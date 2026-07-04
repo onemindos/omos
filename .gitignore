@@ -19,3 +19,6 @@ kubeconfig*.yaml
 /platform/nats/*.secret.*
 /platform/nats/creds.secret.env
 values.secret.yaml
+
+# Cloudflare API token
+platform/cloudflare/*.secret.env

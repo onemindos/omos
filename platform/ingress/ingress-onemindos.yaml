@@ -1,20 +1,20 @@
-# Public HTTPS ingress for the ops UIs, via nip.io hostnames on the LB IP
-# (165.227.251.194). Swap these hosts for real domain names once DNS is set.
+# Real-domain ingress on onemindos.dev (certs via Cloudflare DNS-01).
+# Runs alongside the nip.io ingresses during transition; nip.io removed once verified.
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: grafana
+  name: grafana-onemindos
   namespace: monitoring
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-dns
 spec:
   ingressClassName: nginx
   tls:
-    - hosts: ["grafana.165.227.251.194.nip.io"]
-      secretName: grafana-tls
+    - hosts: ["grafana.onemindos.dev"]
+      secretName: grafana-onemindos-tls
   rules:
-    - host: grafana.165.227.251.194.nip.io
+    - host: grafana.onemindos.dev
       http:
         paths:
           - path: /
@@ -28,19 +28,18 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd
+  name: argocd-onemindos
   namespace: argocd
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    # Argo CD server speaks HTTPS itself; tell nginx to use HTTPS upstream.
+    cert-manager.io/cluster-issuer: letsencrypt-dns
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: nginx
   tls:
-    - hosts: ["argocd.165.227.251.194.nip.io"]
-      secretName: argocd-tls
+    - hosts: ["argocd.onemindos.dev"]
+      secretName: argocd-onemindos-tls
   rules:
-    - host: argocd.165.227.251.194.nip.io
+    - host: argocd.onemindos.dev
       http:
         paths:
           - path: /
