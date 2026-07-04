@@ -1,0 +1,20 @@
+# Tempo — distributed-trace store. Monolithic single-binary, local filesystem.
+# Accepts OTLP (gRPC 4317 / HTTP 4318) from the OTel Collector.
+tempo:
+  storage:
+    trace:
+      backend: local
+      local:
+        path: /var/tempo/traces
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  retention: 336h   # 14d of traces
+
+persistence:
+  enabled: true
+  size: 20Gi

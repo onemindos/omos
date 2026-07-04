@@ -1,0 +1,42 @@
+# OpenTelemetry Collector — the vendor-neutral ingestion layer.
+# Daemonset (one per node): scrapes pod/container logs (filelog preset) and
+# receives OTLP from instrumented services. Routes:
+#   logs   -> Loki   (native OTLP)
+#   traces -> Tempo  (OTLP gRPC)
+# Metrics stay on Prometheus scraping. This decouples instrumentation from
+# backends — we can swap Prometheus->VictoriaMetrics etc. without touching apps.
+mode: daemonset
+
+image:
+  repository: otel/opentelemetry-collector-contrib   # contrib = filelog + k8s processors
+
+presets:
+  logsCollection:
+    enabled: true            # wires the filelog receiver for all pod logs
+    includeCollectorLogs: false
+  kubernetesAttributes:
+    enabled: true            # enrich telemetry with pod/namespace/node metadata
+
+config:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  exporters:
+    otlphttp/loki:
+      endpoint: http://loki-gateway.monitoring.svc.cluster.local/otlp
+    otlp/tempo:
+      endpoint: tempo.monitoring.svc.cluster.local:4317
+      tls:
+        insecure: true
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        exporters: [otlp/tempo]
+      logs:
+        # receivers merged with preset's filelog receiver
+        exporters: [otlphttp/loki]
