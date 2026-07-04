@@ -1,0 +1,52 @@
+# Public HTTPS ingress for the ops UIs, via nip.io hostnames on the LB IP
+# (165.227.251.194). Swap these hosts for real domain names once DNS is set.
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: ["grafana.165.227.251.194.nip.io"]
+      secretName: grafana-tls
+  rules:
+    - host: grafana.165.227.251.194.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Argo CD server speaks HTTPS itself; tell nginx to use HTTPS upstream.
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: ["argocd.165.227.251.194.nip.io"]
+      secretName: argocd-tls
+  rules:
+    - host: argocd.165.227.251.194.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 443
