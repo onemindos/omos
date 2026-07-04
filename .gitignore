@@ -16,3 +16,6 @@ kubeconfig*.yaml
 
 # Letta worktrees
 /.letta/
+/platform/nats/*.secret.*
+/platform/nats/creds.secret.env
+values.secret.yaml

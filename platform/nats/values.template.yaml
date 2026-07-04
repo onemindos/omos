@@ -1,0 +1,46 @@
+# NATS HA cluster — SANITIZED TEMPLATE (committed for reference).
+# Real values live in values.secret.yaml (gitignored) with generated passwords.
+# Regenerate: openssl rand -base64 24 | tr -d '/+=' | head -c 28
+config:
+  cluster:
+    enabled: true
+    replicas: 3
+    routeURLs:
+      useFQDN: true            # FQDN routes match the wildcard TLS SAN
+    tls:
+      enabled: true
+      secretName: nats-server-tls
+  jetstream:
+    enabled: true
+    fileStore:
+      pvc:
+        enabled: true
+        size: 20Gi
+  nats:
+    tls:
+      enabled: true
+      secretName: nats-server-tls
+  merge:
+    system_account: SYS
+    accounts:
+      SYS:
+        users:
+          - user: sys
+            password: "__SYS_PW__"
+      ONEMIND:
+        jetstream:              # limits map reliably enables JS (bare string is not honored)
+          max_mem: -1
+          max_file: -1
+          max_streams: -1
+          max_consumers: -1
+        users:
+          - user: onemind
+            password: "__ONEMIND_PW__"
+
+tlsCA:
+  enabled: true
+  secretName: nats-server-tls
+  key: ca.crt
+
+natsBox:
+  enabled: true

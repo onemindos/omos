@@ -1,0 +1,65 @@
+# Internal TLS for the NATS cluster, issued by a cert-manager self-signed CA.
+# This encrypts client<->server and server<->server (route) traffic inside the
+# cluster. (Public-facing TLS for the UI uses Let's Encrypt separately.)
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: nats-selfsigned
+  namespace: nats
+spec:
+  selfSigned: {}
+---
+# The CA itself (self-signed root).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-ca
+  namespace: nats
+spec:
+  isCA: true
+  commonName: onemind-nats-ca
+  secretName: nats-ca
+  duration: 87600h   # 10y CA
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: nats-selfsigned
+    kind: Issuer
+---
+# Issuer that signs server certs using the CA above.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: nats-ca-issuer
+  namespace: nats
+spec:
+  ca:
+    secretName: nats-ca
+---
+# The NATS server certificate. SANs cover the client service, the headless
+# service (pod-to-pod routes), and localhost (for port-forward provisioning).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-server-tls
+  namespace: nats
+spec:
+  secretName: nats-server-tls
+  duration: 8760h    # 1y, auto-renewed by cert-manager
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: nats-ca-issuer
+    kind: Issuer
+  dnsNames:
+    - nats
+    - nats.nats.svc
+    - nats.nats.svc.cluster.local
+    - "*.nats-headless.nats.svc.cluster.local"
+    - nats-headless.nats.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
