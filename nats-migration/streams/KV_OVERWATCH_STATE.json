@@ -1,0 +1,49 @@
+{
+  "config": {
+    "name": "KV_OVERWATCH_STATE",
+    "description": "om-overwatch fused entity world-state (keyed by entity_id)",
+    "subjects": [
+      "$KV.OVERWATCH_STATE.\u003e"
+    ],
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": 5,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "new",
+    "num_replicas": 1,
+    "duplicate_window": 120000000000,
+    "sealed": false,
+    "deny_delete": true,
+    "deny_purge": false,
+    "allow_rollup_hdrs": true,
+    "allow_direct": true,
+    "mirror_direct": false,
+    "metadata": {
+      "_nats.level": "4",
+      "_nats.req.level": "0",
+      "_nats.ver": "2.14.2"
+    },
+    "consumer_limits": {}
+  },
+  "created": "2026-07-02T05:06:25.257413Z",
+  "state": {
+    "messages": 9228,
+    "bytes": 4181957,
+    "first_seq": 1,
+    "first_ts": "2026-07-02T05:06:44.950297Z",
+    "last_seq": 148263,
+    "last_ts": "2026-07-03T08:06:10.504733Z",
+    "num_deleted": 139035,
+    "num_subjects": 1858,
+    "consumer_count": 0
+  },
+  "cluster": {
+    "leader": "zeus-mac"
+  },
+  "ts": "2026-07-04T18:46:56.211562Z"
+}
+

@@ -1,0 +1,47 @@
+Obtaining Stream stats
+
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                      Stream Report                                                     │
+├────────────────────────┬─────────┬───────────┬───────────┬───────────┬─────────┬──────┬─────────┬───────────┬──────────┤
+│ Stream                 │ Storage │ Placement │ Consumers │ Messages  │ Bytes   │ Lost │ Deleted │ API Level │ Replicas │
+├────────────────────────┼─────────┼───────────┼───────────┼───────────┼─────────┼──────┼─────────┼───────────┼──────────┤
+│ KV_world-state         │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_om-meta-dedup       │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ ZEUS                   │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ ENV                    │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ WORLD                  │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ GEO                    │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ INTEL                  │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ MISSION                │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_zeus-presence       │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_om-schema           │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_agent-caps          │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_agent-config        │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_zeus-focus          │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_zeus-context        │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_fleet-state         │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_geofences           │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_mission-state       │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_node-registry       │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_task-notify         │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_om-config           │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ KV_sys-health          │ File    │           │ 0         │ 0         │ 0 B     │ 0    │ 0       │ 0         │          │
+│ SYS                    │ File    │           │ 0         │ 1         │ 201 B   │ 0    │ 0       │ 0         │          │
+│ KV_projects            │ File    │           │ 0         │ 2         │ 329 B   │ 0    │ 0       │ 0         │          │
+│ KV_OVERWATCH_VIDEO     │ File    │           │ 0         │ 2         │ 410 B   │ 0    │ 10      │ 0         │          │
+│ KV_webhook-registry    │ File    │           │ 0         │ 4         │ 494 B   │ 0    │ 13      │ 0         │          │
+│ KV_device-registry     │ File    │           │ 0         │ 3         │ 730 B   │ 0    │ 0       │ 0         │          │
+│ KV_OVERWATCH_INTERCEPT │ File    │           │ 0         │ 4         │ 759 B   │ 0    │ 1,424   │ 0         │          │
+│ KV_task-index          │ File    │           │ 0         │ 4         │ 1.3 KiB │ 0    │ 0       │ 0         │          │
+│ CMD                    │ File    │           │ 0         │ 17        │ 2.8 KiB │ 0    │ 0       │ 0         │          │
+│ SAAS                   │ File    │           │ 1         │ 17        │ 4.3 KiB │ 0    │ 0       │ 0         │          │
+│ KV_om_ui_projections   │ File    │           │ 0         │ 4         │ 8.3 KiB │ 0    │ 0       │ 0         │          │
+│ KV_agent-registry      │ File    │           │ 0         │ 48        │ 9.0 KiB │ 0    │ 9,560   │ 0         │          │
+│ KV_OVERWATCH_STATE     │ File    │           │ 0         │ 9,228     │ 4.0 MiB │ 0    │ 139,035 │ 0         │          │
+│ VOICE                  │ File    │           │ 0         │ 37,714    │ 8.0 MiB │ 0    │ 0       │ 0         │          │
+│ TEL                    │ File    │           │ 0         │ 35,491    │ 10 MiB  │ 0    │ 0       │ 0         │          │
+│ COT                    │ File    │           │ 0         │ 290,685   │ 152 MiB │ 0    │ 0       │ 0         │          │
+│ AGENTS                 │ File    │           │ 0         │ 737,223   │ 256 MiB │ 0    │ 0       │ 0         │          │
+│ EVT                    │ File    │           │ 1         │ 2,112,029 │ 430 MiB │ 0    │ 0       │ 0         │          │
+╰────────────────────────┴─────────┴───────────┴───────────┴───────────┴─────────┴──────┴─────────┴───────────┴──────────╯
+

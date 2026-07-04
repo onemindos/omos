@@ -1,0 +1,51 @@
+{
+  "config": {
+    "name": "AGENTS",
+    "description": "Agent fabric — prompts, heartbeats, status, tool calls",
+    "subjects": [
+      "agents.hb.\u003e",
+      "agents.status.\u003e",
+      "agents.discover",
+      "agents.heartbeat"
+    ],
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 604800000000000,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 1,
+    "duplicate_window": 120000000000,
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": true,
+    "mirror_direct": false,
+    "metadata": {
+      "_nats.level": "4",
+      "_nats.req.level": "0",
+      "_nats.ver": "2.14.2"
+    },
+    "consumer_limits": {}
+  },
+  "created": "2026-07-01T07:58:33.094084Z",
+  "state": {
+    "messages": 737223,
+    "bytes": 268899726,
+    "first_seq": 1,
+    "first_ts": "2026-06-30T09:25:27.458405Z",
+    "last_seq": 737223,
+    "last_ts": "2026-07-03T08:31:53.792917Z",
+    "num_subjects": 27,
+    "consumer_count": 0
+  },
+  "cluster": {
+    "leader": "zeus-mac"
+  },
+  "ts": "2026-07-04T18:46:56.022093Z"
+}
+
