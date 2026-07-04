@@ -22,3 +22,4 @@ values.secret.yaml
 
 # Cloudflare API token
 platform/cloudflare/*.secret.env
+platform/cloudflare/*.secret
