@@ -1,0 +1,15 @@
+# Grants Zeus's Tailscale identity cluster-admin via the operator's API-server
+# proxy (auth mode impersonates the tailnet user). kubectl-over-tailnet, no
+# public API endpoint. Connect: tailscale configure kubeconfig tailscale-operator
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tailscale-zeus-admin
+subjects:
+  - kind: User
+    name: "Zeus-Delacruz@github"
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
