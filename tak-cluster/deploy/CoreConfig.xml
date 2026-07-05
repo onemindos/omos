@@ -98,6 +98,6 @@
         </fileFilter>
     </federation>
     <plugins/>
-    <cluster/>
+    <cluster enabled="true" natsURL="nats://takserver-nats:4222" kubernetes="true"/>
     <vbm/>
 </Configuration>
