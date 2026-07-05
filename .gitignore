@@ -23,3 +23,13 @@ values.secret.yaml
 # Cloudflare API token
 platform/cloudflare/*.secret.env
 platform/cloudflare/*.secret
+
+# TAK cluster generated private keys / certs — NEVER commit
+tak-cluster/certs-out/
+*.key
+*.jks
+*.p12
+
+# macOS noise
+.DS_Store
+**/.DS_Store

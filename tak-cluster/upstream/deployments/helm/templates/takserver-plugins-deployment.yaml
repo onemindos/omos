@@ -17,15 +17,19 @@ spec:
       containers:
         - name: takserver-plugins 
           image: "{{ .Values.takserver.plugins.image.repository }}:{{ .Values.takserver.plugins.image.tag }}"
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
           env:
             - name: "spring_profiles_active"
               value: "k8cluster"
+            - name: "PLUGIN_MANAGER_MAX_HEAP"
+              value: "{{ .Values.takserver.plugins.maxHeapMb | default 1024 }}"
           resources:
             requests:
               cpu: {{ .Values.takserver.plugins.resources.requests.cpu }}
+              memory: {{ .Values.takserver.plugins.resources.requests.memory }}
             limits:
               cpu: {{ .Values.takserver.api.resources.limits.cpu }}
+              memory: {{ .Values.takserver.plugins.resources.limits.memory }}
           volumeMounts:
             - name: config #The name(key) value must match pod volumes name(key) value
               mountPath: /certs-configmap/

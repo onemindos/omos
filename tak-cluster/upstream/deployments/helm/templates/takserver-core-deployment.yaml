@@ -16,7 +16,7 @@ spec:
       containers:
         - name: takserver-messaging
           image: "{{ .Values.takserver.messaging.image.repository }}:{{ .Values.takserver.messaging.image.tag }}"
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
           env:
             - name: "spring_profiles_active"
               value: "k8cluster"
@@ -91,7 +91,7 @@ spec:
       containers:
         - name: takserver-api 
           image: "{{ .Values.takserver.api.image.repository }}:{{ .Values.takserver.api.image.tag }}"
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
           env:
             - name: POSTGRES_HOST
               value: "{{ .Values.global.postgresql.host }}"
@@ -160,7 +160,7 @@ spec:
       containers:
         - name: takserver-config 
           image: "{{ .Values.takserver.config.image.repository }}:{{ .Values.takserver.config.image.tag }}"
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
           resources:
             requests:
               cpu: "{{ .Values.takserver.config.resources.requests.cpu }}"

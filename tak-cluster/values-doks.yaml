@@ -1,0 +1,116 @@
+# OneMind DOKS values — cluster "onemind-hub" (nyc3), namespace "takserver"
+# Images pulled from DOCR registry.digitalocean.com/onemind-hub. Real pull secret.
+# postgresPassword preset here so the bitnami superuser matches CoreConfig from first boot
+# (no post-install ALTER USER needed). Resources sized for 3x s-4vcpu-8gb (~6.5Gi alloc/node)
+# already hosting argocd/prometheus/ingress-nginx/etc.
+imagePullSecret: registry-onemind-hub
+imagePullPolicy: Always
+certConfigMapName: cert-migration
+coreConfigMapName: core-config
+takIgniteConfigMapName: tak-ignite-config
+
+takserver:
+  namespace: takserver
+  ingress:
+    enabled: false            # first green proof internal-only; add LB after
+  config:
+    image:
+      repository: registry.digitalocean.com/onemind-hub/takserver-config
+      tag: 5.7-onemind
+    replicas: 1
+    resources:
+      requests: { cpu: "300m", memory: 1Gi }
+      limits:   { cpu: "1",    memory: 1536Mi }
+  messaging:
+    image:
+      repository: registry.digitalocean.com/onemind-hub/takserver-messaging
+      tag: 5.7-onemind
+    replicas: 1
+    resources:
+      requests: { cpu: "400m", memory: 1536Mi }
+      limits:   { cpu: "1500m", memory: 2Gi }
+  api:
+    image:
+      repository: registry.digitalocean.com/onemind-hub/takserver-api
+      tag: 5.7-onemind
+    replicas: 1
+    resources:
+      requests: { cpu: "400m", memory: 1536Mi }
+      limits:   { cpu: "1500m", memory: 2Gi }
+  plugins:
+    enabled: true
+    image:
+      repository: registry.digitalocean.com/onemind-hub/takserver-plugins
+      tag: 5.7-onemind
+    replicas: 1
+    maxHeapMb: 768
+    resources:
+      requests: { cpu: "200m", memory: 768Mi }
+      limits:   { cpu: "1",    memory: 1Gi }
+  takserverDatabaseSetup:
+    image:
+      repository: registry.digitalocean.com/onemind-hub/takserver-database-setup
+      tag: 5.7-onemind
+  limits:
+    persistentVolumeClaims: '6'
+    requests:
+      storage: 20Gi
+    storage:
+      max: 10Gi
+      min: 1Gi
+
+global:
+  postgresql:
+    host: takserver-postgresql
+    port: "5432"
+    auth:
+      postgresPassword: postgres        # <-- superuser pw (bitnami new key) — matches CoreConfig
+      postgresqlUsername: postgres
+      postgresqlPassword: postgres
+      postgresqlDatabase: cot
+      username: postgres
+      password: postgres
+      database: cot
+
+postgresql:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: postgis/postgis
+    tag: 15-3.4
+  configurationConfigMap: postgres-configuration
+  auth:
+    postgresPassword: postgres
+    username: postgres
+    password: postgres
+    database: cot
+  primary:
+    persistence:
+      storageClass: do-block-storage-retain
+      size: 8Gi
+    resources:
+      requests: { cpu: "250m", memory: 512Mi }
+      limits:   { cpu: "1",    memory: 1Gi }
+
+ignite:
+  image:
+    repository: registry.digitalocean.com/onemind-hub/takserver-ignite
+    tag: 2.17.0
+    pullPolicy: Always
+  imagePullSecrets:                 # ignite subchart SA needs this (DOCR); patched into SA template
+    - name: registry-onemind-hub
+  serviceAccount:
+    name: takserver-ignite
+  persistence:
+    storageClass: do-block-storage-retain
+
+nats:
+  image:
+    tag: 1.0.1
+  config:
+    jetstream:
+      enabled: true
+    cluster:
+      enabled: false
+      auth:
+        enabled: false
