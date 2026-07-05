@@ -32,18 +32,18 @@ rm /tmp/nats-ca.crt
 ```
 (Verify the source secret name/key — adjust `nats-ca-cert` / `ca.crt` to match the cluster.)
 
-## 4. `docr` — DigitalOcean registry pull secret
+## 4. `ghcr` — GitHub Container Registry pull secret
+Hermes lives on ghcr.io (DOCR was at its 5-repo cap; ghcr is free for the org). The image is
+`ghcr.io/onemindos/hermes:legacy-v1`. Create the pull secret with a GitHub token that has
+`read:packages`:
 ```bash
-kubectl create secret docker-registry docr -n hermes \
-  --docker-server=registry.digitalocean.com \
-  --docker-username="$(doctl account get --format Email --no-header)" \
-  --docker-password="$(doctl registry docr-token 2>/dev/null || cat <DO_API_TOKEN>)"
+kubectl create secret docker-registry ghcr -n hermes \
+  --docker-server=ghcr.io \
+  --docker-username=Zeus-Delacruz \
+  --docker-password="$(gh auth token)"
 ```
-Or the simplest supported path:
-```bash
-doctl registry kubernetes-manifest --namespace hermes | kubectl apply -f -
-# then reference the created secret name in deployment.yaml imagePullSecrets
-```
+> If the ghcr package is private, ensure the token can read it (or make the package internal
+> to the `onemindos` org).
 
 ## Verify (step-1 proof of done)
 ```bash

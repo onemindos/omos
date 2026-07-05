@@ -27,10 +27,10 @@ spec:
         onemind.io/agent: legacy
     spec:
       imagePullSecrets:
-        - name: docr                       # DOCR pull secret (see SECRETS.md)
+        - name: ghcr                       # ghcr.io pull secret (see SECRETS.md)
       containers:
         - name: hermes
-          image: registry.digitalocean.com/onemind-hub/hermes:legacy-v1
+          image: ghcr.io/onemindos/hermes:legacy-v1   # DOCR was at its 5-repo cap; Hermes lives on ghcr (free)
           imagePullPolicy: IfNotPresent
           envFrom:
             # Full ~/.hermes/.env loaded as a secret — carries provider keys,
