@@ -20,6 +20,21 @@ config:
     tls:
       enabled: true
       secretName: nats-server-tls
+  # Leafnode listener — foundation of the OneMind edge fabric (TAK bridge, Mac,
+  # edge sites, robots all connect as leafs). Chart exposes 7422 on the Service +
+  # mounts the wildcard cert. Leaf users bind directly into the ONEMIND account.
+  leafnodes:
+    enabled: true
+    port: 7422
+    tls:
+      enabled: true
+      secretName: nats-server-tls
+    merge:
+      authorization:
+        users:
+          - user: leaf_tak
+            password: "__LEAF_TAK_PW__"
+            account: ONEMIND
   merge:
     system_account: SYS
     accounts:
