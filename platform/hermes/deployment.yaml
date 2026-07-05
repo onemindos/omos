@@ -7,11 +7,11 @@ metadata:
     app.kubernetes.io/name: hermes
     onemind.io/agent: legacy
 spec:
-  # Single cloud body of Legacy — the always-on PRIMARY. The Mac Hermes is a
-  # second body on the SAME agent subject (agents.prompt.legacy.zeus); NATS
-  # queue-group HA routes each prompt to whichever body is alive/nearest.
-  # replicas stays 1: horizontal scale of the same identity is fine for
-  # answering, but self-modification must be single-holder (JetStream KV lease).
+  # The hub's MAIN Hermes = Legacy. Registers on the fabric as its own
+  # first-class agent: agents.prompt.hermes.zeus.legacy. The Mac runs a
+  # SEPARATE Hermes (distinct identity); the fabric interconnects them — this
+  # is NOT one identity with two queue-grouped bodies.
+  # replicas stays 1: RWO PVC + single-holder self-modification.
   replicas: 1
   strategy:
     type: Recreate            # RWO PVC — never two pods on one volume
@@ -31,17 +31,28 @@ spec:
         # ---- Legacy (Hermes) ----
         # Talks PLAINTEXT to the in-pod leaf on localhost:4222 — identical to the
         # Mac setup. All TLS/auth to the cluster bus lives in the sidecar, so we
-        # never depend on Hermes's internal TLS/CA handling. The synadia_ai SDK
-        # (bundled in Hermes) registers this as the `agents` micro service.
+        # never depend on Hermes's internal TLS/CA handling.
+        # NOTE: `hermes gateway run` is CHAT-ONLY and does NOT register on NATS.
+        # The NATS agent-host (hermes_nats_host.py, baked into hermes-legacy) is
+        # what registers agents.prompt.hermes.zeus.legacy — see omos-core/services/agents.
         - name: hermes
-          image: ghcr.io/onemindos/hermes:legacy-v1   # DOCR was at its 5-repo cap; Hermes on ghcr (free)
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/onemindos/hermes-legacy:v1   # Hermes base + NATS agent-host (on ghcr; DOCR at 5-repo cap)
+          imagePullPolicy: Always
+          # Run the NATS agent-host. ENTRYPOINT [/init, main-wrapper.sh] execs this
+          # with the venv activated + HOME=/opt/data (cont-init already done).
+          args: ["/opt/hermes/.venv/bin/python", "/opt/hermes/host/hermes_nats_host.py"]
           envFrom:
             - secretRef:
                 name: hermes-env          # full ~/.hermes/.env (providers, HERMES_NATS_*). See SECRETS.md
           env:
             - name: NATS_URL
               value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
+            # Pin the hub's identity on the fabric. These OVERRIDE envFrom (the
+            # Mac .env ships session=voice); the hub is Legacy, not voice.
+            - name: HERMES_NATS_OWNER
+              value: "zeus"
+            - name: HERMES_NATS_SESSION_NAME
+              value: "legacy"
             # AWS Bedrock creds (currently reused from .env; rotate later → hermes-aws)
             # Uncomment once the rotated secret exists:
             # - name: AWS_ACCESS_KEY_ID
