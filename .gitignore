@@ -45,3 +45,6 @@ tak-cluster/.tapvenv/
 
 # local TAK retirement DB backup (large, disposable)
 tak-cluster/local-retirement-backup/
+
+# uptime-kuma SQLite migration dump
+uptime-kuma/migration-data/
