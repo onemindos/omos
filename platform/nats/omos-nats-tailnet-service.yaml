@@ -1,0 +1,21 @@
+# Exposes the DOKS NATS bus onto Zeus's tailnet via the Tailscale K8s Operator.
+# Operator sees loadBalancerClass: tailscale -> creates tailnet node "omos-nats"
+# forwarding :4222 (client) + :7422 (leaf) to the nats pods. Private, no public IP.
+# Naming scheme: omos-<service> (omos-nats, omos-clickhouse, omos-hermes, ...).
+apiVersion: v1
+kind: Service
+metadata:
+  name: omos-nats
+  namespace: nats
+  annotations:
+    tailscale.com/hostname: "omos-nats"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector:
+    app.kubernetes.io/component: nats
+    app.kubernetes.io/instance: nats
+    app.kubernetes.io/name: nats
+  ports:
+    - { name: client, port: 4222, targetPort: 4222 }
+    - { name: leaf, port: 7422, targetPort: 7422 }
