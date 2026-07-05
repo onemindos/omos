@@ -1,0 +1,76 @@
+---
+# OneMind CoT Tap — TAK Server -> NATS bus (b3 outbound leg)
+# Secret `cot-tap-certs` (tap.pem/tap.key/ca.pem) is created imperatively
+# (out-of-band, never committed). See README.md.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cot-tap-script
+  namespace: takserver
+  labels:
+    app: cot-tap
+data:
+  tap.py: |
+    # placeholder — overwritten by: kubectl create configmap cot-tap-script --from-file=tap.py
+    # (kept in git as tak-cluster/cot-tap/tap.py; apply with kustomize/kubectl replace)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cot-tap
+  namespace: takserver
+  labels:
+    app: cot-tap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cot-tap
+  template:
+    metadata:
+      labels:
+        app: cot-tap
+    spec:
+      containers:
+        - name: cot-tap
+          image: python:3.12-slim
+          command: ["/bin/sh", "-c"]
+          args:
+            - "pip install --no-cache-dir --quiet nats-py && exec python /app/tap.py"
+          env:
+            - name: TAK_HOST
+              value: "takserver-messaging-service"
+            - name: TAK_PORT
+              value: "8089"
+            - name: TAK_CERT
+              value: "/certs/tap.pem"
+            - name: TAK_KEY
+              value: "/certs/tap.key"
+            - name: TAK_CA
+              value: "/certs/ca.pem"
+            - name: NATS_URL
+              value: "nats://tak-nats-leaf:4222"
+            - name: NATS_SUBJECT
+              value: "tak.cot.out"
+            - name: VERIFY_SERVER
+              value: "false"
+          volumeMounts:
+            - name: script
+              mountPath: /app
+            - name: certs
+              mountPath: /certs
+              readOnly: true
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      volumes:
+        - name: script
+          configMap:
+            name: cot-tap-script
+        - name: certs
+          secret:
+            secretName: cot-tap-certs

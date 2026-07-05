@@ -36,3 +36,9 @@ tak-cluster/certs-out/
 
 # TAK bridge plugin artifacts (staged for image bake, not source)
 tak-cluster/plugin/
+
+# TAK client certs / CA keys — never commit
+tak-cluster/b2-enrollment/
+tak-cluster/.tapvenv/
+*.key
+*.p12
