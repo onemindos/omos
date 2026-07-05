@@ -1,0 +1,53 @@
+// Example/default ACLs for unrestricted connections.
+{
+	// Declare static groups of users. Use autogroups for all users or users with a specific role.
+	// "groups": {
+	//   "group:example": ["alice@example.com", "bob@example.com"],
+	// },
+
+	// Tags for the Tailscale Kubernetes Operator and the proxies it creates.
+	"tagOwners": {
+		"tag:k8s-operator": [],
+		"tag:k8s":          ["tag:k8s-operator"],
+	},
+
+	// Auto-approve services advertised by operator-managed proxies (tag:k8s),
+	// so exposed cluster services join the tailnet with no manual approval.
+	"autoApprovers": {
+		"services": {
+			"tag:k8s": ["tag:k8s"],
+		},
+	},
+
+	// Define grants that govern access for users, groups, autogroups, tags,
+	// Tailscale IP addresses, and subnet ranges.
+	"grants": [
+		// Allow all connections.
+		// Comment this section out if you want to define specific restrictions.
+		{
+			"src": ["*"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+	],
+
+	// Define users and devices that can use Tailscale SSH.
+	"ssh": [
+		// Allow all users to SSH into their own devices in check mode.
+		{
+			"src":    ["autogroup:member"],
+			"dst":    ["autogroup:self"],
+			"users":  ["autogroup:nonroot", "root"],
+			"action": "accept",
+		},
+	],
+
+	"nodeAttrs": [
+		{
+			// Funnel policy, which lets tailnet members control Funnel
+			// for their own devices.
+			"target": ["autogroup:member"],
+			"attr":   ["funnel"],
+		},
+	],
+}
