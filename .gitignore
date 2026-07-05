@@ -33,3 +33,6 @@ tak-cluster/certs-out/
 # macOS noise
 .DS_Store
 **/.DS_Store
+
+# TAK bridge plugin artifacts (staged for image bake, not source)
+tak-cluster/plugin/

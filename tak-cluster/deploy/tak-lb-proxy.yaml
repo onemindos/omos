@@ -1,0 +1,71 @@
+# OneMind TAK external ingress — single dedicated DO LoadBalancer via L4 TCP passthrough.
+# nginx `stream` mode does raw TCP proxying (NO TLS termination), so TAK mutual-TLS
+# passes straight through to the api/messaging pods. One LB, one IP, three ports.
+# Avoids DO's discouraged multi-Service LB-ID sharing (reconciliation conflicts).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tak-lb-proxy-conf
+  namespace: takserver
+data:
+  nginx.conf: |
+    worker_processes auto;
+    events { worker_connections 4096; }
+    stream {
+      # 8446 — certificate enrollment (api)
+      upstream tak_enroll  { server takserver-api-service:8446; }
+      # 8443 — WebTAK / Marti API (api)
+      upstream tak_webtak  { server takserver-api-service:8443; }
+      # 8089 — CoT streaming, mutual-TLS (messaging)
+      upstream tak_cot     { server takserver-messaging-service:8089; }
+
+      server { listen 8446; proxy_pass tak_enroll; proxy_timeout 600s; }
+      server { listen 8443; proxy_pass tak_webtak; proxy_timeout 600s; }
+      server { listen 8089; proxy_pass tak_cot;    proxy_timeout 600s; }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tak-lb-proxy
+  namespace: takserver
+  labels: { app: tak-lb-proxy }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: tak-lb-proxy } }
+  template:
+    metadata:
+      labels: { app: tak-lb-proxy }
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - { containerPort: 8089 }
+            - { containerPort: 8443 }
+            - { containerPort: 8446 }
+          volumeMounts:
+            - { name: conf, mountPath: /etc/nginx/nginx.conf, subPath: nginx.conf }
+          resources:
+            requests: { cpu: 50m, memory: 32Mi }
+            limits:   { cpu: 250m, memory: 128Mi }
+      volumes:
+        - name: conf
+          configMap: { name: tak-lb-proxy-conf }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tak-external
+  namespace: takserver
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-name: "onemind-tak"
+    # raw TCP; no proxy-protocol so client cert chain is untouched
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector: { app: tak-lb-proxy }
+  ports:
+    - { name: cot,    port: 8089, targetPort: 8089, protocol: TCP }
+    - { name: webtak, port: 8443, targetPort: 8443, protocol: TCP }
+    - { name: enroll, port: 8446, targetPort: 8446, protocol: TCP }
