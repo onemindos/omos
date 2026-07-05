@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-legacy
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: hermes
+    onemind.io/agent: legacy
+spec:
+  # Single cloud body of Legacy. This is the always-on PRIMARY; the Mac Hermes
+  # is a second body on the SAME agent subject (agents.prompt.legacy.zeus).
+  # NATS queue-group HA routes prompts to whichever body is alive/nearest.
+  # Keep replicas: 1 here — horizontal scale-out of the SAME identity is fine
+  # for answering, but self-modification must be single-holder (JetStream KV
+  # lease); see docs/legacy-agent-fabric.md.
+  replicas: 1
+  strategy:
+    type: Recreate            # RWO PVC — don't run two pods on the same volume
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hermes
+      onemind.io/agent: legacy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hermes
+        onemind.io/agent: legacy
+    spec:
+      imagePullSecrets:
+        - name: docr                       # DOCR pull secret (see SECRETS.md)
+      containers:
+        - name: hermes
+          image: registry.digitalocean.com/onemind-hub/hermes:legacy-v1
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            # Full ~/.hermes/.env loaded as a secret — carries provider keys,
+            # HERMES_NATS_OWNER=zeus, HERMES_NATS_SESSION_NAME=legacy, etc.
+            # Created out-of-band from the file (see SECRETS.md). Never committed.
+            - secretRef:
+                name: hermes-env
+          env:
+            # ---- in-cluster overrides (take precedence over envFrom) ----
+            # Point Legacy at the DOKS bus instead of the Mac's localhost.
+            # TODO(verify at deploy): confirm scheme/auth. Cluster NATS uses the
+            # ONEMIND account over TLS. Likely:
+            #   tls://onemind:<pw>@nats.nats.svc.cluster.local:4222
+            # with the CA mounted below. Adjust if Hermes expects separate
+            # NATS_USER / NATS_PASSWORD / NATS_CA env vars instead of inline URL.
+            - name: NATS_URL
+              value: "tls://nats.nats.svc.cluster.local:4222"
+            # AWS Bedrock creds — ROTATED keys from the hermes-aws secret,
+            # overriding whatever is in .env so we can strip them from .env later.
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef: { name: hermes-aws, key: AWS_ACCESS_KEY_ID }
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef: { name: hermes-aws, key: AWS_SECRET_ACCESS_KEY }
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef: { name: hermes-aws, key: AWS_REGION }
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef: { name: hermes-aws, key: AWS_REGION }
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+          # TODO(verify): wire a real liveness/readiness probe. Options:
+          #  - the agent heartbeat on agents.hb.legacy.zeus.* (sidecar check), or
+          #  - the Hermes dashboard HTTP port if exposed.
+          # s6-overlay already supervises the in-container processes.
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              memory: "3Gi"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: hermes-data
+        - name: nats-ca
+          secret:
+            # Cluster NATS CA (same one the leaf/tak sidecar uses). Create from
+            # the cluster's nats-ca-cert. See SECRETS.md.
+            secretName: hermes-nats-ca
+            optional: true
