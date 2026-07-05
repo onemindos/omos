@@ -36,21 +36,20 @@ spec:
         # The NATS agent-host (hermes_nats_host.py, baked into hermes-legacy) is
         # what registers agents.prompt.hermes.zeus.legacy — see omos-core/services/agents.
         - name: hermes
-          image: ghcr.io/onemindos/hermes-legacy:v1   # Hermes base + NATS agent-host (on ghcr; DOCR at 5-repo cap)
+          image: ghcr.io/onemindos/hermes-legacy:v2   # Hermes base + NATS plugin + Legacy persona (mother)
           imagePullPolicy: Always
-          # Run the NATS agent-host. ENTRYPOINT [/init, main-wrapper.sh] execs this
-          # with the venv activated + HOME=/opt/data (cont-init already done).
-          args: ["/opt/hermes/.venv/bin/python", "/opt/hermes/host/hermes_nats_host.py"]
+          # No custom args — s6 supervisor runs the gateway. The nats-platform
+          # plugin (enabled in config.yaml, seeded by cont-init) registers
+          # agents.prompt.hermes.zeus.legacy and routes prompts through Hermes's
+          # full pipeline (SOUL.md persona, tools, memory).
+          args: ["gateway", "run", "--replace"]
           envFrom:
             - secretRef:
                 name: hermes-env          # full ~/.hermes/.env (providers, HERMES_NATS_*). See SECRETS.md
           env:
             - name: NATS_URL
               value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
-            # Pin the hub's identity on the fabric. These OVERRIDE envFrom (the
-            # Mac .env ships session=voice); the hub is Legacy, not voice.
-            - name: HERMES_NATS_OWNER
-              value: "zeus"
+            # Override envFrom: the Mac .env ships session=voice; the hub is Legacy (mother).
             - name: HERMES_NATS_SESSION_NAME
               value: "legacy"
             # AWS Bedrock creds (currently reused from .env; rotate later → hermes-aws)
