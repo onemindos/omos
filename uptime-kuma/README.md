@@ -1,8 +1,14 @@
-# uptime-kuma — OneMind Watchdog
+# onemind-watchdog Droplet — uptime-kuma + Murmur
 
-Status-monitoring watchdog for the OneMind stack. Lives on an independent DO
-Droplet (SFO3) — deliberately **not** on the DOKS hub (nyc3) so it can detect
-hub outages.
+Independent DO Droplet (SFO3) — deliberately **not** on the DOKS hub (nyc3) so
+the watchdog can detect hub outages. Hosts two edge services:
+- **uptime-kuma** — status-monitoring watchdog (this doc)
+- **murmur** — Mumble voice server for the Hermes/Legacy PTT voice pipeline
+  (iTAK PTT → Murmur → omos-voice-bridge → RealtimeSTT → NATS → Legacy). Data
+  migrated from Mac; superuser pw `ON3m1ndV0ic32026!` (→ 1Password). Listens
+  TCP+UDP 64738. Container: `docker run -d --name murmur --restart unless-stopped
+  -p 64738:64738/tcp -p 64738:64738/udp -v /opt/murmur/config:/config
+  -v /opt/murmur/data:/data -e MURMUR_SUPERUSER_PASSWORD=... mumblevoip/mumble-server:latest`
 
 ## Droplet
 
@@ -12,8 +18,13 @@ hub outages.
 | DO Droplet ID | 582414995 |
 | IP | `146.190.143.195` |
 | Region | SFO3 (independent from hub nyc3) |
-| Size | s-1vcpu-512mb-10gb ($4/mo) |
+| Size | s-1vcpu-1gb ($6/mo — resized up from 512mb; 512 OOM'd running kuma+murmur) |
 | SSH key | `zeus-mac-2026` (id_ed25519) |
+
+## Murmur follow-ups (not yet done)
+- Point the **ATAK/iTAK Mumble plugin** at `146.190.143.195:64738` (was Mac).
+- Point **omos-voice-bridge** `MUMBLE_HOST=146.190.143.195` and decide where the
+  bridge runs (was exited Docker on Mac; co-locating on the droplet is an option).
 
 ## Run
 
