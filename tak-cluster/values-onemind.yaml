@@ -1,0 +1,91 @@
+# OneMind DOKS values for the TAK Server 5.7 cluster.
+# Base chart: upstream/deployments/helm (TAK Product Center blueprint, vendored).
+#
+# DEPLOY INTO NAMESPACE `takserver` — non-negotiable. The Ignite Kubernetes IP
+# finder hardcodes service `takserver-ignite` + namespace `takserver`
+# (upstream issue #43). A different namespace = Ignite discovery fails.
+#
+#   helm upgrade --install takserver ./upstream/deployments/helm \
+#     -n takserver --create-namespace \
+#     -f values-onemind.yaml
+#
+# Images: built from Zeus's takserver-docker-5.7-RELEASE-43 distro and pushed to
+# DigitalOcean Container Registry (DOCR). Replace <DOCR> with your registry,
+# e.g. registry.digitalocean.com/onemind. See README.md "Image build".
+
+imagePullSecret: docr-cred
+certConfigMapName: cert-migration
+coreConfigMapName: core-config
+takIgniteConfigMapName: tak-ignite-config
+
+takserver:
+  ingress:
+    enabled: false          # 8089 fronted by a DO TCP LoadBalancer; 8443/8446 via Cloudflare Tunnel
+    api:
+      cert: {annotations: {}, host: ""}
+      federationTruststore: {annotations: {}, host: ""}
+      https: {annotations: {}, host: ""}
+    messaging:
+      streaming: {annotations: {}, host: ""}
+      fedv1: {annotations: {}, host: ""}
+      fedv2: {annotations: {}, host: ""}
+
+  config:                   # centralized config service (starts first)
+    image: {repository: <DOCR>/takserver-config, tag: "5.7-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 1, memory: 1Gi}}
+
+  # messaging = the device-load tier (CoT/TCP 8089). SCALE THIS as EUD count grows (HPA-ready).
+  messaging:
+    image: {repository: <DOCR>/takserver-messaging, tag: "5.7-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 1, memory: 4Gi}, limits: {cpu: 2, memory: 4Gi}}
+
+  api:                      # Marti API / WebTAK / cert enrollment
+    image: {repository: <DOCR>/takserver-api, tag: "5.7-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 1, memory: 3Gi}, limits: {cpu: 2, memory: 3Gi}}
+
+  # plugins tier runs Zeus's NATS bridge → the OneMind bus. Plugin is baked into this image.
+  plugins:
+    enabled: true
+    image: {repository: <DOCR>/takserver-plugins, tag: "5.7-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 1}, limits: {cpu: 2}}
+
+  takserverDatabaseSetup:
+    image: {repository: <DOCR>/takserver-database-setup, tag: "5.7-onemind"}
+
+  limits:
+    persistentVolumeClaims: '5'
+    requests: {storage: 50Gi}
+    storage: {max: 50Gi, min: 1Gi}
+
+# --- Database ---------------------------------------------------------------
+# START simple: in-cluster PostGIS (self-contained first bring-up).
+# SWITCH to DO Managed PostgreSQL for prod: set postgresql.enabled=false and point
+# global.postgresql.host at the managed host (also update CoreConfig.xml Repository).
+postgresql:
+  enabled: true
+  image: {registry: docker.io, repository: postgis/postgis, tag: 15-3.4}
+  configurationConfigMap: postgres-configuration
+global:
+  postgresql:
+    host: takserver-postgresql
+    port: "5432"
+    auth: {postgresqlUsername: postgres, postgresqlPassword: postgres, postgresqlDatabase: cot}
+
+# --- Ignite (distributed cache + K8s cluster discovery) ---------------------
+ignite:
+  image: {tag: 2.17.0}
+  serviceAccount: {name: takserver-ignite}
+
+# --- NATS: TAK-INTERNAL bus between pods --- NOT the OneMind bus -------------
+# This NATS is the cluster's own inter-pod messaging (JetStream). It is SEPARATE
+# from the OneMind NATS that Zeus's bridge plugin connects to (see plugin config).
+# 1 replica keeps the footprint small; use 3 (R3) for prod HA.
+nats:
+  image: {tag: 1.0.1}
+  config:
+    jetstream: {enabled: true}
+    cluster: {enabled: true, replicas: 1, auth: {enabled: false}}
