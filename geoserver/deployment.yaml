@@ -1,0 +1,115 @@
+---
+# GeoServer on DOKS — geospatial layer engine for the MapLibre COP.
+# Migrated off the Mac (local kartoza container was empty; fresh deploy).
+# Admin secret `geoserver-admin` is created out-of-band (never committed). See README.md.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: geoserver
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geoserver-data
+  namespace: geoserver
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: do-block-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geoserver
+  namespace: geoserver
+  labels:
+    app: geoserver
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate          # single RWO PVC — no rolling overlap
+  selector:
+    matchLabels:
+      app: geoserver
+  template:
+    metadata:
+      labels:
+        app: geoserver
+    spec:
+      containers:
+        - name: geoserver
+          image: kartoza/geoserver:2.25.2
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GEOSERVER_DATA_DIR
+              value: /opt/geoserver/data_dir
+            - name: GEOWEBCACHE_CACHE_DIR
+              value: /opt/geoserver/data_dir/gwc
+            - name: GEOSERVER_ADMIN_USER
+              value: admin
+            - name: GEOSERVER_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geoserver-admin
+                  key: password
+            - name: INITIAL_MEMORY
+              value: 512M
+            - name: MAXIMUM_MEMORY
+              value: 2G
+            - name: STABLE_EXTENSIONS
+              value: ""
+            - name: COMMUNITY_EXTENSIONS
+              value: ""
+          volumeMounts:
+            - name: data
+              mountPath: /opt/geoserver/data_dir
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 30      # up to ~5min for JVM/webapp boot
+          readinessProbe:
+            tcpSocket:                # Wicket UI page is too heavy for a 10s httpGet probe
+              port: 8080
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 4
+          livenessProbe:
+            httpGet:
+              path: /geoserver/web/
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 60
+            timeoutSeconds: 25
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 250m
+              memory: 768Mi
+            limits:
+              cpu: "2"
+              memory: 2560Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: geoserver-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geoserver
+  namespace: geoserver
+  labels:
+    app: geoserver
+spec:
+  type: ClusterIP
+  selector:
+    app: geoserver
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
