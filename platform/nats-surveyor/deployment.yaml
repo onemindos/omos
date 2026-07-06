@@ -1,0 +1,91 @@
+# NATS Surveyor runs alongside the NATS cluster and authenticates as the $SYS
+# user so it can read server, JetStream, and account-level monitoring data.
+#
+# The NATS server is TLS-enabled in-cluster, so Surveyor mounts the cluster CA
+# and verifies the server certificate before exporting Prometheus metrics.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-surveyor
+  namespace: nats
+  labels:
+    app.kubernetes.io/name: nats-surveyor
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: nats-surveyor
+    app.kubernetes.io/component: metrics
+  ports:
+    - name: metrics
+      port: 7777
+      targetPort: metrics
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-surveyor
+  namespace: nats
+  labels:
+    app.kubernetes.io/name: nats-surveyor
+    app.kubernetes.io/component: metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nats-surveyor
+      app.kubernetes.io/component: metrics
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nats-surveyor
+        app.kubernetes.io/component: metrics
+    spec:
+      containers:
+        - name: surveyor
+          image: natsio/nats-surveyor:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - --servers=tls://nats.nats.svc.cluster.local:4222
+            - --count=3
+            - --user=sys
+            - --password=Rhl2yQDxruJ6X09bS7qdZV0ZHRyP
+            - --tlscacert=/etc/nats-ca/ca.crt
+            - --port=7777
+            - --addr=0.0.0.0
+            - --jsz=all
+            - --accounts
+          ports:
+            - name: metrics
+              containerPort: 7777
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+      volumes:
+        - name: nats-ca
+          secret:
+            secretName: nats-server-tls
+            items:
+              - key: ca.crt
+                path: ca.crt
