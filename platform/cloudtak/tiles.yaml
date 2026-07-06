@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudtak-tiles
+  namespace: cloudtak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudtak-tiles
+  template:
+    metadata:
+      labels:
+        app: cloudtak-tiles
+    spec:
+      imagePullSecrets:
+        - name: ghcr-onemindos
+      containers:
+        - name: tiles
+          image: ghcr.io/onemindos/cloudtak-tiles:latest
+          ports:
+            - containerPort: 5002
+          env:
+            - name: PMTILES_URL
+              value: "http://cloudtak-tiles:5002"
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-secrets
+                  key: SIGNING_SECRET
+            - name: ASSET_BUCKET
+              value: "cloudtak"
+            - name: AWS_S3_Endpoint
+              value: "http://cloudtak-minio:9000"
+            - name: AWS_S3_AccessKeyId
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-secrets
+                  key: AWS_S3_AccessKeyId
+            - name: AWS_S3_SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-secrets
+                  key: AWS_S3_SecretAccessKey
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudtak-tiles
+  namespace: cloudtak
+spec:
+  selector:
+    app: cloudtak-tiles
+  ports:
+    - port: 5002
+      targetPort: 5002

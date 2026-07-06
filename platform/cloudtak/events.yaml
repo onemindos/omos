@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudtak-events
+  namespace: cloudtak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudtak-events
+  template:
+    metadata:
+      labels:
+        app: cloudtak-events
+    spec:
+      imagePullSecrets:
+        - name: ghcr-onemindos
+      containers:
+        - name: events
+          image: ghcr.io/onemindos/cloudtak-events:latest
+          env:
+            - name: CLOUDTAK_Mode
+              value: "docker-compose"
+            - name: API_URL
+              value: "http://cloudtak-api:5000"
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-secrets
+                  key: SIGNING_SECRET
+            - name: ASSET_BUCKET
+              value: "cloudtak"
+            - name: AWS_S3_Endpoint
+              value: "http://cloudtak-minio:9000"
+            - name: AWS_S3_AccessKeyId
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-secrets
+                  key: AWS_S3_AccessKeyId
+            - name: AWS_S3_SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-secrets
+                  key: AWS_S3_SecretAccessKey
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
