@@ -1,0 +1,62 @@
+# Legacy Agent Fabric — Agent Identities (source of truth)
+#
+# This file is the canonical definition of every Legacy instance on the fabric.
+# Both the hub (mother) and Mac (daughter) configurations derive from this.
+# Edit here, then propagate: the hub image bakes in SOUL.md + config; the Mac
+# reads ~/.hermes/ (synced from this file's Mac section).
+
+fabric:
+  name: OneMind
+  bus: NATS
+  account: ONEMIND
+  agent_protocol: synadia-ai v0.4.1
+  subject_pattern: "agents.prompt.{agent}.{owner}.{session}"
+
+agents:
+  # ── The Mother ──────────────────────────────────────────────────────
+  - name: Legacy (Mother)
+    agent: hermes
+    owner: zeus
+    session: legacy
+    bus_subject: agents.prompt.hermes.zeus.legacy
+    role: primary
+    description: "The authoritative primary Legacy. Sovereign state, final decisions, source of truth."
+    location:
+      type: cloud
+      cluster: DOKS
+      namespace: hermes
+      pod: hermes-legacy
+      image: ghcr.io/onemindos/hermes-legacy:v2
+    model:
+      provider: bedrock
+      default: us.anthropic.claude-haiku-4-5-20251001-v1:0
+      base_url: https://bedrock-runtime.us-east-1.amazonaws.com
+    nats:
+      connection: leaf-sidecar (localhost:4222 plaintext → tls uplink to cluster:7422)
+      heartbeat_interval_s: 30
+    persona: SOUL.md
+    supervised_by: s6-overlay (container)
+
+  # ── The Daughter ────────────────────────────────────────────────────
+  - name: Legacy (Daughter)
+    agent: hermes
+    owner: zeus
+    session: legacy-edge
+    bus_subject: agents.prompt.hermes.zeus.legacy-edge
+    role: edge-extension
+    description: "Edge extension of Legacy. Local access — terminal, files, sensors, TAK, LAN. Defers to mother for fabric-wide authority."
+    location:
+      type: edge
+      device: Zeus's MacBook Pro
+      hermes_home: /Users/zeus/.hermes
+      supervised_by: launchd (ai.hermes.gateway)
+    model:
+      provider: bedrock
+      default: us.anthropic.claude-haiku-4-5-20251001-v1:0
+      base_url: https://bedrock-runtime.us-east-1.amazonaws.com
+    nats:
+      connection: localhost:4222 (local NATS → leaf to cluster)
+      heartbeat_interval_s: 30
+    persona: SOUL.md
+    env_overrides:
+      HERMES_NATS_SESSION_NAME: legacy-edge
