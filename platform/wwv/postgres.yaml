@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wwv-postgres
+  namespace: wwv
+  labels:
+    app.kubernetes.io/name: wwv-postgres
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  serviceName: wwv-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wwv-postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: wwv-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - name: pg
+              containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: wwv
+            - name: POSTGRES_USER
+              value: wwv
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wwv-pg-credentials
+                  key: password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "wwv"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "wwv"]
+            initialDelaySeconds: 15
+            periodSeconds: 20
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: do-block-storage
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wwv-postgres
+  namespace: wwv
+  labels:
+    app.kubernetes.io/name: wwv-postgres
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: wwv-postgres
+  ports:
+    - name: pg
+      port: 5432
+      targetPort: pg
