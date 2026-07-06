@@ -19,10 +19,12 @@ spec:
         app.kubernetes.io/name: orp
         app.kubernetes.io/part-of: omos-platform
     spec:
+      imagePullSecrets:
+        - name: ghcr
       containers:
         # ── ORP fusion engine ──────────────────────────────────────────────
         - name: orp
-          image: ghcr.io/shieldofsteel/orp:latest
+          image: ghcr.io/onemindos/orp:latest
           imagePullPolicy: Always
           args: ["start", "--config", "/etc/orp/config.yaml"]
           ports:
