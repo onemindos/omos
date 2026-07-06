@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wwv
+  namespace: wwv
+  labels:
+    app.kubernetes.io/name: wwv
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wwv
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: wwv
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      containers:
+        - name: wwv
+          image: ghcr.io/onemindos/wwv:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: wwv-env
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: HOSTNAME
+              value: "0.0.0.0"
+            - name: PORT
+              value: "3000"
+            - name: AUTH_TRUST_HOST
+              value: "true"
+            - name: NEXT_PUBLIC_WWV_EDITION
+              value: local
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wwv
+  namespace: wwv
+  labels:
+    app.kubernetes.io/name: wwv
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: wwv
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+      protocol: TCP

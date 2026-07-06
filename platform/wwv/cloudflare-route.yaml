@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wwv-route
+  namespace: cloudflare
+  labels:
+    app.kubernetes.io/name: wwv
+    app.kubernetes.io/part-of: cloudflare-tunnel
+  annotations:
+    description: Desired Cloudflare public hostname mapping for OneMind Globe (WWV)
+data:
+  hostname: wwv.onemindos.dev
+  service: http://wwv.wwv.svc.cluster.local:3000
+  tunnel: 66bbea70-5300-4e4e-96fa-e5bc4d767b61
+  comment: OneMind hub tunnel
