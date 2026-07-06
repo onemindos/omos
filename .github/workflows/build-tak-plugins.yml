@@ -32,14 +32,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # The patch Dockerfile FROMs the existing GHCR plugins image.
-      # docker/build-push-action pulls the base inside buildkit, but the GITHUB_TOKEN
-      # only grants packages:write by default — pull access to the private image requires
-      # an explicit docker pull after login so credentials are in the local daemon cache.
-      - name: Pull existing plugins image (authorized pull for buildkit base)
-        run: docker pull ghcr.io/onemindos/takserver-plugins:5.7-onemind
-
       # Layer the NatsBridgePlugin on top of the existing plugins image.
+      # ghcr.io/onemindos/takserver-plugins is public — no pull auth needed.
       # /lib → /usr/lib in the base image (Debian symlink), so COPY to lib/ puts
       # the JAR on the Spring loader.path (loader.path=file:lib/ in takserver-pm.jar).
       # conf/plugins/ is where PluginSystemConfiguration (PLUGIN_CONFIG_BASE) reads YAML.

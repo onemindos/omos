@@ -1,11 +1,26 @@
 # Patch layer: add NatsBridgePlugin JAR + config on top of the existing plugins image.
-# No need to rebuild from base — we just layer the plugin artifacts in.
 #
-# loader.path=file:lib/ in takserver-pm.jar reads from /lib/ (symlink → /usr/lib/).
-# PluginSystemConfiguration.PLUGIN_CONFIG_BASE = "conf/plugins/" → reads from /conf/plugins/.
-FROM ghcr.io/onemindos/takserver-plugins:5.7-onemind
+# Uses multi-stage build: the existing GHCR image is a public anonymous pull
+# so buildkit fetches it without authentication. The final stage is pushed
+# under the same tag using the CI GITHUB_TOKEN (packages:write).
+#
+# loader.path=file:lib/ in takserver-pm.jar reads /lib/ (symlink → /usr/lib/).
+# PluginSystemConfiguration.PLUGIN_CONFIG_BASE = "conf/plugins/" → /conf/plugins/.
 
+# Stage 1: extract the existing plugins image content (anonymous pull — public image)
+FROM ghcr.io/onemindos/takserver-plugins:5.7-onemind AS upstream
+
+# Stage 2: rebuild from debian base, copy everything from upstream, then add plugin
+FROM debian:bookworm-slim
+
+# Re-create the full filesystem from the upstream image
+COPY --from=upstream / /
+
+# Create plugin config dir (may not exist in upstream image)
 RUN mkdir -p /conf/plugins
 
+# Add the NatsBridgePlugin
 COPY takserver-nats-plugin-1.0.0.jar /usr/lib/takserver-nats-plugin-1.0.0.jar
 COPY tak.server.plugins.NatsBridgePlugin.yaml /conf/plugins/tak.server.plugins.NatsBridgePlugin.yaml
+
+CMD ["sh", "takserver-plugins-cluster.sh"]
