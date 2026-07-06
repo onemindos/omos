@@ -1,9 +1,9 @@
 # OneMind DOKS values — cluster "onemind-hub" (nyc3), namespace "takserver"
-# Images pulled from DOCR registry.digitalocean.com/onemind-hub. Real pull secret.
+# Images pulled from GHCR ghcr.io/onemindos.
 # postgresPassword preset here so the bitnami superuser matches CoreConfig from first boot
 # (no post-install ALTER USER needed). Resources sized for 3x s-4vcpu-8gb (~6.5Gi alloc/node)
 # already hosting argocd/prometheus/ingress-nginx/etc.
-imagePullSecret: registry-onemind-hub
+imagePullSecret: ghcr-onemindos
 imagePullPolicy: Always
 certConfigMapName: cert-migration
 coreConfigMapName: core-config
@@ -15,7 +15,7 @@ takserver:
     enabled: false            # first green proof internal-only; add LB after
   config:
     image:
-      repository: registry.digitalocean.com/onemind-hub/takserver-config
+      repository: ghcr.io/onemindos/takserver-config
       tag: 5.7-onemind
     replicas: 1
     resources:
@@ -23,7 +23,7 @@ takserver:
       limits:   { cpu: "1",    memory: 1536Mi }
   messaging:
     image:
-      repository: registry.digitalocean.com/onemind-hub/takserver-messaging
+      repository: ghcr.io/onemindos/takserver-messaging
       tag: 5.7-onemind
     replicas: 1
     resources:
@@ -31,7 +31,7 @@ takserver:
       limits:   { cpu: "1500m", memory: 2Gi }
   api:
     image:
-      repository: registry.digitalocean.com/onemind-hub/takserver-api
+      repository: ghcr.io/onemindos/takserver-api
       tag: 5.7-onemind
     replicas: 1
     resources:
@@ -40,7 +40,7 @@ takserver:
   plugins:
     enabled: true
     image:
-      repository: registry.digitalocean.com/onemind-hub/takserver-plugins
+      repository: ghcr.io/onemindos/takserver-plugins
       tag: 5.7-onemind
     replicas: 1
     maxHeapMb: 768
@@ -49,7 +49,7 @@ takserver:
       limits:   { cpu: "1",    memory: 1Gi }
   takserverDatabaseSetup:
     image:
-      repository: registry.digitalocean.com/onemind-hub/takserver-database-setup
+      repository: ghcr.io/onemindos/takserver-database-setup
       tag: 5.7-onemind
   limits:
     persistentVolumeClaims: '6'
@@ -94,11 +94,11 @@ postgresql:
 
 ignite:
   image:
-    repository: registry.digitalocean.com/onemind-hub/takserver-ignite
+    repository: ghcr.io/onemindos/takserver-ignite
     tag: 2.17.0
     pullPolicy: Always
   imagePullSecrets:                 # ignite subchart SA needs this (DOCR); patched into SA template
-    - name: registry-onemind-hub
+    - name: ghcr-onemindos
   serviceAccount:
     name: takserver-ignite
   persistence:
