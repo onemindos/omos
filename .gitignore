@@ -46,5 +46,8 @@ tak-cluster/.tapvenv/
 # local TAK retirement DB backup (large, disposable)
 tak-cluster/local-retirement-backup/
 
+# TAK build-root — compiled JARs/WARs, not source (large binaries, not for git)
+tak-cluster/build-root/
+
 # uptime-kuma SQLite migration dump
 uptime-kuma/migration-data/

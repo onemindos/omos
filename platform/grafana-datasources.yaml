@@ -1,6 +1,3 @@
-# Grafana datasources for Loki (logs) + Tempo (traces).
-# Picked up automatically by the kube-prometheus-stack Grafana sidecar
-# (label grafana_datasource: "1"). Prometheus is already wired by that chart.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,7 +14,6 @@ data:
         access: proxy
         url: http://loki-gateway.monitoring.svc.cluster.local
         jsonData:
-          # link a log line to its trace in Tempo
           derivedFields:
             - datasourceUid: tempo
               matcherRegex: "trace_id=(\\w+)"
