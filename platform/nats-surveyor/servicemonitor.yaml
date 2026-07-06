@@ -1,0 +1,26 @@
+# Prometheus Operator scrape config for the Surveyor exporter.
+# This lives in the monitoring namespace so kube-prometheus-stack can pick it up
+# with the default release label selector.
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nats-surveyor
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app.kubernetes.io/name: nats-surveyor
+spec:
+  namespaceSelector:
+    matchNames:
+      - nats
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nats-surveyor
+      app.kubernetes.io/component: metrics
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+      honorLabels: true

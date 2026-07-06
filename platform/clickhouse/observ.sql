@@ -5,6 +5,8 @@
 -- ClickHouse is the single observability backend: logs + metrics history + app metrics,
 -- all pulled natively off the NATS bus (log.>, metric.>) or scraped from NATS monitoring.
 -- Replaces Loki (logs) and Prometheus (metrics TSDB). Never DROP the sink tables.
+-- NOTE: this ClickHouse version still uses the in-cluster NATS endpoint directly.
+-- TLS/mTLS settings for the NATS engine can be added once upstream ClickHouse lands them.
 
 CREATE DATABASE IF NOT EXISTS onemind;
 
@@ -12,7 +14,7 @@ CREATE DATABASE IF NOT EXISTS onemind;
 CREATE TABLE IF NOT EXISTS onemind.nats_log (
     message String
 ) ENGINE = NATS
-SETTINGS nats_url = 'localhost:4222',
+SETTINGS nats_url = 'nats.nats.svc.cluster.local:4222',
          nats_subjects = 'log.>',
          nats_format = 'RawBLOB',
          nats_num_consumers = 1,
@@ -49,7 +51,7 @@ SETTINGS index_granularity = 8192;
 CREATE TABLE IF NOT EXISTS onemind.nats_metric (
     message String
 ) ENGINE = NATS
-SETTINGS nats_url = 'localhost:4222',
+SETTINGS nats_url = 'nats.nats.svc.cluster.local:4222',
          nats_subjects = 'metric.>',
          nats_format = 'RawBLOB',
          nats_num_consumers = 1,

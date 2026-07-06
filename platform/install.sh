@@ -95,6 +95,13 @@ helm upgrade --install otel-collector open-telemetry/opentelemetry-collector \
 kubectl --context "$CTX" apply -f "$PLATFORM/grafana-datasources.yaml"
 
 # -----------------------------------------------------------------------------
+# 6b. NATS SURVEYOR — Prometheus exporter for the NATS control plane
+# Requires: nats-server-tls secret (CA cert from cert-manager) and $SYS creds
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/deployment.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/servicemonitor.yaml"
+
+# -----------------------------------------------------------------------------
 # 7. LEGACY AGENT (Hermes — mother)
 # Requires: hermes-env secret (AWS creds from 1Password)
 # -----------------------------------------------------------------------------
