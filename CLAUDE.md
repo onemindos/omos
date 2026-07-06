@@ -152,8 +152,8 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | clickhouse | ClickHouse |
 | monitoring | Prometheus + Grafana + Loki + Tempo |
 | cloudflare | cloudflared tunnel |
-| orp | ORP fusion engine (planned) |
-| omos | All omos-* services (planned, shared namespace) |
+| orp | ORP fusion engine |
+| omos | omos-* services (tak-projector, etc.) |
 | argocd | ArgoCD GitOps |
 | cert-manager | cert-manager |
 | ingress-nginx | ingress-nginx |
@@ -174,6 +174,7 @@ All secrets are out-of-band (never committed). Source of truth: 1Password vault 
 | wwv-env | wwv | WWV environment (auth, DB, etc.) | wwv-env |
 | ghcr | hermes/orp/omos | GHCR pull secret | ghcr-onemindos |
 | ghcr-pull-secret | wwv | GHCR pull secret | ghcr-onemindos |
+| omos-nats-creds | omos | NATS user+password for omos namespace workloads | omos-nats-secrets |
 
 ## Key Hostnames (Cloudflare Tunnel)
 

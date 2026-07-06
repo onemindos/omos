@@ -34,8 +34,7 @@ tak-cluster/certs-out/
 .DS_Store
 **/.DS_Store
 
-# TAK bridge plugin artifacts (staged for image bake, not source)
-tak-cluster/plugin/
+# TAK bridge plugin artifacts — JAR + config ARE tracked (needed for CI image build)
 
 # TAK client certs / CA keys — never commit
 tak-cluster/b2-enrollment/

@@ -1,0 +1,11 @@
+# Patch layer: add NatsBridgePlugin JAR + config on top of the existing plugins image.
+# No need to rebuild from base — we just layer the plugin artifacts in.
+#
+# loader.path=file:lib/ in takserver-pm.jar reads from /lib/ (symlink → /usr/lib/).
+# PluginSystemConfiguration.PLUGIN_CONFIG_BASE = "conf/plugins/" → reads from /conf/plugins/.
+FROM ghcr.io/onemindos/takserver-plugins:5.7-onemind
+
+RUN mkdir -p /conf/plugins
+
+COPY takserver-nats-plugin-1.0.0.jar /usr/lib/takserver-nats-plugin-1.0.0.jar
+COPY tak.server.plugins.NatsBridgePlugin.yaml /conf/plugins/tak.server.plugins.NatsBridgePlugin.yaml

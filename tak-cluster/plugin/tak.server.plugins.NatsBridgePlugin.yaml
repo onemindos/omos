@@ -1,4 +1,4 @@
-natsUrl: nats://host.docker.internal:4222
+natsUrl: nats://tak-nats-leaf.takserver.svc.cluster.local:4222
 natsConsumerSubject: tak.cot.inject
 natsProducerSubject: tak.cot.out
 groups:
