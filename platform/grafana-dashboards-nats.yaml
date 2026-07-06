@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-nats-observability
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  nats-observability.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "links": [],
+      "liveNow": false,
+      "schemaVersion": 39,
+      "tags": ["onemind", "nats", "omos-observ"],
+      "templating": { "list": [] },
+      "time": { "from": "now-6h", "to": "now" },
+      "timezone": "browser",
+      "title": "NATS Observability (ClickHouse)",
+      "uid": "omos-nats-observ",
+      "version": 1,
+      "refresh": "15s",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Connections",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, avg(value) AS connections FROM onemind.metrics WHERE name = 'nats_varz_connections' AND $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            }
+          ],
+          "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } }, "overrides": [] }
+        },
+        {
+          "id": 2,
+          "title": "Subscriptions",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, avg(value) AS subscriptions FROM onemind.metrics WHERE name = 'nats_varz_subscriptions' AND $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            }
+          ],
+          "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } }, "overrides": [] }
+        },
+        {
+          "id": 3,
+          "title": "Slow Consumers",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, max(value) AS slow_consumers FROM onemind.metrics WHERE name = 'nats_varz_slow_consumers' AND $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            }
+          ],
+          "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 }, "color": { "mode": "fixed", "fixedColor": "red" } }, "overrides": [] }
+        },
+        {
+          "id": 4,
+          "title": "JetStream — Total Messages",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, max(value) AS messages FROM onemind.metrics WHERE name = 'nats_jsz_messages' AND $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            }
+          ],
+          "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10 } }, "overrides": [] }
+        },
+        {
+          "id": 5,
+          "title": "JetStream — Bytes on Disk",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, max(value) AS bytes FROM onemind.metrics WHERE name = 'nats_jsz_bytes' AND $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "bytes", "custom": { "drawStyle": "line", "fillOpacity": 10 } }, "overrides": [] }
+        },
+        {
+          "id": 6,
+          "title": "Top Streams by Messages (latest)",
+          "type": "table",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "table",
+              "rawSql": "SELECT replaceOne(labels, 'stream=', '') AS stream, argMax(value, timestamp) AS messages FROM onemind.metrics WHERE name = 'nats_stream_messages' AND $__timeFilter(timestamp) GROUP BY labels ORDER BY messages DESC LIMIT 40"
+            }
+          ],
+          "fieldConfig": { "defaults": {}, "overrides": [] }
+        }
+      ]
+    }

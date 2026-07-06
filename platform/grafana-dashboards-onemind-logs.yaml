@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-onemind-logs
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  onemind-logs.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "links": [],
+      "liveNow": true,
+      "schemaVersion": 39,
+      "tags": ["onemind", "logs", "events", "omos-observ"],
+      "templating": {
+        "list": [
+          {
+            "name": "subject",
+            "type": "textbox",
+            "label": "Subject filter (LIKE)",
+            "current": { "text": "%", "value": "%" },
+            "query": "%"
+          }
+        ]
+      },
+      "time": { "from": "now-1h", "to": "now" },
+      "timezone": "browser",
+      "title": "OneMind Logs & Events (ClickHouse)",
+      "uid": "omos-logs-events",
+      "version": 1,
+      "refresh": "10s",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Event volume (events + logs) / 30s",
+          "type": "timeseries",
+          "gridPos": { "h": 7, "w": 24, "x": 0, "y": 0 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, count() AS events FROM onemind.events WHERE $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            },
+            {
+              "refId": "B",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "timeseries",
+              "rawSql": "SELECT toStartOfInterval(timestamp, INTERVAL 30 second) AS time, count() AS logs FROM onemind.logs WHERE $__timeFilter(timestamp) GROUP BY time ORDER BY time"
+            }
+          ],
+          "fieldConfig": { "defaults": { "custom": { "drawStyle": "bars", "fillOpacity": 40 } }, "overrides": [] }
+        },
+        {
+          "id": 2,
+          "title": "Recent logs (log.>)",
+          "type": "logs",
+          "gridPos": { "h": 11, "w": 12, "x": 0, "y": 7 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "options": { "showTime": true, "wrapLogMessage": true, "sortOrder": "Descending" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "logs",
+              "rawSql": "SELECT timestamp AS time, subject, payload AS body FROM onemind.logs WHERE subject LIKE '${subject}' AND $__timeFilter(timestamp) ORDER BY timestamp DESC LIMIT 500"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Recent events (evt.>)",
+          "type": "logs",
+          "gridPos": { "h": 11, "w": 12, "x": 12, "y": 7 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "options": { "showTime": true, "wrapLogMessage": true, "sortOrder": "Descending" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "logs",
+              "rawSql": "SELECT timestamp AS time, subject, payload AS body FROM onemind.events WHERE subject LIKE '${subject}' AND $__timeFilter(timestamp) ORDER BY timestamp DESC LIMIT 500"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Top subjects (events, last window)",
+          "type": "table",
+          "gridPos": { "h": 9, "w": 24, "x": 0, "y": 18 },
+          "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": { "type": "grafana-clickhouse-datasource", "uid": "omos-clickhouse" },
+              "editorType": "sql",
+              "queryType": "table",
+              "rawSql": "SELECT subject, count() AS events FROM onemind.events WHERE $__timeFilter(timestamp) GROUP BY subject ORDER BY events DESC LIMIT 50"
+            }
+          ]
+        }
+      ]
+    }
