@@ -29,7 +29,7 @@ data:
       natsProducerSubject: tak.cot.out      ← tap.py reads from here
       groups: [__ANON__, Red]
     """
-    import asyncio, json, logging, os, sys, time, uuid
+    import asyncio, json, logging, os, ssl, sys, time, uuid
     import xml.etree.ElementTree as ET
     from datetime import datetime, timezone, timedelta
 
@@ -199,11 +199,16 @@ data:
         LOG.info("omos-tak-projector → NATS %s → %s [group=%s min_interval=%.0fs]",
                  NATS_URL, INJECT_SUBJ, TAK_GROUP, MIN_INTERVAL)
 
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+
         opts = {
             "servers":                NATS_URL,
             "name":                   "omos-tak-projector",
             "max_reconnect_attempts": -1,
             "reconnect_time_wait":    2,
+            "tls":                    tls_ctx,
         }
         if NATS_USER:
             opts["user"]     = NATS_USER

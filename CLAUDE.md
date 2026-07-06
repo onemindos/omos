@@ -132,8 +132,8 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | ClickHouse | clickhouse | clickhouse/clickhouse-server | live |
 | Grafana/Loki/Tempo | monitoring | (helm) | live |
 | Cloudflared | cloudflare | cloudflare/cloudflared | live |
-| ORP (fusion engine) | orp | ghcr.io/shieldofsteel/orp:latest | deploying |
-| om-tak-projector | omos | ghcr.io/onemindos/om-tak-projector | PLANNED Wave 2 |
+| ORP (fusion engine) | orp | ghcr.io/onemindos/orp:latest | live |
+| omos-tak-projector | omos | python:3.12-alpine (inline script) | live |
 | om-control-plane | omos | ghcr.io/onemindos/om-control-plane | PLANNED Wave 2 |
 | wwv-bridge | omos | ghcr.io/onemindos/wwv-bridge | PLANNED Wave 2 |
 | omos-feed-world | omos | ghcr.io/onemindos/omos-feed-world | PLANNED Wave 3 |
