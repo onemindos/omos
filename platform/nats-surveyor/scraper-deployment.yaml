@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-metrics-scrape
+  namespace: nats
+  labels:
+    app: nats-metrics-scrape
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-metrics-scrape
+  template:
+    metadata:
+      labels:
+        app: nats-metrics-scrape
+    spec:
+      containers:
+        - name: scraper
+          image: registry.digitalocean.com/onemind-hub/nats-metrics-scrape:latest
+          imagePullPolicy: Always
+          env:
+            - name: NATS_MONITORING_URL
+              value: "http://nats-headless.nats.svc.cluster.local:8222"
+            - name: SURVEYOR_URL
+              value: "http://nats-surveyor.nats.svc.cluster.local:7777/metrics"
+            - name: CLICKHOUSE_HOST
+              value: "chi-onemind-onemind-0-0.clickhouse.svc.cluster.local"
+            - name: CLICKHOUSE_PORT
+              value: "8123"
+            - name: CLICKHOUSE_USER
+              value: "onemind"
+            - name: CLICKHOUSE_PASSWORD
+              value: "onemind2026"
+            - name: CLICKHOUSE_DB
+              value: "onemind"
+            - name: SCRAPE_INTERVAL
+              value: "15"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
