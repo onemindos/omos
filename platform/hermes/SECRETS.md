@@ -20,9 +20,8 @@ into the cluster ONEMIND account — exactly like the Mac leaf. Create `leaf.con
 port: 4222
 http: 8222
 server_name: hermes-legacy-leaf
-accounts { OMOS { } }
+accounts { OMOS { users: [ { user: local } ] } }
 no_auth_user: local
-authorization { users: [ { user: local, account: OMOS } ] }
 leafnodes {
   remotes: [
     {
