@@ -16,7 +16,8 @@ data:
     const WebSocket = require('ws');
     const { connect, StringCodec } = require('nats');
 
-    const ORP_WS   = process.env.ORP_WS_URL  || 'ws://localhost:9090/ws';
+    const ORP_WS   = process.env.ORP_WS_URL  || 'ws://127.0.0.1:9090/ws/updates';
+    const ORP_API_KEY = process.env.ORP_API_KEY || '';
     const NATS_URL = process.env.NATS_URL     || 'nats://localhost:4222';
     const NATS_USER = process.env.NATS_USER;
     const NATS_PASS = process.env.NATS_PASSWORD;
@@ -31,6 +32,7 @@ data:
             servers: NATS_URL,
             user: NATS_USER,
             pass: NATS_PASS,
+            tls: { rejectUnauthorized: false },
           });
           console.log(`[bridge] NATS connected: ${NATS_URL}`);
         } catch (e) {
@@ -40,7 +42,8 @@ data:
       }
 
       function connectORP() {
-        const ws = new WebSocket(ORP_WS);
+        const wsOpts = ORP_API_KEY ? { headers: { 'X-API-Key': ORP_API_KEY } } : {};
+        const ws = new WebSocket(ORP_WS, [], wsOpts);
 
         ws.on('open', () => {
           console.log(`[bridge] ORP WebSocket connected: ${ORP_WS}`);

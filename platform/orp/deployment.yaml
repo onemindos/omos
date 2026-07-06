@@ -21,12 +21,14 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr
+      securityContext:
+        fsGroup: 65532        # nonroot gid — lets the distroless user write the PVC
       containers:
         # ── ORP fusion engine ──────────────────────────────────────────────
         - name: orp
           image: ghcr.io/onemindos/orp:latest
           imagePullPolicy: Always
-          args: ["start", "--config", "/etc/orp/config.yaml"]
+          args: ["--headless", "--port", "9090"]
           ports:
             - name: http
               containerPort: 9090
@@ -35,6 +37,8 @@ spec:
               value: "info"
             - name: ORP_ENV
               value: "production"
+            - name: ORP_DEV_MODE
+              value: "false"
             - name: NATS_USER
               valueFrom:
                 secretKeyRef:
@@ -87,11 +91,18 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              npm install -g ws nats 2>/dev/null
-              node /scripts/bridge.js
+              mkdir -p /tmp/app
+              cd /tmp/app && npm install ws nats
+              cp /scripts/bridge.js /tmp/app/bridge.js
+              exec node /tmp/app/bridge.js
           env:
             - name: ORP_WS_URL
-              value: "ws://localhost:9090/ws"
+              value: "ws://127.0.0.1:9090/ws/updates"
+            - name: ORP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: orp-bridge-key
+                  key: api_key
             - name: NATS_URL
               value: "nats://nats.nats.svc.cluster.local:4222"
             - name: NATS_USER
