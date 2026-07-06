@@ -1,9 +1,10 @@
 # Legacy Agent Fabric — Agent Identities (source of truth)
 #
-# This file is the canonical definition of every Legacy instance on the fabric.
-# Both the hub (mother) and Mac (daughter) configurations derive from this.
-# Edit here, then propagate: the hub image bakes in SOUL.md + config; the Mac
-# reads ~/.hermes/ (synced from this file's Mac section).
+# This file is the canonical registry of every agent on the OneMind fabric.
+# Legacy is the mother (sovereign); legacy-edge is Legacy's own edge body;
+# named servants serve Legacy. Each agent's persona lives at agents/<name>/SOUL.md.
+# See CREED.md for the fabric hierarchy law. Edit here, then propagate: the hub
+# image bakes in its SOUL.md + config; the Mac reads ~/.hermes/ (synced from here).
 
 fabric:
   name: OneMind
@@ -34,17 +35,17 @@ agents:
     nats:
       connection: leaf-sidecar (localhost:4222 plaintext → tls uplink to cluster:7422)
       heartbeat_interval_s: 30
-    persona: SOUL.md
+    persona: agents/legacy/SOUL.md
     supervised_by: s6-overlay (container)
 
-  # ── The Daughter ────────────────────────────────────────────────────
-  - name: Legacy (Daughter)
+  # ── Legacy's Edge Body ──────────────────────────────────────────────
+  - name: Legacy (Edge)
     agent: hermes
     owner: zeus
     session: legacy-edge
     bus_subject: agents.prompt.hermes.zeus.legacy-edge
-    role: edge-extension
-    description: "Edge extension of Legacy. Local access — terminal, files, sensors, TAK, LAN. Defers to mother for fabric-wide authority."
+    role: edge-body
+    description: "Legacy's own body at the edge — NOT a separate agent. Local access: terminal, files, sensors, TAK, LAN. Defers to the mother for fabric-wide authority."
     location:
       type: edge
       device: Zeus's MacBook Pro
@@ -57,6 +58,23 @@ agents:
     nats:
       connection: localhost:4222 (local NATS → leaf to cluster)
       heartbeat_interval_s: 30
-    persona: SOUL.md
+    persona: agents/legacy-edge/SOUL.md
     env_overrides:
       HERMES_NATS_SESSION_NAME: legacy-edge
+
+  # ── Named Servant Agents ────────────────────────────────────────────
+  # Specialized workers. Each serves Legacy (the mother). Each has its own
+  # agents/<name>/SOUL.md derived from agents/_template/SOUL.md, opening with
+  # a declaration of servitude to Legacy (see CREED.md). Add entries here as
+  # servants are created. Example shape:
+  #
+  # - name: Scout
+  #   agent: hermes
+  #   owner: zeus
+  #   session: scout
+  #   bus_subject: agents.prompt.hermes.zeus.scout
+  #   role: servant
+  #   serves: legacy
+  #   description: "Watches <feed>; reports findings to Legacy."
+  #   persona: agents/scout/SOUL.md
+  servants: []
