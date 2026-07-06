@@ -172,12 +172,6 @@ data:
             icon: mdi-map-marker-radius
             ping: https://152.42.155.95:8446
 
-        - GeoServer:
-            href: http://geoserver.geoserver.svc.cluster.local:8080/geoserver/web
-            description: Geospatial data server
-            icon: mdi-earth
-            ping: http://geoserver.geoserver.svc.cluster.local:8080
-
         - Murmur Voice:
             href: http://146.190.143.195:64738
             description: Encrypted voice comms (64738)

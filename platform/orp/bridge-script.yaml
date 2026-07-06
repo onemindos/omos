@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orp-bridge-script
+  namespace: orp
+data:
+  bridge.js: |
+    // orp-nats-bridge — subscribes to ORP WebSocket entity stream and
+    // republishes fused entity state onto the NATS bus.
+    //
+    // ORP /ws emits JSON messages with type "entity_update":
+    //   { type: "entity_update", entity: { entity_id, entity_type, lat, lon, properties, ... } }
+    //
+    // Published subject: ent.{entity_type}.{entity_id}.state
+
+    const WebSocket = require('ws');
+    const { connect, StringCodec } = require('nats');
+
+    const ORP_WS   = process.env.ORP_WS_URL  || 'ws://localhost:9090/ws';
+    const NATS_URL = process.env.NATS_URL     || 'nats://localhost:4222';
+    const NATS_USER = process.env.NATS_USER;
+    const NATS_PASS = process.env.NATS_PASSWORD;
+
+    const sc = StringCodec();
+
+    async function main() {
+      let nc;
+      while (!nc) {
+        try {
+          nc = await connect({
+            servers: NATS_URL,
+            user: NATS_USER,
+            pass: NATS_PASS,
+          });
+          console.log(`[bridge] NATS connected: ${NATS_URL}`);
+        } catch (e) {
+          console.error(`[bridge] NATS connect failed: ${e.message} — retrying in 5s`);
+          await new Promise(r => setTimeout(r, 5000));
+        }
+      }
+
+      function connectORP() {
+        const ws = new WebSocket(ORP_WS);
+
+        ws.on('open', () => {
+          console.log(`[bridge] ORP WebSocket connected: ${ORP_WS}`);
+        });
+
+        ws.on('message', (raw) => {
+          let msg;
+          try { msg = JSON.parse(raw.toString()); } catch { return; }
+
+          const entity = msg.entity || msg.data || msg;
+          if (!entity || !entity.entity_type || !entity.entity_id) return;
+
+          // Sanitise subject components — replace spaces/slashes with underscores
+          const eType = String(entity.entity_type).replace(/[^a-zA-Z0-9_-]/g, '_');
+          const eId   = String(entity.entity_id).replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+          const subject = `ent.${eType}.${eId}.state`;
+
+          const payload = JSON.stringify({
+            entity_id:   entity.entity_id,
+            entity_type: entity.entity_type,
+            lat:         entity.latitude  ?? entity.lat ?? null,
+            lon:         entity.longitude ?? entity.lon ?? null,
+            properties:  entity.properties ?? {},
+            confidence:  entity.confidence ?? entity.trust_score ?? 1.0,
+            ts:          entity.updated_at ?? entity.timestamp ?? new Date().toISOString(),
+            source:      'orp',
+          });
+
+          try {
+            nc.publish(subject, sc.encode(payload));
+          } catch (e) {
+            console.error(`[bridge] publish error: ${e.message}`);
+          }
+        });
+
+        ws.on('close', () => {
+          console.log('[bridge] ORP WebSocket closed — reconnecting in 5s');
+          setTimeout(connectORP, 5000);
+        });
+
+        ws.on('error', (e) => {
+          console.error(`[bridge] ORP WebSocket error: ${e.message}`);
+        });
+      }
+
+      connectORP();
+    }
+
+    main().catch(e => {
+      console.error(`[bridge] fatal: ${e.message}`);
+      process.exit(1);
+    });

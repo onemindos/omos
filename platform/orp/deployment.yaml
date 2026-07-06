@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orp
+  namespace: orp
+  labels:
+    app.kubernetes.io/name: orp
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate          # RWO PVC — one pod at a time
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: orp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: orp
+        app.kubernetes.io/part-of: omos-platform
+    spec:
+      containers:
+        # ── ORP fusion engine ──────────────────────────────────────────────
+        - name: orp
+          image: ghcr.io/shieldofsteel/orp:latest
+          imagePullPolicy: Always
+          args: ["start", "--config", "/etc/orp/config.yaml"]
+          ports:
+            - name: http
+              containerPort: 9090
+          env:
+            - name: RUST_LOG
+              value: "info"
+            - name: ORP_ENV
+              value: "production"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: orp-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: orp-nats-creds
+                  key: password
+          volumeMounts:
+            - name: config
+              mountPath: /etc/orp
+              readOnly: true
+            - name: data
+              mountPath: /var/lib/orp
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+
+        # ── orp-nats-bridge sidecar ────────────────────────────────────────
+        # Subscribes to ORP's WebSocket /ws entity stream and publishes
+        # fused entity state back onto the NATS bus as ent.{type}.{id}.state
+        - name: orp-nats-bridge
+          image: node:20-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              npm install -g ws nats 2>/dev/null
+              node /scripts/bridge.js
+          env:
+            - name: ORP_WS_URL
+              value: "ws://localhost:9090/ws"
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: orp-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: orp-nats-creds
+                  key: password
+          volumeMounts:
+            - name: bridge-script
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+
+      volumes:
+        - name: config
+          configMap:
+            name: orp-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: orp-data
+        - name: bridge-script
+          configMap:
+            name: orp-bridge-script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orp
+  namespace: orp
+  labels:
+    app.kubernetes.io/name: orp
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  selector:
+    app.kubernetes.io/name: orp
+  ports:
+    - name: http
+      port: 9090
+      targetPort: 9090

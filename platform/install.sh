@@ -102,7 +102,30 @@ kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/servicemonitor.yaml"
 
 # -----------------------------------------------------------------------------
-# 7. LEGACY AGENT (Hermes — mother)
+# 7. ORP — Open Reality Protocol fusion engine
+# Requires: orp-nats-creds secret (out-of-band via 1Password)
+#   kubectl create secret generic orp-nats-creds -n orp \
+#     --from-literal=user=onemind \
+#     --from-literal=password='<ONEMIND_PW from 1Password>'
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/orp/namespace.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/orp/pvc.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/orp/configmap.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/orp/bridge-script.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/orp/deployment.yaml"
+
+# -----------------------------------------------------------------------------
+# 8. OMOS SERVICES — shared omos namespace (tak-projector, feed-world, etc.)
+# Requires: omos-nats-creds secret (out-of-band)
+#   kubectl create secret generic omos-nats-creds -n omos \
+#     --from-literal=user=onemind \
+#     --from-literal=password='<ONEMIND_PW from 1Password>'
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
+
+# -----------------------------------------------------------------------------
+# 9. LEGACY AGENT (Hermes — mother)
 # Requires: hermes-env secret (AWS creds from 1Password)
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/hermes/namespace.yaml"
@@ -112,5 +135,4 @@ kubectl --context "$CTX" apply -f "$PLATFORM/hermes/deployment.yaml"
 echo ""
 echo "==> Platform install complete."
 echo "    TAK cluster: see tak-cluster/DEPLOY-RUNBOOK.md"
-echo "    GeoServer:   kubectl apply -f geoserver/deployment.yaml"
 echo "    Streams:     nats-migration/provision.sh"

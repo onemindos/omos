@@ -1,0 +1,328 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-tak-projector-script
+  namespace: omos
+data:
+  projector.py: |
+    #!/usr/bin/env python3
+    """
+    omos-tak-projector — subscribes ent.*.*.state on NATS bus, injects
+    fused entities into TAK Server as CoT XML via tak.cot.inject.
+
+    CoT construction follows the pytak library style used in this repo
+    (tak-cluster/.tapvenv/lib/python3.14/site-packages/pytak/functions.py):
+    - xml.etree.ElementTree for safe XML building (no injection via callsign)
+    - XML declaration prefix ATAK expects
+    - _flow-tags_ provenance in detail block
+    - W3C_XML_DATETIME format: %Y-%m-%dT%H:%M:%S.%fZ
+
+    Route (verified live):
+      main NATS tak.cot.inject
+        → tak-nats-leaf (bridges all subjects bidirectionally, no filters)
+        → TAK internal NATS (takserver-nats namespace)
+        → PluginClusterMessenger → TAK messaging pod
+        → CloudTAK / iTAK / ATAK / WebTAK / VRTAK (__ANON__ group)
+
+    Plugin config (tak-cluster/plugin/tak.server.plugins.NatsBridgePlugin.yaml):
+      natsConsumerSubject: tak.cot.inject   ← we publish here
+      natsProducerSubject: tak.cot.out      ← tap.py reads from here
+      groups: [__ANON__, Red]
+    """
+    import asyncio, json, logging, os, sys, time, uuid
+    import xml.etree.ElementTree as ET
+    from datetime import datetime, timezone, timedelta
+
+    import nats
+
+    LOG = logging.getLogger("omos-tak-projector")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        stream=sys.stdout,
+    )
+
+    NATS_URL      = os.getenv("NATS_URL",           "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER",           "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD",       "")
+    INJECT_SUBJ   = os.getenv("TAK_INJECT_SUBJECT",  "tak.cot.inject")
+    TAK_GROUP     = os.getenv("TAK_GROUP",            "__ANON__")
+    MIN_INTERVAL  = float(os.getenv("MIN_INTERVAL_SEC", "5"))
+
+    # pytak constant: <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+    XML_DECLARATION = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+    # pytak W3C_XML_DATETIME — TAK expects full microseconds with Z suffix
+    W3C_DT = "%Y-%m-%dT%H:%M:%SZ"
+    # pytak DEFAULT_COT_VAL for unknown ce/le/hae
+    DEFAULT_COT_VAL = "9999999.0"
+
+    # ---------------------------------------------------------------------------
+    # CoT type map  (MIL-STD-2525C / TAK)
+    # (cot_type, stale_seconds)
+    # ---------------------------------------------------------------------------
+    COT_TYPE_MAP = {
+        # Aircraft — live tracks, stale fast
+        "aircraft":              ("a-f-A-M-F-Q", 60),
+        "aircraft_multirotor":   ("a-f-A-M-F-Q", 60),
+        "aircraft_fixed_wing":   ("a-f-A-M-F-F", 60),
+        "uav":                   ("a-f-A-M-F-Q", 60),
+        "drone":                 ("a-f-A-M-F-Q", 60),
+        "helicopter":            ("a-f-A-M-F-H", 60),
+        # Maritime
+        "ship":                  ("a-f-S-X-W-U", 120),
+        "vessel":                ("a-f-S-X-W-U", 120),
+        "surface_vessel_usv":    ("a-f-S-X-W-U", 120),
+        "maritime":              ("a-f-S-X-W-U", 120),
+        # Ground
+        "ground_vehicle":        ("a-f-G-U-C",   90),
+        "ground_vehicle_wheeled":("a-f-G-U-C-V", 90),
+        "vehicle":               ("a-f-G-U-C-V", 90),
+        "robot":                 ("a-f-G-U-C-R", 90),
+        # Human
+        "human":                 ("a-f-G-U-C",   120),
+        "operator":              ("a-f-G-U-C",   120),
+        "operator_station":      ("a-f-G-E-V-C", 300),
+        # Fixed sensors — long stale (they don't move)
+        "sensor":                ("a-f-G-I-S",   600),
+        "sensor_platform":       ("a-f-G-I-S",   600),
+        "camera":                ("a-f-G-I-S-C", 600),
+        # Events / detections — hours
+        "fire":                  ("b-r-.-H-.",   3600),
+        "explosion":             ("b-r-.-H-.",   1800),
+        "conflict":              ("b-r-.-C-.",   3600),
+        "earthquake":            ("b-r-.-E-.",   7200),
+        "weather":               ("b-m-p",       1800),
+        "hurricane":             ("b-m-p-H",     3600),
+        "flood":                 ("b-r-.-F-.",   3600),
+        # Intel / threats
+        "threat":                ("a-h-G",        300),
+        "hostile":               ("a-h-G",        300),
+        "unknown_track":         ("a-u-A",        120),
+        # Space
+        "satellite":             ("a-f-A-C-F",   600),
+        "space_object":          ("a-f-A-C",     600),
+        "default":               ("a-f-G-U-C",   300),
+    }
+
+    def cot_meta(entity_type: str):
+        t = (entity_type or "").lower().replace("-", "_")
+        return COT_TYPE_MAP.get(t, COT_TYPE_MAP["default"])
+
+    def cot_time(stale_secs: int = 0) -> str:
+        """W3C XML Schema dateTime — matches pytak.cot_time()."""
+        t = datetime.now(timezone.utc) + timedelta(seconds=stale_secs)
+        return t.strftime(W3C_DT)
+
+    def safe_float(val, default=None) -> float | None:
+        try:
+            return float(val) if val is not None else default
+        except (TypeError, ValueError):
+            return default
+
+    def entity_to_cot(entity: dict) -> tuple:
+        """
+        Build (uid, cot_bytes) using ET.Element — same pattern as pytak.
+        Returns (None, None) if entity has no valid position.
+        """
+        lat = safe_float(entity.get("lat") or entity.get("latitude"))
+        lon = safe_float(entity.get("lon") or entity.get("longitude"))
+        if lat is None or lon is None:
+            return None, None
+        if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+            return None, None
+
+        entity_id   = entity.get("entity_id") or str(uuid.uuid4())
+        entity_type = entity.get("entity_type", "default")
+        props       = entity.get("properties") or {}
+        ctype, stale_secs = cot_meta(entity_type)
+
+        callsign = str(
+            props.get("name") or props.get("callsign") or props.get("flight") or
+            props.get("mmsi") or props.get("icao_hex") or props.get("tail") or
+            entity_id
+        )[:64]
+
+        hae    = safe_float(props.get("altitude") or props.get("hae") or props.get("alt"))
+        speed  = safe_float(props.get("speed") or props.get("sog") or props.get("velocity"), 0.0)
+        course = safe_float(props.get("course") or props.get("heading") or props.get("cog") or props.get("track"), 0.0)
+        ce     = safe_float(props.get("ce"))
+        le_val = safe_float(props.get("le"))
+        conf   = safe_float(entity.get("confidence"), 1.0)
+
+        uid = f"OM.{entity_type}.{entity_id}"
+        now = cot_time()
+
+        # --- Build with ET.Element (safe XML — callsign can contain & < >) ---
+        event = ET.Element("event")
+        event.set("version", "2.0")
+        event.set("type",    ctype)
+        event.set("uid",     uid)
+        event.set("how",     "m-g")   # machine / GPS track
+        event.set("time",    now)
+        event.set("start",   now)
+        event.set("stale",   cot_time(stale_secs))
+        event.set("access",  "Unclassified")   # MIL-STD-6090 minimum
+
+        point = ET.SubElement(event, "point")
+        point.set("lat", f"{lat:.6f}")
+        point.set("lon", f"{lon:.6f}")
+        point.set("hae",  str(hae) if hae is not None else DEFAULT_COT_VAL)
+        point.set("ce",   str(ce)  if ce  is not None else DEFAULT_COT_VAL)
+        point.set("le",   str(le_val) if le_val is not None else DEFAULT_COT_VAL)
+
+        detail = ET.SubElement(event, "detail")
+
+        # _flow-tags_ — provenance marker used by pytak, ATAK, CloudTAK
+        flow = ET.SubElement(detail, "_flow-tags_")
+        flow.set("omos-tak-projector", now)
+
+        contact = ET.SubElement(detail, "contact")
+        contact.set("callsign", callsign)
+
+        track = ET.SubElement(detail, "track")
+        track.set("speed",  f"{speed:.2f}")
+        track.set("course", f"{course:.1f}")
+
+        remarks = ET.SubElement(detail, "remarks")
+        remarks.text = f"src=orp t={entity_type} conf={conf:.2f}"
+
+        # __group tells TAK which group to deliver this to.
+        # NatsBridgePlugin.yaml has groups [__ANON__, Red] so all EUDs see it.
+        group = ET.SubElement(detail, "__group")
+        group.set("name", TAK_GROUP)
+        group.set("role", "Team Member")
+
+        cot_bytes = XML_DECLARATION + ET.tostring(event, encoding="unicode").encode()
+        return uid, cot_bytes
+
+    async def main():
+        LOG.info("omos-tak-projector → NATS %s → %s [group=%s min_interval=%.0fs]",
+                 NATS_URL, INJECT_SUBJ, TAK_GROUP, MIN_INTERVAL)
+
+        opts = {
+            "servers":                NATS_URL,
+            "name":                   "omos-tak-projector",
+            "max_reconnect_attempts": -1,
+            "reconnect_time_wait":    2,
+        }
+        if NATS_USER:
+            opts["user"]     = NATS_USER
+            opts["password"] = NATS_PASSWORD
+
+        nc = await nats.connect(**opts)
+        LOG.info("NATS connected")
+
+        published = 0
+        skipped   = 0
+        last_pub: dict = {}  # uid → monotonic time of last publish
+
+        async def handler(msg):
+            nonlocal published, skipped
+            try:
+                entity = json.loads(msg.data.decode())
+            except Exception:
+                skipped += 1
+                return
+
+            uid, cot_bytes = entity_to_cot(entity)
+            if cot_bytes is None:
+                skipped += 1
+                return
+
+            now_ts = time.monotonic()
+            if now_ts - last_pub.get(uid, 0) < MIN_INTERVAL:
+                return
+            last_pub[uid] = now_ts
+
+            # Evict stale uid entries to bound memory
+            if published % 10000 == 0 and published > 0:
+                cutoff = now_ts - MIN_INTERVAL * 10
+                for k in [k for k, v in last_pub.items() if v < cutoff]:
+                    del last_pub[k]
+
+            await nc.publish(INJECT_SUBJ, cot_bytes)
+            published += 1
+            if published <= 10 or published % 500 == 0:
+                LOG.info("CoT #%d %s/%s → %s",
+                         published, entity.get("entity_type", "?"),
+                         entity.get("entity_id", "?"), INJECT_SUBJ)
+
+        sub = await nc.subscribe("ent.*.*.state", cb=handler)
+        LOG.info("subscribed to ent.*.*.state")
+
+        try:
+            while True:
+                await asyncio.sleep(60)
+                LOG.info("heartbeat published=%d skipped=%d tracked_uids=%d",
+                         published, skipped, len(last_pub))
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await sub.unsubscribe()
+            await nc.drain()
+
+    if __name__ == "__main__":
+        try:
+            asyncio.run(main())
+        except KeyboardInterrupt:
+            pass
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omos-tak-projector
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: omos-tak-projector
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: omos-tak-projector
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: omos-tak-projector
+        app.kubernetes.io/part-of: omos-platform
+    spec:
+      containers:
+        - name: projector
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install --no-cache-dir --quiet nats-py && exec python /app/projector.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: TAK_INJECT_SUBJECT
+              value: "tak.cot.inject"
+            - name: TAK_GROUP
+              value: "__ANON__"
+            - name: MIN_INTERVAL_SEC
+              value: "5"
+          volumeMounts:
+            - name: script
+              mountPath: /app
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+      volumes:
+        - name: script
+          configMap:
+            name: omos-tak-projector-script

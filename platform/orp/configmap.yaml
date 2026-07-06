@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orp-config
+  namespace: orp
+data:
+  config.yaml: |
+    server:
+      host: "0.0.0.0"
+      port: 9090
+      log_level: "info"
+
+    storage:
+      duckdb:
+        path: "/var/lib/orp/data.duckdb"
+        memory_limit_gb: 4
+        max_connections: 10
+      rocksdb:
+        path: "/var/lib/orp/state.db"
+        cache_size_mb: 256
+      sqlite:
+        path: "/var/lib/orp/config.sqlite"
+
+    retention:
+      events_ttl_days: 90
+      snapshots_ttl_days: 30
+      audit_log_ttl_days: 0
+
+    api:
+      cors_enabled: true
+      cors_allowed_origins:
+        - "*"
+      rate_limit_per_minute: 2000
+
+    logging:
+      level: "info"
+      format: "json"
+      output: "stdout"
+      audit_log_path: "/var/lib/orp/audit.log"
+
+    entity_resolution:
+      enabled: true
+      phase: "structural"
+      structural:
+        fields: ["mmsi", "icao_hex", "entity_id", "id"]
+
+    connectors:
+      - name: "nats-ingest"
+        type: "nats"
+        enabled: true
+        url: "nats://nats.nats.svc.cluster.local:4222"
+        entity_type: "mixed"
+        trust_score: 0.9
+        mapping:
+          subjects:
+            - "tel.>"
+            - "det.>"
+            - "intel.>"
+            - "evt.>"
