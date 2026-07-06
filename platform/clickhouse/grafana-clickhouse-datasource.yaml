@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-clickhouse-datasource
+  namespace: monitoring
+  labels:
+    grafana_datasource: "1"
+data:
+  clickhouse-datasource.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: ClickHouse
+        type: grafana-clickhouse-datasource
+        access: proxy
+        url: http://chi-onemind-onemind-0-0.clickhouse.svc.cluster.local:8123
+        jsonData:
+          defaultDatabase: onemind
+          username: onemind
+        secureJsonData:
+          password: onemind2026
