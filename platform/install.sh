@@ -160,6 +160,37 @@ kubectl --context "$CTX" apply -f "$PLATFORM/legacy/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/legacy/tak-agent.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/hermes/onemind-ai-bridge.yaml"
 
+# -----------------------------------------------------------------------------
+# 10. CLOUDTAK — API + Events + Media + Tiles + MinIO + PostGIS
+# Requires: cloudtak-secrets (signing secret, MinIO keys, Postgres DSN)
+#   kubectl create secret generic cloudtak-secrets -n cloudtak \
+#     --from-literal=SIGNING_SECRET='...' \
+#     --from-literal=AWS_S3_AccessKeyId='...' \
+#     --from-literal=AWS_S3_SecretAccessKey='...' \
+#     --from-literal=POSTGRES='postgresql://...'
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" create namespace cloudtak --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/api.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/events.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/media.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/tiles.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/minio.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/postgis.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
+
+# -----------------------------------------------------------------------------
+# 11. Synadia Bridge (Legacy AI full-screen chat UI at legacy-ai.onemindos.dev)
+# Requires: omos-nats-creds in synadia-bridge namespace + ghcr-onemindos pull secret
+#   kubectl create secret generic omos-nats-creds -n synadia-bridge \
+#     --from-literal=user='...' --from-literal=password='...'
+#   kubectl create secret docker-registry ghcr-onemindos -n synadia-bridge \
+#     --docker-server=ghcr.io --docker-username=zeus --docker-password='<PAT>'
+# After deploy: CloudTAK Admin → Config → External Applications → legacy-ai.onemindos.dev
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/synadia-bridge/deployment.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/synadia-bridge/cloudflare-route.yaml"
+
 echo ""
 echo "==> Platform install complete."
 echo "    TAK cluster:  see tak-cluster/DEPLOY-RUNBOOK.md"

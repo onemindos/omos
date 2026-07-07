@@ -1,0 +1,49 @@
+name: Build synadia-bridge → GHCR
+
+# Builds ghcr.io/onemindos/synadia-bridge:latest from the Dockerfile in
+# platform/synadia-bridge/ — a Bun server that wraps the Synadia agent-web-ui
+# and connects it to the in-cluster NATS server.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-synadia-bridge.yml"
+      - "platform/synadia-bridge/**"
+  workflow_dispatch:
+
+jobs:
+  build-push:
+    name: Build ghcr.io/onemindos/synadia-bridge:latest
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout omos-infra
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: zeus
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build and push synadia-bridge image
+        uses: docker/build-push-action@v6
+        with:
+          context: platform/synadia-bridge
+          file: platform/synadia-bridge/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/onemindos/synadia-bridge:latest
+            ghcr.io/onemindos/synadia-bridge:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
