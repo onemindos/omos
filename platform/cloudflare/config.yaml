@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: cloudflare
+data:
+  config.yaml: |
+    tunnel: 66bbea70-5300-4e4e-96fa-e5bc4d767b61
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    metrics: 0.0.0.0:2000
+    no-autoupdate: true
+    ingress:
+      - hostname: grafana.onemindos.dev
+        service: http://monitoring-grafana.monitoring.svc.cluster.local:80
+      - hostname: argocd.onemindos.dev
+        service: https://argocd-server.argocd.svc.cluster.local:443
+        originRequest:
+          noTLSVerify: true
+      - hostname: hermes.onemindos.dev
+        service: http://hermes-webui.hermes.svc.cluster.local:8787
+      - hostname: homepage.onemindos.dev
+        service: http://homepage.homepage.svc.cluster.local:3000
+      - hostname: wwv.onemindos.dev
+        service: http://wwv.wwv.svc.cluster.local:3000
+      - hostname: cloudtak.onemindos.dev
+        service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+      - hostname: tiles.cloudtak.onemindos.dev
+        service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
+      - hostname: legacy-ai.onemindos.dev
+        service: http://synadia-bridge.synadia-bridge.svc.cluster.local:3300
+      - service: http_status:404

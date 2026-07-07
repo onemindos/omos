@@ -1,6 +1,6 @@
 # In-cluster Cloudflare Tunnel connector. Dials OUT to Cloudflare — no public
-# inbound. Routes grafana/argocd.onemindos.dev to internal ClusterIP services.
-# Tunnel config + DNS are managed remotely (Cloudflare API), so no config.yaml here.
+# inbound. Routes are declared in platform/cloudflare/config.yaml (ConfigMap).
+# To add a route: edit config.yaml, kubectl apply it, then rollout restart.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,13 +18,18 @@ spec:
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:latest
-          args: ["tunnel", "--no-autoupdate", "--metrics", "0.0.0.0:2000", "run"]
-          env:
-            - name: TUNNEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: tunnel-credentials
-                  key: token
+          args:
+            - tunnel
+            - --config
+            - /etc/cloudflared/config/config.yaml
+            - run
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared/config
+              readOnly: true
+            - name: creds
+              mountPath: /etc/cloudflared/creds
+              readOnly: true
           livenessProbe:
             httpGet: { path: /ready, port: 2000 }
             initialDelaySeconds: 10
@@ -37,3 +42,10 @@ spec:
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { memory: 128Mi }
+      volumes:
+        - name: config
+          configMap:
+            name: cloudflared-config
+        - name: creds
+          secret:
+            secretName: tunnel-creds-json

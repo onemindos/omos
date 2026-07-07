@@ -41,9 +41,19 @@ kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuers.yaml"
 
 # -----------------------------------------------------------------------------
 # 3. CLOUDFLARE TUNNEL (zero public inbound)
-# Requires: tunnel-credentials secret (inject from 1Password)
+# Routes are declared in platform/cloudflare/config.yaml — edit + apply to add new routes.
+# Requires two secrets (inject from 1Password — both derived from the tunnel token):
+#   tunnel-credentials   (original TUNNEL_TOKEN — kept for reference)
+#   tunnel-creds-json    (credentials.json format — what cloudflared reads from local config)
+#     TOKEN=$(op read "op://00-24 SO/cloudflare-tunnel-token/credential")
+#     python3 -c "
+#       import sys,json,base64; t='$TOKEN'; p=t+'='*(4-len(t)%4)
+#       d=json.loads(base64.urlsafe_b64decode(p))
+#       print(json.dumps({'AccountTag':d['a'],'TunnelID':d['t'],'TunnelSecret':d['s']}))
+#     " | kubectl create secret generic tunnel-creds-json -n cloudflare --from-file=credentials.json=/dev/stdin
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" create namespace cloudflare --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
+kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/config.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/cloudflared.yaml"
 
 # -----------------------------------------------------------------------------
