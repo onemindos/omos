@@ -1,0 +1,18 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: mission
+  namespace: nats
+  annotations:
+    description: "Mission lifecycle + TACMAP events \u2014 status, waypoint reached, abort, geofence, map annotations"
+spec:
+  name: MISSION
+  subjects:
+    - "evt.mission.>"
+    - "evt.map.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 2160h
+  duplicateWindow: 2m

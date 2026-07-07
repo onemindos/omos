@@ -1,0 +1,23 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: tel
+  namespace: nats
+  annotations:
+    description: "Telemetry \u2014 fleet assets: drones, robots, edge nodes, IoT, industrial, satellites"
+spec:
+  name: TEL
+  subjects:
+    - "tel.fleet.>"
+    - "tel.drone.>"
+    - "tel.robot.>"
+    - "tel.edge.>"
+    - "tel.iot.>"
+    - "tel.industrial.>"
+    - "tel.sat.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 168h
+  duplicateWindow: 2m

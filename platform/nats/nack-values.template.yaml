@@ -1,0 +1,30 @@
+# NACK JetStream Controller — SANITIZED TEMPLATE (committed for reference).
+# Real credentials live in nack-values.secret.yaml (gitignored, same pattern as values.secret.yaml).
+#
+# Generate nack-values.secret.yaml:
+#   ONEMIND_PW=$(grep 'password:.*onemind' platform/nats/values.secret.yaml | awk '{print $2}')
+#   # or: ONEMIND_PW=$(op read "op://00-24 SO/nats-onemind/password")
+#   cat > platform/nats/nack-values.secret.yaml <<EOF
+#   jetstream:
+#     nats:
+#       url: "nats://onemind:${ONEMIND_PW}@nats.nats.svc.cluster.local:4222"
+#   EOF
+
+jetstream:
+  enabled: true
+
+  nats:
+    url: "nats://onemind:__ONEMIND_PW__@nats.nats.svc.cluster.local:4222"
+
+  # control-loop mode is required for KeyValue CRD reconciliation.
+  controlLoop: true
+
+  tls:
+    enabled: true
+    # nats-server-tls has ca.crt, tls.crt, tls.key — controller verifies server cert.
+    secretName: nats-server-tls
+    settings:
+      client_cert: "/etc/nats/certs/tls.crt"
+      client_key: "/etc/nats/certs/tls.key"
+      client_ca: "/etc/nats/certs/ca.crt"
+      timeout: 3

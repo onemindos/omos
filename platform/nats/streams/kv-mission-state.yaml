@@ -1,0 +1,10 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-mission-state
+  namespace: nats
+spec:
+  bucket: mission-state
+  storage: file
+  replicas: 3
+  history: 5

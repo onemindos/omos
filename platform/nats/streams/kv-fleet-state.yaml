@@ -1,0 +1,11 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-fleet-state
+  namespace: nats
+spec:
+  bucket: fleet-state
+  storage: file
+  replicas: 3
+  history: 3
+  ttl: 30s

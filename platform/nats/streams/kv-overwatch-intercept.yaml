@@ -1,0 +1,12 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-overwatch-intercept
+  namespace: nats
+  annotations:
+    description: "om-overwatch interceptor engagement status"
+spec:
+  bucket: OVERWATCH_INTERCEPT
+  storage: file
+  replicas: 3
+  history: 1

@@ -1,0 +1,20 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: agents
+  namespace: nats
+  annotations:
+    description: "Agent fabric \u2014 prompts, heartbeats, status, tool calls"
+spec:
+  name: AGENTS
+  subjects:
+    - "agents.hb.>"
+    - "agents.status.>"
+    - "agents.discover"
+    - "agents.heartbeat"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 168h
+  duplicateWindow: 2m

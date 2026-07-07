@@ -1,0 +1,26 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: evt
+  namespace: nats
+  annotations:
+    description: "Homestead semantic events \u2014 tasks, HA, cloud, bio alerts, robot/drone/sat events"
+spec:
+  name: EVT
+  subjects:
+    - "evt.so.>"
+    - "evt.hp.>"
+    - "evt.le.>"
+    - "evt.ge.>"
+    - "evt.task.>"
+    - "evt.cloud.>"
+    - "evt.bio.>"
+    - "evt.robot.>"
+    - "evt.drone.>"
+    - "evt.sat.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 2160h
+  duplicateWindow: 2m

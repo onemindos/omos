@@ -1,0 +1,18 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: world
+  namespace: nats
+  annotations:
+    description: "ORP world intel (raw) \u2014 AIS, ADS-B, ACLED, wildfires, seismic (24h / 2GB cap)"
+spec:
+  name: WORLD
+  subjects:
+    - "evt.world.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 24h
+  maxBytes: 2000000000
+  duplicateWindow: 2m
