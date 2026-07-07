@@ -1,0 +1,10 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-geofences
+  namespace: nats
+spec:
+  bucket: geofences
+  storage: file
+  replicas: 3
+  history: 10

@@ -1,0 +1,12 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-overwatch-video
+  namespace: nats
+  annotations:
+    description: "om-overwatch per-entity video stream availability"
+spec:
+  bucket: OVERWATCH_VIDEO
+  storage: file
+  replicas: 3
+  history: 1

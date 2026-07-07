@@ -69,6 +69,26 @@ helm upgrade --install nats nats/nats \
 kubectl --context "$CTX" apply -f "$PLATFORM/nats/omos-nats-tailnet-service.yaml"
 
 # -----------------------------------------------------------------------------
+# 4b. NACK — JetStream CRD controller (Stream + KeyValue declarative mgmt)
+# Requires: nack-values.secret.yaml (gitignored) — see nack-values.template.yaml
+# Generate:
+#   ONEMIND_PW=$(grep password "$PLATFORM/nats/values.secret.yaml" | awk '{print $2}' | head -1)
+#   # or: ONEMIND_PW=$(op read "op://00-24 SO/nats-onemind/password")
+#   cat > "$PLATFORM/nats/nack-values.secret.yaml" <<EOF
+#   jetstream:
+#     nats:
+#       url: "nats://onemind:${ONEMIND_PW}@nats.nats.svc.cluster.local:4222"
+#   EOF
+# -----------------------------------------------------------------------------
+helm upgrade --install nack nats/nack \
+  --kube-context "$CTX" -n nats \
+  -f "$PLATFORM/nats/nack-values.yaml" \
+  -f "$PLATFORM/nats/nack-values.secret.yaml"  # inject ONEMIND_PW (see template)
+
+# Apply all Stream + KeyValue CRD manifests — controller reconciles them to NATS
+kubectl --context "$CTX" apply -f "$PLATFORM/nats/streams/"
+
+# -----------------------------------------------------------------------------
 # 5. TAILSCALE OPERATOR (kubectl-over-tailnet + service exposure)
 # Requires: tailscale-operator.yaml with real clientSecret from 1Password
 # op read "op://00-24 SO/tailscale-oauth-operator/credential"
@@ -204,7 +224,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/synadia-bridge/cloudflare-route.yam
 echo ""
 echo "==> Platform install complete."
 echo "    TAK cluster:  see tak-cluster/DEPLOY-RUNBOOK.md"
-echo "    Streams:      nats-migration/provision.sh"
+echo "    Streams:      managed as CRDs in platform/nats/streams/ (nack controller)"
 echo "    tak-agent:    needs cloudtak-agent-token secret (see step 9 above)"
 echo "    feeds:        needs omos-feed-secrets (see step 8b above)"
 echo "    AISSTREAM:    sign up free at https://aisstream.io to get API key"

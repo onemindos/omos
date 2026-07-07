@@ -1,0 +1,11 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-zeus-context
+  namespace: nats
+spec:
+  bucket: zeus-context
+  storage: file
+  replicas: 3
+  history: 5
+  ttl: 1h

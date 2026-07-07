@@ -1,0 +1,18 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: zeus
+  namespace: nats
+  annotations:
+    description: "Operator context log"
+spec:
+  name: ZEUS
+  subjects:
+    - "zeus.>"
+    - "op.zeus.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 8760h
+  duplicateWindow: 2m

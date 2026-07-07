@@ -1,0 +1,11 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-om-meta-dedup
+  namespace: nats
+spec:
+  bucket: om-meta-dedup
+  storage: file
+  replicas: 3
+  history: 1
+  ttl: 30s

@@ -1,0 +1,13 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-om-ui-projections
+  namespace: nats
+  annotations:
+    description: "Retained latest ui.* projections from om-control-plane"
+spec:
+  bucket: om_ui_projections
+  storage: file
+  replicas: 3
+  history: 1
+  maxBytes: 1048576

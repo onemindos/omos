@@ -1,4 +1,20 @@
 #!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# DEPRECATED — kept as fallback/reference only.
+#
+# Streams and KV buckets are now managed declaratively as Kubernetes CRDs
+# in platform/nats/streams/ (38 Stream + KeyValue YAML files).  The NATS
+# JetStream controller (nack) reconciles them continuously — no manual
+# provisioning needed.
+#
+# Use this script ONLY if you need to bootstrap streams on a cluster that
+# doesn't have the nack controller installed yet, or for emergency recovery.
+#
+# To install the controller (done by platform/install.sh step 4b):
+#   helm upgrade --install nack nats/nack -n nats \
+#     -f platform/nats/nack-values.secret.yaml
+#   kubectl apply -f platform/nats/streams/
+# ---------------------------------------------------------------------------
 # Provision all captured Mac streams + KV buckets into the cloud NATS cluster,
 # faithfully (same subjects/retention/limits) but bumped to num_replicas=3 (HA).
 # Idempotent: `nats stream add` on an existing stream with matching config is a no-op.

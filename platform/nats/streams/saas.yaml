@@ -1,0 +1,17 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: saas
+  namespace: nats
+  annotations:
+    description: "SaaS I/O \u2014 Wombat inbound webhooks + outbound API request/response"
+spec:
+  name: SAAS
+  subjects:
+    - "saas.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 2160h
+  duplicateWindow: 2m

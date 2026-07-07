@@ -1,0 +1,19 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: sys
+  namespace: nats
+  annotations:
+    description: "System health"
+spec:
+  name: SYS
+  subjects:
+    - "evt.sys.>"
+    - "sys.>"
+    - "tel.host.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 168h
+  duplicateWindow: 2m

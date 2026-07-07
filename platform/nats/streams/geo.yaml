@@ -1,0 +1,18 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: Stream
+metadata:
+  name: geo
+  namespace: nats
+  annotations:
+    description: "TACMAP geo layer \u2014 TAK events (normalized CoT + fleet positions live in TEL + COT)"
+spec:
+  name: GEO
+  subjects:
+    - "evt.tak.cot.>"
+    - "evt.tak.status.>"
+  storage: file
+  replicas: 3
+  retention: limits
+  discard: old
+  maxAge: 720h
+  duplicateWindow: 2m

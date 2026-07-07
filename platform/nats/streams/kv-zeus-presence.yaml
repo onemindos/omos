@@ -1,0 +1,11 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-zeus-presence
+  namespace: nats
+spec:
+  bucket: zeus-presence
+  storage: file
+  replicas: 3
+  history: 1
+  ttl: 2m

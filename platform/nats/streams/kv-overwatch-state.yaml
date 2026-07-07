@@ -1,0 +1,12 @@
+apiVersion: jetstream.nats.io/v1beta2
+kind: KeyValue
+metadata:
+  name: kv-overwatch-state
+  namespace: nats
+  annotations:
+    description: "om-overwatch fused entity world-state (keyed by entity_id)"
+spec:
+  bucket: OVERWATCH_STATE
+  storage: file
+  replicas: 3
+  history: 5

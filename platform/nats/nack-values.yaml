@@ -1,0 +1,19 @@
+jetstream:
+  enabled: true
+
+  # nats.url is injected from nack-values.secret.yaml (gitignored).
+  # See nack-values.template.yaml for the full value — URL embeds onemind credentials.
+  nats:
+    url:
+
+  # control-loop mode is required for KeyValue CRD reconciliation
+  controlLoop: true
+
+  tls:
+    enabled: true
+    secretName: nats-server-tls
+    settings:
+      client_cert: "/etc/nats/certs/tls.crt"
+      client_key: "/etc/nats/certs/tls.key"
+      client_ca: "/etc/nats/certs/ca.crt"
+      timeout: 3
