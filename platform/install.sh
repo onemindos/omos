@@ -125,14 +125,26 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
 
 # -----------------------------------------------------------------------------
-# 9. LEGACY AGENT (Hermes — mother)
-# Requires: hermes-env secret (AWS creds from 1Password)
+# 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT bridge
+# Requires:
+#   hermes-env secret (AWS creds + NATS from 1Password)
+#   hermes-leaf-conf secret (NATS leaf.conf)
+#   hermes-nats-ca secret (NATS CA cert)
+#   omos-nats-creds secret in hermes namespace:
+#     kubectl create secret generic omos-nats-creds -n hermes \
+#       --from-literal=user=onemind \
+#       --from-literal=password='<ONEMIND_PW from 1Password>'
+#   cloudtak-agent-token secret (CloudTAK profile API token):
+#     kubectl create secret generic cloudtak-agent-token -n hermes \
+#       --from-literal=token='<token from CloudTAK UI: Settings → Tokens → New>'
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/pvc.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/deployment.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/legacy/namespace.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/legacy/pvc.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/legacy/deployment.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/legacy/tak-agent.yaml"
 
 echo ""
 echo "==> Platform install complete."
-echo "    TAK cluster: see tak-cluster/DEPLOY-RUNBOOK.md"
-echo "    Streams:     nats-migration/provision.sh"
+echo "    TAK cluster:  see tak-cluster/DEPLOY-RUNBOOK.md"
+echo "    Streams:      nats-migration/provision.sh"
+echo "    tak-agent:    needs cloudtak-agent-token secret (see step 9 above)"

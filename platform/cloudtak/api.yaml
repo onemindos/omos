@@ -18,6 +18,55 @@ spec:
       containers:
         - name: api
           image: ghcr.io/onemindos/cloudtak-api:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -ex
+
+              # --- Patch 1: index.js — align admin wsClients key to AdminConnConfig.id=0 ---
+              sed -i "s/wsClients.get('admin')/wsClients.get('0')/g;
+                      s/wsClients.set('admin',/wsClients.set('0',/g;
+                      s/wsClients.delete('admin')/wsClients.delete('0')/g" \
+                /home/etl/api/dist/index.js 2>/dev/null && \
+                echo "patch1: index.js admin->0 applied" || \
+                echo "patch1: sed failed (non-fatal)"
+
+              # --- Patch 2: connection-pool.js — add AdminConnConfig CoT delivery path ---
+              node -e "
+              const fs = require('fs');
+              const file = '/home/etl/api/dist/lib/connection-pool.js';
+              let c = fs.readFileSync(file, 'utf8');
+              const marker = '            if (conn instanceof MachineConnConfig && !this.config.nosinks) {';
+              if (c.includes(marker) && !c.includes('instanceof AdminConnConfig')) {
+                const adminBlock = '            if (conn instanceof AdminConnConfig) {\n' +
+                  '                for (const [wsKey, clients] of (this.config.wsClients || new Map())) {\n' +
+                  '                    if (String(wsKey) !== String(conn.id)) continue;\n' +
+                  '                    for (const cot of cots) {\n' +
+                  '                        CoTParser.to_geojson(cot).then(feat => {\n' +
+                  '                            for (const client of clients) {\n' +
+                  '                                client.ws.send(JSON.stringify(client.format === \"geojson\"\n' +
+                  '                                    ? { type: \"cot\", connection: conn.id, data: feat }\n' +
+                  '                                    : { type: \"cot\", connection: conn.id, data: cot.raw }));\n' +
+                  '                            }\n' +
+                  '                        }).catch(() => {});\n' +
+                  '                    }\n' +
+                  '                }\n' +
+                  '            }\n';
+                c = c.replace(marker, adminBlock + marker);
+                fs.writeFileSync(file, c);
+                console.log('patch2: connection-pool.js AdminConnConfig applied');
+              } else if (c.includes('instanceof AdminConnConfig')) {
+                console.log('patch2: already patched');
+              } else {
+                console.log('patch2: marker not found - skipping');
+              }
+              " 2>&1
+
+              # --- Replicate the original start script: generate nginx.conf, start nginx, start node ---
+              cd /home/etl/api
+              node nginx.conf.js > /etc/nginx/nginx.conf
+              nginx
+              exec npm run prod
           ports:
             - containerPort: 5000
           env:
@@ -52,9 +101,9 @@ spec:
                   name: cloudtak-secrets
                   key: POSTGRES
             - name: API_URL
-              value: "http://cloudtak-api:5000"
+              value: "https://cloudtak.onemindos.dev"
             - name: PMTILES_URL
-              value: "http://cloudtak-tiles:5002"
+              value: "https://tiles.cloudtak.onemindos.dev"
           resources:
             requests:
               cpu: 300m
