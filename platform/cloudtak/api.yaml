@@ -69,9 +69,10 @@ spec:
                 echo "patch3: sed failed (non-fatal)"
 
               # --- Patch 4: inject window.__ONEMIND_BRIDGE_URL__ into built HTML ---
-              BRIDGE_URL="${CLOUDTAK_Config_onemind__bridge__url:-http://onemind-ai-bridge.hermes.svc.cluster.local:8080}"
-              INJECT_SCRIPT="<script>window.__ONEMIND_BRIDGE_URL__='${BRIDGE_URL}';</script>"
-              INDEX_HTML="/home/etl/api/dist/static/index.html"
+              # Browser uses /onemind (same-origin path); nginx Patch 5 proxies to bridge pod.
+              INJECT_SCRIPT="<script>window.__ONEMIND_BRIDGE_URL__='/onemind';</script>"
+              # CloudTAK serves static files from api/web/dist/ (set in nginx.conf.js aliases)
+              INDEX_HTML="/home/etl/api/web/dist/index.html"
               if [ -f "$INDEX_HTML" ]; then
                 sed -i "s|</head>|${INJECT_SCRIPT}</head>|" "$INDEX_HTML" && \
                   echo "patch4: bridge URL injected into index.html" || \
@@ -83,6 +84,38 @@ spec:
               # --- Replicate the original start script: generate nginx.conf, start nginx, start node ---
               cd /home/etl/api
               node nginx.conf.js > /etc/nginx/nginx.conf
+
+              # --- Patch 5: inject /onemind proxy block into nginx.conf ---
+              # Inserts before the /api location block so the browser plugin can reach
+              # ws(s)://cloudtak.onemindos.dev/onemind/ws same-origin (no CORS needed).
+              BRIDGE_URL="${CLOUDTAK_Config_onemind__bridge__url:-http://onemind-ai-bridge.hermes.svc.cluster.local:8080}"
+              python3 -c "
+import sys
+bridge = '${BRIDGE_URL}'
+with open('/etc/nginx/nginx.conf', 'r') as f:
+    conf = f.read()
+marker = '        location ~ ^/api'
+block = '''
+        location /onemind/ {
+            proxy_pass ''' + bridge + '''/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection \"upgrade\";
+            proxy_set_header Host \$host;
+            proxy_read_timeout 60s;
+        }
+'''
+if marker in conf and 'location /onemind/' not in conf:
+    conf = conf.replace(marker, block + marker, 1)
+    with open('/etc/nginx/nginx.conf', 'w') as f:
+        f.write(conf)
+    print('patch5: /onemind proxy injected')
+elif 'location /onemind/' in conf:
+    print('patch5: already patched')
+else:
+    print('patch5: marker not found, skipping')
+" && true
+
               nginx
               exec npm run prod
           ports:
@@ -97,7 +130,7 @@ spec:
               value: "OMOS ATOC"
             - name: CLOUDTAK_Config_server__name
               value: "OneMind OS"
-            # --- AI bridge URL injected into window.__ONEMIND_BRIDGE_URL__ ---
+            # --- AI bridge pod — Patch 5 nginx reverse-proxy uses this for /onemind/ location ---
             - name: CLOUDTAK_Config_onemind__bridge__url
               value: "http://onemind-ai-bridge.hermes.svc.cluster.local:8080"
             - name: CLOUDTAK_Config_media_url

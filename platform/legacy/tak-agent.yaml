@@ -137,6 +137,7 @@ data:
     CLOUDTAK_TOKEN = os.environ.get("CLOUDTAK_TOKEN", "")
     LEGACY_SUBJECT = os.environ.get("LEGACY_SUBJECT", "agents.prompt.hermes.zeus.legacy")
     TAK_CALLSIGN   = os.environ.get("TAK_CALLSIGN", "Legacy")
+    LEGACY_UID     = "Legacy-AI-OneMind"  # stable UID — prevents duplicates in TAK
 
     # In-memory SA picture: uid -> entity dict
     sa_picture: dict[str, dict] = {}
@@ -149,18 +150,28 @@ data:
         fmt = "%Y-%m-%dT%H:%M:%S.%fZ"
         return now.strftime(fmt), stale.strftime(fmt)
 
-    def build_geochat_cot(message: str, to_callsign: str = "All Chat Rooms") -> str:
-        """Build a GeoChat CoT XML from Legacy callsign."""
+    def build_geochat_cot(
+        message: str,
+        to_callsign: str = "All Chat Rooms",
+        to_uid: str = "",
+    ) -> str:
+        """Build a GeoChat CoT XML from Legacy callsign.
+
+        to_uid: actual TAK UID of the recipient (e.g. ANDROID-CloudTAK-admin).
+                When provided, TAK routes directly to that EUD. Fallback to callsign.
+        """
         now, stale = _now_stale(1)
         uid = f"Legacy-chat-{uuid.uuid4().hex[:8]}"
+        # Use recipient's UID for chatroom/id if known — TAK routes by UID, not callsign
+        recipient_id = to_uid if to_uid else to_callsign
         cot = f"""<event version="2.0" uid="{uid}" type="b-t-f" time="{now}" start="{now}" stale="{stale}" how="h-g-i-g-o">
       <point lat="0" lon="0" hae="0" ce="9999999" le="9999999"/>
       <detail>
-        <__chat parent="RootContactGroup" groupOwner="false" messageId="{uid}" chatroom="{to_callsign}" id="{to_callsign}" senderCallsign="{TAK_CALLSIGN}">
-          <chatgrp uid0="Legacy-AI" uid1="{to_callsign}" id="{to_callsign}"/>
+        <__chat parent="RootContactGroup" groupOwner="false" messageId="{uid}" chatroom="{to_callsign}" id="{recipient_id}" senderCallsign="{TAK_CALLSIGN}">
+          <chatgrp uid0="{LEGACY_UID}" uid1="{recipient_id}" id="{recipient_id}"/>
         </__chat>
-        <link uid="Legacy-AI" type="a-f-G-U-C" relation="p-p"/>
-        <remarks source="BAO.F.ATAK.Legacy-AI" to="{to_callsign}" time="{now}">{message}</remarks>
+        <link uid="{LEGACY_UID}" type="a-f-G-U-C" relation="p-p"/>
+        <remarks source="BAO.F.ATAK.{LEGACY_UID}" to="{recipient_id}" time="{now}">{message}</remarks>
         <__serverdestination destinations="All Streaming"/>
       </detail>
     </event>"""
@@ -180,16 +191,29 @@ data:
         return f"""<event version="2.0" uid="{uid}" type="{cot_type}" time="{now}" start="{now}" stale="{stale}" how="m-g">
       <point lat="{lat}" lon="{lon}" hae="0" ce="10" le="10"/>
       <detail>
-        <contact callsign="{callsign}"/>
+        <contact callsign="{callsign}" endpoint="*:-1:stcp"/>
         <uid Droid="{callsign}"/>
+        <takv platform="OneMind-AI" version="1.0" device="Legacy AI" os="Linux"/>
+        <__group name="Cyan" role="Team Member"/>
         {remarks_el}
       </detail>
     </event>"""
 
+    def build_legacy_presence_cot() -> str:
+        """SA presence beacon for Legacy — keeps it alive as a TAK contact."""
+        return build_marker_cot(
+            uid=LEGACY_UID,
+            callsign=TAK_CALLSIGN,
+            lat=0.0,
+            lon=0.0,
+            cot_type="a-f-G-U-C",
+            remarks="OneMind AI — chat with me!",
+        )
+
     # ── CoT parser ───────────────────────────────────────────────────────────
 
     def parse_geochat(xml_str: str) -> dict | None:
-        """Return {from, to, message} if this CoT is a GeoChat, else None."""
+        """Return {from, to, message, sender_uid} if this CoT is a GeoChat, else None."""
         try:
             root = ET.fromstring(xml_str)
             detail = root.find("detail")
@@ -200,11 +224,15 @@ data:
                 return None
             remarks = detail.find("remarks")
             message = remarks.text.strip() if remarks is not None and remarks.text else ""
+            # Extract sender UID from <chatgrp uid0="..."> — needed for reply routing
+            chatgrp = chat.find("chatgrp")
+            sender_uid = chatgrp.attrib.get("uid0", "") if chatgrp is not None else ""
             return {
                 "from": chat.attrib.get("senderCallsign", "unknown"),
                 "to": chat.attrib.get("chatroom", ""),
                 "message": message,
                 "uid": root.attrib.get("uid", ""),
+                "sender_uid": sender_uid,
             }
         except Exception:
             return None
@@ -362,15 +390,15 @@ data:
                 chat = parse_geochat(xml_str)
                 if chat and TAK_CALLSIGN.lower() in chat["to"].lower():
                     sender = chat["from"]
+                    sender_uid = chat.get("sender_uid", "")
                     prompt = f"[TAK GeoChat from {sender}]: {chat['message']}"
-                    log.info("GeoChat → Legacy: %s", prompt[:120])
+                    log.info("GeoChat → Legacy: %s (uid=%s)", prompt[:120], sender_uid)
 
                     # Use request/reply so Legacy can stream its response back
                     # Collect all response chunks and re-inject as GeoChat
-                    async def _relay_response():
+                    async def _relay_response(sender=sender, sender_uid=sender_uid):
                         response_text = ""
                         try:
-                            # Create an inbox and subscribe before sending
                             inbox = nc.new_inbox()
                             chunks = []
                             done = asyncio.Event()
@@ -404,8 +432,12 @@ data:
                             response_text = f"[Legacy error: {e}]"
 
                         if response_text:
-                            log.info("Legacy → TAK chat: %s", response_text[:120])
-                            cot_xml = build_geochat_cot(response_text, to_callsign=sender)
+                            log.info("Legacy → TAK (uid=%s callsign=%s): %s", sender_uid, sender, response_text[:120])
+                            cot_xml = build_geochat_cot(
+                                response_text,
+                                to_callsign=sender,
+                                to_uid=sender_uid,
+                            )
                             await nc.publish("tak.cot.inject", cot_xml.encode())
 
                     asyncio.create_task(_relay_response())
@@ -462,6 +494,20 @@ data:
             log.info("Service: %s", subject)
 
         log.info("tak-agent ready — callsign='%s' forwarding to '%s'", TAK_CALLSIGN, LEGACY_SUBJECT)
+
+        # ── 4. Periodic presence beacon — keeps Legacy alive in TAK contact lists
+        async def _presence_loop():
+            while True:
+                try:
+                    beacon = build_legacy_presence_cot()
+                    await nc.publish("tak.cot.inject", beacon.encode())
+                    log.debug("Presence beacon sent (uid=%s)", LEGACY_UID)
+                except Exception as e:
+                    log.warning("Presence beacon error: %s", e)
+                await asyncio.sleep(30)
+
+        asyncio.create_task(_presence_loop())
+        log.info("Presence beacon started (30s interval, uid=%s)", LEGACY_UID)
 
         # Keep alive
         try:

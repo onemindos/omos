@@ -15,8 +15,13 @@
         <div class="ai-bubble">{{ msg.content }}</div>
         <div class="ai-meta">{{ msg.role === 'user' ? 'You' : 'Legacy' }} · {{ msg.time }}</div>
       </div>
-      <div v-if="loading" class="ai-message assistant">
-        <div class="ai-bubble ai-thinking">Legacy is thinking…</div>
+
+      <!-- Live streaming bubble (cursor while thinking, text types in as chunks arrive) -->
+      <div v-if="streaming" class="ai-message assistant">
+        <div class="ai-bubble">
+          <template v-if="streamContent">{{ streamContent }}</template>
+          <span v-else class="cursor">▌</span>
+        </div>
       </div>
     </div>
 
@@ -26,21 +31,29 @@
         placeholder="Message Legacy…"
         rows="2"
         @keydown.enter.exact.prevent="send"
-        :disabled="loading"
+        :disabled="streaming"
       />
-      <button @click="send" :disabled="loading || !draft.trim()">Send</button>
+      <button
+        @click="streaming ? cancelStream() : send()"
+        :disabled="!streaming && !draft.trim()"
+        :class="{ 'btn-stop': streaming }"
+      >{{ streaming ? '■' : 'Send' }}</button>
     </div>
 
     <div class="ai-quick-row">
-      <button v-for="q in quickCommands" :key="q" class="ai-quick" @click="quickSend(q)">
-        {{ q }}
-      </button>
+      <button
+        v-for="q in quickCommands"
+        :key="q"
+        class="ai-quick"
+        @click="quickSend(q)"
+        :disabled="streaming"
+      >{{ q }}</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted } from 'vue';
+import { ref, computed, nextTick, onMounted, onUnmounted } from 'vue';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -48,84 +61,203 @@ interface Message {
   time: string;
 }
 
-const BRIDGE_URL = (window as any).__ONEMIND_BRIDGE_URL__ || '/api/onemind/chat';
+// Injected by Patch 4 in CloudTAK api.yaml startup args.
+// Nginx Patch 5 routes /onemind/* to the bridge pod — same-origin, no CORS.
+const BRIDGE_BASE: string = ((window as any).__ONEMIND_BRIDGE_URL__ as string) || '/onemind';
 
-const messages = ref<Message[]>([]);
-const draft = ref('');
-const loading = ref(false);
-const connected = ref(false);
+function getWsUrl(): string {
+  if (BRIDGE_BASE.startsWith('/')) {
+    // Relative path — derive WebSocket URL from current page origin
+    const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${proto}//${location.host}${BRIDGE_BASE}/ws`;
+  }
+  try {
+    const u = new URL(BRIDGE_BASE);
+    u.protocol = u.protocol === 'https:' ? 'wss:' : 'ws:';
+    u.pathname = (u.pathname.replace(/\/$/, '')) + '/ws';
+    return u.toString();
+  } catch {
+    return `ws://${location.host}/onemind/ws`;
+  }
+}
 
-const quickCommands = [
-  'SA picture',
-  'List missions',
-  'Weather',
-  'Ship count',
-  'Air picture',
-];
+const messages      = ref<Message[]>([]);
+const draft         = ref('');
+const streaming     = ref(false);
+const streamContent = ref('');
+const wsStatus      = ref<'connecting' | 'open' | 'closed'>('connecting');
+const messagesEl    = ref<HTMLElement | null>(null);
 
-const statusClass = computed(() => connected.value ? 'online' : 'offline');
-const statusLabel = computed(() => connected.value ? 'online' : 'connecting…');
+const quickCommands = ['SA picture', 'List missions', 'Weather', 'Ship count', 'Air picture'];
 
-const messagesEl = ref<HTMLElement | null>(null);
+const statusClass = computed(() => ({
+  online:     wsStatus.value === 'open',
+  connecting: wsStatus.value === 'connecting',
+  offline:    wsStatus.value === 'closed',
+}));
 
-function now() {
+const statusLabel = computed(() => {
+  if (wsStatus.value === 'open') return 'online';
+  if (wsStatus.value === 'connecting') return 'connecting…';
+  return 'offline';
+});
+
+// WebSocket state
+let ws: WebSocket | null = null;
+let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+let reconnectAttempts = 0;
+let activeId: string | null = null;
+
+// Maps promptId → handler(serverMessage). Handler owns streaming/messages state.
+const streams = new Map<string, (msg: Record<string, unknown>) => void>();
+
+function connectWs(): void {
+  if (ws) return;
+  wsStatus.value = 'connecting';
+  ws = new WebSocket(getWsUrl());
+
+  ws.addEventListener('open', () => {
+    wsStatus.value = 'open';
+    reconnectAttempts = 0;
+  });
+
+  ws.addEventListener('message', (ev) => {
+    try {
+      const msg = JSON.parse(String(ev.data)) as Record<string, unknown>;
+      const id = msg.id as string;
+      streams.get(id)?.(msg);
+    } catch { /* ignore malformed */ }
+  });
+
+  ws.addEventListener('close', () => {
+    wsStatus.value = 'closed';
+    ws = null;
+    for (const [id, handler] of streams) {
+      handler({ kind: 'error', id, message: 'connection closed' });
+    }
+    streams.clear();
+    scheduleReconnect();
+  });
+}
+
+function scheduleReconnect(): void {
+  if (reconnectTimer !== null) return;
+  const delay = Math.min(15000, 500 * 2 ** Math.min(reconnectAttempts, 6));
+  reconnectAttempts++;
+  reconnectTimer = setTimeout(() => {
+    reconnectTimer = null;
+    connectWs();
+  }, delay);
+}
+
+function now(): string {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-async function send() {
+async function scrollBottom(): Promise<void> {
+  await nextTick();
+  if (messagesEl.value) messagesEl.value.scrollTop = messagesEl.value.scrollHeight;
+}
+
+function makeId(): string {
+  return (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : Math.random().toString(36).slice(2);
+}
+
+async function send(): Promise<void> {
   const text = draft.value.trim();
-  if (!text || loading.value) return;
+  if (!text || streaming.value) return;
   draft.value = '';
 
   messages.value.push({ role: 'user', content: text, time: now() });
-  loading.value = true;
+  streaming.value = true;
+  streamContent.value = '';
   await scrollBottom();
 
+  const id = makeId();
+  activeId = id;
+
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    await sendHttp(text);
+    return;
+  }
+
+  streams.set(id, (msg) => {
+    const kind = msg.kind as string;
+    if (kind === 'chunk') {
+      streamContent.value += (msg.text as string) || '';
+      scrollBottom();
+    } else if (kind === 'done') {
+      const content = streamContent.value || (msg.response as string) || '(no response)';
+      messages.value.push({ role: 'assistant', content, time: now() });
+      streaming.value = false;
+      streamContent.value = '';
+      activeId = null;
+      streams.delete(id);
+      scrollBottom();
+    } else if (kind === 'error') {
+      messages.value.push({
+        role: 'assistant',
+        content: `⚠ ${(msg.message as string) || 'Bridge error'}`,
+        time: now(),
+      });
+      streaming.value = false;
+      streamContent.value = '';
+      activeId = null;
+      streams.delete(id);
+      scrollBottom();
+    }
+  });
+
+  ws.send(JSON.stringify({ kind: 'prompt', id, text, callsign: 'Operator' }));
+}
+
+async function sendHttp(text: string): Promise<void> {
   try {
-    const res = await fetch(BRIDGE_URL, {
+    const res = await fetch(`${BRIDGE_BASE}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text }),
+      body: JSON.stringify({ message: text, callsign: 'Operator' }),
     });
-    const data = await res.json();
-    connected.value = true;
+    const data = await res.json() as Record<string, unknown>;
     messages.value.push({
       role: 'assistant',
-      content: data.response || data.message || '(no response)',
+      content: (data.response as string) || '(no response)',
       time: now(),
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
     messages.value.push({
       role: 'assistant',
-      content: `⚠ Bridge unreachable: ${e.message}`,
+      content: `⚠ ${e instanceof Error ? e.message : 'Bridge unreachable'}`,
       time: now(),
     });
-    connected.value = false;
   } finally {
-    loading.value = false;
+    streaming.value = false;
+    streamContent.value = '';
     await scrollBottom();
   }
 }
 
-function quickSend(cmd: string) {
+function cancelStream(): void {
+  if (activeId && ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ kind: 'cancel', id: activeId }));
+  }
+  if (activeId) streams.delete(activeId);
+  streaming.value = false;
+  streamContent.value = '';
+  activeId = null;
+}
+
+function quickSend(cmd: string): void {
   draft.value = cmd;
   send();
 }
 
-async function scrollBottom() {
-  await nextTick();
-  if (messagesEl.value) {
-    messagesEl.value.scrollTop = messagesEl.value.scrollHeight;
-  }
-}
-
-onMounted(async () => {
-  try {
-    const res = await fetch(BRIDGE_URL.replace('/chat', '/health'));
-    connected.value = res.ok;
-  } catch {
-    connected.value = false;
-  }
+onMounted(() => connectWs());
+onUnmounted(() => {
+  if (reconnectTimer !== null) clearTimeout(reconnectTimer);
+  ws?.close();
 });
 </script>
 
@@ -148,8 +280,9 @@ onMounted(async () => {
 }
 .ai-title { font-weight: 700; letter-spacing: 0.5px; color: #58a6ff; }
 .ai-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
-.ai-status.online  { background: #1a4731; color: #3fb950; }
-.ai-status.offline { background: #3d1f1f; color: #f85149; }
+.ai-status.online     { background: #1a4731; color: #3fb950; }
+.ai-status.connecting { background: #2d2a1e; color: #d29922; }
+.ai-status.offline    { background: #3d1f1f; color: #f85149; }
 .ai-messages {
   flex: 1;
   overflow-y: auto;
@@ -159,7 +292,7 @@ onMounted(async () => {
   gap: 8px;
 }
 .ai-message { display: flex; flex-direction: column; }
-.ai-message.user  { align-items: flex-end; }
+.ai-message.user      { align-items: flex-end; }
 .ai-message.assistant { align-items: flex-start; }
 .ai-bubble {
   max-width: 85%;
@@ -169,9 +302,22 @@ onMounted(async () => {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.ai-message.user .ai-bubble      { background: #1f6feb; color: #fff; border-radius: 12px 12px 4px 12px; }
-.ai-message.assistant .ai-bubble { background: #161b22; border: 1px solid #30363d; border-radius: 12px 12px 12px 4px; }
-.ai-thinking { opacity: 0.6; font-style: italic; }
+.ai-message.user .ai-bubble {
+  background: #1f6feb;
+  color: #fff;
+  border-radius: 12px 12px 4px 12px;
+}
+.ai-message.assistant .ai-bubble {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px 12px 12px 4px;
+}
+.cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  color: #58a6ff;
+}
+@keyframes blink { 50% { opacity: 0; } }
 .ai-meta { font-size: 10px; color: #484f58; margin-top: 3px; padding: 0 4px; }
 .ai-input-row {
   display: flex;
@@ -200,8 +346,10 @@ onMounted(async () => {
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
+  min-width: 56px;
 }
 .ai-input-row button:disabled { opacity: 0.4; cursor: default; }
+.ai-input-row button.btn-stop { background: #da3633; }
 .ai-quick-row {
   display: flex;
   flex-wrap: wrap;
@@ -217,5 +365,6 @@ onMounted(async () => {
   font-size: 11px;
   cursor: pointer;
 }
-.ai-quick:hover { background: #30363d; color: #e6edf3; }
+.ai-quick:hover:not(:disabled) { background: #30363d; color: #e6edf3; }
+.ai-quick:disabled { opacity: 0.4; cursor: default; }
 </style>

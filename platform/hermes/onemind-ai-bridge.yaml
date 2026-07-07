@@ -89,14 +89,18 @@ data:
   bridge.py: |
     #!/usr/bin/env python3
     """
-    OneMind AI Bridge — HTTP ↔ NATS RPC relay.
+    OneMind AI Bridge — HTTP + WebSocket ↔ NATS RPC relay.
 
-    POST /chat   { "message": "...", "callsign": "Zeus" }
-      → publishes to svc.tak.chat on NATS with reply-to subject
-      → waits up to TIMEOUT_SEC for tak-agent to relay Legacy's response
+    WebSocket /ws  { kind: "prompt", id, text, callsign }
+      → streams response back as { kind: "chunk", id, text } tokens
+      → closes with { kind: "done", id }
+      Supports { kind: "cancel", id } to abort an in-flight request.
+
+    POST /chat     { "message": "...", "callsign": "..." }
+      → synchronous HTTP fallback (same NATS RPC path)
       → returns { "response": "..." }
 
-    GET /health → 200 OK (checks NATS connection)
+    GET /health → 200 OK
     """
     import asyncio, json, logging, os, ssl
     from aiohttp import web
@@ -111,6 +115,9 @@ data:
     CHAT_SUBJECT  = os.getenv("CHAT_SUBJECT", "svc.tak.chat")
     PORT          = int(os.getenv("PORT", "8080"))
     TIMEOUT_SEC   = float(os.getenv("TIMEOUT_SEC", "30"))
+
+    # Track in-flight WebSocket prompts for cancel support
+    active_tasks: dict[str, asyncio.Task] = {}
 
     nc = None
 
@@ -131,6 +138,86 @@ data:
             LOG.info(f"NATS connected: {NATS_URL}")
         return nc
 
+    async def nats_ask(message: str, callsign: str) -> str:
+        conn = await get_nc()
+        payload = json.dumps({
+            "message": message,
+            "callsign": callsign,
+            "source": "cloudtak-plugin",
+        }).encode()
+        msg = await conn.request(CHAT_SUBJECT, payload, timeout=TIMEOUT_SEC)
+        data = json.loads(msg.data.decode())
+        return data.get("response") or data.get("text") or str(data)
+
+    def word_chunks(text: str):
+        """Split response into word-level chunks for streaming effect."""
+        buf = ""
+        for ch in text:
+            buf += ch
+            if ch in (" ", "\n") and buf.strip():
+                yield buf
+                buf = ""
+        if buf:
+            yield buf
+
+    async def ws_prompt(ws: web.WebSocketResponse, prompt_id: str, text: str, callsign: str):
+        try:
+            response = await nats_ask(text, callsign)
+            LOG.info(f"ws chat: {callsign}: {text[:60]} → {response[:60]}")
+            for chunk in word_chunks(response):
+                if ws.closed:
+                    break
+                await ws.send_json({"kind": "chunk", "id": prompt_id, "text": chunk})
+                await asyncio.sleep(0.015)
+            if not ws.closed:
+                await ws.send_json({"kind": "done", "id": prompt_id})
+        except nats.errors.NoRespondersError:
+            if not ws.closed:
+                await ws.send_json({
+                    "kind": "done", "id": prompt_id,
+                    "response": "Legacy is not available — tak-agent may be offline.",
+                })
+        except asyncio.CancelledError:
+            if not ws.closed:
+                await ws.send_json({"kind": "done", "id": prompt_id})
+        except Exception as e:
+            LOG.error(f"ws prompt error: {e}")
+            if not ws.closed:
+                await ws.send_json({"kind": "error", "id": prompt_id, "message": str(e)})
+        finally:
+            active_tasks.pop(prompt_id, None)
+
+    async def handle_ws(request: web.Request) -> web.WebSocketResponse:
+        ws = web.WebSocketResponse()
+        await ws.prepare(request)
+        LOG.info("WebSocket client connected")
+
+        async for msg in ws:
+            if msg.type == web.WSMsgType.TEXT:
+                try:
+                    data = json.loads(msg.data)
+                except Exception:
+                    continue
+
+                kind = data.get("kind")
+                if kind == "prompt":
+                    prompt_id = data.get("id", "unknown")
+                    text      = data.get("text", "").strip()
+                    callsign  = data.get("callsign", "Operator")
+                    if text:
+                        task = asyncio.create_task(ws_prompt(ws, prompt_id, text, callsign))
+                        active_tasks[prompt_id] = task
+                elif kind == "cancel":
+                    prompt_id = data.get("id")
+                    task = active_tasks.pop(prompt_id, None)
+                    if task:
+                        task.cancel()
+            elif msg.type in (web.WSMsgType.ERROR, web.WSMsgType.CLOSE):
+                break
+
+        LOG.info("WebSocket client disconnected")
+        return ws
+
     async def handle_chat(request: web.Request) -> web.Response:
         try:
             body = await request.json()
@@ -143,29 +230,16 @@ data:
             return web.json_response({"error": "message required"}, status=400)
 
         try:
-            conn = await get_nc()
-            payload = json.dumps({
-                "message": message,
-                "callsign": callsign,
-                "source": "cloudtak-plugin",
-            }).encode()
-
-            msg = await conn.request(CHAT_SUBJECT, payload, timeout=TIMEOUT_SEC)
-            data = json.loads(msg.data.decode())
-            response = data.get("response") or data.get("text") or str(data)
-            LOG.info(f"chat: {callsign}: {message[:60]} → {response[:60]}")
+            response = await nats_ask(message, callsign)
+            LOG.info(f"http chat: {callsign}: {message[:60]} → {response[:60]}")
             return web.json_response({"response": response})
-
         except nats.errors.NoRespondersError:
             return web.json_response(
-                {"response": "Legacy is not available right now — tak-agent may be offline."},
+                {"response": "Legacy is not available — tak-agent may be offline."},
                 status=503,
             )
         except asyncio.TimeoutError:
-            return web.json_response(
-                {"response": "Legacy timed out responding. Try again."},
-                status=504,
-            )
+            return web.json_response({"response": "Legacy timed out. Try again."}, status=504)
         except Exception as e:
             LOG.error(f"bridge error: {e}")
             return web.json_response({"error": str(e)}, status=500)
@@ -180,6 +254,7 @@ data:
     async def main():
         await get_nc()
         app = web.Application()
+        app.router.add_get("/ws",      handle_ws)
         app.router.add_post("/chat",   handle_chat)
         app.router.add_get("/health",  handle_health)
         runner = web.AppRunner(app)
