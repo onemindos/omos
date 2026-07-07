@@ -158,23 +158,39 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | cert-manager | cert-manager |
 | ingress-nginx | ingress-nginx |
 | tailscale | Tailscale operator |
+| external-secrets | ESO + 1Password Connect (secret sync) |
 
 ## Secrets Convention
 
-All secrets are out-of-band (never committed). Source of truth: 1Password vault `00-24 SO`.
+**All secrets are managed by External Secrets Operator (ESO) + 1Password Connect.** Source of truth is 1Password vault `00-24 SO (Sovereign Operations)`. Never create secrets manually — add them to 1Password and write an ExternalSecret YAML in `platform/{service}/external-secret.yaml`.
 
-| Secret name | Namespace | What it holds | 1Password item |
-|-------------|-----------|---------------|----------------|
-| hermes-env | hermes | Full ~/.hermes/.env (AWS Bedrock + NATS creds) | hermes-env |
-| hermes-leaf-conf | hermes | NATS leaf.conf + ca.crt for hermes pod | omos-hub-leaf |
-| hermes-nats-ca | hermes | NATS cluster CA cert | nats-ca |
-| nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords | omos-nats-secrets |
-| tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge | tak-leaf-creds |
-| cloudtak-secrets | cloudtak | signing secret, MinIO, postgres DSN | cloudtak-secrets |
-| wwv-env | wwv | WWV environment (auth, DB, etc.) | wwv-env |
-| ghcr | hermes/orp/omos | GHCR pull secret | ghcr-onemindos |
-| ghcr-pull-secret | wwv | GHCR pull secret | ghcr-onemindos |
-| omos-nats-creds | omos | NATS user+password for omos namespace workloads | omos-nats-secrets |
+**Standard:** One 1Password item per K8s secret. Item title = K8s secret name. Flat fields (no sections). All tagged `k8s-secret, omos-hub`.
+
+**ExternalSecret location:** `platform/{service}/external-secret.yaml` (for services), `tak-cluster/deploy/external-secret.yaml` (for tak-nats-leaf).
+
+| Secret name | Namespace | What it holds | ESO ExternalSecret |
+|-------------|-----------|---------------|--------------------|
+| hermes-env | hermes | AWS Bedrock + NATS creds (23 fields) | platform/legacy/external-secret.yaml |
+| hermes-leaf-conf | hermes | NATS leaf.conf + ca.crt | platform/legacy/external-secret.yaml |
+| hermes-nats-ca | hermes | NATS cluster CA cert | platform/legacy/external-secret.yaml |
+| hermes-webui-auth | hermes | Hermes web UI password | platform/hermes-webui/external-secret.yaml |
+| cloudtak-secrets | cloudtak | signing secret, MinIO keys, postgres DSN | platform/cloudtak/external-secret.yaml |
+| cloudtak-agent-token | hermes | CloudTAK API token (out-of-band — generate in CloudTAK UI) | not in ESO |
+| wwv-env | wwv | WWV auth secret, DB URL, encryption key | platform/wwv/external-secret.yaml |
+| wwv-pg-credentials | wwv | PostgreSQL user/pass/db for WWV | platform/wwv/external-secret.yaml |
+| omos-nats-creds | omos | NATS user+password for omos namespace | platform/omos/external-secret.yaml |
+| orp-nats-creds | orp | NATS user+password for ORP | platform/orp/external-secret.yaml |
+| orp-bridge-key | orp | ORP bridge API key | platform/orp/external-secret.yaml |
+| tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge | tak-cluster/deploy/external-secret.yaml |
+| cloudflare-api-credentials | cloudflare | Cloudflare API key + email | platform/cloudflare/external-secret.yaml |
+| cloudflare-api-token | cert-manager | Cloudflare DNS API token for cert-manager | platform/ingress/external-secret.yaml |
+| tunnel-creds-json | cloudflare | Tunnel credentials.json (out-of-band — derived from TUNNEL_TOKEN) | not in ESO |
+| nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm, out-of-band) | not in ESO |
+| ghcr / ghcr-pull-secret | hermes/orp/omos/wwv | GHCR pull secret (out-of-band) | not in ESO |
+
+**Bootstrap secrets (one-time, not in ESO):**
+- `op-credentials` (external-secrets ns) — 1password-credentials.json for Connect pod
+- `onepassword-connect-token` (external-secrets ns) — Connect JWT token
 
 ## Key Hostnames (Cloudflare Tunnel)
 
@@ -203,7 +219,8 @@ doctl kubernetes cluster kubeconfig save onemind-hub
 - [ ] `platform/{service}/deployment.yaml` created (NATS leaf sidecar if needs NATS)
 - [ ] `platform/{service}/cloudflare-route.yaml` created if public-facing
 - [ ] `kubectl apply` lines added to `platform/install.sh`
-- [ ] Secrets documented in table above, values in 1Password
+- [ ] Secret added to 1Password vault `00-24 SO` (title = K8s secret name, flat fields, tagged `k8s-secret,omos-hub`)
+- [ ] `platform/{service}/external-secret.yaml` created and applied
 - [ ] Service added to Services table above with status
 
 ## What NOT to Do
