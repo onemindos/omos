@@ -20,7 +20,7 @@ export default class OneMindAI implements PluginInstance {
     async enable(): Promise<void> {
         this.api.routes.add(
             {
-                path: '/onemind/ai',
+                path: 'onemind-ai',
                 name: ROUTE_NAME,
                 component: AIPanel,
             },
