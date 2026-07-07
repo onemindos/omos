@@ -62,7 +62,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/cloudflared.yaml"
 # -----------------------------------------------------------------------------
 helm repo add nats https://nats-io.github.io/k8s/helm/charts --force-update
 kubectl --context "$CTX" create namespace nats --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
-kubectl --context "$CTX" apply -f "$PLATFORM/nats/tls.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/nats/certs.yaml"
 helm upgrade --install nats nats/nats \
   --kube-context "$CTX" -n nats \
   -f "$PLATFORM/nats/values.secret.yaml"  # inject from 1Password on fresh deploy
