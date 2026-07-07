@@ -27,7 +27,7 @@ async function ping(): Promise<void> {
 }
 
 function openPanel(): void {
-    router.push({ name: 'onemind-ai' });
+    router.push({ name: 'home-menu-onemind-ai' });
 }
 
 let interval: ReturnType<typeof setInterval>;
