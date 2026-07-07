@@ -15,8 +15,9 @@ COPY --from=builder /synadia/examples/agent-web-ui/dist ./dist
 COPY --from=builder /synadia/examples/agent-web-ui/server/bridge.ts ./server/bridge.ts
 COPY --from=builder /synadia/examples/agent-web-ui/server/wire.ts ./server/wire.ts
 COPY --from=builder /synadia/examples/agent-web-ui/package.json ./package.json
-COPY --from=builder /synadia/examples/agent-web-ui/node_modules ./node_modules
+COPY --from=builder /synadia/examples/agent-web-ui/bun.lock ./bun.lock
 COPY server-index.ts ./server/index.ts
+RUN bun install --frozen-lockfile
 
 EXPOSE 3300
 CMD ["bun", "run", "./server/index.ts"]
