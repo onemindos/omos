@@ -1,0 +1,36 @@
+# platform-nats: NATS in-cluster overlay manifests (TLS, Tailscale service)
+#
+# Covers: platform/nats/
+#
+# NOTE: The NATS HA cluster itself is deployed via Helm (nats/nats chart).
+# This Application manages only the supplementary manifests:
+#   - omos-nats-tailnet-service.yaml  (Tailscale LoadBalancer for leaf nodes)
+#   - tls.yaml  (cert-manager Certificate / Secret reference)
+#
+# Secret files (creds.secret.env, values.secret.yaml) are excluded — they are
+# managed out-of-band and must never be committed to git.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-nats
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/nats
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env,values.template.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nats
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

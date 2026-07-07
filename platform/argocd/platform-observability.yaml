@@ -1,0 +1,53 @@
+# platform-observability: Grafana datasources/dashboards, nats-surveyor, clickhouse
+#
+# Covers:
+#   platform/grafana-datasources.yaml
+#   platform/grafana-dashboards-nats.yaml
+#   platform/grafana-dashboards-onemind-logs.yaml
+#   platform/nats-surveyor/
+#   platform/clickhouse/
+#
+# NOTE: Grafana, Loki, Tempo, and Prometheus stacks are managed via Helm
+# (platform/values/loki.yaml, tempo.yaml, etc.) and are NOT managed here.
+# This Application handles only post-Helm overlay manifests.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-observability
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/nats-surveyor
+      directory:
+        recurse: false
+        exclude: "Dockerfile,*.py"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/clickhouse
+      directory:
+        recurse: false
+        exclude: "*.sql,README.md"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources
+    - group: clickhouse.altinity.com
+      kind: ClickHouseInstallation
+      jsonPointers:
+        - /status

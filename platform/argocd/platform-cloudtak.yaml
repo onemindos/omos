@@ -1,0 +1,41 @@
+# platform-cloudtak: CloudTAK stack (API, Events, Media, Tiles, MinIO, PostGIS)
+#
+# Covers: platform/cloudtak/
+#
+# plugin-onemind-ai/ contains TypeScript source — excluded from sync.
+# DEPLOY-RUNBOOK.md excluded as non-manifest.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-cloudtak
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/cloudtak
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env,DEPLOY-RUNBOOK.md,plugin-onemind-ai/**"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudtak
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/volumeClaimTemplates

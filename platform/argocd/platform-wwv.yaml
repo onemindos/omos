@@ -1,0 +1,38 @@
+# platform-wwv: WorldWideView (OneMind Globe — CesiumJS 3D globe + PostgreSQL)
+#
+# Covers: platform/wwv/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-wwv
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/wwv
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env,README.md"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: wwv
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/volumeClaimTemplates

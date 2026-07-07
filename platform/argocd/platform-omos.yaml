@@ -1,0 +1,51 @@
+# platform-omos: omos-* services (tak-projector, feeds) and ORP fusion engine
+#
+# Covers:
+#   platform/omos/   (tak-projector, omos feeds)
+#   platform/orp/    (ORP fusion engine)
+#   platform/homepage/ (internal ops dashboard)
+#
+# Dockerfile in orp/ is excluded — it is build-time only, not a K8s manifest.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-omos
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/omos
+      directory:
+        recurse: false
+        exclude: "*.secret*,*.env"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/orp
+      directory:
+        recurse: false
+        exclude: "Dockerfile,*.secret*,*.env"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/homepage
+      directory:
+        recurse: false
+        exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources
