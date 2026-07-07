@@ -50,8 +50,8 @@ spec:
                 secretKeyRef:
                   name: omos-nats-creds
                   key: password
-            - name: CHAT_SUBJECT
-              value: "svc.tak.chat"
+            - name: LEGACY_SUBJECT
+              value: "agents.prompt.hermes.zeus.legacy"
             - name: PORT
               value: "8080"
             - name: TIMEOUT_SEC
@@ -109,12 +109,12 @@ data:
     LOG = logging.getLogger("ai-bridge")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
-    NATS_USER     = os.getenv("NATS_USER", "")
-    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
-    CHAT_SUBJECT  = os.getenv("CHAT_SUBJECT", "svc.tak.chat")
-    PORT          = int(os.getenv("PORT", "8080"))
-    TIMEOUT_SEC   = float(os.getenv("TIMEOUT_SEC", "30"))
+    NATS_URL       = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER      = os.getenv("NATS_USER", "")
+    NATS_PASSWORD  = os.getenv("NATS_PASSWORD", "")
+    LEGACY_SUBJECT = os.getenv("LEGACY_SUBJECT", "agents.prompt.hermes.zeus.legacy")
+    PORT           = int(os.getenv("PORT", "8080"))
+    TIMEOUT_SEC    = float(os.getenv("TIMEOUT_SEC", "30"))
 
     # Track in-flight WebSocket prompts for cancel support
     active_tasks: dict[str, asyncio.Task] = {}
@@ -124,14 +124,14 @@ data:
     async def get_nc():
         global nc
         if nc is None or nc.is_closed:
-            tls = ssl.create_default_context()
-            tls.check_hostname = False
-            tls.verify_mode = ssl.CERT_NONE
+            tls_ctx = ssl.create_default_context()
+            tls_ctx.check_hostname = False
+            tls_ctx.verify_mode = ssl.CERT_NONE
             nc = await nats.connect(
                 servers=NATS_URL,
                 user=NATS_USER,
                 password=NATS_PASSWORD,
-                tls=tls,
+                tls=tls_ctx,
                 connect_timeout=5,
                 reconnect_time_wait=2,
             )
@@ -140,14 +140,33 @@ data:
 
     async def nats_ask(message: str, callsign: str) -> str:
         conn = await get_nc()
-        payload = json.dumps({
-            "message": message,
-            "callsign": callsign,
-            "source": "cloudtak-plugin",
-        }).encode()
-        msg = await conn.request(CHAT_SUBJECT, payload, timeout=TIMEOUT_SEC)
-        data = json.loads(msg.data.decode())
-        return data.get("response") or data.get("text") or str(data)
+        prompt = f"[CloudTAK from {callsign}]: {message}"
+        inbox = conn.new_inbox()
+        chunks: list[str] = []
+        done = asyncio.Event()
+
+        async def on_chunk(m):
+            if not m.data:
+                done.set()
+                return
+            try:
+                d = json.loads(m.data)
+                if d.get("type") == "response":
+                    text = d.get("data", "")
+                    if isinstance(text, dict):
+                        text = text.get("text", "")
+                    chunks.append(str(text))
+            except Exception:
+                pass
+
+        sub = await conn.subscribe(inbox, cb=on_chunk)
+        try:
+            await conn.publish(LEGACY_SUBJECT, prompt.encode(), reply=inbox)
+            await asyncio.wait_for(done.wait(), timeout=TIMEOUT_SEC)
+        finally:
+            await sub.unsubscribe()
+
+        return "".join(chunks).strip() or "(no response from Legacy)"
 
     def word_chunks(text: str):
         """Split response into word-level chunks for streaming effect."""
@@ -161,22 +180,35 @@ data:
             yield buf
 
     async def ws_prompt(ws: web.WebSocketResponse, prompt_id: str, text: str, callsign: str):
+        conn = await get_nc()
+        prompt = f"[CloudTAK from {callsign}]: {text}"
+        inbox = conn.new_inbox()
+        done = asyncio.Event()
+
+        async def on_chunk(m):
+            if not m.data:
+                done.set()
+                return
+            try:
+                d = json.loads(m.data)
+                if d.get("type") == "response" and not ws.closed:
+                    chunk_text = d.get("data", "")
+                    if isinstance(chunk_text, dict):
+                        chunk_text = chunk_text.get("text", "")
+                    if chunk_text:
+                        await ws.send_json({"kind": "chunk", "id": prompt_id, "text": str(chunk_text)})
+            except Exception:
+                pass
+
+        sub = await conn.subscribe(inbox, cb=on_chunk)
         try:
-            response = await nats_ask(text, callsign)
-            LOG.info(f"ws chat: {callsign}: {text[:60]} → {response[:60]}")
-            for chunk in word_chunks(response):
-                if ws.closed:
-                    break
-                await ws.send_json({"kind": "chunk", "id": prompt_id, "text": chunk})
-                await asyncio.sleep(0.015)
+            await conn.publish(LEGACY_SUBJECT, prompt.encode(), reply=inbox)
+            await asyncio.wait_for(done.wait(), timeout=TIMEOUT_SEC)
             if not ws.closed:
                 await ws.send_json({"kind": "done", "id": prompt_id})
-        except nats.errors.NoRespondersError:
+        except asyncio.TimeoutError:
             if not ws.closed:
-                await ws.send_json({
-                    "kind": "done", "id": prompt_id,
-                    "response": "Legacy is not available — tak-agent may be offline.",
-                })
+                await ws.send_json({"kind": "done", "id": prompt_id, "text": "\n[Legacy timed out]"})
         except asyncio.CancelledError:
             if not ws.closed:
                 await ws.send_json({"kind": "done", "id": prompt_id})
@@ -185,6 +217,7 @@ data:
             if not ws.closed:
                 await ws.send_json({"kind": "error", "id": prompt_id, "message": str(e)})
         finally:
+            await sub.unsubscribe()
             active_tasks.pop(prompt_id, None)
 
     async def handle_ws(request: web.Request) -> web.WebSocketResponse:
