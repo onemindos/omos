@@ -14,9 +14,9 @@ WORKDIR /app
 COPY --from=builder /synadia/examples/agent-web-ui/dist ./dist
 COPY --from=builder /synadia/examples/agent-web-ui/server/bridge.ts ./server/bridge.ts
 COPY --from=builder /synadia/examples/agent-web-ui/server/wire.ts ./server/wire.ts
-COPY --from=builder /synadia/examples/agent-web-ui/package.json ./package.json
 COPY server-index.ts ./server/index.ts
-RUN bun install --production
+RUN echo '{"dependencies":{"@synadia-ai/agents":"0.5.2","@nats-io/transport-node":"^3.4.0"}}' > package.json && \
+    bun install --production
 
 EXPOSE 3300
 CMD ["bun", "run", "./server/index.ts"]
