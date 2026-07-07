@@ -32,7 +32,7 @@ data:
     def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     def stale_str(s=300): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+    MARTI_BROADCAST = '<marti><dest mission="Sea"/></marti>'
 
     def build_cot(mmsi, name, lat, lon, sog=0, cog=0, ship_type=""):
         uid = f"AIS-{mmsi}"
@@ -120,7 +120,7 @@ data:
         if abs(vr) > 2: return "a-f-A-M-F-Q", 60   # climbing/descending
         return "a-f-A-M-F-Q", 90
 
-    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+    MARTI_BROADCAST = '<marti><dest mission="Air"/></marti>'
 
     def state_to_cot(s):
         icao24, cs = s[0], (s[1] or "").strip() or s[0].upper()
@@ -213,7 +213,7 @@ data:
     def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     def stale_str(s=1800): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+    MARTI_BROADCAST = '<marti><dest mission="Land"/></marti>'
 
     def packet_to_cot(line):
         if line.startswith('#') or '>' not in line: return None
@@ -318,7 +318,7 @@ data:
         uid = f"SAT-{sat.satnum}"
         name = sat_names.get(sat.satnum, str(sat.satnum))
         ts, st = now_str(), stale_str(INTERVAL * 3)
-        MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+        MARTI_BROADCAST = '<marti><dest mission="Air"/></marti>'
         xml = (
             f'<event version="2.0" type="a-f-A-M-F-Q" uid="{uid}" '
             f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
@@ -413,7 +413,7 @@ data:
     def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     def stale_str(s): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+    MARTI_BROADCAST = '<marti><dest mission="Hazards"/></marti>'
 
     def quake_to_cot(feat):
         fid = feat["id"]

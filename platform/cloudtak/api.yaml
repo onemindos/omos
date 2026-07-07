@@ -88,33 +88,13 @@ spec:
               # --- Patch 5: inject /onemind proxy block into nginx.conf ---
               # Inserts before the /api location block so the browser plugin can reach
               # ws(s)://cloudtak.onemindos.dev/onemind/ws same-origin (no CORS needed).
+              # Uses awk one-liner (single indented line) to stay inside YAML literal block.
               BRIDGE_URL="${CLOUDTAK_Config_onemind__bridge__url:-http://onemind-ai-bridge.hermes.svc.cluster.local:8080}"
-              python3 -c "
-import sys
-bridge = '${BRIDGE_URL}'
-with open('/etc/nginx/nginx.conf', 'r') as f:
-    conf = f.read()
-marker = '        location ~ ^/api'
-block = '''
-        location /onemind/ {
-            proxy_pass ''' + bridge + '''/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade \$http_upgrade;
-            proxy_set_header Connection \"upgrade\";
-            proxy_set_header Host \$host;
-            proxy_read_timeout 60s;
-        }
-'''
-if marker in conf and 'location /onemind/' not in conf:
-    conf = conf.replace(marker, block + marker, 1)
-    with open('/etc/nginx/nginx.conf', 'w') as f:
-        f.write(conf)
-    print('patch5: /onemind proxy injected')
-elif 'location /onemind/' in conf:
-    print('patch5: already patched')
-else:
-    print('patch5: marker not found, skipping')
-" && true
+              grep -q 'location /onemind/' /etc/nginx/nginx.conf && echo 'patch5: already patched' || \
+                awk -v b="$BRIDGE_URL" '/^ +location ~ \^\/api/{printf "        location /onemind/ {\n            proxy_pass %s/;\n            proxy_http_version 1.1;\n            proxy_set_header Upgrade $http_upgrade;\n            proxy_set_header Connection \"upgrade\";\n            proxy_set_header Host $host;\n            proxy_read_timeout 60s;\n        }\n",b}{print}' \
+                  /etc/nginx/nginx.conf > /tmp/nginx_patched.conf && \
+                mv /tmp/nginx_patched.conf /etc/nginx/nginx.conf && \
+                echo 'patch5: /onemind proxy injected'
 
               nginx
               exec npm run prod
