@@ -32,6 +32,8 @@ data:
     def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     def stale_str(s=300): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
+    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+
     def build_cot(mmsi, name, lat, lon, sog=0, cog=0, ship_type=""):
         uid = f"AIS-{mmsi}"
         cs = (name or str(mmsi)).strip()[:32]
@@ -45,6 +47,7 @@ data:
             f'<track speed="{sog:.2f}" course="{cog:.1f}"/>'
             f'<status readiness="false"/>'
             f'<remarks>MMSI:{mmsi} {ship_type}</remarks>'
+            f'{MARTI_BROADCAST}'
             f'<_flow-tags_ TAK-Server="AIS-Feed" time="{ts}"/>'
             f'</detail></event>'
         )
@@ -117,6 +120,8 @@ data:
         if abs(vr) > 2: return "a-f-A-M-F-Q", 60   # climbing/descending
         return "a-f-A-M-F-Q", 90
 
+    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+
     def state_to_cot(s):
         icao24, cs = s[0], (s[1] or "").strip() or s[0].upper()
         lon, lat = s[5], s[6]
@@ -136,6 +141,7 @@ data:
             f'<track speed="{spd:.1f}" course="{trk:.1f}"/>'
             f'<status readiness="false"/>'
             f'<remarks>ICAO:{icao24} {s[2]}</remarks>'
+            f'{MARTI_BROADCAST}'
             f'<_flow-tags_ TAK-Server="ADSB-Feed" time="{ts}"/>'
             f'</detail></event>'
         )
@@ -207,6 +213,8 @@ data:
     def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     def stale_str(s=1800): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
+    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+
     def packet_to_cot(line):
         if line.startswith('#') or '>' not in line: return None
         callsign = line.split('>')[0].strip()
@@ -225,6 +233,7 @@ data:
             f'<contact callsign="{callsign}"/>'
             f'<status readiness="false"/>'
             f'<remarks>APRS: {comment}</remarks>'
+            f'{MARTI_BROADCAST}'
             f'<_flow-tags_ TAK-Server="APRS-Feed" time="{ts}"/>'
             f'</detail></event>'
         )
@@ -309,6 +318,7 @@ data:
         uid = f"SAT-{sat.satnum}"
         name = sat_names.get(sat.satnum, str(sat.satnum))
         ts, st = now_str(), stale_str(INTERVAL * 3)
+        MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
         xml = (
             f'<event version="2.0" type="a-f-A-M-F-Q" uid="{uid}" '
             f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
@@ -317,6 +327,7 @@ data:
             f'<contact callsign="{name}"/>'
             f'<status readiness="false"/>'
             f'<remarks>NORAD:{sat.satnum} group:{GROUP}</remarks>'
+            f'{MARTI_BROADCAST}'
             f'<_flow-tags_ TAK-Server="SAT-Feed" time="{ts}"/>'
             f'</detail></event>'
         )
@@ -402,6 +413,8 @@ data:
     def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     def stale_str(s): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
+    MARTI_BROADCAST = '<marti><dest callsign="Broadcast"/></marti>'
+
     def quake_to_cot(feat):
         fid = feat["id"]
         if fid in seen_eq: return None
@@ -418,7 +431,9 @@ data:
             f'<point lat="{lat:.5f}" lon="{lon:.5f}" hae="{-abs(depth)*1000:.0f}" ce="9999999.0" le="9999999.0"/>'
             f'<detail>'
             f'<contact callsign="M{mag:.1f} Earthquake"/>'
+            f'<status readiness="false"/>'
             f'<remarks>M{mag:.1f} {place} depth:{depth:.1f}km</remarks>'
+            f'{MARTI_BROADCAST}'
             f'<_flow-tags_ TAK-Server="Hazard-Feed" time="{ts}"/>'
             f'</detail></event>'
         )
@@ -451,7 +466,9 @@ data:
             f'<point lat="{lat:.5f}" lon="{lon:.5f}" hae="9999999.0" ce="9999999.0" le="9999999.0"/>'
             f'<detail>'
             f'<contact callsign="{event}"/>'
+            f'<status readiness="false"/>'
             f'<remarks>{severity}: {headline}</remarks>'
+            f'{MARTI_BROADCAST}'
             f'<_flow-tags_ TAK-Server="Hazard-Feed" time="{ts}"/>'
             f'</detail></event>'
         )
