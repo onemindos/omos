@@ -361,10 +361,55 @@ data:
                 xml_str = msg.data.decode(errors="replace")
                 chat = parse_geochat(xml_str)
                 if chat and TAK_CALLSIGN.lower() in chat["to"].lower():
-                    # Operator chatted with Legacy — forward to the agent
-                    prompt = f"[TAK GeoChat from {chat['from']}]: {chat['message']}"
+                    sender = chat["from"]
+                    prompt = f"[TAK GeoChat from {sender}]: {chat['message']}"
                     log.info("GeoChat → Legacy: %s", prompt[:120])
-                    await nc.publish(LEGACY_SUBJECT, prompt.encode())
+
+                    # Use request/reply so Legacy can stream its response back
+                    # Collect all response chunks and re-inject as GeoChat
+                    async def _relay_response():
+                        response_text = ""
+                        try:
+                            # Create an inbox and subscribe before sending
+                            inbox = nc.new_inbox()
+                            chunks = []
+                            done = asyncio.Event()
+
+                            async def _on_chunk(m):
+                                if not m.data:  # zero-byte terminator = end of stream
+                                    done.set()
+                                    return
+                                try:
+                                    chunk = json.loads(m.data)
+                                    if chunk.get("type") == "response":
+                                        d = chunk.get("data", "")
+                                        text = d if isinstance(d, str) else d.get("text", "")
+                                        chunks.append(text)
+                                except Exception:
+                                    pass
+
+                            sub = await nc.subscribe(inbox, cb=_on_chunk)
+                            await nc.publish(LEGACY_SUBJECT, prompt.encode(), reply=inbox)
+
+                            try:
+                                await asyncio.wait_for(done.wait(), timeout=60)
+                            except asyncio.TimeoutError:
+                                log.warning("Legacy response timed out")
+                            finally:
+                                await sub.unsubscribe()
+
+                            response_text = "".join(chunks).strip()
+                        except Exception as e:
+                            log.warning("Legacy relay error: %s", e)
+                            response_text = f"[Legacy error: {e}]"
+
+                        if response_text:
+                            log.info("Legacy → TAK chat: %s", response_text[:120])
+                            cot_xml = build_geochat_cot(response_text, to_callsign=sender)
+                            await nc.publish("tak.cot.inject", cot_xml.encode())
+
+                    asyncio.create_task(_relay_response())
+
                 # Also update SA picture from any SA CoT
                 entity = parse_sa_entity(xml_str)
                 if entity and entity["uid"]:
