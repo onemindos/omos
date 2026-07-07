@@ -60,8 +60,11 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: zeus
+          # GHCR_PAT: Personal Access Token from github.com/settings/tokens
+          # Scopes: write:packages, read:packages, delete:packages
+          # Add as repo secret: Settings → Secrets → Actions → GHCR_PAT
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push CloudTAK API image
         uses: docker/build-push-action@v6
