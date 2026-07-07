@@ -2,12 +2,19 @@ name: Build TAK Plugins → GHCR
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/build-tak-plugins.yml"
-      - "tak-cluster/docker/Dockerfile.takserver-plugins.onemind"
-      - "tak-cluster/plugin/**"
+  # NOTE: CI builds fail because GITHUB_TOKEN (org-scoped) cannot pull
+  # ghcr.io/onemindos/takserver-plugins (owned by zeus personal account) even when public.
+  # Build locally with:
+  #   docker buildx build --platform linux/amd64 \
+  #     -f tak-cluster/docker/Dockerfile.takserver-plugins-patch.onemind \
+  #     -t ghcr.io/onemindos/takserver-plugins:5.7-onemind --push \
+  #     tak-cluster/plugin
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - ".github/workflows/build-tak-plugins.yml"
+  #     - "tak-cluster/docker/Dockerfile.takserver-plugins.onemind"
+  #     - "tak-cluster/plugin/**"
 
 jobs:
   build-push:
@@ -33,10 +40,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Layer the NatsBridgePlugin on top of the existing plugins image.
-      # ghcr.io/onemindos/takserver-plugins is public — no pull auth needed.
-      # /lib → /usr/lib in the base image (Debian symlink), so COPY to lib/ puts
-      # the JAR on the Spring loader.path (loader.path=file:lib/ in takserver-pm.jar).
-      # conf/plugins/ is where PluginSystemConfiguration (PLUGIN_CONFIG_BASE) reads YAML.
+      # ghcr.io/onemindos/takserver-plugins is public but CI token gets 403 on pull
+      # because the package is owned by zeus personal account not the org.
+      # This step will fail in CI — use local docker buildx build instead (see above).
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
