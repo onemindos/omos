@@ -1,0 +1,56 @@
+# platform-core: ingress, cloudflare tunnel, tailscale operator, external-secrets
+#
+# Covers: platform/ingress/  platform/cloudflare/  platform/tailscale/  platform/external-secrets/
+#
+# NOTE: cert-manager, ingress-nginx, and tailscale-operator Helm releases are managed
+# via Helm (values in platform/values/), NOT here. This Application manages only the
+# post-Helm K8s manifests (issuers, ClusterSecretStore, cloudflared config, etc.).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-core
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/ingress
+      directory:
+        recurse: true
+        exclude: "*.secret*,*.env"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/cloudflare
+      directory:
+        recurse: true
+        exclude: "*.secret*,*.env"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/tailscale
+      directory:
+        recurse: true
+        exclude: "*.secret*,*.env"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/external-secrets
+      directory:
+        recurse: true
+        exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudflare
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources

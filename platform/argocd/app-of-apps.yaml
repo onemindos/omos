@@ -1,0 +1,31 @@
+# App-of-Apps: syncs platform/argocd/ itself.
+# Apply this once manually; it then manages all other Applications.
+#
+#   kubectl apply -f platform/argocd/app-of-apps.yaml --context tailscale-operator.tail717ba0.ts.net
+#
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/argocd
+    directory:
+      recurse: false
+      # Exclude the app-of-apps itself to avoid self-management drift loops.
+      exclude: "app-of-apps.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
