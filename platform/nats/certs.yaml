@@ -1,0 +1,100 @@
+# cert-manager Certificate resources for NATS internal TLS (auto-rotating).
+# Applied before the NATS Helm install — the Helm chart references the secrets
+# produced here (nats-server-tls holds tls.crt + tls.key + ca.crt).
+#
+# Architecture:
+#   nats-selfsigned (Issuer, self-signed)
+#     └── nats-ca (Certificate, CA, 10y) → secret: nats-ca
+#           └── nats-ca-issuer (Issuer, uses nats-ca)
+#                 └── nats-server-tls (Certificate, 1y, auto-renews) → secret: nats-server-tls
+#
+# NATS Helm values that reference these secrets (platform/nats/values.template.yaml):
+#   config.nats.tls.secretName:      nats-server-tls
+#   config.cluster.tls.secretName:   nats-server-tls
+#   config.leafnodes.tls.secretName: nats-server-tls
+#   tlsCA.secretName:                nats-server-tls  (key: ca.crt)
+#
+# Leaf-node CA trust — manual step on CA rotation:
+#   The hermes leaf sidecar and TAK NATS bridge both mount a ca.crt to verify
+#   the NATS server TLS chain. Those certs are stored in 1Password (vault: 00-24 SO):
+#     - hermes-nats-ca   (property: ca.crt)  → K8s secret hermes-nats-ca  / hermes ns
+#     - hermes-leaf-conf (property: ca.crt)  → K8s secret hermes-leaf-conf / hermes ns
+#     - tak-nats-leaf    (property: ca.crt)  → K8s secret tak-nats-leaf   / takserver ns
+#
+#   nats-ca has a 10-year duration; cert-manager will auto-renew at the 2/3 mark
+#   (~2033). When it rotates, extract the new CA cert and update all three 1Password
+#   items, then force-sync ESO and restart the leaf pods:
+#
+#     NEW_CA=$(kubectl get secret nats-server-tls -n nats \
+#               -o jsonpath='{.data.ca\.crt}' | base64 -d)
+#     # Update 1Password items hermes-nats-ca, hermes-leaf-conf, tak-nats-leaf
+#     # (field: ca.crt) with $NEW_CA, then:
+#     kubectl annotate externalsecret hermes-nats-ca hermes-leaf-conf -n hermes \
+#       force-sync=$(date +%s) --overwrite
+#     kubectl annotate externalsecret tak-nats-leaf -n takserver \
+#       force-sync=$(date +%s) --overwrite
+#     kubectl rollout restart deployment/hermes-legacy -n hermes
+#     kubectl rollout restart deployment/tak-server -n takserver
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: nats-selfsigned
+  namespace: nats
+spec:
+  selfSigned: {}
+---
+# The CA itself (self-signed root). 10-year duration; cert-manager renews ~2033.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-ca
+  namespace: nats
+spec:
+  isCA: true
+  commonName: onemind-nats-ca
+  secretName: nats-ca
+  duration: 87600h   # 10y CA
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: nats-selfsigned
+    kind: Issuer
+---
+# Namespace-scoped Issuer that signs server certs using the CA above.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: nats-ca-issuer
+  namespace: nats
+spec:
+  ca:
+    secretName: nats-ca
+---
+# The NATS server certificate. SANs cover the client service, the headless
+# service (pod-to-pod cluster routes), and localhost (for nats-box / port-forward).
+# cert-manager auto-renews at the 2/3 mark (~8 months into the 1-year duration).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nats-server-tls
+  namespace: nats
+spec:
+  secretName: nats-server-tls
+  duration: 8760h    # 1y, auto-renewed by cert-manager
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: nats-ca-issuer
+    kind: Issuer
+  dnsNames:
+    - nats
+    - nats.nats.svc
+    - nats.nats.svc.cluster.local
+    - "*.nats-headless.nats.svc.cluster.local"
+    - nats-headless.nats.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
