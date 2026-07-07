@@ -125,7 +125,23 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
 
 # -----------------------------------------------------------------------------
-# 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT bridge
+# 8b. OMOS WORLD FEEDS — live global data → NATS → TAK → OMOS ATOC map
+# Sources: AIS ships, ADS-B aircraft, APRS trackers, satellites, hazards
+# Requires:
+#   omos-nats-creds secret in omos namespace (already created above)
+#   omos-feed-secrets (AISSTREAM_API_KEY, OPENSKY_USERNAME, OPENSKY_PASSWORD):
+#     kubectl create secret generic omos-feed-secrets -n omos \
+#       --from-literal=AISSTREAM_API_KEY='<key from aisstream.io — free signup>' \
+#       --from-literal=OPENSKY_USERNAME='<opensky.org free account>' \
+#       --from-literal=OPENSKY_PASSWORD='<opensky password>'
+# Toggle feeds: kubectl scale deployment feed-ships feed-aircraft feed-aprs \
+#   feed-satellites feed-hazards -n omos --replicas=0|1
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
+
+# -----------------------------------------------------------------------------
+# 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge
 # Requires:
 #   hermes-env secret (AWS creds + NATS from 1Password)
 #   hermes-leaf-conf secret (NATS leaf.conf)
@@ -142,9 +158,12 @@ kubectl --context "$CTX" apply -f "$PLATFORM/legacy/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/legacy/pvc.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/legacy/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/legacy/tak-agent.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/hermes/onemind-ai-bridge.yaml"
 
 echo ""
 echo "==> Platform install complete."
 echo "    TAK cluster:  see tak-cluster/DEPLOY-RUNBOOK.md"
 echo "    Streams:      nats-migration/provision.sh"
 echo "    tak-agent:    needs cloudtak-agent-token secret (see step 9 above)"
+echo "    feeds:        needs omos-feed-secrets (see step 8b above)"
+echo "    AISSTREAM:    sign up free at https://aisstream.io to get API key"

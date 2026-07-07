@@ -62,6 +62,24 @@ spec:
               }
               " 2>&1
 
+              # --- Patch 3: login.js — extend session token from 16h to 30d ---
+              sed -i "s/expiresIn: '16h'/expiresIn: '30d'/g" \
+                /home/etl/api/dist/routes/login.js 2>/dev/null && \
+                echo "patch3: token expiry 16h->30d applied" || \
+                echo "patch3: sed failed (non-fatal)"
+
+              # --- Patch 4: inject window.__ONEMIND_BRIDGE_URL__ into built HTML ---
+              BRIDGE_URL="${CLOUDTAK_Config_onemind__bridge__url:-http://onemind-ai-bridge.hermes.svc.cluster.local:8080}"
+              INJECT_SCRIPT="<script>window.__ONEMIND_BRIDGE_URL__='${BRIDGE_URL}';</script>"
+              INDEX_HTML="/home/etl/api/dist/static/index.html"
+              if [ -f "$INDEX_HTML" ]; then
+                sed -i "s|</head>|${INJECT_SCRIPT}</head>|" "$INDEX_HTML" && \
+                  echo "patch4: bridge URL injected into index.html" || \
+                  echo "patch4: sed failed (non-fatal)"
+              else
+                echo "patch4: index.html not found at $INDEX_HTML (non-fatal)"
+              fi
+
               # --- Replicate the original start script: generate nginx.conf, start nginx, start node ---
               cd /home/etl/api
               node nginx.conf.js > /etc/nginx/nginx.conf
@@ -74,6 +92,14 @@ spec:
               value: "0"
             - name: CLOUDTAK_Mode
               value: "docker-compose"
+            # --- OneMind OS branding (sets login::name in CloudTAK settings DB) ---
+            - name: CLOUDTAK_Config_login__name
+              value: "OMOS ATOC"
+            - name: CLOUDTAK_Config_server__name
+              value: "OneMind OS"
+            # --- AI bridge URL injected into window.__ONEMIND_BRIDGE_URL__ ---
+            - name: CLOUDTAK_Config_onemind__bridge__url
+              value: "http://onemind-ai-bridge.hermes.svc.cluster.local:8080"
             - name: CLOUDTAK_Config_media_url
               value: "http://cloudtak-media:9997"
             - name: SigningSecret

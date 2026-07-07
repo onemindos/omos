@@ -1,0 +1,204 @@
+---
+# onemind-ai-bridge — HTTP→NATS bridge for the CloudTAK AI plugin
+#
+# CloudTAK plugins run in the browser and can only make HTTP requests.
+# This pod exposes a tiny HTTP API that the AI panel posts to, then relays
+# the message over NATS RPC to tak-agent → Legacy AI.
+#
+# Endpoints:
+#   POST /chat   { "message": "..." } → { "response": "..." }
+#   GET  /health → 200 OK
+#
+# Secrets: omos-nats-creds (same as tak-agent)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onemind-ai-bridge
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: onemind-ai-bridge
+    app.kubernetes.io/part-of: omos-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-ai-bridge
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: onemind-ai-bridge
+    spec:
+      containers:
+        - name: bridge
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              pip install nats-py aiohttp --quiet
+              exec python3 /scripts/bridge.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: CHAT_SUBJECT
+              value: "svc.tak.chat"
+            - name: PORT
+              value: "8080"
+            - name: TIMEOUT_SEC
+              value: "30"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: script
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+      volumes:
+        - name: script
+          configMap:
+            name: onemind-ai-bridge-script
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: onemind-ai-bridge-script
+  namespace: hermes
+data:
+  bridge.py: |
+    #!/usr/bin/env python3
+    """
+    OneMind AI Bridge — HTTP ↔ NATS RPC relay.
+
+    POST /chat   { "message": "...", "callsign": "Zeus" }
+      → publishes to svc.tak.chat on NATS with reply-to subject
+      → waits up to TIMEOUT_SEC for tak-agent to relay Legacy's response
+      → returns { "response": "..." }
+
+    GET /health → 200 OK (checks NATS connection)
+    """
+    import asyncio, json, logging, os, ssl
+    from aiohttp import web
+    import nats
+
+    LOG = logging.getLogger("ai-bridge")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    CHAT_SUBJECT  = os.getenv("CHAT_SUBJECT", "svc.tak.chat")
+    PORT          = int(os.getenv("PORT", "8080"))
+    TIMEOUT_SEC   = float(os.getenv("TIMEOUT_SEC", "30"))
+
+    nc = None
+
+    async def get_nc():
+        global nc
+        if nc is None or nc.is_closed:
+            tls = ssl.create_default_context()
+            tls.check_hostname = False
+            tls.verify_mode = ssl.CERT_NONE
+            nc = await nats.connect(
+                servers=NATS_URL,
+                user=NATS_USER,
+                password=NATS_PASSWORD,
+                tls=tls,
+                connect_timeout=5,
+                reconnect_time_wait=2,
+            )
+            LOG.info(f"NATS connected: {NATS_URL}")
+        return nc
+
+    async def handle_chat(request: web.Request) -> web.Response:
+        try:
+            body = await request.json()
+        except Exception:
+            return web.json_response({"error": "invalid JSON"}, status=400)
+
+        message  = body.get("message", "").strip()
+        callsign = body.get("callsign", "Operator")
+        if not message:
+            return web.json_response({"error": "message required"}, status=400)
+
+        try:
+            conn = await get_nc()
+            payload = json.dumps({
+                "message": message,
+                "callsign": callsign,
+                "source": "cloudtak-plugin",
+            }).encode()
+
+            msg = await conn.request(CHAT_SUBJECT, payload, timeout=TIMEOUT_SEC)
+            data = json.loads(msg.data.decode())
+            response = data.get("response") or data.get("text") or str(data)
+            LOG.info(f"chat: {callsign}: {message[:60]} → {response[:60]}")
+            return web.json_response({"response": response})
+
+        except nats.errors.NoRespondersError:
+            return web.json_response(
+                {"response": "Legacy is not available right now — tak-agent may be offline."},
+                status=503,
+            )
+        except asyncio.TimeoutError:
+            return web.json_response(
+                {"response": "Legacy timed out responding. Try again."},
+                status=504,
+            )
+        except Exception as e:
+            LOG.error(f"bridge error: {e}")
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def handle_health(request: web.Request) -> web.Response:
+        try:
+            conn = await get_nc()
+            return web.json_response({"status": "ok", "nats": not conn.is_closed})
+        except Exception as e:
+            return web.json_response({"status": "error", "detail": str(e)}, status=503)
+
+    async def main():
+        await get_nc()
+        app = web.Application()
+        app.router.add_post("/chat",   handle_chat)
+        app.router.add_get("/health",  handle_health)
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, "0.0.0.0", PORT)
+        await site.start()
+        LOG.info(f"OneMind AI Bridge listening on :{PORT}")
+        await asyncio.Event().wait()
+
+    asyncio.run(main())
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onemind-ai-bridge
+  namespace: hermes
+spec:
+  selector:
+    app.kubernetes.io/name: onemind-ai-bridge
+  ports:
+    - port: 8080
+      targetPort: 8080

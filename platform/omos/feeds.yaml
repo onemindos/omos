@@ -1,0 +1,324 @@
+---
+# =============================================================================
+# OMOS World Feeds — live data sources → NATS → TAK → OMOS ATOC map
+#
+# Each feed is a separate K8s Deployment (streaming) or CronJob (polling).
+# All publish CoT XML to tak.cot.inject on the hub NATS bus.
+# tak-projector / NatsBridgePlugin deliver to TAK → CloudTAK + iTAK.
+#
+# Secrets required (all in omos namespace):
+#   omos-nats-creds        — NATS user+password (already exists)
+#   omos-feed-secrets      — AISSTREAM_API_KEY, OPENSKY_USER, OPENSKY_PASS
+#                            (create via 1Password → kubectl create secret)
+#
+# Toggle per-feed: set replicas: 0 to disable, replicas: 1 to enable.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Feed 1: AIS Ships — AISstream.io WebSocket (real-time, global chokepoints)
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-ships
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-ships
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-ships
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-ships
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py websockets --quiet && exec python3 /scripts/feed_ships.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: AISSTREAM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: omos-feed-secrets
+                  key: AISSTREAM_API_KEY
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          restartPolicy: Always
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-feed-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed 2: ADS-B Aircraft — OpenSky Network REST (polls every 15s, global)
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-aircraft
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-aircraft
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-aircraft
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-aircraft
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_aircraft.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: OPENSKY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: omos-feed-secrets
+                  key: OPENSKY_USERNAME
+                  optional: true
+            - name: OPENSKY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-feed-secrets
+                  key: OPENSKY_PASSWORD
+                  optional: true
+            - name: POLL_INTERVAL
+              value: "15"
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-feed-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed 3: APRS Ground/Air — APRS-IS TCP firehose (real-time)
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-aprs
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-aprs
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-aprs
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-aprs
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py --quiet && exec python3 /scripts/feed_aprs.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: APRS_FILTER
+              value: "r/0/0/20000"
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-feed-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed 4: Satellites — CelesTrak TLE + SGP4 (propagates every 30s)
+# Groups: stations (ISS), military, starlink — toggle via CELESTRAK_GROUP
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-satellites
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-satellites
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-satellites
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-satellites
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py aiohttp sgp4 --quiet && exec python3 /scripts/feed_satellites.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: CELESTRAK_GROUP
+              value: "stations"
+            - name: PROPAGATE_INTERVAL
+              value: "30"
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-feed-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed 5: Hazard Events — USGS earthquakes + NWS weather alerts (polls 60s)
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-hazards
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-hazards
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-hazards
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-hazards
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_hazards.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: POLL_INTERVAL
+              value: "60"
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-feed-scripts

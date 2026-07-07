@@ -1,0 +1,11 @@
+{
+  "name": "@onemind/cloudtak-plugin-ai",
+  "version": "1.0.0",
+  "description": "OneMind Legacy AI chat panel for CloudTAK",
+  "main": "index.ts",
+  "devDependencies": {
+    "@tak-ps/cloudtak": "^13.35.0",
+    "vue": "^3.4.0",
+    "typescript": "^5.0.0"
+  }
+}

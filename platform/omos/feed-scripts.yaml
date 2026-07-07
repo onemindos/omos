@@ -1,0 +1,500 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-feed-scripts
+  namespace: omos
+data:
+  # ---------------------------------------------------------------------------
+  # feed_ships.py — AISstream.io WebSocket → tak.cot.inject (real-time AIS)
+  # ---------------------------------------------------------------------------
+  feed_ships.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, ssl
+    from datetime import datetime, timezone, timedelta
+    import nats, websockets
+
+    LOG = logging.getLogger("feed-ships")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    API_KEY = os.getenv("AISSTREAM_API_KEY", "")
+    INJECT_SUBJ = "tak.cot.inject"
+    XML_DECL = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+
+    # Tactical chokepoints — monitor all of them simultaneously
+    BBOXES = [
+        [[10.0, -180.0], [80.0, 180.0]],   # Global northern hemisphere
+        [[-60.0, -180.0], [10.0, 180.0]],  # Global southern hemisphere
+    ]
+
+    def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    def stale_str(s=300): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def build_cot(mmsi, name, lat, lon, sog=0, cog=0, ship_type=""):
+        uid = f"AIS-{mmsi}"
+        cs = (name or str(mmsi)).strip()[:32]
+        ts, st = now_str(), stale_str(300)
+        xml = (
+            f'<event version="2.0" type="a-f-S-X-M" uid="{uid}" '
+            f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.6f}" lon="{lon:.6f}" hae="-10000" ce="9999999.0" le="9999999.0"/>'
+            f'<detail>'
+            f'<contact callsign="{cs}"/>'
+            f'<track speed="{sog:.2f}" course="{cog:.1f}"/>'
+            f'<remarks>MMSI:{mmsi} {ship_type}</remarks>'
+            f'<_flow-tags_ TAK-Server="AIS-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    async def main():
+        tls = ssl.create_default_context(); tls.check_hostname = False; tls.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD, tls=tls)
+        LOG.info("NATS connected")
+        count = 0
+        while True:
+            try:
+                async with websockets.connect("wss://stream.aisstream.io/v0/stream", ping_interval=30) as ws:
+                    await ws.send(json.dumps({"APIKey": API_KEY, "BoundingBoxes": BBOXES}))
+                    LOG.info("AISstream connected — streaming global AIS")
+                    async for raw in ws:
+                        msg = json.loads(raw)
+                        md = msg.get("MetaData", {})
+                        mmsi = md.get("MMSI") or md.get("UserID")
+                        lat  = md.get("latitude") or md.get("Latitude")
+                        lon  = md.get("longitude") or md.get("Longitude")
+                        if not mmsi or lat is None or lon is None:
+                            continue
+                        pr = msg.get("Message", {})
+                        pos = pr.get("PositionReport", pr.get("StandardClassBPositionReport", {}))
+                        sog = pos.get("Sog", 0) or 0
+                        cog = pos.get("Cog", 0) or 0
+                        sdata = pr.get("ShipStaticData", {})
+                        name = sdata.get("Name", "") or md.get("ShipName", "")
+                        stype = str(sdata.get("Type", {}).get("Code", ""))
+                        cot = build_cot(mmsi, name, lat, lon, sog, cog, stype)
+                        await nc.publish(INJECT_SUBJ, cot)
+                        count += 1
+                        if count % 500 == 0:
+                            LOG.info(f"Published {count} AIS tracks")
+            except Exception as e:
+                LOG.error(f"AISstream error: {e} — reconnecting in 5s")
+                await asyncio.sleep(5)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_aircraft.py — OpenSky Network REST → tak.cot.inject (polls every 15s)
+  # ---------------------------------------------------------------------------
+  feed_aircraft.py: |
+    #!/usr/bin/env python3
+    import asyncio, logging, os, ssl
+    from datetime import datetime, timezone, timedelta
+    import nats, aiohttp
+
+    LOG = logging.getLogger("feed-aircraft")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL  = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER = os.getenv("NATS_USER", "")
+    NATS_PASS = os.getenv("NATS_PASSWORD", "")
+    OS_USER   = os.getenv("OPENSKY_USERNAME", "")
+    OS_PASS   = os.getenv("OPENSKY_PASSWORD", "")
+    POLL      = int(os.getenv("POLL_INTERVAL", "15"))
+    INJECT    = "tak.cot.inject"
+    XML_DECL  = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+
+    def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    def stale_str(s=90): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def classify(s):
+        # s[8]=on_ground, s[9]=velocity(m/s), s[11]=vert_rate
+        if s[8]: return "a-f-G-U-C-V", 120   # on ground → surface vehicle
+        vr = s[11] or 0
+        if abs(vr) > 2: return "a-f-A-M-F-Q", 60   # climbing/descending
+        return "a-f-A-M-F-Q", 90
+
+    def state_to_cot(s):
+        icao24, cs = s[0], (s[1] or "").strip() or s[0].upper()
+        lon, lat = s[5], s[6]
+        if lat is None or lon is None: return None
+        alt  = s[7] or 0
+        spd  = (s[9] or 0) * 1.94384  # m/s → knots
+        trk  = s[10] or 0
+        ctype, stale_s = classify(s)
+        ts, st = now_str(), stale_str(stale_s)
+        uid = f"ADSB-{icao24.upper()}"
+        xml = (
+            f'<event version="2.0" type="{ctype}" uid="{uid}" '
+            f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.6f}" lon="{lon:.6f}" hae="{alt:.1f}" ce="9999999.0" le="9999999.0"/>'
+            f'<detail>'
+            f'<contact callsign="{cs}"/>'
+            f'<track speed="{spd:.1f}" course="{trk:.1f}"/>'
+            f'<remarks>ICAO:{icao24} {s[2]}</remarks>'
+            f'<_flow-tags_ TAK-Server="ADSB-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    async def main():
+        tls = ssl.create_default_context(); tls.check_hostname = False; tls.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(servers=NATS_URL, user=NATS_USER, password=NATS_PASS, tls=tls)
+        LOG.info("NATS connected")
+        auth = aiohttp.BasicAuth(OS_USER, OS_PASS) if OS_USER else None
+        url  = "https://opensky-network.org/api/states/all"
+        async with aiohttp.ClientSession(auth=auth, headers={"User-Agent": "omos-feed-aircraft/1.0"}) as ses:
+            while True:
+                try:
+                    async with ses.get(url, timeout=aiohttp.ClientTimeout(total=20)) as r:
+                        if r.status == 429:
+                            LOG.warning("OpenSky rate limited — sleeping 60s")
+                            await asyncio.sleep(60)
+                            continue
+                        data = await r.json(content_type=None)
+                    states = data.get("states") or []
+                    published = 0
+                    for s in states:
+                        cot = state_to_cot(s)
+                        if cot:
+                            await nc.publish(INJECT, cot)
+                            published += 1
+                    LOG.info(f"ADS-B: published {published}/{len(states)} aircraft")
+                except Exception as e:
+                    LOG.error(f"OpenSky error: {e}")
+                await asyncio.sleep(POLL)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_aprs.py — APRS-IS TCP → tak.cot.inject (real-time ground/air tracks)
+  # ---------------------------------------------------------------------------
+  feed_aprs.py: |
+    #!/usr/bin/env python3
+    import asyncio, logging, os, re, ssl
+    from datetime import datetime, timezone, timedelta
+    import nats
+
+    LOG = logging.getLogger("feed-aprs")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL  = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER = os.getenv("NATS_USER", "")
+    NATS_PASS = os.getenv("NATS_PASSWORD", "")
+    APRS_HOST = "rotate.aprs2.net"
+    APRS_PORT = 14580
+    APRS_FILTER = os.getenv("APRS_FILTER", "r/0/0/20000")
+    LOGIN = f"user OMOS-1 pass -1 vers omos-feed-aprs 1.0\r\n".encode()
+    INJECT = "tak.cot.inject"
+    XML_DECL = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+
+    POS_RE = re.compile(r"[!=@/](\d{2})(\d{2}\.\d+)([NS]).(\d{3})(\d{2}\.\d+)([EW])")
+
+    def parse_pos(pkt):
+        m = POS_RE.search(pkt)
+        if not m: return None, None
+        la_d, la_m, la_ns, lo_d, lo_m, lo_ew = m.groups()
+        lat = float(la_d) + float(la_m) / 60.0
+        lon = float(lo_d) + float(lo_m) / 60.0
+        if la_ns == 'S': lat = -lat
+        if lo_ew == 'W': lon = -lon
+        return lat, lon
+
+    def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    def stale_str(s=1800): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def packet_to_cot(line):
+        if line.startswith('#') or '>' not in line: return None
+        callsign = line.split('>')[0].strip()
+        lat, lon = parse_pos(line)
+        if lat is None: return None
+        uid = f"APRS-{callsign}"
+        is_air = '/^' in line or '/X' in line
+        ctype = "a-f-A-M-F-Q" if is_air else "a-f-G-U-C"
+        ts, st = now_str(), stale_str(1800)
+        comment = line[line.rfind(':')+1:][:60] if ':' in line else ""
+        xml = (
+            f'<event version="2.0" type="{ctype}" uid="{uid}" '
+            f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.6f}" lon="{lon:.6f}" hae="9999999.0" ce="9999999.0" le="9999999.0"/>'
+            f'<detail>'
+            f'<contact callsign="{callsign}"/>'
+            f'<remarks>APRS: {comment}</remarks>'
+            f'<_flow-tags_ TAK-Server="APRS-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    async def main():
+        tls = ssl.create_default_context(); tls.check_hostname = False; tls.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(servers=NATS_URL, user=NATS_USER, password=NATS_PASS, tls=tls)
+        LOG.info("NATS connected")
+        count = 0
+        while True:
+            try:
+                reader, writer = await asyncio.open_connection(APRS_HOST, APRS_PORT)
+                writer.write(LOGIN)
+                writer.write(f"#filter {APRS_FILTER}\r\n".encode())
+                await writer.drain()
+                LOG.info(f"APRS-IS connected, filter={APRS_FILTER}")
+                while True:
+                    raw = await asyncio.wait_for(reader.readline(), timeout=120)
+                    if not raw: break
+                    line = raw.decode("latin-1").strip()
+                    cot = packet_to_cot(line)
+                    if cot:
+                        await nc.publish(INJECT, cot)
+                        count += 1
+                        if count % 200 == 0:
+                            LOG.info(f"APRS: published {count} tracks")
+            except Exception as e:
+                LOG.error(f"APRS-IS error: {e} — reconnect in 5s")
+                await asyncio.sleep(5)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_satellites.py — CelesTrak TLE + SGP4 → tak.cot.inject (every 30s)
+  # ---------------------------------------------------------------------------
+  feed_satellites.py: |
+    #!/usr/bin/env python3
+    import asyncio, logging, math, os, ssl
+    from datetime import datetime, timezone, timedelta
+    import nats, aiohttp
+    from sgp4.api import Satrec, jday
+
+    LOG = logging.getLogger("feed-satellites")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL  = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER = os.getenv("NATS_USER", "")
+    NATS_PASS = os.getenv("NATS_PASSWORD", "")
+    GROUP     = os.getenv("CELESTRAK_GROUP", "stations")
+    INTERVAL  = int(os.getenv("PROPAGATE_INTERVAL", "30"))
+    INJECT    = "tak.cot.inject"
+    XML_DECL  = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+
+    # Use TLE text format — each entry is 3 lines: name, TLE line 1, TLE line 2
+    CELESTRAK_URL = f"https://celestrak.org/NORAD/elements/gp.php?GROUP={GROUP}&FORMAT=tle"
+
+    sats = []      # list of Satrec objects
+    sat_names = {} # satnum → name string (Satrec is a C extension, can't set attrs)
+
+    def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    def stale_str(s=120): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def eci_to_geodetic(r, gmst):
+        x, y, z = r
+        lon = math.degrees(math.atan2(y, x) - gmst)
+        lon = ((lon + 180) % 360) - 180
+        lat = math.degrees(math.atan2(z, math.sqrt(x**2 + y**2)))
+        alt = math.sqrt(x**2 + y**2 + z**2) - 6371.0
+        return lat, lon, alt
+
+    def sat_to_cot(sat, now):
+        jd, fr = jday(now.year, now.month, now.day,
+                       now.hour, now.minute,
+                       now.second + now.microsecond / 1e6)
+        e, r, _ = sat.sgp4(jd, fr)
+        if e != 0 or r is None: return None
+        # GMST (simplified)
+        d = (jd - 2451545.0) + fr
+        gmst = math.radians((280.46061837 + 360.98564736629 * d) % 360)
+        lat, lon, alt_km = eci_to_geodetic(r, gmst)
+        uid = f"SAT-{sat.satnum}"
+        name = sat_names.get(sat.satnum, str(sat.satnum))
+        ts, st = now_str(), stale_str(INTERVAL * 3)
+        xml = (
+            f'<event version="2.0" type="a-f-A-M-F-Q" uid="{uid}" '
+            f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.4f}" lon="{lon:.4f}" hae="{alt_km*1000:.0f}" ce="9999999.0" le="9999999.0"/>'
+            f'<detail>'
+            f'<contact callsign="{name}"/>'
+            f'<remarks>NORAD:{sat.satnum} group:{GROUP}</remarks>'
+            f'<_flow-tags_ TAK-Server="SAT-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    async def load_tles(session):
+        global sats
+        try:
+            async with session.get(CELESTRAK_URL, timeout=aiohttp.ClientTimeout(total=30)) as r:
+                text = await r.text()
+            lines = [l.strip() for l in text.strip().splitlines() if l.strip()]
+            new = []
+            # TLE format: groups of 3 lines — name, line1, line2
+            i = 0
+            while i + 2 < len(lines):
+                name = lines[i]
+                l1   = lines[i+1]
+                l2   = lines[i+2]
+                if l1.startswith('1 ') and l2.startswith('2 '):
+                    try:
+                        s = Satrec.twoline2rv(l1, l2)
+                        sat_names[s.satnum] = name
+                        new.append(s)
+                        i += 3
+                    except Exception:
+                        i += 1
+                else:
+                    i += 1
+            sats = new
+            LOG.info(f"Loaded {len(sats)} TLEs for group={GROUP}")
+        except Exception as e:
+            LOG.error(f"TLE refresh error: {e}")
+
+    async def main():
+        tls = ssl.create_default_context(); tls.check_hostname = False; tls.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(servers=NATS_URL, user=NATS_USER, password=NATS_PASS, tls=tls)
+        LOG.info("NATS connected")
+        async with aiohttp.ClientSession(headers={"User-Agent": "omos-feed-sats/1.0"}) as ses:
+            await load_tles(ses)
+            tle_t = 0
+            while True:
+                import time
+                if time.time() - tle_t > 3600 * 4:
+                    await load_tles(ses)
+                    tle_t = time.time()
+                now = datetime.now(timezone.utc)
+                published = 0
+                for sat in sats:
+                    cot = sat_to_cot(sat, now)
+                    if cot:
+                        await nc.publish(INJECT, cot)
+                        published += 1
+                LOG.info(f"Satellites: published {published}/{len(sats)} positions")
+                await asyncio.sleep(INTERVAL)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_hazards.py — USGS earthquakes + NWS weather alerts → tak.cot.inject
+  # ---------------------------------------------------------------------------
+  feed_hazards.py: |
+    #!/usr/bin/env python3
+    import asyncio, logging, os, ssl
+    from datetime import datetime, timezone, timedelta
+    import nats, aiohttp
+
+    LOG = logging.getLogger("feed-hazards")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL  = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER = os.getenv("NATS_USER", "")
+    NATS_PASS = os.getenv("NATS_PASSWORD", "")
+    POLL      = int(os.getenv("POLL_INTERVAL", "60"))
+    INJECT    = "tak.cot.inject"
+    XML_DECL  = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+
+    USGS_URL  = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_hour.geojson"
+    NWS_URL   = "https://api.weather.gov/alerts/active?severity=Extreme,Severe&status=actual"
+
+    seen_eq  = set()
+    seen_wx  = set()
+
+    def now_str(): return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    def stale_str(s): return (datetime.now(timezone.utc) + timedelta(seconds=s)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def quake_to_cot(feat):
+        fid = feat["id"]
+        if fid in seen_eq: return None
+        seen_eq.add(fid)
+        props = feat["properties"]
+        lon, lat, depth = feat["geometry"]["coordinates"]
+        mag   = props.get("mag", 0) or 0
+        place = props.get("place", "Unknown")
+        uid   = f"USGS-{fid}"
+        ts, st = now_str(), stale_str(21600)  # 6h stale
+        xml = (
+            f'<event version="2.0" type="b-r-f-h-h" uid="{uid}" '
+            f'how="h-e" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.5f}" lon="{lon:.5f}" hae="{-abs(depth)*1000:.0f}" ce="9999999.0" le="9999999.0"/>'
+            f'<detail>'
+            f'<contact callsign="M{mag:.1f} Earthquake"/>'
+            f'<remarks>M{mag:.1f} {place} depth:{depth:.1f}km</remarks>'
+            f'<_flow-tags_ TAK-Server="Hazard-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    def alert_to_cot(feat):
+        fid = feat.get("id", "")
+        if fid in seen_wx: return None
+        seen_wx.add(fid)
+        props = feat.get("properties", {})
+        geom  = feat.get("geometry") or {}
+        coords = None
+        if geom.get("type") == "Point":
+            coords = geom["coordinates"]
+        elif geom.get("type") == "Polygon":
+            pts = geom["coordinates"][0]
+            lon = sum(p[0] for p in pts) / len(pts)
+            lat = sum(p[1] for p in pts) / len(pts)
+            coords = [lon, lat]
+        if not coords: return None
+        lon, lat = coords[0], coords[1]
+        event   = props.get("event", "Alert")
+        headline = props.get("headline", event)[:80]
+        severity = props.get("severity", "Unknown")
+        uid = f"NWS-{fid[-16:]}" if len(fid) > 16 else f"NWS-{fid}"
+        ts, st = now_str(), stale_str(3600)
+        xml = (
+            f'<event version="2.0" type="b-r-f-h-h" uid="{uid}" '
+            f'how="h-e" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.5f}" lon="{lon:.5f}" hae="9999999.0" ce="9999999.0" le="9999999.0"/>'
+            f'<detail>'
+            f'<contact callsign="{event}"/>'
+            f'<remarks>{severity}: {headline}</remarks>'
+            f'<_flow-tags_ TAK-Server="Hazard-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    async def poll_usgs(session, nc):
+        try:
+            async with session.get(USGS_URL, timeout=aiohttp.ClientTimeout(total=15)) as r:
+                data = await r.json(content_type=None)
+            published = 0
+            for feat in data.get("features", []):
+                cot = quake_to_cot(feat)
+                if cot:
+                    await nc.publish(INJECT, cot)
+                    published += 1
+            if published:
+                LOG.info(f"Earthquakes: {published} new events")
+        except Exception as e:
+            LOG.error(f"USGS error: {e}")
+
+    async def poll_nws(session, nc):
+        try:
+            async with session.get(NWS_URL,
+                                   headers={"Accept": "application/geo+json", "User-Agent": "omos-feed/1.0"},
+                                   timeout=aiohttp.ClientTimeout(total=15)) as r:
+                data = await r.json(content_type=None)
+            published = 0
+            for feat in data.get("features", []):
+                cot = alert_to_cot(feat)
+                if cot:
+                    await nc.publish(INJECT, cot)
+                    published += 1
+            if published:
+                LOG.info(f"NWS Alerts: {published} new events")
+        except Exception as e:
+            LOG.error(f"NWS error: {e}")
+
+    async def main():
+        tls = ssl.create_default_context(); tls.check_hostname = False; tls.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(servers=NATS_URL, user=NATS_USER, password=NATS_PASS, tls=tls)
+        LOG.info("NATS connected — polling USGS + NWS")
+        async with aiohttp.ClientSession() as ses:
+            while True:
+                await asyncio.gather(
+                    poll_usgs(ses, nc),
+                    poll_nws(ses, nc),
+                )
+                await asyncio.sleep(POLL)
+
+    asyncio.run(main())
