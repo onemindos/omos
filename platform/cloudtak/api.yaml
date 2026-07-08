@@ -96,6 +96,13 @@ spec:
                 mv /tmp/nginx_patched.conf /etc/nginx/nginx.conf && \
                 echo 'patch5: /onemind proxy injected'
 
+              # --- Patch 6: allow iframe embedding from onemindos.dev ---
+              # Remove X-Frame-Options DENY lines entirely (sed -E matches the full line).
+              grep -c 'X-Frame-Options' /etc/nginx/nginx.conf && \
+                sed -i "/X-Frame-Options/d" /etc/nginx/nginx.conf && \
+                echo 'patch6: X-Frame-Options removed' || \
+                echo 'patch6: X-Frame-Options not found (non-fatal)'
+
               nginx
               exec npm run prod
           ports:
