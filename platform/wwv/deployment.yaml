@@ -38,7 +38,7 @@ spec:
             - name: AUTH_TRUST_HOST
               value: "true"
             - name: NEXT_PUBLIC_WWV_EDITION
-              value: local
+              value: demo
           resources:
             requests:
               cpu: 200m
