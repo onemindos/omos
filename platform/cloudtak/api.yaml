@@ -96,6 +96,17 @@ spec:
                 mv /tmp/nginx_patched.conf /etc/nginx/nginx.conf && \
                 echo 'patch5: /onemind proxy injected'
 
+              # --- Patch 6: allow framing from onemindos.dev + redirect /login to OIDC ---
+              # Remove X-Frame-Options deny header and add CSP frame-ancestors so the
+              # omos-ui iframe can embed CloudTAK. Also inject a /login location that
+              # redirects straight to /api/login/oidc so users never see the native form.
+              sed -i 's/add_header X-Frame-Options[^;]*;//g' /etc/nginx/nginx.conf 2>/dev/null || true
+              grep -q 'frame-ancestors' /etc/nginx/nginx.conf && echo 'patch6: already patched' || \
+                awk '/^ +location ~ \^\/api/{printf "        add_header Content-Security-Policy \"frame-ancestors '"'"'self'"'"' https://onemindos.dev\" always;\n        location = /login {\n            return 302 /api/login/oidc;\n        }\n"}{print}' \
+                  /etc/nginx/nginx.conf > /tmp/nginx_p6.conf && \
+                mv /tmp/nginx_p6.conf /etc/nginx/nginx.conf && \
+                echo 'patch6: frame-ancestors + /login->OIDC injected'
+
               nginx
               exec npm run prod
           ports:
