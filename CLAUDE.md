@@ -133,7 +133,9 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | Grafana/Loki/Tempo | monitoring | (helm) | live |
 | Cloudflared | cloudflare | cloudflare/cloudflared | live |
 | ORP (fusion engine) | orp | ghcr.io/onemindos/orp:latest | live |
+| Authentik | authentik | ghcr.io/goauthentik/server (helm) | live |
 | omos-tak-projector | omos | python:3.12-alpine (inline script) | live |
+| omos-ui | omos | ghcr.io/onemindos/omos-ui:latest | SCAFFOLDING |
 | om-control-plane | omos | ghcr.io/onemindos/om-control-plane | PLANNED Wave 2 |
 | wwv-bridge | omos | ghcr.io/onemindos/wwv-bridge | PLANNED Wave 2 |
 | omos-feed-world | omos | ghcr.io/onemindos/omos-feed-world | PLANNED Wave 3 |
@@ -154,6 +156,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | cloudflare | cloudflared tunnel |
 | orp | ORP fusion engine |
 | omos | omos-* services (tak-projector, etc.) |
+| authentik | Authentik IdP (Forward Auth + OIDC) |
 | argocd | ArgoCD GitOps |
 | cert-manager | cert-manager |
 | ingress-nginx | ingress-nginx |
@@ -176,6 +179,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | hermes-webui-auth | hermes | Hermes web UI password | platform/hermes-webui/external-secret.yaml |
 | cloudtak-secrets | cloudtak | signing secret, MinIO keys, postgres DSN | platform/cloudtak/external-secret.yaml |
 | cloudtak-agent-token | hermes | CloudTAK API token (out-of-band — generate in CloudTAK UI) | not in ESO |
+| authentik-env | authentik | SECRET_KEY + PG password | platform/authentik/external-secret.yaml |
 | wwv-env | wwv | WWV auth secret, DB URL, encryption key | platform/wwv/external-secret.yaml |
 | wwv-pg-credentials | wwv | PostgreSQL user/pass/db for WWV | platform/wwv/external-secret.yaml |
 | omos-nats-creds | omos | NATS user+password for omos namespace | platform/omos/external-secret.yaml |
@@ -200,6 +204,9 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | tiles.cloudtak.onemindos.dev | CloudTAK tile server |
 | wwv.onemindos.dev | WorldWideView globe |
 | tak.onemindos.dev | TAK Server (WebTAK / EUD connect) |
+| onemindos.dev | OneMind OS web ops center (omos-ui) |
+| auth.onemindos.dev | Authentik IdP (SSO login portal) |
+| nats-ws.onemindos.dev | NATS WebSocket (browser SPA → in-cluster NATS) |
 
 ## Cluster Access
 
