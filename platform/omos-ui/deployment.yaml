@@ -17,7 +17,7 @@ spec:
         app.kubernetes.io/name: omos-ui
     spec:
       imagePullSecrets:
-        - name: ghcr-pull-secret
+        - name: ghcr
       containers:
         - name: omos-ui
           image: ghcr.io/onemindos/omos-ui:latest
