@@ -32,4 +32,6 @@ data:
         service: http://omos-ui.omos.svc.cluster.local:80
       - hostname: nats-ws.onemindos.dev
         service: http://nats.nats.svc.cluster.local:8080
+      - hostname: auth.onemindos.dev
+        service: http://authentik-server.authentik.svc.cluster.local:80
       - service: http_status:404
