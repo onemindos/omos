@@ -28,4 +28,8 @@ data:
         service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
       - hostname: legacy-ai.onemindos.dev
         service: http://synadia-bridge.synadia-bridge.svc.cluster.local:3300
+      - hostname: onemindos.dev
+        service: http://omos-ui.omos.svc.cluster.local:80
+      - hostname: nats-ws.onemindos.dev
+        service: http://nats.nats.svc.cluster.local:8080
       - service: http_status:404

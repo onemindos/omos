@@ -19,3 +19,4 @@ spec:
   ports:
     - { name: client, port: 4222, targetPort: 4222 }
     - { name: leaf, port: 7422, targetPort: 7422 }
+    - { name: websocket, port: 8080, targetPort: 8080 }
