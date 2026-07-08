@@ -101,11 +101,11 @@ spec:
               # omos-ui iframe can embed CloudTAK. Also inject a /login location that
               # redirects straight to /api/login/oidc so users never see the native form.
               sed -i 's/add_header X-Frame-Options[^;]*;//g' /etc/nginx/nginx.conf 2>/dev/null || true
-              grep -q 'frame-ancestors' /etc/nginx/nginx.conf && echo 'patch6: already patched' || \
-                awk '/^ +location ~ \^\/api/{printf "        add_header Content-Security-Policy \"frame-ancestors '"'"'self'"'"' https://onemindos.dev\" always;\n        location = /login {\n            return 302 /api/login/oidc;\n        }\n"}{print}' \
+              grep -q 'location = /login' /etc/nginx/nginx.conf && echo 'patch6: already patched' || \
+                awk '/^ +location ~ \^\/api/{printf "        location = /login {\n            return 302 /api/login/oidc;\n        }\n"}{print}' \
                   /etc/nginx/nginx.conf > /tmp/nginx_p6.conf && \
                 mv /tmp/nginx_p6.conf /etc/nginx/nginx.conf && \
-                echo 'patch6: frame-ancestors + /login->OIDC injected'
+                echo 'patch6: /login->OIDC injected'
 
               nginx
               exec npm run prod
