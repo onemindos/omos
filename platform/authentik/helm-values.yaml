@@ -21,6 +21,8 @@ redis:
 
 server:
   env:
+    - name: AUTHENTIK_WEB__FRAME_ANCESTORS
+      value: "'self' https://onemindos.dev https://cloudtak.onemindos.dev"
     - name: AUTHENTIK_SECRET_KEY
       valueFrom:
         secretKeyRef:
