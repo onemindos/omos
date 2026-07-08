@@ -45,7 +45,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: cloudflared-config
+            name: cloudflared-config-v2
         - name: creds
           secret:
             secretName: tunnel-creds-json
