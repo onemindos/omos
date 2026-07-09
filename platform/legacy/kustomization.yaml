@@ -5,6 +5,7 @@ resources:
   - namespace.yaml
   - pvc.yaml
   - deployment.yaml
+  - dashboard.yaml
 # Secrets (hermes-env, hermes-aws, hermes-nats-ca, docr) are created OUT-OF-BAND
 # and intentionally NOT part of this kustomization — see SECRETS.md.
 # Apply with:  kubectl apply -k platform/hermes/

@@ -46,12 +46,19 @@ spec:
           envFrom:
             - secretRef:
                 name: hermes-env          # full ~/.hermes/.env (providers, HERMES_NATS_*). See SECRETS.md
+            - secretRef:
+                name: hermes-dashboard-auth   # HERMES_DASHBOARD_BASIC_AUTH_USERNAME + _PASSWORD
           env:
             - name: NATS_URL
               value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
-            # Override envFrom: the Mac .env ships session=voice; the hub is Legacy (mother).
             - name: HERMES_NATS_SESSION_NAME
               value: "legacy"
+            - name: HERMES_DASHBOARD
+              value: "true"
+            - name: HERMES_DASHBOARD_HOST
+              value: "0.0.0.0"
+            - name: HERMES_DASHBOARD_PORT
+              value: "9119"
             # AWS Bedrock creds (currently reused from .env; rotate later → hermes-aws)
             # Uncomment once the rotated secret exists:
             # - name: AWS_ACCESS_KEY_ID
