@@ -23,9 +23,9 @@ metadata:
     app.kubernetes.io/name: nats-ws
     app.kubernetes.io/part-of: cloudflare-tunnel
   annotations:
-    description: "NATS WebSocket route — browser SPA connects via wss://nats-ws.onemindos.dev"
+    description: "NATS WebSocket route — browser SPA connects via wss://ws.onemindos.dev"
 data:
   tunnel: "66bbea70-5300-4e4e-96fa-e5bc4d767b61"
   comment: "OneMind hub tunnel"
-  hostname: "nats-ws.onemindos.dev"
+  hostname: "ws.onemindos.dev"
   service: "http://nats.nats.svc.cluster.local:8080"
