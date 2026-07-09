@@ -56,6 +56,8 @@ spec:
               value: /opt/data/workspace
             - name: HERMES_WEBUI_SERVER_CWD
               value: /opt/data
+            - name: HERMES_API_URL
+              value: "http://hermes-dashboard.hermes.svc.cluster.local:8642"
             - name: HERMES_WEBUI_SKIP_ONBOARDING
               value: "1"
             - name: HERMES_WEBUI_SSE_CHUNKED
