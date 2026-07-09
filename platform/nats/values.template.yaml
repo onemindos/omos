@@ -42,6 +42,11 @@ config:
         users:
           - user: sys
             password: "__SYS_PW__"
+          - user: monitor
+            password: "__MONITOR_PW__"
+        exports:
+          - service: "$SYS.REQ.>"
+            accounts: [ONEMIND]
       ONEMIND:
         jetstream:              # limits map reliably enables JS (bare string is not honored)
           max_mem: -1
@@ -51,6 +56,10 @@ config:
         users:
           - user: onemind
             password: "__ONEMIND_PW__"
+        imports:
+          - service:
+              subject: "$SYS.REQ.>"
+              account: SYS
 
 tlsCA:
   enabled: true
