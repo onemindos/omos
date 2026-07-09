@@ -135,12 +135,10 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | ORP (fusion engine) | orp | ghcr.io/onemindos/orp:latest | live |
 | Authentik | authentik | ghcr.io/goauthentik/server (helm) | live |
 | omos-tak-projector | omos | python:3.12-alpine (inline script) | live |
-| omos-ui | omos | ghcr.io/onemindos/omos-ui:latest | SCAFFOLDING |
-| om-control-plane | omos | ghcr.io/onemindos/om-control-plane | PLANNED Wave 2 |
-| wwv-bridge | omos | ghcr.io/onemindos/wwv-bridge | PLANNED Wave 2 |
+| omos-ui | omos | ghcr.io/onemindos/omos-ui:latest | IN PROGRESS — Unified NATS Ops Center |
+| omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | PLANNED Wave 2 |
 | omos-feed-world | omos | ghcr.io/onemindos/omos-feed-world | PLANNED Wave 3 |
 | omos-feed-intel | omos | ghcr.io/onemindos/omos-feed-intel | PLANNED Wave 3 |
-| omos-mission | omos | ghcr.io/onemindos/omos-mission | PLANNED Wave 4 |
 
 ## Namespaces
 
@@ -204,7 +202,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | tiles.cloudtak.onemindos.dev | CloudTAK tile server |
 | wwv.onemindos.dev | WorldWideView globe |
 | tak.onemindos.dev | TAK Server (WebTAK / EUD connect) |
-| onemindos.dev | OneMind OS web ops center (omos-ui) |
+| onemindos.dev | OneMind OS — Unified NATS Operations Center (omos-ui) |
 | auth.onemindos.dev | Authentik IdP (SSO login portal) |
 | nats-ws.onemindos.dev | NATS WebSocket (browser SPA → in-cluster NATS) |
 
@@ -258,3 +256,50 @@ NATS bridge plugin: `tak-cluster/plugin/` + `tak-cluster/build-root/`.
 The NatsBridgePlugin is the live CoT→NATS wire (`tak.cot.inject` in, `tak.cot.>` out).
 
 Full deploy runbook: `tak-cluster/DEPLOY-RUNBOOK.md`.
+
+## OneMind OS — Product Direction (2026-07)
+
+**omos-ui is the Unified NATS Operations Center.** One app that connects to any NATS server and renders everything: topology, agents, streams, missions, integrations, and security — all from a single WebSocket connection.
+
+### Architecture
+
+```
+BROWSER (SPA: React + Vite + nats.ws)
+├── Overview    — dashboard with bus metrics, agent roster, integration status
+├── Bus         — topology ($SYS.REQ.SERVER.PING), connections, subject explorer
+├── Agents      — discovery (agents.heartbeat.>), chat, tool registry, permissions
+├── Missions    — workflow graphs (cmd.*/evt.* orchestration), live execution
+├── Integrations— auto-discovered services (CloudTAK, HA, drones, cameras)
+├── Streams     — JetStream management, KV browsers, publish/subscribe
+├── Replay      — time-travel via JetStream fetch (historical message replay)
+├── Security    — $SYS advisory events (auth failures, disconnects, audit)
+└── Intel       — OSINT feeds, ORP entity browser, threat board
+         │
+         └── nats.ws (single WebSocket) ──► Any NATS server
+```
+
+### Key Design Principles
+
+1. **NATS IS the backend.** The browser connects directly to NATS via WebSocket. No custom API server for 90% of features. $SYS subjects provide all cluster metadata.
+2. **Agents self-register.** Using Synadia Agent SDK protocol (`agents.{verb}.{agent}.{owner}.*`), agents appear automatically via heartbeat/info subjects.
+3. **Integrations auto-discover.** Any NATS service following the subject grammar (tel.*, cmd.*, evt.*, ent.*) renders in the Integrations panel automatically.
+4. **Anyone can connect.** The app works with any NATS server — not locked to OneMind infrastructure. This is potentially a standalone product.
+
+### Synadia Agent SDK Integration
+
+New agents use the Synadia Agent SDK (TypeScript/Python, launched May 2026). Subject pattern aligns with existing grammar:
+```
+Synadia:  agents.{verb}.{token}.{owner}.{session}
+OneMind:  agents.{verb}.{agent}.{owner}.*
+```
+
+Features: auto-discovery, typed conversation protocol, heartbeat/liveness, mid-stream tool calling with permission gates. Legacy/Hermes coexists on the same bus.
+
+### Service Roadmap
+
+| Wave | Service | Purpose |
+|------|---------|---------|
+| 1 (now) | omos-ui | Unified NATS Ops Center — bus visibility, agent chat, integrations |
+| 2 | omos-mission-engine | NATS mission orchestrator — workflow graphs dispatching cmd.* |
+| 3 | omos-feed-world / omos-feed-intel | Automated data feeds (OSINT, world events, AIS, ADS-B) |
+| 4 | Domain bridges | New bridges: ROS (robotics), wellness, scheduler, etc. |
