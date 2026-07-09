@@ -181,6 +181,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | wwv-env | wwv | WWV auth secret, DB URL, encryption key | platform/wwv/external-secret.yaml |
 | wwv-pg-credentials | wwv | PostgreSQL user/pass/db for WWV | platform/wwv/external-secret.yaml |
 | omos-nats-creds | omos | NATS user+password for omos namespace | platform/omos/external-secret.yaml |
+| mission-engine-env | omos | omos-mission-engine runtime config (optional) | platform/omos-mission-engine/external-secret.yaml |
 | orp-nats-creds | orp | NATS user+password for ORP | platform/orp/external-secret.yaml |
 | orp-bridge-key | orp | ORP bridge API key | platform/orp/external-secret.yaml |
 | tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge | tak-cluster/deploy/external-secret.yaml |

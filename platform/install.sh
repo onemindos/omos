@@ -224,6 +224,8 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/cloudflare-route.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/external-secret.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/deployment.yaml"
 
 # -----------------------------------------------------------------------------
 # 8b. OMOS WORLD FEEDS — live global data → NATS → TAK → OMOS ATOC map
