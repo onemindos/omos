@@ -117,24 +117,10 @@ spec:
               value: "http://onemind-ai-bridge.hermes.svc.cluster.local:8080"
             - name: EMBED_ORIGIN
               value: "https://onemindos.dev"
-            # --- Authentik OIDC — single-sign-on with onemindos.dev shell ---
-            # Users who land on cloudtak.onemindos.dev directly get OIDC login.
-            # Users coming through /atoc/ (same-origin proxy) are pre-authed by
-            # nginx Forward Auth and pass through transparently.
+            # --- OIDC disabled — Authentik SSO removed; local auth in use ---
+            # TODO: re-enable when exposing publicly via Cloudflare Tunnel + Authentik.
             - name: CLOUDTAK_Config_oidc__enabled
-              value: "true"
-            - name: CLOUDTAK_Config_oidc__discovery
-              value: "https://auth.onemindos.dev/application/o/cloudtak/.well-known/openid-configuration"
-            - name: CLOUDTAK_Config_oidc__client__id
-              valueFrom:
-                secretKeyRef:
-                  name: cloudtak-secrets
-                  key: OIDC_CLIENT_ID
-            - name: CLOUDTAK_Config_oidc__client__secret
-              valueFrom:
-                secretKeyRef:
-                  name: cloudtak-secrets
-                  key: OIDC_CLIENT_SECRET
+              value: "false"
             - name: CLOUDTAK_Config_media_url
               value: "http://cloudtak-media:9997"
             - name: SigningSecret
