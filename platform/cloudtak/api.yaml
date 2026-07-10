@@ -96,21 +96,7 @@ spec:
                 mv /tmp/nginx_patched.conf /etc/nginx/nginx.conf && \
                 echo 'patch5: /onemind proxy injected'
 
-              # --- Patch 6: set OIDC DB settings from env vars (idempotent) ---
-              # CloudTAK reads oidc::* single-colon keys from the DB at runtime.
-              # The env vars set oidc::::* quad-colon keys but the login page reads
-              # single-colon keys. Sync them here so OIDC enforced mode persists.
-              OIDC_SECRET=$(psql "$POSTGRES" -t -c "SELECT value FROM settings WHERE key='oidc::::client::::secret';" 2>/dev/null | tr -d ' \n')
-              OIDC_CLIENT="${CLOUDTAK_Config_oidc__client__id}"
-              psql "$POSTGRES" -c "UPDATE settings SET value='true' WHERE key IN ('oidc::enabled','oidc::enforced')" 2>/dev/null
-              psql "$POSTGRES" -c "UPDATE settings SET value='https://auth.onemindos.dev/application/o/cloudtak/.well-known/openid-configuration' WHERE key='oidc::discovery'" 2>/dev/null
-              psql "$POSTGRES" -c "UPDATE settings SET value='$OIDC_CLIENT' WHERE key='oidc::client'" 2>/dev/null
-              psql "$POSTGRES" -c "UPDATE settings SET value='https://cloudtak.onemindos.dev' WHERE key='oidc::redirect'" 2>/dev/null
-              psql "$POSTGRES" -c "UPDATE settings SET value='$OIDC_SECRET' WHERE key='oidc::secret'" 2>/dev/null
-              echo "patch6: OIDC DB settings synced"
-
-              # --- Patch 7: cleanup — no extra nginx directives needed ---
-              echo 'patch7: done'
+              echo "patch6: skipped (OIDC managed via CloudTAK admin UI)"
 
               nginx
               exec npm run prod
