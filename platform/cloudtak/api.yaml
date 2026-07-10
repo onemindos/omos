@@ -18,88 +18,6 @@ spec:
       containers:
         - name: api
           image: ghcr.io/onemindos/cloudtak-api:latest
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              set -ex
-
-              # --- Patch 1: index.js — align admin wsClients key to AdminConnConfig.id=0 ---
-              sed -i "s/wsClients.get('admin')/wsClients.get('0')/g;
-                      s/wsClients.set('admin',/wsClients.set('0',/g;
-                      s/wsClients.delete('admin')/wsClients.delete('0')/g" \
-                /home/etl/api/dist/index.js 2>/dev/null && \
-                echo "patch1: index.js admin->0 applied" || \
-                echo "patch1: sed failed (non-fatal)"
-
-              # --- Patch 2: connection-pool.js — add AdminConnConfig CoT delivery path ---
-              node -e "
-              const fs = require('fs');
-              const file = '/home/etl/api/dist/lib/connection-pool.js';
-              let c = fs.readFileSync(file, 'utf8');
-              const marker = '            if (conn instanceof MachineConnConfig && !this.config.nosinks) {';
-              if (c.includes(marker) && !c.includes('instanceof AdminConnConfig')) {
-                const adminBlock = '            if (conn instanceof AdminConnConfig) {\n' +
-                  '                for (const [wsKey, clients] of (this.config.wsClients || new Map())) {\n' +
-                  '                    if (String(wsKey) !== String(conn.id)) continue;\n' +
-                  '                    for (const cot of cots) {\n' +
-                  '                        CoTParser.to_geojson(cot).then(feat => {\n' +
-                  '                            for (const client of clients) {\n' +
-                  '                                client.ws.send(JSON.stringify(client.format === \"geojson\"\n' +
-                  '                                    ? { type: \"cot\", connection: conn.id, data: feat }\n' +
-                  '                                    : { type: \"cot\", connection: conn.id, data: cot.raw }));\n' +
-                  '                            }\n' +
-                  '                        }).catch(() => {});\n' +
-                  '                    }\n' +
-                  '                }\n' +
-                  '            }\n';
-                c = c.replace(marker, adminBlock + marker);
-                fs.writeFileSync(file, c);
-                console.log('patch2: connection-pool.js AdminConnConfig applied');
-              } else if (c.includes('instanceof AdminConnConfig')) {
-                console.log('patch2: already patched');
-              } else {
-                console.log('patch2: marker not found - skipping');
-              }
-              " 2>&1
-
-              # --- Patch 3: login.js — extend session token from 16h to 30d ---
-              sed -i "s/expiresIn: '16h'/expiresIn: '30d'/g" \
-                /home/etl/api/dist/routes/login.js 2>/dev/null && \
-                echo "patch3: token expiry 16h->30d applied" || \
-                echo "patch3: sed failed (non-fatal)"
-
-              # --- Patch 4: inject window.__ONEMIND_BRIDGE_URL__ into built HTML ---
-              # Browser uses /onemind (same-origin path); nginx Patch 5 proxies to bridge pod.
-              INJECT_SCRIPT="<script>window.__ONEMIND_BRIDGE_URL__='/onemind';</script>"
-              # CloudTAK serves static files from api/web/dist/ (set in nginx.conf.js aliases)
-              INDEX_HTML="/home/etl/api/web/dist/index.html"
-              if [ -f "$INDEX_HTML" ]; then
-                sed -i "s|</head>|${INJECT_SCRIPT}</head>|" "$INDEX_HTML" && \
-                  echo "patch4: bridge URL injected into index.html" || \
-                  echo "patch4: sed failed (non-fatal)"
-              else
-                echo "patch4: index.html not found at $INDEX_HTML (non-fatal)"
-              fi
-
-              # --- Replicate the original start script: generate nginx.conf, start nginx, start node ---
-              cd /home/etl/api
-              node nginx.conf.js > /etc/nginx/nginx.conf
-
-              # --- Patch 5: inject /onemind proxy block into nginx.conf ---
-              # Inserts before the /api location block so the browser plugin can reach
-              # ws(s)://cloudtak.onemindos.dev/onemind/ws same-origin (no CORS needed).
-              # Uses awk one-liner (single indented line) to stay inside YAML literal block.
-              BRIDGE_URL="${CLOUDTAK_Config_onemind__bridge__url:-http://onemind-ai-bridge.hermes.svc.cluster.local:8080}"
-              grep -q 'location /onemind/' /etc/nginx/nginx.conf && echo 'patch5: already patched' || \
-                awk -v b="$BRIDGE_URL" '/^ +location ~ \^\/api/{printf "        location /onemind/ {\n            proxy_pass %s/;\n            proxy_http_version 1.1;\n            proxy_set_header Upgrade $http_upgrade;\n            proxy_set_header Connection \"upgrade\";\n            proxy_set_header Host $host;\n            proxy_read_timeout 60s;\n        }\n",b}{print}' \
-                  /etc/nginx/nginx.conf > /tmp/nginx_patched.conf && \
-                mv /tmp/nginx_patched.conf /etc/nginx/nginx.conf && \
-                echo 'patch5: /onemind proxy injected'
-
-              echo "patch6: skipped (OIDC managed via CloudTAK admin UI)"
-
-              nginx
-              exec npm run prod
           ports:
             - containerPort: 5000
           env:
@@ -107,18 +25,16 @@ spec:
               value: "0"
             - name: CLOUDTAK_Mode
               value: "docker-compose"
-            # --- OneMind OS branding (sets login::name in CloudTAK settings DB) ---
+            # --- OneMind OS branding ---
             - name: CLOUDTAK_Config_login__name
               value: "OMOS ATOC"
             - name: CLOUDTAK_Config_server__name
               value: "OneMind OS"
-            # --- AI bridge pod — Patch 5 nginx reverse-proxy uses this for /onemind/ location ---
+            # --- AI bridge pod — /onemind/ nginx location proxies here ---
             - name: CLOUDTAK_Config_onemind__bridge__url
               value: "http://onemind-ai-bridge.hermes.svc.cluster.local:8080"
             - name: EMBED_ORIGIN
               value: "https://onemindos.dev"
-            # --- OIDC disabled — Authentik SSO removed; local auth in use ---
-            # TODO: re-enable when exposing publicly via Cloudflare Tunnel + Authentik.
             - name: CLOUDTAK_Config_oidc__enabled
               value: "false"
             - name: CLOUDTAK_Config_media_url
