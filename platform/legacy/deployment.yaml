@@ -122,6 +122,65 @@ spec:
           resources:
             requests: { cpu: "50m", memory: "64Mi" }
             limits:   { memory: "128Mi" }
+        # ---- Hermes WebUI sidecar ----
+        # Co-located with Legacy to share the /opt/data PVC (RWO block storage).
+        # Gateway is on localhost:9119 — no cross-pod routing needed.
+        # hermes-webui Service selector updated to legacy pod labels.
+        - name: hermes-webui
+          image: ghcr.io/nesquena/hermes-webui:latest
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 10000
+            runAsGroup: 10000
+          ports:
+            - { name: webui, containerPort: 8787 }
+          envFrom:
+            - secretRef:
+                name: hermes-env
+            - secretRef:
+                name: hermes-webui-auth
+          env:
+            - name: HERMES_HOME
+              value: /opt/data
+            - name: HERMES_WEBUI_HOST
+              value: "0.0.0.0"
+            - name: HERMES_WEBUI_PORT
+              value: "8787"
+            - name: HERMES_WEBUI_STATE_DIR
+              value: /opt/data/webui
+            - name: HERMES_WEBUI_DEFAULT_WORKSPACE
+              value: /opt/data/workspace
+            - name: HERMES_WEBUI_SERVER_CWD
+              value: /opt/data
+            - name: HERMES_API_URL
+              value: "http://localhost:9119"
+            - name: HERMES_WEBUI_SKIP_ONBOARDING
+              value: "1"
+            - name: HERMES_WEBUI_SSE_CHUNKED
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+          resources:
+            requests: { cpu: "100m", memory: "128Mi" }
+            limits:   { memory: "512Mi" }
+          startupProbe:
+            httpGet: { path: /health, port: webui }
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: { path: /health, port: webui }
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet: { path: /health, port: webui }
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
       volumes:
         - name: data
           persistentVolumeClaim:

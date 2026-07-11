@@ -6,7 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/name: hermes-webui
 spec:
-  replicas: 1
+  # Scaled to 0 — WebUI now runs as a sidecar in the hermes-legacy pod
+  # (shared RWO PVC). The hermes-webui Service selector now points at legacy.
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: hermes-webui
@@ -118,11 +120,16 @@ metadata:
   namespace: hermes
   labels:
     app.kubernetes.io/name: hermes-webui
+  annotations:
+    description: Routes to the hermes-webui sidecar running inside the hermes-legacy pod
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: hermes-webui
+    # WebUI runs as a sidecar in the hermes-legacy pod (shared RWO PVC).
+    # Selecting by legacy pod labels routes :8787 to that sidecar container.
+    app.kubernetes.io/name: hermes
+    onemind.io/agent: legacy
   ports:
     - name: http
       port: 8787
-      targetPort: http
+      targetPort: webui
