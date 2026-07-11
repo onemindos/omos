@@ -1,0 +1,51 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint YAML
+        run: yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ geoserver/ uptime-kuma/ || true
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          severity: warning
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.9"
+
+      - name: Terraform Format Check
+        run: cd terraform && terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        run: |
+          cd terraform
+          terraform init -backend=false
+          terraform validate
+
+      - name: Check for secrets
+        run: |
+          echo "Scanning for potential secrets..."
+          if grep -rn "BEGIN.*PRIVATE KEY" --include="*.yaml" --include="*.yml" --include="*.tf" .; then
+            echo "::error::Private key found in tracked files!"
+            exit 1
+          fi
+          if grep -rn "password:" --include="*.yaml" --include="*.yml" platform/ | grep -v "secretKeyRef" | grep -v "external-secret" | grep -v "valueFrom" | grep -v "#"; then
+            echo "::warning::Possible hardcoded password found (review manually)"
+          fi
