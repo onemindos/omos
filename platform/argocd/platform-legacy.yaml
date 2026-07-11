@@ -1,13 +1,12 @@
-# platform-legacy: Legacy AI (Hermes), Hermes Web UI, Synadia Bridge, hermes ai-bridge
+# platform-legacy: Legacy AI (Hermes), Hermes Web UI, hermes ai-bridge
 #
 # Covers:
 #   platform/legacy/        (Hermes / Legacy AI agent — uses kustomization.yaml)
 #   platform/hermes/        (onemind-ai-bridge HTTP→NATS)
 #   platform/hermes-webui/  (Hermes web UI)
-#   platform/synadia-bridge/ (Synadia cloud bridge)
 #
 # The legacy/ directory has a kustomization.yaml so ArgoCD uses Kustomize.
-# hermes/, hermes-webui/, and synadia-bridge/ are plain directories.
+# hermes/ and hermes-webui/ are plain directories.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -34,12 +33,6 @@ spec:
       directory:
         recurse: false
         exclude: "*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/synadia-bridge
-      directory:
-        recurse: false
-        exclude: "Dockerfile,*.ts"
   destination:
     server: https://kubernetes.default.svc
     namespace: hermes

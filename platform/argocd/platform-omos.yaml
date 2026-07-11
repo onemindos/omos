@@ -3,7 +3,6 @@
 # Covers:
 #   platform/omos/   (tak-projector, omos feeds)
 #   platform/orp/    (ORP fusion engine)
-#   platform/homepage/ (internal ops dashboard)
 #
 # Dockerfile in orp/ is excluded — it is build-time only, not a K8s manifest.
 apiVersion: argoproj.io/v1alpha1
@@ -28,12 +27,6 @@ spec:
       directory:
         recurse: false
         exclude: "Dockerfile,*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/homepage
-      directory:
-        recurse: false
-        exclude: "*.secret*,*.env"
   destination:
     server: https://kubernetes.default.svc
     namespace: omos
