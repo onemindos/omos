@@ -47,5 +47,3 @@ spec:
       kind: Deployment
       jsonPointers:
         - /spec/template/metadata/annotations
-        - /spec/template/spec/containers/0/resources
-        - /spec/template/spec/initContainers

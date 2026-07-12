@@ -27,6 +27,40 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr
+      initContainers:
+        # ---- Copy agent Python source ----
+        # Seeds hermes-agent-src emptyDir from the hermes-legacy image so the
+        # webui can import hermes Python APIs directly via PYTHONPATH.
+        - name: copy-agent-src
+          image: ghcr.io/onemindos/hermes-legacy:v2
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              cp -a /opt/hermes/agent /agent-src/ && \
+              cp -a /opt/hermes/hermes_constants.py /agent-src/ && \
+              cp -a /opt/hermes/hermes_cli /agent-src/ 2>/dev/null || true && \
+              echo done
+          volumeMounts:
+            - name: hermes-agent-src
+              mountPath: /agent-src
+        # ---- Pre-seed webui /app ----
+        # hermeswebui_init.bash does `cp -a /apptoo /app` which fails with
+        # "preserving times: Operation not permitted" on a fresh emptyDir, causing
+        # a one-time crash on every pod start. Pre-seeding here with `cp -r`
+        # (no -a, no timestamp preservation) means the startup script sees a
+        # non-empty /app and skips re-seeding entirely.
+        - name: seed-webui-app
+          image: ghcr.io/nesquena/hermes-webui:latest
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c", "cp -r /apptoo/. /app/ 2>/dev/null; echo done"]
+          securityContext:
+            runAsUser: 10000
+            runAsGroup: 10000
+          volumeMounts:
+            - name: webui-app
+              mountPath: /app
       containers:
         # ---- Legacy (Hermes) ----
         # Talks PLAINTEXT to the in-pod leaf on localhost:4222 — identical to the
@@ -158,9 +192,15 @@ spec:
               value: "1"
             - name: HERMES_WEBUI_SSE_CHUNKED
               value: "1"
+            - name: PYTHONPATH
+              value: /opt/hermes-agent
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            - name: webui-app
+              mountPath: /app
+            - name: hermes-agent-src
+              mountPath: /opt/hermes-agent
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits:   { memory: "512Mi" }
@@ -191,3 +231,7 @@ spec:
         - name: nats-ca
           secret:
             secretName: hermes-nats-ca      # cluster NATS CA (ca.crt)
+        - name: webui-app
+          emptyDir: {}
+        - name: hermes-agent-src
+          emptyDir: {}
