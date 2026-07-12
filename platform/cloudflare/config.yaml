@@ -22,9 +22,9 @@ data:
         service: http://homepage.homepage.svc.cluster.local:3000
       - hostname: wwv.onemindos.dev
         service: http://wwv.wwv.svc.cluster.local:3000
-      - hostname: cloudtak.onemindos.dev
+      - hostname: atoc.onemindos.dev
         service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
-      - hostname: tiles.cloudtak.onemindos.dev
+      - hostname: tiles.atoc.onemindos.dev
         service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
       - hostname: legacy-ai.onemindos.dev
         service: http://synadia-bridge.synadia-bridge.svc.cluster.local:3300

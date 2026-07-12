@@ -64,9 +64,9 @@ spec:
                   name: cloudtak-secrets
                   key: POSTGRES
             - name: API_URL
-              value: "https://cloudtak.onemindos.dev"
+              value: "https://atoc.onemindos.dev"
             - name: PMTILES_URL
-              value: "https://tiles.cloudtak.onemindos.dev"
+              value: "https://tiles.atoc.onemindos.dev"
           resources:
             requests:
               cpu: 300m
