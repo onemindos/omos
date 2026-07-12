@@ -73,15 +73,15 @@ kubectl --context $CTX apply -f api.yaml
 ## Step 3: Expose via Cloudflare tunnel (or ingress)
 
 Create a Cloudflare tunnel route:
-- `cloudtak.onemindos.dev` → `http://cloudtak-api.cloudtak.svc.cluster.local:5000`
-- `tiles.cloudtak.onemindos.dev` → `http://cloudtak-tiles.cloudtak.svc.cluster.local:5002`
+- `atoc.onemindos.dev` → `http://cloudtak-api.cloudtak.svc.cluster.local:5000`
+- `tiles.atoc.onemindos.dev` → `http://cloudtak-tiles.cloudtak.svc.cluster.local:5002`
 - `video.onemindos.dev` → `http://cloudtak-media.cloudtak.svc.cluster.local:9997`
 
 Or use ingress-nginx with appropriate annotations.
 
 ## Step 4: Connect CloudTAK to TAK Server
 
-1. Open `https://cloudtak.onemindos.dev` → login (first user becomes admin)
+1. Open `https://atoc.onemindos.dev` → login (first user becomes admin)
 2. Admin panel → Connections → New Connection
 3. Upload a client cert pair from our TAK CA (`certs-out/admin.pem` + key)
    - Point to: `ssl://takserver-api.takserver.svc.cluster.local:8089`

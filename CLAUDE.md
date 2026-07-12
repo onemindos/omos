@@ -199,8 +199,8 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 
 | Hostname | Service |
 |----------|---------|
-| cloudtak.onemindos.dev | CloudTAK API |
-| tiles.cloudtak.onemindos.dev | CloudTAK tile server |
+| atoc.onemindos.dev | CloudTAK API |
+| tiles.atoc.onemindos.dev | CloudTAK tile server |
 | wwv.onemindos.dev | WorldWideView globe |
 | tak.onemindos.dev | TAK Server (WebTAK / EUD connect) |
 | onemindos.dev | OneMind OS — Unified NATS Operations Center (omos-ui) |
