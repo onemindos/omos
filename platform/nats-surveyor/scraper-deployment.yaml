@@ -15,9 +15,11 @@ spec:
       labels:
         app: nats-metrics-scrape
     spec:
+      imagePullSecrets:
+        - name: ghcr-onemindos
       containers:
         - name: scraper
-          image: registry.digitalocean.com/onemind-hub/nats-metrics-scrape:latest
+          image: ghcr.io/onemindos/nats-metrics-scrape:latest
           imagePullPolicy: Always
           env:
             - name: NATS_MONITORING_URL
