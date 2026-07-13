@@ -1574,7 +1574,7 @@ data:
     GDACS_URL = "https://www.gdacs.org/xml/rss.xml"
 
     NS = {
-        "gdacs": "https://www.gdacs.org",
+        "gdacs": "http://www.gdacs.org",
         "geo":   "http://www.w3.org/2003/01/geo/wgs84_pos#",
         "dc":    "http://purl.org/dc/elements/1.1/",
     }
