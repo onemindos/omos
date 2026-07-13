@@ -2073,7 +2073,8 @@ data:
                 if r.status != 200:
                     LOG.warning(f"EONET HTTP {r.status}")
                     return 0
-                data = await r.json()
+                text = await r.text()
+                data = json.loads(text)
         except Exception as e:
             LOG.error(f"EONET fetch error: {e}")
             return 0
