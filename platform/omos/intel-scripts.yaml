@@ -229,6 +229,10 @@ data:
             opts["user"]     = NATS_USER
             opts["password"] = NATS_PASSWORD
 
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+        opts["tls"] = tls_ctx
         nc = await nats.connect(**opts)
         LOG.info("NATS connected")
 
@@ -283,7 +287,7 @@ data:
   # ---------------------------------------------------------------------------
   sink_tak.py: |
     #!/usr/bin/env python3
-    import asyncio, json, logging, os
+    import asyncio, json, logging, os, ssl
     from datetime import datetime, timezone, timedelta
     import nats
     import nats.js.api
@@ -445,15 +449,29 @@ data:
     # ---------------------------------------------------------------------------
     async def main():
         global _nc
+        async def _error_cb(e):
+            LOG.error(f"NATS error: {e}")
+
+        async def _reconnected_cb():
+            LOG.info("NATS reconnected")
+
+        async def _disconnected_cb():
+            LOG.warning("NATS disconnected")
+
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+
         _nc = await nats.connect(
             servers=NATS_URL,
             user=NATS_USER,
             password=NATS_PASSWORD,
             max_reconnect_attempts=-1,
             reconnect_time_wait=2,
-            error_cb=lambda e: LOG.error(f"NATS error: {e}"),
-            reconnected_cb=lambda: LOG.info("NATS reconnected"),
-            disconnected_cb=lambda: LOG.warning("NATS disconnected"),
+            tls=tls_ctx,
+            error_cb=_error_cb,
+            reconnected_cb=_reconnected_cb,
+            disconnected_cb=_disconnected_cb,
         )
         LOG.info("NATS connected")
 
