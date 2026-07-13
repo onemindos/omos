@@ -488,6 +488,8 @@ data:
   #           JetStream Nats-Msg-Id header for stream-level dedup
   # Geometry: polygon centroid if present; else zone centroid via API;
   #           else hardcoded state centroid dict — never skips an alert
+  # Config:   NATS KV bucket feed-config, keys feed.noaa.*
+  # Status:   tel.feed.noaa.status published every 30s and after each poll
   # ---------------------------------------------------------------------------
   feed_intel_noaa.py: |
     #!/usr/bin/env python3
@@ -498,14 +500,14 @@ data:
     LOG = logging.getLogger("feed-intel-noaa")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
-    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    FEED_ID       = "noaa"
+    NATS_URL      = os.getenv("NATS_URL", "nats://nats.nats.svc.cluster.local:4222")
     NATS_USER     = os.getenv("NATS_USER", "")
     NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
-    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "300"))
-    NOAA_AREAS    = os.getenv("NOAA_AREAS", "US")   # comma-separated state codes or "US"
 
     NOAA_BASE    = "https://api.weather.gov"
     SEEN_RESET_S = 6 * 3600  # clear dedup set every 6 hours
+    STATUS_INTERVAL = 30.0
 
     # Approximate centroids (lat, lon) for all 50 US states + DC
     STATE_CENTROIDS: dict[str, tuple[float, float]] = {
@@ -537,11 +539,54 @@ data:
         "WY": (42.9957, -107.5512),
     }
 
+    # ---------------------------------------------------------------------------
+    # KV config watcher
+    # ---------------------------------------------------------------------------
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]  # last segment
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int, list[str]]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "300") or "300")
+        areas_raw     = config.get("areas", "US") or "US"
+        areas         = [a.strip() for a in areas_raw.split(",") if a.strip()]
+        return enabled, poll_interval, areas
+
+    # ---------------------------------------------------------------------------
+    # Status heartbeat
+    # ---------------------------------------------------------------------------
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
+
+    # ---------------------------------------------------------------------------
+    # Geometry helpers
+    # ---------------------------------------------------------------------------
     def slugify(text: str) -> str:
         return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
     def extract_state_from_zones(zones: list[str]) -> str:
-        """Extract two-letter state code from a UGC zone code like CTZ001."""
         for z in zones:
             m = re.match(r"^([A-Z]{2})[CZ]\d", z)
             if m:
@@ -595,14 +640,12 @@ data:
                 return poly_centroid(coords)
             if gtype == "MultiPolygon":
                 return multipolygon_centroid(coords)
-        # Try first zone centroid via API
         props    = feat.get("properties", {})
         affected = props.get("affectedZones") or []
         if affected:
             pt = await zone_centroid(session, affected[0])
             if pt:
                 return pt
-        # Fall back to state centroid dict
         fallback = STATE_CENTROIDS.get(state.upper())
         if fallback:
             return fallback
@@ -640,6 +683,9 @@ data:
             },
         }
 
+    # ---------------------------------------------------------------------------
+    # Poll
+    # ---------------------------------------------------------------------------
     async def poll(session: aiohttp.ClientSession, js, seen: set, areas: list[str]) -> int:
         params: dict[str, str] = {"status": "actual"}
         if areas and areas != ["US"]:
@@ -690,25 +736,72 @@ data:
             LOG.info(f"NOAA: published {published} new alerts (total seen={len(seen)})")
         return published
 
+    # ---------------------------------------------------------------------------
+    # Main
+    # ---------------------------------------------------------------------------
     async def main():
-        areas = [a.strip() for a in NOAA_AREAS.split(",") if a.strip()]
-        LOG.info(f"Starting NOAA feed areas={areas} poll={POLL_INTERVAL}s")
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-noaa",
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
+
+        # Load KV config
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        # Start watcher as background task (loads history first, then watches)
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        # Brief yield to let include_history populate config before first poll
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  300,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
         seen: set[str] = set()
         seen_reset_at  = time.monotonic()
+        last_status_at = time.monotonic()
+
         async with aiohttp.ClientSession() as session:
             while True:
-                if time.monotonic() - seen_reset_at > SEEN_RESET_S:
+                enabled, poll_interval, areas = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                # Heartbeat status
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                if not enabled:
+                    await asyncio.sleep(min(poll_interval, 10))
+                    continue
+
+                if now_mono - seen_reset_at > SEEN_RESET_S:
                     LOG.info(f"Clearing dedup set (had {len(seen)} entries)")
                     seen.clear()
                     seen_reset_at = time.monotonic()
-                await poll(session, js, seen, areas)
-                await asyncio.sleep(POLL_INTERVAL)
+
+                state["last_error"] = ""
+                try:
+                    n = await poll(session, js, seen, areas)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
+                except Exception as e:
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
 
     asyncio.run(main())
 
@@ -720,24 +813,69 @@ data:
   #                    m4plus (4.0-4.9), m5plus (5.0+)
   # Payload:  intel envelope with type=earthquake, source=usgs
   # Dedup:    in-memory set on feature id + Nats-Msg-Id header
+  # Config:   NATS KV bucket feed-config, keys feed.usgs.*
+  # Status:   tel.feed.usgs.status published every 30s and after each poll
   # ---------------------------------------------------------------------------
   feed_intel_usgs.py: |
     #!/usr/bin/env python3
-    import asyncio, json, logging, os, re
+    import asyncio, json, logging, os, re, time
     from datetime import datetime, timezone
     import aiohttp, nats
 
     LOG = logging.getLogger("feed-intel-usgs")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
-    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    FEED_ID       = "usgs"
+    NATS_URL      = os.getenv("NATS_URL", "nats://nats.nats.svc.cluster.local:4222")
     NATS_USER     = os.getenv("NATS_USER", "")
     NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
-    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "60"))
-    MIN_MAGNITUDE = float(os.getenv("MIN_MAGNITUDE", "2.5"))
 
-    USGS_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
+    USGS_URL        = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
+    STATUS_INTERVAL = 30.0
 
+    # ---------------------------------------------------------------------------
+    # KV config watcher
+    # ---------------------------------------------------------------------------
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int, float]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "60") or "60")
+        min_magnitude = float(config.get("min_magnitude", "2.5") or "2.5")
+        return enabled, poll_interval, min_magnitude
+
+    # ---------------------------------------------------------------------------
+    # Status heartbeat
+    # ---------------------------------------------------------------------------
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
+
+    # ---------------------------------------------------------------------------
+    # Payload builders
+    # ---------------------------------------------------------------------------
     def magnitude_bucket(mag: float) -> str:
         if mag >= 5.0: return "m5plus"
         if mag >= 4.0: return "m4plus"
@@ -789,7 +927,10 @@ data:
             },
         }
 
-    async def poll(session: aiohttp.ClientSession, js, seen: set) -> int:
+    # ---------------------------------------------------------------------------
+    # Poll
+    # ---------------------------------------------------------------------------
+    async def poll(session: aiohttp.ClientSession, js, seen: set, min_magnitude: float) -> int:
         try:
             async with session.get(
                 USGS_URL,
@@ -811,7 +952,7 @@ data:
                 continue
             props = feat.get("properties", {})
             mag   = props.get("mag")
-            if mag is None or mag < MIN_MAGNITUDE:
+            if mag is None or mag < min_magnitude:
                 continue
             if not feat.get("geometry") or not feat["geometry"].get("coordinates"):
                 continue
@@ -832,19 +973,62 @@ data:
             LOG.info(f"USGS: published {published} new events (total seen={len(seen)})")
         return published
 
+    # ---------------------------------------------------------------------------
+    # Main
+    # ---------------------------------------------------------------------------
     async def main():
-        LOG.info(f"Starting USGS feed min_mag={MIN_MAGNITUDE} poll={POLL_INTERVAL}s")
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-usgs",
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
+
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  60,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
         seen: set[str] = set()
+        last_status_at = time.monotonic()
+
         async with aiohttp.ClientSession() as session:
             while True:
-                await poll(session, js, seen)
-                await asyncio.sleep(POLL_INTERVAL)
+                enabled, poll_interval, min_magnitude = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                if not enabled:
+                    await asyncio.sleep(min(poll_interval, 10))
+                    continue
+
+                state["last_error"] = ""
+                try:
+                    n = await poll(session, js, seen, min_magnitude)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
+                except Exception as e:
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
 
     asyncio.run(main())
 
@@ -854,33 +1038,75 @@ data:
   # Subject:  intel.conflict.acled.{iso3_lower}.{event_type_slug}
   # Payload:  intel envelope with type=conflict_event, source=acled
   # Dedup:    in-memory set on data_id + Nats-Msg-Id header
-  # Requires: ACLED_API_KEY + ACLED_EMAIL env vars; sleeps if not set
+  # Config:   NATS KV bucket feed-config, keys feed.acled.*
+  #           api_key + email required; feed disabled (skips poll) if missing
+  # Status:   tel.feed.acled.status published every 30s and after each poll
   # ---------------------------------------------------------------------------
   feed_intel_acled.py: |
     #!/usr/bin/env python3
-    import asyncio, json, logging, os, re
+    import asyncio, json, logging, os, re, time
     from datetime import datetime, timezone, timedelta
     import aiohttp, nats
 
     LOG = logging.getLogger("feed-intel-acled")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
-    NATS_URL        = os.getenv("NATS_URL", "nats://localhost:4222")
-    NATS_USER       = os.getenv("NATS_USER", "")
-    NATS_PASSWORD   = os.getenv("NATS_PASSWORD", "")
-    POLL_INTERVAL   = int(os.getenv("POLL_INTERVAL", "3600"))
-    ACLED_API_KEY   = os.getenv("ACLED_API_KEY", "")
-    ACLED_EMAIL     = os.getenv("ACLED_EMAIL", "")
-    ACLED_COUNTRIES = os.getenv("ACLED_COUNTRIES", "")
-    ACLED_LOOKBACK  = int(os.getenv("ACLED_LOOKBACK_DAYS", "7"))
+    FEED_ID       = "acled"
+    NATS_URL      = os.getenv("NATS_URL", "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
 
-    ACLED_URL = "https://api.acleddata.com/acled/read"
+    ACLED_URL       = "https://api.acleddata.com/acled/read"
+    ACLED_LOOKBACK  = 7  # days — not configurable via KV, keep fixed
+    STATUS_INTERVAL = 30.0
 
-    def slugify(text: str) -> str:
-        return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    # ---------------------------------------------------------------------------
+    # KV config watcher
+    # ---------------------------------------------------------------------------
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int, str, str, str]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "3600") or "3600")
+        api_key       = config.get("api_key", "")
+        email         = config.get("email", "")
+        countries     = config.get("countries", "")
+        return enabled, poll_interval, api_key, email, countries
+
+    # ---------------------------------------------------------------------------
+    # Status heartbeat
+    # ---------------------------------------------------------------------------
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
 
     def now_iso() -> str:
         return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def slugify(text: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
     def build_payload(row: dict) -> dict:
         try:
@@ -919,12 +1145,16 @@ data:
             },
         }
 
-    async def poll(session: aiohttp.ClientSession, js, seen: set) -> int:
+    # ---------------------------------------------------------------------------
+    # Poll
+    # ---------------------------------------------------------------------------
+    async def poll(session: aiohttp.ClientSession, js, seen: set,
+                   api_key: str, email: str, countries: str) -> int:
         today     = datetime.now(timezone.utc).date()
         from_date = (today - timedelta(days=ACLED_LOOKBACK)).isoformat()
         params: dict[str, str] = {
-            "key":              ACLED_API_KEY,
-            "email":            ACLED_EMAIL,
+            "key":              api_key,
+            "email":            email,
             "event_date":       from_date,
             "event_date_where": ">=",
             "limit":            "5000",
@@ -934,8 +1164,8 @@ data:
                 "|fatalities|notes|source|source_scale"
             ),
         }
-        if ACLED_COUNTRIES:
-            params["iso3"]       = ACLED_COUNTRIES
+        if countries:
+            params["iso3"]       = countries
             params["iso3_where"] = "IN"
         try:
             async with session.get(
@@ -974,60 +1204,140 @@ data:
             LOG.info(f"ACLED: published {published} new events (total seen={len(seen)})")
         return published
 
+    # ---------------------------------------------------------------------------
+    # Main
+    # ---------------------------------------------------------------------------
     async def main():
-        if not ACLED_API_KEY or not ACLED_EMAIL:
-            LOG.warning("ACLED_API_KEY / ACLED_EMAIL not set — feed disabled, sleeping forever")
-            while True:
-                await asyncio.sleep(3600)
-
-        LOG.info(f"Starting ACLED feed lookback={ACLED_LOOKBACK}d poll={POLL_INTERVAL}s")
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-acled",
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
+
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  3600,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
         seen: set[str] = set()
+        last_status_at = time.monotonic()
+
         async with aiohttp.ClientSession() as session:
             while True:
+                enabled, poll_interval, api_key, email, countries = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                # Skip poll if disabled or credentials missing
+                if not enabled or not api_key or not email:
+                    if not api_key or not email:
+                        LOG.debug("ACLED api_key/email not set in KV — skipping poll")
+                    await asyncio.sleep(min(poll_interval, 30))
+                    continue
+
+                state["last_error"] = ""
                 try:
-                    await poll(session, js, seen)
+                    n = await poll(session, js, seen, api_key, email, countries)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
                 except Exception as e:
-                    LOG.error(f"Poll loop error: {e}")
-                await asyncio.sleep(POLL_INTERVAL)
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
 
     asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_firms.py — NASA FIRMS active fire detections → intel.fire.nasa.firms.*
   #
-  # Subject:  intel.fire.nasa.firms.{region}  (region = FIRMS_AREA slugified)
+  # Subject:  intel.fire.nasa.firms.{region}  (region = area slugified)
   # Payload:  intel envelope with type=wildfire, source=nasa_firms
   # Dedup:    in-memory set keyed by SHA-1(lat:lon:acq_date:acq_time)
   #           + Nats-Msg-Id header
-  # Requires: FIRMS_API_KEY env var; sleeps if not set
+  # Config:   NATS KV bucket feed-config, keys feed.firms.*
+  #           api_key required; feed skips poll if missing
+  # Status:   tel.feed.firms.status published every 30s and after each poll
   # ---------------------------------------------------------------------------
   feed_intel_firms.py: |
     #!/usr/bin/env python3
-    import asyncio, csv, hashlib, io, json, logging, os, re
+    import asyncio, csv, hashlib, io, json, logging, os, re, time
     from datetime import datetime, timezone
     import aiohttp, nats
 
     LOG = logging.getLogger("feed-intel-firms")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
-    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    FEED_ID       = "firms"
+    NATS_URL      = os.getenv("NATS_URL", "nats://nats.nats.svc.cluster.local:4222")
     NATS_USER     = os.getenv("NATS_USER", "")
     NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
-    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "600"))
-    FIRMS_API_KEY = os.getenv("FIRMS_API_KEY", "")
-    FIRMS_AREA    = os.getenv("FIRMS_AREA", "world")
-    FIRMS_DAYS    = int(os.getenv("FIRMS_DAYS", "1"))
 
-    FIRMS_URL_TMPL = (
+    FIRMS_URL_TMPL  = (
         "https://firms.modaps.eosdis.nasa.gov/api/area/csv"
         "/{key}/VIIRS_SNPP_NRT/{area}/{days}"
     )
+    STATUS_INTERVAL = 30.0
+
+    # ---------------------------------------------------------------------------
+    # KV config watcher
+    # ---------------------------------------------------------------------------
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int, str, str, int]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "600") or "600")
+        api_key       = config.get("api_key", "")
+        area          = config.get("area", "world") or "world"
+        days          = int(config.get("days", "1") or "1")
+        return enabled, poll_interval, api_key, area, days
+
+    # ---------------------------------------------------------------------------
+    # Status heartbeat
+    # ---------------------------------------------------------------------------
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
 
     def slugify(text: str) -> str:
         return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
@@ -1087,8 +1397,12 @@ data:
             },
         }
 
-    async def poll(session: aiohttp.ClientSession, js, seen: set, subject: str) -> int:
-        url = FIRMS_URL_TMPL.format(key=FIRMS_API_KEY, area=FIRMS_AREA, days=FIRMS_DAYS)
+    # ---------------------------------------------------------------------------
+    # Poll
+    # ---------------------------------------------------------------------------
+    async def poll(session: aiohttp.ClientSession, js, seen: set,
+                   api_key: str, area: str, days: int, subject: str) -> int:
+        url = FIRMS_URL_TMPL.format(key=api_key, area=area, days=days)
         try:
             async with session.get(
                 url,
@@ -1133,31 +1447,70 @@ data:
             except Exception as e:
                 LOG.error(f"NATS publish error {subject}: {e}")
         if published:
-            LOG.info(f"FIRMS: published {published} new fire detections area={FIRMS_AREA} (total seen={len(seen)})")
+            LOG.info(f"FIRMS: published {published} new fire detections area={area} (total seen={len(seen)})")
         return published
 
+    # ---------------------------------------------------------------------------
+    # Main
+    # ---------------------------------------------------------------------------
     async def main():
-        if not FIRMS_API_KEY:
-            LOG.warning("FIRMS_API_KEY not set — feed disabled, sleeping forever")
-            while True:
-                await asyncio.sleep(3600)
-
-        region  = slugify(FIRMS_AREA)
-        subject = f"intel.fire.nasa.firms.{region}"
-        LOG.info(f"Starting FIRMS feed area={FIRMS_AREA} days={FIRMS_DAYS} poll={POLL_INTERVAL}s subject={subject}")
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-firms",
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
+
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  600,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
         seen: set[str] = set()
+        last_status_at = time.monotonic()
+
         async with aiohttp.ClientSession() as session:
             while True:
+                enabled, poll_interval, api_key, area, days = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                # Skip poll if disabled or API key missing
+                if not enabled or not api_key:
+                    if not api_key:
+                        LOG.debug("FIRMS api_key not set in KV — skipping poll")
+                    await asyncio.sleep(min(poll_interval, 30))
+                    continue
+
+                region  = slugify(area)
+                subject = f"intel.fire.nasa.firms.{region}"
+
+                state["last_error"] = ""
                 try:
-                    await poll(session, js, seen, subject)
+                    n = await poll(session, js, seen, api_key, area, days, subject)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
                 except Exception as e:
-                    LOG.error(f"Poll loop error: {e}")
-                await asyncio.sleep(POLL_INTERVAL)
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
 
     asyncio.run(main())

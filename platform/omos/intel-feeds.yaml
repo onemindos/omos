@@ -7,17 +7,18 @@
 #
 # Secrets required (all in omos namespace):
 #   omos-nats-creds    — NATS user+password (already exists)
-#   omos-feed-secrets  — ACLED_API_KEY, ACLED_EMAIL, FIRMS_API_KEY
-#                        (create via 1Password → kubectl create secret)
 #
-# Toggle per-feed: set replicas: 0 to disable, replicas: 1 to enable.
-# ACLED and FIRMS require API keys — disabled by default (replicas: 0).
+# All feed config (poll intervals, API keys, areas, filters) is read from
+# the NATS KV bucket `feed-config` at runtime.
+#
+# Enable/disable per-feed via omos-ui Intel panel or:
+#   nats kv put feed-config feed.{id}.enabled true
 # =============================================================================
 
 # -----------------------------------------------------------------------------
 # Feed: NOAA Weather Alerts — NWS CAP alerts → intel.weather.noaa.alert.*
-# Polls https://api.weather.gov/alerts/active every POLL_INTERVAL seconds.
-# NOAA_AREAS: comma-separated state codes to filter (empty = all US).
+# Polls https://api.weather.gov/alerts/active per feed-config interval.
+# Config keys: feed.noaa.poll_interval, feed.noaa.areas
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -56,10 +57,6 @@ spec:
                 secretKeyRef:
                   name: omos-nats-creds
                   key: password
-            - name: POLL_INTERVAL
-              value: "300"
-            - name: NOAA_AREAS
-              value: "US"
           volumeMounts:
             - name: scripts
               mountPath: /scripts
@@ -77,8 +74,8 @@ spec:
 ---
 # -----------------------------------------------------------------------------
 # Feed: USGS Seismic — earthquake feed → intel.seismic.usgs.*
-# Polls the USGS GeoJSON hourly summary every POLL_INTERVAL seconds.
-# MIN_MAGNITUDE: only events at or above this magnitude are published.
+# Polls the USGS GeoJSON hourly summary per feed-config interval.
+# Config keys: feed.usgs.poll_interval, feed.usgs.min_magnitude
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -117,10 +114,6 @@ spec:
                 secretKeyRef:
                   name: omos-nats-creds
                   key: password
-            - name: POLL_INTERVAL
-              value: "60"
-            - name: MIN_MAGNITUDE
-              value: "2.5"
           volumeMounts:
             - name: scripts
               mountPath: /scripts
@@ -138,9 +131,9 @@ spec:
 ---
 # -----------------------------------------------------------------------------
 # Feed: ACLED Conflict — armed conflict events → intel.conflict.acled.*
-# Disabled by default (replicas: 0) — requires ACLED API key.
-# Set replicas: 1 after creating omos-feed-secrets with ACLED_API_KEY + ACLED_EMAIL.
-# ACLED_COUNTRIES: optional comma-separated ISO3 filter (empty = all countries).
+# Config keys: feed.acled.poll_interval, feed.acled.api_key, feed.acled.email,
+#              feed.acled.countries
+# Enable via omos-ui Intel panel or: nats kv put feed-config feed.acled.enabled true
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -151,7 +144,7 @@ metadata:
     app.kubernetes.io/name: feed-intel-acled
     app.kubernetes.io/part-of: omos-feeds-intel
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: feed-intel-acled
@@ -179,20 +172,6 @@ spec:
                 secretKeyRef:
                   name: omos-nats-creds
                   key: password
-            - name: POLL_INTERVAL
-              value: "3600"
-            - name: ACLED_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: omos-feed-secrets
-                  key: ACLED_API_KEY
-                  optional: true
-            - name: ACLED_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: omos-feed-secrets
-                  key: ACLED_EMAIL
-                  optional: true
           volumeMounts:
             - name: scripts
               mountPath: /scripts
@@ -210,9 +189,9 @@ spec:
 ---
 # -----------------------------------------------------------------------------
 # Feed: NASA FIRMS Fire — active fire detections → intel.fire.nasa.firms.*
-# Disabled by default (replicas: 0) — requires NASA FIRMS API key.
-# Set replicas: 1 after creating omos-feed-secrets with FIRMS_API_KEY.
-# FIRMS_AREA: area code or bbox (default: world); FIRMS_DAYS: lookback days.
+# Config keys: feed.firms.poll_interval, feed.firms.api_key, feed.firms.area,
+#              feed.firms.days
+# Enable via omos-ui Intel panel or: nats kv put feed-config feed.firms.enabled true
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -223,7 +202,7 @@ metadata:
     app.kubernetes.io/name: feed-intel-firms
     app.kubernetes.io/part-of: omos-feeds-intel
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: feed-intel-firms
@@ -251,18 +230,6 @@ spec:
                 secretKeyRef:
                   name: omos-nats-creds
                   key: password
-            - name: POLL_INTERVAL
-              value: "600"
-            - name: FIRMS_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: omos-feed-secrets
-                  key: FIRMS_API_KEY
-                  optional: true
-            - name: FIRMS_AREA
-              value: "world"
-            - name: FIRMS_DAYS
-              value: "1"
           volumeMounts:
             - name: scripts
               mountPath: /scripts
