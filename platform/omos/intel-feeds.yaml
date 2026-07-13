@@ -244,3 +244,171 @@ spec:
         - name: scripts
           configMap:
             name: omos-intel-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed: GDACS Global Disasters — disaster alerts → intel.disaster.gdacs.*
+# No API key required. Config keys: feed.gdacs.poll_interval
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-intel-gdacs
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-intel-gdacs
+    app.kubernetes.io/part-of: omos-feeds-intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-intel-gdacs
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-intel-gdacs
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_intel_gdacs.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-intel-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed: EMSC Seismic — European Mediterranean seismic → intel.seismic.emsc.*
+# No API key required. Config keys: feed.emsc.poll_interval, feed.emsc.min_magnitude
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-intel-emsc
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-intel-emsc
+    app.kubernetes.io/part-of: omos-feeds-intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-intel-emsc
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-intel-emsc
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_intel_emsc.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-intel-scripts
+---
+# -----------------------------------------------------------------------------
+# Feed: NASA EONET — Earth Observatory open natural events → intel.natural.nasa.eonet.*
+# No API key required. Config keys: feed.eonet.poll_interval
+# -----------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-intel-eonet
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-intel-eonet
+    app.kubernetes.io/part-of: omos-feeds-intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-intel-eonet
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-intel-eonet
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_intel_eonet.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-intel-scripts

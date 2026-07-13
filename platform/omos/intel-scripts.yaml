@@ -1545,3 +1545,658 @@ data:
                 await asyncio.sleep(poll_interval)
 
     asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_gdacs.py — GDACS global disaster alerts → intel.disaster.gdacs.*
+  #
+  # Subject:  intel.disaster.gdacs.{alert_type}.{event_id}
+  # Payload:  intel envelope with type per event (earthquake/wildfire/weather_alert/etc)
+  # Dedup:    in-memory set on event_id + Nats-Msg-Id header
+  # Config:   NATS KV bucket feed-config, keys feed.gdacs.*
+  # Status:   tel.feed.gdacs.status published every 30s
+  # ---------------------------------------------------------------------------
+  feed_intel_gdacs.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, re, ssl, sys, time
+    import xml.etree.ElementTree as ET
+    from datetime import datetime, timezone
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-gdacs")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout)
+
+    NATS_URL      = os.getenv("NATS_URL",      "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER",     "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    FEED_ID       = "gdacs"
+    STATUS_INTERVAL = 30.0
+
+    GDACS_URL = "https://www.gdacs.org/xml/rss.xml"
+
+    NS = {
+        "gdacs": "https://www.gdacs.org",
+        "geo":   "http://www.w3.org/2003/01/geo/wgs84_pos#",
+        "dc":    "http://purl.org/dc/elements/1.1/",
+    }
+
+    TYPE_MAP = {
+        "EQ": "earthquake",
+        "TC": "weather_alert",
+        "FL": "weather_alert",
+        "VO": "volcanic_eruption",
+        "DR": "weather_alert",
+        "WF": "wildfire",
+        "TS": "weather_alert",
+    }
+
+    def slugify(s: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def parse_date(s: str) -> str:
+        if not s:
+            return now_iso()
+        try:
+            from email.utils import parsedate_to_datetime
+            return parsedate_to_datetime(s).strftime("%Y-%m-%dT%H:%M:%SZ")
+        except Exception:
+            return now_iso()
+
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "600") or "600")
+        return enabled, poll_interval
+
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set) -> int:
+        try:
+            async with session.get(GDACS_URL, headers={"User-Agent": "omos-feed-intel-gdacs/1.0"}) as r:
+                if r.status != 200:
+                    LOG.warning(f"GDACS HTTP {r.status}")
+                    return 0
+                text = await r.text()
+        except Exception as e:
+            LOG.error(f"GDACS fetch error: {e}")
+            return 0
+
+        try:
+            root = ET.fromstring(text)
+        except Exception as e:
+            LOG.error(f"GDACS XML parse error: {e}")
+            return 0
+
+        items = root.findall(".//item")
+        published = 0
+        for item in items:
+            def gd(tag: str) -> str:
+                el = item.find(f"gdacs:{tag}", NS)
+                return (el.text or "").strip() if el is not None else ""
+
+            event_id   = gd("eventid")
+            event_type = gd("eventtype")
+            if not event_id:
+                continue
+            dedup_key = f"{event_type}-{event_id}"
+            if dedup_key in seen:
+                continue
+
+            alert_level = gd("alertlevel")
+            country     = gd("country")
+            severity    = gd("severity")
+            title_el    = item.find("title")
+            headline    = (title_el.text or "").strip() if title_el is not None else ""
+            link_el     = item.find("link")
+            url         = (link_el.text or "").strip() if link_el is not None else ""
+            pub_el      = item.find("pubDate")
+            timestamp   = parse_date((pub_el.text or "").strip() if pub_el is not None else "")
+
+            lat_el = item.find("geo:lat", NS)
+            lon_el = item.find("geo:long", NS)
+            try:
+                lat = float(lat_el.text) if lat_el is not None else 0.0
+                lon = float(lon_el.text) if lon_el is not None else 0.0
+            except (TypeError, ValueError):
+                lat, lon = 0.0, 0.0
+
+            intel_type = TYPE_MAP.get(event_type, "disaster")
+            alert_slug = slugify(event_type or "event")
+
+            payload = {
+                "id":        f"gdacs-{event_type}-{event_id}",
+                "type":      intel_type,
+                "source":    "gdacs",
+                "lat":       lat,
+                "lon":       lon,
+                "timestamp": timestamp,
+                "expires":   "",
+                "properties": {
+                    "headline":    headline,
+                    "event_type":  event_type,
+                    "alert_level": alert_level,
+                    "country":     country,
+                    "severity":    severity,
+                    "url":         url,
+                },
+            }
+            subject = f"intel.disaster.gdacs.{alert_slug}.{event_id}"
+            try:
+                hdrs = {"Nats-Msg-Id": dedup_key}
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(dedup_key)
+                published += 1
+                LOG.debug(f"Published {subject}")
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+
+        if published:
+            LOG.info(f"GDACS: published {published} new events (total seen={len(seen)})")
+        return published
+
+    async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-gdacs",
+            tls=tls_ctx,
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  600,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
+        seen: set[str] = set()
+        last_status_at = time.monotonic()
+
+        async with aiohttp.ClientSession() as session:
+            while True:
+                enabled, poll_interval = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                if not enabled:
+                    await asyncio.sleep(min(poll_interval, 10))
+                    continue
+
+                state["last_error"] = ""
+                try:
+                    n = await poll(session, js, seen)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
+                except Exception as e:
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_emsc.py — EMSC seismic events → intel.seismic.emsc.*
+  #
+  # Subject:  intel.seismic.emsc.{magnitude_bucket}.{event_id}
+  # Payload:  intel envelope with type=earthquake, source=emsc
+  # Dedup:    in-memory set on event id + Nats-Msg-Id header
+  # Config:   NATS KV bucket feed-config, keys feed.emsc.*
+  # Status:   tel.feed.emsc.status published every 30s
+  # ---------------------------------------------------------------------------
+  feed_intel_emsc.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, re, ssl, sys, time
+    from datetime import datetime, timezone
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-emsc")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout)
+
+    NATS_URL      = os.getenv("NATS_URL",      "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER",     "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    FEED_ID       = "emsc"
+    STATUS_INTERVAL = 30.0
+
+    EMSC_URL = "https://www.seismicportal.eu/fdsnws/event/1/query?limit=100&format=json&orderby=time"
+
+    def slugify(s: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+    def magnitude_bucket(mag: float) -> str:
+        if mag >= 5.0: return "m5plus"
+        if mag >= 4.0: return "m4plus"
+        if mag >= 3.0: return "m3plus"
+        return "m2plus"
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int, float]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "120") or "120")
+        min_magnitude = float(config.get("min_magnitude", "2.5") or "2.5")
+        return enabled, poll_interval, min_magnitude
+
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set, min_magnitude: float) -> int:
+        try:
+            async with session.get(EMSC_URL, headers={"User-Agent": "omos-feed-intel-emsc/1.0"}) as r:
+                if r.status != 200:
+                    LOG.warning(f"EMSC HTTP {r.status}")
+                    return 0
+                data = await r.json()
+        except Exception as e:
+            LOG.error(f"EMSC fetch error: {e}")
+            return 0
+
+        features = data.get("features", [])
+        published = 0
+        for feat in features:
+            fid   = feat.get("id", "")
+            props = feat.get("properties", {})
+            geom  = feat.get("geometry", {})
+            if not fid or fid in seen:
+                continue
+
+            mag = props.get("mag") or 0.0
+            try:
+                mag = float(mag)
+            except (TypeError, ValueError):
+                mag = 0.0
+            if mag < min_magnitude:
+                continue
+
+            coords = geom.get("coordinates", [0.0, 0.0, 0.0])
+            lon    = float(coords[0]) if len(coords) > 0 else 0.0
+            lat    = float(coords[1]) if len(coords) > 1 else 0.0
+            depth  = float(coords[2]) if len(coords) > 2 else 0.0
+
+            ts_raw = props.get("time", "")
+            try:
+                ts = datetime.fromisoformat(ts_raw.replace("Z", "+00:00")).strftime("%Y-%m-%dT%H:%M:%SZ")
+            except Exception:
+                ts = now_iso()
+
+            region   = props.get("flynn_region") or props.get("place") or ""
+            mag_type = props.get("magtype") or props.get("magType") or ""
+            clean_id = re.sub(r"[^a-zA-Z0-9_-]", "", fid)
+            bucket   = magnitude_bucket(mag)
+            subject  = f"intel.seismic.emsc.{bucket}.{clean_id}"
+
+            payload = {
+                "id":        f"emsc-{clean_id}",
+                "type":      "earthquake",
+                "source":    "emsc",
+                "lat":       round(lat, 6),
+                "lon":       round(lon, 6),
+                "timestamp": ts,
+                "expires":   "",
+                "properties": {
+                    "magnitude":      mag,
+                    "magnitude_type": mag_type,
+                    "depth_km":       round(depth, 2),
+                    "place":          region,
+                    "region":         region,
+                    "url":            f"https://www.seismicportal.eu/eventdetails.html?unid={fid}",
+                },
+            }
+            try:
+                hdrs = {"Nats-Msg-Id": f"emsc-{clean_id}"}
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(fid)
+                published += 1
+                LOG.debug(f"Published {subject} mag={mag}")
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+
+        if published:
+            LOG.info(f"EMSC: published {published} new events (total seen={len(seen)})")
+        return published
+
+    async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-emsc",
+            tls=tls_ctx,
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  120,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
+        seen: set[str] = set()
+        last_status_at = time.monotonic()
+
+        async with aiohttp.ClientSession() as session:
+            while True:
+                enabled, poll_interval, min_magnitude = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                if not enabled:
+                    await asyncio.sleep(min(poll_interval, 10))
+                    continue
+
+                state["last_error"] = ""
+                try:
+                    n = await poll(session, js, seen, min_magnitude)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
+                except Exception as e:
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_eonet.py — NASA EONET natural events → intel.natural.nasa.eonet.*
+  #
+  # Subject:  intel.natural.nasa.eonet.{category_slug}.{event_id}
+  # Payload:  intel envelope, type derived from category
+  # Dedup:    in-memory set on event id + Nats-Msg-Id header
+  # Config:   NATS KV bucket feed-config, keys feed.eonet.*
+  # Status:   tel.feed.eonet.status published every 30s
+  # ---------------------------------------------------------------------------
+  feed_intel_eonet.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, re, ssl, sys, time
+    from datetime import datetime, timezone
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-eonet")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout)
+
+    NATS_URL      = os.getenv("NATS_URL",      "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER",     "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    FEED_ID       = "eonet"
+    STATUS_INTERVAL = 30.0
+
+    EONET_URL = "https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=100"
+
+    CATEGORY_TYPE_MAP = {
+        "Wildfires":          "wildfire",
+        "Earthquakes":        "earthquake",
+        "Volcanoes":          "volcanic_eruption",
+        "Severe Storms":      "weather_alert",
+        "Floods":             "weather_alert",
+        "Landslides":         "weather_alert",
+        "Sea and Lake Ice":   "weather_alert",
+        "Snow":               "weather_alert",
+        "Dust and Haze":      "weather_alert",
+        "Manmade":            "disaster",
+        "Water Color":        "disaster",
+    }
+
+    def slugify(s: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    async def watch_config(kv, config: dict, feed_id: str):
+        try:
+            watcher = await kv.watch(f"feed.{feed_id}.*", include_history=True)
+            async for entry in watcher:
+                if entry is None:
+                    break
+                key = entry.key.split(".")[-1]
+                val = entry.value.decode() if entry.value else ""
+                config[key] = val
+                LOG.info(f"KV config update: feed.{feed_id}.{key}={val!r}")
+        except Exception as e:
+            LOG.error(f"KV watcher error: {e}")
+
+    def get_config(config: dict) -> tuple[bool, int]:
+        enabled       = config.get("enabled", "true").lower() != "false"
+        poll_interval = int(config.get("poll_interval", "300") or "300")
+        return enabled, poll_interval
+
+    async def publish_status(nc, state: dict):
+        payload = json.dumps({
+            "feed_id":        FEED_ID,
+            "enabled":        state["enabled"],
+            "poll_interval":  state["poll_interval"],
+            "last_poll_ts":   state["last_poll_ts"],
+            "last_poll_msgs": state["last_poll_msgs"],
+            "last_error":     state["last_error"],
+            "total_msgs":     state["total_msgs"],
+        }).encode()
+        try:
+            await nc.publish(f"tel.feed.{FEED_ID}.status", payload)
+        except Exception as e:
+            LOG.warning(f"Status publish error: {e}")
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set) -> int:
+        try:
+            async with session.get(EONET_URL, headers={"User-Agent": "omos-feed-intel-eonet/1.0"}) as r:
+                if r.status != 200:
+                    LOG.warning(f"EONET HTTP {r.status}")
+                    return 0
+                data = await r.json()
+        except Exception as e:
+            LOG.error(f"EONET fetch error: {e}")
+            return 0
+
+        events = data.get("events", [])
+        published = 0
+        for event in events:
+            eid   = event.get("id", "")
+            title = event.get("title", "")
+            if not eid or eid in seen:
+                continue
+
+            categories = event.get("categories", [])
+            category   = categories[0].get("title", "Unknown") if categories else "Unknown"
+            intel_type = CATEGORY_TYPE_MAP.get(category, "disaster")
+            cat_slug   = slugify(category)
+
+            sources   = event.get("sources", [])
+            source_url = sources[0].get("url", "") if sources else ""
+
+            geometries = event.get("geometry", [])
+            lat, lon   = 0.0, 0.0
+            timestamp  = now_iso()
+            if geometries:
+                geom = geometries[-1]
+                coords = geom.get("coordinates", [0.0, 0.0])
+                try:
+                    lon = float(coords[0])
+                    lat = float(coords[1])
+                except (TypeError, ValueError, IndexError):
+                    pass
+                ts_raw = geom.get("date", "")
+                try:
+                    timestamp = datetime.fromisoformat(ts_raw.replace("Z", "+00:00")).strftime("%Y-%m-%dT%H:%M:%SZ")
+                except Exception:
+                    pass
+
+            clean_eid = re.sub(r"[^a-zA-Z0-9_-]", "-", eid)
+            subject   = f"intel.natural.nasa.eonet.{cat_slug}.{clean_eid}"
+            payload   = {
+                "id":        f"eonet-{clean_eid}",
+                "type":      intel_type,
+                "source":    "nasa-eonet",
+                "lat":       round(lat, 6),
+                "lon":       round(lon, 6),
+                "timestamp": timestamp,
+                "expires":   "",
+                "properties": {
+                    "headline":   title,
+                    "category":   category,
+                    "source_url": source_url,
+                    "closed":     event.get("closed") or "",
+                },
+            }
+            try:
+                hdrs = {"Nats-Msg-Id": f"eonet-{clean_eid}"}
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(eid)
+                published += 1
+                LOG.debug(f"Published {subject}")
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+
+        if published:
+            LOG.info(f"EONET: published {published} new events (total seen={len(seen)})")
+        return published
+
+    async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-eonet",
+            tls=tls_ctx,
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+
+        kv = await js.key_value("feed-config")
+        config: dict = {}
+        asyncio.ensure_future(watch_config(kv, config, FEED_ID))
+        await asyncio.sleep(0.5)
+
+        state = {
+            "enabled":        True,
+            "poll_interval":  300,
+            "last_poll_ts":   "",
+            "last_poll_msgs": 0,
+            "last_error":     "",
+            "total_msgs":     0,
+        }
+
+        seen: set[str] = set()
+        last_status_at = time.monotonic()
+
+        async with aiohttp.ClientSession() as session:
+            while True:
+                enabled, poll_interval = get_config(config)
+                state["enabled"]       = enabled
+                state["poll_interval"] = poll_interval
+
+                now_mono = time.monotonic()
+                if now_mono - last_status_at >= STATUS_INTERVAL:
+                    await publish_status(nc, state)
+                    last_status_at = now_mono
+
+                if not enabled:
+                    await asyncio.sleep(min(poll_interval, 10))
+                    continue
+
+                state["last_error"] = ""
+                try:
+                    n = await poll(session, js, seen)
+                    state["last_poll_msgs"] = n
+                    state["total_msgs"]    += n
+                    state["last_poll_ts"]   = now_iso()
+                except Exception as e:
+                    state["last_error"] = str(e)
+                    LOG.error(f"Poll error: {e}")
+
+                await publish_status(nc, state)
+                last_status_at = time.monotonic()
+                await asyncio.sleep(poll_interval)
+
+    asyncio.run(main())
