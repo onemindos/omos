@@ -21,6 +21,7 @@ data:
     import json
     import logging
     import os
+    import ssl
     import sys
     import time
     import urllib.request
