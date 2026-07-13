@@ -224,6 +224,10 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/cloudflare-route.yaml"
+# Note: Cesium ion vars (VITE_CESIUM_ION_TOKEN, VITE_CESIUM_ION_SERVER) are baked
+# at build time — set them as GitHub Actions secrets in the omos-ui repo, not K8s secrets.
+# Self-hosted ion: VITE_CESIUM_ION_SERVER=https://ion.onemindos.dev
+# Cesium.com cloud: leave VITE_CESIUM_ION_SERVER empty, set token from cesium.com/ion
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/external-secret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/deployment.yaml"
 
