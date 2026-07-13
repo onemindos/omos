@@ -512,7 +512,7 @@ data:
   # ---------------------------------------------------------------------------
   feed_intel_noaa.py: |
     #!/usr/bin/env python3
-    import asyncio, json, logging, os, re, time
+    import asyncio, json, logging, os, re, ssl, time
     from datetime import datetime, timezone
     import aiohttp, nats
 
@@ -759,9 +759,13 @@ data:
     # Main
     # ---------------------------------------------------------------------------
     async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-noaa",
+            tls=tls_ctx,
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
@@ -837,7 +841,7 @@ data:
   # ---------------------------------------------------------------------------
   feed_intel_usgs.py: |
     #!/usr/bin/env python3
-    import asyncio, json, logging, os, re, time
+    import asyncio, json, logging, os, re, ssl, time
     from datetime import datetime, timezone
     import aiohttp, nats
 
@@ -996,9 +1000,13 @@ data:
     # Main
     # ---------------------------------------------------------------------------
     async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-usgs",
+            tls=tls_ctx,
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
@@ -1063,7 +1071,7 @@ data:
   # ---------------------------------------------------------------------------
   feed_intel_acled.py: |
     #!/usr/bin/env python3
-    import asyncio, json, logging, os, re, time
+    import asyncio, json, logging, os, re, ssl, time
     from datetime import datetime, timezone, timedelta
     import aiohttp, nats
 
@@ -1227,9 +1235,13 @@ data:
     # Main
     # ---------------------------------------------------------------------------
     async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-acled",
+            tls=tls_ctx,
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
@@ -1298,7 +1310,7 @@ data:
   # ---------------------------------------------------------------------------
   feed_intel_firms.py: |
     #!/usr/bin/env python3
-    import asyncio, csv, hashlib, io, json, logging, os, re, time
+    import asyncio, csv, hashlib, io, json, logging, os, re, ssl, time
     from datetime import datetime, timezone
     import aiohttp, nats
 
@@ -1473,9 +1485,13 @@ data:
     # Main
     # ---------------------------------------------------------------------------
     async def main():
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
         nc = await nats.connect(
             servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
             max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-firms",
+            tls=tls_ctx,
         )
         js = nc.jetstream()
         LOG.info("NATS connected — JetStream ready")
