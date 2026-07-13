@@ -743,8 +743,7 @@ data:
             subject  = build_subject(state, event_type)
             payload  = build_payload(feat, lat, lon)
             try:
-                hdrs = nats.aio.client.Msg.headers_type()
-                hdrs["Nats-Msg-Id"] = alert_id
+                hdrs = {"Nats-Msg-Id": alert_id}
                 await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
                 seen.add(alert_id)
                 published += 1
@@ -984,8 +983,7 @@ data:
             subject = f"intel.seismic.usgs.{bucket}.{cid}"
             payload = build_payload(feat)
             try:
-                hdrs = nats.aio.client.Msg.headers_type()
-                hdrs["Nats-Msg-Id"] = fid
+                hdrs = {"Nats-Msg-Id": fid}
                 await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
                 seen.add(fid)
                 published += 1
@@ -1220,8 +1218,7 @@ data:
             subject    = f"intel.conflict.acled.{iso3}.{slugify(event_type)}"
             payload    = build_payload(row)
             try:
-                hdrs = nats.aio.client.Msg.headers_type()
-                hdrs["Nats-Msg-Id"] = f"acled-{data_id}"
+                hdrs = {"Nats-Msg-Id": f"acled-{data_id}"}
                 await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
                 seen.add(data_id)
                 published += 1
@@ -1470,8 +1467,7 @@ data:
                 continue
             payload = build_payload(row, lat, lon, dedup_key)
             try:
-                hdrs = nats.aio.client.Msg.headers_type()
-                hdrs["Nats-Msg-Id"] = dedup_key
+                hdrs = {"Nats-Msg-Id": dedup_key}
                 await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
                 seen.add(dedup_key)
                 published += 1
