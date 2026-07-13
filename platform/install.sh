@@ -153,8 +153,8 @@ kubectl --context "$CTX" apply -f "$PLATFORM/tailscale/apiserver-rbac.yaml"
 # -----------------------------------------------------------------------------
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update
 helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
-  --kube-context "$CTX" -n monitoring --create-namespace
-# kube-prometheus-stack uses all defaults
+  --kube-context "$CTX" -n monitoring --create-namespace \
+  -f "$PLATFORM/values/kube-prometheus-stack.yaml"
 
 helm repo add grafana https://grafana.github.io/helm-charts --force-update
 helm upgrade --install loki grafana/loki \
