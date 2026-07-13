@@ -40,3 +40,10 @@ config:
       logs:
         # receivers merged with preset's filelog receiver
         exporters: [otlphttp/loki]
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    memory: 256Mi

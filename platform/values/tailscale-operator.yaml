@@ -8,3 +8,19 @@ apiServerProxyConfig:
 oauth:
   clientId: kUqyevoBNS11CNTRL
   # clientSecret: <inject from 1Password — DO NOT commit real value>
+
+operator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+proxy:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi

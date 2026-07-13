@@ -14,7 +14,29 @@ tempo:
         http:
           endpoint: 0.0.0.0:4318
   retention: 336h   # 14d of traces
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
 
 persistence:
   enabled: true
   size: 20Gi
+
+monolithic:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+configreloader:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      memory: 64Mi

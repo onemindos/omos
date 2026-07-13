@@ -27,6 +27,12 @@ singleBinary:
   persistence:
     enabled: true
     size: 20Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
 
 # Disable the scalable-mode components and external deps we don't need.
 read:
@@ -47,3 +53,24 @@ minio:
   enabled: false
 gateway:
   enabled: true
+  nginxConfig:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        memory: 128Mi
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+
+sidecar:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi

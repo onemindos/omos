@@ -17,3 +17,11 @@ jetstream:
       client_key: "/etc/nats/certs/tls.key"
       client_ca: "/etc/nats/certs/ca.crt"
       timeout: 3
+
+# Resource requests/limits for DO upgrade compliance
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    memory: 256Mi

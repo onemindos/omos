@@ -1,0 +1,1163 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-intel-scripts
+  namespace: omos
+data:
+  sink_clickhouse.py: |
+    #!/usr/bin/env python3
+    """
+    sink_clickhouse.py — NATS intel sink → ClickHouse onemind.events
+
+    Subscribes to:
+      - intel.>  (JetStream push consumer, durable: sink-clickhouse)
+      - ent.*.*.state  (core NATS — KV mirrors)
+
+    Batches up to 100 rows or 5 seconds, then HTTP-POSTs to ClickHouse
+    as newline-delimited JSONEachRow.  Survives ClickHouse downtime by
+    logging the error, discarding the batch, and continuing.
+    """
+    import asyncio
+    import json
+    import logging
+    import os
+    import sys
+    import time
+    import urllib.request
+    import urllib.error
+    from datetime import datetime, timezone
+
+    import nats
+    from nats.js.api import ConsumerConfig, DeliverPolicy
+
+    LOG = logging.getLogger("sink-clickhouse")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        stream=sys.stdout,
+    )
+
+    NATS_URL      = os.getenv("NATS_URL",      "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER",     "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    CH_HOST       = os.getenv("CH_HOST",       "clickhouse-onemind.clickhouse.svc.cluster.local")
+    CH_PORT       = os.getenv("CH_PORT",       "8123")
+    CH_USER       = os.getenv("CH_USER",       "onemind")
+    CH_PASSWORD   = os.getenv("CH_PASSWORD",   "")
+
+    BATCH_MAX  = 100
+    BATCH_SECS = 5.0
+
+    CH_URL = (
+        f"http://{CH_HOST}:{CH_PORT}/"
+        "?query=INSERT+INTO+onemind.events+FORMAT+JSONEachRow"
+    )
+
+
+    # ---------------------------------------------------------------------------
+    # Field extraction helpers
+    # ---------------------------------------------------------------------------
+
+    def _safe_float(val) -> float | None:
+        try:
+            return float(val) if val is not None else None
+        except (TypeError, ValueError):
+            return None
+
+
+    def extract_fields(subject: str, payload: dict) -> dict:
+        tokens = subject.split(".")
+
+        # entity_id
+        entity_id = (
+            payload.get("id")
+            or payload.get("entity_id")
+            or (tokens[-1] if tokens else "unknown")
+        )
+
+        # entity_type — subject token index 2 (e.g. intel.{domain}.{source}.{type} → tokens[3])
+        # For ent.{entity_type}.{entity_id}.state → tokens[1]
+        if tokens and tokens[0] == "ent" and len(tokens) >= 2:
+            entity_type = payload.get("type") or payload.get("entity_type") or tokens[1]
+        else:
+            entity_type = (
+                payload.get("type")
+                or payload.get("entity_type")
+                or (tokens[2] if len(tokens) > 2 else "unknown")
+            )
+
+        # source — payload.source or subject token 1
+        source = payload.get("source") or (tokens[1] if len(tokens) > 1 else "unknown")
+
+        # lat/lon — direct fields or GeoJSON geometry
+        lat = _safe_float(payload.get("lat"))
+        lon = _safe_float(payload.get("lon"))
+        if lat is None or lon is None:
+            geom = payload.get("geometry") or {}
+            coords = geom.get("coordinates")
+            if isinstance(coords, (list, tuple)) and len(coords) >= 2:
+                lon = _safe_float(coords[0])
+                lat = _safe_float(coords[1])
+
+        return {
+            "entity_id":   str(entity_id),
+            "entity_type": str(entity_type),
+            "source":      str(source),
+            "lat":         lat,
+            "lon":         lon,
+        }
+
+
+    # ---------------------------------------------------------------------------
+    # ClickHouse flush
+    # ---------------------------------------------------------------------------
+
+    def flush_to_clickhouse(batch: list[dict]) -> None:
+        body = "\n".join(json.dumps(row) for row in batch).encode("utf-8")
+        req = urllib.request.Request(
+            CH_URL,
+            data=body,
+            method="POST",
+            headers={
+                "Content-Type": "application/x-ndjson",
+                "X-ClickHouse-User": CH_USER,
+                "X-ClickHouse-Key":  CH_PASSWORD,
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                status = resp.status
+            LOG.info("flushed batch=%d status=%d", len(batch), status)
+        except urllib.error.HTTPError as exc:
+            body_text = exc.read(512).decode("utf-8", errors="replace")
+            LOG.error("ClickHouse HTTP %d — batch discarded: %s", exc.code, body_text)
+        except Exception as exc:
+            LOG.error("ClickHouse unavailable — batch discarded: %s", exc)
+
+
+    # ---------------------------------------------------------------------------
+    # Batch accumulator
+    # ---------------------------------------------------------------------------
+
+    class Batcher:
+        def __init__(self) -> None:
+            self._rows: list[dict] = []
+            self._deadline: float = time.monotonic() + BATCH_SECS
+            self._lock = asyncio.Lock()
+
+        async def add(self, row: dict) -> None:
+            async with self._lock:
+                self._rows.append(row)
+                should_flush = (
+                    len(self._rows) >= BATCH_MAX
+                    or time.monotonic() >= self._deadline
+                )
+                if should_flush:
+                    await self._flush_locked()
+
+        async def _flush_locked(self) -> None:
+            if not self._rows:
+                self._deadline = time.monotonic() + BATCH_SECS
+                return
+            batch, self._rows = self._rows, []
+            self._deadline = time.monotonic() + BATCH_SECS
+            # Run blocking HTTP call in a thread so we don't block the event loop
+            loop = asyncio.get_event_loop()
+            await loop.run_in_executor(None, flush_to_clickhouse, batch)
+
+        async def flush_if_due(self) -> None:
+            async with self._lock:
+                if self._rows and time.monotonic() >= self._deadline:
+                    await self._flush_locked()
+
+        async def flush_all(self) -> None:
+            async with self._lock:
+                await self._flush_locked()
+
+
+    # ---------------------------------------------------------------------------
+    # Message handler
+    # ---------------------------------------------------------------------------
+
+    def make_handler(batcher: Batcher):
+        async def handler(msg) -> None:
+            subject = msg.subject
+            try:
+                payload = json.loads(msg.data.decode("utf-8"))
+            except Exception as exc:
+                LOG.warning("JSON parse error on %s — skipping: %s", subject, exc)
+                return
+
+            fields = extract_fields(subject, payload)
+            now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
+            row: dict = {
+                "timestamp":   now_iso,
+                "subject":     subject,
+                "entity_id":   fields["entity_id"],
+                "entity_type": fields["entity_type"],
+                "source":      fields["source"],
+                "payload":     msg.data.decode("utf-8"),
+            }
+            if fields["lat"] is not None:
+                row["lat"] = fields["lat"]
+            if fields["lon"] is not None:
+                row["lon"] = fields["lon"]
+
+            await batcher.add(row)
+
+        return handler
+
+
+    # ---------------------------------------------------------------------------
+    # Main
+    # ---------------------------------------------------------------------------
+
+    async def main() -> None:
+        LOG.info(
+            "sink-clickhouse starting — NATS=%s CH=%s:%s",
+            NATS_URL, CH_HOST, CH_PORT,
+        )
+
+        opts = {
+            "servers":                NATS_URL,
+            "name":                   "sink-clickhouse",
+            "max_reconnect_attempts": -1,
+            "reconnect_time_wait":    2,
+        }
+        if NATS_USER:
+            opts["user"]     = NATS_USER
+            opts["password"] = NATS_PASSWORD
+
+        nc = await nats.connect(**opts)
+        LOG.info("NATS connected")
+
+        js = nc.jetstream()
+        batcher = Batcher()
+        handler = make_handler(batcher)
+
+        # JetStream push consumer — durable, deliver to _INBOX.sink-ch
+        consumer_cfg = ConsumerConfig(
+            durable_name="sink-clickhouse",
+            deliver_subject="_INBOX.sink-ch",
+            deliver_policy=DeliverPolicy.LAST_PER_SUBJECT,
+            filter_subject="intel.>",
+            ack_policy="none",
+        )
+        js_sub = await js.subscribe(
+            "intel.>",
+            config=consumer_cfg,
+            cb=handler,
+            manual_ack=True,
+        )
+        LOG.info("JetStream push consumer subscribed to intel.>  (durable=sink-clickhouse)")
+
+        # Core NATS subscription — ent.*.*.state (KV mirrors)
+        core_sub = await nc.subscribe("ent.*.*.state", cb=handler)
+        LOG.info("core NATS subscribed to ent.*.*.state")
+
+        # Timer loop: flush partial batches on the 5-second deadline
+        try:
+            while True:
+                await asyncio.sleep(1)
+                await batcher.flush_if_due()
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await batcher.flush_all()
+            await js_sub.unsubscribe()
+            await core_sub.unsubscribe()
+            await nc.drain()
+
+    if __name__ == "__main__":
+        try:
+            asyncio.run(main())
+        except KeyboardInterrupt:
+            pass
+
+  # ---------------------------------------------------------------------------
+  # sink_tak.py — INTEL stream → CoT → tak.cot.inject
+  # Durable push consumer on intel.> (90d INTEL stream).
+  # Translates structured intel envelopes to CoT XML and injects into TAK.
+  # Toggle: publish to cmd.etl.sink.tak.disable / cmd.etl.sink.tak.enable
+  # ---------------------------------------------------------------------------
+  sink_tak.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os
+    from datetime import datetime, timezone, timedelta
+    import nats
+    import nats.js.api
+
+    LOG = logging.getLogger("sink-tak")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    INJECT_SUBJ   = "tak.cot.inject"
+    XML_DECL      = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+
+    # Enabled flag — toggled by cmd.etl.sink.tak.disable / .enable
+    _enabled = True
+    _nc      = None
+
+    # ---------------------------------------------------------------------------
+    # CoT type mapping
+    # ---------------------------------------------------------------------------
+    COT_TYPE_MAP = {
+        "Tornado Warning":             "a-f-G-U-W-T",
+        "Tornado Watch":               "a-f-G-U-W-T",
+        "Severe Thunderstorm Warning": "a-f-G-U-W-S",
+        "Severe Thunderstorm Watch":   "a-f-G-U-W-S",
+        "Flash Flood Warning":         "a-f-G-U-W-F",
+        "Flash Flood Watch":           "a-f-G-U-W-F",
+        "Flood Warning":               "a-f-G-U-W-F",
+        "Flood Watch":                 "a-f-G-U-W-F",
+        "Hurricane Warning":           "a-f-G-U-W-H",
+        "Hurricane Watch":             "a-f-G-U-W-H",
+        "Tropical Storm Warning":      "a-f-G-U-W-H",
+        "Tropical Storm Watch":        "a-f-G-U-W-H",
+        "Winter Storm Warning":        "a-f-G-U-W-W",
+        "Blizzard Warning":            "a-f-G-U-W-W",
+        "Ice Storm Warning":           "a-f-G-U-W-W",
+        "Winter Weather Advisory":     "a-f-G-U-W-W",
+        "Excessive Heat Warning":      "a-f-G-U-W-E",
+        "Heat Advisory":               "a-f-G-U-W-E",
+        "Extreme Cold Warning":        "a-f-G-U-W-W",
+        "Wind Advisory":               "a-f-G-U-W",
+        "High Wind Warning":           "a-f-G-U-W",
+        "Red Flag Warning":            "a-f-G-U-F-F",
+        "Wildfire Warning":            "a-f-G-U-F-F",
+        "Dust Storm Warning":          "a-f-G-U-W",
+        "Tsunami Warning":             "a-f-G-U-W-T",
+        "Tsunami Watch":               "a-f-G-U-W-T",
+        "Special Weather Statement":   "a-f-G-U-W",
+    }
+
+    def event_type_to_cot(entity_type: str, properties: dict) -> str:
+        if entity_type == "earthquake":
+            return "a-f-G-E-V-Q"
+        if entity_type == "wildfire":
+            return "a-f-G-U-F-F"
+        if entity_type == "conflict_event":
+            return "a-h-G"
+        if entity_type == "weather_alert":
+            event_name = properties.get("event", "")
+            return COT_TYPE_MAP.get(event_name, "a-f-G-U-W")
+        return "a-f-G-U-O"
+
+    # ---------------------------------------------------------------------------
+    # Time helpers — output format: %Y-%m-%dT%H:%M:%S.000000Z
+    # ---------------------------------------------------------------------------
+    def fmt_time(dt: datetime) -> str:
+        return dt.strftime("%Y-%m-%dT%H:%M:%S") + ".000000Z"
+
+    def parse_iso(s: str) -> datetime:
+        s = s.rstrip("Z")
+        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(s, fmt).replace(tzinfo=timezone.utc)
+            except ValueError:
+                continue
+        return datetime.now(timezone.utc)
+
+    def now_z() -> str:
+        return fmt_time(datetime.now(timezone.utc))
+
+    # ---------------------------------------------------------------------------
+    # CoT XML builder
+    # ---------------------------------------------------------------------------
+    def build_cot(uid: str, cot_type: str, lat, lon,
+                  timestamp_z: str, expires_z: str, remarks: str) -> bytes:
+        xml = (
+            f'<event version="2.0" uid="{uid}" type="{cot_type}" '
+            f'time="{now_z()}" start="{timestamp_z}" stale="{expires_z}" how="m-g">'
+            f'<point lat="{lat}" lon="{lon}" hae="0" ce="9999999" le="9999999"/>'
+            f'<detail>'
+            f'<remarks>{remarks}</remarks>'
+            f'<color argb="-65536"/>'
+            f'</detail>'
+            f'</event>'
+        )
+        return XML_DECL + xml.encode()
+
+    # ---------------------------------------------------------------------------
+    # Message handler
+    # ---------------------------------------------------------------------------
+    async def handle_message(msg):
+        global _enabled
+        try:
+            envelope = json.loads(msg.data.decode())
+        except Exception as e:
+            LOG.warning(f"Bad JSON payload: {e}")
+            await msg.ack()
+            return
+
+        if not _enabled:
+            await msg.ack()
+            return
+
+        uid         = envelope.get("id", "unknown")
+        entity_type = envelope.get("type", "")
+        source      = envelope.get("source", "")
+        lat         = envelope.get("lat")
+        lon         = envelope.get("lon")
+        timestamp   = envelope.get("timestamp", "")
+        expires     = envelope.get("expires", "")
+        properties  = envelope.get("properties", {})
+
+        if lat is None or lon is None:
+            await msg.ack()
+            return
+
+        cot_type = event_type_to_cot(entity_type, properties)
+
+        ts_dt = parse_iso(timestamp) if timestamp else datetime.now(timezone.utc)
+        ex_dt = parse_iso(expires) if expires else ts_dt + timedelta(minutes=30)
+
+        timestamp_z = fmt_time(ts_dt)
+        expires_z   = fmt_time(ex_dt)
+
+        headline = properties.get("headline", properties.get("event", entity_type))
+        remarks  = f"{headline}\nSource: {source}\nID: {uid}"
+
+        cot = build_cot(uid, cot_type, lat, lon, timestamp_z, expires_z, remarks)
+        await _nc.publish(INJECT_SUBJ, cot)
+        LOG.info(f"CoT published uid={uid} type={cot_type}")
+
+        await msg.ack()
+
+    # ---------------------------------------------------------------------------
+    # Control handlers (core NATS)
+    # ---------------------------------------------------------------------------
+    async def handle_disable(msg):
+        global _enabled
+        _enabled = False
+        LOG.info("sink-tak DISABLED via cmd.etl.sink.tak.disable")
+
+    async def handle_enable(msg):
+        global _enabled
+        _enabled = True
+        LOG.info("sink-tak ENABLED via cmd.etl.sink.tak.enable")
+
+    # ---------------------------------------------------------------------------
+    # Main
+    # ---------------------------------------------------------------------------
+    async def main():
+        global _nc
+        _nc = await nats.connect(
+            servers=NATS_URL,
+            user=NATS_USER,
+            password=NATS_PASSWORD,
+            max_reconnect_attempts=-1,
+            reconnect_time_wait=2,
+            error_cb=lambda e: LOG.error(f"NATS error: {e}"),
+            reconnected_cb=lambda: LOG.info("NATS reconnected"),
+            disconnected_cb=lambda: LOG.warning("NATS disconnected"),
+        )
+        LOG.info("NATS connected")
+
+        await _nc.subscribe("cmd.etl.sink.tak.disable", cb=handle_disable)
+        await _nc.subscribe("cmd.etl.sink.tak.enable",  cb=handle_enable)
+
+        js = _nc.jetstream()
+        await js.subscribe(
+            "intel.>",
+            durable="sink-tak",
+            cb=handle_message,
+            deliver_policy=nats.js.api.DeliverPolicy.NEW,
+        )
+        LOG.info("Subscribed: intel.> (durable=sink-tak) → tak.cot.inject")
+
+        try:
+            while True:
+                await asyncio.sleep(3600)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await _nc.drain()
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_noaa.py — NOAA NWS active alerts → intel.weather.noaa.alert.*
+  #
+  # Subject:  intel.weather.noaa.alert.{state_lower}.{event_slug}
+  # Payload:  intel envelope with type=weather_alert, source=noaa
+  # Dedup:    in-memory set on alert id; cleared every 6 hours
+  #           JetStream Nats-Msg-Id header for stream-level dedup
+  # Geometry: polygon centroid if present; else zone centroid via API;
+  #           else hardcoded state centroid dict — never skips an alert
+  # ---------------------------------------------------------------------------
+  feed_intel_noaa.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, re, time
+    from datetime import datetime, timezone
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-noaa")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+
+    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "300"))
+    NOAA_AREAS    = os.getenv("NOAA_AREAS", "US")   # comma-separated state codes or "US"
+
+    NOAA_BASE    = "https://api.weather.gov"
+    SEEN_RESET_S = 6 * 3600  # clear dedup set every 6 hours
+
+    # Approximate centroids (lat, lon) for all 50 US states + DC
+    STATE_CENTROIDS: dict[str, tuple[float, float]] = {
+        "AL": (32.7990, -86.8073), "AK": (64.2008, -153.4937),
+        "AZ": (34.2744, -111.6602), "AR": (34.8938, -92.4426),
+        "CA": (37.1841, -119.4696), "CO": (38.9972, -105.5478),
+        "CT": (41.6219, -72.7273), "DE": (38.9896, -75.5050),
+        "DC": (38.9072, -77.0369), "FL": (28.6305, -82.4497),
+        "GA": (32.6415, -83.4426), "HI": (20.2927, -156.3737),
+        "ID": (44.3509, -114.6130), "IL": (40.0417, -89.1965),
+        "IN": (39.8942, -86.2816), "IA": (42.0751, -93.4960),
+        "KS": (38.4937, -98.3804), "KY": (37.5347, -85.3021),
+        "LA": (31.0689, -91.9968), "ME": (45.3695, -69.2428),
+        "MD": (39.0550, -76.7909), "MA": (42.2596, -71.8083),
+        "MI": (44.3467, -85.4102), "MN": (46.2807, -94.3053),
+        "MS": (32.7364, -89.6678), "MO": (38.3566, -92.4580),
+        "MT": (47.0527, -109.6333), "NE": (41.5378, -99.7951),
+        "NV": (39.3289, -116.6312), "NH": (43.6805, -71.5811),
+        "NJ": (40.1907, -74.6728), "NM": (34.4071, -106.1126),
+        "NY": (42.9538, -75.5268), "NC": (35.5557, -79.3877),
+        "ND": (47.4501, -100.4659), "OH": (40.2862, -82.7937),
+        "OK": (35.5889, -97.4943), "OR": (43.9336, -120.5583),
+        "PA": (40.8781, -77.7996), "RI": (41.6762, -71.5562),
+        "SC": (33.9169, -80.8964), "SD": (44.4443, -100.2263),
+        "TN": (35.8580, -86.3505), "TX": (31.4757, -99.3312),
+        "UT": (39.3055, -111.0937), "VT": (44.0687, -72.6658),
+        "VA": (37.5215, -78.8537), "WA": (47.3826, -120.4472),
+        "WV": (38.6409, -80.6227), "WI": (44.6243, -89.9941),
+        "WY": (42.9957, -107.5512),
+    }
+
+    def slugify(text: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+    def extract_state_from_zones(zones: list[str]) -> str:
+        """Extract two-letter state code from a UGC zone code like CTZ001."""
+        for z in zones:
+            m = re.match(r"^([A-Z]{2})[CZ]\d", z)
+            if m:
+                return m.group(1)
+        return "XX"
+
+    def poly_centroid(coordinates) -> tuple[float, float]:
+        ring = coordinates[0]
+        lon = sum(p[0] for p in ring) / len(ring)
+        lat = sum(p[1] for p in ring) / len(ring)
+        return lat, lon
+
+    def multipolygon_centroid(coordinates) -> tuple[float, float]:
+        all_pts = [p for poly in coordinates for p in poly[0]]
+        lon = sum(p[0] for p in all_pts) / len(all_pts)
+        lat = sum(p[1] for p in all_pts) / len(all_pts)
+        return lat, lon
+
+    async def zone_centroid(session: aiohttp.ClientSession, zone_url: str):
+        try:
+            async with session.get(zone_url, timeout=aiohttp.ClientTimeout(total=10)) as r:
+                if r.status != 200:
+                    return None
+                data = await r.json(content_type=None)
+            geom = data.get("geometry") or {}
+            gtype = geom.get("type", "")
+            coords = geom.get("coordinates")
+            if not coords:
+                return None
+            if gtype == "Polygon":
+                return poly_centroid(coords)
+            if gtype == "MultiPolygon":
+                return multipolygon_centroid(coords)
+            if gtype == "Point":
+                return coords[1], coords[0]
+        except Exception as e:
+            LOG.debug(f"zone centroid fetch failed {zone_url}: {e}")
+        return None
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    async def resolve_geometry(session, feat: dict, state: str) -> tuple[float, float]:
+        geom   = feat.get("geometry") or {}
+        gtype  = geom.get("type", "")
+        coords = geom.get("coordinates")
+        if coords:
+            if gtype == "Point":
+                return coords[1], coords[0]
+            if gtype == "Polygon":
+                return poly_centroid(coords)
+            if gtype == "MultiPolygon":
+                return multipolygon_centroid(coords)
+        # Try first zone centroid via API
+        props    = feat.get("properties", {})
+        affected = props.get("affectedZones") or []
+        if affected:
+            pt = await zone_centroid(session, affected[0])
+            if pt:
+                return pt
+        # Fall back to state centroid dict
+        fallback = STATE_CENTROIDS.get(state.upper())
+        if fallback:
+            return fallback
+        LOG.warning(f"No geometry resolved for state={state} alert id={feat.get('id')}")
+        return 0.0, 0.0
+
+    def build_subject(state: str, event_type: str) -> str:
+        return f"intel.weather.noaa.alert.{state.lower()}.{slugify(event_type)}"
+
+    def build_payload(feat: dict, lat: float, lon: float) -> dict:
+        props = feat.get("properties", {})
+        return {
+            "id":         feat.get("id", ""),
+            "type":       "weather_alert",
+            "source":     "noaa",
+            "lat":        round(lat, 6),
+            "lon":        round(lon, 6),
+            "timestamp":  props.get("sent") or now_iso(),
+            "expires":    props.get("expires") or "",
+            "properties": {
+                "event":       props.get("event", ""),
+                "headline":    props.get("headline", ""),
+                "description": (props.get("description") or "")[:500],
+                "severity":    props.get("severity", ""),
+                "certainty":   props.get("certainty", ""),
+                "urgency":     props.get("urgency", ""),
+                "areaDesc":    props.get("areaDesc", ""),
+                "status":      props.get("status", ""),
+                "messageType": props.get("messageType", ""),
+                "senderName":  props.get("senderName", ""),
+            },
+            "geometry": {
+                "type":        "Point",
+                "coordinates": [round(lon, 6), round(lat, 6)],
+            },
+        }
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set, areas: list[str]) -> int:
+        params: dict[str, str] = {"status": "actual"}
+        if areas and areas != ["US"]:
+            params["area"] = ",".join(areas)
+        url = f"{NOAA_BASE}/alerts/active"
+        try:
+            async with session.get(
+                url,
+                params=params,
+                headers={"Accept": "application/geo+json", "User-Agent": "omos-feed-intel-noaa/1.0"},
+                timeout=aiohttp.ClientTimeout(total=30),
+            ) as r:
+                if r.status != 200:
+                    LOG.warning(f"NOAA HTTP {r.status}")
+                    return 0
+                data = await r.json(content_type=None)
+        except Exception as e:
+            LOG.error(f"NOAA fetch error: {e}")
+            return 0
+
+        features  = data.get("features", [])
+        published = 0
+        for feat in features:
+            alert_id = feat.get("id", "")
+            if not alert_id or alert_id in seen:
+                continue
+            props      = feat.get("properties", {})
+            event_type = props.get("event", "alert")
+            affected   = props.get("affectedZones") or []
+            state = extract_state_from_zones([z.split("/")[-1] for z in affected]) if affected else "XX"
+            if state == "XX":
+                m = re.search(r"\b([A-Z]{2})\b", props.get("areaDesc", ""))
+                if m and m.group(1) in STATE_CENTROIDS:
+                    state = m.group(1)
+            lat, lon = await resolve_geometry(session, feat, state)
+            subject  = build_subject(state, event_type)
+            payload  = build_payload(feat, lat, lon)
+            try:
+                hdrs = nats.aio.client.Msg.headers_type()
+                hdrs["Nats-Msg-Id"] = alert_id
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(alert_id)
+                published += 1
+                LOG.debug(f"Published {subject} id={alert_id}")
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+        if published:
+            LOG.info(f"NOAA: published {published} new alerts (total seen={len(seen)})")
+        return published
+
+    async def main():
+        areas = [a.strip() for a in NOAA_AREAS.split(",") if a.strip()]
+        LOG.info(f"Starting NOAA feed areas={areas} poll={POLL_INTERVAL}s")
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-noaa",
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+        seen: set[str] = set()
+        seen_reset_at  = time.monotonic()
+        async with aiohttp.ClientSession() as session:
+            while True:
+                if time.monotonic() - seen_reset_at > SEEN_RESET_S:
+                    LOG.info(f"Clearing dedup set (had {len(seen)} entries)")
+                    seen.clear()
+                    seen_reset_at = time.monotonic()
+                await poll(session, js, seen, areas)
+                await asyncio.sleep(POLL_INTERVAL)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_usgs.py — USGS earthquake GeoJSON → intel.seismic.usgs.*
+  #
+  # Subject:  intel.seismic.usgs.{magnitude_bucket}.{clean_id}
+  #           Buckets: m2plus (2.0-2.9), m3plus (3.0-3.9),
+  #                    m4plus (4.0-4.9), m5plus (5.0+)
+  # Payload:  intel envelope with type=earthquake, source=usgs
+  # Dedup:    in-memory set on feature id + Nats-Msg-Id header
+  # ---------------------------------------------------------------------------
+  feed_intel_usgs.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, re
+    from datetime import datetime, timezone
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-usgs")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+
+    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "60"))
+    MIN_MAGNITUDE = float(os.getenv("MIN_MAGNITUDE", "2.5"))
+
+    USGS_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
+
+    def magnitude_bucket(mag: float) -> str:
+        if mag >= 5.0: return "m5plus"
+        if mag >= 4.0: return "m4plus"
+        if mag >= 3.0: return "m3plus"
+        return "m2plus"
+
+    def clean_id(fid: str) -> str:
+        return re.sub(r"[^a-zA-Z0-9_-]", "", fid)
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def ms_to_iso(ms) -> str:
+        if ms is None:
+            return now_iso()
+        return datetime.fromtimestamp(ms / 1000.0, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def build_payload(feat: dict) -> dict:
+        props  = feat.get("properties", {})
+        coords = feat["geometry"]["coordinates"]
+        lon, lat, depth = coords[0], coords[1], coords[2]
+        mag = props.get("mag") or 0.0
+        return {
+            "id":        feat["id"],
+            "type":      "earthquake",
+            "source":    "usgs",
+            "lat":       round(lat, 6),
+            "lon":       round(lon, 6),
+            "timestamp": ms_to_iso(props.get("time")),
+            "expires":   "",
+            "properties": {
+                "magnitude":      mag,
+                "magnitude_type": props.get("magType", ""),
+                "depth_km":       round(depth, 2),
+                "place":          props.get("place", ""),
+                "status":         props.get("status", ""),
+                "tsunami":        bool(props.get("tsunami")),
+                "felt":           props.get("felt"),
+                "cdi":            props.get("cdi"),
+                "mmi":            props.get("mmi"),
+                "alert":          props.get("alert"),
+                "sig":            props.get("sig"),
+                "net":            props.get("net", ""),
+                "url":            props.get("url", ""),
+            },
+            "geometry": {
+                "type":        "Point",
+                "coordinates": [round(lon, 6), round(lat, 6)],
+            },
+        }
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set) -> int:
+        try:
+            async with session.get(
+                USGS_URL,
+                headers={"User-Agent": "omos-feed-intel-usgs/1.0"},
+                timeout=aiohttp.ClientTimeout(total=20),
+            ) as r:
+                if r.status != 200:
+                    LOG.warning(f"USGS HTTP {r.status}")
+                    return 0
+                data = await r.json(content_type=None)
+        except Exception as e:
+            LOG.error(f"USGS fetch error: {e}")
+            return 0
+
+        published = 0
+        for feat in data.get("features", []):
+            fid = feat.get("id", "")
+            if not fid or fid in seen:
+                continue
+            props = feat.get("properties", {})
+            mag   = props.get("mag")
+            if mag is None or mag < MIN_MAGNITUDE:
+                continue
+            if not feat.get("geometry") or not feat["geometry"].get("coordinates"):
+                continue
+            bucket  = magnitude_bucket(mag)
+            cid     = clean_id(fid)
+            subject = f"intel.seismic.usgs.{bucket}.{cid}"
+            payload = build_payload(feat)
+            try:
+                hdrs = nats.aio.client.Msg.headers_type()
+                hdrs["Nats-Msg-Id"] = fid
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(fid)
+                published += 1
+                LOG.debug(f"Published {subject} mag={mag}")
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+        if published:
+            LOG.info(f"USGS: published {published} new events (total seen={len(seen)})")
+        return published
+
+    async def main():
+        LOG.info(f"Starting USGS feed min_mag={MIN_MAGNITUDE} poll={POLL_INTERVAL}s")
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-usgs",
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+        seen: set[str] = set()
+        async with aiohttp.ClientSession() as session:
+            while True:
+                await poll(session, js, seen)
+                await asyncio.sleep(POLL_INTERVAL)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_acled.py — ACLED conflict events → intel.conflict.acled.*
+  #
+  # Subject:  intel.conflict.acled.{iso3_lower}.{event_type_slug}
+  # Payload:  intel envelope with type=conflict_event, source=acled
+  # Dedup:    in-memory set on data_id + Nats-Msg-Id header
+  # Requires: ACLED_API_KEY + ACLED_EMAIL env vars; sleeps if not set
+  # ---------------------------------------------------------------------------
+  feed_intel_acled.py: |
+    #!/usr/bin/env python3
+    import asyncio, json, logging, os, re
+    from datetime import datetime, timezone, timedelta
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-acled")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+
+    NATS_URL        = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER       = os.getenv("NATS_USER", "")
+    NATS_PASSWORD   = os.getenv("NATS_PASSWORD", "")
+    POLL_INTERVAL   = int(os.getenv("POLL_INTERVAL", "3600"))
+    ACLED_API_KEY   = os.getenv("ACLED_API_KEY", "")
+    ACLED_EMAIL     = os.getenv("ACLED_EMAIL", "")
+    ACLED_COUNTRIES = os.getenv("ACLED_COUNTRIES", "")
+    ACLED_LOOKBACK  = int(os.getenv("ACLED_LOOKBACK_DAYS", "7"))
+
+    ACLED_URL = "https://api.acleddata.com/acled/read"
+
+    def slugify(text: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def build_payload(row: dict) -> dict:
+        try:
+            lat = float(row.get("latitude", 0) or 0)
+            lon = float(row.get("longitude", 0) or 0)
+        except (ValueError, TypeError):
+            lat, lon = 0.0, 0.0
+        event_date = row.get("event_date", "")
+        timestamp  = f"{event_date}T00:00:00Z" if event_date else now_iso()
+        return {
+            "id":        str(row.get("data_id", "")),
+            "type":      "conflict_event",
+            "source":    "acled",
+            "lat":       round(lat, 6),
+            "lon":       round(lon, 6),
+            "timestamp": timestamp,
+            "expires":   "",
+            "properties": {
+                "event_type":     row.get("event_type", ""),
+                "sub_event_type": row.get("sub_event_type", ""),
+                "actor1":         row.get("actor1", ""),
+                "actor2":         row.get("actor2", ""),
+                "country":        row.get("country", ""),
+                "iso3":           row.get("iso3", ""),
+                "location":       row.get("location", ""),
+                "admin1":         row.get("admin1", ""),
+                "admin2":         row.get("admin2", ""),
+                "fatalities":     int(row.get("fatalities", 0) or 0),
+                "notes":          (row.get("notes") or "")[:500],
+                "source":         row.get("source", ""),
+                "source_scale":   row.get("source_scale", ""),
+            },
+            "geometry": {
+                "type":        "Point",
+                "coordinates": [round(lon, 6), round(lat, 6)],
+            },
+        }
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set) -> int:
+        today     = datetime.now(timezone.utc).date()
+        from_date = (today - timedelta(days=ACLED_LOOKBACK)).isoformat()
+        params: dict[str, str] = {
+            "key":              ACLED_API_KEY,
+            "email":            ACLED_EMAIL,
+            "event_date":       from_date,
+            "event_date_where": ">=",
+            "limit":            "5000",
+            "fields": (
+                "data_id|event_date|event_type|sub_event_type|actor1|actor2"
+                "|country|iso3|location|admin1|admin2|latitude|longitude"
+                "|fatalities|notes|source|source_scale"
+            ),
+        }
+        if ACLED_COUNTRIES:
+            params["iso3"]       = ACLED_COUNTRIES
+            params["iso3_where"] = "IN"
+        try:
+            async with session.get(
+                ACLED_URL,
+                params=params,
+                headers={"User-Agent": "omos-feed-intel-acled/1.0"},
+                timeout=aiohttp.ClientTimeout(total=60),
+            ) as r:
+                if r.status != 200:
+                    LOG.warning(f"ACLED HTTP {r.status}")
+                    return 0
+                data = await r.json(content_type=None)
+        except Exception as e:
+            LOG.error(f"ACLED fetch error: {e}")
+            return 0
+
+        rows      = data.get("data") or []
+        published = 0
+        for row in rows:
+            data_id = str(row.get("data_id", ""))
+            if not data_id or data_id in seen:
+                continue
+            iso3       = (row.get("iso3") or "XXX").lower()
+            event_type = row.get("event_type", "event")
+            subject    = f"intel.conflict.acled.{iso3}.{slugify(event_type)}"
+            payload    = build_payload(row)
+            try:
+                hdrs = nats.aio.client.Msg.headers_type()
+                hdrs["Nats-Msg-Id"] = f"acled-{data_id}"
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(data_id)
+                published += 1
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+        if published:
+            LOG.info(f"ACLED: published {published} new events (total seen={len(seen)})")
+        return published
+
+    async def main():
+        if not ACLED_API_KEY or not ACLED_EMAIL:
+            LOG.warning("ACLED_API_KEY / ACLED_EMAIL not set — feed disabled, sleeping forever")
+            while True:
+                await asyncio.sleep(3600)
+
+        LOG.info(f"Starting ACLED feed lookback={ACLED_LOOKBACK}d poll={POLL_INTERVAL}s")
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-acled",
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+        seen: set[str] = set()
+        async with aiohttp.ClientSession() as session:
+            while True:
+                try:
+                    await poll(session, js, seen)
+                except Exception as e:
+                    LOG.error(f"Poll loop error: {e}")
+                await asyncio.sleep(POLL_INTERVAL)
+
+    asyncio.run(main())
+
+  # ---------------------------------------------------------------------------
+  # feed_intel_firms.py — NASA FIRMS active fire detections → intel.fire.nasa.firms.*
+  #
+  # Subject:  intel.fire.nasa.firms.{region}  (region = FIRMS_AREA slugified)
+  # Payload:  intel envelope with type=wildfire, source=nasa_firms
+  # Dedup:    in-memory set keyed by SHA-1(lat:lon:acq_date:acq_time)
+  #           + Nats-Msg-Id header
+  # Requires: FIRMS_API_KEY env var; sleeps if not set
+  # ---------------------------------------------------------------------------
+  feed_intel_firms.py: |
+    #!/usr/bin/env python3
+    import asyncio, csv, hashlib, io, json, logging, os, re
+    from datetime import datetime, timezone
+    import aiohttp, nats
+
+    LOG = logging.getLogger("feed-intel-firms")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+
+    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "600"))
+    FIRMS_API_KEY = os.getenv("FIRMS_API_KEY", "")
+    FIRMS_AREA    = os.getenv("FIRMS_AREA", "world")
+    FIRMS_DAYS    = int(os.getenv("FIRMS_DAYS", "1"))
+
+    FIRMS_URL_TMPL = (
+        "https://firms.modaps.eosdis.nasa.gov/api/area/csv"
+        "/{key}/VIIRS_SNPP_NRT/{area}/{days}"
+    )
+
+    def slugify(text: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def row_dedup_key(row: dict) -> str:
+        raw = f"{row.get('latitude','')}:{row.get('longitude','')}:{row.get('acq_date','')}:{row.get('acq_time','')}"
+        return hashlib.sha1(raw.encode()).hexdigest()
+
+    def row_timestamp(row: dict) -> str:
+        date = row.get("acq_date", "")
+        t    = row.get("acq_time", "")
+        if date and t:
+            try:
+                hhmm = t.zfill(4)
+                return f"{date}T{hhmm[:2]}:{hhmm[2:]}:00Z"
+            except Exception:
+                pass
+        return now_iso()
+
+    def _float(val):
+        if val is None or val == "":
+            return None
+        try:
+            return float(val)
+        except (ValueError, TypeError):
+            return None
+
+    def build_payload(row: dict, lat: float, lon: float, dedup_key: str) -> dict:
+        return {
+            "id":        dedup_key,
+            "type":      "wildfire",
+            "source":    "nasa_firms",
+            "lat":       round(lat, 6),
+            "lon":       round(lon, 6),
+            "timestamp": row_timestamp(row),
+            "expires":   "",
+            "properties": {
+                "brightness":    _float(row.get("bright_ti4")),
+                "brightness_t5": _float(row.get("bright_ti5")),
+                "frp":           _float(row.get("frp")),
+                "confidence":    row.get("confidence", ""),
+                "satellite":     row.get("satellite", ""),
+                "instrument":    row.get("instrument", "VIIRS"),
+                "scan":          _float(row.get("scan")),
+                "track":         _float(row.get("track")),
+                "acq_date":      row.get("acq_date", ""),
+                "acq_time":      row.get("acq_time", ""),
+                "version":       row.get("version", ""),
+                "daynight":      row.get("daynight", ""),
+            },
+            "geometry": {
+                "type":        "Point",
+                "coordinates": [round(lon, 6), round(lat, 6)],
+            },
+        }
+
+    async def poll(session: aiohttp.ClientSession, js, seen: set, subject: str) -> int:
+        url = FIRMS_URL_TMPL.format(key=FIRMS_API_KEY, area=FIRMS_AREA, days=FIRMS_DAYS)
+        try:
+            async with session.get(
+                url,
+                headers={"User-Agent": "omos-feed-intel-firms/1.0"},
+                timeout=aiohttp.ClientTimeout(total=60),
+            ) as r:
+                if r.status == 400:
+                    LOG.error("FIRMS HTTP 400 — check API key or area parameter")
+                    return 0
+                if r.status != 200:
+                    LOG.warning(f"FIRMS HTTP {r.status}")
+                    return 0
+                body = await r.text()
+        except Exception as e:
+            LOG.error(f"FIRMS fetch error: {e}")
+            return 0
+
+        try:
+            reader = csv.DictReader(io.StringIO(body))
+            rows   = list(reader)
+        except Exception as e:
+            LOG.error(f"FIRMS CSV parse error: {e}")
+            return 0
+
+        published = 0
+        for row in rows:
+            try:
+                lat = float(row.get("latitude", 0) or 0)
+                lon = float(row.get("longitude", 0) or 0)
+            except (ValueError, TypeError):
+                continue
+            dedup_key = row_dedup_key(row)
+            if dedup_key in seen:
+                continue
+            payload = build_payload(row, lat, lon, dedup_key)
+            try:
+                hdrs = nats.aio.client.Msg.headers_type()
+                hdrs["Nats-Msg-Id"] = dedup_key
+                await js.publish(subject, json.dumps(payload).encode(), headers=hdrs)
+                seen.add(dedup_key)
+                published += 1
+            except Exception as e:
+                LOG.error(f"NATS publish error {subject}: {e}")
+        if published:
+            LOG.info(f"FIRMS: published {published} new fire detections area={FIRMS_AREA} (total seen={len(seen)})")
+        return published
+
+    async def main():
+        if not FIRMS_API_KEY:
+            LOG.warning("FIRMS_API_KEY not set — feed disabled, sleeping forever")
+            while True:
+                await asyncio.sleep(3600)
+
+        region  = slugify(FIRMS_AREA)
+        subject = f"intel.fire.nasa.firms.{region}"
+        LOG.info(f"Starting FIRMS feed area={FIRMS_AREA} days={FIRMS_DAYS} poll={POLL_INTERVAL}s subject={subject}")
+        nc = await nats.connect(
+            servers=NATS_URL, user=NATS_USER, password=NATS_PASSWORD,
+            max_reconnect_attempts=-1, reconnect_time_wait=5, name="feed-intel-firms",
+        )
+        js = nc.jetstream()
+        LOG.info("NATS connected — JetStream ready")
+        seen: set[str] = set()
+        async with aiohttp.ClientSession() as session:
+            while True:
+                try:
+                    await poll(session, js, seen, subject)
+                except Exception as e:
+                    LOG.error(f"Poll loop error: {e}")
+                await asyncio.sleep(POLL_INTERVAL)
+
+    asyncio.run(main())
