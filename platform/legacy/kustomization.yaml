@@ -7,6 +7,5 @@ resources:
   - deployment.yaml
   - dashboard.yaml
   - external-secret.yaml
-  - tak-agent.yaml
 # Secrets are managed by External Secrets Operator — source of truth is 1Password.
 # Apply with:  kubectl apply -k platform/legacy/
