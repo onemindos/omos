@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: tak-agent
-          image: python:3.12-alpine
+          image: python:3.12.10-alpine
           command: ["/bin/sh", "-c"]
           args:
             - |
