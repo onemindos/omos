@@ -35,6 +35,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: tak-agent
+      annotations:
+        omos/script-hash: "ef5992013381ae96"
     spec:
       containers:
         - name: tak-agent
