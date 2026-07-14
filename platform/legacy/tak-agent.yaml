@@ -388,11 +388,17 @@ data:
             try:
                 xml_str = msg.data.decode(errors="replace")
                 chat = parse_geochat(xml_str)
-                if chat and TAK_CALLSIGN.lower() in chat["to"].lower():
+                if chat:
+                    to_field = chat["to"].lower()
+                    addressed = TAK_CALLSIGN.lower() in to_field
+                    broadcast = to_field in ("all chat rooms", "allchatrooms", "all chat", "geochat")
+                    # Skip self-echo
+                    is_self = chat["from"].lower() == TAK_CALLSIGN.lower()
+                if chat and (addressed or broadcast) and not is_self:
                     sender = chat["from"]
                     sender_uid = chat.get("sender_uid", "")
                     prompt = f"[TAK GeoChat from {sender}]: {chat['message']}"
-                    log.info("GeoChat → Legacy: %s (uid=%s)", prompt[:120], sender_uid)
+                    log.info("GeoChat → Legacy: %s (uid=%s, room=%s)", prompt[:120], sender_uid, chat["to"])
 
                     # Use request/reply so Legacy can stream its response back
                     # Collect all response chunks and re-inject as GeoChat
