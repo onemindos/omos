@@ -31,7 +31,7 @@ metadata:
   namespace: takserver
   labels: { app: tak-lb-proxy }
 spec:
-  replicas: 2
+  replicas: 1
   selector: { matchLabels: { app: tak-lb-proxy } }
   template:
     metadata:

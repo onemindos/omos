@@ -1,10 +1,6 @@
-# platform-observability: Grafana datasources/dashboards, nats-surveyor, clickhouse
+# platform-observability: ClickHouse + observability overlays
 #
 # Covers:
-#   platform/grafana-datasources.yaml
-#   platform/grafana-dashboards-nats.yaml
-#   platform/grafana-dashboards-onemind-logs.yaml
-#   platform/nats-surveyor/
 #   platform/clickhouse/
 #
 # NOTE: Grafana, Loki, Tempo, and Prometheus stacks are managed via Helm
@@ -22,12 +18,6 @@ spec:
   sources:
     - repoURL: https://github.com/onemindos/omos-infra.git
       targetRevision: HEAD
-      path: platform/nats-surveyor
-      directory:
-        recurse: false
-        exclude: "Dockerfile,*.py"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
       path: platform/clickhouse
       directory:
         recurse: false
@@ -42,11 +32,6 @@ spec:
     syncOptions:
       - CreateNamespace=true
   ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      jsonPointers:
-        - /spec/template/metadata/annotations
-        - /spec/template/spec/containers/0/resources
     - group: clickhouse.altinity.com
       kind: ClickHouseInstallation
       jsonPointers:
