@@ -28,7 +28,7 @@ spec:
       imagePullSecrets:
         - name: ghcr
       initContainers:
-        # ---- Copy agent Python source ----
+        # ---- Copy agent Python source + install deps ----
         # Seeds hermes-agent-src emptyDir from the hermes-legacy image so the
         # webui can import hermes Python APIs directly via PYTHONPATH.
         # IMPORTANT: copy the FULL /opt/hermes tree — webui does
@@ -46,6 +46,28 @@ spec:
           volumeMounts:
             - name: hermes-agent-src
               mountPath: /agent-src
+        # ---- Install hermes-agent deps into webui venv ----
+        # The webui container has its own Python venv without hermes-agent's deps
+        # (pyyaml, aiohttp, etc). Install hermes-agent in editable mode so all
+        # imports resolve. Runs as the webui user (10000) so venv is writable.
+        - name: install-agent-deps
+          image: ghcr.io/nesquena/hermes-webui:latest
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 10000
+            runAsGroup: 10000
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "Installing hermes-agent into webui venv..."
+              cd /opt/hermes-agent
+              /app/venv/bin/pip install -e . --no-build-isolation --quiet 2>&1 | tail -5
+              echo "Install complete"
+          volumeMounts:
+            - name: hermes-agent-src
+              mountPath: /opt/hermes-agent
         # ---- Pre-seed webui /app ----
         # hermeswebui_init.bash does `cp -a /apptoo /app` which fails with
         # "preserving times: Operation not permitted" on a fresh emptyDir, causing
