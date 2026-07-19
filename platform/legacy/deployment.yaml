@@ -31,6 +31,10 @@ spec:
         # ---- Copy agent Python source ----
         # Seeds hermes-agent-src emptyDir from the hermes-legacy image so the
         # webui can import hermes Python APIs directly via PYTHONPATH.
+        # IMPORTANT: copy the FULL /opt/hermes tree — webui does
+        # `from run_agent import AIAgent` which is a top-level module alongside
+        # tools/, providers/, model_tools.py, toolsets.py, utils.py, etc.
+        # Copying only hermes_cli/ leaves run_agent.py missing → AIAgent error.
         - name: copy-agent-src
           image: ghcr.io/onemindos/hermes-legacy:v3
           imagePullPolicy: Always
@@ -38,10 +42,7 @@ spec:
             - sh
             - -c
             - |
-              cp -a /opt/hermes/agent /agent-src/ && \
-              cp -a /opt/hermes/hermes_constants.py /agent-src/ && \
-              cp -a /opt/hermes/hermes_cli /agent-src/ 2>/dev/null || true && \
-              echo done
+              cp -a /opt/hermes/. /agent-src/ && echo "copied $(ls /agent-src | wc -l) items"
           volumeMounts:
             - name: hermes-agent-src
               mountPath: /agent-src
@@ -192,6 +193,8 @@ spec:
               value: "1"
             - name: HERMES_WEBUI_SSE_CHUNKED
               value: "1"
+            - name: HERMES_WEBUI_AGENT_DIR
+              value: /opt/hermes-agent
             - name: PYTHONPATH
               value: /opt/hermes-agent
           volumeMounts:
