@@ -27,7 +27,7 @@ agents:
       cluster: DOKS
       namespace: hermes
       pod: hermes-legacy
-      image: ghcr.io/onemindos/hermes-legacy:v2
+      image: ghcr.io/onemindos/hermes-legacy:v3
     model:
       provider: bedrock
       default: us.anthropic.claude-haiku-4-5-20251001-v1:0

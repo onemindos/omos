@@ -32,7 +32,7 @@ spec:
         # Seeds hermes-agent-src emptyDir from the hermes-legacy image so the
         # webui can import hermes Python APIs directly via PYTHONPATH.
         - name: copy-agent-src
-          image: ghcr.io/onemindos/hermes-legacy:v2
+          image: ghcr.io/onemindos/hermes-legacy:v3
           imagePullPolicy: Always
           command:
             - sh
@@ -70,7 +70,7 @@ spec:
         # The NATS agent-host (hermes_nats_host.py, baked into hermes-legacy) is
         # what registers agents.prompt.hermes.zeus.legacy — see omos-core/services/agents.
         - name: hermes
-          image: ghcr.io/onemindos/hermes-legacy:v2   # Hermes base + NATS plugin + Legacy persona (mother)
+          image: ghcr.io/onemindos/hermes-legacy:v3   # Hermes base + NATS plugin + Legacy persona (mother)
           imagePullPolicy: Always
           # No custom args — s6 supervisor runs the gateway. The nats-platform
           # plugin (enabled in config.yaml, seeded by cont-init) registers
