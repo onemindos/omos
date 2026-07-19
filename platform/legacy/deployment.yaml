@@ -45,6 +45,8 @@ spec:
               cp -a /opt/hermes/. /agent-src/
               echo "Copying hermes venv..."
               cp -a /opt/hermes/.venv/. /hermes-venv/
+              echo "Fixing ownership for webui user (10000)..."
+              chown -R 10000:10000 /agent-src /hermes-venv
               echo "done: $(ls /agent-src | wc -l) source items, $(ls /hermes-venv/bin | wc -l) venv bins"
           volumeMounts:
             - name: hermes-agent-src
