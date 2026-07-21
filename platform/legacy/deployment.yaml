@@ -35,7 +35,7 @@ spec:
         # (Python 3.12 missing dotenv, httpx, requests, etc).
         # This avoids dep conflicts between hermes-agent and hermes-webui venvs.
         - name: copy-agent-src
-          image: ghcr.io/onemindos/hermes-legacy:v3
+          image: nousresearch/hermes-agent:latest
           imagePullPolicy: Always
           command:
             - sh
@@ -78,7 +78,7 @@ spec:
         # The NATS agent-host (hermes_nats_host.py, baked into hermes-legacy) is
         # what registers agents.prompt.hermes.zeus.legacy — see omos-core/services/agents.
         - name: hermes
-          image: ghcr.io/onemindos/hermes-legacy:v3   # Hermes base + NATS plugin + Legacy persona (mother)
+          image: nousresearch/hermes-agent:latest   # Official Nous image — always current, no custom build needed
           imagePullPolicy: Always
           # No custom args — s6 supervisor runs the gateway. The nats-platform
           # plugin (enabled in config.yaml, seeded by cont-init) registers
