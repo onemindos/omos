@@ -1,0 +1,30 @@
+# platform-omos-ui: OneMind OS web UI — serves onemindos.dev via Cloudflare tunnel
+#
+# Covers:
+#   platform/omos-ui/   (deployment, service, cloudflare-route)
+#
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-omos-ui
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/omos-ui
+      directory:
+        recurse: false
+        exclude: "*.secret*,*.env,Dockerfile,nginx.conf,*.md"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

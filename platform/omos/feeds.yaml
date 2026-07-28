@@ -16,6 +16,8 @@
 
 # -----------------------------------------------------------------------------
 # Feed 2: ADS-B Aircraft — OpenSky Network REST (polls every 15s, global)
+# Disabled: global ADS-B handled by ShadowBroker/WorldMonitor on omos-intel.
+# TAK only receives intel events (conflicts, hazards, earthquakes) via sink-tak.
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -26,7 +28,7 @@ metadata:
     app.kubernetes.io/name: feed-aircraft
     app.kubernetes.io/part-of: omos-feeds
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: feed-aircraft
@@ -86,6 +88,8 @@ spec:
 ---
 # -----------------------------------------------------------------------------
 # Feed 3: APRS Ground/Air — APRS-IS TCP firehose (real-time)
+# Disabled: global APRS handled by ShadowBroker/WorldMonitor on omos-intel.
+# TAK only receives intel events (conflicts, hazards, earthquakes) via sink-tak.
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -96,7 +100,7 @@ metadata:
     app.kubernetes.io/name: feed-aprs
     app.kubernetes.io/part-of: omos-feeds
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: feed-aprs
