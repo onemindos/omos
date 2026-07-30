@@ -53,6 +53,30 @@ spec:
               mountPath: /agent-src
             - name: hermes-venv
               mountPath: /hermes-venv
+        # ---- Install gateway-only deps missing from the public Nous image ----
+        # nousresearch/hermes-agent:latest ships without nats-py, nkeys,
+        # synadia-ai-agents, and synadia-ai-agent-service — all required for
+        # the NATS and TAK gateway platforms. This initContainer installs them
+        # into a shared emptyDir (/gateway-deps) using the system uv that ships
+        # in the Nous image. The hermes container mounts the same volume and
+        # sets PYTHONPATH to include it, so the packages are available at runtime
+        # on every pod restart without any custom image build.
+        - name: install-gateway-deps
+          image: nousresearch/hermes-agent:latest
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              echo "Installing NATS/TAK gateway deps into /gateway-deps..."
+              uv pip install \
+                --python /opt/hermes/.venv/bin/python3 \
+                --target /gateway-deps \
+                nats-py nkeys synadia-ai-agents synadia-ai-agent-service
+              echo "Done: $(ls /gateway-deps | wc -l) packages installed"
+          volumeMounts:
+            - name: gateway-deps
+              mountPath: /gateway-deps
         # ---- Pre-seed webui /app ----
         # hermeswebui_init.bash does `cp -a /apptoo /app` which fails with
         # "preserving times: Operation not permitted" on a fresh emptyDir, causing
@@ -95,6 +119,8 @@ spec:
               value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
             - name: HERMES_NATS_SESSION_NAME
               value: "legacy"
+            - name: PYTHONPATH
+              value: "/gateway-deps"
             - name: HERMES_DASHBOARD
               value: "true"
             - name: HERMES_DASHBOARD_HOST
@@ -110,6 +136,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            - name: gateway-deps
+              mountPath: /gateway-deps
           resources:
             requests: { cpu: "500m", memory: "1Gi" }
             limits:   { memory: "3Gi" }
@@ -252,4 +280,6 @@ spec:
         - name: hermes-agent-src
           emptyDir: {}
         - name: hermes-venv
+          emptyDir: {}
+        - name: gateway-deps
           emptyDir: {}
