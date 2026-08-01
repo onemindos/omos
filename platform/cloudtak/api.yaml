@@ -17,7 +17,7 @@ spec:
         - name: ghcr-onemindos
       containers:
         - name: api
-          image: ghcr.io/onemindos/cloudtak-api:latest
+          image: ghcr.io/onemindos/omos:latest
           ports:
             - containerPort: 5000
           env:
