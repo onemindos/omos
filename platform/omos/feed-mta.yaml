@@ -1,0 +1,93 @@
+---
+# =============================================================================
+# feed-mta — MTA Real-Time Train Positions → NATS → TAK
+#
+# Sources (all free, no API key required):
+#   - Metro-North Railroad (MNR): 281+ vehicles with GPS
+#   - Long Island Rail Road (LIRR): 64+ vehicles with GPS
+#
+# CoT type: a-n-G-E-V-C-R (neutral ground equipment vehicle civilian rail)
+# NATS subject: tak.cot.inject → sink-tak → TAK Server → all clients
+# TAK Mission: Land (trains appear in Land mission overlay)
+#
+# Toggle OFF: kubectl scale deploy/feed-mta -n omos --replicas=0
+# Toggle ON:  kubectl scale deploy/feed-mta -n omos --replicas=1
+# Logs:       kubectl logs -f deploy/feed-mta -n omos
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-mta
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: feed-mta
+    app.kubernetes.io/part-of: omos-feeds
+    omos.io/feed-type: transit
+    omos.io/feed-source: mta
+    omos.io/requires-key: "false"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feed-mta
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feed-mta
+        app.kubernetes.io/part-of: omos-feeds
+        omos.io/feed-type: transit
+    spec:
+      containers:
+        - name: feed
+          image: python:3.12-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              pip install --no-cache-dir --quiet \
+                nats-py \
+                protobuf \
+                gtfs-realtime-bindings \
+              && exec python3 /scripts/feed_mta.py
+          env:
+            # --- NATS connection ---
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            # --- Feed tuning ---
+            - name: POLL_INTERVAL
+              value: "30"           # seconds between GTFS-RT polls
+            - name: STALE_SEC
+              value: "120"          # CoT stale window — trains vanish after 2min no update
+            - name: DELTA_METERS
+              value: "50"           # min movement to re-publish (delta filter)
+            - name: NATS_SUBJECT
+              value: "tak.cot.inject"
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "96Mi"
+            limits:
+              cpu: "200m"
+              memory: "192Mi"
+          livenessProbe:
+            exec:
+              command: ["python3", "-c", "import nats"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+      volumes:
+        - name: scripts
+          configMap:
+            name: omos-feed-mta-script

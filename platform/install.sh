@@ -246,6 +246,8 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/deployment.yaml
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-mta-script.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-mta.yaml"
 
 # -----------------------------------------------------------------------------
 # 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge

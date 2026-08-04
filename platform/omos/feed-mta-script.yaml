@@ -1,0 +1,226 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-feed-mta-script
+  namespace: omos
+data:
+  feed_mta.py: |
+    #!/usr/bin/env python3
+    """
+    feed-mta — MTA GTFS-RT → CoT XML → NATS tak.cot.inject
+
+    Polls Metro-North Railroad and LIRR GTFS-RT vehicle position feeds
+    every 30 seconds, converts each train with GPS coordinates to CoT XML,
+    and publishes to the NATS bus. The existing sink-tak pod delivers
+    these to TAK Server where all clients (ATAK, iTAK, CloudTAK) see
+    live train positions on the map.
+
+    Data Sources (all free, no API key):
+      - Metro-North: https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr
+      - LIRR:        https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr
+
+    CoT Types:
+      - Metro-North train: a-n-G-E-V-C-R  (neutral ground equipment vehicle civilian rail)
+      - LIRR train:        a-n-G-E-V-C-R  (neutral ground equipment vehicle civilian rail)
+
+    Callsign format: MNR-{trip_id} / LIRR-{trip_id}
+    UID format:      MTA-MNR-{trip_id} / MTA-LIRR-{trip_id}
+
+    Toggle: scale to 0 replicas or publish to omos.feed.control.mta
+    """
+    import asyncio
+    import logging
+    import os
+    import ssl
+    import time
+    from datetime import datetime, timezone, timedelta
+    from io import BytesIO
+    from urllib.request import urlopen, Request
+
+    import nats
+
+    # Lazy import — installed at pod boot
+    from google.transit import gtfs_realtime_pb2
+
+    # ---------------------------------------------------------------------------
+    # Configuration (all via env vars for k8s ConfigMap/Secret injection)
+    # ---------------------------------------------------------------------------
+    LOG = logging.getLogger("feed-mta")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    )
+
+    NATS_URL      = os.getenv("NATS_URL", "nats://nats.nats.svc.cluster.local:4222")
+    NATS_USER     = os.getenv("NATS_USER", "")
+    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
+    POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "30"))
+    INJECT_SUBJ   = os.getenv("NATS_SUBJECT", "tak.cot.inject")
+    STALE_SEC     = int(os.getenv("STALE_SEC", "120"))
+    DELTA_METERS  = float(os.getenv("DELTA_METERS", "50"))  # min movement to republish
+
+    # MTA GTFS-RT feed URLs — free, no key needed
+    FEEDS = {
+        "MNR": "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr",
+        "LIRR": "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr",
+    }
+
+    # CoT constants
+    COT_TYPE = "a-n-G-E-V-C-R"  # neutral ground equipment vehicle civilian rail
+    XML_DECL = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+    MARTI_DEST = '<marti><dest mission="Land"/></marti>'
+
+    # Delta filter state: uid → (lat, lon, last_publish_time)
+    last_positions: dict[str, tuple[float, float, float]] = {}
+
+    # ---------------------------------------------------------------------------
+    # Helpers
+    # ---------------------------------------------------------------------------
+    def now_str() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def stale_str(seconds: int = STALE_SEC) -> str:
+        return (datetime.now(timezone.utc) + timedelta(seconds=seconds)).strftime(
+            "%Y-%m-%dT%H:%M:%S.%fZ"
+        )
+
+    def haversine_meters(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+        """Approximate distance in meters between two GPS points."""
+        import math
+        R = 6371000
+        dlat = math.radians(lat2 - lat1)
+        dlon = math.radians(lon2 - lon1)
+        a = (
+            math.sin(dlat / 2) ** 2
+            + math.cos(math.radians(lat1))
+            * math.cos(math.radians(lat2))
+            * math.sin(dlon / 2) ** 2
+        )
+        return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    def should_publish(uid: str, lat: float, lon: float) -> bool:
+        """Delta filter: only publish if moved more than DELTA_METERS or stale."""
+        prev = last_positions.get(uid)
+        now = time.time()
+        if prev is None:
+            last_positions[uid] = (lat, lon, now)
+            return True
+        prev_lat, prev_lon, prev_time = prev
+        # Always republish if older than stale window (keeps marker alive on TAK)
+        if now - prev_time > STALE_SEC * 0.7:
+            last_positions[uid] = (lat, lon, now)
+            return True
+        dist = haversine_meters(prev_lat, prev_lon, lat, lon)
+        if dist >= DELTA_METERS:
+            last_positions[uid] = (lat, lon, now)
+            return True
+        return False
+
+    def vehicle_to_cot(feed_prefix: str, vehicle) -> bytes | None:
+        """Convert a GTFS-RT VehiclePosition to CoT XML bytes."""
+        pos = vehicle.position
+        lat = pos.latitude
+        lon = pos.longitude
+        if lat == 0.0 and lon == 0.0:
+            return None  # No GPS fix
+
+        trip = vehicle.trip
+        trip_id = trip.trip_id or "unknown"
+        route_id = trip.route_id or ""
+
+        uid = f"MTA-{feed_prefix}-{trip_id}"
+        callsign = f"{feed_prefix}-{route_id or trip_id}"[:32]
+
+        if not should_publish(uid, lat, lon):
+            return None
+
+        speed = pos.speed if pos.speed > 0 else 0
+        bearing = pos.bearing if pos.bearing > 0 else 0
+        ts = now_str()
+        st = stale_str()
+
+        # Escape any XML-unsafe chars in callsign
+        callsign = callsign.replace("&", "&amp;").replace("<", "&lt;").replace('"', "&quot;")
+
+        xml = (
+            f'<event version="2.0" type="{COT_TYPE}" uid="{uid}" '
+            f'how="m-g" time="{ts}" start="{ts}" stale="{st}">'
+            f'<point lat="{lat:.6f}" lon="{lon:.6f}" hae="0" ce="50" le="50"/>'
+            f'<detail>'
+            f'<contact callsign="{callsign}"/>'
+            f'<track speed="{speed:.1f}" course="{bearing:.1f}"/>'
+            f'<remarks>MTA {feed_prefix} train {trip_id} route:{route_id}</remarks>'
+            f'{MARTI_DEST}'
+            f'<_flow-tags_ TAK-Server="MTA-Feed" time="{ts}"/>'
+            f'</detail></event>'
+        )
+        return XML_DECL + xml.encode()
+
+    # ---------------------------------------------------------------------------
+    # Feed fetcher
+    # ---------------------------------------------------------------------------
+    def fetch_feed(url: str) -> list:
+        """Fetch and parse a GTFS-RT protobuf feed. Returns list of VehiclePosition."""
+        req = Request(url, headers={"User-Agent": "omos-feed-mta/1.0"})
+        try:
+            resp = urlopen(req, timeout=15)
+            data = resp.read()
+        except Exception as e:
+            LOG.error(f"HTTP fetch failed for {url}: {e}")
+            return []
+
+        feed = gtfs_realtime_pb2.FeedMessage()
+        try:
+            feed.ParseFromString(data)
+        except Exception as e:
+            LOG.error(f"Protobuf parse failed for {url}: {e}")
+            return []
+
+        vehicles = []
+        for entity in feed.entity:
+            if entity.HasField("vehicle"):
+                vehicles.append(entity.vehicle)
+        return vehicles
+
+    # ---------------------------------------------------------------------------
+    # Main loop
+    # ---------------------------------------------------------------------------
+    async def main():
+        # Connect to NATS with TLS (in-cluster certs)
+        tls_ctx = ssl.create_default_context()
+        tls_ctx.check_hostname = False
+        tls_ctx.verify_mode = ssl.CERT_NONE
+
+        nc = await nats.connect(
+            servers=NATS_URL,
+            user=NATS_USER,
+            password=NATS_PASSWORD,
+            tls=tls_ctx,
+        )
+        LOG.info(f"NATS connected → publishing to {INJECT_SUBJ}")
+        LOG.info(f"Feeds: {list(FEEDS.keys())} | Poll: {POLL_INTERVAL}s | Stale: {STALE_SEC}s | Delta: {DELTA_METERS}m")
+
+        while True:
+            total_published = 0
+            total_vehicles = 0
+
+            for prefix, url in FEEDS.items():
+                vehicles = fetch_feed(url)
+                published = 0
+                for v in vehicles:
+                    cot = vehicle_to_cot(prefix, v)
+                    if cot:
+                        await nc.publish(INJECT_SUBJ, cot)
+                        published += 1
+                total_vehicles += len(vehicles)
+                total_published += published
+
+            LOG.info(
+                f"MTA cycle: {total_published} published / {total_vehicles} vehicles "
+                f"(delta filtered {total_vehicles - total_published})"
+            )
+
+            await asyncio.sleep(POLL_INTERVAL)
+
+    if __name__ == "__main__":
+        asyncio.run(main())
