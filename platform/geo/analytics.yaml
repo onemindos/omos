@@ -172,14 +172,11 @@ spec:
                 secretKeyRef:
                   name: geo-services-secret
                   key: SUPERSET_ADMIN_PASSWORD
-            - name: PGPASSWORD
+            - name: SQLALCHEMY_DATABASE_URI
               valueFrom:
                 secretKeyRef:
                   name: geo-db-secret
-                  key: POSTGRES_PASSWORD
-            # Use SUPERSET_DATABASE_URI to avoid k8s GEO_DB_PORT env collision
-            - name: SQLALCHEMY_DATABASE_URI
-              value: "postgresql+psycopg2://geo:$(PGPASSWORD)@geo-db.geo.svc.cluster.local:5432/superset"
+                  key: SUPERSET_DB_URL
       containers:
         - name: superset
           image: apache/superset:latest
@@ -191,14 +188,11 @@ spec:
                 secretKeyRef:
                   name: geo-services-secret
                   key: SUPERSET_SECRET_KEY
-            - name: PGPASSWORD
+            - name: SQLALCHEMY_DATABASE_URI
               valueFrom:
                 secretKeyRef:
                   name: geo-db-secret
-                  key: POSTGRES_PASSWORD
-            # Fully-qualified hostname avoids k8s GEO_DB_PORT=tcp://... injection
-            - name: SQLALCHEMY_DATABASE_URI
-              value: "postgresql+psycopg2://geo:$(PGPASSWORD)@geo-db.geo.svc.cluster.local:5432/superset"
+                  key: SUPERSET_DB_URL
           volumeMounts:
             - name: superset-data
               mountPath: /app/superset_home
