@@ -26,7 +26,11 @@ spec:
       containers:
         - name: webodm
           # WebODM official image — use the versioned tag from GitHub releases
-          image: ghcr.io/opendronemap/webodm:latest
+          # WebODM has no public pre-built image — must be built from source.
+          # Build: docker build https://github.com/OpenDroneMap/WebODM.git -t registry/webodm:latest
+          # Then push to a registry and update this image tag.
+          # Placeholder keeps PVC alive without crash-looping:
+          image: nginx:alpine
           ports:
             - containerPort: 8000
           env:
