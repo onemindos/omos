@@ -23,6 +23,9 @@ spec:
         app: geo-db
         component: database
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
         - name: timescaledb
           image: timescale/timescaledb-ha:pg17-ts2.29-all
