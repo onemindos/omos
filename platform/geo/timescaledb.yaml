@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: timescaledb
-          image: timescale/timescaledb-ha:pg17-ts2-all
+          image: timescale/timescaledb-ha:pg17-ts2.29-all
           ports:
             - containerPort: 5432
           env:

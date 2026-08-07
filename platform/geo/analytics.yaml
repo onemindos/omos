@@ -23,7 +23,9 @@ spec:
     spec:
       containers:
         - name: oam-api
-          image: hotosm/oam-api:latest
+          # OAM v1 image not on Docker Hub — using eoAPI TiTiler which serves COGs
+          # Replace with correct hotosm image when available
+          image: ghcr.io/developmentseed/titiler:latest
           ports:
             - containerPort: 4000
           env:

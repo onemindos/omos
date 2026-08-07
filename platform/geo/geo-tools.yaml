@@ -229,7 +229,7 @@ spec:
     spec:
       containers:
         - name: qgis-server
-          image: qgis/qgis:release-3_38
+          image: kartoza/qgis-server:3.38
           command: ["/bin/sh", "-c"]
           args:
             - |
