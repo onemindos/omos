@@ -30,13 +30,13 @@ spec:
           ports:
             - containerPort: 3000
           env:
-            - name: DATABASE_URL
-              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db.geo.svc.cluster.local:5432/geo"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: geo-db-secret
                   key: POSTGRES_PASSWORD
+            - name: DATABASE_URL
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db.geo.svc.cluster.local:5432/geo"
             - name: MARTIN_KEEP_ALIVE
               value: "75"
           resources:

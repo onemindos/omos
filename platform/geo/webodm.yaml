@@ -25,7 +25,8 @@ spec:
           command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
       containers:
         - name: webodm
-          image: opendronemap/webodm:latest
+          # WebODM official image — use the versioned tag from GitHub releases
+          image: opendronemap/webodm_webapp:main
           ports:
             - containerPort: 8000
           env:
