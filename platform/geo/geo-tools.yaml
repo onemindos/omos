@@ -31,7 +31,7 @@ spec:
             - containerPort: 7800
           env:
             - name: DATABASE_URL
-              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/geo"
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db.geo.svc.cluster.local:5432/geo"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -96,7 +96,7 @@ spec:
             - containerPort: 9000
           env:
             - name: DATABASE_URL
-              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/geo"
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db.geo.svc.cluster.local:5432/geo"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -229,7 +229,7 @@ spec:
     spec:
       containers:
         - name: qgis-server
-          image: kartoza/qgis-server:3.38
+          image: kartoza/qgis-server:latest
           command: ["/bin/sh", "-c"]
           args:
             - |

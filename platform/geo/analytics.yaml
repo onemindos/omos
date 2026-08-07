@@ -23,9 +23,8 @@ spec:
     spec:
       containers:
         - name: oam-api
-          # OAM v1 image not on Docker Hub — using eoAPI TiTiler which serves COGs
-          # Replace with correct hotosm image when available
-          image: ghcr.io/developmentseed/titiler:latest
+          # OAM v2 — STAC-based imagery catalog (GHCR, published from hotosm/OpenAerialMap CI)
+          image: ghcr.io/hotosm/openaerialmap/stac-api:main
           ports:
             - containerPort: 4000
           env:
@@ -174,13 +173,14 @@ spec:
                 secretKeyRef:
                   name: geo-services-secret
                   key: SUPERSET_ADMIN_PASSWORD
-            - name: SQLALCHEMY_DATABASE_URI
-              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/superset"
-            - name: POSTGRES_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: geo-db-secret
                   key: POSTGRES_PASSWORD
+            # Use SUPERSET_DATABASE_URI to avoid k8s GEO_DB_PORT env collision
+            - name: SQLALCHEMY_DATABASE_URI
+              value: "postgresql+psycopg2://geo:$(PGPASSWORD)@geo-db.geo.svc.cluster.local:5432/superset"
       containers:
         - name: superset
           image: apache/superset:latest
@@ -192,13 +192,14 @@ spec:
                 secretKeyRef:
                   name: geo-services-secret
                   key: SUPERSET_SECRET_KEY
-            - name: SQLALCHEMY_DATABASE_URI
-              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/superset"
-            - name: POSTGRES_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: geo-db-secret
                   key: POSTGRES_PASSWORD
+            # Fully-qualified hostname avoids k8s GEO_DB_PORT=tcp://... injection
+            - name: SQLALCHEMY_DATABASE_URI
+              value: "postgresql+psycopg2://geo:$(PGPASSWORD)@geo-db.geo.svc.cluster.local:5432/superset"
           volumeMounts:
             - name: superset-data
               mountPath: /app/superset_home

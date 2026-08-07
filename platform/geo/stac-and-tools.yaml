@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
         - name: stac-browser
-          image: ghcr.io/stac-utils/stac-browser:v3
+          image: ghcr.io/radiantearth/stac-browser:latest
           ports:
             - containerPort: 8080
           env:
