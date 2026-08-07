@@ -175,7 +175,7 @@ spec:
             - name: SQLALCHEMY_DATABASE_URI
               valueFrom:
                 secretKeyRef:
-                  name: geo-db-secret
+                  name: geo-service-urls
                   key: SUPERSET_DB_URL
       containers:
         - name: superset
@@ -191,7 +191,7 @@ spec:
             - name: SQLALCHEMY_DATABASE_URI
               valueFrom:
                 secretKeyRef:
-                  name: geo-db-secret
+                  name: geo-service-urls
                   key: SUPERSET_DB_URL
           volumeMounts:
             - name: superset-data
