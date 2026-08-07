@@ -30,19 +30,21 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: PGHOST
-              value: "geo-db.geo.svc.cluster.local"
-            - name: PGPORT
-              value: "5432"
-            - name: PGDATABASE
-              value: "stac"
-            - name: PGUSER
+            - name: POSTGRES_USER
               value: "geo"
-            - name: PGPASSWORD
+            - name: POSTGRES_PASS
               valueFrom:
                 secretKeyRef:
                   name: geo-db-secret
                   key: POSTGRES_PASSWORD
+            - name: POSTGRES_HOST_READER
+              value: "geo-db.geo.svc.cluster.local"
+            - name: POSTGRES_HOST_WRITER
+              value: "geo-db.geo.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DBNAME
+              value: "stac"
             - name: APP_HOST
               value: "0.0.0.0"
             - name: APP_PORT
