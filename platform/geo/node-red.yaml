@@ -1,0 +1,79 @@
+# =============================================================================
+# Node-RED — Visual IoT Flow Engine
+# Bridge: MQTT ↔ NATS ↔ CoT ↔ farmOS ↔ TAK
+# 5,000+ nodes. Sensor thresholds, CoT generation, homestead automation.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-red
+  namespace: geo
+  labels:
+    app: node-red
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-red
+  template:
+    metadata:
+      labels:
+        app: node-red
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: node-red
+          image: nodered/node-red:latest
+          ports:
+            - containerPort: 1880
+          env:
+            - name: TZ
+              value: "America/New_York"
+            - name: NODE_RED_ENABLE_PROJECTS
+              value: "true"
+          volumeMounts:
+            - name: node-red-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 1880
+            initialDelaySeconds: 20
+            periodSeconds: 15
+      volumes:
+        - name: node-red-data
+          persistentVolumeClaim:
+            claimName: node-red-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: node-red-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-red
+  namespace: geo
+spec:
+  selector:
+    app: node-red
+  ports:
+    - port: 1880
+      targetPort: 1880

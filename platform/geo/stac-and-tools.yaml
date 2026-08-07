@@ -1,0 +1,175 @@
+# =============================================================================
+# STAC FastAPI + pgSTAC — Drone Imagery Catalog API
+# Query: "all orthophotos of north field between April-June"
+# pgSTAC backend on geo-db (TimescaleDB/PostGIS)
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stac-api
+  namespace: geo
+  labels:
+    app: stac-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stac-api
+  template:
+    metadata:
+      labels:
+        app: stac-api
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
+      containers:
+        - name: stac-api
+          image: ghcr.io/stac-utils/stac-fastapi-pgstac:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_HOST
+              value: "geo-db"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DBNAME
+              value: "stac"
+            - name: POSTGRES_USER
+              value: "geo"
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: APP_HOST
+              value: "0.0.0.0"
+            - name: APP_PORT
+              value: "8080"
+            - name: RELOAD
+              value: "false"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /_mgmt/ping
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stac-api
+  namespace: geo
+spec:
+  selector:
+    app: stac-api
+  ports:
+    - port: 8082
+      targetPort: 8080
+---
+# =============================================================================
+# STAC Browser — Visual Drone Imagery Catalog UI
+# Browse all drone flights on a map, click to view orthophotos by date/field
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stac-browser
+  namespace: geo
+  labels:
+    app: stac-browser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stac-browser
+  template:
+    metadata:
+      labels:
+        app: stac-browser
+    spec:
+      containers:
+        - name: stac-browser
+          image: radiantearth/stac-browser:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CATALOG_URL
+              value: "http://stac-api:8082"
+            - name: STAC_BROWSER_TITLE
+              value: "OneMind Geo — Drone Imagery"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stac-browser
+  namespace: geo
+spec:
+  selector:
+    app: stac-browser
+  ports:
+    - port: 8085
+      targetPort: 8080
+---
+# =============================================================================
+# Maputnik — Open-Source Map Style Editor
+# Design TAK basemap styles — tactical dark, topo, farm field colors
+# Export style.json → TileServer GL uses it as basemap style
+# Static web app, ~64MB RAM
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maputnik
+  namespace: geo
+  labels:
+    app: maputnik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maputnik
+  template:
+    metadata:
+      labels:
+        app: maputnik
+    spec:
+      containers:
+        - name: maputnik
+          image: maputnik/editor:latest
+          ports:
+            - containerPort: 8888
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maputnik
+  namespace: geo
+spec:
+  selector:
+    app: maputnik
+  ports:
+    - port: 8088
+      targetPort: 8888

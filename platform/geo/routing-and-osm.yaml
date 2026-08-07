@@ -1,0 +1,176 @@
+# =============================================================================
+# Valhalla — Open-Source Routing Engine
+# Farm path optimization, TSP multi-stop routes, isochrone maps
+# Full planet OSM PBF — global offline routing, no rate limits
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valhalla
+  namespace: geo
+  labels:
+    app: valhalla
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: valhalla
+  template:
+    metadata:
+      labels:
+        app: valhalla
+    spec:
+      initContainers:
+        - name: wait-for-tiles
+          image: busybox
+          command: ['sh', '-c', 'until [ -f /data/valhalla_tiles.tar ]; do echo "waiting for valhalla tiles build..."; sleep 30; done']
+          volumeMounts:
+            - name: valhalla-data
+              mountPath: /data
+      containers:
+        - name: valhalla
+          image: valhallateam/valhalla:latest
+          ports:
+            - containerPort: 8002
+          args:
+            - valhalla_service
+            - /data/valhalla.json
+          env:
+            - name: use_tiles_ignore_pbf
+              value: "True"
+            - name: build_admins
+              value: "True"
+            - name: build_time_zones
+              value: "True"
+          volumeMounts:
+            - name: valhalla-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 300m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8002
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 10
+      volumes:
+        - name: valhalla-data
+          persistentVolumeClaim:
+            claimName: valhalla-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: valhalla-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valhalla
+  namespace: geo
+spec:
+  selector:
+    app: valhalla
+  ports:
+    - port: 8002
+      targetPort: 8002
+---
+# =============================================================================
+# Overpass API — Self-Hosted OSM Query Engine
+# Full planet OSM extract — query roads, trails, water, buildings offline
+# No rate limits, sovereign, works fully air-gapped
+# 100Gi PVC for full planet (planet.osm.pbf ~75GB + index overhead)
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: overpass
+  namespace: geo
+  labels:
+    app: overpass
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: overpass
+  template:
+    metadata:
+      labels:
+        app: overpass
+    spec:
+      containers:
+        - name: overpass
+          image: wiktorn/overpass-api:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: OVERPASS_MODE
+              value: "clone"
+            - name: OVERPASS_META
+              value: "yes"
+            - name: OVERPASS_PLANET_URL
+              value: "https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf"
+            - name: OVERPASS_DIFF_URL
+              value: "https://planet.openstreetmap.org/replication/minute/"
+            - name: OVERPASS_RULES_LOAD
+              value: "10"
+            - name: OVERPASS_UPDATE_SLEEP
+              value: "600"
+          volumeMounts:
+            - name: overpass-data
+              mountPath: /db
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+          livenessProbe:
+            httpGet:
+              path: /api/interpreter?data=[out:json];node(1);out;
+              port: 80
+            initialDelaySeconds: 300
+            periodSeconds: 30
+            failureThreshold: 20
+      volumes:
+        - name: overpass-data
+          persistentVolumeClaim:
+            claimName: overpass-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: overpass-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: overpass
+  namespace: geo
+spec:
+  selector:
+    app: overpass
+  ports:
+    - port: 12345
+      targetPort: 80

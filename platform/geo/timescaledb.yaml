@@ -1,0 +1,95 @@
+# =============================================================================
+# TimescaleDB-HA — Geo Namespace Database Backbone
+# PostgreSQL 17 + PostGIS + TimescaleDB + Patroni in one image
+# Used by: farmOS, STAC, GeoServer, pg_tileserv, pg_featureserv, Martin, Nominatim
+# TAK keeps its own cloudtak-postgis — clean separation
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geo-db
+  namespace: geo
+  labels:
+    app: geo-db
+    component: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geo-db
+  template:
+    metadata:
+      labels:
+        app: geo-db
+        component: database
+    spec:
+      containers:
+        - name: timescaledb
+          image: timescale/timescaledb-ha:pg17-ts2-all
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "geo"
+            - name: POSTGRES_USER
+              value: "geo"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+            # Disable Patroni for single-node (simpler, upgrade to HA later)
+            - name: PATRONI_SCOPE
+              value: "geo-db"
+            - name: PGBACKREST_STANZA
+              value: ""
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "geo", "-d", "geo"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "geo", "-d", "geo"]
+            initialDelaySeconds: 15
+            periodSeconds: 5
+      volumes:
+        - name: pgdata
+          persistentVolumeClaim:
+            claimName: geo-db-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geo-db-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geo-db
+  namespace: geo
+spec:
+  selector:
+    app: geo-db
+  ports:
+    - port: 5432
+      targetPort: 5432

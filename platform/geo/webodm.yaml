@@ -1,0 +1,172 @@
+# =============================================================================
+# WebODM — Drone Survey Pipeline UI
+# Upload raw drone JPEGs → orthophoto + 3D Cesium tiles + point cloud + NDVI
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webodm
+  namespace: geo
+  labels:
+    app: webodm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webodm
+  template:
+    metadata:
+      labels:
+        app: webodm
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
+      containers:
+        - name: webodm
+          image: opendronemap/webodm:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: WO_HOST
+              value: "0.0.0.0"
+            - name: WO_PORT
+              value: "8000"
+            - name: WO_DEBUG
+              value: "NO"
+            - name: WO_DEFAULT_NODES
+              value: "1"
+            - name: WO_NODE_ODMS
+              value: "nodeodm:3000"
+            - name: WO_DB_NAME
+              value: "webodm"
+            - name: WO_DB_HOST
+              value: "geo-db"
+            - name: WO_DB_PORT
+              value: "5432"
+            - name: WO_DB_USER
+              value: "geo"
+            - name: WO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: WO_MEDIA_ROOT
+              value: "/webodm/app/media"
+          volumeMounts:
+            - name: webodm-media
+              mountPath: /webodm/app/media
+          resources:
+            requests:
+              cpu: 300m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 45
+            periodSeconds: 15
+      volumes:
+        - name: webodm-media
+          persistentVolumeClaim:
+            claimName: webodm-media
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: webodm-media
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webodm
+  namespace: geo
+spec:
+  selector:
+    app: webodm
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+# =============================================================================
+# NodeODM — WebODM Photogrammetry Processing Worker
+# CPU-heavy during flights, idle otherwise. Scale replicas per concurrent flight.
+# 50Gi PVC for processing workspace (full planet OSM + flight data)
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeodm
+  namespace: geo
+  labels:
+    app: nodeodm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeodm
+  template:
+    metadata:
+      labels:
+        app: nodeodm
+    spec:
+      containers:
+        - name: nodeodm
+          image: opendronemap/nodeodm:latest
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: nodeodm-data
+              mountPath: /var/www/data
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+          livenessProbe:
+            httpGet:
+              path: /info
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+      volumes:
+        - name: nodeodm-data
+          persistentVolumeClaim:
+            claimName: nodeodm-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodeodm-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeodm
+  namespace: geo
+spec:
+  selector:
+    app: nodeodm
+  ports:
+    - port: 3000
+      targetPort: 3000

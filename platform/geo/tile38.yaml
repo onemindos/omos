@@ -1,0 +1,82 @@
+# =============================================================================
+# Tile38 — Real-Time Geofence Engine
+# Native NATS output — geofence breaches fire directly to NATS bus
+# Livestock GPS, asset tracking, homestead perimeter monitoring
+# Redis wire protocol — any Redis client works
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tile38
+  namespace: geo
+  labels:
+    app: tile38
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tile38
+  template:
+    metadata:
+      labels:
+        app: tile38
+    spec:
+      containers:
+        - name: tile38
+          image: tile38/tile38:latest
+          ports:
+            - containerPort: 9851
+              name: tile38
+          args:
+            - tile38-server
+            - -d
+            - /data
+            - -h
+            - "0.0.0.0"
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+          volumeMounts:
+            - name: tile38-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          livenessProbe:
+            tcpSocket:
+              port: 9851
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: tile38-data
+          persistentVolumeClaim:
+            claimName: tile38-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tile38-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tile38
+  namespace: geo
+spec:
+  selector:
+    app: tile38
+  ports:
+    - port: 9851
+      targetPort: 9851
+      name: tile38

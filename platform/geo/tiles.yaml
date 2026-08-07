@@ -1,0 +1,157 @@
+# =============================================================================
+# Martin — Rust Tile Server
+# Serves MBTiles/PMTiles files from MinIO + PostGIS live vector tiles
+# Used for OpenMapTiles basemap delivery to TAK and CloudTAK
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: martin
+  namespace: geo
+  labels:
+    app: martin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: martin
+  template:
+    metadata:
+      labels:
+        app: martin
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
+      containers:
+        - name: martin
+          image: ghcr.io/maplibre/martin:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/geo"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: MARTIN_KEEP_ALIVE
+              value: "75"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: martin
+  namespace: geo
+spec:
+  selector:
+    app: martin
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+# =============================================================================
+# TileServer GL — MBTiles Raster+Vector Tile Server
+# Serves OpenMapTiles .mbtiles as raster tiles for TAK WMS consumption
+# Tiles loaded from MinIO geo-tiles bucket via mounted PVC or S3 proxy
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tileserver-gl
+  namespace: geo
+  labels:
+    app: tileserver-gl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tileserver-gl
+  template:
+    metadata:
+      labels:
+        app: tileserver-gl
+    spec:
+      containers:
+        - name: tileserver-gl
+          image: maptiler/tileserver-gl:latest
+          ports:
+            - containerPort: 8080
+          args:
+            - --config
+            - /config/config.json
+          volumeMounts:
+            - name: tileserver-config
+              mountPath: /config
+            - name: tileserver-tiles
+              mountPath: /tiles
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: tileserver-config
+          configMap:
+            name: tileserver-config
+        - name: tileserver-tiles
+          persistentVolumeClaim:
+            claimName: tileserver-tiles
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tileserver-tiles
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 80Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tileserver-config
+  namespace: geo
+data:
+  config.json: |
+    {
+      "options": {
+        "paths": {
+          "mbtiles": "/tiles"
+        }
+      },
+      "data": {},
+      "styles": {}
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tileserver-gl
+  namespace: geo
+spec:
+  selector:
+    app: tileserver-gl
+  ports:
+    - port: 8080
+      targetPort: 8080

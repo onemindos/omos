@@ -1,0 +1,243 @@
+# =============================================================================
+# OpenAerialMap — Visual Drone Orthophoto Browser
+# Browse/serve all your drone orthophotos on an interactive map
+# MinIO (cloudtak namespace) as S3-compatible backend
+# Using v1 (stable Docker Compose-compatible) — v2 eoAPI when ready
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oam-api
+  namespace: geo
+  labels:
+    app: oam-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oam-api
+  template:
+    metadata:
+      labels:
+        app: oam-api
+    spec:
+      containers:
+        - name: oam-api
+          image: hotosm/oam-api:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4000"
+            - name: OIN_BUCKET
+              value: "oam-imagery"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: geo-minio-secret
+                  key: MINIO_ACCESS_KEY
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: geo-minio-secret
+                  key: MINIO_SECRET_KEY
+            - name: AWS_S3_ENDPOINT
+              value: "http://cloudtak-minio.cloudtak.svc.cluster.local:9000"
+            - name: MONGODB_URI
+              value: "mongodb://oam-mongo:27017/oam"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oam-api
+  namespace: geo
+spec:
+  selector:
+    app: oam-api
+  ports:
+    - port: 4000
+      targetPort: 4000
+---
+# OAM needs MongoDB as catalog store
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oam-mongo
+  namespace: geo
+  labels:
+    app: oam-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oam-mongo
+  template:
+    metadata:
+      labels:
+        app: oam-mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:7
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: oam-mongo-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: oam-mongo-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oam-mongo
+  namespace: geo
+spec:
+  selector:
+    app: oam-mongo
+  ports:
+    - port: 27017
+      targetPort: 27017
+---
+# =============================================================================
+# Apache Superset — BI + Geospatial Analytics
+# Dashboards over TimescaleDB + ClickHouse
+# Farm yield charts, sensor heatmaps, seasonal trends, geo maps
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset
+  namespace: geo
+  labels:
+    app: superset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superset
+  template:
+    metadata:
+      labels:
+        app: superset
+    spec:
+      initContainers:
+        - name: superset-init
+          image: apache/superset:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              superset db upgrade
+              superset fab create-admin --username admin --firstname Admin --lastname Admin \
+                --email admin@onemind.local --password "$SUPERSET_ADMIN_PASSWORD" 2>/dev/null || true
+              superset init
+          env:
+            - name: SUPERSET_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: geo-services-secret
+                  key: SUPERSET_SECRET_KEY
+            - name: SUPERSET_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-services-secret
+                  key: SUPERSET_ADMIN_PASSWORD
+            - name: SQLALCHEMY_DATABASE_URI
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/superset"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+      containers:
+        - name: superset
+          image: apache/superset:latest
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SUPERSET_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: geo-services-secret
+                  key: SUPERSET_SECRET_KEY
+            - name: SQLALCHEMY_DATABASE_URI
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/superset"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: superset-data
+              mountPath: /app/superset_home
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8088
+            initialDelaySeconds: 60
+            periodSeconds: 15
+      volumes:
+        - name: superset-data
+          persistentVolumeClaim:
+            claimName: superset-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: superset-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: superset
+  namespace: geo
+spec:
+  selector:
+    app: superset
+  ports:
+    - port: 8088
+      targetPort: 8088

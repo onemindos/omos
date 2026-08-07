@@ -1,0 +1,97 @@
+# =============================================================================
+# GeoServer — WMS/WFS/WMTS/WCS OGC Server
+# TAK natively consumes WMS — soil maps, drone orthos, terrain overlays
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geoserver
+  namespace: geo
+  labels:
+    app: geoserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geoserver
+  template:
+    metadata:
+      labels:
+        app: geoserver
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
+      containers:
+        - name: geoserver
+          image: kartoza/geoserver:2.25.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GEOSERVER_DATA_DIR
+              value: /opt/geoserver/data_dir
+            - name: GEOWEBCACHE_CACHE_DIR
+              value: /opt/geoserver/data_dir/gwc
+            - name: GEOSERVER_ADMIN_USER
+              value: admin
+            - name: GEOSERVER_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-services-secret
+                  key: GEOSERVER_ADMIN_PASSWORD
+            - name: INITIAL_MEMORY
+              value: "512M"
+            - name: MAXIMUM_MEMORY
+              value: "1536M"
+            - name: STABLE_EXTENSIONS
+              value: ""
+            - name: COMMUNITY_EXTENSIONS
+              value: ""
+            - name: DB_BACKEND
+              value: POSTGRES
+          volumeMounts:
+            - name: geoserver-data
+              mountPath: /opt/geoserver/data_dir
+          resources:
+            requests:
+              cpu: 300m
+              memory: 768Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /geoserver/web/
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 5
+      volumes:
+        - name: geoserver-data
+          persistentVolumeClaim:
+            claimName: geoserver-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geoserver-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geoserver
+  namespace: geo
+spec:
+  selector:
+    app: geoserver
+  ports:
+    - port: 8080
+      targetPort: 8080

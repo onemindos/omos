@@ -1,0 +1,281 @@
+# =============================================================================
+# pg_tileserv — Zero-Config PostGIS → Vector Tiles
+# 18MB Go binary. Every PostGIS table = instant tile endpoint. No config needed.
+# Sensor locations, field bounds, TAK tracks auto-served from geo-db
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-tileserv
+  namespace: geo
+  labels:
+    app: pg-tileserv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-tileserv
+  template:
+    metadata:
+      labels:
+        app: pg-tileserv
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
+      containers:
+        - name: pg-tileserv
+          image: pramsey/pg_tileserv:latest
+          ports:
+            - containerPort: 7800
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/geo"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /index.json
+              port: 7800
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-tileserv
+  namespace: geo
+spec:
+  selector:
+    app: pg-tileserv
+  ports:
+    - port: 7800
+      targetPort: 7800
+---
+# =============================================================================
+# pg_featureserv — PostGIS → OGC Features REST API
+# Query farm features (fields, fences, sensors) as GeoJSON
+# Complements pg_tileserv — same family, different protocol
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-featureserv
+  namespace: geo
+  labels:
+    app: pg-featureserv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-featureserv
+  template:
+    metadata:
+      labels:
+        app: pg-featureserv
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
+      containers:
+        - name: pg-featureserv
+          image: pramsey/pg_featureserv:latest
+          ports:
+            - containerPort: 9000
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://geo:$(POSTGRES_PASSWORD)@geo-db:5432/geo"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-featureserv
+  namespace: geo
+spec:
+  selector:
+    app: pg-featureserv
+  ports:
+    - port: 9000
+      targetPort: 9000
+---
+# =============================================================================
+# Nominatim — Self-Hosted Geocoder
+# Address ↔ GPS coordinates. Full planet. No Google, no rate limits.
+# Regional extract first — upgrade to full planet later (10Gi = regional)
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nominatim
+  namespace: geo
+  labels:
+    app: nominatim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nominatim
+  template:
+    metadata:
+      labels:
+        app: nominatim
+    spec:
+      containers:
+        - name: nominatim
+          image: mediagis/nominatim:4.4
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PBF_URL
+              value: "https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf"
+            - name: REPLICATION_URL
+              value: "https://planet.openstreetmap.org/replication/hour/"
+            - name: NOMINATIM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: geo-services-secret
+                  key: NOMINATIM_PASSWORD
+          volumeMounts:
+            - name: nominatim-data
+              mountPath: /nominatim/data
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 30
+            failureThreshold: 20
+      volumes:
+        - name: nominatim-data
+          persistentVolumeClaim:
+            claimName: nominatim-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nominatim-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nominatim
+  namespace: geo
+spec:
+  selector:
+    app: nominatim
+  ports:
+    - port: 8090
+      targetPort: 8080
+---
+# =============================================================================
+# QGIS Server — Full GIS as WMS/WFS Server
+# Process farm data in QGIS desktop → publish layers to TAK
+# Wave 4 — low priority, add when needed
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qgis-server
+  namespace: geo
+  labels:
+    app: qgis-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qgis-server
+  template:
+    metadata:
+      labels:
+        app: qgis-server
+    spec:
+      containers:
+        - name: qgis-server
+          image: qgis/qgis:release-3_38
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt-get install -y apache2 libapache2-mod-fcgid 2>/dev/null || true
+              qgis_mapserver &
+              tail -f /dev/null
+          ports:
+            - containerPort: 8093
+          env:
+            - name: QGIS_SERVER_LOG_LEVEL
+              value: "0"
+          volumeMounts:
+            - name: qgis-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      volumes:
+        - name: qgis-data
+          persistentVolumeClaim:
+            claimName: qgis-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qgis-data
+  namespace: geo
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qgis-server
+  namespace: geo
+spec:
+  selector:
+    app: qgis-server
+  ports:
+    - port: 8093
+      targetPort: 8093

@@ -1,0 +1,330 @@
+# =============================================================================
+# Geo Stack — Tailscale Ingresses
+# All services accessible at *.tail717ba0.ts.net — no public exposure
+# Pattern: ingressClassName: tailscale + tailscale.com/hostname annotation
+# =============================================================================
+
+# farmOS — Farm Brain
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: farmos
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "farmos"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: farmos
+      port:
+        number: 80
+  tls:
+    - hosts: ["farmos"]
+---
+# Node-RED — IoT Flow Engine
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-red
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "node-red"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: node-red
+      port:
+        number: 1880
+  tls:
+    - hosts: ["node-red"]
+---
+# GeoServer — WMS/WFS OGC Server
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: geoserver
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "geoserver"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: geoserver
+      port:
+        number: 8080
+  tls:
+    - hosts: ["geoserver"]
+---
+# TileServer GL — Offline Basemap
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tileserver
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "tileserver"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: tileserver-gl
+      port:
+        number: 8080
+  tls:
+    - hosts: ["tileserver"]
+---
+# Martin — Rust Tile Server
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: martin
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "martin"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: martin
+      port:
+        number: 3000
+  tls:
+    - hosts: ["martin"]
+---
+# STAC API — Drone Imagery Catalog
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stac-api
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "stac"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: stac-api
+      port:
+        number: 8082
+  tls:
+    - hosts: ["stac"]
+---
+# STAC Browser — Visual Catalog UI
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stac-browser
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "stac-browser"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: stac-browser
+      port:
+        number: 8085
+  tls:
+    - hosts: ["stac-browser"]
+---
+# Maputnik — Map Style Editor
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: maputnik
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "maputnik"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: maputnik
+      port:
+        number: 8088
+  tls:
+    - hosts: ["maputnik"]
+---
+# WebODM — Drone Survey Pipeline
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webodm
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "webodm"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: webodm
+      port:
+        number: 8000
+  tls:
+    - hosts: ["webodm"]
+---
+# Valhalla — Routing Engine
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: valhalla
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "valhalla"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: valhalla
+      port:
+        number: 8002
+  tls:
+    - hosts: ["valhalla"]
+---
+# Overpass — OSM Query Engine
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: overpass
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "overpass"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: overpass
+      port:
+        number: 12345
+  tls:
+    - hosts: ["overpass"]
+---
+# pg_tileserv — Zero-Config PostGIS Tiles
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pg-tileserv
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "pg-tileserv"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: pg-tileserv
+      port:
+        number: 7800
+  tls:
+    - hosts: ["pg-tileserv"]
+---
+# pg_featureserv — PostGIS OGC Features API
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pg-featureserv
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "pg-featureserv"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: pg-featureserv
+      port:
+        number: 9000
+  tls:
+    - hosts: ["pg-featureserv"]
+---
+# Nominatim — Geocoder
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nominatim
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "nominatim"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: nominatim
+      port:
+        number: 8090
+  tls:
+    - hosts: ["nominatim"]
+---
+# Superset — BI Analytics
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: superset
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "superset"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: superset
+      port:
+        number: 8088
+  tls:
+    - hosts: ["superset"]
+---
+# OAM API — Drone Imagery Browser
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oam
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "oam"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: oam-api
+      port:
+        number: 4000
+  tls:
+    - hosts: ["oam"]
+---
+# QGIS Server
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: qgis-server
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "qgis"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: qgis-server
+      port:
+        number: 8093
+  tls:
+    - hosts: ["qgis"]
+---
+# Tile38 — expose for external NATS-connected clients
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tile38
+  namespace: geo
+  annotations:
+    tailscale.com/hostname: "tile38"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: tile38
+      port:
+        number: 9851
+  tls:
+    - hosts: ["tile38"]
