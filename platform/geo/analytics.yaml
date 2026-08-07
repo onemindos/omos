@@ -28,26 +28,25 @@ spec:
           ports:
             - containerPort: 4000
           env:
-            - name: NODE_ENV
-              value: "production"
-            - name: PORT
+            - name: POSTGRES_USER
+              value: "geo"
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_HOST_READER
+              value: "geo-db.geo.svc.cluster.local"
+            - name: POSTGRES_HOST_WRITER
+              value: "geo-db.geo.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DBNAME
+              value: "oam"
+            - name: APP_HOST
+              value: "0.0.0.0"
+            - name: APP_PORT
               value: "4000"
-            - name: OIN_BUCKET
-              value: "oam-imagery"
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: geo-minio-secret
-                  key: MINIO_ACCESS_KEY
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: geo-minio-secret
-                  key: MINIO_SECRET_KEY
-            - name: AWS_S3_ENDPOINT
-              value: "http://cloudtak-minio.cloudtak.svc.cluster.local:9000"
-            - name: MONGODB_URI
-              value: "mongodb://oam-mongo:27017/oam"
           resources:
             requests:
               cpu: 100m
