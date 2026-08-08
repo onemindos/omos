@@ -1,8 +1,7 @@
 # =============================================================================
 # WebODM — Drone Survey Pipeline
-# Requires 4 components: webapp, worker, broker (Redis), db (webodm_db)
-# Uses its own internal Postgres (webodm/webodm_db) — not geo-db
-# Entrypoint scripts: wait-for-postgres.sh + wait-for-it.sh are in the image
+# 3 deployments: webodm-db, webodm-broker, webodm (webapp+worker sidecar)
+# webapp and worker share the media PVC in the same pod (avoids RWO conflict)
 # =============================================================================
 apiVersion: apps/v1
 kind: Deployment
@@ -39,6 +38,13 @@ spec:
           env:
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
       volumes:
         - name: webodm-db-data
           persistentVolumeClaim:
@@ -110,6 +116,7 @@ spec:
     - port: 6379
       targetPort: 6379
 ---
+# webapp + worker as sidecars in one pod — share media PVC without RWO conflict
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -128,7 +135,7 @@ spec:
         app: webodm
     spec:
       containers:
-        - name: webodm
+        - name: webapp
           image: webodm/webodm_webapp:latest
           command: ["/bin/bash", "-c"]
           args:
@@ -150,7 +157,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: geo-services-secret
-                  key: SUPERSET_SECRET_KEY   # reuse long random key
+                  key: SUPERSET_SECRET_KEY
           volumeMounts:
             - name: webodm-media
               mountPath: /webodm/app/media
@@ -165,9 +172,34 @@ spec:
             httpGet:
               path: /
               port: 8000
-            initialDelaySeconds: 90
+            initialDelaySeconds: 120
             periodSeconds: 15
-            failureThreshold: 5
+            failureThreshold: 6
+        - name: worker
+          image: webodm/webodm_webapp:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - "/webodm/wait-for-postgres.sh webodm-db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/wait-for-it.sh -t 0 localhost:8000 -- /webodm/worker.sh start"
+          env:
+            - name: WO_BROKER
+              value: "redis://broker:6379"
+            - name: WO_DEBUG
+              value: "NO"
+            - name: WO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: geo-services-secret
+                  key: SUPERSET_SECRET_KEY
+          volumeMounts:
+            - name: webodm-media
+              mountPath: /webodm/app/media
+          resources:
+            requests:
+              cpu: 300m
+              memory: 512Mi
+            limits:
+              cpu: "4"
+              memory: 4Gi
       volumes:
         - name: webodm-media
           persistentVolumeClaim:
@@ -197,56 +229,9 @@ spec:
     - port: 8000
       targetPort: 8000
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: webodm-worker
-  namespace: geo
-  labels:
-    app: webodm-worker
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: webodm-worker
-  template:
-    metadata:
-      labels:
-        app: webodm-worker
-    spec:
-      containers:
-        - name: worker
-          image: webodm/webodm_webapp:latest
-          command: ["/bin/bash", "-c"]
-          args:
-            - "/webodm/wait-for-postgres.sh webodm-db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/wait-for-it.sh -t 0 webodm:8000 -- /webodm/worker.sh start"
-          env:
-            - name: WO_BROKER
-              value: "redis://broker:6379"
-            - name: WO_DEBUG
-              value: "NO"
-            - name: WO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: geo-services-secret
-                  key: SUPERSET_SECRET_KEY
-          volumeMounts:
-            - name: webodm-media
-              mountPath: /webodm/app/media
-          resources:
-            requests:
-              cpu: 500m
-              memory: 1Gi
-            limits:
-              cpu: "4"
-              memory: 8Gi
-      volumes:
-        - name: webodm-media
-          persistentVolumeClaim:
-            claimName: webodm-media
----
 # =============================================================================
 # NodeODM — WebODM Photogrammetry Processing Worker
+# CPU-heavy during flights, idle otherwise. Scale replicas per concurrent flight.
 # =============================================================================
 apiVersion: apps/v1
 kind: Deployment
