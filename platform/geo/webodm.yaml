@@ -21,6 +21,13 @@ spec:
       labels:
         app: webodm-db
     spec:
+      initContainers:
+        - name: fix-perms
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /data/pgdata && chmod 700 /data/pgdata"]
+          volumeMounts:
+            - name: webodm-db-data
+              mountPath: /data
       containers:
         - name: webodm-db
           image: webodm/webodm_db:latest
@@ -29,13 +36,9 @@ spec:
           volumeMounts:
             - name: webodm-db-data
               mountPath: /var/lib/postgresql/data
-          resources:
-            requests:
-              cpu: 200m
-              memory: 256Mi
-            limits:
-              cpu: "1"
-              memory: 512Mi
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
       volumes:
         - name: webodm-db-data
           persistentVolumeClaim:
