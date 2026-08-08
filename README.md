@@ -53,7 +53,6 @@ platform/               K8s manifests for every service
 nats-migration/         38-stream + 20-KV provisioning scripts
 tak-cluster/            TAK Server 5.7 Helm chart + NATS bridge plugin
 docs/                   Architecture + runbooks
-geoserver/              GeoServer (WMS/WFS)
 uptime-kuma/            Uptime monitoring
 Makefile                Developer commands (make help)
 ```

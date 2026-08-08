@@ -13,7 +13,7 @@ lint: lint-yaml lint-tf lint-shell ## Run all linters
 
 lint-yaml: ## Lint all YAML files
 	@echo "→ yamllint..."
-	@yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ geoserver/ uptime-kuma/ 2>/dev/null || true
+	@yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ uptime-kuma/ 2>/dev/null || true
 
 lint-tf: ## Lint + validate Terraform
 	@echo "→ terraform fmt check..."

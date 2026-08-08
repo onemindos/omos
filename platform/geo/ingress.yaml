@@ -40,24 +40,6 @@ spec:
   tls:
     - hosts: ["node-red"]
 ---
-# GeoServer — WMS/WFS OGC Server
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: geoserver
-  namespace: geo
-  annotations:
-    tailscale.com/hostname: "geoserver"
-spec:
-  ingressClassName: tailscale
-  defaultBackend:
-    service:
-      name: geoserver
-      port:
-        number: 8080
-  tls:
-    - hosts: ["geoserver"]
----
 # TileServer GL — Offline Basemap
 apiVersion: networking.k8s.io/v1
 kind: Ingress
