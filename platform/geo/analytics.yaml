@@ -130,110 +130,106 @@ spec:
       targetPort: 27017
 ---
 # =============================================================================
-# Apache Superset — BI + Geospatial Analytics
-# Dashboards over TimescaleDB + ClickHouse
-# Farm yield charts, sensor heatmaps, seasonal trends, geo maps
+# Grafana — Dashboards + Alerting
+# Native TimescaleDB, PostgreSQL, ClickHouse datasources
+# Homestead sensor telemetry, GPS tracks, farmOS data, NATS event analytics
 # =============================================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: superset
+  name: grafana
   namespace: geo
   labels:
-    app: superset
+    app: grafana
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: superset
+      app: grafana
   template:
     metadata:
       labels:
-        app: superset
+        app: grafana
     spec:
-      initContainers:
-        - name: superset-init
-          image: apache/superset:latest
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              superset db upgrade
-              superset fab create-admin --username admin --firstname Admin --lastname Admin \
-                --email admin@onemind.local --password "$SUPERSET_ADMIN_PASSWORD" 2>/dev/null || true
-              superset init
-          env:
-            - name: SUPERSET_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: geo-services-secret
-                  key: SUPERSET_SECRET_KEY
-            - name: SUPERSET_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: geo-services-secret
-                  key: SUPERSET_ADMIN_PASSWORD
-            - name: SQLALCHEMY_DATABASE_URI
-              valueFrom:
-                secretKeyRef:
-                  name: geo-service-urls
-                  key: SUPERSET_DB_URL
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
       containers:
-        - name: superset
-          image: apache/superset:latest
+        - name: grafana
+          image: grafana/grafana:latest
           ports:
-            - containerPort: 8088
+            - containerPort: 3000
           env:
-            - name: SUPERSET_SECRET_KEY
+            - name: GF_SECURITY_ADMIN_USER
+              value: "admin"
+            - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: geo-services-secret
-                  key: SUPERSET_SECRET_KEY
-            - name: SQLALCHEMY_DATABASE_URI
+                  key: GEOSERVER_ADMIN_PASSWORD
+            - name: GF_SERVER_ROOT_URL
+              value: "https://grafana.tail717ba0.ts.net"
+            - name: GF_SERVER_SERVE_FROM_SUB_PATH
+              value: "false"
+            - name: GF_DATABASE_TYPE
+              value: "postgres"
+            - name: GF_DATABASE_HOST
+              value: "geo-db.geo.svc.cluster.local:5432"
+            - name: GF_DATABASE_NAME
+              value: "grafana"
+            - name: GF_DATABASE_USER
+              value: "geo"
+            - name: GF_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: geo-service-urls
-                  key: SUPERSET_DB_URL
+                  name: geo-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: GF_DATABASE_SSL_MODE
+              value: "disable"
+            - name: GF_INSTALL_PLUGINS
+              value: "grafana-worldmap-panel,grafana-clock-panel,marcusolsson-static-datasource"
           volumeMounts:
-            - name: superset-data
-              mountPath: /app/superset_home
+            - name: grafana-data
+              mountPath: /var/lib/grafana
           resources:
             requests:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 100m
+              memory: 256Mi
             limits:
-              cpu: "2"
-              memory: 2Gi
+              cpu: "1"
+              memory: 512Mi
           livenessProbe:
             httpGet:
-              path: /health
-              port: 8088
-            initialDelaySeconds: 60
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
             periodSeconds: 15
+            timeoutSeconds: 5
       volumes:
-        - name: superset-data
+        - name: grafana-data
           persistentVolumeClaim:
-            claimName: superset-data
+            claimName: grafana-data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: superset-data
+  name: grafana-data
   namespace: geo
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: do-block-storage-retain
   resources:
     requests:
-      storage: 2Gi
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: superset
+  name: grafana
   namespace: geo
 spec:
   selector:
-    app: superset
+    app: grafana
   ports:
-    - port: 8088
-      targetPort: 8088
+    - port: 3000
+      targetPort: 3000

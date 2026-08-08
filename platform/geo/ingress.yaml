@@ -257,23 +257,23 @@ spec:
   tls:
     - hosts: ["nominatim"]
 ---
-# Superset — BI Analytics
+# Grafana — Dashboards + Alerting
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: superset
+  name: grafana
   namespace: geo
   annotations:
-    tailscale.com/hostname: "superset"
+    tailscale.com/hostname: "grafana"
 spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: superset
+      name: grafana
       port:
-        number: 8088
+        number: 3000
   tls:
-    - hosts: ["superset"]
+    - hosts: ["grafana"]
 ---
 # OAM API — Drone Imagery Browser
 apiVersion: networking.k8s.io/v1
