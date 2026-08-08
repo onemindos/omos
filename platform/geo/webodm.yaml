@@ -25,12 +25,9 @@ spec:
           command: ['sh', '-c', 'until pg_isready -h geo-db -U geo; do sleep 2; done']
       containers:
         - name: webodm
-          # WebODM official image — use the versioned tag from GitHub releases
-          # WebODM has no public pre-built image — must be built from source.
-          # Build: docker build https://github.com/OpenDroneMap/WebODM.git -t registry/webodm:latest
-          # Then push to a registry and update this image tag.
-          # Placeholder keeps PVC alive without crash-looping:
-          image: nginx:alpine
+          # Official WebODM image — published to Docker Hub at webodm/webodm_webapp
+          # docker-compose.yml in the repo uses this exact image (linux/amd64 + arm64)
+          image: webodm/webodm_webapp:latest
           ports:
             - containerPort: 8000
           env:
