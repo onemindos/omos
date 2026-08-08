@@ -187,10 +187,13 @@ spec:
             - name: GF_DATABASE_SSL_MODE
               value: "disable"
             - name: GF_INSTALL_PLUGINS
-              value: "grafana-worldmap-panel,grafana-clock-panel,marcusolsson-static-datasource"
+              value: "grafana-worldmap-panel,grafana-clock-panel,marcusolsson-static-datasource,grafana-clickhouse-datasource"
           volumeMounts:
             - name: grafana-data
               mountPath: /var/lib/grafana
+            - name: grafana-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+              readOnly: true
           resources:
             requests:
               cpu: 100m
@@ -209,6 +212,9 @@ spec:
         - name: grafana-data
           persistentVolumeClaim:
             claimName: grafana-data
+        - name: grafana-datasources
+          configMap:
+            name: grafana-datasources
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
