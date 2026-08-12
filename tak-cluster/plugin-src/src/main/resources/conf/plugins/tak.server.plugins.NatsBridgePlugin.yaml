@@ -1,0 +1,5 @@
+natsUrl: nats://host.docker.internal:4222
+natsConsumerSubject: tak.cot.inject
+natsProducerSubject: tak.cot.out
+groups:
+  - __ANON__

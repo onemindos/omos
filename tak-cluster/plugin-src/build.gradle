@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.6'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // TAK Server plugin API — local JAR (no tak.gov credentials needed)
+    compileOnly fileTree(dir: '../tak-server-sdk/tak-server-sdk', include: '*.jar')
+
+    // NATS.java client
+    implementation 'io.nats:jnats:2.20.2'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    testImplementation 'ch.qos.logback:logback-classic:1.4.14'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+shadowJar {
+    archiveBaseName.set('takserver-nats-plugin')
+    archiveClassifier.set('')
+    archiveVersion.set('1.0.0')
+
+    // Don't bundle the TAK Server API classes — they're provided by the server
+    dependencies {
+        exclude(dependency('gov.tak:.*'))
+    }
+}
+
+build.dependsOn shadowJar
