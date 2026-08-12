@@ -66,6 +66,20 @@ kubectl -n hermes create secret generic hermes-aws \
   --from-literal=AWS_REGION='us-east-1'
 ```
 
+## 5. Tailscale Kubernetes Operator OAuth Client
+
+Used by the Tailscale operator Helm chart (`platform/values/tailscale-operator.yaml`).
+```
+clientId:     zeuslegacy-api-client
+clientSecret: YM0cPTYSXk9piaaM3ysAFokZkQmVddMr
+```
+> Store in 1Password under **"tailscale-operator-oauth-client"**. Inject at install time:
+> ```bash
+> helm upgrade --install tailscale-operator tailscale/tailscale-operator \
+>   --set-string oauth.clientId=zeuslegacy-api-client \
+>   --set-string oauth.clientSecret=YM0cPTYSXk9piaaM3ysAFokZkQmVddMr
+> ```
+
 ## Go live
 ```bash
 kubectl create namespace hermes --dry-run=client -o yaml | kubectl apply -f -
