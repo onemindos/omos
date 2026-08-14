@@ -50,3 +50,4 @@ tak-cluster/build-root/
 
 # uptime-kuma SQLite migration dump
 uptime-kuma/migration-data/
+# sensitive platform secrets + local overrides
