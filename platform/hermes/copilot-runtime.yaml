@@ -38,6 +38,8 @@ spec:
       labels:
         app: copilot-runtime
     spec:
+      imagePullSecrets:
+        - name: ghcr-onemindos
       containers:
         - name: copilot-runtime
           image: ghcr.io/onemindos/copilot-runtime:latest
