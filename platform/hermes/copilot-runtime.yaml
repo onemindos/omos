@@ -43,13 +43,15 @@ spec:
       containers:
         - name: copilot-runtime
           image: ghcr.io/onemindos/copilot-runtime:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 4111
               name: http
           envFrom:
             - configMapRef:
                 name: copilot-runtime-config
+            - secretRef:
+                name: omos-nats-creds
           resources:
             requests:
               cpu: 50m
