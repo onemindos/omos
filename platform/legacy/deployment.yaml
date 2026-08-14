@@ -96,33 +96,16 @@ spec:
         # ---- Install hermes-agent deps into webui venv ----
         # ghcr.io/nesquena/hermes-webui ships with its own /app/venv (Python 3.12)
         # that is missing hermes-agent's runtime deps (python-dotenv, tenacity,
-        # httpx, etc.). The webui uses HERMES_WEBUI_AGENT_DIR=/opt/hermes-agent
+        # httpx, etc.). The webui uses HERMES_WEBUI_AGENT_DIR=/opt/hermes
         # (seeded by copy-agent-src) and attempts to import run_agent.AIAgent at
         # startup — this fails with "No module named 'dotenv'" unless the agent's
         # deps are installed into /app/venv.
         # This initContainer runs pip install -e on the copied agent source,
         # pulling all missing deps into /app/venv so AIAgent imports cleanly
         # on every pod start without any manual intervention.
-        - name: install-webui-agent-deps
-          image: ghcr.io/nesquena/hermes-webui:latest
-          imagePullPolicy: Always
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Installing hermes-agent deps into webui venv..."
-              cd /opt/hermes-agent && /app/venv/bin/pip install -e . --quiet
-              echo "Verifying AIAgent import..."
-              /app/venv/bin/python -c "from run_agent import AIAgent; print('OK:', AIAgent)"
-              echo "Done."
-          securityContext:
-            runAsUser: 10000
-            runAsGroup: 10000
-          volumeMounts:
-            - name: webui-app
-              mountPath: /app
-            - name: hermes-agent-src
-              mountPath: /opt/hermes-agent
+        # install-webui-agent-deps: REMOVED — the webui's own /hermeswebui_init.bash
+        # handles the editable install when hermes-agent-src is mounted at /opt/hermes
+        # (the path its _agent_paths array searches). No init container needed.
       containers:
         # ---- Legacy (Hermes) ----
         # Talks PLAINTEXT to the in-pod leaf on localhost:4222 — identical to the
@@ -259,20 +242,20 @@ spec:
             - name: HERMES_WEBUI_SSE_CHUNKED
               value: "1"
             - name: HERMES_WEBUI_AGENT_DIR
-              value: /opt/hermes-agent
+              value: /opt/hermes
             - name: HERMES_WEBUI_AUTO_INSTALL
               value: "1"
             - name: HERMES_WEBUI_PYTHON
               value: /opt/hermes-venv/bin/python
             - name: PYTHONPATH
-              value: /opt/hermes-agent
+              value: /opt/hermes
           volumeMounts:
             - name: data
               mountPath: /opt/data
             - name: webui-app
               mountPath: /app
             - name: hermes-agent-src
-              mountPath: /opt/hermes-agent
+              mountPath: /opt/hermes
             - name: hermes-venv
               mountPath: /opt/hermes-venv
           resources:
