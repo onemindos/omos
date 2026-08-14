@@ -50,8 +50,18 @@ spec:
           envFrom:
             - configMapRef:
                 name: copilot-runtime-config
-            - secretRef:
-                name: omos-nats-creds
+
+          env:
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
           resources:
             requests:
               cpu: 50m
