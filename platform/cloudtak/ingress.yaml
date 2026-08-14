@@ -15,6 +15,13 @@ spec:
     - host: atoc.onemindos.dev
       http:
         paths:
+          - path: /api/omos/ai
+            pathType: Prefix
+            backend:
+              service:
+                name: onemind-ai-bridge
+                port:
+                  number: 8080
           - path: /api/copilot
             pathType: Prefix
             backend:
