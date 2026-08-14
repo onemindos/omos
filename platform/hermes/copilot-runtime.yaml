@@ -1,0 +1,86 @@
+---
+# copilot-runtime — AG-UI ↔ NATS bridge for CopilotKit frontend
+# Lives in hermes namespace, connects OMOS (cloudtak) frontend to Legacy on the bus.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: copilot-runtime-config
+  namespace: hermes
+  labels:
+    app: copilot-runtime
+data:
+  NATS_URL: "nats://nats.nats.svc.cluster.local:4222"
+  LEGACY_SUBJECT: "agents.prompt.hermes.zeus.legacy"
+  PORT: "4111"
+  LOG_LEVEL: "info"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: copilot-runtime
+  namespace: hermes
+  labels:
+    app: copilot-runtime
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: copilot-runtime
+  template:
+    metadata:
+      labels:
+        app: copilot-runtime
+    spec:
+      containers:
+        - name: copilot-runtime
+          image: ghcr.io/onemindos/copilot-runtime:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4111
+              name: http
+          envFrom:
+            - configMapRef:
+                name: copilot-runtime-config
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4111
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4111
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: copilot-runtime
+  namespace: hermes
+  labels:
+    app: copilot-runtime
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4111
+      targetPort: 4111
+      protocol: TCP
+      name: http
+  selector:
+    app: copilot-runtime
