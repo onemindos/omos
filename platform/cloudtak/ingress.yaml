@@ -6,6 +6,8 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
     nginx.ingress.kubernetes.io/websocket-services: "cloudtak-api"
 spec:
   ingressClassName: nginx
@@ -13,6 +15,13 @@ spec:
     - host: atoc.onemindos.dev
       http:
         paths:
+          - path: /api/copilot
+            pathType: Prefix
+            backend:
+              service:
+                name: copilot-runtime
+                port:
+                  number: 4111
           - path: /
             pathType: Prefix
             backend:
