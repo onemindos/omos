@@ -8,20 +8,13 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
-    nginx.ingress.kubernetes.io/websocket-services: "cloudtak-api,onemind-ai-bridge"
+    nginx.ingress.kubernetes.io/websocket-services: "cloudtak-api"
 spec:
   ingressClassName: nginx
   rules:
     - host: atoc.onemindos.dev
       http:
         paths:
-          - path: /api/omos/ai
-            pathType: Prefix
-            backend:
-              service:
-                name: onemind-ai-bridge
-                port:
-                  number: 8080
           - path: /api/copilot
             pathType: Prefix
             backend:
