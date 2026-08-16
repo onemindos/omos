@@ -169,11 +169,11 @@ spec:
               cpu: "{{ .Values.takserver.config.resources.limits.cpu }}"
               memory: "{{ .Values.takserver.config.resources.limits.memory }}"
           readinessProbe:
-            exec:
-              command:
-              - /config-readiness.sh
-            initialDelaySeconds: 1
-            periodSeconds: 1
+            tcpSocket:
+              port: 10800
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            failureThreshold: 6
           livenessProbe:
             tcpSocket:
               port: 10800

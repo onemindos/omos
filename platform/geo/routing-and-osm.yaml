@@ -21,12 +21,35 @@ spec:
         app: valhalla
     spec:
       initContainers:
-        - name: wait-for-tiles
-          image: busybox
-          command: ['sh', '-c', 'until [ -f /data/valhalla_tiles.tar ]; do echo "waiting for valhalla tiles build..."; sleep 30; done']
+        - name: build-tiles
+          image: valhallateam/valhalla:latest
+          command:
+            - sh
+            - -c
+            - |
+              if [ -f /data/valhalla_tiles.tar ]; then
+                echo "Tiles already built, skipping.";
+                exit 0;
+              fi
+              echo "Downloading North America PBF..."
+              wget -q -O /data/north-america.osm.pbf https://download.geofabrik.de/north-america-latest.osm.pbf
+              echo "Building Valhalla tiles..."
+              valhalla_build_config --mjolnir-tile-dir /data/valhalla_tiles --mjolnir-tile-extract /data/valhalla_tiles.tar --mjolnir-timezone /data/tz_world.sqlite --mjolnir-admin /data/admins.sqlite > /data/valhalla.json
+              valhalla_build_admins -c /data/valhalla.json /data/north-america.osm.pbf
+              valhalla_build_timezones > /data/tz_world.sqlite
+              valhalla_build_tiles -c /data/valhalla.json /data/north-america.osm.pbf
+              valhalla_build_extract -c /data/valhalla.json -v
+              echo "Tiles built successfully."
           volumeMounts:
             - name: valhalla-data
               mountPath: /data
+          resources:
+            requests:
+              cpu: "2"
+              memory: 4Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
       containers:
         - name: valhalla
           image: valhallateam/valhalla:latest
@@ -118,13 +141,13 @@ spec:
             - containerPort: 80
           env:
             - name: OVERPASS_MODE
-              value: "clone"
+              value: "init"
             - name: OVERPASS_META
               value: "yes"
             - name: OVERPASS_PLANET_URL
-              value: "https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf"
+              value: "https://download.geofabrik.de/north-america-latest.osm.pbf"
             - name: OVERPASS_DIFF_URL
-              value: "https://planet.openstreetmap.org/replication/minute/"
+              value: "https://download.geofabrik.de/north-america-updates/"
             - name: OVERPASS_RULES_LOAD
               value: "10"
             - name: OVERPASS_UPDATE_SLEEP

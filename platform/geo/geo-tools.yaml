@@ -84,9 +84,9 @@ spec:
             - containerPort: 8080
           env:
             - name: PBF_URL
-              value: "https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf"
+              value: "https://download.geofabrik.de/north-america-latest.osm.pbf"
             - name: REPLICATION_URL
-              value: "https://planet.openstreetmap.org/replication/hour/"
+              value: "https://download.geofabrik.de/north-america-updates/"
             - name: NOMINATIM_PASSWORD
               valueFrom:
                 secretKeyRef:
