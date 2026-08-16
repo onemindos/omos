@@ -23,38 +23,35 @@ spec:
       imagePullSecrets:
         - name: ghcr-push-secret
       initContainers:
-        - name: build-tiles
-          image: ghcr.io/gis-ops/docker-valhalla:latest
+        - name: download-pbf
+          image: alpine:3.19
           command:
             - sh
             - -c
             - |
-              if [ -f /data/valhalla_tiles.tar ]; then
-                echo "Tiles already built, skipping.";
+              if [ -f /data/valhalla_tiles.tar ] || [ -f /data/north-america.osm.pbf ]; then
+                echo "PBF or tiles already present, skipping download.";
                 exit 0;
               fi
-              echo "Downloading North America PBF..."
-              wget -q -O /data/north-america.osm.pbf https://download.geofabrik.de/north-america-latest.osm.pbf
-              echo "Building Valhalla tiles..."
-              valhalla_build_config --mjolnir-tile-dir /data/valhalla_tiles --mjolnir-tile-extract /data/valhalla_tiles.tar --mjolnir-timezone /data/tz_world.sqlite --mjolnir-admin /data/admins.sqlite > /data/valhalla.json
-              valhalla_build_admins -c /data/valhalla.json /data/north-america.osm.pbf
-              valhalla_build_timezones > /data/tz_world.sqlite
-              valhalla_build_tiles -c /data/valhalla.json /data/north-america.osm.pbf
-              valhalla_build_extract -c /data/valhalla.json -v
-              echo "Tiles built successfully."
+              echo "Installing wget..."
+              apk add --no-cache wget
+              echo "Downloading North America PBF (~11GB)..."
+              wget -q --show-progress -O /data/north-america.osm.pbf https://download.geofabrik.de/north-america-latest.osm.pbf
+              echo "Download complete: $(du -sh /data/north-america.osm.pbf)"
           volumeMounts:
             - name: valhalla-data
               mountPath: /data
           resources:
             requests:
-              cpu: "1"
-              memory: 2Gi
+              cpu: "500m"
+              memory: 512Mi
             limits:
-              cpu: "4"
-              memory: 8Gi
+              cpu: "2"
+              memory: 1Gi
       containers:
         - name: valhalla
           image: valhallateam/valhalla:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8002
           args:
@@ -62,11 +59,13 @@ spec:
             - /data/valhalla.json
           env:
             - name: use_tiles_ignore_pbf
-              value: "True"
+              value: "False"
             - name: build_admins
               value: "True"
             - name: build_time_zones
               value: "True"
+            - name: server_threads
+              value: "2"
           volumeMounts:
             - name: valhalla-data
               mountPath: /data
