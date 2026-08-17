@@ -1,0 +1,27 @@
+# Copy to devices/<device_id>.yaml and fill in. Metadata only — never put certs/passwords here.
+device_id: field-android-01        # unique, == cert CN == tak_user
+owner: zeus
+callsign: field-01                 # what shows on the map
+platform: android                  # android | ios
+client: atak                       # atak | itak | taktracker
+tak:
+  user: field-android-01
+  group: Red                       # Red | Air | Sensor | <guest>
+  role: Team Member                # Team Lead | Team Member
+  cert_cn: field-android-01
+connection:
+  primary: tailscale               # lan | tailscale
+  lan_host: 192.168.1.183
+  tailscale_host: 100.74.182.117
+  port: 8089
+  protocol: ssl
+loadout: android-full             # references devices/loadouts/<name>.md
+voice:
+  murmur_user: field-01           # optional; register in Murmur
+provisioning:
+  method: usb                      # usb | manual
+  cert_issued: false
+  installed: false
+  connected: false
+notes: >
+  Free-form. Hardware, purpose, who carries it, retirement plan.

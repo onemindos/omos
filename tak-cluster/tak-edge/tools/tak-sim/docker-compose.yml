@@ -1,0 +1,54 @@
+# TAK Simulation Stack
+# Provides: NATS, FreeTAKServer (TAK server), and the sim itself
+#
+# Usage:
+#   docker compose up -d nats freetakserver    # start infrastructure
+#   npm run sim                                 # run sim (connects to both)
+#
+# ATAK connection:
+#   Server: <your-mac-ip>  Port: 8087  Protocol: TCP (Streaming)
+#   OR use UDP: your ATAK device → Settings → Network → Add new streaming server
+
+services:
+
+  # ── NATS JetStream ──────────────────────────────────────────────────────
+  nats:
+    image: nats:2.14-alpine
+    container_name: tak-sim-nats
+    ports:
+      - "4222:4222"   # client connections
+      - "8222:8222"   # HTTP monitoring
+    command: ["-js", "-m", "8222"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ── FreeTAKServer — TAK Server ──────────────────────────────────────────
+  # The TAK server that ATAK connects to
+  # ATAK clients connect: TCP streaming → <your-mac-ip>:8087
+  freetakserver:
+    image: freetakteam/freetakserver:1.9.9
+    container_name: tak-sim-freetakserver
+    ports:
+      - "8087:8087"    # TCP streaming (ATAK connects here)
+      - "8088:8088"    # UDP
+      - "19023:19023"  # API
+      - "8080:8080"    # Web UI (admin panel)
+    environment:
+      - FTS_CONNECTION_MESSAGE=TAK-SIM Online
+      - FTS_SAVE_COT_TO_DB=False
+    volumes:
+      - fts-data:/usr/local/lib/python3.9/dist-packages/FreeTAKServer/model/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.connect(('localhost',8087)); s.close()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  fts-data:

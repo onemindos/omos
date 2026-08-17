@@ -1,0 +1,43 @@
+device_id: omos-tablet
+owner: zeus
+callsign: zeus-tab
+platform: android
+client: atak
+hardware: Samsung SM-T320 (Galaxy Tab Pro 8.4, mondrianwifi)
+os: LineageOS 22 / Android 15 (sdk 35)
+abi: armeabi-v7a          # 32-bit ONLY — use 32-bit/civSmall ATAK builds; no arm64
+tak:
+  user: omos-tablet
+  group: Red
+  role: Team Member
+  cert_cn: omos-tablet
+connection:
+  primary: tailscale
+  tailscale_host: 100.74.182.117   # TAK server (omos-mbp)
+  lan_host: 192.168.1.183
+  port: 8089
+  protocol: ssl
+tailscale:
+  node: omos-tablet
+  ip: 100.91.64.68
+  active: true
+loadout: android-full
+atak_version: 5.7.0.9 (7a0f6f29) civ-release   # full civ APK — REQUIRED (civSmall is arm64-only)
+installed_plugins:                 # clean 5.7 set (old 4.6 ATAK + plugins removed)
+  - takchat        # com.atakmap.android.takchat.plugin
+  - datasync       # com.atakmap.android.datasync.plugin
+  - reports        # com.atakmap.android.reports.plugin
+  - networkmonitor # com.partech.networkmonitor
+  - imagemarkup    # com.par.imagemarkup
+voice:
+  murmur_user: zeus-tab            # re-add a 5.7 mumble/PTT plugin if voice-in-ATAK wanted; Murmur :64738
+provisioning:
+  method: usb
+  cert_issued: true
+  cert_on_device: /sdcard/atak/cert/omos-tablet.p12 (+ ca.pem)   # pushed via adb
+  installed: true                  # ATAK 5.7.0.9 full civ installed
+  connected: false                 # pending: launch ATAK, add server 100.74.182.117:8089
+notes: >
+  Primary Android field tablet. Wiped old ATAK 4.6 + stale 4.6 plugins, clean-installed
+  full civ 5.7.0.9 (armeabi-v7a) + core plugins. Cert already on device.
+  Remaining: launch ATAK, complete first-run, add server connection, load plugins in-app.

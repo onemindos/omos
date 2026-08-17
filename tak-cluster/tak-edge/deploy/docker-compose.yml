@@ -1,0 +1,96 @@
+# OneMind Tactical Stack — TAK Server + TAK DB + Murmur voice
+# Single home: /Users/zeus/ATAK  (destined to extract as omos-tak)
+#
+# NATS runs natively on the host (launchd com.nats.server) at host.docker.internal:4222.
+# Secrets live in deploy/.env (gitignored). This file is source-of-truth structure only.
+#
+# Bring up:   cd deploy && cp .env.example .env && $EDITOR .env && docker compose up -d
+# Rebind TAK: docker compose up -d --force-recreate takserver
+
+services:
+  tak-database:
+    image: tak-database:latest
+    container_name: tak-database
+    hostname: tak-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${TAK_DB_PASSWORD:?set TAK_DB_PASSWORD in .env}
+      POSTGRES_USER: martiuser
+      POSTGRES_DB: cot
+    volumes:
+      - tak-db-data:/var/lib/postgresql/data
+    networks:
+      takserver-net:
+        ipv4_address: 172.28.0.2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U martiuser -d cot"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  takserver:
+    image: takserver:latest
+    container_name: takserver
+    hostname: takserver
+    restart: unless-stopped
+    depends_on:
+      tak-database:
+        condition: service_healthy
+    ports:
+      - "8089:8089"   # ATAK/iTAK TLS device connections
+      - "8446:8443"   # WebTAK/API; host 8443 is owned by Tailscale
+      - "8444:8444"   # Federation HTTPS
+      - "8448:8446"   # Cert enrollment HTTPS
+    volumes:
+      - ${ATAK_ROOT:?set ATAK_ROOT in .env}/certs/files:/opt/tak/certs/files:ro
+      - ${ATAK_ROOT:?set ATAK_ROOT in .env}/CoreConfig.xml:/opt/tak/CoreConfig.xml
+      - ${ATAK_ROOT:?set ATAK_ROOT in .env}/lib:/opt/tak/lib
+      - ${ATAK_ROOT:?set ATAK_ROOT in .env}/conf/plugins:/opt/tak/conf/plugins
+      - ${ATAK_ROOT:?set ATAK_ROOT in .env}/logs:/opt/tak/logs
+      - ${ATAK_ROOT:?set ATAK_ROOT in .env}/conf/retention:/opt/tak/conf/retention
+    environment:
+      NATS_HOST: host.docker.internal
+      NATS_PORT: "4222"
+      CONFIG_MAX_HEAP: "128"
+      MESSAGING_MAX_HEAP: "650"
+      API_MAX_HEAP: "512"
+      RETENTION_MAX_HEAP: "150"
+      PLUGIN_MANAGER_MAX_HEAP: "150"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      takserver-net:
+        ipv4_address: 172.28.0.3
+
+  murmur:
+    image: mumblevoip/mumble-server:latest
+    container_name: murmur
+    hostname: murmur
+    restart: unless-stopped
+    ports:
+      - "64738:64738/tcp"
+      - "64738:64738/udp"
+    environment:
+      # Official image env is MUMBLE_SUPERUSER_PASSWORD (not MURMUR_...).
+      MUMBLE_SUPERUSER_PASSWORD: ${MUMBLE_SUPERUSER_PASSWORD:?set MUMBLE_SUPERUSER_PASSWORD in .env}
+      MUMBLE_CONFIG_WELCOMETEXT: ${MUMBLE_CONFIG_WELCOMETEXT:-<br/>Welcome to OneMind Command.}
+      MUMBLE_CONFIG_USERS: ${MUMBLE_CONFIG_USERS:-100}
+      MUMBLE_CONFIG_BANDWIDTH: ${MUMBLE_CONFIG_BANDWIDTH:-128000}
+      MUMBLE_CONFIG_PORT: "64738"
+    volumes:
+      - ${MURMUR_ROOT:?set MURMUR_ROOT in .env}/data:/data
+      - ${MURMUR_ROOT:?set MURMUR_ROOT in .env}/config:/config
+
+volumes:
+  # Reuse the live TAK database volume. Do not rename unless intentionally migrating DB state.
+  tak-db-data:
+    external: true
+    name: takserver-docker-57-release-43_tak-db-data
+
+networks:
+  takserver-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

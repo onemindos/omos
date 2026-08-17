@@ -1,0 +1,10 @@
+# Secrets and generated device material — never commit
+.env
+secrets/*
+exports/*
+device-packages/*
+*.p12
+*.jks
+*.key
+*.pem
+!.gitignore

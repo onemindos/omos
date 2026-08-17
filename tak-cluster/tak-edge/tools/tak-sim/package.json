@@ -1,0 +1,20 @@
+{
+  "name": "tak-sim",
+  "version": "1.0.0",
+  "description": "TAK simulation stack — virtual drones, geofences, AI decisions, live ATAK map",
+  "type": "module",
+  "scripts": {
+    "sim": "tsx src/index.ts",
+    "drone-only": "tsx src/drone-simulator.ts",
+    "ai-agent": "tsx src/ai-tak-agent.ts"
+  },
+  "dependencies": {
+    "nats": "^2.29.3",
+    "xmlbuilder2": "^3.1.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "@types/node": "^22.0.0"
+  }
+}

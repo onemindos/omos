@@ -1,0 +1,31 @@
+device_id: omos-ipad
+owner: zeus
+callsign: zeus-pad
+platform: ios
+client: itak
+hardware: iPad
+tak:
+  user: omos-ipad
+  group: Red
+  role: Team Member
+  cert_cn: omos-ipad
+connection:
+  primary: tailscale
+  tailscale_host: 100.74.182.117   # TAK server (omos-mbp)
+  lan_host: 192.168.1.183
+  port: 8089
+  protocol: ssl
+tailscale:
+  node: omos-ipad
+  ip: 100.93.208.36
+  active: true
+loadout: ios-itak
+voice:
+  murmur_user: zeus-pad
+provisioning:
+  method: manual                   # iOS: no adb — iTAK + AirDrop/HTTPS enrollment
+  cert_issued: true
+  installed: false                 # install iTAK from App Store
+  connected: false
+notes: >
+  iPad — larger map surface for command/overview. Enroll via devices/scripts/ios-enroll.md.

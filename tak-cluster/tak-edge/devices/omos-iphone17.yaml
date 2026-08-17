@@ -1,0 +1,32 @@
+device_id: omos-iphone17
+owner: zeus
+callsign: zeus
+platform: ios
+client: itak
+hardware: iPhone
+tak:
+  user: omos-iphone17
+  group: Red
+  role: Team Lead
+  cert_cn: omos-iphone17
+connection:
+  primary: tailscale
+  tailscale_host: 100.74.182.117   # TAK server (omos-mbp)
+  lan_host: 192.168.1.183
+  port: 8089
+  protocol: ssl
+tailscale:
+  node: omos-iphone17
+  ip: 100.122.203.68
+  active: true
+loadout: ios-itak
+voice:
+  murmur_user: zeus                # Mumble iOS client, server 100.74.182.117:64738
+provisioning:
+  method: manual                   # iOS: no adb — iTAK + AirDrop/HTTPS enrollment
+  cert_issued: true
+  installed: false                 # install iTAK from App Store
+  connected: false
+notes: >
+  Zeus primary phone / command handset. Enroll via devices/scripts/ios-enroll.md
+  (HTTPS enrollment over Tailscale is cleanest).

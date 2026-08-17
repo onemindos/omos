@@ -1,0 +1,10 @@
+# Injection certs and keys — secrets, never commit
+certs/*.pem
+certs/*.key
+certs/*.p12
+
+# Generated enrollment packages (bundle certs + passwords)
+packages/*.zip
+
+# macOS
+.DS_Store
