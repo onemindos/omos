@@ -54,10 +54,10 @@ jobs:
           PLUGINS_DIR=cloudtak-upstream/api/web/plugins
           mkdir -p "$PLUGINS_DIR"
 
-          git clone --depth 1 https://github.com/onemindos/omos-ai-plugin.git \
-            "$PLUGINS_DIR/omos-ai-plugin"
-          git clone --depth 1 https://github.com/onemindos/omos-nats-plugin.git \
-            "$PLUGINS_DIR/omos-nats-plugin"
+          git clone --depth 1 https://github.com/onemindos/cloudtak-plugin-legacy-ai.git \
+            "$PLUGINS_DIR/cloudtak-plugin-legacy-ai"
+          git clone --depth 1 https://github.com/onemindos/cloudtak-plugin-nats.git \
+            "$PLUGINS_DIR/cloudtak-plugin-nats"
 
           # Inject plugin deps into CloudTAK's web package.json and regenerate
           # the lockfile so Docker's npm install picks them up.
