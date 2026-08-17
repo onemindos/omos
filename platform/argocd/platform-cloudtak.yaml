@@ -2,8 +2,10 @@
 #
 # Covers: platform/cloudtak/
 #
-# plugin-onemind-ai/ contains TypeScript source — excluded from sync.
-# DEPLOY-RUNBOOK.md excluded as non-manifest.
+# Image: ghcr.io/onemindos/cloudtak-api:latest
+# Plugins loaded at image build time via WEB_PLUGINS in build-cloudtak.yml:
+#   - onemindos/omos-ai-plugin
+#   - onemindos/omos-nats-plugin
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,7 +21,7 @@ spec:
     path: platform/cloudtak
     directory:
       recurse: false
-      exclude: "*.secret*,*.env,DEPLOY-RUNBOOK.md,plugin-onemind-ai/**"
+      exclude: "*.secret*,*.env,DEPLOY-RUNBOOK.md"
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudtak

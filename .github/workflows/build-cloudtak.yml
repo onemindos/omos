@@ -1,21 +1,26 @@
 name: Build CloudTAK → GHCR
 
 # Builds ghcr.io/onemindos/cloudtak-api:latest from upstream dfpc-coe/CloudTAK
-# with the OneMind AI plugin compiled in.
+# with the OneMind plugins loaded via WEB_PLUGINS at build time.
 #
-# Plugin source: platform/cloudtak/plugin-onemind-ai/ (this repo)
-# Plugin destination: api/web/plugins/onemind-ai/ inside the upstream clone
+# Plugins (source of truth — standalone repos):
+#   onemindos/omos-ai-plugin   — Legacy AI chat panel, bottom bar
+#   onemindos/omos-nats-plugin — NATS fabric operator console
 #
-# CloudTAK's main.ts glob-imports  ../plugins/*/index.ts  at Vite build time —
-# dropping our plugin folder there is all it takes to compile it in.
-# No WEB_PLUGINS build arg needed; plugin is baked via COPY in the Dockerfile.
+# Upstream CloudTAK Dockerfile runs: node bin/plugin.ts
+# which git-clones each WEB_PLUGINS URL into api/web/plugins/<name>/
+# then the Vite build picks them up via glob: ../plugins/*/index.ts
+#
+# Trigger this workflow manually or push to either plugin repo
+# (each has a repository_dispatch webhook targeting omos-infra).
 
 on:
   push:
     branches: [main]
     paths:
       - ".github/workflows/build-cloudtak.yml"
-      - "platform/cloudtak/plugin-onemind-ai/**"
+  repository_dispatch:
+    types: [plugin-updated]
   workflow_dispatch:
 
 jobs:
@@ -28,9 +33,6 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout omos-infra
-        uses: actions/checkout@v4
-
       - name: Resolve latest CloudTAK release tag
         id: cloudtak_version
         run: |
@@ -44,15 +46,6 @@ jobs:
           git clone --depth 1 --branch "${{ steps.cloudtak_version.outputs.tag }}" \
             https://github.com/dfpc-coe/CloudTAK.git cloudtak-upstream
 
-      - name: Copy OneMind AI plugin into CloudTAK plugin directory
-        # main.ts glob: ../plugins/*/index.ts — plugin dir must be api/web/plugins/<name>/
-        run: |
-          PLUGIN_DST=cloudtak-upstream/api/web/plugins/onemind-ai
-          mkdir -p "$PLUGIN_DST"
-          cp -r platform/cloudtak/plugin-onemind-ai/. "$PLUGIN_DST/"
-          echo "==> Plugin files copied:"
-          find "$PLUGIN_DST" -type f
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -60,19 +53,17 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: zeus
-          # GHCR_PAT: Personal Access Token from github.com/settings/tokens
-          # Scopes: write:packages, read:packages, delete:packages
-          # Add as repo secret: Settings → Secrets → Actions → GHCR_PAT
-          password: ${{ secrets.GHCR_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push CloudTAK API image
         uses: docker/build-push-action@v6
         with:
-          # Context is the cloudtak-upstream/api dir (Dockerfile lives there)
           context: cloudtak-upstream/api
           file: cloudtak-upstream/api/Dockerfile
           push: true
+          build-args: |
+            WEB_PLUGINS=https://github.com/onemindos/omos-ai-plugin.git,https://github.com/onemindos/omos-nats-plugin.git
           tags: |
             ghcr.io/onemindos/cloudtak-api:latest
             ghcr.io/onemindos/cloudtak-api:${{ steps.cloudtak_version.outputs.tag }}-onemind
