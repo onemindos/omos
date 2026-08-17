@@ -59,8 +59,9 @@ jobs:
           git clone --depth 1 https://github.com/onemindos/omos-nats-plugin.git \
             "$PLUGINS_DIR/omos-nats-plugin"
 
-          # Inject plugin deps into CloudTAK's web package.json so Docker's npm install
-          # resolves them. nats.ws and lucide-vue-next are used by omos-nats-plugin.
+          # Inject plugin deps into CloudTAK's web package.json and regenerate
+          # the lockfile so Docker's npm install picks them up.
+          # nats.ws and lucide-vue-next are used by omos-nats-plugin.
           cd cloudtak-upstream/api/web
           node -e "
             const fs = require('fs');
@@ -70,9 +71,9 @@ jobs:
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4));
             console.log('Injected plugin deps into package.json');
           "
-
-          # Also disable WEB_PLUGINS build-arg since we've pre-cloned
-          echo "Plugins pre-cloned — WEB_PLUGINS build-arg set to empty"
+          # Regenerate lockfile so Docker layer cache includes the new deps
+          npm install --package-lock-only
+          echo "package-lock.json updated with plugin deps"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
