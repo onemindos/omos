@@ -35,7 +35,7 @@ spec:
         exclude: "*.secret*,*.env"
     - repoURL: https://github.com/onemindos/omos-infra.git
       targetRevision: HEAD
-      path: platform/external-secrets
+      path: platform/sealed-secrets
       directory:
         recurse: true
         exclude: "*.secret*,*.env"

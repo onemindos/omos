@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gastbob-nats-ui
+  namespace: nats-tools
+  annotations:
+    tailscale.com/hostname: gastbob-nats-ui
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: gastbob-nats-ui
+      port:
+        number: 3000
+  tls:
+    - hosts:
+        - gastbob-nats-ui

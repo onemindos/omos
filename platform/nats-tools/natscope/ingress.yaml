@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: natscope
+  namespace: nats-tools
+  annotations:
+    tailscale.com/hostname: natscope
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: natscope
+      port:
+        number: 4280
+  tls:
+    - hosts:
+        - natscope

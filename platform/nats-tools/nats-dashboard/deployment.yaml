@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-dashboard
+  namespace: nats-tools
+  labels:
+    app.kubernetes.io/name: nats-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nats-dashboard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nats-dashboard
+    spec:
+      containers:
+        - name: nats-dashboard
+          image: ghcr.io/onemindos/nats-dashboard:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: NATS_NAME
+              value: "OneMind K8s"
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: nats-creds
+                  key: NATS_WS_URL
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: nats-creds
+                  key: SYS_USER
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nats-creds
+                  key: SYS_PASSWORD
+            - name: NATS_MONITORING_URL
+              valueFrom:
+                secretKeyRef:
+                  name: nats-creds
+                  key: NATS_MONITORING_URL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-dashboard
+  namespace: nats-tools
+  labels:
+    app.kubernetes.io/name: nats-dashboard
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: nats-dashboard
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http

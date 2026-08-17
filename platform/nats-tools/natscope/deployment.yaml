@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: natscope
+  namespace: nats-tools
+  labels:
+    app.kubernetes.io/name: natscope
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: natscope
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: natscope
+    spec:
+      containers:
+        - name: natscope
+          image: ghcr.io/onemindos/natscope:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 4280
+          env:
+            - name: ALLOW_INSECURE
+              value: "true"
+            - name: GRPC_WEB_ADDRESS
+              value: "0.0.0.0:4280"
+            - name: ALLOW_REMOTE
+              value: "true"
+            - name: SECRETS__BACKEND
+              value: "file"
+            - name: STORAGE__LOCAL__DATA_DIR
+              value: "/data"
+          volumeMounts:
+            - name: natscope-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+      volumes:
+        - name: natscope-data
+          persistentVolumeClaim:
+            claimName: natscope-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: natscope
+  namespace: nats-tools
+  labels:
+    app.kubernetes.io/name: natscope
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: natscope
+  ports:
+    - name: http
+      port: 4280
+      targetPort: http
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: natscope-data
+  namespace: nats-tools
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi

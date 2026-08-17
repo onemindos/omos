@@ -159,15 +159,29 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | cert-manager | cert-manager |
 | ingress-nginx | ingress-nginx |
 | tailscale | Tailscale operator |
-| external-secrets | ESO + 1Password Connect (secret sync) |
+| kube-system | sealed-secrets-controller (secret decryption) |
 
 ## Secrets Convention
 
-**All secrets are managed by External Secrets Operator (ESO) + 1Password Connect.** Source of truth is 1Password vault `00-24 SO (Sovereign Operations)`. Never create secrets manually — add them to 1Password and write an ExternalSecret YAML in `platform/{service}/external-secret.yaml`.
+**All secrets are managed by Sealed Secrets.** Source of truth is encrypted SealedSecret YAMLs committed to this repo. The sealed-secrets controller (kube-system) decrypts them using the cluster private key.
 
-**Standard:** One 1Password item per K8s secret. Item title = K8s secret name. Flat fields (no sections). All tagged `k8s-secret, omos-hub`.
+**To add or rotate a secret:**
+```bash
+# Fetch cluster public key
+kubeseal --fetch-cert --controller-name=sealed-secrets-controller \
+  --controller-namespace=kube-system > /tmp/pub-cert.pem
 
-**ExternalSecret location:** `platform/{service}/external-secret.yaml` (for services), `tak-cluster/deploy/external-secret.yaml` (for tak-nats-leaf).
+# Create and seal
+kubectl create secret generic <name> -n <namespace> \
+  --from-literal=KEY=value \
+  --dry-run=client -o json \
+  | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
+  > platform/<namespace>/<name>.sealedsecret.yaml
+
+# Commit and push — ArgoCD applies it automatically
+```
+
+**SealedSecret location:** `platform/{namespace}/{secret-name}.sealedsecret.yaml`
 
 | Secret name | Namespace | What it holds | ESO ExternalSecret |
 |-------------|-----------|---------------|--------------------|

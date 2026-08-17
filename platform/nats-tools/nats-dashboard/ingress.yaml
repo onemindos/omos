@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nats-dashboard
+  namespace: nats-tools
+  annotations:
+    tailscale.com/hostname: nats-dashboard
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: nats-dashboard
+      port:
+        number: 3000
+  tls:
+    - hosts:
+        - nats-dashboard

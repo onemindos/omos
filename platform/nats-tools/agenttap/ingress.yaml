@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agenttap
+  namespace: nats-tools
+  annotations:
+    tailscale.com/hostname: agenttap
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: agenttap
+      port:
+        number: 8080
+  tls:
+    - hosts:
+        - agenttap
