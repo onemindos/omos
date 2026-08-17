@@ -76,38 +76,34 @@ jobs:
             context: .
           - name: agent-web-ui
             # Lives inside synadia-ai/synadia-agents monorepo — no upstream Dockerfile,
-            # omos-infra supplies one via platform/nats-tools/agent-web-ui/Dockerfile
+            # omos-infra supplies one via platform/nats-tools/agent-web-ui/Dockerfile.
+            # context is monorepo root so the local SDK file: dep resolves.
             repo: https://github.com/synadia-ai/synadia-agents.git
             dockerfile: examples/agent-web-ui/Dockerfile
-            context: examples/agent-web-ui
+            context: .
 
     steps:
       - name: Skip if not selected tool
         if: ${{ github.event.inputs.tool != '' && github.event.inputs.tool != matrix.tool.name }}
         run: echo "Skipping ${{ matrix.tool.name }}" && exit 0
 
+      - name: Checkout omos-infra (for patched Dockerfiles)
+        uses: actions/checkout@v4
+        with:
+          path: omos-infra
+
       - name: Clone upstream source
         run: git clone --depth 1 ${{ matrix.tool.repo }} src
-
-      - name: Apply onemindos patches
-        run: |
-          PATCH_DIR="${GITHUB_WORKSPACE}/../platform/nats-tools/${{ matrix.tool.name }}/patches"
-          if [ -d "$PATCH_DIR" ]; then
-            for p in "$PATCH_DIR"/*.patch; do
-              echo "Applying patch: $p"
-              git -C src apply "$p"
-            done
-          fi
 
       - name: Apply Dockerfile fixes
         # Copy patched Dockerfiles from omos-infra if they exist
         run: |
-          FIXED_DOCKERFILE="platform/nats-tools/${{ matrix.tool.name }}/Dockerfile"
+          FIXED_DOCKERFILE="omos-infra/platform/nats-tools/${{ matrix.tool.name }}/Dockerfile"
           if [ -f "$FIXED_DOCKERFILE" ]; then
+            mkdir -p "src/$(dirname ${{ matrix.tool.dockerfile }})"
             cp "$FIXED_DOCKERFILE" "src/${{ matrix.tool.dockerfile }}"
             echo "Applied fixed Dockerfile for ${{ matrix.tool.name }}"
           fi
-        working-directory: ${{ github.workspace }}/..
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
