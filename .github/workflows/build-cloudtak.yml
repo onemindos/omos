@@ -46,6 +46,34 @@ jobs:
           git clone --depth 1 --branch "${{ steps.cloudtak_version.outputs.tag }}" \
             https://github.com/dfpc-coe/CloudTAK.git cloudtak-upstream
 
+      - name: Clone plugins and inject their deps into CloudTAK web package.json
+        # bin/plugin.ts runs inside Docker — clone plugins here so they're in the
+        # build context (no internet inside Docker). Also patch web/package.json to
+        # add plugin-only deps so the Docker npm install picks them up.
+        run: |
+          PLUGINS_DIR=cloudtak-upstream/api/web/plugins
+          mkdir -p "$PLUGINS_DIR"
+
+          git clone --depth 1 https://github.com/onemindos/omos-ai-plugin.git \
+            "$PLUGINS_DIR/omos-ai-plugin"
+          git clone --depth 1 https://github.com/onemindos/omos-nats-plugin.git \
+            "$PLUGINS_DIR/omos-nats-plugin"
+
+          # Inject plugin deps into CloudTAK's web package.json so Docker's npm install
+          # resolves them. nats.ws and lucide-vue-next are used by omos-nats-plugin.
+          cd cloudtak-upstream/api/web
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.dependencies['nats.ws'] = '^1.30.3';
+            pkg.dependencies['lucide-vue-next'] = '^0.513.0';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4));
+            console.log('Injected plugin deps into package.json');
+          "
+
+          # Also disable WEB_PLUGINS build-arg since we've pre-cloned
+          echo "Plugins pre-cloned — WEB_PLUGINS build-arg set to empty"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -62,8 +90,6 @@ jobs:
           context: cloudtak-upstream/api
           file: cloudtak-upstream/api/Dockerfile
           push: true
-          build-args: |
-            WEB_PLUGINS=https://github.com/onemindos/omos-ai-plugin.git,https://github.com/onemindos/omos-nats-plugin.git
           tags: |
             ghcr.io/onemindos/cloudtak-api:latest
             ghcr.io/onemindos/cloudtak-api:${{ steps.cloudtak_version.outputs.tag }}-onemind
