@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-intel
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/intel
+    directory:
+      recurse: true
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: intel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shadowbroker-backend
+  namespace: intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shadowbroker-backend
+  template:
+    metadata:
+      labels:
+        app: shadowbroker-backend
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: backend
+          image: ghcr.io/bigbodycobain/shadowbroker-backend:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: shadowbroker-secrets
+          env:
+            - name: MESH_INFONET_FLEET_JOIN
+              value: "true"
+            - name: SHADOWBROKER_TRUST_DOCKER_BRIDGE_LOCAL_OPERATOR
+              value: "1"
+            - name: SHADOWBROKER_TRUSTED_FRONTEND_HOSTS
+              value: "shadowbroker-frontend"
+            - name: NEWS_ENABLED
+              value: "true"
+            - name: TELEGRAM_OSINT_ENABLED
+              value: "true"
+          volumeMounts:
+            - name: backend-data
+              mountPath: /app/data
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 5
+      volumes:
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: shadowbroker-backend-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shadowbroker-frontend
+  namespace: intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shadowbroker-frontend
+  template:
+    metadata:
+      labels:
+        app: shadowbroker-frontend
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: frontend
+          image: ghcr.io/bigbodycobain/shadowbroker-frontend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: BACKEND_URL
+              value: "http://shadowbroker-backend:8000"
+            - name: ADMIN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shadowbroker-secrets
+                  key: ADMIN_KEY
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shadowbroker-backend
+  namespace: intel
+spec:
+  selector:
+    app: shadowbroker-backend
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shadowbroker-frontend
+  namespace: intel
+spec:
+  selector:
+    app: shadowbroker-frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shadowbroker-backend-data
+  namespace: intel
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi

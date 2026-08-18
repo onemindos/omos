@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crucix
+  namespace: intel
+  annotations:
+    tailscale.com/hostname: crucix
+spec:
+  ingressClassName: tailscale
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: crucix
+                port:
+                  number: 3117

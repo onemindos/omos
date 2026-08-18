@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osiris
+  namespace: intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osiris
+  template:
+    metadata:
+      labels:
+        app: osiris
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: osiris
+          image: ghcr.io/onemindos/osiris:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_OPTIONS
+              value: "--dns-result-order=ipv4first"
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3000"
+            - name: HOSTNAME
+              value: "0.0.0.0"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 15
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osiris-intel
+  namespace: intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osiris-intel
+  template:
+    metadata:
+      labels:
+        app: osiris-intel
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: osiris-intel
+          image: ghcr.io/onemindos/osiris-intel:latest
+          ports:
+            - containerPort: 4000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osiris-cache
+  namespace: intel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osiris-cache
+  template:
+    metadata:
+      labels:
+        app: osiris-cache
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: osiris-nginx-config
+        - name: nginx-cache
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osiris
+  namespace: intel
+spec:
+  selector:
+    app: osiris
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osiris-intel
+  namespace: intel
+spec:
+  selector:
+    app: osiris-intel
+  ports:
+    - port: 4000
+      targetPort: 4000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osiris-cache
+  namespace: intel
+spec:
+  selector:
+    app: osiris-cache
+  ports:
+    - port: 8080
+      targetPort: 8080
