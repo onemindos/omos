@@ -133,7 +133,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | Grafana/Loki/Tempo | monitoring | (helm) | live |
 | Cloudflared | cloudflare | cloudflare/cloudflared | live |
 | ORP (fusion engine) | orp | ghcr.io/onemindos/orp:latest | live |
-| Authentik | authentik | ghcr.io/goauthentik/server (helm) | live |
+| Authentik | authentik | ghcr.io/goauthentik/server (helm) | NOT DEPLOYED |
 | omos-tak-projector | omos | python:3.12-alpine (inline script) | live |
 | omos-ui | omos | ghcr.io/onemindos/omos-ui:latest | IN PROGRESS — Unified NATS Ops Center |
 | omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | PLANNED Wave 2 |

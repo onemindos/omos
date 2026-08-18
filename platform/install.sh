@@ -54,8 +54,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/hermes-webui/external-secret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/external-secret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/ingress/external-secret.yaml"
 kubectl --context "$CTX" apply -f "$REPO_ROOT/tak-cluster/deploy/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/authentik/external-secret.yaml"
-
 # Wait for secrets to sync before deploying services
 sleep 15
 
@@ -194,32 +192,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/orp/deployment.yaml"
 # 8. OMOS SERVICES — shared omos namespace (tak-projector, feed-world, etc.)
 # Secrets (omos-nats-creds) synced from 1Password by ESO (step 0)
 # -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-# 7b. AUTHENTIK — IdP for onemindos.dev, Forward Auth for ATOC + ATLAS
-# Secrets (authentik-env) synced from 1Password by ESO (step 0)
-# Bootstrap DB (one-time):
-#   kubectl exec -n cloudtak deploy/cloudtak-postgis -- \
-#     psql -U postgres -c "CREATE USER authentik WITH PASSWORD '<from 1Password>';"
-#   kubectl exec -n cloudtak deploy/cloudtak-postgis -- \
-#     psql -U postgres -c "CREATE DATABASE authentik OWNER authentik;"
-# After deploy: visit https://auth.onemindos.dev/if/flow/initial-setup/
-# to set the admin password, then configure the Embedded Outpost URL:
-#   Authentik Admin → System → Outposts → embedded → Edit
-#   Set Authentik URL: https://auth.onemindos.dev
-# -----------------------------------------------------------------------------
-helm repo add authentik https://charts.goauthentik.io --force-update
-kubectl --context "$CTX" apply -f "$PLATFORM/authentik/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/authentik/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/authentik/cloudflare-route.yaml"
-
-# Wait for secret to sync before Helm reads it
-kubectl --context "$CTX" wait --for=condition=Ready externalsecret/authentik-env \
-  -n authentik --timeout=60s 2>/dev/null || true
-
-helm upgrade --install authentik authentik/authentik \
-  --kube-context "$CTX" -n authentik \
-  -f "$PLATFORM/authentik/helm-values.yaml"
-
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/deployment.yaml"
