@@ -14,7 +14,7 @@ spec:
         app: cloudtak-events
     spec:
       imagePullSecrets:
-        - name: ghcr-onemindos
+        - name: ghcr
       containers:
         - name: events
           image: ghcr.io/onemindos/cloudtak-events:latest

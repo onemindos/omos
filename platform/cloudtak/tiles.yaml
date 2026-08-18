@@ -14,7 +14,7 @@ spec:
         app: cloudtak-tiles
     spec:
       imagePullSecrets:
-        - name: ghcr-onemindos
+        - name: ghcr
       containers:
         - name: tiles
           image: ghcr.io/onemindos/cloudtak-tiles:latest

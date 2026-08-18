@@ -3,7 +3,7 @@
 # postgresPassword preset here so the bitnami superuser matches CoreConfig from first boot
 # (no post-install ALTER USER needed). Resources sized for 3x s-4vcpu-8gb (~6.5Gi alloc/node)
 # already hosting argocd/prometheus/ingress-nginx/etc.
-imagePullSecret: ghcr-onemindos
+imagePullSecret: ghcr
 imagePullPolicy: Always
 certConfigMapName: cert-migration
 coreConfigMapName: core-config
@@ -98,7 +98,7 @@ ignite:
     tag: 2.17.0
     pullPolicy: Always
   imagePullSecrets:                 # ignite subchart SA needs this (DOCR); patched into SA template
-    - name: ghcr-onemindos
+    - name: ghcr
   serviceAccount:
     name: takserver-ignite
   persistence:
