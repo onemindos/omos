@@ -11,7 +11,7 @@ metadata:
   labels:
     app: valhalla
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: valhalla
@@ -50,7 +50,7 @@ spec:
               memory: 1Gi
       containers:
         - name: valhalla
-          image: valhallateam/valhalla:latest
+          image: valhalla/valhalla:run-latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8002
@@ -126,7 +126,7 @@ metadata:
   labels:
     app: overpass
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: overpass
