@@ -8,7 +8,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLb          labels:
+    matchLabels:
       app.kubernetes.io/name: nats-dashboard
   template:
     metadata:
