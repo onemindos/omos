@@ -8,18 +8,16 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels:
+    matchLb          labels:
       app.kubernetes.io/name: nats-dashboard
   template:
     metadata:
       labels:
         app.kubernetes.io/name: nats-dashboard
     spec:
-      imagePullSecrets:
-        - name: ghcr
       containers:
         - name: nats-dashboard
-          image: ghcr.io/onemindos/nats-dashboard:latest
+          image: sahilkhaire/nats-dashboard:latest
           imagePullPolicy: Always
           ports:
             - name: http
