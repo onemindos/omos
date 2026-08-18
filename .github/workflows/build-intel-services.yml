@@ -61,6 +61,8 @@ jobs:
             repo: https://github.com/silvertakana/worldwideview.git
             dockerfile: Dockerfile
             context: .
+            # arm64 Prisma generate fails under QEMU — cluster is amd64 only
+            platforms: linux/amd64
           - name: crucix
             repo: https://github.com/calesthio/Crucix.git
             dockerfile: Dockerfile
@@ -107,4 +109,4 @@ jobs:
           tags: ghcr.io/onemindos/${{ matrix.service.name }}:latest
           cache-from: type=gha,scope=${{ matrix.service.name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service.name }}
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.service.platforms || 'linux/amd64,linux/arm64' }}
