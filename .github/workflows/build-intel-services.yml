@@ -48,7 +48,7 @@ jobs:
           - name: worldmonitor-redis-rest
             repo: https://github.com/koala73/worldmonitor.git
             dockerfile: docker/Dockerfile.redis-rest
-            context: .
+            context: docker
           - name: osiris
             repo: https://github.com/simplifaisoul/osiris.git
             dockerfile: Dockerfile
