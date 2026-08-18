@@ -26,10 +26,7 @@ spec:
               containerPort: 3300
           env:
             - name: NATS_URL
-              valueFrom:
-                secretKeyRef:
-                  name: nats-creds
-                  key: NATS_WS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
             - name: NATS_USER
               valueFrom:
                 secretKeyRef:
