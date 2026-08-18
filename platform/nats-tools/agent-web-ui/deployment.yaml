@@ -27,6 +27,8 @@ spec:
           env:
             - name: NATS_URL
               value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
             - name: NATS_USER
               valueFrom:
                 secretKeyRef:
