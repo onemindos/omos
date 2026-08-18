@@ -27,6 +27,11 @@ COPY --from=builder /app/client-sdk/typescript/dist ./client-sdk/typescript/dist
 COPY --from=builder /app/client-sdk/typescript/package.json ./client-sdk/typescript/package.json
 COPY --from=builder /app/examples/agent-web-ui ./examples/agent-web-ui
 
+# Patch: inject tls.rejectUnauthorized=false so it connects to the internal
+# NATS cluster that uses a self-signed CA (cluster-internal TLS, port 4222).
+RUN sed -i 's/return { ...parseNatsUrl(config.servers), name: "testui" };/return { ...parseNatsUrl(config.servers), name: "testui", tls: { rejectUnauthorized: false } };/' \
+    /app/examples/agent-web-ui/server/index.ts
+
 WORKDIR /app/examples/agent-web-ui
 
 ENV NODE_ENV=production
