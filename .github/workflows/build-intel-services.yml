@@ -71,8 +71,22 @@ jobs:
         if: ${{ github.event.inputs.service != '' && github.event.inputs.service != matrix.service.name }}
         run: echo "Skipping ${{ matrix.service.name }}" && exit 0
 
+      - name: Checkout omos-infra (for patched Dockerfiles)
+        uses: actions/checkout@v4
+        with:
+          path: omos-infra
+
       - name: Clone upstream source
         run: git clone --depth 1 ${{ matrix.service.repo }} src
+
+      - name: Apply Dockerfile fixes
+        run: |
+          FIXED="omos-infra/platform/intel/${{ matrix.service.name }}/Dockerfile"
+          if [ -f "$FIXED" ]; then
+            mkdir -p "src/$(dirname ${{ matrix.service.dockerfile }})"
+            cp "$FIXED" "src/${{ matrix.service.dockerfile }}"
+            echo "Applied patched Dockerfile for ${{ matrix.service.name }}"
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
