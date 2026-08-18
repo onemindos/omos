@@ -24,7 +24,7 @@ spec:
           ports:
             - name: http
               containerPort: 8088
-          args: ["-addr", "0.0.0.0:8088", "-demo"]
+          command: ["./agentweb", "-addr", "0.0.0.0:8088", "-demo"]
           resources:
             requests:
               cpu: 50m
