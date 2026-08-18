@@ -34,12 +34,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: nats-creds
-                  key: ONEMIND_USER
+                  key: onemind-user
             - name: NATS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: nats-creds
-                  key: ONEMIND_PASSWORD
+                  key: onemind-password
           resources:
             requests:
               cpu: 50m

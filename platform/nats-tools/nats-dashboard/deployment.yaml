@@ -38,12 +38,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: nats-creds
-                  key: SYS_USER
+                  key: sys-user
             - name: NATS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: nats-creds
-                  key: SYS_PASSWORD
+                  key: sys-password
             - name: NATS_MONITORING_URL
               valueFrom:
                 secretKeyRef:
