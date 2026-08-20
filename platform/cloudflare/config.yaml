@@ -10,6 +10,16 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
+      # ── CloudTAK (primary domain + legacy alias) ───────────────────────
+      - hostname: onemindos.dev
+        service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+      - hostname: tiles.onemindos.dev
+        service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
+      - hostname: atoc.onemindos.dev
+        service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+      - hostname: tiles.atoc.onemindos.dev
+        service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
+      # ── Core infra ────────────────────────────────────────────────────────
       - hostname: grafana.onemindos.dev
         service: http://monitoring-grafana.monitoring.svc.cluster.local:80
       - hostname: argocd.onemindos.dev
@@ -18,20 +28,8 @@ data:
           noTLSVerify: true
       - hostname: hermes.onemindos.dev
         service: http://hermes-webui.hermes.svc.cluster.local:8787
-      - hostname: homepage.onemindos.dev
-        service: http://homepage.homepage.svc.cluster.local:3000
-      - hostname: wwv.onemindos.dev
-        service: http://wwv.wwv.svc.cluster.local:3000
-      - hostname: atoc.onemindos.dev
-        service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
-      - hostname: tiles.atoc.onemindos.dev
-        service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
-      - hostname: legacy-ai.onemindos.dev
-        service: http://synadia-bridge.synadia-bridge.svc.cluster.local:3300
-      - hostname: onemindos.dev
-        service: http://omos-ui.omos.svc.cluster.local:80
+      # ── NATS WebSocket (browser SPA) ─────────────────────────────────────
       - hostname: ws.onemindos.dev
         service: http://nats.nats.svc.cluster.local:8080
-      - hostname: auth.onemindos.dev
-        service: http://authentik-server.authentik.svc.cluster.local:80
+      # ── Catch-all ────────────────────────────────────────────────────────
       - service: http_status:404
