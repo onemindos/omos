@@ -44,7 +44,7 @@ takserver:
   api:                      # Marti API / WebTAK / cert enrollment
     image: {repository: <DOCR>/takserver-api, tag: "5.7-onemind"}
     replicas: 1
-    resources: {requests: {cpu: 1, memory: 3Gi}, limits: {cpu: 2, memory: 3Gi}}
+    resources: {requests: {cpu: 1, memory: 4Gi}, limits: {cpu: 2, memory: 4Gi}}
 
   # plugins tier runs Zeus's NATS bridge → the OneMind bus. Plugin is baked into this image.
   plugins:
