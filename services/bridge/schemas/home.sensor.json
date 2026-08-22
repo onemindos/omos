@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/home.sensor.json",
+  "title": "Home Sensor",
+  "description": "Data payload for msg_type 'sensor'. Carries a Home Assistant sensor entity state snapshot, including state value, unit, device class, and arbitrary attributes.",
+  "type": "object",
+  "required": [
+    "entity_id",
+    "friendly_name",
+    "state",
+    "unit",
+    "device_class",
+    "attributes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "entity_id": {
+      "type": "string",
+      "description": "Home Assistant entity ID (e.g. 'sensor.living_room_temp')."
+    },
+    "friendly_name": {
+      "type": "string",
+      "description": "Human-readable display name for the entity."
+    },
+    "state": {
+      "type": "string",
+      "description": "Current state value as a string (e.g. '21.5', 'on', 'unavailable')."
+    },
+    "unit": {
+      "type": ["string", "null"],
+      "description": "Unit of measurement (e.g. '°C', 'W', '%'). Null if not applicable."
+    },
+    "device_class": {
+      "type": ["string", "null"],
+      "description": "Home Assistant device class (e.g. 'temperature', 'humidity', 'power'). Null if not set."
+    },
+    "attributes": {
+      "type": "object",
+      "description": "Additional entity attributes as reported by Home Assistant.",
+      "additionalProperties": true
+    }
+  }
+}
