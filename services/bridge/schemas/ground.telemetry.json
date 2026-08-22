@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/ground.telemetry.json",
+  "title": "Ground Telemetry",
+  "description": "Data payload for msg_type 'telemetry'. Carries real-time telemetry from a ground vehicle or asset, covering position, motion, powertrain, and extensible custom fields.",
+  "type": "object",
+  "required": [
+    "entity_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "entity_id": {
+      "type": "string",
+      "description": "Unique identifier for the ground entity (e.g. 'vehicle-alpha-1', 'ugv-007')."
+    },
+    "speed_ms": {
+      "type": ["number", "null"],
+      "description": "Current speed in metres per second. Null if not available."
+    },
+    "heading_deg": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 360,
+      "description": "Current heading in degrees (0-360, clockwise from North). Null if not available."
+    },
+    "lat": {
+      "type": ["number", "null"],
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude in decimal degrees (WGS-84). Null if not available."
+    },
+    "lon": {
+      "type": ["number", "null"],
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude in decimal degrees (WGS-84). Null if not available."
+    },
+    "alt_m": {
+      "type": ["number", "null"],
+      "description": "Altitude above mean sea level in metres. Null if not available."
+    },
+    "rpm": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Engine or motor revolutions per minute. Null if not available."
+    },
+    "fuel_pct": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Fuel level as a percentage (0-100%). Null if not available."
+    },
+    "odometer_km": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Total odometer reading in kilometres. Null if not available."
+    },
+    "engine_temp_c": {
+      "type": ["number", "null"],
+      "description": "Engine coolant or core temperature in degrees Celsius. Null if not available."
+    },
+    "battery_v": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Main battery or electrical system voltage in volts. Null if not available."
+    },
+    "custom": {
+      "type": ["object", "null"],
+      "description": "Extensible map of vendor- or platform-specific telemetry fields. Null if not used.",
+      "additionalProperties": true
+    }
+  }
+}
