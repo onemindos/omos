@@ -1,0 +1,9 @@
+name: mavlink-bridge
+runtime: native
+entity: omos.bridge.mavlink
+env:
+  NATS_URL: $NATS_URL
+  BRIDGE_NAME: $BRIDGE_NAME
+  BRIDGE_ENTITY_ID: $BRIDGE_ENTITY_ID
+  DRONE_IP: $DRONE_IP
+  DRONE_PORT: $DRONE_PORT
