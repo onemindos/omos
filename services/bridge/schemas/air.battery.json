@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/air.battery.json",
+  "title": "Air Battery",
+  "description": "Data payload for msg_type 'battery'. Carries MAVLink-derived battery status for an airborne vehicle.",
+  "type": "object",
+  "required": [
+    "sys_id",
+    "comp_id",
+    "battery_id",
+    "function",
+    "type",
+    "temp_c",
+    "cell_voltages_mv",
+    "current_a",
+    "current_consumed_mah",
+    "energy_consumed_hj",
+    "remaining_pct"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sys_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink system ID (uint8)."
+    },
+    "comp_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink component ID (uint8)."
+    },
+    "battery_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "Battery instance ID (uint8)."
+    },
+    "function": {
+      "type": "string",
+      "description": "MAVLink MAV_BATTERY_FUNCTION enum label (e.g. 'UNKNOWN', 'ALL', 'PROPULSION', 'AVIONICS', 'PAYLOAD')."
+    },
+    "type": {
+      "type": "string",
+      "description": "MAVLink MAV_BATTERY_TYPE enum label (e.g. 'UNKNOWN', 'LIPO', 'LIFE', 'LION', 'NIMH')."
+    },
+    "temp_c": {
+      "type": "number",
+      "description": "Battery temperature in degrees Celsius. INT16_MAX when not known."
+    },
+    "cell_voltages_mv": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Individual cell voltages in millivolts. Use 65535 for cells not present."
+    },
+    "current_a": {
+      "type": "number",
+      "description": "Battery current in amperes. -1 if not measured."
+    },
+    "current_consumed_mah": {
+      "type": "integer",
+      "description": "Consumed charge in milliamp-hours. -1 if not measured."
+    },
+    "energy_consumed_hj": {
+      "type": "integer",
+      "description": "Consumed energy in 0.1 kJ (hecto-joules). -1 if not measured."
+    },
+    "remaining_pct": {
+      "type": "integer",
+      "minimum": -1,
+      "maximum": 100,
+      "description": "Remaining battery charge percentage. -1 if not estimated."
+    }
+  }
+}
