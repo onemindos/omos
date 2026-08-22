@@ -1,0 +1,5 @@
+# omos-meta (Meta Agent) dependencies
+nats-py>=2.6.0
+# Optional: the official Synadia caller SDK for richer streaming/session semantics.
+# The wire format is identical to the raw-NATS discovery used here, so this is drop-in.
+# synadia-ai-agents>=0.3.0
