@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/field.cot.json",
+  "title": "Field Cursor-on-Target (CoT)",
+  "description": "Data payload for msg_type 'cot'. Carries a parsed Cursor-on-Target (CoT) event as used in tactical field networks (TAK/ATAK/WinTAK), including position, error estimates, and raw detail XML.",
+  "type": "object",
+  "required": [
+    "uid",
+    "type",
+    "how",
+    "callsign",
+    "lat",
+    "lon",
+    "hae",
+    "ce",
+    "le",
+    "stale_at",
+    "detail_raw"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "uid": {
+      "type": "string",
+      "description": "Globally unique identifier for this CoT event/entity (e.g. 'ANDROID-abc123')."
+    },
+    "type": {
+      "type": "string",
+      "description": "CoT type string (e.g. 'a-f-G-U-C' for friendly ground unit, 'a-h-A-M-F-Q' for hostile fixed-wing). Follows the CoT type taxonomy."
+    },
+    "how": {
+      "type": "string",
+      "description": "CoT 'how' attribute indicating how the position was determined (e.g. 'm-g' for GPS, 'h-e' for human entered)."
+    },
+    "callsign": {
+      "type": "string",
+      "description": "Human-readable callsign or display name for this entity."
+    },
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude in decimal degrees (WGS-84)."
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude in decimal degrees (WGS-84)."
+    },
+    "hae": {
+      "type": "number",
+      "description": "Height above the WGS-84 ellipsoid in metres."
+    },
+    "ce": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Circular error (horizontal position error estimate) in metres at 90% confidence."
+    },
+    "le": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Linear error (vertical position error estimate) in metres at 90% confidence."
+    },
+    "stale_at": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds after which this CoT event should be considered stale."
+    },
+    "detail_raw": {
+      "type": ["string", "null"],
+      "description": "Raw XML string of the CoT <detail> element. Null if no detail element was present."
+    }
+  }
+}
