@@ -1,0 +1,148 @@
+# OneMind NATS Server — Account Topology Template
+# ----------------------------------------------------------------------------
+# This is the MIRRORABLE template. It contains NO secrets.
+# Passwords are injected from environment variables at render time:
+#   $CORE_PASSWORD  $FABRIC_PASSWORD  $INTERFACE_PASSWORD
+# The installer (install/) generates real values into ~/.nats/config/accounts.creds
+# (chmod 600, never committed) and renders the live config from this template.
+# ----------------------------------------------------------------------------
+
+# =============================================================================
+# OneMind OS - NATS Server Configuration (Mac Clamshell Hub)
+# Updated: 2026-06-10 — P1-A: Doctrine account layout (CORE/FABRIC/INTERFACE)
+# =============================================================================
+server_name: onemind-mac
+
+# Client connections
+port: 4222
+
+# HTTP monitoring (Tailscale-local only)
+http_port: 8222
+
+# Listen on all interfaces (Tailscale peers reach via Tailscale IP)
+host: 0.0.0.0
+
+# =============================================================================
+# ACCOUNTS — Doctrine §5 config-based account layout
+# Security domains: SYS (monitoring), CORE (agents), FABRIC (IoT/telemetry),
+# INTERFACE (apps). Cross-account sharing via explicit exports/imports only.
+# Credentials stored in ~/.nats/config/accounts.creds (chmod 600, not in repo).
+# =============================================================================
+system_account: SYS
+
+accounts {
+  SYS {
+    # Server observability — receives $SYS.> events from the server itself
+  }
+
+  CORE {
+    # Agents + meta services (Legacy, workers, om-meta, scheduling)
+    jetstream: enabled
+    users: [
+      { user: core, password: $CORE_PASSWORD }
+    ]
+    # Exports: evt.> (stream) and svc.> (service) to INTERFACE
+    exports: [
+      { stream: "evt.>" }
+      { service: "svc.>" }
+    ]
+    # Imports: tel.> (stream) from FABRIC
+    imports: [
+      { stream: { account: FABRIC, subject: "tel.>" } }
+    ]
+  }
+
+  FABRIC {
+    # Telemetry + IoT (sensors, bridges, ESP32, MQTT devices, robots)
+    jetstream: enabled
+    users: [
+      { user: fabric, password: $FABRIC_PASSWORD }
+    ]
+    # Exports: tel.> (stream) to CORE and INTERFACE
+    exports: [
+      { stream: "tel.>" }
+    ]
+  }
+
+  INTERFACE {
+    # Apps (Flutter/React cockpit) — read-only view via imports
+    # Explicitly deny publish to tel.> and cmd.> (those belong to FABRIC/CORE only)
+    jetstream: enabled
+    users: [
+      {
+        user: interface,
+        password: $INTERFACE_PASSWORD,
+        permissions: {
+          publish: {
+            deny: ["tel.>", "cmd.>"]
+          }
+          subscribe: {
+            allow: ["evt.>", "tel.>", "svc.>", "_INBOX.>"]
+          }
+        }
+      }
+    ]
+    # Imports: evt.> (stream) and svc.> (service) from CORE; tel.> (stream) from FABRIC
+    imports: [
+      { stream: { account: CORE, subject: "evt.>" } }
+      { service: { account: CORE, subject: "svc.>" } }
+      { stream: { account: FABRIC, subject: "tel.>" } }
+    ]
+  }
+
+  # DEPRECATED: migrate clients to accounts, then remove
+  GLOBAL {
+    # Default global account — unauthenticated / legacy clients
+    # Backward-compat: existing clients (OpenClaw subscribers, etc.) must not break.
+    jetstream: enabled
+    users: [
+      { user: onemind }
+    ]
+  }
+}
+
+# No-auth clients land in GLOBAL (backward compat — keep until all clients migrated)
+no_auth_user: onemind
+
+# =============================================================================
+# JETSTREAM
+# =============================================================================
+jetstream {
+  store_dir: "/Users/onemind/.nats/data"
+  max_mem: 1G
+  max_file: 10G
+  domain: onemind
+}
+
+# =============================================================================
+# LEAFNODES (Atlas and other machines connect here)
+# =============================================================================
+leafnodes {
+  port: 7422
+}
+
+# =============================================================================
+# WEBSOCKET (browser clients, iOS nats.swift app — no VPN needed)
+# =============================================================================
+websocket {
+  port: 8080
+  no_tls: true
+  same_origin: false
+}
+
+# =============================================================================
+# MQTT BRIDGE (IoT devices: SwitchBot, Zigbee, ESP32 — no separate broker)
+# Devices publish to mqtt topic → bridged to NATS subject automatically
+# MQTT topic "devices/plug/a886" → NATS subject "devices.plug.a886"
+# =============================================================================
+mqtt {
+  port: 1883
+}
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+debug: false
+trace: false
+logtime: true
+log_file: "/Users/onemind/.nats/nats-server.log"
