@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind · Live Bus</title>
+<script src="https://cdn.jsdelivr.net/npm/nats.ws@1.30.3/esm/nats.js" type="module"></script>
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#11161f; --panel2:#161d28; --line:#1e2735;
+    --txt:#d6e0f0; --dim:#7c8aa0; --cyan:#22d3ee; --amber:#f59e0b;
+    --emerald:#10b981; --purple:#a78bfa; --red:#ef4444; --pink:#ec4899;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:13px/1.5 ui-monospace,"SF Mono",Menlo,monospace;height:100vh;overflow:hidden}
+  #app{display:flex;flex-direction:column;height:100vh}
+  header{display:flex;align-items:center;gap:16px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+  header h1{font-size:15px;font-weight:600;letter-spacing:.5px}
+  header h1 .bolt{color:var(--amber)}
+  .status{display:flex;align-items:center;gap:7px;font-size:12px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--red);transition:.3s}
+  .dot.on{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+  .dot.connecting{background:var(--amber);animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.3}}
+  .spacer{flex:1}
+  .stat{font-size:12px;color:var(--dim)}
+  .stat b{color:var(--cyan);font-variant-numeric:tabular-nums}
+  .controls{display:flex;gap:8px;align-items:center;padding:8px 16px;background:var(--panel2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .controls input,.controls select{background:var(--bg);border:1px solid var(--line);color:var(--txt);padding:5px 9px;border-radius:6px;font:inherit;font-size:12px}
+  .controls input[type=text]{width:180px}
+  .controls button{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:5px 12px;border-radius:6px;cursor:pointer;font:inherit;font-size:12px;transition:.15s}
+  .controls button:hover{border-color:var(--cyan);color:var(--cyan)}
+  .controls button.active{background:var(--cyan);color:var(--bg);border-color:var(--cyan)}
+  .controls label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  main{flex:1;display:flex;overflow:hidden}
+  #stream{flex:1;overflow-y:auto;padding:4px 0}
+  .msg{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:4px 16px;border-bottom:1px solid #0d1219;animation:in .2s}
+  @keyframes in{from{opacity:0;transform:translateX(-6px)}}
+  .msg:hover{background:var(--panel)}
+  .msg .time{color:var(--dim);font-size:11px;padding-top:1px}
+  .msg .body{min-width:0}
+  .msg .subj{font-weight:600;word-break:break-all}
+  .msg .payload{color:var(--dim);white-space:pre-wrap;word-break:break-all;margin-top:2px;font-size:12px;max-height:200px;overflow:auto}
+  .subj.evt{color:var(--cyan)} .subj.tel{color:var(--emerald)} .subj.cmd{color:var(--amber)}
+  .subj.svc{color:var(--purple)} .subj.agents{color:var(--pink)} .subj.sys{color:var(--dim)}
+  .subj.events,.subj.devices{color:#64b5f6} .subj.other{color:var(--txt)}
+  aside{width:280px;background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:12px;flex-shrink:0}
+  aside h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:8px}
+  .subj-row{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;cursor:pointer;border-radius:4px;padding:3px 6px}
+  .subj-row:hover{background:var(--panel2)}
+  .subj-row .n{color:var(--cyan);font-variant-numeric:tabular-nums}
+  .empty{padding:40px 16px;text-align:center;color:var(--dim)}
+  .empty .big{font-size:15px;margin-bottom:8px;color:var(--txt)}
+  .paused{background:var(--amber)!important;color:var(--bg)!important;border-color:var(--amber)!important}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1><span class="bolt">⚡</span> OneMind · Live Bus</h1>
+    <div class="status"><span class="dot connecting" id="dot"></span><span id="statusTxt">connecting…</span></div>
+    <div class="spacer"></div>
+    <div class="stat">msgs <b id="count">0</b></div>
+    <div class="stat">rate <b id="rate">0</b>/s</div>
+    <div class="stat" id="server"></div>
+  </header>
+  <div class="controls">
+    <label>url</label>
+    <input type="text" id="url" value="ws://127.0.0.1:8080" style="width:200px">
+    <label>filter</label>
+    <input type="text" id="filter" value=">" placeholder="evt.>  tel.>  cmd.>">
+    <button id="connectBtn">connect</button>
+    <button id="pauseBtn">pause</button>
+    <button id="clearBtn">clear</button>
+    <div class="spacer"></div>
+    <label>quick</label>
+    <button class="qf" data-f=">">all</button>
+    <button class="qf" data-f="evt.>">evt</button>
+    <button class="qf" data-f="tel.>">tel</button>
+    <button class="qf" data-f="cmd.>">cmd</button>
+    <button class="qf" data-f="agents.>">agents</button>
+    <button class="qf" data-f="events.>">legacy</button>
+    <button class="qf" data-f="$SYS.>">sys</button>
+  </div>
+  <main>
+    <div id="stream"><div class="empty"><div class="big">Waiting for the bus…</div>Click <b>connect</b>. Messages stream here in realtime as they hit NATS.</div></div>
+    <aside>
+      <h3>Subjects seen</h3>
+      <div id="subjects"></div>
+    </aside>
+  </main>
+</div>
+
+<script type="module">
+import { connect, StringCodec } from "https://cdn.jsdelivr.net/npm/nats.ws@1.30.3/esm/nats.js";
+
+const sc = StringCodec();
+const $ = id => document.getElementById(id);
+let nc=null, sub=null, paused=false, count=0, rateWin=[], subjCounts={};
+
+const dot=$('dot'), statusTxt=$('statusTxt'), streamEl=$('stream'), subjectsEl=$('subjects');
+
+function setStatus(s){
+  dot.className = 'dot ' + (s==='connected'?'on':s==='connecting'?'connecting':'');
+  statusTxt.textContent = s;
+}
+function colorClass(subj){
+  const root = subj.split('.')[0].replace('$','');
+  return ['evt','tel','cmd','svc','agents','sys','events','devices'].includes(root)?root:'other';
+}
+function fmtTime(){ const d=new Date(); return d.toTimeString().slice(0,8)+'.'+String(d.getMilliseconds()).padStart(3,'0'); }
+
+function render(subj, payload){
+  if(streamEl.querySelector('.empty')) streamEl.innerHTML='';
+  const row=document.createElement('div'); row.className='msg';
+  let pretty=payload;
+  try{ pretty=JSON.stringify(JSON.parse(payload),null,2); }catch{}
+  row.innerHTML=`<div class="time">${fmtTime()}</div><div class="body"><div class="subj ${colorClass(subj)}">${subj}</div>${payload?`<div class="payload">${pretty.replace(/</g,'&lt;')}</div>`:''}</div>`;
+  streamEl.insertBefore(row, streamEl.firstChild);
+  while(streamEl.children.length>500) streamEl.removeChild(streamEl.lastChild);
+  // stats
+  count++; $('count').textContent=count;
+  rateWin.push(Date.now());
+  subjCounts[subj]=(subjCounts[subj]||0)+1;
+  renderSubjects();
+}
+function renderSubjects(){
+  const top=Object.entries(subjCounts).sort((a,b)=>b[1]-a[1]).slice(0,25);
+  subjectsEl.innerHTML=top.map(([s,n])=>`<div class="subj-row" data-s="${s}"><span class="subj ${colorClass(s)}" style="font-weight:400">${s}</span><span class="n">${n}</span></div>`).join('')||'<div style="color:var(--dim);font-size:12px">none yet</div>';
+  subjectsEl.querySelectorAll('.subj-row').forEach(r=>r.onclick=()=>{$('filter').value=r.dataset.s;doConnect();});
+}
+setInterval(()=>{ const now=Date.now(); rateWin=rateWin.filter(t=>now-t<1000); $('rate').textContent=rateWin.length; },250);
+
+async function doConnect(){
+  if(sub){ try{sub.unsubscribe();}catch{} sub=null; }
+  if(nc){ try{await nc.close();}catch{} nc=null; }
+  const url=$('url').value.trim(), filter=$('filter').value.trim()||'>';
+  setStatus('connecting');
+  try{
+    nc=await connect({ servers:url, name:"onemind-live-viewer", timeout:5000 });
+    setStatus('connected');
+    $('server').textContent=nc.info?.server_name||'';
+    sub=nc.subscribe(filter);
+    (async()=>{ for await(const m of sub){ if(!paused) render(m.subject, sc.decode(m.data)); } })();
+    nc.closed().then(err=>{ setStatus(err?('error: '+err.message):'disconnected'); });
+  }catch(e){ setStatus('error: '+e.message); }
+}
+
+$('connectBtn').onclick=doConnect;
+$('pauseBtn').onclick=()=>{ paused=!paused; $('pauseBtn').textContent=paused?'resume':'pause'; $('pauseBtn').classList.toggle('paused',paused); };
+$('clearBtn').onclick=()=>{ streamEl.innerHTML='<div class="empty"><div class="big">Cleared</div>Streaming continues…</div>'; count=0;$('count').textContent=0;subjCounts={};renderSubjects(); };
+document.querySelectorAll('.qf').forEach(b=>b.onclick=()=>{ $('filter').value=b.dataset.f; doConnect(); });
+
+// auto-connect on load
+doConnect();
+</script>
+</body>
+</html>
