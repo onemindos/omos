@@ -1,0 +1,65 @@
+version: '3'
+
+vars:
+  BINARY_NAME: mavlink2constellation
+  DOCKER_IMAGE: mavlink2constellation:latest
+
+tasks:
+  build:
+    desc: Build the binary
+    cmds:
+      - echo "Building {{.BINARY_NAME}}..."
+      - go build -o bin/{{.BINARY_NAME}} ./cmd/microlith
+
+  run:
+    desc: Run the binary
+    deps: [build]
+    cmds:
+      - echo "Running {{.BINARY_NAME}}..."
+      - ./bin/{{.BINARY_NAME}}
+
+  dev:
+    desc: Start development mode (build and run)
+    deps: [build]
+    cmds:
+      - echo "Starting development mode..."
+      - ./bin/{{.BINARY_NAME}}
+
+  docker-build:
+    desc: Build Docker image
+    cmds:
+      - echo "Building Docker image {{.DOCKER_IMAGE}}..."
+      - docker build -t {{.DOCKER_IMAGE}} .
+
+  docker-run:
+    desc: Run Docker container with .env file
+    cmds:
+      - echo "Running Docker container {{.DOCKER_IMAGE}}..."
+      - docker run --rm -it --env-file .env -p 14550:14550/udp {{.DOCKER_IMAGE}}
+
+  docker-stop:
+    desc: Stop running Docker container
+    cmds:
+      - docker stop $(docker ps -q --filter ancestor={{.DOCKER_IMAGE}}) 2>/dev/null || echo "No running container found"
+
+  compose-up:
+    desc: Start all services with Docker Compose
+    cmds:
+      - echo "Starting services with Docker Compose..."
+      - docker compose up -d
+
+  compose-down:
+    desc: Stop all services with Docker Compose
+    cmds:
+      - echo "Stopping services..."
+      - docker compose down
+
+  compose-logs:
+    desc: View logs from all services
+    cmds:
+      - docker compose logs -f
+
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
