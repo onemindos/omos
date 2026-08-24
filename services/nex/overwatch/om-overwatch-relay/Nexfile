@@ -1,0 +1,17 @@
+name: "om-overwatch-relay"
+description: "om-overwatch MAVLink ingest — friendly UAV telemetry → tel.drone.{id}.mavlink (spine fuses to ent.air)"
+type: native
+lifecycle: service
+start_request:
+  uri: "file:///Users/zeus/omos-core/nex/om-overwatch-relay/om-overwatch-relay"
+  environment:
+    NATS_URL: "nats://127.0.0.1:4222"
+    # Discovery mode: listen for any MAVLink source (PX4/ArduPilot) on the standard port.
+    MAVLINK_DISCOVERY_MODE: "true"
+    MAVLINK_DISCOVERY_HOST: "0.0.0.0"
+    MAVLINK_DISCOVERY_PORT: "14550"
+    NATS_STREAM_NAME: "TEL"
+    ENABLE_KV_PUBLISHING: "false"
+    ENABLE_METRICS: "true"
+    METRICS_PORT: "9091"
+    SERIAL_AUTO_DETECT: "false"
