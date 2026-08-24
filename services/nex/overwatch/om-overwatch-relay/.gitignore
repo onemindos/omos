@@ -1,0 +1,47 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+mavlink2constellation
+mavlink-nats-bridge
+bin/
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file
+go.work
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.constellation
+overwatch.yaml
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.claude/
+# Vendor directory (if using vendor mode)
+vendor/
+
+# Log files
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Documentation files (optional - uncomment if you want to exclude)
+# PROJECT_SUMMARY.md
+# QUICKSTART.md
+# RESEARCH.md
