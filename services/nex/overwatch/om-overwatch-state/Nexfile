@@ -1,0 +1,8 @@
+name: "om-overwatch-state"
+description: "om-overwatch fusion spine — fuses sensor feeds into OVERWATCH_STATE KV, republishes ent.air.{id}.state"
+type: native
+lifecycle: service
+start_request:
+  uri: "file:///Users/zeus/omos-core/nex/om-overwatch-state/om-overwatch-state"
+  environment:
+    NATS_URL: "nats://127.0.0.1:4222"
