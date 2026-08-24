@@ -26,7 +26,9 @@ spec:
               containerPort: 3300
           env:
             - name: NATS_URL
-              value: "nats://nats.nats.svc.cluster.local:4222"
+              value: "nats://$(NATS_USER):$(NATS_PASSWORD)@nats.nats.svc.cluster.local:4222"
+            - name: AGENT_WEB_UI_HOST
+              value: "0.0.0.0"
             - name: NODE_TLS_REJECT_UNAUTHORIZED
               value: "0"
             - name: NATS_USER

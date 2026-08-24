@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: nats-dashboard
-          image: sahilkhaire/nats-dashboard:latest
+          image: ghcr.io/onemindos/nats-dashboard:latest
           imagePullPolicy: Always
           ports:
             - name: http
