@@ -1,18 +1,22 @@
-name: Build CloudTAK → GHCR
+name: Build OMOS (CloudTAK Fork) → GHCR
 
-# Builds ghcr.io/onemindos/cloudtak-api:latest from upstream dfpc-coe/CloudTAK
-# with the OneMind plugins loaded via WEB_PLUGINS at build time.
+# Builds ghcr.io/onemindos/cloudtak-api:latest from our fork (Zeus-Delacruz/CloudTAK)
+# with OneMind plugins cloned into the build context.
 #
-# Plugins (source of truth — standalone repos):
-#   onemindos/omos-ai-plugin   — Legacy AI chat panel, bottom bar
-#   onemindos/omos-nats-plugin — NATS fabric operator console
+# Source: Zeus-Delacruz/CloudTAK (main branch) — our fork with OMOS additions
 #
-# Upstream CloudTAK Dockerfile runs: node bin/plugin.ts
-# which git-clones each WEB_PLUGINS URL into api/web/plugins/<name>/
-# then the Vite build picks them up via glob: ../plugins/*/index.ts
+# Plugins (standalone repos, cloned at build time):
+#   onemindos/cloudtak-plugin-legacy-ai — Legacy AI chat panel, bottom bar
+#   onemindos/cloudtak-plugin-nats      — NATS fabric operator console
 #
-# Trigger this workflow manually or push to either plugin repo
-# (each has a repository_dispatch webhook targeting omos-infra).
+# The Dockerfile runs: node bin/plugin.ts
+# which picks up plugins already in api/web/plugins/ (we pre-clone them here).
+#
+# Triggers:
+#   - Push to omos-infra main (workflow file changes)
+#   - repository_dispatch from plugin repos (plugin-updated)
+#   - repository_dispatch from CloudTAK fork (fork-updated)
+#   - Manual workflow_dispatch
 
 on:
   push:
@@ -20,7 +24,7 @@ on:
     paths:
       - ".github/workflows/build-cloudtak.yml"
   repository_dispatch:
-    types: [plugin-updated]
+    types: [plugin-updated, fork-updated]
   workflow_dispatch:
 
 jobs:
@@ -33,25 +37,14 @@ jobs:
       packages: write
 
     steps:
-      - name: Resolve latest CloudTAK release tag
-        id: cloudtak_version
+      - name: Clone OMOS fork (Zeus-Delacruz/CloudTAK)
         run: |
-          TAG=$(curl -fsSL https://api.github.com/repos/dfpc-coe/CloudTAK/releases/latest \
-            | jq -r .tag_name)
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          echo "CloudTAK latest: ${TAG}"
+          git clone --depth 1 https://github.com/Zeus-Delacruz/CloudTAK.git omos
+          echo "OMOS fork cloned at $(git -C omos rev-parse --short HEAD)"
 
-      - name: Clone CloudTAK upstream at latest tag
+      - name: Clone plugins into build context
         run: |
-          git clone --depth 1 --branch "${{ steps.cloudtak_version.outputs.tag }}" \
-            https://github.com/dfpc-coe/CloudTAK.git cloudtak-upstream
-
-      - name: Clone plugins and inject their deps into CloudTAK web package.json
-        # bin/plugin.ts runs inside Docker — clone plugins here so they're in the
-        # build context (no internet inside Docker). Also patch web/package.json to
-        # add plugin-only deps so the Docker npm install picks them up.
-        run: |
-          PLUGINS_DIR=cloudtak-upstream/api/web/plugins
+          PLUGINS_DIR=omos/api/web/plugins
           mkdir -p "$PLUGINS_DIR"
 
           git clone --depth 1 https://github.com/onemindos/cloudtak-plugin-legacy-ai.git \
@@ -59,21 +52,18 @@ jobs:
           git clone --depth 1 https://github.com/onemindos/cloudtak-plugin-nats.git \
             "$PLUGINS_DIR/cloudtak-plugin-nats"
 
-          # Inject plugin deps into CloudTAK's web package.json and regenerate
-          # the lockfile so Docker's npm install picks them up.
-          # nats.ws and lucide-vue-next are used by omos-nats-plugin.
-          cd cloudtak-upstream/api/web
+          # Inject plugin deps into package.json so Docker npm install picks them up
+          cd omos/api/web
           node -e "
             const fs = require('fs');
             const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.dependencies['nats.ws'] = '^1.30.3';
-            pkg.dependencies['lucide-vue-next'] = '^0.513.0';
+            pkg.dependencies['nats.ws'] = pkg.dependencies['nats.ws'] || '^1.30.3';
+            pkg.dependencies['lucide-vue-next'] = pkg.dependencies['lucide-vue-next'] || '^0.513.0';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4));
-            console.log('Injected plugin deps into package.json');
+            console.log('Plugin deps ensured in package.json');
           "
-          # Regenerate lockfile so Docker layer cache includes the new deps
           npm install --package-lock-only
-          echo "package-lock.json updated with plugin deps"
+          echo "package-lock.json updated"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -85,15 +75,41 @@ jobs:
           username: zeus
           password: ${{ secrets.GHCR_PAT }}
 
-      - name: Build and push CloudTAK API image
+      - name: Build and push OMOS API image
         uses: docker/build-push-action@v6
         with:
-          context: cloudtak-upstream/api
-          file: cloudtak-upstream/api/Dockerfile
+          context: omos/api
+          file: omos/api/Dockerfile
           push: true
           tags: |
             ghcr.io/onemindos/cloudtak-api:latest
-            ghcr.io/onemindos/cloudtak-api:${{ steps.cloudtak_version.outputs.tag }}-onemind
+            ghcr.io/onemindos/cloudtak-api:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      - name: Build and push OMOS Tiles image
+        uses: docker/build-push-action@v6
+        with:
+          context: omos
+          file: omos/tasks/pmtiles/Dockerfile.compose
+          push: true
+          tags: |
+            ghcr.io/onemindos/cloudtak-tiles:latest
+            ghcr.io/onemindos/cloudtak-tiles:${{ github.sha }}
+          cache-from: type=gha,scope=tiles
+          cache-to: type=gha,mode=max,scope=tiles
+          platforms: linux/amd64
+
+      - name: Build and push OMOS Events image
+        uses: docker/build-push-action@v6
+        with:
+          context: omos
+          file: omos/tasks/events/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/onemindos/cloudtak-events:latest
+            ghcr.io/onemindos/cloudtak-events:${{ github.sha }}
+          cache-from: type=gha,scope=events
+          cache-to: type=gha,mode=max,scope=events
           platforms: linux/amd64
