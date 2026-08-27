@@ -525,8 +525,7 @@ spec:
       containers:
         - name: connect
           image: redpandadata/connect@sha256:b462939a6d7c265df7d6584925a5070beabaf5bc84d35180219e247f438b64ac
-          command: ["/bin/sh", "-c"]
-          args: ["exec /redpanda-connect streams --chilled /config/pipelines/*.yaml"]
+          args: ["streams", "--chilled", "/config/pipelines/feed-mta.yaml"]
           env:
             - name: NATS_USER
               valueFrom:
