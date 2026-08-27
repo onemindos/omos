@@ -49,9 +49,3 @@ variable "ha_control_plane" {
   type        = bool
   default     = true
 }
-
-variable "registry_tier" {
-  description = "DOCR subscription tier. basic = 5 GB, multiple repos, $5/mo."
-  type        = string
-  default     = "basic"
-}

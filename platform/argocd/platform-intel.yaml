@@ -1,8 +1,27 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — INTEL / OSINT                                        sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-intel: OSINT and intelligence services
+#
+# Covers: platform/intel/
+#   crucix/       — threat tracking
+#   osiris/       — OSINT aggregator
+#   shadowbroker/ — signals intel
+#   worldmonitor/ — global event monitor
+#   worldwideview/ — CesiumJS 3D globe (intel layer)
+#
+# Integration with CloudTAK:
+#   Intel services publish to intel.* subjects on NATS.
+#   tak-projector (platform-omos) converts intel.* → CoT notes/overlays
+#   → CloudTAK map renders them as threat icons and overlay annotations.
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-intel
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

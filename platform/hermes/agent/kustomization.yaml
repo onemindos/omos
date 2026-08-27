@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: hermes
+resources:
+  - namespace.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - dashboard.yaml
+# Secrets are managed by Sealed Secrets — SealedSecret YAMLs in platform/hermes/bridge/.
+# Apply with:  kubectl apply -k platform/hermes/agent/

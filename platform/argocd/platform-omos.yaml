@@ -1,13 +1,30 @@
-# platform-omos: omos-* services (tak-projector, feeds)
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — FEEDS / CoT BRIDGE                                   sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-omos: tak-projector + live world feeds + omos-mission-engine
 #
 # Covers:
-#   platform/omos/   (tak-projector, omos feeds)
+#   platform/omos/              — tak-projector, AIS/ADS-B/APRS/hazard feeds, sinks
+#   platform/omos-mission-engine/ — mission orchestration engine (Wave 2)
 #
+# tak-projector is the NATS→CoT→CloudTAK bridge:
+#   Subscribes: ent.*.state, tel.*.position, det.*, intel.*
+#   Publishes:  tak.cot.inject  → CloudTAK map entities + tracks
+#
+# Live world feeds publish to NATS subjects that tak-projector picks up:
+#   feed-ships      → tel.ship.*.position    (AIS via aisstream.io)
+#   feed-aircraft   → tel.aircraft.*.position (ADS-B via OpenSky)
+#   feed-aprs       → tel.aprs.*.position    (APRS trackers)
+#   feed-satellites → tel.sat.*.position     (TLE orbital positions)
+#   feed-hazards    → det.hazard.*.alert     (NOAA hazard warnings)
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-omos
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -16,6 +33,12 @@ spec:
     - repoURL: https://github.com/onemindos/omos-infra.git
       targetRevision: HEAD
       path: platform/omos
+      directory:
+        recurse: false
+        exclude: "*.secret*,*.env"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/omos-mission-engine
       directory:
         recurse: false
         exclude: "*.secret*,*.env"

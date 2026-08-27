@@ -61,8 +61,8 @@ spec:
             - name: POSTGRES
               valueFrom:
                 secretKeyRef:
-                  name: cloudtak-secrets
-                  key: POSTGRES
+                  name: cloudtak-postgres-creds
+                  key: POSTGRES_DSN
             - name: API_URL
               value: "https://atoc.onemindos.dev"
             - name: PMTILES_URL

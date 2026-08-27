@@ -1,16 +1,25 @@
-# platform-observability: ClickHouse + observability overlays
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — DATA                                                 sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-observability: ClickHouse entity history (time-machine)
 #
-# Covers:
-#   platform/clickhouse/
+# Covers: platform/clickhouse/
+#
+# ClickHouse stores all fused entity states from the NATS bus (ent.*.state).
+# The tak-projector (platform-omos) queries ClickHouse to replay historical
+# tracks as CoT batches into CloudTAK — enabling time-travel on the TAK map.
 #
 # NOTE: Grafana, Loki, Tempo, and Prometheus stacks are managed via Helm
-# (platform/values/loki.yaml, tempo.yaml, etc.) and are NOT managed here.
-# This Application handles only post-Helm overlay manifests.
+# (platform/values/). This Application handles only the ClickHouse operator
+# install manifest. SQL migrations (*.sql) are run manually post-deploy.
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-observability
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -24,7 +33,7 @@ spec:
         exclude: "*.sql,README.md"
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: clickhouse
   syncPolicy:
     automated:
       prune: true

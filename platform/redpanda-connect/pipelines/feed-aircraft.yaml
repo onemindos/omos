@@ -1,0 +1,66 @@
+# feed-aircraft.yaml — ADS-B aircraft positions via OpenSky Network REST → CoT → tak.cot.inject
+# Poll interval: 15s, global coverage
+# Anonymous access (rate-limited). Set OPENSKY_USERNAME + OPENSKY_PASSWORD for higher limits.
+# CoT type: a-f-A-M-F-Q (fixed-wing aircraft)
+
+input:
+  generate:
+    interval: "15s"
+    mapping: 'root = ""'
+
+pipeline:
+  processors:
+    - branch:
+        request_map: 'root = ""'
+        processors:
+          - http:
+              url: "https://opensky-network.org/api/states/all"
+              verb: GET
+              timeout: "20s"
+              headers:
+                User-Agent: "omos-feed-aircraft/1.0"
+          - mapping: |
+              root = this.states.or([]).map_each(s ->
+                let lon = s.index(5)
+                let lat = s.index(6)
+                if $lon == null || $lat == null { deleted() } else {
+                  let icao24 = s.index(0).or("").string()
+                  let raw_cs = s.index(1).or("").string().trim()
+                  let callsign = if $raw_cs == "" { $icao24.uppercase() } else { $raw_cs.replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;") }
+                  let alt = s.index(7).or(0)
+                  let spd_kt = s.index(9).or(0) * 1.94384
+                  let trk = s.index(10).or(0)
+                  let country = s.index(2).or("").string().replace_all("&", "&amp;").replace_all("<", "&lt;")
+                  {
+                    "uid": "ADSB-" + $icao24.uppercase(),
+                    "callsign": $callsign,
+                    "lat": $lat,
+                    "lon": $lon,
+                    "alt": $alt,
+                    "spd_kt": $spd_kt,
+                    "trk": $trk,
+                    "icao24": $icao24,
+                    "country": $country
+                  }
+                }
+              )
+        result_map: 'root = this'
+
+    - unarchive:
+        format: json_array
+
+    - mapping: |
+        let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+        let stale = (now().ts_unix() + 90).ts_format("2006-01-02T15:04:05.000Z")
+        root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-f-A-M-F-Q\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"" + this.alt.string() + "\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + this.callsign + "\"/><track speed=\"" + this.spd_kt.format_number(1) + "\" course=\"" + this.trk.string() + "\"/><status readiness=\"false\"/><remarks>ICAO:" + this.icao24 + " " + this.country + "</remarks><marti><dest mission=\"Air\"/></marti></detail></event>"
+
+output:
+  nats:
+    urls: ["nats://nats.nats.svc.cluster.local:4222"]
+    subject: "tak.cot.inject"
+    auth:
+      user: "${NATS_USER}"
+      password: "${NATS_PASSWORD}"
+    tls:
+      enabled: true
+      skip_cert_verify: true

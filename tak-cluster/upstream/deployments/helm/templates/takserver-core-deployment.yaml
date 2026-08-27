@@ -41,7 +41,7 @@ spec:
           readinessProbe:
             exec:
               command:
-              - /messaging-readiness.sh
+              - /opt/tak/messaging-readiness.sh
             initialDelaySeconds: 80
             periodSeconds: 5
           livenessProbe:
@@ -116,7 +116,7 @@ spec:
           readinessProbe:
             exec:
               command:
-              - /api-readiness.sh
+              - /opt/tak/api-readiness.sh
             initialDelaySeconds: 1
             periodSeconds: 1
           livenessProbe:

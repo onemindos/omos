@@ -17,7 +17,7 @@ jobs:
         run: pip install yamllint
 
       - name: Lint YAML
-        run: yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ geoserver/ uptime-kuma/ || true
+        run: yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ || true
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master

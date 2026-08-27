@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-legacy
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: hermes
+    onemind.io/agent: legacy
+spec:
+  # The hub's MAIN Hermes = Legacy. Registers on the fabric as its own
+  # first-class agent: agents.prompt.hermes.zeus.legacy. The Mac runs a
+  # SEPARATE Hermes (distinct identity); the fabric interconnects them — this
+  # is NOT one identity with two queue-grouped bodies.
+  # replicas stays 1: RWO PVC + single-holder self-modification.
+  replicas: 1
+  strategy:
+    type: Recreate            # RWO PVC — never two pods on one volume
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hermes
+      onemind.io/agent: legacy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hermes
+        onemind.io/agent: legacy
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      initContainers:
+        # ---- Install gateway-only deps missing from the public Nous image ----
+        # nousresearch/hermes-agent:latest ships without nats-py, nkeys,
+        # synadia-ai-agents, and synadia-ai-agent-service — all required for
+        # the NATS and TAK gateway platforms. This initContainer installs them
+        # into a shared emptyDir (/gateway-deps) using the system uv that ships
+        # in the Nous image. The hermes container mounts the same volume and
+        # sets PYTHONPATH to include it, so the packages are available at runtime
+        # on every pod restart without any custom image build.
+        - name: install-gateway-deps
+          image: nousresearch/hermes-agent:latest
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              echo "Installing NATS/TAK gateway deps into /gateway-deps..."
+              uv pip install \
+                --python /opt/hermes/.venv/bin/python3 \
+                --target /gateway-deps \
+                nats-py nkeys synadia-ai-agents synadia-ai-agent-service
+              echo "Done: $(ls /gateway-deps | wc -l) packages installed"
+          volumeMounts:
+            - name: gateway-deps
+              mountPath: /gateway-deps
+      containers:
+        # ---- Legacy (Hermes) ----
+        # Talks PLAINTEXT to the in-pod leaf on localhost:4222 — identical to the
+        # Mac setup. All TLS/auth to the cluster bus lives in the sidecar, so we
+        # never depend on Hermes's internal TLS/CA handling.
+        # NOTE: `hermes gateway run` is CHAT-ONLY and does NOT register on NATS.
+        # The NATS agent-host (hermes_nats_host.py, baked into hermes-legacy) is
+        # what registers agents.prompt.hermes.zeus.legacy — see omos-core/services/agents.
+        - name: hermes
+          image: nousresearch/hermes-agent:latest   # Official Nous image — pinned to v2026.8.3
+          imagePullPolicy: Always
+          # No custom args — s6 supervisor runs the gateway. The nats-platform
+          # plugin (enabled in config.yaml, seeded by cont-init) registers
+          # agents.prompt.hermes.zeus.legacy and routes prompts through Hermes's
+          # full pipeline (SOUL.md persona, tools, memory).
+          args: ["gateway", "run", "--replace"]
+          envFrom:
+            - secretRef:
+                name: hermes-env          # full ~/.hermes/.env (providers, HERMES_NATS_*). See SECRETS.md
+            - secretRef:
+                name: hermes-dashboard-auth   # HERMES_DASHBOARD_BASIC_AUTH_USERNAME + _PASSWORD
+          env:
+            - name: NATS_URL
+              value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
+            - name: HERMES_NATS_SESSION_NAME
+              value: "legacy"
+            - name: PYTHONPATH
+              value: "/gateway-deps"
+            - name: HERMES_DASHBOARD
+              value: "true"
+            - name: HERMES_DASHBOARD_HOST
+              value: "0.0.0.0"
+            - name: HERMES_DASHBOARD_PORT
+              value: "9119"
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: gateway-deps
+              mountPath: /gateway-deps
+          resources:
+            requests: { cpu: "500m", memory: "1Gi" }
+            limits:   { memory: "3Gi" }
+        # ---- NATS leaf sidecar ----
+        # nats-server running as a leaf into the cluster ONEMIND account over TLS.
+        # Exposes a local plaintext client listener on :4222 for Hermes only.
+        - name: nats-leaf
+          image: nats:2.10-alpine
+          args: ["-c", "/etc/nats/leaf.conf"]
+          ports:
+            - { name: monitor, containerPort: 8222 }
+          volumeMounts:
+            - name: leaf-conf
+              mountPath: /etc/nats
+              readOnly: true
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits:   { memory: "128Mi" }
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: hermes-data
+        - name: leaf-conf
+          secret:
+            secretName: hermes-leaf-conf   # leaf.conf w/ leaf_tak creds — out-of-band. See SECRETS.md
+        - name: nats-ca
+          secret:
+            secretName: hermes-nats-ca      # cluster NATS CA (ca.crt)
+        - name: gateway-deps
+          emptyDir: {}

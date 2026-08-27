@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 1 — BUS / OPERATORS                                      sync-wave: "1"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-clickhouse-operator: Altinity ClickHouse Operator (kube-system)
+#
+# Manages ClickHouseInstallation CRDs. Must be live before wave-3 services
+# (platform-observability) apply the onemind CHI resource.
+#
+# Previously installed imperatively — now GitOps-managed via Helm.
+# Chart: altinity/altinity-clickhouse-operator
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-clickhouse-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://docs.altinity.com/clickhouse-operator/
+    chart: altinity-clickhouse-operator
+    targetRevision: "0.27.3"
+    helm:
+      values: |
+        deployment:
+          strategy:
+            type: Recreate
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources

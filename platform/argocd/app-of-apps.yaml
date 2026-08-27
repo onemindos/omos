@@ -3,6 +3,30 @@
 #
 #   kubectl apply -f platform/argocd/app-of-apps.yaml --context tailscale-operator.tail717ba0.ts.net
 #
+# ─────────────────────────────────────────────────────────────────────────────
+# ARCHITECTURE — CloudTAK-centric layers (enforced via sync waves)
+#
+#  Wave 0 │ BOOTSTRAP     platform-core          sealed-secrets, networking
+#  Wave 1 │ BUS           platform-nats          NATS 3-node HA + nats-surveyor
+#         │ OPERATORS     platform-clickhouse-operator  Altinity ClickHouse Operator
+#  Wave 2 │ TAK UI CENTER platform-cloudtak      CloudTAK API/Events/Media/Tiles ← main UI
+#                         tak-cluster            TAK Server 5.7 + NATS bridge
+#  Wave 3 │ AI BRAIN      platform-legacy        Legacy/Hermes + hermes-webui + ai-bridge
+#         │ DATA          platform-observability ClickHouse entity history
+#         │ FEEDS         platform-omos          tak-projector, AIS/ADS-B feeds → CoT → TAK
+#         │ INTEL         platform-intel         OSINT / intel services
+#         │ GEO           platform-geo           Tile38, TimescaleDB, STAC, WebODM
+#  Wave 4 │ OPS           platform-nats-tools    NATS debug toolbox
+#                         platform-grafana-overlays Grafana dashboards
+#                         platform-monitoring    PrometheusRules + Alertmanager Telegram
+#
+# Data integration flow:
+#   ClickHouse / ORP / Intel / Geo feeds
+#     → NATS (ent.*, tel.*, det.*, intel.*)
+#     → tak-projector (omos namespace)
+#     → tak.cot.inject
+#     → CloudTAK map
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

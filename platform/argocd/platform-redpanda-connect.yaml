@@ -1,0 +1,54 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — FEEDS / REDPANDA CONNECT (WOMBAT)                   sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-redpanda-connect: Wombat declarative feed engine → NATS → TAK
+#
+# Covers: platform/redpanda-connect/
+#   deployment.yaml  — Deployment + pipeline ConfigMap + proto ConfigMap
+#
+# Pipelines live in platform/redpanda-connect/pipelines/ as standalone YAML.
+# Proto schemas live in platform/redpanda-connect/gtfs-realtime.proto.
+#
+# Current feeds (streams mode — all run concurrently in one pod):
+#   feed-mta.yaml      — MTA Metro-North + LIRR trains → tak.cot.inject (30s poll)
+#   feed-hazards.yaml  — USGS earthquakes + NWS weather alerts → tak.cot.inject (60s poll)
+#   feed-ships.yaml    — AIS vessels via aisstream.io WebSocket → tak.cot.inject
+#   feed-aircraft.yaml — ADS-B aircraft via OpenSky REST → tak.cot.inject (15s poll)
+#
+# To add a new feed:
+#   1. Drop a pipeline YAML in platform/redpanda-connect/pipelines/
+#   2. Add it to the redpanda-connect-pipelines ConfigMap in deployment.yaml
+#   3. No Deployment change needed — streams mode picks up all *.yaml automatically
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-redpanda-connect
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/redpanda-connect
+    directory:
+      recurse: false
+      exclude: "*.proto,pipelines/"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations

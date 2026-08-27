@@ -1,6 +1,0 @@
-# omos-ui deploys into the existing `omos` namespace — no new namespace needed.
-# The omos namespace is created in platform/omos/namespace.yaml.
-# This file is a no-op reference kept for pattern consistency.
-#
-# To ensure the namespace exists before applying omos-ui manifests, run:
-#   kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"

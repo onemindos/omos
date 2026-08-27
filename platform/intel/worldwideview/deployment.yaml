@@ -131,6 +131,7 @@ metadata:
   name: worldwideview-postgres-data
   namespace: intel
 spec:
+  storageClassName: do-block-storage-retain
   accessModes:
     - ReadWriteOnce
   resources:
@@ -143,6 +144,7 @@ metadata:
   name: worldwideview-data
   namespace: intel
 spec:
+  storageClassName: do-block-storage-retain
   accessModes:
     - ReadWriteOnce
   resources:

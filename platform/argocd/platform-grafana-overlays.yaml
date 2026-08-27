@@ -1,17 +1,24 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 4 — OPS OBSERVABILITY                                    sync-wave: "4"
+# ─────────────────────────────────────────────────────────────────────────────
 # platform-grafana-overlays: Grafana datasource + dashboard ConfigMaps
 #
 # Covers: platform/grafana/
-#   - grafana-datasources.yaml        (Loki + Tempo datasources)
-#   - grafana-dashboards-nats.yaml    (NATS observability dashboard)
-#   - grafana-dashboards-onemind-logs.yaml  (OneMind logs dashboard)
+#   grafana-datasources.yaml             — Loki + Tempo datasources
+#   grafana-dashboards-nats.yaml         — NATS observability dashboard
+#   grafana-dashboards-onemind-logs.yaml — OneMind platform logs dashboard
 #
 # These ConfigMaps are picked up by the Grafana sidecar for live provisioning.
-# The Grafana Helm release (platform/values/) is NOT managed here.
+# The Grafana Helm release (platform/values/kube-prometheus-stack.yaml) is
+# NOT managed here — it's Helm-only.
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-grafana-overlays
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

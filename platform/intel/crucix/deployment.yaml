@@ -64,6 +64,7 @@ metadata:
   name: crucix-runs-data
   namespace: intel
 spec:
+  storageClassName: do-block-storage-retain
   accessModes:
     - ReadWriteOnce
   resources:

@@ -1,16 +1,38 @@
-# platform-cloudtak: CloudTAK stack (API, Events, Media, Tiles, MinIO, PostGIS)
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 2 — TAK UI CENTER                                        sync-wave: "2"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-cloudtak: CloudTAK stack — the primary tactical UI
 #
 # Covers: platform/cloudtak/
+#   api.yaml       — CloudTAK API server (atoc.onemindos.dev)
+#   events.yaml    — CoT event stream handler
+#   media.yaml     — Media/file attachments
+#   tiles.yaml     — Tile proxy (tiles.atoc.onemindos.dev)
+#   minio.yaml     — Object store for media/attachments
+#   postgis.yaml   — PostGIS database (entities, tracks, packages)
+#   ingress.yaml   — Internal ingress
+#   cloudflare-route.yaml — Public tunnel route
+#   cesium-globe-route.yaml — Cesium globe tunnel route
 #
 # Image: ghcr.io/onemindos/cloudtak-api:latest
 # Plugins loaded at image build time via WEB_PLUGINS in build-cloudtak.yml:
-#   - onemindos/omos-ai-plugin
-#   - onemindos/omos-nats-plugin
+#   - onemindos/omos-ai-plugin   (AI chat panel)
+#   - onemindos/omos-nats-plugin (NATS event bridge)
+#
+# Everything feeds INTO CloudTAK via NATS → tak-projector → tak.cot.inject:
+#   ClickHouse tracks → CoT track replays on map
+#   ORP fused entities → CoT SA picture
+#   Intel/OSINT detections → CoT alerts/overlays
+#   Hermes AI → GeoChat messages + mission annotations
+#   Geo tile layers → WMS/WMTS registered as CloudTAK map overlays
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-cloudtak
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

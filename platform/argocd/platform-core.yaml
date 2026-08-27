@@ -1,15 +1,23 @@
-# platform-core: ingress, cloudflare tunnel, tailscale operator, external-secrets
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 0 — BOOTSTRAP / CORE NETWORKING                          sync-wave: "0"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-core: sealed-secrets controller, ingress-nginx TLS issuers,
+#                Cloudflare tunnel, Tailscale operator RBAC
 #
-# Covers: platform/ingress/  platform/cloudflare/  platform/tailscale/  platform/external-secrets/
+# Covers: platform/ingress/  platform/cloudflare/  platform/tailscale/
+#         platform/sealed-secrets/
 #
-# NOTE: cert-manager, ingress-nginx, and tailscale-operator Helm releases are managed
-# via Helm (values in platform/values/), NOT here. This Application manages only the
-# post-Helm K8s manifests (issuers, ClusterSecretStore, cloudflared config, etc.).
+# NOTE: cert-manager, ingress-nginx, tailscale-operator Helm releases are
+# managed via Helm (platform/values/). This Application manages only the
+# post-Helm K8s manifests (issuers, ClusterSecretStore, cloudflared config).
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-core
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -41,7 +49,7 @@ spec:
         exclude: "*.secret*,*.env"
   destination:
     server: https://kubernetes.default.svc
-    namespace: cloudflare
+    namespace: kube-system
   syncPolicy:
     automated:
       prune: true

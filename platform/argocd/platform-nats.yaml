@@ -1,30 +1,45 @@
-# platform-nats: NATS in-cluster overlay manifests (TLS, Tailscale service)
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 1 — BUS                                                  sync-wave: "1"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-nats: NATS HA overlay manifests + NATS Surveyor metrics exporter
 #
-# Covers: platform/nats/
+# Covers: platform/nats/       (TLS cert, Tailscale LB service, Stream CRDs)
+#         platform/nats-surveyor/ (Prometheus exporter for NATS $SYS metrics)
 #
 # NOTE: The NATS HA cluster itself is deployed via Helm (nats/nats chart).
-# This Application manages only the supplementary manifests:
-#   - omos-nats-tailnet-service.yaml  (Tailscale LoadBalancer for leaf nodes)
-#   - tls.yaml  (cert-manager Certificate / Secret reference)
+# NACK JetStream CRD controller is also Helm-managed.
+# This Application manages only supplementary manifests.
 #
-# Secret files (creds.secret.env, values.secret.yaml) are excluded — they are
-# managed out-of-band and must never be committed to git.
+# nats-surveyor spans two namespaces (nats + monitoring) — both are respected
+# because each manifest has an explicit namespace field.
+#
+# Secret files (creds.secret.env, values.secret.yaml) are excluded — managed
+# out-of-band, never committed to git.
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-nats
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/onemindos/omos-infra.git
-    targetRevision: HEAD
-    path: platform/nats
-    directory:
-      recurse: false
-      exclude: "*.secret*,*.env,values.template.yaml"
+  sources:
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/nats
+      directory:
+        recurse: false
+        exclude: "*.secret*,*.env,values.template.yaml,nack-values.template.yaml"
+    - repoURL: https://github.com/onemindos/omos-infra.git
+      targetRevision: HEAD
+      path: platform/nats-surveyor
+      directory:
+        recurse: false
+        exclude: "Dockerfile"
   destination:
     server: https://kubernetes.default.svc
     namespace: nats

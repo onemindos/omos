@@ -1,4 +1,4 @@
-# OneMind DOKS values for the TAK Server 5.7 cluster.
+# OneMind DOKS values for the TAK Server 5.8 cluster.
 # Base chart: upstream/deployments/helm (TAK Product Center blueprint, vendored).
 #
 # DEPLOY INTO NAMESPACE `takserver` — non-negotiable. The Ignite Kubernetes IP
@@ -9,11 +9,10 @@
 #     -n takserver --create-namespace \
 #     -f values-onemind.yaml
 #
-# Images: built from Zeus's takserver-docker-5.7-RELEASE-43 distro and pushed to
-# DigitalOcean Container Registry (DOCR). Replace <DOCR> with your registry,
-# e.g. registry.digitalocean.com/onemind. See README.md "Image build".
+# Images: built from takserver-docker-hardened-5.8-RELEASE-69 and pushed to GHCR.
+# Build context = extracted distro root (tak/ directory). See build/stage.sh.
 
-imagePullSecret: docr-cred
+imagePullSecret: ghcr
 certConfigMapName: cert-migration
 coreConfigMapName: core-config
 takIgniteConfigMapName: tak-ignite-config
@@ -31,30 +30,30 @@ takserver:
       fedv2: {annotations: {}, host: ""}
 
   config:                   # centralized config service (starts first)
-    image: {repository: <DOCR>/takserver-config, tag: "5.7-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-config, tag: "5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 1, memory: 1Gi}}
 
   # messaging = the device-load tier (CoT/TCP 8089). SCALE THIS as EUD count grows (HPA-ready).
   messaging:
-    image: {repository: <DOCR>/takserver-messaging, tag: "5.7-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-messaging, tag: "5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 4Gi}, limits: {cpu: 2, memory: 4Gi}}
 
   api:                      # Marti API / WebTAK / cert enrollment
-    image: {repository: <DOCR>/takserver-api, tag: "5.7-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-api, tag: "5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 4Gi}, limits: {cpu: 2, memory: 4Gi}}
 
   # plugins tier runs Zeus's NATS bridge → the OneMind bus. Plugin is baked into this image.
   plugins:
     enabled: true
-    image: {repository: <DOCR>/takserver-plugins, tag: "5.7-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-plugins, tag: "5.8-onemind"}
     replicas: 1
-    resources: {requests: {cpu: 1}, limits: {cpu: 2}}
+    resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 2, memory: 2Gi}}
 
   takserverDatabaseSetup:
-    image: {repository: <DOCR>/takserver-database-setup, tag: "5.7-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-database-setup, tag: "5.8-onemind"}
 
   limits:
     persistentVolumeClaims: '5'

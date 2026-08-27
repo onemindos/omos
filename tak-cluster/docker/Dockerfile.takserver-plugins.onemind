@@ -1,25 +1,17 @@
 # OneMind plugins image = upstream takserver-plugins + Zeus's NATS bridge plugin.
 #
-# Base = the OneMind takserver-base image (built from the 5.7 distro; see README).
-# Build context MUST be the staged cluster build root (same context as the base
-# image build) so the `takserver-core/...` paths and `plugin/...` resolve.
+# Base = ghcr.io/onemindos/takserver-plugins:5.8-onemind (already has takserver-pm.jar
+# and takserver-plugins-cluster.sh at /opt/tak/). Build this AFTER the upstream images
+# are pushed to GHCR.
 #
 #   docker build -f docker/Dockerfile.takserver-plugins.onemind \
-#     -t <DOCR>/takserver-plugins:5.7-onemind <staged-build-root>
-ARG TAKSERVER_IMAGE_REPO=takserver-base
-ARG TAKSERVER_IMAGE_TAG=5.7-onemind
+#     -t ghcr.io/onemindos/takserver-plugins:5.8-onemind .
+#   (build context = tak-cluster/ root — only needs plugin/ directory)
+ARG TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-plugins
+ARG TAKSERVER_IMAGE_TAG=5.8-onemind
 FROM ${TAKSERVER_IMAGE_REPO}:${TAKSERVER_IMAGE_TAG}
 
-# stock plugin manager + cluster launcher (identical to upstream Dockerfile.takserver-plugins)
-COPY takserver-core/takserver-pm.jar takserver-pm.jar
-COPY takserver-core/plugins/takserver-plugins-cluster.sh takserver-plugins-cluster.sh
-
 # --- OneMind: bake in Zeus's NATS bridge plugin -----------------------------
-# JAR is built from /Users/zeus/ATAK/plugins/nats-bridge (takserver-nats-plugin v1.0.0).
-# Copy it into plugin/ before building (gitignored). Config lives in conf/plugins/.
-# NOTE: verify takserver-pm.jar's plugin scan dir in cluster mode — if it is not
-# `lib/`, adjust the destination below (candidate: a dedicated `plugins/` dir).
-COPY plugin/takserver-nats-plugin-1.0.0.jar lib/takserver-nats-plugin-1.0.0.jar
-COPY plugin/tak.server.plugins.NatsBridgePlugin.yaml conf/plugins/tak.server.plugins.NatsBridgePlugin.yaml
-
-CMD ["sh", "takserver-plugins-cluster.sh"]
+RUN mkdir -p /opt/tak/lib /opt/tak/conf/plugins
+COPY plugin/takserver-nats-plugin-1.0.0.jar /opt/tak/lib/takserver-nats-plugin-1.0.0.jar
+COPY plugin/tak.server.plugins.NatsBridgePlugin.yaml /opt/tak/conf/plugins/tak.server.plugins.NatsBridgePlugin.yaml

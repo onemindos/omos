@@ -7,33 +7,32 @@ data:
   projector.py: |
     #!/usr/bin/env python3
     """
-    omos-tak-projector — subscribes ent.*.*.state on NATS bus, injects
-    fused entities into TAK Server as CoT XML via tak.cot.inject.
+    omos-tak-projector — unified NATS → CoT → TAK bridge
 
-    CoT construction follows the pytak library style used in this repo
-    (tak-cluster/.tapvenv/lib/python3.14/site-packages/pytak/functions.py):
-    - xml.etree.ElementTree for safe XML building (no injection via callsign)
-    - XML declaration prefix ATAK expects
-    - _flow-tags_ provenance in detail block
-    - W3C_XML_DATETIME format: %Y-%m-%dT%H:%M:%S.%fZ
+    Subscribes to:
+      1. ent.*.*.state   (core NATS — ORP fused entity states)
+      2. intel.>         (JetStream durable consumer — intel events)
+
+    Publishes CoT XML to tak.cot.inject which the NatsBridgePlugin fans
+    out to all TAK clients (CloudTAK, iTAK, ATAK, WebTAK).
 
     Route (verified live):
       main NATS tak.cot.inject
-        → tak-nats-leaf (bridges all subjects bidirectionally, no filters)
-        → TAK internal NATS (takserver-nats namespace)
+        → tak-nats-leaf (bridges all subjects bidirectionally)
+        → TAK internal NATS (takserver-nats)
         → PluginClusterMessenger → TAK messaging pod
         → CloudTAK / iTAK / ATAK / WebTAK / VRTAK (__ANON__ group)
 
-    Plugin config (tak-cluster/plugin/tak.server.plugins.NatsBridgePlugin.yaml):
-      natsConsumerSubject: tak.cot.inject   ← we publish here
-      natsProducerSubject: tak.cot.out      ← tap.py reads from here
-      groups: [__ANON__, Red]
+    Control:
+      cmd.projector.disable  → soft-pause all projection
+      cmd.projector.enable   → resume
     """
     import asyncio, json, logging, os, ssl, sys, time, uuid
     import xml.etree.ElementTree as ET
     from datetime import datetime, timezone, timedelta
 
     import nats
+    import nats.js.api
 
     LOG = logging.getLogger("omos-tak-projector")
     logging.basicConfig(
@@ -49,19 +48,18 @@ data:
     TAK_GROUP     = os.getenv("TAK_GROUP",            "__ANON__")
     MIN_INTERVAL  = float(os.getenv("MIN_INTERVAL_SEC", "5"))
 
-    # pytak constant: <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
     XML_DECLARATION = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
-    # pytak W3C_XML_DATETIME — TAK expects full microseconds with Z suffix
     W3C_DT = "%Y-%m-%dT%H:%M:%SZ"
-    # pytak DEFAULT_COT_VAL for unknown ce/le/hae
     DEFAULT_COT_VAL = "9999999.0"
 
-    # ---------------------------------------------------------------------------
-    # CoT type map  (MIL-STD-2525C / TAK)
+    _enabled = True
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # CoT type map (MIL-STD-2525C / TAK)
     # (cot_type, stale_seconds)
-    # ---------------------------------------------------------------------------
+    # ─────────────────────────────────────────────────────────────────────────
     COT_TYPE_MAP = {
-        # Aircraft — live tracks, stale fast
+        # Aircraft
         "aircraft":              ("a-f-A-M-F-Q", 60),
         "aircraft_multirotor":   ("a-f-A-M-F-Q", 60),
         "aircraft_fixed_wing":   ("a-f-A-M-F-F", 60),
@@ -82,16 +80,19 @@ data:
         "human":                 ("a-f-G-U-C",   120),
         "operator":              ("a-f-G-U-C",   120),
         "operator_station":      ("a-f-G-E-V-C", 300),
-        # Fixed sensors — long stale (they don't move)
+        # Sensors
         "sensor":                ("a-f-G-I-S",   600),
         "sensor_platform":       ("a-f-G-I-S",   600),
         "camera":                ("a-f-G-I-S-C", 600),
-        # Events / detections — hours
+        # Events / detections
         "fire":                  ("b-r-.-H-.",   3600),
+        "wildfire":              ("b-r-.-H-.",   3600),
         "explosion":             ("b-r-.-H-.",   1800),
         "conflict":              ("b-r-.-C-.",   3600),
-        "earthquake":            ("b-r-.-E-.",   7200),
+        "conflict_event":        ("a-h-G",       3600),
+        "earthquake":            ("a-f-G-E-V-Q", 7200),
         "weather":               ("b-m-p",       1800),
+        "weather_alert":         ("a-f-G-U-W",   1800),
         "hurricane":             ("b-m-p-H",     3600),
         "flood":                 ("b-r-.-F-.",   3600),
         # Intel / threats
@@ -104,26 +105,64 @@ data:
         "default":               ("a-f-G-U-C",   300),
     }
 
+    # Weather alert → CoT type mapping (NOAA event names)
+    WEATHER_COT_MAP = {
+        "Tornado Warning":             "a-f-G-U-W-T",
+        "Tornado Watch":               "a-f-G-U-W-T",
+        "Severe Thunderstorm Warning": "a-f-G-U-W-S",
+        "Severe Thunderstorm Watch":   "a-f-G-U-W-S",
+        "Flash Flood Warning":         "a-f-G-U-W-F",
+        "Flash Flood Watch":           "a-f-G-U-W-F",
+        "Flood Warning":               "a-f-G-U-W-F",
+        "Flood Watch":                 "a-f-G-U-W-F",
+        "Hurricane Warning":           "a-f-G-U-W-H",
+        "Hurricane Watch":             "a-f-G-U-W-H",
+        "Tropical Storm Warning":      "a-f-G-U-W-H",
+        "Tropical Storm Watch":        "a-f-G-U-W-H",
+        "Winter Storm Warning":        "a-f-G-U-W-W",
+        "Blizzard Warning":            "a-f-G-U-W-W",
+        "Ice Storm Warning":           "a-f-G-U-W-W",
+        "Winter Weather Advisory":     "a-f-G-U-W-W",
+        "Excessive Heat Warning":      "a-f-G-U-W-E",
+        "Heat Advisory":               "a-f-G-U-W-E",
+        "Extreme Cold Warning":        "a-f-G-U-W-W",
+        "Wind Advisory":               "a-f-G-U-W",
+        "High Wind Warning":           "a-f-G-U-W",
+        "Red Flag Warning":            "a-f-G-U-F-F",
+        "Wildfire Warning":            "a-f-G-U-F-F",
+        "Dust Storm Warning":          "a-f-G-U-W",
+        "Tsunami Warning":             "a-f-G-U-W-T",
+        "Tsunami Watch":               "a-f-G-U-W-T",
+        "Special Weather Statement":   "a-f-G-U-W",
+    }
+
     def cot_meta(entity_type: str):
         t = (entity_type or "").lower().replace("-", "_")
         return COT_TYPE_MAP.get(t, COT_TYPE_MAP["default"])
 
     def cot_time(stale_secs: int = 0) -> str:
-        """W3C XML Schema dateTime — matches pytak.cot_time()."""
         t = datetime.now(timezone.utc) + timedelta(seconds=stale_secs)
         return t.strftime(W3C_DT)
 
-    def safe_float(val, default=None) -> float | None:
+    def safe_float(val, default=None):
         try:
             return float(val) if val is not None else default
         except (TypeError, ValueError):
             return default
 
+    def parse_iso(s: str) -> datetime:
+        s = s.rstrip("Z")
+        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(s, fmt).replace(tzinfo=timezone.utc)
+            except ValueError:
+                continue
+        return datetime.now(timezone.utc)
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Entity state → CoT (ent.*.*.state — ORP fused entities)
+    # ─────────────────────────────────────────────────────────────────────────
     def entity_to_cot(entity: dict) -> tuple:
-        """
-        Build (uid, cot_bytes) using ET.Element — same pattern as pytak.
-        Returns (None, None) if entity has no valid position.
-        """
         lat = safe_float(entity.get("lat") or entity.get("latitude"))
         lon = safe_float(entity.get("lon") or entity.get("longitude"))
         if lat is None or lon is None:
@@ -152,16 +191,15 @@ data:
         uid = f"OM.{entity_type}.{entity_id}"
         now = cot_time()
 
-        # --- Build with ET.Element (safe XML — callsign can contain & < >) ---
         event = ET.Element("event")
         event.set("version", "2.0")
         event.set("type",    ctype)
         event.set("uid",     uid)
-        event.set("how",     "m-g")   # machine / GPS track
+        event.set("how",     "m-g")
         event.set("time",    now)
         event.set("start",   now)
         event.set("stale",   cot_time(stale_secs))
-        event.set("access",  "Unclassified")   # MIL-STD-6090 minimum
+        event.set("access",  "Unclassified")
 
         point = ET.SubElement(event, "point")
         point.set("lat", f"{lat:.6f}")
@@ -171,23 +209,15 @@ data:
         point.set("le",   str(le_val) if le_val is not None else DEFAULT_COT_VAL)
 
         detail = ET.SubElement(event, "detail")
-
-        # _flow-tags_ — provenance marker used by pytak, ATAK, CloudTAK
         flow = ET.SubElement(detail, "_flow-tags_")
         flow.set("omos-tak-projector", now)
-
         contact = ET.SubElement(detail, "contact")
         contact.set("callsign", callsign)
-
-        track = ET.SubElement(detail, "track")
-        track.set("speed",  f"{speed:.2f}")
-        track.set("course", f"{course:.1f}")
-
+        track_el = ET.SubElement(detail, "track")
+        track_el.set("speed",  f"{speed:.2f}")
+        track_el.set("course", f"{course:.1f}")
         remarks = ET.SubElement(detail, "remarks")
         remarks.text = f"src=orp t={entity_type} conf={conf:.2f}"
-
-        # __group tells TAK which group to deliver this to.
-        # NatsBridgePlugin.yaml has groups [__ANON__, Red] so all EUDs see it.
         group = ET.SubElement(detail, "__group")
         group.set("name", TAK_GROUP)
         group.set("role", "Team Member")
@@ -195,9 +225,85 @@ data:
         cot_bytes = XML_DECLARATION + ET.tostring(event, encoding="unicode").encode()
         return uid, cot_bytes
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # Intel event → CoT (intel.> — JetStream durable)
+    # ─────────────────────────────────────────────────────────────────────────
+    def intel_event_type_to_cot(entity_type: str, properties: dict) -> str:
+        if entity_type == "earthquake":
+            return "a-f-G-E-V-Q"
+        if entity_type == "wildfire":
+            return "a-f-G-U-F-F"
+        if entity_type == "conflict_event":
+            return "a-h-G"
+        if entity_type == "weather_alert":
+            event_name = properties.get("event", "")
+            return WEATHER_COT_MAP.get(event_name, "a-f-G-U-W")
+        return "a-f-G-U-O"
+
+    def intel_to_cot(envelope: dict) -> tuple:
+        uid         = envelope.get("id", "unknown")
+        entity_type = envelope.get("type", "")
+        source      = envelope.get("source", "")
+        lat         = safe_float(envelope.get("lat"))
+        lon         = safe_float(envelope.get("lon"))
+        timestamp   = envelope.get("timestamp", "")
+        expires     = envelope.get("expires", "")
+        properties  = envelope.get("properties", {})
+
+        if lat is None or lon is None:
+            return None, None
+        if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+            return None, None
+
+        cot_type = intel_event_type_to_cot(entity_type, properties)
+
+        ts_dt = parse_iso(timestamp) if timestamp else datetime.now(timezone.utc)
+        ex_dt = parse_iso(expires) if expires else ts_dt + timedelta(minutes=30)
+        now = cot_time()
+
+        headline = properties.get("headline", properties.get("event", entity_type))
+        remarks_text = f"{headline}\nSource: {source}\nID: {uid}"
+
+        event = ET.Element("event")
+        event.set("version", "2.0")
+        event.set("type",    cot_type)
+        event.set("uid",     f"INTEL.{uid}")
+        event.set("how",     "m-g")
+        event.set("time",    now)
+        event.set("start",   ts_dt.strftime(W3C_DT))
+        event.set("stale",   ex_dt.strftime(W3C_DT))
+
+        point = ET.SubElement(event, "point")
+        point.set("lat", f"{lat:.6f}")
+        point.set("lon", f"{lon:.6f}")
+        point.set("hae", "0")
+        point.set("ce",  DEFAULT_COT_VAL)
+        point.set("le",  DEFAULT_COT_VAL)
+
+        detail = ET.SubElement(event, "detail")
+        flow = ET.SubElement(detail, "_flow-tags_")
+        flow.set("omos-tak-projector", now)
+        contact = ET.SubElement(detail, "contact")
+        contact.set("callsign", str(headline)[:64])
+        remarks = ET.SubElement(detail, "remarks")
+        remarks.text = remarks_text
+        color = ET.SubElement(detail, "color")
+        color.set("argb", "-65536")
+        group = ET.SubElement(detail, "__group")
+        group.set("name", TAK_GROUP)
+        group.set("role", "Team Member")
+
+        cot_bytes = XML_DECLARATION + ET.tostring(event, encoding="unicode").encode()
+        return f"INTEL.{uid}", cot_bytes
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Main
+    # ─────────────────────────────────────────────────────────────────────────
     async def main():
-        LOG.info("omos-tak-projector → NATS %s → %s [group=%s min_interval=%.0fs]",
-                 NATS_URL, INJECT_SUBJ, TAK_GROUP, MIN_INTERVAL)
+        global _enabled
+
+        LOG.info("omos-tak-projector (unified) → %s [group=%s]", INJECT_SUBJ, TAK_GROUP)
+        LOG.info("  subscriptions: ent.*.*.state (core) + intel.> (JetStream durable)")
 
         tls_ctx = ssl.create_default_context()
         tls_ctx.check_hostname = False
@@ -214,15 +320,30 @@ data:
             opts["user"]     = NATS_USER
             opts["password"] = NATS_PASSWORD
 
+        async def _error_cb(e):
+            LOG.error(f"NATS error: {e}")
+        async def _reconnected_cb():
+            LOG.info("NATS reconnected")
+        async def _disconnected_cb():
+            LOG.warning("NATS disconnected")
+
+        opts["error_cb"] = _error_cb
+        opts["reconnected_cb"] = _reconnected_cb
+        opts["disconnected_cb"] = _disconnected_cb
+
         nc = await nats.connect(**opts)
         LOG.info("NATS connected")
 
-        published = 0
-        skipped   = 0
-        last_pub: dict = {}  # uid → monotonic time of last publish
+        ent_published = 0
+        intel_published = 0
+        skipped = 0
+        last_pub: dict = {}
 
-        async def handler(msg):
-            nonlocal published, skipped
+        # --- Entity state handler (core NATS subscription) ---
+        async def entity_handler(msg):
+            nonlocal ent_published, skipped
+            if not _enabled:
+                return
             try:
                 entity = json.loads(msg.data.decode())
             except Exception:
@@ -239,31 +360,80 @@ data:
                 return
             last_pub[uid] = now_ts
 
-            # Evict stale uid entries to bound memory
-            if published % 10000 == 0 and published > 0:
+            if ent_published % 10000 == 0 and ent_published > 0:
                 cutoff = now_ts - MIN_INTERVAL * 10
                 for k in [k for k, v in last_pub.items() if v < cutoff]:
                     del last_pub[k]
 
             await nc.publish(INJECT_SUBJ, cot_bytes)
-            published += 1
-            if published <= 10 or published % 500 == 0:
-                LOG.info("CoT #%d %s/%s → %s",
-                         published, entity.get("entity_type", "?"),
+            ent_published += 1
+            if ent_published <= 5 or ent_published % 500 == 0:
+                LOG.info("ENT CoT #%d %s/%s → %s",
+                         ent_published, entity.get("entity_type", "?"),
                          entity.get("entity_id", "?"), INJECT_SUBJ)
 
-        sub = await nc.subscribe("ent.*.*.state", cb=handler)
-        LOG.info("subscribed to ent.*.*.state")
+        # --- Intel event handler (JetStream durable consumer) ---
+        async def intel_handler(msg):
+            nonlocal intel_published, skipped
+            if not _enabled:
+                await msg.ack()
+                return
+            try:
+                envelope = json.loads(msg.data.decode())
+            except Exception:
+                skipped += 1
+                await msg.ack()
+                return
+
+            uid, cot_bytes = intel_to_cot(envelope)
+            if cot_bytes is None:
+                skipped += 1
+                await msg.ack()
+                return
+
+            await nc.publish(INJECT_SUBJ, cot_bytes)
+            intel_published += 1
+            if intel_published <= 5 or intel_published % 100 == 0:
+                LOG.info("INTEL CoT #%d %s → %s",
+                         intel_published, envelope.get("type", "?"), INJECT_SUBJ)
+            await msg.ack()
+
+        # --- Control handlers ---
+        async def handle_disable(msg):
+            global _enabled
+            _enabled = False
+            LOG.info("projector DISABLED via cmd.projector.disable")
+
+        async def handle_enable(msg):
+            global _enabled
+            _enabled = True
+            LOG.info("projector ENABLED via cmd.projector.enable")
+
+        await nc.subscribe("cmd.projector.disable", cb=handle_disable)
+        await nc.subscribe("cmd.projector.enable",  cb=handle_enable)
+
+        # Subscribe: entity states (core NATS — no JetStream)
+        await nc.subscribe("ent.*.*.state", cb=entity_handler)
+        LOG.info("subscribed: ent.*.*.state (core NATS)")
+
+        # Subscribe: intel events (JetStream durable consumer)
+        js = nc.jetstream()
+        await js.subscribe(
+            "intel.>",
+            durable="sink-tak",
+            cb=intel_handler,
+            deliver_policy=nats.js.api.DeliverPolicy.NEW,
+        )
+        LOG.info("subscribed: intel.> (JetStream durable=sink-tak)")
 
         try:
             while True:
                 await asyncio.sleep(60)
-                LOG.info("heartbeat published=%d skipped=%d tracked_uids=%d",
-                         published, skipped, len(last_pub))
+                LOG.info("heartbeat ent=%d intel=%d skipped=%d uids=%d enabled=%s",
+                         ent_published, intel_published, skipped, len(last_pub), _enabled)
         except asyncio.CancelledError:
             pass
         finally:
-            await sub.unsubscribe()
             await nc.drain()
 
     if __name__ == "__main__":
@@ -325,8 +495,8 @@ spec:
               cpu: "50m"
               memory: "64Mi"
             limits:
-              cpu: "200m"
-              memory: "128Mi"
+              cpu: "500m"
+              memory: "192Mi"
       volumes:
         - name: script
           configMap:

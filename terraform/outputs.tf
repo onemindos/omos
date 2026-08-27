@@ -35,8 +35,3 @@ output "vpc_id" {
   description = "Private VPC ID."
   value       = digitalocean_vpc.hub.id
 }
-
-output "registry_endpoint" {
-  description = "Container registry endpoint for image pushes."
-  value       = digitalocean_container_registry.hub.endpoint
-}

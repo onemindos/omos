@@ -13,49 +13,22 @@ PLATFORM="$REPO_ROOT/platform"
 echo "==> Using cluster context: $CTX"
 
 # -----------------------------------------------------------------------------
-# 0. EXTERNAL SECRETS OPERATOR + 1PASSWORD CONNECT
-# All K8s secrets are synced from 1Password via ESO — no manual kubectl create secret needed.
-# Requires two bootstrap secrets (only needed once on fresh cluster):
-#   op-credentials    — 1password-credentials.json file (from 1Password Connect server setup)
-#   onepassword-connect-token  — Connect API JWT token
+# 0. SEALED SECRETS CONTROLLER
+# All K8s secrets are encrypted SealedSecret YAMLs committed to this repo.
+# The controller (kube-system) decrypts them using the cluster private key.
+# Must run before any step that applies SealedSecret manifests.
 #
-# Bootstrap (one-time, from 1Password vault "00-24 SO"):
-#   kubectl create namespace external-secrets
-#   kubectl create secret generic op-credentials \
-#     -n external-secrets --from-file=1password-credentials.json=<path-to-file>
-#   kubectl create secret generic onepassword-connect-token \
-#     -n external-secrets --from-literal=token=<connect-jwt>
+# To reseal a rotated secret:
+#   kubeseal --fetch-cert --controller-name=sealed-secrets-controller \
+#     --controller-namespace=kube-system > /tmp/pub-cert.pem
+#   kubectl create secret generic <name> -n <ns> --from-literal=key=value \
+#     --dry-run=client -o json \
+#     | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
+#     > platform/<ns>/<name>.sealedsecret.yaml
 # -----------------------------------------------------------------------------
-helm repo add external-secrets https://charts.external-secrets.io --force-update
-helm upgrade --install external-secrets external-secrets/external-secrets \
-  --kube-context "$CTX" -n external-secrets --create-namespace \
-  --set installCRDs=true
-
-helm repo add 1password https://1password.github.io/connect-helm-charts --force-update
-helm upgrade --install onepassword-connect 1password/connect \
-  --kube-context "$CTX" -n external-secrets \
-  --set connect.credentials_base64="" \
-  --set operator.create=false
-# Note: helm chart reads op-credentials secret created above
-
-kubectl --context "$CTX" apply -f "$PLATFORM/external-secrets/cluster-secret-store.yaml"
-
-# Wait for Connect pod to be ready before services that depend on synced secrets
-kubectl --context "$CTX" wait --for=condition=available deployment/onepassword-connect \
-  -n external-secrets --timeout=120s
-
-# Apply all ExternalSecrets — they will sync automatically
-kubectl --context "$CTX" apply -f "$PLATFORM/legacy/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/wwv/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/omos/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/orp/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes-webui/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/ingress/external-secret.yaml"
-kubectl --context "$CTX" apply -f "$REPO_ROOT/tak-cluster/deploy/external-secret.yaml"
-# Wait for secrets to sync before deploying services
-sleep 15
+kubectl --context "$CTX" apply -f "$PLATFORM/sealed-secrets/controller.yaml"
+kubectl --context "$CTX" wait --for=condition=available deployment/sealed-secrets-controller \
+  -n kube-system --timeout=120s
 
 # -----------------------------------------------------------------------------
 # 1. CORE PLATFORM — cert-manager, ingress-nginx, ArgoCD
@@ -77,7 +50,7 @@ helm upgrade --install argocd argo/argo-cd \
 
 # -----------------------------------------------------------------------------
 # 2. TLS ISSUERS (cert-manager ClusterIssuers)
-# cloudflare-api-token secret is synced by ESO (step 0) — no manual action needed
+# cloudflare-api-token is a SealedSecret in platform/cert-manager/
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuer-dns.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuers.yaml"
@@ -85,7 +58,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuers.yaml"
 # -----------------------------------------------------------------------------
 # 3. CLOUDFLARE TUNNEL (zero public inbound)
 # Routes are declared in platform/cloudflare/config.yaml — edit + apply to add new routes.
-# Requires tunnel-creds-json secret (NOT synced by ESO — derived from TUNNEL_TOKEN, one-time):
+# Requires tunnel-creds-json secret (SealedSecret — see platform/cloudflare/tunnel-creds-json.sealedsecret.yaml):
 #   TOKEN=$(op read "op://00-24 SO/tunnel-credentials/tunnel-token")
 #   python3 -c "
 #     import sys,json,base64; t='$TOKEN'; p=t+'='*(4-len(t)%4)
@@ -112,8 +85,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/nats/omos-nats-tailnet-service.yaml
 #   websocket:
 #     enabled: true
 #     port: 8080
-# The nats-ws-route ConfigMap (platform/omos-ui/cloudflare-route.yaml)
-# exposes it as wss://nats-ws.onemindos.dev via Cloudflare tunnel
+# NATS WebSocket is exposed as wss://ws.onemindos.dev via Cloudflare tunnel (platform/cloudflare/config.yaml)
 
 # -----------------------------------------------------------------------------
 # 4b. NACK — JetStream CRD controller (Stream + KeyValue declarative mgmt)
@@ -179,28 +151,11 @@ kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/nats-surveyor/servicemonitor.yaml"
 
 # -----------------------------------------------------------------------------
-# 7. ORP — Open Reality Protocol fusion engine
-# Secrets (orp-nats-creds, orp-bridge-key) synced from 1Password by ESO (step 0)
-# -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/orp/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/orp/pvc.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/orp/configmap.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/orp/bridge-script.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/orp/deployment.yaml"
-
-# -----------------------------------------------------------------------------
 # 8. OMOS SERVICES — shared omos namespace (tak-projector, feed-world, etc.)
-# Secrets (omos-nats-creds) synced from 1Password by ESO (step 0)
+# Secrets (omos-nats-creds) are SealedSecrets in platform/omos/
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/tak-projector.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/omos-ui/cloudflare-route.yaml"
-# Note: Cesium ion vars (VITE_CESIUM_ION_TOKEN, VITE_CESIUM_ION_SERVER) are baked
-# at build time — set them as GitHub Actions secrets in the omos-ui repo, not K8s secrets.
-# Self-hosted ion: VITE_CESIUM_ION_SERVER=https://ion.onemindos.dev
-# Cesium.com cloud: leave VITE_CESIUM_ION_SERVER empty, set token from cesium.com/ion
-kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/external-secret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/deployment.yaml"
 
 # -----------------------------------------------------------------------------
@@ -221,20 +176,20 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
 
 # -----------------------------------------------------------------------------
 # 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge
-# Secrets (hermes-env, hermes-leaf-conf, hermes-nats-ca) synced by ESO (step 0)
-# cloudtak-agent-token: still out-of-band — generate in CloudTAK UI → Settings → Tokens
+# Secrets (hermes-env, hermes-leaf-conf, hermes-nats-ca) are SealedSecrets in platform/hermes/
+# cloudtak-agent-token: out-of-band — generate in CloudTAK UI → Settings → Tokens
 #   kubectl create secret generic cloudtak-agent-token -n hermes \
 #     --from-literal=token='<token from CloudTAK UI: Settings → Tokens → New>'
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/legacy/namespace.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/legacy/pvc.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/legacy/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/legacy/tak-agent.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/onemind-ai-bridge.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/namespace.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/pvc.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/deployment.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/tak-agent.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/hermes/bridge/onemind-ai-bridge.yaml"
 
 # -----------------------------------------------------------------------------
 # 10. CLOUDTAK — API + Events + Media + Tiles + MinIO + PostGIS
-# Secrets (cloudtak-secrets) synced from 1Password by ESO (step 0)
+# Secrets (cloudtak-secrets) are SealedSecrets in platform/cloudtak/
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" create namespace cloudtak --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/api.yaml"
@@ -245,18 +200,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/minio.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/postgis.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
-
-# -----------------------------------------------------------------------------
-# 11. Synadia Bridge (Legacy AI full-screen chat UI at legacy-ai.onemindos.dev)
-# Requires: omos-nats-creds in synadia-bridge namespace + ghcr-onemindos pull secret
-#   kubectl create secret generic omos-nats-creds -n synadia-bridge \
-#     --from-literal=user='...' --from-literal=password='...'
-#   kubectl create secret docker-registry ghcr-onemindos -n synadia-bridge \
-#     --docker-server=ghcr.io --docker-username=zeus --docker-password='<PAT>'
-# After deploy: CloudTAK Admin → Config → External Applications → legacy-ai.onemindos.dev
-# -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/synadia-bridge/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/synadia-bridge/cloudflare-route.yaml"
 
 echo ""
 echo "==> Platform install complete."

@@ -9,8 +9,9 @@ name: Build Intel Services → GHCR
 #   osiris-intel         — ontology engine (simplifaisoul/osiris, intel/Dockerfile)
 #   worldwideview        — geo-intelligence app (silvertakana/worldwideview)
 #   crucix               — OSINT intelligence engine (calesthio/Crucix)
-#   shadowbroker-backend — OSINT platform backend (bigbodycobain/shadowbroker)
-#   shadowbroker-frontend — OSINT platform frontend (bigbodycobain/shadowbroker)
+#
+# Note: shadowbroker uses upstream images directly (ghcr.io/bigbodycobain/shadowbroker-*)
+# and is not built here.
 
 on:
   push:

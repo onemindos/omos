@@ -27,6 +27,7 @@ singleBinary:
   persistence:
     enabled: true
     size: 20Gi
+    storageClassName: do-block-storage-retain
   resources:
     requests:
       cpu: 100m

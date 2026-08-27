@@ -1,58 +1,71 @@
 #!/usr/bin/env bash
-# Rung 1: stage Zeus's single-node 5.7 distro into the source layout the upstream
-# cluster Dockerfiles expect (build-root/), so we build CURRENT 5.7 cluster images
-# from the distro (Option B). Docker-independent: pure file staging + verification.
-# If this prints "MISSING: 0", the docker build context is provably complete.
+# Verify the 5.8 distro has all files required by the upstream Dockerfiles.
+# 5.8 ships pre-assembled in tak/ — no staging needed. This script just confirms
+# the build context is complete before running docker build.
+#
+# Usage:
+#   DISTRO=/path/to/takserver-docker-hardened-5.8-RELEASE-69 ./build/stage.sh
 set -euo pipefail
-DISTRO="${DISTRO:-/Users/zeus/ATAK/server/standard/takserver-docker-5.7-RELEASE-43/tak}"
-HERE="$(cd "$(dirname "$0")" && pwd)"
-UPSTREAM="$HERE/../upstream"
-OUT="$HERE/../build-root"
 
-rm -rf "$OUT"
-mkdir -p "$OUT/takserver-core/config" "$OUT/takserver-core/API" \
-         "$OUT/takserver-core/messaging" "$OUT/takserver-core/plugins" \
-         "$OUT/takserver-usermanager" "$OUT/takserver-schemamanager"
+DISTRO="${DISTRO:-/Users/zeus/OneMind Guardian (TAK)/server/5.8/takserver-docker-hardened-5.8-extracted/takserver-docker-hardened-5.8-RELEASE-69}"
+HERE="$(cd "$(dirname "$0")" && pwd)"
 
 miss=0
-stage(){ # $1 = target rel path under build-root ; $2 = filename to find in distro, or UPSTREAM:relpath
-  local target="$OUT/$1" src=""
-  if [[ "$2" == UPSTREAM:* ]]; then src="$UPSTREAM/${2#UPSTREAM:}"
-  else src="$(find "$DISTRO" -name "$2" 2>/dev/null | head -1)"; fi
-  if [[ -n "$src" && -f "$src" ]]; then cp "$src" "$target"; echo "OK   $1"
-  else echo "MISS $1  (looked for: $2)"; miss=$((miss+1)); fi
+check(){ # $1 = relative path under distro
+  if [[ -f "$DISTRO/$1" ]]; then echo "OK   $1"
+  else echo "MISS $1"; miss=$((miss+1)); fi
 }
 
-stage takserver-core/takserver-core.war                        takserver.war
-stage takserver-core/setenv-cluster.sh                         setenv-cluster.sh
-stage takserver-core/logging-restrictsize.xml                  logging-restrictsize.xml
-stage takserver-core/UserAuthenticationFile.xml                UserAuthenticationFile.xml
-stage takserver-core/enable_admin.sh                           enable_admin.sh
-stage takserver-core/messaging-readiness.sh                    messaging-readiness.sh
-stage takserver-core/config-readiness.sh                       config-readiness.sh
-stage takserver-core/api-readiness.sh                          api-readiness.sh
-stage takserver-core/takserver-pm.jar                          takserver-pm.jar
-stage takserver-core/config/takserver-config-cluster.sh        takserver-config-cluster.sh
-stage takserver-core/API/takserver-api-cluster.sh              takserver-api-cluster.sh
-stage takserver-core/messaging/takserver-messaging-cluster.sh  takserver-messaging-cluster.sh
-stage takserver-core/plugins/takserver-plugins-cluster.sh      takserver-plugins-cluster.sh
-stage takserver-usermanager/UserManager.jar                    UserManager.jar
-stage takserver-schemamanager/SchemaManager.jar                SchemaManager.jar
-stage takserver-schemamanager/db-connection-configuration.sh   UPSTREAM:utilities/db-connection-configuration.sh
-stage CoreConfig.xml                                           CoreConfig.example.xml
+echo "=== Verifying 5.8 distro: $DISTRO ==="
+check tak/takserver.war
+check tak/takserver-pm.jar
+check tak/takserver-plugins-cluster.sh
+check tak/setenv.sh
+check tak/setenv-cluster.sh
+check tak/config/takserver-config-cluster.sh
+check tak/API/takserver-api-cluster.sh
+check tak/messaging/takserver-messaging-cluster.sh
+check tak/api-readiness.sh
+check tak/config-readiness.sh
+check tak/messaging-readiness.sh
+check tak/db-utils/SchemaManager.jar
+check tak/db-utils/generic-cluster-database-configuration.sh
+check tak/utils/UserManager.jar
 
-# takserver.sh: single-node launcher, NOT used by cluster entrypoints (config/api/
-# messaging run their *-cluster.sh). Stub so the upstream base COPY+chmod succeeds.
-printf '#!/bin/sh\n# stubbed for cluster build (cluster uses *-cluster.sh launchers)\nexit 0\n' > "$OUT/takserver-core/takserver.sh"
-echo "STUB takserver-core/takserver.sh"
-
-# NATS bridge plugin (Zeus's) into the plugins build context
+echo ""
+echo "=== Plugin JAR ==="
 if [[ -f "$HERE/../plugin/takserver-nats-plugin-1.0.0.jar" ]]; then
-  echo "OK   plugin jar present"
+  echo "OK   plugin/takserver-nats-plugin-1.0.0.jar"
 else
-  echo "NOTE plugin jar not yet copied -> cp .../tak/lib/takserver-nats-plugin-1.0.0.jar plugin/"
+  echo "NOTE plugin jar not present — rebuild against 5.8 SDK first:"
+  echo "     cd plugin-src && gradle build && cp build/libs/*.jar ../plugin/"
 fi
 
 echo ""
 echo "MISSING: $miss"
-[[ $miss -eq 0 ]] && echo "==> BUILD CONTEXT COMPLETE (docker build will resolve every COPY)"
+[[ $miss -eq 0 ]] && echo "==> DISTRO COMPLETE — ready to build images"
+
+echo ""
+echo "=== Build commands (run from $DISTRO) ==="
+GHCR="ghcr.io/onemindos"
+HERE_REL="$(cd "$HERE/.." && pwd)"
+cat <<EOF
+cd "$DISTRO"
+docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-base"     -t $GHCR/takserver-base:5.8-onemind         .
+docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-config"   -t $GHCR/takserver-config:5.8-onemind        --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-api"      -t $GHCR/takserver-api:5.8-onemind           --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-messaging" -t $GHCR/takserver-messaging:5.8-onemind    --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-plugins"  -t $GHCR/takserver-plugins:5.8-onemind       --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.database-setup"     -t $GHCR/takserver-database-setup:5.8-onemind .
+# Push all upstream images first, then build the OneMind plugins overlay:
+docker push $GHCR/takserver-base:5.8-onemind
+docker push $GHCR/takserver-config:5.8-onemind
+docker push $GHCR/takserver-api:5.8-onemind
+docker push $GHCR/takserver-messaging:5.8-onemind
+docker push $GHCR/takserver-plugins:5.8-onemind
+docker push $GHCR/takserver-database-setup:5.8-onemind
+# OneMind plugins overlay (adds NatsBridgePlugin on top of takserver-plugins):
+cd "$HERE_REL"
+docker build --platform linux/amd64 -f docker/Dockerfile.takserver-plugins.onemind -t $GHCR/takserver-plugins:5.8-onemind .
+docker push $GHCR/takserver-plugins:5.8-onemind
+EOF

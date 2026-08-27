@@ -24,6 +24,7 @@ tempo:
 persistence:
   enabled: true
   size: 20Gi
+  storageClassName: do-block-storage-retain
 
 monolithic:
   resources:

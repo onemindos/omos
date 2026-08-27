@@ -1,8 +1,9 @@
 # OneMind cloud hub — Step 1 foundation.
 # Provisions ONLY the primitives an empty production cluster needs:
-#   VPC (network isolation) + DOKS cluster + container registry.
+#   VPC (network isolation) + DOKS cluster.
 # Deliberately NOT here yet (added when a workload needs them):
 #   managed Postgres, load balancer, Spaces buckets.
+# Images are on GHCR (ghcr.io/onemindos/) — DOCR not used.
 
 # --- Private network -------------------------------------------------------
 # Isolates all hub traffic on a private VPC. Node<->node and future
@@ -25,9 +26,6 @@ resource "digitalocean_kubernetes_cluster" "hub" {
   auto_upgrade = true
   surge_upgrade = true
 
-  # Free container-registry integration so nodes can pull our images.
-  registry_integration = true
-
   node_pool {
     name       = "${var.project_name}-core"
     size       = var.node_size
@@ -45,15 +43,6 @@ resource "digitalocean_kubernetes_cluster" "hub" {
     start_time = "07:00" # UTC ~ 03:00 EDT, low-activity window
     day        = "sunday"
   }
-}
-
-# --- Container registry ----------------------------------------------------
-# Holds our own service images (om-control-plane, etc.). One registry per
-# account; basic tier gives 5 GB and multiple repositories.
-resource "digitalocean_container_registry" "hub" {
-  name                   = var.project_name
-  subscription_tier_slug = var.registry_tier
-  region                 = var.region
 }
 
 # --- Project grouping ------------------------------------------------------

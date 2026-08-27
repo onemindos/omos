@@ -1,0 +1,55 @@
+# feed-ships.yaml — AIS vessel positions via aisstream.io WebSocket → CoT → tak.cot.inject
+# Real-time streaming (no poll interval — messages arrive as vessels report)
+# Requires: AISSTREAM_API_KEY env var (from omos-feed-secrets)
+
+input:
+  websocket:
+    url: "wss://stream.aisstream.io/v0/stream"
+    open_message: '{"APIKey": "${AISSTREAM_API_KEY}", "BoundingBoxes": [[[-90, -180], [90, 180]]]}'
+    open_message_type: text
+    tls:
+      enabled: true
+
+pipeline:
+  processors:
+    - mapping: |
+        let md = this.MetaData.or({})
+        let mmsi = $md.MMSI.or($md.UserID)
+        let lat = $md.latitude.or($md.Latitude)
+        let lon = $md.longitude.or($md.Longitude)
+        root = if $mmsi == null || $lat == null || $lon == null { deleted() } else {
+          let pr = this.Message.or({})
+          let pos = $pr.PositionReport.or($pr.StandardClassBPositionReport.or({}))
+          let sog = $pos.Sog.or(0)
+          let cog = $pos.Cog.or(0)
+          let sdata = $pr.ShipStaticData.or({})
+          let ship_name = $sdata.Name.or($md.ShipName.or("")).string().trim()
+          let cs = if $ship_name == "" { $mmsi.string() } else { $ship_name.slice(0, 32).replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;") }
+          let stype = $sdata.Type.Code.or("").string()
+          {
+            "uid": "AIS-" + $mmsi.string(),
+            "callsign": $cs,
+            "lat": $lat,
+            "lon": $lon,
+            "sog": $sog,
+            "cog": $cog,
+            "mmsi": $mmsi,
+            "stype": $stype
+          }
+        }
+
+    - mapping: |
+        let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+        let stale = (now().ts_unix() + 300).ts_format("2006-01-02T15:04:05.000Z")
+        root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-f-S-X-M\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"-10000\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + this.callsign + "\"/><track speed=\"" + this.sog.string() + "\" course=\"" + this.cog.string() + "\"/><status readiness=\"false\"/><remarks>MMSI:" + this.mmsi.string() + " " + this.stype + "</remarks><marti><dest mission=\"Sea\"/></marti></detail></event>"
+
+output:
+  nats:
+    urls: ["nats://nats.nats.svc.cluster.local:4222"]
+    subject: "tak.cot.inject"
+    auth:
+      user: "${NATS_USER}"
+      password: "${NATS_PASSWORD}"
+    tls:
+      enabled: true
+      skip_cert_verify: true

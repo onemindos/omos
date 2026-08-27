@@ -1,0 +1,596 @@
+# =============================================================================
+# Redpanda Connect (Wombat) — declarative data feed engine → NATS → TAK
+#
+# Runs in streams mode: all pipeline files in /config/pipelines/ run as
+# independent concurrent streams in one pod. To add a feed: drop a YAML file
+# in pipelines/ and add it to the ConfigMap below.
+#
+# Current pipelines:
+#   feed-mta.yaml      — MTA Metro-North + LIRR trains → tak.cot.inject (30s poll)
+#   feed-hazards.yaml  — USGS earthquakes + NWS weather alerts → tak.cot.inject (60s poll)
+#   feed-ships.yaml    — AIS vessel positions via aisstream.io WebSocket → tak.cot.inject
+#   feed-aircraft.yaml — ADS-B aircraft via OpenSky REST → tak.cot.inject (15s poll)
+#
+# Secrets required in omos namespace:
+#   omos-nats-creds   — NATS_USER, NATS_PASSWORD
+#   omos-feed-secrets — AISSTREAM_API_KEY (ships), OPENSKY_USERNAME/PASSWORD (aircraft, optional)
+#
+# Proto schemas live in platform/redpanda-connect/gtfs-realtime.proto.
+# =============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redpanda-connect-pipelines
+  namespace: omos
+data:
+  feed-mta.yaml: |
+    input:
+      generate:
+        interval: "30s"
+        mapping: 'root = ""'
+
+    pipeline:
+      processors:
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr"
+                  verb: GET
+                  timeout: "10s"
+                  headers:
+                    User-Agent: "OMOS-FeedEngine/1.0"
+              - protobuf:
+                  operator: to_json
+                  message: "transit_realtime.FeedMessage"
+                  import_paths: ["/proto/"]
+              - mapping: |
+                  root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> {
+                    "uid": "MTA-MNR-%s".format(e.vehicle.trip.trip_id.or(e.id)),
+                    "callsign": "MNR-%s".format(e.vehicle.trip.route_id.or(e.vehicle.trip.trip_id.or("?"))),
+                    "lat": e.vehicle.position.latitude,
+                    "lon": e.vehicle.position.longitude,
+                    "speed": e.vehicle.position.speed.or(0),
+                    "course": e.vehicle.position.bearing.or(0),
+                    "remarks": "MTA Metro-North route:%s trip:%s".format(e.vehicle.trip.route_id.or("?"), e.vehicle.trip.trip_id.or("?")),
+                    "feed": "MNR"
+                  })
+            result_map: 'root.mnr = this'
+
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr"
+                  verb: GET
+                  timeout: "10s"
+                  headers:
+                    User-Agent: "OMOS-FeedEngine/1.0"
+              - protobuf:
+                  operator: to_json
+                  message: "transit_realtime.FeedMessage"
+                  import_paths: ["/proto/"]
+              - mapping: |
+                  root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> {
+                    "uid": "MTA-LIRR-%s".format(e.vehicle.trip.trip_id.or(e.id)),
+                    "callsign": "LIRR-%s".format(e.vehicle.trip.route_id.or(e.vehicle.trip.trip_id.or("?"))),
+                    "lat": e.vehicle.position.latitude,
+                    "lon": e.vehicle.position.longitude,
+                    "speed": e.vehicle.position.speed.or(0),
+                    "course": e.vehicle.position.bearing.or(0),
+                    "remarks": "MTA LIRR route:%s trip:%s".format(e.vehicle.trip.route_id.or("?"), e.vehicle.trip.trip_id.or("?")),
+                    "feed": "LIRR"
+                  })
+            result_map: 'root.lirr = this'
+
+        - mapping: |
+            root = this.mnr.or([]).concat(this.lirr.or([]))
+
+        - unarchive:
+            format: json_array
+
+        - mapping: |
+            root = if this.lat == 0 || this.lon == 0 { deleted() } else { this }
+
+        - mapping: |
+            let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+            let stale = (now().ts_unix() + 120).ts_format("2006-01-02T15:04:05.000Z")
+            let cs = this.callsign.replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;")
+            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-n-G-E-V-C-R\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"0\" ce=\"50\" le=\"50\"/><detail><contact callsign=\"" + $cs + "\"/><track speed=\"" + this.speed.string() + "\" course=\"" + this.course.string() + "\"/><remarks>" + this.remarks + "</remarks><marti><dest mission=\"Land\"/></marti></detail></event>"
+
+    output:
+      nats:
+        urls: ["nats://nats.nats.svc.cluster.local:4222"]
+        subject: "tak.cot.inject"
+        auth:
+          user: "${NATS_USER}"
+          password: "${NATS_PASSWORD}"
+        tls:
+          enabled: true
+          skip_cert_verify: true
+  feed-hazards.yaml: |
+    cache_resources:
+      - label: seen_hazards
+        memory:
+          ttl: 21600s
+          cap: 10000
+
+    input:
+      generate:
+        interval: "60s"
+        mapping: 'root = ""'
+
+    pipeline:
+      processors:
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_hour.geojson"
+                  verb: GET
+                  timeout: "15s"
+                  headers:
+                    User-Agent: "OMOS-FeedEngine/1.0"
+              - mapping: |
+                  root = this.features.or([]).map_each(f -> {
+                    "id": f.id,
+                    "uid": "USGS-" + f.id,
+                    "lat": f.geometry.coordinates.index(1),
+                    "lon": f.geometry.coordinates.index(0),
+                    "depth": f.geometry.coordinates.index(2).or(0),
+                    "mag": f.properties.mag.or(0),
+                    "place": f.properties.place.or("Unknown").replace_all("&", "&amp;").replace_all("<", "&lt;"),
+                    "stale_s": 21600,
+                    "hae": (0 - (f.geometry.coordinates.index(2).or(0) * 1000)).round().string(),
+                    "source": "USGS"
+                  })
+            result_map: 'root.usgs = this'
+
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "https://api.weather.gov/alerts/active?severity=Extreme,Severe&status=actual"
+                  verb: GET
+                  timeout: "15s"
+                  headers:
+                    Accept: "application/geo+json"
+                    User-Agent: "OMOS-FeedEngine/1.0"
+              - mapping: |
+                  root = this.features.or([]).map_each(f ->
+                    let geom = f.geometry.or({})
+                    let gtype = $geom.type.or("")
+                    let c = if $gtype == "Point" { $geom.coordinates }
+                            else if $gtype == "Polygon" { $geom.coordinates.index(0).index(0) }
+                            else { null }
+                    if $c == null { deleted() } else {
+                      let fid = f.id.or("")
+                      let short_id = if $fid.length() > 16 { $fid.slice($fid.length() - 16) } else { $fid }
+                      {
+                        "id": $fid,
+                        "uid": "NWS-" + $short_id,
+                        "lat": $c.index(1),
+                        "lon": $c.index(0),
+                        "event": f.properties.event.or("Alert").replace_all("&", "&amp;").replace_all("<", "&lt;"),
+                        "headline": (f.properties.headline.or(f.properties.event.or("Alert"))).slice(0, 80).replace_all("&", "&amp;").replace_all("<", "&lt;"),
+                        "severity": f.properties.severity.or("Unknown"),
+                        "stale_s": 3600,
+                        "hae": "9999999.0",
+                        "source": "NWS"
+                      }
+                    }
+                  )
+            result_map: 'root.nws = this'
+
+        - mapping: |
+            root = this.usgs.or([]).concat(this.nws.or([]))
+
+        - unarchive:
+            format: json_array
+
+        - dedupe:
+            cache: seen_hazards
+            key: '${!this.id}'
+
+        - mapping: |
+            let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+            let stale = (now().ts_unix() + this.stale_s.number()).ts_format("2006-01-02T15:04:05.000Z")
+            let callsign = if this.source == "USGS" {
+              "M" + this.mag.format_number(1) + " Earthquake"
+            } else {
+              this.event
+            }
+            let remarks = if this.source == "USGS" {
+              "M" + this.mag.format_number(1) + " " + this.place + " depth:" + this.depth.format_number(1) + "km"
+            } else {
+              this.severity + ": " + this.headline
+            }
+            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"b-r-f-h-h\" uid=\"" + this.uid + "\" how=\"h-e\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"" + this.hae + "\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + $callsign + "\"/><status readiness=\"false\"/><remarks>" + $remarks + "</remarks><marti><dest mission=\"Hazards\"/></marti></detail></event>"
+
+    output:
+      nats:
+        urls: ["nats://nats.nats.svc.cluster.local:4222"]
+        subject: "tak.cot.inject"
+        auth:
+          user: "${NATS_USER}"
+          password: "${NATS_PASSWORD}"
+        tls:
+          enabled: true
+          skip_cert_verify: true
+  feed-ships.yaml: |
+    input:
+      websocket:
+        url: "wss://stream.aisstream.io/v0/stream"
+        open_message: '{"APIKey": "${AISSTREAM_API_KEY}", "BoundingBoxes": [[[-90, -180], [90, 180]]]}'
+        open_message_type: text
+        tls:
+          enabled: true
+
+    pipeline:
+      processors:
+        - mapping: |
+            let md = this.MetaData.or({})
+            let mmsi = $md.MMSI.or($md.UserID)
+            let lat = $md.latitude.or($md.Latitude)
+            let lon = $md.longitude.or($md.Longitude)
+            root = if $mmsi == null || $lat == null || $lon == null { deleted() } else {
+              let pr = this.Message.or({})
+              let pos = $pr.PositionReport.or($pr.StandardClassBPositionReport.or({}))
+              let sog = $pos.Sog.or(0)
+              let cog = $pos.Cog.or(0)
+              let sdata = $pr.ShipStaticData.or({})
+              let ship_name = $sdata.Name.or($md.ShipName.or("")).string().trim()
+              let cs = if $ship_name == "" { $mmsi.string() } else { $ship_name.slice(0, 32).replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;") }
+              let stype = $sdata.Type.Code.or("").string()
+              {
+                "uid": "AIS-" + $mmsi.string(),
+                "callsign": $cs,
+                "lat": $lat,
+                "lon": $lon,
+                "sog": $sog,
+                "cog": $cog,
+                "mmsi": $mmsi,
+                "stype": $stype
+              }
+            }
+
+        - mapping: |
+            let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+            let stale = (now().ts_unix() + 300).ts_format("2006-01-02T15:04:05.000Z")
+            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-f-S-X-M\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"-10000\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + this.callsign + "\"/><track speed=\"" + this.sog.string() + "\" course=\"" + this.cog.string() + "\"/><status readiness=\"false\"/><remarks>MMSI:" + this.mmsi.string() + " " + this.stype + "</remarks><marti><dest mission=\"Sea\"/></marti></detail></event>"
+
+    output:
+      nats:
+        urls: ["nats://nats.nats.svc.cluster.local:4222"]
+        subject: "tak.cot.inject"
+        auth:
+          user: "${NATS_USER}"
+          password: "${NATS_PASSWORD}"
+        tls:
+          enabled: true
+          skip_cert_verify: true
+  feed-aircraft.yaml: |
+    input:
+      generate:
+        interval: "15s"
+        mapping: 'root = ""'
+
+    pipeline:
+      processors:
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "https://opensky-network.org/api/states/all"
+                  verb: GET
+                  timeout: "20s"
+                  headers:
+                    User-Agent: "omos-feed-aircraft/1.0"
+              - mapping: |
+                  root = this.states.or([]).map_each(s ->
+                    let lon = s.index(5)
+                    let lat = s.index(6)
+                    if $lon == null || $lat == null { deleted() } else {
+                      let icao24 = s.index(0).or("").string()
+                      let raw_cs = s.index(1).or("").string().trim()
+                      let callsign = if $raw_cs == "" { $icao24.uppercase() } else { $raw_cs.replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;") }
+                      let alt = s.index(7).or(0)
+                      let spd_kt = s.index(9).or(0) * 1.94384
+                      let trk = s.index(10).or(0)
+                      let country = s.index(2).or("").string().replace_all("&", "&amp;").replace_all("<", "&lt;")
+                      {
+                        "uid": "ADSB-" + $icao24.uppercase(),
+                        "callsign": $callsign,
+                        "lat": $lat,
+                        "lon": $lon,
+                        "alt": $alt,
+                        "spd_kt": $spd_kt,
+                        "trk": $trk,
+                        "icao24": $icao24,
+                        "country": $country
+                      }
+                    }
+                  )
+            result_map: 'root = this'
+
+        - unarchive:
+            format: json_array
+
+        - mapping: |
+            let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+            let stale = (now().ts_unix() + 90).ts_format("2006-01-02T15:04:05.000Z")
+            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-f-A-M-F-Q\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"" + this.alt.string() + "\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + this.callsign + "\"/><track speed=\"" + this.spd_kt.format_number(1) + "\" course=\"" + this.trk.string() + "\"/><status readiness=\"false\"/><remarks>ICAO:" + this.icao24 + " " + this.country + "</remarks><marti><dest mission=\"Air\"/></marti></detail></event>"
+
+    output:
+      nats:
+        urls: ["nats://nats.nats.svc.cluster.local:4222"]
+        subject: "tak.cot.inject"
+        auth:
+          user: "${NATS_USER}"
+          password: "${NATS_PASSWORD}"
+        tls:
+          enabled: true
+          skip_cert_verify: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redpanda-connect-proto
+  namespace: omos
+data:
+  gtfs-realtime.proto: |
+    syntax = "proto2";
+    package transit_realtime;
+
+    message FeedMessage {
+      required FeedHeader header = 1;
+      repeated FeedEntity entity = 2;
+    }
+    message FeedHeader {
+      required string gtfs_realtime_version = 1;
+      optional Incrementality incrementality = 2 [default = FULL_DATASET];
+      optional uint64 timestamp = 3;
+      enum Incrementality {
+        FULL_DATASET = 0;
+        DIFFERENTIAL = 1;
+      }
+    }
+    message FeedEntity {
+      required string id = 1;
+      optional bool is_deleted = 2 [default = false];
+      optional TripUpdate trip_update = 3;
+      optional VehiclePosition vehicle = 4;
+      optional Alert alert = 5;
+    }
+    message TripUpdate {
+      optional TripDescriptor trip = 1;
+      optional VehicleDescriptor vehicle = 3;
+      repeated StopTimeUpdate stop_time_update = 2;
+      optional uint64 timestamp = 4;
+      message StopTimeUpdate {
+        optional uint32 stop_sequence = 1;
+        optional string stop_id = 4;
+        optional StopTimeEvent arrival = 2;
+        optional StopTimeEvent departure = 3;
+        enum ScheduleRelationship {
+          SCHEDULED = 0;
+          SKIPPED = 1;
+          NO_DATA = 2;
+        }
+        optional ScheduleRelationship schedule_relationship = 5 [default = SCHEDULED];
+      }
+      message StopTimeEvent {
+        optional int32 delay = 1;
+        optional int64 time = 2;
+        optional int32 uncertainty = 3;
+      }
+      enum ScheduleRelationship {
+        SCHEDULED = 0;
+        ADDED = 1;
+        UNSCHEDULED = 2;
+        CANCELED = 3;
+      }
+      optional ScheduleRelationship schedule_relationship = 5 [default = SCHEDULED];
+    }
+    message VehiclePosition {
+      optional TripDescriptor trip = 1;
+      optional VehicleDescriptor vehicle = 8;
+      optional Position position = 2;
+      optional uint32 current_stop_sequence = 3;
+      optional string stop_id = 7;
+      optional VehicleStopStatus current_status = 4 [default = IN_TRANSIT_TO];
+      optional uint64 timestamp = 5;
+      optional CongestionLevel congestion_level = 6;
+      optional OccupancyStatus occupancy_status = 9;
+      enum VehicleStopStatus {
+        INCOMING_AT = 0;
+        STOPPED_AT = 1;
+        IN_TRANSIT_TO = 2;
+      }
+      enum CongestionLevel {
+        UNKNOWN_CONGESTION_LEVEL = 0;
+        RUNNING_SMOOTHLY = 1;
+        STOP_AND_GO = 2;
+        CONGESTION = 3;
+        SEVERE_CONGESTION = 4;
+      }
+      enum OccupancyStatus {
+        EMPTY = 0;
+        MANY_SEATS_AVAILABLE = 1;
+        FEW_SEATS_AVAILABLE = 2;
+        STANDING_ROOM_ONLY = 3;
+        CRUSHED_STANDING_ROOM_ONLY = 4;
+        FULL = 5;
+        NOT_ACCEPTING_PASSENGERS = 6;
+      }
+    }
+    message Alert {
+      repeated TimeRange active_period = 1;
+      repeated EntitySelector informed_entity = 5;
+      optional Cause cause = 6 [default = UNKNOWN_CAUSE];
+      optional Effect effect = 7 [default = UNKNOWN_EFFECT];
+      optional TranslatedString url = 8;
+      optional TranslatedString header_text = 10;
+      optional TranslatedString description_text = 11;
+      enum Cause {
+        UNKNOWN_CAUSE = 1;
+        OTHER_CAUSE = 2;
+        TECHNICAL_PROBLEM = 3;
+        STRIKE = 4;
+        DEMONSTRATION = 5;
+        ACCIDENT = 6;
+        HOLIDAY = 7;
+        WEATHER = 8;
+        MAINTENANCE = 9;
+        CONSTRUCTION = 10;
+        POLICE_ACTIVITY = 11;
+        MEDICAL_EMERGENCY = 12;
+      }
+      enum Effect {
+        NO_SERVICE = 1;
+        REDUCED_SERVICE = 2;
+        SIGNIFICANT_DELAYS = 3;
+        DETOUR = 4;
+        ADDITIONAL_SERVICE = 5;
+        MODIFIED_SERVICE = 6;
+        OTHER_EFFECT = 7;
+        UNKNOWN_EFFECT = 8;
+        STOP_MOVED = 9;
+      }
+    }
+    message TimeRange {
+      optional uint64 start = 1;
+      optional uint64 end = 2;
+    }
+    message Position {
+      required float latitude = 1;
+      required float longitude = 2;
+      optional float bearing = 3;
+      optional double odometer = 4;
+      optional float speed = 5;
+    }
+    message TripDescriptor {
+      optional string trip_id = 1;
+      optional string route_id = 5;
+      optional uint32 direction_id = 6;
+      optional string start_time = 2;
+      optional string start_date = 3;
+      enum ScheduleRelationship {
+        SCHEDULED = 0;
+        ADDED = 1;
+        UNSCHEDULED = 2;
+        CANCELED = 3;
+      }
+      optional ScheduleRelationship schedule_relationship = 4;
+    }
+    message VehicleDescriptor {
+      optional string id = 1;
+      optional string label = 2;
+      optional string license_plate = 3;
+    }
+    message EntitySelector {
+      optional string agency_id = 1;
+      optional string route_id = 2;
+      optional int32 route_type = 3;
+      optional TripDescriptor trip = 4;
+      optional string stop_id = 5;
+    }
+    message TranslatedString {
+      repeated Translation translation = 1;
+      message Translation {
+        required string text = 1;
+        optional string language = 2;
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redpanda-connect
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: redpanda-connect
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redpanda-connect
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redpanda-connect
+        app.kubernetes.io/part-of: omos-feeds
+    spec:
+      containers:
+        - name: connect
+          image: redpandadata/connect:latest
+          command: ["/bin/sh", "-c"]
+          args: ["exec redpanda-connect streams /config/pipelines/*.yaml"]
+          env:
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: AISSTREAM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: omos-feed-secrets
+                  key: AISSTREAM_API_KEY
+                  optional: true
+            - name: OPENSKY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: omos-feed-secrets
+                  key: OPENSKY_USERNAME
+                  optional: true
+            - name: OPENSKY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-feed-secrets
+                  key: OPENSKY_PASSWORD
+                  optional: true
+          ports:
+            - name: api
+              containerPort: 4195
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 4195
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 4195
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          volumeMounts:
+            - name: pipelines
+              mountPath: /config/pipelines
+            - name: proto
+              mountPath: /proto/gtfs-realtime.proto
+              subPath: gtfs-realtime.proto
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+      volumes:
+        - name: pipelines
+          configMap:
+            name: redpanda-connect-pipelines
+        - name: proto
+          configMap:
+            name: redpanda-connect-proto
+            items:
+              - key: gtfs-realtime.proto
+                path: gtfs-realtime.proto

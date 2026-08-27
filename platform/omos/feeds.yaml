@@ -1,154 +1,16 @@
----
 # =============================================================================
-# OMOS World Feeds — live data sources → NATS → TAK → OMOS ATOC map
+# OMOS Feeds — Python-only feeds that require native libraries unavailable
+# in Redpanda Connect (Wombat). All HTTP/WebSocket-based feeds have been
+# migrated to platform/redpanda-connect/.
 #
-# Each feed is a separate K8s Deployment (streaming) or CronJob (polling).
-# All publish CoT XML to tak.cot.inject on the hub NATS bus.
-# tak-projector / NatsBridgePlugin deliver to TAK → CloudTAK + iTAK.
-#
-# Secrets required (all in omos namespace):
-#   omos-nats-creds        — NATS user+password (already exists)
-#   omos-feed-secrets      — AISSTREAM_API_KEY, OPENSKY_USER, OPENSKY_PASS
-#                            (create via 1Password → kubectl create secret)
-#
-# Toggle per-feed: set replicas: 0 to disable, replicas: 1 to enable.
+# Remaining:
+#   feed-satellites — CelesTrak TLE + SGP4 orbital propagation (sgp4 library)
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Feed 2: ADS-B Aircraft — OpenSky Network REST (polls every 15s, global)
-# Disabled: global ADS-B handled by ShadowBroker/WorldMonitor on omos-intel.
-# TAK only receives intel events (conflicts, hazards, earthquakes) via sink-tak.
-# -----------------------------------------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: feed-aircraft
-  namespace: omos
-  labels:
-    app.kubernetes.io/name: feed-aircraft
-    app.kubernetes.io/part-of: omos-feeds
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: feed-aircraft
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: feed-aircraft
-    spec:
-      containers:
-        - name: feed
-          image: python:3.12-alpine
-          command: ["/bin/sh", "-c"]
-          args:
-            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_aircraft.py
-          env:
-            - name: NATS_URL
-              value: "nats://nats.nats.svc.cluster.local:4222"
-            - name: NATS_USER
-              valueFrom:
-                secretKeyRef:
-                  name: omos-nats-creds
-                  key: user
-            - name: NATS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: omos-nats-creds
-                  key: password
-            - name: OPENSKY_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: omos-feed-secrets
-                  key: OPENSKY_USERNAME
-                  optional: true
-            - name: OPENSKY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: omos-feed-secrets
-                  key: OPENSKY_PASSWORD
-                  optional: true
-            - name: POLL_INTERVAL
-              value: "15"
-          volumeMounts:
-            - name: scripts
-              mountPath: /scripts
-              readOnly: true
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "64Mi"
-            limits:
-              cpu: "200m"
-              memory: "128Mi"
-      volumes:
-        - name: scripts
-          configMap:
-            name: omos-feed-scripts
----
-# -----------------------------------------------------------------------------
-# Feed 3: APRS Ground/Air — APRS-IS TCP firehose (real-time)
-# Disabled: global APRS handled by ShadowBroker/WorldMonitor on omos-intel.
-# TAK only receives intel events (conflicts, hazards, earthquakes) via sink-tak.
-# -----------------------------------------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: feed-aprs
-  namespace: omos
-  labels:
-    app.kubernetes.io/name: feed-aprs
-    app.kubernetes.io/part-of: omos-feeds
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: feed-aprs
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: feed-aprs
-    spec:
-      containers:
-        - name: feed
-          image: python:3.12-alpine
-          command: ["/bin/sh", "-c"]
-          args:
-            - pip install nats-py --quiet && exec python3 /scripts/feed_aprs.py
-          env:
-            - name: NATS_URL
-              value: "nats://nats.nats.svc.cluster.local:4222"
-            - name: NATS_USER
-              valueFrom:
-                secretKeyRef:
-                  name: omos-nats-creds
-                  key: user
-            - name: NATS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: omos-nats-creds
-                  key: password
-            - name: APRS_FILTER
-              value: "r/0/0/20000"
-          volumeMounts:
-            - name: scripts
-              mountPath: /scripts
-              readOnly: true
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "64Mi"
-            limits:
-              cpu: "200m"
-              memory: "128Mi"
-      volumes:
-        - name: scripts
-          configMap:
-            name: omos-feed-scripts
----
-# -----------------------------------------------------------------------------
-# Feed 4: Satellites — CelesTrak TLE + SGP4 (propagates every 30s)
+# Feed: Satellites — CelesTrak TLE + SGP4 (propagates every 30s)
 # Groups: stations (ISS), military, starlink — toggle via CELESTRAK_GROUP
+# SGP4 orbital mechanics requires the sgp4 Python library; not portable to Wombat.
 # -----------------------------------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
@@ -202,64 +64,6 @@ spec:
             limits:
               cpu: "500m"
               memory: "256Mi"
-      volumes:
-        - name: scripts
-          configMap:
-            name: omos-feed-scripts
----
-# -----------------------------------------------------------------------------
-# Feed 5: Hazard Events — USGS earthquakes + NWS weather alerts (polls 60s)
-# -----------------------------------------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: feed-hazards
-  namespace: omos
-  labels:
-    app.kubernetes.io/name: feed-hazards
-    app.kubernetes.io/part-of: omos-feeds
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: feed-hazards
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: feed-hazards
-    spec:
-      containers:
-        - name: feed
-          image: python:3.12-alpine
-          command: ["/bin/sh", "-c"]
-          args:
-            - pip install nats-py aiohttp --quiet && exec python3 /scripts/feed_hazards.py
-          env:
-            - name: NATS_URL
-              value: "nats://nats.nats.svc.cluster.local:4222"
-            - name: NATS_USER
-              valueFrom:
-                secretKeyRef:
-                  name: omos-nats-creds
-                  key: user
-            - name: NATS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: omos-nats-creds
-                  key: password
-            - name: POLL_INTERVAL
-              value: "60"
-          volumeMounts:
-            - name: scripts
-              mountPath: /scripts
-              readOnly: true
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "64Mi"
-            limits:
-              cpu: "100m"
-              memory: "128Mi"
       volumes:
         - name: scripts
           configMap:

@@ -281,224 +281,6 @@ data:
             pass
 
   # ---------------------------------------------------------------------------
-  # sink_tak.py — INTEL stream → CoT → tak.cot.inject
-  # Durable push consumer on intel.> (90d INTEL stream).
-  # Translates structured intel envelopes to CoT XML and injects into TAK.
-  # Toggle: publish to cmd.etl.sink.tak.disable / cmd.etl.sink.tak.enable
-  # ---------------------------------------------------------------------------
-  sink_tak.py: |
-    #!/usr/bin/env python3
-    import asyncio, json, logging, os, ssl
-    from datetime import datetime, timezone, timedelta
-    import nats
-    import nats.js.api
-
-    LOG = logging.getLogger("sink-tak")
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-
-    NATS_URL      = os.getenv("NATS_URL", "nats://localhost:4222")
-    NATS_USER     = os.getenv("NATS_USER", "")
-    NATS_PASSWORD = os.getenv("NATS_PASSWORD", "")
-    INJECT_SUBJ   = "tak.cot.inject"
-    XML_DECL      = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
-
-    # Enabled flag — toggled by cmd.etl.sink.tak.disable / .enable
-    _enabled = True
-    _nc      = None
-
-    # ---------------------------------------------------------------------------
-    # CoT type mapping
-    # ---------------------------------------------------------------------------
-    COT_TYPE_MAP = {
-        "Tornado Warning":             "a-f-G-U-W-T",
-        "Tornado Watch":               "a-f-G-U-W-T",
-        "Severe Thunderstorm Warning": "a-f-G-U-W-S",
-        "Severe Thunderstorm Watch":   "a-f-G-U-W-S",
-        "Flash Flood Warning":         "a-f-G-U-W-F",
-        "Flash Flood Watch":           "a-f-G-U-W-F",
-        "Flood Warning":               "a-f-G-U-W-F",
-        "Flood Watch":                 "a-f-G-U-W-F",
-        "Hurricane Warning":           "a-f-G-U-W-H",
-        "Hurricane Watch":             "a-f-G-U-W-H",
-        "Tropical Storm Warning":      "a-f-G-U-W-H",
-        "Tropical Storm Watch":        "a-f-G-U-W-H",
-        "Winter Storm Warning":        "a-f-G-U-W-W",
-        "Blizzard Warning":            "a-f-G-U-W-W",
-        "Ice Storm Warning":           "a-f-G-U-W-W",
-        "Winter Weather Advisory":     "a-f-G-U-W-W",
-        "Excessive Heat Warning":      "a-f-G-U-W-E",
-        "Heat Advisory":               "a-f-G-U-W-E",
-        "Extreme Cold Warning":        "a-f-G-U-W-W",
-        "Wind Advisory":               "a-f-G-U-W",
-        "High Wind Warning":           "a-f-G-U-W",
-        "Red Flag Warning":            "a-f-G-U-F-F",
-        "Wildfire Warning":            "a-f-G-U-F-F",
-        "Dust Storm Warning":          "a-f-G-U-W",
-        "Tsunami Warning":             "a-f-G-U-W-T",
-        "Tsunami Watch":               "a-f-G-U-W-T",
-        "Special Weather Statement":   "a-f-G-U-W",
-    }
-
-    def event_type_to_cot(entity_type: str, properties: dict) -> str:
-        if entity_type == "earthquake":
-            return "a-f-G-E-V-Q"
-        if entity_type == "wildfire":
-            return "a-f-G-U-F-F"
-        if entity_type == "conflict_event":
-            return "a-h-G"
-        if entity_type == "weather_alert":
-            event_name = properties.get("event", "")
-            return COT_TYPE_MAP.get(event_name, "a-f-G-U-W")
-        return "a-f-G-U-O"
-
-    # ---------------------------------------------------------------------------
-    # Time helpers — output format: %Y-%m-%dT%H:%M:%S.000000Z
-    # ---------------------------------------------------------------------------
-    def fmt_time(dt: datetime) -> str:
-        return dt.strftime("%Y-%m-%dT%H:%M:%S") + ".000000Z"
-
-    def parse_iso(s: str) -> datetime:
-        s = s.rstrip("Z")
-        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
-            try:
-                return datetime.strptime(s, fmt).replace(tzinfo=timezone.utc)
-            except ValueError:
-                continue
-        return datetime.now(timezone.utc)
-
-    def now_z() -> str:
-        return fmt_time(datetime.now(timezone.utc))
-
-    # ---------------------------------------------------------------------------
-    # CoT XML builder
-    # ---------------------------------------------------------------------------
-    def build_cot(uid: str, cot_type: str, lat, lon,
-                  timestamp_z: str, expires_z: str, remarks: str) -> bytes:
-        xml = (
-            f'<event version="2.0" uid="{uid}" type="{cot_type}" '
-            f'time="{now_z()}" start="{timestamp_z}" stale="{expires_z}" how="m-g">'
-            f'<point lat="{lat}" lon="{lon}" hae="0" ce="9999999" le="9999999"/>'
-            f'<detail>'
-            f'<remarks>{remarks}</remarks>'
-            f'<color argb="-65536"/>'
-            f'</detail>'
-            f'</event>'
-        )
-        return XML_DECL + xml.encode()
-
-    # ---------------------------------------------------------------------------
-    # Message handler
-    # ---------------------------------------------------------------------------
-    async def handle_message(msg):
-        global _enabled
-        try:
-            envelope = json.loads(msg.data.decode())
-        except Exception as e:
-            LOG.warning(f"Bad JSON payload: {e}")
-            await msg.ack()
-            return
-
-        if not _enabled:
-            await msg.ack()
-            return
-
-        uid         = envelope.get("id", "unknown")
-        entity_type = envelope.get("type", "")
-        source      = envelope.get("source", "")
-        lat         = envelope.get("lat")
-        lon         = envelope.get("lon")
-        timestamp   = envelope.get("timestamp", "")
-        expires     = envelope.get("expires", "")
-        properties  = envelope.get("properties", {})
-
-        if lat is None or lon is None:
-            await msg.ack()
-            return
-
-        cot_type = event_type_to_cot(entity_type, properties)
-
-        ts_dt = parse_iso(timestamp) if timestamp else datetime.now(timezone.utc)
-        ex_dt = parse_iso(expires) if expires else ts_dt + timedelta(minutes=30)
-
-        timestamp_z = fmt_time(ts_dt)
-        expires_z   = fmt_time(ex_dt)
-
-        headline = properties.get("headline", properties.get("event", entity_type))
-        remarks  = f"{headline}\nSource: {source}\nID: {uid}"
-
-        cot = build_cot(uid, cot_type, lat, lon, timestamp_z, expires_z, remarks)
-        await _nc.publish(INJECT_SUBJ, cot)
-        LOG.info(f"CoT published uid={uid} type={cot_type}")
-
-        await msg.ack()
-
-    # ---------------------------------------------------------------------------
-    # Control handlers (core NATS)
-    # ---------------------------------------------------------------------------
-    async def handle_disable(msg):
-        global _enabled
-        _enabled = False
-        LOG.info("sink-tak DISABLED via cmd.etl.sink.tak.disable")
-
-    async def handle_enable(msg):
-        global _enabled
-        _enabled = True
-        LOG.info("sink-tak ENABLED via cmd.etl.sink.tak.enable")
-
-    # ---------------------------------------------------------------------------
-    # Main
-    # ---------------------------------------------------------------------------
-    async def main():
-        global _nc
-        async def _error_cb(e):
-            LOG.error(f"NATS error: {e}")
-
-        async def _reconnected_cb():
-            LOG.info("NATS reconnected")
-
-        async def _disconnected_cb():
-            LOG.warning("NATS disconnected")
-
-        tls_ctx = ssl.create_default_context()
-        tls_ctx.check_hostname = False
-        tls_ctx.verify_mode = ssl.CERT_NONE
-
-        _nc = await nats.connect(
-            servers=NATS_URL,
-            user=NATS_USER,
-            password=NATS_PASSWORD,
-            max_reconnect_attempts=-1,
-            reconnect_time_wait=2,
-            tls=tls_ctx,
-            error_cb=_error_cb,
-            reconnected_cb=_reconnected_cb,
-            disconnected_cb=_disconnected_cb,
-        )
-        LOG.info("NATS connected")
-
-        await _nc.subscribe("cmd.etl.sink.tak.disable", cb=handle_disable)
-        await _nc.subscribe("cmd.etl.sink.tak.enable",  cb=handle_enable)
-
-        js = _nc.jetstream()
-        await js.subscribe(
-            "intel.>",
-            durable="sink-tak",
-            cb=handle_message,
-            deliver_policy=nats.js.api.DeliverPolicy.NEW,
-        )
-        LOG.info("Subscribed: intel.> (durable=sink-tak) → tak.cot.inject")
-
-        try:
-            while True:
-                await asyncio.sleep(3600)
-        except asyncio.CancelledError:
-            pass
-        finally:
-            await _nc.drain()
-
-    asyncio.run(main())
-
-  # ---------------------------------------------------------------------------
   # feed_intel_noaa.py — NOAA NWS active alerts → intel.weather.noaa.alert.*
   #
   # Subject:  intel.weather.noaa.alert.{state_lower}.{event_slug}
@@ -825,7 +607,8 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_usgs.py — USGS earthquake GeoJSON → intel.seismic.usgs.*
@@ -1055,7 +838,8 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_acled.py — ACLED conflict events → intel.conflict.acled.*
@@ -1292,7 +1076,8 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_firms.py — NASA FIRMS active fire detections → intel.fire.nasa.firms.*
@@ -1544,7 +1329,8 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_gdacs.py — GDACS global disaster alerts → intel.disaster.gdacs.*
@@ -1779,7 +1565,8 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_emsc.py — EMSC seismic events → intel.seismic.emsc.*
@@ -1986,7 +1773,8 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
 
   # ---------------------------------------------------------------------------
   # feed_intel_eonet.py — NASA EONET natural events → intel.natural.nasa.eonet.*
@@ -2200,4 +1988,86 @@ data:
                 last_status_at = time.monotonic()
                 await asyncio.sleep(poll_interval)
 
-    asyncio.run(main())
+    if __name__ == "__main__":
+        asyncio.run(main())
+
+  feed_intel_runner.py: |
+    #!/usr/bin/env python3
+    """
+    feed_intel_runner — runs all intel feed coroutines in a single process.
+
+    Each feed runs as an independent asyncio task with a supervised restart
+    loop. One feed crashing does not affect the others.
+    """
+    import asyncio
+    import importlib.util
+    import logging
+    import sys
+    import os
+
+    LOG = logging.getLogger("feed-intel-runner")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s %(message)s",
+        stream=sys.stdout,
+    )
+
+    FEEDS = [
+        "feed_intel_noaa",
+        "feed_intel_usgs",
+        "feed_intel_acled",
+        "feed_intel_firms",
+        "feed_intel_gdacs",
+        "feed_intel_emsc",
+        "feed_intel_eonet",
+    ]
+
+    RESTART_DELAY = 15  # seconds between crash restarts
+
+    def load_module(name):
+        path = f"/scripts/{name}.py"
+        spec = importlib.util.spec_from_file_location(name, path)
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules[name] = mod
+        spec.loader.exec_module(mod)
+        return mod
+
+    async def supervised(name, mod):
+        while True:
+            try:
+                LOG.info("[%s] starting", name)
+                await mod.main()
+                LOG.warning("[%s] main() returned unexpectedly, restarting in %ds",
+                            name, RESTART_DELAY)
+            except asyncio.CancelledError:
+                LOG.info("[%s] cancelled", name)
+                raise
+            except Exception as exc:
+                LOG.error("[%s] crashed: %s — restarting in %ds",
+                          name, exc, RESTART_DELAY)
+            await asyncio.sleep(RESTART_DELAY)
+
+    async def main():
+        LOG.info("feed-intel-runner starting %d feeds", len(FEEDS))
+        modules = {}
+        for name in FEEDS:
+            try:
+                modules[name] = load_module(name)
+                LOG.info("  loaded %s", name)
+            except Exception as exc:
+                LOG.error("  failed to load %s: %s — skipping", name, exc)
+
+        tasks = [
+            asyncio.create_task(supervised(name, mod), name=name)
+            for name, mod in modules.items()
+        ]
+
+        try:
+            await asyncio.gather(*tasks)
+        except asyncio.CancelledError:
+            for t in tasks:
+                t.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+    if __name__ == "__main__":
+        asyncio.run(main())

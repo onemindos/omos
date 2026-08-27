@@ -1,13 +1,32 @@
-# =============================================================================
-# platform-geo — ArgoCD Application
-# Deploys the complete OneMind Geo stack to the geo namespace
-# Follows the exact pattern of platform-omos, platform-cloudtak etc.
-# =============================================================================
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — GEO / GEOSPATIAL                                     sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-geo: Complete geospatial stack
+#
+# Covers: platform/geo/
+#   farmos.yaml         — FarmOS (land/asset tracking)
+#   node-red.yaml       — Node-RED (geo data pipelines)
+#   timescaledb.yaml    — TimescaleDB (time-series geo data)
+#   tile38.yaml         — Tile38 (real-time geofencing + geospatial index)
+#   stac-and-tools.yaml — STAC catalog + geospatial tooling
+#   webodm.yaml         — WebODM (drone photogrammetry → orthomosaic)
+#   routing-and-osm.yaml — OSRM routing + OpenStreetMap tiles
+#   analytics.yaml      — Geo analytics services
+#   tiles.yaml          — Tile server
+#   ingress.yaml        — Internal ingress
+#
+# Integration with CloudTAK:
+#   - Geo tile servers (OSRM, OSM) register as WMS/WMTS layers in CloudTAK
+#   - Tile38 geofence events publish to evt.geo.*.crossed → CoT alerts
+#   - WebODM orthomosaic exports attach as CloudTAK Data Packages (KML/GeoTIFF)
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-geo
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

@@ -1,0 +1,84 @@
+input:
+  generate:
+    interval: "30s"
+    mapping: 'root = ""'
+
+pipeline:
+  processors:
+    - branch:
+        request_map: 'root = ""'
+        processors:
+          - http:
+              url: "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr"
+              verb: GET
+              timeout: "10s"
+              headers:
+                User-Agent: "OMOS-FeedEngine/1.0"
+          - protobuf:
+              operator: to_json
+              message: "transit_realtime.FeedMessage"
+              import_paths: ["/proto/"]
+          - mapping: |
+              root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> {
+                "uid": "MTA-MNR-%s".format(e.vehicle.trip.trip_id.or(e.id)),
+                "callsign": "MNR-%s".format(e.vehicle.trip.route_id.or(e.vehicle.trip.trip_id.or("?"))),
+                "lat": e.vehicle.position.latitude,
+                "lon": e.vehicle.position.longitude,
+                "speed": e.vehicle.position.speed.or(0),
+                "course": e.vehicle.position.bearing.or(0),
+                "remarks": "MTA Metro-North route:%s trip:%s".format(e.vehicle.trip.route_id.or("?"), e.vehicle.trip.trip_id.or("?")),
+                "feed": "MNR"
+              })
+        result_map: 'root.mnr = this'
+
+    - branch:
+        request_map: 'root = ""'
+        processors:
+          - http:
+              url: "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr"
+              verb: GET
+              timeout: "10s"
+              headers:
+                User-Agent: "OMOS-FeedEngine/1.0"
+          - protobuf:
+              operator: to_json
+              message: "transit_realtime.FeedMessage"
+              import_paths: ["/proto/"]
+          - mapping: |
+              root = this.entity.filter(e -> e.exists("vehicle") && e.vehicle.exists("position")).map_each(e -> {
+                "uid": "MTA-LIRR-%s".format(e.vehicle.trip.trip_id.or(e.id)),
+                "callsign": "LIRR-%s".format(e.vehicle.trip.route_id.or(e.vehicle.trip.trip_id.or("?"))),
+                "lat": e.vehicle.position.latitude,
+                "lon": e.vehicle.position.longitude,
+                "speed": e.vehicle.position.speed.or(0),
+                "course": e.vehicle.position.bearing.or(0),
+                "remarks": "MTA LIRR route:%s trip:%s".format(e.vehicle.trip.route_id.or("?"), e.vehicle.trip.trip_id.or("?")),
+                "feed": "LIRR"
+              })
+        result_map: 'root.lirr = this'
+
+    - mapping: |
+        root = this.mnr.or([]).concat(this.lirr.or([]))
+
+    - unarchive:
+        format: json_array
+
+    - mapping: |
+        root = if this.lat == 0 || this.lon == 0 { deleted() } else { this }
+
+    - mapping: |
+        let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+        let stale = (now().ts_unix() + 120).ts_format("2006-01-02T15:04:05.000Z")
+        let cs = this.callsign.replace_all("&", "&amp;").replace_all("<", "&lt;").replace_all("\"", "&quot;")
+        root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"a-n-G-E-V-C-R\" uid=\"" + this.uid + "\" how=\"m-g\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"0\" ce=\"50\" le=\"50\"/><detail><contact callsign=\"" + $cs + "\"/><track speed=\"" + this.speed.string() + "\" course=\"" + this.course.string() + "\"/><remarks>" + this.remarks + "</remarks><marti><dest mission=\"Land\"/></marti></detail></event>"
+
+output:
+  nats:
+    urls: ["nats://nats.nats.svc.cluster.local:4222"]
+    subject: "tak.cot.inject"
+    auth:
+      user: "${NATS_USER}"
+      password: "${NATS_PASSWORD}"
+    tls:
+      enabled: true
+      skip_cert_verify: true

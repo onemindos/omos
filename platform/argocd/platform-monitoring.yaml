@@ -1,0 +1,45 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 4 — ALERTS                                               sync-wave: "4"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-monitoring: PrometheusRules + Alertmanager Telegram routing
+#
+# Covers: platform/monitoring/
+#   prometheus-rules-onemind.yaml  — OneMind K8s health alert rules
+#   alertmanager-telegram.yaml     — AlertmanagerConfig routing to Telegram
+#
+# Prerequisites (apply once, out-of-band — see CLAUDE.md for kubeseal steps):
+#   kubectl create secret generic telegram-alertmanager-creds -n monitoring \
+#     --from-literal=bot_token=<token>
+#   Seal it → platform/monitoring/telegram-creds.sealedsecret.yaml
+#
+# Helm values wired in platform/values/kube-prometheus-stack.yaml:
+#   alertmanagerConfigSelector: {}   — picks up AlertmanagerConfig CRs
+#   ruleSelector: {}                 — picks up PrometheusRule CRs from all ns
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/monitoring
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -10,14 +10,10 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-      # ── CloudTAK (primary domain + legacy alias) ───────────────────────
+      # ── CloudTAK ──────────────────────────────────────────────────────────
       - hostname: onemindos.dev
         service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
       - hostname: tiles.onemindos.dev
-        service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
-      - hostname: atoc.onemindos.dev
-        service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
-      - hostname: tiles.atoc.onemindos.dev
         service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
       # ── Core infra ────────────────────────────────────────────────────────
       - hostname: grafana.onemindos.dev
@@ -31,5 +27,8 @@ data:
       # ── NATS WebSocket (browser SPA) ─────────────────────────────────────
       - hostname: ws.onemindos.dev
         service: http://nats.nats.svc.cluster.local:8080
+      # ── CesiumJS 3D Globe (God's Eye) ────────────────────────────────────
+      - hostname: globe.onemindos.dev
+        service: http://tak-webview-cesium.takserver.svc.cluster.local:80
       # ── Catch-all ────────────────────────────────────────────────────────
       - service: http_status:404

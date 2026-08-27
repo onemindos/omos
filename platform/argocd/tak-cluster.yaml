@@ -1,18 +1,28 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 2 — TAK UI CENTER                                        sync-wave: "2"
+# ─────────────────────────────────────────────────────────────────────────────
 # tak-cluster: TAK Server 5.7 supplementary deploy manifests
 #
 # Covers: tak-cluster/deploy/
+#   LB proxy, NATS leaf ExternalSecret, ConfigMaps for TAK server config.
 #
-# This manages the overlay K8s resources (LB proxy, NATS leaf, ExternalSecret,
-# ConfigMaps for TAK config). The TAK Server Helm chart itself is in
-# tak-cluster/upstream/ and is managed via Helm, not here.
+# The TAK Server Helm chart is in tak-cluster/upstream/ and is managed via
+# Helm, not ArgoCD. This Application manages only the overlay K8s resources.
 #
-# Raw config files (CoreConfig.xml, TAKIgniteConfig.xml) are excluded — ArgoCD
-# would try to apply them as K8s objects. They are mounted via ConfigMap.
+# NATS bridge plugin (NatsBridgePlugin) is the live CoT↔NATS wire:
+#   tak.cot.inject  ← inbound CoT to inject into TAK (from tak-projector)
+#   tak.cot.>       → outbound CoT from TAK EUDs (to NATS bus)
+#
+# Raw config files (CoreConfig.xml, TAKIgniteConfig.xml) are excluded —
+# ArgoCD would try to apply them as K8s objects. Mounted via ConfigMap.
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: tak-cluster
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

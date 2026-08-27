@@ -1,17 +1,28 @@
-# platform-legacy: Legacy AI (Hermes), Hermes Web UI, hermes ai-bridge
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — AI BRAIN                                             sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-legacy: Legacy AI (Hermes) + OneMind AI Bridge
 #
 # Covers:
-#   platform/legacy/        (Hermes / Legacy AI agent — uses kustomization.yaml)
-#   platform/hermes/        (onemind-ai-bridge HTTP→NATS)
-#   platform/hermes-webui/  (Hermes web UI)
+#   platform/hermes/agent/  — Hermes/Legacy AI agent (kustomization.yaml)
+#   platform/hermes/bridge/ — onemind-ai-bridge (HTTP→NATS) + copilot-runtime
 #
-# The legacy/ directory has a kustomization.yaml so ArgoCD uses Kustomize.
-# hermes/ and hermes-webui/ are plain directories.
+# Integration with CloudTAK:
+#   - Hermes publishes GeoChat via tak.cot.inject → appears in TAK comms panel
+#   - Hermes subscribes to tak.cot.> for SA picture awareness
+#   - onemind-ai-bridge exposes HTTP endpoint CloudTAK AI plugin calls
+#   - cloudtak-agent-token secret authenticates Hermes to CloudTAK API
+#
+# agent/ has kustomization.yaml — ArgoCD auto-detects Kustomize.
+# bridge/ is a plain directory.
+# ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-legacy
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -19,17 +30,11 @@ spec:
   sources:
     - repoURL: https://github.com/onemindos/omos-infra.git
       targetRevision: HEAD
-      path: platform/legacy
+      path: platform/hermes/agent
       # ArgoCD auto-detects kustomization.yaml and uses Kustomize
     - repoURL: https://github.com/onemindos/omos-infra.git
       targetRevision: HEAD
-      path: platform/hermes
-      directory:
-        recurse: false
-        exclude: "*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/hermes-webui
+      path: platform/hermes/bridge
       directory:
         recurse: false
         exclude: "*.secret*,*.env"

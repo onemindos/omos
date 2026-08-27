@@ -33,7 +33,7 @@ terraform/          DO VPC + DOKS cluster + container registry (Terraform)
 platform/           K8s manifests for every platform service
   install.sh        Full cluster reprovisioning script (Helm + kubectl)
   nats/             NATS HA helm values + TLS + Tailscale service
-  legacy/           Hermes/Legacy AI agent
+  hermes/           Hermes/Legacy AI agent (agent/ + bridge/ + webui/)
   cloudtak/         CloudTAK (WebTAK replacement — API/Events/Media/Tiles)
   wwv/              WorldWideView (CesiumJS 3D globe)
   clickhouse/       ClickHouse (entity history / time-machine)
@@ -44,7 +44,6 @@ platform/           K8s manifests for every platform service
   values/           Helm values (cert-manager, ingress-nginx, loki, tempo)
   ingress/          TLS issuers (cert-manager ClusterIssuers)
   tailscale/        Tailscale operator RBAC
-nats-migration/     38-stream + 20-KV provisioning scripts + definitions
 tak-cluster/        TAK Server 5.7 Helm chart + NATS bridge plugin
 docs/               Architecture + runbooks
 ```
@@ -114,7 +113,7 @@ evt.{domain}.{entity}.{event}        semantic events    evt.mission.patrol1.comp
 cmd.{domain}.{entity}.{action}       commands           cmd.drone.x47.intercept
 intel.{domain}.{source}.{type}       intelligence       intel.conflict.acled.event
 ent.{entity_type}.{entity_id}.state  fused entity state ent.ship.mmsi123.state
-svc.{service}.{endpoint}             NATS RPC           svc.orp.query
+svc.{service}.{endpoint}             NATS RPC           svc.hermes.query
 agents.{verb}.{agent}.{owner}.*      agent fabric       agents.prompt.hermes.zeus.legacy
 tak.cot.inject                       CoT → TAK inject   (NatsBridgePlugin input)
 tak.cot.>                            CoT from TAK       (cot-tap output)
@@ -132,10 +131,8 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | ClickHouse | clickhouse | clickhouse/clickhouse-server | live |
 | Grafana/Loki/Tempo | monitoring | (helm) | live |
 | Cloudflared | cloudflare | cloudflare/cloudflared | live |
-| ORP (fusion engine) | orp | ghcr.io/onemindos/orp:latest | live |
 | Authentik | authentik | ghcr.io/goauthentik/server (helm) | NOT DEPLOYED |
 | omos-tak-projector | omos | python:3.12-alpine (inline script) | live |
-| omos-ui | omos | ghcr.io/onemindos/omos-ui:latest | IN PROGRESS — Unified NATS Ops Center |
 | omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | PLANNED Wave 2 |
 | omos-feed-world | omos | ghcr.io/onemindos/omos-feed-world | PLANNED Wave 3 |
 | omos-feed-intel | omos | ghcr.io/onemindos/omos-feed-intel | PLANNED Wave 3 |
@@ -152,7 +149,6 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | clickhouse | ClickHouse |
 | monitoring | Prometheus + Grafana + Loki + Tempo |
 | cloudflare | cloudflared tunnel |
-| orp | ORP fusion engine |
 | omos | omos-* services (tak-projector, etc.) |
 | authentik | Authentik IdP (Forward Auth + OIDC) |
 | argocd | ArgoCD GitOps |
@@ -163,7 +159,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 
 ## Secrets Convention
 
-**All secrets are managed by Sealed Secrets.** Source of truth is encrypted SealedSecret YAMLs committed to this repo. The sealed-secrets controller (kube-system) decrypts them using the cluster private key.
+**All secrets are managed by Sealed Secrets.** Source of truth is encrypted SealedSecret YAMLs committed to this repo. The sealed-secrets controller (kube-system) decrypts them using the cluster private key. ArgoCD applies SealedSecrets automatically on sync.
 
 **To add or rotate a secret:**
 ```bash
@@ -183,43 +179,36 @@ kubectl create secret generic <name> -n <namespace> \
 
 **SealedSecret location:** `platform/{namespace}/{secret-name}.sealedsecret.yaml`
 
-| Secret name | Namespace | What it holds | ESO ExternalSecret |
-|-------------|-----------|---------------|--------------------|
-| hermes-env | hermes | AWS Bedrock + NATS creds (23 fields) | platform/legacy/external-secret.yaml |
-| hermes-leaf-conf | hermes | NATS leaf.conf + ca.crt | platform/legacy/external-secret.yaml |
-| hermes-nats-ca | hermes | NATS cluster CA cert | platform/legacy/external-secret.yaml |
-| hermes-webui-auth | hermes | Hermes web UI password | platform/hermes-webui/external-secret.yaml |
-| cloudtak-secrets | cloudtak | signing secret, MinIO keys, postgres DSN | platform/cloudtak/external-secret.yaml |
-| cloudtak-agent-token | hermes | CloudTAK API token (out-of-band — generate in CloudTAK UI) | not in ESO |
-| authentik-env | authentik | SECRET_KEY + PG password | platform/authentik/external-secret.yaml |
-| wwv-env | wwv | WWV auth secret, DB URL, encryption key | platform/wwv/external-secret.yaml |
-| wwv-pg-credentials | wwv | PostgreSQL user/pass/db for WWV | platform/wwv/external-secret.yaml |
-| omos-nats-creds | omos | NATS user+password for omos namespace | platform/omos/external-secret.yaml |
-| mission-engine-env | omos | omos-mission-engine runtime config (optional) | platform/omos-mission-engine/external-secret.yaml |
-| orp-nats-creds | orp | NATS user+password for ORP | platform/orp/external-secret.yaml |
-| orp-bridge-key | orp | ORP bridge API key | platform/orp/external-secret.yaml |
-| tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge | tak-cluster/deploy/external-secret.yaml |
-| cloudflare-api-credentials | cloudflare | Cloudflare API key + email | platform/cloudflare/external-secret.yaml |
-| cloudflare-api-token | cert-manager | Cloudflare DNS API token for cert-manager | platform/ingress/external-secret.yaml |
-| tunnel-creds-json | cloudflare | Tunnel credentials.json (out-of-band — derived from TUNNEL_TOKEN) | not in ESO |
-| nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm, out-of-band) | not in ESO |
-| ghcr / ghcr-pull-secret | hermes/orp/omos/wwv | GHCR pull secret (out-of-band) | not in ESO |
-
-**Bootstrap secrets (one-time, not in ESO):**
-- `op-credentials` (external-secrets ns) — 1password-credentials.json for Connect pod
-- `onepassword-connect-token` (external-secrets ns) — Connect JWT token
+| Secret name | Namespace | What it holds |
+|-------------|-----------|---------------|
+| hermes-env | hermes | AWS Bedrock + NATS creds (23 fields) |
+| hermes-leaf-conf | hermes | NATS leaf.conf + ca.crt |
+| hermes-nats-ca | hermes | NATS cluster CA cert |
+| hermes-webui-auth | hermes | Hermes web UI password |
+| hermes-dashboard-auth | hermes | Hermes dashboard auth |
+| cloudtak-agent-token | hermes | CloudTAK API token (out-of-band — generate in CloudTAK UI) |
+| cloudtak-secrets | cloudtak | signing secret, MinIO keys, postgres DSN |
+| omos-nats-creds | omos | NATS user+password for omos namespace |
+| tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge |
+| cloudflare-api-credentials | cloudflare | Cloudflare API key + email |
+| cloudflare-api-token | cert-manager | Cloudflare DNS API token for cert-manager |
+| tunnel-creds-json | cloudflare | Tunnel credentials.json (derived from TUNNEL_TOKEN — one-time) |
+| nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm — out-of-band) |
+| ghcr / ghcr-pull-secret | hermes/omos | GHCR pull secret (out-of-band) |
 
 ## Key Hostnames (Cloudflare Tunnel)
 
 | Hostname | Service |
 |----------|---------|
-| atoc.onemindos.dev | CloudTAK API |
-| tiles.atoc.onemindos.dev | CloudTAK tile server |
-| wwv.onemindos.dev | WorldWideView globe |
+| onemindos.dev | CloudTAK API (temporary — will cut over to omos-ui) |
+| tiles.onemindos.dev | CloudTAK tile server |
+| grafana.onemindos.dev | Grafana |
+| argocd.onemindos.dev | ArgoCD |
+| hermes.onemindos.dev | Hermes web UI |
+| ws.onemindos.dev | NATS WebSocket (browser SPA → in-cluster NATS) |
+| globe.onemindos.dev | CesiumJS 3D Globe (tak-webview-cesium) |
 | tak.onemindos.dev | TAK Server (WebTAK / EUD connect) |
-| onemindos.dev | OneMind OS — Unified NATS Operations Center (omos-ui) |
-| auth.onemindos.dev | Authentik IdP (SSO login portal) |
-| nats-ws.onemindos.dev | NATS WebSocket (browser SPA → in-cluster NATS) |
+| auth.onemindos.dev | Authentik IdP (SSO login portal — NOT DEPLOYED) |
 
 ## Cluster Access
 
@@ -254,14 +243,14 @@ doctl kubernetes cluster kubeconfig save onemind-hub
 
 ## NATS Stream Provisioning
 
-Streams are defined as JSON in `nats-migration/streams/`. To provision into a fresh cluster:
+Streams are defined as YAML CRDs in `platform/nats/streams/` (39 files — Stream + KeyValue).
+The NACK JetStream controller (installed via Helm in the `nats` namespace) reconciles them
+continuously. To provision into a fresh cluster:
 
 ```bash
-cd nats-migration
-./provision.sh   # requires nats/creds.secret.env and kubectl access
+helm upgrade --install nack nats/nack -n nats
+kubectl apply -f platform/nats/streams/
 ```
-
-This is idempotent — safe to re-run. Bumps all streams to `num_replicas=3` for HA.
 
 ## TAK Cluster
 
@@ -272,49 +261,10 @@ The NatsBridgePlugin is the live CoT→NATS wire (`tak.cot.inject` in, `tak.cot.
 
 Full deploy runbook: `tak-cluster/DEPLOY-RUNBOOK.md`.
 
-## OneMind OS — Product Direction (2026-07)
-
-**omos-ui is the Unified NATS Operations Center.** One app that connects to any NATS server and renders everything: topology, agents, streams, missions, integrations, and security — all from a single WebSocket connection.
-
-### Architecture
-
-```
-BROWSER (SPA: React + Vite + nats.ws)
-├── Overview    — dashboard with bus metrics, agent roster, integration status
-├── Bus         — topology ($SYS.REQ.SERVER.PING), connections, subject explorer
-├── Agents      — discovery (agents.heartbeat.>), chat, tool registry, permissions
-├── Missions    — workflow graphs (cmd.*/evt.* orchestration), live execution
-├── Integrations— auto-discovered services (CloudTAK, HA, drones, cameras)
-├── Streams     — JetStream management, KV browsers, publish/subscribe
-├── Replay      — time-travel via JetStream fetch (historical message replay)
-├── Security    — $SYS advisory events (auth failures, disconnects, audit)
-└── Intel       — OSINT feeds, ORP entity browser, threat board
-         │
-         └── nats.ws (single WebSocket) ──► Any NATS server
-```
-
-### Key Design Principles
-
-1. **NATS IS the backend.** The browser connects directly to NATS via WebSocket. No custom API server for 90% of features. $SYS subjects provide all cluster metadata.
-2. **Agents self-register.** Using Synadia Agent SDK protocol (`agents.{verb}.{agent}.{owner}.*`), agents appear automatically via heartbeat/info subjects.
-3. **Integrations auto-discover.** Any NATS service following the subject grammar (tel.*, cmd.*, evt.*, ent.*) renders in the Integrations panel automatically.
-4. **Anyone can connect.** The app works with any NATS server — not locked to OneMind infrastructure. This is potentially a standalone product.
-
-### Synadia Agent SDK Integration
-
-New agents use the Synadia Agent SDK (TypeScript/Python, launched May 2026). Subject pattern aligns with existing grammar:
-```
-Synadia:  agents.{verb}.{token}.{owner}.{session}
-OneMind:  agents.{verb}.{agent}.{owner}.*
-```
-
-Features: auto-discovery, typed conversation protocol, heartbeat/liveness, mid-stream tool calling with permission gates. Legacy/Hermes coexists on the same bus.
-
-### Service Roadmap
+## Service Roadmap
 
 | Wave | Service | Purpose |
 |------|---------|---------|
-| 1 (now) | omos-ui | Unified NATS Ops Center — bus visibility, agent chat, integrations |
 | 2 | omos-mission-engine | NATS mission orchestrator — workflow graphs dispatching cmd.* |
 | 3 | omos-feed-world / omos-feed-intel | Automated data feeds (OSINT, world events, AIS, ADS-B) |
 | 4 | Domain bridges | New bridges: ROS (robotics), wellness, scheduler, etc. |

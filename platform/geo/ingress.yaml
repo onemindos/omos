@@ -4,42 +4,6 @@
 # Pattern: ingressClassName: tailscale + tailscale.com/hostname annotation
 # =============================================================================
 
-# farmOS — Farm Brain
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: farmos
-  namespace: geo
-  annotations:
-    tailscale.com/hostname: "farmos"
-spec:
-  ingressClassName: tailscale
-  defaultBackend:
-    service:
-      name: farmos
-      port:
-        number: 80
-  tls:
-    - hosts: ["farmos"]
----
-# Node-RED — IoT Flow Engine
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: node-red
-  namespace: geo
-  annotations:
-    tailscale.com/hostname: "node-red"
-spec:
-  ingressClassName: tailscale
-  defaultBackend:
-    service:
-      name: node-red
-      port:
-        number: 1880
-  tls:
-    - hosts: ["node-red"]
----
 # TileServer GL — Offline Basemap
 apiVersion: networking.k8s.io/v1
 kind: Ingress

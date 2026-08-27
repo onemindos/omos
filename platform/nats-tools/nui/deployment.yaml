@@ -71,6 +71,7 @@ metadata:
   name: nui-data
   namespace: nats-tools
 spec:
+  storageClassName: do-block-storage-retain
   accessModes: [ReadWriteOnce]
   resources:
     requests:

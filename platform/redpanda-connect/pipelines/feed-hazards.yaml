@@ -1,0 +1,112 @@
+# feed-hazards.yaml — USGS earthquakes + NWS weather alerts → CoT → tak.cot.inject
+# Poll interval: 60s
+# Dedup: in-memory cache (6h TTL) — repeated polls don't re-publish seen events
+
+cache_resources:
+  - label: seen_hazards
+    memory:
+      ttl: 21600s
+      cap: 10000
+
+input:
+  generate:
+    interval: "60s"
+    mapping: 'root = ""'
+
+pipeline:
+  processors:
+    - branch:
+        request_map: 'root = ""'
+        processors:
+          - http:
+              url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_hour.geojson"
+              verb: GET
+              timeout: "15s"
+              headers:
+                User-Agent: "OMOS-FeedEngine/1.0"
+          - mapping: |
+              root = this.features.or([]).map_each(f -> {
+                "id": f.id,
+                "uid": "USGS-" + f.id,
+                "lat": f.geometry.coordinates.index(1),
+                "lon": f.geometry.coordinates.index(0),
+                "depth": f.geometry.coordinates.index(2).or(0),
+                "mag": f.properties.mag.or(0),
+                "place": f.properties.place.or("Unknown").replace_all("&", "&amp;").replace_all("<", "&lt;"),
+                "stale_s": 21600,
+                "hae": (0 - (f.geometry.coordinates.index(2).or(0) * 1000)).round().string(),
+                "source": "USGS"
+              })
+        result_map: 'root.usgs = this'
+
+    - branch:
+        request_map: 'root = ""'
+        processors:
+          - http:
+              url: "https://api.weather.gov/alerts/active?severity=Extreme,Severe&status=actual"
+              verb: GET
+              timeout: "15s"
+              headers:
+                Accept: "application/geo+json"
+                User-Agent: "OMOS-FeedEngine/1.0"
+          - mapping: |
+              root = this.features.or([]).map_each(f ->
+                let geom = f.geometry.or({})
+                let gtype = $geom.type.or("")
+                let c = if $gtype == "Point" { $geom.coordinates }
+                        else if $gtype == "Polygon" { $geom.coordinates.index(0).index(0) }
+                        else { null }
+                if $c == null { deleted() } else {
+                  let fid = f.id.or("")
+                  let short_id = if $fid.length() > 16 { $fid.slice($fid.length() - 16) } else { $fid }
+                  {
+                    "id": $fid,
+                    "uid": "NWS-" + $short_id,
+                    "lat": $c.index(1),
+                    "lon": $c.index(0),
+                    "event": f.properties.event.or("Alert").replace_all("&", "&amp;").replace_all("<", "&lt;"),
+                    "headline": (f.properties.headline.or(f.properties.event.or("Alert"))).slice(0, 80).replace_all("&", "&amp;").replace_all("<", "&lt;"),
+                    "severity": f.properties.severity.or("Unknown"),
+                    "stale_s": 3600,
+                    "hae": "9999999.0",
+                    "source": "NWS"
+                  }
+                }
+              )
+        result_map: 'root.nws = this'
+
+    - mapping: |
+        root = this.usgs.or([]).concat(this.nws.or([]))
+
+    - unarchive:
+        format: json_array
+
+    - dedupe:
+        cache: seen_hazards
+        key: '${!this.id}'
+
+    - mapping: |
+        let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
+        let stale = (now().ts_unix() + this.stale_s.number()).ts_format("2006-01-02T15:04:05.000Z")
+        let callsign = if this.source == "USGS" {
+          "M" + this.mag.format_number(1) + " Earthquake"
+        } else {
+          this.event
+        }
+        let remarks = if this.source == "USGS" {
+          "M" + this.mag.format_number(1) + " " + this.place + " depth:" + this.depth.format_number(1) + "km"
+        } else {
+          this.severity + ": " + this.headline
+        }
+        root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"b-r-f-h-h\" uid=\"" + this.uid + "\" how=\"h-e\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"" + this.hae + "\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + $callsign + "\"/><status readiness=\"false\"/><remarks>" + $remarks + "</remarks><marti><dest mission=\"Hazards\"/></marti></detail></event>"
+
+output:
+  nats:
+    urls: ["nats://nats.nats.svc.cluster.local:4222"]
+    subject: "tak.cot.inject"
+    auth:
+      user: "${NATS_USER}"
+      password: "${NATS_PASSWORD}"
+    tls:
+      enabled: true
+      skip_cert_verify: true
