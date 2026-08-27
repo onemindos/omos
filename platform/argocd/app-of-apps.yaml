@@ -1,31 +1,23 @@
 # App-of-Apps: syncs platform/argocd/ itself.
 # Apply this once manually; it then manages all other Applications.
 #
-#   kubectl apply -f platform/argocd/app-of-apps.yaml --context tailscale-operator.tail717ba0.ts.net
+#   kubectl apply -f platform/argocd/app-of-apps.yaml
 #
 # ─────────────────────────────────────────────────────────────────────────────
-# ARCHITECTURE — CloudTAK-centric layers (enforced via sync waves)
+# ARCHITECTURE — Layered sync waves (lower wave = deployed first)
 #
-#  Wave 0 │ BOOTSTRAP     platform-core          sealed-secrets, networking
-#  Wave 1 │ BUS           platform-nats          NATS 3-node HA + nats-surveyor
-#         │ OPERATORS     platform-clickhouse-operator  Altinity ClickHouse Operator
-#  Wave 2 │ TAK UI CENTER platform-cloudtak      CloudTAK API/Events/Media/Tiles ← main UI
-#                         tak-cluster            TAK Server 5.7 + NATS bridge
-#  Wave 3 │ AI BRAIN      platform-legacy        Legacy/Hermes + hermes-webui + ai-bridge
-#         │ DATA          platform-observability ClickHouse entity history
-#         │ FEEDS         platform-omos          tak-projector, AIS/ADS-B feeds → CoT → TAK
-#         │ INTEL         platform-intel         OSINT / intel services
-#         │ GEO           platform-geo           Tile38, TimescaleDB, STAC, WebODM
-#  Wave 4 │ OPS           platform-nats-tools    NATS debug toolbox
-#                         platform-grafana-overlays Grafana dashboards
-#                         platform-monitoring    PrometheusRules + Alertmanager Telegram
-#
-# Data integration flow:
-#   ClickHouse / ORP / Intel / Geo feeds
-#     → NATS (ent.*, tel.*, det.*, intel.*)
-#     → tak-projector (omos namespace)
-#     → tak.cot.inject
-#     → CloudTAK map
+#  Wave 0 │ CORE        platform-core            networking, certs, secrets, tunnel
+#  Wave 1 │ BUS         platform-nats            NATS 3-node HA + streams
+#         │ OPERATORS   platform-clickhouse-op   Altinity ClickHouse Operator
+#  Wave 2 │ TAK         platform-cloudtak        CloudTAK API/Events/Media/Tiles
+#         │             tak-server               TAK Server deploy overlays
+#  Wave 3 │ AI          platform-hermes          Legacy/Hermes AI agent + bridge
+#         │ DATA        platform-data            ClickHouse + Redpanda Connect
+#         │ SERVICES    platform-omos            tak-projector, feeds, mission-engine
+#         │ INTEL       platform-intel           OSINT services
+#         │ GEO         platform-geo             STAC, Tile38, geospatial
+#  Wave 4 │ OPS         platform-nats-tools      NATS debug toolbox
+#         │             platform-monitoring      Grafana, alerting, surveyor
 # ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -42,7 +34,6 @@ spec:
     path: platform/argocd
     directory:
       recurse: false
-      # Exclude the app-of-apps itself to avoid self-management drift loops.
       exclude: "app-of-apps.yaml"
   destination:
     server: https://kubernetes.default.svc

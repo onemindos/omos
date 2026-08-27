@@ -32,8 +32,8 @@ spec:
     targetRevision: HEAD
     path: platform/monitoring
     directory:
-      recurse: false
-      exclude: "*.secret*,*.env"
+      recurse: true
+      exclude: "*.secret*,*.env,Dockerfile,*.py,*.ini,README.md"
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring

@@ -1,16 +1,4 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# LAYER 0 — BOOTSTRAP / CORE NETWORKING                          sync-wave: "0"
-# ─────────────────────────────────────────────────────────────────────────────
-# platform-core: sealed-secrets controller, ingress-nginx TLS issuers,
-#                Cloudflare tunnel, Tailscale operator RBAC
-#
-# Covers: platform/ingress/  platform/cloudflare/  platform/tailscale/
-#         platform/sealed-secrets/
-#
-# NOTE: cert-manager, ingress-nginx, tailscale-operator Helm releases are
-# managed via Helm (platform/values/). This Application manages only the
-# post-Helm K8s manifests (issuers, ClusterSecretStore, cloudflared config).
-# ─────────────────────────────────────────────────────────────────────────────
+# Wave 0 — CORE: sealed-secrets, ingress issuers, cloudflare tunnel, tailscale, github-runner
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -22,34 +10,15 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/ingress
-      directory:
-        recurse: true
-        exclude: "*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/cloudflare
-      directory:
-        recurse: true
-        exclude: "*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/tailscale
-      directory:
-        recurse: true
-        exclude: "*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/sealed-secrets
-      directory:
-        recurse: true
-        exclude: "*.secret*,*.env"
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/core
+    directory:
+      recurse: true
+      exclude: "*.secret*,*.env"
   destination:
     server: https://kubernetes.default.svc
-    namespace: kube-system
   syncPolicy:
     automated:
       prune: true

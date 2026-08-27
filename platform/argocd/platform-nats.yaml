@@ -4,7 +4,7 @@
 # platform-nats: NATS HA overlay manifests + NATS Surveyor metrics exporter
 #
 # Covers: platform/nats/       (TLS cert, Tailscale LB service, Stream CRDs)
-#         platform/nats-surveyor/ (Prometheus exporter for NATS $SYS metrics)
+#         platform/monitoring/ (Prometheus exporter, moved from nats-surveyor $SYS metrics)
 #
 # NOTE: The NATS HA cluster itself is deployed via Helm (nats/nats chart).
 # NACK JetStream CRD controller is also Helm-managed.
@@ -27,19 +27,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/nats
-      directory:
-        recurse: false
-        exclude: "*.secret*,*.env,values.template.yaml,nack-values.template.yaml"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/nats-surveyor
-      directory:
-        recurse: false
-        exclude: "Dockerfile"
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/nats
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env,values.template.yaml,nack-values.template.yaml"
   destination:
     server: https://kubernetes.default.svc
     namespace: nats

@@ -1,5 +1,5 @@
 # In-cluster Cloudflare Tunnel connector. Dials OUT to Cloudflare — no public
-# inbound. Routes are declared in platform/cloudflare/config.yaml (ConfigMap).
+# inbound. Routes are declared in platform/core/config.yaml (ConfigMap).
 # To add a route: edit config.yaml, kubectl apply it, then rollout restart.
 apiVersion: apps/v1
 kind: Deployment

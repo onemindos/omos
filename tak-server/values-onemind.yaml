@@ -1,11 +1,11 @@
 # OneMind DOKS values for the TAK Server 5.8 cluster.
-# Base chart: upstream/deployments/helm (TAK Product Center blueprint, vendored).
+# Base chart: chart (TAK Product Center blueprint, vendored).
 #
 # DEPLOY INTO NAMESPACE `takserver` — non-negotiable. The Ignite Kubernetes IP
 # finder hardcodes service `takserver-ignite` + namespace `takserver`
 # (upstream issue #43). A different namespace = Ignite discovery fails.
 #
-#   helm upgrade --install takserver ./upstream/deployments/helm \
+#   helm upgrade --install takserver ./chart \
 #     -n takserver --create-namespace \
 #     -f values-onemind.yaml
 #

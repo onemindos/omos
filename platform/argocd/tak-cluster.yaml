@@ -1,12 +1,12 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # LAYER 2 — TAK UI CENTER                                        sync-wave: "2"
 # ─────────────────────────────────────────────────────────────────────────────
-# tak-cluster: TAK Server 5.7 supplementary deploy manifests
+# tak-cluster: TAK Server 5.8 supplementary deploy manifests
 #
-# Covers: tak-cluster/deploy/
+# Covers: tak-server/deploy/
 #   LB proxy, NATS leaf ExternalSecret, ConfigMaps for TAK server config.
 #
-# The TAK Server Helm chart is in tak-cluster/upstream/ and is managed via
+# The TAK Server Helm chart is in tak-server/chart/ and is managed via
 # Helm, not ArgoCD. This Application manages only the overlay K8s resources.
 #
 # NATS bridge plugin (NatsBridgePlugin) is the live CoT↔NATS wire:
@@ -30,7 +30,7 @@ spec:
   source:
     repoURL: https://github.com/onemindos/omos-infra.git
     targetRevision: HEAD
-    path: tak-cluster/deploy
+    path: tak-server/deploy
     directory:
       recurse: false
       exclude: "CoreConfig.xml,TAKIgniteConfig.xml"

@@ -34,7 +34,7 @@ spec:
   source:
     repoURL: https://github.com/onemindos/omos-infra.git
     targetRevision: HEAD
-    path: platform/redpanda-connect
+    path: platform/data/redpanda-connect
     directory:
       recurse: false
       exclude: "*.proto,pipelines/"

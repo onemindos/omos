@@ -1,18 +1,4 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# LAYER 3 — DATA                                                 sync-wave: "3"
-# ─────────────────────────────────────────────────────────────────────────────
-# platform-observability: ClickHouse entity history (time-machine)
-#
-# Covers: platform/clickhouse/
-#
-# ClickHouse stores all fused entity states from the NATS bus (ent.*.state).
-# The tak-projector (platform-omos) queries ClickHouse to replay historical
-# tracks as CoT batches into CloudTAK — enabling time-travel on the TAK map.
-#
-# NOTE: Grafana, Loki, Tempo, and Prometheus stacks are managed via Helm
-# (platform/values/). This Application handles only the ClickHouse operator
-# install manifest. SQL migrations (*.sql) are run manually post-deploy.
-# ─────────────────────────────────────────────────────────────────────────────
+# Wave 3 — DATA: ClickHouse + Redpanda Connect
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -24,13 +10,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/clickhouse
-      directory:
-        recurse: false
-        exclude: "*.sql,README.md"
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/data/clickhouse
+    directory:
+      recurse: false
+      exclude: "*.sql,README.md"
   destination:
     server: https://kubernetes.default.svc
     namespace: clickhouse

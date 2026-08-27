@@ -51,12 +51,12 @@ GHCR="ghcr.io/onemindos"
 HERE_REL="$(cd "$HERE/.." && pwd)"
 cat <<EOF
 cd "$DISTRO"
-docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-base"     -t $GHCR/takserver-base:5.8-onemind         .
-docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-config"   -t $GHCR/takserver-config:5.8-onemind        --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
-docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-api"      -t $GHCR/takserver-api:5.8-onemind           --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
-docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-messaging" -t $GHCR/takserver-messaging:5.8-onemind    --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
-docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.takserver-plugins"  -t $GHCR/takserver-plugins:5.8-onemind       --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
-docker build --platform linux/amd64 -f "$HERE_REL/upstream/docker-files/Dockerfile.database-setup"     -t $GHCR/takserver-database-setup:5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/docker/Dockerfile.takserver-base"     -t $GHCR/takserver-base:5.8-onemind         .
+docker build --platform linux/amd64 -f "$HERE_REL/docker/Dockerfile.takserver-config"   -t $GHCR/takserver-config:5.8-onemind        --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/docker/Dockerfile.takserver-api"      -t $GHCR/takserver-api:5.8-onemind           --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/docker/Dockerfile.takserver-messaging" -t $GHCR/takserver-messaging:5.8-onemind    --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/docker/Dockerfile.takserver-plugins"  -t $GHCR/takserver-plugins:5.8-onemind       --build-arg TAKSERVER_IMAGE_REPO=$GHCR/takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind .
+docker build --platform linux/amd64 -f "$HERE_REL/docker/Dockerfile.database-setup"     -t $GHCR/takserver-database-setup:5.8-onemind .
 # Push all upstream images first, then build the OneMind plugins overlay:
 docker push $GHCR/takserver-base:5.8-onemind
 docker push $GHCR/takserver-config:5.8-onemind

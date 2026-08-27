@@ -2,7 +2,7 @@
 # IMPORTANT: clientSecret is a real credential — stored here for reference ONLY.
 # On a fresh deploy, inject from 1Password: op read "op://00-24 SO/tailscale-oauth/credential"
 # oauth.clientId and oauth.clientSecret are the Tailscale OAuth client for the operator.
-# autoApprovers are set in platform/tailscale/policy.hujson (GitOps ACLs).
+# autoApprovers are set in platform/core/policy.hujson (GitOps ACLs).
 apiServerProxyConfig:
   mode: "true"
 oauth:

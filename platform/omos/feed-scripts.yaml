@@ -7,7 +7,7 @@ data:
   # ---------------------------------------------------------------------------
   # feed_satellites.py — CelesTrak TLE + SGP4 → tak.cot.inject (every 30s)
   # SGP4 orbital mechanics requires the sgp4 Python library. Not portable to
-  # Redpanda Connect (Wombat). All other feeds are in platform/redpanda-connect.
+  # Redpanda Connect (Wombat). All other feeds are in platform/data/redpanda-connect.
   # ---------------------------------------------------------------------------
   feed_satellites.py: |
     #!/usr/bin/env python3

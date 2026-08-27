@@ -5,7 +5,7 @@
 #
 # Covers:
 #   platform/omos/              — tak-projector, AIS/ADS-B/APRS/hazard feeds, sinks
-#   platform/omos-mission-engine/ — mission orchestration engine (Wave 2)
+#   platform/omos/mission-engine-*.yaml — mission orchestration (merged)
 #
 # tak-projector is the NATS→CoT→CloudTAK bridge:
 #   Subscribes: ent.*.state, tel.*.position, det.*, intel.*
@@ -29,19 +29,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/omos
-      directory:
-        recurse: false
-        exclude: "*.secret*,*.env"
-    - repoURL: https://github.com/onemindos/omos-infra.git
-      targetRevision: HEAD
-      path: platform/omos-mission-engine
-      directory:
-        recurse: false
-        exclude: "*.secret*,*.env"
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/omos
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
   destination:
     server: https://kubernetes.default.svc
     namespace: omos

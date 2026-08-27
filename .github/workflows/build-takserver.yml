@@ -21,9 +21,9 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-takserver.yml"
-      - "tak-cluster/upstream/docker-files/**"
-      - "tak-cluster/docker/Dockerfile.takserver-plugins.onemind"
-      - "tak-cluster/plugin/**"
+      - "tak-server/docker/**"
+      - "tak-server/docker/Dockerfile.takserver-plugins.onemind"
+      - "tak-server/plugin/**"
   workflow_dispatch:
 
 jobs:
@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-base
+          file: tak-server/docker/Dockerfile.takserver-base
           push: true
           tags: ghcr.io/onemindos/takserver-base:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
@@ -79,7 +79,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-config
+          file: tak-server/docker/Dockerfile.takserver-config
           push: true
           tags: ghcr.io/onemindos/takserver-config:5.8-onemind
           build-args: |
@@ -91,7 +91,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-api
+          file: tak-server/docker/Dockerfile.takserver-api
           push: true
           tags: ghcr.io/onemindos/takserver-api:5.8-onemind
           build-args: |
@@ -103,7 +103,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-messaging
+          file: tak-server/docker/Dockerfile.takserver-messaging
           push: true
           tags: ghcr.io/onemindos/takserver-messaging:5.8-onemind
           build-args: |
@@ -115,7 +115,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-plugins
+          file: tak-server/docker/Dockerfile.takserver-plugins
           push: true
           tags: ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind
           build-args: |
@@ -127,7 +127,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-cluster/upstream/docker-files/Dockerfile.database-setup
+          file: tak-server/docker/Dockerfile.database-setup
           push: true
           tags: ghcr.io/onemindos/takserver-database-setup:5.8-onemind
           platforms: linux/amd64
@@ -137,7 +137,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: tak-cluster
-          file: tak-cluster/docker/Dockerfile.takserver-plugins.onemind
+          file: tak-server/docker/Dockerfile.takserver-plugins.onemind
           push: true
           tags: ghcr.io/onemindos/takserver-plugins:5.8-onemind
           build-args: |

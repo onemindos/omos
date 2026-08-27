@@ -1,7 +1,7 @@
 # =============================================================================
 # OMOS Feeds — Python-only feeds that require native libraries unavailable
 # in Redpanda Connect (Wombat). All HTTP/WebSocket-based feeds have been
-# migrated to platform/redpanda-connect/.
+# migrated to platform/data/redpanda-connect/.
 #
 # Remaining:
 #   feed-satellites — CelesTrak TLE + SGP4 orbital propagation (sgp4 library)

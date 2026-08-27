@@ -14,14 +14,14 @@ registry pull). This gives us a self-owned, air-gappable image supply chain for 
 | Thing | Path |
 |---|---|
 | TAK distro (5.7-RELEASE-43) | `/Users/zeus/ATAK/server/standard/takserver-docker-5.7-RELEASE-43/tak/` |
-| Cluster blueprint (upstream) | `/Users/zeus/omos-infra/tak-cluster/upstream/` |
-| Helm chart | `.../upstream/deployments/helm/` |
-| Dockerfiles | `.../upstream/docker-files/` |
-| Build context (staged) | `/Users/zeus/omos-infra/tak-cluster/build-root/` |
+| Cluster blueprint (upstream) | `/Users/zeus/omos-infra/tak-server/` |
+| Helm chart | `.../chart/` |
+| Dockerfiles | `.../docker/` |
+| Build context (staged) | `/Users/zeus/omos-infra/tak-server/<distro-root>/` |
 | Canonical build script (reference) | `.../upstream/scripts/build-generic.py` (lines 715–847) |
-| Generated deploy files | `/Users/zeus/omos-infra/tak-cluster/deploy/` (CoreConfig.xml, TAKIgniteConfig.xml) |
-| Generated certs | `/Users/zeus/omos-infra/tak-cluster/certs-out/` |
-| kind values | `/Users/zeus/omos-infra/tak-cluster/values-kind.yaml` |
+| Generated deploy files | `/Users/zeus/omos-infra/tak-server/deploy/` (CoreConfig.xml, TAKIgniteConfig.xml) |
+| Generated certs | `/Users/zeus/omos-infra/tak-server/certs-out/` |
+| kind values | `/Users/zeus/omos-infra/tak-server/values-kind.yaml` |
 
 Always: `export PATH="/opt/homebrew/bin:$PATH"` (docker, kind, kubectl, helm, doctl live there).
 
@@ -31,30 +31,30 @@ Always: `export PATH="/opt/homebrew/bin:$PATH"` (docker, kind, kubectl, helm, do
 
 | Image | Dockerfile | Build context | Notes |
 |---|---|---|---|
-| `takserver-base:5.7-onemind` | `Dockerfile.takserver-base` | `build-root` | base layer; runs `db-connection-configuration.sh`; bakes distro certs into `/opt/tak/certs/files/` |
-| `takserver-config:5.7-onemind` | `Dockerfile.takserver-config` | `build-root` | cluster leader (spring profile `config`) |
-| `takserver-api:5.7-onemind` | `Dockerfile.takserver-api` | `build-root` | WebTAK/API (`api,consolelog`) |
-| `takserver-messaging:5.7-onemind` | `Dockerfile.takserver-messaging` | `build-root` | CoT TLS input 8089 |
-| `takserver-plugins:5.7-onemind` | `Dockerfile.takserver-plugins` | `build-root` | launcher `takserver-plugins-cluster.sh`; **needs `PLUGIN_MANAGER_MAX_HEAP` env** |
-| `takserver-database-setup:5.7-onemind` | `Dockerfile.database-setup` | `build-root` | `SchemaManager.jar` + `generic-cluster-database-configuration.sh` |
+| `takserver-base:5.8-onemind` | `Dockerfile.takserver-base` | `<distro-root>` | base layer; runs `db-connection-configuration.sh`; bakes distro certs into `/opt/tak/certs/files/` |
+| `takserver-config:5.8-onemind` | `Dockerfile.takserver-config` | `<distro-root>` | cluster leader (spring profile `config`) |
+| `takserver-api:5.8-onemind` | `Dockerfile.takserver-api` | `<distro-root>` | WebTAK/API (`api,consolelog`) |
+| `takserver-messaging:5.8-onemind` | `Dockerfile.takserver-messaging` | `<distro-root>` | CoT TLS input 8089 |
+| `takserver-plugins:5.8-onemind` | `Dockerfile.takserver-plugins` | `<distro-root>` | launcher `takserver-plugins-cluster.sh`; **needs `PLUGIN_MANAGER_MAX_HEAP` env** |
+| `takserver-database-setup:5.8-onemind` | `Dockerfile.database-setup` | `<distro-root>` | `SchemaManager.jar` + `generic-cluster-database-configuration.sh` |
 | `docker-devtest-local.artifacts.tak.gov/takserver-cluster/takserver-ignite:2.17.0` | `Dockerfile.takserver-ignite` | `upstream` | downloads Apache Ignite 2.17.0 + copies k8s discovery jars; needs `docker-files/scripts/takserver-ignite/ignite.sh` in context |
 
-**Staging inputs into build-root** (needed for db-setup + CA images):
+**Staging inputs into <distro-root>** (needed for db-setup + CA images):
 ```bash
 TAK=/Users/zeus/ATAK/server/standard/takserver-docker-5.7-RELEASE-43/tak
-cp "$TAK/db-utils/generic-cluster-database-configuration.sh" build-root/takserver-schemamanager/
-mkdir -p build-root/takserver-core/certs && cp -R "$TAK/certs/." build-root/takserver-core/certs/
+cp "$TAK/db-utils/generic-cluster-database-configuration.sh" <distro-root>/takserver-schemamanager/
+mkdir -p <distro-root>/takserver-core/certs && cp -R "$TAK/certs/." <distro-root>/takserver-core/certs/
 ```
 
 **Build all** (from `/Users/zeus/omos-infra/tak-cluster`):
 ```bash
-docker build -f upstream/docker-files/Dockerfile.takserver-base      -t takserver-base:5.7-onemind          build-root
-docker build -f upstream/docker-files/Dockerfile.takserver-config    -t takserver-config:5.7-onemind        build-root
-docker build -f upstream/docker-files/Dockerfile.takserver-api       -t takserver-api:5.7-onemind           build-root
-docker build -f upstream/docker-files/Dockerfile.takserver-messaging -t takserver-messaging:5.7-onemind     build-root
-docker build -f upstream/docker-files/Dockerfile.takserver-plugins   -t takserver-plugins:5.7-onemind       build-root
-docker build -f upstream/docker-files/Dockerfile.database-setup      -t takserver-database-setup:5.7-onemind build-root
-docker build -f upstream/docker-files/Dockerfile.takserver-ignite \
+docker build -f docker/Dockerfile.takserver-base      -t takserver-base:5.8-onemind          <distro-root>
+docker build -f docker/Dockerfile.takserver-config    -t takserver-config:5.8-onemind        <distro-root>
+docker build -f docker/Dockerfile.takserver-api       -t takserver-api:5.8-onemind           <distro-root>
+docker build -f docker/Dockerfile.takserver-messaging -t takserver-messaging:5.8-onemind     <distro-root>
+docker build -f docker/Dockerfile.takserver-plugins   -t takserver-plugins:5.8-onemind       <distro-root>
+docker build -f docker/Dockerfile.database-setup      -t takserver-database-setup:5.8-onemind <distro-root>
+docker build -f docker/Dockerfile.takserver-ignite \
   -t docker-devtest-local.artifacts.tak.gov/takserver-cluster/takserver-ignite:2.17.0 upstream
 ```
 
@@ -63,11 +63,11 @@ docker build -f upstream/docker-files/Dockerfile.takserver-ignite \
 ## 2. Generate cluster CA + certs
 
 ```bash
-docker build -f upstream/docker-files/Dockerfile.ca -t takserver-ca-setup:5.7-onemind build-root
+docker build -f docker/Dockerfile.ca -t takserver-ca-setup:5.8-onemind <distro-root>
 docker rm -f tak-ca-setup 2>/dev/null
 docker run --name tak-ca-setup \
   --env CA_NAME=onemind-tak --env STATE=FL --env CITY=Tampa --env ORGANIZATIONAL_UNIT=OneMind \
-  takserver-ca-setup:5.7-onemind
+  takserver-ca-setup:5.8-onemind
 docker cp tak-ca-setup:/files ./certs-out    # ~31 files, storepass = atakatak
 ```
 Required outputs (verify present): `takserver.jks`, `truststore-root.jks`, `fed-truststore.jks`, `admin.pem`.
@@ -109,7 +109,7 @@ service resolve to `takserver-ignite` (helm release name `takserver` does this).
 
 ## 4. Helm chart patches (already applied in repo)
 
-Both in `upstream/deployments/helm/templates/`:
+Both in `chart/templates/`:
 
 1. **`takserver-core-deployment.yaml` + `takserver-plugins-deployment.yaml`** — make pull policy overridable:
    `imagePullPolicy: Always` → `imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}`
@@ -150,8 +150,8 @@ Configmap sizes are all < 1 MB (certs ~120 KB, ignite-extensions.jar 1.8 KB) —
 ## 6. Deploy (helm)
 
 ```bash
-helm dependency build upstream/deployments/helm     # deps (postgresql 12.1.6, nats 1.0.1, ignite 2.17.0) vendored as charts/*.tgz
-helm --kube-context kind-tak upgrade --install takserver upstream/deployments/helm \
+helm dependency build chart     # deps (postgresql 12.1.6, nats 1.0.1, ignite 2.17.0) vendored as charts/*.tgz
+helm --kube-context kind-tak upgrade --install takserver chart \
   --namespace takserver --create-namespace -f values-kind.yaml --timeout 15m
 ```
 `values-kind.yaml` overrides: local image repos+tags, `imagePullPolicy: IfNotPresent`,
@@ -173,7 +173,7 @@ kc exec takserver-postgresql-0 -- env PGPASSWORD="$PW" psql -U postgres -d postg
 
 # 7b. create the TAK schema (94 migrations, 64 tables) with working creds
 kubectl --context kind-tak -n takserver run tak-schema --restart=Never --attach \
-  --image=takserver-database-setup:5.7-onemind --image-pull-policy=IfNotPresent \
+  --image=takserver-database-setup:5.8-onemind --image-pull-policy=IfNotPresent \
   --env POSTGRES_HOST=takserver-postgresql --env POSTGRES_PORT=5432 \
   --env POSTGRES_DB=cot --env POSTGRES_USER=postgres --env POSTGRES_PASSWORD=postgres \
   --env region=local --env identifier=local
@@ -236,22 +236,22 @@ REG=registry.digitalocean.com/onemind-hub; D=upstream/docker-files
 doctl registry login
 
 # 1. amd64 base (load locally so derivatives FROM it)
-docker buildx build --platform linux/amd64 -f $D/Dockerfile.takserver-base -t takserver-base:5.7-onemind --load build-root
+docker buildx build --platform linux/amd64 -f $D/Dockerfile.takserver-base -t takserver-base:5.8-onemind --load <distro-root>
 
 # 2. amd64 ignite (independent) + db-setup -> push
 docker buildx build --platform linux/amd64 -f $D/Dockerfile.takserver-ignite -t $REG/takserver-ignite:2.17.0 --push upstream
-docker buildx build --platform linux/amd64 -f $D/Dockerfile.database-setup   -t $REG/takserver-database-setup:5.7-onemind --push build-root
+docker buildx build --platform linux/amd64 -f $D/Dockerfile.database-setup   -t $REG/takserver-database-setup:5.8-onemind --push <distro-root>
 
 # 3. amd64 core images — MUST pass base build-args (else FROM hits tak.gov = text/html error)
 for n in config api messaging plugins; do
   case $n in config)DF=Dockerfile.takserver-config;;api)DF=Dockerfile.takserver-api;;messaging)DF=Dockerfile.takserver-messaging;;plugins)DF=Dockerfile.takserver-plugins;;esac
   docker buildx build --platform linux/amd64 \
-    --build-arg TAKSERVER_IMAGE_REPO=takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.7-onemind \
-    -f $D/$DF -t $REG/takserver-$n:5.7-onemind --push build-root
+    --build-arg TAKSERVER_IMAGE_REPO=takserver-base --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind \
+    -f $D/$DF -t $REG/takserver-$n:5.8-onemind --push <distro-root>
 done
 ```
 > zsh note: unquoted `$VAR` does NOT word-split — inline `--build-arg` flags, don't stuff them in a var.
-> Verify arch: `docker buildx imagetools inspect $REG/takserver-config:5.7-onemind | grep Platform`.
+> Verify arch: `docker buildx imagetools inspect $REG/takserver-config:5.8-onemind | grep Platform`.
 
 ### DOKS-specific fixes (all captured in `values-doks.yaml` + template patches)
 1. **postgres pw preset works** → set `postgresPassword: postgres` (global + subchart auth) → db-setup
@@ -271,7 +271,7 @@ kubectl --context $CTX -n takserver create configmap cert-migration    --from-fi
 kubectl --context $CTX -n takserver create configmap core-config       --from-file=CoreConfig.xml=deploy/CoreConfig.xml
 kubectl --context $CTX -n takserver create configmap tak-ignite-config --from-file=TAKIgniteConfig.xml=deploy/TAKIgniteConfig.xml
 kubectl --context $CTX -n takserver create configmap ignite-extensions --from-file=ignite-extensions.jar="$TAK/ignite-extensions-5.7-RELEASE-43.jar"
-helm --kube-context $CTX upgrade --install takserver upstream/deployments/helm -n takserver -f values-doks.yaml --timeout 15m
+helm --kube-context $CTX upgrade --install takserver chart -n takserver -f values-doks.yaml --timeout 15m
 # NOTE: helm blocks on the db-setup post-install hook; that's expected. Watch pods separately.
 ```
 > The 2026-07-05 first run left the release in `pending-install` because the CLI wait was

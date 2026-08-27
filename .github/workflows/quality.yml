@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     name: Lint & Validate
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
@@ -17,7 +17,7 @@ jobs:
         run: pip install yamllint
 
       - name: Lint YAML
-        run: yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ || true
+        run: yamllint -c .yamllint.yml platform/ docs/ tak-server/ || true
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
@@ -31,11 +31,11 @@ jobs:
           terraform_version: "~1.9"
 
       - name: Terraform Format Check
-        run: cd terraform && terraform fmt -check -recursive
+        run: cd infra && terraform fmt -check -recursive
 
       - name: Terraform Validate
         run: |
-          cd terraform
+          cd infra
           terraform init -backend=false
           terraform validate
 
