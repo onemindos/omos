@@ -1,0 +1,150 @@
+name: Build TAK Server 5.8 → GHCR
+
+# Builds all OneMind TAK Server images from the hardened 5.8 distro zip.
+#
+# Distro zip must be uploaded to GitHub Releases as a release asset:
+#   gh release create takserver-5.8 \
+#     "/Users/zeus/OneMind Guardian (TAK)/server/5.8/takserver-docker-hardened-5.8-RELEASE-69.zip" \
+#     --repo onemindos/omos-infra --title "TAK Server 5.8 Distro" --notes "" --prerelease
+#
+# Images built and pushed to ghcr.io/onemindos/:
+#   takserver-base         — eclipse-temurin:17-jammy + /opt/tak/ (base for all pods)
+#   takserver-config       — extends base, runs config-cluster.sh
+#   takserver-api          — extends base, runs api-cluster.sh
+#   takserver-messaging    — extends base, runs messaging-cluster.sh
+#   takserver-plugins      — extends base, runs plugins-cluster.sh (upstream only)
+#   takserver-database-setup — SchemaManager init job
+#   takserver-plugins (OneMind overlay) — adds NatsBridgePlugin on top
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-takserver.yml"
+      - "tak-cluster/upstream/docker-files/**"
+      - "tak-cluster/docker/Dockerfile.takserver-plugins.onemind"
+      - "tak-cluster/plugin/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build TAK Server 5.8 images
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout omos-infra
+        uses: actions/checkout@v4
+
+      - name: Download 5.8 distro from GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download takserver-5.8 \
+            --repo onemindos/omos-infra \
+            --pattern "takserver-docker-hardened-5.8-RELEASE-69.zip" \
+            --output /tmp/takserver-5.8.zip
+          unzip -q /tmp/takserver-5.8.zip -d /tmp/takserver-5.8
+          echo "DISTRO=/tmp/takserver-5.8/takserver-docker-hardened-5.8-RELEASE-69" >> $GITHUB_ENV
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+
+      # ── Base image (all pods extend this) ──────────────────────────────────
+      - name: Build and push takserver-base
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DISTRO }}
+          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-base
+          push: true
+          tags: ghcr.io/onemindos/takserver-base:5.8-onemind
+          cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
+          cache-to: type=registry,ref=ghcr.io/onemindos/takserver-base:cache,mode=max
+          platforms: linux/amd64
+
+      # ── Role images (parallel, all FROM takserver-base) ───────────────────
+      - name: Build and push takserver-config
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DISTRO }}
+          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-config
+          push: true
+          tags: ghcr.io/onemindos/takserver-config:5.8-onemind
+          build-args: |
+            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
+            TAKSERVER_IMAGE_TAG=5.8-onemind
+          platforms: linux/amd64
+
+      - name: Build and push takserver-api
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DISTRO }}
+          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-api
+          push: true
+          tags: ghcr.io/onemindos/takserver-api:5.8-onemind
+          build-args: |
+            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
+            TAKSERVER_IMAGE_TAG=5.8-onemind
+          platforms: linux/amd64
+
+      - name: Build and push takserver-messaging
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DISTRO }}
+          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-messaging
+          push: true
+          tags: ghcr.io/onemindos/takserver-messaging:5.8-onemind
+          build-args: |
+            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
+            TAKSERVER_IMAGE_TAG=5.8-onemind
+          platforms: linux/amd64
+
+      - name: Build and push takserver-plugins (upstream)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DISTRO }}
+          file: tak-cluster/upstream/docker-files/Dockerfile.takserver-plugins
+          push: true
+          tags: ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind
+          build-args: |
+            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
+            TAKSERVER_IMAGE_TAG=5.8-onemind
+          platforms: linux/amd64
+
+      - name: Build and push takserver-database-setup
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.DISTRO }}
+          file: tak-cluster/upstream/docker-files/Dockerfile.database-setup
+          push: true
+          tags: ghcr.io/onemindos/takserver-database-setup:5.8-onemind
+          platforms: linux/amd64
+
+      # ── OneMind overlay: NatsBridgePlugin on top of plugins image ─────────
+      - name: Build and push takserver-plugins (OneMind — NatsBridgePlugin)
+        uses: docker/build-push-action@v6
+        with:
+          context: tak-cluster
+          file: tak-cluster/docker/Dockerfile.takserver-plugins.onemind
+          push: true
+          tags: ghcr.io/onemindos/takserver-plugins:5.8-onemind
+          build-args: |
+            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-plugins-upstream
+            TAKSERVER_IMAGE_TAG=5.8-onemind
+          platforms: linux/amd64
+
+      - name: Clean up distro
+        if: always()
+        run: rm -rf /tmp/takserver-5.8 /tmp/takserver-5.8.zip

@@ -29,7 +29,7 @@ on:
 jobs:
   build:
     name: Build ${{ matrix.service.name }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -108,6 +108,6 @@ jobs:
           file: src/${{ matrix.service.dockerfile }}
           push: true
           tags: ghcr.io/onemindos/${{ matrix.service.name }}:latest
-          cache-from: type=gha,scope=${{ matrix.service.name }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.service.name }}
+          cache-from: type=registry,ref=ghcr.io/onemindos/${{ matrix.service.name }}:cache
+          cache-to: type=registry,ref=ghcr.io/onemindos/${{ matrix.service.name }}:cache,mode=max
           platforms: ${{ matrix.service.platforms || 'linux/amd64,linux/arm64' }}

@@ -30,7 +30,7 @@ on:
 jobs:
   build:
     name: Build ${{ matrix.tool.name }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -123,6 +123,6 @@ jobs:
           push: true
           tags: ghcr.io/onemindos/${{ matrix.tool.name }}:latest
           build-args: ${{ matrix.tool.build_args }}
-          cache-from: type=gha,scope=${{ matrix.tool.name }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.tool.name }}
+          cache-from: type=registry,ref=ghcr.io/onemindos/${{ matrix.tool.name }}:cache
+          cache-to: type=registry,ref=ghcr.io/onemindos/${{ matrix.tool.name }}:cache,mode=max
           platforms: linux/amd64,linux/arm64

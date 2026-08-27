@@ -30,7 +30,7 @@ on:
 jobs:
   build-push:
     name: Build ghcr.io/onemindos/cloudtak-api:latest
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     permissions:
       contents: read
@@ -84,8 +84,8 @@ jobs:
           tags: |
             ghcr.io/onemindos/cloudtak-api:latest
             ghcr.io/onemindos/cloudtak-api:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=ghcr.io/onemindos/cloudtak-api:cache
+          cache-to: type=registry,ref=ghcr.io/onemindos/cloudtak-api:cache,mode=max
           platforms: linux/amd64
 
       - name: Build and push OMOS Tiles image
@@ -97,8 +97,8 @@ jobs:
           tags: |
             ghcr.io/onemindos/cloudtak-tiles:latest
             ghcr.io/onemindos/cloudtak-tiles:${{ github.sha }}
-          cache-from: type=gha,scope=tiles
-          cache-to: type=gha,mode=max,scope=tiles
+          cache-from: type=registry,ref=ghcr.io/onemindos/cloudtak-tiles:cache
+          cache-to: type=registry,ref=ghcr.io/onemindos/cloudtak-tiles:cache,mode=max
           platforms: linux/amd64
 
       - name: Build and push OMOS Events image
@@ -110,6 +110,6 @@ jobs:
           tags: |
             ghcr.io/onemindos/cloudtak-events:latest
             ghcr.io/onemindos/cloudtak-events:${{ github.sha }}
-          cache-from: type=gha,scope=events
-          cache-to: type=gha,mode=max,scope=events
+          cache-from: type=registry,ref=ghcr.io/onemindos/cloudtak-events:cache
+          cache-to: type=registry,ref=ghcr.io/onemindos/cloudtak-events:cache,mode=max
           platforms: linux/amd64
