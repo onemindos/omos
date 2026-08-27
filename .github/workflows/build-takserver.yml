@@ -115,23 +115,38 @@ jobs:
             --build-arg TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-plugins-upstream \
             --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind \
             -t ghcr.io/onemindos/takserver-plugins:5.8-onemind \
+            -t ghcr.io/onemindos/takserver-base:plugins-5.8-onemind \
             tak-server
           echo "::endgroup::"
 
+      - name: Tag images for single-package push
+        run: |
+          # Push all images under the existing takserver-base package to avoid
+          # GHCR cross-package blob mounting permission issues. GITHUB_TOKEN can
+          # only push to packages it has already created.
+          docker tag ghcr.io/onemindos/takserver-base:5.8-onemind          ghcr.io/onemindos/takserver-base:base-5.8-onemind
+          docker tag ghcr.io/onemindos/takserver-config:5.8-onemind        ghcr.io/onemindos/takserver-base:config-5.8-onemind
+          docker tag ghcr.io/onemindos/takserver-api:5.8-onemind           ghcr.io/onemindos/takserver-base:api-5.8-onemind
+          docker tag ghcr.io/onemindos/takserver-messaging:5.8-onemind     ghcr.io/onemindos/takserver-base:messaging-5.8-onemind
+          docker tag ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind ghcr.io/onemindos/takserver-base:plugins-upstream-5.8-onemind
+          docker tag ghcr.io/onemindos/takserver-database-setup:5.8-onemind ghcr.io/onemindos/takserver-base:db-setup-5.8-onemind
+          docker tag ghcr.io/onemindos/takserver-plugins:5.8-onemind       ghcr.io/onemindos/takserver-base:plugins-5.8-onemind
+
       - name: Push all images to GHCR
         run: |
-          images=(
-            "ghcr.io/onemindos/takserver-base:5.8-onemind"
-            "ghcr.io/onemindos/takserver-config:5.8-onemind"
-            "ghcr.io/onemindos/takserver-api:5.8-onemind"
-            "ghcr.io/onemindos/takserver-messaging:5.8-onemind"
-            "ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind"
-            "ghcr.io/onemindos/takserver-database-setup:5.8-onemind"
-            "ghcr.io/onemindos/takserver-plugins:5.8-onemind"
+          tags=(
+            "5.8-onemind"
+            "base-5.8-onemind"
+            "config-5.8-onemind"
+            "api-5.8-onemind"
+            "messaging-5.8-onemind"
+            "plugins-upstream-5.8-onemind"
+            "db-setup-5.8-onemind"
+            "plugins-5.8-onemind"
           )
-          for img in "${images[@]}"; do
-            echo "::group::Push $img"
-            docker push "$img"
+          for tag in "${tags[@]}"; do
+            echo "::group::Push ghcr.io/onemindos/takserver-base:$tag"
+            docker push "ghcr.io/onemindos/takserver-base:$tag"
             echo "::endgroup::"
           done
 

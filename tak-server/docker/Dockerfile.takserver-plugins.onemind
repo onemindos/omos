@@ -7,8 +7,8 @@
 #   docker build -f docker/Dockerfile.takserver-plugins.onemind \
 #     -t ghcr.io/onemindos/takserver-plugins:5.8-onemind .
 #   (build context = tak-cluster/ root — only needs plugin/ directory)
-ARG TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-plugins
-ARG TAKSERVER_IMAGE_TAG=5.8-onemind
+ARG TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
+ARG TAKSERVER_IMAGE_TAG=plugins-upstream-5.8-onemind
 FROM ${TAKSERVER_IMAGE_REPO}:${TAKSERVER_IMAGE_TAG}
 
 # --- OneMind: bake in Zeus's NATS bridge plugin -----------------------------

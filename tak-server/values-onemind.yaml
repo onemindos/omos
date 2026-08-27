@@ -30,30 +30,30 @@ takserver:
       fedv2: {annotations: {}, host: ""}
 
   config:                   # centralized config service (starts first)
-    image: {repository: ghcr.io/onemindos/takserver-config, tag: "5.8-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "config-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 1, memory: 1Gi}}
 
   # messaging = the device-load tier (CoT/TCP 8089). SCALE THIS as EUD count grows (HPA-ready).
   messaging:
-    image: {repository: ghcr.io/onemindos/takserver-messaging, tag: "5.8-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 4Gi}, limits: {cpu: 2, memory: 4Gi}}
 
   api:                      # Marti API / WebTAK / cert enrollment
-    image: {repository: ghcr.io/onemindos/takserver-api, tag: "5.8-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "api-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 4Gi}, limits: {cpu: 2, memory: 4Gi}}
 
   # plugins tier runs Zeus's NATS bridge → the OneMind bus. Plugin is baked into this image.
   plugins:
     enabled: true
-    image: {repository: ghcr.io/onemindos/takserver-plugins, tag: "5.8-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "plugins-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 2, memory: 2Gi}}
 
   takserverDatabaseSetup:
-    image: {repository: ghcr.io/onemindos/takserver-database-setup, tag: "5.8-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "db-setup-5.8-onemind"}
 
   limits:
     persistentVolumeClaims: '5'
