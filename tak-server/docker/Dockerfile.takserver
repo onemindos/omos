@@ -1,0 +1,26 @@
+# Multi-target TAK Server 5.8 Dockerfile
+# Build targets: base, config, api, messaging, plugins
+#
+# Usage:
+#   docker buildx build --target config -t ghcr.io/onemindos/takserver-config:5.8-onemind .
+
+FROM eclipse-temurin:17-jammy AS base
+RUN apt-get update && apt-get install -y net-tools netcat-openbsd && rm -rf /var/lib/apt/lists/*
+COPY tak/ /opt/tak/
+RUN find /opt/tak -name "*.sh" -exec chmod +x {} \; \
+    && chmod u=rwx /opt/tak \
+    && find /opt/tak -type d -exec chmod u=rwx {} \;
+WORKDIR /opt/tak
+CMD ["jshell"]
+
+FROM base AS config
+CMD ["/opt/tak/config/takserver-config-cluster.sh"]
+
+FROM base AS api
+CMD ["/opt/tak/API/takserver-api-cluster.sh"]
+
+FROM base AS messaging
+CMD ["/opt/tak/messaging/takserver-messaging-cluster.sh"]
+
+FROM base AS plugins
+CMD ["/opt/tak/takserver-plugins-cluster.sh"]

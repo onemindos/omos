@@ -9,10 +9,10 @@ name: Build TAK Server 5.8 → GHCR
 #
 # Images built and pushed to ghcr.io/onemindos/:
 #   takserver-base         — eclipse-temurin:17-jammy + /opt/tak/ (base for all pods)
-#   takserver-config       — extends base, runs config-cluster.sh
-#   takserver-api          — extends base, runs api-cluster.sh
-#   takserver-messaging    — extends base, runs messaging-cluster.sh
-#   takserver-plugins      — extends base, runs plugins-cluster.sh (upstream only)
+#   takserver-config       — runs config-cluster.sh
+#   takserver-api          — runs api-cluster.sh
+#   takserver-messaging    — runs messaging-cluster.sh
+#   takserver-plugins      — runs plugins-cluster.sh (upstream only)
 #   takserver-database-setup — SchemaManager init job
 #   takserver-plugins (OneMind overlay) — adds NatsBridgePlugin on top
 
@@ -22,7 +22,6 @@ on:
     paths:
       - ".github/workflows/build-takserver.yml"
       - "tak-server/docker/**"
-      - "tak-server/docker/Dockerfile.takserver-plugins.onemind"
       - "tak-server/plugin/**"
   workflow_dispatch:
 
@@ -62,67 +61,67 @@ jobs:
         with:
           driver-opts: network=host
 
-      # ── Base image (all pods extend this) ──────────────────────────────────
+      # ── Multi-target build: base, config, api, messaging, plugins ──────────
+      # Uses a single Dockerfile with build targets to avoid cross-package
+      # layer reference issues in GHCR.
+
       - name: Build and push takserver-base
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-server/docker/Dockerfile.takserver-base
+          file: tak-server/docker/Dockerfile.takserver
+          target: base
           push: true
           tags: ghcr.io/onemindos/takserver-base:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           cache-to: type=registry,ref=ghcr.io/onemindos/takserver-base:cache,mode=max
           platforms: linux/amd64
 
-      # ── Role images (parallel, all FROM takserver-base) ───────────────────
       - name: Build and push takserver-config
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-server/docker/Dockerfile.takserver-config
+          file: tak-server/docker/Dockerfile.takserver
+          target: config
           push: true
           tags: ghcr.io/onemindos/takserver-config:5.8-onemind
-          build-args: |
-            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
-            TAKSERVER_IMAGE_TAG=5.8-onemind
+          cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
 
       - name: Build and push takserver-api
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-server/docker/Dockerfile.takserver-api
+          file: tak-server/docker/Dockerfile.takserver
+          target: api
           push: true
           tags: ghcr.io/onemindos/takserver-api:5.8-onemind
-          build-args: |
-            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
-            TAKSERVER_IMAGE_TAG=5.8-onemind
+          cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
 
       - name: Build and push takserver-messaging
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-server/docker/Dockerfile.takserver-messaging
+          file: tak-server/docker/Dockerfile.takserver
+          target: messaging
           push: true
           tags: ghcr.io/onemindos/takserver-messaging:5.8-onemind
-          build-args: |
-            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
-            TAKSERVER_IMAGE_TAG=5.8-onemind
+          cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
 
       - name: Build and push takserver-plugins (upstream)
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.DISTRO }}
-          file: tak-server/docker/Dockerfile.takserver-plugins
+          file: tak-server/docker/Dockerfile.takserver
+          target: plugins
           push: true
           tags: ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind
-          build-args: |
-            TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-base
-            TAKSERVER_IMAGE_TAG=5.8-onemind
+          cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
 
+      # ── Database setup (standalone, no base dependency) ────────────────────
       - name: Build and push takserver-database-setup
         uses: docker/build-push-action@v6
         with:
@@ -132,11 +131,11 @@ jobs:
           tags: ghcr.io/onemindos/takserver-database-setup:5.8-onemind
           platforms: linux/amd64
 
-      # ── OneMind overlay: NatsBridgePlugin on top of plugins image ─────────
+      # ── OneMind overlay: NatsBridgePlugin on top of plugins image ──────────
       - name: Build and push takserver-plugins (OneMind — NatsBridgePlugin)
         uses: docker/build-push-action@v6
         with:
-          context: tak-cluster
+          context: tak-server
           file: tak-server/docker/Dockerfile.takserver-plugins.onemind
           push: true
           tags: ghcr.io/onemindos/takserver-plugins:5.8-onemind
