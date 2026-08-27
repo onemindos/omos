@@ -63,3 +63,7 @@ spec:
       kind: StatefulSet
       jsonPointers:
         - /spec/volumeClaimTemplates
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /spec/storageClassName

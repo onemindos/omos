@@ -526,7 +526,7 @@ spec:
         - name: connect
           image: redpandadata/connect:latest
           command: ["/bin/sh", "-c"]
-          args: ["exec redpanda-connect streams /config/pipelines/*.yaml"]
+          args: ["exec /redpanda-connect streams /config/pipelines/*.yaml"]
           env:
             - name: NATS_USER
               valueFrom:
