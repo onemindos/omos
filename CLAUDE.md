@@ -29,22 +29,31 @@ MAC (cockpit / hardware edge)
 ## Repo Layout
 
 ```
-terraform/          DO VPC + DOKS cluster + container registry (Terraform)
-platform/           K8s manifests for every platform service
-  install.sh        Full cluster reprovisioning script (Helm + kubectl)
-  nats/             NATS HA helm values + TLS + Tailscale service
-  hermes/           Hermes/Legacy AI agent (agent/ + bridge/ + webui/)
-  cloudtak/         CloudTAK (WebTAK replacement — API/Events/Media/Tiles)
-  wwv/              WorldWideView (CesiumJS 3D globe)
-  clickhouse/       ClickHouse (entity history / time-machine)
-  grafana-*/        Grafana datasources + dashboards
-  voice/            LiveKit voice
-  cloudflare/       cloudflared tunnel
+infra/              DO VPC + DOKS cluster + container registry (Terraform)
+edge/               Non-K8s hardware-bound nodes
   mac-leaf/         Mac NATS leaf node config + launchd
-  values/           Helm values (cert-manager, ingress-nginx, loki, tempo)
-  ingress/          TLS issuers (cert-manager ClusterIssuers)
-  tailscale/        Tailscale operator RBAC
-tak-cluster/        TAK Server 5.7 Helm chart + NATS bridge plugin
+services/           Standalone NATS microservices (presence, tasks, bridges)
+tak-server/         TAK Server 5.8 (self-contained)
+  chart/            Helm chart (upstream + OneMind values)
+  docker/           Dockerfiles (base, api, messaging, config, plugins, db-setup)
+  deploy/           K8s overlay manifests (LB, NATS leaf, secrets)
+  plugin-src/       NatsBridgePlugin Java source
+  plugin/           Built plugin JAR + config
+  edge/             EUD management, device registry, simulators
+  build/            Staging + CI helpers
+platform/           K8s manifests — organized by operational layer
+  argocd/           App-of-apps + Application CRDs
+  core/             Wave 0: ingress, cloudflare, tailscale, sealed-secrets, cert-manager, github-runner
+  nats/             Wave 1: NATS HA helm values + TLS + streams
+  cloudtak/         Wave 2: CloudTAK (API/Events/Media/Tiles)
+  hermes/           Wave 3: Hermes/Legacy AI agent
+  omos/             Wave 3: tak-projector, feeds, mission-engine
+  intel/            Wave 3: OSINT services
+  geo/              Wave 3: geospatial services
+  data/             Wave 3: clickhouse/, redpanda-connect/
+  monitoring/       Wave 4: grafana, alertmanager, nats-surveyor
+  nats-tools/       Wave 4: NATS debug UIs
+  values/           Shared Helm values (cert-manager, ingress-nginx, loki, tempo)
 docs/               Architecture + runbooks
 ```
 
@@ -81,7 +90,7 @@ env:
         key: password
 ```
 
-**External services** (Mac bridges, edge boxes, anything outside K8s) use a `nats-leaf` sidecar or local leaf node to forward to the cluster. The sidecar pattern is shown in `platform/legacy/deployment.yaml` — Legacy uses it because its pod needs to talk to both the cluster bus AND behave as an isolated agent identity. Most new K8s services do NOT need the sidecar.
+**External services** (Mac bridges, edge boxes, anything outside K8s) use a `nats-leaf` sidecar or local leaf node to forward to the cluster. The sidecar pattern is shown in `platform/hermes/deployment.yaml` — Legacy uses it because its pod needs to talk to both the cluster bus AND behave as an isolated agent identity. Most new K8s services do NOT need the sidecar.
 
 ```
 K8s pod  ──────────────────────► nats.nats.svc.cluster.local:4222  (direct, fast)
@@ -127,7 +136,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | Legacy (Hermes) | hermes | ghcr.io/onemindos/hermes-legacy:v2 | live |
 | CloudTAK | cloudtak | ghcr.io/onemindos/cloudtak-api:latest | live |
 | WorldWideView | wwv | ghcr.io/onemindos/wwv:latest | live |
-| TAK Server 5.7 | takserver | ghcr.io/onemindos/takserver-* | live |
+| TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-*:5.8-onemind | live |
 | ClickHouse | clickhouse | clickhouse/clickhouse-server | live |
 | Grafana/Loki/Tempo | monitoring | (helm) | live |
 | Cloudflared | cloudflare | cloudflare/cloudflared | live |
@@ -145,7 +154,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | hermes | Legacy AI agent |
 | cloudtak | CloudTAK stack |
 | wwv | WorldWideView globe |
-| takserver | TAK Server 5.7 |
+| takserver | TAK Server 5.8 |
 | clickhouse | ClickHouse |
 | monitoring | Prometheus + Grafana + Loki + Tempo |
 | cloudflare | cloudflared tunnel |
@@ -224,12 +233,10 @@ doctl kubernetes cluster kubeconfig save onemind-hub
 ## Adding a New Service (checklist)
 
 - [ ] Image built and pushed to `ghcr.io/onemindos/{service}:latest`
-- [ ] `platform/{service}/namespace.yaml` created
-- [ ] `platform/{service}/deployment.yaml` created (NATS leaf sidecar if needs NATS)
-- [ ] `platform/{service}/cloudflare-route.yaml` created if public-facing
-- [ ] `kubectl apply` lines added to `platform/install.sh`
-- [ ] Secret added to 1Password vault `00-24 SO` (title = K8s secret name, flat fields, tagged `k8s-secret,omos-hub`)
-- [ ] `platform/{service}/external-secret.yaml` created and applied
+- [ ] Manifests added to the appropriate platform layer directory (e.g. `platform/omos/`, `platform/data/`)
+- [ ] Cloudflare route ConfigMap added if public-facing (namespace: cloudflare)
+- [ ] SealedSecret created and committed (see Secrets Convention above)
+- [ ] ArgoCD Application updated or created in `platform/argocd/` with correct path
 - [ ] Service added to Services table above with status
 
 ## What NOT to Do
@@ -252,14 +259,16 @@ helm upgrade --install nack nats/nack -n nats
 kubectl apply -f platform/nats/streams/
 ```
 
-## TAK Cluster
+## TAK Server
 
-TAK Server 5.7 runs via Helm chart in `tak-cluster/upstream/deployments/helm/`.
-OneMind values override: `tak-cluster/values-onemind.yaml`.
-NATS bridge plugin: `tak-cluster/plugin/` + `tak-cluster/build-root/`.
+TAK Server 5.8 (hardened) runs via Helm chart in `tak-server/chart/`.
+OneMind values override: `tak-server/values-onemind.yaml`.
+Dockerfiles: `tak-server/docker/` (base, api, messaging, config, plugins, db-setup).
+NATS bridge plugin source: `tak-server/plugin-src/` → built JAR in `tak-server/plugin/`.
 The NatsBridgePlugin is the live CoT→NATS wire (`tak.cot.inject` in, `tak.cot.>` out).
+CI builds all images via `.github/workflows/build-takserver.yml` (self-hosted runner).
 
-Full deploy runbook: `tak-cluster/DEPLOY-RUNBOOK.md`.
+Full deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
 
 ## Service Roadmap
 
