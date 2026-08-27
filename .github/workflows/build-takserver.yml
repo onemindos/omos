@@ -72,6 +72,7 @@ jobs:
           file: tak-server/docker/Dockerfile.takserver
           target: base
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-base:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           cache-to: type=registry,ref=ghcr.io/onemindos/takserver-base:cache,mode=max
@@ -84,6 +85,7 @@ jobs:
           file: tak-server/docker/Dockerfile.takserver
           target: config
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-config:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
@@ -95,6 +97,7 @@ jobs:
           file: tak-server/docker/Dockerfile.takserver
           target: api
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-api:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
@@ -106,6 +109,7 @@ jobs:
           file: tak-server/docker/Dockerfile.takserver
           target: messaging
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-messaging:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
@@ -117,6 +121,7 @@ jobs:
           file: tak-server/docker/Dockerfile.takserver
           target: plugins
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind
           cache-from: type=registry,ref=ghcr.io/onemindos/takserver-base:cache
           platforms: linux/amd64
@@ -128,6 +133,7 @@ jobs:
           context: ${{ env.DISTRO }}
           file: tak-server/docker/Dockerfile.database-setup
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-database-setup:5.8-onemind
           platforms: linux/amd64
 
@@ -138,6 +144,7 @@ jobs:
           context: tak-server
           file: tak-server/docker/Dockerfile.takserver-plugins.onemind
           push: true
+          provenance: false
           tags: ghcr.io/onemindos/takserver-plugins:5.8-onemind
           build-args: |
             TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-plugins-upstream
