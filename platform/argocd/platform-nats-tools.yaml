@@ -37,6 +37,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: nats-tools
+  ignoreDifferences:
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /spec/storageClassName
   syncPolicy:
     automated:
       prune: true

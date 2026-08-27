@@ -36,6 +36,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: intel
+  ignoreDifferences:
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /spec/storageClassName
   syncPolicy:
     automated:
       prune: true
