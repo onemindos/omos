@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y net-tools netcat-openbsd && rm -rf /var
 COPY tak/ /opt/tak/
 RUN find /opt/tak -name "*.sh" -exec chmod +x {} \; \
     && chmod u=rwx /opt/tak \
-    && find /opt/tak -type d -exec chmod u=rwx {} \;
+    && find /opt/tak -type d -exec chmod u=rwx {} \; \
+    && ln -sf /opt/tak/setenv.sh /setenv.sh
 WORKDIR /opt/tak
 CMD ["jshell"]
 

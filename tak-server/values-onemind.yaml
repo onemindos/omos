@@ -76,7 +76,7 @@ global:
 
 # --- Ignite (distributed cache + K8s cluster discovery) ---------------------
 ignite:
-  image: {tag: 2.17.0}
+  image: {repository: ghcr.io/onemindos/takserver-ignite, tag: "2.17.0"}
   serviceAccount: {name: takserver-ignite}
 
 # --- NATS: TAK-INTERNAL bus between pods --- NOT the OneMind bus -------------
