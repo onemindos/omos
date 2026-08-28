@@ -30,6 +30,9 @@ data:
       # ── CesiumJS 3D Globe (God's Eye) ────────────────────────────────────
       - hostname: globe.onemindos.dev
         service: http://tak-webview-cesium.takserver.svc.cluster.local:80
+      # ── CloudTAK media server (video HLS proxy) ──────────────────────────
+      - hostname: media.onemindos.dev
+        service: http://cloudtak-media.cloudtak.svc.cluster.local:9997
       # ── Camera feeds (HLS/WebRTC — mediamtx) ─────────────────────────────
       - hostname: cam.onemindos.dev
         service: http://mediamtx.takserver.svc.cluster.local:8889
