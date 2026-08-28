@@ -12,6 +12,11 @@ ARG TAKSERVER_IMAGE_TAG=plugins-upstream-5.8-onemind
 FROM ${TAKSERVER_IMAGE_REPO}:${TAKSERVER_IMAGE_TAG}
 
 # --- OneMind: bake in Zeus's NATS bridge plugin -----------------------------
+# The TAK PluginLoader discovers plugins via ClassLoader.getResources("plugin-config.yaml"),
+# so the plugin JAR must be on the Spring Boot classpath. Add lib/ to loader.path
+# in setenv.sh so PropertiesLauncher picks up all JARs in /opt/tak/lib/.
+RUN sed -i 's|loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes|loader.path=WEB-INF/lib-provided,WEB-INF/lib,WEB-INF/classes,lib/|' /opt/tak/setenv.sh
+
 RUN mkdir -p /opt/tak/lib /opt/tak/conf/plugins
 COPY plugin/takserver-nats-plugin-1.0.0.jar /opt/tak/lib/takserver-nats-plugin-1.0.0.jar
 COPY plugin/tak.server.plugins.NatsBridgePlugin.yaml /opt/tak/conf/plugins/tak.server.plugins.NatsBridgePlugin.yaml

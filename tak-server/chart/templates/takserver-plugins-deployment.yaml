@@ -30,6 +30,12 @@ spec:
             limits:
               cpu: {{ .Values.takserver.api.resources.limits.cpu }}
               memory: {{ .Values.takserver.plugins.resources.limits.memory }}
+          livenessProbe:
+            tcpSocket:
+              port: 10800
+            initialDelaySeconds: 600
+            periodSeconds: 30
+            failureThreshold: 3
           volumeMounts:
             - name: config #The name(key) value must match pod volumes name(key) value
               mountPath: /certs-configmap/
