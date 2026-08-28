@@ -1,0 +1,112 @@
+# ─── omos-face-id ────────────────────────────────────────────────────────────
+# Face detection + recognition on the maccam RTSP stream.
+# Pipeline:  mediamtx/maccam → InsightFace buffalo_s → NATS
+#
+# NATS subjects published:
+#   det.face.known.{name}     known face with identity
+#   det.face.unknown          face detected, no match
+#   evt.access.{name}.recognized  semantic event on positive ID
+#
+# Enrollment:
+#   1. kubectl cp photo.jpg omos/<pod>:/faces/photos/zeus/photo.jpg
+#   2. kubectl exec -n omos <pod> -- python /app/enroll.py
+#   (pod restarts → worker loads new embeddings.pkl automatically)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omos-face-id
+  namespace: omos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omos-face-id
+  template:
+    metadata:
+      labels:
+        app: omos-face-id
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      initContainers:
+        - name: install-deps
+          image: python:3.11-slim
+          command:
+            - /bin/bash
+            - -c
+            - |
+              if [ ! -f /deps/insightface/__init__.py ]; then
+                echo "Installing deps..."
+                apt-get update -qq && apt-get install -y --no-install-recommends \
+                  libgl1 libglib2.0-0 libgomp1 > /dev/null
+                pip install --no-cache-dir --target=/deps \
+                  insightface==0.7.3 \
+                  onnxruntime==1.18.1 \
+                  opencv-python-headless==4.10.0.84 \
+                  nats-py==2.9.0 \
+                  numpy==1.26.4
+                echo "Done."
+              else
+                echo "Deps already installed."
+              fi
+          volumeMounts:
+            - name: deps
+              mountPath: /deps
+      containers:
+        - name: face-id
+          image: python:3.11-slim
+          command:
+            - /bin/bash
+            - -c
+            - |
+              apt-get update -qq && apt-get install -y --no-install-recommends \
+                libgl1 libglib2.0-0 libgomp1 > /dev/null 2>&1
+              export PYTHONPATH=/deps:$PYTHONPATH
+              python /app/worker.py
+          env:
+            - name: NATS_URL
+              value: "nats://nats.nats.svc.cluster.local:4222"
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+            - name: RTSP_URL
+              value: "rtsp://mediamtx.takserver.svc.cluster.local:8554/maccam"
+            - name: EMBEDDINGS_PATH
+              value: "/faces/embeddings.pkl"
+            - name: INSIGHTFACE_HOME
+              value: "/faces/models"
+            - name: MATCH_THRESHOLD
+              value: "0.4"
+            - name: SAMPLE_INTERVAL
+              value: "1.0"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: deps
+              mountPath: /deps
+            - name: code
+              mountPath: /app
+            - name: faces
+              mountPath: /faces
+      volumes:
+        - name: deps
+          persistentVolumeClaim:
+            claimName: face-id-deps
+        - name: code
+          configMap:
+            name: face-id-code
+        - name: faces
+          persistentVolumeClaim:
+            claimName: face-id-data
