@@ -113,3 +113,12 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/onemindos/cloudtak-events:cache
           cache-to: type=registry,ref=ghcr.io/onemindos/cloudtak-events:cache,mode=max
           platforms: linux/amd64
+
+      - name: Rollout restart CloudTAK in K8s
+        run: |
+          echo "Rolling out new images to cloudtak namespace..."
+          kubectl rollout restart deployment/cloudtak-api -n cloudtak
+          kubectl rollout restart deployment/cloudtak-events -n cloudtak
+          kubectl rollout status deployment/cloudtak-api -n cloudtak --timeout=180s
+          kubectl rollout status deployment/cloudtak-events -n cloudtak --timeout=120s
+          echo "CloudTAK deployed successfully at $(date -u)"
