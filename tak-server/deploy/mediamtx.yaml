@@ -89,6 +89,9 @@ metadata:
   namespace: takserver
   labels:
     app: mediamtx
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "mediamtx-tak"
 spec:
   selector:
     app: mediamtx
