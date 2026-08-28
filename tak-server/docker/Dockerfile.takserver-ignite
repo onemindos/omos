@@ -25,9 +25,12 @@ RUN cd /tmp/tak-extract && \
     cp WEB-INF/lib/takserver-common-5.8-RELEASE-69.jar /opt/ignite/libs/ && \
     rm -rf /tmp/tak-extract
 
-# Copy over a version of ignite.sh that uses exec to launch the process so the SIGTERM signal is caught
+# Preserve the stock ignite.sh (it has the correct Java-17 --add-opens flags), then
+# install our wrapper as ignite.sh. The wrapper converts OPTION_LIBS → USER_LIBS
+# (standard setenv.sh mechanism) and execs ignite-stock.sh.
+RUN mv /opt/ignite/bin/ignite.sh /opt/ignite/bin/ignite-stock.sh
 COPY docker-files/scripts/takserver-ignite/ignite.sh /opt/ignite/bin/ignite.sh
-RUN chmod +x /opt/ignite/bin/ignite.sh
+RUN chmod +x /opt/ignite/bin/ignite.sh /opt/ignite/bin/ignite-stock.sh
 
 ENV IGNITE_HOME=/opt/ignite
 WORKDIR $IGNITE_HOME
