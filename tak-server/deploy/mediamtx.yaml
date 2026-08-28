@@ -1,13 +1,12 @@
-# MediaMTX — raw RTSP ingress tier (PRIMARY for machine consumers)
+# MediaMTX — raw RTSP/HLS/WebRTC ingress tier
 #
 # Architecture:
-#   cameras/drones → mediamtx.takserver:8554 (this) → cloudtak-media.cloudtak:8554 (users)
-#                                              └──────► vision-worker (ML inference)
-#                                              └──────► TAK-ML inference
+#   cameras/drones → mediamtx.takserver:8554 (this) → vision-worker (ML inference)
+#                                                    → cam.onemindos.dev (HLS — user viewing)
+#                                                    → Tailscale RTSP (admin/EUD direct)
 #
-# Cameras push once to mediamtx.takserver. This config auto-relays every stream
-# to cloudtak-media via runOnReady so WebTAK users see streams without needing
-# to know about the raw tier.
+# cloudtak-media (dfpc-coe/media-infra) uses CloudTAK API auth for publishing —
+# relay directly to it is not supported. Users view streams via cam.onemindos.dev.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -72,39 +71,6 @@ spec:
             - name: config
               mountPath: /mediamtx.yml
               subPath: mediamtx.yml
-        # Relay sidecar: watches mediamtx for active streams and re-publishes
-        # each one to cloudtak-media so WebTAK users see all feeds automatically.
-        - name: relay
-          image: linuxserver/ffmpeg:latest
-          command:
-            - /bin/bash
-            - -c
-            - |
-              MEDIAMTX="http://localhost:9997"
-              CLOUDTAK="rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554"
-              declare -A PIDS
-              while true; do
-                PATHS=$(curl -sf "$MEDIAMTX/v3/paths/list" | \
-                  grep -o '"name":"[^"]*"' | cut -d'"' -f4 || true)
-                for PATH_NAME in $PATHS; do
-                  if [ -z "${PIDS[$PATH_NAME]}" ] || ! kill -0 "${PIDS[$PATH_NAME]}" 2>/dev/null; then
-                    ffmpeg -loglevel error -re \
-                      -i "rtsp://localhost:8554/$PATH_NAME" \
-                      -c copy -f rtsp -rtsp_transport tcp \
-                      "$CLOUDTAK/$PATH_NAME" &
-                    PIDS[$PATH_NAME]=$!
-                    echo "[relay] started $PATH_NAME → cloudtak-media"
-                  fi
-                done
-                sleep 5
-              done
-          resources:
-            requests:
-              cpu: 200m
-              memory: 128Mi
-            limits:
-              cpu: "2"
-              memory: 512Mi
       volumes:
         - name: config
           configMap:

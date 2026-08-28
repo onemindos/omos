@@ -217,6 +217,7 @@ kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/murmur.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/mumble-bridge.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/tak-webview-cesium.yaml"
+kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx-cloudflare-route.yaml"
 
 # -----------------------------------------------------------------------------
 # 12. GITHUB RUNNER — self-hosted runner for onemindos org CI/CD
