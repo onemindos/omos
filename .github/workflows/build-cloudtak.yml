@@ -52,7 +52,8 @@ jobs:
           git clone --depth 1 https://github.com/onemindos/cloudtak-plugin-nats.git \
             "$PLUGINS_DIR/cloudtak-plugin-nats"
 
-          # Inject plugin deps into package.json so Docker npm install picks them up
+          # Inject plugin deps into package.json so Docker's npm install picks them up.
+          # No npm ci / package-lock step needed — Dockerfile uses plain npm install.
           cd omos/api/web
           node -e "
             const fs = require('fs');
@@ -60,10 +61,9 @@ jobs:
             pkg.dependencies['nats.ws'] = pkg.dependencies['nats.ws'] || '^1.30.3';
             pkg.dependencies['lucide-vue-next'] = pkg.dependencies['lucide-vue-next'] || '^0.513.0';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 4));
-            console.log('Plugin deps ensured in package.json');
+            console.log('Plugin deps injected into package.json');
           "
-          npm install --package-lock-only
-          echo "package-lock.json updated"
+          echo "Plugin context ready"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -116,9 +116,36 @@ jobs:
 
       - name: Rollout restart CloudTAK in K8s
         run: |
-          echo "Rolling out new images to cloudtak namespace..."
-          kubectl rollout restart deployment/cloudtak-api -n cloudtak
-          kubectl rollout restart deployment/cloudtak-events -n cloudtak
-          kubectl rollout status deployment/cloudtak-api -n cloudtak --timeout=180s
-          kubectl rollout status deployment/cloudtak-events -n cloudtak --timeout=120s
-          echo "CloudTAK deployed successfully at $(date -u)"
+          # Use in-cluster service account token — no kubectl binary needed.
+          # Requires github-runner-rbac.yaml ClusterRoleBinding in platform/core/.
+          TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+          API=https://kubernetes.default.svc.cluster.local
+          RESTART_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          PATCH='{"spec":{"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/restartedAt":"'"$RESTART_TIME"'"}}}}}'
+
+          for DEPLOY in cloudtak-api cloudtak-events; do
+            echo "Restarting $DEPLOY at $RESTART_TIME..."
+            HTTP=$(curl -s -o /dev/null -w "%{http_code}" -k -X PATCH \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Content-Type: application/strategic-merge-patch+json" \
+              "$API/apis/apps/v1/namespaces/cloudtak/deployments/$DEPLOY" \
+              -d "$PATCH")
+            if [ "$HTTP" = "200" ]; then
+              echo "✓ $DEPLOY restart triggered (HTTP $HTTP)"
+            else
+              echo "✗ $DEPLOY restart failed (HTTP $HTTP)" && exit 1
+            fi
+          done
+
+          # Poll cloudtak-api until all replicas are updated (max 3 min)
+          echo "Waiting for cloudtak-api rollout..."
+          for i in $(seq 1 18); do
+            READY=$(curl -sk \
+              -H "Authorization: Bearer $TOKEN" \
+              "$API/apis/apps/v1/namespaces/cloudtak/deployments/cloudtak-api" \
+              | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const s=JSON.parse(d).status;process.stdout.write(String(s.readyReplicas||0)+'/'+String(s.replicas||0))})")
+            echo "  cloudtak-api ready: $READY"
+            [ "$READY" = "1/1" ] && echo "✓ CloudTAK deployed at $(date -u)" && exit 0
+            sleep 10
+          done
+          echo "Timeout waiting for rollout" && exit 1

@@ -1,0 +1,29 @@
+---
+# Gives the github-runner's default SA permission to rollout-restart
+# deployments across the namespaces it needs to deploy to.
+# Used by the build-cloudtak.yml workflow's "Rollout restart" step via
+# the in-cluster service account token + curl K8s API.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: github-runner-deployer
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "patch", "update"]
+  - apiGroups: ["apps"]
+    resources: ["deployments/status"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: github-runner-deployer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: github-runner-deployer
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: github-runner
