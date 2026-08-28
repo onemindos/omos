@@ -201,6 +201,25 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/postgis.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
 
+# -----------------------------------------------------------------------------
+# 11. TAK-ML — TAK ML server + vision worker + database
+# Secrets: takml-db-creds and takml-nats-creds are SealedSecrets in platform/takml/
+# NOTE: takml-server-jar PVC must be populated manually on first deploy:
+#   kubectl run jar-loader --image=busybox --restart=Never -n takml \
+#     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],"containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
+#   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
+#   kubectl delete pod jar-loader -n takml
+# Models (visdrone.torchscript) must be copied to the takml-models PVC similarly.
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/namespace.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/pvcs.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-db-creds.sealedsecret.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-nats-creds.sealedsecret.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-server.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-vision-worker.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/deployment.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/takml/cloudflare-route.yaml"
+
 echo ""
 echo "==> Platform install complete."
 echo "    TAK cluster:  see tak-cluster/DEPLOY-RUNBOOK.md"

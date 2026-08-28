@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: takml-db-data
+  namespace: takml
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: do-block-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: takml-deps
+  namespace: takml
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: do-block-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: takml-models
+  namespace: takml
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: do-block-storage
+---
+# JAR PVC — holds takml_server-2.1.jar, copied in manually once.
+# To populate: kubectl cp takml_server-2.1.jar takml/<busybox-pod>:/jar/
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: takml-server-jar
+  namespace: takml
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: do-block-storage

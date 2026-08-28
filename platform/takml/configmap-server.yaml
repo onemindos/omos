@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: takml-server-config
+  namespace: takml
+data:
+  application.properties: |
+    server.port=8234
+    logging.level.org.springframework.web=WARN
+    logging.level.com.bbn=DEBUG
+    security.require-ssl=false
+    server.ssl.enabled=false
+    server.api.key.enabled=false
+    springdoc.api-docs.path=/v3/api-docs
+    springdoc.swagger-ui.path=/swagger-ui.html
+    spring.datasource.url=jdbc:postgresql://takml-db.takml.svc.cluster.local:5432/takml_server
+    spring.datasource.username=takml
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    spring.servlet.multipart.max-file-size=1GB
+    spring.servlet.multipart.max-request-size=1GB
+    tak.addr=takserver-api-service.takserver.svc.cluster.local
+    tak.port=8443
+    tak.client_store=/certs/takserver.jks
+    tak.client_store.password=atakatak
+    tak.trust_store=/certs/truststore-root.jks
+    tak.trust_store.password=atakatak
+    takfs.mission_name=takml_takfs_sync_mission
+    takfs.takserver.file_limit_size.mb=500
+    takfs.segmented_file_upload_timeout_millis=10000
+    mx_plugins=com.bbn.takml_server.model_execution.mx_plugins.OnnxMxPlugin,com.bbn.takml_server.model_execution.mx_plugins.PytorchMxPlugin
+    models_directory=/models/example_models

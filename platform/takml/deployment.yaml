@@ -1,0 +1,298 @@
+# ─── takml-db ────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takml-db
+  namespace: takml
+  labels:
+    app: takml-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: takml-db
+  template:
+    metadata:
+      labels:
+        app: takml-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          env:
+            - name: POSTGRES_DB
+              value: takml_server
+            - name: POSTGRES_USER
+              value: takml
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: takml-db-creds
+                  key: password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: takml-db-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: takml-db
+  namespace: takml
+spec:
+  selector:
+    app: takml-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+# ─── takml-server ────────────────────────────────────────────────────────────
+# NOTE: JAR is loaded from the takml-server-jar PVC.
+# On first deploy after a cluster wipe, copy the JAR into the PVC:
+#   kubectl run jar-loader --image=busybox --restart=Never -n takml \
+#     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],"containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
+#   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
+#   kubectl delete pod jar-loader -n takml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takml-server
+  namespace: takml
+  labels:
+    app: takml-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: takml-server
+  template:
+    metadata:
+      labels:
+        app: takml-server
+    spec:
+      initContainers:
+        - name: check-jar
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              if [ ! -f /jar/takml_server-2.1.jar ]; then
+                echo "JAR not found — copy takml_server-2.1.jar to the takml-server-jar PVC first"
+                exit 1
+              fi
+              echo "JAR present: $(du -sh /jar/takml_server-2.1.jar)"
+          volumeMounts:
+            - name: jar
+              mountPath: /jar
+      containers:
+        - name: takml-server
+          image: eclipse-temurin:21-jre-jammy
+          command:
+            - java
+            - -Dsun.net.client.defaultConnectTimeout=30000
+            - -Dsun.net.client.defaultReadTimeout=60000
+            - -Djdk.httpclient.connectionPoolSize=5
+            - -jar
+            - /jar/takml_server-2.1.jar
+            - --models_directory=/models/example_models
+            - --mx_plugins=com.bbn.takml_server.model_execution.mx_plugins.OnnxMxPlugin,com.bbn.takml_server.model_execution.mx_plugins.PytorchMxPlugin
+            - --spring.datasource.url=jdbc:postgresql://takml-db.takml.svc.cluster.local:5432/takml_server
+            - --spring.datasource.username=takml
+            - --tak.addr=takserver-api-service.takserver.svc.cluster.local
+            - --server.ssl.enabled=false
+            - --security.require-ssl=false
+            - --server.api.key.enabled=false
+            - --logging.level.com.bbn=DEBUG
+          env:
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: takml-db-creds
+                  key: password
+            - name: TAKSERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tak-keystores-copy
+                  key: cert-password
+                  optional: true
+          ports:
+            - name: http
+              containerPort: 8234
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          startupProbe:
+            tcpSocket:
+              port: 8234
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 30
+            timeoutSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8234
+            periodSeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 10
+          volumeMounts:
+            - name: jar
+              mountPath: /jar
+              readOnly: true
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: certs
+              mountPath: /certs
+              readOnly: true
+            - name: models
+              mountPath: /models
+      volumes:
+        - name: jar
+          persistentVolumeClaim:
+            claimName: takml-server-jar
+        - name: config
+          configMap:
+            name: takml-server-config
+        - name: certs
+          secret:
+            secretName: tak-keystores-copy
+            optional: true
+        - name: models
+          persistentVolumeClaim:
+            claimName: takml-models
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: takml-server
+  namespace: takml
+  labels:
+    app: takml-server
+spec:
+  selector:
+    app: takml-server
+  ports:
+    - name: http
+      port: 8234
+      targetPort: 8234
+---
+# ─── takml-vision-worker ─────────────────────────────────────────────────────
+# Pulls RTSP streams from CloudTAK mediamtx, runs YOLOv5s (VisDrone model),
+# publishes detections to NATS subject: fabric.vision.{feed_id}.detect
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takml-vision-worker
+  namespace: takml
+  labels:
+    app: takml-vision-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: takml-vision-worker
+  template:
+    metadata:
+      labels:
+        app: takml-vision-worker
+    spec:
+      initContainers:
+        - name: install-deps
+          image: python:3.11-slim
+          command:
+            - /bin/bash
+            - -c
+            - |
+              if [ ! -f /deps/torch/__init__.py ]; then
+                apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0
+                pip install --no-cache-dir --target=/deps \
+                  torch==2.3.1+cpu torchvision==0.18.1+cpu \
+                  --extra-index-url https://download.pytorch.org/whl/cpu
+                pip install --no-cache-dir --target=/deps \
+                  opencv-python-headless==4.10.0.84 nats-py==2.9.0 numpy==1.26.4
+              fi
+          volumeMounts:
+            - name: deps
+              mountPath: /deps
+      containers:
+        - name: vision-worker
+          image: python:3.11-slim
+          command:
+            - /bin/bash
+            - -c
+            - |
+              apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 > /dev/null 2>&1
+              export PYTHONPATH=/deps:$PYTHONPATH
+              python /app/worker.py
+          env:
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_USER
+              value: onemind
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: takml-nats-creds
+                  key: password
+            - name: NATS_CA
+              value: /etc/nats-ca/ca.crt
+            - name: MODEL_PATH
+              value: /models/visdrone.torchscript
+            - name: CONFIDENCE_THRESHOLD
+              value: "0.45"
+            - name: SAMPLE_INTERVAL
+              value: "2.0"
+            - name: FEEDS
+              value: '{"takcam":"rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554/takcam","helmcam":"rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554/helmcam"}'
+          resources:
+            requests:
+              cpu: 1500m
+              memory: 1536Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          volumeMounts:
+            - name: deps
+              mountPath: /deps
+            - name: code
+              mountPath: /app
+            - name: models
+              mountPath: /models
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+      volumes:
+        - name: deps
+          persistentVolumeClaim:
+            claimName: takml-deps
+        - name: code
+          configMap:
+            name: vision-worker-code
+        - name: models
+          persistentVolumeClaim:
+            claimName: takml-models
+        - name: nats-ca
+          secret:
+            secretName: nats-ca
+            items:
+              - key: ca.crt
+                path: ca.crt
