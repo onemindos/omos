@@ -64,9 +64,9 @@ spec:
                   name: cloudtak-postgres-creds
                   key: POSTGRES_DSN
             - name: API_URL
-              value: "https://atoc.onemindos.dev"
+              value: "https://onemindos.dev"
             - name: PMTILES_URL
-              value: "https://tiles.atoc.onemindos.dev"
+              value: "https://tiles.onemindos.dev"
           resources:
             requests:
               cpu: 300m
