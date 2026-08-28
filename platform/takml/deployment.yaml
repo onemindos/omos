@@ -116,7 +116,9 @@ spec:
             - --tak.addr=takserver-api-service.takserver.svc.cluster.local
             - --server.ssl.enabled=false
             - --security.require-ssl=false
-            - --server.api.key.enabled=false
+            - --server.api.key.enabled=true
+            - --server.api.key_path=/apikey
+            - --server.api.key.param_name=x-api-key
             - --logging.level.com.bbn=DEBUG
           env:
             - name: SPRING_DATASOURCE_PASSWORD
@@ -165,6 +167,9 @@ spec:
               readOnly: true
             - name: models
               mountPath: /models
+            - name: apikey
+              mountPath: /apikey
+              readOnly: true
       volumes:
         - name: jar
           persistentVolumeClaim:
@@ -179,6 +184,9 @@ spec:
         - name: models
           persistentVolumeClaim:
             claimName: takml-models
+        - name: apikey
+          secret:
+            secretName: takml-api-key
 ---
 apiVersion: v1
 kind: Service
