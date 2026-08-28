@@ -19,7 +19,12 @@ exec java \
     --add-exports=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED \
     --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED \
     --add-opens=java.base/jdk.internal.access=ALL-UNNAMED \
-    --illegal-access=permit \
+    --add-opens=java.base/java.nio=ALL-UNNAMED \
+    --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED \
+    --add-opens=java.base/sun.net.util=ALL-UNNAMED \
+    --add-opens=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED \
+    --add-opens=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED \
+    --add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED \
     -Djava.net.preferIPv4Stack=true \
     -DIGNITE_HOME="${IGNITE_HOME}" \
     -cp "${IGNITE_LIBS}" \
