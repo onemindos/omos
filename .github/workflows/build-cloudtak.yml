@@ -39,6 +39,7 @@ jobs:
     steps:
       - name: Clone OMOS fork (Zeus-Delacruz/CloudTAK)
         run: |
+          rm -rf omos
           git clone --depth 1 https://github.com/Zeus-Delacruz/CloudTAK.git omos
           echo "OMOS fork cloned at $(git -C omos rev-parse --short HEAD)"
 
