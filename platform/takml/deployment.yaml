@@ -196,8 +196,9 @@ spec:
       targetPort: 8234
 ---
 # ─── takml-vision-worker ─────────────────────────────────────────────────────
-# Pulls RTSP streams from CloudTAK mediamtx, runs YOLOv5s (VisDrone model),
-# publishes detections to NATS subject: fabric.vision.{feed_id}.detect
+# Pulls RTSP streams from mediamtx.takserver (raw ingress tier — no auth overhead),
+# runs YOLOv5s (VisDrone model), publishes detections to NATS: fabric.vision.{feed_id}.detect
+# mediamtx.takserver relays all streams to cloudtak-media for user-facing display.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -262,7 +263,7 @@ spec:
             - name: SAMPLE_INTERVAL
               value: "2.0"
             - name: FEEDS
-              value: '{"takcam":"rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554/takcam","helmcam":"rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554/helmcam"}'
+              value: '{"takcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/takcam","helmcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/helmcam"}'
           resources:
             requests:
               cpu: 1500m

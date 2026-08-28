@@ -1,6 +1,39 @@
-# MediaMTX — RTSP/RTMP/HLS/WebRTC relay for TAK video feeds
-# Feeds: rtsp://mediamtx.takserver.svc.cluster.local:8554/{stream-name}
-# Used by: takml-vision-worker (takcam, helmcam), CloudTAK media
+# MediaMTX — raw RTSP ingress tier (PRIMARY for machine consumers)
+#
+# Architecture:
+#   cameras/drones → mediamtx.takserver:8554 (this) → cloudtak-media.cloudtak:8554 (users)
+#                                              └──────► vision-worker (ML inference)
+#                                              └──────► TAK-ML inference
+#
+# Cameras push once to mediamtx.takserver. This config auto-relays every stream
+# to cloudtak-media via runOnReady so WebTAK users see streams without needing
+# to know about the raw tier.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mediamtx-config
+  namespace: takserver
+data:
+  mediamtx.yml: |
+    logLevel: info
+    rtsp: yes
+    rtspAddress: :8554
+    rtmp: yes
+    rtmpAddress: :1935
+    hls: yes
+    hlsAddress: :8889
+    webrtc: yes
+    webrtcAddress: :8888
+    api: yes
+    apiAddress: :9997
+    paths:
+      "~.*":
+        runOnReady: >-
+          ffmpeg -i rtsp://localhost:8554/$MTX_PATH
+          -c copy -f rtsp -rtsp_transport tcp
+          rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554/$MTX_PATH
+        runOnReadyRestart: yes
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,6 +73,14 @@ spec:
             limits:
               cpu: "1"
               memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /mediamtx.yml
+              subPath: mediamtx.yml
+      volumes:
+        - name: config
+          configMap:
+            name: mediamtx-config
 ---
 apiVersion: v1
 kind: Service
