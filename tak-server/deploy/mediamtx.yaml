@@ -27,12 +27,7 @@ data:
     api: yes
     apiAddress: :9997
     paths:
-      "~.*":
-        runOnReady: >-
-          ffmpeg -i rtsp://localhost:8554/$MTX_PATH
-          -c copy -f rtsp -rtsp_transport tcp
-          rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554/$MTX_PATH
-        runOnReadyRestart: yes
+      "~.*": {}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -77,6 +72,39 @@ spec:
             - name: config
               mountPath: /mediamtx.yml
               subPath: mediamtx.yml
+        # Relay sidecar: watches mediamtx for active streams and re-publishes
+        # each one to cloudtak-media so WebTAK users see all feeds automatically.
+        - name: relay
+          image: linuxserver/ffmpeg:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              MEDIAMTX="http://localhost:9997"
+              CLOUDTAK="rtsp://cloudtak-media.cloudtak.svc.cluster.local:8554"
+              declare -A PIDS
+              while true; do
+                PATHS=$(curl -sf "$MEDIAMTX/v3/paths/list" | \
+                  grep -o '"name":"[^"]*"' | cut -d'"' -f4 || true)
+                for PATH_NAME in $PATHS; do
+                  if [ -z "${PIDS[$PATH_NAME]}" ] || ! kill -0 "${PIDS[$PATH_NAME]}" 2>/dev/null; then
+                    ffmpeg -loglevel error -re \
+                      -i "rtsp://localhost:8554/$PATH_NAME" \
+                      -c copy -f rtsp -rtsp_transport tcp \
+                      "$CLOUDTAK/$PATH_NAME" &
+                    PIDS[$PATH_NAME]=$!
+                    echo "[relay] started $PATH_NAME → cloudtak-media"
+                  fi
+                done
+                sleep 5
+              done
+          resources:
+            requests:
+              cpu: 200m
+              memory: 128Mi
+            limits:
+              cpu: "2"
+              memory: 512Mi
       volumes:
         - name: config
           configMap:

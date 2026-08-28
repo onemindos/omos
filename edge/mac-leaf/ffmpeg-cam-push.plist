@@ -4,7 +4,7 @@
   OneMind Mac Camera Push — FaceTime HD Camera → mediamtx-tak (Tailscale)
 
   Pushes the MacBook FaceTime camera to mediamtx.takserver as stream "maccam".
-  Available at: rtsp://mediamtx-tak.tail717ba0.ts.net:8554/maccam
+  Available at: rtsp://mediamtx-tak-1.tail717ba0.ts.net:8554/maccam
   Also relayed to cloudtak-media for WebTAK users automatically.
 
   Install:
@@ -29,15 +29,15 @@
     <key>ProgramArguments</key>
     <array>
         <string>/opt/homebrew/bin/ffmpeg</string>
-        <!-- AVFoundation: device 0 = FaceTime HD Camera -->
+        <!-- AVFoundation: device 0 = FaceTime HD Camera (video only) -->
         <string>-f</string>
         <string>avfoundation</string>
         <string>-framerate</string>
-        <string>15</string>
+        <string>30</string>
         <string>-video_size</string>
         <string>1280x720</string>
         <string>-i</string>
-        <string>0:none</string>
+        <string>0</string>
         <!-- encode: low latency H.264 -->
         <string>-vcodec</string>
         <string>libx264</string>
@@ -54,7 +54,7 @@
         <string>rtsp</string>
         <string>-rtsp_transport</string>
         <string>tcp</string>
-        <string>rtsp://mediamtx-tak.tail717ba0.ts.net:8554/maccam</string>
+        <string>rtsp://mediamtx-tak-1.tail717ba0.ts.net:8554/maccam</string>
     </array>
 
     <!-- restart automatically on exit (connection drops, sleep, etc.) -->

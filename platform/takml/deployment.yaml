@@ -263,7 +263,7 @@ spec:
             - name: SAMPLE_INTERVAL
               value: "2.0"
             - name: FEEDS
-              value: '{"takcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/takcam","helmcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/helmcam"}'
+              value: '{"takcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/takcam","helmcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/helmcam","maccam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/maccam"}'
           resources:
             requests:
               cpu: 1500m
