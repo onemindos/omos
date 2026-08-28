@@ -4,10 +4,10 @@
 # platform-cloudtak: CloudTAK stack — the primary tactical UI
 #
 # Covers: platform/cloudtak/
-#   api.yaml       — CloudTAK API server (atoc.onemindos.dev)
+#   api.yaml       — CloudTAK API server (onemindos.dev)
 #   events.yaml    — CoT event stream handler
 #   media.yaml     — Media/file attachments
-#   tiles.yaml     — Tile proxy (tiles.atoc.onemindos.dev)
+#   tiles.yaml     — Tile proxy (tiles.onemindos.dev)
 #   minio.yaml     — Object store for media/attachments
 #   postgis.yaml   — PostGIS database (entities, tracks, packages)
 #   ingress.yaml   — Internal ingress
