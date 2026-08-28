@@ -1,0 +1,87 @@
+# GitHub Actions self-hosted runner for onemindos org
+# Two containers: runner (myoung34) + dind sidecar for Docker builds
+#
+# Secret: github-runner-secret (key: ACCESS_TOKEN) — GitHub PAT with repo+workflow scope
+# To create after cluster wipe:
+#   TOKEN=$(op read "op://00-24 SO/github-runner-pat/credential")
+#   kubectl create namespace github-runner --dry-run=client -o yaml | kubectl apply -f -
+#   kubectl create secret generic github-runner-secret -n github-runner \
+#     --from-literal=ACCESS_TOKEN="$TOKEN"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: github-runner
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-runner
+  namespace: github-runner
+  labels:
+    app: github-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-runner
+  template:
+    metadata:
+      labels:
+        app: github-runner
+    spec:
+      containers:
+        - name: runner
+          image: myoung34/github-runner:latest
+          imagePullPolicy: Always
+          env:
+            - name: ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-runner-secret
+                  key: ACCESS_TOKEN
+            - name: RUNNER_SCOPE
+              value: org
+            - name: ORG_NAME
+              value: onemindos
+            - name: LABELS
+              value: self-hosted,linux,amd64
+            - name: RUNNER_WORKDIR
+              value: /tmp/runner/work
+            - name: EPHEMERAL
+              value: "false"
+            - name: DISABLE_AUTO_UPDATE
+              value: "false"
+            - name: DOCKER_HOST
+              value: tcp://localhost:2375
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: work
+              mountPath: /tmp/runner/work
+        - name: dind
+          image: docker:dind
+          securityContext:
+            privileged: true
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: docker-storage
+              mountPath: /var/lib/docker
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: docker-storage
+          emptyDir: {}

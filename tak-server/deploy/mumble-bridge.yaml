@@ -1,0 +1,191 @@
+# Mumble Bridge — Legacy's ears on the voice channel
+# Connects to Murmur as "legacy" user, does STT via faster-whisper (CPU int8),
+# publishes voice.transcript to NATS.
+# Waits for murmur to be ready before starting (initContainer).
+#
+# Secret: takserver-nats-creds (key: password) — SealedSecret in this directory
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bridge-scripts
+  namespace: takserver
+data:
+  bridge.py: |
+    """
+    OneMind Mumble Bridge — Legacy's ears on the voice channel.
+    Connects to Murmur, does STT via faster-whisper, publishes voice.transcript to NATS.
+    """
+    from __future__ import annotations
+    import asyncio, json, os, queue, sys, threading, time
+    import numpy as np
+
+    MUMBLE_HOST    = os.getenv("MUMBLE_HOST", "murmur.takserver.svc.cluster.local")
+    MUMBLE_PORT    = int(os.getenv("MUMBLE_PORT", "64738"))
+    MUMBLE_USER    = os.getenv("MUMBLE_USER", "legacy")
+    MUMBLE_CHANNEL = os.getenv("MUMBLE_CHANNEL", "Root")
+    NATS_URL       = os.getenv("NATS_URL", "tls://nats.nats.svc.cluster.local:4222")
+    NATS_USER      = os.getenv("NATS_USER", "onemind")
+    NATS_PASS      = os.getenv("NATS_PASSWORD", "")
+    NATS_CA        = os.getenv("NATS_CA", "")
+    SILENCE_S      = float(os.getenv("STT_SILENCE_S", "1.2"))
+
+    print("[bridge] Loading Whisper base.en (CPU int8)...", flush=True)
+    from faster_whisper import WhisperModel
+    model = WhisperModel("base.en", device="cpu", compute_type="int8")
+    print("[bridge] Whisper ready", flush=True)
+
+    import pymumble_py3 as pymumble
+    import nats as nats_lib
+
+    audio_q: queue.Queue = queue.Queue()
+    buffers: dict = {}
+    last_heard: dict = {}
+
+
+    def sound_received(user, chunk):
+        pcm = np.frombuffer(chunk.pcm, dtype=np.int16)
+        audio_q.put((user, pcm))
+
+
+    def drain_audio():
+        while True:
+            try:
+                speaker, pcm = audio_q.get(timeout=0.5)
+                buffers.setdefault(speaker, []).extend(pcm.tolist())
+                last_heard[speaker] = time.time()
+            except queue.Empty:
+                pass
+
+
+    async def main():
+        import ssl
+        connect_opts = {"servers": NATS_URL}
+        if NATS_USER:
+            connect_opts["user"] = NATS_USER
+        if NATS_PASS:
+            connect_opts["password"] = NATS_PASS
+        if NATS_CA and os.path.exists(NATS_CA):
+            tls_ctx = ssl.create_default_context(cafile=NATS_CA)
+            connect_opts["tls"] = tls_ctx
+        nc = await nats_lib.connect(**connect_opts)
+        print(f"[bridge] NATS connected", flush=True)
+
+        mum = pymumble.Mumble(MUMBLE_HOST, MUMBLE_USER, port=MUMBLE_PORT, reconnect=True)
+        mum.set_receive_sound(True)
+        mum.callbacks.set_callback(pymumble.constants.PYMUMBLE_CLBK_SOUNDRECEIVED, sound_received)
+        mum.start()
+        mum.is_ready()
+        print(f"[bridge] Murmur connected as '{MUMBLE_USER}'", flush=True)
+
+        threading.Thread(target=drain_audio, daemon=True).start()
+
+        while True:
+            now = time.time()
+            for speaker in list(buffers.keys()):
+                buf = buffers[speaker]
+                heard = last_heard.get(speaker, 0)
+                if (now - heard) > SILENCE_S and len(buf) > 8000:
+                    arr = np.array(buf, dtype=np.float32) / 32768.0
+                    arr_16k = arr[::3]  # 48kHz -> 16kHz
+                    segs, _ = model.transcribe(arr_16k, beam_size=1, language="en")
+                    text = " ".join(s.text for s in segs).strip()
+                    if text:
+                        payload = json.dumps({
+                            "speaker": speaker, "text": text,
+                            "ts": now, "source": "mumble", "is_final": True
+                        })
+                        await nc.publish("voice.transcript", payload.encode())
+                        print(f"[bridge] [{speaker}]: {text}", flush=True)
+                    buffers[speaker] = []
+            await asyncio.sleep(0.25)
+
+
+    asyncio.run(main())
+
+  start.sh: |
+    #!/bin/bash
+    set -e
+    echo "[bridge] Installing system deps..."
+    apt-get update -qq && apt-get install -y -qq --no-install-recommends \
+      git libopus0 libopus-dev build-essential \
+      portaudio19-dev libportaudio2 libsndfile1 ffmpeg > /dev/null 2>&1
+    echo "[bridge] Installing Python deps..."
+    pip install --quiet --no-cache-dir numpy nats-py opuslib protobuf faster-whisper 2>&1 | tail -3
+    pip install --quiet --no-cache-dir "git+https://github.com/azlux/pymumble.git@1.6.1" 2>&1 | tail -3
+    echo "[bridge] All deps installed. Starting bridge..."
+    export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+    exec python /scripts/bridge.py
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mumble-bridge
+  namespace: takserver
+  labels:
+    app: mumble-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mumble-bridge
+  template:
+    metadata:
+      labels:
+        app: mumble-bridge
+    spec:
+      initContainers:
+        - name: wait-murmur
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - until nc -z murmur.takserver.svc.cluster.local 64738; do echo waiting; sleep 3; done
+      containers:
+        - name: bridge
+          image: python:3.11-slim
+          command: ["/bin/bash", "/scripts/start.sh"]
+          env:
+            - name: MUMBLE_HOST
+              value: murmur.takserver.svc.cluster.local
+            - name: MUMBLE_PORT
+              value: "64738"
+            - name: MUMBLE_USER
+              value: legacy
+            - name: MUMBLE_CHANNEL
+              value: Root
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_USER
+              value: onemind
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: takserver-nats-creds
+                  key: password
+            - name: NATS_CA
+              value: /etc/nats-ca/ca.crt
+            - name: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
+              value: python
+            - name: STT_SILENCE_S
+              value: "1.2"
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1500m
+              memory: 2Gi
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+      volumes:
+        - name: scripts
+          configMap:
+            name: bridge-scripts
+            defaultMode: 0755
+        - name: nats-ca
+          secret:
+            secretName: nats-ca

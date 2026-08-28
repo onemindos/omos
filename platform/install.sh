@@ -202,7 +202,31 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
 
 # -----------------------------------------------------------------------------
-# 11. TAK-ML — TAK ML server + vision worker + database
+# 11. TAK SERVER OVERLAYS — additional deployments in the takserver namespace
+# These live alongside the Helm-managed TAK Server core (see tak-server/chart/).
+# Apply AFTER the Helm chart is deployed (step in tak-server/DEPLOY-RUNBOOK.md).
+# Secrets:
+#   takserver-nats-creds: SealedSecret in tak-server/deploy/ (NATS password for mumble-bridge)
+#   tak-3dviewer-cert: out-of-band — re-enroll "3DViewer" EUD in TAK Server UI after wipe
+#     kubectl create secret generic tak-3dviewer-cert -n takserver \
+#       --from-file=ca.pem=... --from-file=cert.pem=... --from-file=cert.key=...
+# -----------------------------------------------------------------------------
+TAKDEPLOY="$REPO_ROOT/tak-server/deploy"
+kubectl --context "$CTX" apply -f "$TAKDEPLOY/takserver-nats-creds.sealedsecret.yaml"
+kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx.yaml"
+kubectl --context "$CTX" apply -f "$TAKDEPLOY/murmur.yaml"
+kubectl --context "$CTX" apply -f "$TAKDEPLOY/mumble-bridge.yaml"
+kubectl --context "$CTX" apply -f "$TAKDEPLOY/tak-webview-cesium.yaml"
+
+# -----------------------------------------------------------------------------
+# 12. GITHUB RUNNER — self-hosted runner for onemindos org CI/CD
+# Secret: github-runner-secret (ACCESS_TOKEN) — out-of-band, see platform/core/github-runner.yaml
+# -----------------------------------------------------------------------------
+kubectl --context "$CTX" apply -f "$PLATFORM/core/github-runner-rbac.yaml"
+kubectl --context "$CTX" apply -f "$PLATFORM/core/github-runner.yaml"
+
+# -----------------------------------------------------------------------------
+# 13. TAK-ML — TAK ML server + vision worker + database
 # Secrets: takml-db-creds and takml-nats-creds are SealedSecrets in platform/takml/
 # NOTE: takml-server-jar PVC must be populated manually on first deploy:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \

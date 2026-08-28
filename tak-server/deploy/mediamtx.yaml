@@ -1,0 +1,69 @@
+# MediaMTX — RTSP/RTMP/HLS/WebRTC relay for TAK video feeds
+# Feeds: rtsp://mediamtx.takserver.svc.cluster.local:8554/{stream-name}
+# Used by: takml-vision-worker (takcam, helmcam), CloudTAK media
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediamtx
+  namespace: takserver
+  labels:
+    app: mediamtx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mediamtx
+  template:
+    metadata:
+      labels:
+        app: mediamtx
+    spec:
+      containers:
+        - name: mediamtx
+          image: bluenviron/mediamtx:1.20.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8554
+              name: rtsp
+            - containerPort: 1935
+              name: rtmp
+            - containerPort: 8888
+              name: webrtc
+            - containerPort: 8889
+              name: hls
+            - containerPort: 9997
+              name: api
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mediamtx
+  namespace: takserver
+  labels:
+    app: mediamtx
+spec:
+  selector:
+    app: mediamtx
+  ports:
+    - name: rtsp
+      port: 8554
+      targetPort: 8554
+    - name: rtmp
+      port: 1935
+      targetPort: 1935
+    - name: webrtc
+      port: 8888
+      targetPort: 8888
+    - name: hls
+      port: 8889
+      targetPort: 8889
+    - name: api
+      port: 9997
+      targetPort: 9997

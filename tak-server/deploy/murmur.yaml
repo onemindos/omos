@@ -1,0 +1,71 @@
+# Murmur (Mumble server) — voice comms for OneMind operators
+# Port 64738 TCP+UDP. Bridge (mumble-bridge) connects as "legacy" user.
+# Data is ephemeral (emptyDir) — no persistent state needed.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: murmur
+  namespace: takserver
+  labels:
+    app: murmur
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: murmur
+  template:
+    metadata:
+      labels:
+        app: murmur
+    spec:
+      containers:
+        - name: murmur
+          image: mumblevoip/mumble-server:latest
+          imagePullPolicy: Always
+          env:
+            - name: MUMBLE_CONFIG_welcometext
+              value: "OneMind Voice — Legacy is listening."
+            - name: MUMBLE_CONFIG_users
+              value: "50"
+            - name: MUMBLE_CONFIG_bandwidth
+              value: "72000"
+            - name: MUMBLE_CONFIG_allowping
+              value: "true"
+          ports:
+            - containerPort: 64738
+              name: mumble-tcp
+              protocol: TCP
+            - containerPort: 64738
+              name: mumble-udp
+              protocol: UDP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: murmur-data
+              mountPath: /data
+      volumes:
+        - name: murmur-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: murmur
+  namespace: takserver
+spec:
+  selector:
+    app: murmur
+  ports:
+    - name: mumble-tcp
+      port: 64738
+      targetPort: 64738
+      protocol: TCP
+    - name: mumble-udp
+      port: 64738
+      targetPort: 64738
+      protocol: UDP
