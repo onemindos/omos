@@ -1,19 +1,29 @@
-# Use a Java 17 base image
+# Stage 1: extract takserver-common from the TAK base image (Java 17, has all TAK JARs)
+FROM ghcr.io/onemindos/takserver-base:base-5.8-onemind AS tak-base
+
+# Stage 2: build the standalone Ignite server image
 FROM eclipse-temurin:17-jammy
 
 # Install unzip curl, and nc (used for startup ordering)
-RUN apt-get update && apt-get install -y unzip curl netcat && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y unzip curl netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /opt
 
-# Download and unpack Ignite 2.17.0
-RUN curl -LO https://archive.apache.org/dist/ignite/2.17.0/apache-ignite-2.17.0-bin.zip \
-    && unzip apache-ignite-2.17.0-bin.zip \
-    && rm apache-ignite-2.17.0-bin.zip \
-    && mv apache-ignite-2.17.0-bin ignite
+# Download and unpack Ignite 2.18.0 (matches TAK's embedded ignite-core version)
+RUN curl -LO https://archive.apache.org/dist/ignite/2.18.0/apache-ignite-2.18.0-bin.zip \
+    && unzip apache-ignite-2.18.0-bin.zip \
+    && rm apache-ignite-2.18.0-bin.zip \
+    && mv apache-ignite-2.18.0-bin ignite
 
-RUN cp /opt/ignite/libs/optional/ignite-kubernetes/*.jar /opt/ignite/libs/
+# Extract takserver-common JAR from the war and place it in Ignite libs
+# This provides TAK's Ignite extension classes (ProfileNodeFilter etc.) to the server nodes
+RUN mkdir -p /tmp/tak-extract
+COPY --from=tak-base /opt/tak/takserver.war /tmp/tak-extract/takserver.war
+RUN cd /tmp/tak-extract && \
+    jar xf takserver.war WEB-INF/lib/takserver-common-5.8-RELEASE-69.jar && \
+    cp WEB-INF/lib/takserver-common-5.8-RELEASE-69.jar /opt/ignite/libs/ && \
+    rm -rf /tmp/tak-extract
 
 # Copy over a version of ignite.sh that uses exec to launch the process so the SIGTERM signal is caught
 COPY docker-files/scripts/takserver-ignite/ignite.sh /opt/ignite/bin/ignite.sh

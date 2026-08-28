@@ -76,8 +76,13 @@ global:
 
 # --- Ignite (distributed cache + K8s cluster discovery) ---------------------
 ignite:
-  image: {repository: ghcr.io/onemindos/takserver-ignite, tag: "2.17.0"}
+  image: {repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind"}
   serviceAccount: {name: takserver-ignite}
+  peerClassLoadingEnabled: false
+  env:
+    OPTION_LIBS: "ignite-kubernetes,ignite-rest-http,ignite-json,ignite-slf4j,ignite-urideploy,ignite-web,ignite-calcite"
+    IGNITE_QUIET: "false"
+    JVM_OPTS: "-Djava.net.preferIPv4Stack=true"
 
 # --- NATS: TAK-INTERNAL bus between pods --- NOT the OneMind bus -------------
 # This NATS is the cluster's own inter-pod messaging (JetStream). It is SEPARATE
@@ -87,4 +92,4 @@ nats:
   image: {tag: 1.0.1}
   config:
     jetstream: {enabled: true}
-    cluster: {enabled: true, replicas: 1, auth: {enabled: false}}
+    cluster: {enabled: false, replicas: 1}

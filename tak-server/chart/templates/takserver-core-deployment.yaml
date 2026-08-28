@@ -13,11 +13,23 @@ spec:
         app: takserver-messaging
     spec:
       serviceAccountName: takserver-ignite
+      initContainers:
+        - name: copy-coreconfig
+          image: busybox:1.36
+          command: ['cp', '/tmp/cm/CoreConfig.xml', '/tak-conf/CoreConfig.xml']
+          volumeMounts:
+            - name: core-config-cm
+              mountPath: /tmp/cm/CoreConfig.xml
+              subPath: CoreConfig.xml
+            - name: tak-conf
+              mountPath: /tak-conf
       containers:
         - name: takserver-messaging
           image: "{{ .Values.takserver.messaging.image.repository }}:{{ .Values.takserver.messaging.image.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
           env:
+            - name: MAX_HEAP_PERCENT
+              value: "75.0"
             - name: "spring_profiles_active"
               value: "k8cluster"
             - name: POSTGRES_HOST
@@ -39,11 +51,10 @@ spec:
             - containerPort: 9001
               name: fedv2-9001
           readinessProbe:
-            exec:
-              command:
-              - /opt/tak/messaging-readiness.sh
+            tcpSocket:
+              port: 8089
             initialDelaySeconds: 80
-            periodSeconds: 5
+            periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: 10800
@@ -54,10 +65,10 @@ spec:
             - name: config #The name(key) value must match pod volumes name(key) value
               mountPath: /certs-configmap/
             - name: tak-ignite-config
-              mountPath: /TAKIgniteConfig.xml
+              mountPath: /opt/tak/TAKIgniteConfig.xml
               subPath: TAKIgniteConfig.xml
-            - name: core-config
-              mountPath: /CoreConfig.xml
+            - name: tak-conf
+              mountPath: /opt/tak/conf/CoreConfig.xml
               subPath: CoreConfig.xml
       volumes:
         - name: config
@@ -66,9 +77,11 @@ spec:
         - name: tak-ignite-config
           configMap:
             name: "{{ .Values.takIgniteConfigMapName }}"
-        - name: core-config
+        - name: core-config-cm
           configMap:
             name: "{{ .Values.coreConfigMapName }}"
+        - name: tak-conf
+          emptyDir: {}
 
       imagePullSecrets:
         - name: "{{ .Values.imagePullSecret }}"
@@ -89,10 +102,12 @@ spec:
     spec:
       serviceAccountName: takserver-ignite
       containers:
-        - name: takserver-api 
+        - name: takserver-api
           image: "{{ .Values.takserver.api.image.repository }}:{{ .Values.takserver.api.image.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
           env:
+            - name: MAX_HEAP_PERCENT
+              value: "75.0"
             - name: POSTGRES_HOST
               value: "{{ .Values.global.postgresql.host }}"
             - name: POSTGRES_PORT
@@ -114,11 +129,10 @@ spec:
             - containerPort: 8080
               name: unsecure-8446
           readinessProbe:
-            exec:
-              command:
-              - /opt/tak/api-readiness.sh
-            initialDelaySeconds: 1
-            periodSeconds: 1
+            tcpSocket:
+              port: 8443
+            initialDelaySeconds: 60
+            periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: 8443
@@ -129,7 +143,7 @@ spec:
             - name: config #The name(key) value must match pod volumes name(key) value
               mountPath: /certs-configmap/
             - name: tak-ignite-config
-              mountPath: /TAKIgniteConfig.xml
+              mountPath: /opt/tak/TAKIgniteConfig.xml
               subPath: TAKIgniteConfig.xml
       volumes:
         - name: config
@@ -157,10 +171,23 @@ spec:
         app: takserver-config
     spec:
       serviceAccountName: takserver-ignite
+      initContainers:
+        - name: copy-coreconfig
+          image: busybox:1.36
+          command: ['cp', '/tmp/cm/CoreConfig.xml', '/tak-conf/CoreConfig.xml']
+          volumeMounts:
+            - name: core-config-cm
+              mountPath: /tmp/cm/CoreConfig.xml
+              subPath: CoreConfig.xml
+            - name: tak-conf
+              mountPath: /tak-conf
       containers:
-        - name: takserver-config 
+        - name: takserver-config
           image: "{{ .Values.takserver.config.image.repository }}:{{ .Values.takserver.config.image.tag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
+          env:
+            - name: MAX_HEAP_PERCENT
+              value: "75.0"
           resources:
             requests:
               cpu: "{{ .Values.takserver.config.resources.requests.cpu }}"
@@ -183,22 +210,24 @@ spec:
           volumeMounts:
             - name: config #The name(key) value must match pod volumes name(key) value
               mountPath: /certs-configmap/
-            - name: core-config
-              mountPath: /CoreConfig.xml
+            - name: tak-conf
+              mountPath: /opt/tak/conf/CoreConfig.xml
               subPath: CoreConfig.xml
             - name: tak-ignite-config
-              mountPath: /TAKIgniteConfig.xml
+              mountPath: /opt/tak/TAKIgniteConfig.xml
               subPath: TAKIgniteConfig.xml
       volumes:
         - name: config
           configMap:
             name: "{{ .Values.certConfigMapName }}"
-        - name: core-config
+        - name: core-config-cm
           configMap:
             name: "{{ .Values.coreConfigMapName }}"
         - name: tak-ignite-config
           configMap:
             name: "{{ .Values.takIgniteConfigMapName }}"
+        - name: tak-conf
+          emptyDir: {}
 
       imagePullSecrets:
         - name: "{{ .Values.imagePullSecret }}"
