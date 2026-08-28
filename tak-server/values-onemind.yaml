@@ -48,7 +48,7 @@ takserver:
   # plugins tier runs Zeus's NATS bridge → the OneMind bus. Plugin is baked into this image.
   plugins:
     enabled: true
-    image: {repository: ghcr.io/onemindos/takserver-base, tag: "plugins-5.8-onemind"}
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "plugins-upstream-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 1Gi}, limits: {cpu: 2, memory: 2Gi}}
 
