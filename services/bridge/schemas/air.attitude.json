@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/air.attitude.json",
+  "title": "Air Attitude",
+  "description": "Data payload for msg_type 'attitude'. Carries MAVLink-derived roll/pitch/yaw orientation and angular rates for an airborne vehicle.",
+  "type": "object",
+  "required": [
+    "sys_id",
+    "comp_id",
+    "time_boot_ms",
+    "roll_rad",
+    "pitch_rad",
+    "yaw_rad",
+    "roll_speed_rads",
+    "pitch_speed_rads",
+    "yaw_speed_rads"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sys_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink system ID (uint8)."
+    },
+    "comp_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink component ID (uint8)."
+    },
+    "time_boot_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "Timestamp (milliseconds since system boot, uint32)."
+    },
+    "roll_rad": {
+      "type": "number",
+      "description": "Roll angle in radians (-π to +π)."
+    },
+    "pitch_rad": {
+      "type": "number",
+      "description": "Pitch angle in radians (-π/2 to +π/2)."
+    },
+    "yaw_rad": {
+      "type": "number",
+      "description": "Yaw angle in radians (-π to +π)."
+    },
+    "roll_speed_rads": {
+      "type": "number",
+      "description": "Roll angular speed in radians per second."
+    },
+    "pitch_speed_rads": {
+      "type": "number",
+      "description": "Pitch angular speed in radians per second."
+    },
+    "yaw_speed_rads": {
+      "type": "number",
+      "description": "Yaw angular speed in radians per second."
+    }
+  }
+}

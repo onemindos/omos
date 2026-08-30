@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/air.position.json",
+  "title": "Air Position",
+  "description": "Data payload for msg_type 'position'. Carries MAVLink-derived global position and velocity for an airborne vehicle.",
+  "type": "object",
+  "required": [
+    "sys_id",
+    "comp_id",
+    "time_boot_ms",
+    "lat",
+    "lon",
+    "alt_m",
+    "relative_alt_m",
+    "vx_ms",
+    "vy_ms",
+    "vz_ms",
+    "heading_deg"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sys_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink system ID (uint8)."
+    },
+    "comp_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink component ID (uint8)."
+    },
+    "time_boot_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "Timestamp (milliseconds since system boot, uint32)."
+    },
+    "lat": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude in decimal degrees (WGS-84)."
+    },
+    "lon": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude in decimal degrees (WGS-84)."
+    },
+    "alt_m": {
+      "type": "number",
+      "description": "Altitude above mean sea level in metres."
+    },
+    "relative_alt_m": {
+      "type": "number",
+      "description": "Altitude above home position in metres."
+    },
+    "vx_ms": {
+      "type": "number",
+      "description": "Ground X velocity (North) in metres per second."
+    },
+    "vy_ms": {
+      "type": "number",
+      "description": "Ground Y velocity (East) in metres per second."
+    },
+    "vz_ms": {
+      "type": "number",
+      "description": "Ground Z velocity (Down) in metres per second."
+    },
+    "heading_deg": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 360,
+      "description": "Vehicle heading in degrees (0-360, clockwise from North)."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/air.vfrhud.json",
+  "title": "Air VFR HUD",
+  "description": "Data payload for msg_type 'vfrhud'. Carries MAVLink VFR_HUD message fields used to populate a pilot's heads-up display.",
+  "type": "object",
+  "required": [
+    "sys_id",
+    "comp_id",
+    "airspeed_ms",
+    "groundspeed_ms",
+    "heading_deg",
+    "throttle_pct",
+    "alt_m",
+    "climb_ms"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sys_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink system ID (uint8)."
+    },
+    "comp_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink component ID (uint8)."
+    },
+    "airspeed_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Current indicated airspeed in metres per second."
+    },
+    "groundspeed_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Current ground speed in metres per second."
+    },
+    "heading_deg": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 360,
+      "description": "Current heading in degrees (0-360, clockwise from North)."
+    },
+    "throttle_pct": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Current throttle setting as a percentage (0-100%)."
+    },
+    "alt_m": {
+      "type": "number",
+      "description": "Current altitude in metres above mean sea level."
+    },
+    "climb_ms": {
+      "type": "number",
+      "description": "Current climb rate in metres per second (positive = climbing)."
+    }
+  }
+}

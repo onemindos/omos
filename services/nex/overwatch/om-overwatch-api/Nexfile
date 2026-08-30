@@ -1,0 +1,9 @@
+name: "om-overwatch-api"
+description: "om-overwatch entity CRUD API — typed create/edit/delete for atoc & tools; spine owns KV writes"
+type: native
+lifecycle: service
+start_request:
+  uri: "file:///Users/zeus/omos-core/nex/om-overwatch-api/om-overwatch-api"
+  environment:
+    NATS_URL: "nats://127.0.0.1:4222"
+    PORT: "8091"

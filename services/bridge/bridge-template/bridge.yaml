@@ -1,0 +1,8 @@
+name: template-bridge
+runtime: native
+entity: omos.bridge.template
+env:
+  NATS_URL: $NATS_URL
+  BRIDGE_NAME: $BRIDGE_NAME
+  BRIDGE_ENTITY_ID: $BRIDGE_ENTITY_ID
+  BRIDGE_DOMAIN: $BRIDGE_DOMAIN

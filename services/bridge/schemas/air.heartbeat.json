@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/air.heartbeat.json",
+  "title": "Air Heartbeat",
+  "description": "Data payload for msg_type 'heartbeat'. Carries the MAVLink HEARTBEAT message fields indicating vehicle type, autopilot, and operational status.",
+  "type": "object",
+  "required": [
+    "sys_id",
+    "comp_id",
+    "type",
+    "autopilot",
+    "base_mode",
+    "system_status",
+    "mavlink_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sys_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink system ID (uint8)."
+    },
+    "comp_id": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink component ID (uint8)."
+    },
+    "type": {
+      "type": "string",
+      "description": "MAVLink MAV_TYPE enum label (e.g. 'GENERIC', 'FIXED_WING', 'QUADROTOR', 'HELICOPTER')."
+    },
+    "autopilot": {
+      "type": "string",
+      "description": "MAVLink MAV_AUTOPILOT enum label (e.g. 'GENERIC', 'ARDUPILOTMEGA', 'PX4')."
+    },
+    "base_mode": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "MAVLink MAV_MODE_FLAG bitmask representing the system's current base mode."
+    },
+    "system_status": {
+      "type": "string",
+      "description": "MAVLink MAV_STATE enum label (e.g. 'UNINIT', 'BOOT', 'CALIBRATING', 'STANDBY', 'ACTIVE', 'CRITICAL', 'EMERGENCY', 'POWEROFF')."
+    },
+    "mavlink_version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "MAVLink protocol version (typically 3)."
+    }
+  }
+}

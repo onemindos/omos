@@ -1,0 +1,30 @@
+name: homeassistant-bridge
+runtime: native
+entity: omos.bridge.homeassistant
+description: >
+  Connects a Home Assistant instance to the OMOS NATS message bus.
+  Subscribes to state_changed events and publishes telemetry + event envelopes.
+  Forwards NATS command messages to HA as call_service requests.
+
+env:
+  NATS_URL: $NATS_URL
+  BRIDGE_NAME: $BRIDGE_NAME
+  HA_HOST: $HA_HOST
+  HA_PORT: $HA_PORT
+  HA_TOKEN: $HA_TOKEN
+
+subjects:
+  publish:
+    - omos.home.*.telemetry
+    - omos.home.*.event
+    - omos.bridge.homeassistant-bridge.health
+    - omos.bridge.homeassistant-bridge.errors
+  subscribe:
+    - omos.home.*.command
+
+health:
+  subject: omos.bridge.homeassistant-bridge.health
+  interval: 30s
+
+errors:
+  subject: omos.bridge.homeassistant-bridge.errors

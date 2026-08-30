@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/home.event.json",
+  "title": "Home Event",
+  "description": "Data payload for msg_type 'event'. Carries a Home Assistant state-change or domain event, including before/after state and context.",
+  "type": "object",
+  "required": [
+    "event_type",
+    "entity_id",
+    "old_state",
+    "new_state",
+    "context_id",
+    "occurred_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "description": "Home Assistant event type (e.g. 'state_changed', 'call_service', 'automation_triggered')."
+    },
+    "entity_id": {
+      "type": ["string", "null"],
+      "description": "Entity ID associated with this event. Null for events not tied to a specific entity."
+    },
+    "old_state": {
+      "type": ["string", "null"],
+      "description": "Previous state value before the event. Null if the entity did not previously exist or state is unavailable."
+    },
+    "new_state": {
+      "type": ["string", "null"],
+      "description": "New state value after the event. Null if the entity was removed or became unavailable."
+    },
+    "context_id": {
+      "type": "string",
+      "description": "Home Assistant context UUID identifying the action chain that produced this event."
+    },
+    "occurred_at": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds when the event occurred."
+    }
+  }
+}

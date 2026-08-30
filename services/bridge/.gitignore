@@ -1,0 +1,31 @@
+# omos-bridge gitignore
+
+# Environment files — never commit real credentials
+.env
+*.env
+
+# Go build artifacts
+*/omos-bridge-*
+*/main
+
+# Compiled binaries (any file matching module/dir name with no extension)
+bridge-template/template
+bridges/mavlink/mavlink
+bridges/tak/tak
+bridges/homeassistant/homeassistant
+bridges/webhook/webhook
+bridges/mqtt/mqtt
+internal/dashboard/dashboard
+cmd/omos/omos
+
+# Go workspace
+go.work
+go.work.sum
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp

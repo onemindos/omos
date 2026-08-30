@@ -1,0 +1,10 @@
+name: "om-overwatch-interceptor"
+description: "om-overwatch organ 7 — effector. IN int.command.{id} {ASSIGN_TARGET|START_INTERCEPT|ABORT} + ent.air.{tgt}.state → phase state machine + midcourse/terminal-PN guidance + flight sim. OUT int.phase/target/ack/result.{id}, tel.drone.{id} (friendly → COP). Completes SentinelX (ROS2/PX4) on NATS."
+type: native
+lifecycle: service
+start_request:
+  uri: "file:///Users/zeus/omos-core/nex/om-overwatch-interceptor/om-overwatch-interceptor"
+  environment:
+    NATS_URL: "nats://127.0.0.1:4222"
+    INT_BASE_LAT: "44.3900"
+    INT_BASE_LON: "26.0900"

@@ -1,0 +1,8 @@
+name: "om-task"
+description: "OneMind Task Engine — Go/NEX native binary v3.1.0 (full contract)"
+type: native
+lifecycle: service
+start_request:
+  uri: "file:///Users/zeus/omos-core/nex/om-task/om-task-nex"
+  environment:
+    NATS_URL: "nats://127.0.0.1:4222"
