@@ -1,0 +1,134 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# OVERWATCH.YAML - Entity Registry & Identity Configuration
+# mavlink2constellation v1.0-beta
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# This file defines your organization and entity identities for the Constellation
+# Overwatch platform. Copy this file to `overwatch.yaml` and configure for your setup.
+#
+# QUICK START:
+#   1. Copy: cp overwatch.example.yaml overwatch.yaml
+#   2. Set your org_id (get from Overwatch UI or generate UUID)
+#   3. Add your entities with their MAVLink system_id/component_id
+#   4. Run: go run ./cmd/microlith/main.go
+#
+# DISCOVERY-FIRST APPROACH:
+#   1. Devices are auto-discovered when they send HEARTBEAT
+#   2. system_id + component_id from MAVLink header maps to entity
+#   3. If no match found → auto-generate: {entity_prefix}_{system_id}_{component_id}
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# ORGANIZATION (Required)
+# ─────────────────────────────────────────────────────────────────────────────────
+# Your organization identity in the Constellation Overwatch platform.
+# Get your org_id from the Overwatch UI or generate a UUID.
+#
+organization:
+  org_id: "YOUR-ORG-UUID-HERE"           # Required: UUID from Overwatch platform
+  name: "My Organization"                 # Human-readable org name
+  org_type: "company"                     # company, research, government, etc.
+  description: "My drone fleet operator"
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# ENTITIES (Known devices)
+# ─────────────────────────────────────────────────────────────────────────────────
+# Map MAVLink system_id/component_id to Constellation entity identities.
+# Each entity represents a device in your fleet.
+#
+# MAVLink IDs Reference:
+#   system_id:    1-255 (unique per vehicle in your network)
+#   component_id: 1-255 (component type, see MAV_COMPONENT enum)
+#
+# Common component_id values:
+#   1   = MAV_COMP_ID_AUTOPILOT1 (flight controller)
+#   100 = MAV_COMP_ID_CAMERA (camera)
+#   154 = MAV_COMP_ID_GIMBAL (gimbal)
+#   190 = MAV_COMP_ID_MISSIONPLANNER (GCS)
+#   191 = MAV_COMP_ID_PATHPLANNER
+#
+entities:
+  # Example: Primary drone with Pixhawk autopilot
+  - entity_id: "your-entity-uuid-1"       # Get from Overwatch UI or generate UUID
+    name: "drone001"                       # Human-readable name (hostname-like)
+    system_id: 1                           # MAVLink system_id (uint8: 1-255)
+    component_id: 1                        # MAVLink component_id (uint8: 1-255)
+
+  # Example: Second drone
+  - entity_id: "your-entity-uuid-2"
+    name: "drone002"
+    system_id: 2
+    component_id: 1
+
+  # Example: Ground Control Station
+  - entity_id: "your-gcs-uuid"
+    name: "gcs001"
+    system_id: 255                         # GCS typically uses 255
+    component_id: 190                      # MISSIONPLANNER component
+
+  # Example: Gimbal on drone 1
+  # - entity_id: "your-gimbal-uuid"
+  #   name: "gimbal001"
+  #   system_id: 1                         # Same system as drone
+  #   component_id: 154                    # GIMBAL component
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# DEFAULTS (Auto-discovered devices)
+# ─────────────────────────────────────────────────────────────────────────────────
+# Settings for devices that connect but aren't in the entities list above.
+# These devices will be auto-registered with generated entity_ids.
+#
+defaults:
+  entity_prefix: "device"                  # Prefix for auto-generated entity_id
+  type: "unknown"                          # Default device type
+  status: "discovered"                     # Initial status
+  priority: "normal"                       # Routing priority
+  auto_register: true                      # Allow auto-registration of unknown devices
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# NATS ROUTING
+# ─────────────────────────────────────────────────────────────────────────────────
+# Hierarchical subject structure for telemetry routing.
+#
+# Subject format: {root_subject}.telemetry.{org_id}.{entity_id}
+# Example: constellation.telemetry.abc123.drone001
+#
+routing:
+  root_subject: "constellation"            # Root NATS subject namespace
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# REGISTRATION BEHAVIOR
+# ─────────────────────────────────────────────────────────────────────────────────
+# Controls how devices are fingerprinted and registered.
+#
+registration:
+  fingerprint_on_heartbeat: true           # Fingerprint on first HEARTBEAT
+  id_strategy: "component_id"              # Primary lookup: component_id, then system_id
+  state_ttl: "24h"                         # How long to keep device state in KV
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# KV SIGNAL TREE STRUCTURE
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# The bridge publishes telemetry to a hierarchical KV structure:
+#
+#   {entity_id}                    → Core entity metadata (updated every 5s)
+#   {entity_id}.mavlink.heartbeat  → Heartbeat/mode data
+#   {entity_id}.mavlink.position   → GPS/position data
+#   {entity_id}.mavlink.attitude   → Attitude/orientation data
+#   {entity_id}.mavlink.power      → Battery/power data
+#   {entity_id}.mavlink.flight     → VFR HUD flight data
+#
+# Example KV keys for entity "drone001":
+#   drone001
+#   drone001.mavlink.heartbeat
+#   drone001.mavlink.position
+#   drone001.mavlink.attitude
+#   drone001.mavlink.power
+#   drone001.mavlink.flight
+#
+# Watch all updates: nats kv watch CONSTELLATION_GLOBAL_STATE
+# Get specific key:  nats kv get CONSTELLATION_GLOBAL_STATE drone001.mavlink.position
+#
+# ═══════════════════════════════════════════════════════════════════════════════

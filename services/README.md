@@ -1,54 +1,46 @@
-# `subscribers/`
+# services/ — runtime service code
 
-Python NATS bus subscribers and provisioning scripts. These are the live operational scripts that connect to the bus and do real work — event routing, metrics export, stream/bucket setup, and service management.
+OneMind OS runtime services: Python bus subscribers & provisioning scripts, plus the
+Go services monorepo absorbed from the former `omos-services` repo (merged
+2026-08-30, history preserved via git-filter-repo subdirectory merge).
 
----
-
-## Scripts
+## Python subscribers (live operational scripts)
 
 | Script | Purpose |
 |--------|---------|
-| `om_task.py` | Task Engine subscriber (mirrors `services/task-engine/`) |
-| `om_presence.py` | Presence / voice bridge subscriber (mirrors `services/connect/`) |
-| `notify_router.py` | Routes `evt.notify.>` events to the right notification channel (push, SMS, etc.) |
-| `graphite_bridge.py` | Bridges NATS telemetry to Graphite/Carbon for metrics storage |
+| `om_task.py` | Task Engine subscriber (Python predecessor of `services/task-engine/`) |
+| `om_presence.py` | Presence / voice bridge subscriber |
+| `notify_router.py` | Routes `evt.notify.>` events to notification channels |
+| `graphite_bridge.py` | Bridges NATS telemetry to Graphite/Carbon |
 | `netdata_exporter.py` | Exports NATS metrics to Netdata |
 | `subscriber.py` | Base subscriber class / generic bus subscriber |
 | `subscriber_runner.py` | Process supervisor — runs and restarts subscriber processes |
-| `create_streams.py` | Provisioning: creates all JetStream streams per NATS-DOCTRINE |
+| `create_streams.py` | Provisioning: creates all JetStream streams |
 | `create_buckets.py` | Provisioning: creates all JetStream KV buckets |
 | `seed_rules.py` | Seeds initial rules/config into KV buckets |
 | `ctl.py` | CLI control tool — start/stop/status subscribers |
+| `launch.sh` / `launch_all.sh` | Start single / all subscribers |
 
----
+## Go services (from omos-services)
 
-## Launchers
+| Service | Path | Purpose |
+|---------|------|---------|
+| **task-engine** | `task-engine/` | NATS-native task orchestration — create, dispatch, track tasks |
+| **omd** | `omd/` | OneMind Daemon — runs on every node, supervises local agent harnesses |
+| **bridge** | `bridge/` | Universal protocol bridge (MAVLink, MQTT, HA, TAK, webhook) → NATS |
+| **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
+| **agents/meta** | `agents/meta/` | Meta agent service |
+| **cot2constellation** | `bridge/bridges/tak/` | TAK CoT → Overwatch bridge |
 
+## Development
+
+Go services — each has its own `go.mod`, build individually:
 ```bash
-# Start a single subscriber
-./subscribers/launch.sh om_task
-
-# Start all subscribers
-./subscribers/launch_all.sh
+cd services/task-engine && go build ./...
+cd services/omd && go build ./...
 ```
 
----
-
-## Logs
-
-All subscriber logs go to `subscribers/logs/`. Each subscriber has three log files:
-- `{name}.log` — combined
-- `{name}-stdout.log`
-- `{name}-stderr.log`
-
----
-
-## Provisioning (first-time setup)
-
-```bash
-python3 subscribers/create_streams.py   # create JetStream streams
-python3 subscribers/create_buckets.py   # create KV buckets
-python3 subscribers/seed_rules.py       # seed initial config
-```
-
-> **Note:** `subscribers/` is the operational home for scripts in active development. Once a service matures it graduates to `services/{name}/`.
+Python subscribers — see launchers above. All services connect to
+`nats://nats.nats.svc.cluster.local:4222` (K8s) or via edge leaf node, speak the
+OneMind subject grammar (`cmd.*`, `tel.*`, `evt.*`, `svc.*`), and deploy via
+`ghcr.io/onemindos/{service}:latest` with manifests in `platform/`.

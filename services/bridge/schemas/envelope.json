@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/envelope.json",
+  "title": "One Mind Bridge Envelope",
+  "description": "Standard message envelope for all omos-bridge messages published to the NATS fabric.",
+  "type": "object",
+  "required": ["id", "ts", "source", "entity", "domain", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID — unique, monotonically sortable message identifier"
+    },
+    "ts": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds"
+    },
+    "source": {
+      "type": "string",
+      "description": "Bridge name that produced the message (e.g. mavlink-bridge)"
+    },
+    "entity": {
+      "type": "string",
+      "pattern": "^[a-z]+\\.[a-z0-9\\-]+$",
+      "description": "Fully qualified entity ID: domain.entity-id (e.g. air.drone-alpha-1)"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["air", "ground", "home", "field", "sea", "infra", "net", "human", "space"],
+      "description": "Domain classification"
+    },
+    "payload": {
+      "type": "object",
+      "required": ["msg_type", "data"],
+      "properties": {
+        "msg_type": {
+          "type": "string",
+          "description": "Message type identifier — used by consumers to filter without parsing data"
+        },
+        "data": {
+          "type": "object",
+          "description": "Protocol-specific decoded data — shape defined per msg_type schema"
+        }
+      }
+    }
+  }
+}

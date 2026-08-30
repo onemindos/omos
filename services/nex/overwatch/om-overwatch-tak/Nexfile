@@ -1,0 +1,8 @@
+name: "om-overwatch-tak"
+description: "om-overwatch C2 bridge — CoT↔entity. IN tak.cot.out → det.cot.{id} (human affiliation, spine fuses); OUT ent.air.{id}.state → tak.cot.inject (fused picture → ATAK)"
+type: native
+lifecycle: service
+start_request:
+  uri: "file:///Users/zeus/omos-core/nex/om-overwatch-tak/om-overwatch-tak"
+  environment:
+    NATS_URL: "nats://127.0.0.1:4222"

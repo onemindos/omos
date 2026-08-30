@@ -1,0 +1,49 @@
+name: mqtt-bridge
+version: "0.1.0"
+description: >
+  Bidirectional MQTT ↔ NATS bridge.  Converts MQTT sensor messages into
+  One Mind envelopes (MQTT → NATS telemetry) and forwards NATS commands
+  back to MQTT devices (NATS → MQTT command topics).
+
+protocol: mqtt
+direction: bidirectional
+
+config:
+  nats_url:
+    env: NATS_URL
+    default: nats://localhost:4222
+  bridge_name:
+    env: BRIDGE_NAME
+    default: mqtt-bridge
+  mqtt_host:
+    env: MQTT_HOST
+    default: localhost
+  mqtt_port:
+    env: MQTT_PORT
+    default: "1883"
+  mqtt_username:
+    env: MQTT_USERNAME
+    default: ""
+  mqtt_password:
+    env: MQTT_PASSWORD
+    default: ""
+  mqtt_client_id:
+    env: MQTT_CLIENT_ID
+    default: omos-mqtt-bridge
+  topic_filter:
+    env: MQTT_TOPIC_FILTER
+    default: "#"
+    description: MQTT wildcard subscription (default captures all topics)
+
+subjects:
+  telemetry: "omos.{domain}.{sanitized_topic}.telemetry"
+  commands:  "omos.*.*.command"
+  health:    "omos.bridge.mqtt-bridge.health"
+  errors:    "omos.bridge.mqtt-bridge.errors"
+
+tags:
+  - mqtt
+  - nats
+  - iot
+  - home-assistant
+  - omos-bridge

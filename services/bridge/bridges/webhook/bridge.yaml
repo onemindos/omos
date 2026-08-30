@@ -1,0 +1,36 @@
+name: webhook-bridge
+version: "0.1.0"
+description: >
+  HTTP webhook receiver that converts inbound HTTP requests into
+  One Mind envelopes and publishes them to NATS.
+
+protocol: http
+direction: inbound
+
+config:
+  nats_url:
+    env: NATS_URL
+    default: nats://localhost:4222
+  bridge_name:
+    env: BRIDGE_NAME
+    default: webhook-bridge
+  port:
+    env: WEBHOOK_PORT
+    default: "8090"
+  secret:
+    env: WEBHOOK_SECRET
+    default: ""
+    description: >
+      If set, every inbound request must carry a valid
+      X-Hub-Signature-256 HMAC-SHA256 header (GitHub style).
+
+subjects:
+  telemetry: "omos.{domain}.{source}.telemetry"
+  health:    "omos.bridge.webhook-bridge.health"
+  errors:    "omos.bridge.webhook-bridge.errors"
+
+tags:
+  - webhook
+  - http
+  - nats
+  - omos-bridge

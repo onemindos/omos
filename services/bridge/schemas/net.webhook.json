@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/onemindos/omos-bridge/schemas/net.webhook.json",
+  "title": "Net Webhook",
+  "description": "Data payload for msg_type 'webhook'. Carries an inbound HTTP webhook request received by the omos-bridge network ingress, including method, headers, and body.",
+  "type": "object",
+  "required": [
+    "source_url",
+    "method",
+    "headers",
+    "body_raw",
+    "body_parsed",
+    "received_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Full URL of the inbound webhook request."
+    },
+    "method": {
+      "type": "string",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      "description": "HTTP method of the inbound request."
+    },
+    "headers": {
+      "type": "object",
+      "description": "HTTP request headers as key-value string pairs (header names lowercased).",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "body_raw": {
+      "type": ["string", "null"],
+      "description": "Raw request body as a UTF-8 string. Null if the request had no body."
+    },
+    "body_parsed": {
+      "type": ["object", "null"],
+      "description": "JSON-parsed request body if Content-Type was application/json. Null otherwise.",
+      "additionalProperties": true
+    },
+    "received_at": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds when the webhook was received."
+    }
+  }
+}
