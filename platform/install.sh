@@ -174,13 +174,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/omos-mission-engine/deployment.yaml
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feed-scripts.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/omos/feeds.yaml"
 
-# ── Face-ID ──────────────────────────────────────────────────────────────────
-# Enrollment: kubectl cp photo.jpg omos/<pod>:/faces/photos/zeus/photo.jpg
-#             kubectl exec -n omos <pod> -- python /app/enroll.py
-kubectl --context "$CTX" apply -f "$PLATFORM/omos/pvcs-face-id.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/omos/configmap-face-id.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/omos/face-id.yaml"
-
 # -----------------------------------------------------------------------------
 # 9. LEGACY AGENT (Hermes — mother) + TAK-AGENT + OneMind AI Bridge
 # Secrets (hermes-env, hermes-leaf-conf, hermes-nats-ca) are SealedSecrets in platform/hermes/
