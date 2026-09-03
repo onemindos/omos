@@ -28,7 +28,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: sealed-secrets-controller
+      name: sealed-secrets-controller
   template:
     metadata:
       labels:
