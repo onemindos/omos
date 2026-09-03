@@ -10,14 +10,14 @@
 #  Wave 1 │ BUS         platform-nats            NATS 3-node HA + streams
 #         │ OPERATORS   platform-clickhouse-op   Altinity ClickHouse Operator
 #  Wave 2 │ TAK         platform-cloudtak        CloudTAK API/Events/Media/Tiles
-#         │             tak-server               TAK Server deploy overlays
-#  Wave 3 │ AI          platform-hermes          Legacy/Hermes AI agent + bridge
-#         │ DATA        platform-data            ClickHouse + Redpanda Connect
+#         │             tak-cluster              TAK Server Helm chart
+#  Wave 3 │ AI          platform-legacy          Legacy/Hermes AI agent + bridge
+#         │ DATA        platform-observability   ClickHouse (Altinity)
+#         │             platform-redpanda        Redpanda Connect pipelines
 #         │ SERVICES    platform-omos            tak-projector, feeds, mission-engine
-#         │ INTEL       platform-intel           OSINT services
-#         │ GEO         platform-geo             STAC, Tile38, geospatial
-#  Wave 4 │ OPS         platform-nats-tools      NATS debug toolbox
-#         │             platform-monitoring      Grafana, alerting, surveyor
+#         │ GEO         platform-geo             STAC, Tile38, geospatial stack
+#  Wave 4 │ OPS         platform-nats-tools      NATS debug toolbox (agenttap, heynats, nats-dashboard)
+#         │             platform-monitoring      Grafana, Prometheus, alerting
 # ─────────────────────────────────────────────────────────────────────────────
 apiVersion: argoproj.io/v1alpha1
 kind: Application
