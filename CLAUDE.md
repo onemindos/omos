@@ -132,39 +132,48 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 
 | Service | Namespace | Image | Status |
 |---------|-----------|-------|--------|
-| NATS 3-node HA | nats | nats (helm) | live |
-| Legacy (Hermes) | hermes | ghcr.io/onemindos/hermes-legacy:v2 | live |
-| CloudTAK | cloudtak | ghcr.io/onemindos/cloudtak-api:latest | live |
-| WorldWideView | wwv | ghcr.io/onemindos/wwv:latest | live |
-| TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-*:5.8-onemind | live |
-| ClickHouse | clickhouse | clickhouse/clickhouse-server | live |
-| Grafana/Loki/Tempo | monitoring | (helm) | live |
-| Cloudflared | cloudflare | cloudflare/cloudflared | live |
-| Authentik | authentik | ghcr.io/goauthentik/server (helm) | NOT DEPLOYED |
-| omos-tak-projector | omos | python:3.12-alpine (inline script) | live |
-| omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | PLANNED Wave 2 |
-| omos-feed-world | omos | ghcr.io/onemindos/omos-feed-world | PLANNED Wave 3 |
-| omos-feed-intel | omos | ghcr.io/onemindos/omos-feed-intel | PLANNED Wave 3 |
+| NATS 3-node HA | nats | nats (helm) | ✅ live |
+| Legacy (Hermes AI) | hermes | ghcr.io/onemindos/hermes-legacy:latest | ✅ live |
+| copilot-runtime | hermes | ghcr.io/onemindos/copilot-runtime:latest | ✅ live |
+| CloudTAK API | cloudtak | ghcr.io/onemindos/cloudtak-api:latest | ✅ live |
+| CloudTAK Events | cloudtak | ghcr.io/onemindos/cloudtak-events:latest | ✅ live |
+| CloudTAK Tiles | cloudtak | ghcr.io/onemindos/cloudtak-tiles:latest | ✅ live |
+| TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-base:* | ✅ live |
+| ClickHouse | clickhouse | altinity/clickhouse-server (operator) | ✅ live |
+| Grafana/Loki/Tempo | monitoring | (helm) | ✅ live |
+| Cloudflared | cloudflare | cloudflare/cloudflared | ✅ live |
+| nats-dashboard | nats | ghcr.io/onemindos/nats-dashboard:latest | ✅ live |
+| agent-web-ui | nats | ghcr.io/onemindos/agent-web-ui:latest | ✅ live |
+| agenttap | nats | ghcr.io/onemindos/agenttap:latest | ✅ live |
+| heynats | nats | ghcr.io/onemindos/heynats:latest | ✅ live |
+| nats-ui | nats | ghcr.io/gastbob40/nats-ui:latest | ✅ live |
+| omos-tak-projector | omos | python:3.12-alpine (inline script) | ✅ live |
+| feed-intel | omos | ghcr.io/onemindos/feed-intel:latest | ✅ live |
+| feed-satellites | omos | ghcr.io/onemindos/feed-satellites:latest | ✅ live |
+| sink-clickhouse | omos | ghcr.io/onemindos/sink-clickhouse:latest | ✅ live |
+| redpanda-connect | omos | ghcr.io/redpandadata/connect:latest | ✅ live |
+| omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | 🔴 scaled to 0 |
 
 ## Namespaces
 
 | Namespace | Purpose |
 |-----------|---------|
-| nats | NATS HA cluster |
-| hermes | Legacy AI agent |
-| cloudtak | CloudTAK stack |
-| wwv | WorldWideView globe |
+| nats | NATS 3-node HA cluster + tools |
+| hermes | Legacy AI agent + copilot-runtime |
+| cloudtak | OneTAK (CloudTAK fork) — API/Events/Tiles |
 | takserver | TAK Server 5.8 |
-| clickhouse | ClickHouse |
+| clickhouse | ClickHouse (Altinity operator) |
 | monitoring | Prometheus + Grafana + Loki + Tempo |
-| cloudflare | cloudflared tunnel |
-| omos | omos-* services (tak-projector, etc.) |
-| authentik | Authentik IdP (Forward Auth + OIDC) |
-| argocd | ArgoCD GitOps |
-| cert-manager | cert-manager |
-| ingress-nginx | ingress-nginx |
-| tailscale | Tailscale operator |
-| kube-system | sealed-secrets-controller (secret decryption) |
+| cloudflare | cloudflared tunnel controller |
+| omos | omos-* services (tak-projector, feeds, sinks) |
+| geo | Geospatial stack (Tile38, STAC, farmOS, etc.) |
+| takml | TAK-ML vision pipeline |
+| argocd | ArgoCD GitOps controller |
+| cert-manager | TLS cert automation |
+| tailscale | Tailscale proxy sidecars |
+| github-runner | Self-hosted GH Actions runner |
+| ingress-nginx | Ingress controller |
+| kube-system | sealed-secrets controller (secret decryption) |
 
 ## Secrets Convention
 
