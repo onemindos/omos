@@ -10,8 +10,9 @@
 #  Wave 1 │ BUS         platform-nats            NATS 3-node HA + streams
 #         │ OPERATORS   platform-clickhouse-op   Altinity ClickHouse Operator
 #  Wave 2 │ TAK         platform-onetak          OneTAK API/Events/Media/Tiles
-#         │             tak-cluster              TAK Server Helm chart
-#  Wave 3 │ AI          platform-legacy          Legacy/Hermes AI agent + bridge
+#         │             platform-takserver       TAK Server overlay (LB, NATS leaf, config)
+#         │             platform-takml           TAK ML vision pipeline (inference → CoT)
+#  Wave 3 │ AI          platform-legacy          Hermes AI agent + copilot bridge
 #         │ DATA        platform-observability   ClickHouse (Altinity)
 #         │             platform-redpanda        Redpanda Connect pipelines
 #         │ SERVICES    platform-omos            tak-projector, feeds, mission-engine

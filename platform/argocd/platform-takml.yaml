@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 2 — ONETAK PLATFORM                                     sync-wave: "2"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-takml: TAK ML vision pipeline
+#
+# Covers: platform/takml/
+#   deployment.yaml         — takml-server, takml-db, takml-vision-worker
+#   configmap-server.yaml   — server config
+#   configmap-vision-worker.yaml — vision worker config (GPU inference)
+#   pvcs.yaml               — persistent storage
+#   namespace.yaml          — takml namespace
+#
+# takml-vision-worker is scaled to 0 — activate when wired to onetak-media
+# RTSP stream for live inference (object detection → CoT → TAK Server).
+#
+# Pipeline:
+#   onetak-media (RTSP) → takml-vision-worker (inference) → NATS → TAK Server
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-takml
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/takml
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: takml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /spec/storageClassName
