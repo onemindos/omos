@@ -79,6 +79,9 @@ ignite:
   image: {repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind"}
   serviceAccount: {name: takserver-ignite}
   peerClassLoadingEnabled: false
+  # 2026-09-09: requests added — pods ran requestless (680Mi each), hiding 1.3Gi
+  # of real usage from the scheduler and overcommitting node memory.
+  resources: {requests: {cpu: 250m, memory: 768Mi}, limits: {cpu: "2", memory: 1536Mi}}
   env:
     OPTION_LIBS: "ignite-kubernetes,ignite-rest-http,ignite-json,ignite-slf4j,ignite-urideploy,ignite-web,ignite-calcite"
     IGNITE_QUIET: "false"
@@ -112,3 +115,15 @@ nats:
   config:
     jetstream: {enabled: true}
     cluster: {enabled: false, replicas: 1}
+  # 2026-09-09: requests added — ran requestless.
+  container:
+    merge:
+      resources:
+        requests: {cpu: 50m, memory: 192Mi}
+        limits: {memory: 512Mi}
+  natsBox:
+    container:
+      merge:
+        resources:
+          requests: {cpu: 10m, memory: 16Mi}
+          limits: {memory: 64Mi}

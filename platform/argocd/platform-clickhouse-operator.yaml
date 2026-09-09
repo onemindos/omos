@@ -29,6 +29,21 @@ spec:
         deployment:
           strategy:
             type: Recreate
+        operator:
+          # 2026-09-09: ran requestless (~74Mi). Give the scheduler real numbers.
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+        metrics:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
