@@ -1,17 +1,15 @@
-# =============================================================================
-# WebODM — Drone Survey Pipeline
-# 3 deployments: webodm-db, webodm-broker, webodm (webapp+worker sidecar)
-# webapp and worker share the media PVC in the same pod (avoids RWO conflict)
-# =============================================================================
+# WebODM — Drone photogrammetry pipeline: images → orthomosaic → GeoTIFF/KML
+# All scaled to 0 by default. Activate for post-flight processing.
+# Architecture: webodm-db (postgres) + broker (redis) + webodm (webapp+worker) + nodeodm (processor)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webodm-db
-  namespace: geo
+  namespace: onetak
   labels:
     app: webodm-db
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: webodm-db
@@ -54,7 +52,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: webodm-db-data
-  namespace: geo
+  namespace: onetak
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: do-block-storage-retain
@@ -66,7 +64,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webodm-db
-  namespace: geo
+  namespace: onetak
 spec:
   selector:
     app: webodm-db
@@ -78,11 +76,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webodm-broker
-  namespace: geo
+  namespace: onetak
   labels:
     app: webodm-broker
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: webodm-broker
@@ -108,7 +106,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: broker
-  namespace: geo
+  namespace: onetak
 spec:
   selector:
     app: webodm-broker
@@ -116,16 +114,16 @@ spec:
     - port: 6379
       targetPort: 6379
 ---
-# webapp + worker as sidecars in one pod — share media PVC without RWO conflict
+# webapp + worker share a pod so both access the media PVC without RWO conflict
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webodm
-  namespace: geo
+  namespace: onetak
   labels:
     app: webodm
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: webodm
@@ -156,7 +154,7 @@ spec:
             - name: WO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: geo-services-secret
+                  name: onetak-geo-secrets
                   key: SUPERSET_SECRET_KEY
           volumeMounts:
             - name: webodm-media
@@ -188,7 +186,7 @@ spec:
             - name: WO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: geo-services-secret
+                  name: onetak-geo-secrets
                   key: SUPERSET_SECRET_KEY
           volumeMounts:
             - name: webodm-media
@@ -209,7 +207,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: webodm-media
-  namespace: geo
+  namespace: onetak
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: do-block-storage-retain
@@ -221,7 +219,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webodm
-  namespace: geo
+  namespace: onetak
 spec:
   selector:
     app: webodm
@@ -229,19 +227,16 @@ spec:
     - port: 8000
       targetPort: 8000
 ---
-# =============================================================================
-# NodeODM — WebODM Photogrammetry Processing Worker
-# CPU-heavy during flights, idle otherwise. Scale replicas per concurrent flight.
-# =============================================================================
+# NodeODM — CPU-heavy photogrammetry worker; scale replicas up per concurrent flight
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nodeodm
-  namespace: geo
+  namespace: onetak
   labels:
     app: nodeodm
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: nodeodm
@@ -280,7 +275,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nodeodm-data
-  namespace: geo
+  namespace: onetak
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: do-block-storage-retain
@@ -292,7 +287,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nodeodm
-  namespace: geo
+  namespace: onetak
 spec:
   selector:
     app: nodeodm

@@ -1,27 +1,19 @@
-# =============================================================================
-# TimescaleDB-HA — Geo Namespace Database Backbone
-# PostgreSQL 17 + PostGIS + TimescaleDB + Patroni in one image
-# Used by: farmOS, STAC, GeoServer, pg_tileserv, pg_featureserv, Martin, Nominatim
-# TAK keeps its own cloudtak-postgis — clean separation
-# =============================================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: geo-db
-  namespace: geo
+  name: onetak-geo-db
+  namespace: onetak
   labels:
-    app: geo-db
-    component: database
+    app: onetak-geo-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: geo-db
+      app: onetak-geo-db
   template:
     metadata:
       labels:
-        app: geo-db
-        component: database
+        app: onetak-geo-db
     spec:
       securityContext:
         fsGroup: 1000
@@ -39,13 +31,12 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: geo-db-secret
+                  name: onetak-geo-db-secret
                   key: POSTGRES_PASSWORD
             - name: PGDATA
               value: "/var/lib/postgresql/data/pgdata"
-            # Disable Patroni for single-node (simpler, upgrade to HA later)
             - name: PATRONI_SCOPE
-              value: "geo-db"
+              value: "onetak-geo-db"
             - name: PGBACKREST_STANZA
               value: ""
           volumeMounts:
@@ -71,13 +62,13 @@ spec:
       volumes:
         - name: pgdata
           persistentVolumeClaim:
-            claimName: geo-db-data
+            claimName: onetak-geo-db-data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: geo-db-data
-  namespace: geo
+  name: onetak-geo-db-data
+  namespace: onetak
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: do-block-storage-retain
@@ -88,11 +79,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: geo-db
-  namespace: geo
+  name: onetak-geo-db
+  namespace: onetak
 spec:
   selector:
-    app: geo-db
+    app: onetak-geo-db
   ports:
     - port: 5432
       targetPort: 5432

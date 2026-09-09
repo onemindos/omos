@@ -1,0 +1,88 @@
+# TileServer GL — WMS/WMTS server for TAK EUD consumption of MBTiles
+# Serves raster tiles from .mbtiles files; TAK ATAK/WinTAK can consume as WMS layer.
+# Scaled to 0 by default; activate and upload .mbtiles to /tiles when needed.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tileserver-gl
+  namespace: onetak
+  labels:
+    app: tileserver-gl
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: tileserver-gl
+  template:
+    metadata:
+      labels:
+        app: tileserver-gl
+    spec:
+      containers:
+        - name: tileserver-gl
+          image: maptiler/tileserver-gl:latest
+          ports:
+            - containerPort: 8080
+          args:
+            - --config
+            - /config/config.json
+          volumeMounts:
+            - name: tileserver-config
+              mountPath: /config
+            - name: tileserver-tiles
+              mountPath: /tiles
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: tileserver-config
+          configMap:
+            name: tileserver-config
+        - name: tileserver-tiles
+          persistentVolumeClaim:
+            claimName: tileserver-tiles
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tileserver-tiles
+  namespace: onetak
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 80Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tileserver-config
+  namespace: onetak
+data:
+  config.json: |
+    {
+      "options": {
+        "paths": {
+          "mbtiles": "/tiles"
+        }
+      },
+      "data": {},
+      "styles": {}
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tileserver-gl
+  namespace: onetak
+spec:
+  selector:
+    app: tileserver-gl
+  ports:
+    - port: 8080
+      targetPort: 8080
