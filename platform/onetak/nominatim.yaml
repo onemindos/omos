@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nominatim
+  namespace: onetak
+  labels:
+    app: nominatim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nominatim
+  template:
+    metadata:
+      labels:
+        app: nominatim
+    spec:
+      containers:
+        - name: nominatim
+          image: mediagis/nominatim:4.4
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PBF_URL
+              value: "https://download.geofabrik.de/north-america-latest.osm.pbf"
+            - name: REPLICATION_URL
+              value: "https://download.geofabrik.de/north-america-updates/"
+            - name: NOMINATIM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-geo-secrets
+                  key: NOMINATIM_PASSWORD
+          volumeMounts:
+            - name: nominatim-data
+              mountPath: /nominatim/data
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 300
+            periodSeconds: 30
+            failureThreshold: 20
+      volumes:
+        - name: nominatim-data
+          persistentVolumeClaim:
+            claimName: nominatim-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nominatim-data
+  namespace: onetak
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nominatim
+  namespace: onetak
+spec:
+  selector:
+    app: nominatim
+  ports:
+    - port: 8090
+      targetPort: 8080
