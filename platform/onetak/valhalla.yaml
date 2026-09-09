@@ -6,7 +6,7 @@ metadata:
   labels:
     app: valhalla
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: valhalla
@@ -46,13 +46,29 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8002
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              DATA=/custom_files
+              if [ ! -f "$DATA/valhalla.json" ]; then
+                echo "Building valhalla config..."
+                valhalla_build_config \
+                  --mjolnir-tile-dir "$DATA/valhalla_tiles" \
+                  --mjolnir-tile-extract "$DATA/valhalla_tiles.tar" \
+                  --mjolnir-timezone "$DATA/timezones.sqlite" \
+                  --mjolnir-admin "$DATA/admins.sqlite" \
+                  > "$DATA/valhalla.json"
+              fi
+              if [ ! -d "$DATA/valhalla_tiles" ] && [ ! -f "$DATA/valhalla_tiles.tar" ]; then
+                echo "Building tiles from PBF (this takes several hours for North America)..."
+                valhalla_build_tiles -c "$DATA/valhalla.json" "$DATA/north-america.osm.pbf"
+                echo "Tile build complete."
+              fi
+              echo "Starting valhalla service..."
+              exec valhalla_service "$DATA/valhalla.json" 1
           env:
-            - name: use_tiles_ignore_pbf
-              value: "False"
-            - name: build_admins
-              value: "True"
-            - name: build_time_zones
-              value: "True"
             - name: server_threads
               value: "2"
           volumeMounts:
@@ -69,9 +85,9 @@ spec:
             httpGet:
               path: /status
               port: 8002
-            initialDelaySeconds: 60
-            periodSeconds: 15
-            failureThreshold: 10
+            initialDelaySeconds: 14400
+            periodSeconds: 30
+            failureThreshold: 5
       volumes:
         - name: valhalla-data
           persistentVolumeClaim:
