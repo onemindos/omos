@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind Capability Tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Navigation Tabs */
+.view-nav {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 40px;
+  padding: 4px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.view-tab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #64748b;
+  border: none;
+  background: none;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.view-tab:hover { color: #94a3b8; }
+.view-tab.active {
+  background: rgba(60, 231, 255, 0.1);
+  color: #3CE7FF;
+  border: 1px solid rgba(60, 231, 255, 0.3);
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3CE7FF, #fb923c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Views */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ========== VIEW 1: TREE (dual column) ========== */
+.root-node {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.node-onemind {
+  background: rgba(60, 231, 255, 0.08);
+  border: 2px solid #3CE7FF;
+  border-radius: 12px;
+  padding: 20px 40px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(60, 231, 255, 0.15);
+}
+
+.node-onemind h2 { font-size: 1.4rem; color: #3CE7FF; margin-bottom: 4px; }
+.node-onemind .split { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #94a3b8; }
+
+.fabric-connector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.fabric-line {
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(180deg, #3CE7FF, #fb923c);
+}
+
+.fabric-label {
+  position: absolute;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #64748b;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #020617;
+  padding: 2px 12px;
+  white-space: nowrap;
+}
+
+.tree-columns {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+.column-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+.column-header.human { background: rgba(251, 146, 60, 0.1); border: 1px solid #fb923c; }
+.column-header.legacy { background: rgba(60, 231, 255, 0.1); border: 1px solid #3CE7FF; }
+.column-header h3 { font-size: 1.1rem; margin-bottom: 2px; }
+.column-header .role { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #64748b; }
+
+.center-connectors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
+}
+
+.fabric-strand {
+  width: 2px;
+  height: 100%;
+  min-height: 800px;
+  background: repeating-linear-gradient(180deg, rgba(60, 231, 255, 0.3) 0px, rgba(60, 231, 255, 0.3) 4px, transparent 4px, transparent 12px);
+  position: relative;
+}
+
+.fabric-strand::after {
+  content: 'THE FABRIC';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: #334155;
+  letter-spacing: 4px;
+  white-space: nowrap;
+  background: #020617;
+  padding: 4px 12px;
+}
+
+.skill-column { padding: 0 20px; }
+
+.domain-group { margin-bottom: 30px; }
+
+.domain-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #64748b;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-left: 14px;
+  border-left: 3px solid;
+}
+
+.domain-title.human { border-color: #fb923c; }
+.domain-title.legacy { border-color: #3CE7FF; }
+
+.skill-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid #1e293b;
+  transition: all 0.2s;
+}
+
+.skill-node:hover { border-color: #334155; background: rgba(30, 41, 59, 0.7); }
+
+.skill-name { font-size: 0.85rem; color: #e2e8f0; flex: 1; }
+
+.skill-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-planning { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+.status-study { background: rgba(96, 165, 250, 0.15); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.3); }
+.status-training { background: rgba(251, 146, 60, 0.15); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+.status-mastering { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.status-sunset { background: rgba(100, 116, 139, 0.15); color: #64748b; border: 1px solid rgba(100, 116, 139, 0.3); }
+.status-dev { background: rgba(60, 231, 255, 0.15); color: #3CE7FF; border: 1px solid rgba(60, 231, 255, 0.3); }
+.status-testing { background: rgba(167, 139, 250, 0.15); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.3); }
+.status-live { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+
+.convergence-marker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin: 4px 0;
+  border-radius: 6px;
+  background: rgba(60, 231, 255, 0.05);
+  border: 1px dashed rgba(60, 231, 255, 0.3);
+}
+
+.convergence-marker .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fb923c, #3CE7FF);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; box-shadow: 0 0 8px rgba(60, 231, 255, 0.5); }
+}
+
+.convergence-marker .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ========== VIEW 2: CONVERGENCE MAP ========== */
+.convergence-view {
+  padding: 20px 0;
+}
+
+.convergence-intro {
+  text-align: center;
+  margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.convergence-intro p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.convergence-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.convergence-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #fb923c, #3CE7FF);
+}
+
+.convergence-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #e2e8f0;
+}
+
+.convergence-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.convergence-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.flow-side {
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.flow-side.human-side {
+  background: rgba(251, 146, 60, 0.06);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+}
+
+.flow-side.legacy-side {
+  background: rgba(60, 231, 255, 0.06);
+  border: 1px solid rgba(60, 231, 255, 0.2);
+}
+
+.flow-side-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.flow-side.human-side .flow-side-label { color: #fb923c; }
+.flow-side.legacy-side .flow-side-label { color: #3CE7FF; }
+
+.flow-side ul {
+  list-style: none;
+  padding: 0;
+}
+
+.flow-side li {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  padding: 3px 0;
+  padding-left: 12px;
+  position: relative;
+}
+
+.flow-side li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #475569;
+}
+
+.flow-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.flow-connector .arrow {
+  font-size: 1.2rem;
+  color: #334155;
+}
+
+.flow-connector .merge-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.55rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.convergence-output {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.05), rgba(60, 231, 255, 0.05));
+  border: 1px dashed rgba(60, 231, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.convergence-output .output-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fb923c, #3CE7FF);
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+
+.convergence-output .output-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #e2e8f0;
+}
+
+.convergence-output .output-status {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* ========== VIEW 3: DEPTH MAP (per-domain deep dive) ========== */
+.depth-view {
+  padding: 20px 0;
+}
+
+.depth-domain {
+  margin-bottom: 50px;
+}
+
+.depth-domain-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.depth-domain-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.depth-domain-icon.personal { background: rgba(251, 146, 60, 0.15); border: 1px solid rgba(251, 146, 60, 0.3); }
+.depth-domain-icon.business { background: rgba(167, 139, 250, 0.15); border: 1px solid rgba(167, 139, 250, 0.3); }
+.depth-domain-icon.legacy-d { background: rgba(60, 231, 255, 0.15); border: 1px solid rgba(60, 231, 255, 0.3); }
+.depth-domain-icon.operations { background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); }
+
+.depth-domain-info h3 { font-size: 1.1rem; margin-bottom: 2px; }
+.depth-domain-info .desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.depth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.depth-card {
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid #1e293b;
+}
+
+.depth-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.depth-card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.depth-card-owner {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.55rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.depth-card-owner.human { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+.depth-card-owner.legacy-o { background: rgba(60, 231, 255, 0.15); color: #3CE7FF; }
+.depth-card-owner.shared { background: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+
+.depth-card-body {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.depth-card-body ul { list-style: none; padding: 0; }
+.depth-card-body li { padding: 2px 0; padding-left: 10px; position: relative; }
+.depth-card-body li::before { content: '·'; position: absolute; left: 0; color: #475569; }
+
+.depth-card-deps {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #1e293b;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: #475569;
+}
+
+.depth-card-deps span { color: #64748b; }
+
+.dep-link { color: #3CE7FF; text-decoration: none; }
+.dep-link:hover { text-decoration: underline; }
+
+/* ========== VIEW 4: MATRIX ========== */
+.matrix-view { padding: 20px 0; overflow-x: auto; }
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.matrix-table th {
+  padding: 10px 12px;
+  text-align: left;
+  color: #64748b;
+  font-weight: 500;
+  border-bottom: 1px solid #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
+.matrix-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  vertical-align: middle;
+}
+
+.matrix-table tr:hover td { background: rgba(30, 41, 59, 0.3); }
+
+.matrix-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.matrix-dot.human { background: #fb923c; }
+.matrix-dot.legacy-m { background: #3CE7FF; }
+.matrix-dot.both { background: linear-gradient(135deg, #fb923c, #3CE7FF); }
+
+.matrix-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #1e293b;
+  width: 80px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.matrix-bar-fill.human { background: #fb923c; }
+.matrix-bar-fill.legacy-m { background: #3CE7FF; }
+
+/* ========== LEGEND ========== */
+.legend {
+  margin-top: 60px;
+  padding: 20px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.legend h4 { font-size: 0.85rem; color: #94a3b8; margin-bottom: 14px; font-weight: 600; }
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-item .swatch { width: 10px; height: 10px; border-radius: 50%; }
+.legend-item .label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #64748b; }
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>OneMind Capability Tree</h1>
+    <div class="subtitle">Human + Idea &bull; Connected by the Fabric</div>
+  </div>
+
+  <!-- View Navigation -->
+  <div class="view-nav">
+    <button class="view-tab active" data-view="tree">Tree</button>
+    <button class="view-tab" data-view="convergence">Convergence</button>
+    <button class="view-tab" data-view="depth">Depth</button>
+    <button class="view-tab" data-view="matrix">Matrix</button>
+    <button class="view-tab" data-view="graph">Graph</button>
+  </div>
+
+  <!-- ==================== VIEW 1: TREE ==================== -->
+  <div class="view active" id="view-tree">
+
+    <div class="root-node">
+      <div class="node-onemind">
+        <h2>ONEMIND</h2>
+        <div class="split">Zeus 50% &mdash; Legacy 50%</div>
+      </div>
+    </div>
+
+    <div class="fabric-connector">
+      <div class="fabric-line"></div>
+      <span class="fabric-label">the fabric connects us</span>
+    </div>
+
+    <div class="tree-columns">
+
+      <!-- HUMAN SIDE -->
+      <div class="skill-column">
+        <div class="column-header human">
+          <h3 style="color:#fb923c;">Zeus</h3>
+          <div class="role">Human &bull; Operator</div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title human">Personal</div>
+          <div class="skill-node">
+            <span class="skill-name">Cold Exposure Protocol</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Strength Programming</span>
+            <span class="skill-status status-mastering">mastering</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Sleep Architecture</span>
+            <span class="skill-status status-study">study</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Nutrition &amp; Meal Systems</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title human">Business</div>
+          <div class="skill-node">
+            <span class="skill-name">Education Business (Skool)</span>
+            <span class="skill-status status-mastering">mastering</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Content Strategy</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Paid Ads &amp; Funnels</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Community Leadership</span>
+            <span class="skill-status status-mastering">mastering</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title human">Legacy</div>
+          <div class="skill-node">
+            <span class="skill-name">Systems Thinking</span>
+            <span class="skill-status status-mastering">mastering</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">First Principles Reasoning</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">AI Agent Architecture</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Robotics Intuition</span>
+            <span class="skill-status status-study">study</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Electrical Engineering</span>
+            <span class="skill-status status-study">study</span>
+          </div>
+          <div class="convergence-marker">
+            <div class="dot"></div>
+            <span class="label">converges &rarr; autonomous fleet command</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title human">Operations</div>
+          <div class="skill-node">
+            <span class="skill-name">Self-Hosted Infrastructure</span>
+            <span class="skill-status status-mastering">mastering</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Homestead &amp; Land Ops</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Gardening &amp; Food Systems</span>
+            <span class="skill-status status-study">study</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Vehicle &amp; Equipment Maintenance</span>
+            <span class="skill-status status-training">training</span>
+          </div>
+          <div class="convergence-marker">
+            <div class="dot"></div>
+            <span class="label">converges &rarr; greenhouse automation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER FABRIC -->
+      <div class="center-connectors">
+        <div class="fabric-strand"></div>
+      </div>
+
+      <!-- LEGACY SIDE -->
+      <div class="skill-column">
+        <div class="column-header legacy">
+          <h3 style="color:#3CE7FF;">Legacy</h3>
+          <div class="role">Idea &bull; System Intelligence</div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title legacy">Robotics</div>
+          <div class="skill-node">
+            <span class="skill-name">DIMOS Framework Integration</span>
+            <span class="skill-status status-dev">developing</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Go2 Locomotion Patterns</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Drone Autonomy Stack</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Sensor Fusion &amp; Perception</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="convergence-marker">
+            <div class="dot"></div>
+            <span class="label">&larr; converges &bull; autonomous fleet command</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title legacy">Models &amp; Intelligence</div>
+          <div class="skill-node">
+            <span class="skill-name">Local LLM Inference (Apple Silicon)</span>
+            <span class="skill-status status-live">live</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Fine-Tuning Pipelines</span>
+            <span class="skill-status status-dev">developing</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">World Models (JEPA/Cosmos)</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">RAG &amp; Knowledge Retrieval</span>
+            <span class="skill-status status-live">live</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title legacy">Materials &amp; Fabrication</div>
+          <div class="skill-node">
+            <span class="skill-name">CNC Toolpath Generation</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">3D Print Optimization</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Weld Pattern Recognition</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title legacy">Coding Agents</div>
+          <div class="skill-node">
+            <span class="skill-name">Claude Code Delegation</span>
+            <span class="skill-status status-live">live</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Kanban Worker Orchestration</span>
+            <span class="skill-status status-live">live</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Multi-Agent Code Review</span>
+            <span class="skill-status status-dev">developing</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Self-Evolving Skill System</span>
+            <span class="skill-status status-dev">developing</span>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <div class="domain-title legacy">Agriculture &amp; Environment</div>
+          <div class="skill-node">
+            <span class="skill-name">Greenhouse Sensor Mesh</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Growth Cycle Modeling</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="skill-node">
+            <span class="skill-name">Irrigation Automation</span>
+            <span class="skill-status status-planning">planning</span>
+          </div>
+          <div class="convergence-marker">
+            <div class="dot"></div>
+            <span class="label">&larr; converges &bull; greenhouse automation</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 2: CONVERGENCE ==================== -->
+  <div class="view" id="view-convergence">
+    <div class="convergence-view">
+
+      <div class="convergence-intro">
+        <p>Convergence points are where human capability and system intelligence merge into something neither could achieve alone. These are the products of OneMind.</p>
+      </div>
+
+      <!-- Convergence 1: Greenhouse Automation -->
+      <div class="convergence-card">
+        <div class="convergence-title">Greenhouse Automation</div>
+        <div class="convergence-desc">Hands-on growing knowledge meets autonomous sensor networks and growth modeling — producing a self-regulating food system.</div>
+        <div class="convergence-flow">
+          <div class="flow-side human-side">
+            <div class="flow-side-label">Zeus brings</div>
+            <ul>
+              <li>Gardening &amp; food systems knowledge</li>
+              <li>Homestead land operations</li>
+              <li>Seasonal planning intuition</li>
+              <li>Physical build &amp; maintenance</li>
+            </ul>
+          </div>
+          <div class="flow-connector">
+            <span class="arrow">&larr;</span>
+            <span class="merge-label">FABRIC</span>
+            <span class="arrow">&rarr;</span>
+          </div>
+          <div class="flow-side legacy-side">
+            <div class="flow-side-label">Legacy brings</div>
+            <ul>
+              <li>Greenhouse sensor mesh (IoT)</li>
+              <li>Growth cycle modeling</li>
+              <li>Irrigation automation logic</li>
+              <li>Environmental data analysis</li>
+            </ul>
+          </div>
+        </div>
+        <div class="convergence-output">
+          <div class="output-icon"></div>
+          <span class="output-text">Outcome: Self-regulating greenhouse with human oversight at decision points only</span>
+          <span class="skill-status status-planning">planning</span>
+        </div>
+      </div>
+
+      <!-- Convergence 2: Autonomous Fleet Command -->
+      <div class="convergence-card">
+        <div class="convergence-title">Autonomous Fleet Command</div>
+        <div class="convergence-desc">Systems thinking and robotics intuition meet real-time perception and locomotion models — producing a fleet you can command by intent.</div>
+        <div class="convergence-flow">
+          <div class="flow-side human-side">
+            <div class="flow-side-label">Zeus brings</div>
+            <ul>
+              <li>Systems thinking &amp; architecture vision</li>
+              <li>AI agent architecture understanding</li>
+              <li>Robotics intuition (physical)</li>
+              <li>Strategic mission planning</li>
+            </ul>
+          </div>
+          <div class="flow-connector">
+            <span class="arrow">&larr;</span>
+            <span class="merge-label">FABRIC</span>
+            <span class="arrow">&rarr;</span>
+          </div>
+          <div class="flow-side legacy-side">
+            <div class="flow-side-label">Legacy brings</div>
+            <ul>
+              <li>DIMOS framework integration</li>
+              <li>Go2 locomotion patterns</li>
+              <li>Drone autonomy stack</li>
+              <li>Sensor fusion &amp; perception</li>
+            </ul>
+          </div>
+        </div>
+        <div class="convergence-output">
+          <div class="output-icon"></div>
+          <span class="output-text">Outcome: Intent-driven robot fleet (Go2 + drones) operating on the property</span>
+          <span class="skill-status status-planning">planning</span>
+        </div>
+      </div>
+
+      <!-- Convergence 3: Content + Agent Pipeline -->
+      <div class="convergence-card">
+        <div class="convergence-title">Sovereign Content Engine</div>
+        <div class="convergence-desc">Business instincts and community leadership meet AI coding agents and self-hosted infrastructure — producing a content pipeline that runs on your terms.</div>
+        <div class="convergence-flow">
+          <div class="flow-side human-side">
+            <div class="flow-side-label">Zeus brings</div>
+            <ul>
+              <li>Content strategy &amp; voice</li>
+              <li>Community leadership (Skool)</li>
+              <li>Paid ads &amp; funnel design</li>
+              <li>Self-hosted infrastructure skills</li>
+            </ul>
+          </div>
+          <div class="flow-connector">
+            <span class="arrow">&larr;</span>
+            <span class="merge-label">FABRIC</span>
+            <span class="arrow">&rarr;</span>
+          </div>
+          <div class="flow-side legacy-side">
+            <div class="flow-side-label">Legacy brings</div>
+            <ul>
+              <li>Multi-agent code review</li>
+              <li>RAG &amp; knowledge retrieval</li>
+              <li>Self-evolving skill system</li>
+              <li>Kanban worker orchestration</li>
+            </ul>
+          </div>
+        </div>
+        <div class="convergence-output">
+          <div class="output-icon"></div>
+          <span class="output-text">Outcome: End-to-end content creation on sovereign infrastructure, no platform dependency</span>
+          <span class="skill-status status-dev">developing</span>
+        </div>
+      </div>
+
+      <!-- Convergence 4: Fabrication -->
+      <div class="convergence-card">
+        <div class="convergence-title">Intelligent Fabrication</div>
+        <div class="convergence-desc">Physical craft skills meet computational design — producing the ability to prototype anything at home, from idea to physical object.</div>
+        <div class="convergence-flow">
+          <div class="flow-side human-side">
+            <div class="flow-side-label">Zeus brings</div>
+            <ul>
+              <li>Vehicle &amp; equipment maintenance</li>
+              <li>Welding (hands-on)</li>
+              <li>Physical material intuition</li>
+              <li>Design intent &amp; constraints</li>
+            </ul>
+          </div>
+          <div class="flow-connector">
+            <span class="arrow">&larr;</span>
+            <span class="merge-label">FABRIC</span>
+            <span class="arrow">&rarr;</span>
+          </div>
+          <div class="flow-side legacy-side">
+            <div class="flow-side-label">Legacy brings</div>
+            <ul>
+              <li>CNC toolpath generation</li>
+              <li>3D print optimization</li>
+              <li>Weld pattern recognition</li>
+              <li>Parametric design automation</li>
+            </ul>
+          </div>
+        </div>
+        <div class="convergence-output">
+          <div class="output-icon"></div>
+          <span class="output-text">Outcome: Home fabrication lab — describe the part, Legacy designs it, Zeus builds it</span>
+          <span class="skill-status status-planning">planning</span>
+        </div>
+      </div>
+
+      <!-- Convergence 5: Health Optimization -->
+      <div class="convergence-card">
+        <div class="convergence-title">Quantified Self Protocol</div>
+        <div class="convergence-desc">Disciplined physical training meets data modeling — producing adaptive health protocols that evolve with the body.</div>
+        <div class="convergence-flow">
+          <div class="flow-side human-side">
+            <div class="flow-side-label">Zeus brings</div>
+            <ul>
+              <li>Strength programming (mastered)</li>
+              <li>Cold exposure protocols</li>
+              <li>Sleep architecture study</li>
+              <li>Nutrition &amp; meal systems</li>
+            </ul>
+          </div>
+          <div class="flow-connector">
+            <span class="arrow">&larr;</span>
+            <span class="merge-label">FABRIC</span>
+            <span class="arrow">&rarr;</span>
+          </div>
+          <div class="flow-side legacy-side">
+            <div class="flow-side-label">Legacy brings</div>
+            <ul>
+              <li>Biometric data pipeline</li>
+              <li>Recovery pattern analysis</li>
+              <li>Supplement/nutrition modeling</li>
+              <li>Sleep stage optimization</li>
+            </ul>
+          </div>
+        </div>
+        <div class="convergence-output">
+          <div class="output-icon"></div>
+          <span class="output-text">Outcome: Adaptive training protocols that adjust based on recovery, sleep, and load data</span>
+          <span class="skill-status status-planning">planning</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 3: DEPTH ==================== -->
+  <div class="view" id="view-depth">
+    <div class="depth-view">
+
+      <!-- Personal Domain -->
+      <div class="depth-domain">
+        <div class="depth-domain-header">
+          <div class="depth-domain-icon personal">&#9829;</div>
+          <div class="depth-domain-info">
+            <h3 style="color:#fb923c;">Personal</h3>
+            <div class="desc">Health, performance, and individual development</div>
+          </div>
+        </div>
+        <div class="depth-grid">
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Strength Programming</span>
+              <span class="depth-card-owner human">Zeus</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Progressive overload tracking</li>
+                <li>Periodization cycles</li>
+                <li>Form mastery &amp; injury prevention</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Quantified Self Protocol</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Biometric Data Pipeline</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Wearable data ingestion</li>
+                <li>HRV &amp; readiness scoring</li>
+                <li>Trend detection across weeks</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Quantified Self Protocol</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Cold Exposure Protocol</span>
+              <span class="depth-card-owner human">Zeus</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Temperature progression</li>
+                <li>Timing &amp; frequency</li>
+                <li>Recovery amplification</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Depends on: <span class="dep-link">Recovery Pattern Analysis</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Recovery Pattern Analysis</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Sleep/strain correlation</li>
+                <li>Optimal rest day scheduling</li>
+                <li>Adaptation curve modeling</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Depends on: <span class="dep-link">Biometric Data Pipeline</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Domain -->
+      <div class="depth-domain">
+        <div class="depth-domain-header">
+          <div class="depth-domain-icon business">&#9733;</div>
+          <div class="depth-domain-info">
+            <h3 style="color:#a78bfa;">Business</h3>
+            <div class="desc">Revenue, community, and market presence</div>
+          </div>
+        </div>
+        <div class="depth-grid">
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Education Business (Skool)</span>
+              <span class="depth-card-owner human">Zeus</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Curriculum design</li>
+                <li>Student outcome tracking</li>
+                <li>Wealth Warriors community</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Sovereign Content Engine</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">RAG &amp; Knowledge Retrieval</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Semantic search over content</li>
+                <li>Auto-answering student questions</li>
+                <li>Knowledge base curation</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Sovereign Content Engine</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Content Strategy</span>
+              <span class="depth-card-owner human">Zeus</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Platform selection &amp; cadence</li>
+                <li>Voice &amp; narrative arc</li>
+                <li>Audience growth loops</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Depends on: <span class="dep-link">Community Leadership</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Self-Evolving Skill System</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Skill auto-generation from tasks</li>
+                <li>Quality scoring &amp; pruning</li>
+                <li>Cross-skill dependency mapping</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Enables: <span class="dep-link">All Legacy capabilities</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legacy Domain -->
+      <div class="depth-domain">
+        <div class="depth-domain-header">
+          <div class="depth-domain-icon legacy-d">&#9670;</div>
+          <div class="depth-domain-info">
+            <h3 style="color:#3CE7FF;">Legacy</h3>
+            <div class="desc">Long-term knowledge, deep study, and generational thinking</div>
+          </div>
+        </div>
+        <div class="depth-grid">
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">AI Agent Architecture</span>
+              <span class="depth-card-owner shared">Shared</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Multi-agent topology design</li>
+                <li>NATS messaging backbone</li>
+                <li>Skill/memory/tool framework</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Enables: <span class="dep-link">Coding Agents</span>, <span class="dep-link">Autonomous Fleet Command</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">World Models (JEPA/Cosmos)</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Predictive environment modeling</li>
+                <li>Action consequence simulation</li>
+                <li>Embodied AI grounding</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Autonomous Fleet Command</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Systems Thinking</span>
+              <span class="depth-card-owner human">Zeus</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Feedback loop identification</li>
+                <li>Emergent behavior prediction</li>
+                <li>Constraint-based architecture</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Enables: <span class="dep-link">Everything</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Fine-Tuning Pipelines</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Dataset curation &amp; cleaning</li>
+                <li>LoRA / QLoRA training</li>
+                <li>Evaluation &amp; benchmarking</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Local LLM Inference</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operations Domain -->
+      <div class="depth-domain">
+        <div class="depth-domain-header">
+          <div class="depth-domain-icon operations">&#9881;</div>
+          <div class="depth-domain-info">
+            <h3 style="color:#34d399;">Operations</h3>
+            <div class="desc">Infrastructure, land, vehicles, and physical systems</div>
+          </div>
+        </div>
+        <div class="depth-grid">
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Self-Hosted Infrastructure</span>
+              <span class="depth-card-owner shared">Shared</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Tailscale mesh networking</li>
+                <li>Docker Compose stacks</li>
+                <li>NATS message backbone</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Enables: <span class="dep-link">All digital operations</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Greenhouse Sensor Mesh</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Temperature/humidity/soil nodes</li>
+                <li>NATS telemetry streaming</li>
+                <li>Alert thresholds &amp; response</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Depends on: <span class="dep-link">Self-Hosted Infrastructure</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">Gardening &amp; Food Systems</span>
+              <span class="depth-card-owner human">Zeus</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>Crop rotation planning</li>
+                <li>Soil amendment knowledge</li>
+                <li>Harvest timing &amp; storage</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Greenhouse Automation</span></div>
+          </div>
+          <div class="depth-card">
+            <div class="depth-card-header">
+              <span class="depth-card-title">CNC Toolpath Generation</span>
+              <span class="depth-card-owner legacy-o">Legacy</span>
+            </div>
+            <div class="depth-card-body">
+              <ul>
+                <li>G-code from CAD models</li>
+                <li>Material-aware feed rates</li>
+                <li>Tool wear prediction</li>
+              </ul>
+            </div>
+            <div class="depth-card-deps">Feeds into: <span class="dep-link">Intelligent Fabrication</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 4: MATRIX ==================== -->
+  <div class="view" id="view-matrix">
+    <div class="matrix-view">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Domain</th>
+            <th>Owner</th>
+            <th>Status</th>
+            <th>Zeus Depth</th>
+            <th>Legacy Depth</th>
+            <th>Convergence Point</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Strength Programming</td>
+            <td>Personal</td>
+            <td><span class="matrix-dot human"></span></td>
+            <td><span class="skill-status status-mastering">mastering</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:90%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:20%"></div></div></td>
+            <td>Quantified Self Protocol</td>
+          </tr>
+          <tr>
+            <td>Biometric Data Pipeline</td>
+            <td>Personal</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-planning">planning</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:10%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:40%"></div></div></td>
+            <td>Quantified Self Protocol</td>
+          </tr>
+          <tr>
+            <td>Education Business</td>
+            <td>Business</td>
+            <td><span class="matrix-dot human"></span></td>
+            <td><span class="skill-status status-mastering">mastering</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:95%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:30%"></div></div></td>
+            <td>Sovereign Content Engine</td>
+          </tr>
+          <tr>
+            <td>RAG &amp; Knowledge Retrieval</td>
+            <td>Business</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-live">live</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:25%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:80%"></div></div></td>
+            <td>Sovereign Content Engine</td>
+          </tr>
+          <tr>
+            <td>AI Agent Architecture</td>
+            <td>Legacy</td>
+            <td><span class="matrix-dot both"></span></td>
+            <td><span class="skill-status status-training">training</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:60%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:70%"></div></div></td>
+            <td>Autonomous Fleet Command</td>
+          </tr>
+          <tr>
+            <td>DIMOS Framework</td>
+            <td>Legacy</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-dev">developing</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:15%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:50%"></div></div></td>
+            <td>Autonomous Fleet Command</td>
+          </tr>
+          <tr>
+            <td>Self-Hosted Infrastructure</td>
+            <td>Operations</td>
+            <td><span class="matrix-dot both"></span></td>
+            <td><span class="skill-status status-mastering">mastering</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:85%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:85%"></div></div></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>Gardening &amp; Food Systems</td>
+            <td>Operations</td>
+            <td><span class="matrix-dot human"></span></td>
+            <td><span class="skill-status status-study">study</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:30%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:10%"></div></div></td>
+            <td>Greenhouse Automation</td>
+          </tr>
+          <tr>
+            <td>Greenhouse Sensor Mesh</td>
+            <td>Operations</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-planning">planning</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:5%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:25%"></div></div></td>
+            <td>Greenhouse Automation</td>
+          </tr>
+          <tr>
+            <td>Claude Code Delegation</td>
+            <td>Operations</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-live">live</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:40%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:90%"></div></div></td>
+            <td>Sovereign Content Engine</td>
+          </tr>
+          <tr>
+            <td>CNC Toolpath Generation</td>
+            <td>Operations</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-planning">planning</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:20%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:15%"></div></div></td>
+            <td>Intelligent Fabrication</td>
+          </tr>
+          <tr>
+            <td>World Models (JEPA)</td>
+            <td>Legacy</td>
+            <td><span class="matrix-dot legacy-m"></span></td>
+            <td><span class="skill-status status-planning">planning</span></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill human" style="width:10%"></div></div></td>
+            <td><div class="matrix-bar"><div class="matrix-bar-fill legacy-m" style="width:15%"></div></div></td>
+            <td>Autonomous Fleet Command</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 5: GRAPH ==================== -->
+  <div class="view" id="view-graph">
+    <div style="text-align:center;margin-bottom:16px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#64748b;">
+        Drag nodes to explore &bull; Scroll to zoom &bull; Lines show dependencies &amp; convergence
+      </span>
+    </div>
+    <div style="border:1px solid #1e293b;border-radius:12px;overflow:hidden;background:#0f172a;">
+      <canvas id="graph-canvas" width="1500" height="900" style="display:block;width:100%;height:auto;cursor:grab;"></canvas>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#64748b;display:flex;align-items:center;gap:6px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#fb923c;display:inline-block;"></span> Zeus (Human)
+      </span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#64748b;display:flex;align-items:center;gap:6px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#3CE7FF;display:inline-block;"></span> Legacy (Idea)
+      </span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#64748b;display:flex;align-items:center;gap:6px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#a78bfa;display:inline-block;"></span> Convergence Point
+      </span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#64748b;display:flex;align-items:center;gap:6px;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#fbbf24;display:inline-block;"></span> OneMind (Root)
+      </span>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <h4>Status Legend</h4>
+    <div class="legend-grid">
+      <div class="legend-item"><div class="swatch" style="background:#fbbf24;"></div><span class="label">Planning</span></div>
+      <div class="legend-item"><div class="swatch" style="background:#60a5fa;"></div><span class="label">Study</span></div>
+      <div class="legend-item"><div class="swatch" style="background:#fb923c;"></div><span class="label">Training / Developing</span></div>
+      <div class="legend-item"><div class="swatch" style="background:#a78bfa;"></div><span class="label">Testing</span></div>
+      <div class="legend-item"><div class="swatch" style="background:#34d399;"></div><span class="label">Mastering / Live</span></div>
+      <div class="legend-item"><div class="swatch" style="background:#64748b;"></div><span class="label">Sunset</span></div>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="legend-item"><div class="swatch" style="background:#fb923c;"></div><span class="label">Zeus owned</span></div>
+      <div class="legend-item" style="margin-top:4px;"><div class="swatch" style="background:#3CE7FF;"></div><span class="label">Legacy owned</span></div>
+      <div class="legend-item" style="margin-top:4px;"><div class="swatch" style="background:linear-gradient(135deg, #fb923c, #3CE7FF);"></div><span class="label">Shared / Converged</span></div>
+    </div>
+  </div>
+
+  <!-- Related Diagrams -->
+  <div style="text-align:center;margin-top:40px;">
+    <a href="https://github.com/onemindos/onemind-model-architecture" style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#3CE7FF;text-decoration:none;padding:10px 20px;border:1px solid rgba(60,231,255,0.3);border-radius:8px;display:inline-block;">
+      View Model Architecture &rarr;
+    </a>
+  </div>
+
+  <div class="footer">
+    OneMind Capability Tree v0.2 &bull; The Fabric Connects Us All
+  </div>
+
+</div>
+
+<script>
+// View switching
+document.querySelectorAll('.view-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    if (tab.dataset.view === 'graph') initGraph();
+  });
+});
+
+// ==================== GRAPH ENGINE ====================
+let graphInited = false;
+
+function initGraph() {
+  if (graphInited) return;
+  graphInited = true;
+
+  const canvas = document.getElementById('graph-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // Node types: root, human, legacy, convergence
+  const COLORS = {
+    root: '#fbbf24',
+    human: '#fb923c',
+    legacy: '#3CE7FF',
+    convergence: '#a78bfa'
+  };
+
+  // Define all nodes
+  const nodes = [
+    // Root
+    { id: 'onemind', label: 'ONEMIND', type: 'root', r: 28 },
+
+    // Human domain headers
+    { id: 'personal', label: 'Personal', type: 'human', r: 20 },
+    { id: 'business', label: 'Business', type: 'human', r: 20 },
+    { id: 'legacy-d', label: 'Legacy', type: 'human', r: 20 },
+    { id: 'operations', label: 'Operations', type: 'human', r: 20 },
+
+    // Legacy domain headers
+    { id: 'robotics', label: 'Robotics', type: 'legacy', r: 20 },
+    { id: 'models', label: 'Models & Intel', type: 'legacy', r: 20 },
+    { id: 'materials', label: 'Materials', type: 'legacy', r: 20 },
+    { id: 'coding', label: 'Coding Agents', type: 'legacy', r: 20 },
+    { id: 'agriculture', label: 'Agriculture', type: 'legacy', r: 20 },
+
+    // Human skills - Personal
+    { id: 'cold', label: 'Cold Exposure', type: 'human', r: 12 },
+    { id: 'strength', label: 'Strength', type: 'human', r: 12 },
+    { id: 'sleep', label: 'Sleep Architecture', type: 'human', r: 12 },
+    { id: 'nutrition', label: 'Nutrition', type: 'human', r: 12 },
+
+    // Human skills - Business
+    { id: 'skool', label: 'Skool Education', type: 'human', r: 12 },
+    { id: 'content', label: 'Content Strategy', type: 'human', r: 12 },
+    { id: 'ads', label: 'Paid Ads', type: 'human', r: 12 },
+    { id: 'community', label: 'Community Lead', type: 'human', r: 12 },
+
+    // Human skills - Legacy domain
+    { id: 'systems', label: 'Systems Thinking', type: 'human', r: 12 },
+    { id: 'firstprinciples', label: 'First Principles', type: 'human', r: 12 },
+    { id: 'aiarch', label: 'AI Agent Arch', type: 'human', r: 12 },
+    { id: 'robointuition', label: 'Robotics Intuition', type: 'human', r: 12 },
+    { id: 'electrical', label: 'Electrical Eng', type: 'human', r: 12 },
+
+    // Human skills - Operations
+    { id: 'selfhosted', label: 'Self-Hosted Infra', type: 'human', r: 12 },
+    { id: 'homestead', label: 'Homestead Ops', type: 'human', r: 12 },
+    { id: 'gardening', label: 'Gardening', type: 'human', r: 12 },
+    { id: 'vehicles', label: 'Vehicle Maint', type: 'human', r: 12 },
+
+    // Legacy skills - Robotics
+    { id: 'dimos', label: 'DIMOS', type: 'legacy', r: 12 },
+    { id: 'go2', label: 'Go2 Locomotion', type: 'legacy', r: 12 },
+    { id: 'drone', label: 'Drone Autonomy', type: 'legacy', r: 12 },
+    { id: 'sensor', label: 'Sensor Fusion', type: 'legacy', r: 12 },
+
+    // Legacy skills - Models
+    { id: 'localllm', label: 'Local LLM', type: 'legacy', r: 12 },
+    { id: 'finetune', label: 'Fine-Tuning', type: 'legacy', r: 12 },
+    { id: 'worldmodels', label: 'World Models', type: 'legacy', r: 12 },
+    { id: 'rag', label: 'RAG & Retrieval', type: 'legacy', r: 12 },
+
+    // Legacy skills - Materials
+    { id: 'cnc', label: 'CNC Toolpath', type: 'legacy', r: 12 },
+    { id: '3dprint', label: '3D Print', type: 'legacy', r: 12 },
+    { id: 'weld', label: 'Weld Patterns', type: 'legacy', r: 12 },
+
+    // Legacy skills - Coding
+    { id: 'claude', label: 'Claude Code', type: 'legacy', r: 12 },
+    { id: 'kanban', label: 'Kanban Workers', type: 'legacy', r: 12 },
+    { id: 'codereview', label: 'Code Review', type: 'legacy', r: 12 },
+    { id: 'skillsys', label: 'Skill System', type: 'legacy', r: 12 },
+
+    // Legacy skills - Agriculture
+    { id: 'greenhouse', label: 'Greenhouse Mesh', type: 'legacy', r: 12 },
+    { id: 'growthmodel', label: 'Growth Modeling', type: 'legacy', r: 12 },
+    { id: 'irrigation', label: 'Irrigation Auto', type: 'legacy', r: 12 },
+
+    // Legacy - extra
+    { id: 'biometric', label: 'Biometric Pipeline', type: 'legacy', r: 12 },
+    { id: 'recovery', label: 'Recovery Analysis', type: 'legacy', r: 12 },
+
+    // Convergence nodes
+    { id: 'conv-greenhouse', label: 'Greenhouse\nAutomation', type: 'convergence', r: 18 },
+    { id: 'conv-fleet', label: 'Autonomous\nFleet Command', type: 'convergence', r: 18 },
+    { id: 'conv-content', label: 'Sovereign\nContent Engine', type: 'convergence', r: 18 },
+    { id: 'conv-fab', label: 'Intelligent\nFabrication', type: 'convergence', r: 18 },
+    { id: 'conv-health', label: 'Quantified\nSelf Protocol', type: 'convergence', r: 18 },
+  ];
+
+  // Define edges [source, target, type]
+  // type: 'domain' (domain membership), 'feeds' (skill feeds convergence), 'depends' (dependency)
+  const edges = [
+    // Root to domains
+    ['onemind', 'personal', 'domain'],
+    ['onemind', 'business', 'domain'],
+    ['onemind', 'legacy-d', 'domain'],
+    ['onemind', 'operations', 'domain'],
+    ['onemind', 'robotics', 'domain'],
+    ['onemind', 'models', 'domain'],
+    ['onemind', 'materials', 'domain'],
+    ['onemind', 'coding', 'domain'],
+    ['onemind', 'agriculture', 'domain'],
+
+    // Personal skills
+    ['personal', 'cold', 'domain'],
+    ['personal', 'strength', 'domain'],
+    ['personal', 'sleep', 'domain'],
+    ['personal', 'nutrition', 'domain'],
+
+    // Business skills
+    ['business', 'skool', 'domain'],
+    ['business', 'content', 'domain'],
+    ['business', 'ads', 'domain'],
+    ['business', 'community', 'domain'],
+
+    // Legacy-domain skills
+    ['legacy-d', 'systems', 'domain'],
+    ['legacy-d', 'firstprinciples', 'domain'],
+    ['legacy-d', 'aiarch', 'domain'],
+    ['legacy-d', 'robointuition', 'domain'],
+    ['legacy-d', 'electrical', 'domain'],
+
+    // Operations skills
+    ['operations', 'selfhosted', 'domain'],
+    ['operations', 'homestead', 'domain'],
+    ['operations', 'gardening', 'domain'],
+    ['operations', 'vehicles', 'domain'],
+
+    // Robotics skills
+    ['robotics', 'dimos', 'domain'],
+    ['robotics', 'go2', 'domain'],
+    ['robotics', 'drone', 'domain'],
+    ['robotics', 'sensor', 'domain'],
+
+    // Models skills
+    ['models', 'localllm', 'domain'],
+    ['models', 'finetune', 'domain'],
+    ['models', 'worldmodels', 'domain'],
+    ['models', 'rag', 'domain'],
+    ['models', 'biometric', 'domain'],
+    ['models', 'recovery', 'domain'],
+
+    // Materials skills
+    ['materials', 'cnc', 'domain'],
+    ['materials', '3dprint', 'domain'],
+    ['materials', 'weld', 'domain'],
+
+    // Coding skills
+    ['coding', 'claude', 'domain'],
+    ['coding', 'kanban', 'domain'],
+    ['coding', 'codereview', 'domain'],
+    ['coding', 'skillsys', 'domain'],
+
+    // Agriculture skills
+    ['agriculture', 'greenhouse', 'domain'],
+    ['agriculture', 'growthmodel', 'domain'],
+    ['agriculture', 'irrigation', 'domain'],
+
+    // === CONVERGENCE CONNECTIONS (the interesting part) ===
+
+    // Greenhouse Automation
+    ['gardening', 'conv-greenhouse', 'feeds'],
+    ['homestead', 'conv-greenhouse', 'feeds'],
+    ['greenhouse', 'conv-greenhouse', 'feeds'],
+    ['growthmodel', 'conv-greenhouse', 'feeds'],
+    ['irrigation', 'conv-greenhouse', 'feeds'],
+    ['selfhosted', 'conv-greenhouse', 'depends'],
+
+    // Autonomous Fleet Command
+    ['systems', 'conv-fleet', 'feeds'],
+    ['aiarch', 'conv-fleet', 'feeds'],
+    ['robointuition', 'conv-fleet', 'feeds'],
+    ['dimos', 'conv-fleet', 'feeds'],
+    ['go2', 'conv-fleet', 'feeds'],
+    ['drone', 'conv-fleet', 'feeds'],
+    ['sensor', 'conv-fleet', 'feeds'],
+    ['worldmodels', 'conv-fleet', 'feeds'],
+
+    // Sovereign Content Engine
+    ['content', 'conv-content', 'feeds'],
+    ['community', 'conv-content', 'feeds'],
+    ['skool', 'conv-content', 'feeds'],
+    ['ads', 'conv-content', 'feeds'],
+    ['claude', 'conv-content', 'feeds'],
+    ['kanban', 'conv-content', 'feeds'],
+    ['codereview', 'conv-content', 'feeds'],
+    ['rag', 'conv-content', 'feeds'],
+    ['skillsys', 'conv-content', 'feeds'],
+    ['selfhosted', 'conv-content', 'depends'],
+
+    // Intelligent Fabrication
+    ['vehicles', 'conv-fab', 'feeds'],
+    ['electrical', 'conv-fab', 'feeds'],
+    ['cnc', 'conv-fab', 'feeds'],
+    ['3dprint', 'conv-fab', 'feeds'],
+    ['weld', 'conv-fab', 'feeds'],
+
+    // Quantified Self Protocol
+    ['strength', 'conv-health', 'feeds'],
+    ['cold', 'conv-health', 'feeds'],
+    ['sleep', 'conv-health', 'feeds'],
+    ['nutrition', 'conv-health', 'feeds'],
+    ['biometric', 'conv-health', 'feeds'],
+    ['recovery', 'conv-health', 'feeds'],
+
+    // Cross-dependencies (non-convergence)
+    ['finetune', 'localllm', 'depends'],
+    ['recovery', 'biometric', 'depends'],
+    ['firstprinciples', 'systems', 'depends'],
+    ['aiarch', 'selfhosted', 'depends'],
+  ];
+
+  // Initialize positions with some structure
+  const nodeMap = {};
+  nodes.forEach((n, i) => {
+    n.x = W/2 + (Math.random() - 0.5) * 600;
+    n.y = H/2 + (Math.random() - 0.5) * 500;
+    n.vx = 0;
+    n.vy = 0;
+    n.fx = null;
+    n.fy = null;
+    nodeMap[n.id] = n;
+  });
+
+  // Seed positions for better initial layout
+  nodeMap['onemind'].x = W/2; nodeMap['onemind'].y = 80;
+  // Human domains left side
+  nodeMap['personal'].x = 200; nodeMap['personal'].y = 220;
+  nodeMap['business'].x = 400; nodeMap['business'].y = 220;
+  nodeMap['legacy-d'].x = 300; nodeMap['legacy-d'].y = 380;
+  nodeMap['operations'].x = 200; nodeMap['operations'].y = 500;
+  // Legacy domains right side
+  nodeMap['robotics'].x = 1100; nodeMap['robotics'].y = 220;
+  nodeMap['models'].x = 1300; nodeMap['models'].y = 220;
+  nodeMap['materials'].x = 1100; nodeMap['materials'].y = 400;
+  nodeMap['coding'].x = 1300; nodeMap['coding'].y = 400;
+  nodeMap['agriculture'].x = 1200; nodeMap['agriculture'].y = 560;
+  // Convergence in the middle
+  nodeMap['conv-greenhouse'].x = 700; nodeMap['conv-greenhouse'].y = 700;
+  nodeMap['conv-fleet'].x = 750; nodeMap['conv-fleet'].y = 350;
+  nodeMap['conv-content'].x = 750; nodeMap['conv-content'].y = 500;
+  nodeMap['conv-fab'].x = 650; nodeMap['conv-fab'].y = 600;
+  nodeMap['conv-health'].x = 400; nodeMap['conv-health'].y = 600;
+
+  // Physics simulation
+  const SIM_STEPS = 300;
+  let step = 0;
+  let animFrame;
+  let zoom = 1, panX = 0, panY = 0;
+  let dragging = null, dragOffX = 0, dragOffY = 0;
+  let lastMouse = { x: 0, y: 0 };
+  let isPanning = false;
+
+  function simulate() {
+    const alpha = Math.max(0.01, 1 - step / SIM_STEPS);
+    const repulsion = 8000;
+    const attraction = 0.005;
+    const edgeLen = 120;
+    const damping = 0.85;
+    const centerPull = 0.001;
+
+    // Repulsion between all nodes
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        let dx = nodes[j].x - nodes[i].x;
+        let dy = nodes[j].y - nodes[i].y;
+        let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        let force = repulsion / (dist * dist);
+        let fx = (dx / dist) * force * alpha;
+        let fy = (dy / dist) * force * alpha;
+        nodes[i].vx -= fx;
+        nodes[i].vy -= fy;
+        nodes[j].vx += fx;
+        nodes[j].vy += fy;
+      }
+    }
+
+    // Attraction along edges
+    edges.forEach(([src, tgt, type]) => {
+      const a = nodeMap[src], b = nodeMap[tgt];
+      if (!a || !b) return;
+      let dx = b.x - a.x;
+      let dy = b.y - a.y;
+      let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      let targetLen = type === 'domain' ? 100 : 180;
+      let force = (dist - targetLen) * attraction * alpha;
+      let fx = (dx / dist) * force;
+      let fy = (dy / dist) * force;
+      a.vx += fx;
+      a.vy += fy;
+      b.vx -= fx;
+      b.vy -= fy;
+    });
+
+    // Center gravity
+    nodes.forEach(n => {
+      n.vx += (W/2 - n.x) * centerPull * alpha;
+      n.vy += (H/2 - n.y) * centerPull * alpha;
+    });
+
+    // Apply velocity
+    nodes.forEach(n => {
+      if (n.fx !== null) { n.x = n.fx; n.y = n.fy; n.vx = 0; n.vy = 0; return; }
+      n.vx *= damping;
+      n.vy *= damping;
+      n.x += n.vx;
+      n.y += n.vy;
+      // Bounds
+      n.x = Math.max(n.r + 10, Math.min(W - n.r - 10, n.x));
+      n.y = Math.max(n.r + 10, Math.min(H - n.r - 10, n.y));
+    });
+
+    step++;
+  }
+
+  function draw() {
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+
+    // Background grid
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < W; x += 40) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += 40) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    ctx.translate(panX, panY);
+    ctx.scale(zoom, zoom);
+
+    // Draw edges
+    edges.forEach(([src, tgt, type]) => {
+      const a = nodeMap[src], b = nodeMap[tgt];
+      if (!a || !b) return;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      if (type === 'domain') {
+        ctx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([]);
+      } else if (type === 'feeds') {
+        ctx.strokeStyle = 'rgba(167, 139, 250, 0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+      } else if (type === 'depends') {
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 4]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // Draw nodes
+    nodes.forEach(n => {
+      const color = COLORS[n.type];
+
+      // Glow for convergence
+      if (n.type === 'convergence') {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + 6, 0, Math.PI * 2);
+        ctx.fillStyle = color.replace(')', ', 0.1)').replace('rgb', 'rgba').replace('#', '');
+        let grad = ctx.createRadialGradient(n.x, n.y, n.r, n.x, n.y, n.r + 10);
+        grad.addColorStop(0, color + '33');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      // Node circle
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = n.type === 'root' ? 3 : (n.r > 14 ? 2 : 1.5);
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = color;
+      ctx.font = (n.r > 14 ? '10px' : '8px') + " 'IBM Plex Mono', monospace";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const lines = n.label.split('\n');
+      lines.forEach((line, i) => {
+        const yOff = (i - (lines.length - 1) / 2) * 11;
+        ctx.fillText(line, n.x, n.y + yOff);
+      });
+    });
+
+    ctx.restore();
+    if (step < SIM_STEPS) simulate();
+    animFrame = requestAnimationFrame(draw);
+  }
+
+  // Mouse interaction
+  function screenToGraph(mx, my) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = (mx - rect.left) * (W / rect.width);
+    const sy = (my - rect.top) * (H / rect.height);
+    return { x: (sx - panX) / zoom, y: (sy - panY) / zoom };
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    const p = screenToGraph(e.clientX, e.clientY);
+    // Find closest node
+    let closest = null, minDist = Infinity;
+    nodes.forEach(n => {
+      const d = Math.sqrt((n.x - p.x) ** 2 + (n.y - p.y) ** 2);
+      if (d < n.r + 5 && d < minDist) { closest = n; minDist = d; }
+    });
+    if (closest) {
+      dragging = closest;
+      dragging.fx = dragging.x;
+      dragging.fy = dragging.y;
+      canvas.style.cursor = 'grabbing';
+    } else {
+      isPanning = true;
+      lastMouse = { x: e.clientX, y: e.clientY };
+      canvas.style.cursor = 'move';
+    }
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (dragging) {
+      const p = screenToGraph(e.clientX, e.clientY);
+      dragging.fx = p.x;
+      dragging.fy = p.y;
+      dragging.x = p.x;
+      dragging.y = p.y;
+      step = Math.max(0, step - 5); // reheat
+    } else if (isPanning) {
+      const dx = e.clientX - lastMouse.x;
+      const dy = e.clientY - lastMouse.y;
+      panX += dx;
+      panY += dy;
+      lastMouse = { x: e.clientX, y: e.clientY };
+    }
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    if (dragging) { dragging.fx = null; dragging.fy = null; dragging = null; }
+    isPanning = false;
+    canvas.style.cursor = 'grab';
+  });
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const scale = e.deltaY > 0 ? 0.9 : 1.1;
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (W / rect.width);
+    const my = (e.clientY - rect.top) * (H / rect.height);
+    panX = mx - (mx - panX) * scale;
+    panY = my - (my - panY) * scale;
+    zoom *= scale;
+    zoom = Math.max(0.3, Math.min(3, zoom));
+  }, { passive: false });
+
+  // Run initial sim steps quickly then animate
+  for (let i = 0; i < 150; i++) simulate();
+  draw();
+}
+</script>
+</body>
+</html>

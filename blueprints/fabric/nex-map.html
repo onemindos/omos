@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OneMind — Operations OS</title>
+<style>
+:root{--bg:#020912;--bg2:#060f1e;--bg3:#0a1628;--panel:rgba(8,18,36,.92);--border:#1a2e4a;--border2:#2a4866;--ink:#e9f1fb;--muted:#7d93ad;--muted2:#4a6280;--live:#00ff9f;--dead:#ff3366;--warn:#ffd700;--blue:#3b82f6;--core:#00ffe5;--purple:#a855f7;--orange:#ff8c00;--pink:#f472b6;--teal:#14b8a6}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.5;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,229,.007) 2px,rgba(0,255,229,.007) 4px)}
+a{color:var(--core);text-decoration:none}a:hover{text-decoration:underline}
+
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 22px;background:rgba(2,8,18,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
+.logo{width:28px;height:28px;border-radius:7px;background:conic-gradient(from 200deg,var(--core),var(--purple),var(--blue),var(--core));box-shadow:0 0 16px rgba(0,255,229,.4);position:relative;flex-shrink:0}
+.logo::after{content:'';position:absolute;inset:5px;border-radius:3px;background:var(--bg2)}
+.brand{display:flex;align-items:center;gap:9px}
+.brand h1{font-size:13px;font-weight:900}.brand h1 span{color:var(--core)}
+.brand .sub{font-size:8.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.hpills{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.hp{font-size:8.5px;font-weight:700;padding:2px 8px;border-radius:16px;border:1px solid currentColor;letter-spacing:.8px;text-transform:uppercase;cursor:default}
+.hp-g{color:var(--live);background:rgba(0,255,159,.08)}.hp-c{color:var(--core);background:rgba(0,255,229,.08)}.hp-w{color:var(--warn);background:rgba(255,215,0,.08)}.hp-p{color:var(--purple);background:rgba(168,85,247,.08)}
+
+nav{display:flex;gap:2px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:3px;margin:16px 22px 0;flex-wrap:wrap}
+.tab{flex:1;min-width:75px;padding:7px 8px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:.18s;text-align:center;white-space:nowrap}
+.tab:hover{color:var(--ink);background:rgba(255,255,255,.04)}.tab.active{background:linear-gradient(135deg,var(--core),#00b8d4);color:#000}
+
+main{padding:20px 22px;max-width:1640px;margin:0 auto}
+.view{display:none}.view.active{display:block;animation:fi .25s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.sh{margin-bottom:18px}
+.sh .ey{font-size:9.5px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--core);margin-bottom:4px}
+.sh h2{font-size:22px;font-weight:900}.sh h2 em{font-style:normal;color:var(--core)}
+.sh p{color:var(--muted);font-size:12px;margin-top:4px;max-width:780px}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:1100px){.g5{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:750px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:15px;position:relative;overflow:hidden;transition:.18s}
+.card:hover{border-color:var(--border2);transform:translateY(-1px)}
+
+/* STATUS DOTS */
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dl{background:var(--live);box-shadow:0 0 5px var(--live);animation:p 2s infinite}
+.dw{background:var(--warn);box-shadow:0 0 5px var(--warn);animation:p 2s infinite}
+.dd{background:var(--dead)}
+.db{background:var(--blue)}
+.dm{background:var(--muted2)}
+.dpu{background:var(--purple);box-shadow:0 0 5px var(--purple);animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.4}}
+
+.badge{display:inline-block;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:8px;text-transform:uppercase;letter-spacing:.8px;font-family:'JetBrains Mono',monospace;border:1px solid currentColor}
+.bl{color:var(--live);background:rgba(0,255,159,.08)}.bd{color:var(--dead);background:rgba(255,51,102,.08)}.bb{color:var(--blue);background:rgba(59,130,246,.08)}.bw{color:var(--warn);background:rgba(255,215,0,.08)}.bpu{color:var(--purple);background:rgba(168,85,247,.08)}.bm{color:var(--muted2);background:rgba(74,98,128,.08)}
+
+/* SERVICE CARDS */
+.svc{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px;transition:.15s}
+.svc:hover{border-color:var(--border2);background:var(--bg2)}
+.svc-head{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.svc-name{font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;flex:1}
+.svc-desc{font-size:11px;color:var(--muted);line-height:1.55;margin-bottom:7px}
+.tags{display:flex;flex-wrap:wrap;gap:3px}
+.tag{font-size:8.5px;font-family:'JetBrains Mono',monospace;padding:2px 5px;border-radius:5px}
+.tpub{background:rgba(0,255,229,.1);color:var(--core);border:1px solid rgba(0,255,229,.2)}
+.tsub{background:rgba(59,130,246,.1);color:#93bbfd;border:1px solid rgba(59,130,246,.2)}
+.tport{background:rgba(168,85,247,.1);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
+.tkv{background:rgba(255,140,0,.1);color:var(--orange);border:1px solid rgba(255,140,0,.2)}
+.svc-stat{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted2);margin-top:5px}
+
+/* LIVE URL CARDS */
+.url-card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:15px 16px;transition:.15s;display:flex;flex-direction:column;gap:6px}
+.url-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.url-port{font-size:22px;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:-1px}
+.url-name{font-size:12px;font-weight:700;margin-bottom:2px}
+.url-desc{font-size:10.5px;color:var(--muted);line-height:1.5;flex:1}
+.url-link{font-size:10px;font-family:'JetBrains Mono',monospace;padding:5px 10px;border-radius:6px;border:1px solid currentColor;text-align:center;font-weight:600;transition:.15s;display:block;margin-top:4px}
+.url-link:hover{background:rgba(255,255,255,.06);text-decoration:none}
+
+/* PIPELINE */
+.pipeline{display:flex;align-items:stretch;gap:0;margin:14px 0;flex-wrap:wrap}
+.ps{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;flex:1;min-width:90px}
+.ps-num{font-size:8.5px;font-weight:700;color:var(--core);letter-spacing:1px;margin-bottom:3px}
+.ps-name{font-size:11px;font-weight:700}
+.ps-sub{font-size:9px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace}
+.pa{padding:0 5px;font-size:14px;color:var(--muted2);flex-shrink:0;display:flex;align-items:center}
+
+/* ENTITY TABLE */
+.etable{width:100%;border-collapse:collapse;font-size:11.5px;margin:10px 0}
+.etable th{text-align:left;padding:8px 11px;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.etable td{padding:8px 11px;border-bottom:1px solid rgba(26,46,74,.4);vertical-align:middle}
+.etable tr:last-child td{border-bottom:none}.etable tr:hover td{background:rgba(255,255,255,.018)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+
+/* STREAMS */
+.stream-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin:12px 0}
+.sc{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:currentColor;opacity:.55}
+.sc-name{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:3px}
+.sc-role{font-size:11px;font-weight:600;margin-bottom:5px}
+.sc-detail{font-size:10.5px;color:var(--muted);line-height:1.6}
+.sc-subj{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--core);margin-top:5px;opacity:.85}
+.sc-msgs{font-size:9.5px;font-family:'JetBrains Mono',monospace;margin-top:5px;padding-top:5px;border-top:1px solid var(--border)}
+
+/* LAYERS */
+.layers{display:flex;flex-direction:column;gap:7px;margin:14px 0}
+.layer{border:1px solid var(--border);border-radius:11px;padding:13px 16px;display:flex;align-items:center;gap:14px}
+.layer::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:11px 0 0 11px;background:currentColor;opacity:.4;position:relative;width:4px;flex-shrink:0;align-self:stretch;border-radius:2px}
+.ln{font-size:11px;font-weight:700;flex-shrink:0;width:130px}
+.lsvcs{display:flex;flex-wrap:wrap;gap:4px;flex:1}
+.ls{font-size:9.5px;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:5px;border:1px solid var(--border);color:var(--muted)}
+.ls-live{border-color:rgba(0,255,159,.3);color:var(--live);background:rgba(0,255,159,.06)}
+.ls-def{border-color:rgba(59,130,246,.3);color:#93bbfd;background:rgba(59,130,246,.06)}
+.ls-unity{border-color:rgba(168,85,247,.4);color:#c084fc;background:rgba(168,85,247,.08)}
+.ls-warn{border-color:rgba(255,215,0,.3);color:var(--warn);background:rgba(255,215,0,.06)}
+.ldesc{font-size:10px;color:var(--muted);flex-shrink:0;width:190px;text-align:right}
+
+/* SECTION TITLES */
+.sec-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);padding-bottom:7px;border-bottom:1px solid var(--border);margin-bottom:11px;margin-top:20px;display:flex;align-items:center;gap:7px}
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:9px;margin-bottom:4px}
+
+/* CALLOUT */
+.callout{background:rgba(0,255,229,.04);border:1px solid rgba(0,255,229,.18);border-radius:11px;padding:14px 18px;margin-bottom:15px}
+.callout.pu{background:rgba(168,85,247,.04);border-color:rgba(168,85,247,.22)}
+.callout.rd{background:rgba(255,51,102,.04);border-color:rgba(255,51,102,.18)}
+.callout.gn{background:rgba(0,255,159,.04);border-color:rgba(0,255,159,.18)}
+.callout h3{font-size:12.5px;font-weight:700;margin-bottom:5px}.callout p{font-size:11.5px;color:var(--muted);line-height:1.6}
+
+/* BUILD ITEMS */
+.phase{margin-bottom:20px}
+.pt{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding:7px 12px;border-radius:6px;border:1px solid;margin-bottom:10px}
+.pt0{color:var(--dead);border-color:rgba(255,51,102,.3);background:rgba(255,51,102,.05)}
+.pt1{color:var(--warn);border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.05)}
+.pt2{color:var(--blue);border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.05)}
+.pt3{color:var(--muted);border-color:var(--border);background:var(--bg3)}
+.bi{display:flex;gap:11px;padding:11px 13px;background:var(--panel);border:1px solid var(--border);border-radius:9px;margin-bottom:7px;align-items:flex-start}
+.bi-ico{font-size:17px;flex-shrink:0;padding-top:1px}
+.bi h4{font-size:12px;font-weight:700;margin-bottom:3px}
+.bi p{font-size:10.5px;color:var(--muted);line-height:1.55}
+.bi-tag{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:8px;border:1px solid currentColor;flex-shrink:0;text-transform:uppercase;letter-spacing:.8px;margin-top:2px;white-space:nowrap}
+
+hr{border:none;border-top:1px solid var(--border);margin:18px 0}
+footer{text-align:center;padding:22px;color:var(--muted2);font-size:10.5px;border-top:1px solid var(--border);margin-top:24px}
+footer span{color:var(--core)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo"></div><div><h1>ONE<span>MIND</span></h1><div class="sub">Operations OS — Architecture Map</div></div></div>
+  <div class="hpills">
+    <span class="hp hp-g">● 13 NEX Running</span>
+    <span class="hp hp-c">5,938 Entities in ORP</span>
+    <span class="hp hp-w">TAK 5.7 Live</span>
+    <span class="hp hp-p">Legacy Online · 3s RTT</span>
+    <span class="hp" style="color:var(--pink);border-color:var(--pink)">LM Studio :1234</span>
+  </div>
+</header>
+<nav>
+  <button class="tab active" onclick="S('doctrine',this)">🎯 Doctrine</button>
+  <button class="tab" onclick="S('consoles',this)">🖥 Live Consoles</button>
+  <button class="tab" onclick="S('entities',this)">🌐 Entity Pipeline</button>
+  <button class="tab" onclick="S('workloads',this)">⚙️ Workloads</button>
+  <button class="tab" onclick="S('streams',this)">📦 Streams</button>
+  <button class="tab" onclick="S('build',this)">🚀 Build Order</button>
+</nav>
+<main>
+<!-- DOCTRINE -->
+<div id="view-doctrine" class="view active">
+  <div class="sh"><div class="ey">The Mission</div><h2>OneMind is a <em>Real-Life Operations OS</em></h2>
+  <p>Every asset in the world is an entity on the bus. Every entity shows on the TAK map. Legacy watches all streams and acts on your orders. This is C4ISR infrastructure — not an app.</p></div>
+
+  <div class="callout gn">
+    <h3>🔮 om-unity (ORP) has 5,938 entities RIGHT NOW — ships, aircraft, and more</h3>
+    <p>om-unity is a 45MB Rust binary (Open Reality Protocol) with 39 protocol adapters, a live entity graph with 5,938 active entities (AIS ships live, ADS-B ready, MAVLink adapter built-in), ORP-QL query language, a unity-tak TAK wire codec, a CoT ingestion engine, and a built-in COP frontend. It's been running for 37+ hours. Its API is live at localhost:9090. The path to those 5,938 entities appearing on your ATAK map is: wire om-unity's NATS adapter → publish to tel.* subjects → fusion spine picks up → CoT → ATAK. No new code — just configuration.</p>
+  </div>
+
+  <div class="callout pu">
+    <h3>⚡ One sentence: Everything is an entity. Every entity has state on the bus. TAK shows the state. Legacy acts on the state.</h3>
+    <p>The om-overwatch pattern (sensor → fusion spine → CoT bridge → ATAK) is the universal template. Every new asset type follows the same path. The pipeline already works for drones and hostile air. The work is extending it to robots, servers, sensors, and AI agents — then wiring those assets in.</p>
+  </div>
+
+  <div class="sh" style="margin-top:22px"><div class="ey">Architecture</div><h2>The <em>4 Layers</em> of the Ops OS</h2></div>
+  <div class="layers">
+    <div class="layer" style="color:var(--core)">
+      <div style="background:var(--core);width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;opacity:.5"></div>
+      <div class="ln" style="color:var(--core)">🔌 1 — INGEST</div>
+      <div class="lsvcs">
+        <span class="ls ls-live">om-mavlink → tel.drone.*</span>
+        <span class="ls ls-def">om-ros2 → tel.robot.*</span>
+        <span class="ls ls-def">om-homeassistant → tel.home.*</span>
+        <span class="ls ls-def">omd → tel.node.* (all machines)</span>
+        <span class="ls ls-live">apex-sentinel → det.air.*</span>
+        <span class="ls ls-live">takserver-bridge → tak.cot.*</span>
+        <span class="ls ls-unity">om-unity (39 protocols) → 5,938 entities</span>
+      </div>
+      <div class="ldesc">Every protocol, every asset → NATS subjects</div>
+    </div>
+    <div class="layer" style="color:var(--orange)">
+      <div style="background:var(--orange);width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;opacity:.5"></div>
+      <div class="ln" style="color:var(--orange)">🧲 2 — FUSION</div>
+      <div class="lsvcs">
+        <span class="ls ls-live">om-overwatch-state (LIVE — air only today)</span>
+        <span class="ls ls-def">→ generalize to ALL entity types</span>
+        <span class="ls ls-unity">om-unity entity graph (ORP-QL, 5,938 entities)</span>
+        <span class="ls ls-live">KV_OVERWATCH_STATE (4,824 keys)</span>
+      </div>
+      <div class="ldesc">Raw telemetry → fused entity state, one record per asset</div>
+    </div>
+    <div class="layer" style="color:var(--live)">
+      <div style="background:var(--live);width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;opacity:.5"></div>
+      <div class="ln" style="color:var(--live)">🗺 3 — DISPLAY</div>
+      <div class="lsvcs">
+        <span class="ls ls-live">om-overwatch-tak (LIVE — air only today)</span>
+        <span class="ls ls-def">→ generalize to ent.*.*.state → all CoT types</span>
+        <span class="ls ls-live">TAK Server 5.7 :8089</span>
+        <span class="ls ls-live">iTAK / ATAK (3 devices)</span>
+        <span class="ls ls-live">om-unity COP :9090</span>
+        <span class="ls ls-live">om-overwatch-video → MediaMTX</span>
+      </div>
+      <div class="ldesc">TAK = primary ops surface. Every entity on your map.</div>
+    </div>
+    <div class="layer" style="color:var(--purple)">
+      <div style="background:var(--purple);width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;opacity:.5"></div>
+      <div class="ln" style="color:var(--purple)">🧠 4 — INTELLIGENCE</div>
+      <div class="lsvcs">
+        <span class="ls ls-live">Legacy / Hermes (Haiku 4.5) — 3s RTT</span>
+        <span class="ls ls-live">Watches ALL streams simultaneously</span>
+        <span class="ls ls-live">omos-voice — PTT → Legacy → action</span>
+        <span class="ls ls-def">TAK Missions → MISSION stream → Legacy tasks</span>
+        <span class="ls ls-live">LM Studio :1234 (local inference fallback)</span>
+      </div>
+      <div class="ldesc">Legacy sees everything, acts via cmd.* on the bus</div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="g3" style="margin-top:14px">
+    <div class="card" style="border-left:3px solid var(--live)">
+      <div style="font-size:20px;margin-bottom:7px">📱</div>
+      <h3 style="font-size:12px;font-weight:700;margin-bottom:5px;color:var(--live)">Primary — TAK Map</h3>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6">Phone in chest rig. Every asset on the map — drones, robots, servers, Pis, ATAK team. Tap any entity → details + commands. TAK Missions = task assignments. Voice PTT → Legacy acts.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--core)">
+      <div style="font-size:20px;margin-bottom:7px">⚡</div>
+      <h3 style="font-size:12px;font-weight:700;margin-bottom:5px;color:var(--core)">Secondary — atoc Flutter</h3>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6">Status feeds. Stream health. Legacy chat panel. NEX workload status. The awareness layer — not the ops surface. Glanceable. Background. NOT wired to NATS yet — Phase 2 work.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--purple)">
+      <div style="font-size:20px;margin-bottom:7px">🧠</div>
+      <h3 style="font-size:12px;font-weight:700;margin-bottom:5px;color:var(--purple)">Background — Legacy AI</h3>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6">Subscribes to ALL streams. Watches for patterns, threats, mission status. Dispatches drones. Manages missions. Answers voice in 3s. Should appear as an entity on your TAK map.</p>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE CONSOLES -->
+<div id="view-consoles" class="view">
+  <div class="sh"><div class="ey">Running Now</div><h2>Every <em>Live Web Console</em> on Your Machine</h2>
+  <p>You have more running than you know. Every one of these is accessible in your browser right now. Open them.</p></div>
+
+  <div class="callout gn" style="margin-bottom:16px">
+    <h3>🖥 11 web interfaces running on zeus-mac right now</h3>
+    <p>These are all live, all serving. Most you've never opened. Click any link below.</p>
+  </div>
+
+  <div class="g4">
+    <div class="url-card" style="border-left:3px solid var(--purple)">
+      <div class="url-port" style="color:var(--purple)">:9090</div>
+      <div class="url-name">om-unity Console (ORP)</div>
+      <div class="url-desc">Open Reality Protocol — 5,938 entities in graph. Ships (AIS), aircraft (ADS-B ready), your sovereign Lattice OS equivalent. 39 protocol adapters. ORP-QL query. Built-in COP map. Ed25519 audit log.</div>
+      <a href="http://localhost:9090" target="_blank" class="url-link" style="color:var(--purple)">Open localhost:9090 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--live)">
+      <div class="url-port" style="color:var(--live)">:3000</div>
+      <div class="url-name">Grafana (omos-observ)</div>
+      <div class="url-desc">ClickHouse-native observability. 2 dashboards, 8 monitors seeded. log.> and metric.> streams. System health, NATS metrics, workload performance.</div>
+      <a href="http://localhost:3000" target="_blank" class="url-link" style="color:var(--live)">Open localhost:3000 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--live)">
+      <div class="url-port" style="color:var(--live)">:3001</div>
+      <div class="url-name">Uptime Kuma</div>
+      <div class="url-desc">Uptime monitoring for all your services. Status page. Alert when something goes down. Part of omos-observ stack.</div>
+      <a href="http://localhost:3001" target="_blank" class="url-link" style="color:var(--live)">Open localhost:3001 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--core)">
+      <div class="url-port" style="color:var(--core)">:3300</div>
+      <div class="url-name">NATS Agent Console</div>
+      <div class="url-desc">Agent management console (bun process). Inspect agents, view heartbeats, manage agent registry on the bus.</div>
+      <a href="http://localhost:3300" target="_blank" class="url-link" style="color:var(--core)">Open localhost:3300 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--core)">
+      <div class="url-port" style="color:var(--core)">:3301</div>
+      <div class="url-name">om-nex-ui (NEX Dashboard)</div>
+      <div class="url-desc">Live NEX workload topology dashboard. Subscribes to $NEX.> events. Shows running workloads, NEX node status, deploy events.</div>
+      <a href="http://localhost:3301" target="_blank" class="url-link" style="color:var(--core)">Open localhost:3301 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--blue)">
+      <div class="url-port" style="color:var(--blue)">:5000</div>
+      <div class="url-name">heynats</div>
+      <div class="url-desc">NATS web explorer. Browse subjects, subscribe to streams, publish test messages. Live NATS traffic viewer.</div>
+      <a href="http://localhost:5000" target="_blank" class="url-link" style="color:var(--blue)">Open localhost:5000 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--blue)">
+      <div class="url-port" style="color:var(--blue)">:5173</div>
+      <div class="url-name">NATS Dashboard</div>
+      <div class="url-desc">NATS UI Dashboard — connection list, stream stats, JetStream consumers, subject activity. Visual NATS monitoring.</div>
+      <a href="http://localhost:5173" target="_blank" class="url-link" style="color:var(--blue)">Open localhost:5173 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--warn)">
+      <div class="url-port" style="color:var(--warn)">:8088</div>
+      <div class="url-name">agentweb</div>
+      <div class="url-desc">Agent web console (agentweb process). Inspect and manage agents connected to the bus.</div>
+      <a href="http://localhost:8088" target="_blank" class="url-link" style="color:var(--warn)">Open localhost:8088 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--orange)">
+      <div class="url-port" style="color:var(--orange)">:8091</div>
+      <div class="url-name">om-overwatch-api</div>
+      <div class="url-desc">Entity CRUD REST API. Create/edit/delete entities on the map. Pinned entities (no-fly zones, waypoints). HTTP endpoint — use curl or Postman.</div>
+      <a href="http://localhost:8091" target="_blank" class="url-link" style="color:var(--orange)">Open localhost:8091 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--purple)">
+      <div class="url-port" style="color:var(--purple)">:9120</div>
+      <div class="url-name">Hermes / Legacy Dashboard</div>
+      <div class="url-desc">Legacy AI gateway dashboard. Active sessions, agent roster, Bedrock (Haiku 4.5) metrics, skill activations, bus connections.</div>
+      <a href="http://localhost:9120" target="_blank" class="url-link" style="color:var(--purple)">Open localhost:9120 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--pink)">
+      <div class="url-port" style="color:var(--pink)">:1234</div>
+      <div class="url-name">LM Studio</div>
+      <div class="url-desc">Local inference engine — fallback for Legacy when Bedrock is unavailable. OpenAI-compatible API. Serves local GGUF models.</div>
+      <a href="http://localhost:1234" target="_blank" class="url-link" style="color:var(--pink)">Open localhost:1234 →</a>
+    </div>
+    <div class="url-card" style="border-left:3px solid var(--muted2)">
+      <div class="url-port" style="color:var(--muted2)">:8222</div>
+      <div class="url-name">NATS Monitoring API</div>
+      <div class="url-desc">Raw NATS monitoring JSON. /varz /connz /subsz /jsz /healthz. Auth-free (no_auth_user=nats on monitoring port). Useful for scripting.</div>
+      <a href="http://localhost:8222" target="_blank" class="url-link" style="color:var(--muted2)">Open localhost:8222 →</a>
+    </div>
+  </div>
+
+  <hr>
+  <div class="sh"><div class="ey">Media & TAK</div><h2>Video + TAK Ports</h2></div>
+  <div class="g4">
+    <div class="card">
+      <div style="font-size:11px;font-weight:700;color:var(--warn);margin-bottom:5px">📹 MediaMTX</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8">:8554 RTSP<br>:8888 WebRTC<br>:8889 HLS<br>:8892 RTMP<br>:9997 Control API</div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:5px">🗺 TAK Server 5.7</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8">:8089 TLS (ATAK/iTAK)<br>:8444 REST API<br>:8446 Federation<br>:8450 Data Packages<br>:8600 WebTAK</div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:5px">🎙 Murmur (Voice)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8">:64738 Mumble server<br>(Docker, primary)<br><br>⚠️ murmur-test :64739<br>⚠️ murmur-stable :64740<br><span style="color:var(--dead)">→ delete test murmurs</span></div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;font-weight:700;color:var(--core);margin-bottom:5px">🗃 Data Stores</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8">:8123 ClickHouse HTTP<br>:9001 ClickHouse native<br>:4222 NATS client<br>:8080 NATS WebSocket<br>:1883 NATS MQTT<br>:7777 NATS Surveyor</div>
+    </div>
+  </div>
+</div>
+<!-- ENTITY PIPELINE -->
+<div id="view-entities" class="view">
+  <div class="sh"><div class="ey">Universal Pattern</div><h2>Protocol → NATS → Entity → <em>TAK Map</em></h2>
+  <p>The om-overwatch kill chain proved the pattern works. The work is extending it to every asset type. Same 5 steps, every time.</p></div>
+
+  <div class="callout rd">
+    <h3>⚠️ Current Limitation — om-overwatch only handles air tracks</h3>
+    <p>om-overwatch-state subscribes det.air.* and tel.drone.* only → publishes ent.<strong>air</strong>.{id}.state only. om-overwatch-tak converts ent.<strong>air</strong>.{id}.state → CoT → TAK. Everything else (robots, servers, sensors, agents) is invisible on your map. Generalizing these two services is the single highest-leverage change you can make.</p>
+  </div>
+
+  <div class="pipeline">
+    <div class="ps" style="border-color:var(--core)"><div class="ps-num" style="color:var(--core)">STEP 1</div><div class="ps-name">Protocol / Source</div><div class="ps-sub">MAVLink · ROS2 · SSH<br>MQTT · HTTP · CoT · AIS</div></div>
+    <div class="pa">→</div>
+    <div class="ps"><div class="ps-num">STEP 2</div><div class="ps-name">Ingest Bridge</div><div class="ps-sub">om-mavlink · om-ros2<br>omd · om-homeassistant</div></div>
+    <div class="pa">→</div>
+    <div class="ps" style="border-color:rgba(255,140,0,.4)"><div class="ps-num" style="color:var(--orange)">STEP 3</div><div class="ps-name">NATS Subject</div><div class="ps-sub">tel.{type}.{id}.*<br>det.{domain}.{id}</div></div>
+    <div class="pa">→</div>
+    <div class="ps" style="border-color:rgba(255,140,0,.6)"><div class="ps-num" style="color:var(--orange)">STEP 4</div><div class="ps-name">Fusion Spine</div><div class="ps-sub">om-state fuses →<br>ent.{type}.{id}.state</div></div>
+    <div class="pa">→</div>
+    <div class="ps" style="border-color:rgba(0,255,159,.4)"><div class="ps-num" style="color:var(--live)">STEP 5</div><div class="ps-name">TAK Bridge</div><div class="ps-sub">om-tak → CoT →<br>dot on ATAK map</div></div>
+  </div>
+
+  <hr>
+  <table class="etable">
+    <thead><tr><th>Entity Type</th><th>Source / Bridge</th><th>NATS Subject</th><th>CoT Type</th><th>Icon on Map</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Hostile Air Track</strong></td><td class="mono">apex-sentinel (RF/acoustic)</td><td class="mono" style="color:var(--core)">det.air.contact.{id}</td><td class="mono">a-h-A-M-F</td><td style="font-size:10px;color:var(--muted)">Red hostile aircraft</td><td><span class="badge bl">✅ LIVE</span></td></tr>
+      <tr><td><strong>Friendly UAV / Drone</strong></td><td class="mono">om-mavlink (:14550 UDP)</td><td class="mono" style="color:var(--core)">tel.drone.{id}.mavlink</td><td class="mono">a-f-A-M-F</td><td style="font-size:10px;color:var(--muted)">Blue friendly drone</td><td><span class="badge bl">✅ LIVE</span></td></tr>
+      <tr><td><strong>ATAK/iTAK Human</strong></td><td class="mono">takserver-bridge (CoT)</td><td class="mono" style="color:var(--core)">tak.cot.out</td><td class="mono">a-f-G-U-C</td><td style="font-size:10px;color:var(--muted)">Blue callsign (you + team)</td><td><span class="badge bl">✅ LIVE</span></td></tr>
+      <tr><td><strong>AIS Ships (5,938!)</strong></td><td class="mono">om-unity AIS adapter</td><td class="mono" style="color:#c084fc">tel.ais.{mmsi}.* (configure)</td><td class="mono">a-n-S-X-M</td><td style="font-size:10px;color:var(--muted)">Vessel tracks, marine traffic</td><td><span class="badge bpu">⬡ ORP HAS 5,938 — WIRE IT</span></td></tr>
+      <tr><td><strong>Ground Robot</strong></td><td class="mono">om-ros2 (Unitree Go2/G1)</td><td class="mono" style="color:#93bbfd">tel.robot.{id}.odom</td><td class="mono">a-f-G-U-R</td><td style="font-size:10px;color:var(--muted)">Friendly ground robot</td><td><span class="badge bb">⬡ BRIDGE NOT RUNNING</span></td></tr>
+      <tr><td><strong>Server / Mac / Cloud VM</strong></td><td class="mono">omd (host health daemon)</td><td class="mono" style="color:#93bbfd">tel.node.{hostname}.*</td><td class="mono">a-f-G-U-i-I</td><td style="font-size:10px;color:var(--muted)">Infrastructure node icon</td><td><span class="badge bb">⬡ omd NOT PUBLISHING</span></td></tr>
+      <tr><td><strong>Raspberry Pi Edge Node</strong></td><td class="mono">omd on Pi (ARM64)</td><td class="mono" style="color:#93bbfd">tel.node.pi-{id}.*</td><td class="mono">a-f-G-U-i-I</td><td style="font-size:10px;color:var(--muted)">Edge sensor node</td><td><span class="badge bb">⬡ PI NODES NOT DEPLOYED</span></td></tr>
+      <tr><td><strong>Legacy AI Agent</strong></td><td class="mono">agents.hb.hermes.zeus.*</td><td class="mono" style="color:#93bbfd">tel.agent.hermes.* (add)</td><td class="mono">a-f-G-U-i-ai</td><td style="font-size:10px;color:var(--muted)">AI brain dot — tap to chat</td><td><span class="badge bb">⬡ NOT ON MAP YET</span></td></tr>
+      <tr><td><strong>HA Sensor (185+)</strong></td><td class="mono">om-homeassistant</td><td class="mono" style="color:#93bbfd">tel.home.{entity_id}.*</td><td class="mono">b-m-p-s</td><td style="font-size:10px;color:var(--muted)">Sensor point with state</td><td><span class="badge bb">⬡ BRIDGE NOT DEPLOYED</span></td></tr>
+      <tr><td><strong>ADS-B Aircraft</strong></td><td class="mono">om-unity adsb.rs adapter</td><td class="mono" style="color:#c084fc">via om-unity → wire to bus</td><td class="mono">a-n-A-C-F</td><td style="font-size:10px;color:var(--muted)">Real commercial air traffic</td><td><span class="badge bpu">⬡ ORP ADAPTER BUILT — WIRE IT</span></td></tr>
+      <tr><td><strong>GTFS Transit (MTA)</strong></td><td class="mono">om-unity gtfs.rs adapter</td><td class="mono" style="color:#c084fc">via om-unity → wire to bus</td><td class="mono">a-n-G-E-V</td><td style="font-size:10px;color:var(--muted)">MTA buses/trains live</td><td><span class="badge bpu">⬡ ORP ADAPTER BUILT — WIRE IT</span></td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+  <div class="g2">
+    <div class="callout">
+      <h3>🎯 TAK Missions = Your Task Management</h3>
+      <p>TAK Server 5.7 has a native Missions API. A mission is a shared map layer — every ATAK device sees the same entities, assignments, and packages in real time. Wire om-task to be a TAK mission adapter: Legacy creates missions → they appear on all ATAK devices immediately. Replace custom task UI with TAK-native mission management. The MISSION stream records the lifecycle.</p>
+    </div>
+    <div class="callout pu">
+      <h3>🔌 Custom ATAK Plugin — OneMind Inside ATAK</h3>
+      <p>A plugin that adds to ATAK: Legacy chat button in toolbar, NEX workload health sidebar, custom entity icons (AI agents, servers, robots), mission creation that publishes to NATS cmd.mission.*, stream health overlay, voice PTT → Legacy. This is what makes ATAK feel like a OneMind terminal rather than just a mapping app. Java/Kotlin for Android ATAK, Swift for iTAK.</p>
+    </div>
+  </div>
+</div>
+<!-- WORKLOADS -->
+<div id="view-workloads" class="view">
+  <div class="sh"><div class="ey">NEX · 25 Defined · 13 Running</div><h2>Workloads — <em>By Function</em></h2><p>Re-read through the ops OS lens. Proposed renames shown in grey. Each section is one layer of the machine.</p></div>
+
+  <div class="sec-title"><span>🔌</span> INGEST — Raw protocol → NATS subjects</div>
+  <div class="sec-grid">
+    <div class="svc" style="border-left:3px solid var(--core)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-overwatch-relay <span style="font-weight:400;color:var(--muted2)">→ om-mavlink</span></div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">MAVLink UDP :14550 → tel.drone.{id}.mavlink. Auto-IDs drones by MAVLink sysid. /metrics :9091.</div>
+      <div class="tags"><span class="tag tport">UDP :14550</span><span class="tag tpub">tel.drone.{id}.*</span></div>
+      <div class="svc-stat">pub 60k msgs</div>
+    </div>
+    <div class="svc" style="border-left:3px solid #93bbfd">
+      <div class="svc-head"><div class="dot db"></div><div class="svc-name">om-bridge-ros2 <span style="font-weight:400;color:var(--muted2)">→ om-ros2</span></div><span class="badge bb">NOT RUNNING</span></div>
+      <div class="svc-desc">ROS2 DDS → tel.robot.{name}.>. Needed for Unitree Go2/G1. Binary not built. TEL stream waiting for robot data.</div>
+      <div class="tags"><span class="tag tpub">tel.robot.{name}.&gt;</span><span class="tag tsub">cmd.robot.{name}.&gt;</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid #93bbfd">
+      <div class="svc-head"><div class="dot db"></div><div class="svc-name">om-bridge-homeassistant <span style="font-weight:400;color:var(--muted2)">→ om-ha</span></div><span class="badge bb">NOT RUNNING</span></div>
+      <div class="svc-desc">185+ HA entities (sensors, locks, cameras) → tel.home.*/evt.home.*. Actuation via cmd.home.*. Nexfile ready.</div>
+      <div class="tags"><span class="tag tport">HA :8123</span><span class="tag tpub">tel.home.*</span><span class="tag tpub">evt.home.*</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--warn)">
+      <div class="svc-head"><div class="dot dw"></div><div class="svc-name">apex-sentinel</div><span class="badge bw">TSX — NOT NEX</span></div>
+      <div class="svc-desc">RF/acoustic drone detection. Runs as Node/tsx process. Should become NEX native binary. Publishes detection events.</div>
+      <div class="tags"><span class="tag tpub">det.air.contact.{id}</span></div>
+      <div class="svc-stat">pub 8k · pure emitter</div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--purple)">
+      <div class="svc-head"><div class="dot dpu"></div><div class="svc-name">om-unity (ORP) — Ingest Role</div><span class="badge bpu">LIVE · :9090</span></div>
+      <div class="svc-desc">39 protocol adapters. AIS connector live → 5,938 ship entities. ADS-B, MAVLink, GTFS, CoT adapters built-in. Configure NATS adapter to push entities to bus.</div>
+      <div class="tags"><span class="tag tport">API :9090</span><span class="tag tpub">Entity graph (5,938)</span><span class="tag tsub">39 protocols</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--live)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">takserver-nats-bridge</div><span class="badge bl">LIVE (Docker)</span></div>
+      <div class="svc-desc">TAK Server Java plugin. Exposes all CoT bidirectionally on NATS. The ATAK↔bus link. All 3 devices (2 iTAK, 1 ATAK) flowing.</div>
+      <div class="tags"><span class="tag tsub">tak.cot.inject</span><span class="tag tpub">tak.cot.out</span></div>
+      <div class="svc-stat">pub 61k · recv 60k</div>
+    </div>
+  </div>
+
+  <div class="sec-title"><span>🧲</span> FUSION — NATS subjects → entity state</div>
+  <div class="sec-grid">
+    <div class="svc" style="border-left:3px solid var(--orange)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-overwatch-state <span style="font-weight:400;color:var(--muted2)">→ generalize to om-state</span></div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">Fusion spine. Fuses every detection + telemetry into one entity record per tracked object. Writes KV_OVERWATCH_STATE. <strong style="color:var(--warn)">Currently air-only</strong> — needs entity ontology extended to ALL types (robots, servers, agents).</div>
+      <div class="tags"><span class="tag tsub">det.air.*</span><span class="tag tsub">tel.drone.*</span><span class="tag tsub">det.cot.*</span><span class="tag tpub">ent.air.{id}.state</span><span class="tag tkv">KV_OVERWATCH_STATE</span></div>
+      <div class="svc-stat">pub 31.2M · recv 63.0M — busiest node on bus</div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--purple)">
+      <div class="svc-head"><div class="dot dpu"></div><div class="svc-name">om-unity (ORP) — Fusion Role</div><span class="badge bpu">LIVE · 5,938 entities</span></div>
+      <div class="svc-desc">Live entity graph. DuckDB + RocksDB. ORP-QL queryable. Ed25519 audit trail. Runs 37+ hrs. API live at :9090/api/v1/entities.</div>
+      <div class="tags"><span class="tag tport">:9090/api/v1</span><span class="tag tpub">5,938 entities in graph</span></div>
+    </div>
+  </div>
+
+  <div class="sec-title"><span>🗺</span> DISPLAY — Entity state → TAK map + video</div>
+  <div class="sec-grid">
+    <div class="svc" style="border-left:3px solid var(--live)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-overwatch-tak <span style="font-weight:400;color:var(--muted2)">→ generalize to om-tak</span></div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">CoT bridge. ent.air.*.state → CoT XML → tak.cot.inject → TAK → ATAK. <strong style="color:var(--warn)">Currently air-only</strong>. Must extend to ent.*.*.state wildcard + all CoT type mappings for robots, servers, agents.</div>
+      <div class="tags"><span class="tag tsub">ent.air.*.state</span><span class="tag tsub">tak.cot.out</span><span class="tag tpub">tak.cot.inject</span></div>
+      <div class="svc-stat">pub 57k · recv 110k</div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--live)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-overwatch-video <span style="font-weight:400;color:var(--muted2)">→ om-video</span></div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">Per-entity video bridge. vid.request.{id} → ffmpeg → MediaMTX. WebRTC/HLS/RTSP URLs on bus. Any entity can stream video if it has a camera.</div>
+      <div class="tags"><span class="tag tsub">vid.request.{id}</span><span class="tag tpub">vid.stream.{id}</span><span class="tag tkv">KV_OVERWATCH_VIDEO</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--purple)">
+      <div class="svc-head"><div class="dot dpu"></div><div class="svc-name">om-unity Console</div><span class="badge bpu">LIVE · :9090</span></div>
+      <div class="svc-desc">Built-in COP frontend. 4 tile layers, entity graph visualization, timeline scrubber, ORP-QL query interface. Secondary COP to ATAK.</div>
+      <div class="tags"><span class="tag tport">:9090 (browser)</span></div>
+    </div>
+  </div>
+
+  <div class="sec-title"><span>⚡</span> EFFECTORS — Commands → actions in the world</div>
+  <div class="sec-grid">
+    <div class="svc" style="border-left:3px solid var(--dead)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-overwatch-interceptor</div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">Kill chain effector. int.command.{id} → PN guidance → intercept flight sim → results to COP. ASSIGN_TARGET / START_INTERCEPT / ABORT.</div>
+      <div class="tags"><span class="tag tsub">ent.air.*.state</span><span class="tag tsub">int.command.*</span><span class="tag tpub">int.phase/target.{id}</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--orange)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-overwatch-api <span style="font-weight:400;color:var(--muted2)">→ om-entity-api</span></div><span class="badge bl">LIVE · :8091</span></div>
+      <div class="svc-desc">HTTP entity CRUD. Pinned entities (no-fly zones, waypoints) survive staleness. Generalize to all entity types.</div>
+      <div class="tags"><span class="tag tport">HTTP :8091</span><span class="tag tpub">ent.manual.upsert/delete</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--blue)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-task</div><span class="badge bl">LIVE · barely used</span></div>
+      <div class="svc-desc">Task engine — KV-backed CRUD. Should become the TAK Missions adapter: tasks here → TAK missions on all ATAK devices. Currently disconnected from TAK.</div>
+      <div class="tags"><span class="tag tsub">task.*</span><span class="tag tkv">KV_task-index</span></div>
+      <div class="svc-stat">pub 21 msgs — test only</div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--blue)">
+      <div class="svc-head"><div class="dot db"></div><div class="svc-name">om-hooks</div><span class="badge bb">DEFINED — DEPLOY IT</span></div>
+      <div class="svc-desc">Outbound notifications. evt.> consumer → Slack/Discord/HTTP webhooks, retry+backoff, KV webhook-registry. Deploy when P1 cleanup is done.</div>
+      <div class="tags"><span class="tag tsub">evt.&gt;</span><span class="tag tpub">evt.hooks.*</span></div>
+    </div>
+  </div>
+
+  <div class="sec-title"><span>🧠</span> INTELLIGENCE — AI + Voice</div>
+  <div class="sec-grid">
+    <div class="svc" style="border-left:3px solid var(--purple)">
+      <div class="svc-head"><div class="dot dpu"></div><div class="svc-name">Legacy / Hermes</div><span class="badge bpu">LIVE · Haiku 4.5</span></div>
+      <div class="svc-desc">The AI brain. Bedrock (Haiku 4.5) + LM Studio :1234 fallback. 7 skills. Dashboard :9120. 3s RTT proven. Should subscribe ALL streams + have CoT presence on TAK map.</div>
+      <div class="tags"><span class="tag tsub">agents.prompt.hermes.*</span><span class="tag tpub">cmd.* · voice.say</span><span class="tag tport">Dashboard :9120</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--pink)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-presence / omos-voice</div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">Mumble PTT → STT → voice.transcript → Legacy → TTS → Mumble. Headless proven. Receive blocked by Docker Desktop port-forward bug. Fix = containerize on Murmur network.</div>
+      <div class="tags"><span class="tag tport">Murmur :64738</span><span class="tag tpub">voice.transcript</span><span class="tag tsub">voice.say</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--pink)">
+      <div class="svc-head"><div class="dot dw"></div><div class="svc-name">om-meta (FastStream)</div><span class="badge bw">LIVE · PYTHON</span></div>
+      <div class="svc-desc">Reactive event router. Routes evt.>/voice.>/saas.> subjects. FastStream 0.7.1. The Go NEX binary exists but this Python version is what's running.</div>
+      <div class="tags"><span class="tag tsub">evt.&gt;</span><span class="tag tsub">voice.&gt;</span><span class="tag tsub">saas.&gt;</span></div>
+    </div>
+  </div>
+
+  <div class="sec-title"><span>🛠</span> INFRASTRUCTURE</div>
+  <div class="sec-grid">
+    <div class="svc" style="border-left:3px solid var(--muted2)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-callout</div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">Zero-trust device auth callout. KV device-registry. Keeps untrusted devices off the bus.</div>
+      <div class="tags"><span class="tag tsub">$AUTH.&gt;</span><span class="tag tkv">KV_device-registry</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--live)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-http-gateway</div><span class="badge bl">LIVE · :8090 (confirmed works)</span></div>
+      <div class="svc-desc">HTTP↔NATS bridge. POST /pub/{subject} and GET /sub/{subject} SSE. Confirmed working — tested live. Was showing pub=1 in connz because no one was using it. Web clients can talk to the bus here.</div>
+      <div class="tags"><span class="tag tport">HTTP :8090</span><span class="tag tpub">any subject</span></div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--muted2)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">resgate</div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">REST/WebSocket live-cache gateway for web clients. NATS req/reply with guaranteed consistency.</div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--muted2)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-streaming-bridge</div><span class="badge bl">LIVE</span></div>
+      <div class="svc-desc">NATS → RisingWave/Flink/Postgres streaming analytics. JetStream consumers → analytical layer.</div>
+    </div>
+    <div class="svc" style="border-left:3px solid var(--muted2)">
+      <div class="svc-head"><div class="dot dl"></div><div class="svc-name">om-nex-ui</div><span class="badge bl">LIVE · :3301</span></div>
+      <div class="svc-desc">NEX workload dashboard. $NEX.> subscriber. Shows live workload status, node health, deploy events.</div>
+      <div class="tags"><span class="tag tsub">$NEX.&gt;</span><span class="tag tport">:3301</span></div>
+    </div>
+  </div>
+</div>
+<!-- STREAMS -->
+<div id="view-streams" class="view">
+  <div class="sh"><div class="ey">JetStream</div><h2>What Each Stream <em>Is For</em></h2>
+  <p>Streams are the operational journal of your OS. Each has a role. Hot = real data flowing. Partial = some data. Empty = placeholder, no publisher yet.</p></div>
+  <div class="stream-grid">
+    <div class="sc" style="color:var(--live)"><div class="sc-name">EVT</div><div class="sc-role">📋 The Operational Event Log</div><div class="sc-detail">Everything that happens in the network. Detection events, drone maneuvers, mission milestones, agent actions. The audit trail. 90-day retention.</div><div class="sc-subj">evt.{so·hp·le·ge·task·cloud·bio·robot·drone·sat}.></div><div class="sc-msgs" style="color:var(--live)">2,112,028 msgs · 90 days · om-overwatch-* → om-hooks → ClickHouse</div></div>
+    <div class="sc" style="color:var(--muted)"><div class="sc-name">AGENTS</div><div class="sc-role">🤖 The Agent Roster</div><div class="sc-detail">Heartbeats from every NEX workload and AI agent. The "who is alive" register. Detect dead services. NOT for AI prompt traffic (core NATS req/reply, can't be JetStream).</div><div class="sc-subj">agents.hb.> · agents.status.> · agents.discover</div><div class="sc-msgs" style="color:var(--live)">708,537 msgs · 7 days · all NEX workloads → monitoring, Legacy</div></div>
+    <div class="sc" style="color:var(--live)"><div class="sc-name">COT</div><div class="sc-role">🗺 TAK Traffic Archive</div><div class="sc-detail">Every CoT message in/out of the TAK server. Your map history. Use this to replay track history, build heat maps, audit who was where when. 30-day retention.</div><div class="sc-subj">tak.cot.></div><div class="sc-msgs" style="color:var(--live)">186,855 msgs · 30 days · takserver-bridge ↔ om-overwatch-tak</div></div>
+    <div class="sc" style="color:var(--warn)"><div class="sc-name">TEL</div><div class="sc-role">📡 Raw Sensor Telemetry</div><div class="sc-detail">High-freq raw sensor data from all asset types. Short retention (7 days). Fusion spine consumes this and creates entity state. <strong style="color:var(--dead)">ONLY tel.drone.> has data</strong> — robot/edge/IoT/industrial empty.</div><div class="sc-subj">tel.{fleet·drone·robot·edge·iot·industrial·sat}.></div><div class="sc-msgs" style="color:var(--warn)">35,491 msgs · 7 days · ⚠️ tel.drone.> only</div></div>
+    <div class="sc" style="color:var(--pink)"><div class="sc-name">VOICE</div><div class="sc-role">🎙 Voice Session Log</div><div class="sc-detail">All PTT transcripts, TTS outputs, session boundaries. Feeds Legacy context. Every spoken word through Mumble is persisted here and retrievable. 30-day retention.</div><div class="sc-subj">voice.></div><div class="sc-msgs" style="color:var(--live)">28,905 msgs · 30 days · omos-voice → Legacy</div></div>
+    <div class="sc" style="color:var(--blue)"><div class="sc-name">CMD</div><div class="sc-role">⚡ The Orders Log</div><div class="sc-detail">Every command issued — drone launch, intercept, robot waypoint, agent instruction. The record of decisions and actions. Currently test-only (11 msgs). Real commands = CMD stream fills up.</div><div class="sc-subj">cmd.></div><div class="sc-msgs" style="color:var(--dead)">11 msgs · 30 days · ⚠️ test only</div></div>
+    <div class="sc" style="color:var(--orange)"><div class="sc-name">MISSION</div><div class="sc-role">🎯 Mission Lifecycle</div><div class="sc-detail">Mission creation, assignment, progress, completion. Should be wired to TAK Missions API. When Legacy creates a task → TAK mission → publishes here. When operator checks off → MISSION stream updates. Currently empty.</div><div class="sc-subj">evt.mission.> · evt.map.></div><div class="sc-msgs" style="color:var(--dead)">0 msgs · 90 days · ⚠️ EMPTY — needs TAK missions adapter</div></div>
+    <div class="sc" style="color:var(--teal)"><div class="sc-name">GEO</div><div class="sc-role">📍 Geographic Events</div><div class="sc-detail">Structured geo events extracted from TAK CoT traffic. Geofence triggers, area entries/exits, waypoint arrivals. Feed: process COT stream → extract structured events → GEO → Legacy reacts to area violations.</div><div class="sc-subj">evt.tak.cot.> · evt.tak.status.></div><div class="sc-msgs" style="color:var(--dead)">0 msgs · 30 days · ⚠️ EMPTY — needs CoT extractor</div></div>
+    <div class="sc" style="color:var(--purple)"><div class="sc-name">INTEL</div><div class="sc-role">🔍 Intelligence Products</div><div class="sc-detail">Reports, threat assessments, pattern-of-life from Legacy. Long-form analysis with intelligence value — persisted and searchable. Build this as Legacy's "write" channel for analysis outputs.</div><div class="sc-subj">intel.></div><div class="sc-msgs" style="color:var(--dead)">0 msgs · 90 days · ⚠️ EMPTY — needs Legacy intel publisher</div></div>
+    <div class="sc" style="color:var(--core)"><div class="sc-name">ZEUS</div><div class="sc-role">🧍 Personal Operator Stream</div><div class="sc-detail">Your personal data layer. Apple Watch HRV/HR, ATAK position track, operator activity log, personal AI context. 365-day retention (longest). Feed with omd operator metrics + Watch bridge. The most personal stream.</div><div class="sc-subj">zeus.> · op.zeus.></div><div class="sc-msgs" style="color:var(--dead)">0 msgs · 365 days · ⚠️ EMPTY — needs omd + Watch bridge</div></div>
+    <div class="sc" style="color:var(--muted2)"><div class="sc-name">ENV</div><div class="sc-role">🌱 Environmental Sensors</div><div class="sc-detail">Weather, soil, water quality, biological signals from Pi nodes. Once om-homeassistant + Pi nodes run, environmental data flows via tel.bio.* and tel.weather.* into this stream.</div><div class="sc-subj">tel.{nature·bio·weather·soil·water}.></div><div class="sc-msgs" style="color:var(--dead)">0 msgs · 7 days · ⚠️ EMPTY — needs Pi sensor nodes</div></div>
+    <div class="sc" style="color:var(--muted2)"><div class="sc-name">SAAS + WORLD</div><div class="sc-role">🌐 External Feeds</div><div class="sc-detail">SaaS webhook events and world-state events. External data ingestion channels — news feeds, financial signals, public APIs. Route via om-meta rules. SAAS has 17 test msgs; WORLD empty (1-day retention).</div><div class="sc-subj">saas.> · evt.world.></div><div class="sc-msgs" style="color:var(--warn)">17 msgs (SAAS only) · test</div></div>
+  </div>
+</div>
+
+<!-- BUILD ORDER -->
+<div id="view-build" class="view">
+  <div class="sh"><div class="ey">Execution</div><h2>Build Order — <em>From Here to Full Ops OS</em></h2>
+  <p>Each phase adds real, visible capability. Do them in order. Don't jump ahead.</p></div>
+
+  <div class="phase">
+    <div class="pt pt0">⛔ PHASE 0 — CLEAN THE FOUNDATION (before anything new)</div>
+    <div class="bi"><div class="bi-ico">📁</div><div><h4>Fix nats/ folder rename (Finder collision → "nats 2/")</h4><p>omos-core/nats/ was collision-renamed to "nats 2/" (space in name). Contains nqlite, Nats-blitz, resgate. mv "nats 2/" nats — 2 minutes.</p></div><span class="bi-tag" style="color:var(--dead)">P0 · 2 min</span></div>
+    <div class="bi"><div class="bi-ico">🗑</div><div><h4>Prune 15 ghost KV buckets</h4><p>zeus-presence, zeus-focus, zeus-context, world-state, task-notify, sys-health, om-schema, om-meta-dedup, om-config, node-registry, mission-state, geofences, fleet-state, agent-config, agent-caps. All 0 msgs, no publisher. nats kv del each.</p></div><span class="bi-tag" style="color:var(--dead)">P0 · 10 min</span></div>
+    <div class="bi"><div class="bi-ico">🧹</div><div><h4>Kill 2 leftover test murmurs</h4><p>murmur-test (:64739) and murmur-stable (:64740) still running. docker rm -f murmur-test murmur-stable. Brief.</p></div><span class="bi-tag" style="color:var(--dead)">P0 · 2 min</span></div>
+    <div class="bi"><div class="bi-ico">📂</div><div><h4>omos-core root structural cleanup</h4><p>"01 The Fabric..." folder (87MB, spaces+parens) → move to docs/. Delete services/observability/ (dead copy). Delete fusion-platform/ + fluxrig/ (3rd-party clones). Retire nex/om-bridge-constellation + nex/om-overwatch-demo.</p></div><span class="bi-tag" style="color:var(--dead)">P0 · 30 min</span></div>
+  </div>
+
+  <div class="phase">
+    <div class="pt pt1">⚡ PHASE 1 — WIRE TAK AS THE PRIMARY COP (the big unlock)</div>
+    <div class="bi"><div class="bi-ico">🌐</div><div><h4>Generalize om-overwatch-state to handle ALL entity types</h4><p>Add to ontology.go: ServerNode, GroundRobot, AIAgent, EdgeNode, HumanOperator. Add subscriptions: tel.robot.>, tel.node.>, agents.hb.> to the fusion spine. Same fusion pattern, now works for every asset type.</p></div><span class="bi-tag" style="color:var(--warn)">P1 · 2-3 hrs</span></div>
+    <div class="bi"><div class="bi-ico">🗺</div><div><h4>Generalize om-overwatch-tak → ent.*.*.state → CoT for ALL types</h4><p>Subscribe ent.*.*.state wildcard. Add CoT mappings: ServerNode → a-f-G-U-i-I, GroundRobot → a-f-G-U-R, AIAgent → a-f-G-U-i, EdgeNode → a-f-G-U-i-I. Every entity shows on ATAK. This is the "see everything on the map" moment.</p></div><span class="bi-tag" style="color:var(--warn)">P1 · 2-3 hrs</span></div>
+    <div class="bi"><div class="bi-ico">💻</div><div><h4>omd → tel.node.* → every machine on the map</h4><p>omd in omos-core/omd/ publishes tel.node.{hostname}.{cpu,mem,disk,ip,uptime} on heartbeat. zeus-mac shows as entity on ATAK. Add every cloud VM, every Pi when deployed. Add omd to boot-deploy script.</p></div><span class="bi-tag" style="color:var(--warn)">P1 · 3-4 hrs</span></div>
+    <div class="bi"><div class="bi-ico">🧠</div><div><h4>Legacy → CoT entity on the TAK map</h4><p>Hermes gateway publishes agents.hb.hermes.zeus.*. Once om-state handles AIAgent, Legacy appears as a map dot. Tap it in ATAK → opens Legacy chat. The AI brain becomes a visible entity in the COP.</p></div><span class="bi-tag" style="color:var(--warn)">P1 · 1 hr</span></div>
+    <div class="bi"><div class="bi-ico">🚢</div><div><h4>Wire om-unity's 5,938 entities to the NATS bus</h4><p>Configure om-unity NATS adapter to publish entity updates to tel.ais.{mmsi}.* / tel.adsb.{icao}.* subjects. Fusion spine picks up → ent.ship.{id}.state / ent.aircraft.{id}.state → om-tak → CoT → ATAK. Marine traffic + ADS-B aircraft on your tactical map. Zero new code.</p></div><span class="bi-tag" style="color:var(--warn)">P1 · 2-4 hrs</span></div>
+  </div>
+
+  <div class="phase">
+    <div class="pt pt2">🔵 PHASE 2 — WIRE MORE ASSETS</div>
+    <div class="bi"><div class="bi-ico">🤖</div><div><h4>Deploy om-bridge-ros2 → Unitree Go2/G1 on the map</h4><p>Build binary, deploy as NEX workload. ROS2 DDS → tel.robot.{name}.* → TEL stream → fusion → ent.robot.{id}.state → CoT → ATAK. Go2 and G1 appear as ground robot entities.</p></div><span class="bi-tag" style="color:var(--blue)">P2 · 1 day</span></div>
+    <div class="bi"><div class="bi-ico">🏠</div><div><h4>Deploy om-bridge-homeassistant → 185+ HA entities on the bus</h4><p>Nexfile ready. Deploy as NEX workload. Every HA sensor → tel.home.* → fusion → entity → CoT → map. Instant data density from your home systems.</p></div><span class="bi-tag" style="color:var(--blue)">P2 · half day</span></div>
+    <div class="bi"><div class="bi-ico">🎯</div><div><h4>Wire om-task → TAK Missions API</h4><p>TAK Server 5.7 Missions REST API (OTS). Legacy creates task → POST TAK mission → appears on all ATAK devices. Operator marks complete → MISSION stream update → Legacy acknowledges. Replace custom task UI with TAK-native missions.</p></div><span class="bi-tag" style="color:var(--blue)">P2 · 1-2 days</span></div>
+    <div class="bi"><div class="bi-ico">📱</div><div><h4>Finish omos-atoc NATS wiring</h4><p>Collapse NatsWireService onto shared L1 transport. Subscribe ent.*.*.state → tacmap renders ALL entity types. Subscribe MISSION stream → show active missions. Fold voice_service's 4th NATS client onto shared transport.</p></div><span class="bi-tag" style="color:var(--blue)">P2 · 1-2 days</span></div>
+    <div class="bi"><div class="bi-ico">🎙</div><div><h4>Fix Mumble receive → containerize bridge on Murmur network</h4><p>Root cause proven: macOS Docker Desktop vpnkit port-forward breaks Mumble voice relay. Fix = run bridge as container on Murmur Docker network (co-locate on Linux TAK box). No code change.</p></div><span class="bi-tag" style="color:var(--blue)">P2 · 2-3 hrs</span></div>
+  </div>
+
+  <div class="phase">
+    <div class="pt pt3">⬜ PHASE 3 — THE FULL OPS OS</div>
+    <div class="bi"><div class="bi-ico">🔌</div><div><h4>Custom ATAK plugin — OneMind control panel inside ATAK</h4><p>Java/Kotlin for Android ATAK, Swift for iTAK. Adds: Legacy chat button, NEX health sidebar, custom entity icons, mission creation → NATS, stream health overlay. ATAK becomes a OneMind terminal.</p></div><span class="bi-tag" style="color:var(--muted)">P3 · 1-2 weeks</span></div>
+    <div class="bi"><div class="bi-ico">📡</div><div><h4>Deploy Pi NEX nodes → extend the mesh to the physical world</h4><p>Raspberry Pi 4 (arm64) running NEX as onemind nexus nodes. Workloads deploy TO Pi nodes via tags. omd on each Pi → tel.node.pi-{id}.* → shows on map. Pi Zero W for gate sensors.</p></div><span class="bi-tag" style="color:var(--muted)">P3 · 1 week</span></div>
+    <div class="bi"><div class="bi-ico">🌍</div><div><h4>Fill ZEUS + INTEL + GEO streams with real data</h4><p>ZEUS: Apple Watch HRV/HR → HealthKit → omd → zeus.*. INTEL: Legacy publishes threat assessments → intel.reports.*. GEO: CoT extractor processes COT stream → structured geofence events → Legacy reacts to area violations.</p></div><span class="bi-tag" style="color:var(--muted)">P3 · 2-3 days each</span></div>
+  </div>
+</div>
+
+</main>
+<footer><span>ONEMIND</span> Ops OS · zeus-mac · NATS v2.14.2 · om-unity :9090 (5,938 entities) · TAK 5.7 · Legacy online · 13/25 workloads running · verified 2026-07-02</footer>
+<script>
+function S(n,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('view-'+n).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

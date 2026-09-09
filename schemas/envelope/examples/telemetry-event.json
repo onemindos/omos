@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "id": "550e8400-e29b-41d4-a716-446655440002",
+  "ts": "2026-06-10T14:32:15.456Z",
+  "type": "tel.barn-pi-1.soil.moisture",
+  "source": "node.barn-pi-1",
+  "subject": "tel.barn-pi-1.soil.moisture",
+  "trace": "abc123def456ghi789",
+  "data": {
+    "sensor_id": "soil-1",
+    "value": 18.3,
+    "unit": "%",
+    "threshold_min": 20,
+    "alert": true,
+    "location": "greenhouse-row-3"
+  }
+}

@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI — Model Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.header-badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #64748b;
+  border: 1px solid #1e293b;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3CE7FF 0%, #60a5fa 35%, #a78bfa 65%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.header-line {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3CE7FF, transparent);
+  margin: 20px auto 0;
+}
+
+/* ── Nav ── */
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 24px;
+  padding: 6px 14px;
+  border: 1px solid rgba(60, 231, 255, 0.25);
+  border-radius: 6px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.nav-back:hover {
+  background: rgba(60, 231, 255, 0.07);
+  border-color: rgba(60, 231, 255, 0.5);
+}
+
+/* ── Section wrapper ── */
+.section {
+  margin-bottom: 52px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #1e293b, transparent);
+}
+
+/* ── Overview ── */
+.overview-box {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #1e293b;
+  border-left: 3px solid #3CE7FF;
+  border-radius: 8px;
+  padding: 24px 28px;
+  font-size: 0.92rem;
+  line-height: 1.9;
+  color: #cbd5e1;
+}
+
+.overview-box strong { color: #3CE7FF; }
+
+.overview-box .tag-row {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+
+.tag-cyan   { color: #3CE7FF; border-color: rgba(60,231,255,0.3);  background: rgba(60,231,255,0.06); }
+.tag-amber  { color: #fbbf24; border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.06); }
+.tag-orange { color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.06); }
+.tag-purple { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+.tag-green  { color: #34d399; border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.06); }
+.tag-pink   { color: #f472b6; border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.06); }
+
+/* ── Model cards ── */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.model-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+.model-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.model-card.flagship::before    { background: linear-gradient(90deg, #3CE7FF, #60a5fa); }
+.model-card.turbo::before       { background: linear-gradient(90deg, #60a5fa, #a78bfa); }
+.model-card.reasoning::before   { background: linear-gradient(90deg, #a78bfa, #ec4899); }
+.model-card.code::before        { background: linear-gradient(90deg, #34d399, #3CE7FF); }
+.model-card.mini::before        { background: linear-gradient(90deg, #fbbf24, #fb923c); }
+.model-card.image::before       { background: linear-gradient(90deg, #f472b6, #a78bfa); }
+.model-card.audio::before       { background: linear-gradient(90deg, #34d399, #60a5fa); }
+
+.model-card:hover {
+  border-color: rgba(60,231,255,0.35);
+  transform: translateY(-2px);
+}
+
+.model-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.model-icon { font-size: 1.4rem; line-height: 1; }
+
+.model-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.model-badge {
+  margin-top: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.badge-flagship   { color: #3CE7FF; background: rgba(60,231,255,0.1);   border: 1px solid rgba(60,231,255,0.2); }
+.badge-reasoning  { color: #a78bfa; background: rgba(167,139,250,0.1);  border: 1px solid rgba(167,139,250,0.2); }
+.badge-code       { color: #34d399; background: rgba(52,211,153,0.1);   border: 1px solid rgba(52,211,153,0.2); }
+.badge-mini       { color: #fbbf24; background: rgba(251,191,36,0.1);   border: 1px solid rgba(251,191,36,0.2); }
+.badge-image      { color: #f472b6; background: rgba(244,114,182,0.1);  border: 1px solid rgba(244,114,182,0.2); }
+.badge-audio      { color: #60a5fa; background: rgba(96,165,250,0.1);   border: 1px solid rgba(96,165,250,0.2); }
+.badge-legacy     { color: #64748b; background: rgba(100,116,139,0.1);  border: 1px solid rgba(100,116,139,0.2); }
+
+.model-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.model-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.stat-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(30,41,59,0.8);
+  border: 1px solid #334155;
+  color: #94a3b8;
+}
+
+/* ── Where OpenAI Lives ── */
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.provider-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+
+.provider-card:hover { border-color: rgba(60,231,255,0.3); }
+
+.provider-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+
+.provider-content h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 5px;
+}
+
+.provider-content p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* ── Comparison table ── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+}
+
+thead tr {
+  background: rgba(30,41,59,0.8);
+}
+
+thead th {
+  padding: 12px 16px;
+  text-align: left;
+  color: #fbbf24;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1e293b;
+}
+
+tbody tr {
+  border-bottom: 1px solid rgba(30,41,59,0.5);
+  transition: background 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(30,41,59,0.4); }
+
+tbody td {
+  padding: 11px 16px;
+  color: #94a3b8;
+  vertical-align: top;
+}
+
+tbody td:first-child { color: #3CE7FF; font-weight: 500; }
+
+.td-green  { color: #34d399 !important; }
+.td-amber  { color: #fbbf24 !important; }
+.td-purple { color: #a78bfa !important; }
+
+/* ── Code blocks ── */
+.code-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #1e293b;
+}
+
+.code-tab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 7px 14px;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  color: #475569;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  letter-spacing: 0.5px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.code-tab.active {
+  color: #3CE7FF;
+  background: rgba(60,231,255,0.07);
+  border-color: #1e293b;
+}
+
+.code-tab:hover:not(.active) { color: #94a3b8; }
+
+.code-panel {
+  display: none;
+  background: #0a0f1e;
+  border: 1px solid #1e293b;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 18px 22px;
+  overflow-x: auto;
+}
+
+.code-panel.active { display: block; }
+
+.code-panel pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: #94a3b8;
+  white-space: pre;
+}
+
+.code-panel pre .kw  { color: #a78bfa; }
+.code-panel pre .fn  { color: #3CE7FF; }
+.code-panel pre .st  { color: #34d399; }
+.code-panel pre .cm  { color: #475569; }
+.code-panel pre .va  { color: #fbbf24; }
+.code-panel pre .nu  { color: #fb923c; }
+.code-panel pre .de  { color: #f472b6; }
+
+.code-wrap {
+  background: #0a0f1e;
+  border: 1px solid #1e293b;
+  border-left: 3px solid #fbbf24;
+  border-radius: 8px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.code-wrap pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: #94a3b8;
+  white-space: pre;
+}
+
+.code-wrap pre .kw  { color: #a78bfa; }
+.code-wrap pre .fn  { color: #3CE7FF; }
+.code-wrap pre .st  { color: #34d399; }
+.code-wrap pre .cm  { color: #475569; }
+.code-wrap pre .va  { color: #fbbf24; }
+.code-wrap pre .nu  { color: #fb923c; }
+
+.code-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #475569;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.env-block {
+  background: rgba(10,15,30,0.9);
+  border: 1px solid #1e293b;
+  border-left: 3px solid #fbbf24;
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-top: 12px;
+}
+
+.env-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  padding: 3px 0;
+}
+
+.env-key  { color: #fbbf24; }
+.env-sep  { color: #475569; }
+.env-val  { color: #34d399; }
+.env-cmt  { color: #475569; margin-left: 6px; }
+
+.how-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) { .how-split { grid-template-columns: 1fr; } }
+
+.how-block {
+  background: rgba(15,23,42,0.5);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.how-block-header {
+  padding: 12px 18px;
+  background: rgba(30,41,59,0.5);
+  border-bottom: 1px solid #1e293b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.how-block-body { padding: 16px 18px; }
+
+.note-box {
+  margin-top: 10px;
+  background: rgba(251,191,36,0.05);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #d97706;
+  line-height: 1.6;
+}
+
+.note-box span { color: #fbbf24; font-weight: 700; }
+
+/* ── Agent cards ── */
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.agent-card {
+  background: rgba(15,23,42,0.6);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 18px 20px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.agent-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.agent-card.codex-cli::before  { background: linear-gradient(90deg, #34d399, #3CE7FF); }
+.agent-card.copilot::before    { background: linear-gradient(90deg, #3CE7FF, #60a5fa); }
+.agent-card.hermes::before     { background: linear-gradient(90deg, #a78bfa, #fb923c); }
+.agent-card.openclaw::before   { background: linear-gradient(90deg, #fb923c, #fbbf24); }
+
+.agent-card:hover {
+  border-color: rgba(60,231,255,0.3);
+  transform: translateY(-2px);
+}
+
+.agent-icon { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+.agent-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.agent-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.agent-models {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.agent-model-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: rgba(60,231,255,0.07);
+  border: 1px solid rgba(60,231,255,0.15);
+  color: #94a3b8;
+}
+
+/* ── Canvas graph ── */
+.graph-wrap {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0f1e;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+canvas#openai-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+canvas#openai-graph:active { cursor: grabbing; }
+
+.graph-hint {
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+  margin-bottom: 32px;
+}
+
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15,23,42,0.5);
+  margin-bottom: 20px;
+}
+
+.gl-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #94a3b8;
+}
+
+.gl-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid #0f172a;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #1e293b;
+  letter-spacing: 1px;
+}
+
+.footer span { color: #334155; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Nav back -->
+  <a href="../index.html" class="nav-back">&#8592; Back to Model Architecture</a>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">Model Deep Dive</div>
+    <h1>OpenAI</h1>
+    <div class="subtitle">GPT, o-series, and Codex</div>
+    <div class="header-line"></div>
+  </div>
+
+  <!-- ═══════════════════════════════ 1. OVERVIEW -->
+  <div class="section">
+    <div class="section-title">&#9685; Overview</div>
+    <div class="overview-box">
+      <strong>OpenAI</strong> is the AI research company behind the most widely deployed large language models in the world. Founded in 2015, it launched the <strong>GPT (Generative Pre-trained Transformer)</strong> lineage — each generation larger and more capable than the last: GPT-1, GPT-2, GPT-3, InstructGPT, GPT-3.5, GPT-4, and the current flagship <strong>GPT-4o</strong> (omni). Their models power ChatGPT, the OpenAI API, GitHub Copilot, Azure AI, and hundreds of thousands of applications globally.
+      <br><br>
+      The <strong>GPT lineage</strong> focuses on fast, general-purpose language and multimodal understanding. The newer <strong>o-series (o1, o3, o4-mini)</strong> are reasoning models that use an internal chain-of-thought process before answering, dramatically improving performance on math, code, and complex logic. The <strong>Codex</strong> family was purpose-built for code generation and powers tools like Codex CLI and early GitHub Copilot. OpenAI also offers specialised models for <strong>image generation (DALL-E)</strong>, <strong>speech recognition (Whisper)</strong>, and <strong>embeddings</strong>.
+      <br><br>
+      OpenAI models are available through three major channels: the <strong>OpenAI Direct API</strong>, <strong>Azure OpenAI Service</strong> (Microsoft's enterprise deployment), and bundled via <strong>GitHub Copilot</strong> for developer tooling.
+      <div class="tag-row">
+        <span class="tag tag-cyan">GPT-4o Multimodal</span>
+        <span class="tag tag-purple">o1 / o3 Reasoning</span>
+        <span class="tag tag-green">Codex Code Models</span>
+        <span class="tag tag-pink">DALL-E Image Gen</span>
+        <span class="tag tag-amber">Whisper Speech</span>
+        <span class="tag tag-orange">Azure OpenAI Service</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 2. MODEL FAMILIES -->
+  <div class="section">
+    <div class="section-title">&#9881; Model Families</div>
+    <div class="models-grid">
+
+      <!-- GPT-4o -->
+      <div class="model-card flagship">
+        <div class="model-card-header">
+          <span class="model-icon">&#9889;</span>
+          <div>
+            <div class="model-name">GPT-4o</div>
+            <span class="model-badge badge-flagship">Flagship</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          The current default model. "Omni" — natively multimodal across text, images, and audio in a single model. Fastest of the GPT-4 family with the same intelligence as GPT-4 Turbo. Best for interactive applications.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">128K context</span>
+          <span class="stat-pill">text + vision + audio</span>
+          <span class="stat-pill">fast latency</span>
+          <span class="stat-pill">gpt-4o</span>
+        </div>
+      </div>
+
+      <!-- GPT-4 Turbo -->
+      <div class="model-card turbo">
+        <div class="model-card-header">
+          <span class="model-icon">&#128293;</span>
+          <div>
+            <div class="model-name">GPT-4 Turbo</div>
+            <span class="model-badge badge-legacy">Previous Gen</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          The extended-context GPT-4 variant released late 2023. Knowledge cutoff April 2024. Still capable and widely deployed. Successor is GPT-4o. Common in enterprise Azure deployments that haven't migrated yet.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">128K context</span>
+          <span class="stat-pill">text + vision</span>
+          <span class="stat-pill">gpt-4-turbo</span>
+        </div>
+      </div>
+
+      <!-- o1 / o3 / o4-mini -->
+      <div class="model-card reasoning">
+        <div class="model-card-header">
+          <span class="model-icon">&#129504;</span>
+          <div>
+            <div class="model-name">o1 / o3 / o4-mini</div>
+            <span class="model-badge badge-reasoning">Reasoning</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          The o-series uses internal chain-of-thought "thinking time" before responding. Dramatically better at math, logic, science, and hard coding problems. o4-mini balances reasoning power with speed and cost. o3 is the strongest general-purpose reasoning model.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">chain-of-thought</span>
+          <span class="stat-pill">200K context (o3)</span>
+          <span class="stat-pill">extended thinking</span>
+          <span class="stat-pill">o1 / o3 / o4-mini</span>
+        </div>
+      </div>
+
+      <!-- Codex -->
+      <div class="model-card code">
+        <div class="model-card-header">
+          <span class="model-icon">&#128187;</span>
+          <div>
+            <div class="model-name">Codex</div>
+            <span class="model-badge badge-code">Code Specialist</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          Code-specialized model family fine-tuned on billions of lines of public code. Powers the Codex CLI agent (codex-1) and was the engine behind early GitHub Copilot. Excels at code completion, generation, explanation, and debugging.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">code-specialized</span>
+          <span class="stat-pill">powers Codex CLI</span>
+          <span class="stat-pill">agentic tasks</span>
+          <span class="stat-pill">codex-1</span>
+        </div>
+      </div>
+
+      <!-- GPT-4o mini -->
+      <div class="model-card mini">
+        <div class="model-card-header">
+          <span class="model-icon">&#9889;</span>
+          <div>
+            <div class="model-name">GPT-4o mini</div>
+            <span class="model-badge badge-mini">Lightweight</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          Smallest and cheapest in the GPT-4o family. Ideal for high-volume tasks like classification, routing, summarization, and structured extraction where cost matters. Surprisingly capable for its size.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">128K context</span>
+          <span class="stat-pill">lowest cost</span>
+          <span class="stat-pill">high throughput</span>
+          <span class="stat-pill">gpt-4o-mini</span>
+        </div>
+      </div>
+
+      <!-- DALL-E 3 -->
+      <div class="model-card image">
+        <div class="model-card-header">
+          <span class="model-icon">&#127912;</span>
+          <div>
+            <div class="model-name">DALL-E 3</div>
+            <span class="model-badge badge-image">Image Gen</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          OpenAI's text-to-image model. Accepts natural language prompts and produces photorealistic or artistic images. Integrated into ChatGPT and available via the Images API. Supports 1024x1024, 1024x1792, and 1792x1024 resolutions.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">text-to-image</span>
+          <span class="stat-pill">1024–1792px</span>
+          <span class="stat-pill">dall-e-3</span>
+        </div>
+      </div>
+
+      <!-- Whisper -->
+      <div class="model-card audio">
+        <div class="model-card-header">
+          <span class="model-icon">&#127908;</span>
+          <div>
+            <div class="model-name">Whisper</div>
+            <span class="model-badge badge-audio">Speech-to-Text</span>
+          </div>
+        </div>
+        <div class="model-desc">
+          Open-source automatic speech recognition model trained on 680K hours of multilingual audio. Available via the OpenAI Transcriptions API or self-hosted. Supports 99 languages, translation to English, and timestamps.
+        </div>
+        <div class="model-stats">
+          <span class="stat-pill">99 languages</span>
+          <span class="stat-pill">self-hostable</span>
+          <span class="stat-pill">whisper-1</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 3. WHERE OPENAI LIVES -->
+  <div class="section">
+    <div class="section-title">&#127760; Where OpenAI Lives</div>
+
+    <div class="provider-grid">
+      <div class="provider-card">
+        <div class="provider-icon">&#128279;</div>
+        <div class="provider-content">
+          <h4>OpenAI Direct API</h4>
+          <p>api.openai.com — the original public API. Pay-as-you-go token pricing. Access all models including cutting-edge previews. Set OPENAI_API_KEY. No infrastructure overhead; fastest path to new model releases.</p>
+        </div>
+      </div>
+      <div class="provider-card">
+        <div class="provider-icon">&#9729;</div>
+        <div class="provider-content">
+          <h4>Azure OpenAI Service</h4>
+          <p>Managed deployments inside Microsoft Azure. Enterprise-grade: private endpoints, VNet integration, Azure RBAC, compliance certifications (HIPAA, FedRAMP). Uses deployment names instead of model IDs. Subset of OpenAI models, slightly delayed releases.</p>
+        </div>
+      </div>
+      <div class="provider-card">
+        <div class="provider-icon">&#128296;</div>
+        <div class="provider-content">
+          <h4>GitHub Copilot</h4>
+          <p>GPT-4o and o3 bundled inside the Copilot subscription. Accessible in VS Code, JetBrains, and CLI via the Copilot API. No direct model billing — included in Copilot seat pricing. Also exposes Claude (Anthropic) as an alternative.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Auth</th>
+            <th>Pricing</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OpenAI Direct</td>
+            <td>OPENAI_API_KEY</td>
+            <td class="td-green">Pay-per-token, cheapest</td>
+            <td>Startups, developers, prototyping, latest models</td>
+          </tr>
+          <tr>
+            <td>Azure OpenAI</td>
+            <td>Azure AD / API key + endpoint URL</td>
+            <td class="td-amber">Pay-per-token + infra costs</td>
+            <td>Enterprise, compliance, private network, regulated industries</td>
+          </tr>
+          <tr>
+            <td>GitHub Copilot</td>
+            <td>GitHub OAuth / GITHUB_TOKEN</td>
+            <td class="td-purple">Flat seat subscription</td>
+            <td>Developers in IDE, coding agents, Copilot CLI integration</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 4. HOW TO USE -->
+  <div class="section">
+    <div class="section-title">&#128196; How to Use</div>
+
+    <div class="how-split">
+      <!-- Direct path -->
+      <div class="how-block">
+        <div class="how-block-header" style="color:#3CE7FF;">
+          <span>&#128279;</span> OpenAI Direct
+        </div>
+        <div class="how-block-body">
+          <div class="code-label">install</div>
+          <div class="code-wrap">
+            <pre>pip install openai</pre>
+          </div>
+
+          <div class="code-label" style="margin-top:14px;">python</div>
+          <div class="code-wrap">
+<pre><span class="kw">from</span> openai <span class="kw">import</span> <span class="fn">OpenAI</span>
+
+client = <span class="fn">OpenAI</span>()  <span class="cm"># reads OPENAI_API_KEY</span>
+
+response = client.chat.completions.<span class="fn">create</span>(
+    <span class="va">model</span>=<span class="st">"gpt-4o"</span>,
+    <span class="va">messages</span>=[
+        {<span class="st">"role"</span>: <span class="st">"user"</span>,
+         <span class="st">"content"</span>: <span class="st">"Explain transformers"</span>}
+    ]
+)
+<span class="fn">print</span>(response.choices[<span class="nu">0</span>].message.content)</pre>
+          </div>
+
+          <div class="env-block">
+            <div class="env-row">
+              <span class="env-key">OPENAI_API_KEY</span>
+              <span class="env-sep">=</span>
+              <span class="env-val">sk-proj-...</span>
+            </div>
+          </div>
+
+          <div class="note-box" style="margin-top:12px;">
+            <span>Note:</span> Use <code>model="o3"</code> or <code>"o4-mini"</code> for reasoning tasks. Reasoning models don't support system messages — use user messages only.
+          </div>
+        </div>
+      </div>
+
+      <!-- Azure path -->
+      <div class="how-block">
+        <div class="how-block-header" style="color:#fbbf24;">
+          <span>&#9729;</span> Azure OpenAI
+        </div>
+        <div class="how-block-body">
+          <div class="code-label">python (azure)</div>
+          <div class="code-wrap">
+<pre><span class="kw">from</span> openai <span class="kw">import</span> <span class="fn">AzureOpenAI</span>
+<span class="kw">import</span> os
+
+client = <span class="fn">AzureOpenAI</span>(
+    <span class="va">azure_endpoint</span>=os.environ[<span class="st">"AZURE_OPENAI_ENDPOINT"</span>],
+    <span class="va">api_key</span>=os.environ[<span class="st">"AZURE_OPENAI_API_KEY"</span>],
+    <span class="va">api_version</span>=<span class="st">"2024-10-21"</span>
+)
+
+response = client.chat.completions.<span class="fn">create</span>(
+    <span class="va">model</span>=<span class="st">"my-gpt4o-deployment"</span>,  <span class="cm"># deployment name</span>
+    <span class="va">messages</span>=[
+        {<span class="st">"role"</span>: <span class="st">"user"</span>,
+         <span class="st">"content"</span>: <span class="st">"Explain Azure RBAC"</span>}
+    ]
+)
+<span class="fn">print</span>(response.choices[<span class="nu">0</span>].message.content)</pre>
+          </div>
+
+          <div class="env-block">
+            <div class="env-row">
+              <span class="env-key">AZURE_OPENAI_ENDPOINT</span>
+              <span class="env-sep">=</span>
+              <span class="env-val">https://YOUR.openai.azure.com/</span>
+            </div>
+            <div class="env-row">
+              <span class="env-key">AZURE_OPENAI_API_KEY</span>
+              <span class="env-sep">=</span>
+              <span class="env-val">abc123...</span>
+            </div>
+          </div>
+
+          <div class="note-box" style="margin-top:12px;">
+            <span>Key diff:</span> Azure uses deployment names, not model IDs. You create a deployment named e.g. <code>my-gpt4o-deployment</code> in the Azure portal and reference it by that name. Same Python SDK, different client class.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reasoning models addendum -->
+    <div style="margin-top:16px;">
+      <div class="how-block">
+        <div class="how-block-header" style="color:#a78bfa;">
+          <span>&#129504;</span> o-series Reasoning Models
+        </div>
+        <div class="how-block-body">
+          <div class="code-wrap">
+<pre><span class="cm"># o3 / o4-mini: streaming disabled, no system messages</span>
+response = client.chat.completions.<span class="fn">create</span>(
+    <span class="va">model</span>=<span class="st">"o4-mini"</span>,
+    <span class="va">messages</span>=[
+        {<span class="st">"role"</span>: <span class="st">"user"</span>,
+         <span class="st">"content"</span>: <span class="st">"Prove that sqrt(2) is irrational"</span>}
+    ],
+    <span class="va">reasoning_effort</span>=<span class="st">"high"</span>  <span class="cm"># low | medium | high</span>
+)
+
+<span class="cm"># Check how much thinking was done</span>
+usage = response.usage
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"Reasoning tokens: {usage.completion_tokens_details.reasoning_tokens}"</span>)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 5. OPENAI IN CODING AGENTS -->
+  <div class="section">
+    <div class="section-title">&#9000; OpenAI in Coding Agents</div>
+    <div class="agents-grid">
+
+      <div class="agent-card codex-cli">
+        <span class="agent-icon">&#128187;</span>
+        <div class="agent-name">Codex CLI</div>
+        <div class="agent-desc">
+          OpenAI's own terminal coding agent. Runs codex-1 natively via OPENAI_API_KEY, or can be pointed at an Azure deployment. Supports full-auto, suggest, and interactive modes. Sandboxed shell execution.
+        </div>
+        <div class="agent-models">
+          <span class="agent-model-pill">codex-1 (native)</span>
+          <span class="agent-model-pill">OPENAI_API_KEY</span>
+          <span class="agent-model-pill">Azure support</span>
+        </div>
+      </div>
+
+      <div class="agent-card copilot">
+        <span class="agent-icon">&#128296;</span>
+        <div class="agent-name">GitHub Copilot</div>
+        <div class="agent-desc">
+          Uses GPT-4o as its default coding model and o3 for complex reasoning tasks and Copilot Workspace. Bundled via GitHub's infrastructure — developers don't manage API keys. Also surfaces Claude and Gemini as model choices.
+        </div>
+        <div class="agent-models">
+          <span class="agent-model-pill">GPT-4o (default)</span>
+          <span class="agent-model-pill">o3 reasoning</span>
+          <span class="agent-model-pill">GITHUB_TOKEN auth</span>
+        </div>
+      </div>
+
+      <div class="agent-card hermes">
+        <span class="agent-icon">&#9889;</span>
+        <div class="agent-name">Hermes Agent</div>
+        <div class="agent-desc">
+          Nous Research's orchestration agent. Configurable to route to OpenAI via OPENAI_API_KEY or through Azure OpenAI. Switch models per-skill or per-session. Part of the OneMind OS stack.
+        </div>
+        <div class="agent-models">
+          <span class="agent-model-pill">gpt-4o routing</span>
+          <span class="agent-model-pill">o-series support</span>
+          <span class="agent-model-pill">OPENAI_API_KEY</span>
+          <span class="agent-model-pill">Azure path</span>
+        </div>
+      </div>
+
+      <div class="agent-card openclaw">
+        <span class="agent-icon">&#128270;</span>
+        <div class="agent-name">OpenClaw</div>
+        <div class="agent-desc">
+          Multi-agent fleet system. Can route tasks to OpenAI models including GPT-4o, o3, and o4-mini. Useful for parallelizing work across model families — fast GPT-4o for quick tasks, o3 for hard reasoning sub-problems.
+        </div>
+        <div class="agent-models">
+          <span class="agent-model-pill">GPT-4o fast tasks</span>
+          <span class="agent-model-pill">o3 hard problems</span>
+          <span class="agent-model-pill">multi-model routing</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Agent + model config quickref -->
+    <div style="margin-top:20px;">
+      <div class="how-block">
+        <div class="how-block-header" style="color:#34d399;">
+          <span>&#127381;</span> Quick Config Reference
+        </div>
+        <div class="how-block-body">
+          <div class="code-wrap">
+<pre><span class="cm"># Codex CLI — direct</span>
+<span class="kw">export</span> <span class="va">OPENAI_API_KEY</span>=<span class="st">sk-proj-...</span>
+codex <span class="st">"refactor this function to use async/await"</span>
+
+<span class="cm"># Codex CLI — via Azure</span>
+<span class="kw">export</span> <span class="va">AZURE_OPENAI_ENDPOINT</span>=<span class="st">https://myorg.openai.azure.com/</span>
+<span class="kw">export</span> <span class="va">AZURE_OPENAI_API_KEY</span>=<span class="st">abc123...</span>
+codex --provider azure --model my-codex-deployment <span class="st">"write unit tests"</span>
+
+<span class="cm"># Hermes — set OpenAI as provider in config</span>
+<span class="cm"># ~/.hermes/config.yaml</span>
+provider: openai
+model: gpt-4o
+api_key: <span class="st">"${OPENAI_API_KEY}"</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 6. CANVAS GRAPH -->
+  <div class="section">
+    <div class="section-title">&#128202; OpenAI Ecosystem Graph</div>
+
+    <div class="graph-legend">
+      <div class="gl-item"><div class="gl-dot" style="background:#3CE7FF;"></div> OpenAI (center)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#60a5fa;"></div> GPT Models</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#a78bfa;"></div> Reasoning Models</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#34d399;"></div> Specialised Models</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#fbbf24;"></div> Providers / Access</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#fb923c;"></div> Coding Agents</div>
+    </div>
+
+    <div class="graph-wrap">
+      <canvas id="openai-graph" width="1100" height="680"></canvas>
+    </div>
+    <div class="graph-hint">Drag nodes &bull; Scroll to zoom &bull; Drag background to pan</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    OneMind Skill Tree &bull; OpenAI Deep Dive &bull; <span>GPT &rarr; o-series &rarr; Codex &rarr; Agents</span>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ══════════════════════════════ CANVAS GRAPH ══════════════════════════════
+const canvas = document.getElementById('openai-graph');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+const NODE_COLORS = {
+  center:    '#3CE7FF',
+  gpt:       '#60a5fa',
+  reasoning: '#a78bfa',
+  special:   '#34d399',
+  provider:  '#fbbf24',
+  agent:     '#fb923c',
+};
+
+const nodes = [
+  // Center
+  { id: 'openai', label: 'OpenAI', type: 'center', r: 30 },
+
+  // GPT models
+  { id: 'gpt4o',     label: 'GPT-4o',      type: 'gpt', r: 20 },
+  { id: 'gpt4t',     label: 'GPT-4 Turbo', type: 'gpt', r: 17 },
+  { id: 'gpt4omini', label: 'GPT-4o mini', type: 'gpt', r: 17 },
+
+  // Reasoning
+  { id: 'o1',     label: 'o1',      type: 'reasoning', r: 18 },
+  { id: 'o3',     label: 'o3',      type: 'reasoning', r: 20 },
+  { id: 'o4mini', label: 'o4-mini', type: 'reasoning', r: 17 },
+
+  // Specialised
+  { id: 'codex',   label: 'Codex',   type: 'special', r: 18 },
+  { id: 'dalle3',  label: 'DALL-E 3',type: 'special', r: 17 },
+  { id: 'whisper', label: 'Whisper', type: 'special', r: 16 },
+
+  // Providers
+  { id: 'direct',  label: 'OpenAI Direct\nAPI', type: 'provider', r: 19 },
+  { id: 'azure',   label: 'Azure OpenAI',        type: 'provider', r: 19 },
+  { id: 'copilot_p', label: 'GitHub Copilot',    type: 'provider', r: 19 },
+
+  // Agents
+  { id: 'codex_cli', label: 'Codex CLI',  type: 'agent', r: 17 },
+  { id: 'copilot_a', label: 'Copilot',    type: 'agent', r: 17 },
+  { id: 'hermes',    label: 'Hermes',     type: 'agent', r: 17 },
+  { id: 'openclaw',  label: 'OpenClaw',   type: 'agent', r: 17 },
+];
+
+const edges = [
+  // OpenAI → models
+  ['openai', 'gpt4o'],
+  ['openai', 'gpt4t'],
+  ['openai', 'gpt4omini'],
+  ['openai', 'o1'],
+  ['openai', 'o3'],
+  ['openai', 'o4mini'],
+  ['openai', 'codex'],
+  ['openai', 'dalle3'],
+  ['openai', 'whisper'],
+
+  // OpenAI → providers
+  ['openai', 'direct'],
+  ['openai', 'azure'],
+  ['openai', 'copilot_p'],
+
+  // Providers → agents
+  ['direct',    'codex_cli'],
+  ['direct',    'hermes'],
+  ['direct',    'openclaw'],
+  ['azure',     'codex_cli'],
+  ['azure',     'hermes'],
+  ['azure',     'openclaw'],
+  ['copilot_p', 'copilot_a'],
+
+  // Models → agents
+  ['gpt4o',  'copilot_a'],
+  ['o3',     'copilot_a'],
+  ['codex',  'codex_cli'],
+  ['gpt4o',  'hermes'],
+  ['o3',     'hermes'],
+  ['gpt4o',  'openclaw'],
+  ['o4mini', 'openclaw'],
+];
+
+const nodeMap = {};
+nodes.forEach(n => {
+  n.vx = 0; n.vy = 0; n.fx = null; n.fy = null;
+  nodeMap[n.id] = n;
+});
+
+// Seed positions: center, then rings
+nodeMap['openai'].x = W / 2; nodeMap['openai'].y = H / 2;
+
+// GPT models ring (right-upper)
+const gptIds = ['gpt4o','gpt4t','gpt4omini'];
+gptIds.forEach((id, i) => {
+  const a = -0.7 + i * 0.55;
+  nodeMap[id].x = W/2 + Math.cos(a) * 180;
+  nodeMap[id].y = H/2 + Math.sin(a) * 180;
+});
+
+// Reasoning ring (right-lower)
+const rIds = ['o1','o3','o4mini'];
+rIds.forEach((id, i) => {
+  const a = 0.4 + i * 0.6;
+  nodeMap[id].x = W/2 + Math.cos(a) * 180;
+  nodeMap[id].y = H/2 + Math.sin(a) * 180;
+});
+
+// Special models (left side)
+const spIds = ['codex','dalle3','whisper'];
+spIds.forEach((id, i) => {
+  const a = Math.PI - 0.4 + i * 0.55;
+  nodeMap[id].x = W/2 + Math.cos(a) * 170;
+  nodeMap[id].y = H/2 + Math.sin(a) * 170;
+});
+
+// Providers (top)
+const prIds = ['direct','azure','copilot_p'];
+prIds.forEach((id, i) => {
+  const a = -Math.PI/2 - 0.45 + i * 0.45;
+  nodeMap[id].x = W/2 + Math.cos(a) * 240;
+  nodeMap[id].y = H/2 + Math.sin(a) * 240;
+});
+
+// Agents (bottom)
+const agIds = ['codex_cli','copilot_a','hermes','openclaw'];
+agIds.forEach((id, i) => {
+  const a = Math.PI/2 - 0.6 + i * 0.4;
+  nodeMap[id].x = W/2 + Math.cos(a) * 250;
+  nodeMap[id].y = H/2 + Math.sin(a) * 250;
+});
+
+// ── Physics sim ──
+let step = 0;
+const SIM = 300;
+let zoom = 1, panX = 0, panY = 0;
+let dragging = null, isPanning = false, lastMouse = {x:0,y:0};
+
+function simulate() {
+  const alpha = Math.max(0.004, 1 - step / SIM);
+  const repulsion = 5500;
+  const attraction = 0.003;
+  const damping = 0.80;
+
+  // Repulsion
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i+1; j < nodes.length; j++) {
+      let dx = nodes[j].x - nodes[i].x;
+      let dy = nodes[j].y - nodes[i].y;
+      let d = Math.sqrt(dx*dx + dy*dy) || 1;
+      let f = (repulsion / (d*d)) * alpha;
+      nodes[i].vx -= (dx/d)*f; nodes[i].vy -= (dy/d)*f;
+      nodes[j].vx += (dx/d)*f; nodes[j].vy += (dy/d)*f;
+    }
+  }
+
+  // Attraction along edges
+  edges.forEach(([s, t]) => {
+    const a = nodeMap[s], b = nodeMap[t];
+    if (!a || !b) return;
+    let dx = b.x - a.x, dy = b.y - a.y;
+    let d = Math.sqrt(dx*dx + dy*dy) || 1;
+    let tl = 140;
+    let f = (d - tl) * attraction * alpha;
+    let fx = (dx/d)*f, fy = (dy/d)*f;
+    a.vx += fx; a.vy += fy;
+    b.vx -= fx; b.vy -= fy;
+  });
+
+  // Center gravity
+  nodes.forEach(n => {
+    n.vx += (W/2 - n.x) * 0.0003 * alpha;
+    n.vy += (H/2 - n.y) * 0.0003 * alpha;
+  });
+
+  // Apply
+  nodes.forEach(n => {
+    if (n.fx !== null) { n.x = n.fx; n.y = n.fy; n.vx = 0; n.vy = 0; return; }
+    n.vx *= damping; n.vy *= damping;
+    n.x += n.vx; n.y += n.vy;
+    n.x = Math.max(n.r+10, Math.min(W - n.r - 10, n.x));
+    n.y = Math.max(n.r+10, Math.min(H - n.r - 10, n.y));
+  });
+  step++;
+}
+
+function draw() {
+  ctx.save();
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+  }
+  for (let y = 0; y < H; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+
+  ctx.translate(panX, panY);
+  ctx.scale(zoom, zoom);
+
+  // Edges
+  edges.forEach(([s, t]) => {
+    const a = nodeMap[s], b = nodeMap[t];
+    if (!a || !b) return;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    // color by target type
+    const col = {
+      gpt:       'rgba(96,165,250,0.18)',
+      reasoning: 'rgba(167,139,250,0.18)',
+      special:   'rgba(52,211,153,0.18)',
+      provider:  'rgba(251,191,36,0.18)',
+      agent:     'rgba(251,146,60,0.22)',
+      center:    'rgba(60,231,255,0.2)',
+    };
+    ctx.strokeStyle = col[b.type] || 'rgba(100,116,139,0.15)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+  });
+
+  // Nodes
+  nodes.forEach(n => {
+    const c = NODE_COLORS[n.type] || '#94a3b8';
+
+    // Glow
+    if (n.type === 'center') {
+      const g = ctx.createRadialGradient(n.x, n.y, n.r*0.3, n.x, n.y, n.r*2.5);
+      g.addColorStop(0, 'rgba(60,231,255,0.15)');
+      g.addColorStop(1, 'rgba(60,231,255,0)');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r*2.5, 0, Math.PI*2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+
+    // Circle
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(10,15,30,0.85)';
+    ctx.fill();
+    ctx.strokeStyle = c;
+    ctx.lineWidth = n.type === 'center' ? 2.5 : 1.5;
+    ctx.stroke();
+
+    // Label
+    const lines = n.label.split('\n');
+    ctx.textAlign = 'center';
+    ctx.fillStyle = n.type === 'center' ? '#3CE7FF' : c;
+
+    if (lines.length === 1) {
+      ctx.font = n.type === 'center' ? "bold 11px 'IBM Plex Mono', monospace" : "10px 'IBM Plex Mono', monospace";
+      ctx.fillText(n.label, n.x, n.y + 3.5);
+    } else {
+      ctx.font = "9px 'IBM Plex Mono', monospace";
+      lines.forEach((l, i) => {
+        ctx.fillText(l, n.x, n.y - (lines.length-1)*6 + i*13);
+      });
+    }
+  });
+
+  ctx.restore();
+}
+
+function loop() {
+  if (step < SIM) simulate();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ── Interaction ──
+function toWorld(cx, cy) {
+  return { x: (cx - panX) / zoom, y: (cy - panY) / zoom };
+}
+
+function hitNode(cx, cy) {
+  const p = toWorld(cx, cy);
+  return nodes.find(n => Math.hypot(n.x - p.x, n.y - p.y) < n.r + 4) || null;
+}
+
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  const sx = (e.clientX - rect.left) * (W / rect.width);
+  const sy = (e.clientY - rect.top)  * (H / rect.height);
+  const hit = hitNode(sx, sy);
+  if (hit) {
+    dragging = hit;
+    hit.fx = hit.x; hit.fy = hit.y;
+  } else {
+    isPanning = true;
+    lastMouse = { x: sx, y: sy };
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const sx = (e.clientX - rect.left) * (W / rect.width);
+  const sy = (e.clientY - rect.top)  * (H / rect.height);
+  if (dragging) {
+    const p = toWorld(sx, sy);
+    dragging.fx = p.x; dragging.fy = p.y;
+    dragging.x = p.x;  dragging.y = p.y;
+  } else if (isPanning) {
+    panX += sx - lastMouse.x;
+    panY += sy - lastMouse.y;
+    lastMouse = { x: sx, y: sy };
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  if (dragging) { dragging.fx = null; dragging.fy = null; dragging = null; }
+  isPanning = false;
+});
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top)  * (H / rect.height);
+  const delta = e.deltaY > 0 ? 0.88 : 1.14;
+  panX = mx - (mx - panX) * delta;
+  panY = my - (my - panY) * delta;
+  zoom = Math.min(4, Math.max(0.25, zoom * delta));
+}, { passive: false });
+
+// ── Code tab switching ──
+document.querySelectorAll('.code-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const group = tab.closest('.code-tabs').dataset.group;
+    document.querySelectorAll(`.code-tab[data-group="${group}"]`).forEach(t => t.classList.remove('active'));
+    document.querySelectorAll(`.code-panel[data-group="${group}"]`).forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.panel).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

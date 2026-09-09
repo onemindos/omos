@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/registry/service/v1",
+  "title": "Registry Service Record",
+  "description": "Canonical record for a OneMind backend service or NEX workload. Lives in the KV_SERVICE_REGISTRY bucket and is emitted on the registry.service.{id} subject. A service is a process or NEX workload that runs on the bus (e.g. om-control-plane, om-tak-projector, om-router, om-task, om-unity).",
+  "type": "object",
+  "required": ["id", "name", "status", "type"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable service identifier (e.g. 'om-control-plane', 'om-tak-projector', 'om-router', 'om-task').",
+      "minLength": 1,
+      "pattern": "^[a-z0-9_][a-z0-9_.\\-$]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable service name.",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "description": "Service deployment type.",
+      "enum": ["nex_workload", "process", "launchd", "systemd", "container", "embedded"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Current health status of the service.",
+      "enum": ["running", "stopped", "error", "starting", "degraded", "unknown"]
+    },
+    "version": {
+      "type": "string",
+      "description": "Service version string (e.g. '2.0.0')."
+    },
+    "node": {
+      "type": "string",
+      "description": "Node ID where this service is running (e.g. 'node.zeus-mac')."
+    },
+    "subjects": {
+      "type": "object",
+      "description": "NATS subjects this service subscribes to or publishes on.",
+      "additionalProperties": true,
+      "properties": {
+        "subscribes": {
+          "type": "array",
+          "description": "Subjects the service subscribes to.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publishes": {
+          "type": "array",
+          "description": "Subjects the service publishes.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "endpoints": {
+      "type": "array",
+      "description": "$SRV micro-service endpoints exposed by this service.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Endpoint name."
+          },
+          "subject": {
+            "type": "string",
+            "description": "NATS subject for this endpoint."
+          }
+        }
+      }
+    },
+    "health_subject": {
+      "type": "string",
+      "description": "Subject where this service publishes health/heartbeat (e.g. 'svc.om-control-plane.health')."
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "RFC3339 timestamp of the last heartbeat.",
+      "format": "date-time"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Service-specific metadata (resource usage, config ref, etc.).",
+      "additionalProperties": true
+    }
+  }
+}

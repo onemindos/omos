@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alibaba Cloud AI — Model Studio & Qwen Models</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24, #fb923c, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #fbbf24;
+  letter-spacing: 1px;
+}
+
+.provider-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 6px #fbbf24;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  border: 1px solid rgba(60, 231, 255, 0.2);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.nav-back:hover { background: rgba(60, 231, 255, 0.05); }
+
+.graph-container {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+  margin-bottom: 24px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  margin-bottom: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.info-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid #1e293b;
+}
+
+.info-card h3 {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  padding: 4px 0;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.info-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #fbbf24;
+}
+
+.code-block {
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.code-block .comment { color: #475569; }
+.code-block .cmd { color: #fbbf24; }
+.code-block .str { color: #34d399; }
+.code-block .kw { color: #3CE7FF; }
+.code-block .val { color: #fb923c; }
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.tag-cyan  { color: #3CE7FF; border-color: rgba(60,231,255,0.3); background: rgba(60,231,255,0.06); }
+.tag-amber { color: #fbbf24; border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.06); }
+.tag-orange{ color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.06); }
+.tag-green { color: #34d399; border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.06); }
+.tag-red   { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.06); }
+
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #475569;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  margin-top: 32px;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+.model-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  margin-top: 8px;
+}
+
+.model-table th {
+  text-align: left;
+  color: #475569;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 8px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.model-table td {
+  padding: 7px 8px;
+  color: #94a3b8;
+  border-bottom: 1px solid #1e293b22;
+  vertical-align: top;
+}
+
+.model-table td:first-child {
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.model-table tr:hover td {
+  background: rgba(251, 191, 36, 0.04);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 48px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+  padding-top: 20px;
+  border-top: 1px solid #0f172a;
+}
+
+.region-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.2);
+  color: #fbbf24;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="nav-back">&larr; Back to Model Architecture</a>
+
+  <div class="header">
+    <h1>Alibaba Cloud AI</h1>
+    <div class="subtitle">Model Studio &amp; Qwen Models</div>
+    <div class="provider-badge">CLOUD PROVIDER · ALIBABA GROUP</div>
+  </div>
+
+  <!-- Canvas Graph -->
+  <p class="instructions">Hover over nodes to explore. Scroll to zoom.</p>
+  <div class="graph-container">
+    <canvas id="graph" width="1200" height="520"></canvas>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fbbf24"></div> Alibaba Hub / Platform
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fb923c"></div> Qwen Language Models
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#34d399"></div> Specialised Models
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3CE7FF"></div> Platform Services
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#a78bfa"></div> Agent Consumers
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <p class="section-label">Overview</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; DashScope API</h3>
+      <ul>
+        <li>Primary API gateway for all Alibaba AI models</li>
+        <li>OpenAI-compatible endpoint — drop-in replacement</li>
+        <li>Supports text, image, audio, embedding in one surface</li>
+        <li>Free tier available, pay-as-you-go beyond quota</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-amber">dashscope</span>
+        <span class="tag tag-cyan">openai-compat</span>
+        <span class="tag tag-green">free-tier</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9670; Model Studio</h3>
+      <ul>
+        <li>Managed fine-tuning platform for Qwen family models</li>
+        <li>Deploy custom checkpoints as private endpoints</li>
+        <li>Prompt playground and eval suite built-in</li>
+        <li>RAG pipeline builder with integrated vector store</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Why Alibaba Cloud?</h3>
+      <ul>
+        <li>Best multilingual support — Chinese / Japanese / Arabic + 29 more</li>
+        <li>Qwen 2.5 72B rivals GPT-4o at fraction of cost</li>
+        <li>Strong Asia-Pacific region coverage (CN, SG, JP, AU)</li>
+        <li>Cost-effective token pricing vs US cloud incumbents</li>
+        <li>Tongyi Qianwen ecosystem: unified brand across verticals</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-amber">multilingual</span>
+        <span class="tag tag-orange">apac</span>
+        <span class="tag tag-green">cost-effective</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Models -->
+  <p class="section-label">Qwen Model Family</p>
+  <div class="info-grid">
+    <div class="info-card" style="grid-column: 1 / -1; max-width: 100%;">
+      <h3 style="color:#fb923c;">&#9670; Full Model Catalogue</h3>
+      <table class="model-table">
+        <thead>
+          <tr>
+            <th>Model ID</th>
+            <th>Type</th>
+            <th>Context</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>qwen2.5-72b-instruct</td>
+            <td>Language</td>
+            <td>128K</td>
+            <td>Flagship — rivals GPT-4o in many benchmarks</td>
+          </tr>
+          <tr>
+            <td>qwen2.5-32b-instruct</td>
+            <td>Language</td>
+            <td>128K</td>
+            <td>Balance of quality and speed, strong coding</td>
+          </tr>
+          <tr>
+            <td>qwen2.5-7b-instruct</td>
+            <td>Language</td>
+            <td>128K</td>
+            <td>Lightweight — fast, cheap, deployable locally</td>
+          </tr>
+          <tr>
+            <td>qwen-vl-plus / max</td>
+            <td>Vision-Language</td>
+            <td>32K</td>
+            <td>Image + text understanding, OCR, chart analysis</td>
+          </tr>
+          <tr>
+            <td>qwen-audio-turbo</td>
+            <td>Audio-Language</td>
+            <td>—</td>
+            <td>Speech understanding, audio Q&amp;A, multilingual ASR</td>
+          </tr>
+          <tr>
+            <td>qwen2.5-coder-32b</td>
+            <td>Code</td>
+            <td>128K</td>
+            <td>Best open-source code model, 40+ languages</td>
+          </tr>
+          <tr>
+            <td>qwen2.5-coder-7b</td>
+            <td>Code</td>
+            <td>128K</td>
+            <td>Fast local coding assistant</td>
+          </tr>
+          <tr>
+            <td>tongyi-qianwen (legacy)</td>
+            <td>Language</td>
+            <td>8K</td>
+            <td>Original product brand; superseded by Qwen 2.x</td>
+          </tr>
+          <tr>
+            <td>text-embedding-v3</td>
+            <td>Embedding</td>
+            <td>8K</td>
+            <td>Multilingual dense embeddings for RAG / search</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Connection -->
+  <p class="section-label">How to Connect</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; DashScope API Key</h3>
+      <div class="code-block">
+<span class="comment"># Get key at dashscope.aliyuncs.com</span>
+<span class="kw">export</span> DASHSCOPE_API_KEY=*** class="str">"sk-..."</span>
+
+<span class="comment"># Direct DashScope call</span>
+<span class="cmd">curl</span> https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation \
+  -H <span class="str">"Authorization: Bearer $DASHSCOPE_API_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="val">'{"model":"qwen2.5-72b-instruct","input":{"messages":[...]}}'</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9670; OpenAI-Compatible Endpoint</h3>
+      <div class="code-block">
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(
+    api_key=<span class="str">"sk-..."</span>,
+    base_url=<span class="str">"https://dashscope.aliyuncs.com/compatible-mode/v1"</span>
+)
+
+resp = client.chat.completions.create(
+    model=<span class="str">"qwen2.5-72b-instruct"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"你好！"</span>}]
+)
+<span class="kw">print</span>(resp.choices[<span class="val">0</span>].message.content)
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; DashScope Python SDK</h3>
+      <div class="code-block">
+<span class="cmd">pip install</span> <span class="str">dashscope</span>
+
+<span class="kw">import</span> dashscope
+<span class="kw">from</span> dashscope <span class="kw">import</span> Generation
+
+dashscope.api_key = <span class="str">"sk-..."</span>
+
+resp = Generation.call(
+    model=<span class="str">"qwen2.5-72b-instruct"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span>}],
+    result_format=<span class="str">"message"</span>
+)
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; Vision &amp; Audio</h3>
+      <div class="code-block">
+<span class="comment"># Vision — image + question</span>
+resp = client.chat.completions.create(
+    model=<span class="str">"qwen-vl-plus"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: [
+        {<span class="str">"type"</span>: <span class="str">"image_url"</span>, <span class="str">"image_url"</span>: {<span class="str">"url"</span>: <span class="str">"..."</span>}},
+        {<span class="str">"type"</span>: <span class="str">"text"</span>,      <span class="str">"text"</span>: <span class="str">"Describe this image."</span>}
+    ]}]
+)
+
+<span class="comment"># Audio (DashScope SDK)</span>
+<span class="kw">from</span> dashscope.audio.asr <span class="kw">import</span> Recognition
+result = Recognition.call(model=<span class="str">"paraformer-v2"</span>, file=<span class="str">"audio.wav"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- Regions -->
+  <p class="section-label">Service Regions</p>
+  <div class="info-card" style="margin-top:0;">
+    <h3 style="color:#fbbf24;">&#9670; Asia-Pacific Coverage</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+      <span class="region-pill">🇨🇳 China (Beijing / Shanghai / Hangzhou)</span>
+      <span class="region-pill">🇸🇬 Singapore (AP-Southeast)</span>
+      <span class="region-pill">🇯🇵 Japan (AP-Northeast)</span>
+      <span class="region-pill">🇦🇺 Australia (AP-Southeast-2)</span>
+      <span class="region-pill">🇩🇪 Germany (EU-Central)</span>
+      <span class="region-pill">🇺🇸 US-West</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li>DashScope API available globally (non-China endpoint: dashscope.aliyuncs.com)</li>
+      <li>China-mainland endpoint: dashscope.aliyuncs.com/cn — requires ICP registration</li>
+      <li>Lowest latency for East Asia traffic vs US-based providers</li>
+    </ul>
+  </div>
+
+  <!-- Used By -->
+  <p class="section-label">Used By</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#a78bfa;">&#9670; Hermes Agent</h3>
+      <ul>
+        <li>Provider: <code style="color:#fbbf24;">alibaba</code> / <code style="color:#fbbf24;">qwen</code> in provider config</li>
+        <li>Qwen 2.5 72B for high-quality reasoning tasks</li>
+        <li>Qwen 2.5 Coder for code generation subtasks</li>
+        <li>OpenAI-compatible shim — minimal config change</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-amber">active</span>
+        <span class="tag tag-orange">qwen2.5-72b</span>
+        <span class="tag tag-green">coder-32b</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#a78bfa;">&#9670; OpenClaw</h3>
+      <ul>
+        <li>Qwen-VL for multimodal document analysis pipelines</li>
+        <li>DashScope embeddings for multilingual RAG</li>
+        <li>Qwen-Audio for voice-input processing</li>
+        <li>Model Studio fine-tunes for domain adaptation</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-cyan">qwen-vl</span>
+        <span class="tag tag-amber">embeddings</span>
+        <span class="tag tag-green">qwen-audio</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    onemind-skill-tree &mdash; Alibaba Cloud AI &mdash; Model Studio &amp; Qwen Models &mdash; 2026
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+
+const W = 1200, H = 520;
+canvas.width = W;
+canvas.height = H;
+
+let transform = { x: 0, y: 0, scale: 1 };
+let dragging = false, lastMouse = null, hoveredNode = null;
+
+const CYAN   = '#3CE7FF';
+const GREEN  = '#34d399';
+const AMBER  = '#fbbf24';
+const ORANGE = '#fb923c';
+const PURPLE = '#a78bfa';
+const SLATE  = '#64748b';
+const RED    = '#f87171';
+
+const nodes = [
+  // Center
+  { id: 'alibaba',  x: 600, y: 260, r: 46, label: 'Alibaba\nCloud AI',  color: AMBER,  glow: AMBER,  group: 'hub' },
+
+  // Platform
+  { id: 'dashscope',x: 380, y: 120, r: 30, label: 'DashScope\nAPI',      color: CYAN,   glow: CYAN,   group: 'platform' },
+  { id: 'mstudio',  x: 200, y: 260, r: 26, label: 'Model\nStudio',       color: CYAN,   glow: CYAN,   group: 'platform' },
+  { id: 'compat',   x: 200, y: 400, r: 24, label: 'OpenAI\nCompat',      color: SLATE,  glow: SLATE,  group: 'platform' },
+
+  // Qwen language models
+  { id: 'q72b',     x: 600, y: 90,  r: 30, label: 'Qwen 2.5\n72B',       color: ORANGE, glow: ORANGE, group: 'model' },
+  { id: 'q32b',     x: 800, y: 140, r: 26, label: 'Qwen 2.5\n32B',       color: ORANGE, glow: ORANGE, group: 'model' },
+  { id: 'q7b',      x: 890, y: 270, r: 22, label: 'Qwen 2.5\n7B',        color: ORANGE, glow: ORANGE, group: 'model' },
+  { id: 'tongyi',   x: 840, y: 400, r: 20, label: 'Tongyi\n(legacy)',     color: SLATE,  glow: SLATE,  group: 'model' },
+
+  // Specialised
+  { id: 'qvl',      x: 600, y: 430, r: 24, label: 'Qwen-VL\n(Vision)',   color: GREEN,  glow: GREEN,  group: 'special' },
+  { id: 'qaudio',   x: 420, y: 420, r: 20, label: 'Qwen\nAudio',         color: GREEN,  glow: GREEN,  group: 'special' },
+  { id: 'qcoder',   x: 400, y: 320, r: 24, label: 'Qwen\nCoder',         color: GREEN,  glow: GREEN,  group: 'special' },
+  { id: 'embed',    x: 760, y: 440, r: 20, label: 'Embed\nv3',           color: PURPLE, glow: PURPLE, group: 'special' },
+
+  // Agents
+  { id: 'hermes',   x: 100, y: 140, r: 28, label: 'Hermes\nAgent',       color: PURPLE, glow: PURPLE, group: 'agent' },
+  { id: 'openclaw', x: 100, y: 390, r: 28, label: 'OpenClaw',            color: PURPLE, glow: PURPLE, group: 'agent' },
+];
+
+const edges = [
+  // Hub → platform
+  { from: 'alibaba',   to: 'dashscope', style: 'solid',  color: CYAN },
+  { from: 'alibaba',   to: 'mstudio',   style: 'solid',  color: CYAN },
+  { from: 'alibaba',   to: 'compat',    style: 'dashed', color: SLATE },
+
+  // Hub → models
+  { from: 'alibaba',   to: 'q72b',      style: 'solid',  color: ORANGE },
+  { from: 'alibaba',   to: 'q32b',      style: 'solid',  color: ORANGE },
+  { from: 'alibaba',   to: 'q7b',       style: 'solid',  color: ORANGE },
+  { from: 'alibaba',   to: 'tongyi',    style: 'dashed', color: SLATE },
+
+  // Hub → specialised
+  { from: 'alibaba',   to: 'qvl',       style: 'solid',  color: GREEN },
+  { from: 'alibaba',   to: 'qaudio',    style: 'solid',  color: GREEN },
+  { from: 'alibaba',   to: 'qcoder',    style: 'solid',  color: GREEN },
+  { from: 'alibaba',   to: 'embed',     style: 'solid',  color: PURPLE },
+
+  // DashScope passes through
+  { from: 'dashscope', to: 'q72b',      style: 'dashed', color: CYAN },
+  { from: 'compat',    to: 'dashscope', style: 'dashed', color: SLATE },
+
+  // Agents
+  { from: 'hermes',    to: 'dashscope', style: 'solid',  color: PURPLE },
+  { from: 'hermes',    to: 'q72b',      style: 'dashed', color: PURPLE },
+  { from: 'hermes',    to: 'qcoder',    style: 'dashed', color: PURPLE },
+  { from: 'openclaw',  to: 'qvl',       style: 'solid',  color: PURPLE },
+  { from: 'openclaw',  to: 'embed',     style: 'dashed', color: PURPLE },
+  { from: 'openclaw',  to: 'qaudio',    style: 'dashed', color: PURPLE },
+];
+
+function nodeById(id) { return nodes.find(n => n.id === id); }
+
+function drawEdge(e) {
+  const a = nodeById(e.from), b = nodeById(e.to);
+  if (!a || !b) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.strokeStyle = e.color + '55';
+  ctx.lineWidth = e.style === 'dashed' ? 1 : 1.5;
+  if (e.style === 'dashed') ctx.setLineDash([5, 5]);
+  else ctx.setLineDash([]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawNode(n) {
+  const hov = (hoveredNode && hoveredNode.id === n.id);
+  ctx.save();
+  const grd = ctx.createRadialGradient(n.x, n.y, n.r * 0.5, n.x, n.y, n.r * (hov ? 2.4 : 1.8));
+  grd.addColorStop(0, n.glow + '33');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r * (hov ? 2.4 : 1.8), 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+  ctx.fillStyle = '#0f172a';
+  ctx.fill();
+  ctx.strokeStyle = n.color + (hov ? 'ff' : '99');
+  ctx.lineWidth = hov ? 2 : 1.5;
+  ctx.stroke();
+
+  const lines = n.label.split('\n');
+  ctx.fillStyle = hov ? '#ffffff' : n.color;
+  ctx.font = `${n.group === 'hub' ? 600 : 400} ${n.group === 'hub' ? 11 : 9.5}px 'IBM Plex Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const lineH = 13;
+  const startY = n.y - ((lines.length - 1) * lineH) / 2;
+  lines.forEach((ln, i) => ctx.fillText(ln, n.x, startY + i * lineH));
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(transform.x, transform.y);
+  ctx.scale(transform.scale, transform.scale);
+  ctx.strokeStyle = '#1e293b44';
+  ctx.lineWidth = 0.5;
+  for (let gx = 0; gx < W; gx += 60) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 60) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+  edges.forEach(drawEdge);
+  nodes.forEach(drawNode);
+  ctx.restore();
+}
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width, scaleY = H / rect.height;
+  return {
+    x: ((e.clientX - rect.left) * scaleX - transform.x) / transform.scale,
+    y: ((e.clientY - rect.top)  * scaleY - transform.y) / transform.scale,
+  };
+}
+
+canvas.addEventListener('mousemove', e => {
+  const { x, y } = getMousePos(e);
+  hoveredNode = nodes.find(n => Math.hypot(n.x - x, n.y - y) < n.r + 8) || null;
+  canvas.style.cursor = hoveredNode ? 'pointer' : (dragging ? 'grabbing' : 'grab');
+  if (dragging && lastMouse) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    transform.x += (e.clientX - lastMouse.x) * scaleX;
+    transform.y += (e.clientY - lastMouse.y) * scaleY;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+  draw();
+});
+
+canvas.addEventListener('mousedown', e => { dragging = true; lastMouse = { x: e.clientX, y: e.clientY }; canvas.style.cursor = 'grabbing'; });
+canvas.addEventListener('mouseup',   () => { dragging = false; canvas.style.cursor = 'grab'; });
+canvas.addEventListener('mouseleave',() => { dragging = false; hoveredNode = null; draw(); });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top)  * (H / rect.height);
+  const delta = e.deltaY < 0 ? 1.1 : 0.91;
+  transform.x = mx - (mx - transform.x) * delta;
+  transform.y = my - (my - transform.y) * delta;
+  transform.scale = Math.min(3, Math.max(0.3, transform.scale * delta));
+  draw();
+}, { passive: false });
+
+draw();
+</script>
+</body>
+</html>

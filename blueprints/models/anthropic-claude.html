@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthropic Claude — OneMind Model Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #020617; color: #e2e8f0; font-family: 'Chakra Petch', sans-serif; min-height: 100vh; }
+.container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+a.nav-back { display: inline-flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #3CE7FF; text-decoration: none; margin-bottom: 20px; padding: 6px 12px; border: 1px solid rgba(60,231,255,0.2); border-radius: 6px; }
+a.nav-back:hover { background: rgba(60,231,255,0.05); }
+.header { text-align: center; margin-bottom: 50px; }
+.header h1 { font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #fb923c, #3CE7FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+.header .subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: #64748b; letter-spacing: 2px; text-transform: uppercase; }
+
+.section { margin-bottom: 50px; }
+.section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #1e293b; }
+.section-title.cyan { color: #3CE7FF; }
+.section-title.orange { color: #fb923c; }
+.section-title.amber { color: #fbbf24; }
+.section-title.green { color: #34d399; }
+
+.overview { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: #94a3b8; line-height: 1.7; max-width: 900px; }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.card { padding: 20px; border-radius: 8px; background: rgba(30,41,59,0.3); border: 1px solid #1e293b; }
+.card-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+.card-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+.card-desc { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #94a3b8; line-height: 1.5; }
+.card-desc ul { list-style: none; padding: 0; }
+.card-desc li { padding: 3px 0; padding-left: 12px; position: relative; }
+.card-desc li::before { content: '›'; position: absolute; left: 0; color: #475569; }
+
+.highlight-card { border-color: rgba(60,231,255,0.3); background: rgba(60,231,255,0.03); }
+
+/* Table */
+.compare-table { width: 100%; border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; margin-top: 16px; }
+.compare-table th { padding: 10px 12px; text-align: left; color: #64748b; font-weight: 500; border-bottom: 1px solid #1e293b; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.5px; }
+.compare-table td { padding: 10px 12px; border-bottom: 1px solid rgba(30,41,59,0.5); color: #cbd5e1; }
+.compare-table tr:hover td { background: rgba(30,41,59,0.3); }
+
+/* Code blocks */
+.code-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
+.code-block { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; }
+.code-header { padding: 8px 14px; background: rgba(30,41,59,0.5); border-bottom: 1px solid #1e293b; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #64748b; display: flex; align-items: center; gap: 8px; }
+.code-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+.code-body { padding: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #e2e8f0; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+.code-body .comment { color: #475569; }
+.code-body .string { color: #34d399; }
+.code-body .keyword { color: #60a5fa; }
+.code-body .var { color: #fbbf24; }
+
+/* Graph */
+.graph-container { border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; background: #0f172a; margin-top: 20px; }
+canvas { display: block; width: 100%; height: auto; cursor: grab; }
+
+.note { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #fbbf24; padding: 10px 14px; border: 1px solid rgba(251,191,36,0.2); border-radius: 6px; background: rgba(251,191,36,0.05); margin-top: 12px; }
+
+.footer { text-align: center; margin-top: 40px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: #334155; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="nav-back">&larr; Back to Model Architecture</a>
+
+<div class="header">
+  <h1>Anthropic Claude</h1>
+  <div class="subtitle">The Model Behind the Agent &bull; One Model, Many Doors</div>
+</div>
+
+<!-- Overview -->
+<div class="section">
+  <h2 class="section-title cyan">Overview</h2>
+  <div class="overview">
+    <p>Anthropic builds Claude — a family of large language models designed for safety, helpfulness, and honesty. Founded by former OpenAI researchers, Anthropic uses Constitutional AI (RLHF with a constitution of principles) to align Claude's behavior.</p>
+    <br>
+    <p>Claude is the <strong>primary model</strong> powering the OneMind OS stack. What makes it unique in our architecture: <strong>you can access the same model through multiple providers</strong>. This means redundancy, cost optimization, and zero vendor lock-in. One model, many doors.</p>
+  </div>
+</div>
+
+<!-- Model Family -->
+<div class="section">
+  <h2 class="section-title cyan">Model Family</h2>
+  <div class="card-grid">
+    <div class="card highlight-card">
+      <div class="card-title" style="color:#3CE7FF;">Claude Opus 4</div>
+      <span class="card-badge" style="background:rgba(60,231,255,0.15);color:#3CE7FF;border:1px solid rgba(60,231,255,0.3);">FLAGSHIP</span>
+      <div class="card-desc">
+        <ul>
+          <li>Most capable model in the family</li>
+          <li>Deep reasoning and analysis</li>
+          <li>Sustained agentic performance (hours-long tasks)</li>
+          <li>200K token context</li>
+          <li>Best for: complex code, research, multi-step agents</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card highlight-card">
+      <div class="card-title" style="color:#34d399;">Claude Sonnet 4</div>
+      <span class="card-badge" style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3);">MOST USED</span>
+      <div class="card-desc">
+        <ul>
+          <li>Best balance of speed and intelligence</li>
+          <li>Default for most agent workloads</li>
+          <li>Strong coding, writing, analysis</li>
+          <li>200K token context</li>
+          <li>Best for: daily agent work, coding, orchestration</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#fbbf24;">Claude Haiku 3.5</div>
+      <span class="card-badge" style="background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);">FASTEST</span>
+      <div class="card-desc">
+        <ul>
+          <li>Fastest response times</li>
+          <li>Cheapest per token</li>
+          <li>Still surprisingly capable</li>
+          <li>200K token context</li>
+          <li>Best for: routing, classification, high-volume tasks</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Where Claude Lives - THE KEY SECTION -->
+<div class="section">
+  <h2 class="section-title orange">Where Claude Lives — Every Door In</h2>
+  <div class="overview" style="margin-bottom:20px;">
+    <p>This is the key insight: <strong>Claude is available through 4+ different providers</strong>. Each has different auth, pricing, and trade-offs. You're never locked into one.</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card highlight-card">
+      <div class="card-title" style="color:#fb923c;">Anthropic Direct API</div>
+      <span class="card-badge" style="background:rgba(251,146,60,0.15);color:#fb923c;border:1px solid rgba(251,146,60,0.3);">SIMPLEST</span>
+      <div class="card-desc">
+        <ul>
+          <li>Endpoint: api.anthropic.com</li>
+          <li>Auth: API key (ANTHROPIC_API_KEY)</li>
+          <li>Pricing: pay-per-token, no commitment needed</li>
+          <li>First to get new models</li>
+          <li>Rate limits can be tight on free tier</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card highlight-card">
+      <div class="card-title" style="color:#fbbf24;">AWS Bedrock</div>
+      <span class="card-badge" style="background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);">ENTERPRISE</span>
+      <div class="card-desc">
+        <ul>
+          <li>Endpoint: bedrock-runtime.{region}.amazonaws.com</li>
+          <li>Auth: IAM (no API keys floating around)</li>
+          <li>Pricing: on-demand or provisioned throughput</li>
+          <li>VPC private endpoints (data never leaves your VPC)</li>
+          <li>Regional: us-east-1, us-west-2, eu-west-1, etc.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#60a5fa;">Google Vertex AI</div>
+      <span class="card-badge" style="background:rgba(96,165,250,0.15);color:#60a5fa;border:1px solid rgba(96,165,250,0.3);">GCP</span>
+      <div class="card-desc">
+        <ul>
+          <li>Endpoint: {region}-aiplatform.googleapis.com</li>
+          <li>Auth: Service account / ADC</li>
+          <li>Pricing: pay-per-token via GCP billing</li>
+          <li>Good if you're already in GCP ecosystem</li>
+          <li>Slightly behind on model versions</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#a78bfa;">Azure AI Foundry</div>
+      <span class="card-badge" style="background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);">PARTNER</span>
+      <div class="card-desc">
+        <ul>
+          <li>Via Azure AI Model Catalog</li>
+          <li>Auth: Azure AD / API key</li>
+          <li>Pricing: Azure consumption-based</li>
+          <li>Unified billing with other Azure services</li>
+          <li>Limited model versions available</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Table -->
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Auth Method</th>
+        <th>Pricing</th>
+        <th>Latency</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:#fb923c;">Anthropic Direct</td>
+        <td>API Key</td>
+        <td>Pay-per-token</td>
+        <td>Lowest</td>
+        <td>Development, prototyping, indie</td>
+      </tr>
+      <tr>
+        <td style="color:#fbbf24;">AWS Bedrock</td>
+        <td>IAM / STS</td>
+        <td>On-demand or committed</td>
+        <td>Low</td>
+        <td>Enterprise, compliance, multi-region</td>
+      </tr>
+      <tr>
+        <td style="color:#60a5fa;">Google Vertex</td>
+        <td>Service Account</td>
+        <td>GCP billing</td>
+        <td>Medium</td>
+        <td>GCP-native shops</td>
+      </tr>
+      <tr>
+        <td style="color:#a78bfa;">Azure AI Foundry</td>
+        <td>Azure AD</td>
+        <td>Azure consumption</td>
+        <td>Medium</td>
+        <td>Microsoft-centric orgs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">&#9888; Pro tip: Use Bedrock as your fallback. If Anthropic direct hits rate limits (429), Bedrock uses IAM auth on a separate quota. Zero downtime.</div>
+</div>
+
+<!-- How to Use Claude -->
+<div class="section">
+  <h2 class="section-title green">How to Use — Code for Every Path</h2>
+
+  <div class="code-section">
+    <div class="code-block">
+      <div class="code-header"><div class="dot" style="background:#fb923c;"></div> Anthropic Direct</div>
+      <div class="code-body"><span class="comment"># Install</span>
+pip install anthropic
+
+<span class="comment"># Set key</span>
+<span class="keyword">export</span> <span class="var">ANTHROPIC_API_KEY</span>=<span class="string">"sk-ant-..."</span>
+
+<span class="comment"># Python</span>
+<span class="keyword">import</span> anthropic
+client = anthropic.Anthropic()
+msg = client.messages.create(
+    model=<span class="string">"claude-sonnet-4-20250514"</span>,
+    max_tokens=1024,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>,
+               <span class="string">"content"</span>: <span class="string">"Hello"</span>}]
+)</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dot" style="background:#fbbf24;"></div> AWS Bedrock</div>
+      <div class="code-body"><span class="comment"># No pip install needed (boto3 comes with AWS CLI)</span>
+
+<span class="comment"># Auth via IAM (no API key!)</span>
+<span class="keyword">export</span> <span class="var">AWS_ACCESS_KEY_ID</span>=<span class="string">"AKIA..."</span>
+<span class="keyword">export</span> <span class="var">AWS_SECRET_ACCESS_KEY</span>=<span class="string">"..."</span>
+<span class="keyword">export</span> <span class="var">AWS_DEFAULT_REGION</span>=<span class="string">"us-east-1"</span>
+
+<span class="comment"># Python</span>
+<span class="keyword">import</span> boto3, json
+client = boto3.client(<span class="string">"bedrock-runtime"</span>)
+resp = client.invoke_model(
+    modelId=<span class="string">"anthropic.claude-sonnet-4-20250514-v1:0"</span>,
+    body=json.dumps({
+        <span class="string">"anthropic_version"</span>: <span class="string">"bedrock-2023-05-31"</span>,
+        <span class="string">"max_tokens"</span>: 1024,
+        <span class="string">"messages"</span>: [{<span class="string">"role"</span>: <span class="string">"user"</span>,
+                      <span class="string">"content"</span>: <span class="string">"Hello"</span>}]
+    })
+)</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dot" style="background:#60a5fa;"></div> Google Vertex AI</div>
+      <div class="code-body"><span class="comment"># Install</span>
+pip install google-cloud-aiplatform anthropic[vertex]
+
+<span class="comment"># Auth via service account</span>
+<span class="keyword">export</span> <span class="var">GOOGLE_APPLICATION_CREDENTIALS</span>=<span class="string">"/path/to/sa.json"</span>
+<span class="keyword">export</span> <span class="var">CLOUD_ML_REGION</span>=<span class="string">"us-east5"</span>
+
+<span class="comment"># Python (uses Anthropic SDK with Vertex backend)</span>
+<span class="keyword">from</span> anthropic <span class="keyword">import</span> AnthropicVertex
+client = AnthropicVertex(
+    region=<span class="string">"us-east5"</span>,
+    project_id=<span class="string">"my-project"</span>
+)
+msg = client.messages.create(
+    model=<span class="string">"claude-sonnet-4@20250514"</span>,
+    max_tokens=1024,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>,
+               <span class="string">"content"</span>: <span class="string">"Hello"</span>}]
+)</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dot" style="background:#34d399;"></div> Claude Code — All Backends</div>
+      <div class="code-body"><span class="comment"># Default (Anthropic direct)</span>
+claude
+
+<span class="comment"># Via AWS Bedrock</span>
+<span class="keyword">export</span> <span class="var">CLAUDE_CODE_USE_BEDROCK</span>=<span class="string">1</span>
+claude  <span class="comment"># uses your AWS credentials</span>
+
+<span class="comment"># Via Google Vertex</span>
+<span class="keyword">export</span> <span class="var">CLAUDE_CODE_USE_VERTEX</span>=<span class="string">1</span>
+claude  <span class="comment"># uses your GCP service account</span>
+
+<span class="comment"># Via Copilot (GitHub auth)</span>
+copilot --acp --stdio  <span class="comment"># routes to Claude</span>
+
+<span class="comment"># The same Claude Code agent — different billing door</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Claude in Coding Agents -->
+<div class="section">
+  <h2 class="section-title amber">Claude in the OneMind Stack</h2>
+  <div class="card-grid">
+    <div class="card highlight-card">
+      <div class="card-title" style="color:#34d399;">Claude Code</div>
+      <div class="card-desc">
+        <ul>
+          <li>Native Claude agent for coding</li>
+          <li>Supports: Anthropic direct, Bedrock, Vertex, Copilot</li>
+          <li>Switch backend with env vars — same agent, different billing</li>
+          <li>Delegated from Hermes via delegate_task or ACP</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card highlight-card">
+      <div class="card-title" style="color:#fb923c;">Hermes Agent</div>
+      <div class="card-desc">
+        <ul>
+          <li>Orchestrator — routes to Claude as primary model</li>
+          <li>Config: provider = copilot, anthropic, or bedrock</li>
+          <li>Fallback chain: copilot → bedrock (auto-failover)</li>
+          <li>Can switch models mid-session</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#a78bfa;">OpenClaw</div>
+      <div class="card-desc">
+        <ul>
+          <li>Multi-agent fleet orchestrator</li>
+          <li>Routes different agents to different Claude tiers</li>
+          <li>Opus for complex tasks, Sonnet for standard, Haiku for routing</li>
+          <li>Cost optimization via model selection</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#3CE7FF;">Copilot (GitHub)</div>
+      <div class="card-desc">
+        <ul>
+          <li>Routes to Claude Sonnet via GitHub's infra</li>
+          <li>Auth: GitHub token (free with Pro/Enterprise)</li>
+          <li>Used by Hermes as primary provider (no API cost)</li>
+          <li>Rate limits can hit (429) during heavy use</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Graph -->
+<div class="section">
+  <h2 class="section-title cyan">Connection Map</h2>
+  <div class="graph-container">
+    <canvas id="claude-graph" width="1400" height="700"></canvas>
+  </div>
+</div>
+
+<div class="footer">
+  OneMind Model Architecture &bull; Anthropic Claude &bull; The Fabric Connects Us All
+</div>
+
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('claude-graph');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const COLORS = { provider: '#fbbf24', model: '#60a5fa', agent: '#34d399', system: '#fb923c', hub: '#3CE7FF' };
+
+  const nodes = [
+    // Center: Claude
+    { id: 'claude', label: 'Claude', type: 'hub', r: 30 },
+
+    // Model variants
+    { id: 'opus', label: 'Opus 4', type: 'model', r: 16 },
+    { id: 'sonnet', label: 'Sonnet 4', type: 'model', r: 16 },
+    { id: 'haiku', label: 'Haiku 3.5', type: 'model', r: 16 },
+
+    // Providers (where it lives)
+    { id: 'anthropic', label: 'Anthropic\nDirect', type: 'provider', r: 20 },
+    { id: 'bedrock', label: 'AWS\nBedrock', type: 'provider', r: 20 },
+    { id: 'vertex', label: 'Google\nVertex', type: 'provider', r: 20 },
+    { id: 'azure-ai', label: 'Azure AI\nFoundry', type: 'provider', r: 20 },
+    { id: 'copilot-p', label: 'GitHub\nCopilot', type: 'provider', r: 20 },
+
+    // Coding Agents
+    { id: 'claude-code', label: 'Claude\nCode', type: 'agent', r: 18 },
+    { id: 'copilot-a', label: 'Copilot', type: 'agent', r: 16 },
+    { id: 'opencode', label: 'OpenCode', type: 'agent', r: 16 },
+
+    // Systems
+    { id: 'hermes', label: 'Hermes', type: 'system', r: 22 },
+    { id: 'openclaw', label: 'OpenClaw', type: 'system', r: 22 },
+  ];
+
+  const edges = [
+    // Claude to variants
+    ['claude', 'opus', 'model'],
+    ['claude', 'sonnet', 'model'],
+    ['claude', 'haiku', 'model'],
+
+    // Claude hosted by providers
+    ['anthropic', 'claude', 'hosts'],
+    ['bedrock', 'claude', 'hosts'],
+    ['vertex', 'claude', 'hosts'],
+    ['azure-ai', 'claude', 'hosts'],
+    ['copilot-p', 'claude', 'hosts'],
+
+    // Agents use Claude (via various providers)
+    ['claude-code', 'anthropic', 'uses'],
+    ['claude-code', 'bedrock', 'uses'],
+    ['claude-code', 'vertex', 'uses'],
+    ['claude-code', 'copilot-p', 'uses'],
+    ['copilot-a', 'copilot-p', 'uses'],
+    ['opencode', 'anthropic', 'uses'],
+
+    // Systems connect to agents and providers
+    ['hermes', 'anthropic', 'uses'],
+    ['hermes', 'bedrock', 'uses'],
+    ['hermes', 'copilot-p', 'uses'],
+    ['hermes', 'claude-code', 'powers'],
+    ['openclaw', 'anthropic', 'uses'],
+    ['openclaw', 'bedrock', 'uses'],
+    ['openclaw', 'claude-code', 'powers'],
+  ];
+
+  const nodeMap = {};
+  nodes.forEach(n => { n.vx = 0; n.vy = 0; n.fx = null; n.fy = null; nodeMap[n.id] = n; });
+
+  // Seed
+  nodeMap['claude'].x = W/2; nodeMap['claude'].y = H/2 - 40;
+  nodeMap['opus'].x = W/2 - 100; nodeMap['opus'].y = H/2 - 130;
+  nodeMap['sonnet'].x = W/2; nodeMap['sonnet'].y = H/2 - 150;
+  nodeMap['haiku'].x = W/2 + 100; nodeMap['haiku'].y = H/2 - 130;
+
+  nodeMap['anthropic'].x = 250; nodeMap['anthropic'].y = 150;
+  nodeMap['bedrock'].x = 450; nodeMap['bedrock'].y = 100;
+  nodeMap['vertex'].x = 950; nodeMap['vertex'].y = 100;
+  nodeMap['azure-ai'].x = 1150; nodeMap['azure-ai'].y = 150;
+  nodeMap['copilot-p'].x = 700; nodeMap['copilot-p'].y = 80;
+
+  nodeMap['claude-code'].x = 400; nodeMap['claude-code'].y = 500;
+  nodeMap['copilot-a'].x = 700; nodeMap['copilot-a'].y = 480;
+  nodeMap['opencode'].x = 1000; nodeMap['opencode'].y = 480;
+
+  nodeMap['hermes'].x = 350; nodeMap['hermes'].y = 620;
+  nodeMap['openclaw'].x = 900; nodeMap['openclaw'].y = 620;
+
+  const SIM_STEPS = 200;
+  let step = 0, zoom = 1, panX = 0, panY = 0, dragging = null, isPanning = false, lastMouse = {x:0,y:0};
+
+  function simulate() {
+    const alpha = Math.max(0.01, 1 - step/SIM_STEPS);
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i+1; j < nodes.length; j++) {
+        let dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y;
+        let dist = Math.sqrt(dx*dx+dy*dy)||1;
+        let f = 5000/(dist*dist)*alpha;
+        nodes[i].vx -= (dx/dist)*f; nodes[i].vy -= (dy/dist)*f;
+        nodes[j].vx += (dx/dist)*f; nodes[j].vy += (dy/dist)*f;
+      }
+    }
+    edges.forEach(([s,t])=>{
+      const a=nodeMap[s],b=nodeMap[t]; if(!a||!b)return;
+      let dx=b.x-a.x,dy=b.y-a.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+      let f=(dist-140)*0.004*alpha;
+      a.vx+=(dx/dist)*f; a.vy+=(dy/dist)*f;
+      b.vx-=(dx/dist)*f; b.vy-=(dy/dist)*f;
+    });
+    nodes.forEach(n=>{
+      n.vx+=(W/2-n.x)*0.0005*alpha; n.vy+=(H/2-n.y)*0.0005*alpha;
+      if(n.fx!==null){n.x=n.fx;n.y=n.fy;n.vx=0;n.vy=0;return;}
+      n.vx*=0.83; n.vy*=0.83;
+      n.x+=n.vx; n.y+=n.vy;
+      n.x=Math.max(n.r+10,Math.min(W-n.r-10,n.x));
+      n.y=Math.max(n.r+10,Math.min(H-n.r-10,n.y));
+    });
+    step++;
+  }
+
+  function draw() {
+    ctx.save(); ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#1e293b'; ctx.lineWidth=0.5;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.translate(panX,panY); ctx.scale(zoom,zoom);
+
+    edges.forEach(([s,t,type])=>{
+      const a=nodeMap[s],b=nodeMap[t]; if(!a||!b)return;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      if(type==='hosts'){ctx.strokeStyle='rgba(251,191,36,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([]);}
+      else if(type==='uses'){ctx.strokeStyle='rgba(167,139,250,0.4)';ctx.lineWidth=1.2;ctx.setLineDash([5,5]);}
+      else if(type==='powers'){ctx.strokeStyle='rgba(251,146,60,0.4)';ctx.lineWidth=1.2;ctx.setLineDash([3,4]);}
+      else{ctx.strokeStyle='rgba(96,165,250,0.4)';ctx.lineWidth=1;ctx.setLineDash([2,3]);}
+      ctx.stroke(); ctx.setLineDash([]);
+    });
+
+    nodes.forEach(n=>{
+      const color = n.type==='hub'?COLORS.hub:COLORS[n.type];
+      if(n.type==='hub'||n.type==='system'){
+        let g=ctx.createRadialGradient(n.x,n.y,n.r,n.x,n.y,n.r+12);
+        g.addColorStop(0,color+'33');g.addColorStop(1,'transparent');
+        ctx.beginPath();ctx.arc(n.x,n.y,n.r+12,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      }
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle='#0f172a';ctx.fill();
+      ctx.strokeStyle=color;ctx.lineWidth=n.type==='hub'?3:2;ctx.stroke();
+      ctx.fillStyle=color;
+      ctx.font=(n.r>18?'10px':'8px')+" 'IBM Plex Mono',monospace";
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      n.label.split('\n').forEach((l,i,a)=>{ctx.fillText(l,n.x,n.y+(i-(a.length-1)/2)*11);});
+    });
+
+    ctx.restore();
+    if(step<SIM_STEPS)simulate();
+    requestAnimationFrame(draw);
+  }
+
+  function s2g(mx,my){const r=canvas.getBoundingClientRect();return{x:((mx-r.left)*(W/r.width)-panX)/zoom,y:((my-r.top)*(H/r.height)-panY)/zoom};}
+  canvas.addEventListener('mousedown',e=>{const p=s2g(e.clientX,e.clientY);let c=null,md=Infinity;nodes.forEach(n=>{const d=Math.hypot(n.x-p.x,n.y-p.y);if(d<n.r+8&&d<md){c=n;md=d;}});if(c){dragging=c;c.fx=c.x;c.fy=c.y;canvas.style.cursor='grabbing';}else{isPanning=true;lastMouse={x:e.clientX,y:e.clientY};canvas.style.cursor='move';}});
+  canvas.addEventListener('mousemove',e=>{if(dragging){const p=s2g(e.clientX,e.clientY);dragging.fx=p.x;dragging.fy=p.y;dragging.x=p.x;dragging.y=p.y;step=Math.max(0,step-3);}else if(isPanning){panX+=e.clientX-lastMouse.x;panY+=e.clientY-lastMouse.y;lastMouse={x:e.clientX,y:e.clientY};}});
+  canvas.addEventListener('mouseup',()=>{if(dragging){dragging.fx=null;dragging.fy=null;dragging=null;}isPanning=false;canvas.style.cursor='grab';});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();const s=e.deltaY>0?0.9:1.1;const r=canvas.getBoundingClientRect();const mx=(e.clientX-r.left)*(W/r.width),my=(e.clientY-r.top)*(H/r.height);panX=mx-(mx-panX)*s;panY=my-(my-panY)*s;zoom=Math.max(0.3,Math.min(3,zoom*s));},{passive:false});
+
+  for(let i=0;i<100;i++)simulate();
+  draw();
+})();
+</script>
+</body>
+</html>

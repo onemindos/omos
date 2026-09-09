@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/registry/entity/v1",
+  "title": "Registry Entity Record",
+  "description": "Canonical record for every connected/operational object in OneMind. Lives in the KV_ENTITY_REGISTRY bucket and is emitted on the registry.entity.{id} subject. An entity is any robot, drone, agent, node, sensor, camera, ship, TAK user, or other addressable thing on the bus.",
+  "type": "object",
+  "required": ["id", "kind", "name", "status", "source"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable, globally unique entity identity (e.g. 'node.zeus-mac', 'robot.go2-01', 'agent.legacy', 'sensor.greenhouse-temp-01'). Matches the actor identity model.",
+      "minLength": 1,
+      "pattern": "^[a-z0-9_][a-z0-9_.\\-$]*$"
+    },
+    "kind": {
+      "type": "string",
+      "description": "Entity class — determines how the entity is rendered and which CoT type it maps to.",
+      "enum": [
+        "machine",
+        "robot",
+        "drone",
+        "agent",
+        "node",
+        "sensor",
+        "camera",
+        "ship",
+        "aircraft",
+        "tak_user",
+        "vehicle",
+        "human",
+        "squad",
+        "other"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name (e.g. 'zeus-mac', 'Go2 Dog 01').",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "Current operational status of the entity.",
+      "enum": ["online", "offline", "busy", "degraded", "unknown"]
+    },
+    "source": {
+      "type": "string",
+      "description": "The source/connector that registered this entity (e.g. 'omd', 'homeassistant', 'om-unity', 'tak-bridge').",
+      "minLength": 1
+    },
+    "subjects": {
+      "type": "object",
+      "description": "NATS subjects this entity publishes or listens on. Wildcards allowed.",
+      "additionalProperties": true,
+      "properties": {
+        "telemetry": {
+          "type": "string",
+          "description": "Telemetry subject pattern (e.g. 'tel.node.zeus-mac.>')."
+        },
+        "commands": {
+          "type": "string",
+          "description": "Command subject pattern (e.g. 'cmd.node.zeus-mac.>')."
+        },
+        "state": {
+          "type": "string",
+          "description": "Entity state subject (e.g. 'ent.node.zeus-mac.state')."
+        }
+      }
+    },
+    "visibility": {
+      "type": "object",
+      "description": "Projection visibility flags — which surfaces should display this entity.",
+      "additionalProperties": false,
+      "properties": {
+        "tak": {
+          "type": "boolean",
+          "description": "Whether this entity should be projected into TAK as a CoT marker.",
+          "default": false
+        },
+        "atoc": {
+          "type": "boolean",
+          "description": "Whether this entity appears in the omos-atoc control-plane console.",
+          "default": true
+        },
+        "feed": {
+          "type": "boolean",
+          "description": "Whether this entity's events appear in the UI feed.",
+          "default": true
+        },
+        "legacy_watch": {
+          "type": "boolean",
+          "description": "Whether Legacy should actively watch this entity for attention-worthy signals.",
+          "default": false
+        }
+      }
+    },
+    "tak": {
+      "type": "object",
+      "description": "TAK projection metadata. Required only when visibility.tak is true.",
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "TAK CoT UID (e.g. 'OM.node.zeus-mac')."
+        },
+        "cot_type": {
+          "type": "string",
+          "description": "CoT type string (e.g. 'a-f-G-U-i-I' for infrastructure, 'a-f-A-M-F' for friendly drone). See TAK-PROJECTION.md CoT mapping table."
+        },
+        "layer": {
+          "type": "string",
+          "description": "TAK layer/group name (e.g. 'infrastructure', 'air', 'ground')."
+        },
+        "label": {
+          "type": "string",
+          "description": "Label shown on the TAK marker."
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "Capability tags this entity advertises (e.g. 'health', 'logs', 'restart_workload', 'fs.read', 'fly').",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "location": {
+      "type": "object",
+      "description": "Optional geographic location for map projection. Omitted for entities without a meaningful position.",
+      "additionalProperties": false,
+      "properties": {
+        "lat": {
+          "type": "number",
+          "description": "WGS-84 latitude in decimal degrees.",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lon": {
+          "type": "number",
+          "description": "WGS-84 longitude in decimal degrees.",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "hae": {
+          "type": "number",
+          "description": "Height above ellipsoid in metres. 0 for ground assets."
+        }
+      }
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "RFC3339 timestamp of the last known activity from this entity.",
+      "format": "date-time"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Free-form domain-specific metadata (model, hardware, battery, etc.).",
+      "additionalProperties": true
+    }
+  }
+}

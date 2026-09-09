@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind - Blueprints</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a14;
+    --bg2: #0a1322;
+    --panel: #0c1626;
+    --border: #1c2e45;
+    --ink: #e9f1fb;
+    --muted: #7d93ad;
+    --muted2: #4f6680;
+    --core: #1de9b6;
+    --core2: #00b8d4;
+    --amber: #fbbf24;
+    --purple: #a78bfa;
+    --pink: #ec4899;
+    --red: #fb7185;
+    --blue: #60a5fa;
+    --green: #34d399;
+    --orange: #fb923c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(1200px 700px at 60% -5%, rgba(29,233,182,.06), transparent 55%),
+                radial-gradient(800px 600px at 5% 100%, rgba(96,165,250,.06), transparent 50%),
+                var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 28px;
+    background: rgba(5,10,20,.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .logo {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: conic-gradient(from 200deg, var(--core), var(--core2), var(--blue), var(--core));
+    box-shadow: 0 0 20px rgba(29,233,182,.4);
+    flex: none; position: relative;
+  }
+  .logo::after { content: ''; position: absolute; inset: 7px; border-radius: 4px; background: var(--bg); }
+  header h1 { font-size: 16px; font-weight: 800; letter-spacing: .2px; }
+  header h1 span { color: var(--core); }
+  .sub { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono'; margin-left: auto; }
+  .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--core);
+    box-shadow: 0 0 0 0 rgba(29,233,182,.6); animation: pulse 2s infinite; flex: none; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(29,233,182,.5)} 50%{box-shadow:0 0 0 8px rgba(29,233,182,0)} }
+  main { max-width: 1300px; margin: 0 auto; padding: 40px 28px 60px; }
+  .intro { margin-bottom: 36px; }
+  .intro .kick { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--core); font-weight: 700; margin-bottom: 8px; }
+  .intro h2 { font-size: 28px; font-weight: 800; letter-spacing: -.3px; margin-bottom: 10px; }
+  .intro p { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 640px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+    font-family: 'JetBrains Mono'; font-weight: 700;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px; margin-top: 36px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; position: relative; overflow: hidden; transition: all .25s ease;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent, var(--core)); opacity: 0; transition: opacity .25s;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--accent, var(--core)); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+  .card:hover::before { opacity: 1; }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,.03); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 16px;
+  }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
+  .card .desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .card .source {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted2);
+    background: rgba(0,0,0,.2); padding: 6px 10px; border-radius: 6px;
+    border: 1px solid rgba(28,46,69,.5); display: inline-block;
+  }
+  .card .source code { color: var(--accent, var(--core)); text-decoration: none; font-weight: 500; }
+  .card .tag {
+    position: absolute; top: 20px; right: 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--muted2);
+    border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px;
+  }
+  .card .arrow { position: absolute; bottom: 20px; right: 20px; color: var(--muted2); font-size: 16px; transition: all .2s; }
+  .card:hover .arrow { transform: translate(3px, -3px); color: var(--accent, var(--ink)); }
+  footer {
+    border-top: 1px solid var(--border); padding: 24px 28px; margin-top: 40px;
+    color: var(--muted2); font-family: 'JetBrains Mono'; font-size: 11px; text-align: center;
+  }
+  .protocol {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; margin-top: 40px;
+  }
+  .protocol h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; color: var(--ink); }
+  .protocol ol { padding-left: 20px; }
+  .protocol li { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 8px; }
+  .protocol code { background: rgba(255,255,255,.05); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 12px; color: var(--ink); }
+  .protocol .note { margin-top: 16px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .protocol .note b { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"></div>
+  <h1>OneMind <span>OS</span></h1>
+  <div class="sub">blueprints - interactive architecture</div>
+  <div class="pulse"></div>
+</header>
+<main>
+  <div class="intro">
+    <div class="kick">System Knowledge Base</div>
+    <h2>Design Documents & Visualizations</h2>
+    <p>Interactive HTML blueprints for the OneMind fabric - visualizations, architecture docs, and infrastructure reference across all domains.</p>
+  </div>
+  <div class="section-label">Fabric & Infrastructure</div>
+  <div class="grid">
+    <a class="card" href="fabric/live-bus.html" style="--accent:#22d3ee">
+      <div class="card-icon">&#128225;</div>
+      <h3>Live Bus</h3>
+      <div class="desc">Real-time NATS WebSocket viewer. Connect to any server, filter by subject pattern, watch messages stream live.</div>
+      <div class="source">&#128205; <code>omos-core/nats/tools/live-bus/index.html</code></div>
+      <span class="tag">NATS | WebSocket | Live</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="fabric/nats-fabric-vision.html" style="--accent:#1de9b6">
+      <div class="card-icon">&#9673;</div>
+      <h3>The NATS Fabric</h3>
+      <div class="desc">Interactive animated visualization of NATS as the nervous system - nodes, subjects, topology, SaaS, anatomy, languages, and voice. 6 tabs.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/nats-fabric-vision.html</code></div>
+      <span class="tag">NATS | Interactive | Canvas</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="fabric/nex-map.html" style="--accent:#fb923c">
+      <div class="card-icon">&#11021;</div>
+      <h3>Operations OS - NEX Map</h3>
+      <div class="desc">OneMind Operations OS overview - NEX workloads, services, and how everything connects at the infrastructure level.</div>
+      <div class="source">&#128205; <code>Desktop/omos-nex-map.html</code></div>
+      <span class="tag">NEX | Infrastructure | Ops</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="fabric/sovereign-network.html" style="--accent:#a78bfa">
+      <div class="card-icon">&#127760;</div>
+      <h3>Sovereign Intelligence Network</h3>
+      <div class="desc">Global map of the OneMind sovereign infrastructure. All nodes, connections, and operational zones visualized on a world canvas.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/onemind-sovereign-network.html</code></div>
+      <span class="tag">Global | Map | Leaflet</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="section-label">Network</div>
+  <div class="grid">
+    <a class="card" href="network/onemind-sovereign-network.html" style="--accent:#a78bfa">
+      <div class="card-icon">&#128274;</div>
+      <h3>Sovereign Network Overview</h3>
+      <div class="desc">Tailnet topology, device roles, and encrypted mesh - how the fabric stays sovereign.</div>
+      <div class="source">&#128205; <code>network/onemind-sovereign-network.html</code></div>
+      <span class="tag">Network | Mesh | Tailscale</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="section-label">Planning & Documentation</div>
+  <div class="grid">
+    <a class="card" href="planning/migration-plan.html" style="--accent:#fbbf24">
+      <div class="card-icon">&#128203;</div>
+      <h3>Migration Master Plan</h3>
+      <div class="desc">OMOS full migration roadmap - phased plan for consolidating repos, workloads, and infrastructure into OneMind.</div>
+      <div class="source">&#128205; <code>Desktop/OMOS-MIGRATION-MASTER-PLAN.html</code></div>
+      <span class="tag">Migration | Planning | Phases</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="planning/repos-extraction.html" style="--accent:#fb7185">
+      <div class="card-icon">&#128451;</div>
+      <h3>World Repos Extraction</h3>
+      <div class="desc">Full audit of all OMOS repos - what has been extracted, eliminated, absorbed into OneMind.</div>
+      <div class="source">&#128205; <code>Desktop/OMOS-WORLD-REPOS-EXTRACTION.html</code></div>
+      <span class="tag">Repos | Audit | Extraction</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="planning/skill-tree-full.html" style="--accent:#34d399">
+      <div class="card-icon">&#127795;</div>
+      <h3>OneMind Capability Tree</h3>
+      <div class="desc">The full capability and skill tree of the OneMind system - every domain, every tool, every agent, mapped and linked. Force-directed graph + matrix views.</div>
+      <div class="source">&#128205; <code>omos-skill-tree/index.html</code></div>
+      <span class="tag">Capabilities | Skills | Tree</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="planning/tacmap.html" style="--accent:#22d3ee">
+      <div class="card-icon">&#128506;</div>
+      <h3>TACMAP - COP</h3>
+      <div class="desc">Common Operating Picture. Tactical map overlay for OneMind operations - track assets, zones, and events in real time.</div>
+      <div class="source">&#128205; <code>omos-atoc/tacmap.html</code></div>
+      <span class="tag">Tactical | Map | COP</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="section-label">Agents & Intelligence</div>
+  <div class="grid">
+    <a class="card" href="agents/index.html" style="--accent:#f472b6">
+      <div class="card-icon">&#129302;</div>
+      <h3>Agent Registry</h3>
+      <div class="desc">All OneMind agents - Legacy (mother), edge, servants. Identity, hierarchy, NATS subjects, and capability map.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/agents/index.html</code></div>
+      <span class="tag">Agents | Legacy | Hierarchy</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="section-label">AI Models</div>
+  <div class="grid">
+    <a class="card" href="models/architecture.html" style="--accent:#60a5fa">
+      <div class="card-icon">&#129504;</div>
+      <h3>Model Architecture</h3>
+      <div class="desc">Full OneMind AI model architecture - agent topology, provider matrix, sovereign vs cloud routing, and model selection logic.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/index.html</code></div>
+      <span class="tag">Models | Agents | Architecture</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="models/anthropic-claude.html" style="--accent:#e2b96f">
+      <div class="card-icon">&#128310;</div>
+      <h3>Anthropic - Claude</h3>
+      <div class="desc">Claude model family deep-dive - capabilities, context windows, pricing tiers, and OneMind routing rules.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/models/anthropic-claude.html</code></div>
+      <span class="tag">Claude | Anthropic | LLM</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="models/openai.html" style="--accent:#74c99d">
+      <div class="card-icon">&#11036;</div>
+      <h3>OpenAI - GPT / o-series</h3>
+      <div class="desc">OpenAI model family - GPT-4o, o3, o4-mini, reasoning models, and API reference for OneMind integrations.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/models/openai.html</code></div>
+      <span class="tag">GPT | OpenAI | LLM</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="models/gemini.html" style="--accent:#4fc3f7">
+      <div class="card-icon">&#128142;</div>
+      <h3>Google - Gemini</h3>
+      <div class="desc">Gemini model family - Flash, Pro, Ultra. Multimodal capabilities and integration points for OneMind.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/models/gemini.html</code></div>
+      <span class="tag">Gemini | Google | LLM</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="section-label">Cloud Providers</div>
+  <div class="grid">
+    <a class="card" href="providers/digitalocean.html" style="--accent:#1de9b6">
+      <div class="card-icon">&#127754;</div>
+      <h3>DigitalOcean</h3>
+      <div class="desc">DO DOKS cluster, Spaces, Container Registry, and Droplet topology for OneMind sovereign cloud hub.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/providers/digitalocean.html</code></div>
+      <span class="tag">DOKS | DO | Cloud</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="providers/aws-bedrock.html" style="--accent:#fb923c">
+      <div class="card-icon">&#9729;&#65039;</div>
+      <h3>AWS Bedrock</h3>
+      <div class="desc">AWS Bedrock model access - Claude, Titan, and sovereign AI inference on AWS infrastructure.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/providers/aws-bedrock.html</code></div>
+      <span class="tag">AWS | Bedrock | AI</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="providers/azure.html" style="--accent:#60a5fa">
+      <div class="card-icon">&#128311;</div>
+      <h3>Azure</h3>
+      <div class="desc">Azure OpenAI, cognitive services, and hybrid cloud integration points for OneMind.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/providers/azure.html</code></div>
+      <span class="tag">Azure | OpenAI | Cloud</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="providers/google.html" style="--accent:#4fc3f7">
+      <div class="card-icon">&#128309;</div>
+      <h3>Google Cloud</h3>
+      <div class="desc">GCP Vertex AI, Cloud Run, and Google provider reference for OneMind multi-cloud strategy.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/providers/google.html</code></div>
+      <span class="tag">GCP | Vertex | Cloud</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+    <a class="card" href="providers/alibaba.html" style="--accent:#fb7185">
+      <div class="card-icon">&#128308;</div>
+      <h3>Alibaba Cloud</h3>
+      <div class="desc">Alibaba Cloud provider reference - Qwen models, OSS, and Asia-Pacific sovereign infrastructure.</div>
+      <div class="source">&#128205; <code>omos-model-architecture/providers/alibaba.html</code></div>
+      <span class="tag">Alibaba | Qwen | APAC</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="section-label">Documentation</div>
+  <div class="grid">
+    <a class="card" href="docs/ai-models-quick-ref.md" style="--accent:#a78bfa">
+      <div class="card-icon">&#128196;</div>
+      <h3>AI Models Quick Reference</h3>
+      <div class="desc">Quick reference for LM Studio, Paperspace, and local/cloud model status. Hermes model config cheatsheet.</div>
+      <div class="source">&#128205; <code>~/ai_models_quick_ref.md</code></div>
+      <span class="tag">LM Studio | Models | Reference</span>
+      <div class="arrow">&#8599;</div>
+    </a>
+  </div>
+  <div class="protocol">
+    <h3>&#128203; Protocol - Adding a New Blueprint</h3>
+    <ol>
+      <li>Copy your standalone HTML file into the appropriate folder with a clean kebab-case name.</li>
+      <li>Open <code>index.html</code> and add a new card in the matching section. Use any existing card as a template.</li>
+      <li>Set the <code>href</code> to your filename, pick an <code>--accent</code> color, write a short desc, and add a <code>source</code> line.</li>
+      <li>Commit and push: <code>git add . && git commit -m "add: blueprint name" && git push</code></li>
+      <li>Live at <code>onemindos.github.io/omos-blueprints/</code> within 60 seconds.</li>
+    </ol>
+    <div class="note">
+      <b>Rules:</b> Single HTML files only - no build steps, no frameworks. Each file must be self-contained (inline CSS/JS, CDN deps OK). If it needs a server, it does not belong here.<br>
+      <b>Source tracking:</b> Every card shows where it originated with a &#128205; marker. Keep this updated.
+    </div>
+  </div>
+</main>
+<footer>
+  OneMind OS · Blueprints · <span id="clock"></span>
+</footer>
+<script>
+  const c = document.getElementById("clock");
+  const tick = () => c.textContent = new Date().toLocaleTimeString() + " - live";
+  tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/registry/source/v1",
+  "title": "Registry Source Record",
+  "description": "Canonical record for a data/information source that feeds entities or events into OneMind. Lives in the KV_SOURCE_REGISTRY bucket and is emitted on the registry.source.{id} subject. A source is the origin system (e.g. Home Assistant, ADS-B, AIS, ACLED, om-unity) that discovers and feeds entities.",
+  "type": "object",
+  "required": ["id", "name", "kind", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable source identifier (e.g. 'homeassistant', 'ads-b', 'ais-feed', 'om-unity').",
+      "minLength": 1,
+      "pattern": "^[a-z0-9_][a-z0-9_.\\-$]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable source name.",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "description": "Source category — what type of system this source represents.",
+      "enum": [
+        "connector",
+        "world_feed",
+        "sensor_network",
+        "bridge",
+        "agent_feed",
+        "external_api",
+        "manual",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "Current connection/health status of the source.",
+      "enum": ["connected", "disconnected", "error", "degraded", "unknown"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Short human-readable description of what this source provides."
+    },
+    "subjects": {
+      "type": "object",
+      "description": "NATS subjects this source publishes on.",
+      "additionalProperties": true,
+      "properties": {
+        "events": {
+          "type": "string",
+          "description": "Event subject pattern this source emits (e.g. 'evt.world.air.>')."
+        },
+        "telemetry": {
+          "type": "string",
+          "description": "Telemetry subject pattern this source emits."
+        }
+      }
+    },
+    "entity_count": {
+      "type": "integer",
+      "description": "Number of entities currently discovered from this source.",
+      "minimum": 0
+    },
+    "tak_projection": {
+      "type": "string",
+      "description": "Whether this source's entities are projected into TAK by default.",
+      "enum": ["on", "off", "inherit"],
+      "default": "inherit"
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "RFC3339 timestamp of the last activity from this source.",
+      "format": "date-time"
+    },
+    "config": {
+      "type": "object",
+      "description": "Source-specific configuration (endpoint, credentials ref, poll interval, etc.). No secrets stored inline — use credential references.",
+      "additionalProperties": true
+    }
+  }
+}

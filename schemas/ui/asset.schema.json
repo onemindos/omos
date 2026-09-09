@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/ui/asset/v1",
+  "title": "UI Asset Projection",
+  "description": "Bounded projection of a registry entity for the Flutter app's asset views. Published by om-control-plane on ui.assets.index (list) and ui.assets.{id}.state (single). This is a UI-friendly view of an entity — not the full registry record. Clients use this for routine UI; they do not subscribe to raw ent.*.*.state.",
+  "type": "object",
+  "required": ["id", "name", "kind", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Entity ID (matches registry entity id).",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name.",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "description": "Entity kind for icon/rendering.",
+      "enum": [
+        "machine",
+        "robot",
+        "drone",
+        "agent",
+        "node",
+        "sensor",
+        "camera",
+        "ship",
+        "aircraft",
+        "tak_user",
+        "vehicle",
+        "human",
+        "squad",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "Current status.",
+      "enum": ["online", "offline", "busy", "degraded", "unknown"]
+    },
+    "source": {
+      "type": "string",
+      "description": "Source that registered this entity."
+    },
+    "visibility": {
+      "type": "object",
+      "description": "Projection visibility flags (mirrors registry entity visibility).",
+      "additionalProperties": false,
+      "properties": {
+        "tak": {
+          "type": "boolean"
+        },
+        "atoc": {
+          "type": "boolean"
+        },
+        "feed": {
+          "type": "boolean"
+        },
+        "legacy_watch": {
+          "type": "boolean"
+        }
+      }
+    },
+    "tak_visible": {
+      "type": "boolean",
+      "description": "Whether this entity is currently projected into TAK (convenience flag for UI rendering)."
+    },
+    "location": {
+      "type": "object",
+      "description": "Last known location if available.",
+      "additionalProperties": false,
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lon": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "Capability tags (subset relevant to UI actions).",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "RFC3339 timestamp of last activity.",
+      "format": "date-time"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short human-readable summary line for list views."
+    }
+  }
+}

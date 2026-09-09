@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/ui/system/v1",
+  "title": "UI System Projection",
+  "description": "Bounded projection of a backend service/system for the Flutter app's systems view. Published by om-control-plane on ui.systems.index. This is a UI-friendly view of a service — not the full registry record. Clients use this for routine UI; they do not subscribe to raw $SYS.> subjects.",
+  "type": "object",
+  "required": ["id", "name", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Service ID (matches registry service id).",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name.",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "description": "Service deployment type.",
+      "enum": ["nex_workload", "process", "launchd", "systemd", "container", "embedded"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Current health status.",
+      "enum": ["running", "stopped", "error", "starting", "degraded", "unknown"]
+    },
+    "node": {
+      "type": "string",
+      "description": "Node ID where this service runs."
+    },
+    "version": {
+      "type": "string",
+      "description": "Service version."
+    },
+    "category": {
+      "type": "string",
+      "description": "UI grouping category for the systems view.",
+      "enum": ["core", "connector", "agent", "bridge", "infrastructure", "other"]
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "RFC3339 timestamp of last heartbeat.",
+      "format": "date-time"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short human-readable summary for list views."
+    },
+    "actions": {
+      "type": "array",
+      "description": "UI actions available for this system (e.g. restart, stop, view logs). Each maps to a command subject.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Button label."
+          },
+          "command": {
+            "type": "string",
+            "description": "Command subject to publish when action is triggered."
+          },
+          "protected": {
+            "type": "boolean",
+            "description": "Whether this action requires operator approval (e.g. stop/restart).",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}

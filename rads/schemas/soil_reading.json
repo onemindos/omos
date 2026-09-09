@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SoilReading",
+  "description": "OMOS RADS soil sensor reading envelope payload",
+  "type": "object",
+  "required": ["field", "moisture", "ts"],
+  "properties": {
+    "field":         { "type": "integer", "minimum": 1 },
+    "moisture":      { "type": "number",  "minimum": 0, "maximum": 100 },
+    "temperature_c": { "type": "number" },
+    "humidity_pct":  { "type": "number",  "minimum": 0, "maximum": 100 },
+    "ts":            { "type": "number",  "description": "Unix epoch float" }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/ui/now-summary/v1",
+  "title": "UI Now Summary Projection",
+  "description": "Top-level operator dashboard summary published by om-control-plane on the ui.now.summary subject. This is a bounded projection for the Flutter app's home/now view — NOT a firehose. Clients consume this for routine UI; they do not subscribe to raw evt.> or tel.> subjects.",
+  "type": "object",
+  "required": ["ts", "system_health", "entity_count", "active_alerts"],
+  "additionalProperties": true,
+  "properties": {
+    "ts": {
+      "type": "string",
+      "description": "RFC3339 timestamp when this summary was generated.",
+      "format": "date-time"
+    },
+    "system_health": {
+      "type": "string",
+      "description": "Overall system health rollup.",
+      "enum": ["healthy", "degraded", "critical", "unknown"]
+    },
+    "entity_count": {
+      "type": "integer",
+      "description": "Total number of registered entities currently known to the control plane.",
+      "minimum": 0
+    },
+    "entities_online": {
+      "type": "integer",
+      "description": "Number of entities currently online.",
+      "minimum": 0
+    },
+    "active_alerts": {
+      "type": "integer",
+      "description": "Number of active (unacknowledged) alerts.",
+      "minimum": 0
+    },
+    "active_tasks": {
+      "type": "integer",
+      "description": "Number of in-progress tasks.",
+      "minimum": 0
+    },
+    "active_missions": {
+      "type": "integer",
+      "description": "Number of active missions.",
+      "minimum": 0
+    },
+    "nats_status": {
+      "type": "string",
+      "description": "NATS server health.",
+      "enum": ["ok", "degraded", "down", "unknown"]
+    },
+    "nex_workloads": {
+      "type": "integer",
+      "description": "Number of running NEX workloads.",
+      "minimum": 0
+    },
+    "legacy_status": {
+      "type": "string",
+      "description": "Legacy agent status.",
+      "enum": ["idle", "active", "offline", "unknown"]
+    },
+    "tak_status": {
+      "type": "string",
+      "description": "TAK bridge/server health.",
+      "enum": ["ok", "degraded", "down", "unknown"]
+    },
+    "headline": {
+      "type": "string",
+      "description": "Short human-readable headline for the now view (e.g. '3 alerts, 12 entities online')."
+    }
+  }
+}

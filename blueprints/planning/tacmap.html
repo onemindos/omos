@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TACMAP — OneMind COP</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/milsymbol@2.2.0/dist/milsymbol.js"></script>
+<style>
+  :root{
+    --bg:#04070c; --panel:rgba(6,12,20,.82); --cyan:#3CE7FF; --orange:#FF9F31;
+    --magenta:#FF4FD8; --green:#43E27D; --red:#FF4B57; --amber:#FFCB47;
+    --teal:#2BD9C0; --purple:#9B7BFF; --ink:#cfe8f5; --dim:#5d7a8c; --line:rgba(60,231,255,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;overflow:hidden}
+  #map{position:absolute;inset:0}
+  .maplibregl-ctrl-attrib,.maplibregl-ctrl-logo{opacity:.25;filter:grayscale(1)}
+
+  /* scanline + vignette overlays */
+  .fx{position:absolute;inset:0;pointer-events:none;z-index:40}
+  .fx.scan{background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.12) 2px 3px);mix-blend-mode:multiply;opacity:.5}
+  .fx.vig{background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
+
+  h1,h2,h3,.disp{font-family:'Chakra Petch',sans-serif;letter-spacing:.06em}
+
+  /* HUD panel w/ corner brackets */
+  .hud{position:relative;background:var(--panel);border:1px solid var(--line);
+    backdrop-filter:blur(6px);box-shadow:0 0 24px rgba(0,0,0,.5),inset 0 0 30px rgba(60,231,255,.03)}
+  .hud::before,.hud::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none}
+  .hud::before{top:-1px;left:-1px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+  .hud::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
+
+  /* top bar */
+  #top{position:absolute;top:14px;left:14px;right:14px;height:54px;z-index:30;
+    display:flex;align-items:center;gap:18px;padding:0 18px}
+  #top .brand{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;
+    color:#eaf9ff;text-shadow:0 0 14px rgba(60,231,255,.6)}
+  #top .brand b{color:var(--cyan)}
+  #top .tag{font-size:10.5px;color:var(--dim);letter-spacing:.16em;text-transform:uppercase}
+  #top .spacer{flex:1}
+  .pill{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink);
+    padding:6px 11px;border:1px solid var(--line);background:rgba(0,0,0,.25)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .pill .k{color:var(--dim);text-transform:uppercase;letter-spacing:.12em;font-size:9.5px}
+  .pill .v{color:var(--cyan);font-weight:600}
+  #clock{color:var(--amber);font-weight:600}
+
+  /* left rail */
+  #left{position:absolute;top:80px;left:14px;width:226px;z-index:30;
+    display:flex;flex-direction:column;gap:12px}
+  .hud .hd{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--cyan);padding:9px 12px;border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center}
+  .hud .bd{padding:11px 12px}
+  .toggle{display:flex;align-items:center;justify-content:space-between;padding:7px 0;cursor:pointer;font-size:11.5px}
+  .toggle:not(:last-child){border-bottom:1px dashed rgba(60,231,255,.08)}
+  .toggle .lbl{display:flex;align-items:center;gap:8px;color:var(--ink)}
+  .sw{width:30px;height:15px;border-radius:8px;background:rgba(255,255,255,.08);position:relative;transition:.2s}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--dim);transition:.2s}
+  .toggle.on .sw{background:rgba(60,231,255,.3)}
+  .toggle.on .sw::after{left:17px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .ck{width:9px;height:9px;border-radius:2px}
+  .stat{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:var(--dim)}
+  .stat b{color:var(--cyan);font-weight:600;font-size:13px}
+  .legend{font-size:10px;color:var(--dim);line-height:1.7}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+  /* right panel */
+  #right{position:absolute;top:80px;right:14px;width:288px;z-index:30;max-height:calc(100vh - 250px);display:flex;flex-direction:column}
+  #right .bd{overflow:auto}
+  .empty{color:var(--dim);font-size:11.5px;line-height:1.7}
+  .empty .ring{margin:10px 0;padding:9px 11px;border-left:2px solid var(--cyan);background:rgba(60,231,255,.04)}
+  .empty .ring.out{border-color:var(--magenta);background:rgba(255,79,216,.04)}
+  .empty .ring b{font-family:'Chakra Petch',sans-serif;letter-spacing:.08em}
+  .asset-hd{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+  .asset-hd canvas,.asset-hd img{filter:drop-shadow(0 0 6px rgba(60,231,255,.5))}
+  .asset-hd .cs{font-family:'Chakra Petch',sans-serif;font-size:17px;color:#eaf9ff;font-weight:600}
+  .asset-hd .ty{font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+  .kv{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px dashed rgba(60,231,255,.08)}
+  .kv .k{color:var(--dim)}
+  .kv .v{color:var(--ink);font-weight:500}
+  .kv .v.geo{color:var(--cyan)}
+  .verbs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:13px}
+  .verb{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.08em;text-align:center;
+    padding:9px 0;border:1px solid var(--line);background:rgba(255,159,49,.07);color:var(--orange);
+    cursor:pointer;transition:.15s;text-transform:uppercase}
+  .verb:hover{background:rgba(255,159,49,.18);box-shadow:0 0 12px rgba(255,159,49,.25)}
+  .verb.estop{grid-column:1/3;border-color:rgba(255,75,87,.5);background:rgba(255,75,87,.1);color:var(--red)}
+  .verb.estop:hover{background:rgba(255,75,87,.22)}
+
+  /* bottom feed + scrub */
+  #bottom{position:absolute;left:14px;right:14px;bottom:14px;z-index:30;display:flex;gap:12px;align-items:stretch}
+  #feed{flex:1;min-width:0}
+  #feed .bd{height:118px;overflow:auto;font-size:11px;line-height:1.65;padding:8px 12px}
+  .ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ln .t{color:#33424d;margin-right:8px}
+  .ln .s{font-weight:600;margin-right:7px}
+  .s.tel{color:var(--cyan)} .s.cmd{color:var(--orange)} .s.evt{color:var(--magenta)}
+  .s.voice{color:var(--teal)} .s.sys{color:var(--dim)}
+  .ln .p{color:#7fa8bd}
+  #scrub{width:300px;display:flex;flex-direction:column}
+  #scrub .bd{padding:11px 13px}
+  .tm-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .tmbtn{font-family:'Chakra Petch',sans-serif;font-size:10px;letter-spacing:.1em;padding:5px 11px;
+    border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--dim);cursor:pointer}
+  .tmbtn.live{color:var(--green);border-color:rgba(67,226,125,.4);background:rgba(67,226,125,.08)}
+  .tmbtn.rep{color:var(--amber);border-color:rgba(255,203,71,.4);background:rgba(255,203,71,.08)}
+  input[type=range]{width:100%;accent-color:var(--cyan);background:transparent}
+  .tmlabel{font-size:9.5px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;display:flex;justify-content:space-between}
+
+  /* marker */
+  .mk{cursor:pointer;position:relative;transform:translate(-50%,-50%)}
+  .mk .lab{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:1px;
+    font-size:8.5px;font-family:'IBM Plex Mono',monospace;color:#bfe6f4;white-space:nowrap;
+    text-shadow:0 0 4px #000,0 0 4px #000;letter-spacing:.04em}
+  .mk.sel::before{content:"";position:absolute;top:50%;left:50%;width:42px;height:42px;
+    transform:translate(-50%,-50%);border:1.5px solid var(--cyan);border-radius:50%;
+    box-shadow:0 0 14px var(--cyan);animation:spin 3s linear infinite}
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+  .mk.haz{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;
+    border-bottom:16px solid var(--orange);filter:drop-shadow(0 0 6px var(--orange));animation:pulse 1.4s infinite}
+  .mk.haz .lab{top:16px}
+
+  .toast{position:absolute;top:80px;left:50%;transform:translateX(-50%);z-index:50;
+    background:rgba(255,79,216,.14);border:1px solid var(--magenta);color:#ffd6f4;
+    padding:9px 18px;font-size:11.5px;letter-spacing:.06em;box-shadow:0 0 22px rgba(255,79,216,.4);
+    opacity:0;transition:.3s;pointer-events:none;font-family:'Chakra Petch',sans-serif}
+  .toast.show{opacity:1}
+  .mission-hint{position:absolute;bottom:150px;left:50%;transform:translateX(-50%);z-index:35;
+    background:rgba(255,159,49,.14);border:1px solid var(--orange);color:#ffe2c0;padding:7px 16px;
+    font-size:11px;letter-spacing:.05em;display:none}
+  .mission-hint.show{display:block}
+  ::-webkit-scrollbar{width:7px;height:7px}::-webkit-scrollbar-thumb{background:rgba(60,231,255,.2)}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="fx scan"></div>
+<div class="fx vig"></div>
+
+<div id="top" class="hud">
+  <div>
+    <div class="brand"><b>TAC</b>MAP</div>
+    <div class="tag">OneMind Common Operating Picture</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="pill"><span class="dot"></span><span class="k">NATS</span><span class="v" id="nats-st">CONNECTED</span></div>
+  <div class="pill"><span class="k">MSG/S</span><span class="v" id="mps">0</span></div>
+  <div class="pill"><span class="k">TRACKS</span><span class="v" id="trk">0</span></div>
+  <div class="pill"><span class="k">UTC</span><span id="clock">--:--:--</span></div>
+</div>
+
+<div id="left">
+  <div class="hud">
+    <div class="hd">Layers</div>
+    <div class="bd" id="layers">
+      <div class="toggle on" data-l="inner"><span class="lbl"><span class="ck" style="background:var(--cyan)"></span>Inner ring · fleet</span><span class="sw"></span></div>
+      <div class="toggle on" data-l="outer"><span class="lbl"><span class="ck" style="background:var(--magenta)"></span>Outer ring · world</span><span class="sw"></span></div>
+      <div class="toggle on" data-l="vectors"><span class="lbl"><span class="ck" style="background:var(--amber)"></span>Heading vectors</span><span class="sw"></span></div>
+      <div class="toggle on" data-l="trails"><span class="lbl"><span class="ck" style="background:var(--teal)"></span>Track trails</span><span class="sw"></span></div>
+      <div class="toggle on" data-l="geofence"><span class="lbl"><span class="ck" style="background:var(--green)"></span>Geofence</span><span class="sw"></span></div>
+    </div>
+  </div>
+  <div class="hud">
+    <div class="hd">Telemetry</div>
+    <div class="bd">
+      <div class="stat"><span>Fleet assets live</span><b id="s-inner">0</b></div>
+      <div class="stat"><span>World tracks</span><b id="s-outer">0</b></div>
+      <div class="stat"><span>Correlations</span><b id="s-corr" style="color:var(--magenta)">0</b></div>
+      <div class="stat"><span>Events captured</span><b id="s-evt">0</b></div>
+    </div>
+  </div>
+  <div class="hud">
+    <div class="hd">Legend</div>
+    <div class="bd legend">
+      <i style="background:#3a76c9"></i>Friend &nbsp; <i style="background:#d9444f"></i>Hostile<br>
+      <i style="background:#d2c63f"></i>Unknown &nbsp; <i style="background:#3fb96b"></i>Neutral<br>
+      <div style="margin-top:7px;color:#4a6575">MIL-STD-2525 · CoT types</div>
+    </div>
+  </div>
+</div>
+
+<div id="right" class="hud">
+  <div class="hd">Detail <span id="r-tag" style="color:var(--dim);font-size:9px"></span></div>
+  <div class="bd" id="rbody">
+    <div class="empty">
+      <div style="color:var(--cyan);font-family:'Chakra Petch';letter-spacing:.1em;margin-bottom:8px">SELECT AN ASSET</div>
+      The map is the interface. Click any node to inspect and command it.
+      <div class="ring"><b style="color:var(--cyan)">INNER RING — participate.</b><br>Our fleet: robots, drones, vehicles, nodes, agents. Live position via <code style="color:var(--cyan)">tel.{class}.{id}.position</code>. Command via <code style="color:var(--orange)">cmd.{class}.{id}.{verb}</code>.</div>
+      <div class="ring out"><b style="color:var(--magenta)">OUTER RING — observe.</b><br>The world: aircraft, vessels, hazards via <code style="color:var(--magenta)">evt.world.{domain}</code>.</div>
+      <div style="margin-top:10px;color:#4a6575;font-size:10px">NATS = source of truth · CoT = field standard · TAK = bridge</div>
+    </div>
+  </div>
+</div>
+
+<div id="bottom">
+  <div id="feed" class="hud">
+    <div class="hd">NATS Feed <span style="color:var(--dim);font-size:9px">subject · payload</span></div>
+    <div class="bd" id="feedbody"></div>
+  </div>
+  <div id="scrub" class="hud">
+    <div class="hd">Time Machine</div>
+    <div class="bd">
+      <div class="tm-row">
+        <span class="tmbtn live" id="tmstate">● LIVE</span>
+        <span class="tmbtn" id="missionbtn" style="margin-left:auto">▤ DRAW MISSION</span>
+      </div>
+      <input type="range" min="0" max="60" value="60" id="tmrange">
+      <div class="tmlabel"><span>−60s</span><span id="tmnow">NOW</span></div>
+      <div style="font-size:9px;color:#4a6575;margin-top:6px">ClickHouse evt.&gt; · 10-yr TTL · scrub to replay</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="mission-hint" id="mhint">MISSION MODE · click map to add waypoints · ESC to finish</div>
+
+<script>
+const MS = window.ms || window.milsymbol;
+
+// ---- CoT-type → 2525C SIDC (milsymbol renders frame+affiliation from positions 1-4) ----
+const SIDC = {
+  node:    "SFGPIB---------", edge:  "SFGPUSS--------", robot: "SFGPEVU--------",
+  vehicle: "SFGPEVC--------", drone: "SFAPMFQ--------", plane: "SFAPMFL--------",
+  agent:   "SFGPUCI--------", aircraft:"SUAPMFC--------", vessel:"SUSPXM---------"
+};
+const COT = {
+  node:"a-f-G-I-U-T-C", edge:"a-f-G-U-C", robot:"a-f-G-E-V", vehicle:"a-f-G-E-V",
+  drone:"a-f-A-M-F-Q", plane:"a-f-A-C-F", agent:"a-f-G-U-C-I",
+  aircraft:"a-u-A-C", vessel:"a-u-S-X-M"
+};
+const iconCache={};
+function icon(cls,size){
+  const key=cls+size; if(iconCache[key])return iconCache[key];
+  try{ const s=new MS.Symbol(SIDC[cls]||"SFGP-----------",{size:size||26,frame:true,fill:true});
+       iconCache[key]=s.toDataURL(); }catch(e){ iconCache[key]=""; }
+  return iconCache[key];
+}
+
+// ---- simulated fleet (inner) + world (outer) ----  base: Greenwich CT
+const assets=[
+  {id:"house",  cls:"node", cs:"HOUSE-1",  lat:41.030,lon:-73.628, hae:32, course:0,spd:0,  bat:100,mode:"ONLINE",link:"TS",ring:"inner"},
+  {id:"barn",   cls:"node", cs:"BARN-1",   lat:41.055,lon:-73.600, hae:40, course:0,spd:0,  bat:100,mode:"ONLINE",link:"TS",ring:"inner"},
+  {id:"office", cls:"node", cs:"OFFICE-1", lat:41.010,lon:-73.660, hae:28, course:0,spd:0,  bat:100,mode:"ONLINE",link:"TS",ring:"inner"},
+  {id:"sens7",  cls:"edge", cs:"EDGE-07",  lat:41.045,lon:-73.585, hae:38, course:0,spd:0,  bat:74, mode:"SENSE", link:"TS",ring:"inner"},
+  {id:"legacy", cls:"agent",cs:"LEGACY",   lat:41.0285,lon:-73.625,hae:32, course:0,spd:0,  bat:100,mode:"ORCH",  link:"CORE",ring:"inner"},
+  {id:"go2",    cls:"robot",cs:"GO2-UGV",  lat:41.050,lon:-73.606, hae:41, course:60,spd:3, bat:62, mode:"PATROL",link:"TS",ring:"inner",mv:1},
+  {id:"drone1", cls:"drone",cs:"DRONE-01", lat:41.058,lon:-73.598, hae:120,course:90,spd:12,bat:48, mode:"ORBIT", link:"TS",ring:"inner",mv:1,vid:1},
+  {id:"car1",   cls:"vehicle",cs:"CAR-01", lat:41.020,lon:-73.642, hae:30, course:70,spd:15,bat:81, mode:"TRANSIT",link:"LTE",ring:"inner",mv:1},
+  {id:"plane",  cls:"plane",cs:"N1MIND",   lat:41.100,lon:-73.700, hae:1800,course:120,spd:78,bat:90,mode:"FLIGHT",link:"LTE",ring:"inner",mv:1},
+  {id:"aal",    cls:"aircraft",cs:"AAL231",lat:41.130,lon:-73.560, hae:3200,course:205,spd:225,ring:"outer",domain:"air",mv:1},
+  {id:"jbu",    cls:"aircraft",cs:"JBU88", lat:40.980,lon:-73.470, hae:2600,course:300,spd:235,ring:"outer",domain:"air",mv:1},
+  {id:"ves1",   cls:"vessel",cs:"MV-SOUND",lat:40.955,lon:-73.560, hae:0,  course:88, spd:6, ring:"outer",domain:"sea",mv:1}
+];
+const hazards=[{id:"fire1",cs:"WILDFIRE",lat:41.150,lon:-73.405,domain:"fire"}];
+
+const BB={latMin:40.90,latMax:41.21,lonMin:-73.80,lonMax:-73.34};
+const markers={}; let map, state={live:true,offset:0}, msgCount=0, corrCount=0, evtCount=0;
+const layerOn={inner:true,outer:true,vectors:true,trails:true,geofence:true};
+
+map=new maplibregl.Map({
+  container:"map", attributionControl:false, center:[-73.612,41.045], zoom:11.1, pitch:38, bearing:-12,
+  style:{ version:8, glyphs:"https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+    sources:{ land:{type:"vector",url:"https://demotiles.maplibre.org/tiles/tiles.json"} },
+    layers:[
+      {id:"bg",type:"background",paint:{"background-color":"#04070c"}},
+      {id:"cf",type:"fill",source:"land","source-layer":"countries",paint:{"fill-color":"#0a1626","fill-opacity":.55}},
+      {id:"cl",type:"line",source:"land","source-layer":"countries",paint:{"line-color":"#16324f","line-width":1}}
+    ]}
+});
+map.addControl(new maplibregl.NavigationControl({showCompass:true}),"bottom-right");
+
+function dest(lat,lon,crsDeg,dM){const r=crsDeg*Math.PI/180;const dLat=dM*Math.cos(r)/111320;
+  const dLon=dM*Math.sin(r)/(111320*Math.cos(lat*Math.PI/180));return [lon+dLon,lat+dLat];}
+function hav(a,b,c,d){const R=6371000,t=Math.PI/180;const dphi=(c-a)*t,dl=(d-b)*t;
+  const x=Math.sin(dphi/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+function fc(features){return {type:"FeatureCollection",features:features};}
+
+map.on("load",()=>{
+  // graticule
+  const g=[]; for(let la=40.9;la<=41.2;la+=0.05)g.push({type:"Feature",geometry:{type:"LineString",coordinates:[[-73.8,la],[-73.34,la]]}});
+  for(let lo=-73.8;lo<=-73.34;lo+=0.05)g.push({type:"Feature",geometry:{type:"LineString",coordinates:[[lo,40.9],[lo,41.21]]}});
+  map.addSource("grat",{type:"geojson",data:fc(g)});
+  map.addLayer({id:"grat",type:"line",source:"grat",paint:{"line-color":"#3CE7FF","line-opacity":.07,"line-width":1}});
+
+  ["trails","vectors","mission","corr","geofence"].forEach(s=>map.addSource(s,{type:"geojson",data:fc([])}));
+  map.addLayer({id:"geofence-f",type:"fill",source:"geofence",paint:{"fill-color":"#43E27D","fill-opacity":.06}});
+  map.addLayer({id:"geofence-l",type:"line",source:"geofence",paint:{"line-color":"#43E27D","line-opacity":.5,"line-width":1.2,"line-dasharray":[3,2]}});
+  map.addLayer({id:"trails",type:"line",source:"trails",paint:{"line-color":"#2BD9C0","line-opacity":.4,"line-width":1.4}});
+  map.addLayer({id:"vectors",type:"line",source:"vectors",paint:{"line-color":"#FFCB47","line-opacity":.8,"line-width":1.6}});
+  map.addLayer({id:"corr",type:"line",source:"corr",paint:{"line-color":"#FF4FD8","line-opacity":.9,"line-width":1.4,"line-dasharray":[2,2]}});
+  map.addLayer({id:"mission",type:"line",source:"mission",paint:{"line-color":"#FF9F31","line-width":2.4,"line-opacity":.95}});
+
+  // geofence ring around barn (~1.4km)
+  const cx=assets.find(a=>a.id==="barn"); const ring=[];
+  for(let i=0;i<=48;i++){const ang=i/48*360;ring.push(dest(cx.lat,cx.lon,ang,1400));}
+  map.getSource("geofence").setData(fc([{type:"Feature",geometry:{type:"Polygon",coordinates:[ring]}}]));
+
+  assets.forEach(a=>{a.trail=[]; makeMarker(a);});
+  hazards.forEach(makeHaz);
+  tick(); setInterval(tick,1000);
+});
+
+function makeMarker(a){
+  const el=document.createElement("div");el.className="mk";
+  const im=icon(a.cls,a.ring==="outer"?23:27);
+  el.innerHTML=(im?`<img src="${im}" width="${a.ring==="outer"?23:27}">`:`<div style="width:14px;height:14px;background:var(--cyan)"></div>`)
+    +`<div class="lab">${a.cs}</div>`;
+  el.onclick=(e)=>{e.stopPropagation();select(a.id);};
+  markers[a.id]=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([a.lon,a.lat]).addTo(map);
+  a._el=el;
+}
+function makeHaz(h){
+  const el=document.createElement("div");el.className="mk haz";
+  el.innerHTML=`<div class="lab" style="color:#ffd6a8">⚠ ${h.cs}</div>`;
+  new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([h.lon,h.lat]).addTo(map);
+}
+
+function tick(){
+  if(state.live){
+    msgCount=0;
+    assets.forEach(a=>{
+      if(a.mv){
+        a.course+=(Math.random()-0.5)*8;
+        const np=dest(a.lat,a.lon,a.course,a.spd);
+        a.lon=np[0];a.lat=np[1];
+        if(a.lat>BB.latMax||a.lat<BB.latMin)a.course=(180-a.course+360)%360;
+        if(a.lon>BB.lonMax||a.lon<BB.lonMin)a.course=(360-a.course)%360;
+        a.lat=Math.max(BB.latMin,Math.min(BB.latMax,a.lat));
+        a.lon=Math.max(BB.lonMin,Math.min(BB.lonMax,a.lon));
+      }
+      a.trail.push([a.lon,a.lat]); if(a.trail.length>60)a.trail.shift();
+      if(a.mv||Math.random()<0.15){ emit(a); msgCount++; }
+    });
+    detectCorrelation();
+    if(selId)fillPanel(assets.find(a=>a.id===selId));
+  }
+  render(); updateStats();
+}
+
+function emit(a){
+  const sub=a.ring==="inner"?`tel.${a.cls}.${a.id}.position`:`evt.world.${a.domain}`;
+  const p=`{lat:${a.lat.toFixed(5)},lon:${a.lon.toFixed(5)},crs:${Math.round(a.course)},spd:${a.spd}}`;
+  feed(sub,p,a.ring==="inner"?"tel":"evt"); evtCount++;
+}
+
+let corrPairs={};
+function detectCorrelation(){
+  const air=assets.filter(a=>a.ring==="outer"&&a.domain==="air");
+  const mine=assets.filter(a=>a.ring==="inner"&&(a.cls==="drone"||a.cls==="plane"));
+  const links=[]; const now=Date.now();
+  air.forEach(w=>mine.forEach(m=>{
+    const d=hav(w.lat,w.lon,m.lat,m.lon);
+    if(d<6000){
+      links.push({type:"Feature",geometry:{type:"LineString",coordinates:[[w.lon,w.lat],[m.lon,m.lat]]}});
+      const key=w.id+m.id;
+      if(!corrPairs[key]||now-corrPairs[key]>15000){
+        corrPairs[key]=now;corrCount++;
+        feed(`evt.world.air`,`PROXIMITY ${w.cs} ↔ ${m.cs} ${(d/1000).toFixed(1)}km`,"evt");
+        toast(`⚠ CROSS-RING: ${w.cs} within ${(d/1000).toFixed(1)}km of ${m.cs}`);
+      }
+    }
+  }));
+  map.getSource("corr").setData(fc(links));
+}
+
+function render(){
+  const vec=[],tr=[];
+  assets.forEach(a=>{
+    const vis=layerOn[a.ring];
+    let lng=a.lon,lat=a.lat;
+    if(!state.live&&a.trail.length){const idx=Math.max(0,a.trail.length-1-state.offset);const p=a.trail[idx];if(p){lng=p[0];lat=p[1];}}
+    markers[a.id].setLngLat([lng,lat]);
+    a._el.style.display=vis?"block":"none";
+    if(vis&&a.mv&&layerOn.vectors){
+      const e=dest(lat,lng,a.course,Math.max(a.spd*45,400));
+      vec.push({type:"Feature",geometry:{type:"LineString",coordinates:[[lng,lat],e]}});
+    }
+    if(vis&&layerOn.trails&&a.trail.length>1)
+      tr.push({type:"Feature",geometry:{type:"LineString",coordinates:a.trail.slice()}});
+  });
+  map.getSource("vectors").setData(fc(layerOn.vectors?vec:[]));
+  map.getSource("trails").setData(fc(layerOn.trails?tr:[]));
+  map.setLayoutProperty("geofence-f","visibility",layerOn.geofence?"visible":"none");
+  map.setLayoutProperty("geofence-l","visibility",layerOn.geofence?"visible":"none");
+}
+
+function updateStats(){
+  const inner=assets.filter(a=>a.ring==="inner").length, outer=assets.filter(a=>a.ring==="outer").length;
+  document.getElementById("s-inner").textContent=inner;
+  document.getElementById("s-outer").textContent=outer;
+  document.getElementById("s-corr").textContent=corrCount;
+  document.getElementById("s-evt").textContent=evtCount;
+  document.getElementById("mps").textContent=msgCount;
+  document.getElementById("trk").textContent=inner+outer;
+}
+
+// ---- feed log ----
+const fb=document.getElementById("feedbody");
+function feed(sub,payload,kind){
+  const t=new Date().toISOString().substr(11,8);
+  const d=document.createElement("div");d.className="ln";
+  d.innerHTML=`<span class="t">${t}</span><span class="s ${kind}">${sub}</span><span class="p">${payload}</span>`;
+  fb.prepend(d); while(fb.childElementCount>120)fb.removeChild(fb.lastChild);
+}
+
+// ---- selection + command ----
+let selId=null;
+function select(id){
+  selId=id; Object.values(markers).forEach(m=>m.getElement().classList.remove("sel"));
+  markers[id].getElement().classList.add("sel");
+  fillPanel(assets.find(a=>a.id===id));
+}
+function fillPanel(a){
+  if(!a)return;
+  document.getElementById("r-tag").textContent="· "+(a.ring==="inner"?"INNER":"OUTER");
+  const im=icon(a.cls,34);
+  const verbs=a.ring==="inner"&&(a.mv||a.cls==="robot"||a.cls==="drone")
+    ? `<div class="verbs">
+         <div class="verb" onclick="cmd('${a.id}','${a.cls}','goto')">▸ GOTO</div>
+         <div class="verb" onclick="cmd('${a.id}','${a.cls}','track')">◎ TRACK</div>
+         <div class="verb" onclick="cmd('${a.id}','${a.cls}','rtl')">⤺ RTL</div>
+         <div class="verb" onclick="cmd('${a.id}','${a.cls}','hold')">⏸ HOLD</div>
+         <div class="verb estop" onclick="cmd('${a.id}','${a.cls}','estop')">⬛ EMERGENCY STOP</div>
+       </div>` : (a.ring==="outer"?`<div style="margin-top:12px;font-size:10.5px;color:var(--dim)">Observed track — read-only. Outer-ring world contact via <span style="color:var(--magenta)">evt.world.${a.domain}</span>.</div>`:"");
+  document.getElementById("rbody").innerHTML=`
+    <div class="asset-hd">${im?`<img src="${im}" width="34">`:""}
+      <div><div class="cs">${a.cs}</div><div class="ty">${a.cls} · ${a.ring} ring</div></div></div>
+    <div class="kv"><span class="k">CoT type</span><span class="v">${COT[a.cls]||"-"}</span></div>
+    <div class="kv"><span class="k">UID</span><span class="v">onemind-${a.cls}-${a.id}</span></div>
+    <div class="kv"><span class="k">Position</span><span class="v geo">${a.lat.toFixed(4)}, ${a.lon.toFixed(4)}</span></div>
+    <div class="kv"><span class="k">HAE</span><span class="v">${a.hae!=null?a.hae+" m":"-"}</span></div>
+    <div class="kv"><span class="k">Course / Speed</span><span class="v">${Math.round(a.course)}° · ${a.spd} m/s</span></div>
+    ${a.bat!=null?`<div class="kv"><span class="k">Battery</span><span class="v" style="color:${a.bat<35?'var(--red)':a.bat<60?'var(--amber)':'var(--green)'}">${a.bat}%</span></div>`:""}
+    ${a.mode?`<div class="kv"><span class="k">Mode</span><span class="v">${a.mode}</span></div>`:""}
+    ${a.vid?`<div class="kv"><span class="k">Video</span><span class="v" style="color:var(--cyan)">▸ RTSP feed (MediaMTX)</span></div>`:""}
+    ${verbs}`;
+}
+function cmd(id,cls,verb){
+  if(verb==="estop"){toast(`⬛ E-STOP → ${id}`);}
+  feed(`cmd.${cls}.${id}.${verb}`,`{by:"legacy",ts:"${new Date().toISOString()}"}`,"cmd");
+}
+window.cmd=cmd;
+map.on("click",e=>{ if(missionMode){addWp(e.lngLat);return;} });
+
+// ---- toast ----
+let tt;
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");
+  clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("show"),3200);}
+
+// ---- layer toggles ----
+document.querySelectorAll(".toggle").forEach(t=>t.onclick=()=>{
+  t.classList.toggle("on");layerOn[t.dataset.l]=t.classList.contains("on");render();});
+
+// ---- time machine ----
+const range=document.getElementById("tmrange");
+range.oninput=()=>{
+  const v=+range.value; state.offset=60-v;
+  const st=document.getElementById("tmstate"), nl=document.getElementById("tmnow");
+  if(v>=60){state.live=true;state.offset=0;st.textContent="● LIVE";st.className="tmbtn live";nl.textContent="NOW";
+    document.getElementById("nats-st").textContent="CONNECTED";}
+  else{state.live=false;st.textContent="❚❚ REPLAY";st.className="tmbtn rep";nl.textContent=`−${state.offset}s`;
+    document.getElementById("nats-st").textContent="REPLAY";}
+  render();
+};
+
+// ---- mission draw ----
+let missionMode=false, wps=[];
+document.getElementById("missionbtn").onclick=()=>{
+  missionMode=!missionMode; wps=[];
+  document.getElementById("mhint").classList.toggle("show",missionMode);
+  const b=document.getElementById("missionbtn");
+  b.style.color=missionMode?"#04070c":"";b.style.background=missionMode?"var(--orange)":"";
+  if(!missionMode)map.getSource("mission").setData(fc([]));
+};
+function addWp(ll){
+  wps.push([ll.lng,ll.lat]);
+  map.getSource("mission").setData(fc([{type:"Feature",geometry:{type:"LineString",coordinates:wps}}]));
+  feed("cmd.mission.m1.waypoint",`{seq:${wps.length},lat:${ll.lat.toFixed(5)},lon:${ll.lng.toFixed(5)}}`,"cmd");
+  if(wps.length>=2)toast(`▤ Mission M1 · ${wps.length} waypoints · publish cmd.mission.m1.execute`);
+}
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&missionMode){
+  if(wps.length>=2)feed("cmd.mission.m1.execute",`{waypoints:${wps.length},assignee:"drone1"}`,"cmd");
+  document.getElementById("missionbtn").click();}});
+
+// ---- clock ----
+setInterval(()=>{document.getElementById("clock").textContent=new Date().toISOString().substr(11,8);},1000);
+</script>
+</body>
+</html>

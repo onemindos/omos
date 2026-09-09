@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Cloud AI — Vertex AI & Gemini API</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3CE7FF, #34d399, #fb923c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(60, 231, 255, 0.08);
+  border: 1px solid rgba(60, 231, 255, 0.25);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #3CE7FF;
+  letter-spacing: 1px;
+}
+
+.provider-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3CE7FF;
+  box-shadow: 0 0 6px #3CE7FF;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  border: 1px solid rgba(60, 231, 255, 0.2);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.nav-back:hover { background: rgba(60, 231, 255, 0.05); }
+
+/* Graph */
+.graph-container {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+  margin-bottom: 24px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  margin-bottom: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+/* Info cards */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.info-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid #1e293b;
+}
+
+.info-card h3 {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  padding: 4px 0;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.info-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #3CE7FF;
+}
+
+.code-block {
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.code-block .comment { color: #475569; }
+.code-block .cmd { color: #fbbf24; }
+.code-block .str { color: #34d399; }
+.code-block .kw { color: #3CE7FF; }
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.tag-cyan  { color: #3CE7FF; border-color: rgba(60,231,255,0.3); background: rgba(60,231,255,0.06); }
+.tag-amber { color: #fbbf24; border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.06); }
+.tag-orange{ color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.06); }
+.tag-green { color: #34d399; border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.06); }
+
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #475569;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  margin-top: 32px;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 48px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+  padding-top: 20px;
+  border-top: 1px solid #0f172a;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="nav-back">&larr; Back to Model Architecture</a>
+
+  <div class="header">
+    <h1>Google Cloud AI</h1>
+    <div class="subtitle">Vertex AI &amp; Gemini API</div>
+    <div class="provider-badge">CLOUD PROVIDER · GOOGLE LLC</div>
+  </div>
+
+  <!-- Canvas Graph -->
+  <p class="instructions">Hover over nodes to explore. Scroll to zoom.</p>
+  <div class="graph-container">
+    <canvas id="graph" width="1200" height="520"></canvas>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3CE7FF"></div> Google Hub / Platform
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#34d399"></div> Language / Multimodal Models
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fbbf24"></div> Specialised Models
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fb923c"></div> Agent Consumers
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#a78bfa"></div> Platform Services
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <p class="section-label">Overview</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; Vertex AI Platform</h3>
+      <ul>
+        <li>Unified ML platform — training, tuning, deployment</li>
+        <li>Model Garden: access 100+ models from Google &amp; third-parties</li>
+        <li>Pipelines, Feature Store, Vector Search built-in</li>
+        <li>Enterprise SLAs, VPC-SC, CMEK encryption</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Gemini API (AI Studio)</h3>
+      <ul>
+        <li>Direct API access to Gemini family — no GCP project needed</li>
+        <li>Google AI Studio: free-tier prototyping &amp; prompt engineering</li>
+        <li>Zero-to-production in minutes with a single API key</li>
+        <li>Same models as Vertex but simpler auth, fewer controls</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; Key Differentiators</h3>
+      <ul>
+        <li>Native multimodal: text, image, video, audio in one model</li>
+        <li>1M+ token context window (Gemini 1.5 Pro / 2.5 Pro)</li>
+        <li>Grounding with live Google Search — reduces hallucination</li>
+        <li>Tight integration: BigQuery, Cloud Storage, Workspace</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-cyan">multimodal</span>
+        <span class="tag tag-amber">long-context</span>
+        <span class="tag tag-green">search-grounded</span>
+        <span class="tag tag-orange">enterprise</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Models -->
+  <p class="section-label">Available Models</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; Gemini 2.5 Series</h3>
+      <ul>
+        <li><strong style="color:#e2e8f0;">gemini-2.5-pro</strong> — flagship, deep reasoning, 1M ctx</li>
+        <li><strong style="color:#e2e8f0;">gemini-2.5-flash</strong> — speed-optimised, thinking mode</li>
+        <li>Both: text + image + video + audio + code</li>
+        <li>Tool use, function calling, structured output</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Gemini 1.5 &amp; Legacy</h3>
+      <ul>
+        <li><strong style="color:#e2e8f0;">gemini-1.5-pro</strong> — 2M ctx, stable production model</li>
+        <li><strong style="color:#e2e8f0;">gemini-1.5-flash</strong> — fast &amp; cheap, high throughput</li>
+        <li><strong style="color:#e2e8f0;">PaLM 2</strong> — legacy (text-bison, chat-bison) — deprecated path</li>
+        <li><strong style="color:#e2e8f0;">Codey</strong> — code-gecko, code-bison, code generation focus</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; Specialised Models</h3>
+      <ul>
+        <li><strong style="color:#e2e8f0;">Imagen 3</strong> — state-of-the-art image generation &amp; editing</li>
+        <li><strong style="color:#e2e8f0;">Chirp</strong> — universal speech model, 100+ languages</li>
+        <li><strong style="color:#e2e8f0;">Embeddings</strong> — text-embedding-004, multimodal-embed</li>
+        <li><strong style="color:#e2e8f0;">MedPaLM 2</strong> — medical domain (restricted access)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Connection -->
+  <p class="section-label">How to Connect</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; gcloud CLI &amp; Auth</h3>
+      <div class="code-block">
+<span class="comment"># Install and authenticate</span>
+<span class="cmd">gcloud auth application-default login</span>
+<span class="cmd">gcloud config set project</span> <span class="str">YOUR_PROJECT_ID</span>
+
+<span class="comment"># Set region</span>
+<span class="cmd">gcloud config set</span> <span class="kw">ai/region</span> <span class="str">us-central1</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; API Key (AI Studio)</h3>
+      <div class="code-block">
+<span class="comment"># Get key at aistudio.google.com</span>
+<span class="kw">export</span> GOOGLE_API_KEY=<span class="str">"AIza..."</span>
+
+<span class="comment"># REST call</span>
+<span class="cmd">curl</span> -X POST \
+  <span class="str">"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$GOOGLE_API_KEY"</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; Vertex AI SDK (Python)</h3>
+      <div class="code-block">
+<span class="cmd">pip install</span> <span class="str">google-cloud-aiplatform</span>
+
+<span class="kw">import</span> vertexai
+<span class="kw">from</span> vertexai.generative_models <span class="kw">import</span> GenerativeModel
+
+vertexai.init(project=<span class="str">"my-project"</span>, location=<span class="str">"us-central1"</span>)
+model = GenerativeModel(<span class="str">"gemini-2.5-pro"</span>)
+resp = model.generate_content(<span class="str">"Hello!"</span>)
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9670; Service Account (Prod)</h3>
+      <div class="code-block">
+<span class="comment"># Create key file</span>
+<span class="cmd">gcloud iam service-accounts keys create</span> key.json \
+  <span class="kw">--iam-account</span>=<span class="str">sa@project.iam.gserviceaccount.com</span>
+
+<span class="kw">export</span> GOOGLE_APPLICATION_CREDENTIALS=<span class="str">"./key.json"</span>
+
+<span class="comment"># Roles needed:</span>
+<span class="comment"># roles/aiplatform.user</span>
+<span class="comment"># roles/ml.developer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Used By -->
+  <p class="section-label">Used By</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9670; Hermes Agent</h3>
+      <ul>
+        <li>Provider: <code style="color:#3CE7FF;">google</code> in provider config</li>
+        <li>Gemini 2.5 Flash for fast multi-turn conversations</li>
+        <li>Gemini 2.5 Pro for complex reasoning tasks</li>
+        <li>Vertex AI endpoint for enterprise deployments</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-cyan">active</span>
+        <span class="tag tag-green">gemini-2.5-flash</span>
+        <span class="tag tag-amber">gemini-2.5-pro</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9670; OpenClaw</h3>
+      <ul>
+        <li>Multimodal analysis pipelines via Vertex AI</li>
+        <li>Imagen 3 for image generation workflows</li>
+        <li>Grounding with Search for factual retrieval tasks</li>
+        <li>Embeddings for semantic search &amp; RAG</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-orange">imagen-3</span>
+        <span class="tag tag-green">embeddings</span>
+        <span class="tag tag-cyan">vertex-ai</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    onemind-skill-tree &mdash; Google Cloud AI &mdash; Vertex AI &amp; Gemini API &mdash; 2026
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+
+const W = 1200, H = 520;
+canvas.width = W;
+canvas.height = H;
+
+let transform = { x: 0, y: 0, scale: 1 };
+let dragging = false, lastMouse = null;
+let hoveredNode = null;
+
+const CYAN   = '#3CE7FF';
+const GREEN  = '#34d399';
+const AMBER  = '#fbbf24';
+const ORANGE = '#fb923c';
+const PURPLE = '#a78bfa';
+const SLATE  = '#64748b';
+
+const nodes = [
+  // Center hub
+  { id: 'google',    x: 600, y: 260, r: 44, label: 'Google\nCloud AI', color: CYAN,   glow: CYAN,   group: 'hub' },
+
+  // Platform services
+  { id: 'vertex',    x: 390, y: 120, r: 30, label: 'Vertex AI',        color: PURPLE, glow: PURPLE, group: 'platform' },
+  { id: 'aistudio',  x: 220, y: 240, r: 26, label: 'AI Studio',        color: PURPLE, glow: PURPLE, group: 'platform' },
+  { id: 'mgarden',   x: 390, y: 400, r: 26, label: 'Model\nGarden',    color: PURPLE, glow: PURPLE, group: 'platform' },
+
+  // Core language models
+  { id: 'g25pro',    x: 620, y: 90,  r: 28, label: 'Gemini\n2.5 Pro',  color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'g25flash',  x: 800, y: 130, r: 26, label: 'Gemini\n2.5 Flash',color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'g15pro',    x: 880, y: 260, r: 22, label: 'Gemini\n1.5 Pro',  color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'palm2',     x: 830, y: 400, r: 20, label: 'PaLM 2\n(legacy)', color: SLATE,  glow: SLATE,  group: 'model' },
+
+  // Specialised
+  { id: 'imagen',    x: 620, y: 430, r: 24, label: 'Imagen 3',         color: AMBER,  glow: AMBER,  group: 'special' },
+  { id: 'chirp',     x: 450, y: 460, r: 20, label: 'Chirp\n(speech)',  color: AMBER,  glow: AMBER,  group: 'special' },
+  { id: 'codey',     x: 200, y: 380, r: 20, label: 'Codey',            color: AMBER,  glow: AMBER,  group: 'special' },
+
+  // Agents
+  { id: 'hermes',    x: 100, y: 130, r: 26, label: 'Hermes\nAgent',    color: ORANGE, glow: ORANGE, group: 'agent' },
+  { id: 'openclaw',  x: 100, y: 380, r: 26, label: 'OpenClaw',         color: ORANGE, glow: ORANGE, group: 'agent' },
+];
+
+const edges = [
+  // Hub → platform
+  { from: 'google', to: 'vertex',   style: 'solid',  color: PURPLE },
+  { from: 'google', to: 'aistudio', style: 'solid',  color: PURPLE },
+  { from: 'google', to: 'mgarden',  style: 'solid',  color: PURPLE },
+
+  // Hub → models
+  { from: 'google', to: 'g25pro',   style: 'solid',  color: GREEN },
+  { from: 'google', to: 'g25flash', style: 'solid',  color: GREEN },
+  { from: 'google', to: 'g15pro',   style: 'solid',  color: GREEN },
+  { from: 'google', to: 'palm2',    style: 'dashed', color: SLATE },
+
+  // Hub → special
+  { from: 'google', to: 'imagen',   style: 'solid',  color: AMBER },
+  { from: 'google', to: 'chirp',    style: 'solid',  color: AMBER },
+  { from: 'google', to: 'codey',    style: 'solid',  color: AMBER },
+
+  // Agents → platform
+  { from: 'hermes',   to: 'vertex',   style: 'dashed', color: ORANGE },
+  { from: 'hermes',   to: 'aistudio', style: 'dashed', color: ORANGE },
+  { from: 'openclaw', to: 'vertex',   style: 'dashed', color: ORANGE },
+
+  // Agent → models (direct usage)
+  { from: 'hermes',   to: 'g25flash', style: 'dashed', color: ORANGE },
+  { from: 'openclaw', to: 'imagen',   style: 'dashed', color: ORANGE },
+];
+
+function nodeById(id) { return nodes.find(n => n.id === id); }
+
+function drawEdge(e) {
+  const a = nodeById(e.from), b = nodeById(e.to);
+  if (!a || !b) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.strokeStyle = e.color + '55';
+  ctx.lineWidth = e.style === 'dashed' ? 1 : 1.5;
+  if (e.style === 'dashed') ctx.setLineDash([5, 5]);
+  else ctx.setLineDash([]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawNode(n) {
+  const hov = (hoveredNode && hoveredNode.id === n.id);
+  ctx.save();
+
+  // Glow
+  const grd = ctx.createRadialGradient(n.x, n.y, n.r * 0.5, n.x, n.y, n.r * (hov ? 2.4 : 1.8));
+  grd.addColorStop(0, n.glow + '33');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r * (hov ? 2.4 : 1.8), 0, Math.PI * 2);
+  ctx.fill();
+
+  // Circle
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+  ctx.fillStyle = '#0f172a';
+  ctx.fill();
+  ctx.strokeStyle = n.color + (hov ? 'ff' : '99');
+  ctx.lineWidth = hov ? 2 : 1.5;
+  ctx.stroke();
+
+  // Label
+  const lines = n.label.split('\n');
+  ctx.fillStyle = hov ? '#ffffff' : n.color;
+  ctx.font = `${n.group === 'hub' ? 600 : 400} ${n.group === 'hub' ? 11 : 9.5}px 'IBM Plex Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const lineH = 13;
+  const startY = n.y - ((lines.length - 1) * lineH) / 2;
+  lines.forEach((ln, i) => ctx.fillText(ln, n.x, startY + i * lineH));
+
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(transform.x, transform.y);
+  ctx.scale(transform.scale, transform.scale);
+
+  // Background grid
+  ctx.strokeStyle = '#1e293b44';
+  ctx.lineWidth = 0.5;
+  for (let gx = 0; gx < W; gx += 60) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 60) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  edges.forEach(drawEdge);
+  nodes.forEach(drawNode);
+  ctx.restore();
+}
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width;
+  const scaleY = H / rect.height;
+  return {
+    x: ((e.clientX - rect.left) * scaleX - transform.x) / transform.scale,
+    y: ((e.clientY - rect.top)  * scaleY - transform.y) / transform.scale,
+  };
+}
+
+canvas.addEventListener('mousemove', e => {
+  const { x, y } = getMousePos(e);
+  hoveredNode = nodes.find(n => Math.hypot(n.x - x, n.y - y) < n.r + 8) || null;
+  canvas.style.cursor = hoveredNode ? 'pointer' : (dragging ? 'grabbing' : 'grab');
+  if (dragging && lastMouse) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    transform.x += (e.clientX - lastMouse.x) * scaleX;
+    transform.y += (e.clientY - lastMouse.y) * scaleY;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+  draw();
+});
+
+canvas.addEventListener('mousedown', e => {
+  dragging = true;
+  lastMouse = { x: e.clientX, y: e.clientY };
+  canvas.style.cursor = 'grabbing';
+});
+
+canvas.addEventListener('mouseup',   () => { dragging = false; canvas.style.cursor = 'grab'; });
+canvas.addEventListener('mouseleave',() => { dragging = false; hoveredNode = null; draw(); });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top)  * (H / rect.height);
+  const delta = e.deltaY < 0 ? 1.1 : 0.91;
+  transform.x = mx - (mx - transform.x) * delta;
+  transform.y = my - (my - transform.y) * delta;
+  transform.scale = Math.min(3, Math.max(0.3, transform.scale * delta));
+  draw();
+}, { passive: false });
+
+draw();
+</script>
+</body>
+</html>

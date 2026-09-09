@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind — The Fusion Platform</title>
+<style>
+  :root{--bg:#0a0e14;--panel:#111823;--panel2:#0d141d;--line:#1e2a3a;--txt:#e6edf3;--dim:#8b9bb0;
+    --nats:#d29922;--orp:#2dd4bf;--cloud:#58a6ff;--edge:#3fb950;--con:#a371f7;--safe:#f778ba;--warn:#f85149;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:30px 38px 80px}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.5px}
+  .lead{color:var(--dim);max-width:1060px;margin:6px 0 4px}
+  .stamp{color:var(--dim);font-size:12px;margin-bottom:22px}
+  h2{font-size:19px;margin:32px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .principle{background:linear-gradient(135deg,#161f2e,#0d141d);border:1px solid var(--orp);border-radius:12px;padding:18px 24px;margin:8px 0}
+  .principle b{color:var(--orp)}
+  /* connector anatomy */
+  .conn{display:flex;align-items:stretch;gap:0;margin:10px 0;flex-wrap:wrap}
+  .cbox{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;flex:1;min-width:150px;margin:4px}
+  .cbox h4{font-size:13px;color:var(--con);margin-bottom:4px}
+  .cbox p{font-size:11.5px;color:var(--dim)}
+  .cbox.pub h4{color:var(--nats)}
+  /* split */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  .col{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .col.cl{border-color:var(--cloud)} .col.cl h3{color:var(--cloud)}
+  .col.ed{border-color:var(--edge)} .col.ed h3{color:var(--edge)}
+  .col h3{font-size:16px;margin-bottom:8px}
+  .col ul{list-style:none;font-size:12.5px;color:var(--dim)}
+  .col li{padding:3px 0;padding-left:16px;position:relative}
+  .col li:before{content:"▸";position:absolute;left:0;color:var(--dim)}
+  /* stack diagram */
+  .stack{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .layer{border:1px solid var(--line);border-radius:8px;padding:12px 16px;background:var(--panel)}
+  .layer .lh{font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:5px}
+  .layer .lb{font-size:12.5px;color:var(--dim)}
+  .l-ing{border-left:3px solid var(--con)} .l-ing .lh{color:var(--con)}
+  .l-bus{border-left:3px solid var(--nats)} .l-bus .lh{color:var(--nats)}
+  .l-brain{border-left:3px solid var(--orp)} .l-brain .lh{color:var(--orp)}
+  .l-app{border-left:3px solid var(--cloud)} .l-app .lh{color:var(--cloud)}
+  .l-gov{border-left:3px solid var(--safe)} .l-gov .lh{color:var(--safe)}
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--orp);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  tr:hover{background:var(--panel2)}
+  code{background:#0d141d;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--nats);font-size:12px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+  .g{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .g h4{font-size:13px;margin-bottom:6px;color:var(--safe)}
+  .g p{font-size:11.5px;color:var(--dim)}
+  .phase{background:var(--panel);border-left:3px solid var(--orp);border-radius:0 8px 8px 0;padding:12px 16px;margin:8px 0}
+  .phase b{color:var(--orp)}
+  .foot{margin-top:32px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+  <h1>OneMind — The Fusion Platform</h1>
+  <p class="lead">The sovereign, open equivalent of Palantir AIP + Anduril Lattice + Maven OS: 55+ sources → one bus → one fused mind → every interface, all controlled, stable, and safe.</p>
+  <p class="stamp">Generated 2026-07-06 by Legacy</p>
+
+  <div class="principle">
+    <b>The move that makes it a platform, not a pile of scripts:</b> we don't run Crucix/WM/Osiris as apps — we extract each source into a <b>uniform Connector</b>. Every feed becomes an identical, self-healing, observable, least-privilege container. Write the framework once; all 55 inherit stability + safety for free. <b>That uniformity IS the control.</b>
+  </div>
+
+  <h2>The OneMind Connector — one shape for every feed</h2>
+  <div class="conn">
+    <div class="cbox"><h4>① FETCH</h4><p>Pull from the source API (the logic Crucix/WM already wrote). Retries + backoff + rate-limit respect built in.</p></div>
+    <div class="cbox"><h4>② NORMALIZE</h4><p>Map to the common entity schema (lat/lon/type/time/confidence).</p></div>
+    <div class="cbox pub"><h4>③ PUBLISH</h4><p><code>nats.publish(subject, data)</code> to its assigned subject. Nkey-scoped: can ONLY publish its own subject.</p></div>
+    <div class="cbox"><h4>④ EXPOSE</h4><p><code>/health</code> + Prometheus <code>/metrics</code> (last-success, rate, errors). Structured logs.</p></div>
+  </div>
+  <p class="lead" style="font-size:12.5px">Each connector = one container image built from one template. Config (interval, region, subject, secret ref) comes from a manifest — <b>not</b> baked in. Swap the fetch block, keep everything else.</p>
+
+  <h2>Where they run — Cloud (K8s) vs Edge (NEX)</h2>
+  <div class="split">
+    <div class="col cl">
+      <h3>☁ Cloud connectors → DOKS / K8s</h3>
+      <ul>
+        <li>All internet-API feeds: Crucix 29, WM layers, Osiris</li>
+        <li>Need stable egress, secrets, always-on</li>
+        <li>Polling feeds → <b>CronJob</b> · streaming feeds → <b>Deployment</b></li>
+        <li>Auto-restart, resource limits, network policies</li>
+        <li>Publish to the cloud NATS cluster</li>
+      </ul>
+    </div>
+    <div class="col ed">
+      <h3>⚡ Edge connectors → NEX</h3>
+      <ul>
+        <li>Physical sensors born at the edge: MAVLink drones, cameras, RF/SDR, home-assistant</li>
+        <li>Run near the hardware (low latency, offline-tolerant)</li>
+        <li>Publish to the <b>leaf</b> NATS → syncs to cloud</li>
+        <li>NEX = your edge function runtime; this is exactly its job</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>The full stack — 5 layers</h2>
+  <div class="stack">
+    <div class="layer l-ing"><div class="lh">① Ingest — Connectors (cloud + edge)</div><div class="lb">55+ uniform connectors. ORP's 40 protocol adapters + ported Crucix/WM/Osiris feeds + edge sensors. All publish to NATS.</div></div>
+    <div class="layer l-bus"><div class="lh">② Fabric — NATS JetStream</div><div class="lb">The HA spine. Durable streams retain + replay (nothing lost on restart). Accounts + nkeys + TLS. Cloud cluster + edge leaves.</div></div>
+    <div class="layer l-brain"><div class="lh">③ Fusion — ORP / om-unity</div><div class="lb">Subscribes to all subjects → entity resolution → knowledge graph → ORP-QL. Republishes fused <code>ent.*</code>/<code>intel.*</code>. StatefulSet + PVC, 1 replica.</div></div>
+    <div class="layer l-app"><div class="lh">④ Interfaces — the lenses</div><div class="lb">WWV (3D globe) · atoc (2D COP) · TAK/ATAK (tactical) · Legacy/Hermes (AI, ORP-QL) · AMOS (tasking). All subscribe to the bus.</div></div>
+    <div class="layer l-gov"><div class="lh">⑤ Governance — control, stability, safety (spans all)</div><div class="lb">GitOps · secrets · observability · audit · network policy. This is what turns it from "running" to "controlled."</div></div>
+  </div>
+
+  <h2>Control · Stability · Safety — the governance layer</h2>
+  <div class="grid4">
+    <div class="g"><h4>🎛 CONTROL</h4><p><b>GitOps.</b> Every connector = a manifest in <code>omos-infra</code>. On/off, interval, subject via git commit. <code>om-control-plane</code> = runtime view of what's live.</p></div>
+    <div class="g"><h4>🛡 STABILITY</h4><p>K8s self-heals crashed pods. Each connector isolated in its own pod — one crash never touches ORP or others. JetStream buffers through restarts. Resource limits.</p></div>
+    <div class="g"><h4>🔒 SAFETY</h4><p>Secrets via <b>1Password → K8s Secrets</b> (never in code). NATS nkeys: a connector can ONLY publish its subject. TLS everywhere. ORP Ed25519 signed audit log. Network policies.</p></div>
+    <div class="g"><h4>📊 OBSERVABILITY</h4><p>Prometheus scrapes every connector + NATS + ORP. Grafana "feed health" board: is every source publishing? rate? last success? Alert on silent feed.</p></div>
+  </div>
+
+  <h2>This IS Maven / Palantir / Lattice — the mapping</h2>
+  <table>
+    <tr><th>Their capability</th><th>OneMind equivalent</th></tr>
+    <tr><td>Palantir Foundry — data integration / pipelines</td><td>Connector framework (55+ uniform feeds)</td></tr>
+    <tr><td>Palantir ontology / AIP reasoning</td><td>ORP entity graph + ORP-QL + Legacy (AI)</td></tr>
+    <tr><td>Anduril Lattice — sensor fusion</td><td>ORP multi-protocol fusion (40 adapters)</td></tr>
+    <tr><td>Lattice C2 + tasking</td><td>atoc / TAK + AMOS mission engine</td></tr>
+    <tr><td>Maven OS — multi-INT correlation</td><td>ORP entity resolver across all domains</td></tr>
+    <tr><td>Their closed bus / cloud</td><td><b>NATS + DOKS + NEX — sovereign, ours, Apache-2.0</b></td></tr>
+    <tr><td>Cost: $50M–$500M, undisclosed</td><td><b>Free + self-hosted</b></td></tr>
+  </table>
+
+  <h2>How to get there — the sequence</h2>
+  <div class="phase"><b>Phase 0 · Lock the contract.</b> The <code>source → subject</code> taxonomy for all 55. Every connector targets a fixed subject.</div>
+  <div class="phase"><b>Phase 1 · Build the Connector Framework + 1 gold connector.</b> Ship the template with all production features (retries, secrets, health, metrics) and prove it on FIRMS end-to-end: NASA fire → NATS → ORP → globe + TAK + AI.</div>
+  <div class="phase"><b>Phase 2 · Stand up governance spine.</b> 1Password→Secrets, NATS accounts/nkeys, Prometheus + Grafana feed-health dashboard. Now every new feed is observable + safe by default.</div>
+  <div class="phase"><b>Phase 3 · Mass-port, one feed at a time.</b> Clone template per source → GitOps deploy → confirm publishing → delete the old silo. Grind the coverage map. Cloud feeds → K8s, edge sensors → NEX.</div>
+  <div class="phase"><b>Phase 4 · Consumers on the bus.</b> WWV/atoc/TAK/Legacy subscribe. Kill redundant globes + Cesium Ion. Single pane of glass, many lenses.</div>
+
+  <p class="foot">You already own every hard part: NATS (bus), ORP (brain), NEX (edge), DOKS (cloud), the source recipes (Crucix/WM/Osiris). The platform is assembling them under one framework + one contract + one governance layer. Not new invention — disciplined convergence.</p>
+</body>
+</html>

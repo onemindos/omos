@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/command/envelope/v1",
+  "title": "Command Envelope",
+  "description": "Wrapper for command messages on the OneMind NATS bus. Commands are imperatives published on cmd.* subjects. UI buttons and automation publish commands; backend services (om-router, om-control-plane, om-tak-projector) validate and execute them, emitting result events (evt.command.accepted, evt.command.rejected, evt.command.executed, evt.command.failed). See docs/CONTROL-PLANE.md command model. This envelope is distinct from the event envelope — commands may be rejected; events are immutable facts.",
+  "type": "object",
+  "required": ["v", "id", "ts", "cmd", "source", "subject", "data"],
+  "additionalProperties": true,
+  "properties": {
+    "v": {
+      "type": "integer",
+      "description": "Schema version. Start at 1. Consumers pin a minimum v and tolerate unknowns.",
+      "minimum": 1
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique command ID — UUID v4.",
+      "format": "uuid"
+    },
+    "ts": {
+      "type": "string",
+      "description": "Command timestamp — RFC3339 / ISO8601 with millisecond precision.",
+      "format": "date-time"
+    },
+    "cmd": {
+      "type": "string",
+      "description": "Dotted command type mirroring the NATS subject grammar (e.g. 'cmd.entity.node.zeus-mac.tak.show', 'cmd.integration.homeassistant.test', 'cmd.workflow.create').",
+      "pattern": "^cmd\\.[a-z0-9_][a-z0-9_.\\-$]*$",
+      "minLength": 4
+    },
+    "source": {
+      "type": "string",
+      "description": "Actor ID that issued this command (e.g. 'ui.onemindos-command', 'agent.legacy', 'om-router').",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "string",
+      "description": "The NATS subject this command is published on. May include dynamic tokens (e.g. entity IDs).",
+      "minLength": 1
+    },
+    "data": {
+      "type": "object",
+      "description": "Command payload. Schema varies by command type. The command handler validates and interprets this according to the 'cmd' field.",
+      "additionalProperties": true
+    },
+    "corr": {
+      "type": "string",
+      "description": "Correlation ID — links this command to related events in a workflow chain.",
+      "format": "uuid"
+    },
+    "causation": {
+      "type": "string",
+      "description": "Causation ID — the 'id' of the event that caused this command to be issued.",
+      "format": "uuid"
+    },
+    "trace": {
+      "type": "string",
+      "description": "Distributed trace ID for OpenTelemetry / Jaeger integration.",
+      "minLength": 1
+    },
+    "approval": {
+      "type": "object",
+      "description": "Approval metadata for protected command classes. Commands matching protected patterns (cmd.drone.launch, cmd.robot.move, cmd.intercept.*, cmd.service.restart.*, cmd.nex.workload.stop.*, cmd.integration.*.write) require operator approval by default.",
+      "additionalProperties": true,
+      "properties": {
+        "required": {
+          "type": "boolean",
+          "description": "Whether this command requires human approval before execution.",
+          "default": false
+        },
+        "approver": {
+          "type": "string",
+          "description": "Actor ID of the approver (filled when approved)."
+        },
+        "status": {
+          "type": "string",
+          "description": "Current approval status.",
+          "enum": ["pending", "approved", "rejected", "not_required"]
+        },
+        "reason": {
+          "type": "string",
+          "description": "Approval/rejection reason."
+        }
+      }
+    },
+    "dry_run": {
+      "type": "boolean",
+      "description": "When true, the handler should validate and log the command without executing it. Used for testing.",
+      "default": false
+    }
+  }
+}

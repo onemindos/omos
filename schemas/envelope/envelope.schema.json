@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/envelope/v1",
+  "title": "OneMind Event Envelope",
+  "description": "Versioned wrapper for every message on the OneMind NATS bus. All services, agents, bridges, and the Flutter UI speak this envelope. Consumers MUST tolerate unknown fields (additionalProperties: true) per forward-compat doctrine.",
+  "type": "object",
+  "required": ["v", "id", "ts", "type", "source", "subject", "data"],
+  "additionalProperties": true,
+  "properties": {
+    "v": {
+      "type": "integer",
+      "description": "Schema version. Start at 1. Consumers pin a minimum v and tolerate unknowns. Breaking changes bump v and ship a migration note.",
+      "minimum": 1
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique event ID — UUID v4.",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "ts": {
+      "type": "string",
+      "description": "Event timestamp — RFC3339 / ISO8601 with millisecond precision (e.g. '2026-06-10T14:30:00.123Z').",
+      "format": "date-time"
+    },
+    "type": {
+      "type": "string",
+      "description": "Dotted event type that mirrors the NATS subject grammar (e.g. 'evt.task.issue.created', 'tel.barn-pi-1.soil.moisture').",
+      "pattern": "^[a-z0-9_$][a-z0-9_.\\-$]*$",
+      "minLength": 3
+    },
+    "source": {
+      "type": "string",
+      "description": "Actor ID that emitted this event (e.g. 'agent.legacy', 'node.barn-pi-1', 'device.go2-dog'). Matches the actor identity model.",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "string",
+      "description": "The NATS subject this envelope was published on. May differ from 'type' when the subject carries dynamic tokens (e.g. task IDs).",
+      "minLength": 1
+    },
+    "data": {
+      "type": "object",
+      "description": "Typed payload. Schema varies by event type; the envelope is the wrapper, not the payload schema. Consumers parse this according to the 'type' field.",
+      "additionalProperties": true
+    },
+    "corr": {
+      "type": "string",
+      "description": "Correlation ID — groups related events across a workflow or request chain. Propagate from triggering event.",
+      "format": "uuid"
+    },
+    "causation": {
+      "type": "string",
+      "description": "Causation ID — the 'id' of the parent event that caused this one. Enables event lineage graphs.",
+      "format": "uuid"
+    },
+    "trace": {
+      "type": "string",
+      "description": "Distributed trace ID — for integration with OpenTelemetry / Jaeger trace propagation.",
+      "minLength": 1
+    }
+  }
+}

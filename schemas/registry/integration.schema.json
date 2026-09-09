@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/registry/integration/v1",
+  "title": "Registry Integration Record",
+  "description": "Canonical record for an external integration managed by om-connector-manager. Lives in the KV_INTEGRATION_REGISTRY bucket and is emitted on the registry.integration.{id} subject. An integration is a connector to an external system (e.g. Home Assistant, Todoist, Google Calendar, Slack, Discord, GitHub, Tailscale).",
+  "type": "object",
+  "required": ["id", "name", "kind", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable integration identifier (e.g. 'homeassistant', 'todoist', 'slack', 'github').",
+      "minLength": 1,
+      "pattern": "^[a-z0-9_][a-z0-9_.\\-$]*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable integration name.",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "description": "Integration category.",
+      "enum": [
+        "home_automation",
+        "task_manager",
+        "calendar",
+        "messaging",
+        "code_hosting",
+        "network",
+        "world_intel",
+        "monitoring",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "Current connection status of the integration.",
+      "enum": ["connected", "disconnected", "error", "connecting", "needs_credentials", "unknown"]
+    },
+    "version": {
+      "type": "string",
+      "description": "Connector version string."
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "External endpoint URL or address (e.g. 'http://homeassistant.local:8123')."
+    },
+    "credentials_ref": {
+      "type": "string",
+      "description": "Reference to stored credentials (never inline secrets). Points to a secret KV key or vault path."
+    },
+    "commands": {
+      "type": "object",
+      "description": "Command subjects for this integration's lifecycle.",
+      "additionalProperties": false,
+      "properties": {
+        "test": {
+          "type": "string",
+          "description": "Subject to test the connection (e.g. 'cmd.integration.homeassistant.test')."
+        },
+        "discover": {
+          "type": "string",
+          "description": "Subject to trigger entity discovery (e.g. 'cmd.integration.homeassistant.discover')."
+        },
+        "start": {
+          "type": "string",
+          "description": "Subject to start the connector (e.g. 'cmd.integration.homeassistant.start')."
+        },
+        "stop": {
+          "type": "string",
+          "description": "Subject to stop the connector (e.g. 'cmd.integration.homeassistant.stop')."
+        }
+      }
+    },
+    "entity_count": {
+      "type": "integer",
+      "description": "Number of entities discovered through this integration.",
+      "minimum": 0
+    },
+    "last_seen": {
+      "type": "string",
+      "description": "RFC3339 timestamp of the last successful interaction.",
+      "format": "date-time"
+    },
+    "config": {
+      "type": "object",
+      "description": "Integration-specific configuration. No secrets inline — use credentials_ref.",
+      "additionalProperties": true
+    }
+  }
+}

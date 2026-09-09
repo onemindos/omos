@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "id": "550e8400-e29b-41d4-a716-446655440003",
+  "ts": "2026-06-10T14:35:00.789Z",
+  "type": "agents.status.legacy.zeus.sess-001",
+  "source": "agent.legacy",
+  "subject": "agents.status.legacy.zeus.sess-001",
+  "corr": "a1b2c3d4-e5f6-4a7b-8c9d-000000000002",
+  "causation": "550e8400-e29b-41d4-a716-446655440001",
+  "data": {
+    "agent": "legacy",
+    "status": "idle",
+    "session": "sess-001",
+    "capabilities": ["code", "plan", "review", "kanban"],
+    "owner": "zeus",
+    "model": "claude-sonnet-4.6"
+  }
+}

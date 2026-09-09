@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Gemini — Multimodal Native Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4285F4, #34d399, #EA4335, #FBBC05);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.model-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 6px 18px;
+  border-radius: 20px;
+  background: rgba(66, 133, 244, 0.08);
+  border: 1px solid rgba(66, 133, 244, 0.3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #4285F4;
+  letter-spacing: 1px;
+}
+
+.model-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4285F4;
+  box-shadow: 0 0 8px #4285F4;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+/* ── Nav ── */
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 24px;
+  padding: 6px 12px;
+  border: 1px solid rgba(60, 231, 255, 0.2);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.nav-back:hover { background: rgba(60, 231, 255, 0.06); }
+
+/* ── Section label ── */
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #475569;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  margin-top: 36px;
+}
+
+/* ── Canvas ── */
+.graph-container {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+  margin-bottom: 20px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+/* ── Legend ── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 14px 20px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  margin-bottom: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #94a3b8;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #475569;
+}
+
+/* ── Info grid / cards ── */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.info-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.info-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 16px;
+}
+
+.info-card {
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #1e293b;
+  transition: border-color 0.2s;
+}
+
+.info-card:hover { border-color: #334155; }
+
+.info-card h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.71rem;
+  color: #94a3b8;
+  padding: 4px 0 4px 14px;
+  position: relative;
+  line-height: 1.55;
+}
+
+.info-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #475569;
+}
+
+/* ── Model family cards (larger, featured) ── */
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.model-card {
+  padding: 18px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #1e293b;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.model-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.model-card:hover {
+  transform: translateY(-2px);
+  border-color: #334155;
+}
+
+.model-card.flagship::before { background: linear-gradient(90deg, #4285F4, #34d399); }
+.model-card.fast::before     { background: linear-gradient(90deg, #34d399, #3CE7FF); }
+.model-card.legacy::before   { background: linear-gradient(90deg, #64748b, #94a3b8); }
+.model-card.edge::before     { background: linear-gradient(90deg, #a78bfa, #4285F4); }
+.model-card.image::before    { background: linear-gradient(90deg, #FBBC05, #EA4335); }
+.model-card.video::before    { background: linear-gradient(90deg, #EA4335, #fb923c); }
+
+.model-card .model-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.model-card .model-tagline {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #64748b;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.model-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.model-card li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  padding: 3px 0 3px 12px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.model-card li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+}
+
+/* ── Comparison table ── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  margin-top: 6px;
+}
+
+.compare-table th {
+  text-align: left;
+  padding: 8px 12px;
+  color: #64748b;
+  font-size: 0.63rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1e293b;
+}
+
+.compare-table td {
+  padding: 8px 12px;
+  color: #94a3b8;
+  border-bottom: 1px solid #0f172a;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: rgba(30, 41, 59, 0.3); }
+
+.compare-table .col-feature { color: #e2e8f0; font-size: 0.68rem; width: 140px; }
+.compare-table .col-aistudio { color: #34d399; }
+.compare-table .col-vertex   { color: #4285F4; }
+
+/* ── Code blocks ── */
+.code-block {
+  background: rgba(2, 6, 23, 0.9);
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.67rem;
+  color: #94a3b8;
+  line-height: 1.75;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.code-block .comment { color: #334155; }
+.code-block .cmd     { color: #fbbf24; }
+.code-block .str     { color: #34d399; }
+.code-block .kw      { color: #3CE7FF; }
+.code-block .var     { color: #a78bfa; }
+.code-block .num     { color: #fb923c; }
+
+/* ── Tags ── */
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.59rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.tag-blue   { color: #4285F4; border-color: rgba(66,133,244,0.35);  background: rgba(66,133,244,0.07); }
+.tag-cyan   { color: #3CE7FF; border-color: rgba(60,231,255,0.3);   background: rgba(60,231,255,0.06); }
+.tag-amber  { color: #fbbf24; border-color: rgba(251,191,36,0.3);   background: rgba(251,191,36,0.06); }
+.tag-orange { color: #fb923c; border-color: rgba(251,146,60,0.3);   background: rgba(251,146,60,0.06); }
+.tag-green  { color: #34d399; border-color: rgba(52,211,153,0.3);   background: rgba(52,211,153,0.06); }
+.tag-purple { color: #a78bfa; border-color: rgba(167,139,250,0.3);  background: rgba(167,139,250,0.06); }
+.tag-red    { color: #EA4335; border-color: rgba(234,67,53,0.3);    background: rgba(234,67,53,0.06); }
+
+/* ── Stack section ── */
+.stack-card {
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #1e293b;
+}
+
+.stack-card h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.strength-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid #0f172a;
+}
+
+.strength-item:last-child { border-bottom: none; }
+
+.strength-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.strength-icon.blue   { background: rgba(66,133,244,0.15);  color: #4285F4; }
+.strength-icon.green  { background: rgba(52,211,153,0.15);  color: #34d399; }
+.strength-icon.amber  { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+.strength-icon.purple { background: rgba(167,139,250,0.15); color: #a78bfa; }
+.strength-icon.cyan   { background: rgba(60,231,255,0.15);  color: #3CE7FF; }
+.strength-icon.red    { background: rgba(234,67,53,0.15);   color: #EA4335; }
+
+.strength-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 2px;
+}
+
+.strength-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.67rem;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  margin-top: 56px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #334155;
+  padding-top: 20px;
+  border-top: 1px solid #0f172a;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="nav-back">&larr; Back to Model Architecture</a>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════ -->
+  <div class="header">
+    <h1>Google Gemini</h1>
+    <div class="subtitle">Multimodal Native Intelligence</div>
+    <div class="model-badge">GOOGLE DEEPMIND · NATIVELY MULTIMODAL · 1M+ TOKEN CONTEXT</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       CANVAS GRAPH
+  ══════════════════════════════════════════════ -->
+  <p class="instructions">Hover over nodes · Scroll to zoom · Drag to pan</p>
+  <div class="graph-container">
+    <canvas id="gemini-graph" width="1200" height="540"></canvas>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#4285F4"></div> Gemini Core
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#34d399"></div> Language / Reasoning
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#FBBC05"></div> Generative Media
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#a78bfa"></div> Platforms
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fb923c"></div> Agent Consumers
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3CE7FF"></div> Unique Capabilities
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       OVERVIEW
+  ══════════════════════════════════════════════ -->
+  <p class="section-label">Overview — Google DeepMind</p>
+  <div class="info-grid-3">
+    <div class="info-card">
+      <h3 style="color:#4285F4;">&#9670; What is Gemini?</h3>
+      <ul>
+        <li>Built by Google DeepMind — flagship AI research arm</li>
+        <li>Natively multimodal from architecture up — not bolt-on</li>
+        <li>Processes text, image, video, audio, code in one model</li>
+        <li>Trained jointly on all modalities simultaneously</li>
+        <li>Powers Google Search, Workspace, Android, and more</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-blue">multimodal</span>
+        <span class="tag tag-green">native</span>
+        <span class="tag tag-purple">deepmind</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Massive Context</h3>
+      <ul>
+        <li>1M token context window — Gemini 2.5 Pro &amp; Flash</li>
+        <li>~750,000 words or ~50k lines of code in one prompt</li>
+        <li>Full codebases, entire books, hours of transcripts</li>
+        <li>Needle-in-haystack retrieval at 1M tokens</li>
+        <li>Ideal for RAG without chunking overhead</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-amber">1M tokens</span>
+        <span class="tag tag-green">long-context RAG</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; Unique Capabilities</h3>
+      <ul>
+        <li>Grounding with live Google Search — real-time facts</li>
+        <li>Thinking mode (extended reasoning, like o1/o3)</li>
+        <li>Native video understanding — frame-by-frame analysis</li>
+        <li>Function calling, structured JSON output</li>
+        <li>Code execution sandbox built-in</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-cyan">search-grounded</span>
+        <span class="tag tag-blue">thinking</span>
+        <span class="tag tag-red">video native</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODEL FAMILY
+  ══════════════════════════════════════════════ -->
+  <p class="section-label">Model Family</p>
+  <div class="model-grid">
+
+    <!-- Gemini 2.5 Pro -->
+    <div class="model-card flagship">
+      <div class="model-name" style="color:#4285F4;">Gemini 2.5 Pro</div>
+      <div class="model-tagline">Flagship · Frontier Reasoning</div>
+      <ul>
+        <li>Best overall quality across all tasks</li>
+        <li>1M token context window</li>
+        <li>Extended Thinking mode (deep reasoning)</li>
+        <li>Text · Image · Video · Audio · Code</li>
+        <li>Function calling &amp; structured output</li>
+        <li>Highest accuracy, slower &amp; pricier</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-blue">flagship</span>
+        <span class="tag tag-amber">1M ctx</span>
+        <span class="tag tag-cyan">thinking</span>
+      </div>
+    </div>
+
+    <!-- Gemini 2.5 Flash -->
+    <div class="model-card fast">
+      <div class="model-name" style="color:#34d399;">Gemini 2.5 Flash</div>
+      <div class="model-tagline">Speed · Cost-Efficiency</div>
+      <ul>
+        <li>Best price/performance in the 2.5 series</li>
+        <li>1M token context window</li>
+        <li>Fast latency — great for real-time apps</li>
+        <li>Thinking mode (optional, budgetable)</li>
+        <li>Full multimodal: text, image, video, audio</li>
+        <li>Production workhorse for high-throughput</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-green">fast</span>
+        <span class="tag tag-amber">1M ctx</span>
+        <span class="tag tag-orange">cost-effective</span>
+      </div>
+    </div>
+
+    <!-- Gemini 1.5 Pro -->
+    <div class="model-card legacy">
+      <div class="model-name" style="color:#94a3b8;">Gemini 1.5 Pro</div>
+      <div class="model-tagline">Previous Gen · Production Stable</div>
+      <ul>
+        <li>2M token context window (previous record)</li>
+        <li>Stable, battle-tested in production</li>
+        <li>Strong multimodal across all modalities</li>
+        <li>Lower cost than 2.5 Pro</li>
+        <li>Good fallback / cost-optimised routing</li>
+        <li>Widely available across regions</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-cyan">2M ctx</span>
+        <span class="tag tag-amber">stable</span>
+      </div>
+    </div>
+
+    <!-- Gemini Nano -->
+    <div class="model-card edge">
+      <div class="model-name" style="color:#a78bfa;">Gemini Nano</div>
+      <div class="model-tagline">On-Device · Edge Inference</div>
+      <ul>
+        <li>Runs locally on Android / Pixel devices</li>
+        <li>No network required — privacy-first</li>
+        <li>Powers Pixel AI features (Summarize, Smart Reply)</li>
+        <li>Tiny footprint, quantised weights</li>
+        <li>Available via Android AICore APIs</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-purple">on-device</span>
+        <span class="tag tag-green">offline</span>
+        <span class="tag tag-cyan">android</span>
+      </div>
+    </div>
+
+    <!-- Imagen 3 -->
+    <div class="model-card image">
+      <div class="model-name" style="color:#FBBC05;">Imagen 3</div>
+      <div class="model-tagline">Image Generation · Editing</div>
+      <ul>
+        <li>State-of-the-art text-to-image generation</li>
+        <li>Photorealistic, artistic, diagram styles</li>
+        <li>Inpainting / outpainting / image editing</li>
+        <li>Fewer artefacts than previous versions</li>
+        <li>Available via Vertex AI &amp; AI Studio</li>
+        <li>Watermarking via SynthID</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-amber">image-gen</span>
+        <span class="tag tag-orange">synthid</span>
+      </div>
+    </div>
+
+    <!-- Veo 2 -->
+    <div class="model-card video">
+      <div class="model-name" style="color:#EA4335;">Veo 2</div>
+      <div class="model-tagline">Video Generation</div>
+      <ul>
+        <li>High-quality text-to-video generation</li>
+        <li>Up to 4K resolution, 60fps capability</li>
+        <li>Long-form coherent video synthesis</li>
+        <li>Camera motion control (pan, zoom, dolly)</li>
+        <li>Available via Vertex AI (limited preview)</li>
+        <li>Powers YouTube Dream Screen</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-red">video-gen</span>
+        <span class="tag tag-orange">4K</span>
+        <span class="tag tag-amber">vertex only</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       WHERE GEMINI LIVES
+  ══════════════════════════════════════════════ -->
+  <p class="section-label">Where Gemini Lives</p>
+  <div class="info-grid-2">
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Google AI Studio</h3>
+      <ul>
+        <li>aistudio.google.com — free-tier access, no GCP needed</li>
+        <li>Single API key — instant prototyping in minutes</li>
+        <li>Interactive prompt editor with live playground</li>
+        <li>Supports Gemini 2.5 Pro, Flash, 1.5 Pro</li>
+        <li>Grounding with Google Search available</li>
+        <li>Rate-limited free tier; pay-as-you-go above limits</li>
+        <li>No enterprise SLA, community-level support</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-green">free tier</span>
+        <span class="tag tag-cyan">api key</span>
+        <span class="tag tag-blue">prototyping</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#4285F4;">&#9670; Google Cloud Vertex AI</h3>
+      <ul>
+        <li>GCP project required — enterprise-grade deployment</li>
+        <li>Service account + ADC auth (no long-lived API keys)</li>
+        <li>VPC-SC, CMEK, data residency guarantees</li>
+        <li>99.9% uptime SLA — production-safe</li>
+        <li>Model Garden: 100+ models beyond Gemini</li>
+        <li>Grounding, RAG engine, Agent Builder built-in</li>
+        <li>Tuning, distillation, batch prediction pipelines</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-blue">enterprise</span>
+        <span class="tag tag-purple">service account</span>
+        <span class="tag tag-amber">SLA</span>
+        <span class="tag tag-orange">GCP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <div class="info-card" style="margin-top:16px;">
+    <h3 style="color:#64748b;">&#9670; AI Studio vs Vertex AI — At a Glance</h3>
+    <table class="compare-table">
+      <tr>
+        <th>Feature</th>
+        <th style="color:#34d399;">AI Studio</th>
+        <th style="color:#4285F4;">Vertex AI</th>
+      </tr>
+      <tr>
+        <td class="col-feature">Auth</td>
+        <td class="col-aistudio">API key (simple)</td>
+        <td class="col-vertex">Service account / ADC</td>
+      </tr>
+      <tr>
+        <td class="col-feature">GCP project</td>
+        <td class="col-aistudio">Not required</td>
+        <td class="col-vertex">Required</td>
+      </tr>
+      <tr>
+        <td class="col-feature">Free tier</td>
+        <td class="col-aistudio">Yes (rate-limited)</td>
+        <td class="col-vertex">No (pay-as-you-go)</td>
+      </tr>
+      <tr>
+        <td class="col-feature">SLA</td>
+        <td class="col-aistudio">None</td>
+        <td class="col-vertex">99.9% uptime</td>
+      </tr>
+      <tr>
+        <td class="col-feature">Data privacy</td>
+        <td class="col-aistudio">Standard terms</td>
+        <td class="col-vertex">VPC-SC, CMEK, DPA</td>
+      </tr>
+      <tr>
+        <td class="col-feature">Model tuning</td>
+        <td class="col-aistudio">Limited</td>
+        <td class="col-vertex">Full fine-tuning, RLHF</td>
+      </tr>
+      <tr>
+        <td class="col-feature">Best for</td>
+        <td class="col-aistudio">Dev &amp; prototyping</td>
+        <td class="col-vertex">Production &amp; enterprise</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       HOW TO USE — CODE
+  ══════════════════════════════════════════════ -->
+  <p class="section-label">How to Use</p>
+  <div class="info-grid-2">
+
+    <!-- AI Studio SDK -->
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; AI Studio — google-generativeai SDK</h3>
+      <div class="code-block"><span class="comment"># Install SDK</span>
+<span class="cmd">pip install</span> <span class="str">google-generativeai</span>
+
+<span class="comment"># Set API key (from aistudio.google.com)</span>
+<span class="kw">export</span> <span class="var">GOOGLE_API_KEY</span>=<span class="str">"AIzaSy..."</span>
+
+<span class="comment"># Python — basic text generation</span>
+<span class="kw">import</span> google.generativeai <span class="kw">as</span> genai
+
+genai.configure(api_key=<span class="str">"AIzaSy..."</span>)
+model = genai.GenerativeModel(<span class="str">"gemini-2.5-flash"</span>)
+
+response = model.generate_content(<span class="str">"Explain quantum entanglement."</span>)
+<span class="kw">print</span>(response.text)
+
+<span class="comment"># Multimodal: image + text</span>
+<span class="kw">import</span> PIL.Image
+
+img = PIL.Image.open(<span class="str">"diagram.png"</span>)
+response = model.generate_content([<span class="str">"Describe this diagram:"</span>, img])
+<span class="kw">print</span>(response.text)</div>
+    </div>
+
+    <!-- Vertex AI SDK -->
+    <div class="info-card">
+      <h3 style="color:#4285F4;">&#9670; Vertex AI — google-cloud-aiplatform SDK</h3>
+      <div class="code-block"><span class="comment"># Install SDK</span>
+<span class="cmd">pip install</span> <span class="str">google-cloud-aiplatform</span>
+
+<span class="comment"># Authenticate (Application Default Credentials)</span>
+<span class="cmd">gcloud auth application-default login</span>
+
+<span class="comment"># Python — Vertex AI GenerativeModel</span>
+<span class="kw">import</span> vertexai
+<span class="kw">from</span> vertexai.generative_models <span class="kw">import</span> GenerativeModel, Part
+
+vertexai.init(
+    project=<span class="str">"my-gcp-project"</span>,
+    location=<span class="str">"us-central1"</span>
+)
+
+model = GenerativeModel(<span class="str">"gemini-2.5-pro"</span>)
+
+response = model.generate_content(
+    [<span class="str">"Summarise this PDF:"</span>,
+     Part.from_uri(<span class="str">"gs://my-bucket/doc.pdf"</span>, mime_type=<span class="str">"application/pdf"</span>)]
+)
+<span class="kw">print</span>(response.text)</div>
+    </div>
+
+    <!-- REST — AI Studio -->
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; REST API — AI Studio (curl)</h3>
+      <div class="code-block"><span class="comment"># Text generation via REST</span>
+<span class="cmd">curl</span> -s -X POST \
+  <span class="str">"https://generativelanguage.googleapis.com/v1beta/\
+models/gemini-2.5-flash:generateContent?\
+key=$GOOGLE_API_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "contents": [{
+      "parts": [{"text": "What is RAG?"}]
+    }]
+  }'</span>
+
+<span class="comment"># With Grounding — search live web</span>
+<span class="cmd">curl</span> -s -X POST \
+  <span class="str">"https://generativelanguage.googleapis.com/v1beta/\
+models/gemini-2.5-pro:generateContent?\
+key=$GOOGLE_API_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "contents": [{"parts": [{"text":"Latest AI news"}]}],
+    "tools": [{"google_search": {}}]
+  }'</span></div>
+    </div>
+
+    <!-- REST — Vertex -->
+    <div class="info-card">
+      <h3 style="color:#FBBC05;">&#9670; REST API — Vertex AI (curl)</h3>
+      <div class="code-block"><span class="comment"># Get token from gcloud</span>
+<span class="var">TOKEN</span>=$(<span class="cmd">gcloud auth print-access-token</span>)
+<span class="var">PROJECT</span>=<span class="str">"my-gcp-project"</span>
+<span class="var">REGION</span>=<span class="str">"us-central1"</span>
+<span class="var">MODEL</span>=<span class="str">"gemini-2.5-pro"</span>
+
+<span class="comment"># Vertex REST endpoint</span>
+<span class="cmd">curl</span> -s -X POST \
+  <span class="str">"https://$REGION-aiplatform.googleapis.com/v1/\
+projects/$PROJECT/locations/$REGION/\
+publishers/google/models/$MODEL:generateContent"</span> \
+  -H <span class="str">"Authorization: Bearer $TOKEN"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "contents": [{
+      "role": "user",
+      "parts": [{"text": "Explain transformers"}]
+    }]
+  }'</span></div>
+    </div>
+
+  </div>
+
+  <!-- Thinking mode / advanced -->
+  <div class="info-card" style="margin-top:16px;">
+    <h3 style="color:#a78bfa;">&#9670; Advanced — Thinking Mode &amp; Streaming</h3>
+    <div class="code-block"><span class="comment"># Gemini 2.5 Flash with Thinking (budget tokens)</span>
+<span class="kw">from</span> google.generativeai <span class="kw">import</span> GenerativeModel
+<span class="kw">from</span> google.generativeai.types <span class="kw">import</span> GenerationConfig
+
+model = genai.GenerativeModel(
+    model_name=<span class="str">"gemini-2.5-flash"</span>,
+    generation_config=GenerationConfig(
+        thinking_config={<span class="str">"thinking_budget"</span>: <span class="num">8192</span>}  <span class="comment"># tokens for thinking</span>
+    )
+)
+
+<span class="comment"># Streaming response</span>
+<span class="kw">for</span> chunk <span class="kw">in</span> model.generate_content(<span class="str">"Solve: ..."</span>, stream=<span class="kw">True</span>):
+    <span class="kw">print</span>(chunk.text, end=<span class="str">""</span>, flush=<span class="kw">True</span>)
+
+<span class="comment"># Multi-turn chat</span>
+chat = model.start_chat(history=[])
+r1 = chat.send_message(<span class="str">"My name is Alex."</span>)
+r2 = chat.send_message(<span class="str">"What's my name?"</span>)  <span class="comment"># remembers context</span>
+<span class="kw">print</span>(r2.text)</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       GEMINI IN THE STACK
+  ══════════════════════════════════════════════ -->
+  <p class="section-label">Gemini in the Stack</p>
+  <div class="info-grid">
+
+    <!-- Hermes -->
+    <div class="stack-card">
+      <h3 style="color:#fb923c;">&#9733; Hermes Agent</h3>
+      <div class="strength-item">
+        <div class="strength-icon blue">&#9670;</div>
+        <div>
+          <div class="strength-title">Provider Config</div>
+          <div class="strength-desc">Set provider to <code style="color:#3CE7FF">google</code> in Hermes config. Supports both AI Studio (GOOGLE_API_KEY) and Vertex AI (ADC / service account) paths.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon green">&#9670;</div>
+        <div>
+          <div class="strength-title">gemini-2.5-flash for Speed</div>
+          <div class="strength-desc">Default Gemini model in Hermes for fast multi-turn conversations — low latency, 1M context, cost-effective at high volume.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon amber">&#9670;</div>
+        <div>
+          <div class="strength-title">gemini-2.5-pro for Depth</div>
+          <div class="strength-desc">Switched in for complex reasoning tasks — deep code analysis, long-document synthesis, extended thinking chains.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OpenClaw -->
+    <div class="stack-card">
+      <h3 style="color:#fb923c;">&#9733; OpenClaw — Multi-Model Routing</h3>
+      <div class="strength-item">
+        <div class="strength-icon cyan">&#9670;</div>
+        <div>
+          <div class="strength-title">Route by Modality</div>
+          <div class="strength-desc">OpenClaw routes image/video analysis tasks to Gemini automatically — it's the only model in the fleet with native video understanding.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon amber">&#9670;</div>
+        <div>
+          <div class="strength-title">Imagen 3 for Media</div>
+          <div class="strength-desc">Image generation pipelines in OpenClaw dispatch to Imagen 3 via Vertex AI, with SynthID watermarking for provenance.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon purple">&#9670;</div>
+        <div>
+          <div class="strength-title">Embeddings for RAG</div>
+          <div class="strength-desc">text-embedding-004 and multimodal-embed power semantic search and vector retrieval in OpenClaw's knowledge pipelines.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unique Strengths -->
+    <div class="stack-card">
+      <h3 style="color:#3CE7FF;">&#9670; Unique Strengths</h3>
+      <div class="strength-item">
+        <div class="strength-icon green">&#128269;</div>
+        <div>
+          <div class="strength-title">Grounding with Google Search</div>
+          <div class="strength-desc">Real-time web retrieval baked into the API. Eliminates hallucination for factual/current queries without external search integration code.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon amber">&#128214;</div>
+        <div>
+          <div class="strength-title">Massive Context for RAG</div>
+          <div class="strength-desc">1M token window means entire codebases or document corpora fit in a single prompt — dramatically simpler RAG architecture.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon blue">&#127916;</div>
+        <div>
+          <div class="strength-title">Native Video Understanding</div>
+          <div class="strength-desc">Upload video files directly; Gemini analyzes frames, audio, and temporal patterns without a separate vision pipeline.</div>
+        </div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-icon red">&#128200;</div>
+        <div>
+          <div class="strength-title">Thinking Mode</div>
+          <div class="strength-desc">Extended reasoning chains (similar to o1/o3) available on both 2.5 Pro and Flash. Budget tokens to control depth vs cost.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════ -->
+  <div class="footer">
+    onemind-skill-tree &mdash; Google Gemini Deep-Dive &mdash; Multimodal Native Intelligence &mdash; 2026
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CANVAS GRAPH SCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+const canvas = document.getElementById('gemini-graph');
+const ctx    = canvas.getContext('2d');
+
+const W = 1200, H = 540;
+canvas.width  = W;
+canvas.height = H;
+
+// Palette
+const BLUE   = '#4285F4';
+const GREEN  = '#34d399';
+const AMBER  = '#FBBC05';
+const RED    = '#EA4335';
+const ORANGE = '#fb923c';
+const PURPLE = '#a78bfa';
+const CYAN   = '#3CE7FF';
+const SLATE  = '#64748b';
+
+const nodes = [
+  // ── Centre hub ──────────────────────────────────
+  { id: 'gemini',    x: 600, y: 270, r: 48, label: 'Gemini',          color: BLUE,   glow: BLUE,   group: 'hub' },
+
+  // ── Platforms ───────────────────────────────────
+  { id: 'aistudio',  x: 200, y: 120, r: 28, label: 'AI\nStudio',      color: PURPLE, glow: PURPLE, group: 'platform' },
+  { id: 'vertex',    x: 200, y: 270, r: 30, label: 'Vertex\nAI',      color: PURPLE, glow: PURPLE, group: 'platform' },
+
+  // ── Language / reasoning models ─────────────────
+  { id: 'g25pro',    x: 490, y: 95,  r: 32, label: 'Gemini\n2.5 Pro', color: BLUE,   glow: BLUE,   group: 'model' },
+  { id: 'g25flash',  x: 700, y: 75,  r: 28, label: 'G2.5\nFlash',     color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'g15pro',    x: 870, y: 115, r: 24, label: 'G1.5\nPro',       color: SLATE,  glow: SLATE,  group: 'model' },
+  { id: 'nano',      x: 970, y: 230, r: 22, label: 'Gemini\nNano',    color: PURPLE, glow: PURPLE, group: 'model' },
+
+  // ── Generative media ────────────────────────────
+  { id: 'imagen',    x: 870, y: 390, r: 26, label: 'Imagen 3',        color: AMBER,  glow: AMBER,  group: 'media' },
+  { id: 'veo',       x: 700, y: 460, r: 24, label: 'Veo 2',           color: RED,    glow: RED,    group: 'media' },
+
+  // ── Unique capabilities ─────────────────────────
+  { id: 'search',    x: 490, y: 450, r: 24, label: 'Google\nSearch',  color: CYAN,   glow: CYAN,   group: 'cap' },
+  { id: 'thinking',  x: 340, y: 430, r: 22, label: 'Thinking\nMode',  color: CYAN,   glow: CYAN,   group: 'cap' },
+
+  // ── Agent consumers ─────────────────────────────
+  { id: 'hermes',    x: 80,  y: 400, r: 28, label: 'Hermes\nAgent',   color: ORANGE, glow: ORANGE, group: 'agent' },
+  { id: 'openclaw',  x: 80,  y: 190, r: 26, label: 'OpenClaw',        color: ORANGE, glow: ORANGE, group: 'agent' },
+];
+
+const edges = [
+  // Hub → platforms
+  { from: 'gemini',   to: 'aistudio',  style: 'solid',  color: PURPLE },
+  { from: 'gemini',   to: 'vertex',    style: 'solid',  color: PURPLE },
+
+  // Hub → models
+  { from: 'gemini',   to: 'g25pro',    style: 'solid',  color: BLUE   },
+  { from: 'gemini',   to: 'g25flash',  style: 'solid',  color: GREEN  },
+  { from: 'gemini',   to: 'g15pro',    style: 'dashed', color: SLATE  },
+  { from: 'gemini',   to: 'nano',      style: 'dashed', color: PURPLE },
+
+  // Hub → media
+  { from: 'gemini',   to: 'imagen',    style: 'solid',  color: AMBER  },
+  { from: 'gemini',   to: 'veo',       style: 'solid',  color: RED    },
+
+  // Hub → capabilities
+  { from: 'gemini',   to: 'search',    style: 'solid',  color: CYAN   },
+  { from: 'gemini',   to: 'thinking',  style: 'solid',  color: CYAN   },
+
+  // Thinking on pro & flash
+  { from: 'g25pro',   to: 'thinking',  style: 'dashed', color: CYAN   },
+  { from: 'g25flash', to: 'thinking',  style: 'dashed', color: CYAN   },
+
+  // Search grounding on pro & flash
+  { from: 'g25pro',   to: 'search',    style: 'dashed', color: CYAN   },
+  { from: 'g25flash', to: 'search',    style: 'dashed', color: CYAN   },
+
+  // Agent → platform/model
+  { from: 'hermes',   to: 'aistudio',  style: 'dashed', color: ORANGE },
+  { from: 'hermes',   to: 'vertex',    style: 'dashed', color: ORANGE },
+  { from: 'hermes',   to: 'g25flash',  style: 'dashed', color: ORANGE },
+  { from: 'hermes',   to: 'g25pro',    style: 'dashed', color: ORANGE },
+
+  { from: 'openclaw', to: 'vertex',    style: 'dashed', color: ORANGE },
+  { from: 'openclaw', to: 'imagen',    style: 'dashed', color: ORANGE },
+  { from: 'openclaw', to: 'g25flash',  style: 'dashed', color: ORANGE },
+];
+
+let transform  = { x: 0, y: 0, scale: 1 };
+let dragging   = false;
+let lastMouse  = null;
+let hoveredNode = null;
+
+function nodeById(id) { return nodes.find(n => n.id === id); }
+
+function drawEdge(e) {
+  const a = nodeById(e.from), b = nodeById(e.to);
+  if (!a || !b) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.strokeStyle = e.color + '55';
+  ctx.lineWidth   = e.style === 'dashed' ? 1 : 1.6;
+  ctx.setLineDash(e.style === 'dashed' ? [5, 5] : []);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawNode(n) {
+  const hov = hoveredNode && hoveredNode.id === n.id;
+  ctx.save();
+
+  // Glow
+  const radius = n.r * (hov ? 2.6 : 2.0);
+  const grd = ctx.createRadialGradient(n.x, n.y, n.r * 0.4, n.x, n.y, radius);
+  grd.addColorStop(0, n.glow + '40');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Circle fill
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+  ctx.fillStyle = '#0a0f1e';
+  ctx.fill();
+  ctx.strokeStyle = n.color + (hov ? 'ee' : '88');
+  ctx.lineWidth   = hov ? 2.2 : 1.5;
+  ctx.stroke();
+
+  // Label
+  const lines   = n.label.split('\n');
+  const isHub   = n.group === 'hub';
+  ctx.fillStyle   = hov ? '#ffffff' : n.color;
+  ctx.font        = `${isHub ? 700 : 400} ${isHub ? 12 : 9.5}px 'IBM Plex Mono', monospace`;
+  ctx.textAlign   = 'center';
+  ctx.textBaseline = 'middle';
+  const lineH  = isHub ? 15 : 13;
+  const startY = n.y - ((lines.length - 1) * lineH) / 2;
+  lines.forEach((ln, i) => ctx.fillText(ln, n.x, startY + i * lineH));
+
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(transform.x, transform.y);
+  ctx.scale(transform.scale, transform.scale);
+
+  // Background grid
+  ctx.strokeStyle = '#1e293b44';
+  ctx.lineWidth   = 0.5;
+  ctx.setLineDash([]);
+  for (let gx = 0; gx < W; gx += 60) {
+    ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+  }
+  for (let gy = 0; gy < H; gy += 60) {
+    ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+  }
+
+  edges.forEach(drawEdge);
+  nodes.forEach(drawNode);
+  ctx.restore();
+}
+
+function getMousePos(e) {
+  const rect   = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width;
+  const scaleY = H / rect.height;
+  return {
+    x: ((e.clientX - rect.left) * scaleX - transform.x) / transform.scale,
+    y: ((e.clientY - rect.top)  * scaleY - transform.y) / transform.scale,
+  };
+}
+
+canvas.addEventListener('mousemove', e => {
+  const { x, y } = getMousePos(e);
+  hoveredNode = nodes.find(n => Math.hypot(n.x - x, n.y - y) < n.r + 10) || null;
+  canvas.style.cursor = hoveredNode ? 'pointer' : (dragging ? 'grabbing' : 'grab');
+  if (dragging && lastMouse) {
+    const rect   = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    transform.x += (e.clientX - lastMouse.x) * scaleX;
+    transform.y += (e.clientY - lastMouse.y) * scaleY;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+  draw();
+});
+
+canvas.addEventListener('mousedown', e => {
+  dragging  = true;
+  lastMouse = { x: e.clientX, y: e.clientY };
+  canvas.style.cursor = 'grabbing';
+});
+
+canvas.addEventListener('mouseup',    () => { dragging = false; canvas.style.cursor = 'grab'; });
+canvas.addEventListener('mouseleave', () => { dragging = false; hoveredNode = null; draw(); });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect  = canvas.getBoundingClientRect();
+  const mx    = (e.clientX - rect.left) * (W / rect.width);
+  const my    = (e.clientY - rect.top)  * (H / rect.height);
+  const delta = e.deltaY < 0 ? 1.1 : 0.91;
+  transform.x = mx - (mx - transform.x) * delta;
+  transform.y = my - (my - transform.y) * delta;
+  transform.scale = Math.min(3, Math.max(0.25, transform.scale * delta));
+  draw();
+}, { passive: false });
+
+draw();
+</script>
+</body>
+</html>

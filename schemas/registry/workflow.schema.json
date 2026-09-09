@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/registry/workflow/v1",
+  "title": "Registry Workflow Record",
+  "description": "Canonical record for a workflow/routing rule owned by om-router. Lives in the KV_WORKFLOW_REGISTRY bucket and is emitted on the registry.workflow.{id} subject. A workflow defines how events/telemetry/state are matched and what actions (commands, tasks, missions, alerts, Legacy prompts) are produced. See docs/WORKFLOW-ROUTING.md.",
+  "type": "object",
+  "required": ["id", "enabled", "description", "when", "then"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable workflow/rule identifier (e.g. 'rule.hostile-drone-critical').",
+      "minLength": 1,
+      "pattern": "^[a-z0-9_][a-z0-9_.\\-$]*$"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether this workflow is currently active.",
+      "default": true
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what this workflow does."
+    },
+    "when": {
+      "type": "object",
+      "description": "Trigger condition — which events match this workflow.",
+      "required": ["subject"],
+      "additionalProperties": true,
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "NATS subject pattern to match (e.g. 'ent.air.*.state', 'evt.task.issue.created')."
+        },
+        "where": {
+          "type": "string",
+          "description": "Optional predicate expression evaluated against the event data (e.g. \"data.affiliation == 'hostile' && data.priority == 'critical'\")."
+        }
+      }
+    },
+    "then": {
+      "type": "array",
+      "description": "Ordered list of actions to execute when the condition matches.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "description": "A single action. Exactly one action type per item.",
+        "additionalProperties": true,
+        "properties": {
+          "publish": {
+            "type": "string",
+            "description": "Publish a command or event subject (e.g. 'cmd.mission.create', 'ui.alerts.active')."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Send a Legacy/agent prompt (e.g. 'agents.prompt.hermes.zeus.ops')."
+          },
+          "task": {
+            "type": "object",
+            "description": "Create a task in the Task Engine.",
+            "additionalProperties": true,
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "assignee": {
+                "type": "string",
+                "description": "Actor ID to assign the task to."
+              },
+              "priority": {
+                "type": "string",
+                "enum": ["low", "normal", "high", "urgent"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "approval": {
+      "type": "string",
+      "description": "Approval policy for this workflow's commands. 'none' = auto-execute, 'operator_required' = hold for human approval, or a named policy reference.",
+      "default": "none"
+    },
+    "dry_run": {
+      "type": "boolean",
+      "description": "When true, the workflow logs matches and would-be actions without executing them. Used for testing.",
+      "default": false
+    },
+    "last_triggered": {
+      "type": "string",
+      "description": "RFC3339 timestamp of the last time this workflow fired.",
+      "format": "date-time"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Workflow-specific metadata (run count, last match details, etc.).",
+      "additionalProperties": true
+    }
+  }
+}

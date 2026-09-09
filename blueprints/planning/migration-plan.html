@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind · Migration Master Plan</title>
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#111823; --panel2:#0d141d; --ink:#e6edf3; --muted:#8b98a5;
+    --line:#1e2a38; --accent:#39d0d8; --accent2:#7ee787;
+    --easy:#2ea043; --medium:#d29922; --hard:#f85149; --stay:#8957e5; --done:#238636;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:30px;margin:0 0 4px;letter-spacing:-.5px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);margin:0 0 26px;font-size:14px}
+  h2{font-size:20px;margin:38px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--accent);font-variant-numeric:tabular-nums;margin-right:8px}
+  h3{font-size:15px;margin:20px 0 8px;color:var(--accent2)}
+  p{margin:8px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .keystone{border-color:#f8514966;background:linear-gradient(180deg,#1a1013,#111823)}
+  .keystone h2{border-color:#f8514933}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  tr:last-child td{border-bottom:none}
+  code{background:#0b1119;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:12.5px/1.4 "SF Mono",ui-monospace,Menlo,monospace;color:#a5d6ff}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+  .p-easy{background:#2ea04322;color:#56d364;border:1px solid #2ea04355}
+  .p-medium{background:#d2992222;color:#e3b341;border:1px solid #d2992255}
+  .p-hard{background:#f8514922;color:#ff7b72;border:1px solid #f8514955}
+  .p-stay{background:#8957e522;color:#b184f8;border:1px solid #8957e555}
+  .p-done{background:#23863622;color:#56d364;border:1px solid #23863655}
+  .dest{font-weight:600}
+  .d-doks{color:#79c0ff}.d-drop{color:#7ee787}.d-nex{color:#b184f8}.d-mac{color:#e3b341}
+  .lead{font-size:15px;color:#c9d4e0}
+  .flag{background:#1a1013;border-left:3px solid var(--hard);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:13.5px}
+  .ok{background:#0d1a12;border-left:3px solid var(--done);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:13.5px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 0;font-size:12.5px;color:var(--muted)}
+  .phase-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#04252a;font-weight:800;font-size:14px;margin-right:10px}
+  .zero{background:var(--hard);color:#2a0a08}
+  ul{margin:8px 0;padding-left:20px}li{margin:4px 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .foot{color:var(--muted);font-size:12.5px;margin-top:30px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>OneMind · <span>Migration Master Plan</span></h1>
+  <p class="sub">Clearing the Mac of server responsibility → code on DOKS + droplet + NEX edge. Built 2026-07-05 · Legacy/Mother</p>
+
+  <div class="card">
+    <p class="lead">Goal: the Mac becomes a pure <strong>cockpit</strong>. Always-on services → DOKS hub. Thin UIs/tools → DO droplet. Camera/video/mesh-bound services → NEX edge (stay on Mac until a dedicated edge box exists). The bus itself is the linchpin.</p>
+    <div class="legend">
+      <span><span class="pill p-easy">EASY</span> stateless / portable</span>
+      <span><span class="pill p-medium">MEDIUM</span> stateful / config work</span>
+      <span><span class="pill p-hard">HARD</span> hardware / deeply coupled</span>
+      <span><span class="pill p-stay">STAYS</span> edge-bound</span>
+      <span><span class="pill p-done">DONE</span> migrated</span>
+    </div>
+  </div>
+
+  <!-- KEYSTONE -->
+  <div class="card keystone">
+    <h2><span class="phase-num zero">0</span>KEYSTONE — NATS Bus Bridge <span style="font-size:13px;color:var(--muted);font-weight:400">· gates everything</span></h2>
+    <p>The <strong>Mac NATS mesh</strong> (<code>zeus-mac · localhost:4222</code>) is the source of truth for the entire OneMind bus. DOKS NATS (<code>nats.nats.svc:4222</code>, leaf listener <code>:7422</code>) is a <strong>separate</strong> bus — only TAK is bridged today. All subjects (<code>log.&gt; metric.&gt; evt.&gt; voice.* agents.*</code>) live <strong>only on the Mac</strong>.</p>
+    <div class="flag"><strong>Consequence:</strong> move any consumer/producer to DOKS <em>without</em> bridging first and it arrives <strong>dead</strong> — no data flows. This is step zero, not a "later" phase.</div>
+    <p><strong>Action:</strong> configure a Mac-NATS leafnode remote → DOKS leaf listener <code>:7422</code> over TLS (Tailscale/mTLS). Mac already has the leaf listener; only the remote is missing. Bridge the subject families, verify subjects appear on both buses, then migrations unlock.</p>
+  </div>
+
+  <!-- PHASE 1 -->
+  <h2><span class="phase-num">1</span>Thin UIs &amp; Read-only Tools → DO Droplet</h2>
+  <p>Stateless web surfaces. Low risk, high "Mac feels clearer" payoff. Need NATS reachable (via the Phase-0 bridge or a public NATS endpoint).</p>
+  <table>
+    <tr><th>Service</th><th>What</th><th>Difficulty</th><th>Destination</th></tr>
+    <tr><td><code>omos.nats-dashboard</code></td><td>NATS monitoring dashboard (:5173)</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-drop">DO droplet</td></tr>
+    <tr><td><code>omos.agenttap</code></td><td>Read-only agent-protocol tap/visualizer (:8088)</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-drop">DO droplet</td></tr>
+    <tr><td><code>omos.heynats</code></td><td>Web admin UI for NATS (:5000)</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-drop">DO droplet</td></tr>
+    <tr><td><code>omos.agent-web-ui</code></td><td>Synadia Agent SDK browser client</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-drop">DO droplet</td></tr>
+    <tr><td><code>ai.hermes.dashboard-proxy</code></td><td>Reverse proxy / front door for Hermes dashboard</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-drop">DO droplet</td></tr>
+  </table>
+
+  <!-- PHASE 2 -->
+  <h2><span class="phase-num">2</span>Observability Unit → DOKS <span style="font-size:13px;color:var(--muted);font-weight:400">· after Phase 0</span></h2>
+  <p>ClickHouse + Grafana move <strong>together</strong>. ClickHouse ingests off the bus, so it needs Phase 0 bridged or it receives nothing. ~11M event rows on disk — <strong>back up first.</strong></p>
+  <table>
+    <tr><th>Service</th><th>What</th><th>Difficulty</th><th>Destination</th></tr>
+    <tr><td><code>omos.clickhouse.timemachine</code></td><td>ClickHouse store (log/metric/evt via NATS engine)</td><td><span class="pill p-hard">HARD</span></td><td class="dest d-doks">DOKS (StatefulSet+PVC)</td></tr>
+    <tr><td><code>omos.observ.metrics</code></td><td>NATS→ClickHouse metrics scraper (15s)</td><td><span class="pill p-medium">MEDIUM</span></td><td class="dest d-doks">DOKS (CronJob/Deploy)</td></tr>
+    <tr><td><code>omos.observ.surveyor</code></td><td>NATS Surveyor exporter (:7777)</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-doks">DOKS</td></tr>
+    <tr><td><code>omos-grafana</code> <span style="font-size:11px;color:var(--muted)">(Docker)</span></td><td>2 dashboards, ClickHouse datasource</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-doks">Reuse <code>monitoring-grafana</code> + add CH datasource</td></tr>
+  </table>
+  <div class="ok"><strong>Cutover:</strong> stand up DOKS ClickHouse → apply <code>observ.sql</code> → dual-run &amp; verify row counts/dashboard parity → then retire Mac ClickHouse + <code>omos-grafana</code> Docker. Do <strong>not</strong> kill Mac ClickHouse until parity is proven.</div>
+
+  <!-- PHASE 3 -->
+  <h2><span class="phase-num">3</span>Hermes Agent Backend → DOKS</h2>
+  <p>Where <strong>Legacy</strong> lives. Once Hermes is on DOKS (with the bus bridged), the voice pipeline target moves cloud-side too.</p>
+  <table>
+    <tr><th>Service</th><th>What</th><th>Difficulty</th><th>Destination</th></tr>
+    <tr><td><code>ai.hermes.gateway</code></td><td>Hermes agent backend / API bridge (:63136)</td><td><span class="pill p-medium">MEDIUM</span></td><td class="dest d-doks">DOKS hub</td></tr>
+    <tr><td><code>ai.hermes.webui</code></td><td>Browser UI for Hermes agent</td><td><span class="pill p-medium">MEDIUM</span></td><td class="dest d-doks">DOKS hub</td></tr>
+    <tr><td><code>ai.hermes.dashboard</code></td><td>Hermes control/dashboard surface</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-doks">DOKS hub</td></tr>
+    <tr><td><code>omos.nex-deploy</code></td><td>NEX deploy/bootstrap helper (orchestration)</td><td><span class="pill p-easy">EASY</span></td><td class="dest d-doks">DOKS hub</td></tr>
+  </table>
+
+  <!-- PHASE 4 -->
+  <h2><span class="phase-num">4</span>Voice Pipeline — finalize</h2>
+  <div class="ok"><strong>Murmur → DONE</strong> (droplet <code>146.190.143.195:64738</code>).</div>
+  <table>
+    <tr><th>Piece</th><th>Placement</th><th>Why</th></tr>
+    <tr><td><code>omos-voice-bridge</code></td><td class="dest d-mac">Mac (native launchd)</td><td>Runs Whisper STT (needs compute, not a 1GB droplet) + publishes where Legacy subscribes. <code>MUMBLE_HOST=146.190.143.195</code>, <code>NATS=localhost:4222</code>. Reaches Murmur over public IP. Re-evaluate once Hermes+bus are cloud-side (Phase 3).</td></tr>
+    <tr><td>iTAK Mumble plugin</td><td class="dest d-mac">Your phone</td><td>Repoint host → <code>146.190.143.195:64738</code>.</td></tr>
+  </table>
+
+  <!-- PHASE 5 -->
+  <h2><span class="phase-num">5</span>Edge / Hardware-bound <span style="font-size:13px;color:var(--muted);font-weight:400">· stays local until a dedicated edge box exists</span></h2>
+  <p>These are legitimately <strong>edge</strong> — not "clear the Mac" targets. They stay on the Mac (or move to the future home Proxmox/Dell edge), NOT DOKS.</p>
+  <table>
+    <tr><th>Service</th><th>What</th><th>Difficulty</th><th>Destination</th></tr>
+    <tr><td><code>com.onemind.nex-node</code></td><td>Core NEX node — <em>is</em> the local mesh</td><td><span class="pill p-hard">HARD</span></td><td class="dest d-nex">NEX edge</td></tr>
+    <tr><td><code>omos.nex</code></td><td>NEX mesh runtime / control wrapper</td><td><span class="pill p-hard">HARD</span></td><td class="dest d-nex">NEX edge</td></tr>
+    <tr><td><code>com.omos.overwatch-vision</code></td><td>Vision inference — needs camera/RTSP feeds</td><td><span class="pill p-hard">HARD</span></td><td class="dest d-nex">NEX edge</td></tr>
+    <tr><td><code>com.omos.overwatch-mediamtx</code></td><td>RTSP/WebRTC/HLS relay — near video sources</td><td><span class="pill p-medium">MEDIUM</span></td><td class="dest d-nex">NEX edge</td></tr>
+    <tr><td><code>com.omos.overwatch-sentinel</code></td><td>Drone-detection backend (NATS JS + CoT)</td><td><span class="pill p-hard">HARD</span></td><td class="dest d-doks">DOKS (backend) — but plist stale, fix first</td></tr>
+    <tr><td><code>omos.orp</code> <span style="font-size:11px;color:var(--muted)">(disabled)</span></td><td>ORP fusion engine (DuckDB/RocksDB)</td><td><span class="pill p-hard">HARD</span></td><td class="dest d-doks">DOKS if re-enabled</td></tr>
+  </table>
+  <div class="flag"><strong>Stale plists to fix:</strong> <code>overwatch-sentinel</code> points at a missing <code>apex-sentinel/scripts/run-organ.sh</code>; <code>overwatch-vision</code> points at an empty dir (real code = <code>vision2constellation</code> in <code>integrations/defense/constellation-overwatch</code>).</div>
+
+  <!-- REPOS -->
+  <h2><span class="phase-num">R</span>Repo Fork / Take / Delete <span style="font-size:13px;color:var(--muted);font-weight:400">· parallel track</span></h2>
+  <p>The 6 exited <code>omos-review-*</code> containers are the sandbox for this. Decisions are documented in <code>~/Desktop/OMOS-WORLD-REPOS-EXTRACTION.html</code> — but extraction is <strong>NOT yet materialized</strong> into omos-core. Do not delete repos until patterns are saved.</p>
+  <table>
+    <tr><th>Repo</th><th>What</th><th>Verdict</th><th>Value to extract</th></tr>
+    <tr><td><code>worldwideview</code></td><td>CesiumJS 3D geospatial engine (Next.js+Prisma)</td><td><span class="pill p-stay">FORK</span></td><td>Keep intact — the 3D globe reference for the future 3D COP</td></tr>
+    <tr><td><code>worldmonitor</code></td><td>Real-time global intel dashboard (Vite, deck.gl/MapLibre)</td><td><span class="pill p-medium">TAKE</span></td><td>Map/registry/feed patterns, basemap config, service arch → then delete</td></tr>
+    <tr><td><code>osiris</code></td><td>OSINT/recon dashboard (Next.js 16, MapLibre)</td><td><span class="pill p-medium">TAKE</span></td><td><code>osint/ cctv/ region-dossier/ scanner/</code> + SSRF-safe fetch → then delete</td></tr>
+    <tr><td><code>crucix</code></td><td>Local intel terminal (Express, 27 OSINT sources)</td><td><span class="pill p-medium">TAKE</span></td><td>"One adapter per source" pattern + briefing/sweep pipeline → then delete</td></tr>
+  </table>
+
+  <!-- SUBAGENTS -->
+  <h2><span class="phase-num">⚡</span>Parallelization — Subagent Workers</h2>
+  <div class="grid">
+    <div class="card"><h3>Track A · Repo Extraction (parallel now)</h3>
+      <ul>
+        <li><strong>Worker A1</strong> → extract <code>worldmonitor</code> patterns → omos-core</li>
+        <li><strong>Worker A2</strong> → extract <code>osiris</code> patterns → omos-core</li>
+        <li><strong>Worker A3</strong> → extract <code>crucix</code> adapters+briefing → omos-core</li>
+      </ul>
+      <p style="font-size:13px;color:var(--muted)">Independent repos = safe in parallel. <code>worldwideview</code> = fork only, no extraction. After each: delete repo + its review container.</p>
+    </div>
+    <div class="card"><h3>Track B · Infra (sequential — bus first)</h3>
+      <ul>
+        <li><strong>Step 0</strong> → NATS bus bridge (blocks Track B)</li>
+        <li><strong>Then ∥</strong> → Phase 1 UIs (droplet) + Phase 2 ClickHouse prep can run alongside</li>
+        <li><strong>Then</strong> → Phase 2 cutover → Phase 3 Hermes → Phase 4 voice</li>
+      </ul>
+      <p style="font-size:13px;color:var(--muted)">Infra can't fully parallelize — the bus bridge gates the data-bound moves.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Recommended execution order</h3>
+    <ul>
+      <li><strong>Now, in parallel:</strong> Track A repo-extraction workers (no infra dependency) <em>+</em> Phase 0 NATS bus bridge.</li>
+      <li><strong>After bridge:</strong> Phase 1 (thin UIs → droplet) — quick, visible Mac clearance.</li>
+      <li><strong>Then:</strong> Phase 2 observability cutover (backup → dual-run → retire Mac ClickHouse+grafana).</li>
+      <li><strong>Then:</strong> Phase 3 Hermes backend → Phase 4 voice-bridge finalize.</li>
+      <li><strong>Left on Mac/edge (by design):</strong> NEX node + Overwatch vision/mediamtx until a dedicated edge box exists.</li>
+    </ul>
+  </div>
+
+  <p class="foot">Honest note: "clear the Mac 100%" isn't fully reachable while the Mac is <em>also</em> the NEX edge node + camera host. Everything that <em>can</em> leave, leaves; the edge tier stays until the home Proxmox/Dell box is stood up. Docker is already ~cleared (only <code>omos-grafana</code> remains, moving with ClickHouse in Phase 2).</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Bedrock — OneMind Model Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* NAV BACK */
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 28px;
+  padding: 6px 14px;
+  border: 1px solid rgba(60, 231, 255, 0.25);
+  border-radius: 6px;
+  transition: background 0.2s;
+  letter-spacing: 0.05em;
+}
+.nav-back:hover { background: rgba(60, 231, 255, 0.07); }
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.header-badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #fbbf24;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  background: rgba(251, 191, 36, 0.06);
+}
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24 0%, #fb923c 50%, #3CE7FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+  letter-spacing: 1.5px;
+}
+
+/* SECTION HEADERS */
+.section {
+  margin-bottom: 48px;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.section-title h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.section-title .accent-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(60,231,255,0.3), transparent);
+}
+
+/* OVERVIEW */
+.overview-card {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(60, 231, 255, 0.03));
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 12px;
+  padding: 28px 32px;
+}
+.overview-card p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+.overview-card p:last-child { margin-bottom: 0; }
+.overview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+.tag-amber {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+.tag-cyan {
+  color: #3CE7FF;
+  background: rgba(60, 231, 255, 0.08);
+  border: 1px solid rgba(60, 231, 255, 0.2);
+}
+.tag-orange {
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.1);
+  border: 1px solid rgba(251, 146, 60, 0.25);
+}
+
+/* MODELS GRID */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.model-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 18px 20px;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  cursor: default;
+}
+.model-card:hover {
+  border-color: rgba(96, 165, 250, 0.35);
+  background: rgba(96, 165, 250, 0.04);
+  transform: translateY(-2px);
+}
+.model-card.primary {
+  border-color: rgba(60, 231, 255, 0.35);
+  background: rgba(60, 231, 255, 0.04);
+}
+.model-card.primary:hover {
+  border-color: rgba(60, 231, 255, 0.6);
+  background: rgba(60, 231, 255, 0.08);
+}
+.model-provider-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.model-provider-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.model-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #e2e8f0;
+}
+.model-card.primary h3 {
+  color: #3CE7FF;
+}
+.model-variants {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+.model-badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+.badge-primary { background: rgba(60, 231, 255, 0.12); color: #3CE7FF; border: 1px solid rgba(60, 231, 255, 0.25); }
+.badge-text { background: rgba(96, 165, 250, 0.1); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.2); }
+.badge-vision { background: rgba(167, 139, 250, 0.1); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2); }
+.badge-image { background: rgba(244, 114, 182, 0.1); color: #f472b6; border: 1px solid rgba(244, 114, 182, 0.2); }
+.badge-embed { background: rgba(52, 211, 153, 0.1); color: #34d399; border: 1px solid rgba(34, 197, 94, 0.2); }
+
+/* WHY BEDROCK */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.why-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.why-card:hover { border-color: rgba(251, 191, 36, 0.25); }
+.why-icon {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  display: block;
+}
+.why-card h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+.why-card p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* HOW TO CONNECT */
+.connect-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.connect-step {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-left: 3px solid #fbbf24;
+  border-radius: 0 10px 10px 0;
+  padding: 18px 22px;
+}
+.connect-step h3 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.code-block {
+  background: #0a0f1a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 8px 0;
+  overflow-x: auto;
+}
+.code-block pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  white-space: pre;
+}
+.code-block .c-comment { color: #475569; }
+.code-block .c-keyword { color: #fb923c; }
+.code-block .c-string { color: #3CE7FF; }
+.code-block .c-var { color: #a78bfa; }
+.code-block .c-func { color: #34d399; }
+.code-block .c-env { color: #fbbf24; }
+.note-box {
+  background: rgba(251, 191, 36, 0.06);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #fbbf24;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.note-box .note-icon { flex-shrink: 0; }
+
+/* USED BY */
+.usedby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.usedby-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 20px 22px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.usedby-card:hover {
+  border-color: rgba(52, 211, 153, 0.3);
+  transform: translateY(-2px);
+}
+.usedby-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.usedby-info h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #34d399;
+  margin-bottom: 4px;
+}
+.usedby-info .role {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #3CE7FF;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+.usedby-info p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* GRAPH */
+.graph-section {
+  margin-bottom: 48px;
+}
+.graph-container {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0f1a;
+  position: relative;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+canvas:active { cursor: grabbing; }
+.graph-instructions {
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+  padding: 8px;
+  border-top: 1px solid #1e293b;
+}
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 14px 16px;
+  border-top: 1px solid #1e293b;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #64748b;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #0f172a;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #1e293b;
+  letter-spacing: 1.5px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .header h1 { font-size: 2rem; }
+  .models-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .usedby-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- NAV BACK -->
+  <a href="../index.html" class="nav-back">&larr; Back to Model Architecture</a>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-badge">Cloud Provider</div>
+    <h1>AWS Bedrock</h1>
+    <div class="subtitle">Model-as-a-Service on Amazon Web Services</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section">
+    <div class="section-title">
+      <h2 style="color:#3CE7FF;">Overview</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="overview-card">
+      <p>
+        Amazon Bedrock is a fully managed service that makes high-performing foundation models from leading AI companies
+        available through a single unified API. There is no infrastructure to provision, no model weights to store,
+        and no GPUs to rent — AWS handles all of it. You pay only for the tokens you consume.
+      </p>
+      <p>
+        Bedrock integrates natively with the broader AWS ecosystem: IAM roles govern access instead of floating API keys,
+        models run within your chosen AWS region for data-residency compliance, and traffic can traverse VPC private
+        endpoints so tokens never cross the public internet. For organizations already inside AWS, Bedrock is often the
+        fastest path to production AI.
+      </p>
+      <p>
+        Through Provisioned Throughput, teams can reserve model capacity for predictable high-volume workloads at rates
+        that frequently beat per-token pricing on comparable direct-vendor plans.
+      </p>
+      <div class="overview-tags">
+        <span class="tag tag-amber">Fully Managed</span>
+        <span class="tag tag-cyan">Pay-per-Token</span>
+        <span class="tag tag-cyan">IAM Native</span>
+        <span class="tag tag-orange">Enterprise Compliance</span>
+        <span class="tag tag-amber">Multi-Model</span>
+        <span class="tag tag-cyan">VPC Private Endpoints</span>
+        <span class="tag tag-orange">Regional Deployment</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVAILABLE MODELS -->
+  <div class="section">
+    <div class="section-title">
+      <h2 style="color:#60a5fa;">Available Models</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="models-grid">
+
+      <!-- Anthropic Claude — PRIMARY -->
+      <div class="model-card primary" style="grid-column: span 2; min-width: 0;">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#3CE7FF;"></span>
+          <span style="color:#3CE7FF;">Anthropic &mdash; Primary Provider</span>
+        </div>
+        <h3>Claude</h3>
+        <div class="model-variants">Opus 4 &nbsp;|&nbsp; Sonnet 4 &nbsp;|&nbsp; Haiku 3.5 &nbsp;|&nbsp; Haiku 3</div>
+        <span class="model-badge badge-primary">Primary</span>
+        <span class="model-badge badge-text">Text</span>
+        <span class="model-badge badge-vision">Vision</span>
+        <span class="model-badge badge-text">Code</span>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:#4b6178;margin-top:10px;line-height:1.6;">
+          Anthropic's flagship family. Sonnet 4 is the workhorse for coding agents, Opus 4 for deep reasoning,
+          Haiku for low-latency, high-volume tasks. Claude Code and Hermes Agent default here via Bedrock when
+          operating inside AWS infrastructure.
+        </p>
+      </div>
+
+      <!-- Meta Llama -->
+      <div class="model-card">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#60a5fa;"></span>
+          <span style="color:#60a5fa;">Meta</span>
+        </div>
+        <h3>Llama</h3>
+        <div class="model-variants">3.1 (8B/70B/405B) &nbsp;|&nbsp; 3.2 (1B/3B/11B/90B) &nbsp;|&nbsp; 4 Scout/Maverick</div>
+        <span class="model-badge badge-text">Text</span>
+        <span class="model-badge badge-vision">Vision</span>
+      </div>
+
+      <!-- Mistral -->
+      <div class="model-card">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#60a5fa;"></span>
+          <span style="color:#60a5fa;">Mistral AI</span>
+        </div>
+        <h3>Mistral</h3>
+        <div class="model-variants">Large 2 &nbsp;|&nbsp; Small 3 &nbsp;|&nbsp; Mixtral 8x7B</div>
+        <span class="model-badge badge-text">Text</span>
+        <span class="model-badge badge-text">Code</span>
+      </div>
+
+      <!-- Amazon Titan -->
+      <div class="model-card">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#fbbf24;"></span>
+          <span style="color:#fbbf24;">Amazon (first-party)</span>
+        </div>
+        <h3>Amazon Titan</h3>
+        <div class="model-variants">Text Premier &nbsp;|&nbsp; Text Lite &nbsp;|&nbsp; Text Express &nbsp;|&nbsp; Embeddings V2</div>
+        <span class="model-badge badge-text">Text</span>
+        <span class="model-badge badge-embed">Embeddings</span>
+      </div>
+
+      <!-- Cohere -->
+      <div class="model-card">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#60a5fa;"></span>
+          <span style="color:#60a5fa;">Cohere</span>
+        </div>
+        <h3>Command R+</h3>
+        <div class="model-variants">Command R+ &nbsp;|&nbsp; Command R &nbsp;|&nbsp; Embed 3</div>
+        <span class="model-badge badge-text">Text</span>
+        <span class="model-badge badge-embed">Embeddings</span>
+      </div>
+
+      <!-- AI21 -->
+      <div class="model-card">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#60a5fa;"></span>
+          <span style="color:#60a5fa;">AI21 Labs</span>
+        </div>
+        <h3>Jamba</h3>
+        <div class="model-variants">Jamba 1.5 Large &nbsp;|&nbsp; Jamba 1.5 Mini</div>
+        <span class="model-badge badge-text">Text</span>
+      </div>
+
+      <!-- Stability AI -->
+      <div class="model-card">
+        <div class="model-provider-tag">
+          <span class="model-provider-dot" style="background:#f472b6;"></span>
+          <span style="color:#f472b6;">Stability AI</span>
+        </div>
+        <h3>Stable Diffusion</h3>
+        <div class="model-variants">SD3 Large &nbsp;|&nbsp; SDXL 1.0 &nbsp;|&nbsp; SD Core</div>
+        <span class="model-badge badge-image">Image Gen</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WHY USE BEDROCK -->
+  <div class="section">
+    <div class="section-title">
+      <h2 style="color:#fbbf24;">Why Use Bedrock</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="why-icon">&#128273;</span>
+        <h3>IAM Authentication</h3>
+        <p>
+          No floating API keys in your codebase. Access is governed by IAM roles and policies — the same identity
+          system that controls every other AWS service. Rotate credentials once, everywhere.
+        </p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">&#127758;</span>
+        <h3>Regional Endpoints</h3>
+        <p>
+          Choose where your requests land: us-east-1, eu-west-1, ap-southeast-1, and more.
+          Data sovereignty and GDPR compliance become architectural decisions, not afterthoughts.
+        </p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">&#128274;</span>
+        <h3>VPC Private Endpoints</h3>
+        <p>
+          Route Bedrock traffic through an Interface VPC Endpoint. Tokens never traverse the public internet —
+          essential for sensitive workloads, financial data, and healthcare (HIPAA-eligible).
+        </p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">&#128200;</span>
+        <h3>Cost via Commitments</h3>
+        <p>
+          On-demand pricing is competitive, but Provisioned Throughput unlocks reserved capacity at significant
+          discounts for predictable workloads. Often cheaper than direct-vendor pricing at scale.
+        </p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">&#9989;</span>
+        <h3>Enterprise Compliance</h3>
+        <p>
+          SOC 2, ISO 27001, PCI DSS, FedRAMP (select regions), and HIPAA BAA available. Bedrock logs all
+          model invocations to CloudTrail for full audit trails out of the box.
+        </p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">&#128101;</span>
+        <h3>Single API Surface</h3>
+        <p>
+          One SDK (boto3), one authentication mechanism, one monitoring stack (CloudWatch) — and access to
+          Claude, Llama, Mistral, Titan, Cohere, and more through the same interface.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO CONNECT -->
+  <div class="section">
+    <div class="section-title">
+      <h2 style="color:#fb923c;">How to Connect</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="connect-steps">
+
+      <!-- Step 1: CLI setup -->
+      <div class="connect-step">
+        <h3>Step 1 &mdash; AWS CLI Setup</h3>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#64748b;margin-bottom:8px;">
+          Configure credentials using the AWS CLI. This writes to ~/.aws/credentials and ~/.aws/config.
+        </p>
+        <div class="code-block">
+          <pre><span class="c-comment"># Install AWS CLI then run:</span>
+<span class="c-func">aws configure</span>
+
+<span class="c-comment"># You will be prompted for:</span>
+<span class="c-comment"># AWS Access Key ID      [None]: AKIAIOSFODNN7EXAMPLE</span>
+<span class="c-comment"># AWS Secret Access Key  [None]: wJalrXUtnFEMI/K7MDENG/...</span>
+<span class="c-comment"># Default region name    [None]: us-east-1</span>
+<span class="c-comment"># Default output format  [None]: json</span></pre>
+        </div>
+      </div>
+
+      <!-- Step 2: Env vars -->
+      <div class="connect-step">
+        <h3>Step 2 &mdash; Environment Variables</h3>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#64748b;margin-bottom:8px;">
+          Alternatively, set env vars directly. These override ~/.aws/credentials at runtime.
+        </p>
+        <div class="code-block">
+          <pre><span class="c-keyword">export</span> <span class="c-env">AWS_ACCESS_KEY_ID</span><span class="c-comment">=</span><span class="c-string">"AKIAIOSFODNN7EXAMPLE"</span>
+<span class="c-keyword">export</span> <span class="c-env">AWS_SECRET_ACCESS_KEY</span><span class="c-comment">=</span><span class="c-string">"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"</span>
+<span class="c-keyword">export</span> <span class="c-env">AWS_DEFAULT_REGION</span><span class="c-comment">=</span><span class="c-string">"us-east-1"</span>
+
+<span class="c-comment"># For IAM roles on EC2/ECS/Lambda — no env vars needed at all.</span>
+<span class="c-comment"># boto3 picks up the instance metadata role automatically.</span></pre>
+        </div>
+      </div>
+
+      <!-- Step 3: Endpoint pattern -->
+      <div class="connect-step">
+        <h3>Step 3 &mdash; API Endpoint Pattern</h3>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#64748b;margin-bottom:8px;">
+          Bedrock Runtime uses a region-scoped endpoint. All model inference goes through this base:
+        </p>
+        <div class="code-block">
+          <pre><span class="c-comment"># Runtime endpoint (inference):</span>
+https://<span class="c-string">bedrock-runtime</span>.<span class="c-env">{region}</span>.amazonaws.com
+
+<span class="c-comment"># Example (Claude Sonnet 4, us-east-1):</span>
+https://<span class="c-string">bedrock-runtime</span>.<span class="c-env">us-east-1</span>.amazonaws.com/model/<span class="c-func">anthropic.claude-sonnet-4-20250514-v1:0</span>/invoke
+
+<span class="c-comment"># Control plane (list models, manage throughput):</span>
+https://<span class="c-string">bedrock</span>.<span class="c-env">{region}</span>.amazonaws.com</pre>
+        </div>
+      </div>
+
+      <!-- Step 4: Python boto3 -->
+      <div class="connect-step">
+        <h3>Step 4 &mdash; Python (boto3)</h3>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:#64748b;margin-bottom:8px;">
+          Use the <code style="color:#3CE7FF;">bedrock-runtime</code> client. The API is identical regardless of which model you target.
+        </p>
+        <div class="code-block">
+          <pre><span class="c-keyword">import</span> boto3, json
+
+client = boto3.<span class="c-func">client</span>(
+    <span class="c-string">"bedrock-runtime"</span>,
+    region_name=<span class="c-string">"us-east-1"</span>
+)
+
+response = client.<span class="c-func">invoke_model</span>(
+    modelId=<span class="c-string">"anthropic.claude-sonnet-4-20250514-v1:0"</span>,
+    contentType=<span class="c-string">"application/json"</span>,
+    accept=<span class="c-string">"application/json"</span>,
+    body=json.<span class="c-func">dumps</span>({
+        <span class="c-string">"anthropic_version"</span>: <span class="c-string">"bedrock-2023-05-31"</span>,
+        <span class="c-string">"max_tokens"</span>: 1024,
+        <span class="c-string">"messages"</span>: [{<span class="c-string">"role"</span>: <span class="c-string">"user"</span>, <span class="c-string">"content"</span>: <span class="c-string">"Hello, Claude!"</span>}]
+    })
+)
+
+result = json.<span class="c-func">loads</span>(response[<span class="c-string">"body"</span>].<span class="c-func">read</span>())
+<span class="c-keyword">print</span>(result[<span class="c-string">"content"</span>][0][<span class="c-string">"text"</span>])</pre>
+        </div>
+        <div class="note-box">
+          <span class="note-icon">&#9888;</span>
+          <span>
+            You must <strong>enable model access</strong> in the AWS Bedrock console before you can invoke any model.
+            Navigate to Bedrock &rarr; Model access &rarr; Manage model access &rarr; check each model &rarr; Save changes.
+            Approval is usually instant but can take up to a few minutes.
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- USED BY -->
+  <div class="section">
+    <div class="section-title">
+      <h2 style="color:#34d399;">Used By</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="usedby-grid">
+
+      <div class="usedby-card">
+        <div class="usedby-icon" style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);">&#9000;</div>
+        <div class="usedby-info">
+          <h3>Claude Code</h3>
+          <div class="role">Coding Agent &mdash; via Bedrock profile</div>
+          <p>
+            Claude Code's <code style="color:#3CE7FF;">--bedrock</code> flag (or the CLAUDE_CODE_USE_BEDROCK env var)
+            routes all model calls through Bedrock Runtime instead of api.anthropic.com. Ideal for teams that
+            already operate inside AWS and want unified billing + IAM governance.
+          </p>
+        </div>
+      </div>
+
+      <div class="usedby-card">
+        <div class="usedby-icon" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);">&#9729;</div>
+        <div class="usedby-info">
+          <h3>Hermes Agent</h3>
+          <div class="role">Autonomous Orchestrator &mdash; fallback provider</div>
+          <p>
+            Hermes Agent is configured with AWS Bedrock as a fallback provider. When the primary provider is
+            unavailable or rate-limited, Hermes routes inference through Bedrock using the same Claude models,
+            ensuring continuity for long-running agentic workflows.
+          </p>
+        </div>
+      </div>
+
+      <div class="usedby-card">
+        <div class="usedby-icon" style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);">&#128760;</div>
+        <div class="usedby-info">
+          <h3>OpenClaw</h3>
+          <div class="role">Multi-Agent Fleet &mdash; cloud inference backend</div>
+          <p>
+            OpenClaw's multi-agent orchestration layer uses Bedrock as one of its cloud inference backends,
+            enabling cost-optimized fleet scaling: route cheaper subtasks to Haiku, complex reasoning to
+            Sonnet or Opus, all under a single AWS bill.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GRAPH -->
+  <div class="section graph-section">
+    <div class="section-title">
+      <h2 style="color:#a78bfa;">Dependency Graph</h2>
+      <div class="accent-line"></div>
+    </div>
+    <div class="graph-container">
+      <canvas id="bedrock-graph" width="1300" height="680"></canvas>
+      <div class="graph-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#fbbf24;"></div><span>Provider</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#60a5fa;"></div><span>Model</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#34d399;"></div><span>Agent</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fb923c;"></div><span>System</span></div>
+      </div>
+      <div class="graph-instructions">
+        Drag nodes &bull; Scroll to zoom &bull; Click-drag canvas to pan
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    OneMind Model Architecture &bull; AWS Bedrock
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+//  Force-Directed Graph — AWS Bedrock provider page
+// ─────────────────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('bedrock-graph');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const COLORS = {
+    provider: '#fbbf24',
+    model:    '#60a5fa',
+    agent:    '#34d399',
+    system:   '#fb923c'
+  };
+
+  const GLOW = {
+    provider: 'rgba(251,191,36,0.25)',
+    model:    'rgba(96,165,250,0.2)',
+    agent:    'rgba(52,211,153,0.2)',
+    system:   'rgba(251,146,60,0.2)'
+  };
+
+  // ── Nodes ─────────────────────────────────────────────
+  const nodes = [
+    // Provider (center)
+    { id: 'bedrock',  label: 'AWS\nBedrock',  type: 'provider', r: 30, x: W/2,    y: H/2 },
+
+    // Models
+    { id: 'claude',   label: 'Anthropic\nClaude',    type: 'model', r: 22, x: W/2 - 250, y: H/2 - 200 },
+    { id: 'sonnet',   label: 'Sonnet 4',             type: 'model', r: 14, x: W/2 - 380, y: H/2 - 280 },
+    { id: 'opus',     label: 'Opus 4',               type: 'model', r: 14, x: W/2 - 280, y: H/2 - 310 },
+    { id: 'haiku',    label: 'Haiku',                type: 'model', r: 14, x: W/2 - 170, y: H/2 - 290 },
+    { id: 'llama',    label: 'Meta\nLlama 3/4',      type: 'model', r: 18, x: W/2 + 20,  y: H/2 - 230 },
+    { id: 'mistral',  label: 'Mistral\nLarge/Small', type: 'model', r: 16, x: W/2 + 230, y: H/2 - 180 },
+    { id: 'titan',    label: 'Amazon\nTitan',        type: 'model', r: 16, x: W/2 + 290, y: H/2      },
+    { id: 'cohere',   label: 'Cohere\nCmd R+',       type: 'model', r: 15, x: W/2 + 220, y: H/2 + 180 },
+    { id: 'ai21',     label: 'AI21\nJamba',          type: 'model', r: 14, x: W/2 + 60,  y: H/2 + 240 },
+    { id: 'sd',       label: 'Stability AI\nSD3',    type: 'model', r: 14, x: W/2 - 180, y: H/2 + 240 },
+
+    // Agents
+    { id: 'ccode',    label: 'Claude\nCode',         type: 'agent',  r: 18, x: W/2 - 350, y: H/2 + 80  },
+    { id: 'hermes',   label: 'Hermes\nAgent',        type: 'system', r: 20, x: W/2 - 320, y: H/2 + 220 },
+    { id: 'openclaw', label: 'Open\nClaw',           type: 'agent',  r: 16, x: W/2 - 100, y: H/2 + 310 },
+  ];
+
+  // ── Edges ─────────────────────────────────────────────
+  const edges = [
+    // Bedrock hosts models
+    { s: 'bedrock', t: 'claude',  style: 'host' },
+    { s: 'bedrock', t: 'llama',   style: 'host' },
+    { s: 'bedrock', t: 'mistral', style: 'host' },
+    { s: 'bedrock', t: 'titan',   style: 'host' },
+    { s: 'bedrock', t: 'cohere',  style: 'host' },
+    { s: 'bedrock', t: 'ai21',    style: 'host' },
+    { s: 'bedrock', t: 'sd',      style: 'host' },
+
+    // Claude sub-models
+    { s: 'claude', t: 'sonnet',   style: 'sub' },
+    { s: 'claude', t: 'opus',     style: 'sub' },
+    { s: 'claude', t: 'haiku',    style: 'sub' },
+
+    // Agents use Claude via Bedrock
+    { s: 'ccode',    t: 'claude',  style: 'use' },
+    { s: 'hermes',   t: 'claude',  style: 'use' },
+    { s: 'openclaw', t: 'claude',  style: 'use' },
+    { s: 'openclaw', t: 'llama',   style: 'use' },
+    { s: 'openclaw', t: 'mistral', style: 'use' },
+  ];
+
+  // Index nodes by id
+  const nodeMap = {};
+  nodes.forEach(n => { nodeMap[n.id] = n; });
+
+  // Add velocity
+  nodes.forEach(n => { n.vx = 0; n.vy = 0; });
+
+  // ── Physics constants ─────────────────────────────────
+  const REPEL    = 9000;
+  const ATTRACT  = 0.018;
+  const IDEAL = {
+    host: 180,
+    sub:  90,
+    use:  220
+  };
+  const DAMPING  = 0.82;
+  const CENTER_K = 0.004;
+
+  function tickPhysics() {
+    // Repulsion
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.sqrt(dx*dx + dy*dy) || 0.01;
+        const force = REPEL / (dist * dist);
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+        a.vx -= fx; a.vy -= fy;
+        b.vx += fx; b.vy += fy;
+      }
+    }
+
+    // Attraction along edges
+    edges.forEach(e => {
+      const a = nodeMap[e.s], b = nodeMap[e.t];
+      if (!a || !b) return;
+      let dx = b.x - a.x, dy = b.y - a.y;
+      const dist = Math.sqrt(dx*dx + dy*dy) || 0.01;
+      const ideal = IDEAL[e.style] || 160;
+      const delta = (dist - ideal) * ATTRACT;
+      const fx = (dx / dist) * delta;
+      const fy = (dy / dist) * delta;
+      a.vx += fx; a.vy += fy;
+      b.vx -= fx; b.vy -= fy;
+    });
+
+    // Gentle center pull
+    nodes.forEach(n => {
+      n.vx += (W/2 - n.x) * CENTER_K;
+      n.vy += (H/2 - n.y) * CENTER_K;
+    });
+
+    // Integrate + damp
+    nodes.forEach(n => {
+      if (n.dragging) return;
+      n.vx *= DAMPING;
+      n.vy *= DAMPING;
+      n.x += n.vx;
+      n.y += n.vy;
+      // Boundary
+      const pad = n.r + 10;
+      n.x = Math.max(pad, Math.min(W - pad, n.x));
+      n.y = Math.max(pad, Math.min(H - pad, n.y));
+    });
+  }
+
+  // ── Viewport (pan + zoom) ──────────────────────────────
+  let vp = { tx: 0, ty: 0, scale: 1 };
+
+  function worldToScreen(x, y) {
+    return [x * vp.scale + vp.tx, y * vp.scale + vp.ty];
+  }
+  function screenToWorld(x, y) {
+    return [(x - vp.tx) / vp.scale, (y - vp.ty) / vp.scale];
+  }
+
+  // ── Draw ──────────────────────────────────────────────
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background grid (subtle)
+    ctx.save();
+    ctx.translate(vp.tx, vp.ty);
+    ctx.scale(vp.scale, vp.scale);
+
+    const EDGE_STYLES = {
+      host: { color: '#475569', dash: [],        width: 1.5 },
+      sub:  { color: '#334155', dash: [4, 4],    width: 1   },
+      use:  { color: '#a78bfa', dash: [5, 4],    width: 1.2 }
+    };
+
+    // Draw edges
+    edges.forEach(e => {
+      const a = nodeMap[e.s], b = nodeMap[e.t];
+      if (!a || !b) return;
+      const st = EDGE_STYLES[e.style];
+      ctx.save();
+      ctx.setLineDash(st.dash);
+      ctx.strokeStyle = st.color;
+      ctx.lineWidth   = st.width;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // Draw nodes
+    nodes.forEach(n => {
+      const col = COLORS[n.type];
+      const glow = GLOW[n.type];
+
+      // Outer glow
+      const g = ctx.createRadialGradient(n.x, n.y, n.r * 0.5, n.x, n.y, n.r * 2.4);
+      g.addColorStop(0, glow);
+      g.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // Node circle fill
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = n.hovered
+        ? col
+        : `${col}22`;
+      ctx.fill();
+
+      // Node ring
+      ctx.strokeStyle = col;
+      ctx.lineWidth   = n.hovered ? 2.5 : 1.5;
+      ctx.stroke();
+
+      // Label
+      const lines = n.label.split('\n');
+      const fontSize = n.r > 22 ? 11 : (n.r > 16 ? 9.5 : 8.5);
+      ctx.font = `600 ${fontSize}px 'Chakra Petch', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = n.hovered ? '#020617' : col;
+      const lineH = fontSize + 2;
+      const startY = n.y - ((lines.length - 1) * lineH) / 2;
+      lines.forEach((l, i) => {
+        ctx.fillText(l, n.x, startY + i * lineH);
+      });
+    });
+
+    ctx.restore();
+  }
+
+  // ── Interaction ───────────────────────────────────────
+  let dragNode = null, panStart = null;
+  let lastMouse = { x: 0, y: 0 };
+
+  function hitNode(wx, wy) {
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i];
+      const dx = n.x - wx, dy = n.y - wy;
+      if (dx*dx + dy*dy <= n.r * n.r) return n;
+    }
+    return null;
+  }
+
+  function getCanvasPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    const cx = (e.clientX - rect.left) * scaleX;
+    const cy = (e.clientY - rect.top)  * scaleY;
+    return [cx, cy];
+  }
+
+  canvas.addEventListener('mousedown', e => {
+    const [cx, cy] = getCanvasPos(e);
+    const [wx, wy] = screenToWorld(cx, cy);
+    dragNode = hitNode(wx, wy);
+    if (dragNode) {
+      dragNode.dragging = true;
+      dragNode.vx = 0; dragNode.vy = 0;
+    } else {
+      panStart = { sx: cx, sy: cy, tx: vp.tx, ty: vp.ty };
+    }
+  });
+
+  canvas.addEventListener('mousemove', e => {
+    const [cx, cy] = getCanvasPos(e);
+    lastMouse = { x: cx, y: cy };
+
+    if (dragNode) {
+      const [wx, wy] = screenToWorld(cx, cy);
+      dragNode.x = wx;
+      dragNode.y = wy;
+    } else if (panStart) {
+      vp.tx = panStart.tx + (cx - panStart.sx);
+      vp.ty = panStart.ty + (cy - panStart.sy);
+    } else {
+      const [wx, wy] = screenToWorld(cx, cy);
+      nodes.forEach(n => {
+        const dx = n.x - wx, dy = n.y - wy;
+        n.hovered = (dx*dx + dy*dy <= n.r * n.r);
+      });
+    }
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    if (dragNode) { dragNode.dragging = false; dragNode = null; }
+    panStart = null;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    if (dragNode) { dragNode.dragging = false; dragNode = null; }
+    panStart = null;
+    nodes.forEach(n => { n.hovered = false; });
+  });
+
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const [cx, cy] = getCanvasPos(e);
+    const factor = e.deltaY < 0 ? 1.1 : 0.91;
+    const newScale = Math.max(0.3, Math.min(3, vp.scale * factor));
+    vp.tx = cx - (cx - vp.tx) * (newScale / vp.scale);
+    vp.ty = cy - (cy - vp.ty) * (newScale / vp.scale);
+    vp.scale = newScale;
+  }, { passive: false });
+
+  // Touch support
+  let lastTouchDist = null;
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      const [cx, cy] = getCanvasPos(t);
+      const [wx, wy] = screenToWorld(cx, cy);
+      dragNode = hitNode(wx, wy);
+      if (dragNode) { dragNode.dragging = true; dragNode.vx = 0; dragNode.vy = 0; }
+      else panStart = { sx: cx, sy: cy, tx: vp.tx, ty: vp.ty };
+    }
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastTouchDist = Math.sqrt(dx*dx + dy*dy);
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      const [cx, cy] = getCanvasPos(t);
+      if (dragNode) {
+        const [wx, wy] = screenToWorld(cx, cy);
+        dragNode.x = wx; dragNode.y = wy;
+      } else if (panStart) {
+        vp.tx = panStart.tx + (cx - panStart.sx);
+        vp.ty = panStart.ty + (cy - panStart.sy);
+      }
+    }
+    if (e.touches.length === 2 && lastTouchDist !== null) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const newDist = Math.sqrt(dx*dx + dy*dy);
+      const factor = newDist / lastTouchDist;
+      const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      const rect = canvas.getBoundingClientRect();
+      const cx = (midX - rect.left) * (W / rect.width);
+      const cy = (midY - rect.top)  * (H / rect.height);
+      const newScale = Math.max(0.3, Math.min(3, vp.scale * factor));
+      vp.tx = cx - (cx - vp.tx) * (newScale / vp.scale);
+      vp.ty = cy - (cy - vp.ty) * (newScale / vp.scale);
+      vp.scale = newScale;
+      lastTouchDist = newDist;
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', () => {
+    if (dragNode) { dragNode.dragging = false; dragNode = null; }
+    panStart = null;
+    lastTouchDist = null;
+  });
+
+  // ── Loop ─────────────────────────────────────────────
+  function loop() {
+    tickPhysics();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+})();
+</script>
+</body>
+</html>

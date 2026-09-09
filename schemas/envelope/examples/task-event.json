@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "id": "550e8400-e29b-41d4-a716-446655440001",
+  "ts": "2026-06-10T14:30:00.123Z",
+  "type": "evt.task.issue.created",
+  "source": "agent.legacy",
+  "subject": "evt.task.issue.created",
+  "corr": "a1b2c3d4-e5f6-4a7b-8c9d-000000000001",
+  "data": {
+    "issue_id": "OM-001",
+    "title": "Re-roof the barn section",
+    "assignee": "node.barn-pi-1",
+    "priority": "high",
+    "status": "open",
+    "created_by": "agent.legacy",
+    "tags": ["infrastructure", "barn"]
+  }
+}

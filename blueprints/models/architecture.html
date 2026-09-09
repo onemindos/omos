@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind Model Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3CE7FF, #a78bfa, #fb923c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  border: 1px solid rgba(60, 231, 255, 0.2);
+  border-radius: 6px;
+}
+
+.nav-back:hover { background: rgba(60, 231, 255, 0.05); }
+
+/* Graph container */
+.graph-container {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+  margin-bottom: 24px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  margin-bottom: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-line {
+  width: 24px;
+  height: 2px;
+}
+
+/* Info cards */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.info-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid #1e293b;
+}
+
+.info-card h3 {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  padding: 4px 0;
+  padding-left: 12px;
+  position: relative;
+}
+
+.info-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #475569;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #475569;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="index.html" class="nav-back">&larr; Back to Capability Tree</a>
+
+  <div class="header">
+    <h1>Model Architecture</h1>
+    <div class="subtitle">Providers &rarr; Models &rarr; Coding Agents &rarr; Autonomous Systems</div>
+  </div>
+
+  <div class="instructions">
+    Drag nodes &bull; Scroll to zoom &bull; Click-drag background to pan
+  </div>
+
+  <div class="graph-container">
+    <canvas id="model-graph" width="1500" height="1000"></canvas>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fbbf24;"></div>
+      <span>Cloud Providers</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#60a5fa;"></div>
+      <span>Models</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#34d399;"></div>
+      <span>Coding Agents</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fb923c;"></div>
+      <span>Autonomous Systems</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3CE7FF;"></div>
+      <span>Local / Self-Hosted</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="background:#475569;"></div>
+      <span>Provider hosts Model</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="background:#a78bfa; border-style:dashed;"></div>
+      <span>Agent uses Model</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="background:#fb923c;"></div>
+      <span>Powers System</span>
+    </div>
+  </div>
+
+  <!-- Deep dive nav -->
+  <div style="margin:30px 0;">
+    <h3 style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:#64748b;margin-bottom:16px;text-align:center;letter-spacing:1px;text-transform:uppercase;">Deep Dive &mdash; Click Any Layer</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
+      <a href="providers/aws-bedrock.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#fbbf24;margin-right:6px;vertical-align:middle;"></span>AWS Bedrock</a>
+      <a href="providers/azure.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#fbbf24;margin-right:6px;vertical-align:middle;"></span>Azure AI</a>
+      <a href="providers/google.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#fbbf24;margin-right:6px;vertical-align:middle;"></span>Google Cloud</a>
+      <a href="providers/digitalocean.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#fbbf24;margin-right:6px;vertical-align:middle;"></span>DigitalOcean</a>
+      <a href="providers/alibaba.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#fbbf24;margin-right:6px;vertical-align:middle;"></span>Alibaba Cloud</a>
+      <a href="models/anthropic-claude.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#60a5fa;margin-right:6px;vertical-align:middle;"></span>Anthropic Claude</a>
+      <a href="models/openai.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#60a5fa;margin-right:6px;vertical-align:middle;"></span>OpenAI</a>
+      <a href="models/gemini.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#60a5fa;margin-right:6px;vertical-align:middle;"></span>Google Gemini</a>
+      <a href="agents/index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:12px 16px;border-radius:8px;border:1px solid #1e293b;background:rgba(30,41,59,0.3);color:#e2e8f0;text-decoration:none;text-align:center;transition:all 0.2s;display:block;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#34d399;margin-right:6px;vertical-align:middle;"></span>Coding Agents</a>
+    </div>
+  </div>
+
+  <!-- Info cards -->
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9729; Cloud Providers</h3>
+      <ul>
+        <li>Azure (Microsoft) — hosts OpenAI models</li>
+        <li>AWS Bedrock — hosts Claude (Anthropic)</li>
+        <li>Google Cloud — hosts Gemini</li>
+        <li>Alibaba Cloud — hosts Qwen</li>
+        <li>OpenAI Direct — GPT-4o, o1, o3</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#60a5fa;">&#9881; Models</h3>
+      <ul>
+        <li>Claude (Anthropic) — via AWS Bedrock + direct</li>
+        <li>OpenAI GPT — via Azure + direct</li>
+        <li>Gemini — via Google Cloud</li>
+        <li>Qwen — via Alibaba Cloud</li>
+        <li>Ollama — local inference (any open model)</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9000; Coding Agents</h3>
+      <ul>
+        <li>Claude Code — Claude via Bedrock/direct</li>
+        <li>Codex — OpenAI via Azure/direct</li>
+        <li>Copilot — OpenAI + Claude via Azure</li>
+        <li>OpenCode — multi-model</li>
+        <li>Pi Agent — local coding agent</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9733; Autonomous Systems</h3>
+      <ul>
+        <li>Hermes Agent — orchestrator, connects all models</li>
+        <li>OpenClaw — multi-agent fleet, connects all models</li>
+        <li>Both power the full OneMind OS stack</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    OneMind Model Architecture v0.1 &bull; The Fabric Connects Us All
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById('model-graph');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+// Layer colors
+const COLORS = {
+  provider: '#fbbf24',
+  model: '#60a5fa',
+  agent: '#34d399',
+  system: '#fb923c',
+  local: '#3CE7FF'
+};
+
+// Nodes
+const nodes = [
+  // Layer 1: Cloud Providers (top)
+  { id: 'azure', label: 'Azure', type: 'provider', r: 22 },
+  { id: 'aws', label: 'AWS\nBedrock', type: 'provider', r: 22 },
+  { id: 'google', label: 'Google\nCloud', type: 'provider', r: 22 },
+  { id: 'alibaba', label: 'Alibaba\nCloud', type: 'provider', r: 22 },
+  { id: 'openai-direct', label: 'OpenAI\nDirect', type: 'provider', r: 22 },
+
+  // Layer 2: Models
+  { id: 'claude', label: 'Claude', type: 'model', r: 20 },
+  { id: 'openai', label: 'OpenAI\nGPT', type: 'model', r: 20 },
+  { id: 'gemini', label: 'Gemini', type: 'model', r: 20 },
+  { id: 'qwen', label: 'Qwen', type: 'model', r: 20 },
+  { id: 'ollama', label: 'Ollama', type: 'local', r: 20 },
+
+  // Layer 3: Coding Agents
+  { id: 'claude-code', label: 'Claude\nCode', type: 'agent', r: 18 },
+  { id: 'codex', label: 'Codex', type: 'agent', r: 18 },
+  { id: 'copilot', label: 'Copilot', type: 'agent', r: 18 },
+  { id: 'opencode', label: 'OpenCode', type: 'agent', r: 18 },
+  { id: 'pi-agent', label: 'Pi Agent', type: 'agent', r: 18 },
+
+  // Layer 4: Autonomous Systems (bottom)
+  { id: 'hermes', label: 'Hermes', type: 'system', r: 26 },
+  { id: 'openclaw', label: 'OpenClaw', type: 'system', r: 26 },
+];
+
+// Edges [source, target, type]
+// types: 'hosts' (provider→model), 'uses' (agent→model), 'powers' (system connects)
+const edges = [
+  // Provider → Model relationships
+  ['azure', 'openai', 'hosts'],
+  ['aws', 'claude', 'hosts'],
+  ['google', 'gemini', 'hosts'],
+  ['alibaba', 'qwen', 'hosts'],
+  ['openai-direct', 'openai', 'hosts'],
+
+  // Claude also available direct (not just bedrock)
+  ['openai-direct', 'claude', 'hosts'],  // Anthropic direct API parallel
+
+  // Coding Agent → Model connections
+  ['claude-code', 'claude', 'uses'],
+  ['claude-code', 'aws', 'uses'],         // Claude Code via Bedrock
+
+  ['codex', 'openai', 'uses'],
+  ['codex', 'azure', 'uses'],             // Codex via Azure
+
+  ['copilot', 'openai', 'uses'],
+  ['copilot', 'claude', 'uses'],          // Copilot uses both
+  ['copilot', 'azure', 'uses'],
+
+  ['opencode', 'claude', 'uses'],
+  ['opencode', 'openai', 'uses'],
+  ['opencode', 'ollama', 'uses'],
+
+  ['pi-agent', 'ollama', 'uses'],
+  ['pi-agent', 'claude', 'uses'],
+
+  // Autonomous Systems → connect to ALL models
+  ['hermes', 'claude', 'powers'],
+  ['hermes', 'openai', 'powers'],
+  ['hermes', 'gemini', 'powers'],
+  ['hermes', 'qwen', 'powers'],
+  ['hermes', 'ollama', 'powers'],
+
+  ['openclaw', 'claude', 'powers'],
+  ['openclaw', 'openai', 'powers'],
+  ['openclaw', 'gemini', 'powers'],
+  ['openclaw', 'qwen', 'powers'],
+  ['openclaw', 'ollama', 'powers'],
+
+  // Autonomous Systems → Coding Agents (they orchestrate them)
+  ['hermes', 'claude-code', 'powers'],
+  ['hermes', 'codex', 'powers'],
+  ['hermes', 'copilot', 'powers'],
+  ['hermes', 'opencode', 'powers'],
+  ['hermes', 'pi-agent', 'powers'],
+
+  ['openclaw', 'claude-code', 'powers'],
+  ['openclaw', 'codex', 'powers'],
+  ['openclaw', 'copilot', 'powers'],
+  ['openclaw', 'opencode', 'powers'],
+  ['openclaw', 'pi-agent', 'powers'],
+];
+
+// Initialize node positions in layers
+const nodeMap = {};
+nodes.forEach(n => {
+  n.vx = 0;
+  n.vy = 0;
+  n.fx = null;
+  n.fy = null;
+  nodeMap[n.id] = n;
+});
+
+// Seed layered positions
+// Layer 1: Providers (y=120)
+nodeMap['azure'].x = 250; nodeMap['azure'].y = 120;
+nodeMap['aws'].x = 500; nodeMap['aws'].y = 120;
+nodeMap['google'].x = 750; nodeMap['google'].y = 120;
+nodeMap['alibaba'].x = 1000; nodeMap['alibaba'].y = 120;
+nodeMap['openai-direct'].x = 1250; nodeMap['openai-direct'].y = 120;
+
+// Layer 2: Models (y=340)
+nodeMap['openai'].x = 300; nodeMap['openai'].y = 340;
+nodeMap['claude'].x = 550; nodeMap['claude'].y = 340;
+nodeMap['gemini'].x = 800; nodeMap['gemini'].y = 340;
+nodeMap['qwen'].x = 1050; nodeMap['qwen'].y = 340;
+nodeMap['ollama'].x = 1250; nodeMap['ollama'].y = 340;
+
+// Layer 3: Coding Agents (y=580)
+nodeMap['claude-code'].x = 250; nodeMap['claude-code'].y = 580;
+nodeMap['codex'].x = 475; nodeMap['codex'].y = 580;
+nodeMap['copilot'].x = 700; nodeMap['copilot'].y = 580;
+nodeMap['opencode'].x = 950; nodeMap['opencode'].y = 580;
+nodeMap['pi-agent'].x = 1200; nodeMap['pi-agent'].y = 580;
+
+// Layer 4: Autonomous Systems (y=820)
+nodeMap['hermes'].x = 550; nodeMap['hermes'].y = 830;
+nodeMap['openclaw'].x = 950; nodeMap['openclaw'].y = 830;
+
+// Physics
+const SIM_STEPS = 250;
+let step = 0;
+let zoom = 1, panX = 0, panY = 0;
+let dragging = null;
+let lastMouse = { x: 0, y: 0 };
+let isPanning = false;
+
+function simulate() {
+  const alpha = Math.max(0.005, 1 - step / SIM_STEPS);
+  const repulsion = 6000;
+  const attraction = 0.003;
+  const damping = 0.82;
+  const layerForce = 0.02; // keep nodes in their layer
+
+  // Layer targets
+  const layerY = { provider: 120, model: 340, local: 340, agent: 580, system: 830 };
+
+  // Repulsion
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      let dx = nodes[j].x - nodes[i].x;
+      let dy = nodes[j].y - nodes[i].y;
+      let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      let force = repulsion / (dist * dist);
+      let fx = (dx / dist) * force * alpha;
+      let fy = (dy / dist) * force * alpha;
+      nodes[i].vx -= fx;
+      nodes[i].vy -= fy;
+      nodes[j].vx += fx;
+      nodes[j].vy += fy;
+    }
+  }
+
+  // Edge attraction
+  edges.forEach(([src, tgt]) => {
+    const a = nodeMap[src], b = nodeMap[tgt];
+    if (!a || !b) return;
+    let dx = b.x - a.x;
+    let dy = b.y - a.y;
+    let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    let targetLen = 150;
+    let force = (dist - targetLen) * attraction * alpha;
+    let fx = (dx / dist) * force;
+    let fy = (dy / dist) * force;
+    a.vx += fx; a.vy += fy;
+    b.vx -= fx; b.vy -= fy;
+  });
+
+  // Layer constraint (soft)
+  nodes.forEach(n => {
+    const target = layerY[n.type];
+    n.vy += (target - n.y) * layerForce * alpha;
+    // Center X gravity (gentle)
+    n.vx += (W / 2 - n.x) * 0.0005 * alpha;
+  });
+
+  // Apply
+  nodes.forEach(n => {
+    if (n.fx !== null) { n.x = n.fx; n.y = n.fy; n.vx = 0; n.vy = 0; return; }
+    n.vx *= damping;
+    n.vy *= damping;
+    n.x += n.vx;
+    n.y += n.vy;
+    n.x = Math.max(n.r + 20, Math.min(W - n.r - 20, n.x));
+    n.y = Math.max(n.r + 20, Math.min(H - n.r - 20, n.y));
+  });
+
+  step++;
+}
+
+function draw() {
+  ctx.save();
+  ctx.clearRect(0, 0, W, H);
+
+  // Background grid
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x < W; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 0; y < H; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Layer labels
+  ctx.font = "11px 'IBM Plex Mono', monospace";
+  ctx.fillStyle = '#334155';
+  ctx.textAlign = 'left';
+  ctx.fillText('PROVIDERS', 20, 60);
+  ctx.fillText('MODELS', 20, 290);
+  ctx.fillText('CODING AGENTS', 20, 530);
+  ctx.fillText('AUTONOMOUS SYSTEMS', 20, 780);
+
+  // Layer separator lines
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([6, 6]);
+  [230, 460, 700].forEach(y => {
+    ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(W - 40, y); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  ctx.translate(panX, panY);
+  ctx.scale(zoom, zoom);
+
+  // Draw edges
+  edges.forEach(([src, tgt, type]) => {
+    const a = nodeMap[src], b = nodeMap[tgt];
+    if (!a || !b) return;
+
+    ctx.beginPath();
+
+    // Curved lines for cleaner look
+    const midX = (a.x + b.x) / 2;
+    const midY = (a.y + b.y) / 2;
+    const cpX = midX + (Math.random() * 0.001 - 0.0005); // tiny jitter for overlaps
+    const cpY = midY;
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+
+    if (type === 'hosts') {
+      ctx.strokeStyle = 'rgba(71, 85, 105, 0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([]);
+    } else if (type === 'uses') {
+      ctx.strokeStyle = 'rgba(167, 139, 250, 0.4)';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([5, 5]);
+    } else if (type === 'powers') {
+      ctx.strokeStyle = 'rgba(251, 146, 60, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const color = COLORS[n.type];
+
+    // Glow for systems
+    if (n.type === 'system') {
+      let grad = ctx.createRadialGradient(n.x, n.y, n.r, n.x, n.y, n.r + 14);
+      grad.addColorStop(0, 'rgba(251, 146, 60, 0.2)');
+      grad.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + 14, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    // Node body
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#0f172a';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = n.type === 'system' ? 2.5 : 2;
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = color;
+    ctx.font = (n.r >= 20 ? '10px' : '9px') + " 'IBM Plex Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const lines = n.label.split('\n');
+    lines.forEach((line, i) => {
+      const yOff = (i - (lines.length - 1) / 2) * 12;
+      ctx.fillText(line, n.x, n.y + yOff);
+    });
+  });
+
+  ctx.restore();
+  if (step < SIM_STEPS) simulate();
+  requestAnimationFrame(draw);
+}
+
+// Mouse interaction
+function screenToGraph(mx, my) {
+  const rect = canvas.getBoundingClientRect();
+  const sx = (mx - rect.left) * (W / rect.width);
+  const sy = (my - rect.top) * (H / rect.height);
+  return { x: (sx - panX) / zoom, y: (sy - panY) / zoom };
+}
+
+canvas.addEventListener('mousedown', (e) => {
+  const p = screenToGraph(e.clientX, e.clientY);
+  let closest = null, minDist = Infinity;
+  nodes.forEach(n => {
+    const d = Math.sqrt((n.x - p.x) ** 2 + (n.y - p.y) ** 2);
+    if (d < n.r + 8 && d < minDist) { closest = n; minDist = d; }
+  });
+  if (closest) {
+    dragging = closest;
+    dragging.fx = dragging.x;
+    dragging.fy = dragging.y;
+    canvas.style.cursor = 'grabbing';
+  } else {
+    isPanning = true;
+    lastMouse = { x: e.clientX, y: e.clientY };
+    canvas.style.cursor = 'move';
+  }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+  if (dragging) {
+    const p = screenToGraph(e.clientX, e.clientY);
+    dragging.fx = p.x;
+    dragging.fy = p.y;
+    dragging.x = p.x;
+    dragging.y = p.y;
+    step = Math.max(0, step - 3);
+  } else if (isPanning) {
+    panX += e.clientX - lastMouse.x;
+    panY += e.clientY - lastMouse.y;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+});
+
+canvas.addEventListener('mouseup', () => {
+  if (dragging) { dragging.fx = null; dragging.fy = null; dragging = null; }
+  isPanning = false;
+  canvas.style.cursor = 'grab';
+});
+
+canvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const scale = e.deltaY > 0 ? 0.9 : 1.1;
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top) * (H / rect.height);
+  panX = mx - (mx - panX) * scale;
+  panY = my - (my - panY) * scale;
+  zoom = Math.max(0.3, Math.min(3, zoom * scale));
+}, { passive: false });
+
+// Pre-simulate then render
+for (let i = 0; i < 120; i++) simulate();
+draw();
+</script>
+</body>
+</html>

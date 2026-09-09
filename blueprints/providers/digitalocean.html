@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigitalOcean — GPU Droplets & AI/ML Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3CE7FF, #fb923c, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #fb923c;
+  letter-spacing: 1px;
+}
+
+.provider-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fb923c;
+  box-shadow: 0 0 6px #fb923c;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  border: 1px solid rgba(60, 231, 255, 0.2);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.nav-back:hover { background: rgba(60, 231, 255, 0.05); }
+
+.active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  float: right;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: #34d399;
+}
+
+.active-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 5px #34d399;
+  animation: pulse 2s infinite;
+}
+
+.graph-container {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0f172a;
+  margin-bottom: 24px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  margin-bottom: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.info-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid #1e293b;
+}
+
+.info-card h3 {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  padding: 4px 0;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.info-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #fb923c;
+}
+
+.code-block {
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.code-block .comment { color: #475569; }
+.code-block .cmd { color: #fbbf24; }
+.code-block .str { color: #34d399; }
+.code-block .kw { color: #3CE7FF; }
+.code-block .val { color: #fb923c; }
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.tag-cyan  { color: #3CE7FF; border-color: rgba(60,231,255,0.3); background: rgba(60,231,255,0.06); }
+.tag-amber { color: #fbbf24; border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.06); }
+.tag-orange{ color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.06); }
+.tag-green { color: #34d399; border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.06); }
+
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #475569;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  margin-top: 32px;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #475569;
+}
+
+.highlight-card {
+  padding: 16px 20px;
+  border-radius: 8px;
+  background: rgba(251, 146, 60, 0.05);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  margin-bottom: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.highlight-card .dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 6px #34d399;
+  animation: pulse 2s infinite;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 48px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+  padding-top: 20px;
+  border-top: 1px solid #0f172a;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="nav-back">&larr; Back to Model Architecture</a>
+
+  <div class="header">
+    <h1>DigitalOcean</h1>
+    <div class="subtitle">GPU Droplets &amp; AI/ML Platform</div>
+    <div class="provider-badge">CLOUD PROVIDER · DIGITALOCEAN INC.</div>
+  </div>
+
+  <!-- Live usage callout -->
+  <div class="highlight-card">
+    <div class="dot"></div>
+    <span>
+      <strong style="color:#34d399;">Live Today:</strong> Hermes Agent successfully switched to DigitalOcean provider.
+      Model inference via GenAI Platform API confirmed working. Flat-rate GPU Droplets available on demand.
+    </span>
+  </div>
+
+  <!-- Canvas Graph -->
+  <p class="instructions">Hover over nodes to explore. Scroll to zoom.</p>
+  <div class="graph-container">
+    <canvas id="graph" width="1200" height="500"></canvas>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fb923c"></div> DigitalOcean Hub
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#3CE7FF"></div> GPU Infrastructure
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#34d399"></div> Hosted Models
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fbbf24"></div> Platform Services
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#a78bfa"></div> Agent Consumers
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <p class="section-label">Overview</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; GPU Droplets</h3>
+      <ul>
+        <li>NVIDIA H100 80GB SXM5 — cutting-edge inference &amp; training</li>
+        <li>NVIDIA A100 80GB — production GPU workloads</li>
+        <li>Hourly billing — no long-term commitments required</li>
+        <li>Self-host any model: LLM, image gen, custom fine-tunes</li>
+        <li>Full root access, deploy your own inference stack</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-cyan">H100</span>
+        <span class="tag tag-cyan">A100</span>
+        <span class="tag tag-amber">hourly-billing</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; GenAI Platform</h3>
+      <ul>
+        <li>Managed inference endpoints — no GPU provisioning needed</li>
+        <li>Popular open-source models served out of the box</li>
+        <li>Knowledge bases, agents, serverless functions integration</li>
+        <li>Per-token pricing on managed endpoints</li>
+        <li>OpenAI-compatible API surface (easy migration)</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-amber">managed</span>
+        <span class="tag tag-green">openai-compat</span>
+        <span class="tag tag-orange">serverless</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Why DigitalOcean?</h3>
+      <ul>
+        <li>Simplest UX in the cloud — no IAM labyrinth</li>
+        <li>Flat, predictable pricing — no egress shock</li>
+        <li>Zero enterprise overhead — indie &amp; startup friendly</li>
+        <li>One-click app marketplace: Ollama, vLLM, TGI ready</li>
+        <li>NYC / AMS / BLR regions — low-latency globally</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Models -->
+  <p class="section-label">Available Models (GenAI Platform)</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Meta Llama Series</h3>
+      <ul>
+        <li><strong style="color:#e2e8f0;">Llama 3.3 70B Instruct</strong> — flagship open model</li>
+        <li><strong style="color:#e2e8f0;">Llama 3.1 8B Instruct</strong> — fast &amp; lightweight</li>
+        <li><strong style="color:#e2e8f0;">Llama 3.2 Vision</strong> — multimodal image + text</li>
+        <li>Also available as GPU Droplet base images</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Mistral Series</h3>
+      <ul>
+        <li><strong style="color:#e2e8f0;">Mistral 7B Instruct</strong> — efficient, production-ready</li>
+        <li><strong style="color:#e2e8f0;">Mixtral 8x7B</strong> — MoE architecture, high quality</li>
+        <li><strong style="color:#e2e8f0;">Mistral Nemo</strong> — 12B, Apache 2.0 license</li>
+        <li>Function calling support across variants</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; Custom Deployments</h3>
+      <ul>
+        <li>Deploy any HuggingFace model on GPU Droplet</li>
+        <li>vLLM / Ollama / TGI pre-configured images available</li>
+        <li>Private model uploads via DigitalOcean Spaces</li>
+        <li>Bring your own fine-tuned GGUF / safetensors</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Connection -->
+  <p class="section-label">How to Connect</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#3CE7FF;">&#9670; doctl CLI &amp; Auth</h3>
+      <div class="code-block">
+<span class="comment"># Install doctl</span>
+<span class="cmd">brew install</span> <span class="str">doctl</span>
+
+<span class="comment"># Authenticate with API token</span>
+<span class="cmd">doctl auth init</span>
+<span class="comment"># → paste your Personal Access Token</span>
+
+<span class="comment"># List GPU Droplet sizes</span>
+<span class="cmd">doctl compute size list</span> | <span class="kw">grep</span> <span class="str">gpu</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fbbf24;">&#9670; GenAI Platform API</h3>
+      <div class="code-block">
+<span class="kw">export</span> DO_API_TOKEN=<span class="str">"dop_v1_..."</span>
+
+<span class="comment"># OpenAI-compatible call</span>
+<span class="cmd">curl</span> https://api.digitalocean.com/v2/gen-ai/v1/chat/completions \
+  -H <span class="str">"Authorization: Bearer $DO_API_TOKEN"</span> \
+  -d <span class="val">'{"model":"llama3.3-70b","messages":[...]}'</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#34d399;">&#9670; Python OpenAI SDK</h3>
+      <div class="code-block">
+<span class="cmd">pip install</span> <span class="str">openai</span>
+
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(
+    api_key=<span class="str">"dop_v1_..."</span>,
+    base_url=<span class="str">"https://api.digitalocean.com/v2/gen-ai/v1"</span>
+)
+
+resp = client.chat.completions.create(
+    model=<span class="str">"llama3.3-70b"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span>}]
+)
+      </div>
+    </div>
+    <div class="info-card">
+      <h3 style="color:#fb923c;">&#9670; GPU Droplet (Self-host)</h3>
+      <div class="code-block">
+<span class="comment"># Create H100 Droplet</span>
+<span class="cmd">doctl compute droplet create</span> gpu-node \
+  <span class="kw">--size</span> <span class="str">gpu-h100x1-80gb</span> \
+  <span class="kw">--image</span> <span class="str">ubuntu-22-04-x64</span> \
+  <span class="kw">--region</span> <span class="str">nyc3</span>
+
+<span class="comment"># Then deploy Ollama on it</span>
+<span class="cmd">curl</span> -fsSL https://ollama.com/install.sh | sh
+<span class="cmd">ollama pull</span> <span class="str">llama3.3:70b</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Used By -->
+  <p class="section-label">Used By</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3 style="color:#a78bfa;">&#9670; Hermes Agent <span class="active-badge">active today</span></h3>
+      <ul>
+        <li>Provider: <code style="color:#fb923c;">digitalocean</code> in provider config</li>
+        <li>GenAI Platform as LLM backend — confirmed working</li>
+        <li>Model switch from Copilot → DigitalOcean demonstrated</li>
+        <li>Uses OpenAI-compatible endpoint wrapper</li>
+        <li>GPU Droplet path available for private model hosting</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-green">live</span>
+        <span class="tag tag-orange">genai-platform</span>
+        <span class="tag tag-amber">llama-3.3-70b</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    onemind-skill-tree &mdash; DigitalOcean &mdash; GPU Droplets &amp; AI/ML Platform &mdash; 2026
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+
+const W = 1200, H = 500;
+canvas.width = W;
+canvas.height = H;
+
+let transform = { x: 0, y: 0, scale: 1 };
+let dragging = false, lastMouse = null, hoveredNode = null;
+
+const CYAN   = '#3CE7FF';
+const GREEN  = '#34d399';
+const AMBER  = '#fbbf24';
+const ORANGE = '#fb923c';
+const PURPLE = '#a78bfa';
+const SLATE  = '#64748b';
+
+const nodes = [
+  // Center
+  { id: 'do',       x: 600, y: 250, r: 46, label: 'DigitalOcean', color: ORANGE, glow: ORANGE, group: 'hub' },
+
+  // Infrastructure
+  { id: 'h100',     x: 380, y: 110, r: 28, label: 'H100 GPU\nDroplet',    color: CYAN,   glow: CYAN,   group: 'infra' },
+  { id: 'a100',     x: 200, y: 220, r: 24, label: 'A100 GPU\nDroplet',    color: CYAN,   glow: CYAN,   group: 'infra' },
+  { id: 'spaces',   x: 200, y: 380, r: 22, label: 'Spaces\n(Object Store)',color: SLATE,  glow: SLATE,  group: 'infra' },
+
+  // Platform
+  { id: 'genai',    x: 820, y: 110, r: 30, label: 'GenAI\nPlatform',      color: AMBER,  glow: AMBER,  group: 'platform' },
+  { id: 'kb',       x: 1000,y: 200, r: 22, label: 'Knowledge\nBase',      color: AMBER,  glow: AMBER,  group: 'platform' },
+
+  // Models
+  { id: 'llama',    x: 600, y: 90,  r: 26, label: 'Llama 3.3\n70B',       color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'llama8',   x: 780, y: 330, r: 22, label: 'Llama 3.1\n8B',        color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'mistral',  x: 400, y: 390, r: 24, label: 'Mistral / \nMixtral',  color: GREEN,  glow: GREEN,  group: 'model' },
+  { id: 'custom',   x: 600, y: 430, r: 22, label: 'Custom\nDeploy',       color: PURPLE, glow: PURPLE, group: 'model' },
+
+  // Agents
+  { id: 'hermes',   x: 990, y: 380, r: 30, label: 'Hermes\nAgent ✓',      color: PURPLE, glow: PURPLE, group: 'agent' },
+];
+
+const edges = [
+  { from: 'do', to: 'h100',    style: 'solid',  color: CYAN },
+  { from: 'do', to: 'a100',    style: 'solid',  color: CYAN },
+  { from: 'do', to: 'spaces',  style: 'dashed', color: SLATE },
+  { from: 'do', to: 'genai',   style: 'solid',  color: AMBER },
+  { from: 'do', to: 'llama',   style: 'solid',  color: GREEN },
+  { from: 'do', to: 'mistral', style: 'solid',  color: GREEN },
+  { from: 'do', to: 'custom',  style: 'dashed', color: PURPLE },
+  { from: 'genai', to: 'kb',   style: 'solid',  color: AMBER },
+  { from: 'genai', to: 'llama',style: 'solid',  color: GREEN },
+  { from: 'genai', to: 'llama8',style:'solid',  color: GREEN },
+  { from: 'h100',  to: 'custom',style:'dashed', color: PURPLE },
+  { from: 'hermes',to: 'genai', style:'solid',  color: PURPLE },
+  { from: 'hermes',to: 'llama', style:'dashed', color: PURPLE },
+  { from: 'spaces',to: 'custom',style:'dashed', color: SLATE },
+];
+
+function nodeById(id) { return nodes.find(n => n.id === id); }
+
+function drawEdge(e) {
+  const a = nodeById(e.from), b = nodeById(e.to);
+  if (!a || !b) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.strokeStyle = e.color + '55';
+  ctx.lineWidth = e.style === 'dashed' ? 1 : 1.5;
+  if (e.style === 'dashed') ctx.setLineDash([5, 5]);
+  else ctx.setLineDash([]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawNode(n) {
+  const hov = (hoveredNode && hoveredNode.id === n.id);
+  ctx.save();
+  const grd = ctx.createRadialGradient(n.x, n.y, n.r * 0.5, n.x, n.y, n.r * (hov ? 2.4 : 1.8));
+  grd.addColorStop(0, n.glow + '33');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r * (hov ? 2.4 : 1.8), 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+  ctx.fillStyle = '#0f172a';
+  ctx.fill();
+  ctx.strokeStyle = n.color + (hov ? 'ff' : '99');
+  ctx.lineWidth = hov ? 2 : 1.5;
+  ctx.stroke();
+
+  const lines = n.label.split('\n');
+  ctx.fillStyle = hov ? '#ffffff' : n.color;
+  ctx.font = `${n.group === 'hub' ? 600 : 400} ${n.group === 'hub' ? 11 : 9.5}px 'IBM Plex Mono', monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const lineH = 13;
+  const startY = n.y - ((lines.length - 1) * lineH) / 2;
+  lines.forEach((ln, i) => ctx.fillText(ln, n.x, startY + i * lineH));
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(transform.x, transform.y);
+  ctx.scale(transform.scale, transform.scale);
+  ctx.strokeStyle = '#1e293b44';
+  ctx.lineWidth = 0.5;
+  for (let gx = 0; gx < W; gx += 60) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (let gy = 0; gy < H; gy += 60) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+  edges.forEach(drawEdge);
+  nodes.forEach(drawNode);
+  ctx.restore();
+}
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width, scaleY = H / rect.height;
+  return {
+    x: ((e.clientX - rect.left) * scaleX - transform.x) / transform.scale,
+    y: ((e.clientY - rect.top)  * scaleY - transform.y) / transform.scale,
+  };
+}
+
+canvas.addEventListener('mousemove', e => {
+  const { x, y } = getMousePos(e);
+  hoveredNode = nodes.find(n => Math.hypot(n.x - x, n.y - y) < n.r + 8) || null;
+  canvas.style.cursor = hoveredNode ? 'pointer' : (dragging ? 'grabbing' : 'grab');
+  if (dragging && lastMouse) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    transform.x += (e.clientX - lastMouse.x) * scaleX;
+    transform.y += (e.clientY - lastMouse.y) * scaleY;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+  draw();
+});
+
+canvas.addEventListener('mousedown', e => { dragging = true; lastMouse = { x: e.clientX, y: e.clientY }; canvas.style.cursor = 'grabbing'; });
+canvas.addEventListener('mouseup',   () => { dragging = false; canvas.style.cursor = 'grab'; });
+canvas.addEventListener('mouseleave',() => { dragging = false; hoveredNode = null; draw(); });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (W / rect.width);
+  const my = (e.clientY - rect.top)  * (H / rect.height);
+  const delta = e.deltaY < 0 ? 1.1 : 0.91;
+  transform.x = mx - (mx - transform.x) * delta;
+  transform.y = my - (my - transform.y) * delta;
+  transform.scale = Math.min(3, Math.max(0.3, transform.scale * delta));
+  draw();
+}, { passive: false });
+
+draw();
+</script>
+</body>
+</html>

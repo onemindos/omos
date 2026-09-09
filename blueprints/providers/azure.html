@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure AI — Provider Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Chakra Petch', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.header-badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #64748b;
+  border: 1px solid #1e293b;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3CE7FF 0%, #60a5fa 40%, #a78bfa 70%, #fb923c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+.header .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.header-line {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3CE7FF, transparent);
+  margin: 20px auto 0;
+}
+
+/* Nav */
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #3CE7FF;
+  text-decoration: none;
+  margin-bottom: 24px;
+  padding: 6px 14px;
+  border: 1px solid rgba(60, 231, 255, 0.25);
+  border-radius: 6px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.nav-back:hover {
+  background: rgba(60, 231, 255, 0.07);
+  border-color: rgba(60, 231, 255, 0.5);
+}
+
+/* Section headings */
+.section {
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #1e293b, transparent);
+}
+
+/* Overview */
+.overview-box {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #1e293b;
+  border-left: 3px solid #3CE7FF;
+  border-radius: 8px;
+  padding: 24px 28px;
+  font-size: 0.92rem;
+  line-height: 1.9;
+  color: #cbd5e1;
+}
+
+.overview-box strong {
+  color: #3CE7FF;
+}
+
+.overview-box .tag-row {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+
+.tag-cyan  { color: #3CE7FF; border-color: rgba(60,231,255,0.3); background: rgba(60,231,255,0.06); }
+.tag-amber { color: #fbbf24; border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.06); }
+.tag-orange{ color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.06); }
+.tag-purple{ color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06);}
+
+/* Model cards grid */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.model-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+.model-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.model-card.openai::before  { background: linear-gradient(90deg, #3CE7FF, #60a5fa); }
+.model-card.reasoning::before{ background: linear-gradient(90deg, #a78bfa, #ec4899); }
+.model-card.code::before    { background: linear-gradient(90deg, #34d399, #3CE7FF); }
+.model-card.partner::before { background: linear-gradient(90deg, #fb923c, #f59e0b); }
+.model-card.catalog::before { background: linear-gradient(90deg, #fbbf24, #fb923c); }
+.model-card.msft::before    { background: linear-gradient(90deg, #60a5fa, #a78bfa); }
+.model-card.multimodal::before { background: linear-gradient(90deg, #f472b6, #a78bfa); }
+
+.model-card:hover {
+  border-color: rgba(60,231,255,0.35);
+  transform: translateY(-2px);
+}
+
+.model-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.model-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.model-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.model-badge {
+  margin-top: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.badge-openai   { color: #3CE7FF; background: rgba(60,231,255,0.1);   border: 1px solid rgba(60,231,255,0.2); }
+.badge-reasoning{ color: #a78bfa; background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2);}
+.badge-code     { color: #34d399; background: rgba(52,211,153,0.1);   border: 1px solid rgba(52,211,153,0.2); }
+.badge-partner  { color: #fb923c; background: rgba(251,146,60,0.1);   border: 1px solid rgba(251,146,60,0.2); }
+.badge-catalog  { color: #fbbf24; background: rgba(251,191,36,0.1);   border: 1px solid rgba(251,191,36,0.2); }
+.badge-msft     { color: #60a5fa; background: rgba(96,165,250,0.1);   border: 1px solid rgba(96,165,250,0.2); }
+.badge-multimodal{ color: #f472b6; background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.2);}
+
+.model-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+/* Why Azure - feature pills */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.feature-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+
+.feature-item:hover { border-color: rgba(251,191,36,0.3); }
+
+.feature-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feature-content h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 5px;
+}
+
+.feature-content p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* How to Connect */
+.connect-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(60,231,255,0.1);
+  border: 1px solid rgba(60,231,255,0.3);
+  color: #3CE7FF;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-body {
+  flex: 1;
+  background: rgba(15,23,42,0.5);
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 14px 18px;
+}
+
+.step-body h4 {
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.step-body p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* Code block */
+.code-block {
+  background: #0a0f1e;
+  border: 1px solid #1e293b;
+  border-left: 3px solid #fbbf24;
+  border-radius: 8px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.code-block pre {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: #94a3b8;
+  white-space: pre;
+}
+
+.code-block pre .kw  { color: #a78bfa; }
+.code-block pre .fn  { color: #3CE7FF; }
+.code-block pre .st  { color: #34d399; }
+.code-block pre .cm  { color: #475569; }
+.code-block pre .va  { color: #fbbf24; }
+.code-block pre .nu  { color: #fb923c; }
+
+.env-vars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.env-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.env-key   { color: #fbbf24; }
+.env-sep   { color: #475569; }
+.env-val   { color: #34d399; }
+
+.note-box {
+  margin-top: 10px;
+  background: rgba(251,191,36,0.05);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #92400e;
+  color: #d97706;
+  line-height: 1.6;
+}
+
+.note-box span { color: #fbbf24; font-weight: 700; }
+
+/* Used By */
+.usedby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.usedby-card {
+  background: rgba(15,23,42,0.6);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 18px 20px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.usedby-card:hover {
+  border-color: rgba(60,231,255,0.3);
+  transform: translateY(-2px);
+}
+
+.usedby-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.usedby-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.usedby-desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.usedby-native {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #3CE7FF;
+  background: rgba(60,231,255,0.08);
+  border: 1px solid rgba(60,231,255,0.2);
+}
+
+/* Canvas graph */
+.graph-wrap {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0a0f1e;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+canvas#azure-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+}
+
+canvas#azure-graph:active { cursor: grabbing; }
+
+.graph-hint {
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #334155;
+  margin-bottom: 32px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid #0f172a;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #1e293b;
+  letter-spacing: 1px;
+}
+
+.footer span { color: #334155; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Nav back -->
+  <a href="../index.html" class="nav-back">&#8592; Back to Model Architecture</a>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">Provider Deep Dive</div>
+    <h1>Azure AI</h1>
+    <div class="subtitle">Microsoft Cloud AI Services</div>
+    <div class="header-line"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ OVERVIEW -->
+  <div class="section">
+    <div class="section-title">&#9729; Overview</div>
+    <div class="overview-box">
+      <strong>Azure AI</strong> (formally the <strong>Azure OpenAI Service</strong>) is Microsoft's enterprise-grade platform for deploying large language models and AI services inside the Azure cloud. Rather than hitting a shared public API, organisations create their own <strong>dedicated deployments</strong> — private, regionally isolated instances of the model running on Microsoft infrastructure. This gives teams the compliance posture, data-residency guarantees and reliability SLAs that regulated industries require.
+      <br><br>
+      Azure hosts OpenAI's flagship models natively, plus an expanding <strong>Model Catalog</strong> inside <strong>Azure AI Foundry</strong> that adds partner and open-source models (Anthropic Claude, Meta Llama, Mistral, Cohere, and more). Every deployment sits behind Azure's <strong>Role-Based Access Control</strong>, Microsoft Entra ID (formerly Active Directory), private virtual-network endpoints, and built-in content safety filters — so the same governance tooling you use for your databases and services applies to your AI layer automatically.
+      <div class="tag-row">
+        <span class="tag tag-cyan">Azure OpenAI Service</span>
+        <span class="tag tag-amber">Azure AI Foundry</span>
+        <span class="tag tag-cyan">Managed Deployments</span>
+        <span class="tag tag-orange">Enterprise-Grade</span>
+        <span class="tag tag-purple">Model Catalog</span>
+        <span class="tag tag-amber">Content Safety</span>
+        <span class="tag tag-cyan">Private Endpoints</span>
+        <span class="tag tag-orange">SOC 2 / HIPAA / ISO 27001</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ AVAILABLE MODELS -->
+  <div class="section">
+    <div class="section-title">&#9881; Available Models</div>
+    <div class="models-grid">
+
+      <div class="model-card openai">
+        <div class="model-card-header">
+          <span class="model-icon">&#129302;</span>
+          <div>
+            <div class="model-name">GPT-4o</div>
+            <span class="model-badge badge-openai">OpenAI · Flagship</span>
+          </div>
+        </div>
+        <div class="model-desc">Omni model. Text + vision + audio in a single endpoint. Fastest of the GPT-4 family. Azure deploys this as a dedicated resource with configurable TPM quotas.</div>
+      </div>
+
+      <div class="model-card openai">
+        <div class="model-card-header">
+          <span class="model-icon">&#128640;</span>
+          <div>
+            <div class="model-name">GPT-4 Turbo</div>
+            <span class="model-badge badge-openai">OpenAI · 128k Context</span>
+          </div>
+        </div>
+        <div class="model-desc">Extended 128 k token context window. Strong instruction-following and structured-output generation. Preferred for large-document analysis pipelines.</div>
+      </div>
+
+      <div class="model-card openai">
+        <div class="model-card-header">
+          <span class="model-icon">&#128203;</span>
+          <div>
+            <div class="model-name">GPT-4</div>
+            <span class="model-badge badge-openai">OpenAI · Stable</span>
+          </div>
+        </div>
+        <div class="model-desc">The original GPT-4 (8 k / 32 k variants). Reliable baseline for production workloads. Version-pinnable so deployments don't change unexpectedly.</div>
+      </div>
+
+      <div class="model-card reasoning">
+        <div class="model-card-header">
+          <span class="model-icon">&#129504;</span>
+          <div>
+            <div class="model-name">o1 / o3</div>
+            <span class="model-badge badge-reasoning">OpenAI · Reasoning</span>
+          </div>
+        </div>
+        <div class="model-desc">Chain-of-thought reasoning models. o1 thinks before answering; o3 pushes further with extended reasoning traces. Ideal for math, code proofs, and complex multi-step problems.</div>
+      </div>
+
+      <div class="model-card code">
+        <div class="model-card-header">
+          <span class="model-icon">&#128187;</span>
+          <div>
+            <div class="model-name">Codex / GPT for Code</div>
+            <span class="model-badge badge-code">OpenAI · Code</span>
+          </div>
+        </div>
+        <div class="model-desc">Specialised code-completion and generation models. Power GitHub Copilot's backend. Available through Azure for enterprise Copilot integrations and custom dev-tooling.</div>
+      </div>
+
+      <div class="model-card partner">
+        <div class="model-card-header">
+          <span class="model-icon">&#128048;</span>
+          <div>
+            <div class="model-name">Claude (Anthropic)</div>
+            <span class="model-badge badge-partner">AI Foundry · Partner</span>
+          </div>
+        </div>
+        <div class="model-desc">Claude 3 / 3.5 series via Azure AI Foundry's partner-model catalogue. Managed deployment with Azure billing and access controls, no separate Anthropic account required.</div>
+      </div>
+
+      <div class="model-card catalog">
+        <div class="model-card-header">
+          <span class="model-icon">&#129422;</span>
+          <div>
+            <div class="model-name">Llama 3.1 (Meta)</div>
+            <span class="model-badge badge-catalog">Model Catalog · OSS</span>
+          </div>
+        </div>
+        <div class="model-desc">Meta's open-weight Llama 3.1 (8B / 70B / 405B). Deployed as serverless or dedicated endpoint in Azure AI Foundry. Full control over fine-tuning on your own data.</div>
+      </div>
+
+      <div class="model-card catalog">
+        <div class="model-card-header">
+          <span class="model-icon">&#127795;</span>
+          <div>
+            <div class="model-name">Mistral</div>
+            <span class="model-badge badge-catalog">Model Catalog · Partner</span>
+          </div>
+        </div>
+        <div class="model-desc">Mistral 7B, Mistral Large, and Mixtral MoE variants. Available pay-as-you-go via serverless APIs or hosted dedicated deployments. Strong for instruction-following and multilingual tasks.</div>
+      </div>
+
+      <div class="model-card msft">
+        <div class="model-card-header">
+          <span class="model-icon">&#128311;</span>
+          <div>
+            <div class="model-name">Phi-3 / Phi-4</div>
+            <span class="model-badge badge-msft">Microsoft · SLM</span>
+          </div>
+        </div>
+        <div class="model-desc">Microsoft's own small language models. Punch well above their size on reasoning benchmarks. Phi-3 mini fits on edge devices; Phi-4 pushes SLM SOTA. First-class citizens in Azure AI.</div>
+      </div>
+
+      <div class="model-card multimodal">
+        <div class="model-card-header">
+          <span class="model-icon">&#127912;</span>
+          <div>
+            <div class="model-name">DALL-E 3</div>
+            <span class="model-badge badge-multimodal">OpenAI · Image Gen</span>
+          </div>
+        </div>
+        <div class="model-desc">Text-to-image generation. Azure-hosted DALL-E 3 endpoint with the same content policy and compliance controls as the rest of Azure AI. Supports natural-language prompts to 1024×1024+ images.</div>
+      </div>
+
+      <div class="model-card multimodal">
+        <div class="model-card-header">
+          <span class="model-icon">&#127908;</span>
+          <div>
+            <div class="model-name">Whisper</div>
+            <span class="model-badge badge-multimodal">OpenAI · Speech-to-Text</span>
+          </div>
+        </div>
+        <div class="model-desc">Automatic speech recognition. Multilingual transcription and translation. Azure deployment keeps audio data inside your tenant boundary — no cross-tenant data sharing.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ WHY USE AZURE -->
+  <div class="section">
+    <div class="section-title">&#9733; Why Use Azure</div>
+    <div class="features-grid">
+
+      <div class="feature-item">
+        <span class="feature-icon">&#128274;</span>
+        <div class="feature-content">
+          <h4>Enterprise Compliance</h4>
+          <p>SOC 2 Type II, ISO 27001, HIPAA BAA, FedRAMP. Your model traffic stays within Azure's compliance boundary. Audit logs, data-residency guarantees, and customer-managed encryption keys (CMK) included.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">&#128100;</span>
+        <div class="feature-content">
+          <h4>Active Directory / Entra ID Integration</h4>
+          <p>Authenticate to models using the same Azure AD / Entra ID identities and service principals you already use across your Azure estate. No separate API-key rotation needed — use managed identities.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">&#128737;</span>
+        <div class="feature-content">
+          <h4>Built-in Content Filtering</h4>
+          <p>Azure AI Content Safety runs alongside every deployment. Configurable filters for hate, violence, self-harm, and sexual content — all configurable per severity level without any extra integration work.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">&#127758;</span>
+        <div class="feature-content">
+          <h4>Global Regions</h4>
+          <p>Deploy to 60+ Azure regions worldwide. Pin your inference endpoint to the same geography as your data for latency and sovereignty. Cross-region redundancy available for high-availability configs.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">&#128200;</span>
+        <div class="feature-content">
+          <h4>SLA Guarantees</h4>
+          <p>Azure OpenAI Service carries a 99.9% uptime SLA backed by Microsoft credits. Provisioned throughput units (PTUs) give predictable, reserved capacity rather than shared best-effort rate limits.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">&#128279;</span>
+        <div class="feature-content">
+          <h4>Private Endpoints</h4>
+          <p>Expose your Azure OpenAI resource only on a private VNet — zero public internet exposure. Traffic never leaves your network perimeter. Ideal for air-gapped enterprise and government deployments.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ HOW TO CONNECT -->
+  <div class="section">
+    <div class="section-title">&#128296; How to Connect</div>
+    <div class="connect-steps">
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>Create an Azure OpenAI Resource</h4>
+          <p>Azure Portal &#8594; "Create a resource" &#8594; Search "Azure OpenAI" &#8594; Fill subscription, resource group, region, pricing tier &#8594; Click Create. Once provisioned, navigate to the resource and open <strong>Azure AI Studio</strong> (or Azure AI Foundry) to create a deployment.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>Deploy a Model</h4>
+          <p>In Azure AI Studio &#8594; Deployments &#8594; + Create deployment &#8594; Choose the base model (e.g. gpt-4o) &#8594; Give it a deployment name (you reference this name in API calls, not the model name). Each deployment is version-pinned and has its own TPM quota.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>Retrieve Keys &amp; Endpoint</h4>
+          <p>In the Azure Portal &#8594; your OpenAI resource &#8594; Keys and Endpoint. The endpoint URL looks like:</p>
+          <div class="code-block"><pre>https://&lt;your-resource-name&gt;.openai.azure.com/</pre></div>
+          <p style="margin-top:10px;">Two API keys are provided (rotate without downtime). You only need one at a time.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h4>Set Environment Variables</h4>
+          <div class="env-vars">
+            <div class="env-row"><span class="env-key">AZURE_OPENAI_ENDPOINT</span><span class="env-sep">=</span><span class="env-val">https://&lt;resource&gt;.openai.azure.com/</span></div>
+            <div class="env-row"><span class="env-key">AZURE_OPENAI_API_KEY</span><span class="env-sep">=</span><span class="env-val">&lt;your-api-key&gt;</span></div>
+            <div class="env-row"><span class="env-key">AZURE_OPENAI_DEPLOYMENT</span><span class="env-sep">=</span><span class="env-val">&lt;your-deployment-name&gt;</span></div>
+          </div>
+          <div class="note-box"><span>Note:</span> AZURE_OPENAI_DEPLOYMENT is the custom name you gave when deploying, e.g. <em>gpt4o-prod</em> — not the raw model string. Different from OpenAI direct where you pass <em>gpt-4o</em> as the model.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h4>Python — openai library with Azure config</h4>
+          <div class="code-block"><pre><span class="kw">import</span> os
+<span class="kw">from</span> openai <span class="kw">import</span> <span class="fn">AzureOpenAI</span>
+
+<span class="cm"># Initialise Azure-flavoured client</span>
+client = <span class="fn">AzureOpenAI</span>(
+    azure_endpoint=os.environ[<span class="st">"AZURE_OPENAI_ENDPOINT"</span>],
+    api_key=os.environ[<span class="st">"AZURE_OPENAI_API_KEY"</span>],
+    api_version=<span class="st">"2024-10-01-preview"</span>,   <span class="cm"># pin the API version</span>
+)
+
+<span class="cm"># model= takes your DEPLOYMENT NAME, not the base model name</span>
+response = client.chat.completions.<span class="fn">create</span>(
+    model=os.environ[<span class="st">"AZURE_OPENAI_DEPLOYMENT"</span>],  <span class="cm"># e.g. "gpt4o-prod"</span>
+    messages=[
+        {<span class="st">"role"</span>: <span class="st">"system"</span>,  <span class="st">"content"</span>: <span class="st">"You are a helpful assistant."</span>},
+        {<span class="st">"role"</span>: <span class="st">"user"</span>,    <span class="st">"content"</span>: <span class="st">"Explain Azure AI in one sentence."</span>},
+    ],
+    max_tokens=<span class="nu">256</span>,
+    temperature=<span class="nu">0.7</span>,
+)
+
+<span class="fn">print</span>(response.choices[<span class="nu">0</span>].message.content)</pre></div>
+          <div class="note-box"><span>Tip:</span> For Managed Identity auth (no API key), replace api_key with azure_ad_token_provider= using <em>azure.identity.DefaultAzureCredential</em>. This is the recommended approach for production workloads running inside Azure.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ USED BY -->
+  <div class="section">
+    <div class="section-title">&#9889; Used By</div>
+    <div class="usedby-grid">
+
+      <div class="usedby-card">
+        <span class="usedby-icon">&#128187;</span>
+        <div class="usedby-name">Codex</div>
+        <div class="usedby-desc">OpenAI Codex is hosted natively on Azure infrastructure. GitHub Copilot routes through Azure OpenAI endpoints for code completion and generation at scale.</div>
+        <span class="usedby-native">native integration</span>
+      </div>
+
+      <div class="usedby-card">
+        <span class="usedby-icon">&#129309;</span>
+        <div class="usedby-name">Copilot</div>
+        <div class="usedby-desc">Microsoft 365 Copilot runs on Azure OpenAI Service. All enterprise data stays within the Microsoft 365 compliance boundary — Azure is the backbone powering every Copilot surface.</div>
+        <span class="usedby-native">native integration</span>
+      </div>
+
+      <div class="usedby-card">
+        <span class="usedby-icon">&#9889;</span>
+        <div class="usedby-name">Hermes Agent</div>
+        <div class="usedby-desc">Nous Research's Hermes Agent can connect to Azure OpenAI deployments as a provider, enabling enterprise-compliant agentic workflows with managed identity and private endpoint support.</div>
+        <span class="usedby-native">provider support</span>
+      </div>
+
+      <div class="usedby-card">
+        <span class="usedby-icon">&#128008;</span>
+        <div class="usedby-name">OpenClaw</div>
+        <div class="usedby-desc">OpenClaw's multi-agent fleet supports Azure AI as a routing target, letting organisations run autonomous agent workflows entirely within their Azure tenant for maximum data control.</div>
+        <span class="usedby-native">provider support</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ GRAPH -->
+  <div class="section">
+    <div class="section-title">&#9741; Connection Graph</div>
+    <div class="graph-wrap">
+      <canvas id="azure-graph" width="1160" height="640"></canvas>
+    </div>
+    <div class="graph-hint">Drag nodes &bull; Scroll to zoom &bull; Drag background to pan</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    OneMind Skill Tree &bull; Azure AI Provider Deep Dive &bull; <span>Microsoft Azure OpenAI Service</span> &bull; The Fabric Connects Us All
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── Graph setup ─────────────────────────────────────────────────────────────
+const canvas = document.getElementById('azure-graph');
+const ctx    = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+// ─── Node definitions ────────────────────────────────────────────────────────
+const NODES = [
+  // Centre hub
+  { id:'azure',    label:'Azure AI',       sub:'Cloud Provider',    color:'#fbbf24', radius:46, x:580, y:320, fixed:false },
+
+  // Models — top arc
+  { id:'gpt4o',    label:'GPT-4o',         sub:'OpenAI',            color:'#3CE7FF', radius:30, x:340, y:120, fixed:false },
+  { id:'gpt4t',    label:'GPT-4 Turbo',    sub:'OpenAI',            color:'#3CE7FF', radius:30, x:480, y: 90, fixed:false },
+  { id:'gpt4',     label:'GPT-4',          sub:'OpenAI',            color:'#3CE7FF', radius:28, x:620, y: 80, fixed:false },
+  { id:'o1o3',     label:'o1 / o3',        sub:'Reasoning',         color:'#a78bfa', radius:30, x:760, y: 90, fixed:false },
+  { id:'codex',    label:'Codex',          sub:'Code',              color:'#34d399', radius:28, x:880, y:150, fixed:false },
+
+  // Models — right arc
+  { id:'dalle',    label:'DALL·E 3',       sub:'Image Gen',         color:'#f472b6', radius:28, x:960, y:280, fixed:false },
+  { id:'whisper',  label:'Whisper',        sub:'Speech',            color:'#f472b6', radius:26, x:960, y:390, fixed:false },
+
+  // Models — bottom arc
+  { id:'claude',   label:'Claude',         sub:'Anthropic Partner', color:'#fb923c', radius:30, x:840, y:510, fixed:false },
+  { id:'llama',    label:'Llama 3.1',      sub:'Meta · Catalog',    color:'#fb923c', radius:28, x:680, y:560, fixed:false },
+  { id:'mistral',  label:'Mistral',        sub:'Catalog',           color:'#fb923c', radius:28, x:530, y:570, fixed:false },
+  { id:'phi',      label:'Phi-3/4',        sub:'Microsoft',         color:'#60a5fa', radius:28, x:380, y:540, fixed:false },
+
+  // Models — left arc
+  { id:'entra',    label:'Entra ID',       sub:'Auth / RBAC',       color:'#64748b', radius:26, x:200, y:400, fixed:false },
+  { id:'safety',   label:'Content Safety', sub:'Filtering',         color:'#64748b', radius:26, x:180, y:270, fixed:false },
+
+  // Downstream agents
+  { id:'hermes',   label:'Hermes Agent',   sub:'Orchestrator',      color:'#e879f9', radius:28, x:200, y:130, fixed:false },
+  { id:'openclaw', label:'OpenClaw',       sub:'Multi-Agent',       color:'#e879f9', radius:28, x: 90, y:490, fixed:false },
+  { id:'codexcli', label:'Codex CLI',      sub:'Dev Tool',          color:'#34d399', radius:24, x:480, y:440, fixed:false },
+  { id:'copilot',  label:'Copilot',        sub:'M365',              color:'#34d399', radius:26, x:330, y:390, fixed:false },
+];
+
+// ─── Edge definitions ─────────────────────────────────────────────────────────
+const EDGES = [
+  // Provider → Models
+  { from:'azure', to:'gpt4o',    color:'#3CE7FF', dash:[] },
+  { from:'azure', to:'gpt4t',    color:'#3CE7FF', dash:[] },
+  { from:'azure', to:'gpt4',     color:'#3CE7FF', dash:[] },
+  { from:'azure', to:'o1o3',     color:'#a78bfa', dash:[] },
+  { from:'azure', to:'codex',    color:'#34d399', dash:[] },
+  { from:'azure', to:'dalle',    color:'#f472b6', dash:[] },
+  { from:'azure', to:'whisper',  color:'#f472b6', dash:[] },
+  { from:'azure', to:'claude',   color:'#fb923c', dash:[] },
+  { from:'azure', to:'llama',    color:'#fb923c', dash:[] },
+  { from:'azure', to:'mistral',  color:'#fb923c', dash:[] },
+  { from:'azure', to:'phi',      color:'#60a5fa', dash:[] },
+  // Provider → Auth/Safety
+  { from:'azure', to:'entra',    color:'#475569', dash:[4,3] },
+  { from:'azure', to:'safety',   color:'#475569', dash:[4,3] },
+  // Models → Agents (dashed)
+  { from:'gpt4o',   to:'hermes',   color:'#e879f9', dash:[5,4] },
+  { from:'gpt4o',   to:'openclaw', color:'#e879f9', dash:[5,4] },
+  { from:'gpt4o',   to:'copilot',  color:'#34d399', dash:[5,4] },
+  { from:'codex',   to:'codexcli', color:'#34d399', dash:[5,4] },
+  { from:'gpt4o',   to:'codexcli', color:'#34d399', dash:[5,4] },
+  { from:'claude',  to:'hermes',   color:'#e879f9', dash:[5,4] },
+  { from:'llama',   to:'hermes',   color:'#e879f9', dash:[5,4] },
+  { from:'mistral', to:'openclaw', color:'#e879f9', dash:[5,4] },
+];
+
+// ─── Physics ─────────────────────────────────────────────────────────────────
+const NODES_MAP = {};
+NODES.forEach(n => NODES_MAP[n.id] = n);
+
+let scale = 1, offX = 0, offY = 0;
+let dragging = null, dragOffX = 0, dragOffY = 0;
+let panning = false, panStartX = 0, panStartY = 0, panOffX = 0, panOffY = 0;
+
+function toWorld(cx, cy) {
+  return { x: (cx - offX) / scale, y: (cy - offY) / scale };
+}
+
+function nodeAt(wx, wy) {
+  let best = null, bestD = Infinity;
+  NODES.forEach(n => {
+    const d = Math.hypot(n.x - wx, n.y - wy);
+    if (d < n.radius + 4 && d < bestD) { bestD = d; best = n; }
+  });
+  return best;
+}
+
+// ─── Draw ─────────────────────────────────────────────────────────────────────
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Background grid
+  ctx.save();
+  ctx.strokeStyle = 'rgba(30,41,59,0.4)';
+  ctx.lineWidth = 0.5;
+  const gs = 40 * scale;
+  const ox = ((offX % gs) + gs) % gs;
+  const oy = ((offY % gs) + gs) % gs;
+  for (let x = ox - gs; x < W + gs; x += gs) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = oy - gs; y < H + gs; y += gs) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(offX, offY);
+  ctx.scale(scale, scale);
+
+  // Edges
+  EDGES.forEach(e => {
+    const a = NODES_MAP[e.from], b = NODES_MAP[e.to];
+    if (!a || !b) return;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist === 0) return;
+    const ux = dx / dist, uy = dy / dist;
+    const sx = a.x + ux * a.radius;
+    const sy = a.y + uy * a.radius;
+    const ex = b.x - ux * b.radius;
+    const ey = b.y - uy * b.radius;
+
+    ctx.beginPath();
+    ctx.setLineDash(e.dash);
+    ctx.strokeStyle = e.color + '55';
+    ctx.lineWidth = 1.5 / scale;
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Arrowhead
+    const alen = 7 / scale;
+    const ang = Math.atan2(ey - sy, ex - sx);
+    ctx.beginPath();
+    ctx.fillStyle = e.color + '99';
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - alen * Math.cos(ang - 0.4), ey - alen * Math.sin(ang - 0.4));
+    ctx.lineTo(ex - alen * Math.cos(ang + 0.4), ey - alen * Math.sin(ang + 0.4));
+    ctx.closePath();
+    ctx.fill();
+  });
+
+  // Nodes
+  NODES.forEach(n => {
+    const r = n.radius;
+
+    // Glow
+    const grd = ctx.createRadialGradient(n.x, n.y, r * 0.3, n.x, n.y, r * 1.8);
+    grd.addColorStop(0, n.color + '22');
+    grd.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r * 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // Body
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#0a0f1e';
+    ctx.fill();
+    ctx.strokeStyle = n.color;
+    ctx.lineWidth = 1.5 / scale;
+    ctx.stroke();
+
+    // Label
+    const fontSize = Math.max(9, Math.min(13, r * 0.45));
+    ctx.fillStyle = n.color;
+    ctx.font = `600 ${fontSize}px 'Chakra Petch', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n.label, n.x, n.y - 4);
+
+    // Sub
+    const subSize = Math.max(7, fontSize * 0.68);
+    ctx.fillStyle = '#64748b';
+    ctx.font = `${subSize}px 'IBM Plex Mono', monospace`;
+    ctx.fillText(n.sub, n.x, n.y + fontSize * 0.85);
+  });
+
+  ctx.restore();
+}
+
+// ─── Interaction ──────────────────────────────────────────────────────────────
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const sx = canvas.width / rect.width;
+  const sy = canvas.height / rect.height;
+  const t = e.touches ? e.touches[0] : e;
+  return { x: (t.clientX - rect.left) * sx, y: (t.clientY - rect.top) * sy };
+}
+
+canvas.addEventListener('mousedown', e => {
+  const p = getPos(e);
+  const w = toWorld(p.x, p.y);
+  const n = nodeAt(w.x, w.y);
+  if (n) {
+    dragging = n;
+    dragOffX = w.x - n.x;
+    dragOffY = w.y - n.y;
+    canvas.style.cursor = 'grabbing';
+  } else {
+    panning = true;
+    panStartX = p.x; panStartY = p.y;
+    panOffX = offX;  panOffY = offY;
+    canvas.style.cursor = 'grabbing';
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const p = getPos(e);
+  if (dragging) {
+    const w = toWorld(p.x, p.y);
+    dragging.x = w.x - dragOffX;
+    dragging.y = w.y - dragOffY;
+    draw();
+  } else if (panning) {
+    offX = panOffX + (p.x - panStartX);
+    offY = panOffY + (p.y - panStartY);
+    draw();
+  }
+});
+
+canvas.addEventListener('mouseup', () => {
+  dragging = null; panning = false;
+  canvas.style.cursor = 'grab';
+});
+canvas.addEventListener('mouseleave', () => { dragging = null; panning = false; });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const p = getPos(e);
+  const factor = e.deltaY < 0 ? 1.1 : 0.91;
+  const wx = (p.x - offX) / scale;
+  const wy = (p.y - offY) / scale;
+  scale = Math.max(0.3, Math.min(3, scale * factor));
+  offX = p.x - wx * scale;
+  offY = p.y - wy * scale;
+  draw();
+}, { passive: false });
+
+// Touch
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    const p = getPos(e);
+    const w = toWorld(p.x, p.y);
+    const n = nodeAt(w.x, w.y);
+    if (n) {
+      dragging = n; dragOffX = w.x - n.x; dragOffY = w.y - n.y;
+    } else {
+      panning = true; panStartX = p.x; panStartY = p.y; panOffX = offX; panOffY = offY;
+    }
+  }
+}, { passive: true });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (e.touches.length === 1) {
+    const p = getPos(e);
+    if (dragging) {
+      const w = toWorld(p.x, p.y);
+      dragging.x = w.x - dragOffX;
+      dragging.y = w.y - dragOffY;
+    } else if (panning) {
+      offX = panOffX + (p.x - panStartX);
+      offY = panOffY + (p.y - panStartY);
+    }
+    draw();
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { dragging = null; panning = false; });
+
+// ─── Subtle float animation ───────────────────────────────────────────────────
+let t = 0;
+const FLOAT = {};
+NODES.forEach(n => { FLOAT[n.id] = { bx: n.x, by: n.y, phase: Math.random() * Math.PI * 2 }; });
+
+function animate() {
+  t += 0.008;
+  if (!dragging) {
+    NODES.forEach(n => {
+      if (n === dragging) return;
+      const f = FLOAT[n.id];
+      n.x = f.bx + Math.sin(t + f.phase) * 1.8;
+      n.y = f.by + Math.cos(t * 0.7 + f.phase) * 1.4;
+    });
+  }
+  draw();
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

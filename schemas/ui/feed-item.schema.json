@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/ui/feed-item/v1",
+  "title": "UI Feed Item Projection",
+  "description": "A single item in the UI event feed. Published by om-control-plane on ui.feed.recent and ui.feed.important. This is a bounded, curated projection — NOT a raw event firehose. The control plane selects which events are feed-worthy and normalizes them into this shape.",
+  "type": "object",
+  "required": ["id", "ts", "type", "title"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique feed item ID (typically the source event ID).",
+      "minLength": 1
+    },
+    "ts": {
+      "type": "string",
+      "description": "RFC3339 timestamp of the underlying event.",
+      "format": "date-time"
+    },
+    "type": {
+      "type": "string",
+      "description": "Feed item category for icon/grouping.",
+      "enum": [
+        "alert",
+        "task",
+        "mission",
+        "entity",
+        "integration",
+        "workflow",
+        "system",
+        "command",
+        "agent",
+        "tak",
+        "info"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "description": "Short headline for the feed item.",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional longer description/body text."
+    },
+    "source": {
+      "type": "string",
+      "description": "Actor ID that originated the underlying event."
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "Related entity ID if applicable (for deep-linking to asset detail)."
+    },
+    "severity": {
+      "type": "string",
+      "description": "Importance level for filtering and highlighting.",
+      "enum": ["info", "low", "medium", "high", "critical"],
+      "default": "info"
+    },
+    "subject": {
+      "type": "string",
+      "description": "The original NATS subject of the underlying event (for traceability)."
+    },
+    "actions": {
+      "type": "array",
+      "description": "Optional quick actions available from the feed item.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command subject to publish."
+          }
+        }
+      }
+    }
+  }
+}
