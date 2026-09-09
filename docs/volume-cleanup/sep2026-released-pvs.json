@@ -1,0 +1,263 @@
+{
+  "deleted_on": "2026-09-09",
+  "count": 32,
+  "total_gib": 271,
+  "volumes": [
+    {
+      "pv": "pvc-0009abc8-14f5-4520-a529-cab0c4211d6d",
+      "claim": "intel/crucix-runs-data",
+      "size": "10Gi",
+      "policy": "Retain",
+      "do_volume_id": "b34729b1-a762-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-0cc14095-0b9e-470c-ba21-fa8bdf7b3ec9",
+      "claim": "intel/worldmonitor-redis-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "b3723633-a762-11f1-b57c-dac2302f7e2a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-0ffd454f-d6e2-4faa-87aa-37c01721d7ea",
+      "claim": "intel/crucix-runs-data",
+      "size": "10Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f510c2f-a761-11f1-9df9-de39b00b0517",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-1ab2d32f-9175-444b-8740-17d328abfdd8",
+      "claim": "cloudtak/cloudtak-pgdata",
+      "size": "10Gi",
+      "policy": "Delete",
+      "do_volume_id": "a3aab530-9854-11f1-a771-e66fff52f8cd",
+      "created": "2026-08-15"
+    },
+    {
+      "pv": "pvc-1d6a8c4e-e1c6-434b-bd49-9b6b5f0a77cd",
+      "claim": "geo/webodm-db-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "72b00b9e-932e-11f1-bcfb-0e065acb992f",
+      "created": "2026-08-08"
+    },
+    {
+      "pv": "pvc-27588662-15d1-4db0-b4b1-1d1074e37829",
+      "claim": "intel/worldwideview-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f29db39-a761-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-2a065cab-c0e0-48c8-ae39-90977b246028",
+      "claim": "intel/worldwideview-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "b327f2a6-a762-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-2a210703-2211-455a-8213-ac66615c44f3",
+      "claim": "intel/worldwideview-postgres-data",
+      "size": "20Gi",
+      "policy": "Retain",
+      "do_volume_id": "7fae5297-a761-11f1-8108-3a4e8ce01f4c",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-58c2849b-dcca-4536-b9f6-d2a0d60762f1",
+      "claim": "nats-tools/natscope-data",
+      "size": "2Gi",
+      "policy": "Retain",
+      "do_volume_id": "95057dea-a763-11f1-8680-be969771ec3a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-59c6ea1d-ab01-4729-a3cd-501124c5cd0e",
+      "claim": "geo/geoserver-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "4b0481dd-936d-11f1-bfc7-ae85a7a7c0e9",
+      "created": "2026-08-08"
+    },
+    {
+      "pv": "pvc-7804a628-8b6b-4845-88e5-e7dd91f6ed0d",
+      "claim": "geo/farmos-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "bd53ba49-a205-11f1-9263-f2f6a1811acf",
+      "created": "2026-08-27"
+    },
+    {
+      "pv": "pvc-7a7cfe66-b2ce-412a-b803-d4558166b1c5",
+      "claim": "cloudtak/cloudtak-minio-data",
+      "size": "20Gi",
+      "policy": "Delete",
+      "do_volume_id": "a445ba72-9854-11f1-9ecc-d27e10f45f37",
+      "created": "2026-08-15"
+    },
+    {
+      "pv": "pvc-8a1727cc-3c99-45a7-96ba-7d424d445189",
+      "claim": "geo/geoserver-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "7efe0ec5-929f-11f1-bfc7-ae85a7a7c0e9",
+      "created": "2026-08-07"
+    },
+    {
+      "pv": "pvc-9f4f7df5-619d-40a9-a909-fb61ea86e7a0",
+      "claim": "intel/worldwideview-postgres-data",
+      "size": "20Gi",
+      "policy": "Retain",
+      "do_volume_id": "e6cd1596-a778-11f1-8108-3a4e8ce01f4c",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-a16260b6-815f-4a44-b829-22985b9b6769",
+      "claim": "nats-tools/nui-data",
+      "size": "1Gi",
+      "policy": "Retain",
+      "do_volume_id": "952b4b45-a763-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-abd97304-926c-4888-8277-db5044598028",
+      "claim": "intel/worldwideview-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "e6555473-a778-11f1-8680-be969771ec3a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-adb18137-c257-4879-aa2f-eff6ef925906",
+      "claim": "geo/farmos-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f01dcb8-929f-11f1-bcfb-0e065acb992f",
+      "created": "2026-08-07"
+    },
+    {
+      "pv": "pvc-b11ed33f-f1bb-46e4-b531-c105e7777a87",
+      "claim": "geo/superset-data",
+      "size": "2Gi",
+      "policy": "Retain",
+      "do_volume_id": "9c5c7be3-9334-11f1-9ef1-329b511cf451",
+      "created": "2026-08-08"
+    },
+    {
+      "pv": "pvc-c1921770-a52f-4daa-9d33-0f0370b7099c",
+      "claim": "geo/node-red-data",
+      "size": "2Gi",
+      "policy": "Retain",
+      "do_volume_id": "be7c4d92-a205-11f1-9263-f2f6a1811acf",
+      "created": "2026-08-27"
+    },
+    {
+      "pv": "pvc-cdff9804-deaf-415b-9814-c9c29dd884b0",
+      "claim": "geo/superset-data",
+      "size": "2Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f10c9d4-929f-11f1-890a-d67be68f4ad1",
+      "created": "2026-08-07"
+    },
+    {
+      "pv": "pvc-ce398b68-89cf-48f0-9016-2c446225ab2e",
+      "claim": "intel/shadowbroker-backend-data",
+      "size": "20Gi",
+      "policy": "Retain",
+      "do_volume_id": "add78741-a672-11f1-b57c-dac2302f7e2a",
+      "created": "2026-09-02"
+    },
+    {
+      "pv": "pvc-d5d20835-6a04-4f0f-bbb1-32adba6d25d3",
+      "claim": "geo/oam-mongo-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f1c3820-929f-11f1-9ef1-329b511cf451",
+      "created": "2026-08-07"
+    },
+    {
+      "pv": "pvc-d5dfe9bd-c3f5-4e0a-a909-422529fb1d4a",
+      "claim": "intel/crucix-runs-data",
+      "size": "10Gi",
+      "policy": "Retain",
+      "do_volume_id": "1208425a-a779-11f1-b57c-dac2302f7e2a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-d852e067-d5fb-412d-8ef4-f51f6135be0b",
+      "claim": "intel/worldmonitor-redis-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f15641d-a761-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-e218128e-8ef0-44c2-ab64-12291ed78501",
+      "claim": "geo/node-red-data",
+      "size": "2Gi",
+      "policy": "Retain",
+      "do_volume_id": "7efd3c9d-929f-11f1-9ef1-329b511cf451",
+      "created": "2026-08-07"
+    },
+    {
+      "pv": "pvc-e9c35772-fa91-4eb9-b24e-179682314278",
+      "claim": "geo/geo-db-data",
+      "size": "20Gi",
+      "policy": "Retain",
+      "do_volume_id": "7f1a5cd6-929f-11f1-bfc7-ae85a7a7c0e9",
+      "created": "2026-08-07"
+    },
+    {
+      "pv": "pvc-eac4a2bf-b665-4151-bb46-d24fc46639b5",
+      "claim": "intel/worldwideview-postgres-data",
+      "size": "20Gi",
+      "policy": "Retain",
+      "do_volume_id": "125dba30-a779-11f1-8680-be969771ec3a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-eca18ec8-3555-4458-a3a9-31a615c558c0",
+      "claim": "intel/worldmonitor-redis-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "12425bcd-a779-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-f186bdcc-07e2-4dc3-8f34-87b767438ea1",
+      "claim": "intel/crucix-runs-data",
+      "size": "10Gi",
+      "policy": "Retain",
+      "do_volume_id": "e62e1ddc-a778-11f1-8680-be969771ec3a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-f529e104-b378-4fe0-b7f9-e8331b97de80",
+      "claim": "intel/worldwideview-postgres-data",
+      "size": "20Gi",
+      "policy": "Retain",
+      "do_volume_id": "b3798352-a762-11f1-8680-be969771ec3a",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-f5bbdffb-2d7d-4e1f-a5bf-6c678133e293",
+      "claim": "intel/worldwideview-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "12a49503-a779-11f1-93d8-2a61c817cb77",
+      "created": "2026-09-03"
+    },
+    {
+      "pv": "pvc-fc0a7a71-30d8-4949-9b3e-755dd5935548",
+      "claim": "intel/worldmonitor-redis-data",
+      "size": "5Gi",
+      "policy": "Retain",
+      "do_volume_id": "e6137975-a778-11f1-b57c-dac2302f7e2a",
+      "created": "2026-09-03"
+    }
+  ]
+}
