@@ -10,27 +10,7 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-      # ── OneTAK ────────────────────────────────────────────────────────────
-      - hostname: onemindos.dev
-        service: http://onetak-api.onetak.svc.cluster.local:5000
-      - hostname: tiles.onemindos.dev
-        service: http://onetak-tiles.onetak.svc.cluster.local:5002
-      - hostname: media.onemindos.dev
-        service: http://onetak-media.onetak.svc.cluster.local:9997
-      # ── Core infra ────────────────────────────────────────────────────────
-      - hostname: grafana.onemindos.dev
-        service: http://monitoring-grafana.monitoring.svc.cluster.local:80
-      - hostname: argocd.onemindos.dev
-        service: https://argocd-server.argocd.svc.cluster.local:443
-        originRequest:
-          noTLSVerify: true
-      - hostname: hermes.onemindos.dev
-        service: http://hermes-webui.hermes.svc.cluster.local:8787
-      # ── NATS WebSocket (browser SPA) ─────────────────────────────────────
-      - hostname: ws.onemindos.dev
-        service: http://nats.nats.svc.cluster.local:8080
-      # ── CesiumJS 3D Globe (God's Eye) ────────────────────────────────────
-      - hostname: globe.onemindos.dev
-        service: http://tak-webview-cesium.takserver.svc.cluster.local:80
-      # ── Catch-all ────────────────────────────────────────────────────────
+      # Routing is handled by ingress-nginx (143.244.220.155).
+      # DNS records for onemindos.dev and subdomains point to the LB IP.
+      # Tunnel is kept scaled to 0; activate only if LB path is unavailable.
       - service: http_status:404

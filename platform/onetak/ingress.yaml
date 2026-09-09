@@ -30,33 +30,6 @@ spec:
                 name: onetak-api
                 port:
                   number: 5000
-    - host: atoc.onemindos.dev
-      http:
-        paths:
-          - path: /api/copilot
-            pathType: Prefix
-            backend:
-              service:
-                name: copilot-runtime
-                port:
-                  number: 4111
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: onetak-api
-                port:
-                  number: 5000
-    - host: tiles.atoc.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: onetak-tiles
-                port:
-                  number: 5002
     - host: tiles.onemindos.dev
       http:
         paths:

@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: atoc.onemindos.dev
+    - host: onemindos.dev
       http:
         paths:
           - path: /api/omos/ai(/|$)(.*)
