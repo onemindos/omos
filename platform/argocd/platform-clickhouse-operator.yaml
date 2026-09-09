@@ -53,5 +53,8 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=false
+      - ServerSideApply=true
   # 2026-09-09: removed ignoreDifferences on containers/0/resources —
   # resources now set properly via helm values (operator.requests/metrics.resources)
+  # ServerSideApply: chart's CRD-anchor ConfigMaps exceed the 256Ki last-applied
+  # annotation limit under client-side apply (SyncError) — SSA stores no such annotation.
