@@ -10,11 +10,13 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-      # ── CloudTAK ──────────────────────────────────────────────────────────
+      # ── OneTAK ────────────────────────────────────────────────────────────
       - hostname: onemindos.dev
-        service: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+        service: http://onetak-api.onetak.svc.cluster.local:5000
       - hostname: tiles.onemindos.dev
-        service: http://cloudtak-tiles.cloudtak.svc.cluster.local:5002
+        service: http://onetak-tiles.onetak.svc.cluster.local:5002
+      - hostname: media.onemindos.dev
+        service: http://onetak-media.onetak.svc.cluster.local:9997
       # ── Core infra ────────────────────────────────────────────────────────
       - hostname: grafana.onemindos.dev
         service: http://monitoring-grafana.monitoring.svc.cluster.local:80
@@ -30,11 +32,5 @@ data:
       # ── CesiumJS 3D Globe (God's Eye) ────────────────────────────────────
       - hostname: globe.onemindos.dev
         service: http://tak-webview-cesium.takserver.svc.cluster.local:80
-      # ── CloudTAK media server (video HLS proxy) ──────────────────────────
-      - hostname: media.onemindos.dev
-        service: http://cloudtak-media.cloudtak.svc.cluster.local:9997
-      # ── Camera feeds (HLS/WebRTC — mediamtx) ─────────────────────────────
-      - hostname: cam.onemindos.dev
-        service: http://mediamtx.takserver.svc.cluster.local:8889
       # ── Catch-all ────────────────────────────────────────────────────────
       - service: http_status:404
