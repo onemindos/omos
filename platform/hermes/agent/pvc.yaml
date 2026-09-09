@@ -14,4 +14,4 @@ spec:
       # Bump if the working set grows; DO block storage is resizable.
       storage: 10Gi
   # DOKS default block-storage class.
-  storageClassName: do-block-storage-retain
+  storageClassName: do-block-storage

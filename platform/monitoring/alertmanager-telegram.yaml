@@ -1,48 +1,20 @@
-apiVersion: monitoring.coreos.com/v1alpha1
-kind: AlertmanagerConfig
-metadata:
-  name: onemind-telegram
-  namespace: monitoring
-  labels:
-    alertmanagerConfig: onemind
-spec:
-  route:
-    receiver: telegram
-    groupBy: ['alertname', 'namespace', 'service']
-    groupWait: 30s
-    groupInterval: 5m
-    repeatInterval: 4h
-    matchers:
-      - name: severity
-        matchType: =~
-        value: "warning|critical"
-  receivers:
-    - name: telegram
-      telegramConfigs:
-        - botToken:
-            # kubectl create secret generic telegram-alertmanager-creds -n monitoring
-            #   --from-literal=bot_token=<your-bot-token>
-            #   --dry-run=client -o json
-            #   | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide
-            #   > platform/monitoring/telegram-creds.sealedsecret.yaml
-            name: telegram-alertmanager-creds
-            key: bot_token
-          # Your Telegram chat ID (negative number for groups, e.g. -1001234567890)
-          # Get it: add @userinfobot to your group, or message @getidsbot
-          chatID: 0  # TODO: replace with your actual chat ID
-          parseMode: HTML
-          sendResolved: true
-          message: |-
-            {{ range .Alerts -}}
-            {{ if eq .Status "firing" -}}
-            <b>FIRING {{ .Labels.alertname }}</b>
-            {{- else -}}
-            <b>RESOLVED {{ .Labels.alertname }}</b>
-            {{- end }}
-            Severity: {{ .Labels.severity }}
-            {{ if .Labels.namespace -}}Namespace: <code>{{ .Labels.namespace }}</code>{{ end }}
-            {{ if .Labels.pod -}}Pod: <code>{{ .Labels.pod }}</code>{{ end }}
-            {{ if .Labels.node -}}Node: <code>{{ .Labels.node }}</code>{{ end }}
-            {{ .Annotations.summary }}
-            {{ .Annotations.description }}
-            {{ end -}}
+# AlertmanagerConfig for Telegram notifications.
+# DISABLED: chatID was 0 (placeholder) — webhook rejects invalid chatID.
+# To enable:
+#   1. Get your Telegram chat ID (add @getidsbot to group)
+#   2. Update chatID below
+#   3. Create sealed secret: kubectl create secret generic telegram-alertmanager-creds
+#      -n monitoring --from-literal=bot_token=<token> | kubeseal ...
+#   4. Uncomment the resource below
+#
+# apiVersion: monitoring.coreos.com/v1alpha1
+# kind: AlertmanagerConfig
+# metadata:
+#   name: onemind-telegram
+#   namespace: monitoring
+#   labels:
+#     alertmanagerConfig: onemind
+# spec:
+#   route:
+#     receiver: telegram
+#     ...
