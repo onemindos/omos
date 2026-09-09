@@ -46,9 +46,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8002
-          args:
-            - valhalla_service
-            - /data/valhalla.json
           env:
             - name: use_tiles_ignore_pbf
               value: "False"
