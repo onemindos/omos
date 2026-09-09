@@ -66,9 +66,8 @@ All services follow this exact pattern — no exceptions:
 2. Directory: platform/{service}/
    - namespace.yaml
    - deployment.yaml  (Deployment + Service; stateful adds PVC)
-   - cloudflare-route.yaml  (if public-facing via tunnel)
-3. Add kubectl apply lines to platform/install.sh
-4. Secrets: out-of-band via 1Password → kubectl create secret (never committed)
+   - ingress.yaml     (if public-facing — nginx class, Cloudflare IP whitelist)
+3. Secrets: out-of-band via 1Password → kubectl create secret (never committed)
 ```
 
 ### NATS access pattern
@@ -97,21 +96,34 @@ K8s pod  ──────────────────────► n
 Mac/edge ── leaf node ──────────► DOKS NATS :7422  (TLS, forwarding only)
 ```
 
-### Cloudflare route pattern
+### Public ingress pattern
 
-Public hostnames are declared as ConfigMaps in namespace `cloudflare`. The cloudflared controller reads them and registers routes. See `platform/cloudtak/cloudflare-route.yaml` for the canonical example.
+Public hostnames are handled by `ingress-nginx` (LB `143.244.220.155`). All public DNS records are Cloudflare-proxied A records pointing at the LB. The ingress object lives in the same namespace as the service and uses the Cloudflare IP whitelist so only Cloudflare-edge IPs can reach the LB.
 
 ```yaml
-apiVersion: v1
-kind: ConfigMap
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: {service}-route
-  namespace: cloudflare
-data:
-  tunnel: "66bbea70-5300-4e4e-96fa-e5bc4d767b61"
-  hostname: "{service}.onemindos.dev"
-  service: "http://{service}.{namespace}.svc.cluster.local:{port}"
+  name: {service}-ingress
+  namespace: {namespace}
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "173.245.48.0/20,..."
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {service}.onemindos.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {service}
+                port:
+                  number: {port}
 ```
+
+The Cloudflare tunnel (`cloudflared`) is **scaled to 0** and kept only as a cold standby. All routing is via ingress-nginx.
 
 ## NATS Subject Grammar (LOCKED — do not invent new patterns)
 
@@ -135,13 +147,14 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | NATS 3-node HA | nats | nats (helm) | ✅ live |
 | Legacy (Hermes AI) | hermes | ghcr.io/onemindos/hermes-legacy:latest | ✅ live |
 | copilot-runtime | hermes | ghcr.io/onemindos/copilot-runtime:latest | ✅ live |
-| OneTAK API | onetak | ghcr.io/onemindos/cloudtak-api:latest | 🔄 migrating |
-| OneTAK Events | onetak | ghcr.io/onemindos/cloudtak-events:latest | 🔄 migrating |
-| OneTAK Tiles | onetak | ghcr.io/onemindos/cloudtak-tiles:latest | 🔄 migrating |
+| OneTAK API | onetak | ghcr.io/onemindos/onetak-api:latest | ✅ live |
+| OneTAK Events | onetak | ghcr.io/onemindos/onetak-events:latest | ✅ live |
+| OneTAK Tiles | onetak | ghcr.io/onemindos/onetak-tiles:latest | ✅ live |
+| OneTAK Media | onetak | ghcr.io/onemindos/onetak-media:latest | ✅ live |
 | TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-base:* | ✅ live |
 | ClickHouse | clickhouse | altinity/clickhouse-server (operator) | ✅ live |
 | Grafana/Loki/Tempo | monitoring | (helm) | ✅ live |
-| Cloudflared | cloudflare | cloudflare/cloudflared | ✅ live |
+| Cloudflared | cloudflare | cloudflare/cloudflared | 🔴 scaled to 0 (standby) |
 | nats-dashboard | nats | ghcr.io/onemindos/nats-dashboard:latest | ✅ live |
 | agent-web-ui | nats | ghcr.io/onemindos/agent-web-ui:latest | ✅ live |
 | agenttap | nats | ghcr.io/onemindos/agenttap:latest | ✅ live |
@@ -153,6 +166,8 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | sink-clickhouse | omos | ghcr.io/onemindos/sink-clickhouse:latest | ✅ live |
 | redpanda-connect | omos | ghcr.io/redpandadata/connect:latest | ✅ live |
 | omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | 🔴 scaled to 0 |
+| valhalla | onetak | valhalla/valhalla:run-latest | 🔴 scaled to 0 (awaiting tile build) |
+| nominatim | onetak | mediagis/nominatim:4.4 | 🔴 scaled to 0 (geofabrik rate-limited) |
 
 ## Namespaces
 
@@ -160,11 +175,11 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 |-----------|---------|
 | nats | NATS 3-node HA cluster + tools |
 | hermes | Legacy AI agent + copilot-runtime |
-| onetak | OneTAK — API/Events/Media/Tiles (migrating from cloudtak) |
+| onetak | OneTAK — API/Events/Media/Tiles + geo services |
 | takserver | TAK Server 5.8 |
 | clickhouse | ClickHouse (Altinity operator) |
 | monitoring | Prometheus + Grafana + Loki + Tempo |
-| cloudflare | cloudflared tunnel controller |
+| cloudflare | cloudflared (scaled to 0 — cold standby only) |
 | omos | omos-* services (tak-projector, feeds, sinks) |
 | geo | Geospatial stack (Tile38, STAC, farmOS, etc.) |
 | takml | TAK-ML vision pipeline |
@@ -214,19 +229,27 @@ kubectl create secret generic <name> -n <namespace> \
 | nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm — out-of-band) |
 | ghcr / ghcr-pull-secret | hermes/omos | GHCR pull secret (out-of-band) |
 
-## Key Hostnames (Cloudflare Tunnel)
+## Public Hostnames
+
+All public DNS records are **Cloudflare-proxied A records → `143.244.220.155`** (ingress-nginx LB), except `tak.onemindos.dev` which is an unproxied A record direct to the TAK LB.
+
+| Hostname | Ingress object | Backend | DNS status |
+|----------|---------------|---------|------------|
+| onemindos.dev | onetak/onetak-ingress | onetak-api:5000 | ⚠️ update DNS |
+| tiles.onemindos.dev | onetak/onetak-ingress | onetak-tiles:5002 | ⚠️ update DNS |
+| media.onemindos.dev | onetak/onetak-ingress | onetak-media:9997 | ⚠️ update DNS |
+| ws.onemindos.dev | nats/nats-ws-ingress | nats:8080 (WebSocket) | ⚠️ update DNS |
+| tak.onemindos.dev | — | tak-external LB 152.42.155.95 | A record, unproxied |
+
+**Tailscale-only (never public):**
 
 | Hostname | Service |
 |----------|---------|
-| onemindos.dev | CloudTAK API (temporary — will cut over to omos-ui) |
-| tiles.onemindos.dev | CloudTAK tile server |
-| grafana.onemindos.dev | Grafana |
-| argocd.onemindos.dev | ArgoCD |
-| hermes.onemindos.dev | Hermes web UI |
-| ws.onemindos.dev | NATS WebSocket (browser SPA → in-cluster NATS) |
-| globe.onemindos.dev | CesiumJS 3D Globe (tak-webview-cesium) |
-| tak.onemindos.dev | TAK Server (WebTAK / EUD connect) |
-| auth.onemindos.dev | Authentik IdP (SSO login portal — NOT DEPLOYED) |
+| argocd.tail717ba0.ts.net | ArgoCD |
+| grafana.tail717ba0.ts.net | Grafana |
+| hermes-agent.tail717ba0.ts.net | Hermes web UI |
+| agent-web-ui-1.tail717ba0.ts.net | Agent Web UI |
+| nats-dashboard-1.tail717ba0.ts.net | NATS Dashboard |
 
 ## Cluster Access
 
