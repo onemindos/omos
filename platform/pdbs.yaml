@@ -1,0 +1,109 @@
+# PodDisruptionBudgets — added 2026-09-09
+# Ensures core services survive a node drain/eviction without going fully offline.
+# Rule: maxUnavailable: 1 for all single-replica services (protect against total outage).
+#
+# Missing coverage found: takserver (api/messaging/plugins), hermes, monitoring, geo-db.
+# Already covered: nats, clickhouse, takserver-nats, cilium-operator, kube-dns, konnectivity.
+
+# ─── TAK SERVER ──────────────────────────────────────────────────────────────
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: takserver-api
+  namespace: takserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: takserver-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: takserver-messaging
+  namespace: takserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: takserver-messaging
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: takserver-plugins
+  namespace: takserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: takserver-plugins
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: takserver-config
+  namespace: takserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: takserver-config
+---
+# ─── HERMES ──────────────────────────────────────────────────────────────────
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: hermes-legacy
+  namespace: hermes
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      onemind.io/agent: legacy
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: copilot-runtime
+  namespace: hermes
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: copilot-runtime
+---
+# ─── MONITORING ──────────────────────────────────────────────────────────────
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: prometheus-operator
+  namespace: monitoring
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: kube-prometheus-stack-operator
+---
+# ─── GEO ─────────────────────────────────────────────────────────────────────
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: geo-db
+  namespace: geo
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: geo-db
