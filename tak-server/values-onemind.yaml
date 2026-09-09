@@ -76,10 +76,8 @@ global:
 
 # --- Ignite (distributed cache + K8s cluster discovery) ---------------------
 ignite:
-  image: {repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind", pullPolicy: IfNotPresent}
-  # TEMP 2026-09-09: ghcr PAT died (403) — IfNotPresent lets the roll complete
-  # from node-cached image until Zeus mints a new read:packages PAT. Flip back
-  # to Always once the secret is rotated.
+  image: {repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind", pullPolicy: Always}
+  # ghcr PAT rotated 2026-09-09 → 1P item "GHCR Pull PAT (k8s)"; all 6 ghcr secrets patched. Always restored.
   serviceAccount: {name: takserver-ignite}
   peerClassLoadingEnabled: false
   # 2026-09-09: requests added — pods ran requestless (680Mi each), hiding 1.3Gi
