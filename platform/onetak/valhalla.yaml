@@ -22,14 +22,14 @@ spec:
             - sh
             - -c
             - |
-              if [ -f /data/valhalla_tiles.tar ] || [ -f /data/north-america.osm.pbf ]; then
+              if [ -f /custom_files/valhalla_tiles.tar ] || [ -f /custom_files/north-america.osm.pbf ]; then
                 echo "PBF or tiles already present, skipping download.";
                 exit 0;
               fi
               apk add --no-cache wget
               echo "Downloading North America PBF (~11GB)..."
-              wget -q --show-progress -O /data/north-america.osm.pbf https://download.geofabrik.de/north-america-latest.osm.pbf
-              echo "Download complete: $(du -sh /data/north-america.osm.pbf)"
+              wget -q --show-progress -O /custom_files/north-america.osm.pbf https://download.geofabrik.de/north-america-latest.osm.pbf
+              echo "Download complete: $(du -sh /custom_files/north-america.osm.pbf)"
           volumeMounts:
             - name: valhalla-data
               mountPath: /custom_files
