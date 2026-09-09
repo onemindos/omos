@@ -37,7 +37,7 @@ spec:
       serviceAccountName: sealed-secrets-controller
       containers:
         - name: sealed-secrets-controller
-          image: ghcr.io/bitnami/sealed-secrets-controller:v0.38.4
+          image: docker.io/bitnami/sealed-secrets-controller:0.38.4
           command:
             - controller
           args:
