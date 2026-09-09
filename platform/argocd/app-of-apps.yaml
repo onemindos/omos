@@ -9,7 +9,7 @@
 #  Wave 0 │ CORE        platform-core            networking, certs, secrets, tunnel
 #  Wave 1 │ BUS         platform-nats            NATS 3-node HA + streams
 #         │ OPERATORS   platform-clickhouse-op   Altinity ClickHouse Operator
-#  Wave 2 │ TAK         platform-cloudtak        CloudTAK API/Events/Media/Tiles
+#  Wave 2 │ TAK         platform-onetak          OneTAK API/Events/Media/Tiles
 #         │             tak-cluster              TAK Server Helm chart
 #  Wave 3 │ AI          platform-legacy          Legacy/Hermes AI agent + bridge
 #         │ DATA        platform-observability   ClickHouse (Altinity)

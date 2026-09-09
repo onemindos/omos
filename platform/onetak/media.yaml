@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onetak-media
+  namespace: onetak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onetak-media
+  template:
+    metadata:
+      labels:
+        app: onetak-media
+    spec:
+      containers:
+        - name: media
+          image: ghcr.io/dfpc-coe/media-infra:v9.1.1
+          ports:
+            - containerPort: 9997
+            - containerPort: 8554
+            - containerPort: 1935
+            - containerPort: 8888
+            - containerPort: 8890
+              protocol: UDP
+          env:
+            - name: API_URL
+              value: "http://onetak-api:5000"
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-secrets
+                  key: SIGNING_SECRET
+            - name: CLOUDTAK_Config_media_url
+              value: "http://onetak-media:9997"
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onetak-media
+  namespace: onetak
+spec:
+  selector:
+    app: onetak-media
+  ports:
+    - name: api
+      port: 9997
+      targetPort: 9997
+    - name: rtsp
+      port: 8554
+      targetPort: 8554
+    - name: rtmp
+      port: 1935
+      targetPort: 1935
+    - name: hls
+      port: 8888
+      targetPort: 8888

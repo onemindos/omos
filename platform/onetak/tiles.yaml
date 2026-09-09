@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onetak-tiles
+  namespace: onetak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onetak-tiles
+  template:
+    metadata:
+      labels:
+        app: onetak-tiles
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: tiles
+          image: ghcr.io/onemindos/onetak-tiles:latest
+          ports:
+            - containerPort: 5002
+          env:
+            - name: PMTILES_URL
+              value: "http://onetak-tiles:5002"
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-secrets
+                  key: SIGNING_SECRET
+            - name: ASSET_BUCKET
+              value: "cloudtak"
+            - name: AWS_S3_Endpoint
+              value: "http://onetak-minio:9000"
+            - name: AWS_S3_AccessKeyId
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-secrets
+                  key: AWS_S3_AccessKeyId
+            - name: AWS_S3_SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-secrets
+                  key: AWS_S3_SecretAccessKey
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onetak-tiles
+  namespace: onetak
+spec:
+  selector:
+    app: onetak-tiles
+  ports:
+    - port: 5002
+      targetPort: 5002

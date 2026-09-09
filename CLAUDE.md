@@ -45,7 +45,7 @@ platform/           K8s manifests — organized by operational layer
   argocd/           App-of-apps + Application CRDs
   core/             Wave 0: ingress, cloudflare, tailscale, sealed-secrets, cert-manager, github-runner
   nats/             Wave 1: NATS HA helm values + TLS + streams
-  cloudtak/         Wave 2: CloudTAK (API/Events/Media/Tiles)
+  onetak/           Wave 2: OneTAK (API/Events/Media/Tiles) — renamed from cloudtak/
   hermes/           Wave 3: Hermes/Legacy AI agent
   omos/             Wave 3: tak-projector, feeds, mission-engine
   intel/            Wave 3: OSINT services
@@ -135,9 +135,9 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | NATS 3-node HA | nats | nats (helm) | ✅ live |
 | Legacy (Hermes AI) | hermes | ghcr.io/onemindos/hermes-legacy:latest | ✅ live |
 | copilot-runtime | hermes | ghcr.io/onemindos/copilot-runtime:latest | ✅ live |
-| CloudTAK API | cloudtak | ghcr.io/onemindos/cloudtak-api:latest | ✅ live |
-| CloudTAK Events | cloudtak | ghcr.io/onemindos/cloudtak-events:latest | ✅ live |
-| CloudTAK Tiles | cloudtak | ghcr.io/onemindos/cloudtak-tiles:latest | ✅ live |
+| OneTAK API | onetak | ghcr.io/onemindos/cloudtak-api:latest | 🔄 migrating |
+| OneTAK Events | onetak | ghcr.io/onemindos/cloudtak-events:latest | 🔄 migrating |
+| OneTAK Tiles | onetak | ghcr.io/onemindos/cloudtak-tiles:latest | 🔄 migrating |
 | TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-base:* | ✅ live |
 | ClickHouse | clickhouse | altinity/clickhouse-server (operator) | ✅ live |
 | Grafana/Loki/Tempo | monitoring | (helm) | ✅ live |
@@ -160,7 +160,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 |-----------|---------|
 | nats | NATS 3-node HA cluster + tools |
 | hermes | Legacy AI agent + copilot-runtime |
-| cloudtak | OneTAK (CloudTAK fork) — API/Events/Tiles |
+| onetak | OneTAK — API/Events/Media/Tiles (migrating from cloudtak) |
 | takserver | TAK Server 5.8 |
 | clickhouse | ClickHouse (Altinity operator) |
 | monitoring | Prometheus + Grafana + Loki + Tempo |
@@ -205,7 +205,7 @@ kubectl create secret generic <name> -n <namespace> \
 | hermes-webui-auth | hermes | Hermes web UI password |
 | hermes-dashboard-auth | hermes | Hermes dashboard auth |
 | cloudtak-agent-token | hermes | CloudTAK API token (out-of-band — generate in CloudTAK UI) |
-| cloudtak-secrets | cloudtak | signing secret, MinIO keys, postgres DSN |
+| onetak-secrets | onetak | signing secret, MinIO keys, postgres DSN |
 | omos-nats-creds | omos | NATS user+password for omos namespace |
 | tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge |
 | cloudflare-api-credentials | cloudflare | Cloudflare API key + email |
