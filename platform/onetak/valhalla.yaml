@@ -32,7 +32,7 @@ spec:
               echo "Download complete: $(du -sh /data/north-america.osm.pbf)"
           volumeMounts:
             - name: valhalla-data
-              mountPath: /data
+              mountPath: /custom_files
           resources:
             requests:
               cpu: "500m"
@@ -57,7 +57,7 @@ spec:
               value: "2"
           volumeMounts:
             - name: valhalla-data
-              mountPath: /data
+              mountPath: /custom_files
           resources:
             requests:
               cpu: 300m
