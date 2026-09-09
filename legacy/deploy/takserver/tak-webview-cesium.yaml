@@ -1,0 +1,105 @@
+# tak-webview-cesium — 3D TAK COP viewer (CesiumJS + CoT TLS)
+# Namespace: takserver
+# Access: https://tak3d.tail717ba0.ts.net (Tailscale internal)
+# Repo: https://github.com/sgofferj/tak-webview-cesium (GPL-3.0)
+# Deployed: 2026-07-14 by Legacy (Mother)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tak-webview-cesium
+  namespace: takserver
+  labels:
+    app: tak-webview-cesium
+    component: 3d-cop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tak-webview-cesium
+  template:
+    metadata:
+      labels:
+        app: tak-webview-cesium
+        component: 3d-cop
+    spec:
+      containers:
+        - name: tak-webview-cesium
+          image: ghcr.io/sgofferj/tak-webview-cesium:latest
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            # Connect to TAK Server via external LB (works in-cluster + out-of-cluster)
+            - name: TAK_HOST
+              value: "152.42.155.95"
+            - name: TAK_PORT
+              value: "8089"
+            - name: TAK_ENROLL_PORT
+              value: "8446"
+            - name: TAK_CALLSIGN
+              value: "3DViewer"
+            # Cesium Ion token (optional) — add for Bing aerial + terrain
+            # Get free token at https://ion.cesium.com
+            # - name: CESIUM_ION_TOKEN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: cesium-ion-token
+            #       key: token
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tak-webview-cesium
+  namespace: takserver
+  labels:
+    app: tak-webview-cesium
+spec:
+  selector:
+    app: tak-webview-cesium
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tak-webview-cesium
+  namespace: takserver
+  labels:
+    app: tak-webview-cesium
+  annotations:
+    tailscale.com/funnel: "false"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: tak-webview-cesium
+      port:
+        number: 80
+  tls:
+    - hosts:
+        - tak3d

@@ -1,0 +1,87 @@
+#!/command/with-contenv sh
+# cont-init: seed Legacy's persona + NATS platform config into the PVC.
+# Runs AFTER 01-hermes-setup (which creates config.yaml + default SOUL.md)
+# and BEFORE 02-reconcile-profiles (which starts the gateway service).
+# We OVERWRITE SOUL.md with Legacy's persona + a hardcoded role banner,
+# and MERGE the NATS platform + plugin into config.yaml.
+set -e
+
+HOME_DIR="${HERMES_HOME:-/opt/data}"
+SESSION="${HERMES_NATS_SESSION_NAME:-legacy}"
+
+# --- SOUL.md: pick the role-specific persona by session name ---
+# Two single-voice personas exist: SOUL.mother.md (session=legacy, the main
+# authoritative primary) and SOUL.edge.md (session=legacy-edge, any edge node
+# — the mother's reach into a local environment). Each is unambiguously about
+# ITSELF — no conditional banners, no dual-role confusion.
+#   session == legacy      → MOTHER (main)
+#   session != legacy      → EDGE (any non-mother edge node)
+if [ "$SESSION" = "legacy" ] && [ -f /opt/hermes/seed/SOUL.mother.md ]; then
+    cp /opt/hermes/seed/SOUL.mother.md "$HOME_DIR/SOUL.md"
+    echo "[seed] installed SOUL.md (MOTHER persona, session=legacy)"
+elif [ -f /opt/hermes/seed/SOUL.edge.md ]; then
+    # Anything that is NOT the mother is an edge node
+    cp /opt/hermes/seed/SOUL.edge.md "$HOME_DIR/SOUL.md"
+    echo "[seed] installed SOUL.md (EDGE persona, session=$SESSION)"
+fi
+
+# --- nats-platform plugin ---
+if [ -d /opt/hermes/plugins/nats-platform ]; then
+    mkdir -p "$HOME_DIR/plugins"
+    rm -rf "$HOME_DIR/plugins/nats-platform"
+    cp -r /opt/hermes/plugins/nats-platform "$HOME_DIR/plugins/nats-platform"
+    echo "[seed] installed nats-platform plugin"
+fi
+
+# --- config.yaml: merge NATS platform + plugin + system prompt ---
+# Hermes's 01-hermes-setup already wrote a config.yaml. We need to:
+#   1. Enable the nats-platform plugin (plugins.enabled)
+#   2. Add the platforms.nats section (agent/owner/session/servers)
+#   3. Set agent.system_prompt to the SOUL.md content (the gateway reads
+#      agent.system_prompt, NOT SOUL.md directly — SOUL.md is only
+#      auto-injected in the CLI `hermes -z` path, not the gateway path)
+/opt/hermes/.venv/bin/python -c "
+import yaml, os
+p = os.path.join('$HOME_DIR', 'config.yaml')
+with open(p) as f:
+    cfg = yaml.safe_load(f) or {}
+
+# Enable nats-platform plugin
+plugins = cfg.setdefault('plugins', {})
+enabled = plugins.setdefault('enabled', [])
+if 'nats-platform' not in enabled:
+    enabled.append('nats-platform')
+
+# Add NATS platform config
+platforms = cfg.setdefault('platforms', {})
+platforms['nats'] = {
+    'enabled': True,
+    'servers': ['nats://localhost:4222'],
+    'agent': 'hermes',
+    'owner': 'zeus',
+    'session_name': '$SESSION',
+    'heartbeat_interval_s': 30,
+}
+
+# Set agent.system_prompt to SOUL.md content (gateway reads this, not SOUL.md)
+soul_path = os.path.join('$HOME_DIR', 'SOUL.md')
+if os.path.exists(soul_path):
+    with open(soul_path) as sf:
+        soul = sf.read()
+    agent = cfg.setdefault('agent', {})
+    agent['system_prompt'] = soul
+    print(f'[seed] set agent.system_prompt from SOUL.md ({len(soul)} chars)')
+
+# Set model config (Hermes's default is OpenRouter; we need Bedrock)
+cfg['model'] = {
+    'provider': 'bedrock',
+    'default': 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+    'context_length': 131072,
+    'base_url': 'https://bedrock-runtime.us-east-1.amazonaws.com',
+}
+print('[seed] set model config (bedrock/haiku)')
+
+with open(p, 'w') as f:
+    yaml.dump(cfg, f, default_flow_style=False, sort_keys=False)
+print(f'[seed] merged NATS platform config (session=$SESSION)')
+"
