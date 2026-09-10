@@ -1,0 +1,100 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — AUTHENTIK                                            sync-wave: "3"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-auth-helm: Authentik IdP — EUD enrollment, LDAP outpost for TAK
+#
+# Chart: goauthentik/authentik 2026.8.2
+# Namespace: auth (created by platform-auth-infra, wave 2)
+#
+# External dependencies (deployed by platform-auth-infra):
+#   authentik-postgres.auth.svc.cluster.local:5432  — Postgres 17
+#   authentik-redis.auth.svc.cluster.local:6379     — Redis 7
+#   authentik-secret                                 — SealedSecret
+#
+# LDAP outpost (auth.onemindos.dev/.well-known/openid-configuration):
+#   After first login, go to System → Outposts → Create LDAP outpost.
+#   Copy the outpost token, seal it as authentik-ldap-token in auth namespace,
+#   then deploy platform/auth/ldap-outpost.yaml.
+#
+# Bootstrap credentials (first login only):
+#   Username: akadmin
+#   Password: in sealed authentik-secret → AUTHENTIK_BOOTSTRAP_PASSWORD
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-auth-helm
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://charts.goauthentik.io
+    chart: authentik
+    targetRevision: "2026.8.2"
+    helm:
+      values: |
+        global:
+          envFrom:
+            - secretRef:
+                name: authentik-secret
+
+        authentik:
+          secret_key: ""  # loaded from AUTHENTIK_SECRET_KEY env var
+          error_reporting:
+            enabled: false
+          postgresql:
+            host: "authentik-postgres.auth.svc.cluster.local"
+            port: 5432
+            name: "authentik"
+            user: "authentik"
+            password: ""  # loaded from AUTHENTIK_POSTGRESQL__PASSWORD env var
+          redis:
+            host: "authentik-redis.auth.svc.cluster.local"
+            port: 6379
+
+        server:
+          replicas: 1
+          ingress:
+            enabled: false  # managed by platform/auth/ingress.yaml
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+
+        worker:
+          replicas: 1
+          resources:
+            requests:
+              cpu: 50m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+
+        postgresql:
+          enabled: false  # using authentik-postgres StatefulSet
+
+        redis:
+          enabled: false  # using authentik-redis Deployment
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: auth
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+        - /spec/template/spec/containers/0/resources

@@ -12,11 +12,13 @@
 #  Wave 2 │ TAK         platform-onetak          OneTAK API/Events/Media/Tiles
 #         │             platform-takserver       TAK Server overlay (LB, NATS leaf, config)
 #         │             platform-takml           TAK ML vision pipeline (inference → CoT)
+#         │ AUTH        platform-auth-infra      Authentik Postgres + Redis + ingress + secret
 #  Wave 3 │ AI          platform-legacy          Hermes AI agent + copilot bridge
 #         │ DATA        platform-observability   ClickHouse (Altinity)
 #         │             platform-redpanda        Redpanda Connect pipelines
 #         │ SERVICES    platform-omos            tak-projector, feeds, mission-engine
 #         │ GEO         platform-geo             STAC, Tile38, geospatial stack
+#         │ AUTH        platform-auth-helm       Authentik IdP (EUD enrollment, LDAP for TAK)
 #  Wave 4 │ OPS         platform-nats-tools      NATS debug toolbox (agenttap, heynats, nats-dashboard)
 #         │             platform-monitoring      Grafana, Prometheus, alerting
 # ─────────────────────────────────────────────────────────────────────────────

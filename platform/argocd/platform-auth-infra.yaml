@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 2 — AUTH INFRASTRUCTURE                                  sync-wave: "2"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-auth-infra: Authentik supporting infrastructure
+#
+# Covers: platform/auth/
+#   namespace.yaml            — auth namespace
+#   postgres.yaml             — Postgres 17 StatefulSet for Authentik
+#   redis.yaml                — Redis 7 for Authentik
+#   ingress.yaml              — auth.onemindos.dev → authentik-server
+#   authentik.sealedsecret.yaml — sealed secret_key, pg password, bootstrap creds
+#
+# Must sync before platform-auth-helm (wave 3) so the namespace and secret
+# exist before the Authentik Helm chart runs.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-auth-infra
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos-infra.git
+    targetRevision: HEAD
+    path: platform/auth
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: auth
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/volumeClaimTemplates
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /spec/storageClassName
