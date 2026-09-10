@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tak-portal
+  namespace: onetak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tak-portal
+  template:
+    metadata:
+      labels:
+        app: tak-portal
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: portal
+          image: ghcr.io/onemindos/tak-portal:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TAK_HOST
+              value: "tak.onemindos.dev"
+            - name: TAK_PORT
+              value: "8089"
+            - name: PORTAL_URL
+              value: "https://enroll.onemindos.dev"
+            - name: CA_CERT_PATH
+              value: "/certs/ca.pem"
+            - name: CA_KEY_PATH
+              value: "/certs/ca.key"
+            - name: CA_KEY_PASS
+              value: ""
+          volumeMounts:
+            - name: ca-certs
+              mountPath: /certs
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "500m"
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: ca-certs
+          secret:
+            secretName: tak-portal-ca-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tak-portal
+  namespace: onetak
+spec:
+  selector:
+    app: tak-portal
+  ports:
+    - port: 8080
+      targetPort: 8080
