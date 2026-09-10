@@ -20,7 +20,8 @@ TAK_PORT = os.getenv("TAK_PORT", "8089")
 PORTAL_URL = os.getenv("PORTAL_URL", "https://enroll.onemindos.dev")
 CA_CERT_PATH = os.getenv("CA_CERT_PATH", "/certs/ca.pem")
 CA_KEY_PATH = os.getenv("CA_KEY_PATH", "/certs/ca.key")
-CA_KEY_PASS = os.getenv("CA_KEY_PASS", "atakatak").encode()
+_raw_pass = os.getenv("CA_KEY_PASS", "")
+CA_KEY_PASS = _raw_pass.encode() if _raw_pass else None
 CERT_PASS = b"atakatak"
 
 app = FastAPI(title="OneMind TAK Portal")
