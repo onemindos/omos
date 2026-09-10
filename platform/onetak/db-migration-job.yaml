@@ -1,0 +1,115 @@
+# One-time migration job: copy onetak-postgis (gis/docker) into onetak-geo-db
+# as a new database, then OneTAK can be pointed at onetak-geo-db.
+#
+# Run order:
+#   1. kubectl apply -f db-migration-job.yaml
+#   2. Watch: kubectl logs -n onetak -l job-name=postgres-consolidation -f
+#   3. Verify data in onetak-geo-db (see job logs for row counts)
+#   4. Scale OneTAK API + Events to 0
+#   5. Re-seal onetak-postgres-creds pointing to onetak-geo-db (see README below)
+#   6. kubectl apply -f onetak-postgres-creds.sealedsecret.yaml
+#   7. Scale OneTAK API + Events back to 1
+#   8. Confirm site works, then delete onetak-postgis deployment + PVC
+#
+# NEW DSN for onetak-postgres-creds (after migration):
+#   POSTGRES_DSN=postgres://docker:<PASSWORD>@onetak-geo-db.onetak.svc.cluster.local:5432/gis
+#   POSTGRES_PASSWORD=<same password as before>
+#
+# Re-seal command:
+#   kubectl create secret generic onetak-postgres-creds -n onetak \
+#     --from-literal=POSTGRES_DSN="postgres://docker:<PW>@onetak-geo-db.onetak.svc.cluster.local:5432/gis" \
+#     --from-literal=POSTGRES_PASSWORD="<PW>" \
+#     --dry-run=client -o json \
+#     | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
+#     > platform/onetak/onetak-postgres-creds.sealedsecret.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-consolidation
+  namespace: onetak
+spec:
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-source
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h onetak-postgis -U docker; do sleep 2; done && echo "source ready"']
+        - name: wait-for-target
+          image: postgres:17-alpine
+          command: ['sh', '-c', 'until pg_isready -h onetak-geo-db -U geo; do sleep 2; done && echo "target ready"']
+      containers:
+        - name: migrate
+          image: postgres:17-alpine
+          env:
+            - name: SRC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-postgres-creds
+                  key: POSTGRES_PASSWORD
+            - name: DST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: onetak-geo-db-secret
+                  key: POSTGRES_PASSWORD
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              export PGPASSWORD=$DST_PASSWORD
+
+              echo "=== Creating gis database and docker user in onetak-geo-db ==="
+              psql -h onetak-geo-db -U geo -d postgres -c "
+                SELECT 'exists' FROM pg_database WHERE datname='gis'
+              " | grep -q exists && echo "gis db already exists" || \
+              psql -h onetak-geo-db -U geo -d postgres -c "CREATE DATABASE gis;"
+
+              psql -h onetak-geo-db -U geo -d postgres -c "
+                DO \$\$ BEGIN
+                  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'docker') THEN
+                    CREATE USER docker WITH PASSWORD '$SRC_PASSWORD';
+                  END IF;
+                END \$\$;
+                GRANT ALL PRIVILEGES ON DATABASE gis TO docker;
+              "
+
+              echo "=== Enabling PostGIS + TimescaleDB on gis database ==="
+              psql -h onetak-geo-db -U geo -d gis -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+              psql -h onetak-geo-db -U geo -d gis -c "CREATE EXTENSION IF NOT EXISTS postgis_topology;" || true
+              psql -h onetak-geo-db -U geo -d gis -c "CREATE EXTENSION IF NOT EXISTS timescaledb;" || true
+
+              echo "=== Dumping onetak-postgis ==="
+              export PGPASSWORD=$SRC_PASSWORD
+              pg_dump -h onetak-postgis -U docker -d gis \
+                --no-owner --no-acl \
+                -f /tmp/gis.dump
+
+              echo "=== Restoring into onetak-geo-db ==="
+              export PGPASSWORD=$DST_PASSWORD
+              psql -h onetak-geo-db -U geo -d gis -f /tmp/gis.dump
+
+              echo "=== Granting permissions to docker user ==="
+              psql -h onetak-geo-db -U geo -d gis -c "
+                GRANT ALL ON ALL TABLES IN SCHEMA public TO docker;
+                GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO docker;
+                GRANT ALL ON SCHEMA public TO docker;
+              "
+
+              echo "=== Verifying row counts ==="
+              export PGPASSWORD=$SRC_PASSWORD
+              echo "Source tables:"
+              psql -h onetak-postgis -U docker -d gis -c "\dt" | head -30
+              export PGPASSWORD=$DST_PASSWORD
+              echo "Target tables:"
+              psql -h onetak-geo-db -U geo -d gis -c "\dt" | head -30
+
+              echo "=== Migration complete — verify above, then follow cutover steps in this file's header ==="
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
