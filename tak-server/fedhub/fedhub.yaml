@@ -1,0 +1,145 @@
+# FedHub Deployment — runs all 4 micro-services in one container:
+#   1. federation-hub-policy (Ignite server, starts first)
+#   2. federation-hub-broker (federation routing)
+#   3. federation-hub-ui (admin UI, port 9100)
+#   4. federation-hub-plugin-manager
+# Startup orchestrated by /opt/tak/federation-hub/scripts/configureInDocker.sh
+#
+# IMAGE BUILD (one-time, from extracted fedhub zip):
+#   cd takserver-fedhub-docker-5.8-RELEASE-79
+#   docker build -t ghcr.io/onemindos/fedhub:5.8 -f docker/Dockerfile.fedhub .
+#   docker push ghcr.io/onemindos/fedhub:5.8
+# The Dockerfile expects the entire tak/ directory at /opt/tak/.
+#
+# CERT GENERATION (run once from extracted fedhub zip directory):
+#   cd takserver-fedhub-docker-5.8-RELEASE-79
+#   export CA_NAME=onemindos-fedhub
+#   cd tak/federation-hub/certs && ./generateClusterCerts.sh
+#   cd ../../..
+#   kubectl -n takserver create secret generic fedhub-certs \
+#     --from-file=tak/federation-hub/certs/files/ \
+#     --dry-run=client -o yaml | kubeseal -o yaml \
+#     > tak-server/fedhub/fedhub-certs.sealedsecret.yaml
+#   Commit fedhub-certs.sealedsecret.yaml, NOT the raw cert files.
+#
+# AUTHORIZE ADMIN USER (after fedhub pod is Running):
+#   kubectl -n takserver exec deploy/fedhub -- java -jar \
+#     /opt/tak/federation-hub/jars/federation-hub-manager.jar \
+#     /opt/tak/federation-hub/certs/files/admin.pem
+#   Then restart: kubectl -n takserver rollout restart deploy/fedhub
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fedhub-authorized-users
+  namespace: takserver
+  labels: { app: fedhub }
+data:
+  # Populated by federation-hub-manager.jar after cert generation.
+  # See AUTHORIZE ADMIN USER in the file header above.
+  authorized_users.yml: "{}\n"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fedhub
+  namespace: takserver
+  labels: { app: fedhub }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: fedhub }
+  template:
+    metadata:
+      labels: { app: fedhub }
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: fedhub
+          image: ghcr.io/onemindos/fedhub:5.8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - { name: ui,    containerPort: 9100, protocol: TCP }
+            - { name: fed-v1, containerPort: 9101, protocol: TCP }
+            - { name: fed-v2, containerPort: 9102, protocol: TCP }
+          env:
+            - { name: BROKER_MAX_HEAP,         value: "512" }
+            - { name: UI_MAX_HEAP,             value: "256" }
+            - { name: POLICY_MAX_HEAP,         value: "256" }
+            - { name: PLUGIN_MANAGER_MAX_HEAP, value: "128" }
+          readinessProbe:
+            tcpSocket: { port: 9100 }
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket: { port: 9100 }
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          resources:
+            requests: { cpu: 500m, memory: 1Gi }
+            limits:   { cpu: "2",  memory: 2Gi }
+          volumeMounts:
+            - name: broker-config
+              mountPath: /opt/tak/federation-hub/configs/federation-hub-broker.yml
+              subPath: federation-hub-broker.yml
+            - name: ui-config
+              mountPath: /opt/tak/federation-hub/configs/federation-hub-ui.yml
+              subPath: federation-hub-ui.yml
+            - name: fedhub-certs
+              mountPath: /opt/tak/federation-hub/certs/files
+              readOnly: true
+            - name: authorized-users
+              mountPath: /opt/tak/federation-hub/authorized_users.yml
+              subPath: authorized_users.yml
+            - name: logs
+              mountPath: /opt/tak/federation-hub/logs
+            - name: policies
+              mountPath: /opt/tak/federation-hub/policies
+            - name: jetty-temp
+              mountPath: /opt/tak/federation-hub/jetty-temp
+      volumes:
+        - name: broker-config
+          configMap:
+            name: fedhub-broker-config
+        - name: ui-config
+          configMap:
+            name: fedhub-ui-config
+        - name: fedhub-certs
+          secret:
+            secretName: fedhub-certs
+        - name: authorized-users
+          configMap:
+            name: fedhub-authorized-users
+        - name: logs
+          emptyDir: {}
+        - name: policies
+          emptyDir: {}
+        - name: jetty-temp
+          emptyDir: {}
+---
+# ClusterIP for the admin UI — fronted by the nginx Ingress
+apiVersion: v1
+kind: Service
+metadata:
+  name: fedhub-ui
+  namespace: takserver
+  labels: { app: fedhub, component: ui }
+spec:
+  selector: { app: fedhub }
+  ports:
+    - { name: ui, port: 9100, targetPort: 9100, protocol: TCP }
+---
+# ClusterIP for federation ports — exposed externally via fedhub-lb.yaml LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: fedhub-fed
+  namespace: takserver
+  labels: { app: fedhub, component: federation }
+spec:
+  selector: { app: fedhub }
+  ports:
+    - { name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP }
+    - { name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP }
