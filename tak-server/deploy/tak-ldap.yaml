@@ -89,8 +89,8 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 30
           resources:
-            requests: { cpu: 100m, memory: 128Mi }
-            limits:   { cpu: 500m, memory: 256Mi }
+            requests: { cpu: 100m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
           volumeMounts:
             - { name: ldap-data,   mountPath: /var/lib/ldap }
             - { name: ldap-config, mountPath: /etc/ldap/slapd.d }
