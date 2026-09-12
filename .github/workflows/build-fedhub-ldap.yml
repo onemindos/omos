@@ -40,7 +40,7 @@ jobs:
         run: |
           gh release download takserver-supplements-5.8 \
             --repo onemindos/omos-infra \
-            --pattern "takserver-fedhub-5.8-RELEASE.zip" \
+            --pattern "takserver-fedhub-docker-5.8-RELEASE-79.zip" \
             --output /tmp/fedhub-5.8.zip
           unzip -q /tmp/fedhub-5.8.zip -d /tmp/fedhub-5.8
           echo "FEDHUB_DIR=/tmp/fedhub-5.8" >> $GITHUB_ENV
@@ -54,32 +54,12 @@ jobs:
 
       - name: Build FedHub image
         run: |
-          # Find the extracted tak/ tree — FedHub zips unpack to
-          # either federation-hub-5.8-RELEASE/ or tak/
+          # Zip unpacks to takserver-fedhub-docker-5.8-RELEASE-79/
           DISTRO=$(ls -d $FEDHUB_DIR/*/ | head -1)
-
-          cat > /tmp/Dockerfile.fedhub <<'EOF'
-          FROM eclipse-temurin:17.0.19_10-jdk-ubi10-minimal
-
-          RUN groupadd -r tak && useradd -r -g tak tak
-
-          WORKDIR /opt/tak
-          COPY tak/ /opt/tak/
-
-          # Make all scripts executable
-          RUN find /opt/tak -name "*.sh" -exec chmod +x {} \;
-
-          # Ports: 9100=UI, 9101=v1 fed, 9102=v2 fed
-          EXPOSE 9100 9101 9102
-
-          USER tak
-
-          # Entrypoint runs all 4 FedHub processes via the official Docker init script
-          ENTRYPOINT ["/opt/tak/federation-hub/scripts/configureInDocker.sh", "init"]
-          EOF
-
+          # Use the official Dockerfile from the zip (docker/Dockerfile.fedhub)
+          # Build context is the zip root so COPY tak/ /opt/tak/ works correctly
           docker build \
-            -f /tmp/Dockerfile.fedhub \
+            -f "$DISTRO/docker/Dockerfile.fedhub" \
             -t ghcr.io/onemindos/fedhub:5.8 \
             -t ghcr.io/onemindos/fedhub:latest \
             "$DISTRO"
@@ -91,7 +71,7 @@ jobs:
 
       - name: Clean up
         if: always()
-        run: rm -rf /tmp/fedhub-5.8 /tmp/fedhub-5.8.zip /tmp/Dockerfile.fedhub
+        run: rm -rf /tmp/fedhub-5.8 /tmp/fedhub-5.8.zip
 
   build-tak-ldap:
     name: Build TAK LDAP 5.8
