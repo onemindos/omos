@@ -168,6 +168,9 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | 🔴 scaled to 0 |
 | valhalla | onetak | valhalla/valhalla:run-latest | 🔴 scaled to 0 (awaiting tile build) |
 | nominatim | onetak | mediagis/nominatim:4.4 | 🔴 scaled to 0 (geofabrik rate-limited) |
+| fedhub | takserver | ghcr.io/onemindos/fedhub:5.8 | ⏳ manifests deployed; awaiting image build + certs |
+| tak-ldap | takserver | ghcr.io/onemindos/tak-ldap:5.8 | ⏳ manifest deployed; awaiting image build + SealedSecret |
+| vrtak-releases | vrtak | nginx:1.27-alpine | ⏳ file server live; awaiting Unreal build upload |
 
 ## Namespaces
 
@@ -183,6 +186,7 @@ tak.cot.>                            CoT from TAK       (cot-tap output)
 | omos | omos-* services (tak-projector, feeds, sinks) |
 | geo | Geospatial stack (Tile38, STAC, farmOS, etc.) |
 | takml | TAK-ML vision pipeline |
+| vrtak | VRTAK distribution server (nginx file server + Pixel Streaming future) |
 | argocd | ArgoCD GitOps controller |
 | cert-manager | TLS cert automation |
 | tailscale | Tailscale proxy sidecars |
