@@ -56,10 +56,23 @@ jobs:
         run: |
           # Zip unpacks to takserver-fedhub-docker-5.8-RELEASE-79/
           DISTRO=$(ls -d $FEDHUB_DIR/*/ | head -1)
-          # Use the official Dockerfile from the zip (docker/Dockerfile.fedhub)
-          # Build context is the zip root so COPY tak/ /opt/tak/ works correctly
+          # The official Dockerfile.fedhub has NO COPY — it's designed for
+          # docker-compose with a volume mount (-v tak:/opt/tak). For K8s we
+          # need to bake tak/ into the image. We write a wrapper Dockerfile
+          # that extends the official base and adds the COPY.
+          cat > /tmp/Dockerfile.fedhub-k8s <<'EOF'
+          FROM eclipse-temurin:17.0.19_10-jdk-ubi10-minimal
+
+          RUN microdnf update -y && \
+              microdnf install -y net-tools nmap-ncat vim-minimal && \
+              microdnf clean all
+
+          COPY tak /opt/tak
+
+          ENTRYPOINT ["/bin/bash", "-c", "/opt/tak/federation-hub/scripts/configureInDocker.sh init"]
+          EOF
           docker build \
-            -f "$DISTRO/docker/Dockerfile.fedhub" \
+            -f /tmp/Dockerfile.fedhub-k8s \
             -t ghcr.io/onemindos/fedhub:5.8 \
             -t ghcr.io/onemindos/fedhub:latest \
             "$DISTRO"
