@@ -57,7 +57,7 @@ spec:
       containers:
         - name: fedhub
           image: ghcr.io/onemindos/fedhub:5.8
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - { name: ui,    containerPort: 9100, protocol: TCP }
             - { name: fed-v1, containerPort: 9101, protocol: TCP }
