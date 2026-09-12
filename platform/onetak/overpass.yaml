@@ -9,7 +9,7 @@ metadata:
   labels:
     app: overpass
 spec:
-  replicas: 1
+  replicas: 0   # OOM on current cluster; scale to 1 only when needed for mission planning
   selector:
     matchLabels:
       app: overpass

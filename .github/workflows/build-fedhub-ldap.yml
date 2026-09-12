@@ -1,0 +1,143 @@
+name: Build FedHub + TAK LDAP → GHCR
+
+# Builds two supplementary TAK Server 5.8 images:
+#   ghcr.io/onemindos/fedhub:5.8        — FedHub multi-TAK federation hub
+#   ghcr.io/onemindos/tak-ldap:5.8      — OpenLDAP with TAK-specific schema
+#
+# Zip assets must be pre-uploaded to GitHub Releases "takserver-supplements-5.8":
+#   gh release create takserver-supplements-5.8 \
+#     "path/to/takserver-fedhub-5.8-RELEASE.zip" \
+#     "path/to/takserver-ldap-5.8-RELEASE-79.zip" \
+#     --repo onemindos/omos-infra --title "TAK Supplements 5.8" --notes "" --prerelease
+#
+# Images built under the existing fedhub and tak-ldap packages on GHCR.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-fedhub-ldap.yml"
+      - "tak-server/build/build-fedhub.sh"
+      - "tak-server/build/build-tak-ldap.sh"
+  workflow_dispatch:
+
+jobs:
+  build-fedhub:
+    name: Build FedHub 5.8
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download FedHub zip from Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download takserver-supplements-5.8 \
+            --repo onemindos/omos-infra \
+            --pattern "takserver-fedhub-5.8-RELEASE.zip" \
+            --output /tmp/fedhub-5.8.zip
+          unzip -q /tmp/fedhub-5.8.zip -d /tmp/fedhub-5.8
+          echo "FEDHUB_DIR=/tmp/fedhub-5.8" >> $GITHUB_ENV
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build FedHub image
+        run: |
+          # Find the extracted tak/ tree — FedHub zips unpack to
+          # either federation-hub-5.8-RELEASE/ or tak/
+          DISTRO=$(ls -d $FEDHUB_DIR/*/ | head -1)
+
+          cat > /tmp/Dockerfile.fedhub <<'EOF'
+          FROM eclipse-temurin:17.0.19_10-jdk-ubi10-minimal
+
+          RUN groupadd -r tak && useradd -r -g tak tak
+
+          WORKDIR /opt/tak
+          COPY tak/ /opt/tak/
+
+          # Make all scripts executable
+          RUN find /opt/tak -name "*.sh" -exec chmod +x {} \;
+
+          # Ports: 9100=UI, 9101=v1 fed, 9102=v2 fed
+          EXPOSE 9100 9101 9102
+
+          USER tak
+
+          # Entrypoint runs all 4 FedHub processes via the official Docker init script
+          ENTRYPOINT ["/opt/tak/federation-hub/scripts/configureInDocker.sh", "init"]
+          EOF
+
+          docker build \
+            -f /tmp/Dockerfile.fedhub \
+            -t ghcr.io/onemindos/fedhub:5.8 \
+            -t ghcr.io/onemindos/fedhub:latest \
+            "$DISTRO"
+
+      - name: Push FedHub images
+        run: |
+          docker push ghcr.io/onemindos/fedhub:5.8
+          docker push ghcr.io/onemindos/fedhub:latest
+
+      - name: Clean up
+        if: always()
+        run: rm -rf /tmp/fedhub-5.8 /tmp/fedhub-5.8.zip /tmp/Dockerfile.fedhub
+
+  build-tak-ldap:
+    name: Build TAK LDAP 5.8
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download LDAP zip from Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download takserver-supplements-5.8 \
+            --repo onemindos/omos-infra \
+            --pattern "takserver-ldap-5.8-RELEASE-79.zip" \
+            --output /tmp/tak-ldap-5.8.zip
+          unzip -q /tmp/tak-ldap-5.8.zip -d /tmp/tak-ldap-5.8
+          LDAP_DIR=$(ls -d /tmp/tak-ldap-5.8/*/ | head -1)
+          echo "LDAP_DIR=$LDAP_DIR" >> $GITHUB_ENV
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build TAK LDAP image
+        run: |
+          # The zip contains a Dockerfile.takserver-ldap — use it directly
+          docker build \
+            -f "$LDAP_DIR/Dockerfile.takserver-ldap" \
+            -t ghcr.io/onemindos/tak-ldap:5.8 \
+            -t ghcr.io/onemindos/tak-ldap:latest \
+            "$LDAP_DIR"
+
+      - name: Push TAK LDAP images
+        run: |
+          docker push ghcr.io/onemindos/tak-ldap:5.8
+          docker push ghcr.io/onemindos/tak-ldap:latest
+
+      - name: Clean up
+        if: always()
+        run: rm -rf /tmp/tak-ldap-5.8 /tmp/tak-ldap-5.8.zip

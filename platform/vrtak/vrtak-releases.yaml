@@ -1,0 +1,143 @@
+# VRTAK Release Distribution Server
+#
+# Serves native VRTAK builds (Win64 ZIP + Quest 3 APK) to operators.
+# Source: fork of https://github.com/TAK-Product-Center/VR (onemindos/VR)
+#
+# BUILD PIPELINE (pre-requisite — runs on a Windows Unreal build machine):
+#   1. Fork TAK-Product-Center/VR → onemindos/VR
+#   2. Add VTAK_NATS, VTAK_Hermes, VTAK_3DTiles plugins (see OneMind-Platform/arcortex-takvr.md)
+#   3. Package:
+#      - Win64:  Unreal "Package Project" → vrtak-win64.zip
+#      - Quest 3: Android target → vrtak-quest3.apk
+#      - Linux:  Unreal "Package Project" → vrtak-linux.zip (optional, for Pixel Streaming server)
+#   4. Upload to omos-vrtak-releases PVC or MinIO bucket:
+#        kubectl cp vrtak-win64.zip vrtak-releases-<pod>:/srv/releases/latest/
+#        kubectl cp vrtak-quest3.apk vrtak-releases-<pod>:/srv/releases/latest/
+#
+# PIXEL STREAMING (GPU path — optional, requires DigitalOcean GPU node):
+#   Add a GPU node pool (gpu-h100-80gb-3 or similar) to the DOKS cluster.
+#   Deploy vrtak-linux.zip as a streaming server pod using Unreal Pixel Streaming.
+#   Operators access VR from any browser tab — no local install needed.
+#   This path is parked until GPU node costs are approved.
+#
+# CONNECT VRTAK TO ONEMIND:
+#   In VTAK_NATS plugin settings (DefaultGame.ini):
+#     NatsServerURL=wss://ws.onemindos.dev
+#     NatsUser=<VITE_NATS_WS_USER>
+#     NatsPass=<VITE_NATS_WS_PASS>
+#   In VTAK_3DTiles plugin settings:
+#     MartinBaseURL=https://martin.onemindos.dev
+#     WebODMBaseURL=https://odm.onemindos.dev
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vrtak
+  labels:
+    app.kubernetes.io/part-of: onemind
+---
+# Simple nginx file server — operators hit https://vrtak.onemindos.dev to download
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vrtak-releases
+  namespace: vrtak
+  labels:
+    app: vrtak-releases
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vrtak-releases
+  template:
+    metadata:
+      labels:
+        app: vrtak-releases
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: releases
+              mountPath: /usr/share/nginx/html/releases
+            - name: nginx-cfg
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits:   { cpu: 200m, memory: 128Mi }
+      volumes:
+        - name: releases
+          persistentVolumeClaim:
+            claimName: vrtak-releases
+        - name: nginx-cfg
+          configMap:
+            name: vrtak-nginx-cfg
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vrtak-nginx-cfg
+  namespace: vrtak
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+
+        location /releases/ {
+            alias /usr/share/nginx/html/releases/;
+            autoindex on;
+            autoindex_exact_size off;
+            autoindex_localtime on;
+            add_header Cache-Control "no-store";
+        }
+
+        location /health { return 200 "ok\n"; add_header Content-Type text/plain; }
+    }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vrtak-releases
+  namespace: vrtak
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vrtak-releases
+  namespace: vrtak
+spec:
+  selector:
+    app: vrtak-releases
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vrtak-ingress
+  namespace: vrtak
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: vrtak.onemindos.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vrtak-releases
+                port:
+                  number: 80

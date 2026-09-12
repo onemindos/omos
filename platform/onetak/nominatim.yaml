@@ -22,9 +22,10 @@ spec:
             - containerPort: 8080
           env:
             - name: PBF_URL
-              value: "https://download.geofabrik.de/north-america-latest.osm.pbf"
+              # geofabrik blocks DOKS IPs; GWDG is the official geofabrik mirror and works from cloud providers
+              value: "https://ftp5.gwdg.de/pub/misc/openstreetmap/download.geofabrik.de/north-america-latest.osm.pbf"
             - name: REPLICATION_URL
-              value: "https://download.geofabrik.de/north-america-updates/"
+              value: "https://ftp5.gwdg.de/pub/misc/openstreetmap/download.geofabrik.de/north-america-updates/"
             - name: NOMINATIM_PASSWORD
               valueFrom:
                 secretKeyRef:
