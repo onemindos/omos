@@ -9,7 +9,7 @@ metadata:
   labels:
     app: tileserver-gl
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: tileserver-gl

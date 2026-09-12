@@ -9,7 +9,7 @@ metadata:
   labels:
     app: webodm-db
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: webodm-db
@@ -80,7 +80,7 @@ metadata:
   labels:
     app: webodm-broker
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: webodm-broker
@@ -123,7 +123,7 @@ metadata:
   labels:
     app: webodm
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: webodm
@@ -236,7 +236,7 @@ metadata:
   labels:
     app: nodeodm
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: nodeodm

@@ -9,7 +9,7 @@ metadata:
   labels:
     app: overpass
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: overpass
