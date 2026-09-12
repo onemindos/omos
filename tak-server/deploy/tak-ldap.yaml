@@ -1,0 +1,122 @@
+# TAK Server OpenLDAP — TAK-specific LDAP backend.
+#
+# Source: takserver-ldap-5.8-RELEASE-79.zip (downloaded from tak.gov, Sept 2026).
+# The Dockerfile in that archive builds a Debian 12 OpenLDAP with TAK-specific
+# schema (takCallSign, takRole, takColor objectClass) pre-loaded via bootstrap.sh.
+#
+# IMAGE BUILD (one-time, run from extracted zip root):
+#   docker build -f Dockerfile.takserver-ldap -t ghcr.io/onemindos/tak-ldap:5.8 .
+#   docker push ghcr.io/onemindos/tak-ldap:5.8
+#
+# AFTER DEPLOYING — patch CoreConfig.xml in the `core-config` ConfigMap to add:
+#   <auth default="ldap">
+#     <ldap url="ldap://tak-ldap:389"
+#           userstring="uid={username},ou=People,dc=onemindos,dc=dev"
+#           style="DS"
+#           serviceAccountDN="cn=ldapadm,dc=onemindos,dc=dev"
+#           serviceAccountCredential="<LDAP_ADMIN_PASSWORD from secret>"
+#           callsignAttribute="takCallSign"
+#           colorAttribute="takColor"
+#           roleAttribute="takRole"
+#           updateinterval="60000" />
+#     <File location="UserAuthenticationFile.xml"/>
+#   </auth>
+# Then restart: takserver-config → takserver-messaging → takserver-plugins
+#
+# TEST LDAP:
+#   kubectl -n takserver exec -it deploy/tak-ldap -- ldapsearch \
+#     -x -H ldap://localhost:389 -b "dc=onemindos,dc=dev" \
+#     -D "cn=ldapadm,dc=onemindos,dc=dev" -W
+#
+# ADD USERS (example):
+#   See takcl-test-users.sh in the source zip. Adapt DN to dc=onemindos,dc=dev.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tak-ldap-config
+  namespace: takserver
+data:
+  LDAP_BASE_DN: "dc=onemindos,dc=dev"
+  LDAP_ADMIN: "ldapadm"
+  LDAP_EXTERNAL_PORT_TCP: "389"
+  LDAP_EXTERNAL_PORT_TLS: "636"
+---
+# REQUIRED before deploying — create a SealedSecret for LDAP_ADMIN_PASSWORD:
+#   kubectl -n takserver create secret generic tak-ldap-creds \
+#     --from-literal=LDAP_ADMIN_PASSWORD='<strong-password>' \
+#     --dry-run=client -o yaml | kubeseal -o yaml > \
+#     tak-server/deploy/tak-ldap-creds.sealedsecret.yaml
+# Commit the .sealedsecret.yaml file, NOT the plaintext secret.
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tak-ldap
+  namespace: takserver
+  labels: { app: tak-ldap }
+spec:
+  serviceName: tak-ldap
+  replicas: 1
+  selector:
+    matchLabels: { app: tak-ldap }
+  template:
+    metadata:
+      labels: { app: tak-ldap }
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: openldap
+          image: ghcr.io/onemindos/tak-ldap:5.8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - { name: ldap,  containerPort: 389, protocol: TCP }
+            - { name: ldaps, containerPort: 636, protocol: TCP }
+          envFrom:
+            - configMapRef: { name: tak-ldap-config }
+            - secretRef:    { name: tak-ldap-creds  }
+          readinessProbe:
+            exec:
+              command: ["ldapsearch", "-x", "-H", "ldap://localhost:389",
+                        "-b", "dc=onemindos,dc=dev", "-s", "base"]
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 5
+          livenessProbe:
+            exec:
+              command: ["ldapsearch", "-x", "-H", "ldap://localhost:389",
+                        "-b", "dc=onemindos,dc=dev", "-s", "base"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits:   { cpu: 500m, memory: 256Mi }
+          volumeMounts:
+            - { name: ldap-data,   mountPath: /var/lib/ldap }
+            - { name: ldap-config, mountPath: /etc/ldap/slapd.d }
+  volumeClaimTemplates:
+    - metadata:
+        name: ldap-data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: { storage: 1Gi }
+    - metadata:
+        name: ldap-config
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: { storage: 256Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tak-ldap
+  namespace: takserver
+  labels: { app: tak-ldap }
+spec:
+  selector: { app: tak-ldap }
+  clusterIP: None   # headless — StatefulSet members address directly
+  ports:
+    - { name: ldap,  port: 389, targetPort: 389,  protocol: TCP }
+    - { name: ldaps, port: 636, targetPort: 636,  protocol: TCP }
