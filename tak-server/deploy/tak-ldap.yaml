@@ -65,6 +65,26 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr
+      initContainers:
+        - name: seed-slapd-config
+          image: ghcr.io/onemindos/tak-ldap:5.8
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              # Seed the slapd.d PVC from image defaults if it is empty (first run).
+              # lost+found is the only entry on a fresh ext4 volume.
+              if [ "$(ls /target/ | grep -v lost+found | wc -l)" = "0" ]; then
+                echo "slapd.d PVC is empty — seeding from image defaults..."
+                cp -a /etc/ldap/slapd.d/. /target/
+                chown -R openldap:openldap /target/
+                echo "Seed complete."
+              else
+                echo "slapd.d PVC already has content — skipping seed."
+              fi
+          volumeMounts:
+            - name: ldap-config
+              mountPath: /target
       containers:
         - name: openldap
           image: ghcr.io/onemindos/tak-ldap:5.8
