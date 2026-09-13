@@ -141,6 +141,8 @@ spec:
           ports:
             - containerPort: 8000
           env:
+            - name: WO_DB_HOSTNAME
+              value: "webodm-db"
             - name: WO_PORT
               value: "8000"
             - name: WO_HOST
@@ -179,6 +181,8 @@ spec:
           args:
             - "/webodm/wait-for-postgres.sh webodm-db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/wait-for-it.sh -t 0 localhost:8000 -- /webodm/worker.sh start"
           env:
+            - name: WO_DB_HOSTNAME
+              value: "webodm-db"
             - name: WO_BROKER
               value: "redis://broker:6379"
             - name: WO_DEBUG
