@@ -229,6 +229,16 @@ spec:
                     secretKeyRef:
                       name: backup-s3-creds
                       key: SECRET_KEY
+                - name: CH_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: clickhouse-backup-creds
+                      key: CH_USER
+                - name: CH_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: clickhouse-backup-creds
+                      key: CH_PASSWORD
               command:
                 - /bin/bash
                 - -c
@@ -239,6 +249,8 @@ spec:
                   clickhouse-client \
                     --host chi-onemind-onemind-0-0.clickhouse \
                     --port 9000 \
+                    --user "${CH_USER}" \
+                    --password "${CH_PASSWORD}" \
                     --query "BACKUP DATABASE onemind TO S3('https://onemind-backups.nyc3.digitaloceanspaces.com/backups/clickhouse/${DATE}/', '${S3_ACCESS_KEY}', '${S3_SECRET_KEY}')"
                   echo "[$(date)] ClickHouse backup complete: backups/clickhouse/${DATE}/"
 
