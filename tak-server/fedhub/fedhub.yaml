@@ -34,9 +34,11 @@ metadata:
   namespace: takserver
   labels: { app: fedhub }
 data:
-  # Populated by federation-hub-manager.jar after cert generation.
-  # See AUTHORIZE ADMIN USER in the file header above.
-  authorized_users.yml: "{}\n"
+  authorized_users.yml: |
+    ---
+    users:
+    - username: "admin"
+      fingerprint: "A8:82:A4:08:4C:CA:A4:0E:73:69:EF:90:78:07:FF:50:3D:54:25:17:A6:98:04:BC:6D:AF:42:C2:6F:FE:B2:FF:FB:DE:72:70:27:EE:77:3D:37:E0:8A:4D:6B:20:40:CE:A8:0B:21:E2:87:88:AD:18:8C:A8:8F:94:AC:30:EE:3D"
 ---
 apiVersion: apps/v1
 kind: Deployment
