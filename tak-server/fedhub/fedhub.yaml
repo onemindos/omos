@@ -58,20 +58,22 @@ spec:
         - name: ghcr
       initContainers:
         - name: copy-configs
-          image: busybox:1.36
+          image: ghcr.io/onemindos/fedhub:5.8
+          imagePullPolicy: Always
           command:
             - sh
             - -c
             - |
-              cp /cm/broker/federation-hub-broker.yml /configs/
-              cp /cm/ui/federation-hub-ui.yml /configs/
+              cp -a /opt/tak/federation-hub/configs/. /mnt/configs/
+              cp /cm/broker/federation-hub-broker.yml /mnt/configs/
+              cp /cm/ui/federation-hub-ui.yml /mnt/configs/
           volumeMounts:
             - name: broker-config
               mountPath: /cm/broker
             - name: ui-config
               mountPath: /cm/ui
             - name: fedhub-configs
-              mountPath: /configs
+              mountPath: /mnt/configs
       containers:
         - name: fedhub
           image: ghcr.io/onemindos/fedhub:5.8
