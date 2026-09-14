@@ -41,13 +41,19 @@ spec:
             limits:
               cpu: "4"
               memory: 8Gi
+          startupProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            failureThreshold: 1440
           livenessProbe:
             httpGet:
               path: /status
               port: 8080
-            initialDelaySeconds: 300
             periodSeconds: 30
-            failureThreshold: 20
+            failureThreshold: 5
       volumes:
         - name: nominatim-data
           persistentVolumeClaim:
