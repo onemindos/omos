@@ -65,6 +65,13 @@ spec:
               value: "https://onemindos.dev"
             - name: PMTILES_URL
               value: "https://tiles.onemindos.dev"
+          volumeMounts:
+            - name: provider-patch
+              mountPath: /home/etl/api/dist/stateless/lib/provider.js
+              subPath: provider.js
+            - name: tak-ca
+              mountPath: /home/etl/tak-ca
+              readOnly: true
           resources:
             requests:
               cpu: 300m
@@ -72,6 +79,13 @@ spec:
             limits:
               cpu: "1"
               memory: 1Gi
+      volumes:
+        - name: provider-patch
+          configMap:
+            name: onetak-provider-patch
+        - name: tak-ca
+          secret:
+            secretName: tak-portal-ca-certs
 ---
 apiVersion: v1
 kind: Service

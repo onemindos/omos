@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: onetak-provider-patch
+  namespace: onetak
+data:
+  provider.js: |
+    import Err from '@openaddresses/batch-error';
+    import { X509Certificate, createPrivateKey } from 'crypto';
+    import { TAKAPI, APIAuthCertificate } from '@tak-ps/node-tak';
+    import UserControl from './control/user.js';
+    import fs from 'node:fs';
+    import forge from 'node-forge';
+
+    export const CERT_RENEWAL_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
+    export var AuthProviderAccess;
+    (function (AuthProviderAccess) {
+        AuthProviderAccess["ADMIN"] = "admin";
+        AuthProviderAccess["AGENCY"] = "agency";
+        AuthProviderAccess["USER"] = "user";
+    })(AuthProviderAccess || (AuthProviderAccess = {}));
+
+    const CA_CERT_PATH = '/home/etl/tak-ca/ca.pem';
+    const CA_KEY_PATH  = '/home/etl/tak-ca/ca.key';
+    const CA_PASSPHRASE = 'atakatak';
+
+    function generateTAKCert(username) {
+        const caCertPem = fs.readFileSync(CA_CERT_PATH, 'utf8');
+        const caKeyPem  = fs.readFileSync(CA_KEY_PATH, 'utf8');
+        const caCert = forge.pki.certificateFromPem(caCertPem);
+        const caKey  = forge.pki.decryptRsaPrivateKey(caKeyPem, CA_PASSPHRASE);
+        if (!caKey) throw new Error('Failed to decrypt CA key');
+
+        const keys = forge.pki.rsa.generateKeyPair(2048);
+        const cert = forge.pki.createCertificate();
+        cert.publicKey = keys.publicKey;
+        cert.serialNumber = Date.now().toString(16);
+        cert.validity.notBefore = new Date();
+        cert.validity.notAfter = new Date();
+        cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 10);
+        const attrs = [{ name: 'commonName', value: username }];
+        cert.setSubject(attrs);
+        cert.setIssuer(caCert.subject.attributes);
+        cert.sign(caKey, forge.md.sha256.create());
+
+        return {
+            cert: forge.pki.certificateToPem(cert),
+            key:  forge.pki.privateKeyToPem(keys.privateKey),
+        };
+    }
+
+    export default class AuthProvider {
+        config;
+        userControl;
+
+        constructor(config) {
+            this.config = config;
+            this.userControl = new UserControl(config);
+        }
+
+        static certificate(cert) {
+            if (typeof cert !== 'string' || !cert.length) return undefined;
+            try {
+                const { subject, validFrom, validTo } = new X509Certificate(cert);
+                return { subject, validFrom, validTo };
+            } catch { return undefined; }
+        }
+
+        static certificateExpired(cert, now = Date.now()) {
+            const info = AuthProvider.certificate(cert);
+            if (!info) return true;
+            const expiry = Date.parse(info.validTo);
+            return Number.isNaN(expiry) || expiry < now;
+        }
+
+        static certificateRenewalRequired(cert, now = Date.now()) {
+            return AuthProvider.certificateExpired(cert, now + CERT_RENEWAL_WINDOW_MS);
+        }
+
+        async login(username, password) {
+            let profile;
+            try {
+                profile = await this.config.models.Profile.from(username);
+            } catch (err) {
+                if (err instanceof Error && err.message.includes('Item Not Found')) {
+                    const certs = generateTAKCert(username);
+                    profile = await this.userControl.generate({
+                        username,
+                        auth: certs,
+                    });
+                } else {
+                    throw new Err(400, err instanceof Error ? err : new Error(String(err)),
+                        err instanceof Error ? err.message : String(err));
+                }
+            }
+
+            if (AuthProvider.certificateRenewalRequired(profile.auth.cert)) {
+                const certs = generateTAKCert(username);
+                profile = await this.config.models.Profile.commit(username, { auth: certs });
+            }
+
+            await this.valid(profile);
+            return username;
+        }
+
+        async valid(profile) {
+            const cert_api = await TAKAPI.init(
+                new URL(String(this.config.server.api)),
+                new APIAuthCertificate(profile.auth.cert, profile.auth.key),
+            );
+            const probe = await cert_api.Certificate.probe();
+            if (!probe.accepted) {
+                console.error(`CertificateRejected: ${profile.username}: ${probe.reason}: ${probe.message}`);
+                const certs = generateTAKCert(profile.username);
+                profile = await this.config.models.Profile.commit(profile.username, { auth: certs });
+                const retry_api = await TAKAPI.init(
+                    new URL(String(this.config.server.api)),
+                    new APIAuthCertificate(profile.auth.cert, profile.auth.key),
+                );
+                const retry = await retry_api.Certificate.probe();
+                if (!retry.accepted) {
+                    throw new Err(401, new Error(retry.message ?? retry.reason),
+                        'Certificate was rejected by the TAK Server');
+                }
+            }
+            return profile;
+        }
+
+        async status(cert) {
+            if (!this.config.server.auth.cert || !this.config.server.auth.key) return undefined;
+            const api = await TAKAPI.init(
+                new URL(String(this.config.server.api)),
+                new APIAuthCertificate(this.config.server.auth.cert, this.config.server.auth.key),
+            );
+            return await api.Certificate.validate(cert);
+        }
+    }
