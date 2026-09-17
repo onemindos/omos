@@ -66,3 +66,9 @@ notion-import*/
 obsidian-import*/
 _byte-matched-dupes/
 __sorted-duplicates-docs/
+
+# --- LARGE DATA EXPORTS (not markdown, shouldnt be in git) ---
+**/gpt-chat-export/
+**/chat.html
+**/conversations.json
+
