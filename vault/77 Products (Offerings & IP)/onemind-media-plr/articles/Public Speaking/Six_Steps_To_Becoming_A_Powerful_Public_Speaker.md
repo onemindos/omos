@@ -1,0 +1,31 @@
+# Title:
+
+Six Steps To Becoming A Powerful Public Speaker
+
+Word Count:
+568
+
+Summary:
+Public speaking ranks right up there in terms of the things we are afraid to do. Whether it�s the fear of being watched closely by others, or the insecurity and self-conscious feeling of slipping up during the presentation, these six tips will help you give a polished, professional speech that you (and your audience) can be proud of! 
+
+1. Know your audience. This is the single best piece of advice for delivering a presentation. What are there interests? Their backgrounds? W...
+
+Keywords:
+speaker,motivational speaker,self help,keynote speaker,motorcycle speaker,stereo speaker,car speaker
+
+Article Body:
+Public speaking ranks right up there in terms of the things we are afraid to do. Whether it�s the fear of being watched closely by others, or the insecurity and self-conscious feeling of slipping up during the presentation, these six tips will help you give a polished, professional speech that you (and your audience) can be proud of! 
+
+1. Know your audience. This is the single best piece of advice for delivering a presentation. What are there interests? Their backgrounds? Why are they coming to hear you speak? What ideas do you have to share with them? Approaching your speech as more of a �me-to-you� discussion rather than a full-blown broadcast makes it less stressful. 
+
+2. What do you want your audience to do as a result of your speech? What�s really at the heart of your presentation? By concentrating on the �end result� rather than slogging through the beginning, you create a powerful punch that drives home your message instead of rambling on. 
+
+3. Share a story. In public speaking circles, this is called a �hook� � something that gets your audience�s attention and makes them sit up and listen. Start off by asking questions or sharing an experience you had. People like to be active, rather than passive listeners. By giving them something that they can identify with, you�ll find that these people are just like you; that makes giving a presentation a whole lot easier. Be sure your story has a beginning, a point, and an ending. There�s nothing quite as bad as telling a story to an engaged audience and then forgetting why you told it! 
+
+4. If you�re selling a product, focus on the benefits instead of the features. People would much rather hear WHAT a product can do for them than HOW it does it. Narrow down your product�s features until you get to the core of how it solves a problem. If you need help with figuring out the difference between a feature and a benefit, ask yourself �So What?� For example, if you�re selling a vacuum cleaner that has a hypoallergenic filter, put yourself in the customer�s shoes and ask yourself �so what?� The answer would be something like, �It picks up dust, mold and pet dander�. Again, �so what?� Answer, �You�ll feel relief from runny nose and sneezing plus itchy, water eyes.� Now THAT�s a benefit! 
+
+5 Powerpoint presentations are great but they can be overwhelming � or downright boring. Instead, give your audience something to DO by providing them with fill-in-the-blank flip charts or �team activities�. These help reinforce and emphasize your message in ways that a computer presentation simply cannot. 
+
+6. Make sure your speech ends in a way that reiterates the beginning. Speakers can get carried away with the details and leave their audiences asking, �What was the point of all that?� People naturally digest information in �chunks�, so focus on the big picture rather than all the pieces. If the details are just as important, save it for an after-speech handout that the audience can take with them and read over at their leisure. 
+
+If you keep these six tips in mind, you�ll not only have an easier time overcoming your fear of public speaking, but you�ll have a very appreciative audience who will in turn be more receptive and eager to try your product or service. Go get �em!

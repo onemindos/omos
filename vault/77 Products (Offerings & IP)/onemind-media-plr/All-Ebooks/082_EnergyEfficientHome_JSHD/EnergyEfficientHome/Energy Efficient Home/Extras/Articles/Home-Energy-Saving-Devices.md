@@ -1,0 +1,31 @@
+# Home Energy Saving Devices
+
+If your electric meter is spinning as fast as slot machines for as long as you can remember, then today is the right time to be concerned. You are paying large on electric bills month after month right? And you are still trying to figure out how will you be able to lower down your energy cost to somehow make paying easier for you. 
+
+You see, you are not alone on this problem. Many American households are trying to find ways on how to lower down their electric bills just like you. To be specific about it, there are two ways on how to cut the cost of your electric bill. One is to minimize the use of your devices. Two is to use home energy saving devices. The former deals with controlling your use of your devices and becoming more responsible in using them. The latter on the other hand entitles you to purchase specific devices to replace or add on your existing fixtures. 
+
+This article emphasizes on the use of home energy saving devices for 2 reasons: 1, home energy saving devices would let you save on electric bills and 2, it will let you save money without restricting your use of your devices. 
+
+Among all electronic devices you have in your home, the home�s heating and cooling system and the water heating system are the 2 biggest contributors why you receive big electric bills. Thus focusing on how to reduce consumption on these two would certainly affect the figures of your electric bill. 
+
+From here, we will discuss some ways on how reduce the cost of your monthly electric bills through the following home energy saving devices:
+
+Home energy saving devices for your heating and cooling system:
+
+Centralized Heating & Cooling � this device would let you set your desired room temperature on each room. The central control will let you adjust the temperature even if you are not on that specific room. This is a great help if you have the tendency to leave the room and leave the heating and cooling system in its current state. Most households practice this way. And no one seems to care. But if you do, invest on centralized heating and cooling system.  
+
+Programmable Thermostat � Installing this device would let you set specific room temperature even if you are not home. The best example to use this is when you are often leaving the heating and cooling system as is when you leave home. Now, you can set the temperature minutes before you come home. Just set a temperature in a specific time and it will automatically adjust without you. 
+
+Remote Control Heating System � Even you are away or if you are just arriving or if you forget to change the thermostat before leaving, the remote controlled heating system works best. With a simple phone call, the thermostat will automatically change. The remote control heating system has special device to give you this convenience. 
+
+Home energy saving devices for your water heating system
+
+The reduction of water consumption would yield to many good effects. And the number 1 effect we would like to hear is the cost we would save on electric bills. As the second biggest reason why we receive such large electric bill, here are the home energy saving devices you can use:
+
+Low-Flow Showerhead � This device would let you save as much as 40% on your water consumption. And since you are using less water, your water heating system is less used. 
+
+Multi-Setting Showerheads � There are several showerheads with settings such as pause, spray, puls, turbo pulse, and outsider spray. These functions let you save on water and in turn heating requirement. 
+
+Toilet Flush Water Saver � This device would let you save as much as 25% of your water consumption.
+
+You may ask: Is it worth to invest on these devices? On the first months using these devices, you will certainly see the savings you get. But since you have invested money on these, the first months will literally just pay you back what you have spent to have these devices. But in the long run, when you are using these devices for years, savings are evidently felt.

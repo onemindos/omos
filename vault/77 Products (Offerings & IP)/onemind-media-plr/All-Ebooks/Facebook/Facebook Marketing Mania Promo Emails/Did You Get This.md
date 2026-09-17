@@ -1,0 +1,14 @@
+# SUBJECT: Did you get my email yesterday?
+
+Hey [[firstname]],
+Yesterday, I sent an email regarding my latest Facebook Marketing Superguide � Facebook Marketing Mania:
+Check it out here if you haven�t already:
+=> YOUR LINK
+Remember, Facebook is one of the largest sources of traffic online and is fast surpassing Google in terms of target users. 
+Facebook has the ability to target highly specific demographics and  can grow your traffic virally through its news feed. This guide will reveal to you the secret strategies and tools to tap into the power of Facebook and build a massive online presence for your online business.
+If you don�t want to be left behind by your competition, you owe it to yourself to have a look at these turn-key Facebook marketing secrets.
+=> YOUR LINK
+Regards,
+[[YOURNAME]],
+P.S. You can thank me later ;) 
+=> YOUR LINK

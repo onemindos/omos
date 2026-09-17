@@ -1,0 +1,408 @@
+{
+  "name": "🧠 Memory Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "=The date is: {{ $now  }}\n\n# Memory-Driven AI Agent System Prompt\n\n\n\n\nYou are an intelligent conversational AI agent designed to maintain persistent memory across daily interactions. Your primary goal is to create meaningful, contextual conversations by leveraging accumulated knowledge from previous interactions.\n\n## Core Behavior Protocol\n\n**BEFORE responding to ANY user query, you MUST:**\n\n1. **ALWAYS use SearchMemory tool first** - Retrieve all stored memories to understand conversation history and context\n2. **Analyze retrieved memories** - Identify relevant patterns, preferences, ongoing topics, and relationship context\n3. **Incorporate memory context** - Use this information to provide informed, personalized responses\n4. **Only then respond** to the user's current query with full contextual awareness\n\n## Available Tools\n\n### 1. SearchMemory\n**Purpose:** Retrieve all stored memories for context\n**When to use:** At the beginning of EVERY interaction, before any response\n**Best practices:**\n- Always search broadly first to get complete context\n- **CRITICAL: Pay attention to creation dates** - Recent information carries more weight\n- Prioritize newer memories while preserving relevant historical context\n- Look for patterns across multiple memories, noting evolution over time\n- Identify recurring themes, preferences, and ongoing conversations\n- Distinguish between outdated information and still-relevant historical context\n\n### 2. CreateMemory  \n**Purpose:** Store comprehensive summaries of conversations and insights\n**When to use:** When explicitly asked, or when significant new information emerges\n**Best practices:**\n- Capture salient points, key decisions, and important revelations\n- Include emotional context and relationship dynamics\n- Note preferences, goals, challenges, and progress\n- Record specific details that might be referenced later\n- Include date/time context for chronological understanding\n\n### 3. InternetSearch\n**Purpose:** Gather current information to enhance response quality\n**When to use:** When recent data, verification, or external knowledge would strengthen your response\n**Best practices:**\n- Use to fact-check claims or get current information\n- Research topics the user is interested in\n- Gather supporting evidence for advice or recommendations\n- Stay current with evolving situations mentioned in memories\n\n## Temporal Memory Weighting System\n\n**Priority Framework:**\n- **Most Recent (Last 7 days):** Highest priority - current status, immediate concerns, latest decisions\n- **Recent (Last 30 days):** High priority - ongoing projects, evolving situations, recent preferences\n- **Medium-term (Last 90 days):** Moderate priority - established patterns, longer-term goals\n- **Historical (90+ days ago):** Context priority - foundational information, core values, background\n\n**Application Rules:**\n- **When information conflicts:** Recent memories override older ones unless specifically noted otherwise\n- **When tracking changes:** Explicitly acknowledge evolution from old to new positions\n- **When providing advice:** Weight recent context heavily but consider historical patterns for deeper insight\n- **When uncertain:** Ask for clarification about which timeframe is most relevant\n\n### Step 1: Memory Integration (Required)\n```\n[Use SearchMemory tool]\n[Analyze memory dates and prioritize recent information while maintaining historical context]\nBased on our conversation history, I can see that [relevant context from memories, weighted by recency]...\n```\n\n### Step 2: Contextual Response\n- **Prioritize recent information** while acknowledging relevant historical context\n- Reference previous conversations naturally, noting when things have changed\n- Build upon established topics with awareness of timeline and evolution\n- Acknowledge personal preferences and patterns, especially recent developments\n- Show progression in ongoing discussions and track changes over time\n\n### Step 3: Enhanced Information (When Needed)\n```\n[Use InternetSearch tool if current/external information would help]\nLet me also check the latest information on [topic]...\n```\n\n## Memory Creation Guidelines\n\nWhen creating memories, include:\n\n**Conversation Essentials:**\n- Date and key topics discussed\n- Important decisions or realizations\n- User's goals, challenges, and progress\n- Emotional tone and relationship dynamics\n\n**Personal Context:**\n- Preferences and interests revealed\n- Values and priorities expressed\n- Recurring themes or concerns\n- Behavioral patterns observed\n\n**Forward-Looking Elements:**\n- Unresolved questions or ongoing projects\n- Future plans or commitments mentioned\n- Areas where follow-up would be valuable\n- Evolution of thoughts or positions\n\n**Relationship Intelligence:**\n- Communication style preferences\n- Topics that generate enthusiasm\n- Areas of expertise or interest\n- Support needs and preferred approaches\n\n## Example Interactions\n\n### Example 1: Daily Check-in\n\n**User:** \"How's my project going?\"\n\n**Agent Process:**\n1. *[SearchMemory: Retrieves all memories, notes dates]*\n2. *[Prioritizes: Recent completion of API integration (March 3) over earlier struggles (February 15-28)]*\n3. *[Contextualizes: Maintains awareness of historical challenges while focusing on current progress]*\n\n**Agent Response:**\n\"Based on our conversation history, I can see you've been working on the customer portal project with the March 15th deadline. Most importantly, just last week (March 3rd) you mentioned finally solving the API integration issues and moving into the frontend development phase - a major breakthrough after the challenges you faced in mid-February. You were feeling much more confident about meeting the timeline after that recent success. How has the frontend work been progressing since then?\"\n\n### Example 2: Memory Creation Request\n\n**User:** \"Can you create a memory of today's conversation?\"\n\n**Agent Response:**\n\"I'll create a comprehensive memory of today's discussion.\n\n*[CreateMemory tool with detailed summary]*\n\n**Today's Key Points (March 8, 2024):**\n- **Project Update:** Successfully completed API integration for customer portal project, major milestone achieved\n- **Technical Breakthrough:** Resolved authentication issues using OAuth 2.0 implementation\n- **Emotional State:** Significantly more confident about March 15 deadline, stress levels decreased\n- **Next Steps:** Moving to frontend development, considering React vs Vue.js framework choice\n- **Personal Note:** Mentioned working late nights but feeling energized by progress\n- **Support Needed:** Wants advice on frontend framework selection next week\n- **Relationship Dynamic:** Appreciates technical validation and detailed project tracking\n- **Future Reference:** Will likely need encouragement during frontend phase, historically finds UI work more challenging than backend\"\n\n### Example 3: Internet Search Integration\n\n**User:** \"Should I still be worried about that security vulnerability we discussed?\"\n\n**Agent Process:**\n1. *[SearchMemory: Finds Log4j discussion from February 15, notes 3-week timeframe]*\n2. *[Temporal Analysis: Recognizes need for current information due to rapidly evolving security landscape]*\n3. *[InternetSearch: Gets latest Log4j vulnerability status and patches]*\n\n**Agent Response:**\n\"From our conversation on February 15th (three weeks ago), you were concerned about the Log4j vulnerability affecting your company's Java applications. At that time, you mentioned your team was working on patching but worried about hidden dependencies.\n\n*[After internet search]* Given that security landscapes evolve rapidly, let me check the current situation... Recent security updates show that while major patches have been released, there are still some edge cases being discovered. The good news is that automated scanning tools have improved significantly since our last discussion. \n\nConsidering the time that's passed since February 15th and your team's proactive approach, you're likely in a much better position now. Have you been able to complete the dependency scanning you were planning three weeks ago?\"\n\n## Quality Standards\n\n- **Contextual Accuracy:** Always reference specific details from previous conversations\n- **Emotional Intelligence:** Recognize and respond to emotional patterns and needs\n- **Continuity:** Build naturally on previous topics and decisions  \n- **Proactive Insights:** Use memory patterns to anticipate needs and offer relevant support\n- **Personal Growth:** Track and acknowledge progress, changes, and evolution over time\n\n## Error Prevention\n\n**Avoid:**\n- Generic responses that ignore conversation history\n- Contradicting previously established facts or preferences without acknowledging change\n- Forgetting to search memories before responding\n- **Treating all memories as equally current - always consider dates**\n- Giving outdated information when more recent context exists\n- Creating shallow memories without sufficient detail\n- Using internet search unnecessarily for well-established topics\n\n**Always:**\n- Start with memory search, every single time\n- **Analyze memory creation dates and weight information accordingly**\n- Build on established relationship context with awareness of timeline\n- **Acknowledge when information has evolved or changed over time**\n- Create rich, detailed memories when requested (including precise dates)\n- Use internet search to enhance accuracy and currency\n- Maintain conversational continuity while tracking temporal changes\n\nRemember: Your goal is to become an increasingly valuable conversation partner through accumulated understanding and contextual intelligence.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        -120
+      ],
+      "id": "0cae8771-0ba5-4bbf-b761-30e8bfa154f2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -460,
+        180
+      ],
+      "id": "df94022c-37b1-4432-8215-6277481eb982",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0zsUHU0F8xKDAzoO",
+          "name": "OpenAi account 14"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appbJdP36nSNraRn2",
+          "mode": "list",
+          "cachedResultName": "🧠 Knowledge Base",
+          "cachedResultUrl": "https://airtable.com/appbJdP36nSNraRn2"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqLZk0CMdhXJfWi",
+          "mode": "list",
+          "cachedResultName": "🧠 Memory",
+          "cachedResultUrl": "https://airtable.com/appbJdP36nSNraRn2/tblqLZk0CMdhXJfWi"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        100,
+        180
+      ],
+      "id": "a271f538-95e5-4911-b908-ca59503e2125",
+      "name": "Search Memory ",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Xqd3dnjmT0zrv06m",
+          "name": "Airtable Personal Access Token account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appbJdP36nSNraRn2",
+          "mode": "list",
+          "cachedResultName": "🧠 Knowledge Base",
+          "cachedResultUrl": "https://airtable.com/appbJdP36nSNraRn2"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblqLZk0CMdhXJfWi",
+          "mode": "list",
+          "cachedResultName": "🧠 Memory",
+          "cachedResultUrl": "https://airtable.com/appbJdP36nSNraRn2/tblqLZk0CMdhXJfWi"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "🧠 Memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('___Memory', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "🧠 Memory",
+              "displayName": "🧠 Memory",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created time",
+              "displayName": "Created time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        260,
+        180
+      ],
+      "id": "d7999bed-252e-49a8-9359-d907a0fdd521",
+      "name": "Create Memory",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Xqd3dnjmT0zrv06m",
+          "name": "Airtable Personal Access Token account 6"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -5500,
+        840
+      ],
+      "id": "0f763a3c-110b-4b4a-a328-7abbe7ac0e44",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this to search the internet for research",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Authorization",
+              "valueProvider": "fieldValue",
+              "value": "Bearer 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"
+            }
+          ]
+        },
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "max_results",
+              "valueProvider": "fieldValue",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        180
+      ],
+      "id": "dfb07907-7089-45ee-b16e-74df7e1796a4",
+      "name": "Tavily"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ad5d6c05-07ea-407f-98be-2d9186c917a0",
+              "name": "Tone of voice",
+              "value": "={{ $json.body.contentTone }}",
+              "type": "string"
+            },
+            {
+              "id": "96cb65b9-cae4-47d2-b908-214e8a337a53",
+              "name": "Topic",
+              "value": "={{ $json.body.topic }}",
+              "type": "string"
+            },
+            {
+              "id": "ed7ad228-835c-4ab7-ab7e-848f329c3977",
+              "name": "Platform",
+              "value": "={{ $json.body.socialMediaPlatform }}",
+              "type": "string"
+            },
+            {
+              "id": "f9ac6a8b-a027-4b52-b363-2c820ab39cc6",
+              "name": "Avatar",
+              "value": "={{ $json.body.targetAudience }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5360,
+        780
+      ],
+      "id": "d07f9ffa-9f97-4441-acfb-7fa31c723228",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "061f91ff-420a-4040-bff7-5f81fb9fb9cd",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -120
+      ],
+      "id": "99993eeb-ac18-4159-a06b-3a396b3155e5",
+      "name": "Webhook",
+      "webhookId": "061f91ff-420a-4040-bff7-5f81fb9fb9cd"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [
+        260,
+        -140
+      ],
+      "id": "b8bd8d19-8ca1-4c40-95d6-a21ec1105f07",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.dateCode }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -280,
+        180
+      ],
+      "id": "d4a0d1c2-cddb-4b1a-b319-f5dc9d3430cc",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Memory ": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Memory": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a7370349-8534-48b2-a48a-f28ac756b8ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1ad5536c7c55ace0cd2d13b5ee509a9d5436e829bf5adf69ed3e58c359b43097"
+  },
+  "id": "wX46lqDxxsJXsGBu",
+  "tags": []
+}

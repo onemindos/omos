@@ -1,0 +1,2 @@
+Legacy here. When setting up your AI, prioritize compatibility. Tools like Zapier or IFTTT can be instrumental in automating and syncing data across platforms.
+Three things to remember: Identify tasks for automation, ensure tool compatibility, and continuously refine your workflow for best results.

@@ -1,0 +1,21 @@
+Best Spyware Removal Programs
+
+The Importance of Spyware Removal Programs
+
+Spyware is a software that is seldom installed in computer just by surfing on a website. Sometimes it quickly installs in your computer whenever you download free software from a website. Once installed, it sends users information about web activities or habits to its website. Thus, it gathers users information and be able to use its accounts and other private information.
+
+Spyware is a threat to the computer users. It is another act of theft of personal information that violates the privacy of internet users. It is important for the internet users to have knowledge about this spyware to be able to avoid it. There are spyware removal softwares that can be downloaded in internet for free while some are paid.
+
+Just be sure that it’s really a spyware removal tool because some sites prompt you to install spyware removal tool but in fact, it is also a spyware. To avoid downloading spyware search for spyware removal software that can be downloaded to its official website and try free version.
+
+Here are some of the spyware removal programs you can download:
+
+1. Ad-Aware SE Personal. This is a spyware or adware removal tool that can be downloaded in internet for personal use in windows operating systems. It will scan your computer for malicious programs such as spyware. It will guide you to determine whether a program is a threat to your system and what does it do to your system. In just a matter of seconds it will delete the entire threatening program from your computer. Ad-Aware SE Personal and other version of Ad-Aware has been the most downloaded spyware removal program for the past year.
+
+2. Spybot S&D. Spybot Search & Destroy is software that can remove and detect spyware programs of different types from your system. Spybot S&D is the most effective and popular spyware removal tool. Like Ad-Aware, Spybot S&D can also be used as a conjunction with other program because it detects and delete a bunch of spyware. This spyware removal program can be completely downloaded for free.
+
+3. HiJack.  This is spyware removal tool that will make a report of all the browser add-ons, start-up items and buttons to guide you in determining malicious items and then finally remove it. This tool functions like ms config and more thorough in finding spyware. Once you run this, it will present to you a list of unwanted files and programs found on your registry. Your computer will still work well if you delete all the files and programs detected by this software. 
+
+4. IE-SPYAD. Compared to other spyware removal tool IE-SPYAD is a type of registry files that merge or adds a long list of marketers, advertisers and spyware. It goes to the restricted site zones of the Internet Explorer and blocks those sites from being accessed. IE-SPYAD will open a certain program and will immediately terminate if it’s a malicious one.
+
+5. X-Cleaner. Like many other spyware removal program, X-Cleaner also perform Internet cache cleaning, cookie cleaning, scans lots of popular spyware programs and performs file shredding. Once the spyware programs were detected, you will select all the unwanted programs and then delete it. X-Cleaner can be downloaded for free with just limited features but there is also the professional version which gives a full support and added features.

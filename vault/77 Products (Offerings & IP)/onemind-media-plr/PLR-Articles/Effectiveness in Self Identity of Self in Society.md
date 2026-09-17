@@ -1,0 +1,25 @@
+# Effectiveness in Self Identity of Self in Society
+
+Self-development is best when using solutions that allow you to become more effective and successful in your progress. We all can find the right solutions that allow us to use helpers or self to developing our personality. Understand that our personality makes up our personal individuality and these distinctive traits we develop lead us directly to the self. The self is our nature, identity and characteristics that give us this distinction, or sets us apart from others. 
+
+We must build this personality with a winning attitude for developing and maintaining new skills.  We lose our growing strength when we become stressed because our energy starts to weaken. Thus, the progress of self-development leads us to see that we must reduce stress. 
+
+When stress builds up we lose the aptitude to function properly in society or anywhere else in life. We have guides and solutions that will direct us to building a positive attitude so that we can change the way we feel and think. The global computer network is a channel that links us to other networks all over the universe and connects us with other users and databases that links us to new age information. 
+
+You will find plenty of articles geared to assist you with self-development. Find new solutions in the new age arena online to help you conquer any problems you may face. Look for the latest strategies and techniques that have proven results of helping others develop their identity. 
+
+Developing a positive attitude is one way to find the right guides. With a positive attitude one can achieve more by making decisions that help them develop skills.  
+
+A negative attitude will not lead you to success. When one has a negative attitude it hinders them from seeing the true light. Thus, when you read some of the latest solutions make sure you see the effectiveness in the reviews. 
+
+Change your attitude by thinking positive when making changes to help you get the most of the self-development process. One solution you may find helpful is to write your negative thoughts on paper and reread to see how you can change them.  Make each change positive. Each time you read the list it will ultimately overshadow the mind to reprogram its thinking.
+
+Learn to focus when making changes to help you make constructive changes.  When you focus on more than one thought at a time it is hard to decide on what solution works best for you. Learn steps in redirecting your mind so that you can take control and make better decisions. 
+
+Focusing is another way to meditate and relaxing. Try Yoga techniques for relaxing and learning to meditate and breathe naturally.  We can focus better by standing in a relaxing position or sitting straight in a chair. Resting in the bed is even better. 
+
+Mind puzzles are another effective strategy that will help relieve stress as well as build effective consciousness in self-development.  When we are solving mind puzzles we use our focusing skills, which expands our memory and awareness Relaxing with a mind puzzle will help guide you in expanding the memory and mind. 
+
+Mind puzzles, meditation and yoga will increase your knowledge, as well as build vocabulary skills to give the brain exercise that will lessen memory loss.  
+
+Physical exercise is a good solution not only for body building but for relieving stress and to grow on.  Relieve stress by focusing exercising weekly to lose some pounds by the end of next month. When you take off a few pounds, you relieve 5 pounds of stress to give your energy a boost.

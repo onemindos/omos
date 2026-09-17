@@ -1,0 +1,37 @@
+name: habit-checker
+description: "HP daily habit check-ins via Discord — morning + evening"
+triggers:
+  - cron: "30 8 * * *"
+    timezone: "America/New_York"
+    label: morning
+  - cron: "0 21 * * *"
+    timezone: "America/New_York"
+    label: evening
+steps:
+  - tool: sessions_send
+    label: checkin
+    input:
+      agentId: hp
+      message: |
+        HABIT CHECK-IN trigger={{trigger.label}}
+
+        Read workspace/hp/habits.json for current streaks.
+
+        IF trigger=morning:
+          DM Zeus (Discord user 1024395579742228570):
+          "Morning check. Quick 5: workout planned? sleep ok? priorities set?
+          water goal? reading today? Reply y/y/y/y/y or skip any."
+          Log timestamp of DM in habits.json under pending_responses.
+
+        IF trigger=evening:
+          DM Zeus: "Evening wrap. How many habits today? (workout/sleep/phone/water/reading)
+          Current streaks: {list from habits.json}.
+          Tone rules: streak>7 celebrate briefly, missed 2+ gentle nudge,
+          missed 3+ send motivational message + ask if goal needs adjusting.
+          No repeat DM if no response — one follow-up max after 2h."
+
+        IF it is Sunday evening: also compute weekly report:
+          Completion rate per habit, best/worst day, one pattern observation,
+          one suggestion for next week. Append to habits.json weekly_reports.
+
+        Write all updates back to workspace/hp/habits.json.

@@ -1,0 +1,29 @@
+# Discovering Fears in Self Mastery
+
+Discover your fears and doubts. Sometimes we have fears and doubts in our mind that we don�t realize are there. These fears and doubts will hinder people each time from developing self-mastery skills that enable them to take control of their life. 
+
+The common human tendency is to suppress fears or stressful situations rather than to face them head on. Many of the fears that develop in our mind often occur in our childhood, yet most people find it hard to understand this because they believe that the problems arise from current situations.  
+
+The subliminal mind stores negative things such as fear or grief sending biofeedback messages through the subconscious mind when we least expect it.  Sometimes fearful things crop up in the mind and often people do not know where it comes from unless they have self-mastery skills developed to a large extent.  The flash back could be reminding you of the fear as a child because you were never able to let it out.
+
+Learn to practice by putting your body and mind in balance by discovering your loss of memory as a child to relieve this stress.  Start out by exploring your mind to find what is stored by blocking it out at one time. 
+
+Build your mental and physical ease and supremacy by digging into your subliminal mind to find the cause of stress that is trying to take control.  Stress will build up and cause you many problems; even lost of memory when you try to forget.
+
+When an entity slows the progress of self-development and self-mastery, often they fall back into the slumps.   This could cause you to become depressed and angry at yourself.  Using guides to help you overcome stress to relieve you negative feelings such as making constructive changes in the way you live.
+
+Use meditation as a guide to help you change your attitude to find a happy home for the lost puppy.  Relieving stress will give you guidance to change your attitude by making it positive.
+
+Meditation will help you to focus and relax letting you feel better about fears and grief that haunt you. Sometimes we have to relax and let the stress go. Realizing that something�s you do not have the power to control is a great start to developing self-mastery skills.   
+
+When we are stressed and feeling down; let meditation guide you to relaxation for a better night of sleep.  When you feel rested, it makes it possible to think clearly.   When you have too many stressors building up in your life, it is often difficult to make good decisions.   Learn to focus for making decisions more effective and successful.
+
+Learn the skills of meditation to guide you by joining a Yoga class.  Yoga will guide you to relax the brain to explore for the mental and physical ease and supremacy.  Let Yoga help you overcome fear and grief with relaxation by meditating.  
+
+Learn ways to sit stand and move in different positions to relieve the stress that is causing you to slump your shoulders or lay in a chair.  You�ll love the feeling that meditating with Yoga skills will guide you to.
+
+Exercise is a good physical stress reliever to guide you in changing your attitude about yourself and life. Turn the lost puppy into a happy one with confidence and a great attitude with exercise.
+
+Exercise will help you build the body, relieve stress, increase memory, and improve your self-mastery skills. Getting stronger helps not only the joints it will help to relieve stress in restoring the memory process. Relieving stress with exercise will give your memory room for holding new positive thoughts.  
+
+Feel like a new person with a guide for mental and physical ease and supremacy.

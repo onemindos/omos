@@ -1,0 +1,40 @@
+# Bed Bugs Are Back!
+
+Find out how to get rid of bed bugs
+for the long haul.
+
+Get Rid Of Bed Bugs
+Find out how to get rid of bed bugs
+for the long haul.
+
+Bed Bugs Are Back!
+Find out how to get rid of bed bugs
+the easiest and safest way.
+
+Get Rid Of Bed Bugs
+Find out how to get rid of bed bugs
+the easiest and safest way.
+
+Bed Bugs
+Discover how to prevent bed bugs
+and how to eliminate them.
+
+Bed Bugs Uncovered
+Discover exaclty what bed bugs are 
+and how to prevent them.
+
+Bed Bugs Are Back!
+Find out how to get rid of bed bugs
+for the long haul.
+
+Bed Bugs Uncovered
+Find out how to get rid of bed bugs
+for the long haul.
+
+Bed Bugs
+Find out how to get rid of bed bugs
+for the long haul.
+
+Bed Bugs Uncovered
+Discover how to prevent bed bugs
+and how to eliminate them.

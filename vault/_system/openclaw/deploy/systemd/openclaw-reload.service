@@ -1,0 +1,19 @@
+[Unit]
+Description=OneMind — auto-restart OpenClaw on skill/config changes
+After=openclaw.service
+Requires=openclaw.service
+
+[Service]
+Type=simple
+User=onemind
+Group=onemind
+Environment=HOME=/home/onemind
+ExecStart=/home/onemind/openclaw-reload.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=openclaw-reload
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,30 @@
+# Title:
+
+How do I Know if I'm Getting any of This Law of Attraction Stuff?
+
+Word Count:
+350
+
+Summary:
+To help you gauge where you're at in the mastery of Law of Attraction, I've compiled a list of seven sure-fire ways to tell if YOU are joining the thousands of people who really are mastering this stuff.
+
+Keywords:
+law, attraction, events, deliberate, vibes, vibration, energy, positive, negative, accountable, stuff
+
+Article Body:
+This is a popular question people ask me. How do you know if I am mastering the art of Deliberate Attraction? Is there an advanced course I can take? My answer is always the same, "The application of this material into your daily life IS the advanced course!" To help you gauge where you're at in the mastery of Law of Attraction, I've compiled a list of seven sure-fire ways to tell if YOU are joining the thousands of people who really are mastering this stuff.
+
+7 TOP indicators that I am mastering Law of Attraction
+
+1. I understand and accept that Law of Attraction is a process. It is a process of gradually reducing the negative vibrational patterns I have towards some areas in my life and replacing them with positive thoughts. Through the intentional and deliberate use of the tools of Law of Attraction, I see evidence that my allowing is gradually increasing.
+
+2. Over time I am seeing some behavioural changes in myself. Even though I constantly hear others using don't, not and no I have eventually stopped using these words out loud. Each time I catch myself even thinking these words, I automatically ask myself the question, "So what DO I want?" I know that when I change my words, my vibration changes and I can only hold one vibration at a time.
+
+3. I've noticed over time that I am observing contrast (anything that doesn't feel good to me) more and more briefly.
+
+4. I've noticed that I am having fewer and fewer experiences of negative people and events in my life. 
+5. It's become second nature for me to be aware of many, many more things that I can appreciate and express gratitude for.
+
+6. I find myself automatically assigning all my new desires to Law of Attraction. When I want something new in my life I say, "I'm using Law of Attraction to get that!"
+
+7. I understand the expression I get what I vibrate and I hold myself fully accountable for everything that shows up in my life, both positive and negative!

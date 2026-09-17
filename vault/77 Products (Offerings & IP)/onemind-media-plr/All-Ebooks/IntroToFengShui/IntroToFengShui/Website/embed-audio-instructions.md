@@ -1,0 +1,3 @@
+# Adding the Audio Sample to Your Site
+
+Here is a code you can use to add the audio to your website.  You will need to change the links to point to your own website and directory where the audio file is.

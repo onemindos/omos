@@ -1,0 +1,10 @@
+# [YES] Can Sell Master Resell Rights
+
+[YES] Can Be Packaged 
+[YES] Can Be Offered As a Bonus 
+[YES] Can Be Used As Web Content 
+[YES] Can Be Used For Product Creation 
+[YES] Can Be Added To a Paid Membership 
+[YES] Can Be Given Away 
+
+[NO] You May Not Sell Private Label Rights

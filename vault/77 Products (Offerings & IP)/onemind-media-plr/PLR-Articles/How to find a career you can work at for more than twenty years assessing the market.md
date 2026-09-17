@@ -1,0 +1,17 @@
+# How to find a career you can work at for more than twenty years assessing the market
+
+There are a lot of companies that have been in the job market for twenty years; however, you have to understand that some of these new companies could make become the next best thing. It�s hard to figure out if the company that you are working for is stable because you will never know what the future holds for both you and the company. You may put in 15 years, but then get an offer to go somewhere else. The company may shut down after 10 years. The future is very unpredictable so you need to understand that there is nothing you can do or say that will make things definite. The following will contain tips on how to help you make good choices in the jobs that you accept or decline. 
+
+First, you need to learn more about the company that you being interviewed for. You�ll want to sit there and ask all the questions that you wish to have the answers to. You can be frank and ask them if they are strong and a company that will last decades. They will most likely be honored that you wish to put in so much time into the company, and they will give you an answer that is assuring. You will want to look for things in the market too. 
+
+You will need to consider that the market may be going strong right now and you will also find that there are a lot of predictions about the market�s future when you get online and search through government sites. Right now, you will need to consider that mills, factories, and other labor businesses are not strong for the future. 
+
+There are less things made in America, but there are more things made overseas. Often they will have the higher management teams� move with the company. You may be safe for the future, but the labors are not secure with their job. 
+
+You will also want to make sure that you do the research of past bankruptcies and layoffs. You will want to work with a company that has had very few bankruptcies or layoffs, because you need to have a job that is secured for the next twenty years, not the next twenty months. 
+
+You will also want to go searching into the past of the company to see if they have had any shut downs, because of the government. This will show that the company mismanaged some of their opportunities. You will also find that when it comes to the company, you may end up having to deal with the cleanup of these misfortunes by taking pay cuts or work cuts. This is not a good thing to find in a company that you are considering working for. 
+
+When you do your proper research and you ask all the right questions, you will be able to make a good, educated decision to accept the job or to decline the job.  If you do end up declining the job, you will want to talk some of your fears over. 
+
+Again, the person you talk to, may just assure you that they are worth all the time that you give the company, but then again, they may assure that declining is best.  It is important that you are able to put the time into the career development, so that you can work on having a secure future and retirement. You will find that with your career development choices you will be able to know the difference between a job that has a lot of potential to a job that really doesn�t have a lot to offer to you.

@@ -1,0 +1,17 @@
+# Where you can find advice about careers for you
+
+Finding a good career that will match your needs is something that you need to do. You have to be excited about the job that you have and what you do every day.  There are going to be certain procedures that you may have to do in order to find the right advice about the career that is destined to be for you.  
+
+The first step is to figure out what you want in life. What makes you happy? How do you like to fill your time each day and what do you see yourself doing?  If you can think about these questions and you know the answers you will be one step closer to finding something that makes you happy and gives you a feeling of pride. There are going to be questions that you will have but you need to sit down and make a list of the features that you are looking for in a career. Once you do this, you will have a better idea of what to look for.
+
+You may need to write up a resume.  You have to list all the professional jobs you have had and what you are proud of doing. Once you have this listed you will then be able to add other things to your resume. You need to make sure that you are using a good cover letter that will help get you noticed for the employment that you are trying to find.  
+
+There are plenty of job opportunities out there if we are looking in the right place. The one thing that we have to do is make sure that we are using our full capabilities in life so that we can create a better and more successful place in life.  When we are taking advantage of the opportunities that are out there we will feel better and are able to find just what we are looking for. 
+
+There are so many online places that we can turn to.  Many times a person will want to check out the online site that offer help in locating jobs in local areas.  Finding a good job that will give us what we are looking for is very important. We need to make sure that we know what we are looking for so that we are better off in making our dreams come true.  Reading the sites and using your better judgment will get you the job that you want.  
+
+There are many off line resources that will also be good for you to use when looking for a job or career.  You can turn to the newspaper and ads that are used to find just what you are looking for. The next time that you want to take on a career change you will need to use the resources of what is available. You may need to do some investigating and think about the career ideas that are out there but you need to make it happen for you. 
+
+Networking and job fairs can also be a great help. You will be able to meet more people and get a better idea of what you are looking for. Networking will help you get your foot in the door by being noticed and able to have others get a feel about who you are.  You may want to also think about job fairs in person and online.  They are a great benefit to someone that needs to find more facts about the career they are most interested in.  
+
+The one thing that you want to do is make sure that you are following up on the interviews that you have had.  You want to send a thank you letter for their time and also contact the employer if you have not heard anything about the job.  You want to make sure that they are keeping you in mind so that you are the first person they think about when it comes to finally filling the position.

@@ -1,0 +1,25 @@
+# Sudokus: Give your Brain a Mind Twisting Puzzle Game
+
+Games are not just for kids, adults can play games as well. With the very busy life of most of adults today, they do not have much time to go to entertainment centers to play with arcade games, fun filled and enjoyable activities. However, these activities are boring; it only requires physical activities taking for granted the importance of logical thinking.
+
+You can use your leisure time by playing games. You do not need to go to entertainment centers to enjoy. You can just sit around your office, grab a pencil and enjoy playing with some of the puzzle games around. There are so many fun filled puzzle games that will make use of your extra time. You do not need to spend money to enjoy it. Empower your neurons and improve your logical thinking by playing with it. 
+
+One among the best sought after puzzle games is called sudoku. Have you heard of sudoku? Have you experienced the one of a kind satisfaction you can get over playing with it? If you have not yet played with it, you are missing half of your life. Do you want to know about it? Read on and learn all about sudoku. 
+
+Sudoku is the hottest most enjoyable puzzle game today. Most of the people prefer playing with it because of the unexplainable pleasure it brings. In fact, it is one among the most discussed topics on the World Wide Web. Even people who belong to highest society love playing sudoku. What is sudoku? How is it played? 
+
+Sudoku is a puzzle games that requires only 9 numbers. It only requires numbers from 1 to 9. There are nine rows and nine columns as well. The main goal of this puzzle game is to complete the box with the appropriate numbers corresponding to the numbers needed in the box. The puzzle is pre-entered with numbers and your job is to put the missing numbers on the blank. You might think it�s easy but is quite challenging than difficult. 
+
+It has different intensity that depends on the given numbers. The more numbers are given the more it becomes difficult. The different levels of intensity are identified as light, easy, moderate, heavy, difficult and very difficult. It is better if you start on the light level first before venturing to higher levels. 
+
+Sudoku has different kinds and types. You can choose from the different types according to your preference. There are many types as well. However, the directions of playing them are just the same. They have the same mode of playing the games and all are enjoyable. 
+
+Once you get hold of the pencil and start playing with it, it is really impossible for you to stop. With its grabbing way of playing it, it is hard to stop. If you are into crossword and puzzles, you will like sudoku as well. You can play with it within 10 to 30 minutes depending on your expertise. With the different types available, you can enjoy playing with it. 
+
+You can always find sudoku into almost anywhere around the world. Usually, there books loaded with different sudoku puzzle game plays. All you need is pencil and you can start thinking how you are going to complete the box. 
+
+Newspapers and magazines are also great source of sudoku. Newspapers can give you new puzzle game plays everyday. Most of the people buy newspapers because of the sudoku puzzles. Magazines also grab readers because of including sudoku on the pages of their magazines. The one who finishes the games will receive a price. This is a very effective way to gain more people ton patronize the magazine. What a clever idea. 
+
+You can also find it over the very useful internet. The World Wide Web will give you more than millions of printable sudokus. You just have to choose which website can give you the best sudoku game plays. There are many website available for you online. Search engines are very useful in terms of your search. Just type �sudoku free� and the rest will be the search engine�s job. 
+
+Start indulging yourself now to playing with sudoku puzzle games. Giving your mind an exercise, empower your brain cells and practice your logical thinking by playing with sudokus. Enjoy and have fun playing with it.

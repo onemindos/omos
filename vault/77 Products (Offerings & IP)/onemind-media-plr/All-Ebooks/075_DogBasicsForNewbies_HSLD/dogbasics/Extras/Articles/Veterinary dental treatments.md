@@ -1,0 +1,13 @@
+# Veterinary dental treatments
+
+Veterinary dental treatments are more important. If the dental structures are not being looked carefully, there are more chances for the development of periodontal diseases in dogs.  Hence, the veterinary dental treatments need to be paid maximum importance during the life of your dogs. 
+
+	There are many advanced systems that deal with dental treatments that have come up in the market.  Many systems are available with built in water spray systems, double filter systems, auto clavable clips, and more.
+
+	Many veterinarians use high speed fiber optic hand pieces with push button turbines, two hand piece water jet systems, soundless water compressors and more.  The diagnosis of a condition pertaining to the periodontal structure based diseases are more important before the treatment. 
+
+	Periodontal diseases are graded into minimal and moderate and severe diseases.  Accordingly the therapy is carried out, it is impossible to check all teeth by basic oral examination in the dog patient.  Hence, general anesthesia is required before the examination of the teeth inside structures.  Surgical curettage is done in case of advanced periodontal diseases using flaps and the teeth extractions are also carried out using moderate force and more care is taken to avoid the continuous bleeding.  
+
+	Oral surgeries are undertaken after obtaining of the dental radio graphs in the dogs and by comparing the tissue damage with normal teeth structures.  The concerned veterinarians assess the extent of damage in a systematic manner. 
+
+	The periodontal diseases are controlled by administration of broad-spectrum antibiotics in an effective manner.  Along with the dental surgeries, the oral treatment is done with many products that are helpful to prevent the attachment of the tartar or plaque on the teeth. However, reputable products should be used in the veterinary practice and the dog owner�s satisfaction is given more priority during the veterinary dental therapy.

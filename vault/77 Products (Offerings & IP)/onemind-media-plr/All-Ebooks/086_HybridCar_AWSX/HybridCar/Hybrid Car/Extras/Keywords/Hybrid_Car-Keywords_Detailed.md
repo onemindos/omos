@@ -1,0 +1,440 @@
+# 1	1302	1682	hybrid cars
+
+2	317	410	hybrid vehicles
+3	138	178	Hybrid Cars
+4	106	137	HYBRID CARS
+5	90	116	Hybrid cars
+6	64	83	New Hybrid Cars
+7	60	78	hybrid automobiles
+8	48	62	Hybrid Vehicles
+9	41	53	Electric And Hybrid Cars
+10	36	47	hybrid cars vs oil cars
+11	32	41	Colorado tax credit hybrid cars
+12	21	27	Hybrid Automobiles
+13	20	26	new hybrid cars
+14	19	25	Hybrid vehicles
+15	18	23	plug in hybrid cars
+16	17	22	Toyota Camry Hybrid Cars
+17	16	21	electric and hybrid cars
+18	16	21	tax credit for hybrid cars
+19	15	19	history and technology of hybrid cars
+20	15	19	gm hybrid cars
+21	15	19	electric hybrid cars
+22	14	18	how hybrid cars work
+23	14	18	gas electric hybrid cars
+24	14	18	future hybrid vehicles
+25	13	17	hybrid cars and trucks
+26	13	17	How Do Hybrid Cars Work
+27	13	17	ford hybrid vehicles
+28	12	16	hybrid cars price
+29	12	16	used hybrid cars
+30	12	16	cheap hybrid cars
+31	12	16	buy hybrid cars
+32	12	16	credit for hybrid cars
+33	11	14	light-duty hybrid vehicles
+34	11	14	buying hybrid cars
+35	11	14	disadvantages of hybrid cars
+36	11	14	american hybrid cars
+37	11	14	used hybrid vehicles
+38	11	14	for hybrid cars
+39	10	13	hybrid cars and suvs
+40	10	13	hybrid vehicles list
+41	10	13	compare hybrid cars
+42	10	13	advantages of hybrid cars
+43	9	12	toyota hybrid cars
+44	9	12	What are hybrid cars
+45	9	12	what are hybrid cars
+46	9	12	hybrid cars for sale
+47	9	12	hybrid vehicles for sale
+48	9	12	hybrid vehicles comparison
+49	9	12	Used Hybrid Cars
+50	9	12	hybrid vehicles canada
+51	9	12	diesel hybrid vehicles
+52	8	10	consumer reports hybrid cars
+53	8	10	hybrid cars+impact+singapore
+54	8	10	how hybrid cars help the enviroment
+55	8	10	2007 hybrid cars
+56	8	10	information on hybrid cars
+57	8	10	tax breaks for hybrid vehicles
+58	8	10	Electric Hybrid Automobiles
+59	8	10	compare hybrid vehicles
+60	8	10	2006 hybrid cars
+61	8	10	best hybrid cars
+62	8	10	hybrid cars models
+63	8	10	Hybrid Cars Now2c Fuel Cell Cars
+64	8	10	electric and hybrid vehicles
+65	8	10	toyota hybrid vehicles
+66	8	10	gm hybrid vehicles
+67	8	10	tax credit for hybrid vehicles
+68	8	10	honda hybrid vehicles
+69	8	10	tax credits for hybrid vehicles
+70	8	10	do hybrid cars save the environment
+71	8	10	Hybrid cars sales tax in SC
+72	8	10	new hybrid vehicles
+73	8	10	hybrid vehicles and
+74	8	10	best hybrid vehicles
+75	8	10	in hybrid vehicles
+76	7	9	HYBRID CARS OHIO INCOME TAX
+77	7	9	tax credits for hybrid cars
+78	7	9	future hybrid cars
+79	7	9	hybrid automobile
+80	7	9	on hybrid vehicles
+81	7	9	hybrid cars and suv
+82	7	9	and hybrid vehicles
+83	7	9	list of hybrid vehicles
+84	7	9	hybrid vehicles review
+85	7	9	available hybrid vehicles
+86	7	9	of hybrid vehicles
+87	6	8	upcoming hybrid vehicles
+88	6	8	credits for hybrid vehicles
+89	6	8	for hybrid vehicles
+90	6	8	plug-in hybrid vehicles
+91	6	8	used hybrid cars for sale
+92	6	8	gas hybrid vehicles
+93	6	8	hybrid vehicles work
+94	6	8	hybrid vehicles tax
+95	6	8	incentives for hybrid vehicles
+96	6	8	gas electric hybrid vehicles
+97	6	8	hybrid cars vs electric cars
+98	6	8	Hybrid Electric Vehicles2c Hybrid Cars
+99	6	8	electric hybrid vehicles
+100	6	8	hybrid vehicles in
+101	6	8	General Motors Hybrid Vehicles ERG
+102	6	8	hybrid cars best gas mileage cars
+103	6	8	hybrid vehicles for
+104	6	8	HYBRID CARS FUTURE DESIGNS
+105	6	8	tax incentives for hybrid vehicles
+106	6	8	2006 hybrid vehicles
+107	6	8	Convertible hybrid Cars
+108	6	8	us department of energy gas vs hybrid cars
+109	6	8	tax credit hybrid vehicles
+110	6	8	hybrid cars info
+111	6	8	credit for hybrid vehicles
+112	6	8	credit hybrid vehicles
+113	6	8	all hybrid vehicles
+114	6	8	mercury hybrid cars
+115	6	8	Advantages for Hybrid Vehicles
+116	6	8	2 door electric hybrid cars
+117	6	8	hybrid cars toyota electric car future concept
+118	6	8	honda hybrid cars
+119	6	8	hybrid cars middle east
+120	6	8	asian pluggable hybrid cars
+121	6	8	information about hybrid cars and the enviroment
+122	6	8	tax credit hybrid cars
+123	6	8	Federal Tax Credit for Hybrid Cars
+124	6	8	advantages and disadvantages of hybrid cars
+125	6	8	hybrid vehicles available
+126	5	6	hybrid cars, Portland Oregon
+127	5	6	Canada Hybrid Cars Electric
+128	5	6	Hybrid Cars Toyota Electric Car Future Concept
+129	5	6	gas & electric hybrid cars
+130	5	6	Hybrid Cars Tax Rebate
+131	5	6	hybrid cars tax rebate
+132	5	6	homemade hybrid cars
+133	5	6	hybrid cars and the environment
+134	5	6	advantages of Hybrid Cars
+135	5	6	hybrid cars evaluation
+136	5	6	bio diesel hybrid cars
+137	5	6	information about hybrid cars and how they work
+138	5	6	hybrid cars electrical batteries
+139	5	6	history hybrid cars
+140	5	6	Disadvantages of Hybrid Cars
+141	5	6	problems with hybrid cars
+142	5	6	hybrid cars review
+143	5	6	2005 hybrid vehicles
+144	5	6	Toyota Honda Hybrid Vehicles
+145	5	6	Emergency Response For Hybrid Vehicles
+146	5	6	list of hybrid cars
+147	5	6	energy ll hybrid vehicles
+148	5	6	vehicle statistics hybrid vehicles
+149	5	6	tax break for hybrid cars
+150	5	6	HYBRID VEHICLES
+151	5	6	Hybrid cars work
+152	5	6	hybrid cars maintenance costs
+153	5	6	are hybrid cars good for the economy
+154	5	6	how do hybrid cars work
+155	5	6	Los Angeles Parking: and Hybrid Cars
+156	5	6	the history of hybrid cars
+157	5	6	hybrid cars are not worth buying
+158	5	6	distance electric hybrid cars
+159	4	5	Mechanics Of Gas Electric Hybrid Cars
+160	4	5	Hybrid Cars Miles Per Gallon
+161	4	5	reviews and road tests of hybrid cars
+162	4	5	energy ll and hybrid vehicles
+163	4	5	electric and hybrid cars a history
+164	4	5	Hybrid vehicles economy
+165	4	5	Electric Hybrid Cars For Sale Scooters
+166	4	5	Types of Hybrid Cars
+167	4	5	what is a hybrid vehicles
+168	4	5	hybrid cars how they work
+169	4	5	Honda hybrid cars
+170	4	5	hybrid cars-meaning
+171	4	5	graphs on hybrid cars
+172	4	5	are hybrid cars harmful to humans' long term health
+173	4	5	hybrid cars fuel mileage
+174	4	5	who makes hybrid cars
+175	4	5	Upcoming Hybrid cars
+176	4	5	hybrid cars tax deduction
+177	4	5	Hybrid Automobile Reviews
+178	4	5	Toyota Hybrid Automobiles
+179	4	5	hybrid cars in America
+180	4	5	installing amateur radio into hybrid cars
+181	4	5	Pros And Cons of Hybrid Cars
+182	4	5	hybrid cars cost of a hybrid cars
+183	4	5	Advantages of Hybrid Cars
+184	4	5	consumer reports on hybrid cars
+185	4	5	hybrid cars prices
+186	4	5	general motors hybrid vehicles
+187	4	5	hybrid vehicles price
+188	4	5	plug-in hybrid cars
+189	4	5	hybrid cars that get 200 miles per gallon
+190	4	5	Electric Hybrid Cars
+191	4	5	Hydraulic hybrid cars
+192	4	5	modern technology 2b hybrid cars 2b argumentative essay
+193	4	5	hybrid cars help to the ecosystem
+194	4	5	ford hybrid cars
+195	4	5	how hybrid cars save energy
+196	4	5	injuries or deaths from hybrid vehicles
+197	4	5	tax breaks for hybrid cars
+198	4	5	Energy Ll And Hybrid Vehicles
+199	4	5	2007 hybrid vehicles
+200	4	5	Information on Hybrid Vehicles
+201	4	5	What Are Some Prices of the Hybrid Vehicles
+202	4	5	tax deduction for hybrid vehicles
+203	4	5	tax credits hybrid cars
+204	4	5	tax credits hybrid vehicles
+205	4	5	tax deduction for hybrid cars
+206	4	5	hybrid cars now2c fuel cell cars later
+207	4	5	hybrid cars show
+208	4	5	How Much Do Hybrid Cars Cost
+209	4	5	installing amateur radios into hybrid cars
+210	4	5	Taxes And Hybrid Cars
+211	4	5	WHO Makes the Hybrid Cars
+212	4	5	hybrid cars pictures
+213	4	5	hybrid cars versus cars that fuel by gasoline
+214	4	5	hybrid cars Nickel Metal Hydrides
+215	4	5	Benefits Hybrid Cars
+216	4	5	Electric Vehicles Hybrid Cars
+217	4	5	benefits of hybrid cars on the environment
+218	4	5	top hybrid cars
+219	4	5	info on hybrid cars
+220	4	5	Hybrid Cars Best Gas Mileage Cars
+221	3	4	Electric Vehicles Review Hybrid Cars
+222	3	4	hybrid cars worth it
+223	3	4	Dodge Hybrid Cars
+224	3	4	Diesel Hybrid Cars
+225	3	4	2007 Hybrid Cars
+226	3	4	Electric And Hybrid Cars Ecology Benefits
+227	3	4	mechanics of gas electric hybrid cars
+228	3	4	tax rebates of hybrid cars
+229	3	4	Bank of America AND Hybrid cars
+230	3	4	history of hybrid cars
+231	3	4	Used Hybrid Cars For Sale
+232	3	4	plug in hybrid cars ford escape
+233	3	4	electric hybrid american hybrid cars
+234	3	4	Energy Ll Tax Credits For Hybrid Cars
+235	3	4	Toyota Hybrid cars
+236	3	4	HYBRID CARS & TRUCKS
+237	3	4	how safe are hybrid cars
+238	3	4	sydney australia hybrid cars
+239	3	4	Hybrid Cars Vs Electric Cars
+240	3	4	mechanics gas electric hybrid cars
+241	3	4	The Need for Hybrid Cars
+242	3	4	History of Hybrid Cars
+243	3	4	hybrid cars most popular
+244	3	4	Hybrid Cars Now2c Fuel Cell Cars Later
+245	3	4	Compare Hybrid Automobiles
+246	3	4	hybrid automobile conversions
+247	3	4	Colorado tax credit on hybrid automobiles
+248	3	4	hybrid automobile reliability
+249	3	4	Hybrid Cars Games
+250	3	4	HYBRID CARS IRS
+251	3	4	Ford Hybrid Cars
+252	3	4	wher can i get hybrid cars in india
+253	3	4	lexus hybrid cars
+254	3	4	new hybrid cars danville il
+255	3	4	Hybrid Cars Cons
+256	3	4	Electric And Hybrid Cars A History
+257	3	4	hybrid cars show june
+258	3	4	Bmw Hybrid Cars
+259	3	4	hybrid cars and cleaner environment
+260	3	4	History Of Hybrid Vehicles
+261	3	4	WHO Makes Hybrid Cars
+262	3	4	Against Hybrid Cars
+263	3	4	Hybrid cars and the enviorment
+264	3	4	hybrid cars with the best gas mileage
+265	3	4	mitsubishi hybrid cars
+266	3	4	used Hybrid Cars
+267	3	4	consumer report on hybrid cars
+268	3	4	concept hybrid cars
+269	3	4	Consumer Benefits of Hybrid Cars
+270	3	4	bmw hybrid cars
+271	3	4	American Ford Hybrid Vehicles
+272	3	4	Hybrid Electric Vehicles Hybrid Vehicles Toyota
+273	3	4	new energy ll hybrid vehicles
+274	3	4	General Motors Hybrid Vehicles
+275	3	4	How Do Hybrid Vehicles Work
+276	3	4	hybrid cars environmental effects
+277	3	4	Do Hybrid Vehicles Make Sense
+278	3	4	Hybrid Vehicles for Sale
+279	3	4	Hybrid Vehicles Work
+280	3	4	hybrid vehicles reviews
+281	3	4	Why Hybrid Vehicles
+282	3	4	are hybrid cars better than all-electric cars
+283	3	4	When Were Hybrid Cars Invented
+284	3	4	Do hybrid cars save the enviornment
+285	3	4	downloadable commercials / hybrid cars
+286	3	4	types of hybrid cars
+287	3	4	Hybrid cars vs petroleum cars
+288	3	4	average cost of hybrid cars
+289	3	4	hybrid cars NJ tax rebate
+290	3	4	energy ll tax credits for hybrid cars
+291	3	4	when were hybrid cars invented
+292	3	4	conservatives and hybrid cars
+293	3	4	diesel hybrid cars
+294	3	4	general motor hybrid cars
+295	3	4	hybrid cars value
+296	3	4	honda civic hybrid cars
+297	3	4	hybrid cars miles per gallon
+298	3	4	dodge hybrid cars
+299	3	4	new electric petrol hybrid cars retailers
+300	3	4	hybrid cars with all wheel drive
+301	3	4	Best Hybrid Cars
+302	3	4	Tax Incentives for Hybrid Cars
+303	3	4	toyota camry hybrid cars
+304	3	4	hybrid cars work
+305	2	3	hydro electric hybrid cars
+306	2	3	information about how hybrid cars work
+307	2	3	hybrid cars in south america
+308	2	3	hybrid cars AND alternative fuels
+309	2	3	hybrid cars reviewed
+310	2	3	Honda Hybrid Cars
+311	2	3	hybrid cars consumer report
+312	2	3	overstocked hybrid cars
+313	2	3	Electric And Hybrid Cars And The Future
+314	2	3	hybrid cars fuel cell
+315	2	3	electric vehicles review hybrid cars
+316	2	3	hybrid cars fact or fiction
+317	2	3	used prius hybrid cars in whatcom county
+318	2	3	hybrid cars battery
+319	2	3	Federal Tax Rebate On Hybrid Cars
+320	2	3	hybrid cars consumer info
+321	2	3	hybrid cars nissan
+322	2	3	who invented hybrid cars
+323	2	3	How Are Hybrid Cars Environmentally Friendly
+324	2	3	Electric Hybrid Cars History
+325	2	3	electric and hybrid cars ecology benefits
+326	2	3	chevy hybrid cars
+327	2	3	Government Regulation of Hybrid Cars
+328	2	3	federal income tax credit for Hybrid cars
+329	2	3	hybrid cars advantages
+330	2	3	why hybrid cars are good
+331	2	3	studies on hybrid cars versus gasoline cars
+332	2	3	Li-ion batteries for hybrid cars
+333	2	3	Are Hybrid Cars Efficient
+334	2	3	hybrid cars vs gasoline engines
+335	2	3	hybrid cars save on gas
+336	2	3	hybrid cars edmond
+337	2	3	hybrid electric vehicles2c hybrid cars
+338	2	3	2007 Hybrid cars
+339	2	3	hybrid cars china chang'an motor
+340	2	3	hybrid cars canada
+341	2	3	Hydrogen Fuel Cell Powered Hybrid Cars
+342	2	3	hybrid automobile companies
+343	2	3	HYBRID AUTOMOBILES
+344	2	3	what is hybrid automobile
+345	2	3	toyota Highlander Hybrid automobile
+346	2	3	Honda Hybrid Automobiles
+347	2	3	used hybrid automobiles southern wisconsin
+348	2	3	How Do Hybrid Automobiles Work
+349	2	3	Who is the world's largest hybrid automobile fan
+350	2	3	HYBRID CARS TOYOTA CAMRY
+351	2	3	CONSUMER BEHAVIOR TO HYBRID CARS
+352	2	3	hybrid cars, toyota
+353	2	3	Gas Powered Cars Vs Hybrid Cars
+354	2	3	Graphs on Hybrid Cars
+355	2	3	hybrid cars to rent
+356	2	3	saturn hybrid cars
+357	2	3	What Companies Make Hybrid Cars
+358	2	3	hybrid CARS
+359	2	3	california carpool hybrid cars
+360	2	3	Hybrid Cars   Technology Of The Future Or Passing Fad
+361	2	3	General Motors Hybrid Cars
+362	2	3	cons hybrid cars
+363	2	3	Hybrid Cars Supply And Demand
+364	2	3	Cars   See Entire Guide to Cars   Hybrid Cars
+365	2	3	New Electric Petrol Hybrid Cars
+366	2	3	Hybrid cars gm
+367	2	3	hybrid vehicles AND clean air
+368	2	3	hybrid cars using extra batteries for better mpg
+369	2	3	photos pictures hybrid cars
+370	2	3	Plugin Hybrid Cars
+371	2	3	Problems With Hybrid Cars
+372	2	3	Pre-owned Hybrid cars
+373	2	3	Hybrid Cars With The Best Gas Mileage
+374	2	3	Electric Hybrid Cars Ecology Benefits
+375	2	3	future of hybrid cars
+376	2	3	Graph comparing hybrid cars to regular cars
+377	2	3	HYBRID CARS AND WHEN THEY STARTED
+378	2	3	Maintenance Cost For Hybrid Vehicles
+379	2	3	Hybrid Vehicles Prius
+380	2	3	hybrid vehicles and models and sports
+381	2	3	diesel and hybrid vehicles
+382	2	3	Do Hybrid Vehicles Really Get Good Gas Mileage
+383	2	3	hybrid cars improving environment
+384	2	3	All car manufacturers who make hybrid cars
+385	2	3	Hybrid Cars & background
+386	2	3	Hybrid Cars Fuel Cell
+387	2	3	vegan hybrid cars
+388	2	3	technology of hybrid cars
+389	2	3	history of hybrid vehicles
+390	2	3	hybrid cars get up to 250 miles per gallon
+391	2	3	new hybrid cars on the marcket
+392	2	3	the best hybrid cars
+393	2	3	economic benefits of using hybrid vehicles
+394	2	3	steam hybrid vehicles
+395	2	3	articles on hybrid vehicles
+396	2	3	information on hybrid vehicles
+397	2	3	Gas Electric Hybrid Cars
+398	2	3	hybrid cars approved by caltrans for carpool lane
+399	2	3	Pictures Of Hybrid Vehicles
+400	2	3	Cons Of Hybrid Vehicles
+401	2	3	current hybrid vehicles
+402	2	3	Topics on Hybrid Vehicles
+403	2	3	Hybrid Vehicles Vs Gasoline
+404	2	3	Tax Credits For Hybrid Vehicles
+405	2	3	info on hybrid vehicles
+406	2	3	certified pre-owned hybrid vehicles
+407	2	3	hybrid cars and milage tax
+408	2	3	manufacturers with hybrid vehicles
+409	2	3	dangers hybrid vehicles
+410	2	3	ford hybrid vehicles schedule
+411	2	3	top selling hybrid vehicles in america
+412	2	3	hybrid cars reviews
+413	2	3	advantages and disadvantages hybrid cars
+414	2	3	future hybrid cars photos
+415	2	3	techonology of hybrid cars
+416	2	3	hybrid cars used midwest
+417	2	3	How Many Hybrid Cars Shipped Or Made In The Usa
+418	2	3	are hybrid cars solar cars
+419	2	3	Different Types of Hybrid Cars
+420	2	3	Where Did Hybrid Cars Originate
+421	2	3	diffrent hybrid vehicles
+422	2	3	Hybrid Vehicles Vs Gasoline Cars Charts And
+423	2	3	Honda Hybrid Vehicles
+424	2	3	Benefits of Hybrid Vehicles
+425	2	3	Tax Incentives For Hybrid Vehicles
+426	2	3	COMPARATIVE REVIEWS OF HYBRID VEHICLES
+427	2	3	List Of Hybrid Vehicles
+428	2	3	Why Hybrid Vehicles Are Better
+429	2	3	2006 Tax Credits For Hybrid Vehicles
+430	2	3	Maintenance Of Hybrid Vehicles
+431	2	3	Hybrid Vehicles Vs Gasoline Vehicles
+432	2	3	Cheverolet hybrid vehicles
+433	2	3	tax incentives hybrid vehicles
+434	2	3	New Energy Ll Hybrid Vehicles
+435	2	3	Prices of Hybrid Vehicles
+436	2	3	Hybrid Vehicles And Tax Credits
+437	2	3	Energy Ll Hybrid Vehicles
+438	2	3	New Hybrid Vehicles
+439	2	3	hybrid cars comparison

@@ -1,0 +1,33 @@
+# title:Are You Invisible?
+
+author:Margaret Paul
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_1352.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+Ellen was brought up to be invisible. She was taught to be very tuned into others� feelings and needs, but to never have any of her own. Her family made it clear to her that her job was to give to them but to never expect anything in return. As a result, Ellen learned to be totally tuned out to her own feelings and needs. It was as if she, as a person, didn�t really exist, other than to be there for others.
+When Ellen�s feelings and needs did surface, she would tell herself that they weren�t important, that she was strong and could handle not having her feelings cared for and or her needs recognized. She convinced herself that if she just cared enough about others, others would eventually care about her. It never happened.
+The inner stress of never attending to her own feelings and needs and always feeling so invisible to others as a result finally took a toll on Ellen�s health. Ellen is now dealing with cancer and finally has to attend to herself.
+Many of us have learned to be invisible � to ourselves and to others. What are some of the ways you create invisibility?
+
+	Do you remain silent, not speaking up for yourself, when feeling discounted or unseen by others?
+	Do you ignore your own feelings and needs in deference to others?
+	Do you go along with what others want, even if you really want something else?
+	Do you accept blame for things that you know are not really your responsibility?
+	Do you put aside your own opinions and accept the opinions of others to be accepted?
+	Do you accept disrespectful behavior from others, finding ways to excuse the behavior?
+	Do you pretend everything is okay when you are really feeling lonely or sad?
+	Are you conflict avoidant, preferring peace at any cost rather than rock the boat?
+	Are you carrying too much of the load at home or at work, without complaint?
+	Do you pretend to like a food, a movie, a topic of conversation, or sex, rather than run the risk of disapproval or rejection?
+	Do you allow yourself to be violated in any way � physically, emotionally, verbally, sexually � to avoid rejection?
+	Do you allow others� anger or bullying to control you into doing what they want?
+	Do you do everything yourself, never asking others for help?
+
+How often do you end up feeling unappreciated, unseen, not valued? How much of this is a reflection of how you treat yourself?
+If your own feelings and needs are invisible to yourself, they will end up being invisible to others. It is not realistic to constantly put yourself aside and then expect others to value and respect you. Anytime you tolerate uncaring or disrespectful behavior in others to avoid conflict, you are training others to see you as invisible, to not care about your feelings and needs.
+If you have been allowing yourself to be invisible for a long time, it is a real challenge to start to care about yourself. You need to be willing to go through a difficult period of feeling others� anger and resentment. After all, you trained them for years to not have to care about you or see you, and now you are changing the rules. They won�t like it, but they will eventually respect you for it. You will also discover in the process of caring about yourself who really cares about you and who has just been using you. Those people who really care about you will eventually applaud your self-care, while those who were just using you will go away or be constantly angry with you for changing.
+It takes great courage to shift from invisibility to being seen and valued. It takes great courage to be willing to lose others rather than continue to lose yourself. Yet, like with Ellen, your very life may depend upon it. Hopefully, you will not wait until you are ill or feel alone and cast aside by others to start to become visible to yourself.
+It must start with yourself � with learning to tune into, acknowledge, value, and take loving action for yourself regarding your own feelings and needs. It means moving into personal responsibility for your own feelings and needs rather than taking care of everyone else in the hopes they will eventually take care of you. If you are ever going to feel cared for and loved, it has to start with you caring about and being loving to yourself!
+ZZZZZZ

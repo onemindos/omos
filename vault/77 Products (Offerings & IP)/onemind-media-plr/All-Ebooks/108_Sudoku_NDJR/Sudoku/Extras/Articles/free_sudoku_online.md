@@ -1,0 +1,24 @@
+# Post or Host Your Sudoku Online � It�s Free and It�s Fun
+
+Are you familiar with the Rubik�s Cube? Have you enjoyed the challenge it provides? If you enjoyed challenge and you still want to be challenged, try the Sudoku game. If you�re not familiar with the game, well, Sudoku is a number puzzle game that requires a lot of patience and logic skills. It is played on 9 inches width and 9 inches long grid that is divided to nine small squares. The aim of the number puzzle is to fill up the values starting 1 to 9 for it to be visible only once in every row and column. You are presented by few of the numbers and then you need to search for the position of the other values with the aid of your logic and deductive reasoning.
+
+It is an addictive game that has spread throughout the United Kingdom like a storm and is currently taking over the world.  Ever since it existed in the late 19th century, the game�s popularity has cultivated.
+
+It is fascinating puzzle game which can easily be found in books, newspapers, and game online sites. Free Sudoko games are now available on theses online sties. They are posted or hosted by some computer enthusiasts and Sudoku fanatics.  
+
+Nowadays, you can now type your own Sudoku number puzzles, email them to your family and friends or you can even post them in forums. In addition, you can join in competitions on Sudoku Solving and you can email your puzzle solutions URL totally free.
+
+Have you tried sharing your Sudoku games with your brother via email, or via forum or group postings? If yes, perhaps you already know how difficult the task is. Each day, tons of Sudoku sophisticates across the world attempt to solve Sudoko number puzzles. A lot of them share their Sudoku games, solutions, and intermediary steps. They will probably say that the sharing and posting of their Sudoku puzzle is one hell of a task.
+
+Why is this sharing, posting or hosting Sudoku stuff difficult? It is because you have to compose your text-based Sudoku grid, or you have to put in the number entries in text form together with dashes or dots for the empty cells.
+
+How totally ill at ease and time wasting? The entries would look like not a Sudoku. It would seem like worse for the person who reads. Are you able to solve the way it is. You have to carefully write the numbers on to your computer or in a piece of paper with the use of few templates before it make sense. After this, you can now sit back, breathe and relax.
+
+A free Sudoku host online site has been made which then allow you simply to just crack in your own Sudoku game and you will be able to share them to anywhere and anyone throughout the internet. Your site is suitably named free Sudoku for you to able to host your own Sudoku puzzle for the entire world to see.
+
+You just have to type the corresponding Sudoku numbers in the correct cells on a big Sudoku screen then just click on the submit key or button. It is that easy and simple. A URL will be provided by the site in which you can just copy then paste it to an email or place it in a discussion board. After a recipient had clicked on to such link, a page with �your Sudoko puzzle� phrase will be shown similarly the way you entered. The funky text grids and ASCII number junks will not anymore show up.
+
+And the great part is when your recipients are able to try to decipher your Sudoku puzzle directly on to the web page that prompted. And it is surely free for them as well.
+
+Finally, the prompted screen will allow the recipients to make deletions, additions as well as changes to the blank cells. However, they cannot make changes to the filled cells. They may attempt to solve your Sudoku puzzles in the �in situ� found on the screen.
+Now, with these basic steps you can already host or post your Sudoku puzzles online, absolutely fun and free!

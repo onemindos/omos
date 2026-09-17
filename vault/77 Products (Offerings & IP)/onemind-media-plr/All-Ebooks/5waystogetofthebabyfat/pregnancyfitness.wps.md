@@ -1,0 +1,15 @@
+# Staying Fit During Your Pregnancy
+
+Keeping fit during your pregnancy is great for you, not only will it help you keep your body toned but it also can help when it comes time to push that baby out. Every pregnant woman wants to be able to go back to her pre-pregnancy weight after the baby is born, but the only way to do that is to make sure you can. By excising or working out every day you are making sure you don�t add fat to your body.  During labor it�ll be much easier to push the baby if you�ve been strengthening your leg and stomach muscles. Who knows, it may even make labor a little bit shorter.  Isn�t that what we all want?
+
+Plus when you are tired and just feeling a little blue, just by exercising you actually increase your energy. 
+
+Here are a few quick things you can do to stay fit during pregnancy, without really having to break out a sweat. I�m sure by now you�ve heard of yoga, this is a very good thing for you to practice, especially if you haven�t always been in the best of shape. Not to worry, there are beginning levels here, you don�t have to jump into the human pretzel right away. Try purchasing a set of small weights that you can use throughout the house, like hand weights or wrist weights that can use while walking. Instead of just laying on the couch while you rest you can be lifting small weights. 
+
+Get a chair and try doing a couple crunches, 5 to 10 in the beginning to make sure you don�t pull anything. Don�t worry you can always add to it as the weeks go on.  
+
+Try running, walking or jogging outside. Not only will this boost up your energy but it�ll also help get your spirits up, especially if you�ve been inside all day. Remember, if you are going for a walk to always bring a drink with you. You don�t want to dehydrate out there. Always make sure that you are wearing comfortable shoes, before you leave the house. If you didn�t always run, ask your doctor if you can. Sometimes a doctor may suggest you walk around the block at first and increase it from there, if you didn�t always do it before you were pregnant. 
+
+If you can you may want to try going for a swim or try bicycling. However, if you find that you are accident prone you may want to stay away from the bike.  A bike accident is something that can easily happen, even when you�ve always road a bike. Swimming can help you relax and stay cool. Take a dip in the pool near you, they may even have a swim class for pregnant women in your area. This would be a great way to meet other moms.  
+
+Whenever you are doing exercises, make sure you aren�t overdoing it. If you believe you could be stop immediately and take a break. You never want to do anything that�ll harm the pregnancy.

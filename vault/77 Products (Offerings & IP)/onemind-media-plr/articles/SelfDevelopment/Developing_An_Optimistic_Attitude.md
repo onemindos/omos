@@ -1,0 +1,25 @@
+# title:Developing An Optimistic Attitude
+
+author:Wendy Betterini
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_4313.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+How's your attitude lately? I caught myself doing something surprising a few days ago: being a pessimist!
+I was working on a big project and making great progress, when suddenly I encountered a big obstacle that would take more time and energy to get through than I had anticipated. The first words out of my mouth were, "Of course, everything always goes wrong for me." Gasp! Who said that?
+I tend to think of myself as a positive person most of the time. I almost always have a smile or laugh available, and I try to look on the bright side of things. But I wasn't always like that. I spent most of my early life stuck in negative thinking. For the past few years I've worked very hard on changing my mindset to a positive one, and helping others to do the same. The other day I realized just how easy it is to slip back into negative thinking again.
+To be fair to myself, I was frustrated when I uttered that negative phrase. It's understandable that we get upset when things go wrong. However, what I said simply isn't true. Everything always goes wrong for me. At that moment, all of the hard work I've done on myself over the past few years vanished. I was right back where I used to spend most of my time: being a "victim."
+I like to joke that I own lakefront property in "Victimville." ;-) But I don't have to stay there. None of us do.
+Expecting the Best
+You've probably heard the phrase, "Expect the Best, but Prepare for the Worst." Do you really expect the best? Or are you just waiting for something negative to happen so you can say, "Everything always goes wrong for me." Isn't preparing for the worst the same as expecting the worst?
+We can't expect the best AND the worst. We have to choose. In my moment of frustration, I was expecting the worst. Once I realized what I was doing, I decided to change it around. One obstacle does not mean my whole project is ruined. It just means I might have to work a little harder, or a little longer to reach my goal. What's the big deal? At that moment, the big deal was that I wouldn't achieve the outcome I was expecting, in the timeframe I expected to do it. Ah, notice the word "expect" sprinkled throughout that statement. How often do our expectations get us into trouble? For most of us, quite often!
+So I uttered a phrase that would cancel out my previous negative one: It's all good. Whether I meet my goals or not, it's all good. Even if more obstacles come up, it's still all good. Everything happens exactly when it's meant to. That phrase has the power to relieve all pressure and stress, if we allow it to.
+Reinforcing Postive Thoughts
+The truth is, positive thinking takes consistent effort. It would be great if we could "fix" our negative thinking once and for all, and never have to worry about it again. Unfortunately, it doesn't work that way. We have the tendency to form habits around our most common routines, whether physical or mental. In order to change negative thinking into positive thinking, we need to work at it constantly.
+There are two ways to do this:
+Replace the negative thoughts with positive ones - It takes practice, but you can actually catch yourself thinking negative thoughts. Begin to form an awareness of when this happens. Because I've been working at this for so long, I immediately noticed when I uttered that negative phrase. If you are new to positive thinking, it might take some time for you to notice when negative thoughts come barging in. When you do notice them, immediately question the thought. Is it really true? Does it accurately reflect your reality? Even if it does, you can still choose something else. What reality would you like to create? Then form a positive statement that will cancel out the negative one. Every time you come across a negative thought, go through this same inner process. Question the negative thought and then replace it with a positive one.
+Preventative maintenance - You don't have to wait for negative thoughts to come up in order to start thinking more positively. Make it a habit to purposely feed your mind positive thoughts each day -- several times a day. Keep it simple. Say things like, "I am a good person." -- "I love my life." -- "I'm good at what I do." -- "I make my own good luck." -- "I choose to be happy." -- and my personal favorite, "It's all good."
+At first you might not really believe these positive thoughts, and that's okay. Keep at it. Say them as if you really did mean them, and eventually you will begin to believe it. Remember that our negative thinking patterns are a result of YEARS of reinforcement. Changing negative thinking patterns to positive ones takes time.
+I'm in this journey with you, you are not alone. Remember that it IS a journey. We don't have to rush to the finish line, we just need to enjoy the scenery. It's all good -- really! :-)
+ZZZZZZ

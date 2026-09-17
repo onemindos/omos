@@ -1,0 +1,52 @@
+{
+  "name": "lob-1.0.0",
+  "version": "1.0.0",
+  "description": "Send physical mail (letters, postcards) and verify US addresses via the Lob API",
+  "main": "index.js",
+  "tools": [
+    {
+      "name": "lob",
+      "description": "Send physical mail and verify addresses via Lob. Actions: 'send_letter' (mail a letter via USPS), 'send_postcard' (mail a postcard), 'verify_address' (validate US address), 'get_letter' (check delivery status), 'list_letters' (recent letters), 'cancel_letter' (cancel if not yet printed). Uses test mode when LOB_API_KEY starts with 'test_'.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "description": "What to do: send_letter, send_postcard, verify_address, get_letter, list_letters, cancel_letter" },
+          "to_name": { "type": "string", "description": "Recipient name" },
+          "to_address_line1": { "type": "string", "description": "Recipient street address" },
+          "to_address_line2": { "type": "string", "description": "Recipient apt/suite" },
+          "to_city": { "type": "string", "description": "Recipient city" },
+          "to_state": { "type": "string", "description": "Recipient state (2-letter)" },
+          "to_zip": { "type": "string", "description": "Recipient ZIP code" },
+          "to_country": { "type": "string", "description": "Recipient country (default: US)" },
+          "from_name": { "type": "string", "description": "Sender name" },
+          "from_address_line1": { "type": "string", "description": "Sender street address" },
+          "from_address_line2": { "type": "string", "description": "Sender apt/suite" },
+          "from_city": { "type": "string", "description": "Sender city" },
+          "from_state": { "type": "string", "description": "Sender state" },
+          "from_zip": { "type": "string", "description": "Sender ZIP" },
+          "from_country": { "type": "string", "description": "Sender country (default: US)" },
+          "content": { "type": "string", "description": "HTML content for letter/postcard body" },
+          "file_url": { "type": "string", "description": "URL to PDF file (alternative to content)" },
+          "color": { "type": "boolean", "description": "Print in color (default: false)" },
+          "double_sided": { "type": "boolean", "description": "Print double-sided (default: true)" },
+          "mail_type": { "type": "string", "description": "Mail class: usps_first_class or usps_standard (default: usps_first_class)" },
+          "use_type": { "type": "string", "description": "'operational' (invoices, receipts) or 'marketing' (promotions)" },
+          "address_line1": { "type": "string", "description": "Address to verify (for verify_address)" },
+          "city": { "type": "string", "description": "City to verify" },
+          "state": { "type": "string", "description": "State to verify" },
+          "zip_code": { "type": "string", "description": "ZIP to verify" },
+          "letter_id": { "type": "string", "description": "Letter ID (for get_letter, cancel_letter)" }
+        },
+        "required": ["action"]
+      }
+    }
+  ],
+  "env": [
+    {
+      "name": "LOB_API_KEY",
+      "description": "Lob API key. Use test_ prefix for sandbox, live_ prefix for real mail. Get from dashboard.lob.com",
+      "required": true
+    }
+  ],
+  "dependencies": {}
+}

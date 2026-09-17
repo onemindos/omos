@@ -1,0 +1,26 @@
+# Title:
+
+How To Keep Your Mind Sharp, Improve Your Memory And Iq, Impress Others, And Make More Money
+
+Word Count:
+684
+
+Summary:
+Everyone has seen or heard of someone with a photographic memory. We have also seen or know people afflicted with alzheimers, dementia, and low IQ's. Why do some people have such memory power and others either never have it or are stripped of it by disease and neglect.
+
+Studies have shown that 50% of brain power and function is genetic, and 50% is environment derived. What that means is that, yes, there are some that are born better off than others - Just like some people a...
+
+Keywords:
+
+Article Body:
+Everyone has seen or heard of someone with a photographic memory. We have also seen or know people afflicted with alzheimers, dementia, and low IQ's. Why do some people have such memory power and others either never have it or are stripped of it by disease and neglect.
+
+Studies have shown that 50% of brain power and function is genetic, and 50% is environment derived. What that means is that, yes, there are some that are born better off than others - Just like some people are born with more wealth than the rest of us (Paris Hilton, Martin Sheen, etc...), but for every one inherently better off rich kid (spoiled brat) there are 3 or more selfstarters that have equaled or surpassed them with hard work. This is the same with inherent genius. This means that 50% of your brain power is a direct result of its environment - what it is exposed to, the activity it receives, and can be seriously developed to even surpass the born super geniuses.
+
+The brain is very similar to a muscle. We have all heard of stories of the underdog in sports. Someone whom has overcome great difficulty, diseases like cancer (Lance Armstrong), etc... and risen to be the best - far exceeding people with better genetics, better training, etc... The brain is no different. The number one thing to increase your brain's thinking power is activity. Just like muscles it needs to be exercised and stretched out.
+
+Dr's know that the way to avoid mental decline is to constantly expose the brain to new activities. Keep it active. Studies have shown that the harder you work your brain the more it will improve. It has actually been proven that those who work their minds the hardest have actually shown definite and marked improvement in scores on various intelligence tests. It has also been proven that stagnation will cause a marked decline on those same tests. This same activity has even been proved to help those whose minds have already started to decline - even in alzheimers patients.
+
+Now, just like the body has many different muscles, the brain has numerous functions and each has its own area or region. This is why there is autism and savants like Rainman. Gentics just like the environment can lead to gross overdevelpment of a region and underdevelopment of others (autism). Just like body builders wouldn't want to just work on their chest muscles, you want to try and expand your whole range of thought for a more well rounded brain. There are many different areas of brain thought like short term and long term memory, spatial perception, logic, some even say there is an unknown area that has been related to psychics and communication with the unknown (studies have actually shown that there is an area of the mind unlinked with any known thought processes that is highly developed (extensive increases in neuropathways and blood flow) that is only seen in psychic and paranormal activities - interesting!
+
+We will not go into how to exercise each of the areas of the brain as there are numerous books on this (a great one is by Harry Lorraine - The Memory Book. Just remember crossword puzzles, college and adult education classes, reading - especially different subject matter, brainstorming, etc... will all help you develope your mind and reach your peak mental fitness and potential. I just want you to realize how important it is to keep your mind active and sharp. This mental exercise will inherently improve your IQ, bolster your confidence, make you and your life more interesting, earn you more friends, and make you more money for all these same reasons, regardless your profession - what have you got to lose. Maybe through brainstorming and streching the limits of your mind you will invent new ideas, products, or maybe even start your own business. This is how we invented our patented headlight cleaner and restorer, formed a biochemical company, and became the number one supplier of TCA peel skin peels in the world. Start exercising your brain today - you never know where it may take you!

@@ -1,0 +1,15 @@
+# Genealogy Search Engine � Searching For Your Lost Relatives
+
+There are about an estimated of 6,525,170,264 people living in the planet today. You have to consider that that's a lot of people and imagine if you are related to roughly a million of this people. It's hard to believe but it is a possibility. Even incumbent president George W. Bush traced his relations to his rival John Kerry. In fact, John Kerry is the 16th cousin, three times removed of George W. Bush. This is an amazing fact but still, it is.
+
+Today, because of DNA testing and professional methods used by genealogist, it is now very much possible to trace your long lost relatives that you didn�t even know existed. Finding your genealogy is a fun family activity where everyone will be fascinated about who they are related to. Who knows? Maybe when you try searching for your genealogy it will uncover certain facts that you are related to someone famous today, such as Tom Cruise or even famous politicians, such as George W. Bush. It may be amazing, but it is a possibility.
+
+More and more people are now trying to trace their genealogy for fun, or for medical purposes. Some do this just to find out how far they can trace their ancestors and their distant relatives. So, if you are one of these people who are trying to find their genealogy, you can consider hiring a genealogist to do the job for you. However, you may find that hiring genealogists may be costly and finding your genealogy yourself can prove very hard.
+
+However, because of modern technology, there is another way on how you can search for your genealogy. Today, the internet is one of the widely used communication tools available. Besides, it is easier, it is faster and the best thing about the internet is that it's cheap. There are available websites today that are dedicated to genealogy search. There are even genealogy search engines where you can type in your grandparent's full name, and date of birth to reveal their family tree.
+
+You have to consider that birth records, marriage records, death records and even marriage records are now also stored in computers today. Many organizations make this available on the internet. Because of this, genealogists and web developers use this tool in order to make an automated family tree and make it available in an easy to read interface in the internet.
+
+There are free and pay genealogy search engines available. If you are just starting out your search, you can consider using the free genealogy search engine. However, free genealogy search engines have only limited resources and can only take you to your great-great grandparents or less. If you want to broaden your family tree, you have to consider using the pay genealogy search engine website. It can offer more comprehensive results and some can also offer automated family tree that is easy to use and is printable in large formats.
+
+So, if you want to find out about your past, you should consider searching for your relatives through genealogy search engines. You will be surprised on how many people you are related to.

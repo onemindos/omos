@@ -1,0 +1,33 @@
+# title:Personality Testing; Myth and Realities
+
+author:Saqib Ali Ateel
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_2664.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+It is commonly believed myth that personality testing instruments can measure your personality and predict your future behaviors. The pre-employment testing mechanism has been following this creed without any solid evidence. The testing industry claims all out validity. The educational institutions and employer organizations use them for screening purposes. Their transparency and equity has even convinced the courts of law. 
+But it is still an unresolved riddle; what do they test?
+Do they test personality? What is personality then? What is its nature? How does it come into existence? Is it outcome of evolution? Does matter has capability to generate a personality? Why animals don�t have a personality? Does it remain the same during whole of your life? And many more questions.
+It is like peeling off an onion. Every strip leads to many more. Finally you get a heap of onion strips. Where is the onion? 
+But personality is not an onion�
+Allport has recorded hundreds of different definitions. Most of the psychologists equate it to your style, behaviors and reactions. They have devised instruments to measure these main areas. The collected data about your behaviors and temperaments help them to decide your career. You may organize your behaviors in future but you may never be able to go for a career of your passion.
+Why?
+Experts like to predict. They predict weather. They predict political situations. They predict economic conditions. They predict your future with signs, numbers, cards or palms. And they predict your future performance with the help of personality testing instruments. 
+What�s Your Personality?
+It is well recognized fact that every human being has a personality. It is not merely your physical body. It is not merely your consciousness. It is not merely your ego. It is not merely your behaviors. It is not merely your physical expression. It is not merely your style. It is not merely your temperament.
+But they all and many other characteristics are expressions of your personality. 
+I don�t find it wise to define personality. Admittedly it is an abstract reality. You get it with your birth. You can either develop it or disintegrate. Your style, behaviors and reactions are expressions of your developed, undeveloped or under-developed personality. 
+How do you look? How do you react? How do you talk? How do you live? How do you think? They all are expressions of your personality. The psychometrics measures these expressions and not your personality.
+The abstract nature of personality can neither be measured nor be analyzed with any scientific or non-scientific tool. It can only be visualized. It can be developed. It can be disintegrated. Your thinking and doing makes all out the difference. A developed personality gives better style, behaviors and reactions than an undeveloped one.
+Why Psychometrics are Getting Popular?
+The very first reason is that every one wants to know who he is. 
+But bigger reason of their massive use is just a desire of the employers to avoid bad-hire. They get hundreds of applications for a single situation. They are the only available tools to avoid idiosyncrasies. 
+They don�t have alternatives for psychometrics.
+Tests are going to stay. Whether you are trying to be admitted for a specific discipline or looking for your dream job, you are going to encounter psychometrics at one stage or the others. You need to prepare before encountering them.
+How to Prepare for Personality Testing Sessions?
+Keep in mind�
+Personality is an amazing entity. You can think. You can visualize. You can discover. You can express. You can plan. You can create. You have unlimited hidden potentials. But your selected options on paper are going to decide your future. 
+You should practice offline and online personality tests before encountering a real session. Your practice shall not only make them familiar to you but also generate a list of your strengths and weaknesses. You can improve them with your conscious effort. 
+However, it is much more important to learn how different personality and aptitude tests measure expressions of your personality. What theories are working behind them? How do they relate different jobs with different types? This knowledge shall make it a lot easier to encounter psychometrics.
+ZZZZZZ

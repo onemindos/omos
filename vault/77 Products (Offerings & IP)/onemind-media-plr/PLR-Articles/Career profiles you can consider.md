@@ -1,0 +1,15 @@
+# Career profiles you can consider
+
+It is not easy to figure out what you want to do with your life.  It is a hard decision that you need to think about as soon as you can because time does go by fast and you cannot miss out on an opportunity.  You have to use the resources that are out there to help coordinate your future and figure out a career profile that you can consider. 
+
+There are so many possibilities when it comes to finding a career that is going to work for you. Many times people are not sure what they want to do in life and how they want to achieve their goals. Thinking about the different areas that you can change about yourself and what you do is going to be a very big part in making certain choices for yourself.
+
+Gaining different career profiles and learning about them as much as you can will help you get a better idea of what to expect when you are in search of a good career possibility.  Figuring out what is going to make the happiest and give you the satisfaction that you are looking for will be a good start.  You need to take a self-assessment of yourself and what ideas you may have in mind.  Being able to know about the careers that are out there and what they can do for you may give you the insight that you are in need of. 
+
+You should make a list of the things that you like to do and the things that you are not so interested in.  Do you like working with people and being around others in your job? Are you looking for something that deals with finances or the money market?  What type of careers interests you and your desires?  Many of the questions that we ask ourselves can help us figure out a good career path that will suit our personality and characteristics. 
+
+Being able to take time and learn as much as we can about the career profiles that are in our category can be great help when looking for the perfect fit in our life.  Making sure that we are using the factors from what we learn in our self-assessment test will give us a great benefit when looking for a career that gives us great satisfaction.  
+
+Management is another good career profile that many people are looking into.  Sometimes we want to be in control of a situation and be in charge of a business or company.  When we find that we have these dreams and work ethics then we need to move on them and create the perfect job that will make us get what we want and more.  Taking time to learn about the career profiles that we have heard about will give us a great insight of what life has out there and what we were meant to do.  
+
+Being challenged is another possibility that many people want to have in their life.  They want to take on challenges and be able to think about a topic and find answers for others.  Learning about resources that can give good advice to those that are looking for a career profile is something that can really help.  Many times just listening to others that are in the same field that you are looking at will give you good tips about what to expect and what you will need to have.  This can get you started on deciding if this is the path for you or not.

@@ -1,0 +1,1 @@
+<iframe src="http://rcm.amazon.com/e/cm?t=<?=$AmazonID;?>&o=1&p=13&l=st1&mode=<?=$AmazonMode;?>&search=<?=$AmazonSearch;?>&fc1=<?=$AmazonTextColor;?>&lt1=_blank&lc1=<?=$AmazonLinkColor;?>&bg1=&f=ifr" marginwidth="0" marginheight="0" width="468" height="60" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>

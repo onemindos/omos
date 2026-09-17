@@ -1,0 +1,215 @@
+# Opening-closing paragraphs
+
+Use these to open and close your articles. Then
+choose 2 to 5 paragraphs from the 'paragraphs' file
+and you will have a complete article that is uniquely
+created by you. Then submit it to article directories
+to get visitors to your squeeze page.
+
+----------------------------------------------
+
+Openings:
+Use these to open your articles
+
+----------------------------------------------
+
+We all know that cats are loving and truly wonderful creatures.  These
+days, it isn't out of the ordinary to see a cat in virtually every other home,
+sleeping in the window or cuddling up on the laps of their owners.
+Although cats have been popular pets for as long as most can
+remember, they weren't domesticated less than 5,000 years or so ago.
+Domestication took place in the valley of the Nile, which is what
+research tells us today.
+
+----------------------------------------------
+
+The exotic and somewhat mysterious Siamese cat hails from the
+country of Thailand.  They had always been a popular breed of cats,
+some even residing in royal palaces.  Siamese cats, in the past, were
+trusted to protect royal palaces and monasteries from evil spirits.
+These cats were also thought of as bringing good fortune to their
+owners as well.
+
+----------------------------------------------
+
+Over the last thousands of years, cats have pretty much handled their
+breeding themselves.  In the beginning, they were used for one
+purpose, hunting and killing rodents.  As the years progressed, we
+began to breed cats more to our liking.  Now days, there are several
+different breeds of cats, which you can tell if you look closely.
+
+----------------------------------------------
+
+Giving a cat a pill can be a nightmare.  No cat wants something shoved
+down his throat, and he will fight you tooth and nail to prevent it.
+Although most cats are small in size, you'd be quite amazed with how
+much power they actually have.  There are ways that you can get your
+cat to take his pills, which we will cover below.
+
+----------------------------------------------
+
+There are a lot of great gifts that you can give to cat lovers, although
+photo frames are among the most popular.  Photo frames are very
+affordable, and make a great gift for anyone who owns a cat or other
+pet.  Those who own more than one cat will truly appreciate photo
+frames  as it gives them a chance to show off their pet.  Cat lovers can
+also frame pictures of their pet for memories as well  and keep them
+forever and ever.
+
+----------------------------------------------
+
+Ringworm is a very common form of skin disease that is found in both
+dogs and cats.  Although its name makes you think otherwise, this skin
+disease isn't caused by any type of worm.  It�s actually caused by fungi
+known as Dermatophytes that feed on dead tissues found in the
+surface of the skin, spreading them around the skin of the animal.
+
+----------------------------------------------
+
+Cats that have been abused can appear severely maimed and
+damaged all over their exterior.  Some may appear to be in perfect
+shape on the outside, although all of the damage they sustained may
+be internal or emotional.  Even though physical damage is bad,
+emotional damage is much tougher to fix.  Cats who have physical
+abuse will still answer to a soft touch and soft voice, as long as they
+know that the abuse has come to an end.
+
+----------------------------------------------
+
+As most pet owners already know, heartworm treatment for cats and
+dogs isn't the same. Never, under any circumstances, should you give
+your cat heartworm treatment that is designed for a dog  or vice versa.
+Even though you may own both dogs and cats, you should always give
+them medicine that is designed for their species.
+
+----------------------------------------------
+
+These days, Persian cats are among the most popular breeds of cat.
+Well known for their gentle and sweet personalities and their long hair,
+Persian cats have very attractive features.  They are great companions
+for virtually anyone, and not very demanding.  Unlike other breeds, such
+as the Siamese breed, Persian breeds need very little attention.
+
+----------------------------------------------
+
+A cat whisper is somewhat similar to a dog or horse whisperer,
+although cat whisperers relate quite well with cats.  These types of
+people are unusually lucky and very successfully with cats.  In most
+cases, a cat will be abandoned or just show up at someone�s door.  In
+this event, the cat will adopt this individual as the cat whisperer.
+
+----------------------------------------------
+
+Cats use their claws for various purposes.  The claws are important to
+cats, as they are an essential part of balancing.  If you've ever noticed a
+cat jumping and latching on to a high object, you've probably noticed
+that he uses his claws to pull himself up.  When climbing trees, cats
+tend to use their claws to latch onto the bark and climb towards their
+destination.
+
+---------------------------------------------------------------
+
+Closings
+Use these to close your articles
+
+----------------------------------------------------------------
+
+There�s no mistaking the fact that cats are great companions.  You can
+get a kitten from a reputable breeder, through a local newspaper, or an
+adoption agency. Cats can also be obtained from a local pound,
+although people normally don�t like to choose this option.  No matter
+which way you decide to pursue, you should always make sure that your
+cat is healthy.  If you get a healthy cat, you won't have a lot of problems
+later on down the road.  Healthy cats were taken care of and normally
+have everything up to date including their vaccinations.
+
+----------------------------------------------
+
+If you can�t get any of the above techniques to work, you can always go
+to a local pharmacy and get them to a make flavored gel or liquid using
+your cats medication.  You should use this as a last resort though, as it
+can tend to get expensive.
+
+----------------------------------------------
+
+Abused cats are truly a sad thing, although they are out there.  Abused
+cats can be a sad thing to see indeed, especially those that were
+physically abused.  Abused cats need a loving home and a loving
+owner who will give them the type of lifestyle they deserve.  Always
+remember that if you are dealing with an abused cat you should
+always be as gentle as you possibly can.
+
+----------------------------------------------
+
+When you compare Persians to other breeds, you'll notice that the
+Persians are among the easiest to keep.  You don�t have to worry
+about things like jumping or climbing, as Persians don�t like to do
+either.  All you'll need to do is feed your cat and groom him or him on a
+daily basis.  Even though grooming can be quite a bit of work in the
+long run it�s well worth it when you have a healthy an beautiful Persian
+cat.
+
+----------------------------------------------
+
+Other great gifts for cat lovers include decorative mats with cat pictures,
+which you can get personalized for the owner if you prefer.  You can
+also give cat videos, musical cat dolls, cat shaped mail boxes, toys and
+treats, and various other goodies that are directed towards cat lovers.
+If you do your shopping on the Internet, you'll find that the possibilities
+are endless.  Cats are very popular pets meaning that you'll have no
+trouble finding the perfect gift for the cat lover in your life.
+
+----------------------------------------------
+
+Cats that have ringworm should be labeled as infectious.  If you have
+children in the house, you should keep them away from your pet.
+Whenever you handle your cat, you should always use gloves.
+Ringworms are contagious, and you should always use caution.  Even
+though it�s a mild disease, ringworm can result in serious problems due
+to the slow recovery time and fact that it�s contagious.
+
+----------------------------------------------
+
+Over the years, there has been quite a few breeds come along.  Cats
+were one of the first pets, and easily one of the most popular.  Millions
+of people around the world own cats, with many people preferring a cat
+over any other pet - including dogs.  No matter breed of cat you get -
+you�re sure to get a pet who make for a great companion for years and
+years to come.
+
+----------------------------------------------
+
+No matter how you look at it, a Siamese cat is a great pet.  Although
+the Siamese breed does require a lot of attention, they are excellent
+pets that you can spend a lot of time with.  They are great for kids as
+well, simply because kids can spend a lot of time with them.  As long as
+you give your pet the attention he craves - he will be your life long friend
+for as long as you have him.
+
+----------------------------------------------
+
+Although many don�t realize it, there are other ways to protect your
+things other than getting your cat de-clawed.  Getting a cat�s claws
+removed is very painful and confusing to the cat, and may totally change
+his outlook on things.  Before you decide to take the inhumane path of
+getting your cat de-clawed, you should look into your other available
+options- your cat will like these options much better.
+
+----------------------------------------------
+
+With all diseases, prevention is a lot better and safer than treatment.
+Be sure to talk to your vet and find out what heartworm prevention
+medication is the best to use.  Your vet can tell you what you need to
+get, and how to use it.  This way, you can prevent your pet from getting
+heartworms and the serious side effects and life threatening issues
+that go along with them.
+
+----------------------------------------------
+
+Cat whisperers on the other hand, can communicate with physically and
+emotionally abused cats.  Cats know who they will choose to be their
+cat whisperer, which is normally an individual they sense trust with.  Cat
+whisperers are common with cats, although most people have never
+heard of them before.  Even though a cat whisperer may be able to
+communicate better with cats, it will still take time to heal a cat that has
+been abused.

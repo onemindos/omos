@@ -1,0 +1,33 @@
+# The Health Benefits of Organic Meat
+
+Organic meat differs from regular meat in the way the animal farmer raised the animal priorto butchering.  Organic meats 
+must be certified through one of several certification organizations, including the Midwest Organic Services Association.  
+Farmers must follow strict organic guidelines in the production of the meat product.
+Meat certified organic are often born on farms and raised with the utmost of respect and animal dignity.  Beef cattle are 
+not raised in pens but are often free to roam the farm with unrestricted access to water, food, sunshine and outdoor air at 
+all times.  
+Everything that goes into an organic farm animal must also be organic.  The pastures the animals graze in must be certified 
+organic themselves.  Organic forage and grains grown organically must be fed to the animals and organic pest control must 
+be utilized on these farms.  No synthetic or chemical pesticides, herbicides or fertilizers are applied to local fields or 
+pastures.
+Organic animal farms must apply specific conservation practices to preserve the natural surroundings and the soil in the 
+area.  Water is not wasted and recycling is used whenever possible.
+No organic meat can be certified organic if the animal has been fed any antibiotics, growth hormones, steroids or animal 
+byproducts.  Animals are fed what they eat in the pastures and organically grown farm products, such as organic hay.  Water 
+is free from contaminants.  
+In many cases, animals grown on organic animal farms are removed from the program if they ever become sick enough to require 
+antibiotics.  They are removed from the herd as soon as their illness is discovered.  While antibiotics are an excellent way 
+to treat bacterial infections, there is always the risk of developing resistant strains of bacteria and no one knows the 
+health effects to consumers who eat meat treated with antibiotics.  Antibiotics speed the growth of cattle that seem to 
+grow using less feed but, because of resistances, sick animals often can�t be well treated and often die of their illness.
+Growth hormones, eliminated from the production of organic meats, are given to cattle to speed up their growth on less feed. 
+This is another situation where scientists do not know the effect of this practice on consumers who eat non-organic meats. 
+Most organic meat comes from animals grown from birth on small farms in which the animal has free range to move around on 
+the pasture and to eat when it wants to.  Such animals generally are healthier than their conventional counterparts and are 
+treated more humanely.  Animals are allowed to mate as they wish, adding to the sustainability of the farming practice.  
+Much of the organic meat is derived from bull meat, which is some of the leanest meat around.  Farmers who raise bulls and 
+sell them (called seed stock producers) must provide affidavits stating that their bulls were not raised using antibiotics 
+or growth hormones from the time of their birth. Such affidavits generally go back at least twenty months prior to the time 
+that the organic farmer purchased the animal.   
+Organic meats, particularly organic meat, may be somewhat more expensive than conventionally-grown meat.  In general, 
+however, the meat is fresh and the consumer can guarantee that there is nothing unhealthy in the organic meat product.

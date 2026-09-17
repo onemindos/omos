@@ -1,0 +1,37 @@
+# Title:
+
+Staying In Bed Can Cause Insomnia
+
+Word Count:
+517
+
+Summary:
+It would seem ridiculous to suggest that the reason you can't fall asleep is because you are in bed. As preposterous as this sounds, it can actually be the case. When a person is suffering from insomnia, and they continue to stay in bed, the problem can actually worsen.
+
+It's happened to most people at least once in their lives. They feel tired in the evening, so they decide to go to bed. Once there they find that sleep is hard to find. Minutes turn into hours and then befo...
+
+Keywords:
+insomnia
+
+Article Body:
+It would seem ridiculous to suggest that the reason you can't fall asleep is because you are in bed. As preposterous as this sounds, it can actually be the case. When a person is suffering from insomnia, and they continue to stay in bed, the problem can actually worsen.
+
+It's happened to most people at least once in their lives. They feel tired in the evening, so they decide to go to bed. Once there they find that sleep is hard to find. Minutes turn into hours and then before they realize it they have been in bed for three or four hours without even a moment of sleep.
+
+Insomnia is a common problem and although there are many medical ways to treat it, the answer might be found in getting out of bed.
+
+Sleep is of course fundamental to a human being's existence and if we feel that we aren't getting enough it can create a great deal of stress and unhappiness. To counteract that we sometimes go to bed before we feel tired. The idea being that once we are in bed, in the peaceful darkness, our body will natural take the hint and drift off. This is especially true if we have to wake up early or we have something stressful to tackle the next day, such as beginning a new job or starting school.
+
+The problem with that logic is that if you are not tired, being in bed is not going to change that fact. You cannot magically drift off to dreamland if your body is not ready yet. Instead you will become frustrated and even more determined to sleep. Insomnia sets in and your good intentions of getting a full eight hours of sleep turns into just an hour or two.
+
+If you are in bed and you cannot fall asleep after thirty minutes you should get back up. It may be discouraging to realize that you are back where you started, out of bed and no closer to falling asleep, but getting out of bed can put a stop to the insomnia.
+
+If you do get up there are a few things you can do that will help put you in the mind frame that you need to be to sleep. These include:
+
+Watch television. It's important to pick a program that is not stimulating such as the news or an action movie. You don't want to be stimulated.
+
+Listen to soft music. For some people music is very relaxing and if you sit in a darkened room with the music gently playing it can help your mind prepare for sleep.
+
+Read. Again choice is important. You shouldn't choose something that you'll become too engaged in. You want to be able to close the book or magazine once you're tired.
+
+Getting out of bed when you can't sleep doesn't mean that insomnia has already taken hold of you. It does mean that your mind isn't quite ready to shut itself off for the day. Instead get up, do something relaxing, and before you know it, you'll fall right to sleep.

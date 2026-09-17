@@ -1,0 +1,40 @@
+{"archived":false,"desc":"The NATS execution engine","lang":"Go","name":"nex","stars":310,"url":"https://github.com/synadia-io/nex"}
+{"archived":false,"desc":"Episode assets and source code for the Rethink Connectivity Screencast series","lang":"Go","name":"rethink_connectivity","stars":136,"url":"https://github.com/synadia-io/rethink_connectivity"}
+{"archived":false,"desc":null,"lang":"Go","name":"orbit.go","stars":83,"url":"https://github.com/synadia-io/orbit.go"}
+{"archived":false,"desc":null,"lang":null,"name":"awesome-nats","stars":80,"url":"https://github.com/synadia-io/awesome-nats"}
+{"archived":false,"desc":"Nats Java Flink Connector","lang":"Java","name":"flink-connector-nats","stars":34,"url":"https://github.com/synadia-io/flink-connector-nats"}
+{"archived":false,"desc":"Authentication Callout Library","lang":"Go","name":"callout.go","stars":23,"url":"https://github.com/synadia-io/callout.go"}
+{"archived":false,"desc":null,"lang":"Rust","name":"orbit.rs","stars":19,"url":"https://github.com/synadia-io/orbit.rs"}
+{"archived":false,"desc":"Connect Client SDK and CLI","lang":"Go","name":"connect","stars":19,"url":"https://github.com/synadia-io/connect"}
+{"archived":false,"desc":null,"lang":"Go","name":"jwt-auth-builder.go","stars":17,"url":"https://github.com/synadia-io/jwt-auth-builder.go"}
+{"archived":false,"desc":null,"lang":"TypeScript","name":"orbit.js","stars":16,"url":"https://github.com/synadia-io/orbit.js"}
+{"archived":false,"desc":"Synadia Control Plane","lang":null,"name":"control-plane","stars":8,"url":"https://github.com/synadia-io/control-plane"}
+{"archived":false,"desc":null,"lang":"Java","name":"orbit.java","stars":8,"url":"https://github.com/synadia-io/orbit.java"}
+{"archived":false,"desc":"NATS .NET utility packages: JetStream publisher, partitioned consumers, scheduled messages, distributed counters","lang":"C#","name":"orbit.net","stars":7,"url":"https://github.com/synadia-io/orbit.net"}
+{"archived":false,"desc":"Authentication Callout Library for .NET","lang":"C#","name":"callout.net","stars":6,"url":"https://github.com/synadia-io/callout.net"}
+{"archived":false,"desc":"Go SDK for Synadia Control Plane","lang":"Go","name":"control-plane-sdk-go","stars":4,"url":"https://github.com/synadia-io/control-plane-sdk-go"}
+{"archived":false,"desc":null,"lang":null,"name":"ai-workflows","stars":4,"url":"https://github.com/synadia-io/ai-workflows"}
+{"archived":false,"desc":"Synadia Control Plane CLI","lang":null,"name":"control-plane-cli","stars":3,"url":"https://github.com/synadia-io/control-plane-cli"}
+{"archived":false,"desc":"The wombat connect runtime","lang":"Go","name":"connect-runtime-wombat","stars":3,"url":"https://github.com/synadia-io/connect-runtime-wombat"}
+{"archived":false,"desc":"Synadia Private Link","lang":null,"name":"private-link","stars":1,"url":"https://github.com/synadia-io/private-link"}
+{"archived":false,"desc":"Configuration for the Synadia Platform Trial","lang":"Shell","name":"platform-trial","stars":1,"url":"https://github.com/synadia-io/platform-trial"}
+{"archived":false,"desc":"A series of blog posts and resources to prepare organizations for an event-driven future","lang":"Go","name":"nats-data-series","stars":1,"url":"https://github.com/synadia-io/nats-data-series"}
+{"archived":true,"desc":"A reference runtime for Connect. Usable as a template to write your own.","lang":"Go","name":"connect-runtime-vanilla","stars":1,"url":"https://github.com/synadia-io/connect-runtime-vanilla"}
+{"archived":false,"desc":null,"lang":"Go","name":"connector-intro-series","stars":1,"url":"https://github.com/synadia-io/connector-intro-series"}
+{"archived":false,"desc":"Kubernetes Operator for Synadia Control Plane","lang":"Go","name":"synack","stars":1,"url":"https://github.com/synadia-io/synack"}
+{"archived":false,"desc":"Synadia Insights","lang":null,"name":"insights","stars":1,"url":"https://github.com/synadia-io/insights"}
+{"archived":false,"desc":"Helm Charts for Synadia Software","lang":"Go Template","name":"helm-charts","stars":0,"url":"https://github.com/synadia-io/helm-charts"}
+{"archived":false,"desc":null,"lang":null,"name":".github","stars":0,"url":"https://github.com/synadia-io/.github"}
+{"archived":true,"desc":"Synadia's distribution of the NATS Server","lang":null,"name":"synadia-server","stars":0,"url":"https://github.com/synadia-io/synadia-server"}
+{"archived":false,"desc":"Java Client Testing Programs","lang":"Java","name":"testing.java","stars":0,"url":"https://github.com/synadia-io/testing.java"}
+{"archived":false,"desc":"Standardized platform component interactions with Synadia Control Plane","lang":"Go","name":"platform-component","stars":0,"url":"https://github.com/synadia-io/platform-component"}
+{"archived":true,"desc":null,"lang":"Java","name":"json.java","stars":0,"url":"https://github.com/synadia-io/json.java"}
+{"archived":false,"desc":null,"lang":null,"name":"orbit.py","stars":0,"url":"https://github.com/synadia-io/orbit.py"}
+{"archived":false,"desc":"Synadia Nex CE public assets","lang":null,"name":"nex-ce","stars":0,"url":"https://github.com/synadia-io/nex-ce"}
+{"archived":false,"desc":"Synadia HTTP Gateway public assets","lang":null,"name":"http-gateway","stars":0,"url":"https://github.com/synadia-io/http-gateway"}
+{"archived":false,"desc":"Synadia Connect Node public assets","lang":null,"name":"connect-node","stars":0,"url":"https://github.com/synadia-io/connect-node"}
+{"archived":false,"desc":"Synadia Schema Registry public assets","lang":null,"name":"schema-registry","stars":0,"url":"https://github.com/synadia-io/schema-registry"}
+{"archived":false,"desc":"JNATS Active / Passive Connection Extension","lang":"Java","name":"java-active-passive","stars":0,"url":"https://github.com/synadia-io/java-active-passive"}
+{"archived":false,"desc":"Reusable Github Action Workflows","lang":null,"name":"workflows","stars":0,"url":"https://github.com/synadia-io/workflows"}
+{"archived":false,"desc":"Synadia Connect public connector assets ","lang":null,"name":"connectors","stars":0,"url":"https://github.com/synadia-io/connectors"}
+{"archived":false,"desc":null,"lang":"C","name":"orbit.c","stars":0,"url":"https://github.com/synadia-io/orbit.c"}

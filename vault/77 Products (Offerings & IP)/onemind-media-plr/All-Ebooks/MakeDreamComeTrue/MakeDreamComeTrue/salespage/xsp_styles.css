@@ -1,0 +1,118 @@
+BODY{MARGIN-LEFT: 0px;MARGIN-RIGHT: 0px;MARGIN-TOP: 0px;MARGIN-BOTTOM: 0px;BACKGROUND-COLOR: #0C0703;FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TABLE.XSP_OUTLINE{HEIGHT: 100%;WIDTH: 856px;}
+TD.XSP_HEADER_PANEL{BACKGROUND-COLOR: #FFFFFF; WIDTH: 856px;HEIGHT: 1px;TEXT-ALIGN: center;}
+TD.XSP_HEADER_PANEL TABLE{}
+TD.XSP_LEFT_PANEL_SPC{VERTICAL-ALIGN: top;TEXT-ALIGN: left;WIDTH: 75px; BACKGROUND-COLOR: #FFFFFF;PADDING: 0px;BACKGROUND-IMAGE: url('images/template_05.jpg'); BACKGROUND-REPEAT: repeat; BACKGROUND-POSITION: left top; }
+TD.XSP_LEFT_PANEL, TD.XSP_LEFT_PANEL_2{VERTICAL-ALIGN: top;TEXT-ALIGN: left;HEIGHT: 1px; WIDTH: 75px; BACKGROUND-COLOR: #FFFFFF;PADDING: 0px;BACKGROUND-IMAGE: url('images/template_05.jpg'); BACKGROUND-REPEAT: repeat; BACKGROUND-POSITION: left top}
+TD.XSP_LEFT_PANEL_2{background-position: bottom left;}
+DIV.XSP_LEFT_PANEL{VERTICAL-ALIGN: top;TEXT-ALIGN: left;WIDTH: 100%; FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif; PADDING: 0px;}
+DIV.XSP_LEFT_PANEL table{FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TD.XSP_CENTER_PANEL{VERTICAL-ALIGN: top;WIDTH: 694px; BACKGROUND-COLOR: #FFFFFF;}
+TD.XSP_CENTER_PANEL_NR{VERTICAL-ALIGN: top;WIDTH: 781px; BACKGROUND-COLOR: #FFFFFF;}
+TABLE.XSP_CENTER_PANEL{HEIGHT: 100%;WIDTH: 100%;}
+
+TD.XSP_MAIN_PANEL{VERTICAL-ALIGN: top;TEXT-ALIGN: left;WIDTH: 100%;FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;PADDING: 0px;}
+TD.XSP_MAIN_PANEL TABLE{FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TD.XSP_MAIN_PANEL_FOOTER{VERTICAL-ALIGN: top;TEXT-ALIGN: left;HEIGHT: 20px; BACKGROUND-COLOR: #FFFFFF; WIDTH: 100%; FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;PADDING: 5px 5px;}
+TD.XSP_MAIN_PANEL_FOOTER TABLE{FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TD.XSP_MAIN_PANEL_HEADER{VERTICAL-ALIGN: top;TEXT-ALIGN: left;HEIGHT: 30px; BACKGROUND-COLOR: #FFFFFF; WIDTH: 100%; FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;PADDING: 5px 5px;}
+TD.XSP_MAIN_PANEL_HEADER TABLE{FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TD.XSP_INFO_BAR{VERTICAL-ALIGN: top;HEIGHT: 30px; BACKGROUND-COLOR: #FFFFFF;FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;PADDING: 5px;}
+TD.XSP_INFO_BAR TABLE{FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TD.XSP_RIGHT_PANEL_SPC{VERTICAL-ALIGN: top;TEXT-ALIGN: left;WIDTH: 87px; BACKGROUND-COLOR: #FFFFFF;PADDING: 0px;BACKGROUND-IMAGE: url('images/template_07.jpg'); BACKGROUND-REPEAT: repeat; BACKGROUND-POSITION: right top}
+TD.XSP_RIGHT_PANEL{VERTICAL-ALIGN: top;TEXT-ALIGN: left;HEIGHT: 1px; WIDTH: 87px; BACKGROUND-COLOR: #FFFFFF;PADDING: 0px;BACKGROUND-IMAGE: url('images/template_07.jpg'); BACKGROUND-REPEAT: repeat; BACKGROUND-POSITION: right top}
+DIV.XSP_RIGHT_PANEL{VERTICAL-ALIGN: top;TEXT-ALIGN: left;WIDTH: 100%; FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif; PADDING: 0px;}
+DIV.XSP_RIGHT_PANEL TABLE{FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif;}
+TD.XSP_FOOTER_PANEL{VERTICAL-ALIGN: top;TEXT-ALIGN: left;HEIGHT: 177px; WIDTH: 856px; FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif; PADDING: 5px;BACKGROUND-IMAGE: url('images/template_10.jpg'); BACKGROUND-COLOR: #FFFFFF;BACKGROUND-POSITION: left top; }
+
+TD.XSP_FOOTER_PANEL TABLE{FONT-SIZE: 8pt; COLOR: #000000; FONT-FAMILY: Verdana, Sans-Serif; }
+
+TD.NAVBAR_LEFT { font-size: 10pt; color: #000000; font-family: verdana; font-weight: normal; text-decoration: none; }
+A.NAVBAR_LEFT { font-size: 10pt; color: #000000; font-family: Verdana, Sans-Serif; font-weight: bold; text-decoration: none; }
+A.NAVBAR_LEFT:visited { color:#000000; }
+A.NAVBAR_LEFT:hover { color:#000000 }
+DIV.BREADCRUMB { font-size: 10pt; color: #000000; font-family: Verdana, Sans-Serif; font-weight: normal; text-decoration: none; }
+A.BREADCRUMB { font-size: 10pt; color: #000000; font-family: Verdana, Sans-Serif; font-weight: normal; text-decoration: underline; }
+A.BREADCRUMB:visited { color:#000000; }
+A.BREADCRUMB:hover { color:#000000 }
+
+.border6d157d61-ff14-4437-b009-488148911031 { background-color: White; width: 200px; border: solid 1px Black}
+.cell16d157d61-ff14-4437-b009-488148911031 { padding: 0px 5px 5px 5px; width:100% }
+.cell26d157d61-ff14-4437-b009-488148911031 { padding: 0px 5px 5px 0px}
+.label6d157d61-ff14-4437-b009-488148911031{FONT-WEIGHT:bold; FONT-SIZE: 12pt; COLOR: Black; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: Left; }
+
+.input6d157d61-ff14-4437-b009-488148911031 { border: solid 1px Black; width:100% }
+.button6d157d61-ff14-4437-b009-488148911031 { background-color: Silver; border: solid 1px Black; color: Black; font-family: Arial; font-size: 12pt; font-weight: normal; font-style: normal; text-decoration: none }
+.head6d157d61-ff14-4437-b009-488148911031{FONT-WEIGHT:bold; FONT-SIZE: 12pt; COLOR: Black; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+div.result6d157d61-ff14-4437-b009-488148911031 { margin-top:0px; }
+div.resultspage6d157d61-ff14-4437-b009-488148911031 { overflow:hidden; }
+.result6d157d61-ff14-4437-b009-488148911031{FONT-WEIGHT:bold; FONT-SIZE: 12pt; COLOR: Blue; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+.result6d157d61-ff14-4437-b009-488148911031:hover{FONT-WEIGHT:bold; FONT-SIZE: 12pt; COLOR: Green; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+.desc6d157d61-ff14-4437-b009-488148911031{FONT-WEIGHT:normal; FONT-SIZE: 10pt; COLOR: Black; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+.url6d157d61-ff14-4437-b009-488148911031{FONT-WEIGHT:normal; FONT-SIZE: 9pt; COLOR: Green; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; MARGIN-BOTTOM: 0px}
+.page6d157d61-ff14-4437-b009-488148911031{FONT-WEIGHT:normal; FONT-SIZE: 10pt; COLOR: Black; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+.page6d157d61-ff14-4437-b009-488148911031 a{FONT-WEIGHT:normal; FONT-SIZE: 10pt; COLOR: Green; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+.page6d157d61-ff14-4437-b009-488148911031 a:hover{FONT-WEIGHT:normal; FONT-SIZE: 10pt; COLOR: Red; FONT-STYLE: normal; FONT-FAMILY: Verdana; TEXT-DECORATION: none; TEXT-ALIGN: left; }
+
+.ulxsptagcloud { 
+list-style-type:none;
+padding:0px;
+margin:0px;
+text-align:center;
+}
+.ulxsptagcloud a { 
+font-family:verdana;
+color:blue;
+text-decoration:none;
+}
+.ulxsptagcloud a:hover { 
+font-family:verdana;
+text-decoration:underline;
+}
+.ulxsptagcloud li { 
+display:inline;
+margin-left:1px;
+margin-right:1px;
+}
+
+.ulxsptaglinks { 
+list-style-type:none;
+padding-left:0px;
+margin-left:0px;
+padding-right:0px;
+margin-right:0px;
+}
+.ulxsptaglinks a{ 
+}
+.ulxsptaglinks .tagcloudtitle{ 
+}
+.ulxsptaglinks .tagcloudtitle a{ 
+color:blue;
+font-family:verdana;
+font-size:12pt;
+}
+.ulxsptaglinks .tagclouddesc{ 
+font-size:10pt;
+color:black;
+font-family:verdana;
+}
+.ulxsptaglinks .tagcloudurl{ 
+font-size:10pt;
+color:green;
+font-family:verdana;
+}
+.spanxsptaglist { 
+font-size:10pt;
+font-family:Verdana;
+}
+.spanxsptaglist a{ 
+font-size:10pt;
+font-family:Verdana;
+}
+
+a.class1:link {font-family:Verdana; font-size:10pt;color:blue;text-decoration:underline;}
+a.class1:visited {font-family:Verdana; font-size:10pt;color:blue;text-decoration:underline;}
+a.class1:hover {font-family:Verdana; font-size:10pt;color:blue;text-decoration:underline;}
+li.class1 {display:list-item; color:black; margin-bottom:5}
+div.class1 {font-family:Verdana; font-size:10pt;color:Black;text-decoration:none;}
+

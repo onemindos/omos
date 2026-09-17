@@ -1,0 +1,21 @@
+# Categories of Genealogy: Find Your Family Heritage without Too Much Hassles
+
+There are many ways to find your family heritage through genealogy. Relative genetics is the most common way. This performs a series of tests on DNA (deoxyribonucleic acid) in different categories.
+
+1.	Paternal Line or Ycs Testing. The Y chromosomal DNA (Ycs) is utilized in establishing the haplotype (genetic profile) of the ancestors who are already dead.  The father passed the Ycs through his son largely unchanged. The inheritance pattern of Ycs is similar to passing the surnames common to most cultures. Discovering clues within the paternal lineage becomes quiet easy using the Ycs. This is an incredible tool powerful in helping genealogists to trace the paternal lines. 
+
+Relative genetics have reported that between eighteen and forty three years old, different alleles (values) on specific loci (regions) of the Y chromosomal DNA are present. Every locus has undergone validation and standardization in a way that it can provide people with the greatest chances of specifying their paternal lineage. The information becomes very important to genealogist in identifying the closest relatives as well as establishing approximate time or distance to the latest common ancestor. 
+
+2.	Maternal Line of mtDNA testing. This is used for disproving or supporting a relationship in the same immediate maternal line using mtDNA (mitochondrial DNA). The mother passed this type of DNA to her children but only the female children pass this down continuously from generation to generation. 
+
+The mtDNA testing is taking the benefits of a specialized DNA form passed by mothers to her biological children. So, each child virtually carries an exact mtDNA copy of their mother. Therefore, all siblings have identical sequences of mtDNA. Thus, mtDNA became an important investigative tool to research direct maternal lineage ancestry and exploring ethnic origins. 
+
+3.	Ancestral Origin Testing (mtDNA, Ycs, or autosomal testing). This is useful for people who are adopted and simply curious about their ancestral heritage. It also provides prediction about the anthropological haplogroup which originates from either the maternal or paternal lines. Haplogroups refer to wide ancestral groupings which originated a thousand years ago. They also correspond to an early migration of humans having connections on the different geographic locations all over the world. Therefore, information about haplogroups can reveal a deep ancestral origin. 
+
+-	Y chromosomal DNA Haplogroups. Once this is identified, you can take a glimpse on the deep paternal line ancestry. Every indigenous race of people in this world is an affiliate of a certain haplogroup. 
+
+-	The mtDNA Haplogroups are subdivided in different sub-lineages, more often population or regionally specific. 
+
+4.	Extended Family Testings utilize autosomal DNA. The twenty two pairs of chromosomes considered as non sex located within the cell nucleus is known as autosomal DNA. One half of the autosomal DNA comes from the father; the other one half comes from the mother. The purpose of this test is to authenticate relationships beyond simple maternity or paternity lineage. 
+
+Finally, you will never have any difficulty is tracing your family heritage. Choose one among the different genealogy testing categories that suits you best. Enjoy your research.

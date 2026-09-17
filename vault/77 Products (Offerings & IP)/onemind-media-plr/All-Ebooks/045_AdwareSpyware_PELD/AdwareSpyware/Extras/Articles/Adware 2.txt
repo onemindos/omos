@@ -1,0 +1,46 @@
+Adware 2
+
+Computer Menaces Differentiated: Adware vs. Spyware 
+
+In a world wherein technology plays a big role in human beings’ comfort, leisure, and learning, the personal computer and the Internet have become very indispensable tools.  However, as more and more people become dependent on these two, you come to see others who take advantage of computer users everywhere and cause them nuisance and damage - using the same technology that’s meant to make life easier. 
+
+It’s no wonder then why it’s very hard nowadays to keep your computers free of unwanted advertisements.  As if spams and viruses are not bad enough, people invented spyware and adware, which basically work together to bring your Internet connection experience to a crawl, as well as bombard your computer with popup advertisements, and compromise your privacy and security. 
+
+But do you know the difference between spyware and adware? 
+
+Adware Explained
+
+You surf the net today.  The next day, you are surprised to find the homepage of your browser changed to a rundown site and your computer desktop has a new program that you don’t remember ever installing. 
+
+You might as well consider your self a victim of adware. 
+
+What is adware? 
+
+Adware, also known as advertising supported software, is a package that automatically downloads, displays, or plays advertisements to a personal computer almost right after installation of software or use of application. 
+
+It may also install an extra component, which feeds your computer advertising, often through the delivery of popup advertisements or installation of a new toolbar in the browser.  Other adware may take over your browser and redirect you to sites that you don’t really want to go to. 
+
+More often than not, adware is a legitimate source of income for many companies that offer software to users for free.  Eudora, an e-mail program, is often cited as a good example of this.  You can purchase the e-mail program or run Eudora in a so-called “sponsored mode.”  In the mentioned mode, the program displays an advertisement window and more or less three toolbar links. 
+
+What’s good with this program is that it doesn’t keep an eye on your computer use or even give away important information about you.  This kind of adware only serves paid advertisements within it.  Once you quit using Eudora, the advertisements stop running in your computer system. 
+
+Once, web tracking is involved, we are no longer dealing with adware.  Instead, we have spyware. 
+
+Spyware Exposed 
+
+You surf the net today, doing some on-line banking and settling of your credit card account.  The next day, you go to the mall.  In need of cash, you try to withdraw money from the automated teller machine.  To your horror, all of your money is gone. 
+
+You might have been a victim of spyware. 
+
+What is spyware? 
+
+Spyware covertly monitors your Internet and computer use.  Some spyware are malicious, in such a way that some collect passwords, user ID’s, credit card numbers, and some other sensitive details about the user.  
+
+Spyware is somewhat similar to the Trojan horse (a program that claims to rid the computer of virus, but introduces virus instead) since you can download a freeware but then your computer will be infected by something else – the spyware itself. 
+
+Besides giving a user problems connected to privacy and ethics, spyware robs you through usage of the computer’s memory, as well as eating of bandwidth (amount of information that can be conveyed in a specific period of time), making Internet exploration slower than ever.  The spyware may also cause your computer to crash or become unstable. 
+
+
+Licensing terms are expected to contain warnings as regards the installation of a spyware program that may come with the downloading of the needed program.  However, because of the size of the text, these agreements may not be read completely. 
+
+There you have it – the menaces of our computer use.  But since you are aware about the difference and the circumstances surrounding their installation and effects, you will be able to take proper precautions.  You will be now more careful about downloading free software and programs from the Internet. 

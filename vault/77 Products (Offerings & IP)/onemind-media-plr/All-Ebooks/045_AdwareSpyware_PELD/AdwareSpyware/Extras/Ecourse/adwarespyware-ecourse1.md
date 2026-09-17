@@ -1,0 +1,35 @@
+# Subject: {FIRSTNAME},Spyware Can Destroy
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my adware/spyware 
+ecourse! In this ecourse you'll learn all about:
+
+Part 1: Spyware Cand Destroy
+Part 2: Is It Legal?
+Part 3: How does it spread
+Part 4: Removing Spyware
+Part 5: Different Helpfull Programs
+
+That being said... Lets get started shall we  :)
+==================================================
+
+Part 1: Spyware Can Destroy
+
+--------------------------------------------------
+
+Spyware and adware are two different animals.  Each has the ability to make your life a mess.  If you rely on the internet for anything or you rely on your computer for anything, it is a must that you fully understand what these things are and how they work.  
+
+The first key to protecting yourself from these things is to fully understand what they are.  That will allow you to know how to not make common mistakes that cause spyware to get into your computer.
+
+Unfortunately, many people have been lead to believe that all types of this software are bad and should be avoided.  But, that�s not always the case.  The fact is you may want to have certain types of this software to use.  
+
+Remember, to make it spyware it has to be downloaded to your computer without your consent.  
+
+Why would you want to have spyware that tracks your personal information?  Why would you want those advertisements?  You may actually sign up for a service online and when you do you may also agree to receive targeted ads.  
+
+Companies like this find it helpful to track where you go online and what you do in order to provide you with ads that are targeted to your interests.  Instead of seeing ads that don�t have anything to do with you, you�ll see ads that are based on the places you�ve visited online.
+
+For more information about Adware/Spyware, please refer to my website   
+
+Take Care,

@@ -1,0 +1,41 @@
+# Title:
+
+Goal Setting & Attainment
+
+Word Count:
+973
+
+Summary:
+I am sure that many of you are deep into the drama and excitement of the holiday season. There is so much to be done and so much to think about and consider that many can hardly think of anything else. However, when the excitement is over, our attention typically turns the closing of one year and the beginning of a new one.
+
+This is a time typically reserved for reflection. We think back on the previous year, sometimes with a strong sense of accomplishment and sometimes wit...
+
+Keywords:
+goals, goal setting, goal attainment, career, visions, affirmations, visualization
+
+Article Body:
+I am sure that many of you are deep into the drama and excitement of the holiday season. There is so much to be done and so much to think about and consider that many can hardly think of anything else. However, when the excitement is over, our attention typically turns the closing of one year and the beginning of a new one.
+
+This is a time typically reserved for reflection. We think back on the previous year, sometimes with a strong sense of accomplishment and sometimes with regrets for the things we didn�t do that we wanted to and the goals we set but didn�t accomplish. Sometimes we get so disgusted with ourselves for our lack of goal-directed behavior that we actually stop setting goals altogether.
+
+Sometimes we are waiting for something to happen first. We wait to retire, for our children to leave home, or for there to be enough money in the savings account. While we are waiting, time is whizzing past us at an alarming rate. Before we know it, we end up at a place where we say, �Now I�m too old to do ________________ .� While we are waiting for certain life events to manifest, there are things we can still do to move ourselves forward toward our goals. Waiting is not the only option.
+
+There are known techniques that will help you improve the odds of accomplishing your goals. What�s the difference between those who seem to breeze through their day accomplishing everything they set out to do and those who seem to wonder where the time went at the end of the day. We all have the same amount of time each day. What�s the secret?
+
+First of all, you need to decide what it is you want to accomplish---the more specific you can be the better. We generally do not get too excited about the vague thought of losing weight but if we can say instead, I will lose 10 pounds by March 1, 2006 so I can fit back into a size 10 dress then there is more energy and impetus around that particular goal.
+
+Next, you must decide, as Napoleon Hill says, �Do you have a burning desire to accomplish this goal?� Without truly possessing a burning desire, without passion to make it happen, we will often drift back into old behaviors that keep us plateaued at the same place we were the beginning of last year.
+
+Once you�ve determined you have the burning desire, next you must ask if you have a good plan. Does your plan have a reasonable chance for success? Do you have deadlines for accomplishment? When you are trying to stop a certain behavior, do you spell out what you are going to do instead? Are the goals realistic? Are they measurable? Do you have the determination and unwavering resolve to follow through on your plan?
+
+Sometimes there are things that sabotage our efforts. Typically, the things we do throughout our day are things that meet our needs. If we are trying to lose weight but continue to eat instead, we need to look at what benefits we gain from overeating. Often these are unconscious benefits that we really need to do some serious scrutiny to uncover. If the benefits we receive from our current behavior outweigh the benefits of making the change we desire, we will have a difficult time making the change without building in additional features to our plan that will make up for the benefits of the behavior we are giving up.
+
+You need to develop systems to track and measure your progress. Many people require a visual representation of their progress to provide incentive to continue moving forward. You must develop a single-minded focus. You must avoid anything that threatens to pull you off your straight ahead direction toward your goals. You must prioritize and protect your time everyday.
+
+The final thing that will be instrumental in achieving your goals in 2006 is to reprogram your nonconscious mind. There is a great deal of evidence that shows the neural programming of our nonconscious mind often gets in the way of us accomplishing our goals. These are the early messages that we picked up from those who were close to us when we were younger. We received messages that money was the root of all evil, that we didn�t deserve to be loved, that we were chubby and will stay that way, and that there is never enough time in a day. All those messages have formed neural pathways in our brain.
+
+This means that when certain neurons fire, they trigger the firing of other neurons in the same pathway, which makes it extremely difficult to consciously change our behavior. The good news is that there is a way to reprogram the neural pathways so they will work for us instead of against us to accomplish our goals.
+
+Through the processes of affirmations and visualization we have the ability to change this nonconscious programming. We must develop a mental movie of what life will look like once our goals are accomplished. Then, we must write out present tense affirmations of the belief systems we must have in place in order to accomplish our goals. If weight loss is your goal, for example, then your affirmations would sound like this: �I weigh 130 pounds and look and feel terrific. I eat only healthy food that nourishes my body. I enjoy exercising and the way my body feels while doing it and afterwards. I drink at least eight 8-oz. glasses of water each day.� 
+
+Reprogramming requires repetition of the affirmations and visualization daily and more often if you can make the time. With this added to all of the above goal setting steps, you will be well on your way to accomplishing your goals in 2006.

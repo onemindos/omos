@@ -1,0 +1,29 @@
+# Home Energy Magizines
+
+Home Energy Magazine: Its Use, Mission, and Objective 
+
+One of the greatest things that technology advancement has been affording us to consume is the privilege of making things relatively easier than things of before. If in the early days you have to deal things in analog and manual way, in these modern days, things are dealt in an automatic and digital way, by far the most convenient and comfortable way technology advancement has to offer. 
+
+But even with this grand achievement, there are certain prices that consumers have to pay for. And with the case of highly-modernized technologies, they can be a nuisance to your energy bills, making them pile up high with the constant use. Of course, there are some energy-efficient devices and appliances where edifices could use but with the accumulation of energy consumption they could still be huge amount to most. 
+
+Energy bills are one of the biggest expenses households and business establishments have to deal with in a regular basis. And because of how they could take a toll on you especially on the days where economy is not too friendly, it is important that you find a way on how to minimize the amount of dollars you part for these bills. 
+
+There are ways and tips that some concerned agencies could provide you on how to save on the energy those equipments and devices consume. But for some reasons, it is sometimes difficult for people to obtain this specific information. On other times, even if they have the information people would accidentally forget all about it. And then, on the following day they resume to their unpractical habit of utilizing electrical appliances and devices until realizing they have overdone it again when the next bill arrives. 
+ 
+In order for them to be diligent in the mentioned assignment, these consumers need something where they would be constantly reminded of those things. And one of the best options is to seek Home Energy Magazine, a published reading material designed for consumers who need information on energy conservation basis for the residential edifices. 
+
+What is Home Energy Magazine?
+
+The Home Energy Magazine is a published magazine intended to assist consumers on how to use energy practically and efficiently. This reading material is published by a non-profit organization with a mission to disseminate practical information and details such as its objective, relevant issues, programs, and others. It covers areas on energy conservation, performance, and residential comfort issues. 
+
+Through these books, consumers were able to enjoy gathering information about products that work with systems engineering meticulously. Also, here you will find different people discussing and sharing innovative designs in related products. When you subscribe to this magazine line, you will be able to gather information where you could have your residential applied with the long-term benefits of new technologies or building practices without sacrificing conservation on the energy-consumption. In turn, your residential house is added with more comfort factors as well as more value. 
+
+People who wrote on the editorial content are those that have undergone extensive research on the proliferation of innovative designs of the products. Accordingly, the research made by these experts is extended to their building, then remodeling practices as well as putting the end products on the magazine. They are also the experts when it comes to the latest and best building or manufacturing techniques. Emphasis is put on the implementation of sound and thorough building science fundamentals and concepts. Aside from these, they are also connoisseurs on curing sick buildings. 
+
+With those experts pointing on relevant and significant information about energy conservation issues and problems, the magazine offers a whole plethora of solution to residential energy conservation problems and needs. Home Energy Magazine releases different issues to cater to different aspects and uses.
+
+Finding Home Energy Magazine Issues through online
+
+By turning on the internet premises, you will be able to get different issues of the home energy books. You only need to look for the website or online store that sells the book and follow the instructions provided by them and wait for its arrival on your preference of shipping point. 
+
+By subscribing or acquiring these home energy books, you are going to have the privilege to select the best technologies or products for ventilation equipments, heating and cooling equipments, insulation lights, windows and doors, and many more.

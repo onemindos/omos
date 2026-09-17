@@ -1,0 +1,33 @@
+# Title:
+
+Performance Anxiety
+
+Word Count:
+734
+
+Summary:
+Beverly had suffered from anxiety most of her life. As a child, she slept poorly and often had nightmares. She bit her nails and would chew on the skin around her nails until they were raw and bleeding.
+
+Keywords:
+improvement self, anxiety, performance anxiety, psychology
+
+Article Body:
+Beverly had suffered from anxiety most of her life. As a child, she slept poorly and often had nightmares. She bit her nails and would chew on the skin around her nails until they were raw and bleeding.
+
+Beverly had tried many forms of therapy, meditation and medication before consulting with me. She had a strong belief in God and prayed daily. Yet she was still anxious and could not understand the source of her anxiety.
+
+Beverly grew up in a �normal� household with two parents who seemingly loved her. Yet as we explored her childhood, it became apparent that, while there was no overt abuse, the covert emotional abuse was constant. Her parents were highly critical of her and would get angry and withdraw when she didn�t perform to their expectations. Her mother was not affectionate and her father�s affection was tinged with sexual energy that frightened her.
+
+Beverly felt tense much of the time in her home. Her parents fought a lot and her mother would often end up crying hysterically while her father withdrew behind his newspaper. What she did not see in her household was any role-modeling for taking personal responsibility for her own feelings. Her mother would blame her and her father whenever she was unhappy, while her father would blame her and her mother for his upsets. Beverly always tried to be a good girl and be there for her parents, but no one was ever there for her.
+
+It�s easy to see why Beverly was so anxious as a child. But what was causing her anxiety as an adult?
+
+The problem was that Beverly had never learned how to be a loving parent to herself, because her parents had not been loving to her or to themselves. She was kind and generous with others, but she tended to ignore her own feelings and needs. The little girl inside Beverly, her Inner Child, felt alone and abandoned inside most of the time. In addition, she was highly critical of herself, just as her parents had been with her. She was constantly telling herself that she couldn�t do anything right.
+
+Beverly was treating herself just as her parents had treated her and themselves. Little Beverly did not have a powerful loving inner adult to attend to her feelings or speak up for her with others. Instead, she was neglectful or critical of herself. Due to abandoning herself and not giving herself love and approval, she was constantly seeking approval from others. As a result, Beverly felt anxious in many situations with others - with friends, at work, as well as with her husband and children. She was constantly trying to �perform� right so people would approve of her or not be mad at her. She was constantly suffering from �performance anxiety.�
+
+Beverly saw that much of her anxiety centered around wanting to control how others saw her and treated her. She realized that she judged herself in the hopes of getting herself to perform right. She noticed that she was constantly seeking others� approval because of being so critical of herself.
+
+Learning to be compassionate with herself rather than judgmental was a challenge that took time and dedication. She was so used to judging herself that she would do it without realizing it. Through her inner work, Beverly became aware of the fact that most of the critical things she told herself about herself were just not true - they were beliefs she had absorbed from her parents but were not the reality of who she was. As she paid attention to her self-judgments, she noticed that her anxiety was directly related to her judgments, false beliefs, and desire to control getting approval from others.
+
+As Beverly slowly learned to be a loving inner parent rather than a critical one, her anxiety gradually diminished. Any time it she felt anxious, she could now trace it back to something she had told herself that not only was not true, but was self-critical. She discovered that she had been using her spiritual connection as a way of avoiding responsibility for herself, rather than as guidance in what was loving to herself. As she opened to learning about what was loving to herself, she gained more access to and connection with her spiritual source of guidance. The more Beverly took loving care of herself, the more inner peace she attained.

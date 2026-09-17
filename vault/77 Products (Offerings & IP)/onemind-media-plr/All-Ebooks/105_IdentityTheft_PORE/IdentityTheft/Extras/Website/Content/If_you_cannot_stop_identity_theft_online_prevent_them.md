@@ -1,0 +1,55 @@
+# Identity Theft OnlineIf you cannot stop identity theft online, prevent them
+
+Online, identity theft is quite common already. It seems that everybody is getting their businesses and transactions done online. That is why, online identity thieves are always on the lookout for their next victims.
+
+How do online savvy protect themselves from the online identity thieves that are rampant nowadays?
+
+1. Passwords. 
+
+Know that those little pop ups that is asking you if you would like to remember your user name and password is not helping you any. Most of these passwords are stored in system file and every half brained hackers know about this. 
+If you are not making use of firewalls, it is pretty easy for just about anyone to get hold of your password and use that anytime in your expense. 
+
+Be wary of these things. A prevention measure is to have a lengthy password complete with different kinds of characters. 
+
+As much as possible, do not input all your information in your computer or when something asks for it. The internet is definitely not a safe place to store your data and information.
+
+2. Phishing.
+
+What is phishing?
+
+Phishing is one of the strategies being used to fool people into giving out their passwords and other personal information by pretending that they come from a genuine source. 
+
+Examples are emails sent by someone staring that you have won on some online raffle. And that you need to give out some information for verification. Out of hope or ignorance, you probably will end up giving them what they want. 
+This is what phishing is all about.  Phishing scammers are very much skilled in imitating other styles and language of communications. They use lists of millions of email addresses to send their notes out to, in the hope of getting even a small number of victim. 
+
+If you find it hard to distinguish which emails you are receiving are scams, try to verify the source of the message. Better yet, ask some sort of proof first to find out they are really legitimate or not. 
+
+3. Firewalls. 
+
+In the past, firewalls were a luxury. But now, they have become a necessity. 
+
+There are already an increasing number of Internet hackers that are making use of free programs that can compromise your system. 
+
+Take note that there are around 60,000 points of entry to your computer. So you may want to at least filter out some of the entries that can cause trouble. 
+
+4. A secure connection.
+
+Before sending out any personal information, make sure that you make it a point to check out the browser address bar. Why is this?
+
+Because you may want to be assured that you are sending them on a secure connection. A secure connection is an address that begins with http. If you do not see this in the address browser, then you can guarantee that that link is not secured. They can be breached easily. There goes your details. 
+
+5. Always confirm. 
+
+Before you click on that send button, think hard first. Are you willing to give out vital information away? Do you trust the receiver of this? 
+
+Today, every bit of information can be built into a solid profile. You can actually get a lot of information about someone just by knowing his or her birthday. This is the online world. Apparently, identity thieves also know about this. 
+
+Be prepared for the consequences that your actions will bring. You cannot blame anyone but yourself when you find yourself a victim of identity theft online. 
+
+6. Account checking. 
+
+If you are one of those banking online, be sure to go back and check in after a few days to review the transactions you have made. Not all of these online financial institutions have the ability to filter out fake transactions. 
+
+If ever you find something suspicious in your transaction, contact your bank immediately so they can take the necessary steps and stop further unknown negotiations to happen. In many of these cases, you will not be made liable for the expenses or charges that may incur. That is why, you have to report the soonest possible time. 
+
+Online identity theft is not likely to go away for sometime. So you need to be aware of them in order to prevent them from getting the most out of you.

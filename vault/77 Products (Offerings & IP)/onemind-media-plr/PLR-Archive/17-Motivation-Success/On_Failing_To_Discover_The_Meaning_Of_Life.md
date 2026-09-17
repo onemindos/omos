@@ -1,0 +1,29 @@
+---
+id: plr-20260114013943-9248
+title: "On Failing To Discover The Meaning Of Life"
+type: reference
+path: PLR
+domain: reference
+status: reference
+created: 2026-01-14
+modified: 2026-01-14
+owner: zeus
+tags: [path/plr, type/reference, status/reference, topic/motivation-success]
+ai_summary: "PLR reference - On Failing To Discover The Meaning Of Life"
+---
+title:On Failing To Discover The Meaning Of Life
+author:Abraham Thomas
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_4167.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+We did not choose to be born. Without our permission, we were pitched into this world, to live out seventy or eighty years, to act out our unique scripts in life. Each of those millions of actions had a purpose. It achieved an objective. Just to pick up a cup of tea, or to become an accountant. Achieving objectives gave progressive meanings to our activities. The mason who felt he was just laying bricks was less satisfied than the one who believed he was building a cathedral. Finding deeper meanings satisfied us. So, it was but natural to gaze beyond our individual careers at the meaning of life itself. Greater satisfaction came from fulfilment of a nobler purpose.
+Religion offered a a compelling vision of a divine and benevolent purpose. It acted in the best of all possible worlds, for the well being of all. If there was pain and distress, the beneficent deity had willed it to steel humanity to ever greater triumphs. Everything happened for the best. But, for a few people, there was a flaw in this view. Disaster was hardly necessary for improvement. The finest periods of creativity of the human race occurred during periods of peace and prosperity, not in times of famine and disease, or earthquakes and floods. It stretched credibility to believe that a hundred thousand people could be crushed in an earthquake for their own good. To sceptics, the world appeared iniquitous. But, they often avoided despair by accepting the random quality of life. For these, just fighting back gave meaning to life.
+But, the religious sometimes failed to discover any visible benign purpose behind epic disasters. This troubled some. The sceptics, on the other hand, wondered if it was so weightily important to survive in the this all too brief span of time in this infinitesimally small speck in the universe. What was so special about survival, if the earth was to end a dead planet hurtling through black space? What was the purpose of all this suffering? Whatever their convictions, the search for a meaning in life troubled both the religious and the sceptics. In spite of their doubts, finding meaning was crucial. 
+The famed psychiatrist, Frankl, survived the horrors of the Nazi concentration camps, to narrate the dreaded moment, when a fellow prisoner ceased to struggle for life. Usually, the prisoner refused to go out on to the parade grounds. He just lay there, hardly moving. No entreaties, no blows, no threats had any effect. He simply gave up. There he remained, lying in his own excreta, and nothing bothered him any more. His life had lost its meaning. Such people died soon after. 
+But, despite the meaningless torture and beatings, thousands of inmates still struggled against all odds to eke out a life. Frankl submitted that it was a purpose in life, whatever it was, which helped them to survive. These were not large purposes. A hope of meeting a son after the war was a purpose. Even a decision to harden oneself against suffering was a sufficient purpose. After the war, Frankl established a major field in psychiatry, assisting thousands of suicidal patients around the world to recover by discovering an acceptable purpose in life.
+In reality, the need to find a purpose in life was built into our neural circuits. Emotions granted us short term purpose. Anger sought retribution; hunger, a search for food; fear a drive to escape. Each drive intelligently sought its own objective and rewarded its achievement with pleasure. The thrill one felt came from built in pleasure circuits fashioned by nature. Those circuits powered drives, which successfully achieved a range of survival activities in a complex and hostile world. The drive circuits carried within them a massive depth of experience and wisdom. The noblest goals of mankind and its most evil instincts were drives, inherited from millions of years of history. One of those drives was a search for meaning - an instinctual drive, like hunger.
+Across history, mankind searched the heavens to discover meaning. Religions offered a wide range of possible meanings, each favouring a particular divine purpose. But, religion failed to find meaning in horrifying disasters. For the sceptic, without the support of religion, a fearful existence on a tiny planet appeared utterly pointless. Both suspected that life appeared to have no meaning. Where could we go from there? There was an answer. We had to understand this obsessive human need to find meaning. It was merely another instinctual drive. A craving. Such drives could be calmed. Just an awareness alone could still the need. After all, it was hardly so urgent to discover that cosmic meaning. 
+Freed from this need, it was easier to fit into society, contribute our mite and satisfy the demands of our minds. We could be content with discovering reasonable purposes. Frankl had proved that simpler purposes sufficiently enabled prisoners to withstand even the most meaningless excesses of life. Hunger did not demand that we gorge ourselves. A reasonable repast was sufficient to satisfy our craving. So also, it was hardly necessary to feast ourselves on understanding the global purpose of the universe. Just as there was little need to travel to a distant galaxy to satisfy our curiosity. It was enough to be happy with finding our own role in society.
+ZZZZZZ

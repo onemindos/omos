@@ -1,0 +1,54 @@
+# OneMind OS — Project State
+# Maintained by Legacy (project-state.lob) — DO NOT edit manually mid-session
+# Legacy reads this every 4h and updates it based on today's memory + context
+---
+last_updated: "2026-03-04T00:00:00Z"
+projects:
+
+  - id: onemind-os-infra
+    name: OneMind OS — VPS Infrastructure
+    status: active
+    pillar: UI
+    priority: 1
+    current_focus: "Ecosystem 42 integrations — clawsec, supermemory, MCP plugin"
+    next_action: "Install TIER 0 plugins from ECOSYSTEM-42.md"
+    blocked_since: null
+    notes: "DO droplet live, all 5 agents running, Discord bot active"
+
+  - id: openclaw-workspace
+    name: OpenClaw Workspace Buildout
+    status: active
+    pillar: UI
+    priority: 2
+    current_focus: "Lobster workflows complete — 6 workflows live"
+    next_action: "Monitor habit-checker and morning-brief for first runs"
+    blocked_since: null
+    notes: "morning-brief, health-check, git-sync, habit-checker, tech-digest, second-brain, earnings-tracker"
+
+  - id: onemind-frontend
+    name: OneMind OS Frontend (Flutter)
+    status: active
+    pillar: UI
+    priority: 3
+    current_focus: "Flutter web — agent dashboard"
+    next_action: "Resume frontend build per FRONTEND-UX-REQUIREMENTS.md"
+    blocked_since: null
+    notes: "Paused for infra sprint"
+
+  - id: ge-ventures
+    name: GE — Venture Pipeline
+    status: active
+    pillar: GE
+    priority: 4
+    current_focus: "Identify first monetizable capability via ClawWork benchmark"
+    next_action: "Run ClawWork against Legacy + Agno workers"
+    blocked_since: null
+    notes: ""
+
+weekly_wins:
+  - "DO droplet deployed (134.122.8.135)"
+  - "5 OpenClaw agents live (legacy/community/hp/le/ge)"
+  - "6 Gradient AI models configured"
+  - "7 Lobster workflows created"
+  - "Discord server structured (10 channels)"
+  - "ElevenLabs voice enabled"

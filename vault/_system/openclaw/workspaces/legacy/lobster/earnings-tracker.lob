@@ -1,0 +1,44 @@
+name: earnings-tracker
+description: "Weekly Monday 8AM — track AI/tech earnings, surface GE opportunities"
+cron: "0 8 * * 1"
+timezone: "America/New_York"
+steps:
+  - tool: web_fetch
+    label: sec-rss
+    input:
+      url: "https://efts.sec.gov/LATEST/search-index?q=%22earnings%22&dateRange=custom&startdt={last_week}&forms=8-K&hits.hits._source=period_of_report,entity_name,file_date"
+  - tool: web_fetch
+    label: hn-earnings
+    input:
+      url: "https://hnrss.org/newest.jsonfeed?q=earnings+AI+results&count=20"
+  - tool: sessions_send
+    label: compile
+    input:
+      agentId: ge
+      message: |
+        EARNINGS TRACKER — weekly GE brief. Post to Discord #ge-feed (1478604264942207017).
+
+        Data:
+        - SEC 8-K filings this week: {{sec-rss.output}}
+        - HN earnings discussion: {{hn-earnings.output}}
+
+        Also fetch these manually:
+        - https://finance.yahoo.com/calendar/earnings (parse top 10 companies)
+        - https://stockanalysis.com/stocks/upcoming-earnings/ (AI/tech names)
+
+        Compile and post:
+        =====================================
+        EARNINGS WATCH — Week of {date}
+
+        THIS WEEK REPORTS:
+        List AI/tech companies reporting earnings this week with dates and
+        consensus estimates if available (EPS expected, revenue expected).
+
+        LAST WEEK RESULTS (notable):
+        Any major beats/misses relevant to our tech stack or vendors.
+        (OpenAI, Anthropic, Nvidia, Microsoft, Google, Meta, Apple, DO)
+
+        GE SIGNAL:
+        1-2 sentences on what this week's earnings mean for OneMind OS —
+        pricing changes, capability shifts, competitive moves.
+        =====================================

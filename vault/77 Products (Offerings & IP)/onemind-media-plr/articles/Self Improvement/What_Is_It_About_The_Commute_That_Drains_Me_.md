@@ -1,0 +1,31 @@
+# Title:
+
+What Is It About The Commute That Drains Me?
+
+Word Count:
+442
+
+Summary:
+On the surface, this is a no-brainer � it�s everything about the commute itself. The time involved, the energy it takes, and - did I mention the time involved? Underneath it though, there are many other factors that go into making us feel drained during the commute, and they can be very different for each person. If your goal is to alleviate the stress of the commute, then it helps to understand what it is that actually is causing the stress in the first place.
+
+For example...
+
+Keywords:
+commute, stress, relax, advice, health, travel, car, techniques, weight
+
+Article Body:
+On the surface, this is a no-brainer � it�s everything about the commute itself. The time involved, the energy it takes, and - did I mention the time involved? Underneath it though, there are many other factors that go into making us feel drained during the commute, and they can be very different for each person. If your goal is to alleviate the stress of the commute, then it helps to understand what it is that actually is causing the stress in the first place.
+
+For example, is it the distance, the traffic, the amount of time sitting in one place, fears of breaking down or having an accident? Or could it be that when someone else is in control, forcing you to give up your control - for example to a pilot, a bus driver, or a conductor - it sap your energy or makes you tense. 
+
+Understanding what causes you to become tense and putting a name to it will help you on your way to overcoming the impact of this stress. A good time to think about these issues is when you are commuting. It will give you a more accurate way to identify the causes of the stressful commute. 
+
+Stop and observe your thinking. Take a moment and examine your behavior. Are you angrily shouting epitaphs in your mind or out loud to other drivers? Are you thinking of the chores left behind at home or the heavy workday ahead? Are you checking the clock and thinking about the time spent on the road? Are you listening to every creak of the train as it rounds the curves? What other things come into your mind?
+
+If the draining is in some part of your body, then you may want to consider relaxation techniques that you can do during your commute. This will help you reduce the feeling of stress and the tension in your body. 
+
+If the draining is in your thinking, a change in attitude toward the commute will reduce that feeling. There are a number of techniques available to help you with this. Most importantly is awareness, because, with awareness, comes the ability to change.
+
+If the draining is emotional, distraction such as listening to music, talking to someone who�s next to you, using a mantra, can be very effective. Signing up for a share-ride or using public transportation at least part of the week are also good ways to stop the draining of the commute. Even having a plan for the days off work can be energizing. 
+
+Once you are aware of these thoughts and feelings, you can begin to consciously change, making your commute more enjoyable.

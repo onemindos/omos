@@ -1,0 +1,43 @@
+# FOR IMMEDIATE RELEASE:
+
+Cut the Itch and Eradicate Annoying Bed bugs?
+
+There may have been many pesticides that were created to eliminate bed bugs at home but to no avail. Finally, there is one great solution ever made to nip the pests out of your home.
+
+>>, >>, >>; >> � Thanks to the genius creators of this remarkable book about bed bugs. While many people are so busy finding different ways how to eliminate these annoying pests at home, 2ndincome4u.com was busy coming up with a book that will end all woes.
+
+Finally, with superior research and advanced concepts, this remarkable book about bed bugs will definitely give you the truth about bed bugs. The problem with most people is that they were so busy looking for effective ways to eliminate bed bugs that they tend to overlook the importance of knowing the nature of bed bugs.
+
+With the recent release of Bed Bugs Uncovered, the reality about these little monsters has been revealed. Knowing exactly what these pests are will help you learn the effective ways how to eliminate and put a stop to their existence in your home.
+
+The funny thing is that there are some people who are not even aware of what bed bugs really look like. This is basically the main reason why the problem continues to persist. 
+
+Knowing everything about bed bugs will create a magnitude of expertise on your part and will definitely give you a better understanding of what these creatures are all about.
+
+Bed Bugs Uncovered will give you more than what you can ask for. Here are the other benefits of Bed Bugs Uncovered:
+
+1. Know where to find the culprits
+
+One of the main reasons why bed bug problems persist is that some people do not even know where to find their enemies. So how can you get rid of them if this is the case?
+
+With Bed Bugs Uncovered, you will learn where exactly bed bugs have been hiding all these years. In fact, with this book, you can easily detect if you have bed bugs in your home.
+
+2. Know the right solution
+
+There are countless solutions that have been introduced in the market and all of them swore that they would eliminate bed bugs. The problem is that all of them were just marketing strategies and none of them offered the right solution to bed bug problems.
+
+With Bed Bug Uncovered, you will learn how to accurately inhibit the propagation of bed bugs in your home. No more sweet promises or remarkable marketing techniques, but just the right solution to your bed bug problems.
+
+The right bed bug solution should not only delve more on the elimination of the pests but more on the prevention so that the problem will not happen again.
+
+3. Get the right picture
+
+Know thy enemies. How can you fight them if you are not even sure what they really look like? 
+
+With Bed Bug Uncovered, you can be sure that what you see on the book�s diagrams about bed bugs are real. This book will provide you full pictures of the different kinds of bed bugs. This will, in turn, help you identify bed bugs easily and correctly.
+
+And the great thing about this book is that you can get it anytime you need it. With its availability in the Internet, you can obtain a copy of Bed Bugs Uncovered anytime, even if it is already late at night. The download process is not even harder than what you think.
+
+All of these great things at such affordable value. And because it is from >>, you can bet you will profit from buying this product.
+
+For more complete information, contact >> or >>, get this amazing bed Bug Uncovered, and live a bed bug-free life.

@@ -1,0 +1,29 @@
+# Title:
+
+The Difference Between Approval and Appreciation
+
+Word Count:
+682
+
+Summary:
+Having worked with individuals, couples, families and business partners for 35 years, helping them learn to resolve conflict, I have often been faced with the difficulties that occur when people are confused about the difference between approval with appreciation. Have you ever wondered about the difference between approval and appreciation?
+
+Keywords:
+approval, appreciation, conflicts, self improvement, coaching, success
+
+Article Body:
+Having worked with individuals, couples, families and business partners for 35 years, helping them learn to resolve conflict, I have often been faced with the difficulties that occur when people are confused about the difference between approval with appreciation. Have you ever wondered about the difference between approval and appreciation? Most of us have never actually thought about it, yet if we do think about it, we realize that we feel very differently when we receive approval as opposed to receiving appreciation. There are good reasons for this.
+
+Approval is something we give from a wounded, controlling part of us. Approval is conditional upon the other person performing in the way we want or expect. Approval is manipulative - that is, we give it with an outcome in mind. We hope that the other person will continue to do what we want as a result of the approval.
+
+Appreciation, on the other hand, is something we offer from a whole loving place within - what I call the loving Adult. It comes from the heart and is offered spontaneously as the heart wells up with feelings of delight, awe, joy, or love regarding another�s way of being. Appreciation has much more to do with the essence of a person rather than with performance. We are appreciating a person�s core Self, who they really are and the results of who they are, rather than what they do and their performance. With appreciation, there is no attachment to the outcome, no expectation that the other should or will continue to perform. Appreciation is a true gift.
+
+Often, when someone says they want appreciation or do not feel appreciated, what they are really seeking is approval. It is the wounded part of them who is not feeling seen and appreciated within - they are not seeing and appreciating themselves so they need it from others to feel worthy. The wounded self of the individual projects outward the inner need to be seen, understood and appreciated and pulls from others to get this need met. Whenever I hear someone say that they do not feel appreciated, I know that their essence - their Inner Child - is not being seen and loved by their own inner adult.
+
+When we are giving ourselves the attention and appreciation that we need and we then receive appreciation from others, it feels wonderful but it is the icing on the cake, not the cake itself. When it becomes the cake itself, then we need to look within and recognize that we have handed over to others the job of defining and validating our own worth and lovability.
+
+When you share something about yourself with the intent of getting approval, attention or appreciation, it doesn�t feel like sharing to other people. Instead they feel pulled at to validate you. When you share something about yourself with the intent of offering something to others, it feels like a gift. This is clearly illustrated in the wonderful movie, Good Will Hunting. In this movie the therapist, played by Robin Williams, shares much personal information about himself with his client Will, an angry and resistant young man. He shared it, not because he wanted or needed anything back, but purely to help Will feel safe in opening to his own pain.
+
+We can all challenge ourselves to be aware of our intent when we offer positive feedback to others - is it a true gift or does it have strings attached? And we can challenge ourselves to be aware of our intent when we share things about ourselves - are we giving or trying to get? Giving to get doesn't feel good to others who are at the other end of the pull, and getting what we want from others feels good only for the moment, but is ultimately tiring for us. It is tiring to always be trying to get from others what we need to be giving to ourselves.
+
+Giving appreciation and sharing ourselves from a loving heart, with no need to get anything back, will always feel wonderful and energizing to us and to others.

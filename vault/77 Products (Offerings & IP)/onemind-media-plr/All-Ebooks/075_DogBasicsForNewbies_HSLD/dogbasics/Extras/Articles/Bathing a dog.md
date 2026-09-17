@@ -1,0 +1,11 @@
+# Bathing a dog
+
+Bathing a dog needs to be given more emphasis. This is because of the fact that if you are careless in bathing, the animal may end up having some infections.  For example, if you don�t close the ears with large cotton ball, the water may enter into ear canals and may cause some ear infections with signs like constant discharge from the ears and shaking of head.
+
+	Frequency of bathing actually depends on the breed of the dog. If the dog is of a hairy type like the cocker spaniel, then the bathing is to be carried out once in six to eight weeks. If these breeds are bathed too frequently, then the skin and coat loose the protective characters.  However, when the dog has defecated on the skin due to the frequent digestive upsets leading to diarrhea, to avoid the bad smell, the dog may be subjected to frequent bathing some times by the owners. 
+	
+	Take more care in avoiding some irritant soaps or human soaps. The soap materials used for human beings are not suitable for dogs.  Similarly, many human shampoo products are having some ingredients that are not suitable in the proportions that are to be used in case of dogs. Hence, always try to use the shampoo products that are mentioned mainly for use in dogs. Take more care in using any new product.  
+
+	Always have good time and patience for products required for bathing in one place with availability of water source.  Dogs love the sprinkling of water, river, and oceans.  Even when you are using bathtub, have everything in one place and then start bathing of the dog. Try to have a leash, conditioner, towel, and shampoo in the bath place.
+
+	Conditioner is of helpful to make the combing activity easier later. Bathing should be a convenient activity to both the dog and the owner. This should not be a burden.

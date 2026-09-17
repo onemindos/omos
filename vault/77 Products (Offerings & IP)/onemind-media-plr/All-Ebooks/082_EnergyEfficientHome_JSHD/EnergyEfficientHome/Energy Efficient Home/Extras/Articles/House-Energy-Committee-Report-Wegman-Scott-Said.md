@@ -1,0 +1,37 @@
+# Information on the House Energy Committee Report by Wegman, Scott and Said
+
+A few years ago, specifically on 1999, paleoclimatologist Michael Mann released a report that concluded that man was experiencing a steady increase in global temperature. Before Mr. Mann�s work, the common belief was that the earth experienced a series of warming and cooling periods.
+
+However, Mr. Mann asserted that people have caused an alarming increase in world temperature. This triggered some media hype and even gave way to a movie. Lately, however, a House energy committee report by Edward Wegman, George Scott and Yasmin Said, debunked this theory.
+
+The House energy committee report by Wegman, Scott and Said proved through statistical means that the report of Mr. Mann, was full of statistical errors and that the methodology he used could have formed the same conclusion with any other type of data.
+
+The three people who made the report were not climatologists. They were actually statisticians from different schools tasked with looking at the report from a mathematical point of view. They actually proved that the methodology and computations made by Mr. Mann was biased to producing the results of a �hockey stick� graph.
+
+This, of course, led people to question the reasons why most of the climate research community remained silent about the discrepancies. 
+
+The House energy committee report by Wegman, Scott and Said contained not only the information on why Mr. Mann�s theories were invalid. It also attempted to explain the social network statistics of the climate research company and the reason why only two climatologists came forward to question the theory of Mr. Mann.
+
+In fact, Mr. Mann�s theory was the typical climatologists dream: uncovering a global disaster due to climatic conditions. This, of course, put Mr. Mann in the center of the climate research community.
+
+The attention that the climate community had gotten because of the report may have caused them to shy away from doing a critical study of the papers.
+
+When you take a look at this case, you may be able to pick up a few lessons. Here they are:
+
+1) Ignorance is bliss �Sometimes, people would rather not question an idea that brings them so much. People would rather be told that it is going to be alright than to see for themselves, for fear of discovering something bad.
+
+Some people would rather live in a fantastic dream than in a horrible reality. True, our reality may not seem so good, but why would anyone trade the truth for a dream? That is one of the questions that we all think about, yet fear to answer.
+
+2) A fresh eye never hurts � We all consider ourselves as the best judge of our realities. However, as the House energy committee report by Wegman, Scott and Said has shown, we all need to have someone look over our shoulders once in a while. 
+
+�For none is more deceitful than the heart� as a quote goes. We all need a reality check from other people from time to time as we tend to blind ourselves with the potential of success.
+
+3) Make sure you have the facts straight � When we make something public, we must be sure of our motives and facts first. The quest for fame is far from being the right reason to declare something as catastrophic as the climatic end of the world.
+
+In order to save yourself the embarrassment, you might want to have all your facts check out before announcing them. Remember that it never hurts to double check your results.
+
+If you are no expert in one area, you might want to get advice from other people. Usually, researchers do not come to other people for they do not want to share the fame they think they will get. Unfortunately, not getting a second opinion often leads to self-destruction.
+
+As you may see from the House energy committee report by Wegman, Scott and Said, even geniuses can make mistakes.
+
+These are just some of the lessons we have learned from the House energy committee report by Wegman, Scott and Said. In fact, these lessons are always repeating themselves, showing their faces on every mistake that humanity has done. And through it all, we always learn to move on and grow.

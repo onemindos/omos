@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "updated": "2026-03-27T22:00:00Z",
+  "active_projects": [
+    {
+      "id": "upgrade-deployment",
+      "title": "Deploy PAI-inspired upgrade modules",
+      "status": "in_progress",
+      "started": "2026-03-27"
+    }
+  ],
+  "current_session": null,
+  "notes": "Updated at session start/end. Tracks what agents are actively working on."
+}

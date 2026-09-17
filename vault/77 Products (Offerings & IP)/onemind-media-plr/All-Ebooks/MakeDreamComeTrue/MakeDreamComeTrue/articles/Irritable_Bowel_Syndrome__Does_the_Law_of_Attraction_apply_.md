@@ -1,0 +1,34 @@
+# Title:
+
+Irritable Bowel Syndrome. Does the Law of Attraction apply?
+
+Word Count:
+656
+
+Summary:
+Irritable Bowel Syndrome is not just a common condition but it is shrouded in negative facts. There in no real cause, no abnormality of the gut, no cure and no one effective treatment. According to the Law of Attraction, negative thoughts, results in negative effects. Mind treatment involving changing negative thoughts about Irritable Bowel Syndrome into positive once are becoming increasingly popular. Is it possible that these negative factors are the reason why up to 20% of  the population suffer 
+from Irritable Bowel Syndrome?
+
+Keywords:
+irritable bowel syndrome,ibs,irritable bowel syndrome treatment,ibs treatment,
+
+Article Body:
+Irritable Bowel Syndrome affects as much as 20% of people in USA and Europe. Symptoms of Irritable Bowel Syndrome are abdominal pains associated with altered bowel pattern and bloating. In addition there can be rectal symptoms such as irritation and urgency. There are also non-colonic symptoms. 
+
+Treatments of IBS fall into four categories. These are patient education, dietary modification, medication, and behaviour and psychological therapy. Experts now agree that behaviour and psychological therapies are more likely to be effective that the other three.
+
+ The law of Attraction suggests that you attract into your life whatever you think about. This generalisation in simple terms means that your thoughts determine your destiny. The Law of Attraction has built up an enormous momentum after "The Secrets"; a documentary film, was shown on Oprah. It has been used for some time for personal growth, achievement and financial gain.
+
+The question is: Does the Law of Attraction work in Medicine? In 2004, a study of 196 young people and 314 elderly subjects associated with negative thoughts or rumination concluded that negative thoughts may be detrimental to health independently of effects. In Reikii, all processes of healing or personal and spiritual development is associated with removing negative Ki (Life Forces) from a person's energy field, along with negative thoughts and feelings that have created it.
+
+Negative thoughts, following job loss, relationship break ups and poor assessment, affect self-esteem. These people can feel worthless, insignificant, unsure and easily defeated. A person with high self-esteem has positive thoughts and their thoughts determine their level of success.
+
+So, does the Law of Attraction apply to Irritable Bowel Syndrome? When a person is first diagnosed with IBS, what information is delivered? Here are a few. We do not know why you have IBS. There is no single treatment that works for everyone. We cannot find any abnormality in your gut. There is no cure. Stress plays an important role in IBS. You have to live with it. It is also an established fact that most IBS sufferers do not get adequate support from their health professionals.
+
+All these facts are negative. Is it not likely that they can lead to negative thoughts in the minds of IBS patients and produce negative effects? Treatments that focus on the mind are now recommended by experts. Treatment such as psychotherapy and cognitive behaviour therapy (CBT) are producing excellent results. Moss-Morris at the University of Southampton, UK said, "Patients who have ongoing IBS symptoms might benefit from a simple, early intervention of CGT, a means of changing thought processes from negative to positive that has been shown to be helpful." Dr .J. Lackner at the State University of New York reported that after  four brief sessions of CBT and a self-study manual given to patients, there was improvement in 73% of his IBS patients.
+
+ When an IBS patient tries a new treatment, expectation may well create significant improvement. This benefit may not last long because of the negative underbelly (There is no cure.) in the subconscious mind. Soon the benefits may wear off.
+
+There are cases of refractory Irritable Bowel Syndrome patients following a course of hypnotherapy living normal lives, eating foods that were previously triggers. In refractory IBS nothing works anymore. During hypnotherapy, negative messages about IBS are plucked from the subconscious mind and replaced by positive ones. This is the Law of Attraction working at its best. Ingrained negative thoughts created negative effects in refractory IBS. After hypnotherapy, positive thoughts produced positive effects.
+
+If you believe in the Law of Attraction, how can you use it to change the course of your IBS? Focus on the positives. Make them your reality and eventually your thoughts and feelings. Here are some positives. My gut is normal. My IBS will not lead on to other illnesses. Stress is a trigger. I can control stress. I can balance my lifestyle to improve my IBS. I can lead a full life even though I have IBS

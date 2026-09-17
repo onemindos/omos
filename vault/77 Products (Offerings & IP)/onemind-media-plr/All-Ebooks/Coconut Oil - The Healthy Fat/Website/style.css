@@ -1,0 +1,28 @@
+/* CSS Document */
+
+body
+{
+margin:0px;
+background-image:url(images/bg.png);
+background-repeat:repeat-x;
+background-color:#FFFFFF;
+font-family:'Helvetica', Arial, Verdana;
+a:link color: #59770E;
+a:hover color: #333333;
+}
+
+#header
+{
+background-image:url(images/index_01.png);
+background-repeat:repeat-x;
+height:211px;
+width:900px;
+}
+
+#contentbg {
+  background-image: url(images/index_03.png);
+  background-repeat: no-repeat;
+  background-position: top center
+  width:817px;
+  height:637px;
+}

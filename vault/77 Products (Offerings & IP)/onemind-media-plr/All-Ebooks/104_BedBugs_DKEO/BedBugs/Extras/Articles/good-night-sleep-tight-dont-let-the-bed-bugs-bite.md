@@ -1,0 +1,35 @@
+# Good Night, Sleep Tight, Don't Let the Bed Bugs Bite
+
+Bed bug bites are so itchy. Some people are even have allergies to the saliva that a bed bug injects on the skin before it sucks in blood to feed. Children and adult alike could not say good night sleep tight and don't let the bed bugs bite especially if bed bugs are all over your house! 
+
+So, how would you know if your house is infested and you can safely say to your family members good night sleep tight and don't let the bed bugs bite?
+
+Check for bed bugs symptoms. Don't assume that the intense scratching that your children do are due to mosquito bites. Inspect your house for posible bed bugs infestation so you can say at night good night sleep tight and don't let the bed bugs bite.
+
+-- Skin Symptoms To Note To Detect Possible Bed Bug Infestation
+
+For the past few mornings, you have notice that your kid has swollen insect bites at the arms and shoulders. The bites are oval shaped and are seemed to be in line. Your kid looked drowsy. It seemed your kid didn't have a good night sleep. Oh, it is not a good night sleep tight and don't let the bed bugs bite night for your kid. Check his mattress to inspect for bed bugs infestation. 
+
+Some people don't react to the bed bugs' saliva that is injected onto the skin before the blood feeding starts. The saliva contains anesthetics, which prevents pain during piercing of the skin, and anticoagulant to keep the blood from clotting. But some people, especially the younger ones, react to these natural chemicals. Children feel discomfort in their sleep. Some are even have allergies to these natural chemicals. Oh, it will never be a good night sleep tight and don't let the bed bugs bite night for them.
+
+What are the common allergic reactions? One is development of itchy and swollen large wheals, often the size of less than a centimeter. Thick wheals subside and become red spots that can last for days. 
+
+Infection may arise when children scratch these itchy wheals. Children can't control the scratching, especially that bed bug bites are more itchy than mosquitoes or dust mites bites. There are reports that when these wheals get infected due to scratching, bullous eruptions occur. 
+
+Some individuals develop anxiety, stress, and insomnia due to bed bugs infestation. They didn't have a good night sleep tight and don't let the bed bugs bite night. 
+
+-- Hiding Places of Bed Bugs
+
+People always aspire of having a good night sleep and say every night to their household members good night sleep tight and don't let the bed bugs bite. A good night sleep tight and don't let the bed bugs bite night for every American is a night of comfort, night of uninterrupted sleep, and night without mosquitoes, dust mites, and bed bugs.
+
+So, in order to have a good night sleep tight and don't let the bed bugs bite night, learn the hiding places of bed bugs and exterminate them.
+
+ 
+
+Bed bugs are small, oval-shaped, reddish brown, flat insect that can live in almost any crevice where a warm-blooded mammal usually stays. Their breeding place are usually in the bedroom and the living room where people sleeps and stay longer than an hour. Bed bugs want to be near to their source of food. 
+
+Once you see a single bed bug on your dress, on your comforter or couch, it undoubtedly means that your house is 100% bed bugs infested. And this also confirm your suspicion since you can't have a good night sleep tight and don't let the bed bugs bite night. 
+
+Seams of mattresses, head boards, wooden furniture and wooden bedside table are the first few places that you should look at. If you notice a reddish brown stain on these places, you need to look for an exterminator to treat your house for bed bugs. This also means that you have to throw your bed and your comfy couch.
+
+Yes, even your favorite couch, you must throw it away. Bed bugs can survive for eighteen (18) months, that's 1 1/2 years, without feeding. Bed bugs in your bed foam and springs can escape insecticide. A single female bed bug survivor can lay 300 eggs and this is means another infestation in your household.

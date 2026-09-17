@@ -1,0 +1,258 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "github-copilot/claude-sonnet-4.6",
+        "fallbacks": [
+          "amazon-bedrock/us.anthropic.claude-sonnet-4-6",
+          "amazon-bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0"
+        ]
+      },
+      "models": {
+        "github-copilot/claude-sonnet-4.6": {
+          "alias": "Sonnet 4.6 [GH]"
+        },
+        "github-copilot/claude-sonnet-4.5": {
+          "alias": "Sonnet 4.5 [GH]"
+        },
+        "github-copilot/claude-sonnet-4": {
+          "alias": "Sonnet 4 [GH]"
+        },
+        "github-copilot/claude-opus-4.7": {
+          "alias": "Opus 4.7 [GH]"
+        },
+        "github-copilot/claude-opus-4.6": {
+          "alias": "Opus 4.6 [GH]"
+        },
+        "github-copilot/claude-opus-4.5": {
+          "alias": "Opus 4.5 [GH]"
+        },
+        "github-copilot/claude-haiku-4.5": {
+          "alias": "Haiku 4.5 [GH]"
+        },
+        "github-copilot/gemini-3.1-pro": {
+          "alias": "Gemini 3.1 Pro [GH]"
+        },
+        "github-copilot/gemini-3-flash": {
+          "alias": "Gemini 3 Flash [GH]"
+        },
+        "github-copilot/gemini-2.5-pro": {
+          "alias": "Gemini 2.5 Pro [GH]"
+        },
+        "github-copilot/gpt-5.4": {
+          "alias": "GPT-5.4 [GH]"
+        },
+        "github-copilot/gpt-5.4-mini": {
+          "alias": "GPT-5.4 Mini [GH]"
+        },
+        "github-copilot/gpt-5.4-nano": {
+          "alias": "GPT-5.4 Nano [GH]"
+        },
+        "github-copilot/gpt-5.3-codex": {
+          "alias": "GPT-5.3 Codex [GH]"
+        },
+        "github-copilot/gpt-5.2": {
+          "alias": "GPT-5.2 [GH]"
+        },
+        "github-copilot/gpt-5.2-codex": {
+          "alias": "GPT-5.2 Codex [GH]"
+        },
+        "github-copilot/gpt-5-mini": {
+          "alias": "GPT-5 Mini [GH]"
+        },
+        "github-copilot/gpt-4.1": {
+          "alias": "GPT-4.1 [GH]"
+        },
+        "github-copilot/grok-code-fast-1": {
+          "alias": "Grok Code Fast [GH]"
+        },
+        "github-copilot/goldeneye": {
+          "alias": "Goldeneye [GH]"
+        },
+        "github-copilot/raptor-mini": {
+          "alias": "Raptor Mini [GH]"
+        },
+        "amazon-bedrock/us.anthropic.claude-sonnet-4-6": {
+          "alias": "Sonnet 4.6 [bedrock]"
+        },
+        "amazon-bedrock/us.anthropic.claude-opus-4-6": {
+          "alias": "Opus 4.6 [bedrock]"
+        },
+        "amazon-bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+          "alias": "Haiku 4.5 [bedrock]"
+        }
+      },
+      "subagents": {
+        "model": "github-copilot/claude-haiku-4.5"
+      },
+      "sandbox": {
+        "mode": "off"
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "default": true,
+        "name": "Sentinel",
+        "workspace": "~/.openclaw/workspace",
+        "skills": [
+          "discord",
+          "healthcheck",
+          "model-usage",
+          "node-connect",
+          "session-logs",
+          "taskflow",
+          "tmux",
+          "sentinel",
+          "telegram"
+        ],
+        "sandbox": {
+          "mode": "off"
+        }
+      }
+    ]
+  },
+  "auth": {
+    "profiles": {
+      "github-copilot:github": {
+        "mode": "token",
+        "provider": "github-copilot"
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "op://aaeyris5z44pdqspk277u2oppi/lmpukgoo7w4bb5katnt24vqobe/credential",
+      "dmPolicy": "open",
+      "streaming": {
+        "mode": "partial"
+      },
+      "commands": {
+        "native": "auto"
+      },
+      "groups": {
+        "-1003905828404": {
+          "requireMention": true,
+          "topics": {
+            "195": {
+              "agentId": "main",
+              "requireMention": false
+            }
+          }
+        }
+      }
+    },
+    "discord": {
+      "enabled": true,
+      "token": "op://aaeyris5z44pdqspk277u2oppi/czrullgbzaz3dty2pki6s4b4oq/credential",
+      "groupPolicy": "allowlist",
+      "streaming": {
+        "mode": "off"
+      },
+      "guilds": {
+        "1453411552181883027": {
+          "requireMention": true,
+          "channels": {
+            "1482355265092190319": {
+              "requireMention": true,
+              "enabled": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "gateway": {
+    "auth": {
+      "token": "f60bvv3B54vvwwvmbM8R60jKyHDOJXJK",
+      "mode": "token"
+    },
+    "bind": "loopback",
+    "controlUi": {
+      "allowedOrigins": [
+        "http://localhost:18789",
+        "http://127.0.0.1:18789",
+        "https://omos-sentinel.tail717ba0.ts.net"
+      ],
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "mode": "local",
+    "port": 18789,
+    "trustedProxies": [
+      "127.0.0.1"
+    ],
+    "tailscale": {
+      "mode": "serve"
+    }
+  },
+  "meta": {
+    "lastTouchedAt": "2026-05-04T03:00:22.665Z",
+    "lastTouchedVersion": "2026.5.2"
+  },
+  "plugins": {
+    "entries": {
+      "browser": {
+        "enabled": false
+      },
+      "device-pair": {
+        "enabled": false
+      },
+      "discord": {
+        "enabled": true
+      },
+      "file-transfer": {
+        "enabled": true
+      },
+      "memory-core": {
+        "enabled": true
+      },
+      "openshell": {
+        "enabled": true
+      },
+      "skill-workshop": {
+        "enabled": false
+      },
+      "telegram": {
+        "enabled": true
+      },
+      "thread-ownership": {
+        "enabled": true
+      },
+      "webhooks": {
+        "enabled": true
+      },
+      "github-copilot": {
+        "enabled": true
+      },
+      "amazon-bedrock": {
+        "enabled": true
+      }
+    },
+    "allow": [
+      "discord",
+      "telegram",
+      "github-copilot",
+      "amazon-bedrock",
+      "file-transfer",
+      "memory-core",
+      "openshell",
+      "thread-ownership",
+      "webhooks"
+    ]
+  },
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "telegram"
+      }
+    },
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "discord"
+      }
+    }
+  ]
+}

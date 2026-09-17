@@ -1,0 +1,18 @@
+# title:Control Your Own Level of Motivation
+
+author:Paul M. Jerard Jr.
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_3000.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+When I first mention this to most people, they really don�t get it, so here is a simple formula for keeping your moods upbeat. 
+Audio books and music can be used as tools for motivation.  The audio book is such a great motivational and learning tool, while you are commuting, or just out for a drive by yourself. I mention �by yourself� because, ideally, you should spend quality time with people in your car. 
+You can learn so much about life and a self-improvement audio book can keep you motivated all day long. 
+When I first started listening to audio books it was during commuter traffic through Providence and Boston. I would show up to meetings relaxed, with fresh ideas, and motivated. When people asked me the secret, I told them about the magic of audio books. 
+Most of them never asked me again, thought I was some strange eternal optimist, and never bothered to try an audio book. 
+Unfortunately, many people are slaves to stress, and don�t want to change anything. They go about their lives with a perfect recipe for a heart attack and high blood pressure. 
+Here is the ultimate recipe for a very sad and short life.  You must combine "running late" to work, high volume traffic, the daily latte, a high stress job, and show up barely on time or late. 
+Some people are, what I call, �mad at the world.� They drive from one intersection to the next, making gestures at everyone. Some of these people can be helped, while others go through a daily cycle of frustration and even invite violence. 
+Now, let�s get back to you. As long as you stay aware, you have control over your motivation, moods, and level of optimism. So, take charge by plugging yourself into positive energy with books, audio books, music, and positive people.
+ZZZZZZ

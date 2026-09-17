@@ -1,0 +1,45 @@
+# Title:
+
+How The Law Of Attraction Can Help With Your Depression
+
+Word Count:
+781
+
+Summary:
+If you are one of the millions of people the world over who are suffering from depression you may be able to take the first steps yourself to get better.
+
+More and more people are suffering from depression for many years despite wanting to get well. Many different medications are on the market to help persons with an ongoing depression. The person who is suffering from this is in many cases a victim of physical or mental abuse. It is therefore very difficult for the person ...
+
+Keywords:
+law of attraction, depression, anxiety
+
+Article Body:
+If you are one of the millions of people the world over who are suffering from depression you may be able to take the first steps yourself to get better.
+
+More and more people are suffering from depression for many years despite wanting to get well. Many different medications are on the market to help persons with an ongoing depression. The person who is suffering from this is in many cases a victim of physical or mental abuse. It is therefore very difficult for the person to be able to get better without professional help.
+
+Due to the new public awareness about the Law of Attraction and about how we are fitting into this world of unwritten but very powerful laws, some people have tried to make the first steps themselves to the way of recovery by employing the Law of Attraction in their lives. You may have heard about it. It is been aired on TV shows like Oprah and Larry King Live. You can find many books even in good book stores about the Law of Attraction and how it can work for you. The knowledge of the Law of Attraction has been known for thousands of years. Only a few people have known this in the past and those who applied it have increased the quality of their live experience. Just now many more people have got to know about this wisdom of the ancient world and have learned to it works for them.
+
+No doubt when suffering from depression a person would like to feel better and get some relief. There is help available and doctors, nurses and experienced therapist are specially trained to help you deal with depression.
+
+But now you can help yourself along with professional therapy to get better. When knowing about the Law of Attraction we find out that the universe only respond to our feelings not to the spoken words. So we may say to ourselves I hate the way I feel and I wished I could be happy and feel better. Or we may feel that we do not care anymore about life. When you feel this way you will unknowingly get more of the same feeling. The universe will respond and bring to you more of the feeling that matches with yours.
+
+To feel better and to help with depression you need to make it a regular routine to meditate. Meditation is very important as this will connect you with the powers of the universe. To help yourself with the secret of the Law of Attraction you need to meditate daily. The universe can give you what you need to become better and to make your life a success. Depressions can be in your past by applying this knowledge and by being determined to help yourself.
+
+When doing meditations you will soon begin to notice a difference in yourself. This will help you to become a person that is able to take control. Eventually you can make your own life and live it the way you really want to.
+
+You are the creator of your own experiences in life. You will discover the secret of people who have been successful in live. Some of them have been known for their extra ordinary accomplishments.
+
+You do not have to suffer from depressions for the rest of your life!
+
+Here are some special ways that you can meditate:
+
+When meditating sit in a comfortable chair and close your eyes. You can play some low sound effects if you like. There are tapes or CD's available in many stores or even online.
+
+This may help you to relax and to become in tune with the universe. You can sit in a room with lights and only candle light if you prefer.
+
+You also need to do this when things are quiet around you so that you can truly meditate without distractions.
+
+Try not to think about anything and if you do gently dismiss your thoughts. You may have to do t his kind of exercise several times before you can do this and become totally quiet during your meditations.
+
+Your goal is to become in tune with the universe. You will be able to learn more about your own self and about the secret person inside of you. The universe will respond and give you what you are asking for! With the Law of Attraction true happiness and a life without depression can be yours. Learn to unleash the powers of the universe when meditating daily. There is a way out for you! With the Law of Attraction you will be able to attract peace, harmony and well being into your life!

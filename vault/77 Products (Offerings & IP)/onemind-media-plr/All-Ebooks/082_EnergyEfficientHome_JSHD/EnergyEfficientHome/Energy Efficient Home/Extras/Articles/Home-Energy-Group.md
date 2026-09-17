@@ -1,0 +1,33 @@
+# Home Energy Group
+
+Home Energy Groups and Why They are Formed
+
+There are many types of home energy groups today. These people form groups for different reasons. In order to truly understand their nature, you must learn about their purpose.
+
+1) Research � There are some home energy groups formed specifically for the task of expanding the study of home energy. These home energy groups are composed of different specialists, professors and students who try to improve the state of home energy for different reasons.
+
+However different the purpose of each person in a home energy group can be, these individuals are united by the will to discover and to innovate. By forming home energy groups, scientists can pool resources and share ideas on how to improve the technology of home energy. 
+
+Some home energy groups also focus their research on understanding the true nature of energy. By doing so, these people expect to be able to jump-start home energy technology and lead us into another revolution.
+
+This type of home energy group is usually backed by a school or government grant. You might say that these people are paid to think. Their ideas transform the way we look at home energy and allow us to harness it through technology. Because of this type of home energy group, we have reached the level we are in today.
+
+2) Law � This is probably the type of home energy group most people know about. These groups are formed in order to improve laws concerning home energy. Mostly, these groups are made up of people working in the senate and congress. These people propose laws that are designed to help resolve different issues regarding home energy.
+
+In some countries, there are home energy groups formed to make sure that the entire nation makes use of its energy efficiently. These groups often propose laws that standardize the quality of living. If you take a look at some places like Victoria, you will see that they have required laws that require houses to stick to an energy efficiency level. By doing this, they not only help people reduce the cost of energy, they also help the economy.
+
+These home energy groups are also responsible for passing laws meant to promote the development of alternative energy. These laws sometimes offer rewards such as tax breaks for companies who develop alternative sources of energy.
+
+Because of this type of home energy group, progress has been made and funding has become available for improvements on the home energy front.
+
+3) Consumers � These home energy groups are composed of concerned citizens who are focused on the goal of facing consumer problems. These groups are often trying to find ways of making home energy more accessible and less expensive for consumers.
+
+In a sense, this home energy group deals with questions regarding the market of home energy. They attempt to study the mechanism that runs the home energy market and they try to inform the people of just why they have to pay this and that for their energy.
+
+Another task that falls to them is monitoring that the companies who supply home energy do so in a manner that is fair to the consumers. They address complaints and try to find reasons for prices. They protect the ordinary citizen from the corruption often found in big corporations.
+
+4) Business � This type of home energy group is composed of companies that supply energy to the people. These groups are formed for the sole purpose of maintaining an order in the market.
+
+Because of home energy groups like these, the market for home energy remains balanced, and customer satisfaction is ensured. It is within these groups that price increases and rollbacks are determined. These groups make sure that what they charge for home energy is enough so that they can have a profit while maintaining consumer satisfaction.
+
+These are the different types of home energy groups. As you may have observed, each has a purpose that can be helpful to different types of people. By knowing about the purpose of these energy groups, you may be able to grasp the complexity and importance by which humanity grasps the concept of home energy. In doing this, you are also able to determine which home energy group to go to when you need help.

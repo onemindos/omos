@@ -1,0 +1,37 @@
+# 739
+
+Bugged By The Bugs
+
+The notoriety of bed bugs show that vampires are not the only popular blood suckers in society. Scientifically known as Cimex lectularius, bed bugs are tiny, brownish flat-like insects that operate mostly during nighttime. During the day bed bugs prefer to situate themselves in areas people normally sleep on. Their small bodies enable them to fit in the narrowest of spaces, especially those related with headboards, box springs and mattresses. Unlike ants or bees, bed bugs do not congregate in a single area.
+
+The problems on bed bugs are even documented in writings about medieval Europe and classical Greek during the time of Aristotle. Bed bugs were already known to feast on wild hosts mainly birds and bats.
+
+Bed bugs were a big problem especially before World War II due to the poor focus on cleanliness and proper hygiene. However, the bugs nearly vanished in the 1940�s and 1950�s because of the widespread use of various pesticides. However, less effective pesticides and reforms in pest control methods enabled these creatures to make a comeback and again become a pest in society.
+
+The Big Bugs
+
+The adult bed bugs are normally mistaken as ticks or cockroaches, as they are approximately � inch in length with flat and hard bodies. These insects can move swiftly in floors, ceiling, walls and other surfaces but cannot fly. The female bed bugs can lay as many as 500 eggs during their lifespan and choose secluded areas to make their move.
+
+When the eggs hatch, the baby bugs or nymphs can fully develop as fast as a month. Cool areas or where there is no access to blood will prolong the development time. The nymphs can live for several months without feasting, while the adults can last for around a year.
+
+Bite Me 
+
+People in deep slumber are normally the prime targets of bed bugs. A person who is being bitten may not even notice that he has become dinner for the bed bug, as engorgement normally lasts for around three minutes or even less than a minute. Bite scars result in a red welt or slight swelling of the skin.
+
+People that travel frequently, do not regularly clean their beds or use pre-owned beds should be concerned that they will be eventually attacked. However, bed bugs are not considered a serious disease threat, as there is only a small chance that they can transmit any harmful virus to humans. Those that want to prevent complications from bed bug bites should spread antibiotic cream or antiseptic to the infected area of the body.
+
+In addition, it is best not to scratch the infected area. Similar to mosquito bites, scratching only makes the infection worse.
+
+Control �em bugs
+
+The proliferation of bed bugs has been a problem for many centuries. The length of time they have been causing headaches indicate that the perfect way control them has yet to be developed. It is wise for a person with a bed bug issue to hire a professional pest control group to help solve his dilemma.
+
+Those with a long experience in the pest industry should know where bed bugs settle. To assist the pest solvers, clients should at least clean their surroundings from excess clutter. The inspectors could be forced to look in nearby rooms, as bed bugs have the ability to disperse in different areas of a building.
+
+Dispose the bed
+
+The bed is normally the main breeding ground of bugs. If a bed has holes and tears it is likely that these contain eggs inside or out. Pest control companies normally advise their clients to dispose the beds that are heavily infested or in poor shape.
+
+Bed bugs do not choose what type of bed they will settle, as they put more importance on the warm blooded person occupying it for an extended period of time. Bed bugs can even settle in sleeping bags, egg foam, or even stacks cardboard on the floor. Any place where people sleep is always the perfect area for bed bugs to roam. Water beds are also included, as these have nooks and crannies and are often warm, which is the preferred temperature of these insects.
+
+Despite various alternatives to control bed bugs, it is safe to say they are here to stay. Possibly, the best way not to become a bed bug victim is by putting a premium on good hygiene and cleanliness.

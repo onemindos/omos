@@ -1,0 +1,43 @@
+Definition Of Lean Manufacturing
+
+Defining Lean Manufacturing
+
+Understanding what lean manufacturing is does not take rocket science, nor does it take a conference of ten experts to bear down to the basic concepts. Simply put, lean manufacturing is the achievement of the greatest efficiency and profitability for a company by eliminating the wasteful methods and activities that are commonly present in corporate regimes.
+
+At first glance, some firms are intimated with the thought of adopting lean manufacturing because of its fancy sounding name. But, if truth be told, it's actually easier than seems. What you just need to have is the dedication and the discipline to see things through and make change happen.
+
+First up, let us identify what the top seven wastes companies identified as the reasons for the production delays, gargantuan costs and, eventually, bankruptcy filings and hostile takeovers. 
+
+1) overproduction
+2) transportation
+3) motion (processes that don't need to be conducted)
+4) inventory
+5) processing
+6) waiting time
+7) defects
+
+These are the key reasons why most firms often fail. For instance, with defects, instead of focusing on achieving the best quality output at the shortest period of time, some firms waste effort and energy into looking at and fixing equipment and method defects and problems. If the kinks had been addressed in the first place and the problem nipped at the bud, such an unnecessary activity would be eliminated.
+
+Definitions of popular lean manufacturing terms
+
+If a company wants to fully understand what lean manufacturing is, it should first familiarize itself with some of the prominent technical terms linked to it. Don't let these words scare you off. 
+
+Cellular manufacturing
+
+This involves the linking manual and machine operation to achieve the most efficient and cost-effective combination that would extract maximum value from a certain activity and method, while reducing wastes at the same time. Cellular manufacturing is usually U-shaped and flows in a single pattern.
+
+Kanban System
+
+This is a pull method that makes use of color-coded cards attached to parts to be able to ensure the smooth flow of the production process. A 'pull method' simply means the customer's interest is foremost, instead of you as the manufacturer dictating what the consumer should have.
+
+Value
+
+This is what the customers is willing to pay for. It is the responsibility of the lean manufacturing strategy to deliver what the customer wants exactly.
+
+Pull system
+
+This involves the replacement only of goods that have been used up or depleted.
+
+Takt time
+
+This is identified by the customers' rate of demand. The takt time is what sets the production pace and matches it with how badly consumers need the product delivered to them. It is often referred to as the heartbeat of lean manufacturing systems.

@@ -1,0 +1,721 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ad5:55cf:0:0:0:0:0 with SMTP id e15csp3659271imq;
+        Thu, 7 May 2020 20:43:09 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIHebqIr1ThyNGp6zyWSmqHxPbt/6LqRp88DlheO8/z5qluFs+yZnLUUvjPZOz+k2BTOxK8
+X-Received: by 2002:a05:620a:688:: with SMTP id f8mr667182qkh.431.1588909389527;
+        Thu, 07 May 2020 20:43:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1588909389; cv=none;
+        d=google.com; s=arc-20160816;
+        b=WlR4dKUEOfuD+/8xbojcKffeSNFwt7rZ3Y+qzG/PHULWf0nkBHr9sba7h22NoIZFGZ
+         Kj5+pi8dqR0fPzPP7CFoXP0iNjaW3nvXqZbzY/ZuTgsyi70KwP1Vqh9OfLGy8xDa6nby
+         di0S0FJgiB9seFpCsETJ6fhVimtcdzCYSue79BsAsAANj77jBJ2O+/OlRZs4SkFEeGNC
+         vELz+VeU5dgnzr+e9I1Rg5fiNyAV5+lKcySZMR+DKelb4JFSHmsVv/8VCX01KJHEkMY6
+         DIzpV8Qv8wl8rPdsxvFBg2V1n97HXsfWzJlINLcPw63lcMXbkI8ilVnq/ZppPf5F5c0W
+         3jaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=24+fxfO6mXitkcZMCovoSIZDjeoRDp5bPvFbiTk7UnI=;
+        b=swxODyOO07agYapG8cdoCsMaqDtGbgxXby5ZC8Lq5WNjLKTo0DUPmdRbrIkwyfSRbQ
+         v6J7yAg/ZLaopPQ7j04xhU6P0gaUiAJf14ioT/voX1MCgqhHsiOripp6jxQqstvSiLI+
+         T+75OhdivUSa9nJFcJDfF+CuwHRectpwyhlxcdN/S9yAFAuw3sgcno4CabpvwCZr9nyk
+         UbyfH2iMJCvh6tRWNvdOxCLZNF5BWbti+Fxh3xmNgRuDvHZs8U79YrC2YwuEhTnIxDyW
+         +4LoNMPqg9yOWZG7kn+XY5r4sSxLkAIeDYu1Z5zALidLAgJpjXDGWvVWpnnBejrlY5RW
+         ZmVA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=CVLctoaS;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=Dv7tWEiM;
+       spf=pass (google.com: domain of bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id f15si137766qtg.143.2020.05.07.20.43.09
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 20:43:09 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=CVLctoaS;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=Dv7tWEiM;
+       spf=pass (google.com: domain of bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=24+fxfO6mXitkcZMCovoSIZDjeoRDp5bPvFbiTk7UnI=;
+ b=CVLctoaSZOX5T56AvtJO1T+sErs7FpIO40Fv5HAjrNRDqY+48/LZIMNuKs+F3Gyb/vHhX4aYTkCh
+   FDPQP/Jr/Xgcnub+UcD1i45OJFn6GykVIfA32qpZcOnsA0HQYvKkObip5YF9UJ7dwG1hHtGxMy8S
+   qoXBSIiyaj3wEtSoVJ4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=24+fxfO6mXitkcZMCovoSIZDjeoRDp5bPvFbiTk7UnI=;
+ b=Dv7tWEiMdpYBnI+E6TmjIPHQMB0ypO+v7wmV1p51ERuQPTJgg4YDJL1tijnXrxysf7IaxEgXwotH
+   FxxNCwkYvjWuwi0OtjNkKHAg7Qu51aY1t8t0IoyxnXLCV/wUC8c8K/1s4EAbmRzKq1/Y4nsKUbv9
+   tywjx9fz5px1CSMb4MA=
+Received: by s2.asa1.acemsd3.com id hmjako2lshks for <bruce.k.cosma@gmail.com>; Fri, 8 May 2020 03:43:08 +0000 (envelope-from <bounce-549600-432-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Day 10
+Date: Thu, 07 May 2020 22:43:08 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-2138763795eb4d54ce5ca30.41367420_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDMyICwgbTQ0NiAsIHM2MzI3
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-432
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-432-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=432&m=446&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200508034308.15324.951175639.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-2138763795eb4d54ce5ca30.41367420_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public. Dispute 21 - Day 10:
+Outsmarting 
+Optical Character Recognition 
+
+Credit repair is extremely effective. But results will vary GREATLY
+depending on your own knowledge and the methodology you use to dispute
+items on your client's reports.
+
+Simply mailing off angry letters to the credit bureaus without fully
+understanding how their automated computer systems work will not yield
+positive results.  
+
+One of the main reasons credit repair is not as effective as it should
+be is that it is rarely executed properly.
+
+What Makes Credit Repair Effective 
+
+In the past credit repair methods were largely restricted to bombarding
+the bureaus with letters. The hope was to mail lots of disputes to the
+bureaus, confusing both the person entering the disputes and the person
+at the creditor receiving the disputes. The belief was that if the
+creditor didn't respond in time, the item would be removed. 
+
+These types of methods are rarely effective anymore. Even if items get
+deleted, they are usually put back on the credit report shortly after. 
+
+How can this happen? As we've discussed in prior lessons, even though
+creditors have 30 days to respond to the dispute before it is deleted, a
+response 60 days after the fact still gives them the legal right to put
+the item back on the report. 
+
+To effectively and permanently delete negative credit items, you have to
+ensure the item did not get deleted because the creditor or credit
+bureaus made a mistake, or couldn't verify the item. 
+
+Once you know how to do that, the item will be deleted and stays
+permanently off your report. 
+
+Over the years the credit bureaus have gotten much smarter. Most of the
+dispute process is now automated through two computer systems the credit
+bureaus use. The key to success in disputing items on your report is
+understanding how these computers work. Today we will take a look at one
+of these computer systems and ways of getting around it.
+
+OCR (Optical Character Recognition) is the credit bureaus first line of
+defense against your disputes. It's a massive program that "reads"
+every dispute letter you send into the credit bureaus.
+
+The computer basically "scan" reads your dispute letter to uncover
+several things. First it attempts to see if the dispute is legitimate or
+what they call frivolous. 
+
+The system automatically categorizes the disputes, and flags some of
+them as a stalling tactic if they feel you are actually trying to
+improve your credit score instead of just disputing one account about
+which you might have a question. 
+
+OCR also stores these disputes in a detailed database and auto
+categorizes them with a dispute reason code. These codes can prevent you
+from submitting the dispute again. In that case, the system will detect
+the code and the dispute will not be investigated, and instead be
+flagged as "frivolous". 
+
+In theory, OCR was designed to reduce credit bureau human error. In
+practice it ensures your disputes are stalled or voided at any chance it
+gets. 
+
+It will even read your letters including the font, paper, color of font,
+spelling, and other variables to try to see if you have used that letter
+before, OR if you are using a template letter to dispute. 
+
+If OCR thinks you are using a template letter which has been used before
+or sees another dispute for the same account with a similar reason, it
+marks it as frivolous and won't investigate the dispute. Even if it
+accepts your dispute letter it auto categorizes it and processes the
+dispute with no human intervention of any kind. 
+
+This is EXACTLY why you NEVER want to dispute online. To be truly
+successful at disputing you want to create confusion with both your
+creditors and the bureaus. When you dispute online, you remove the
+possibility of humans ever getting involved in the process. Online
+disputes make it much easier for OCR to validate the dispute and keep
+the item on the credit report. Disputing online is basically spoon
+feeding OCR "prime beef". The credit bureaus love it, which is why they
+make it so convenient for you. But you won't get the best results for
+your clients by disputing online. 
+
+OCR is also the reason you don't want to just send in letters to the
+credit bureau without knowing what you are doing. If you dispute for a
+similar reason twice, the item is then listed as frivolous, making it
+very hard to dispute again. The same applies if you are using a common
+dispute letter or a template that's passed down or inside of a
+software that many other companies have access to and are likely to use,
+without customizing it first. Simply put, you're likely to get hooked in
+OCR if you don't custom tailor your disputes. If OCR picks these
+things up, your dispute results will suffer, making it much harder to
+ever get items deleted.
+
+One of the most successful methods you can use to by pass OCR is to
+always customize your letters. Some companies who claim to have mastered
+getting their letters pass OCR say that they:
+
+-  Write their disputes on heavy stock paper so that the paper can't
+fed 
+    through the OCR system
+
+-  Use crayons and markers to write out some of their letters
+
+-  Commonly misspell words and include some sentences that make no 
+    sense
+
+-  Change their fonts on their letters if typing them out
+
+-  Change the color of their fonts
+
+-  And even at times, Dispute in Spanish and French
+
+Although I am not for certain how successful these methods actually are,
+what I and many of these other credit repair business owners who claim
+to have used these methods do agree on is that the trick is to use any
+method you can use to confuse OCR and get your disputes out of that
+system and into the hands of an actual person. 
+
+Copyright © 2019 EduCredit Solutions. All rights reserved.
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online at www.educreditsolutions.com
+
+Work With Elle
+
+For information regarding 1-on-1 Coaching, Staff Training and Education
+Services, you can schedule a discovery call at
+bit.ly/discoverycallwithelle 
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=432&m=446&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-2138763795eb4d54ce5ca30.41367420_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;}=0A/*-------------------------------------------------------=
+------------------*\ Product Widget \*-------------------------------------=
+------------------------------------*/ .td_product > div { float: none !imp=
+ortant; width: 100% !important; margin-bottom: 20px !important; } .td_produ=
+ct > div img { width: 75% !important; } /* Default social icons */ *[class]=
+.ac-social-icon-16 {width:16px !important; height:16px !important;} *[class=
+].ac-social-icon-24 {width:24px !important; height:24px !important;} *[clas=
+s].ac-social-icon-28 {width:28px !important; height:28px !important;} *[cla=
+ss].__ac_social_icons { margin-right: 0px !important; } }=0A</style><style =
+data-ac-keep=3D"true"> @media only screen and (max-width: 320px) { #layout-=
+row3271 img { width: 100% !important; height: auto !important; max-width: 3=
+20px !important; } #layout-row3272 img { width: 100% !important; height: au=
+to !important; max-width: 320px !important; } #layout-row3274 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width:=0A100% !=
+important; min-width: 100% !important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 375px) { #layout-=
+row3271 img { width: 100% !important; height: auto !important; max-width: 3=
+75px !important; } #layout-row3272 img { width: 100% !important; height: au=
+to !important; max-width: 375px !important; } #layout-row3274 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 414px) { #layout-=
+row3271 img { width: 100% !important; height: auto !important; max-width: 4=
+14px !important; } #layout-row3272 img { width: 100% !important; height: au=
+to !important; max-width: 414px !important; } #layout-row3274 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 667px) { #layout-=
+row3271 img { width: 100% !important; height: auto !important; max-width: 6=
+48px !important; } #layout-row3272 img { width: 100% !important; height: au=
+to !important; max-width: 667px !important; } #layout-row3274 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A} </style><!--[if !mso]><!-- webfonts --><!--<![endif]--=
+><!--[if lt mso 12]> <![endif]--></head><body id=3D"ac-designer" class=3D"b=
+ody" style=3D"font-family: Arial; line-height: 1.1; margin: 0px; background=
+-color: #ffffff; width: 100%; text-align: center;">=09=09<div style=3D"disp=
+lay:none; padding:0; height:1px; font-size:1px; background-color:inherit !i=
+mportant; color:inherit !important; line-height:1px; mso-hide:all;">=0A=09=
+=09=09Outsmarting OCR to Get Your Disputes Read By An Actual Person=0A=09=
+=09</div>=0A<div class=3D"divbody" style=3D"margin: 0px; outline: none; pad=
+ding: 0px; color: #000000; font-family: arial; line-height: 1.1; width: 100=
+%; background-color: #ffffff; background: #ffffff; text-align: center;"><ta=
+ble class=3D"template-table" border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" width=3D"100%" align=3D"left" style=3D"font-size: 13px; min-width: auto;=
+ mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; b=
+ackground: #ffffff;"><tr><td align=3D"center" valign=3D"top" width=3D"100%"=
+><table class=3D"template-table" border=3D"0" width=3D"660" bgcolor=3D"#5d5=
+d5d" style=3D"font-size: 13px; min-width: auto; mso-table-lspace: 0pt; mso-=
+table-rspace: 0pt; border-collapse: collapse; border-spacing: 0;"><tr><td w=
+idth=3D"660" bgcolor=3D"#5d5d5d" style=3D"padding:5px;"><table class=3D"tem=
+plate-table" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"650"=
+ bgcolor=3D"#ffffff" style=3D"font-size: 13px; min-width: auto; mso-table-l=
+space: 0pt; mso-table-rspace: 0pt; max-width: 650px;"><tr><td=0Aid=3D"layou=
+t_table_62bc46ea13ba05a0d66af5019d6d66bf85df56b9" valign=3D"top" align=3D"c=
+enter" width=3D"650" style=3D""><table cellpadding=3D"0" cellspacing=3D"0" =
+border=3D"0" class=3D"layout layout-table root-table" width=3D"650" style=
+=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr style=3D""><td id=3D"layout-row-margin3271" valign=3D"top" st=
+yle=3D"padding: 0px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" =
+cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspa=
+ce: 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><tr i=
+d=3D"layout-row3271" class=3D"layout layout-row widget _widget_picture styl=
+e3271" align=3D"center" style=3D""><td id=3D"layout-row-padding3271" valign=
+=3D"top" style=3D"padding: 1px 1px 0px 1px;"><table width=3D"100%" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-wi=
+dth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=3D"=
+image-td" align=3D"center" valign=3D"top" width=3D"648"><img=0Asrc=3D"https=
+://educreditsolutions.imgus11.com/public//29ecbfeca3f75820e0f32d5ca07e6f96.=
+png?r=3D2021835207" alt=3D"" width=3D"648" style=3D"display: block; border:=
+ none; outline: none; width: 648px; opacity: 1; max-width: 100%;"></td>=0A<=
+/tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""=
+><td id=3D"layout-row-margin3270" valign=3D"top" style=3D"padding: 0;"><tab=
+le width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt; border-collapse: initial !important;"><tr id=3D"layout-row3270" class=
+=3D"layout layout-row widget _widget_text style3270" style=3D"margin: 0; pa=
+dding: 0;"><td id=3D"layout-row-padding3270" valign=3D"top" style=3D"paddin=
+g: 20px 30px 20px 30px;"><table width=3D"100%" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-l=
+space: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3038" class=3D"td=
+_text td_block" valign=3D"top" align=3D"left" width=3D"590" style=3D"line-h=
+eight: 112%; margin: 0; outline: none; padding: 0; color: inherit; font-siz=
+e: 12px; font-weight: inherit; line-height: 1.12; text-decoration: inherit;=
+ font-family: Arial; mso-line-height-rule: exactly;"> <div data-line-height=
+=3D"1.12" style=3D"line-height: 112%; margin:=0A0; outline: none; padding: =
+0; mso-line-height-rule: exactly; line-height: 1.12;"> <div style=3D"margin=
+: 0; outline: none; padding: 0;"> <div style=3D"margin: 0; outline: none; p=
+adding: 0;" class=3D""> <div style=3D"margin: 0; outline: none; padding: 0;=
+ text-align: left;" class=3D""><div style=3D"margin: 0; outline: none; padd=
+ing: 0; text-align: left;" class=3D""><i style=3D"margin: 0; outline: none;=
+ padding: 0; mso-bidi-font-style: normal;" class=3D""><span style=3D"color:=
+ #999999; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit; font-family: arial;" class=3D"">Objective: This 21=
+ day email course is designed for the student to gain a clear understanding=
+ of the credit repair process so that they can approach the client file and=
+ create an action plan with certainty. The content of this course is also d=
+esigned to help the student effectively communicate credit information so t=
+hat as a business owner they can feel comfortable and confident when=0Aspea=
+king about the subject of credit to leads, clients, and the general public.=
+ </span></i><div style=3D"margin: 0; outline: none; padding: 0; text-align:=
+ center; color: #0174df;" class=3D""><span style=3D"color: #0174df; font-si=
+ze: 28.6667px; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit; font-family: arial;" class=3D"">Dispute 21 - Day 10:<br class=3D"=
+">Outsmarting <br>Optical Character Recognition </span></div>=0A<div style=
+=3D"margin: 0; outline: none; padding: 0; text-align: center;" class=3D""><=
+br style=3D"color: #2a65c5;color: #000000;font-size: 23px; text-align: left=
+;"></div>=0A<span style=3D"color: inherit; font-size: 17px; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit;" class=3D""> Credit =
+repair is extremely effective. But results will vary GREATLY depending on y=
+our own knowledge and the methodology you use to dispute items on your clie=
+nt's reports.<br><br> Simply mailing off angry letters to the credit bureau=
+s without fully understanding how their automated computer systems work wil=
+l not yield positive results. =C2=A0<br><br> One of the main reasons credit=
+ repair is not as effective as it should be is that it is rarely executed p=
+roperly.<br><br></span><div style=3D"margin: 0; outline: none; padding: 0; =
+text-align: center; font-size: 22px;"><span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: bold; line-height: inherit; text-decoration: inh=
+erit;" class=3D"">What Makes Credit Repair Effective </span><br></div>=0A<s=
+pan style=3D"color: inherit; font-size: 17px; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit;" class=3D""> <br>In the past credi=
+t repair methods were largely restricted to bombarding the bureaus with let=
+ters. The hope was to mail lots of disputes to the bureaus, confusing both =
+the person entering the disputes and the person at the creditor receiving t=
+he disputes. The belief was that if the creditor didn=E2=80=99t respond in =
+time, the item would be removed. <br><br> These types of methods are rarely=
+ effective anymore. Even if items get deleted, they are usually put back on=
+ the credit report shortly after. <br><br><span style=3D"color: inherit; fo=
+nt-size: inherit; font-weight: bold; line-height: inherit; text-decoration:=
+ inherit; font-style: italic;" class=3D""> How can this happen? </span>As w=
+e've discussed in prior lessons, even though creditors have 30 days to resp=
+ond to the dispute before it is deleted, a response 60 days after the fact =
+still gives them=0Athe legal right to put the item back on the report. <br>=
+<br> To effectively and permanently delete negative credit items, you have =
+to ensure the item did not get deleted because the creditor or credit burea=
+us made a mistake, or couldn=E2=80=99t verify the item. <br><br> Once you k=
+now how to do that, the item will be deleted and stays permanently off your=
+ report. <br><br> Over the years the credit bureaus have gotten much smarte=
+r. Most of the dispute process is now automated through two computer system=
+s the credit bureaus use. The key to success in disputing items on your rep=
+ort is understanding how these computers work. Today we will take a look at=
+ one of these computer systems and ways of getting around it.<br><br><span =
+style=3D"color: inherit; font-size: inherit; font-weight: bold; line-height=
+: inherit; text-decoration: inherit;" class=3D"">OCR (Optical Character Rec=
+ognition) </span>is the credit bureaus first line of defense against your d=
+isputes. It=E2=80=99s a massive program=0Athat "reads" every dispute letter=
+ you send into the credit bureaus.<br><br> The computer basically "scan" re=
+ads your dispute letter to uncover several things. First it attempts to see=
+ if the dispute is legitimate or what they call frivolous. <br><br> The sys=
+tem automatically categorizes the disputes, and flags some of them as a sta=
+lling tactic if they feel you are actually trying to improve your credit sc=
+ore instead of just disputing one account about which you might have a ques=
+tion. <br><br> OCR also stores these disputes in a detailed database and au=
+to categorizes them with a dispute reason code. These codes can prevent you=
+ from submitting the dispute again. In that case, the system will detect th=
+e code and the dispute will not be investigated, and instead be flagged as =
+"frivolous". <br><br> In theory, OCR was designed to reduce credit bureau h=
+uman error. In practice it ensures your disputes are stalled or voided at a=
+ny chance it gets. <br><br> It will even read=0Ayour letters including the =
+font, paper, color of font, spelling, and other variables to try to see if =
+you have used that letter before, OR if you are using a template letter to =
+dispute. <br><br> If OCR thinks you are using a template letter which has b=
+een used before or sees another dispute for the same account with a similar=
+ reason, it marks it as frivolous and won=E2=80=99t investigate the dispute=
+. Even if it accepts your dispute letter it auto categorizes it and process=
+es the dispute with no human intervention of any kind. <br><br> This is EXA=
+CTLY why you NEVER want to dispute online. To be truly successful at disput=
+ing you want to create confusion with both your creditors and the bureaus. =
+When you dispute online, you remove the possibility of humans ever getting =
+involved in the process. Online disputes make it much easier for OCR to val=
+idate the dispute and keep the item on the credit report. Disputing online =
+is basically spoon feeding OCR "prime beef". The credit=0Abureaus love it, =
+which is why they make it so convenient for you. But you won=E2=80=99t get =
+the best results for your clients by disputing online. <br><br> OCR is also=
+ the reason you don=E2=80=99t want to just send in letters to the credit bu=
+reau without knowing what you are doing. If you dispute for a similar reaso=
+n twice, the item is then listed as frivolous, making it very hard to dispu=
+te again. The same applies if you are using a common dispute letter or a te=
+mplate that=E2=80=99s passed down or inside of a software that many other c=
+ompanies have access to and are likely to use, without customizing it first=
+. Simply put, you're likely to get hooked in OCR if you don=E2=80=99t custo=
+m tailor your disputes. If OCR picks these things up, your dispute results =
+will suffer, making it much harder to ever get items deleted.<br><br> One o=
+f the most successful methods you can use to by pass OCR is to always custo=
+mize your letters. Some companies who claim to have mastered getting their =
+letters pass=0AOCR say that they:<br><br></span></div>=0A</div>=0A</div>=0A=
+</div>=0A<blockquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0=
+px; border: none;"><div style=3D"margin: 0; outline: none; padding: 0;"><di=
+v style=3D"margin: 0; outline: none; padding: 0;" class=3D""><div style=3D"=
+margin: 0; outline: none; padding: 0; text-align: left;" class=3D""><div st=
+yle=3D"margin: 0; outline: none; padding: 0; text-align: left;" class=3D"">=
+<span style=3D"color: inherit; font-size: 17px; font-weight: inherit; line-=
+height: inherit; text-decoration: inherit;" class=3D""><span style=3D"color=
+: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit; mso-bidi-font-family: Calibri; mso-list: Ignore;"=
+>-<span style=3D"color: inherit; font-size: inherit; font-weight: normal; l=
+ine-height: inherit; text-decoration: inherit; font-style: normal; font-fam=
+ily: arial;">=C2=A0=C2=A0</span></span>Write their disputes on heavy stock =
+paper so that the paper can=E2=80=99t fed <br>=C2=A0 =C2=A0 through the </s=
+pan><span style=3D"color: inherit; font-size: 17px;=0Afont-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;">OCR system</span></div>=
+=0A</div>=0A</div>=0A</div>=0A</blockquote><blockquote style=3D"margin: 0 0=
+ 0 40px; outline: none; padding: 0px; border: none;"><div style=3D"margin: =
+0; outline: none; padding: 0;"><div style=3D"margin: 0; outline: none; padd=
+ing: 0;" class=3D""><div style=3D"margin: 0; outline: none; padding: 0; tex=
+t-align: left;" class=3D""><div style=3D"margin: 0; outline: none; padding:=
+ 0; text-align: left;" class=3D""><span style=3D"color: inherit; font-size:=
+ 17px; font-weight: inherit; line-height: inherit; text-decoration: inherit=
+;" class=3D""><span style=3D"color: inherit; font-size: inherit; font-weigh=
+t: inherit; line-height: inherit; text-decoration: inherit; mso-bidi-font-f=
+amily: Calibri; mso-list: Ignore;">-<span style=3D"color: inherit; font-siz=
+e: inherit; font-weight: normal; line-height: inherit; text-decoration: inh=
+erit; font-style: normal; font-family: arial;">=C2=A0=C2=A0</span></span>Us=
+e crayons and markers to write out some of their letters</span></div>=0A</d=
+iv>=0A</div>=0A</div>=0A</blockquote><blockquote style=3D"margin: 0 0 0 40p=
+x; outline: none; padding: 0px; border: none;"><div style=3D"margin: 0; out=
+line: none; padding: 0;"><div style=3D"margin: 0; outline: none; padding: 0=
+;" class=3D""><div style=3D"margin: 0; outline: none; padding: 0; text-alig=
+n: left;" class=3D""><div style=3D"margin: 0; outline: none; padding: 0; te=
+xt-align: left;" class=3D""><span style=3D"color: inherit; font-size: 17px;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit;" cla=
+ss=3D""><span style=3D"color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit; mso-bidi-font-family:=
+ Calibri; mso-list: Ignore;">-<span style=3D"color: inherit; font-size: inh=
+erit; font-weight: normal; line-height: inherit; text-decoration: inherit; =
+font-style: normal; font-family: arial;">=C2=A0=C2=A0</span></span>Commonly=
+ misspell words and include some sentences that make no <br>=C2=A0 =C2=
+=A0 sense</span></div>=0A</div>=0A</div>=0A</div>=0A</blockquote><blockquot=
+e style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;">=
+<div style=3D"margin: 0; outline: none; padding: 0;"><div style=3D"margin: =
+0; outline: none; padding: 0;" class=3D""><div style=3D"margin: 0; outline:=
+ none; padding: 0; text-align: left;" class=3D""><div style=3D"margin: 0; o=
+utline: none; padding: 0; text-align: left;" class=3D""><span style=3D"colo=
+r: inherit; font-size: 17px; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit;" class=3D""><span style=3D"color: inherit; font-siz=
+e: inherit; font-weight: inherit; line-height: inherit; text-decoration: in=
+herit; mso-bidi-font-family: Calibri; mso-list: Ignore;">-<span style=3D"co=
+lor: inherit; font-size: inherit; font-weight: normal; line-height: inherit=
+; text-decoration: inherit; font-style: normal; font-family: arial;">=C2=
+=A0=C2=A0</span></span>Change their fonts on their letters if typing them o=
+ut</span></div>=0A</div>=0A</div>=0A</div>=0A</blockquote><blockquote style=
+=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;"><div st=
+yle=3D"margin: 0; outline: none; padding: 0;"><div style=3D"margin: 0; outl=
+ine: none; padding: 0;" class=3D""><div style=3D"margin: 0; outline: none; =
+padding: 0; text-align: left;" class=3D""><div style=3D"margin: 0; outline:=
+ none; padding: 0; text-align: left;" class=3D""><span style=3D"color: inhe=
+rit; font-size: 17px; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;" class=3D""><span style=3D"color: inherit; font-size: inhe=
+rit; font-weight: inherit; line-height: inherit; text-decoration: inherit; =
+mso-bidi-font-family: Calibri; mso-list: Ignore;">-<span style=3D"color: in=
+herit; font-size: inherit; font-weight: normal; line-height: inherit; text-=
+decoration: inherit; font-style: normal; font-family: arial;">=C2=A0=C2=
+=A0</span></span>Change the color of their fonts</span></div>=0A</div>=0A</=
+div>=0A</div>=0A</blockquote><blockquote style=3D"margin: 0 0 0 40px; outli=
+ne: none; padding: 0px; border: none;"><div style=3D"margin: 0; outline: no=
+ne; padding: 0;"><div style=3D"margin: 0; outline: none; padding: 0;" class=
+=3D""><div style=3D"margin: 0; outline: none; padding: 0; text-align: left;=
+" class=3D""><div style=3D"margin: 0; outline: none; padding: 0; text-align=
+: left;" class=3D""><span style=3D"color: inherit; font-size: 17px; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">=
+<span style=3D"color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; mso-bidi-font-family: Calibri=
+; mso-list: Ignore;">-<span style=3D"color: inherit; font-size: inherit; fo=
+nt-weight: normal; line-height: inherit; text-decoration: inherit; font-sty=
+le: normal; font-family: arial;">=C2=A0=C2=A0</span></span>And even at time=
+s, Dispute in Spanish and French</span></div>=0A</div>=0A</div>=0A</div>=0A=
+</blockquote><div style=3D"margin: 0; outline: none; padding: 0;"><div styl=
+e=3D"margin: 0; outline: none; padding: 0;" class=3D""><div style=3D"margin=
+: 0; outline: none; padding: 0; text-align: left;" class=3D""><div style=3D=
+"margin: 0; outline: none; padding: 0; text-align: left;" class=3D""><span =
+style=3D"color: inherit; font-size: 17px; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;" class=3D""><br> Although I am not for=
+ certain how successful these methods actually are, what I and many of thes=
+e other credit repair business owners who claim to have used these methods =
+do agree on is that the trick is to use any method you can use to confuse O=
+CR and get your disputes out of that system and into the hands of an actual=
+ person. </span><br class=3D""></div>=0A</div>=0A </div>=0A </div>=0A </div=
+>=0A<!--[if (gte mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=3D"true" dat=
+a-ac-inline=3D"false"> #text_div3038, #text_div3038 div { line-height: 112%=
+ !important; };=0A</style>=0A<![endif]--></td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-m=
+argin3274" valign=3D"top" style=3D""><table width=3D"100%" border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%;=
+ mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-row3274" c=
+lass=3D"layout layout-row widget _widget_break "><td id=3D"layout-row-paddi=
+ng3274" valign=3D"top" style=3D"line-height: 0; mso-line-height-rule: exact=
+ly;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-tabl=
+e-rspace: 0pt; border-collapse: collapse; line-height: 0; mso-line-height-r=
+ule: exactly;"><tr><td height=3D"10" style=3D"line-height: 0; mso-line-heig=
+ht-rule: exactly;"></td>=0A</tr>=0A<tr><td align=3D"center" height=3D"1" wi=
+dth=3D"650" style=3D"line-height: 0; mso-line-height-rule: exactly;"> <tabl=
+e align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" height=
+=3D"1" width=3D"650" style=3D"font-size: 13px; min-width: auto!important; m=
+so-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; lin=
+e-height: 0; mso-line-height-rule: exactly; width: 100%; max-width: 100%;">=
+<tr><td class=3D"break-line" bgcolor=3D"#000000" height=3D"1" width=3D"650"=
+ style=3D"line-height: 1px; mso-line-height-rule: exactly; height: 1px; wid=
+th: 650px; background-color: #000000;"> </td>=0A </tr>=0A</table>=0A</td>=
+=0A </tr>=0A<tr><td height=3D"10" style=3D"line-height: 0; mso-line-height-=
+rule: exactly;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3273" valign=3D"top" s=
+tyle=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspac=
+e: 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=
+=3D"layout-row3273" class=3D"layout layout-row widget _widget_text style327=
+3" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-padding3273" valig=
+n=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-=
+table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3041" clas=
+s=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"650" style=3D=
+"margin: 0; outline: none; padding: 0; color: inherit; font-size: 12px; fon=
+t-weight: inherit; line-height: 1; text-decoration: inherit; font-family: A=
+rial;"> <div style=3D"margin: 0; outline: none; padding: 0; font-size: 12px=
+;" class=3D""><span style=3D"color: inherit; font-size: 12px; font-weight:=
+=0Ainherit; line-height: inherit; text-decoration: inherit;" class=3D""> <d=
+iv style=3D"margin: 0; outline: none; padding: 0; text-align: center;" clas=
+s=3D"">Copyright =C2=A9 2019 EduCredit Solutions. All rights reserved.<br c=
+lass=3D"">Services bought to you by Ellevation Coaching & Consulting<br cla=
+ss=3D""><br class=3D""></div>=0A<div style=3D"margin: 0; outline: none; pad=
+ding: 0; text-align: center;" class=3D""> <span style=3D"color: #000000; fo=
+nt-size: 12px; font-weight: 400; line-height: inherit; text-decoration: inh=
+erit; font-family: arial; font-style: normal;">Visit Us Online at </span><a=
+ href=3D"https://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f=
+9a0dc81917526f09&i=3D432A446A11A2348" data-ac-default-color=3D"1" style=3D"=
+margin: 0; outline: none; padding: 0; color: #045fb4; text-decoration: unde=
+rline; font-family: arial; font-weight: 400; font-size: 12px; font-style: n=
+ormal;" target=3D"_blank"><span style=3D"color: ; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit;">www.educr=
+editsolutions.com</span></a> <br><br><span style=3D"color: inherit; font-si=
+ze: inherit; font-weight: bold; line-height: inherit; text-decoration: inhe=
+rit;" class=3D"">Work With Elle</span><br class=3D""></div>=0A<div style=3D=
+"margin: 0; outline: none; padding: 0; text-align: center;" class=3D"">For =
+information regarding 1-on-1 Coaching, Staff Training and Education Service=
+s, you can schedule a discovery call at <a href=3D"https://educreditsolutio=
+ns.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D432A446A11A2=
+349" data-ac-default-color=3D"1" class=3D"" target=3D"_blank" style=3D"marg=
+in: 0; outline: none; padding: 0; color: #045fb4; text-decoration: underlin=
+e;"><span style=3D"color: ; font-size: inherit; font-weight: inherit; line-=
+height: inherit; text-decoration: inherit;">bit.ly/discoverycallwithelle</s=
+pan></a></div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-a=
+lign: center;" class=3D""><br class=3D""><span style=3D"color: inherit; fon=
+t-size: inherit; font-weight: bold; line-height: inherit; text-decoration: =
+inherit;" class=3D"">Contact Us</span><br class=3D""></div>=0A<div style=3D=
+"margin: 0; outline: none; padding: 0; text-align: center;" class=3D""><a h=
+ref=3D"mailto:support@educreditsolutions.com" data-ac-default-color=3D"1" c=
+lass=3D"" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; te=
+xt-decoration: underline;" target=3D"_blank"><span style=3D"color: ; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;">support@educreditsolutions.com</span></a></div>=0A<div style=3D"m=
+argin: 0; outline: none; padding: 0; text-align: center;" class=3D"">Direct=
+: (225) 620-6202<br class=3D"">Toll-Free: 1-800-373-8491<br class=3D""></di=
+v>=0A </span></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3272" valign=
+=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpaddi=
+ng=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-t=
+able-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !importan=
+t;"><tr id=3D"layout-row3272" class=3D"layout layout-row widget _widget_pic=
+ture style3272" align=3D"center" style=3D""><td id=3D"layout-row-padding327=
+2" valign=3D"top" style=3D"padding: 20px 0 0 20px;"><table width=3D"100%" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; m=
+in-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td clas=
+s=3D"image-td" align=3D"center" valign=3D"top" width=3D"630"><img src=3D"ht=
+tps://educreditsolutions.imgus11.com/public//2a0ea3f14572e3829345d5f92f3300=
+73.jpg?r=3D2054883849" alt=3D"" width=3D"176" style=3D"display: block; bord=
+er: none; outline: none; width: 176px; opacity: 1; max-width: 100%;"></td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</=
+table>=0A</div>=0A<img src=3D"https://educreditsolutions.acemlna.com/lt.php=
+?nl=3D11&c=3D432&m=3D446&s=3Dda50c2422345422f9a0dc81917526f09&l=3Dopen" bor=
+der=3D"0" width=3D"1" height=3D"1" style=3D"display:block;width:1px!importa=
+nt;min-width:1px!important;max-width:1px!important;height:1px!important;bor=
+der:0;overflow:hidden;" /><br /><div id=3D"ac-footer" style=3D"clear:both;b=
+ackground-color:inherit;background:inherit;min-width:100%;mso-table-lspace:=
+0pt;mso-table-rspace:0pt;padding:20px;color:#000000;font-size:11px;font-fam=
+ily:arial,helvetica,sans-serif;line-height:140%;line-height:1.4;text-align:=
+center;box-sizing:border-box;">=0A=09<center>=0A=09=09Sent to: <span style=
+=3D"font-size:11px;font-family:arial,helvetica,sans-serif;font-weight:norma=
+l;text-decoration:none;outline:none;">bruce.k.cosma@gmail.com</span>=0A=09=
+=09<br>=0A=09=09<br>=0A=09=09<a href=3D"http://educreditsolutions.acemlna.c=
+om/proc.php?nl=3D11&c=3D432&m=3D446&s=3Dda50c2422345422f9a0dc81917526f09&ac=
+t=3Dunsub" style=3D"font-size:11px;font-family:arial,helvetica,sans-serif;f=
+ont-weight:bold;text-decoration:underline;"><span style=3D"font-weight:bold=
+;text-decoration:underline;">Unsubscribe</span></a>=0A=09=09<br>=0A=09=09<b=
+r> EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Loui=
+siana 70809, United States=0A=09</center>=0A</div>=0A<br clear=3D"all" /></=
+body>=0A</html>
+--_=_swift-2138763795eb4d54ce5ca30.41367420_=_--
+

@@ -1,0 +1,310 @@
+# =============================================================================
+# OneMind OS — Core Stack
+# =============================================================================
+# Services:
+#   - NATS JetStream   (IoT event bus, MQTT bridge, multi-location leaf nodes)
+#   - OmniDB           (PostgreSQL 16 + TimescaleDB + pgvector — unified DB)
+#   - NATS Ingester    (NATS → OmniDB pipeline)
+#   - legacy-bridge    (NATS → OpenClaw webhook forwarder)
+#   - n8n              (Deterministic workflow engine, 400+ integrations) [profile: full]
+#   - livekit          (Self-hosted WebRTC fallback — use LiveKit Cloud first) [profile: full]
+#   - voice-agent      (Deepgram STT + Azure OpenAI TTS voice pipeline) [profile: voice/full]
+#
+# OpenClaw gateway runs on the host (not in Docker):
+#   openclaw gateway
+#
+# OmniDB is ONE PostgreSQL instance with TWO extensions:
+#   - TimescaleDB  → time-series events, compression, continuous aggregates
+#   - pgvector     → embeddings, semantic search, cosine similarity
+#
+# Usage:
+#   docker-compose up -d                # Start core services
+#   docker-compose --profile full up -d # Start everything (core + n8n + livekit)
+#   docker-compose logs -f              # Logs
+#   docker-compose down                 # Stop
+#   docker-compose up -d nats omnidb    # Start NATS + OmniDB only
+#
+# Profiles:
+#   default          — NATS + legacy-bridge (lightweight)
+#   --profile data   — adds OmniDB + NATS ingester
+#   --profile voice  — adds LiveKit + voice-agent (Deepgram STT + Azure TTS)
+#   --profile full   — everything
+#
+# =============================================================================
+
+networks:
+  onemind-network:
+    driver: bridge
+
+volumes:
+  nats_data:
+    driver: local
+  omnidb_data:
+    driver: local
+  n8n_data:
+    driver: local
+
+services:
+  # ===========================================================================
+  # NATS: IoT Event Bus (MQTT + JetStream + leaf nodes)
+  # ===========================================================================
+  # Ports:
+  #   4222 — NATS native client connections
+  #   7422 — Leaf node connections (house, office, van, edge)
+  #   1883 — MQTT (Home Assistant, Victron, sensors)
+  #   8222 — HTTP monitoring dashboard
+  # ===========================================================================
+  nats:
+    image: nats:latest
+    container_name: onemind-nats
+    restart: unless-stopped
+    ports:
+      - "4222:4222"   # NATS clients
+      - "7422:7422"   # Leaf nodes (remote locations)
+      - "1883:1883"   # MQTT (IoT devices, Home Assistant, Victron)
+      - "8222:8222"   # HTTP monitoring
+      - "9222:9222"   # WebSocket (browser clients, onemind-ui, mobile)
+    volumes:
+      - ./nats/config/hub.conf:/etc/nats/nats-server.conf:ro
+      - nats_data:/data
+    networks:
+      - onemind-network
+    command: ["-c", "/etc/nats/nats-server.conf"]
+    healthcheck:
+      test: ["CMD", "/nats-server", "-version"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ===========================================================================
+  # OMNIDB: PostgreSQL 16 + TimescaleDB + pgvector (Unified Database)
+  # ===========================================================================
+  # ONE database, THREE superpowers:
+  #
+  # 1. PostgreSQL 16  — full SQL, JSONB, triggers, foreign keys
+  # 2. TimescaleDB     — hypertables, compression, continuous aggregates
+  #    → "What happened last summer?" (historical queries)
+  #    → "When do I usually sleep?" (pattern detection via time_bucket)
+  #    → Biometric aggregation, sensor data, event archival
+  # 3. pgvector        — vector embeddings, cosine similarity, semantic search
+  #    → Agent memory embeddings (long-term semantic recall)
+  #    → Document/Codex chunk embeddings for RAG
+  #    → Sensor pattern embeddings for anomaly detection
+  #
+  # This is the MIND'S MEMORY — both temporal and semantic in one place.
+  #
+  # Start with: docker-compose --profile data up -d
+  # ===========================================================================
+  omnidb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: onemind-omnidb
+    restart: unless-stopped
+    profiles: ["data", "full"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - omnidb_data:/var/lib/postgresql/data
+      - ./openclaw/nats/timescaledb/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    environment:
+      POSTGRES_USER: ${OMNIDB_USER:-onemind}
+      POSTGRES_PASSWORD: ${OMNIDB_PASSWORD:-onemind-omnidb-2026}
+      POSTGRES_DB: ${OMNIDB_DB:-onemind}
+    networks:
+      - onemind-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${OMNIDB_USER:-onemind} -d ${OMNIDB_DB:-onemind}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ===========================================================================
+  # NATS INGESTER: NATS JetStream → OmniDB Pipeline
+  # ===========================================================================
+  # Subscribes to all NATS subjects and archives events into OmniDB.
+  # Uses durable consumers so no events are lost during restarts.
+  #
+  # Start with: docker-compose --profile data up -d
+  # ===========================================================================
+  nats-ingester:
+    image: python:3.12-slim
+    container_name: onemind-nats-ingester
+    restart: unless-stopped
+    profiles: ["data", "full"]
+    working_dir: /app
+    command: >
+      sh -c "pip install nats-py psycopg2-binary --quiet && python openclaw/nats/nats_ingester.py"
+    volumes:
+      - .:/app
+    environment:
+      NATS_URL: ${NATS_URL:-nats://nats:4222}
+      OMNIDB_URL: ${OMNIDB_URL:-postgresql://onemind:onemind-omnidb-2026@omnidb:5432/onemind}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      nats:
+        condition: service_healthy
+      omnidb:
+        condition: service_healthy
+    networks:
+      - onemind-network
+    healthcheck:
+      test: ["CMD-SHELL", "kill -0 1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ===========================================================================
+  # LEGACY BRIDGE: NATS → OpenClaw Webhook Forwarder
+  # ===========================================================================
+  # Subscribes to NATS subjects and forwards events to the OpenClaw gateway
+  # as webhook hooks — giving Legacy full awareness of all IoT/system events.
+  #
+  # OpenClaw gateway must be running on the host:
+  #   openclaw gateway
+  # ===========================================================================
+  legacy-bridge:
+    image: python:3.12-slim
+    container_name: onemind-legacy-bridge
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "pip install nats-py httpx --quiet && python openclaw/workspace/bridge.py"
+    volumes:
+      - .:/app
+    environment:
+      NATS_URL: ${NATS_URL:-nats://nats:4222}
+      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-http://host.docker.internal:18789}
+      OPENCLAW_HOOKS_TOKEN: ${OPENCLAW_HOOKS_TOKEN}
+      BRIDGE_AGENT_ID: ${BRIDGE_AGENT_ID:-legacy}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      nats:
+        condition: service_started
+    networks:
+      - onemind-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "kill -0 1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ===========================================================================
+  # n8n — Deterministic Workflow Engine (Ecosystem #17)
+  # ===========================================================================
+  # 400+ built-in integrations. Visual workflow builder at :5678.
+  # OpenClaw = reasoning layer, n8n = execution layer.
+  # Connected via webhooks: Legacy fires webhook → n8n workflow runs.
+  #
+  # Enable: docker compose --profile full up -d n8n
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: onemind-n8n
+    restart: unless-stopped
+    profiles: ["full"]
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    environment:
+      N8N_HOST: "0.0.0.0"
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: "http"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://host.docker.internal:5678}
+      # n8n can use OmniDB for persistence (optional)
+      # DB_TYPE: postgresdb
+      # DB_POSTGRESDB_HOST: omnidb
+      # DB_POSTGRESDB_PORT: 5432
+      # DB_POSTGRESDB_DATABASE: n8n
+      # DB_POSTGRESDB_USER: ${OMNIDB_USER:-onemind}
+      # DB_POSTGRESDB_PASSWORD: ${OMNIDB_PASSWORD}
+    networks:
+      - onemind-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "/nats-server", "-version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================================================
+  # LiveKit — Self-Hosted WebRTC Fallback (Ecosystem #18)
+  # ===========================================================================
+  # PRIMARY: Use LiveKit Cloud (livekit.cloud) — free tier: 50 hrs/mo.
+  #   Set LIVEKIT_CLOUD_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET in .env.
+  #
+  # FALLBACK: This self-hosted container for offline/privacy use.
+  #   Enable: docker compose --profile full up -d livekit
+  #
+  # Required by: VisionClaw (#23), voice-avatar (#32)
+  # Ports: 7880 (HTTP API), 7881 (WebRTC TCP), 7882 (WebRTC UDP)
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: onemind-livekit
+    restart: unless-stopped
+    profiles: ["full"]
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+      - "7882:7882/udp"
+    environment:
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY:-devkey}:${LIVEKIT_API_SECRET:-devsecret}"
+    networks:
+      - onemind-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7880 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ===========================================================================
+  # VOICE AGENT: LiveKit Voice Pipeline (Deepgram STT + Azure OpenAI TTS)
+  # ===========================================================================
+  # Credit-optimized voice pipeline:
+  #   VAD: Silero (local, free)
+  #   STT: Deepgram Nova-3 (Deepgram credits)
+  #   LLM: Azure OpenAI gpt-4o (Azure credits)
+  #   TTS: Azure OpenAI tts-1 (Azure credits)
+  #
+  # Enable: docker compose --profile voice up -d voice-agent
+  # Or:     docker compose --profile full up -d
+  # ===========================================================================
+  voice-agent:
+    build: ./services/livekit/voice-agent
+    container_name: onemind-voice-agent
+    restart: unless-stopped
+    profiles: ["voice", "full"]
+    environment:
+      LIVEKIT_URL: ${LIVEKIT_URL:-ws://livekit:7880}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:-devkey}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:-devsecret}
+      DEEPGRAM_API_KEY: ${DEEPGRAM_API_KEY}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      NATS_URL: ${NATS_URL:-nats://nats:4222}
+      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-http://host.docker.internal:18789}
+      OPENCLAW_HOOKS_TOKEN: ${OPENCLAW_HOOKS_TOKEN}
+    depends_on:
+      livekit:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    networks:
+      - onemind-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "kill -0 1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+

@@ -1,0 +1,37 @@
+# Greenhouse Heater InformationAll You Have to Know About Greenhouse Heaters
+
+Temperature changes several times a day. And during the night, it could really drop to a low level that may not be healthy for plants. Thus, to keep the temperature at a suitable level for a successful plant growth, greenhouse heaters are needed. In choosing the right greenhouse heater, you must take into consideration not only the capability of having a good temperature during cold, winter nights, but also the costs to be incurred in installing and running it. 
+
+Kinds of Greenhouse Heaters
+- Electric heaters. This kind of heater is most suitable for smaller greenhouse structures. Electric heaters can efficiently maintain specified temperature levels. These do not produce any fumes and there is no further need for ventilation when these heaters are being used.
+
+- Gas heaters. Since these heaters are fuelled either by natural gas or bottled ones, they can be less efficient that the electric heaters. Their waste products due to combustion are discharged into the greenhouse and ventilation is required when they are in use. Also, these heaters should be placed in a safe location and need constant monitoring and replacement.
+
+- Paraffin heaters. This kind of heaters is the most basic among the three. Paraffin heaters need constant refilling and wick-trimming. They also need fuel to run, thus, fumes are again discharged into the greenhouse and would need ventilation. However, paraffin heaters can reduce the risk of frost damage and act as emergency standby.
+
+Heater Mounting
+- Hanging. These heaters are mounted directly to the ceiling or hung from it. It is advantageous to use because of less floor space consumed. They should just be hung high enough as to not be an obstruction.
+
+- Wall. This type of heaters is mounted directly to the wall and vent towards the outside of the greenhouse. No floor space is required but the area in front of them should be clear.
+
+- Floor. This type is not mounted as they have their own stand and can be placed anywhere on the floor of the greenhouse. That is the disadvantage of this type because it occupies a lot of space.
+
+Heater Combustion
+- Open. This kind of heater uses air inside the greenhouse for combustion. As long as the air does not have contaminants in it, this will work just fine. Flammable liquids should not be placed near an open combustion heater, though, because its burner is not sealed.
+
+- Separated. A gas heater uses this kind of combustion mechanism wherein it uses the air outside the greenhouse for combustion. Its burner is also sealed to trap all the air in from outside of the greenhouse. The exhaust pipe is run to the outside of the structure.
+
+- Sealed. This kind is a lot similar to the separated combustion type. The burner is completely sealed inside and there is no access to air inside the building. Sealed combustion heaters use direct vent both for exhaust and intake.
+
+Heater Vents
+- Unvented. Being unvented heaters, combustion-produced gases are directly released to the heated area. Unvented heaters are only for temporary use because of the sensitivity of some plants.
+
+- Gravity. The exhausted air from this type of heater should rise through the pipe and released outside, thus, the vents should be vertical. The air expelled must be replaced by outside air.
+
+- Power. These power vented heaters have a blower that pushes air through the pipe and outside the structure. The vents may be arranged vertically or horizontally, and the vent pipes are smaller making it more efficient.
+
+- Direct. This kind of venting is special to sealed combustion types. It has only one vent pipe with both the inlet and exhaust; one pipe is inside the other. The amount of air that leaves the pipe is the same amount that it pulls as intake. There is no additional air outside needed to replace the expelled air.
+
+Another thing to consider in a greenhouse heater is its output range or the measure of the heat output. You can ask your nearby greenhouse store to check out your needed output range based on the area of your greenhouse and other factors. There are also web sites that can do the computation for you.
+
+There are definitely several kinds of greenhouse heaters to choose from. For you to decide on which one to purchase, it is best to first do an assessment of your current greenhouse structure and its needs. You can also ask advice from experts in building and maintaining greenhouses for better results.

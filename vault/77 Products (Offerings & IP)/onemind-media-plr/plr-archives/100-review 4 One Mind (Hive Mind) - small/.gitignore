@@ -1,0 +1,82 @@
+# Legacy Codex Vault V2 - Git Configuration
+# Only track .md and .pdf files to keep repo lightweight
+
+# Ignore everything by default
+*
+
+# Allow markdown and PDF files
+!*.md
+!*.pdf
+
+# Allow .gitignore and .gitattributes
+!.gitignore
+!.gitattributes
+
+# Allow directories (needed for git to traverse into subdirectories)
+!*/
+
+# System files to always ignore
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Obsidian workspace and cache (keep settings but ignore workspace state)
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+
+# Trash
+.trash/
+**/.trash/
+
+# All other file types (explicitly listed for clarity)
+*.csv
+*.base
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Media files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.svg
+*.webp
+*.heic
+*.ico
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.flac
+
+# Office documents
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+
+# Development
+node_modules/
+.vscode/
+.idea/
+*.log
+
+# ClickUp attachments (usually large binary files)
+clickup-attachments*/
+
+# Large review folder - exclude from version control (288GB)
+99-Review and Delete or Keep/

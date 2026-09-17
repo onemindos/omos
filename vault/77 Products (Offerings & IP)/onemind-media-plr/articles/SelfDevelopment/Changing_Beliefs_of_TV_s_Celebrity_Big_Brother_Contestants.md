@@ -1,0 +1,51 @@
+# title:Changing Beliefs of TV's Celebrity Big Brother Contestants
+
+author:Adam Eason
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_4029.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+Ok, ok, so I admit it, I have watched one or two episodes of celebrity big brother on the TV here in the UK in past couple of weeks. I am not a reality game show fanatic, however, I find it fascinating. 
+One thing that I have found fascinating is how different people react to others just because of what they believed before they entered the house rather than treating individuals on the basis of how they have experienced them first hand. 
+There is a young musician from a fabulous band in the Big Brother house called Preston and he voted for a lady called Faria to be evicted from the house simply because of the fact that she is famous for a kiss and tell story with England football coach Sven Goran Erickson. The first evictee, Jodie Marsh, was also cold and unpleasant to Faria on the first night for the very same reasons and expressed that to Dennis Rodman in the house. Neither of them judged Faria on how they found her or on their own personal experience of her. 
+Jodie and Preston both openly stated beliefs that they thought she was not a �proper celebrity� (whatever that is) because of how she was famous and Jodie Marsh actually said, when she was evicted from the house last week, that she thought Faria was lovely!! Amazing stuff. When she got to know her beyond what she originally believed, she discovered something that was liberating and kind instead of to the contrary. 
+Your beliefs are pretty much the rules of your life, well at least they are the rules that you will no doubt be living by. These rules may be what sets you free to achieve things in your life and live the way that you think is important. These beliefs may well also be restricting you and holding you back; they may even be creating the belief that you are incapable of achieving your goals. Or as in the case of contestants from Celebrity Big Brother, stop you from being agreeable to someone! 
+I wonder how many of you are already losing sight of your New Year goals or resolutions? Your beliefs may well be affecting your degree of success. 
+I believe in gravity and am guessing that you all believe in it too.  Gravity is not influenced or altered in any way, shape or form by my belief in it. However, our relationships, abilities and possibilities are all influenced by our beliefs about them. 
+We tend to form our beliefs as the result of our experiences and then we act as if they are true. In one sense they are self-fulfilling propphecies. If you believe you are a likeable person, you will act that way, approach people openly and enjoy being with them. They will warm to you and so confirm your belief. We think that beliefs are formed by experiences, but equally experiences are the results of beliefs. 
+So this then means that you can choose your beliefs!
+Understand that the belief that beliefs are changeable is in itself a challenging belief to many people because they tend to think of beliefs as possessions. People talk about 'holding' and 'having' beliefs, 'losing' or 'gaining' them. No one wants to 'lose' something. It would be better talking about them 'leaving' or 'outgrowing' beliefs rather than 'losing' them.
+What's more, we all have a personal investment in our own beliefs. When the world confirms them, then they make a lot of sense to us, they are then predictable and give us a sense of security and certainty. We even may take a perverse pleasure in disaster, providing we have predicted it; how many of you have used the term 'I told you so' and found it to be a satisfying phrase? Not because you necessarily wanted anything to go wrong, but because your beliefs were proved correct. 
+Limiting beliefs are the major offender stopping us from achieving our goals and living our dreams. They act as rules that stop us from getting what exists within us as potential and we all have so much potential that we do not tap into nearly enough.  Limiting beliefs hold us back from achieiving what we are actually capable of and what we deserve. 
+So have a good think about this question; "What is stopping you from achieving your goal?" and know that the answers are very often your limiting beliefs. 
+Early limiting beliefs may come from childhood influences such as parents or teachers or people whose beliefs we deemed worthy of believing ourselves. These early beliefs often stay hidden and we do not consciously evaluate them as adults. We also pick up limiting beliefs from the media. The numerous soap operas that take up so many hours of TV time set up situations where the characters have to act out ridiculous limitations, otherwise there simply is no drama to compulsively view! 
+Here are some typical limiting beliefs that are amazingly common; 
+"No pain - no gain."
+"I need to have lots of money to be happy."
+"I can't trust anybody."
+"You can't get over a bad start in life."
+"I am too old to learn to use a computer."
+"I never get what I am after."
+"Other people are better than me."
+"I do not deserve to be successful."
+"I have reached my limits."
+"I need to work very hard to have enough money to live."
+"Success takes a very long time."
+These and similar beliefs are only true if you act as if they are. Suppose they are mistaken? what difference would that make?
+In the process of achieving your goals, sometimes just being able to articulate any existing limiting beliefs and in turn noticing their effect is enough to alter or dissolve your old unwanted belief and therefore change and update your own reality. 
+It has certainly been my experience that the majority of people are not usually aware of their limiting beliefs. So the first step is to put them into language or to write them down. Then they are exposed and can be examined and ideally let go of. There are two simple ways to do this:  
+The first way is to simply ask yourself what the reasons are that you are not currently achieving your goal. What do you think is holding you back? Ask yourself that question and answer as truthfully and thoroughly as you can. The answers will reveal what it is that you perceive to be limitations. More often than not, these limits will be more about you than about the world. When they are about you, they are something that can be changed or updated. 
+Now, I have found that when people do ask themselves these questions  in their own mind, they are rarely honest with themselves, so here is another approach that I use a lot with my one to one clients to discover what, if any, limiting beliefs you have; 
+Step one: Take a piece of paper and write down an important goal. Have a good look at that goal and really think about it. 
+Step two: As you think about that goal, assess and score each of the following statements; 
+Score each of these statements by giving it a score out of 10. Where 1 means you do not believe this statement and 10 means that you believe it without a doubt at all. 
+I deserve to achieve my goal. 
+I have the skills and abilities necessary to achieve this goal. 
+It is possible to achieve my goal.
+My goal is clear and defined. 
+My goal is desirable to me. 
+My goal is worthwhile.  
+Look at the lowest scores for any of your answers and begin to explore them. This can be wonderfully enlightening. Low scores highlight and indicate a limiting belief or that you have not thought about the goal sufficiently. If you have discovered some doubts in some areas of your goals, now begin to ask your self about the reasons you are doubtful or what could be making you doubt this?  
+When you begin to question and examine your beliefs you can unearth what might be limiting beliefs and then you can begin to heighten your awareness of whether or not your beliefs are preventing you from achieving your goals. 
+ZZZZZZ

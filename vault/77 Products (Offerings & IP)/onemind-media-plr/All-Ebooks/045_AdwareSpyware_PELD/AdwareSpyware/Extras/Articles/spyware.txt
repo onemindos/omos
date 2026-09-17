@@ -1,0 +1,63 @@
+Spyware
+
+What You Need to Know about Spyware
+
+Did you experience any problems connecting to the Internet lately? 
+
+Did some of your software programs stop functioning? 
+
+Have you ever been annoyed by advertisements that suddenly pop up in your computer screen?  
+
+Have you ever wondered how some unidentified people are able to know your e-mail address and send you tons of junk mails? 
+
+Or worse, have you ever been stashed of cash from your bank account or your credit card spending suddenly went haywire? 
+
+You most probably have been the victim of spyware. 
+
+What is a spyware? 
+
+In computer technology, spyware refers to a kind of program that “spies” on what users do with their computers.  Through this close monitoring, spyware gathers information about the user and sends this information over the World Wide Web for another person’s or a company’s benefit.  This is usually done without the user’s knowledge. 
+
+Spyware can gather numerous informations on computer users.  Some programs are almost harmless since they only send off popup ads or attempt to follow the types of websites users visit and send the collected information to different advertisement agencies.  However, nastier versions may try to take note of what the users' type in order to catch passwords or event credit card numbers. 
+
+How did spyware start? 
+
+According to records, the term “spyware” was first used on October 17, 1994 in a posting made on a globally distributed bulletin board system, Usenet.  Later on, spyware came to be known as espionage apparatus, like tiny cameras.  However, Gregor Freund, founder of Zone Labs (a security software company), used the term in one of his press releases for a product, sealing the word’s place in computer users’ lingo. 
+
+In 2000, Steve Gibson, owner of Gibson Research (a computer software development firm), found out that advertising software components from two companies had been installed in his system and even suspected them of collecting information without his knowledge.  He retracted this claim later on, but still he reprimanded the advertising companies Aureate and Conducent for secretly installing the spyware and giving him a hard time to remove it. 
+
+With this event, Gibson made and released OptOut, the first ever anti-spyware program.  Many others followed suit and came up with their own antidotes. 
+
+According to a survey conducted by the National Cyber-Security Alliance and AOL in 2004, a whopping 80% of computers had spyware, with almost 93 spyware workings per computer.  89% of the participants in the survey said they were not aware of the existence of the spyware, while 95% said they didn’t give any permission for the installation of any spyware program. 
+
+As of today, spyware has become the top and primary security threat to computer systems running under Microsoft Windows.  Internet Explorer users are targeted more often than not because of its popularity. 
+
+What are the sources of spyware? 
+
+Here are several sources of spyware infection:
+
+•	utilities which claim to make your Internet experience faster
+•	programs that are said to provide special offers while shopping via the internet
+•	programs that would give smileys, animated and colorful cursors, etc.
+•	file-sharing programs
+•	spyware programs disguised as anti-spyware applications
+
+How can you tell if your computer sustained spyware infection? 
+
+Here are clues that will help you determine if spyware is on your computer:
+
+•	numerous popup advertisements, even on Internet sites that don’t usually have ads
+•	the browser home page changes unexpectedly and won’t change back
+•	new and unfamiliar toolbars appear in the browser
+•	additional icons appear at the corner of the screen where the clock is
+•	the browser takes you to websites you don’t want to be in the first place
+
+How do you remove spyware from your computer? 
+
+After knowing some background information on what spyware is, its history and development, its sources, and the clues that your computer sustained spyware damage, let’s talk about solution to the problem. 
+
+The fastest and safest way by far to remove spyware from your computer is to use anti-spyware programs.  These applications are somewhat similar to anti-virus software. 
+
+Spybot and Ad-Aware are only two of the highly recommended programs for the safe removal of spyware programs.  You may check the Internet regarding how you can avail of these programs. 
+
+With the need we have for computers nowadays, it would be a very big hassle if they won’t work properly.  So make sure that your computers are in top condition.  Eliminate the spyware program in your computer today! 

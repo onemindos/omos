@@ -1,0 +1,28 @@
+[Unit]
+Description=OneMind OS — OpenClaw Studio (Native Agent Dashboard)
+After=network-online.target openclaw.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=onemind
+Group=onemind
+WorkingDirectory=/home/onemind/onemind-os/command-center/openclaw-studio
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOST=127.0.0.1
+Environment=OPENCLAW_STATE_DIR=/home/onemind/.openclaw
+Environment=NEXT_PUBLIC_GATEWAY_URL=ws://localhost:18789
+EnvironmentFile=-/opt/onemind/.env.sa
+ExecStart=/usr/bin/op run --env-file=/opt/onemind/.env.tpl -- /usr/bin/node server/index.js
+Restart=always
+RestartSec=10
+StartLimitBurst=5
+StartLimitIntervalSec=300
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=openclaw-studio
+
+[Install]
+WantedBy=multi-user.target

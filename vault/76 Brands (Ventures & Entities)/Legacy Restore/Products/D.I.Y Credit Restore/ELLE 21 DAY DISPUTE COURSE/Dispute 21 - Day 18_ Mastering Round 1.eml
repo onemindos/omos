@@ -1,0 +1,891 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ac0:9388:0:0:0:0:0 with SMTP id d8csp3695821imd;
+        Mon, 18 May 2020 21:45:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzHQ9nvj5AgMlIIVP67ZdGRYu/GLbFK/dMYgQ6GwnbK2Y1GYW2hDPweNFIMlJrfIC4dy67c
+X-Received: by 2002:ac8:3968:: with SMTP id t37mr19949806qtb.174.1589863525713;
+        Mon, 18 May 2020 21:45:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1589863525; cv=none;
+        d=google.com; s=arc-20160816;
+        b=zdAO33fGCcCWuBw3ivfj8orkVtIBWmCDz5ArYCJVYjbRr9Rv7OSqM+Fq1Ci0+3cgAx
+         8a4zVqSoktj2Eb4dfKnniFqkF0gi9I9Vqg54u3PwgPqP1g5u8kXE9s439NfFX3A+SX5J
+         omeeeLY8wfCPtvDU2SYOgenm2wR8nDu3egCNyZz+EuwWNa2FX6D3YABjc3U54nM8VOaf
+         4qnzka4RdSCAShHfwgdjYB3jGiL00gg/036ohHBDyzkwdfxvfIL0glHgW2ueHYB+oZgg
+         SJh1nAIG4M6whyzvwG65DnIr4xw6ilvO/sONXKrBvPU/GJqvTo8vsHck7zuio8W5UEa6
+         pvOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=kW4NQyxWQKDYHbbUsCeZggxyk8M70R4NjKegNRnSr0g=;
+        b=0kODArfZ6V4e/1+clUYTvT64Lvr1MMxEs3dopqOvT0UPL19tDSIKOONLHjFIetfdiM
+         O7KynzU0DWrJf0dRemm5zNgeOFbdM2+Rct/DGO+ElT7xHRiBW74FHHsebyvJcJhDBc/5
+         ofSRpIZefG/reqwrGfNeJ7ARc3W6j/XjFcbywaB6d4q8/rOV6QXVTXOmc5B9EqgUlYeF
+         7k5/AehnzHmpkwJXpzArJW4cGvoELfxQeaZAWV2Hkzetm+IJyc30GivQZwaI2Eky9g5D
+         5UPukpdAhIUW7n3LURnZj3l0gbPPwmgcV9xQZZXqQbjwcb4ASvodi0nDav0tVMeW2cGv
+         W4+g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=sIGKvpOc;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=3geTO0OY;
+       spf=pass (google.com: domain of bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id p17si6743626qkh.184.2020.05.18.21.45.25
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 21:45:25 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=sIGKvpOc;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=3geTO0OY;
+       spf=pass (google.com: domain of bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=kW4NQyxWQKDYHbbUsCeZggxyk8M70R4NjKegNRnSr0g=;
+ b=sIGKvpOcQ06lzsUwZJGTbpXRe6wRBPfvoqqme9IhoBD/nE+U24+WGUk3+L8Yfa7U9hm8LZv/Z40F
+   hQkcsDTjTB+aO7lRzA0MwfXBif3A5Z8Q9SaCLO9ZNLtCymj11YGEwoCCpRR5dXTEzQbIjIPEzH9F
+   egm6Cn0R39BY5UeqCVo=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=kW4NQyxWQKDYHbbUsCeZggxyk8M70R4NjKegNRnSr0g=;
+ b=3geTO0OYX9olm6HUzl7yxC0YBGlyr+9CdY6BcQmkAzSCalI7tasY+WYzZVYpW8iDWquZjefcXVdR
+   xq6lPq2MJmuAeH6xgQVbDbQce2qnVnygs/+wMu1uk/E9wLnB9T0HqajCaqUSLj3+NtB20CWY047W
+   KvPyKADIz0EA4Tn29xE=
+Received: by s2.asa1.acemsd3.com id hodi6a2lshkk for <bruce.k.cosma@gmail.com>; Tue, 19 May 2020 04:45:25 +0000 (envelope-from <bounce-549600-445-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Day 18: Mastering Round 1
+Date: Mon, 18 May 2020 23:45:25 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-8409777885ec364652b89b7.52842669_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDQ1ICwgbTQ2MiAsIHM3Mjk1
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-445
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-445-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=445&m=462&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200519044525.22285.224337717.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-8409777885ec364652b89b7.52842669_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public.
+Dispute 21 - Day 18
+
+Mastering Round 1  
+
+Bruce did you think I forgot about you? Well Absolutely Not!!
+You're too Awesomely Amazing to forget. I was just giving you time to
+get your life together and correct those Personal Information letters!
+By now, you should have updated the personal information. The next step
+is to send a dispute letter to the Credit Reporting Agencies (CRA) 
+
+**Section 611 (5)(A**) of the FCRA - you are required to 
+
+**"...promptly DELETE all information which cannot be verified."**In
+short, if the credit bureaus cannot verify the account or inquiry is
+yours in a timely matter (30-45 business days) the account must be
+removed off of your report. If this is the first time you are disputing
+an item, or multiple items, on a credit report, we call that a Round 1
+letter.
+
+Before beginning Round 1, you want to carefully analyze the most
+recently pulled credit report. When analyzing the report, it's
+important to determine which accounts are negatively impacting the
+credit score the most. Generally, these are the accounts that have
+become negative or delinquent within the past 24 months. You will want
+to focus on those. It is also important to note that there may be other
+negative accounts on the credit report that you will include that are
+beyond the 24 month mark and there are other negative accounts that you
+will want to leave alone. More on this below... 
+
+The Round 1 letter is always sent to the credit reporting agency (CRA).
+The CRA that you begin Round 1 with will depend on the type of account
+you are disputing and your dispute strategy or action plan. You can
+refer back to a previous lesson that discusses various CRAs aside from
+the Big 3. 
+
+In the Round 1 letter you are asking the CRA to Re-Investigate the
+account(s) listed in your letter and verify whether the account
+information for each is reporting with maximum accuracy. It's
+pertinent that when you are writing your dispute reason you are very
+clear and concise. Most letters go unanswered or do not have the desired
+action taken because there is a lack of clarity in what is being asked
+of the CRA. The absolute must in a dispute letter is that a reasonable
+person must be able to tell that you are disputing an item. Simply
+stating that you've recently looked at your credit report and found
+inaccurate information then listing the Account Name and Account Number
+is not enough detail to determine why you are disputing an item and what
+action you would like taken at the end of the investigation. I like to
+break down the dispute reason into 3 steps, called the Dispute Reason
+Formula. Your dispute reason should contain the following: a Reason, a
+Request and a Result. 
+
+·        State your "
+
+**Reason**" for disputing the account: Inaccurate Information
+
+·        State your "
+
+**Request**": Re-investigate and Verify all data for this account is
+reporting accurate including every notation, dates and balances, whether
+reported or not
+
+·        State your desired "
+
+**Result**": immediately delete this account from my report/ correct
+this account to report as...(based on what you would like to happen with
+the account).
+
+Simply asking the credit bureaus to just "Validate or verify account" or
+"Unverified Account" is not enough. The credit bureaus get the same
+responses every single day.
+
+If you remember from the dispute letter writing lesson, you want to
+ensure that your letter sounds as if it's coming from a consumer.
+Think "least sophisticated consumer." This is especially important for
+Round 1 letters so that your disputes aren't immediately blocked,
+causing your chances of getting the account(s) deleted to diminish. 
+
+The 30-Day Time Limit - The FCRA imposes a thirty-day time limit on the
+dispute. If the item is not responded to within that time limit, it must
+be removed from your credit file. Using their automated dispute system
+makes it very easy for the credit reporting bureaus and reporting
+agencies to not only respond, but to respond without having to do a full
+investigation. This is why you want to ensure that your letters are
+basic but customized and your dispute reason is clear.
+
+Within 30 - 45 days of mailing off your letter(s) you are likely to
+receive one of the following responses to your dispute. 
+
+·       
+
+**The item was deleted / corrected:** Horary!!! Mission Accomplished.
+Now just keep an eye on the proceeding reports to ensure the item
+doesn't mysteriously pop back up or those corrections are don't
+revert back to inaccurate reporting on the next update.
+
+·       
+
+**This item has been verified:** This most likely means that the bureau
+or reporting agency checked against their own flawed system and spat out
+this response. They most likely didn't really investigate anything at
+this early stage. 
+
+**Next Step:** Proceed to Round 2 and challenge the bureau by asking
+them to "prove it" by telling you what creditor they contacted and how
+they verified it. You can even try by asking them to provide you with a
+document bearing your signature, but most likely that won't happen and
+they are not required to do so. You might also choose to send a letter
+to the creditor or collection agency by asking them to provide proof or
+debt validation by way of a document with a signature proving that the
+debt is yours and was agreed to.
+
+****
+·       
+
+**Suspicious Letter or Not Enough Information:**This could simply be a
+stall tactic used to buy themselves more time or sent in hope that the
+consumer does not know the proper steps to take next, gets frustrated
+and gives up. Or, it could mean that you forgot to include the
+client's photo ID and proof of address. 
+
+**Next Step:** Resend the same letter as before, inserting a handwritten
+note or a line at the beginning of the letter that says "Oops I forgot
+to include my Photo ID and Proof of Address, here you go" and be sure to
+include the identification documentation. (Note: Personal Information
+Letters and Round 1 letters are the only letters that require
+Identification Documents.)
+
+****
+·       
+
+**Your dispute is frivolous:**Frivolous means to not have any serious
+purpose or value. You may receive this response when you lack clarity in
+your reason for disputing or if the account has been previously disputed
+using the same reason. 
+
+**Next Step:** (1) Resend the Round 1 letter clarifying your dispute
+reason, using the 3 R Dispute Formula. (2) Respond with a letter
+requesting a reason for why they believe this to be the case and ask
+what you need to do to have the matter investigated, again including
+your disputed accounts.
+
+****
+·       
+
+**We suspect that you are working with a Credit Repair Company: This
+result is most common when**too much legalese is used, especially in
+Round 1, or it doesn't seem like the Investigation letter is being sent
+by a consumer. 
+
+**Next Step:** Remove the legal jargon, if any. Re-send Round One Letter
+responding to their accusation and ensure them that you've done your
+research and you know your rights.
+
+·       
+
+**Your letter is not legible:**This response is either a stall tactic or
+it means that your letter was too difficult to understand.
+
+**Next Step:**Go back to the original letter you sent. Check to make
+sure that your dispute reasons are written clearly and makes sense. Wait
+approximately 5 - 7 days to see if you receive another response from
+the bureau. If so, they were just stalling to by themselves more time.
+If not, resend the same letter - dispute reasons written clearly -
+with a handwritten note on the original letter explaining that your
+letter is indeed legible and demand that they investigate per your
+request.
+
+Why All Negative Account Should Not Be Deleted
+
+Some derogatory accounts can actually raise your credit score, or having
+them deleted can actually lower your score more than just leaving them
+reporting. For example, if you had a $5,000 charged-off account - paid
+in full - the balance, paid status and payment history could account in
+the scoring of your file. That's why deleting some derogatory accounts
+can actually lower your credit score! So be careful when deciding which
+accounts you want to have deleted. Some you may just want to have
+correct and others you may want to leave alone altogether. 
+
+Copyright © 2019 EduCredit Solutions. All rights reserved.
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online at www.educreditsolutions.com
+
+Work With Elle
+
+For information regarding 1-on-1 Coaching, Staff Training and Education
+Services, you can schedule a discovery call at
+bit.ly/discoverycallwithelle 
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=445&m=462&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-8409777885ec364652b89b7.52842669_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;}=0A/*-------------------------------------------------------=
+------------------*\ Product Widget \*-------------------------------------=
+------------------------------------*/ .td_product > div { float: none !imp=
+ortant; width: 100% !important; margin-bottom: 20px !important; } .td_produ=
+ct > div img { width: 75% !important; } /* Default social icons */ *[class]=
+.ac-social-icon-16 {width:16px !important; height:16px !important;} *[class=
+].ac-social-icon-24 {width:24px !important; height:24px !important;} *[clas=
+s].ac-social-icon-28 {width:28px !important; height:28px !important;} *[cla=
+ss].__ac_social_icons { margin-right: 0px !important; } }=0A</style><style =
+data-ac-keep=3D"true"> @media only screen and (max-width: 320px) { #layout-=
+row3452 img { width: 100% !important; height: auto !important; max-width: 3=
+20px !important; } #layout-row3453 .break-line { width: 100% !important; ma=
+rgin: auto !important; } #layout-row3462 img { width: 100% !important; heig=
+ht: auto !important; max-width: 320px !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width:=0A100% !=
+important; min-width: 100% !important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 375px) { #layout-=
+row3452 img { width: 100% !important; height: auto !important; max-width: 3=
+75px !important; } #layout-row3453 .break-line { width: 100% !important; ma=
+rgin: auto !important; } #layout-row3462 img { width: 100% !important; heig=
+ht: auto !important; max-width: 375px !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 414px) { #layout-=
+row3452 img { width: 100% !important; height: auto !important; max-width: 4=
+14px !important; } #layout-row3453 .break-line { width: 100% !important; ma=
+rgin: auto !important; } #layout-row3462 img { width: 100% !important; heig=
+ht: auto !important; max-width: 414px !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 667px) { #layout-=
+row3452 img { width: 100% !important; height: auto !important; max-width: 6=
+67px !important; } #layout-row3453 .break-line { width: 100% !important; ma=
+rgin: auto !important; } #layout-row3462 img { width: 100% !important; heig=
+ht: auto !important; max-width: 600px !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A} </style><!--[if !mso]><!-- webfonts --><!--<![endif]--=
+><!--[if lt mso 12]> <![endif]--></head><body id=3D"ac-designer" class=3D"b=
+ody" style=3D"font-family: Arial; line-height: 1.1; margin: 0px; background=
+-color: #ffffff; width: 100%; text-align: center;"><div class=3D"divbody" s=
+tyle=3D"margin: 0px; outline: none; padding: 0px; color: #000000; font-fami=
+ly: arial; line-height: 1.1; width: 100%; background-color: #ffffff; backgr=
+ound: #ffffff; text-align: center;"><table class=3D"template-table" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left" st=
+yle=3D"font-size: 13px; min-width: auto; mso-table-lspace: 0pt; mso-table-r=
+space: 0pt; background-color: #ffffff; background: #ffffff;"><tr><td align=
+=3D"center" valign=3D"top" width=3D"100%"><table class=3D"template-table" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"650" bgcolor=3D"#f=
+fffff" style=3D"font-size: 13px; min-width: auto; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt; max-width: 650px;"><tr><td=0Aid=3D"layout_table_7a4a04=
+ae6440b7b26801e3139cff2da7851e2db1" valign=3D"top" align=3D"center" width=
+=3D"650" style=3D""><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0"=
+ class=3D"layout layout-table root-table" width=3D"650" style=3D"font-size:=
+ 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr =
+style=3D""><td id=3D"layout-row-margin3462" valign=3D"top" style=3D""><tabl=
+e width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"=
+font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: =
+0pt;"><tr id=3D"layout-row3462" class=3D"layout layout-row widget _widget_p=
+icture " align=3D"left"><td id=3D"layout-row-padding3462" valign=3D"top"><t=
+able width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr><td class=3D"image-td" align=3D"left" valign=3D"top" width=3D=
+"650"><img src=3D"https://educreditsolutions.imgus11.com/public//3ffc49e03b=
+5aeb9a3ff6d85611623657.png?r=3D1419073205" alt=3D""=0Awidth=3D"600" style=
+=3D"display: block; border: none; outline: none; width: 600px; opacity: 1; =
+max-width: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</t=
+d>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3455" valign=3D"top"=
+ style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-l=
+space: 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><t=
+r id=3D"layout-row3455" class=3D"layout layout-row widget _widget_text styl=
+e3455" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border3455" va=
+lign=3D"top" style=3D"border-color: #1f2129; border-style: solid; border-wi=
+dth: 2px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding3455" valign=3D"top" =
+style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-ls=
+pace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3223" class=3D"td_=
+text td_block" valign=3D"top" align=3D"left" width=3D"626" style=3D"margin:=
+ 0;=0Aoutline: none; padding: 0; color: inherit; font-size: 12px; font-weig=
+ht: inherit; line-height: 1; text-decoration: inherit; font-family: Arial;"=
+> <div style=3D"margin: 0; outline: none; padding: 0;"> <div style=3D"margi=
+n: 0; outline: none; padding: 0;"> <div style=3D"margin: 0; outline: none; =
+padding: 0; font-size: 17px;"> <div style=3D"margin: 0; outline: none; padd=
+ing: 0;"> <div style=3D"margin: 0; outline: none; padding: 0; font-size: 17=
+px;"> <div style=3D"margin: 0; outline: none; padding: 0;"> <div style=3D"m=
+argin: 0; outline: none; padding: 0;"> <div class=3D"" style=3D"margin: 0; =
+outline: none; padding: 0;"> <div class=3D"" style=3D"margin: 0; outline: n=
+one; padding: 0;"> <i style=3D"margin: 0; outline: none; padding: 0; font-s=
+ize: 12px; font-style: italic; font-family: arial; color: #000000; font-wei=
+ght: 400;" class=3D""><span style=3D"color: #999999; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit; font-fa=
+mily: arial;" class=3D""><br=0Aclass=3D"">Objective: This 21 day email cour=
+se is designed for the student to gain a clear understanding of the credit =
+repair process so that they can approach the client file and create an acti=
+on plan with certainty. The content of this course is also designed to help=
+ the student effectively communicate credit information so that as a busine=
+ss owner they can feel comfortable and confident when speaking about the su=
+bject of credit to leads, clients, and the general public.</span></i><div s=
+tyle=3D"margin: 0; outline: none; padding: 0; font-size: 17px; font-family:=
+ arial; font-style: normal; font-weight: 400; text-align: center; color: #0=
+174df;" class=3D""><span style=3D"color: #0174df; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit; font-famil=
+y: arial;" class=3D""><br class=3D""><span style=3D"color: inherit; font-si=
+ze: 28.6667px; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;" class=3D"">Dispute 21 - Day=0A18<br></span><br style=3D"" class=
+=3D""><span style=3D"color: #0174df; font-size: 28.6667px; font-weight: 400=
+; line-height: inherit; text-decoration: inherit; font-family: arial; font-=
+style: normal;" class=3D"">Mastering Round 1=C2=A0=C2=A0</span><br style=3D=
+"font-family: arial; font-weight: 400; color: #0174df; font-style: normal;f=
+ont-size: 18px;" class=3D""></span></div>=0A</div>=0A</div>=0A</div>=0A</di=
+v>=0A</div>=0A</div>=0A<blockquote style=3D"margin: 0px 0px 0px 40px; outli=
+ne: none; padding: 0px; border: none; font-size: 17px;"><br style=3D"font-w=
+eight: bold;"></blockquote></div>=0A</div>=0A<blockquote style=3D"margin: 0=
+ 0 0 40px; outline: none; padding: 0px; border: none;"><div style=3D"margin=
+: 0; outline: none; padding: 0;"> <div style=3D"margin: 0 49.95pt 0 5.95pt;=
+ outline: none; padding: 0; color: #000000; font-size: 19px;">Bruce did you=
+ think I forgot about you? Well Absolutely Not!! You're too Awesomely Amazi=
+ng to forget. I was just giving you time to get your life together and corr=
+ect those Personal Information letters! By now, you should have updated the=
+ personal information. The next step is to send a dispute letter to the Cre=
+dit Reporting Agencies (CRA) <b style=3D"margin: 0; outline: none; padding:=
+ 0; mso-bidi-font-weight: normal;">Section 611 (5)(A</b>) of the FCRA =
+=E2=80=93 you are required to <b style=3D"margin: 0; outline: none; padding=
+: 0; mso-bidi-font-weight: normal;"><i style=3D"margin: 0; outline: none; p=
+adding: 0; mso-bidi-font-style: normal;">"=E2=80=A6promptly DELETE all info=
+rmation which cannot be verified." </i></b>In short, if the credit=0Abureau=
+s cannot verify the account or inquiry is yours in a timely matter (30-45 b=
+usiness days) the account must be removed off of your report. <span style=
+=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;">If this is the first time you are dispu=
+ting an item, or multiple items, on a credit report, we call that a Round 1=
+ letter.</span></div>=0A<br style=3D"color: #000000; font-size: 19px;"><div=
+ style=3D"margin: 0 49.95pt 0 5.95pt; outline: none; padding: 0; color: #00=
+0000; font-size: 19px;"><span style=3D"color: #000000; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;" clas=
+s=3D"">Before beginning Round 1, you want to carefully analyze the most rec=
+ently pulled credit report. When analyzing the report, it=E2=80=99s importa=
+nt to determine which accounts are negatively impacting the credit score th=
+e most. Generally, these are the accounts that have become negative or deli=
+nquent within the past 24 months. You will want to focus on those. It is al=
+so important to note that there may be other negative accounts on the credi=
+t report that you will include that are beyond the 24 month mark and there =
+are other negative accounts that you will want to leave alone. More on this=
+ below=E2=80=A6 <span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit;=0Atext-decoration: inherit; mso-spaceru=
+n: yes;"> </span><span style=3D"color: inherit; font-size: inherit; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit; mso-spacerun=
+: yes;"> </span><span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit; mso-spacerun:=
+ yes;"> </span></span></div>=0A<br style=3D"color: #000000; font-size: 19px=
+;"><div style=3D"margin: 0 49.95pt 0 5.95pt; outline: none; padding: 0; col=
+or: #000000; font-size: 19px;"><span style=3D"color: #000000; font-size: in=
+herit; font-weight: inherit; line-height: inherit; text-decoration: inherit=
+;" class=3D"">The Round 1 letter is always sent to the credit reporting age=
+ncy (CRA). The CRA that you begin Round 1 with will depend on the type of a=
+ccount you are disputing and your dispute strategy or action plan. You can =
+refer back to a previous lesson that discusses various CRAs aside from the =
+Big 3. </span></div>=0A<br style=3D"color: #000000; font-size: 19px;"><div =
+style=3D"margin: 0 49.95pt 0 5.95pt; outline: none; padding: 0; color: #000=
+000; font-size: 19px;"><span style=3D"color: #000000; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;" class=
+=3D"">In the Round 1 letter you are asking the CRA to Re-Investigate the ac=
+count(s) listed in your letter and verify whether the account information f=
+or each is reporting with maximum accuracy. It=E2=80=99s pertinent that whe=
+n you are writing your dispute reason you are very clear and concise. Most =
+letters go unanswered or do not have the desired action taken because there=
+ is a lack of clarity in what is being asked of the CRA. The absolute must =
+in a dispute letter is that a reasonable person must be able to tell that y=
+ou are disputing an item. Simply stating that you=E2=80=99ve recently looke=
+d at your credit report and found inaccurate information then listing the A=
+ccount Name and Account Number is not enough=0Adetail to determine why you =
+are disputing an item and what action you would like taken at the end of th=
+e investigation. I like to break down the dispute reason into 3 steps, call=
+ed the Dispute Reason Formula. Your dispute reason should contain the follo=
+wing: a Reason, a Request and a Result. </span></div>=0A<br style=3D"color:=
+ #000000; font-size: 19px;"><div style=3D"margin: 0 49.95pt 0 23.8pt; outli=
+ne: none; padding: 0; color: #000000; font-size: 19px;"><span style=3D"colo=
+r: #000000; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit; font-family: arial; mso-list: Ignore;">=C2=B7<sp=
+an style=3D"color: inherit; font-size: inherit; font-weight: normal; line-h=
+eight: inherit; text-decoration: inherit; font-style: normal; font-family: =
+arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0 </span></span><span style=3D"=
+color: #000000; font-size: inherit; font-weight: inherit; line-height: inhe=
+rit; text-decoration: inherit;">State your "<b style=3D"margin: 0; outline:=
+ none; padding: 0; mso-bidi-font-weight: normal;">Reason</b>" for disputing=
+ the account: Inaccurate Information</span></div>=0A<br style=3D"color: #00=
+0000; font-size: 19px;"><div style=3D"margin: 0 49.95pt 0 23.8pt; outline: =
+none; padding: 0; color: #000000; font-size: 19px;"><span style=3D"color: #=
+000000; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit; font-family: arial; mso-list: Ignore;">=C2=B7<span s=
+tyle=3D"color: inherit; font-size: inherit; font-weight: normal; line-heigh=
+t: inherit; text-decoration: inherit; font-style: normal; font-family: aria=
+l;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0 </span></span><span style=3D"colo=
+r: #000000; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit;">State your "<b style=3D"margin: 0; outline: non=
+e; padding: 0; mso-bidi-font-weight: normal;">Request</b>": Re-investigate =
+and Verify </span>all data for this account is reporting accurate including=
+ every notation, dates and balances, whether reported or not</div>=0A<br st=
+yle=3D"color: #000000; font-size: 19px;"><div style=3D"margin: 0 49.95pt 0 =
+23.8pt; outline: none; padding: 0; color: #000000; font-size: 19px;"><span =
+style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit; font-family: arial; mso-list: Ignor=
+e;">=C2=B7<span style=3D"color: inherit; font-size: inherit; font-weight: n=
+ormal; line-height: inherit; text-decoration: inherit; font-style: normal; =
+font-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0 </span></span><s=
+pan style=3D"color: #000000; font-size: inherit; font-weight: inherit; line=
+-height: inherit; text-decoration: inherit;">State your desired "<b style=
+=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">Re=
+sult</b>": immediately delete this account from my report/ correct this acc=
+ount to report as=E2=80=A6(based on what you would like to happen with the =
+account).</span></div>=0A<div style=3D"margin: 0 49.95pt 0 0in; outline: no=
+ne; padding: 0; color: #000000; font-size: 19px;"><br></div>=0A<div style=
+=3D"margin: 0; outline: none; padding: 0; color: #000000; font-size: 19px;"=
+>Simply asking the credit bureaus to just "Validate or verify account" or <=
+span style=3D"color: #000000; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit; text-align: inherit;">"Unverif=
+ied Account" is not enough. The credit bureaus get the same responses every=
+ single day.</span></div>=0A<div style=3D"margin: 0 49.95pt 0 0in; outline:=
+ none; padding: 0; color: #000000; font-size: 19px;"><span style=3D"color: =
+#000000; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit;" class=3D""> </span></div>=0A<br style=3D"color: #0=
+00000; font-size: 19px;"><div style=3D"margin: 0 32.8pt 0 9pt; outline: non=
+e; padding: 0; color: #000000; text-align: justify; font-size: 19px;"><span=
+ style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit;" class=3D"">If you remember from t=
+he dispute letter writing lesson, you want to ensure that your letter sound=
+s as if it=E2=80=99s coming from a consumer. Think "least sophisticated con=
+sumer." This is especially important for Round 1 letters so that your dispu=
+tes aren=E2=80=99t immediately blocked, causing your chances of getting the=
+ account(s) deleted to diminish. </span></div>=0A<div style=3D"margin: 0 32=
+.8pt 0 9pt; outline: none; padding: 0; color: #000000; text-align: justify;=
+ font-size: 19px;"><br></div>=0A<br style=3D"color: #000000; font-size: 19p=
+x;"><div style=3D"margin: 0 5.25pt 0 5pt; outline: none; padding: 0; color:=
+ #000000; font-size: 19px;"><b style=3D"margin: 0; outline: none; padding: =
+0; mso-bidi-font-weight: normal;"><span style=3D"color: inherit; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit; font-family: arial;">The 30-Day Time Limit </span></b><span style=3D"c=
+olor: inherit; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; font-family: arial;">- The FCRA imposes a thi=
+rty-day time limit on the dispute. If the item is not responded to within t=
+hat time limit, it must be removed from your credit file. Using their autom=
+ated dispute system makes it very easy for the credit reporting bureaus and=
+ reporting agencies to not only respond, but to respond without having to d=
+o a full investigation. This is why you want to ensure that your letters ar=
+e basic but customized and your dispute reason=0Ais clear.</span></div>=0A<=
+br style=3D"color: #000000; font-size: 19px;"><div style=3D"margin: 0 5.25p=
+t 0 5pt; outline: none; padding: 0; color: #000000; text-align: center; fon=
+t-size: 19px;"><span style=3D"color: inherit; font-size: inherit; font-weig=
+ht: bold; line-height: inherit; text-decoration: inherit; font-family: aria=
+l;" class=3D"">Within 30 =E2=80=93 45 days of mailing off your letter(s) yo=
+u are likely to receive one of the following responses to your dispute. </s=
+pan></div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align=
+: center;"><br style=3D"font-size: 19px;"></div>=0A <div style=3D"margin: 0=
+ 5.25pt 0 23pt; outline: none; padding: 0; color: #000000; font-size: 19px;=
+"><span style=3D"color: inherit; font-size: inherit; font-weight: inherit; =
+line-height: inherit; text-decoration: inherit; font-family: arial; mso-lis=
+t: Ignore;">=C2=B7<span style=3D"color: inherit; font-size: inherit; font-w=
+eight: normal; line-height: inherit; text-decoration: inherit; font-style: =
+normal; font-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 </span></span>=
+<b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: nor=
+mal;">The item was deleted / corrected:</b> Horary!!! Mission Accomplished.=
+ Now just keep an eye on the proceeding reports to ensure the item doesn=
+=E2=80=99t mysteriously pop back up or those corrections are don=E2=80=
+=99t revert back to inaccurate reporting on the next update.</div>=0A<br st=
+yle=3D"color: #000000; font-size: 19px;"><div style=3D"margin: 0 5.25pt 0 2=
+3pt; outline: none; padding: 0; color: #000000; font-size: 19px;"><span sty=
+le=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit; font-family: arial; mso-list: Ignore;"=
+>=C2=B7<span style=3D"color: inherit; font-size: inherit; font-weight: norm=
+al; line-height: inherit; text-decoration: inherit; font-style: normal; fon=
+t-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 </span></span><b style=3D=
+"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">This =
+item has been verified:</b> This most likely means that the bureau or repor=
+ting agency checked against their own flawed system and spat out this respo=
+nse. They most likely didn't really investigate anything at this early stag=
+e. <b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: =
+normal;">Next Step:</b> Proceed to Round 2 and challenge the bureau by aski=
+ng them to "prove it" by telling=0Ayou what creditor they contacted and how=
+ they verified it. You can even try by asking them to provide you with a do=
+cument bearing your signature, but most likely that won=E2=80=99t happen an=
+d they are not required to do so. You might also choose to send a letter to=
+ the creditor or collection agency by asking them to provide proof or debt =
+validation by way of a document with a signature proving that the debt is y=
+ours and was agreed to.</div>=0A<span style=3D"color: #000000; font-size: 1=
+9px; font-weight: inherit; line-height: inherit; text-decoration: inherit;"=
+ class=3D""> <b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-fon=
+t-weight: normal;"> </b><br></span><div style=3D"margin: 0 5.25pt 0 23pt; o=
+utline: none; padding: 0; color: #000000; font-size: 19px;"><span style=3D"=
+color: inherit; font-size: inherit; font-weight: inherit; line-height: inhe=
+rit; text-decoration: inherit; font-family: arial; mso-list: Ignore;">=
+=C2=B7<span style=3D"color: inherit; font-size: inherit; font-weight: norma=
+l; line-height: inherit; text-decoration: inherit; font-style: normal; font=
+-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 </span></span><b style=3D"=
+margin: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">Suspic=
+ious Letter or Not Enough Information: </b>This could simply be a stall tac=
+tic used to buy themselves more time or sent in hope that the consumer does=
+ not know the proper steps to take next, gets frustrated and gives up. Or, =
+it=0Acould mean that you forgot to include the client=E2=80=99s photo ID an=
+d proof of address. <b style=3D"margin: 0; outline: none; padding: 0; mso-b=
+idi-font-weight: normal;">Next Step:</b> Resend the same letter as before, =
+inserting a handwritten note or a line at the beginning of the letter that =
+says "Oops I forgot to include my Photo ID and Proof of Address, here you g=
+o" and be sure to include the identification documentation. (Note: Personal=
+ Information Letters and Round 1 letters are the only letters that require =
+Identification Documents.)</div>=0A<span style=3D"color: #000000; font-size=
+: 19px; font-weight: inherit; line-height: inherit; text-decoration: inheri=
+t;" class=3D""> <b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-=
+font-weight: normal;"> </b><br></span><div style=3D"margin: 0 5.25pt 0 23pt=
+; outline: none; padding: 0; color: #000000; font-size: 19px;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial; mso-list: Ignore;">=
+=C2=B7<span style=3D"color: inherit; font-size: inherit; font-weight: norma=
+l; line-height: inherit; text-decoration: inherit; font-style: normal; font=
+-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 </span></span><b style=3D"=
+margin: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">Your d=
+ispute is frivolous: </b>Frivolous means to not have any serious purpose or=
+ value. You may receive this response when you lack clarity in your reason =
+for disputing or if the account has been previously disputed using the same=
+=0Areason. <b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-=
+weight: normal;">Next Step:</b> (1) Resend the Round 1 letter clarifying yo=
+ur dispute reason, using the 3 R Dispute Formula. (2) Respond with a letter=
+ requesting a reason for why they believe this to be the case and ask what =
+you need to do to have the matter investigated, again including your disput=
+ed accounts.</div>=0A<span style=3D"color: #000000; font-size: 19px; font-w=
+eight: inherit; line-height: inherit; text-decoration: inherit;" class=3D""=
+> <b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: n=
+ormal;"> </b><br></span><div style=3D"margin: 0 5.25pt 0 23pt; outline: non=
+e; padding: 0; color: #000000; font-size: 19px;"><span style=3D"color: inhe=
+rit; font-size: inherit; font-weight: inherit; line-height: inherit; text-d=
+ecoration: inherit; font-family: arial; mso-list: Ignore;">=C2=B7<span styl=
+e=3D"color: inherit; font-size: inherit; font-weight: normal; line-height: =
+inherit; text-decoration: inherit; font-style: normal; font-family: arial;"=
+>=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 </span></span><b style=3D"margin: 0; outli=
+ne: none; padding: 0; mso-bidi-font-weight: normal;">We suspect that you ar=
+e working with a Credit Repair Company: This result is most common when </b=
+>too much legalese is used, especially in Round 1, or it doesn't seem like =
+the Investigation letter is being sent by a consumer. <b=0Astyle=3D"margin:=
+ 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">Next Step:</b=
+> Remove the legal jargon, if any. Re-send Round One Letter responding to t=
+heir accusation and ensure them that you=E2=80=99ve done your research and =
+you know your rights.<br></div>=0A<div style=3D"margin: 0 5.25pt 0 23pt; ou=
+tline: none; padding: 0; color: #000000; font-size: 19px;"><span style=3D"c=
+olor: inherit; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; font-family: arial; mso-list: Ignore;">=C2=
+=B7<span style=3D"color: inherit; font-size: inherit; font-weight: normal; =
+line-height: inherit; text-decoration: inherit; font-style: normal; font-fa=
+mily: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 </span></span><b style=3D"mar=
+gin: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">Your lett=
+er is not legible: </b>This response is either a stall tactic or it means t=
+hat your letter was too difficult to understand.<b style=3D"margin: 0; outl=
+ine: none; padding: 0; mso-bidi-font-weight: normal;"> Next Step: </b>Go ba=
+ck to the original letter you sent. Check to make sure that your dispute re=
+asons are written clearly and makes sense. Wait approximately 5 =E2=80=
+=93 7 days to see if you receive another response from the bureau. If so, t=
+hey were=0Ajust stalling to by themselves more time. If not, resend the sam=
+e letter =E2=80=93 dispute reasons written clearly =E2=80=93 with a handwri=
+tten note on the original letter explaining that your letter is indeed legi=
+ble and demand that they investigate per your request.</div>=0A<span style=
+=3D"color: #000000; font-size: 19px; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit;" class=3D""><br><br></span><div style=3D"ma=
+rgin: 0 32.8pt 0 0; outline: none; padding: 0; text-align: center; color: #=
+000000; font-size: 19px;"><b style=3D"margin: 0; outline: none; padding: 0;=
+ mso-bidi-font-weight: normal;"><u style=3D"margin: 0; outline: none; paddi=
+ng: 0;"><span style=3D"color: #000000; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;" class=3D"">Why All N=
+egative Account Should Not Be Deleted</span></u></b></div>=0A<br style=3D"c=
+olor: #000000; font-size: 19px;"><div style=3D"margin: 0 32.8pt 0 9pt; outl=
+ine: none; padding: 0; color: #000000; text-align: justify; font-size: 19px=
+;"><span style=3D"color: #000000; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;" class=3D"">Some derogator=
+y accounts can actually raise your credit score, or having them deleted can=
+ actually lower your score more than just leaving them reporting. For examp=
+le, if you had a $5,000 charged-off account - paid in full - the balance, p=
+aid status and payment history could account in the scoring of your file. T=
+hat=E2=80=99s why deleting some derogatory accounts can actually lower your=
+ credit score! So be careful when deciding which accounts you want to have =
+deleted. Some you may just want to have correct and others you may want to =
+leave alone altogether. <span style=3D"color: inherit; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;=0Amso=
+-spacerun: yes;"> </span></span></div>=0A<br><div style=3D"margin: 0 49.95p=
+t 0 5.95pt; outline: none; padding: 0; color: #000000;"><span style=3D"colo=
+r: #000000; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit;"> </span></div>=0A<br><br><br></div>=0A</blockqu=
+ote><div style=3D"margin: 0; outline: none; padding: 0;"><div style=3D"marg=
+in: 0; outline: none; padding: 0; font-size: 17px;"><div style=3D"margin: 0=
+; outline: none; padding: 0;"><div style=3D"margin: 0; outline: none; paddi=
+ng: 0; font-size: 17px;"><div style=3D"margin: 0; outline: none; padding: 0=
+;"><div style=3D"margin: 0; outline: none; padding: 0;"><blockquote style=
+=3D"margin: 0px 0px 0px 40px; outline: none; padding: 0px; border: none;" c=
+lass=3D""><div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"><=
+div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"><span style=
+=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; text-align: left; font-family: arial; fo=
+nt-style: italic; margin: 0;" class=3D""> </span> </div>=0A</div>=0A</block=
+quote> </div>=0A </div>=0A </div>=0A </div>=0A </div>=0A </div>=0A </div>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</=
+table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3453" va=
+lign=3D"top" style=3D""><table width=3D"100%" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-ls=
+pace: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-row3453" class=3D"layou=
+t layout-row widget _widget_break "><td id=3D"layout-row-padding3453" valig=
+n=3D"top" style=3D"line-height: 0; mso-line-height-rule: exactly;"><table w=
+idth=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"fon=
+t-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+; border-collapse: collapse; line-height: 0; mso-line-height-rule: exactly;=
+"><tr><td height=3D"10" style=3D"line-height: 0; mso-line-height-rule: exac=
+tly;"></td>=0A</tr>=0A<tr><td align=3D"center" height=3D"1" width=3D"650" s=
+tyle=3D"line-height: 0; mso-line-height-rule: exactly;"> <table align=3D"ce=
+nter" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" height=3D"1" width=
+=3D"650" style=3D"font-size: 13px; min-width: auto!important; mso-table-lsp=
+ace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; line-height: 0;=
+ mso-line-height-rule: exactly; width: 100%; max-width: 100%;"><tr><td clas=
+s=3D"break-line" bgcolor=3D"#000000" height=3D"1" width=3D"650" style=3D"li=
+ne-height: 1px; mso-line-height-rule: exactly; height: 1px; width: 650px; b=
+ackground-color: #000000;"> </td>=0A </tr>=0A</table>=0A</td>=0A </tr>=0A<t=
+r><td height=3D"10" style=3D"line-height: 0; mso-line-height-rule: exactly;=
+"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr=
+ style=3D""><td id=3D"layout-row-margin3454" valign=3D"top" style=3D"paddin=
+g: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"=
+0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-ta=
+ble-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout-row=
+3454" class=3D"layout layout-row widget _widget_text style3454" style=3D"ma=
+rgin: 0; padding: 0;"><td id=3D"layout-row-padding3454" valign=3D"top" styl=
+e=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: =
+0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3222" class=3D"td_text t=
+d_block" valign=3D"top" align=3D"left" width=3D"650" style=3D"margin: 0; ou=
+tline: none; padding: 0; color: inherit; font-size: 12px; font-weight: inhe=
+rit; line-height: 1; text-decoration: inherit; font-family: Arial;"> <div s=
+tyle=3D"margin: 0; outline: none; padding: 0; font-size: 12px;" class=3D"">=
+<span style=3D"color: inherit; font-size: 12px; font-weight:=0Ainherit; lin=
+e-height: inherit; text-decoration: inherit;" class=3D""> <div style=3D"mar=
+gin: 0; outline: none; padding: 0; text-align: center;" class=3D"">Copyrigh=
+t =C2=A9 2019 EduCredit Solutions. All rights reserved.<br class=3D"">Servi=
+ces bought to you by Ellevation Coaching & Consulting<br class=3D""><br cla=
+ss=3D""></div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-a=
+lign: center;" class=3D""> <span style=3D"color: #000000; font-size: 12px; =
+font-weight: 400; line-height: inherit; text-decoration: inherit; font-fami=
+ly: arial; font-style: normal;">Visit Us Online at </span><a href=3D"https:=
+//educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f0=
+9&i=3D445A462A11A2429" data-ac-default-color=3D"1" style=3D"margin: 0; outl=
+ine: none; padding: 0; color: #045fb4; text-decoration: underline; font-fam=
+ily: arial; font-weight: 400; font-size: 12px; font-style: normal;" target=
+=3D"_blank"><span style=3D"color: ; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;">www.educreditsolutions.=
+com</span></a> <br><br><span style=3D"color: inherit; font-size: inherit; f=
+ont-weight: bold; line-height: inherit; text-decoration: inherit;" class=3D=
+"">Work With Elle</span><br class=3D""></div>=0A<div style=3D"margin: 0; ou=
+tline: none; padding: 0; text-align: center;" class=3D"">For information re=
+garding 1-on-1 Coaching, Staff Training and Education Services, you can sch=
+edule a discovery call at <a href=3D"https://educreditsolutions.acemlna.com=
+/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D445A462A11A2430" data-ac-d=
+efault-color=3D"1" class=3D"" target=3D"_blank" style=3D"margin: 0; outline=
+: none; padding: 0; color: #045fb4; text-decoration: underline;"><span styl=
+e=3D"color: ; font-size: inherit; font-weight: inherit; line-height: inheri=
+t; text-decoration: inherit;">bit.ly/discoverycallwithelle</span></a></div>=
+=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: center;"=
+ class=3D""><br class=3D""><span style=3D"color: inherit; font-size: inheri=
+t; font-weight: bold; line-height: inherit; text-decoration: inherit;" clas=
+s=3D"">Contact Us</span><br class=3D""></div>=0A<div style=3D"margin: 0; ou=
+tline: none; padding: 0; text-align: center;" class=3D""><a href=3D"mailto:=
+support@educreditsolutions.com" data-ac-default-color=3D"1" class=3D"" styl=
+e=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-decoration:=
+ underline;" target=3D"_blank"><span style=3D"color: ; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;">supp=
+ort@educreditsolutions.com</span></a></div>=0A<div style=3D"margin: 0; outl=
+ine: none; padding: 0; text-align: center;" class=3D"">Direct: (225) 620-62=
+02<br class=3D"">Toll-Free: 1-800-373-8491<br class=3D""></div>=0A </span><=
+/div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A<tr style=3D""><td id=3D"layout-row-margin3452" valign=3D"top" style=3D"=
+padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; =
+mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layo=
+ut-row3452" class=3D"layout layout-row widget _widget_picture style3452" al=
+ign=3D"center" style=3D""><td id=3D"layout-row-padding3452" valign=3D"top" =
+style=3D"padding: 20px 0 0 20px;"><table width=3D"100%" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=3D"image-td" ali=
+gn=3D"center" valign=3D"top" width=3D"630"><img src=3D"https://educreditsol=
+utions.imgus11.com/public//2a0ea3f14572e3829345d5f92f330073.jpg?r=3D1924357=
+893" alt=3D"" width=3D"176" style=3D"display: block; border: none; outline:=
+ none; width: 176px; opacity: 1; max-width: 100%;"></td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</=
+table>=0A</td>=0A</tr>=0A</table>=0A</div>=0A<img src=3D"https://educredits=
+olutions.acemlna.com/lt.php?nl=3D11&c=3D445&m=3D462&s=3Dda50c2422345422f9a0=
+dc81917526f09&l=3Dopen" border=3D"0" width=3D"1" height=3D"1" style=3D"disp=
+lay:block;width:1px!important;min-width:1px!important;max-width:1px!importa=
+nt;height:1px!important;border:0;overflow:hidden;" /><br /><div id=3D"ac-fo=
+oter" style=3D"clear:both;background-color:inherit;background:inherit;min-w=
+idth:100%;mso-table-lspace:0pt;mso-table-rspace:0pt;padding:20px;color:#000=
+000;font-size:11px;font-family:arial,helvetica,sans-serif;line-height:140%;=
+line-height:1.4;text-align:center;box-sizing:border-box;">=0A=09<center>=0A=
+=09=09Sent to: <span style=3D"font-size:11px;font-family:arial,helvetica,sa=
+ns-serif;font-weight:normal;text-decoration:none;outline:none;">bruce.k.cos=
+ma@gmail.com</span>=0A=09=09<br>=0A=09=09<br>=0A=09=09<a href=3D"http://edu=
+creditsolutions.acemlna.com/proc.php?nl=3D11&c=3D445&m=3D462&s=3Dda50c24223=
+45422f9a0dc81917526f09&act=3Dunsub" style=3D"font-size:11px;font-family:ari=
+al,helvetica,sans-serif;font-weight:bold;text-decoration:underline;"><span =
+style=3D"font-weight:bold;text-decoration:underline;">Unsubscribe</span></a=
+>=0A=09=09<br>=0A=09=09<br> EduCredit Solutions, 9618 Jefferson Hwy., Ste. =
+D #310, Baton Rouge, Louisiana 70809, United States=0A=09</center>=0A</div>=
+=0A<br clear=3D"all" /></body>=0A</html>
+--_=_swift-8409777885ec364652b89b7.52842669_=_--
+

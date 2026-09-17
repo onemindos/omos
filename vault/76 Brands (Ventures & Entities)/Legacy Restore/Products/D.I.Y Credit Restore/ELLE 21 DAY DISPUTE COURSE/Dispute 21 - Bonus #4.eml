@@ -1,0 +1,1144 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ac0:9388:0:0:0:0:0 with SMTP id d8csp261192imd;
+        Thu, 14 May 2020 20:53:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxN1m0eQesARGUOCw7HQc8FmZLlRIsWDLf3ile9ypWEgeOCbRnpHhzJ8mbcMrLCqmSQD35e
+X-Received: by 2002:ac8:5184:: with SMTP id c4mr1443714qtn.356.1589514803316;
+        Thu, 14 May 2020 20:53:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1589514803; cv=none;
+        d=google.com; s=arc-20160816;
+        b=XQAOx/9uysKv3Z5m0HL/DYMePA1k2aS8AfceP+7ktJA7uo/fBb579MF7eZUnYDbvcw
+         nLvFyt3RuXT0nCVAeqaNBXEwRgXySwfFhoRGCbYK8YT82DQjgjxSaWbE6OD24u5Sdu0U
+         Jpa+/WB5GV4NIOKfAUVzxuTy4pWcBe/lyDitbVw5swej6my/z9//oInPRsfnevgwfjhT
+         lwQWHy1HZq6qg05nscTJgn54f3MdJDH4hkal/s77kDfIRehmS38+npGBdBgyachV7LME
+         Tq877IQU0cCeXWjJBBtJYO4tH9UwW1yf4w6vbIQeQ2xr1HSU2zbx24RlRc44JpOBmgFJ
+         T57A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=mvUVo2PqGRoJZX44oH0r1ZcVDudwszP4fIINwyAnaUI=;
+        b=BVV6+LuF3I9EuE9HyoDW1VXuF+EJKb4obNWk7RbCWn7AhbXTxXe4JH8Qsc8hxP7CBM
+         7CAnentt3GdpR2quE7iBAReurFwxRpbajt+sW1N+3aJPd+8eewsnVXj1F6umTBlqoDqE
+         IFdv/SqKtilCrZarY5NJtPfkQBK8N+TIXNDmRO7gCUw5rUnXJ9CicMDwRI3Vlt2EX64J
+         +PpOuHWAbZ10VFoym/FE99OrNj2lW49qYMC3ZlyvX5XhfmptKYojKzKD0n8B8UD7/9EP
+         zc3I8PdZ/3GW7aXZl8rmdMJq5u/0eQeI+JlDXjb4Q2GKEcd11gsAwxdK2MRKjRaE6jrN
+         IR7w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=n4Q3lbGr;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=qmWT9QRB;
+       spf=pass (google.com: domain of bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id g25si620078qtm.252.2020.05.14.20.53.23
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 20:53:23 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=n4Q3lbGr;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=qmWT9QRB;
+       spf=pass (google.com: domain of bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=mvUVo2PqGRoJZX44oH0r1ZcVDudwszP4fIINwyAnaUI=;
+ b=n4Q3lbGr0eWplx/PQDpP7YEeSoslS6/4xXCHkyIIiorc1uZ6mMAz+T/tePW75SNfIlEdCCNBvaVg
+   wBIMhCTFoIX4qEywa7N5/ajkolnX8bHfYyeureKdjeFBHRtsalwnKQKQaVmozT7d+gn1delvx0Oa
+   JbBMRGc8WPI+ZSm+6WA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=mvUVo2PqGRoJZX44oH0r1ZcVDudwszP4fIINwyAnaUI=;
+ b=qmWT9QRBj1LILDXDmL6+vizcmMF5WdlGLWCJzXeHSJOFzMOnmAcdRp6n8ZXoWPDqE6hsTkMcF0Q8
+   IaxBGuSdbkv3hkmp7u/H3VDyKFwQVFPdUoyzl1cOJ0VRzGKQIWrhurOcxcULdMRX1N4V/xeaVzDR
+   TvoKdVwcUM9mQq2WZyc=
+Received: by s2.asa1.acemsd3.com id hno9342lshku for <bruce.k.cosma@gmail.com>; Fri, 15 May 2020 03:53:22 +0000 (envelope-from <bounce-549600-440-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Bonus #4
+Date: Thu, 14 May 2020 22:53:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-5314046075ebe1232ed9a74.84514303_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDQwICwgbTQ1NSAsIHM2OTYw
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-440
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-440-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=440&m=455&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200515035322.30362.307955224.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-5314046075ebe1232ed9a74.84514303_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public.
+
+Bonus Lesson #4:
+Consumer Reporting Agencies
+
+Bruce, When it comes to checking consumer reports and disputing
+negative accounts, we're all familiar with the BIG 3: TransUnion,
+Experian, & Equifax. But, did you know that there are more than 400
+consumer reporting agencies in the United States? The information
+contained in many of the reports these agencies provide to other
+companies could many times be the very reason you or your clients are
+being denied for credit as well as the key to successfully removing
+negative information. 
+
+As we move into the last phase of this course, dispute flows, I
+encourage you to take a look at the list of consumer reporting companies
+I've listed below. Aside from the Big 3, these are a few of the
+companies that I frequently request reports from for my clients,
+depending on the information I'm seeking. Many of these companies report
+information and accounts that you will not find on a bureau report. It
+is also important to note that some of these companies are not only
+reporting agencies, but they also act as data furnishers. For example,
+LexisNexis is many times the furnisher of public records information to
+the bureaus. If you're having a hard time with a bankruptcy, LexisNexis
+might be one of the agencies that you would want to contact to request a
+consumer report and possibly dispute with before verifying an account
+with either TransUnion, Equifax or Experian. If your client has an
+eviction or a repossession, you just might want to contact one of the
+agencies below to tackle that account first. 
+
+I suggest that you get very familiar with the companies listed below as
+well as others out there to find out what type of information they
+collect and report. FYI...once you have the report, you request
+verification from these agencies and follow the dispute process the same
+as you would a credit bureau.  
+
+Innovis 
+(aka*4th Bureau)
+
+Provides ID verification data to assist with fraud detection and
+prevention. 
+
+Free report: 
+The company will provide one free report every 12 months if you request
+it. 
+
+Freeze your report: 
+The company will freeze your consumer report if you request it. 
+
+Website 
+Innovis.com  
+Request security freeze
+
+Phone 
+800-540-2505 
+
+Address 
+Innovis Consumer Assistance 
+P.O. Box 1689 
+Pittsburgh, PA 15230-1689 
+
+LexisNexis Risk Solutions 
+
+Collects information from public records and multiple proprietary data
+sources. This includes items such as real estate transaction and
+ownership data, lien, judgment, and bankruptcy records, professional
+license information, and historical addresses on file. 
+
+Free report: 
+The company will provide one free report every 12 months if you request
+it. 
+
+Freeze your report: 
+The company will freeze your consumer report if you request it. 
+
+Website 
+personalreports.lexisnexis.com
+
+Request report form
+
+and Instructions
+
+Request security freeze
+
+Phone 
+866-897-8126 
+
+Address 
+LexisNexis Consumer Center 
+Attn: Full File Disclosure 
+P.O. Box 105108 
+Atlanta, GA 30348-5108 
+
+**ChexSystems**
+
+Provides account verification services primarily for financial
+institutions. Collects and reports data on checking account
+applications, openings, and closures, including reasons for account
+closure. When you apply for a new checking account many banks and credit
+unions will refer to this database to help inform whether to approve
+your new account. 
+
+ChexSystems is affiliated with Fidelity National Information Services,
+Inc. (FNIS)
+
+**Free report and score:**
+The company will provide one free report every 12 months if you request
+it. A free score will be provided upon request too.
+
+**Freeze your report:**
+The company will freeze your consumer report if you request it.
+
+**Website**
+chexsystems.com  
+Request report form
+
+Request score form
+
+Security freeze information
+
+Security freeze form
+
+****
+
+**Phone** 
+800-428-9623 or 
+800-513-7125 
+
+****
+
+**Address**
+ChexSystems, Inc.
+Attn: Consumer Relations 
+7805 Hudson Road, Suite 100 
+Woodbury, MN 55125 
+
+Clarity Services 
+
+Collects and provides information on payday loans, installment loans,
+auto loans (and leasing), check cashing services, rent-to- own
+transactions, telecommunication account openings, and financial services
+with an emphasis on the lower income and subprime consumer market
+segments. 
+
+*Clarity Services is owned by Experian. 
+
+Free report and score: 
+The company will provide one free report every 12 months if you request
+it. The company will also provide a credit risk score if you request it 
+
+Freeze your report: 
+The company will freeze your consumer report if you request it. 
+
+Website 
+ClarityServices.com  
+Request score
+
+Request security freeze
+
+Phone 
+866-390-3118 
+(Option 1 for security freeze; Option 4 for report request). 
+
+Address 
+Clarity Services, Inc. 
+P.O. Box 5717 
+Clearwater, FL 33758 
+
+CoreLogic Credco 
+
+Collects and reports personal data such as property ownership and home
+loan obligation records; property legal filings and tax payment status;
+rental applications and collection accounts; consumer bankruptcies,
+liens, judgments, and child support obligations. 
+
+Free report: 
+The company will provide one free report every 12 months if you request
+it. 
+
+Freeze your report: 
+The company will freeze your consumer report if you request it. 
+
+Website 
+CoreLogic.com/Credco
+
+Request security freeze 
+
+Phone 
+877-532-8778 
+
+Address 
+CoreLogic Credco, LLC 
+P.O. Box 509124 
+San Diego, CA 92150 
+
+SageStream 
+
+This reporting company collects information from, and provides
+supplementary consumer reports to, auto lenders, credit card issuers,
+retailers, utilities and mobile phone service providers among other
+service providers. 
+
+SageStream is a subsidiary of ID Analytics. ID Analytics is a Symantec
+Company. 
+
+Free report: 
+The company will provide one free report every 12 months if you request
+it. 
+
+Freeze your report: 
+The company will freeze your consumer report if you request it. 
+
+Website 
+SageStream  
+Request report  
+Request security freeze 
+
+Phone 
+888-395-0277 
+
+Address 
+SageStream, LLC 
+Consumer Office 
+P.O. Box 503793 
+San Diego, CA 92150 
+
+Bruce, I'd love to hear the ways in which you've been able to
+benefit from this course content so far and/or how you feel you can use
+this content moving forward. Feel free to reach out to me if you have
+any questions or to simply share your thoughts, Ah Ha Moments, and
+Successes at elle@educreditsolutions.com
+. 
+
+Copyright © 2019 EduCredit Solutions. All rights reserved.
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online at www.educreditsolutions.com
+
+For information regarding 1-on-1 Coaching, Staff Training and Services,
+you can schedule a discovery call at bit.ly/discoverycallwithelle
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=440&m=455&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-5314046075ebe1232ed9a74.84514303_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;}=0A/*-------------------------------------------------------=
+------------------*\ Product Widget \*-------------------------------------=
+------------------------------------*/ .td_product > div { float: none !imp=
+ortant; width: 100% !important; margin-bottom: 20px !important; } .td_produ=
+ct > div img { width: 75% !important; } /* Default social icons */ *[class]=
+.ac-social-icon-16 {width:16px !important; height:16px !important;} *[class=
+].ac-social-icon-24 {width:24px !important; height:24px !important;} *[clas=
+s].ac-social-icon-28 {width:28px !important; height:28px !important;} *[cla=
+ss].__ac_social_icons { margin-right: 0px !important; } }=0A</style><style =
+data-ac-keep=3D"true"> @media only screen and (max-width: 320px) { #layout-=
+row3380 img { width: 100% !important; height: auto !important; max-width: 3=
+20px !important; } #layout-row3382 .break-line { width: 100% !important; ma=
+rgin: auto !important; } #layout-row3385 .break-line { width: 100% !importa=
+nt; margin: auto !important; } #layout-row3395 img { width: 100% !important=
+; height: auto !important; max-width: 320px !important; } #layout-row3396 i=
+mg { width: 100% !important; height: auto !important; max-width: 320px !imp=
+ortant; } div.divbody { padding: 20px !important; } .td_rss .rss-item img.i=
+phone_large_image { width: auto !important; } u + .body { display: table !i=
+mportant; width: 100vw !important; min-width: 100vw !important; } u + .body=
+ table { display: table !important; width: 100% !important; min-width: 100%=
+ !important; } u + .body td { display: block !important; width: 100% !impor=
+tant; min-width: 100% !important; } u + .body img { display:=0Ainline-block=
+ !important; margin: auto !important; width: auto !important; vertical-alig=
+n: bottom !important; } u + .body center { display: block !important; margi=
+n: auto !important; width: 100% !important; min-width: 100% !important; tex=
+t-align: center !important; } u + .body table._ac_social_table, u + .body t=
+able._ac_social_table td, u + .body table._ac_social_table div, u + .body t=
+able._ac_social_table a { display: inline-block !important; margin: auto !i=
+mportant; width: auto !important; min-width: auto !important; text-align: c=
+enter !important; } u + .body table._ac_social_table img { display: inline-=
+block !important; margin: auto !important; width: 32px !important; min-widt=
+h: 32px !important; max-width: 32px !important; }=0A}=0A@media only screen =
+and (max-width: 375px) { #layout-row3380 img { width: 100% !important; heig=
+ht: auto !important; max-width: 375px !important; } #layout-row3382 .break-=
+line { width: 100% !important; margin: auto !important; } #layout-row3385 .=
+break-line { width: 100% !important; margin: auto !important; } #layout-row=
+3395 img { width: 100% !important; height: auto !important; max-width: 375p=
+x !important; } #layout-row3396 img { width: 100% !important; height: auto =
+!important; max-width: 375px !important; } div.divbody { padding: 20px !imp=
+ortant; } .td_rss .rss-item img.iphone_large_image { width: auto !important=
+; } u + .body { display: table !important; width: 100vw !important; min-wid=
+th: 100vw !important; } u + .body table { display: table !important; width:=
+ 100% !important; min-width: 100% !important; } u + .body td { display: blo=
+ck !important; width: 100% !important; min-width: 100% !important; } u + .b=
+ody img { display: inline-block !important; margin: auto=0A!important; widt=
+h: auto !important; vertical-align: bottom !important; } u + .body center {=
+ display: block !important; margin: auto !important; width: 100% !important=
+; min-width: 100% !important; text-align: center !important; } u + .body ta=
+ble._ac_social_table, u + .body table._ac_social_table td, u + .body table.=
+_ac_social_table div, u + .body table._ac_social_table a { display: inline-=
+block !important; margin: auto !important; width: auto !important; min-widt=
+h: auto !important; text-align: center !important; } u + .body table._ac_so=
+cial_table img { display: inline-block !important; margin: auto !important;=
+ width: 32px !important; min-width: 32px !important; max-width: 32px !impor=
+tant; }=0A}=0A@media only screen and (max-width: 414px) { #layout-row3380 i=
+mg { width: 100% !important; height: auto !important; max-width: 414px !imp=
+ortant; } #layout-row3382 .break-line { width: 100% !important; margin: aut=
+o !important; } #layout-row3385 .break-line { width: 100% !important; margi=
+n: auto !important; } #layout-row3395 img { width: 100% !important; height:=
+ auto !important; max-width: 414px !important; } #layout-row3396 img { widt=
+h: 100% !important; height: auto !important; max-width: 414px !important; }=
+ div.divbody { padding: 20px !important; } .td_rss .rss-item img.iphone_lar=
+ge_image { width: auto !important; } u + .body { display: table !important;=
+ width: 100vw !important; min-width: 100vw !important; } u + .body table { =
+display: table !important; width: 100% !important; min-width: 100% !importa=
+nt; } u + .body td { display: block !important; width: 100% !important; min=
+-width: 100% !important; } u + .body img { display: inline-block !important=
+; margin: auto=0A!important; width: auto !important; vertical-align: bottom=
+ !important; } u + .body center { display: block !important; margin: auto !=
+important; width: 100% !important; min-width: 100% !important; text-align: =
+center !important; } u + .body table._ac_social_table, u + .body table._ac_=
+social_table td, u + .body table._ac_social_table div, u + .body table._ac_=
+social_table a { display: inline-block !important; margin: auto !important;=
+ width: auto !important; min-width: auto !important; text-align: center !im=
+portant; } u + .body table._ac_social_table img { display: inline-block !im=
+portant; margin: auto !important; width: 32px !important; min-width: 32px !=
+important; max-width: 32px !important; }=0A}=0A@media only screen and (max-=
+width: 667px) { #layout-row3380 img { width: 100% !important; height: auto =
+!important; max-width: 667px !important; } #layout-row3382 .break-line { wi=
+dth: 100% !important; margin: auto !important; } #layout-row3385 .break-lin=
+e { width: 100% !important; margin: auto !important; } #layout-row3395 img =
+{ width: 100% !important; height: auto !important; max-width: 667px !import=
+ant; } #layout-row3396 img { width: 100% !important; height: auto !importan=
+t; max-width: 650px !important; } div.divbody { padding: 20px !important; }=
+ .td_rss .rss-item img.iphone_large_image { width: auto !important; } u + .=
+body { display: table !important; width: 100vw !important; min-width: 100vw=
+ !important; } u + .body table { display: table !important; width: 100% !im=
+portant; min-width: 100% !important; } u + .body td { display: block !impor=
+tant; width: 100% !important; min-width: 100% !important; } u + .body img {=
+ display: inline-block !important; margin: auto=0A!important; width: auto !=
+important; vertical-align: bottom !important; } u + .body center { display:=
+ block !important; margin: auto !important; width: 100% !important; min-wid=
+th: 100% !important; text-align: center !important; } u + .body table._ac_s=
+ocial_table, u + .body table._ac_social_table td, u + .body table._ac_socia=
+l_table div, u + .body table._ac_social_table a { display: inline-block !im=
+portant; margin: auto !important; width: auto !important; min-width: auto !=
+important; text-align: center !important; } u + .body table._ac_social_tabl=
+e img { display: inline-block !important; margin: auto !important; width: 3=
+2px !important; min-width: 32px !important; max-width: 32px !important; }=
+=0A} </style><!--[if !mso]><!-- webfonts --><!--<![endif]--><!--[if lt mso =
+12]> <![endif]--></head><body id=3D"ac-designer" class=3D"body" style=3D"fo=
+nt-family: Arial; line-height: 1.1; margin: 0px; background-color: #ffffff;=
+ width: 100%; text-align: center;">=09=09<div style=3D"display:none; paddin=
+g:0; height:1px; font-size:1px; background-color:inherit !important; color:=
+inherit !important; line-height:1px; mso-hide:all;">=0A=09=09=09Consumer Re=
+porting Agencies You Need to Know About...=0A=09=09</div>=0A<div class=3D"d=
+ivbody" style=3D"margin: 0px; outline: none; padding: 0px; color: #000000; =
+font-family: arial; line-height: 1.1; width: 100%; background-color: #fffff=
+f; background: #ffffff; text-align: center;"><table class=3D"template-table=
+" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"=
+left" style=3D"font-size: 14px; min-width: auto; mso-table-lspace: 0pt; mso=
+-table-rspace: 0pt; background-color: #ffffff; background: #ffffff;"><tr><t=
+d align=3D"center" valign=3D"top" width=3D"100%"><table class=3D"template-t=
+able" border=3D"0" width=3D"660" bgcolor=3D"#5d5d5d" style=3D"font-size: 14=
+px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-c=
+ollapse: collapse; border-spacing: 0;"><tr><td width=3D"660" bgcolor=3D"#5d=
+5d5d" style=3D"padding:5px;"><table class=3D"template-table" border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" width=3D"650" bgcolor=3D"#ffffff" style=
+=3D"font-size: 14px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt; max-width: 650px;"><tr><td=0Aid=3D"layout_table_5d348ad9fb49d1a8a1=
+3b6ce4f7b53a0928145a8e" valign=3D"top" align=3D"center" width=3D"650" style=
+=3D""><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" class=3D"layo=
+ut layout-table root-table" width=3D"650" style=3D"font-size: 14px; min-wid=
+th: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr style=3D""><td=
+ id=3D"layout-row-margin3396" valign=3D"top" style=3D""><table width=3D"100=
+%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14p=
+x; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=
+=3D"layout-row3396" class=3D"layout layout-row widget _widget_picture " ali=
+gn=3D"left"><td id=3D"layout-row-padding3396" valign=3D"top"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><=
+tr><td class=3D"image-td" align=3D"left" valign=3D"top" width=3D"650"><img =
+src=3D"https://educreditsolutions.imgus11.com/public//e4ea854f9526f80dfc600=
+115582113f6.png?r=3D1583236673" alt=3D""=0Awidth=3D"650" style=3D"display: =
+block; border: none; outline: none; width: 650px; opacity: 1; max-width: 10=
+0%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A=
+<tr style=3D""><td id=3D"layout-row-margin3379" valign=3D"top" style=3D"pad=
+ding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout=
+-row3379" class=3D"layout layout-row widget _widget_text style3379" style=
+=3D"margin: 0; padding: 0;"><td id=3D"layout-row-padding3379" valign=3D"top=
+" style=3D"padding: 20px 30px 20px 30px;"><table width=3D"100%" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: =
+100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div=
+3147" class=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"590=
+" style=3D"line-height: 112%; margin: 0; outline: none; padding: 0; color: =
+inherit; font-size: 12px; font-weight: inherit; line-height: 1.12; text-dec=
+oration: inherit; font-family: Arial; mso-line-height-rule: exactly;"> <div=
+ style=3D"line-height: 112%; margin: 0; outline: none;=0Apadding: 0; text-a=
+lign: left; line-height: 1.12; mso-line-height-rule: exactly;" class=3D"" d=
+ata-line-height=3D"1.12"><div style=3D"margin: 0; outline: none; padding: 0=
+; text-align: left;" class=3D""><i style=3D"margin: 0; outline: none; paddi=
+ng: 0; mso-bidi-font-style: normal;" class=3D""><span style=3D"color: #9999=
+99; font-size: inherit; font-weight: inherit; line-height: inherit; text-de=
+coration: inherit; font-family: arial;" class=3D"">Objective: This 21 day e=
+mail course is designed for the student to gain a clear understanding of th=
+e credit repair process so that they can approach the client file and creat=
+e an action plan with certainty. The content of this course is also designe=
+d to help the student effectively communicate credit information so that as=
+ a business owner they can feel comfortable and confident when speaking abo=
+ut the subject of credit to leads, clients, and the general public.<br></sp=
+an></i><div style=3D"margin: 0; outline: none; padding: 0; text-align: cent=
+er;=0Acolor: #0174df;" class=3D""><span style=3D"color: inherit; font-size:=
+ 28.6667px; font-weight: inherit; line-height: inherit; text-decoration: in=
+herit;"><br>Bonus Lesson #4:<br>Consumer Reporting Agencies</span></div>=0A=
+<div style=3D"margin: 0; outline: none; padding: 0; text-align: center;" cl=
+ass=3D""><br style=3D"color: #2a65c5;color: #000000;"></div>=0A<span style=
+=3D"color: #000000; font-size: 17px; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit;" class=3D""> <br>Bruce, When it comes to ch=
+ecking consumer reports and disputing negative accounts, we're all familiar=
+ with the BIG 3: TransUnion, Experian, & Equifax. But, did you know that th=
+ere are more than 400 consumer reporting agencies in the United States? The=
+ information contained in many of the reports these agencies provide to oth=
+er companies could many times be the very reason you or your clients are be=
+ing denied for credit as well as the key to successfully removing negative =
+information. <br><br>As we move into the last phase of this course, dispute=
+ flows, I encourage you to take a look at the list of consumer reporting co=
+mpanies I've listed below. Aside from the Big 3, these are a few of the com=
+panies that I frequently request reports from for my clients, depending on =
+the information I'm seeking. Many of these companies report=0Ainformation a=
+nd accounts that you will not find on a bureau report. It is also important=
+ to note that some of these companies are not only reporting agencies, but =
+they also act as data furnishers. For example, LexisNexis is many times the=
+ furnisher of public records information to the bureaus. If you're having a=
+ hard time with a bankruptcy, LexisNexis might be one of the agencies that =
+you would want to contact to request a consumer report and possibly dispute=
+ with before verifying an account with either TransUnion, Equifax or Experi=
+an. If your client has an eviction or a repossession, you just might want t=
+o contact one of the agencies below to tackle that account first. <br><br>I=
+ suggest that you get very familiar with the companies listed below as well=
+ as others out there to find out what type of information they collect and =
+report. FYI...once you have the report, you request verification from these=
+ agencies and follow the dispute process the same as you would a=0Acredit b=
+ureau.=C2=A0=C2=A0</span></div>=0A</div>=0A<!--[if (gte mso 12)&(lte mso 15=
+) ]>=0A<style data-ac-keep=3D"true" data-ac-inline=3D"false"> #text_div3147=
+, #text_div3147 div { line-height: 112% !important; };=0A</style>=0A<![endi=
+f]--></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A=
+<tr style=3D""><td id=3D"layout-row-margin3382" valign=3D"top" style=3D""><=
+table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr id=3D"layout-row3382" class=3D"layout layout-row widget _widg=
+et_break "><td id=3D"layout-row-padding3382" valign=3D"top" style=3D"line-h=
+eight: 0; mso-line-height-rule: exactly;"><table width=3D"100%" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: =
+100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collap=
+se; line-height: 0; mso-line-height-rule: exactly;"><tr><td height=3D"10" s=
+tyle=3D"line-height: 0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A<tr=
+><td align=3D"center" height=3D"1" width=3D"650" style=3D"line-height: 0; m=
+so-line-height-rule: exactly;"> <table align=3D"center" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" height=3D"1" width=3D"650" style=3D"font-size=
+: 14px; min-width: auto!important; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt; border-collapse: collapse; line-height: 0; mso-line-height-rule: exac=
+tly; width: 100%; max-width: 100%;"><tr><td class=3D"break-line" bgcolor=3D=
+"#000000" height=3D"1" width=3D"650" style=3D"line-height: 1px; mso-line-he=
+ight-rule: exactly; height: 1px; width: 650px; background-color: #000000;">=
+ </td>=0A </tr>=0A</table>=0A</td>=0A </tr>=0A<tr><td height=3D"10" style=
+=3D"line-height: 0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A</table=
+>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"lay=
+out-row-margin3395" valign=3D"top" style=3D""><table width=3D"100%" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-wi=
+dth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-=
+row3395" class=3D"layout layout-row widget _widget_picture " align=3D"left"=
+><td id=3D"layout-row-padding3395" valign=3D"top"><table width=3D"100%" bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min=
+-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=
+=3D"image-td" align=3D"left" valign=3D"top" width=3D"650"><img src=3D"https=
+://educreditsolutions.imgus11.com/public//afda6d82968d2285f992f68fc9c16f68.=
+png?r=3D1777581307" alt=3D"" width=3D"650" style=3D"display: block; border:=
+ none; outline: none; width: 650px; opacity: 1; max-width: 100%;"></td>=0A<=
+/tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""=
+><td id=3D"layout-row-margin3392" valign=3D"top" style=3D"padding: 5px;"><t=
+able width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt; border-collapse: initial !important;"><tr id=3D"layout-row3392" cl=
+ass=3D"layout layout-row widget _widget_text style3392" style=3D"margin: 0;=
+ padding: 0;"><td id=3D"layout-row-border3392" valign=3D"top" style=3D"bord=
+er-color: #1f2129; border-style: solid; border-width: 2px;"><table width=3D=
+"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size:=
+ 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr>=
+<td id=3D"layout-row-padding3392" valign=3D"top" style=3D"padding: 5px;"><t=
+able width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr><td id=3D"text_div3160" class=3D"td_text td_block" valign=3D"=
+top" align=3D"left" width=3D"626" style=3D"margin: 0;=0Aoutline: none; padd=
+ing: 0; color: inherit; font-size: 12px; font-weight: inherit; line-height:=
+ 1; text-decoration: inherit; font-family: Arial;"> <div style=3D"margin: 0=
+; outline: none; padding: 0; font-size: 17px;"><div style=3D"margin: 0; out=
+line: none; padding: 0; text-align: center; font-size: 18px;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: bold; line-height: inh=
+erit; text-decoration: inherit; text-align: inherit;" class=3D""><span styl=
+e=3D"color: inherit; font-size: 22px; font-weight: inherit; line-height: in=
+herit; text-decoration: inherit;" class=3D"">Innovis <br></span><span style=
+=3D"color: inherit; font-size: 15px; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit;" class=3D"">(aka*4th Bureau)</span></span><=
+/div>=0A<span style=3D"color: inherit; font-size: 17px; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;" class=3D""><br>Provides=
+ ID verification data to assist with fraud detection and prevention. <br><b=
+r><span style=3D"color: inherit; font-size: inherit; font-weight: bold; lin=
+e-height: inherit; text-decoration: inherit;" class=3D"">Free report: </spa=
+n><br>The company will provide one free report every 12 months if you reque=
+st it. <br><br><span style=3D"color: inherit; font-size: inherit; font-weig=
+ht: bold; line-height: inherit; text-decoration: inherit;" class=3D"">Freez=
+e your report: </span><br>The company will freeze your consumer report if y=
+ou request it. <br><br><span style=3D"color: inherit; font-size: inherit; f=
+ont-weight: bold; line-height: inherit; text-decoration: inherit;" class=3D=
+"">Website </span><br><a href=3D"https://educreditsolutions.acemlna.com/lt.=
+php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2388" data-ac-defau=
+lt-color=3D"1" style=3D"margin: 0;=0Aoutline: none; padding: 0; color: #045=
+fb4; text-decoration: underline;"><span style=3D"color: ; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;">I=
+nnovis.com</span></a> <br><a href=3D"https://educreditsolutions.acemlna.com=
+/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2389" data-ac-d=
+efault-color=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #0=
+45fb4; text-decoration: underline;"><span style=3D"color: ; font-size: inhe=
+rit; font-weight: inherit; line-height: inherit; text-decoration: inherit;"=
+>Request security freeze </span></a><br><br><span style=3D"color: inherit; =
+font-size: inherit; font-weight: bold; line-height: inherit; text-decoratio=
+n: inherit;" class=3D"">Phone</span> <br>800-540-2505 <br><br><span style=
+=3D"color: inherit; font-size: inherit; font-weight: bold; line-height: inh=
+erit; text-decoration: inherit;" class=3D"">Address </span><br>Innovis Cons=
+umer Assistance <br>P.O. Box 1689 </span><br><span style=3D"color:=0Ainheri=
+t; font-size: 17px; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit;" class=3D"">Pittsburgh, PA 15230-1689 </span> <br></div>=0A<=
+/td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</tabl=
+e>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3393" valign=
+=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !import=
+ant;"><tr id=3D"layout-row3393" class=3D"layout layout-row widget _widget_t=
+ext style3393" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border=
+3393" valign=3D"top" style=3D"border-color: #1f2129; border-style: solid; b=
+order-width: 2px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace:=
+ 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding3393" valign=
+=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3161" cla=
+ss=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"626" style=
+=3D"margin: 0;=0Aoutline: none; padding: 0; color: inherit; font-size: 12px=
+; font-weight: inherit; line-height: 1; text-decoration: inherit; font-fami=
+ly: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0; font-size:=
+ 17px;"><div style=3D"margin: 0; outline: none; padding: 0; text-align: cen=
+ter;"><span style=3D"color: inherit; font-size: 22px; font-weight: bold; li=
+ne-height: inherit; text-decoration: inherit; text-align: inherit;">LexisNe=
+xis Risk Solutions </span></div>=0A<span style=3D"color: inherit; font-size=
+: 17px; font-weight: inherit; line-height: inherit; text-decoration: inheri=
+t;" class=3D""><br>Collects information from <span style=3D"color: #b40404;=
+ font-size: inherit; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit;" class=3D"">public records</span> and multiple proprietary =
+data sources. This includes items such as real estate transaction and owner=
+ship data, <span style=3D"color: #b40404; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit;" class=3D"">lien</=
+span>, <span style=3D"color: #b40404; font-size: inherit; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;" class=3D"">judgment</=
+span>, and <span style=3D"color: #b40404; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit;" class=3D"">bankru=
+ptcy</span> records, professional license information, and <span style=3D"c=
+olor: #b40404; font-size: inherit; font-weight: inherit;=0Aline-height: inh=
+erit; text-decoration: inherit;" class=3D"">historical addresses</span> on =
+file. <br><span style=3D"color: inherit; font-size: inherit; font-weight: b=
+old; line-height: inherit; text-decoration: inherit;" class=3D""><br>Free r=
+eport: </span><br>The company will provide one free report every 12 months =
+if you request it. <br><br><span style=3D"color: inherit; font-size: inheri=
+t; font-weight: bold; line-height: inherit; text-decoration: inherit;" clas=
+s=3D"">Freeze your report:</span> <br>The company will freeze your consumer=
+ report if you request it. <br><br><span style=3D"color: inherit; font-size=
+: inherit; font-weight: bold; line-height: inherit; text-decoration: inheri=
+t;" class=3D"">Website </span><br><a href=3D"https://educreditsolutions.ace=
+mlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2390" d=
+ata-ac-default-color=3D"1" target=3D"_blank" style=3D"margin: 0; outline: n=
+one; padding: 0; color: #045fb4; text-decoration: underline;"><span style=
+=3D"color: ;=0Afont-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit;">personalreports.lexisnexis.com </span></a><b=
+r><a href=3D"https://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345=
+422f9a0dc81917526f09&i=3D440A455A11A2391" data-ac-default-color=3D"1" targe=
+t=3D"_blank" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4;=
+ text-decoration: underline;"><span style=3D"color: ; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;">Reque=
+st report form</span></a> and <a href=3D"https://educreditsolutions.acemlna=
+.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2392" data-=
+ac-default-color=3D"1" target=3D"_blank" style=3D"margin: 0; outline: none;=
+ padding: 0; color: #045fb4; text-decoration: underline;"><span style=3D"co=
+lor: ; font-size: inherit; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit;">Instructions</span></a> <br><a=0Ahref=3D"https://edu=
+creditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=
+=3D440A455A11A2393" data-ac-default-color=3D"1" target=3D"_blank" style=3D"=
+margin: 0; outline: none; padding: 0; color: #045fb4; text-decoration: unde=
+rline;"><span style=3D"color: ; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit;">Request security freeze </s=
+pan></a><br><br><span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: bold; line-height: inherit; text-decoration: inherit;" class=3D"">Phon=
+e</span> <br>866-897-8126 <br><br><span style=3D"color: inherit; font-size:=
+ inherit; font-weight: bold; line-height: inherit; text-decoration: inherit=
+;" class=3D"">Address</span> <br>LexisNexis Consumer Center <br>Attn: Full =
+File Disclosure <br>P.O. Box 105108 <br>Atlanta, GA 30348-5108 </span><br><=
+/div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin338=
+3" valign=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: =
+100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initia=
+l !important;"><tr id=3D"layout-row3383" class=3D"layout layout-row widget =
+_widget_text style3383" style=3D"margin: 0; padding: 0;"><td id=3D"layout-r=
+ow-border3383" valign=3D"top" style=3D"border-color: #1f2129; border-style:=
+ solid; border-width: 2px;"><table width=3D"100%" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-tab=
+le-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding338=
+3" valign=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: =
+100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div=
+3151" class=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"626=
+" style=3D"margin: 0;=0Aoutline: none; padding: 0; color: inherit; font-siz=
+e: 12px; font-weight: inherit; line-height: 1; text-decoration: inherit; fo=
+nt-family: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0; fon=
+t-size: 17px; color: #000000; font-family: arial;"> <div style=3D"margin: 0=
+; outline: none; padding: 0; text-align: left; font-family: arial; color: #=
+000000; font-size: 17px; font-style: normal; font-weight: 400;"><div style=
+=3D"margin: 0; outline: none; padding: 0; text-align: center;"><b class=3D"=
+" style=3D"margin: 0; outline: none; padding: 0; font-family: arial; text-d=
+ecoration: inherit; font-size: 22px;">ChexSystems </b></div>=0A <br>Provide=
+s account verification services primarily for financial institutions. Colle=
+cts and reports data on <span style=3D"color: #b40404; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;" clas=
+s=3D"">checking account applications</span>, openings, and closures, includ=
+ing reasons for account closure. When you apply for a new checking account =
+many banks and credit unions will refer to this database to help inform whe=
+ther to approve your new account. <br><br> ChexSystems is affiliated with F=
+idelity National Information Services, Inc. (FNIS)<br><br><b style=3D"margi=
+n: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;">Free report=
+ and score: </b><br> The company will provide one free report every 12 mont=
+hs if you request it. A free score will be provided upon request too.<br><b=
+r><b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: n=
+ormal;">Freeze your report: </b><br> The company will freeze your consumer=
+=0Areport if you request it.<br><br><b style=3D"margin: 0; outline: none; p=
+adding: 0; mso-bidi-font-weight: normal;">Website </b><br><a href=3D"chexsy=
+stems.com" data-ac-default-color=3D"1" style=3D"margin: 0; outline: none; p=
+adding: 0; color: #045fb4; text-decoration: underline;"><span style=3D"colo=
+r: ; font-size: inherit; font-weight: inherit; line-height: inherit; text-d=
+ecoration: inherit;">chexsystems.com</span></a> <br><a href=3D"https://educ=
+reditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D=
+440A455A11A2394" data-ac-default-color=3D"1" style=3D"margin: 0; outline: n=
+one; padding: 0; color: #045fb4; text-decoration: underline;"><span style=
+=3D"color: ; font-size: inherit; font-weight: inherit; line-height: inherit=
+; text-decoration: inherit;">Request report form</span></a> <br><a href=3D"=
+https://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc8191=
+7526f09&i=3D440A455A11A2395" data-ac-default-color=3D"1" style=3D"margin: 0=
+; outline: none; padding: 0; color: #045fb4;=0Atext-decoration: underline;"=
+><span style=3D"color: ; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;">Request score form</span></a> <br>=
+<a href=3D"https://educreditsolutions.acemlna.com/lt.php?s=3Dda50c242234542=
+2f9a0dc81917526f09&i=3D440A455A11A2396" data-ac-default-color=3D"1" style=
+=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-decoration: =
+underline;"><span style=3D"color: ; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;">Security freeze informa=
+tion</span></a> <br><a href=3D"https://educreditsolutions.acemlna.com/lt.ph=
+p?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2397" data-ac-default=
+-color=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4;=
+ text-decoration: underline;"><span style=3D"color: ; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;">Secur=
+ity freeze form</span></a> <br><b style=3D"margin: 0; outline: none; paddin=
+g: 0;=0Amso-bidi-font-weight: normal;"> </b><br><b style=3D"margin: 0; outl=
+ine: none; padding: 0; mso-bidi-font-weight: normal;">Phone</b> <br> 800-42=
+8-9623 or <br> 800-513-7125 <br><b style=3D"margin: 0; outline: none; paddi=
+ng: 0; mso-bidi-font-weight: normal;"> </b><br><b style=3D"margin: 0; outli=
+ne: none; padding: 0; mso-bidi-font-weight: normal;">Address </b><br> ChexS=
+ystems, Inc.<br>Attn: Consumer Relations <br> 7805 Hudson Road, Suite 100 <=
+br> Woodbury, MN 55125 <br></div>=0A<br></div>=0A</td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<t=
+r style=3D""><td id=3D"layout-row-margin3388" valign=3D"top" style=3D"paddi=
+ng: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout=
+-row3388" class=3D"layout layout-row widget _widget_text style3388" style=
+=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border3388" valign=3D"top"=
+ style=3D"border-color: #1f2129; border-style: solid; border-width: 2px;"><=
+table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr><td id=3D"layout-row-padding3388" valign=3D"top" style=3D"pad=
+ding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacin=
+g=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; m=
+so-table-rspace: 0pt;"><tr><td id=3D"text_div3156" class=3D"td_text td_bloc=
+k" valign=3D"top" align=3D"left" width=3D"626" style=3D"margin: 0;=0Aoutlin=
+e: none; padding: 0; color: inherit; font-size: 12px; font-weight: inherit;=
+ line-height: 1; text-decoration: inherit; font-family: Arial;"> <div style=
+=3D"margin: 0; outline: none; padding: 0; font-size: 17px;"><div style=3D"m=
+argin: 0; outline: none; padding: 0; text-align: center; font-size: 22px;">=
+<span style=3D"color: #000000; font-size: inherit; font-weight: bold; line-=
+height: inherit; text-decoration: inherit; text-align: inherit;" class=3D""=
+>Clarity Services </span></div>=0A<span style=3D"color: inherit; font-size:=
+ 17px; font-weight: inherit; line-height: inherit; text-decoration: inherit=
+;" class=3D""><br>Collects and provides information on <span style=3D"color=
+: #b40404; font-size: inherit; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit;" class=3D"">payday loans</span>, <span style=3D"c=
+olor: #b40404; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit;" class=3D"">installment loans</span>, auto lo=
+ans (and leasing), <span style=3D"color: #b40404; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit;" class=3D"=
+">check cashing services</span>, <span style=3D"color: #b40404; font-size: =
+inherit; font-weight: inherit; line-height: inherit; text-decoration: inher=
+it;" class=3D"">rent-to- own transactions</span>, <span style=3D"color: #b4=
+0404; font-size: inherit; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit;" class=3D"">telecommunication account=0Aopenings</span=
+>, and <span style=3D"color: #b40404; font-size: inherit; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;" class=3D"">financial =
+services</span> with an emphasis on the <span style=3D"color: #000000; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: underline;" class=3D"">lower income and subprime</span> consumer market s=
+egments. <br><br><span style=3D"color: inherit; font-size: inherit; font-we=
+ight: bold; line-height: inherit; text-decoration: inherit;" class=3D"">*</=
+span>Clarity Services is owned by Experian. <br><br><span style=3D"color: i=
+nherit; font-size: inherit; font-weight: bold; line-height: inherit; text-d=
+ecoration: inherit;" class=3D"">Free report and score: <br></span>The compa=
+ny will provide one free report every 12 months if you request it. The comp=
+any will also provide a credit risk score if you request it <br><br><span s=
+tyle=3D"color: inherit; font-size: inherit; font-weight: bold; line-height:=
+ inherit;=0Atext-decoration: inherit;" class=3D"">Freeze your report: <br><=
+/span>The company will freeze your consumer report if you request it. <br><=
+br><span style=3D"color: inherit; font-size: inherit; font-weight: bold; li=
+ne-height: inherit; text-decoration: inherit;" class=3D"">Website </span><b=
+r><a href=3D"https://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345=
+422f9a0dc81917526f09&i=3D440A455A11A2398" data-ac-default-color=3D"1" style=
+=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-decoration: =
+underline;"><span style=3D"color: ; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;">ClarityServices.com</sp=
+an></a> <br><a href=3D"https://educreditsolutions.acemlna.com/lt.php?s=3Dda=
+50c2422345422f9a0dc81917526f09&i=3D440A455A11A2399" data-ac-default-color=
+=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-=
+decoration: underline;"><span style=3D"color: ; font-size: inherit; font-we=
+ight: inherit; line-height: inherit;=0Atext-decoration: inherit;">Request s=
+core</span></a> <br><a href=3D"https://educreditsolutions.acemlna.com/lt.ph=
+p?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2400" data-ac-default=
+-color=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4;=
+ text-decoration: underline;"><span style=3D"color: ; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;">Reque=
+st security freeze</span></a> <br><br><span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: bold; line-height: inherit; text-decoration: inh=
+erit;" class=3D"">Phone</span> <br>866-390-3118 <br>(Option 1 for security =
+freeze; Option 4 for report request). <br><br><span style=3D"color: inherit=
+; font-size: inherit; font-weight: bold; line-height: inherit; text-decorat=
+ion: inherit;" class=3D"">Address</span> <br>Clarity Services, Inc. <br>P.O=
+. Box 5717 <br>Clearwater, FL 33758 </span><br></div>=0A</td>=0A</tr>=0A</t=
+able>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A<tr style=3D""><td id=3D"layout-row-margin3391" valign=3D"top" style=3D"=
+padding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt=
+; mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"la=
+yout-row3391" class=3D"layout layout-row widget _widget_text style3391" sty=
+le=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border3391" valign=3D"to=
+p" style=3D"border-color: #1f2129; border-style: solid; border-width: 2px;"=
+><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" sty=
+le=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rs=
+pace: 0pt;"><tr><td id=3D"layout-row-padding3391" valign=3D"top" style=3D"p=
+adding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspac=
+ing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt;=
+ mso-table-rspace: 0pt;"><tr><td id=3D"text_div3159" class=3D"td_text td_bl=
+ock" valign=3D"top" align=3D"left" width=3D"626" style=3D"margin: 0;=0Aoutl=
+ine: none; padding: 0; color: inherit; font-size: 12px; font-weight: inheri=
+t; line-height: 1; text-decoration: inherit; font-family: Arial;"> <div sty=
+le=3D"margin: 0; outline: none; padding: 0;"><div style=3D"margin: 0; outli=
+ne: none; padding: 0; text-align: center;"><span style=3D"color: inherit; f=
+ont-size: 22px; font-weight: bold; line-height: inherit; text-decoration: i=
+nherit; text-align: inherit;" class=3D"">CoreLogic Credco </span></div>=0A<=
+br><span style=3D"color: inherit; font-size: 17px; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit;" class=3D"">Collects and repo=
+rts personal data such as property ownership and home loan obligation recor=
+ds; property legal filings and tax payment status; <span style=3D"color: #b=
+40404; font-size: inherit; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit;" class=3D"">rental applications</span> and <span styl=
+e=3D"color: #b40404; font-size: inherit; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit;" class=3D"">collection accounts</span>;=
+ <span style=3D"color: #b40404; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit;" class=3D"">consumer bankrup=
+tcies</span>, <span style=3D"color: #b40404; font-size: inherit; font-weigh=
+t: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">lie=
+ns</span>, <span style=3D"color: #b40404; font-size: inherit; font-weight: =
+inherit; line-height:=0Ainherit; text-decoration: inherit;" class=3D"">judg=
+ments</span>, and <span style=3D"color: #b40404; font-size: inherit; font-w=
+eight: inherit; line-height: inherit; text-decoration: inherit;" class=3D""=
+>child support obligations</span>. <br><br><span style=3D"color: inherit; f=
+ont-size: inherit; font-weight: bold; line-height: inherit; text-decoration=
+: inherit;" class=3D"">Free report:</span> <br>The company will provide one=
+ free report every 12 months if you request it. <br><br><span style=3D"colo=
+r: inherit; font-size: inherit; font-weight: bold; line-height: inherit; te=
+xt-decoration: inherit;" class=3D"">Freeze your report: </span><br>The comp=
+any will freeze your consumer report if you request it. <br><br><span style=
+=3D"color: inherit; font-size: inherit; font-weight: bold; line-height: inh=
+erit; text-decoration: inherit;" class=3D"">Website </span><br><a href=3D"h=
+ttps://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917=
+526f09&i=3D440A455A11A2401" data-ac-default-color=3D"1"=0Atarget=3D"_blank"=
+ style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-decora=
+tion: underline;"><span style=3D"color: ; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit;">CoreLogic.com/Cre=
+dco</span></a> <br><a href=3D"https://educreditsolutions.acemlna.com/lt.php=
+?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2402" data-ac-default-=
+color=3D"1" target=3D"_blank" style=3D"margin: 0; outline: none; padding: 0=
+; color: #045fb4; text-decoration: underline;"><span style=3D"color: ; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit;">Request security freeze </span></a><br><br><span style=3D"color=
+: inherit; font-size: inherit; font-weight: bold; line-height: inherit; tex=
+t-decoration: inherit;" class=3D"">Phone </span><br>877-532-8778 <br><br><s=
+pan style=3D"color: inherit; font-size: inherit; font-weight: bold; line-he=
+ight: inherit; text-decoration: inherit;" class=3D"">Address </span><br>Cor=
+eLogic Credco,=0ALLC <br>P.O. Box 509124 <br>San Diego, CA 92150 </span><br=
+></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</t=
+r>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3=
+394" valign=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D=
+"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width=
+: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: init=
+ial !important;"><tr id=3D"layout-row3394" class=3D"layout layout-row widge=
+t _widget_text style3394" style=3D"margin: 0; padding: 0;"><td id=3D"layout=
+-row-border3394" valign=3D"top" style=3D"border-color: #1f2129; border-styl=
+e: solid; border-width: 2px;"><table width=3D"100%" border=3D"0" cellpaddin=
+g=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-ta=
+ble-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding33=
+94" valign=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width:=
+ 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_di=
+v3162" class=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"62=
+6" style=3D"margin: 0;=0Aoutline: none; padding: 0; color: inherit; font-si=
+ze: 12px; font-weight: inherit; line-height: 1; text-decoration: inherit; f=
+ont-family: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0;"><=
+div style=3D"margin: 0; outline: none; padding: 0; text-align: center;"><sp=
+an style=3D"color: inherit; font-size: 22px; font-weight: bold; line-height=
+: inherit; text-decoration: inherit; text-align: inherit;">SageStream </spa=
+n></div>=0A<br><span style=3D"color: inherit; font-size: 17px; font-weight:=
+ inherit; line-height: inherit; text-decoration: inherit;" class=3D"">This =
+reporting company collects information from, and provides supplementary con=
+sumer reports to, auto lenders, credit card issuers, retailers, utilities a=
+nd mobile phone service providers among other service providers. <br><br>Sa=
+geStream is a subsidiary of ID Analytics. ID Analytics is a Symantec Compan=
+y. <br><br><span style=3D"color: inherit; font-size: inherit; font-weight: =
+bold; line-height: inherit; text-decoration: inherit;" class=3D"">Free repo=
+rt: </span><br>The company will provide one free report every 12 months if =
+you request it. <br><br><span style=3D"color: inherit; font-size: inherit; =
+font-weight: bold; line-height: inherit; text-decoration: inherit;" class=
+=3D"">Freeze your report: </span><br>The company will freeze your consumer =
+report if you request it. <br><br><span style=3D"color: inherit; font-size:=
+ inherit; font-weight: bold;=0Aline-height: inherit; text-decoration: inher=
+it;" class=3D"">Website</span> <br><a href=3D"https://educreditsolutions.ac=
+emlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2403" =
+data-ac-default-color=3D"1" style=3D"margin: 0; outline: none; padding: 0; =
+color: #045fb4; text-decoration: underline;"><span style=3D"color: ; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;">SageStream</span></a> <br><a href=3D"https://educreditsolutions.a=
+cemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2404"=
+ data-ac-default-color=3D"1" style=3D"margin: 0; outline: none; padding: 0;=
+ color: #045fb4; text-decoration: underline;"><span style=3D"color: ; font-=
+size: inherit; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;">Request report</span></a> <br><a href=3D"https://educreditsoluti=
+ons.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A=
+2405" data-ac-default-color=3D"1" style=3D"margin: 0; outline: none;=0Apadd=
+ing: 0; color: #045fb4; text-decoration: underline;"><span style=3D"color: =
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;">Request security freeze </span></a><br><br><span style=3D=
+"color: inherit; font-size: inherit; font-weight: bold; line-height: inheri=
+t; text-decoration: inherit;" class=3D"">Phone</span> <br>888-395-0277 <br>=
+<br><span style=3D"color: inherit; font-size: inherit; font-weight: bold; l=
+ine-height: inherit; text-decoration: inherit;" class=3D"">Address </span><=
+br>SageStream, LLC <br>Consumer Office <br>P.O. Box 503793 <br>San Diego, C=
+A 92150 </span> <br></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</t=
+able>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D=
+"layout-row-margin3384" valign=3D"top" style=3D"padding: 5px;"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; bo=
+rder-collapse: initial !important;"><tr id=3D"layout-row3384" class=3D"layo=
+ut layout-row widget _widget_text style3384" style=3D"margin: 0; padding: 0=
+;"><td id=3D"layout-row-padding3384" valign=3D"top" style=3D"padding: 5px;"=
+><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" sty=
+le=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rs=
+pace: 0pt;"><tr><td id=3D"text_div3152" class=3D"td_text td_block" valign=
+=3D"top" align=3D"left" width=3D"630" style=3D"margin: 0; outline: none; pa=
+dding: 0; color: inherit; font-size: 12px; font-weight: inherit; line-heigh=
+t: 1; text-decoration: inherit; font-family: Arial;"> <div style=3D"margin:=
+ 0; outline: none; padding: 0; font-size: 17px; color: #000000; font-family=
+: arial;"><span style=3D"color:=0Ainherit; font-size: 17px; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit; font-family: arial; =
+font-style: normal;"><span style=3D"color: #000000; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit; font-fam=
+ily: arial;">Bruce, </span><span style=3D"color: #000000; font-size: inheri=
+t; font-weight: 400; line-height: inherit; text-decoration: inherit; font-f=
+amily: arial;">I=E2=80=99d love to hear the ways in which you=E2=80=99ve be=
+en able to benefit from this course content so far and/or how you feel you =
+can use this content moving forward. </span></span><span style=3D"color: #0=
+00000; font-size: 17px; font-weight: 400; line-height: inherit; text-decora=
+tion: inherit; font-family: arial; font-style: normal;"><span style=3D"colo=
+r: inherit; font-size: 17px; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial; font-style: normal;">Feel free =
+to reach out to me if you have any questions or to=0Asimply share your thou=
+ghts, Ah Ha Moments, and Successes at <span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit; font-family: arial;"><a href=3D"mailto:elle@educreditsolutions.com=
+" data-ac-default-color=3D"1" target=3D"_blank" style=3D"margin: 0; outline=
+: none; padding: 0; color: #045fb4; text-decoration: underline; font-family=
+: arial; font-weight: inherit;"><span style=3D"color: ; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit;">ell=
+e@educreditsolutions.com</span></a>.</span></span> </span> <br></div>=0A</t=
+d>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr styl=
+e=3D""><td id=3D"layout-row-margin3385" valign=3D"top" style=3D""><table wi=
+dth=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font=
+-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;=
+"><tr id=3D"layout-row3385" class=3D"layout layout-row widget _widget_break=
+ "><td id=3D"layout-row-padding3385" valign=3D"top" style=3D"line-height: 0=
+; mso-line-height-rule: exactly;"><table width=3D"100%" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; line=
+-height: 0; mso-line-height-rule: exactly;"><tr><td height=3D"10" style=3D"=
+line-height: 0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A<tr><td ali=
+gn=3D"center" height=3D"1" width=3D"650" style=3D"line-height: 0; mso-line-=
+height-rule: exactly;"> <table align=3D"center" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" height=3D"1" width=3D"650" style=3D"font-size: 14px; =
+min-width: auto!important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; bo=
+rder-collapse: collapse; line-height: 0; mso-line-height-rule: exactly; wid=
+th: 100%; max-width: 100%;"><tr><td class=3D"break-line" bgcolor=3D"#000000=
+" height=3D"1" width=3D"650" style=3D"line-height: 1px; mso-line-height-rul=
+e: exactly; height: 1px; width: 650px; background-color: #000000;"> </td>=
+=0A </tr>=0A</table>=0A</td>=0A </tr>=0A<tr><td height=3D"10" style=3D"line=
+-height: 0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A</table>=0A</td=
+>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-=
+margin3381" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" bord=
+er=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-=
+width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse:=
+ initial !important;"><tr id=3D"layout-row3381" class=3D"layout layout-row =
+widget _widget_text style3381" style=3D"margin: 0; padding: 0;"><td id=3D"l=
+ayout-row-padding3381" valign=3D"top" style=3D"padding: 0;"><table width=3D=
+"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size:=
+ 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr>=
+<td id=3D"text_div3149" class=3D"td_text td_block" valign=3D"top" align=3D"=
+left" width=3D"650" style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: 12px; font-weight: inherit; line-height: 1; text-decorat=
+ion: inherit; font-family: Arial;"> <div style=3D"margin: 0; outline: none;=
+ padding: 0; font-size: 12px;" class=3D""><span style=3D"color: inherit; fo=
+nt-size: 12px; font-weight:=0Ainherit; line-height: inherit; text-decoratio=
+n: inherit;" class=3D""> <div style=3D"margin: 0; outline: none; padding: 0=
+; text-align: center;" class=3D"">Copyright =C2=A9 2019 EduCredit Solutions=
+. All rights reserved.<br class=3D"">Services bought to you by Ellevation C=
+oaching & Consulting<br class=3D""><br class=3D""></div>=0A<div style=3D"ma=
+rgin: 0; outline: none; padding: 0; text-align: center;" class=3D""> <span =
+style=3D"color: #000000; font-size: 12px; font-weight: 400; line-height: in=
+herit; text-decoration: inherit; font-family: arial; font-style: normal;">V=
+isit Us Online at </span><a href=3D"https://educreditsolutions.acemlna.com/=
+lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D440A455A11A2406" data-ac-de=
+fault-color=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #04=
+5fb4; text-decoration: underline; font-family: arial; font-weight: 400; fon=
+t-size: 12px; font-style: normal;" target=3D"_blank"><span style=3D"color: =
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;">www.educreditsolutions.com</span></a> <br><br class=3D"">=
+</div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: ce=
+nter;" class=3D"">For information regarding 1-on-1 Coaching, Staff Training=
+ and Services, you can schedule a discovery call at <a href=3D"https://educ=
+reditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D=
+440A455A11A2407" data-ac-default-color=3D"1" class=3D"" target=3D"_blank" s=
+tyle=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-decorati=
+on: underline;"><span style=3D"color: ; font-size: inherit; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit;">bit.ly/discoverycal=
+lwithelle</span></a></div>=0A<div style=3D"margin: 0; outline: none; paddin=
+g: 0; text-align: center;" class=3D""><br class=3D"">Contact Us<br class=3D=
+""></div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align:=
+ center;" class=3D""><a href=3D"mailto:support@educreditsolutions.com" data=
+-ac-default-color=3D"1" class=3D"" style=3D"margin: 0; outline: none; paddi=
+ng: 0; color: #045fb4; text-decoration: underline;" target=3D"_blank"><span=
+ style=3D"color: ; font-size: inherit; font-weight: inherit; line-height: i=
+nherit; text-decoration: inherit;">support@educreditsolutions.com</span></a=
+></div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: c=
+enter;" class=3D"">Direct: (225) 620-6202<br class=3D"">Toll-Free: 1-800-37=
+3-8491<br class=3D""></div>=0A </span></div>=0A</td>=0A</tr>=0A</table>=0A<=
+/td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-r=
+ow-margin3380" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; m=
+in-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collap=
+se: initial !important;"><tr id=3D"layout-row3380" class=3D"layout layout-r=
+ow widget _widget_picture style3380" align=3D"center" style=3D""><td id=3D"=
+layout-row-padding3380" valign=3D"top" style=3D"padding: 20px 0 0 20px;"><t=
+able width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr><td class=3D"image-td" align=3D"center" valign=3D"top" width=
+=3D"630"><img src=3D"https://educreditsolutions.imgus11.com/public//2a0ea3f=
+14572e3829345d5f92f330073.jpg?r=3D973829796" alt=3D"" width=3D"176" style=
+=3D"display: block; border: none; outline: none; width: 176px; opacity: 1; =
+max-width: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</t=
+d>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</div>=0A<img src=3D"https://educreditsolutio=
+ns.acemlna.com/lt.php?nl=3D11&c=3D440&m=3D455&s=3Dda50c2422345422f9a0dc8191=
+7526f09&l=3Dopen" border=3D"0" width=3D"1" height=3D"1" style=3D"display:bl=
+ock;width:1px!important;min-width:1px!important;max-width:1px!important;hei=
+ght:1px!important;border:0;overflow:hidden;" /><br /><div id=3D"ac-footer" =
+style=3D"clear:both;background-color:inherit;background:inherit;min-width:1=
+00%;mso-table-lspace:0pt;mso-table-rspace:0pt;padding:20px;color:#000000;fo=
+nt-size:11px;font-family:arial,helvetica,sans-serif;line-height:140%;line-h=
+eight:1.4;text-align:center;box-sizing:border-box;">=0A=09<center>=0A=09=09=
+Sent to: <span style=3D"font-size:11px;font-family:arial,helvetica,sans-ser=
+if;font-weight:normal;text-decoration:none;outline:none;">bruce.k.cosma@gma=
+il.com</span>=0A=09=09<br>=0A=09=09<br>=0A=09=09<a href=3D"http://educredit=
+solutions.acemlna.com/proc.php?nl=3D11&c=3D440&m=3D455&s=3Dda50c2422345422f=
+9a0dc81917526f09&act=3Dunsub" style=3D"font-size:11px;font-family:arial,hel=
+vetica,sans-serif;font-weight:bold;text-decoration:underline;"><span style=
+=3D"font-weight:bold;text-decoration:underline;">Unsubscribe</span></a>=0A=
+=09=09<br>=0A=09=09<br> EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #3=
+10, Baton Rouge, Louisiana 70809, United States=0A=09</center>=0A</div>=0A<=
+br clear=3D"all" /></body>=0A</html>
+--_=_swift-5314046075ebe1232ed9a74.84514303_=_--
+

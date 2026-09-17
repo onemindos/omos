@@ -1,0 +1,168 @@
+a 
+	{			
+		color: #A40F15;
+		font-size: 8pt;
+		text-decoration: none;
+		border-bottom-style: solid;
+		border-bottom-width: 1;
+				
+	}
+			
+	a:hover
+		{
+			text-decoration:none;
+			border-bottom-style: dashed;
+			border-bottom-width:1;
+		}				
+
+body
+	{
+		background: url(../Images/B0.jpg);
+		background-color:#FFFFFF;		
+	}
+	
+div
+	{
+		margin-left: 5;
+		margin-right: 5;
+	}
+		
+	.divCategories
+		{
+		}
+
+	.divNavigation
+		{
+		}
+		
+h1	
+	{
+		color: #505937;
+		font-size: small;
+		margin-left: 300;
+		margin-top: 100;
+	}	
+		
+hr
+	{
+		border: 0;
+		border-bottom-color: #A40F15;
+		border-bottom-style: dashed;
+		border-bottom-width: 1;
+		height: 0;
+		margin: 0;
+		padding: 0;
+		width: 100%;		
+	}
+p
+	{
+		margin-left: 10;
+		margin-right: 10;
+		margin-top: 5;		
+	}
+	
+	.pContent
+		{
+			margin-bottom: 0;
+			margin-top: 0;				
+		}
+	
+table
+	{		
+		background-color: #FFFFFF;
+		border-color: #A40F15;
+		border-style: solid;
+		border-width: 1;
+		font-family: Verdana, Arial, MS Sans Serif;
+		font-size: 10pt;
+		margin-left: auto;
+		margin-right: auto;
+		width: 780;	
+		padding: 0;
+	}
+
+td
+	{
+		margin-left: 10;
+		margin-right: 10;	
+	}
+	
+	.tdContent
+		{
+			border-left-color: #A40F15;
+			border-left-style: dashed;
+			border-left-width: 1;
+			margin-left: 10;
+			margin-right: 10;
+			vertical-align: top;
+			width: 660;			
+		}
+		
+	.tdFooter
+		{
+			background: url(../Images/H1.jpg);
+			color: #D76062;
+			font-size: 8pt;
+			height: 24;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.tdFooter a
+			{
+				color: #D76062;
+				font-weight: normal;
+			}
+					
+	.tdHeader 
+		{
+			background-color: #FFFFFF;
+			background: url(../Images/H0.jpg);
+			background-repeat: no-repeat;
+			color: #D76062;
+			height: 150;
+			vertical-align: bottom;		
+			text-align: right;	
+		}
+
+		.tdHeader a
+			{
+				color: #D76062;
+				font-weight: normal;
+			}
+				
+	.tdLeft
+		{
+			background-color: #FFFFFF;
+			padding-left: 10;
+			overflow: hidden;
+			text-align:	left;
+			vertical-align: top;
+			width: 140; 			 	
+		}
+		
+	.tdRow
+		{
+			background: url(../Images/H1.jpg);
+			color: #D76062;
+			font-size: 8pt;
+			height: 24;
+			margin: 0;
+			text-align: center;
+			vertical-align: middle;
+		}
+		
+		.tdRow a
+			{
+				color: #D76062;
+				font-weight: normal;
+				margin-Top: 0;
+			}
+
+ul
+	{
+		
+		font-size: xx-small;
+		list-style-type: disc;
+		margin-right: 10;
+		text-align: left;
+	}

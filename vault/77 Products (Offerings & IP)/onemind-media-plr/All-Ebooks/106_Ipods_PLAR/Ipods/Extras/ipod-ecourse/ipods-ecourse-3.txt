@@ -1,0 +1,34 @@
+Subject: {FIRSTNAME}, here's how you go about getting the most from your ipod ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my ipods 101 ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - Making the most of itunes.
+2. Part 2 - Organizing and transferring music.
+3. Part 3 - Use your ipod as a storage device.
+4. Part 4 - Copy songs from your ipod to your computer.
+5. Part 5 - Use your ipod for map directions.
+
+Let's go ahead & get started today with "Part 3 - Use your ipod as a storage device".
+
+Part 3 - Use your ipod as a storage device.
+============================
+You can use your iPod as storage drive.  Depending on the type of iPod that you have, it can be used as a flash drive or as a hard drive.  This means that you have the ability to store and transfer files and data.  This is known as disk mode.  Here's a little tip:  use iTunes to transfer files of music from your computer to your iPod.  You won't be able to see the files as they are copied from iTunes to your iPod so be patient.  If you copy your music files to your iPod using an Explorer window you'll find that you won't be able to play them on your iPod.
+
+The following steps will show you how to use your iPod as a storage drive:
+
+·  Connect your iPod to the computer.  If iTunes doesn't open automatically, open it manually by clicking on it.
+·  Set your iTunes preferences.  Find the edit menu on the Windows toolbar.  Choose preferences.  If you are using a Mac you can go directly to the iTunes menu to choose preferences.  For both a PC and Mac, click on the iPod button.
+·  Choose the enable disk use or manually manage songs and playlists option (do this for every iPod model except the iPod shuffle).  Both of these options will let you use your iPod as a drive.  If you choose manually manage songs and playlists you won't automatically update your iPod with the songs that you have in your iTunes library.  If you are going to be automatically updating your iPod with new songs, you will want to use the enable disk use option instead.
+·  For the iPod Shuffle.  Click on enable disk use.  Adjust the storage allocation slider to the exact amount that you want to be used by your audio files and the amount that you want to be used by your data files.
+·  You will now find the iPod icon on your desktop as well as in my computer in Windows.  All you need to do is double click on the icon and drag your files from or to the iPod window to copy them over.
+·  Remember to eject your iPod before you disconnect it from the computer.
+
+Next time we'll be discussing a little about "Copy songs from your ipod to your computer".
+
+For more information about this part of Use your ipod as a storage device, please refer to my definitive guide to ipods at <YOUR WEBSITE URL>
+
+Take Care,
+<YOUR NAME>
+<WEBSITE>

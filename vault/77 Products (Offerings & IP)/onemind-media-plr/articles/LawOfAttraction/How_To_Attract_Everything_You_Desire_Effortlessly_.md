@@ -1,0 +1,122 @@
+# Title:
+
+How To Attract Everything You Desire Effortlessly!
+
+Word Count:
+732
+
+Summary:
+Be Simply Irresistible . . .
+
+How To Attract Everything You Desire Effortlessly!
+
+1. Create an environment that naturally pulls you forward so things like commitment and discipline are optional. Being pulled forward is attractive, pushing forward is not.
+
+2. Over respond to every event. By over responding instead of overacting, you evolve which is very attractive.
+
+3. Build reserves in every area of your life. Having enough is not nearly enough for you to be Irresisti...
+
+Keywords:
+Coach,  Money, Attraction, Needs, Truth, Values, Lifestyle, Simplify
+
+Article Body:
+Be Simply Irresistible . . .
+
+How To Attract Everything You Desire Effortlessly!
+
+1. Create an environment that naturally pulls you forward so things like commitment and discipline are optional. Being pulled forward is attractive, pushing forward is not.
+
+2. Over respond to every event. By over responding instead of overacting, you evolve which is very attractive.
+
+3. Build reserves in every area of your life. Having enough is not nearly enough for you to be Irresistible Attractive. Stop running your life on adrenaline.
+
+4. Add value just for the joy of it. When you add value just because you enjoy it, people are naturally attracted to you.
+
+5. Market your talents shamelessly. If you are embarrassed about what you do , you won�t be very attractive. 
+
+6. Become irresistible attractive to yourself. How can you attract others if you don�t feel irresistible attractive to yourself?
+
+7. Get a fulfilling life, not just an impressive lifestyle. A great lifestyle is attractive, lifestyles can be seductive.
+
+ 8. Deliver twice what you promise.When you consistently deliver more than was expected, new customers are drawn to you.
+
+9. Unhook yourself from the future. Attraction works in the present, not in the future.
+
+10. Eliminate delay. Time is expensive and delays are very unattractive.
+
+11. Get your personal needs met, once and for all. If you have unmet needs, you will attract others in the same position. Needs are not optional. Create a Sass!
+
+12. Tolerate nothing. When you put up with something, it costs you. Costs are expensive and very unattractive.
+
+13. Show others how to please you. Don�t make them guess.
+
+14. Endorse your worst weakness and shadow. When you accept and honor the worst part of yourself you are free and more accepting of others. 
+
+15. Sensitize yourself. The more you feel, the more you notice and respond to the many subtle opportunities in the present. 
+
+16. Perfect your environment. Create an environment that brings out your brilliance versus one that drains you.
+
+17. See how perfect the present really is especially when it is clearly not.
+
+18. Orient exclusively around your values. When you spend your days doing what fulfills you, you are a magnet for attraction.
+
+19. Simplify everything. Abandon the non essentials and leave room for you to attract.
+
+20. Master your craft. Being the best at what you do is the easiest way to become successful.
+
+21. Recognize and tell the truth. The truth is the most attractive thing of all, and it requires skill and awareness.
+
+22. Be more human. When you are genuine, you are attractive. 
+
+Are You A Coaching Candidate?
+
+1. Do you spend your day putting out fires?
+
+2. Do you have any concerns about your business running at maximum profitability?
+
+3. Do you run your business on the edge?
+
+4. Do the same problems continually resurface?
+
+5. Do you have difficulty finding someone you trust who can give you an objective viewpoint and bounce ideas off of?
+
+6. Is your business running you?
+
+7. Do you find that you are unable to make the most of all the opportunities in your life?
+
+8. Do you experience roller coaster highs and lows in your business?
+
+9. Do you have a lone ranger lifestyle?
+
+10. Do you allow your goals and purpose to get sidetracked?
+
+11. Do you lack having a clear, measurable action plan to fulfill your goals?
+
+12. Do you lack structure?
+
+13. Do you lack inner fulfillment?
+
+14. Do you spend most of your day working "in" your business instead of "on" it?
+
+15. Are you a workaholic?
+
+16. Are you experiencing a lack of balance in your life and business?
+
+17. Are you committed to growing yourself and your company?
+
+18. Are you coachable? (Are you willing to hear and act on another's person's viewpoint?)
+
+19. Do you lack a clear financial plan for your future?
+
+20. Are you willing to be truthful and restore your integrity?
+
+* If you answered yes to more than three of these questions you can benefit from a coach.
+
+Questions A Coach May Ask You:
+
+* What five opportunities are you leaving on the table?
+* How might you sabotage our professional relationship?
+* How have you been motivated in the past to reach difficult goals or make difficult decisions? How can we best utilize that motivation now?
+* How would you do this differently if you were willing to let it be easy?
+* What would happen if you showed up ten times more bolder this week in every aspect of your life?
+* What are the 10 things you are tolerating or putting up with that are preventing you from performing at your best?

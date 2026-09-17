@@ -1,0 +1,36 @@
+# Title:
+
+Where is Happiness?
+
+Word Count:
+862
+
+Summary:
+How to Find Truth, Meaning, and Happiness in a Mixed Up World
+
+Keywords:
+Happiness, Happy, Releasing Desire, Overcoming Vices, Finding Life's Purpose, Building Success
+
+Article Body:
+Do you move through life feeling everyday is the same? Like some repeated pattern that goes on and on? For some people, there's nothing new to do under the sun, and nowhere to go. Everything is just boring, boring, boring. They work so hard to earn enough money to play, but yet their playtime passes so fast. Suffer five days, enjoy two days. Sometimes, to break the monotony, they seek thrill through intoxicants (alcohol, smoke), sex, and even drugs. For these temporary pleasures, it feels exciting while it's happening, but once it's over, the same pattern of meaninglessness sets in, and they're left thinking, "When can I get the next high?"
+
+Perhaps you will recognize this scene... Two old men are sitting on a bus. As the bus passes by the red-light district, one old man says to the other, "Hey... aren't you going to see the chickens (prostitute) today?" The other man raises an eyebrow... a spark in his wrinkled eyes, "Yes, yes, I will be going this afternoon!" The first old man smirks, and says, "You didn't even bring your medicine, how can you DO IT?"
+
+For some people, their lust is so strong, that they borrow money from family and friends, just to visit brothels. You will see this pattern in addicts. Drug addicts, sex addicts, alcohol addicts. They're always looking for the greater thrill and the next high, and that's what sets their life on a downward spiral. They waste their time, energy, and money, instead of using it to build success.
+
+For life to have zest, everyone needs that natural feeling of drive, anticipation, and excitement. When one does not know how to get it naturally, one may resort to vices to stimulate that sense of being fully alive, desperately trying to bring some meaning into life. But you see, happiness is within you... If you can�t satisfy your wants, then the other way to happiness is to release them. Let go of that which you must have. Shakyamuni Buddha said that, "All desire leads to suffering..." Suffering because you crave what you do not have. And let me ask you this: Is this yearning self-created? Or something imposed on you by the outside world? Perhaps it's the outside world's fault because other people keep flaunting their luxuries and exotic experiences. But surely, we create this yearning within ourselves. It is within our power to control it, or release it altogether.
+
+Lord Richard Layard, Professor from the London School of Economics, a leading happiness researcher, says, "Happiness is a balance between your expectations and your attainments. One way is to get what you want. The other, is liking what you get."
+
+Many of our desires are misplaced. We think getting them will bring us happiness, but that is an illusion. These misplaced desires are nothing more than temporary pleasures. You don't need to satisfy your desires to be happy; you need only release them. Do you need the attention of the opposite sex? No, as you get older, your body parts will sag, and the opposite sex will pay less attention to you. Must you get laid to be happy? No, as you age, your sex hormones will lessen, and so will your desire to mate. Must you wait till you have a million bucks? Nope. Historical and worldwide research shows that above US$15,000 a year, higher income is no guarantee of greater happiness.
+
+The people who feel good everyday, without resorting to vices, have one mental characteristic in common. They have a dream, and they know what they want to achieve in life. This sense of purpose drives them; gives meaning to their existence. They have discovered their soul's calling, and are living life to the fullest by following it. This is different from those who are 'party animals', "living life to the fullest" by drowning in deafening music, and shaking till the sun rises... That's not living, that's dying.
+
+If you want to find true meaning and happiness in life, then you've got to uncover your life's purpose. For each of us has a unique destiny. A path made specially for you to walk on this journey through life. Follow it, and you arrive in paradise. Ignore it, and you continue to wander... wasting time, and life itself. 
+
+1. You need to know what you�re made of. Your talents, strengths, and abilities. 
+2. Craft a vision for yourself, and visualize that dream in your mind.
+3. Work out a plan that sets your goals and decides what actions you must take to achieve them.
+4. Tell your closest friends about it, and commit yourself to taking five of the planned actions everyday to build your dream.
+
+When you see that your actions are creating results, it will be a natural source of excitement and inspiration. Instead of spending time, energy, and money on vices, you invest it in creating an upward spiral of success. By releasing your desire for temporary pleasures, you kick your bad habit out the door. By choosing to live your purpose and answer your soul�s calling, you break free from the chains of monotony, and find truth, meaning, and happiness in life.

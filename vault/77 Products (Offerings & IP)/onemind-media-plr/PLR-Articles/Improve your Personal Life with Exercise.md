@@ -1,0 +1,25 @@
+# Improve your Personal Life with Exercise
+
+Exercise is good for everyone young and old. When having a regular exercise program through the week you�ll notice a big change in how you feel, and it will boost your energy up, as you feel better.
+
+There are many ways an exercise program can help you. Before starting a regular program, you might need to talk to your physician to see if he/she has any recommendations. Many doctors are opening up their own exercise programs. 
+
+Keeping active is the key as moving to keep those joints flexible while strengthening the muscles is as well.
+
+Are you having problems with shortness of breathe, do you have muscles that are hurting you? Soreness is often relieved by exercise. Exercise has reduced the risk of cancer, heart disease and so on. By keeping active, you are lowering your risks, as well as improving your personal life. Just going to work or doing housework on a daily basis is not exercise.  Exercise is working your heart, and using those stiff muscles, try exercising for a month on a daily routine besides working and see how you feel.
+
+Exercise can help you sleep better, relieves stress; lowers pain and it will help improve your health so you live longer. Self-esteem is another reason why you should exercise on a daily basis.
+
+If you happen to be close to becoming a diabetic or already have, diabetes type 2 exercises will help you. When exercising with a daily routine and watching your diet it can lower your glucose level by helping you lose weight and keeping it off.
+
+Colds and the flu can be lessened by exercising and moving around. Take a moderate walk for 30 minutes each day and taking in some of that outside air and the moving you�ll have more of a chance to get rid of all those nasty germs.
+
+A person can lose weight with exercise and tone up those loses muscles along with building up their strength. If you find a program that you like, you will enjoy the memorable experience. If you watch your diet cutting down the calories it will help you accomplish all the things that you want to see happen and help keep it off. By losing weight and toning up, you will feel better just being yourself. Your energy will rocket higher as you begin to get that self-esteem up and going. A person has to feel good about them self in order to be happy. Take care of yourself and you will become a better person.
+
+When a person has had a heart attack they will need to get active again more and more as they are healing. Exercise will strengthen the muscles around your heart and you�ll feel more in control.  
+
+Your doctor will probably give you some light exercising to do, as you get stronger. Be sure to get your doctor�s approval on how much exercising and the limit as you begin to feel better. Don�t push yourself, take things slow and you�ll soon be able to do more.
+
+How about arthritis, do you suffer pain from stiff joints caused by arthritis? Exercising on a regular daily schedule can help the pain. As well, your body will tone as you lose weight, and gain self-esteem. When doing exercises choose a program at first, which is designed for beginners. Take things slow because those joints are stiff. By strengthening, making those joints more flexible you�ll be working on relieving some of your stress that is being caused from the pain.
+
+Get going and start exercising for your health and well-being. Find a program that you like and stay with it; you�ll feel better, look better and live longer.

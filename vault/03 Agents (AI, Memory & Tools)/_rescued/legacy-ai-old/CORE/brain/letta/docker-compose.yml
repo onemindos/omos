@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  letta:
+    image: letta/letta:latest
+    container_name: letta
+    restart: unless-stopped
+    ports:
+      - "8283:8283"
+    environment:
+      - LETTA_SERVER_PORT=8283
+      - LETTA_SERVER_HOST=0.0.0.0
+    volumes:
+      - letta_data:/root/.letta
+    networks:
+      - legacy_network
+
+volumes:
+  letta_data:
+    driver: local
+
+networks:
+  legacy_network:
+    external: true

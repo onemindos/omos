@@ -1,0 +1,34 @@
+# Title:
+
+Healthy Grief, Unhealthy Grief
+
+Word Count:
+754
+
+Summary:
+We all know that it is in one�s highest good to grieve the loss of a relationship. Healthy grief releases feelings rather than allowing them to get stuck in the body. Healthy grief allows the griever to heal the loss and move on with life.
+
+Keywords:
+overcoming grief, sorrow
+
+Article Body:
+We all know that it is in one�s highest good to grieve the loss of a relationship. Healthy grief releases feelings rather than allowing them to get stuck in the body. Healthy grief allows the griever to heal the loss and move on with life.
+
+Yet grief is not always healing. Many of us have known people who were stuck in their grief, seemingly locked into the past and unable to move forward in their lives.
+
+What is the difference between those who feel their grief and move on and those who get stuck in it? The difference lies in what they believe they have lost. When people believe they have lost their source of love, their grief will feel unending.
+
+Gary had been in a three-year relationship with Samantha when Samantha decided to end the relationship. Gary was devastated. In this relationship, like in his past relationships, Gary was a taker � always trying to get love but unable to give love or share love. Samantha gave him a lot of love, but she often felt very lonely with him. Gary was devastated when she left because his source of love was gone. He was not grieving the loss of Samantha as a person he loved. He was grieving the loss of her love for him. He was grieving as a lost wounded child rather than as a loving adult.
+
+As a result, Gary became stuck in his grief. He was stuck in feeling like a victim � stuck in �poor me.� Gary had never done the inner work to develop an adult part of himself that could bring love to himself and share it with others. He felt lost, abandoned, and hurt. No matter how much he cried, no healing occurred. Because he was abandoning himself, he just continued to feel alone and despairing. Sometimes he was angry at Samantha for abandoning him and other times he was angry at himself for not being a better partner. He had many regrets that plagued him, and a constant inner refrain was, �If only I had��� �If only I had listened to her more, maybe she wouldn�t have left.� If only I had told her how beautiful she is, maybe she wouldn�t have left.�
+
+Frank, on the other hand, was in deep grief over the death of his beloved wife, Beth. He had loved Beth with his whole heart and he missed her terribly. Yet Frank�s grief was totally different than Gary�s grief. Frank missed Beth�s laugh. He missed her joy, her caring for people, her sense of wonder. He missed her as a person, and he missed being able to share his love with her. Frank had no regrets because he had not been a taker. He had loved Beth totally and was deeply grateful for the time he had with her. But Frank was actually fine. His grief came in waves, and he cried when it came. Then it washed through and he was fine again.
+
+Frank was fine because Beth had not been the source of his sense of self. Frank had a strong loving inner adult who was connected with a spiritual source of love and wisdom. This was his Source, not Beth. Frank was a person who took full responsibility for his own pain and joy. He had never made Beth responsible for his feelings or his wellbeing.
+Because he had never abandoned himself, he could miss Beth and grieve for her without feeling abandoned, lost, victimized and alone.
+
+Gary, on the other hand, was not fine, no matter how much sadness he released, because Samantha had been his Source of love, his Higher Power. He had handed to her the job of defining his sense of self, so when she left, all he could feel was abandoned. Gary had handed his Inner Child � his feeling self � to Samantha. He had made Samantha responsible for his feelings, so when she left, he felt like an abandoned child. His Source of love had gone away.
+
+Because Frank knew how to love himself, he knew how to love others. Within a couple of years, Frank was in another loving relationship.
+
+Gary found another relationship within six months of losing Samantha, and six months after that was again alone. Until Gary decides to learn to take responsibility for his own feelings and needs, he will likely continue to lose relationship after relationship, and continue to be stuck in feeling like a victim of the women in his life.

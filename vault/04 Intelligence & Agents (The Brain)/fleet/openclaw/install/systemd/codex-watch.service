@@ -1,0 +1,23 @@
+# DEPRECATED — This file uses the old "codex-watch" name.
+# The live service is onemind-watch.service at /etc/systemd/system/onemind-watch.service
+# See gateway/SYNC-ARCHITECTURE.md for current architecture.
+
+[Unit]
+Description=OneMind vault file-watcher — auto-push changes to GitHub
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+Environment=HOME=/home/ubuntu
+ExecStart=/usr/local/bin/onemind-watch.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=onemind-watch
+
+[Install]
+WantedBy=multi-user.target

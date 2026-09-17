@@ -1,0 +1,27 @@
+{
+  "habits": {
+    "workout": {
+      "streak": 0,
+      "last_done": null
+    },
+    "sleep_7h": {
+      "streak": 0,
+      "last_done": null
+    },
+    "no_phone_am": {
+      "streak": 0,
+      "last_done": null
+    },
+    "water": {
+      "streak": 0,
+      "last_done": null
+    },
+    "reading": {
+      "streak": 0,
+      "last_done": null
+    }
+  },
+  "pending_responses": {},
+  "log": [],
+  "weekly_reports": []
+}

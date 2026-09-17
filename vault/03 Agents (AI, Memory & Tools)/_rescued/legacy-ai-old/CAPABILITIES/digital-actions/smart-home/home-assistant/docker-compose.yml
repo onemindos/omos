@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  home-assistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: home-assistant
+    restart: unless-stopped
+    privileged: true  # Required for hardware access
+    ports:
+      - "8123:8123"
+    environment:
+      - TZ=America/New_York
+    volumes:
+      - home_assistant_config:/config
+      - /run/dbus:/run/dbus:ro  # Required for Bluetooth
+    networks:
+      - legacy_network
+    depends_on:
+      - mosquitto
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8123"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  home_assistant_config:
+    driver: local
+
+networks:
+  legacy_network:
+    external: true

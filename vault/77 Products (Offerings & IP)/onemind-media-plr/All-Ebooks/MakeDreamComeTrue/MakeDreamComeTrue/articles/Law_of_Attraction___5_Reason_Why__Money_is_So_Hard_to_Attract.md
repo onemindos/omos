@@ -1,0 +1,35 @@
+# Title:
+
+Law of Attraction   5 Reason Why  Money is So Hard to Attract
+
+Word Count:
+556
+
+Summary:
+Most everyone will agree that manifesting money takes something special.  You may have manifest some of the things that you want but what about more money?
+
+Keywords:
+law of attraction, laws of attraction, attraction, manifesting, manifest
+
+Article Body:
+Recently someone ask the question, "why is money so very hard to attract?"  Lots of people who discover the laws of attraction want to know the answer to that very question.  Many more people will continue to have a very hard time at trusting the law of attraction for the very reason that they are not able to manifest money as they would like.
+
+ 1.  You Want it tooo Much 
+
+Yes, that's right!  The mere fact that you want money makes you repel that money.  The more you want something the more you activate the law of attraction to further push it away from you.  When you want something desperately you are at a place of lack, emptiness and with out.  There are many ancient techniques that can move you out of that feeling of emptiness to where you begin to energetically empower yourself to draw a phenomenal amount of magnetic power to you.  These techniques although  simple are extremely effective in making you a powerful magnet.
+
+ 2.  You Have Not Learned How to be Abundant 
+
+Learning how to be abundant is necessary to activating the law of attraction in your favor.  Before you can be abundant you have to be able to see abundance all around you.  You have to change your perspective on life and your present reality.  If you are thinking and feeling that the universe is scarce then it is more than likely that what you seen of the universe and scarcely will be reflected in how you manifest money to you.
+
+ 3.  You Have Placed Money Above You
+
+Few people will admit to doing so but most everyone has made money a huge priority in their life.  It isn't that money is not a priority but there is something which is way beyond money.  The moment you become aware that your own divine self is far more powerful than money you will continue to struggle in attracting more of it.  Those who are aware of their divine nature have an easier time of applying the laws of attraction to bring them more money or anything a lot faster.
+
+ 4.  You Don't Really Want Money
+
+If a survey were to be taken more people than not would say the same sing, "I don't really want a lot of money, I just want to have enough."  It amazes me that so many people who work diligently at trying to understand the law of attraction will easily say that they don't really want a lot of money.  Is it any wonder that few people will ever really attract a large amount of money.  The laws of attraction are quite on target with that inner feeling of conflict and will manifest exactly that resistance you have towards money
+
+ 5. You Can't Take Money as a Joke
+
+One thing which is quite common to those who have manifested large fortunes in their life is that they moved beneath the pressure of making money.  To move beyond money you need to see and feel money as a game.  Making money should become a wonderful feeling of joy rather than a struggle of pain and suffering.  If you learn to have fun with making money the law of attraction will reward you by bringing you much more.

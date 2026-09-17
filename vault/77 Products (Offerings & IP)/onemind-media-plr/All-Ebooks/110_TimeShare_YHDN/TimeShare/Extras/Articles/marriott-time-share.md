@@ -1,0 +1,27 @@
+# Marriott time share: Leading in the travel industry
+
+Marriott time share is from one of the leading time share resort companies around the world. Most buy Marriott time share because Marriott's chain of hotels and resorts have consistent in keeping a rock solid foundation. Its client eagerly buy or rent units through their Marriott time share also because of the many choices they have of the Marriott time share resort properties worldwide.
+
+The history of Marriott time share goes back to 1984 when this prestigious hotel chain started bringing its service and customer care to more people through the idea of time ownership. Commonly known as time share, happy clients from different parts of the globe are happy to join the booming vacation ownership industry. The concept of floating time and unit began in 1985 when Marriott introduced a more flexible time share package to its clients. 
+
+Marriott time share is now sold by Marriott Vacation Club International. Today, it is one of the most highly successful companies in the travel industry's time share segment. There are over 52 luxurious resorts owned by the Marriott Vacation Club International. The high quality service and accommodations as well as the company's marketing strategies have made their time share profit to sky-rocket. Their sales continuously go up as its Marriott time shares are enjoyed by vacationers who wish to come back year after year. 
+
+Marriott Vacation Club International sells first class Marriott time shares that offers lifetime of quality vacations to its clients along with their families and friends. There are flexible options in buying your Marriott time share. 
+
+Aside from the different Marriott resorts in different vacation destinations, you also have the choice of what amenities and services you wish to enjoy during your stay. Its flexibility also expands to trading just in case you wish to exchange your Marriott time share with another Marriott time share of a different unit or Marriott resort, or with another time share of a different time share resort company. 
+
+Purchasing Marriott time share also allows you to have interest at any Marriott resort under the Marriott Vacation Club International. This will give you various benefits and you will eventually become part of a complete system of Marriott resorts. 
+
+Marriott time share point system
+
+Marriott time share also includes your opportunity to enjoy time share points. It is known as Marriott Rewards Points. As the owner of Marriott time share you have the choice to have your property assigned the occupancy rights to Marriott in return for Reward Points. It can spend like money for many Marriott services and benefits other than the time share itself. 
+
+But, Reward Points is a point system that can only be enjoyed by owners of whose Marriott time share is bought from Marriott. This is not open to Marriott time share owners who bought their time share at a resale that is not by Marriott. Benefits you can get from Marriot time share Reward Points are airline tickets, merchandise, car rentals, and cruises, among other things. 
+
+Marriott time share owners can get 10 points for every dollar that is spend while you are enjoying your dream vacation at a Marriott resort. Marriott resorts include Courtyard by Marriott, Fairfield Inn by Marriott, Renaissance Hotels, Resorts and Suites, Spring Hill Suites by Marriott, and all Marriott Hotels, Resorts and Suites. Marriott time share owners can also enjoy 5 points for every dollar spent in Residence Inn by Marriott and Town Place Suites. 
+
+There are more than 250,000 Marriott time share owners who are automatically members of the Marriott Vacation Club International. Locations of Marriott time share resorts include Newport Beach and Palm Desert in California; Breckenridge and Vail in Colorado, Orlando, Fort Lauderdale, Palm Beach, Miami, Panama City and Long Boat Key in Florida; Maui and Kauai in Hawaii; Abson in New Jersey; Hilton Head Island in South Carolina; Park City in Utah; and Williamsburg in Virginia. 
+
+Outside the United States Marriott time share resort locations include Orangestad, Aruba; Paradise Island, Bahamas; and Mallorca, Spain.
+
+Today, Marriot Vacation Club International, with its Marriott time share, is believed to continue in leading along with other hotel and resort giants in developing more and more flexible, convenient and cost effective time share packages. Owning a Marriott time share means you have the best choices for an extraordinary vacation experience.

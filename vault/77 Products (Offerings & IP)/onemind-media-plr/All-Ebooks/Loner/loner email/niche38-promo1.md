@@ -1,0 +1,21 @@
+# SUBJECT: The Best Tool For You To Overcome Negative Feelings Of Loneliness
+
+Hey [[firstname]],
+
+Just want to give you the heads up that I have just released my latest book - Loner's Lifehack!
+
+>> LINK TO YOUR SALES PAGE
+
+With this powerful book, you will get a guide to escaping loneliness and living a life surrounded by loved ones!
+
+This is truly an awesome tool you must look into
+because it is something that will help you to get
+results in your own life!
+
+So check it out now while it��s still on offer:
+
+>> LINK TO YOUR SALES PAGE
+
+To your success,
+
+[[YOURNAME]]

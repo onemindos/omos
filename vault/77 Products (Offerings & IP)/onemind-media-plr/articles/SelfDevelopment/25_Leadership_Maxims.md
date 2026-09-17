@@ -1,0 +1,36 @@
+# title:25 Leadership Maxims
+
+author:Brent Filson
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_2486.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+"We will never know how really good we are as leaders unless we are leading people to be better than they think they are."
+"Poor performance is less harmful to a leader than mediocre performance disguised as good performance."
+"Most leaders are striving to get the wrong results or the right results in the wrong ways."
+"The lowest forms of leadership involve rewards and punishments."  
+"Getting along is not necessarily getting results."
+"If you can't feel it, you can't lead it, and they won't do it."
+"Leadership is the trim tab of all careers."
+"Leadership is seeing hope in any adversity."
+"To make a difference, be the difference."
+"In leadership, you don't have to expect the worse, you just have to make the most of it when it happens."
+"The best leaders make use of the simplest of ideas."  
+"If you are always right, you are usually wrong."
+"The best way for a leader to communicate an idea is to bundle it in a human being."
+"The most persuasive art of leadership is to hide your leadership."
+"Refraining from action is sometimes the best action."
+"It's not so much what you say as a leader that's important; it's the action the people take after you have had your say."
+"In leadership, the value of every need is in its use."
+"Leadership is not about living a easy life for ourselves but a hard life for others."
+"We ourselves are our own biggest obstacles to becoming better leaders."
+"Leadership is showing people not that they must take a certain action but that they GET TO take that action."
+"Half the art of listening is waiting."
+"To get the best out of people, embrace the best in them."
+"People are often unaware of the best that's in them.  When you show it to them, you are half way down the road to motivating them to be your cause leaders."
+"Achievement needs three things, the leader, the cause leader, and the moment."
+"In the long run, the most important results of leadership are not what we achieve but what we become in that achieving."
+2005 &copy; The Filson Leadership Group, Inc.   All rights reserved. 
+PERMISSION TO REPUBLISH: This article may be republished in newsletters and on web sites provided attribution is provided to the author, and it appears with the included copyright, resource box and live web site link.  Email notice of intent to publish is appreciated but not required: mail to: brent@actionleadership.com
+ZZZZZZ

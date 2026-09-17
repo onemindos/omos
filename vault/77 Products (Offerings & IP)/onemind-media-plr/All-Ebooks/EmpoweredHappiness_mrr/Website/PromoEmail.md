@@ -1,0 +1,50 @@
+# Hi ,
+
+Are you struggling with the fact that 
+you really don't know anything about 
+how to really be happy?
+
+Happiness is something that has long been present 
+inside you. Finding happiness inside yourself 
+is like peeling off the layers of onion, with 
+each layer representing your thoughts, fears, 
+and negative beliefs. As you slowly peel away each 
+layer (who you are not), you will gradually reach its 
+very core (who you are). 
+
+And right there and then, you will find your 
+purpose and meaning in life. You will finally 
+discover yourself and learn the real meaning 
+of happiness. 
+
+What if I can offer you a
+solution that will help
+you to attain greatness, to become a success
+and learn about the best ways to budget?
+
+In this book, you will 
+learn about:
+
+- Basics on Happiness
+
+- Why People Are So Sad Today
+
+- What Is True Happiness?
+
+- What Is The Empowered Happiness Mindset?
+
+- many other useful things!
+
+Click here to find out more:
+
+>> Your Link
+
+With great power comes great,responsibility. Once you know
+the secrets in this amazing book, there is no going back.
+
+It's time to get moving toward developing success in 
+your happiness!
+
+>> Your Link
+
+Regards,

@@ -1,0 +1,113 @@
+<?php include("../Includes/Configure.php"); ?>
+<html>
+	<head>
+		<title>Hot Selling Items On Ebay | GUIDE TO MAKE YOUR ITEMS BELONG TO THE “WHAT’S HOT” SELLING LIST ON EBAY</title>
+		<META http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<meta name="Creator" content="Kotzakoliou, SSA - http://www.niche-mania.com">
+		<meta name="Copyright" content="<?=$CopyRight;?>">
+		<meta name="Description" content="GUIDE TO MAKE YOUR ITEMS BELONG TO THE “WHAT’S HOT” SELLING LIST ON EBAY - The trend for the hottest items – from head to toe fashion to the latest gadgetry and accessories is influenced by trendsetters and tech-and-fashion gurus of society. Having the latest items to show to your friends, co-workers and colleagues labels you as ">
+		<meta name="Keywords" content="<?=$Keywords;?>">
+		<meta name="Distribution" content="global">
+		<meta name="Publisher" content="<?=$Domain;?>">
+		<meta name="Rating" content="General">
+		<meta name="Revisit-after" content="5 days">
+		<meta name="Robots" content="index,follow">
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="tdHeader" colspan="3">
+					<p style="margin-bottom: 5; margin-left: 10;">
+						<?php include("../Includes/Menu.php"); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<?php include("../Includes/Google_728x15_TextLinks.php"); ?>
+					<hr>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdleft">
+					<br>
+					<?php include("../Includes/Navigation.php"); ?>
+				</td>
+				<td class="tdContent">
+					<br>
+					<p>
+						<b>GUIDE TO MAKE YOUR ITEMS BELONG TO THE “WHAT’S HOT” SELLING LIST ON EBAY </b>
+						<br>
+						<b><small> </small></b>
+						<br>
+						<br>
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						The trend for the hottest items – from head to toe fashion to the latest gadgetry and accessories is influenced by trendsetters and tech-and-fashion gurus of society. Having the latest items to show to your friends, co-workers and colleagues labels you as “in”; though sadly, keeping up with the Joneses can be quite demanding both on your wallet and your time. Naturally, the newer and hotter the items the more expensive it can be; and besides just imagine the time you will have to spend looking for these on malls and stores. 
+<br><br>
+This is where EBay comes in. 
+<br><br>
+Ebay is an online auction and shopping website where people from all over the world buy and sell their goods, some unused and some though used are still in good condition. Selection of items available here includes collectibles, parts and appliances, furniture, vehicles, gizmos, rare items and other thingamajigs that others want. There is lots of stuff available on Ebay, from digital and video cameras; cell phones; old items like maps, globes, vintage furniture, beds, cabinets, frames, stamps, coins; clothes; books; arts and crafts; music and video cds and dvds; watches and jewelries; home and garden tools and equipment; sports wearable down to a fine line of accessories and more. 
+<br><br>
+Given such a huge selection of merchandise, which among them is the hottest with buyers?
+<br><br>
+What’s hot and what’s not? Want to find out what’s hot selling on Ebay and how to make your items included on the list... Read on for entrepreneurial tips and tricks of eBay selling!
+<br><br>
+1) Searches-cum-bidders (read: Buyers) tend to go for up-to-date items out on the market, which is a positive note for you since this means that the more bidders plunk down money for your items, the higher your potential earnings will be. 
+<br><br>
+Though the negative part here is that, it will be quite hard for you to obtain the goods without having to pay off a huge sum in the first place. Since sellers of these new items would naturally want to make money from it, thus you will resort to pricing high for your item too - which is not the way to go. Buyers will have second thoughts and put off bidding until they have checked other possible resources. Keep in mind that you are catering to an international selling site so possibly you are not the only one who has that item up for sale.
+<br><br>
+Tip: As much as possible if you can get new products on the market at a lower price, then go for it. You have a lot of resources to search: your own stuff (newly acquired items that you want to sell; for some this is known as “buy and sell” though it is an entirely different matter); discount markets and stores; from your friends and family (maybe they have a thing or two they want to get rid off yet cannot do so since its brand-new); and the internet. Remember to keep your price to a minimum and just let the money grow as potential buyers’ cash in their bids for your object. 
+<br><br>
+2) If you have used items that are still in good condition and of value, then include it on ebay as ‘for sale’ items also. 
+<br><br>
+Instead of throwing your items away because you have no more use for it or that you do not want it anymore, sell it on ebay websites. Who knows there might be someone out there who is looking for an object just like yours, then you are bound to make money from it. 
+<br><br>
+Tip: As long as your items do not violate any rules regarding saleable products on ebay websites, and you feel that someone might be interested to buy it, then feel free to put it up for auctioning. If you are not sure, then check the list of prohibited items provided on the site itself (sometimes a link is placed within the homepage for this, while other EBay sites include this in User Agreements – either way it is accessible for general viewing). 
+<br><br>
+3) Make sure that you have a catchy and interesting description and title for your item. This is the first thing that ebay searchers look for in your items. Success-selling stories tells that the way you describe and present your items to potential buyers – brand, features, makeup, usefulness and quality – can either persuade them or discourage them to buy the item so it is very important that you make your description be as substantial and meaningful as possible.
+<br><br>
+Practiced this three fueling factors that makes up the “what’s hot selling on ebay” list? Then get your items, have it registered for sale on ebay sites, and let the bidding for the hottest items – in this case, Your Items - on Ebay, begin!
+						<br>
+						<br>
+						
+					</p>
+					<br>
+					<?php if ($DisplayAmazon) { echo "<br><center>"; 
+					include("../Includes/Amazon_468x60.php"); echo "</center><br>"; } ?>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" class="tdRow">
+					<?=$Category;?> News and Current Events
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<?php include("../Includes/Google_Search.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<?php include($Domain."Includes/NewsFeed.php?CAT=$NewsFeed"); ?> <?php if 
+					($DisplayAmazon) { echo "<br><center>"; 
+					include("../Includes/Amazon_728x90.php"); echo "</center><br>"; } ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdFooter" colspan="3">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All 
+					Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal 
+						Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>
+

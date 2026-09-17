@@ -1,0 +1,47 @@
+# Hi ,
+
+Are you struggling with the fact that 
+you really don't know anything about 
+how to get into shape?
+
+If you're busy living in yesterday's errors, 
+many of your decisions will be founded on 
+guilt and shame instead of what you really 
+want (and need) to accomplish to achieve your 
+goals. Real change comes from day-to-day 
+choices and becoming mindful and basing your 
+choices on what you need now (rather than what 
+you did or didn't do yesterday) will make your 
+exercise life much more passable.
+
+What if I can offer you a
+solution that will help
+you to attain greatness, to become a success
+and learn about the best ways to get in shape?
+
+In this book, you will 
+learn about:
+
+- Exercise Basics
+
+- Set Your Goal And Stick To It
+
+- Get Your Exercise Plan Together
+
+- Make Sure To Warm Up
+
+- many other useful things!
+
+Click here to find out more:
+
+>> Your Link
+
+With great power comes great,responsibility. Once you know
+the secrets in this amazing book, there is no going back.
+
+It's time to get moving toward developing success in 
+getting in shape!
+
+>> Your Link
+
+Regards,

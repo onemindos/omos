@@ -1,0 +1,29 @@
+# 729
+
+Battling the Distribution of Bed Bugs
+
+Bed bugs are insects that do not have wings. They are roughly shaped oval. They measure, once fully grown, from four to five millimeters long. You might find the next piece of information unexpected, but bed bugs are fast runners.
+
+There are easy to see on white linoleum or marble floors, but very difficult to spot on brown wooden floors. This is so because bed bugs are rust brown in color and they even change into a deeper red brown when they finish a blood meal.
+
+The fact that bed bugs are dorsoventrally flat assists their distribution. Since they are so thin, they can squeeze in and fit in very narrow cracks and crevices, oftenly ones that may be found on the floor. Because of their great skillful hiding, bed bugs are very hard to detect.
+
+Bed bug distribution also adds up to the any pieces of information about the two main species of bed bugs that bite human beings.
+
+First, is the common bed bug, more scientifically called cimex lectularius. This kind of bed bug is found in any crevice as long as it is around room temperature. They are of greater distribution in Australia. May it be remote or urban, common bed bugs do not care, only as long as they are distributed to an area that copes well with their needs.
+
+Another kind of bed bugs is the tropical bed bug, or cimex hemipterus. This bed bug has been guessed to be distributed in the tropics a long time ago. However, it was only recently recognized by the medical entomology department. This department can tell you more information about the distribution of the cimex hemipterus in the tropics.
+
+Bed bugs are also distributed finely in human dwellings, bat caves and bird�s nests. In truth, the habitats that have been recently mentioned are the ones found to be most suitable for these said bed bugs. Why? It seems to be quite obvious. Bed bugs are distributed to these habitats because of their offered warmth and hosts they can feed on.
+
+However, you must always remember tht bed bugs are never evenly distributed throughout the environment. You will come to notice that instead of being distributed in the environment, bed bugs are distributed mainly in harborages.
+
+When human dwellings is the subject, the harborages are inclusive of the crack and crevices that you can find, sometimes not find, in your house�s walls, behind your wallpaper, furniture and wood paneling, or even under your carpetting.
+
+Bed bugs are more usually not so prone to activity during the night, but will feed on anything during the day, especially when hunger strikes them. So, most likely, these said bed bugs would be distributed to trees and leaves and roots and absolutely anything that they can land on and strike their fancy.
+
+Bed bugs can also be distributed to clothing, in bedding or even your luggage. However, much to their dismay, they do not have appendages that could allow them to cling, possibly to hair feathers or fur. This would bring you to the conclusion that bed bugs leave to feast on their hosts but once done with that thing they do, they leave their hosts since they have nothing to cling with in the first place.
+
+Adult bed bugs live exclusively as parasites that feed mainly on warm-blooded animals, the best example, and probably the most usual, would be human beings. Since bed bugs can be distributed to poor housing conditions, then it would be conclusive that the infestations o fbed bugs can be found in these places too. And if these said bed bugs do get distributed to domestic premises, then the room they will most probably attack is the bedroom.
+
+You already know of the fact that bed bugs are distributed to cracks and crevices where they most typically hide, but you probably would find this quite surprising. Throughout this essay, have you ever wondered or asked yourself why these insects are called bed bugs? It is because they love to distribute themselves in bedrooms, specifically in the vicinity of where the host, in this case, human beings, sleeps. Oftentimes, they would even habitate in the host�s sleeping place itself, the bed. Its distribution in bedrooms are also inclusive of bed frames, behind skirting or wallpaper and the matress itself.

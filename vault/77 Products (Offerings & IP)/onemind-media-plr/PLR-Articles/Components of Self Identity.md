@@ -1,0 +1,19 @@
+# Components of Self Identity
+
+Self and Society 
+
+Some of the human components of emotional strength comes from is self-confidence. Self-confidence one�s belief in his ability to complete any task he sets out to master. This type of emotional strength gives the entity the ability to recognize that they are the right person for the job. Self-confidence is also enables one to convey ideas and opinions to others without feeling emotionally challenged. This entity can express his feelings and thoughts in a manner that is self-assured. An entity that is self-confident will produce a positive and enduring impact on other people life. 
+
+Most people have envied others that have developed with self-confidence at one point in their life. Instead of envying these people, one should work hard to develop self-confidence of self. This moves that entity closer to his identity. 
+
+An entity that is self-assured has three unique skills. An entity who is sure of self will present self in an unreserved and self-assured manner. This is because this person has established convictions that back his confidence. 
+
+When an individual has self-assurance, that person usually stands out in a group. Self-confident individuals believe that he or she is the best person, the most competent entity for any specific task. Once an entity possesses the three major skills, he acquires stronger feelings. In this event, that entity can be verified as a self-confident soul. 
+
+We must consider three steps that an individual can take in order to develop a higher plane of self-confidence. In order for an entity to learn these steps in developing self-confidence, the person cultivates a willingness to change his or her behavior and thinking. An entity must be willing to modify his or her thinking to adapt to someone else�s self-confidence. Once this individual has committed to cultivating self-confidence that person must learn to act more determinedly and decisively and with a confident approach. In order to develop self-confidence we must recognize the need of all humans to accept and need help. A friend or mentor, someone who you can trust, to assist you in analyzing your confidence ability is all you need to help you establish your identity. Nevertheless, you must not allow these people to deter you from developing self-identity that clearly identifies you. In other words, you must seek help, yet decide what you need in order to establish your identity. This will allocate an entity to see themselves through someone else�s eyes, yet set a limit. The step in self-development is essential in order to develop new perspectives on life. 
+
+When an entity is ready to accomplish developing self-confidence that entity should seek a career in which that individual qualifies for personally. Ask someone you trust or assign a mentor to help you measure what you need to do in order to amplify your qualifications. 
+
+By probing for a better career, a job you qualify for, you are approaching the highest treads of success and consciousness. Ultimately, you will take charge of your emotions. When you take charge of your emotions, you often see clearly the final steps that lead you to self-identity. 
+
+Humans are made up of many components. In addition to the components outlined in the article, one must also seek self-awareness of his physiological response and actions. Take time now to find articles that inform you of the benefits of using biofeedback and Neurofeedback programs. Don�t forget to look for assistance from Radionics. As well, discover the benefits of meditation, yoga and other practices that point you to guided relaxation. You have many options that will assist you in the new age arena.

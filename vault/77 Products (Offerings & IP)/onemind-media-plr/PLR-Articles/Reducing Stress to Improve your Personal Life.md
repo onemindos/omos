@@ -1,0 +1,20 @@
+# Reducing Stress to Improve your Personal Life
+
+When you are feeling under the whether all the time perhaps it is because you are stressed. Stress alone can cause major psychological and mental problems. In fact, stress can cause self-induced exaggerated problems. Stress causes confusion, since it targets your physical, emotional responses, and psychological aspects while causing you pain. Stress is the leading problem that everyone in the world faces at one time or another. 
+
+What causes stress:
+Bills cause stress, especially if you do not have cash flow to pay the bills. Jobs will cause stress, since you battle to make sure your duties are correctly handled. Children cause stress. Especially nowadays, since the media, television, etc has polluted and corrupted the minds of our children by offering them nudity, violence, and other harmful actions on air. A bad relationship can cause stress. If you are in a bad relationship, it only affects your mind and physical well-being, causing you stress. There are many reasons a person can feel stressed. The upside is, you have the choice to make stress your best friend or worst enemy. 
+
+What are the different kinds of stress?
+There are many kinds of stress that can cause you problems like the acute stress this is a short term stress problem normally, which may last shortly or could carry forward. You want to avoid overstressing self. One of the common reasons someone develops acute stress is because they are thinking of how to change things they cannot change. Only change the things you can change and learn to accept. We all deal with everyday challenges. Take each challenge as a learning experience. We all have to pay bills, work, and so on. It's a part of life. We all have to face it. Sometimes we do not have the money to pay bills. Learn to set a budget that relieves you of stress. You may loose your job. Instead of sweating the problem, do something about it. 
+
+Children these days are increasing stress for parents. Many teenagers these days are difficult to manage. Today our children are plagued with mental illnesses, far more so than at one time in history. When you feel chronic stress, burned out and do not see hope, it is time to seek help. Your doctor or mental health expert can help you manage stress emerging from difficulty teenagers. 
+
+How to reduce stress:
+You can reduce stress by managing, planning and setting goals. When you have something to look forward to, it improves your personal life. The first thing you want to consider while planning and setting goals is truth. The truth is what sets you free. Everything you do in life should uphold the truth. If you are not sure, research to learn the truth. You can take many steps to reduce stress. 
+
+To improve your life and reduce stress you may want to consider education. If you lack skills, experience or education you will benefit from returning to school. 
+
+You want to avoid setting traps for your memory and intelligence, since the emotions play unhealthy games if you allow it. What I mean is you want to avoid telling yourself I cannot do it. Life is too hard. Life is easier if you learn to think positive. 
+
+How you can improve, your personal life is up to you. You will need to consult with your inner counselor to learn what you need, what you are lacking and the steps you can take to improve your personal life. If you are unsure, seek feedback. Feedback is the key that leads you to success.

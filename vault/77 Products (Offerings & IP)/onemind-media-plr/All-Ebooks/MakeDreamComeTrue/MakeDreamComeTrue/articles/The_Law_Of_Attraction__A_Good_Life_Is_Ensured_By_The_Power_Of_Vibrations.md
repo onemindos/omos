@@ -1,0 +1,27 @@
+# Title:
+
+The Law Of Attraction: A Good Life Is Ensured By The Power Of Vibrations
+
+Word Count:
+440
+
+Summary:
+Energy is everywhere as the universe is made of pure energy. The rate of vibration makes the only difference and the law of attraction is the one that is guided by this vibration. The vibration causes energy. Energy attracts more energy that is created by an equal amount of vibration. 
+
+Never lose the purpose: what are we trying to achieve? What is that something we are looking for? This is what the law of attraction demands. This includes both positive and negative situati...
+
+Keywords:
+law of attraction, the secret, strangest secret
+
+Article Body:
+Energy is everywhere as the universe is made of pure energy. The rate of vibration makes the only difference and the law of attraction is the one that is guided by this vibration. The vibration causes energy. Energy attracts more energy that is created by an equal amount of vibration. 
+
+Never lose the purpose: what are we trying to achieve? What is that something we are looking for? This is what the law of attraction demands. This includes both positive and negative situations you've been through. The reality is made up of the things we notice but with a certain resistances from our part too, whenever it is possible.
+ 
+The Potential of Psychic Energy
+
+Energy is being generated all the time. Paying attention to things happening around you is also a form of psychic energy. You need to focus so that the energy stays within yourself. The moment you pay less attention you lose the energy as it flows out of your mind until it will all flow away. This is how the law of attraction works. The things you appreciate are appreciated in value; once you cease to appreciate them their value depreciates. So you need to focus on the positive things that happen to you no mater how insignificant they may appear they may be a true blessing for you.
+
+Creation stands at the basis of the law of attraction. The creation is everything: it attracts through it and creates through attraction. The things you are focus on will be those attracted by the law of attraction. This is what is called the power of thought. Your mind is the one that rules over your imaginations and properties. It also defines you as a human being and when the law of attraction comes into work you get into a state of vibration that will have as result the feeling that desires you've experienced so far already came into force. This new mentality possesses all the creative properties that the vibration rapport offers. 
+
+When trying to create something special emotions play an important role. The same happens in the law of attraction case. Emotions will also be helping you to achieve the things you want through the energy that resides in them. The power of thought is that powerful that it can destroy or keep together any of your attempts to get somewhere. When it comes to losing or gaining something, this will never occur unless you lose or gain something within yourself. Never hope for something that has already been lost. Once lost, they cannot be recovered no matter how hard you try to recuperate them.

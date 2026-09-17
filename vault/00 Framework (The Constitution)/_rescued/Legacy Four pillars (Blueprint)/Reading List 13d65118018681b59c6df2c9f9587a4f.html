@@ -1,0 +1,684 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Reading List</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="13d65118-0186-81b5-9c6d-f2c9f9587a4f" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📕</span></div><h1 class="page-title">Reading List</h1><p class="page-description"></p></header><div class="page-body"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="13d65118-0186-810b-a28b-d2ac0576abac"><div style="font-size:1.5em"><span class="icon">📚</span></div><div style="width:100%">The modern day reading list includes more than just books. We&#x27;ve created a dashboard to help you track books, articles, podcasts, and videos. <strong>Each</strong> <strong>media type</strong> has its own view based on the <strong>Type</strong> property. <br/><br/>Change your views to sort content by status, author, type, or publisher ✓<br/>Rate content out of 5 stars ✓<br/></div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="13d65118-0186-819d-91bb-f829f34e9490"><div style="font-size:1.5em"><span class="icon">✂️</span></div><div style="width:100%">One more thing... if you install <a href="https://chrome.google.com/webstore/detail/notion-web-clipper/knheggckgoiihginacbkhaalnibhilkk?hl=en">Notion Web Clipper</a>, you can save pages and links off the web directly to these lists.</div></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="13d65118-0186-812c-b39c-d762de1a3e72"><div style="font-size:1.5em"><span class="icon">👇</span></div><div style="width:100%">Click on <code>Articles</code> to see what other views might have in store or add your own ✨</div></figure><div id="13d65118-0186-81d1-80f5-e579c67907cc" class="collection-content"><h4 class="collection-title">Media</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Type</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesTitle"><path d="M0.637695 13.1914C1.0957 13.1914 1.32812 13 1.47852 12.5215L2.24414 10.3887H6.14746L6.90625 12.5215C7.05664 13 7.2959 13.1914 7.74707 13.1914C8.22559 13.1914 8.5332 12.9043 8.5332 12.4531C8.5332 12.2891 8.50586 12.1523 8.44434 11.9678L5.41602 3.79199C5.2041 3.21777 4.82129 2.9375 4.19922 2.9375C3.60449 2.9375 3.21484 3.21777 3.0166 3.78516L-0.0322266 12.002C-0.09375 12.1797 -0.121094 12.3232 -0.121094 12.4668C-0.121094 12.918 0.166016 13.1914 0.637695 13.1914ZM2.63379 9.12402L4.17871 4.68066H4.21973L5.76465 9.12402H2.63379ZM12.2793 13.2324C13.3115 13.2324 14.2891 12.6787 14.7129 11.8037H14.7402V12.5762C14.7471 12.9863 15.0273 13.2393 15.4238 13.2393C15.834 13.2393 16.1143 12.9795 16.1143 12.5215V8.00977C16.1143 6.49902 14.9658 5.52148 13.1543 5.52148C11.7666 5.52148 10.6592 6.08887 10.2695 6.99121C10.1943 7.15527 10.1533 7.3125 10.1533 7.46289C10.1533 7.81152 10.4062 8.04395 10.7686 8.04395C11.0215 8.04395 11.2129 7.94824 11.3496 7.73633C11.7529 6.99121 12.2861 6.65625 13.1064 6.65625C14.0977 6.65625 14.6992 7.20996 14.6992 8.1123V8.67285L12.5664 8.7959C10.7686 8.8916 9.77734 9.69824 9.77734 11.0107C9.77734 12.3369 10.8096 13.2324 12.2793 13.2324ZM12.6621 12.1387C11.8008 12.1387 11.2129 11.667 11.2129 10.9561C11.2129 10.2725 11.7598 9.82129 12.7578 9.75977L14.6992 9.62988V10.3203C14.6992 11.3457 13.7969 12.1387 12.6621 12.1387Z"></path></svg></span>Name</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Status</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Score /5</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesMultipleSelect"><path d="M1.91602 4.83789C2.44238 4.83789 2.87305 4.40723 2.87305 3.87402C2.87305 3.34766 2.44238 2.91699 1.91602 2.91699C1.38281 2.91699 0.952148 3.34766 0.952148 3.87402C0.952148 4.40723 1.38281 4.83789 1.91602 4.83789ZM5.1084 4.52344H14.3984C14.7607 4.52344 15.0479 4.23633 15.0479 3.87402C15.0479 3.51172 14.7607 3.22461 14.3984 3.22461H5.1084C4.74609 3.22461 4.45898 3.51172 4.45898 3.87402C4.45898 4.23633 4.74609 4.52344 5.1084 4.52344ZM1.91602 9.03516C2.44238 9.03516 2.87305 8.60449 2.87305 8.07129C2.87305 7.54492 2.44238 7.11426 1.91602 7.11426C1.38281 7.11426 0.952148 7.54492 0.952148 8.07129C0.952148 8.60449 1.38281 9.03516 1.91602 9.03516ZM5.1084 8.7207H14.3984C14.7607 8.7207 15.0479 8.43359 15.0479 8.07129C15.0479 7.70898 14.7607 7.42188 14.3984 7.42188H5.1084C4.74609 7.42188 4.45898 7.70898 4.45898 8.07129C4.45898 8.43359 4.74609 8.7207 5.1084 8.7207ZM1.91602 13.2324C2.44238 13.2324 2.87305 12.8018 2.87305 12.2686C2.87305 11.7422 2.44238 11.3115 1.91602 11.3115C1.38281 11.3115 0.952148 11.7422 0.952148 12.2686C0.952148 12.8018 1.38281 13.2324 1.91602 13.2324ZM5.1084 12.918H14.3984C14.7607 12.918 15.0479 12.6309 15.0479 12.2686C15.0479 11.9062 14.7607 11.6191 14.3984 11.6191H5.1084C4.74609 11.6191 4.45898 11.9062 4.45898 12.2686C4.45898 12.6309 4.74609 12.918 5.1084 12.918Z"></path></svg></span>Author</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Publisher</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesDate"><path d="M3.29688 14.4561H12.7031C14.1797 14.4561 14.9453 13.6904 14.9453 12.2344V3.91504C14.9453 2.45215 14.1797 1.69336 12.7031 1.69336H3.29688C1.82031 1.69336 1.05469 2.45215 1.05469 3.91504V12.2344C1.05469 13.6973 1.82031 14.4561 3.29688 14.4561ZM3.27637 13.1162C2.70898 13.1162 2.39453 12.8154 2.39453 12.2207V5.9043C2.39453 5.30273 2.70898 5.00879 3.27637 5.00879H12.71C13.2842 5.00879 13.6055 5.30273 13.6055 5.9043V12.2207C13.6055 12.8154 13.2842 13.1162 12.71 13.1162H3.27637ZM6.68066 7.38086H7.08398C7.33008 7.38086 7.41211 7.30566 7.41211 7.05957V6.66309C7.41211 6.41699 7.33008 6.3418 7.08398 6.3418H6.68066C6.44141 6.3418 6.35938 6.41699 6.35938 6.66309V7.05957C6.35938 7.30566 6.44141 7.38086 6.68066 7.38086ZM8.92285 7.38086H9.31934C9.56543 7.38086 9.64746 7.30566 9.64746 7.05957V6.66309C9.64746 6.41699 9.56543 6.3418 9.31934 6.3418H8.92285C8.67676 6.3418 8.59473 6.41699 8.59473 6.66309V7.05957C8.59473 7.30566 8.67676 7.38086 8.92285 7.38086ZM11.1582 7.38086H11.5547C11.8008 7.38086 11.8828 7.30566 11.8828 7.05957V6.66309C11.8828 6.41699 11.8008 6.3418 11.5547 6.3418H11.1582C10.9121 6.3418 10.8301 6.41699 10.8301 6.66309V7.05957C10.8301 7.30566 10.9121 7.38086 11.1582 7.38086ZM4.44531 9.58203H4.84863C5.09473 9.58203 5.17676 9.50684 5.17676 9.26074V8.86426C5.17676 8.61816 5.09473 8.54297 4.84863 8.54297H4.44531C4.20605 8.54297 4.12402 8.61816 4.12402 8.86426V9.26074C4.12402 9.50684 4.20605 9.58203 4.44531 9.58203ZM6.68066 9.58203H7.08398C7.33008 9.58203 7.41211 9.50684 7.41211 9.26074V8.86426C7.41211 8.61816 7.33008 8.54297 7.08398 8.54297H6.68066C6.44141 8.54297 6.35938 8.61816 6.35938 8.86426V9.26074C6.35938 9.50684 6.44141 9.58203 6.68066 9.58203ZM8.92285 9.58203H9.31934C9.56543 9.58203 9.64746 9.50684 9.64746 9.26074V8.86426C9.64746 8.61816 9.56543 8.54297 9.31934 8.54297H8.92285C8.67676 8.54297 8.59473 8.61816 8.59473 8.86426V9.26074C8.59473 9.50684 8.67676 9.58203 8.92285 9.58203ZM11.1582 9.58203H11.5547C11.8008 9.58203 11.8828 9.50684 11.8828 9.26074V8.86426C11.8828 8.61816 11.8008 8.54297 11.5547 8.54297H11.1582C10.9121 8.54297 10.8301 8.61816 10.8301 8.86426V9.26074C10.8301 9.50684 10.9121 9.58203 11.1582 9.58203ZM4.44531 11.7832H4.84863C5.09473 11.7832 5.17676 11.708 5.17676 11.4619V11.0654C5.17676 10.8193 5.09473 10.7441 4.84863 10.7441H4.44531C4.20605 10.7441 4.12402 10.8193 4.12402 11.0654V11.4619C4.12402 11.708 4.20605 11.7832 4.44531 11.7832ZM6.68066 11.7832H7.08398C7.33008 11.7832 7.41211 11.708 7.41211 11.4619V11.0654C7.41211 10.8193 7.33008 10.7441 7.08398 10.7441H6.68066C6.44141 10.7441 6.35938 10.8193 6.35938 11.0654V11.4619C6.35938 11.708 6.44141 11.7832 6.68066 11.7832ZM8.92285 11.7832H9.31934C9.56543 11.7832 9.64746 11.708 9.64746 11.4619V11.0654C9.64746 10.8193 9.56543 10.7441 9.31934 10.7441H8.92285C8.67676 10.7441 8.59473 10.8193 8.59473 11.0654V11.4619C8.59473 11.708 8.67676 11.7832 8.92285 11.7832Z"></path></svg></span>Publishing/Release Date</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesUrl"><path d="M7.69922 10.8945L8.73828 9.84863C7.91797 9.77344 7.34375 9.51367 6.91992 9.08984C5.76465 7.93457 5.76465 6.29395 6.91309 5.14551L9.18262 2.87598C10.3379 1.7207 11.9717 1.7207 13.127 2.87598C14.2891 4.04492 14.2822 5.67188 13.1338 6.82031L11.958 7.99609C12.1768 8.49512 12.2451 9.10352 12.1289 9.62988L14.0908 7.6748C15.7725 6 15.7793 3.62109 14.084 1.92578C12.3887 0.223633 10.0098 0.237305 8.33496 1.91211L5.95605 4.29785C4.28125 5.97266 4.26758 8.35156 5.96289 10.0469C6.36621 10.4434 6.90625 10.7441 7.69922 10.8945ZM8.30078 5.13184L7.26855 6.17773C8.08203 6.25293 8.66309 6.51953 9.08008 6.93652C10.2422 8.09863 10.2422 9.73242 9.08691 10.8809L6.81738 13.1504C5.66211 14.3057 4.03516 14.3057 2.87305 13.1504C1.71094 11.9883 1.71777 10.3545 2.87305 9.20605L4.04199 8.03027C3.83008 7.53125 3.75488 6.92969 3.87109 6.39648L1.91602 8.35156C0.234375 10.0264 0.227539 12.4121 1.92285 14.1074C3.61816 15.8027 5.99707 15.7891 7.67188 14.1143L10.0439 11.7354C11.7256 10.0537 11.7324 7.6748 10.0371 5.98633C9.64062 5.58301 9.10059 5.28223 8.30078 5.13184Z"></path></svg></span>Link</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesText"><path d="M1.56738 3.25879H14.4258C14.7676 3.25879 15.0479 2.97852 15.0479 2.63672C15.0479 2.29492 14.7744 2.02148 14.4258 2.02148H1.56738C1.21875 2.02148 0.952148 2.29492 0.952148 2.63672C0.952148 2.97852 1.22559 3.25879 1.56738 3.25879ZM1.56738 6.84082H14.4258C14.7676 6.84082 15.0479 6.56055 15.0479 6.21875C15.0479 5.87695 14.7744 5.60352 14.4258 5.60352H1.56738C1.21875 5.60352 0.952148 5.87695 0.952148 6.21875C0.952148 6.56055 1.22559 6.84082 1.56738 6.84082ZM1.56738 10.4229H14.4258C14.7676 10.4229 15.0479 10.1426 15.0479 9.80078C15.0479 9.45898 14.7744 9.18555 14.4258 9.18555H1.56738C1.21875 9.18555 0.952148 9.45898 0.952148 9.80078C0.952148 10.1426 1.22559 10.4229 1.56738 10.4229ZM1.56738 14.0049H8.75879C9.10059 14.0049 9.38086 13.7246 9.38086 13.3828C9.38086 13.041 9.10742 12.7676 8.75879 12.7676H1.56738C1.21875 12.7676 0.952148 13.041 0.952148 13.3828C0.952148 13.7246 1.22559 14.0049 1.56738 14.0049Z"></path></svg></span>Summary</th></tr></thead><tbody><tr id="13d65118-0186-8198-b0f5-da7806f22bdd"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Academic Journal</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/The%20contribution%20of%20neural%20networks%20and%20genetic%20al%2013d6511801868198b0f5da7806f22bdd.html">The contribution of neural networks and genetic algorithms to business decision support </a></td><td class="cell-`zz5"><span class="selected-value select-value-color-blue">Finished</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️⭐️</span></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-gray">Emerald Group</span></td><td class="cell-?ex+"><time>@November 1, 2004</time></td><td class="cell-VVMi"><a href="https://www.emeraldinsight.com/doi/abs/10.1108/00251740410518534" class="url-value">https://www.emeraldinsight.com/doi/abs/10.1108/00251740410518534</a></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-81c4-a01d-db1f2753d838"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Article</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/At%20Work,%20Everyone%20Is%20in%20Fact%20Talking%20About%20You%20All%2013d65118018681c4a01ddb1f2753d838.html">At Work, Everyone Is in Fact Talking About You All the Time </a></td><td class="cell-`zz5"><span class="selected-value select-value-color-red">Reading</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️</span></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Megan Greenwell</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-default">NYT</span></td><td class="cell-?ex+"><time>@November 30, 2019</time></td><td class="cell-VVMi"><a href="https://www.nytimes.com/2019/05/31/business/at-work-everyone-is-in-fact-talking-about-you-all-the-time.html" class="url-value">https://www.nytimes.com/2019/05/31/business/at-work-everyone-is-in-fact-talking-about-you-all-the-time.html</a></td><td class="cell-?\25">How to cope with gossipy industries — and blackening bananas in the office kitchen.</td></tr><tr id="13d65118-0186-81df-ad70-dbcca4f757bb"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Essay Resource</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/The%20Bronte%CC%88s&#x27;%20Secret%2013d65118018681dfad70dbcca4f757bb.html">The Brontës&#x27; Secret</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-blue">Finished</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️</span></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Judith Shulevitz</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-red">The Atlantic</span></td><td class="cell-?ex+"><time>@November 5, 2016</time></td><td class="cell-VVMi"><a href="https://www.theatlantic.com/magazine/archive/2016/06/the-brontes-secret/480726/" class="url-value">https://www.theatlantic.com/magazine/archive/2016/06/the-brontes-secret/480726/</a></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-81b5-b822-ea8742a10585"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Podcast</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/The%20Daily%2013d65118018681b5b822ea8742a10585.html">The Daily</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-red">Listening</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️⭐️⭐️</span></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-default">NYT</span></td><td class="cell-?ex+"></td><td class="cell-VVMi"></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-812a-9ddf-d4457eeaa72d"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Article</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/You%20Are%20Not%20as%20Good%20at%20Kissing%20as%20You%20Think%20But%20Yo%2013d651180186812a9ddfd4457eeaa72d.html">You Are Not as Good at Kissing as You Think. But You Are Better at Dancing.</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-blue">Finished</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️⭐️</span></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Spencer Greenberg</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-default">NYT</span></td><td class="cell-?ex+"><time>@November 6, 2019</time></td><td class="cell-VVMi"><a href="https://www.nytimes.com/2019/04/06/opinion/sunday/overconfidence-men-women.html" class="url-value">https://www.nytimes.com/2019/04/06/opinion/sunday/overconfidence-men-women.html</a></td><td class="cell-?\25">We overestimate and underestimate our abilities in weird ways.</td></tr><tr id="13d65118-0186-8118-9608-dd034bc58c4e"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Podcast</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/Bon%20Appe%CC%81tit%20Foodcast%2013d65118018681189608dd034bc58c4e.html">Bon Appétit Foodcast</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-yellow">Ready to Start</span></td><td class="cell-)Y7&quot;"></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-yellow">Bon Appetit</span></td><td class="cell-?ex+"></td><td class="cell-VVMi"></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-8135-a170-d5aa4123ecbe"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Article</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/The%20Joy%20of%20Standards%2013d6511801868135a170d5aa4123ecbe.html">The Joy of Standards </a></td><td class="cell-`zz5"><span class="selected-value select-value-color-blue">Finished</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️⭐️⭐️</span></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Andrew Russell</span><span class="selected-value select-value-color-default">Lee Vinsel</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-default">NYT</span></td><td class="cell-?ex+"><time>@November 16, 2019</time></td><td class="cell-VVMi"><a href="https://www.nytimes.com/2019/02/16/opinion/sunday/standardization.html" class="url-value">https://www.nytimes.com/2019/02/16/opinion/sunday/standardization.html</a></td><td class="cell-?\25">Life is a lot easier when you can plug in to any socket.</td></tr><tr id="13d65118-0186-8150-bc9f-f33c4c35b9bf"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Film</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/General%20Magic%20the%20Movie%2013d6511801868150bc9ff33c4c35b9bf.html">General Magic the Movie</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-blue">Finished</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️⭐️⭐️</span></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-brown">Indie</span></td><td class="cell-?ex+"></td><td class="cell-VVMi"><a href="https://www.generalmagicthemovie.com/" class="url-value">https://www.generalmagicthemovie.com/</a></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-813c-b87c-c2bc1e14a53c"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Article</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/Who%20Will%20Teach%20Silicon%20Valley%20to%20Be%20Ethical%2013d651180186813cb87cc2bc1e14a53c.html">Who Will Teach Silicon Valley to Be Ethical? </a></td><td class="cell-`zz5"><span class="selected-value select-value-color-yellow">Ready to Start</span></td><td class="cell-)Y7&quot;"></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Kara Swisher</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-default">NYT</span></td><td class="cell-?ex+"><time>@November 21, 2018</time></td><td class="cell-VVMi"><a href="https://www.nytimes.com/2018/10/21/opinion/who-will-teach-silicon-valley-to-be-ethical.html" class="url-value">https://www.nytimes.com/2018/10/21/opinion/who-will-teach-silicon-valley-to-be-ethical.html</a></td><td class="cell-?\25">Some think chief ethics officers could help technology companies navigate political and social questions.</td></tr><tr id="13d65118-0186-819f-8ee3-f36b81b2e225"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Article</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/A%20Tax%20That%20Could%20Fix%20Big%20Tech%2013d651180186819f8ee3f36b81b2e225.html">A Tax That Could Fix Big Tech </a></td><td class="cell-`zz5"><span class="selected-value select-value-color-yellow">Ready to Start</span></td><td class="cell-)Y7&quot;"></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Paul Romer</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-default">NYT</span></td><td class="cell-?ex+"><time>@November 6, 2019</time></td><td class="cell-VVMi"><a href="https://www.nytimes.com/2019/05/06/opinion/tax-facebook-google.html" class="url-value">https://www.nytimes.com/2019/05/06/opinion/tax-facebook-google.html</a></td><td class="cell-?\25">Putting a levy on targeted ad revenue would give Facebook and Google a real incentive to change their dangerous business models.</td></tr><tr id="13d65118-0186-81c6-9ac9-f82474ef3eb0"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Essay Resource</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/Jane%20Eyre%20and%20the%20Invention%20of%20Self%2013d65118018681c69ac9f82474ef3eb0.html">Jane Eyre and the Invention of Self</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-red">Reading</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️</span></td><td class="cell-qNw_"><span class="selected-value select-value-color-default">Karen Swallow Prior</span></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-red">The Atlantic</span></td><td class="cell-?ex+"><time>@November 3, 2016</time></td><td class="cell-VVMi"><a href="https://www.theatlantic.com/entertainment/archive/2016/03/how-jane-eyre-created-the-modern-self/460461/" class="url-value">https://www.theatlantic.com/entertainment/archive/2016/03/how-jane-eyre-created-the-modern-self/460461/</a></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-8149-8b23-c71da9b54812"><td class="cell-/7eo"><span class="selected-value select-value-color-default">TV Series</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/Chef&#x27;s%20Table%2013d65118018681498b23c71da9b54812.html">Chef&#x27;s Table </a></td><td class="cell-`zz5"><span class="selected-value select-value-color-red">Watching</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️⭐️⭐️⭐️</span></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-blue">Netflix</span></td><td class="cell-?ex+"></td><td class="cell-VVMi"><a href="https://www.newyorker.com/culture/annals-of-gastronomy/in-praise-of-chefs-table-wild-overuse-of-slow-motion" class="url-value">https://www.newyorker.com/culture/annals-of-gastronomy/in-praise-of-chefs-table-wild-overuse-of-slow-motion</a></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-818a-9bf5-c60840e818a5"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Academic Journal</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/Stability%20of%20stochastic%20delay%20neural%20networks%20-%20Sc%2013d651180186818a9bf5c60840e818a5.html">Stability of stochastic delay neural networks - ScienceDirect</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-blue">Finished</span></td><td class="cell-)Y7&quot;"><span class="selected-value select-value-color-default">⭐️⭐️</span></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-pink">Franklin Institute</span></td><td class="cell-?ex+"><time>@November 1, 2001</time></td><td class="cell-VVMi"><a href="https://www.sciencedirect.com/science/article/pii/S0016003201000163" class="url-value">https://www.sciencedirect.com/science/article/pii/S0016003201000163</a></td><td class="cell-?\25"></td></tr><tr id="13d65118-0186-81ca-83d7-e6e64e28f796"><td class="cell-/7eo"><span class="selected-value select-value-color-default">Academic Journal</span></td><td class="cell-title"><a href="Reading%20List%2013d65118018681b59c6df2c9f9587a4f/Media%2013d65118018681d180f5e579c67907cc/Automatic%20Keyphrases%20Extraction%20from%20Document%20Usin%2013d65118018681ca83d7e6e64e28f796.html">Automatic Keyphrases Extraction from Document Using Neural Network | SpringerLink</a></td><td class="cell-`zz5"><span class="selected-value select-value-color-yellow">Ready to Start</span></td><td class="cell-)Y7&quot;"></td><td class="cell-qNw_"></td><td class="cell-&gt;$Pb"><span class="selected-value select-value-color-orange">Springer</span></td><td class="cell-?ex+"><time>@November 18, 2005</time></td><td class="cell-VVMi"><a href="https://link.springer.com/chapter/10.1007/11739685_66" class="url-value">https://link.springer.com/chapter/10.1007/11739685_66</a></td><td class="cell-?\25"></td></tr></tbody></table><br/><br/></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

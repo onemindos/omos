@@ -1,0 +1,11 @@
+# Learn what the future holds when you develop with astrology
+
+The future can be bright if you look the right way. You can find so much more when you are willing to take the chances that you deserve with the astrology that is out there. Take your adventure seriously so that you are better able to make choices and live life to the fullest with astrology. 
+
+Learning what your future may hold for you can make you more stable and more secure. You will want to be sure that you check your astrology chart all the time and see what your future is holding.  You can find your horoscope in any local paper and or online. When you go online, you will be able to see more and detailed astrology reports.  This is going to be something that makes you feels better about the future and what you are doing.
+
+Gaining control of your future is something that you need to do.  You will be able to see all the different ideas that may be available for you.  Getting to the adventure in your life is something that may be right there for anyone that is learning to deal with astrology.  Learning about your astrology chart is something that can really do you good when you are looking to have the future that you deserve.
+
+Your chart with astrology is going to use the stars, planets and the sun to point you in the right direction. You are going to be better able to see what the world holds for you and your future.  Getting to see what is planned out for you can be exciting. You will know what to expect within your day. There is no time like the present to get your future started and to be prepared for what it holds.  You can make all the choices as long as you have the astrology chart on your side.  
+
+Once you know your sign and what your astrology report holds for you then you can see just how right it all is. You can compare your day with the horoscope that you go by.  See if the sun and the planets really know you and what you can expect. Once you see if this is something that you can depend on you will be better able to realize if your future is going the way that you want it to or not.  Do not get excited if you do not have the future that you planned.  As long as you check out your horoscope and use it to your advantage, you will be able to change the future and make the difference in your future.

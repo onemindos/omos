@@ -1,0 +1,58 @@
+{
+  "name": "hitl-escalate-1.0.0",
+  "version": "1.0.0",
+  "description": "Human-in-the-Loop escalation — SMS and voice call when Zeus hasn't responded to a critical HITL request on Discord/Telegram",
+  "main": "index.js",
+  "skills": ["SKILL.md"],
+  "tools": [
+    {
+      "name": "hitl_escalate_sms",
+      "description": "Send an urgent SMS to Zeus when he hasn't responded to a HITL approval request on Discord/Telegram within the expected window. Use after 5–15 minutes of no response on high-priority items.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "description": "One sentence describing what decision is pending (e.g. 'Approve $500 server upgrade')"
+          },
+          "context": {
+            "type": "string",
+            "description": "Why this matters or what happens if not addressed (e.g. 'Server goes down at midnight without renewal')"
+          },
+          "options": {
+            "type": "string",
+            "description": "Optional: what responses are valid (e.g. 'Reply YES to approve or NO to cancel')"
+          },
+          "urgency": {
+            "type": "string",
+            "enum": ["high", "critical"],
+            "description": "Urgency level. Default: high"
+          }
+        },
+        "required": ["decision", "context"]
+      }
+    },
+    {
+      "name": "hitl_escalate_voice",
+      "description": "Initiate a voice call to Zeus as the final escalation step. Use ONLY when Zeus has not responded to Discord messages AND an SMS escalation within a critical timeout window (30+ minutes). This is the last resort for L0/L1 decisions.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "description": "One sentence describing the pending decision (spoken aloud in the call)"
+          },
+          "urgency": {
+            "type": "string",
+            "enum": ["critical"],
+            "description": "Always critical for voice escalation"
+          }
+        },
+        "required": ["decision"]
+      }
+    }
+  ],
+  "env": {
+    "required": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER", "ZEUS_PHONE_NUMBER"]
+  }
+}

@@ -1,0 +1,16 @@
+# Subject: DID YOU GET THIS?
+
+Hey [[firstname]],
+
+Yesterday, I sent an email regarding my latest launch - Mantra Mastery:
+
+>> LINK TO YOUR SALES PAGE
+
+Remember, with this insane Mantra handbook, you'll be sure to master the art of Mantra in no time!
+
+So far, there has been raving reviews about it already, and I don��t want you to miss out on this great opportunity. So grab it now before it��s sold out:
+
+>> LINK TO YOUR SALES PAGE
+
+Warm regards,
+[[YOURNAME]]

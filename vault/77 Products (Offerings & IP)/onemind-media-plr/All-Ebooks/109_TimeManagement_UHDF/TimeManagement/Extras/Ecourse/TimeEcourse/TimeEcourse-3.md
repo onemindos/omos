@@ -1,0 +1,33 @@
+# Subject: {FIRSTNAME}, here's how you go about Time Management 101...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my Time Management For College Students ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - Time is On Your Side.
+2. Part 2 - Your Planner is Your Friend.
+3. Part 3 - Time Management 101.
+4. Part 4 - I�ll Stop Procrastinating Tomorrow.
+5. Part 5 - Stop The Cramming!
+
+Let's go ahead & get started today with "Part 3 - Time Management 101".
+
+Part 3 - Time Management 101
+============================
+The time you spend on task has some relationship to the quality of work you end up producing. A good gauge to follow is to perform 2-3 hours of schoolwork outside class for every hour of class time. Yes, this means for a full-time student with 15-hours of class per week load the recommendation is to do between 30 and 45 hours of homework each week. 
+
+Sure, that's a big jump, especially if you breezed through high school or previous years of college on less. This estimate simply reflects the time it actually takes to learn effectively.  It's not steadfast and set in stone.  If you find yourself really grasping the concepts of a chapter after a half-hour, feel free to stop.  The key here is to set aside this time exclusively for studying.  If you get done earlier than expected - that's a bonus!  
+
+Now this number shouldn't mean that you completely forgo time for yourself. It is important to have some personal time. Even though you may work a part-time job, and doing so isn't necessarily counter-productive to success at school, you'll need to take some time for yourself and for recreation each week. 
+
+A starting guideline might be something like 10% of your week, or 17 hours. What is more important than these specific targets is that you spend enough time on school work to ensure that you're successful and that you spend enough time outside of school to ensure that you have a healthy balance.
+
+Allow for unanticipated interruptions in your schedule. This means leaving some empty spaces during the day or in some way being flexible enough to handle interruptions. If the unexpected does not happen, time is available to do something we were saving until the next day. 
+ 
+Schedule homework early in the day so it is less likely to be crowded out by unexpected events like meeting an old friend or having a roommate ask for help with one of his classes. Homework should be a part of each day's schedule. Students who participated in a major study on stress, reported doing homework as the most frequently used method for reducing stress in their lives. 
+
+Next time we'll be discussing a little about "I�ll Stop Procrastinating Tomorrow".
+
+For more information about this part of Time Management 101, please refer to my definitive guide to Time Management For College Students at 
+
+Take Care,

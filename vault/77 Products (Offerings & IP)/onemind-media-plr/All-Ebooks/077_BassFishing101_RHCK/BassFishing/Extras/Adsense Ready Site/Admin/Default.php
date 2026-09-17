@@ -1,0 +1,108 @@
+<?php include("Session.php"); ?>
+<?php
+	$strDefault									= "disabled";
+	$message									= "";
+	
+	if (isset($_POST['posted']))
+		{						
+			$filename							= "http://www.niche-mania.com/GetDefaultConfig.php?dmn=" . $_SERVER["HTTP_HOST"];
+			$content							= file_get_contents($filename);     
+
+            if (trim($content)=="0")
+                {
+                    $message					= "This Domain is not listed in your Niche Mania Member's Account!";
+                }
+            elseif (trim($content)=="1")
+                {
+                    $message					= "We could not find a Default Configuration for you at Niche Mania!";
+                }
+            else
+                {
+                    $strColumn                  = explode("|", $content);
+                    $_SESSION['GooglePubID']    = trim($strColumn[0]);
+        			$_SESSION['Name']			= $strColumn[1];
+        			$_SESSION['Address1']		= $strColumn[2];
+        			$_SESSION['Address2']		= $strColumn[3];
+        			$_SESSION['City']			= $strColumn[4];
+        			$_SESSION['State']			= $strColumn[5];
+        			$_SESSION['ZipCode']		= $strColumn[6];
+        			$_SESSION['Country']		= $strColumn[7];
+        			$_SESSION['Telephone']		= $strColumn[8];
+        			$_SESSION['EmailAddress']	= $strColumn[9];
+        			
+        			header('location: Write.php');
+				}
+				
+			$strAlert							= "<table border=0 cellpadding=0 cellspacing=0 width=100% style='border-color:#000000;border-style:solid;border-width:1;' bgcolor=#FFFFCC><tr><td align=center>$message</td></tr></table>";
+		}		
+?>
+	<?php include("Header.php"); ?>
+		<form method="post" action="Default.php" name="frmData">
+        	<input type="hidden" name="posted" value="true">
+			<center>
+				<table class="tblForm">
+					<tr>
+						<td align="center" style="background: url(http://www.niche-mania.com/Images/NM_006.jpg); color: #FFFFFF; font-weight: bold; height: 24px; text-align: center; vertical-align: middle;">
+							Load Default Configurations&nbsp;
+						</td>				
+					<tr>
+					<tr>
+						<td>
+							<?php 
+								if($message)
+									{
+										echo $strAlert;
+									}
+								else
+									{
+							?>
+										&nbsp;
+							<?php
+									}	
+							?>
+						<td>
+					</tr>
+					<tr>
+						<td>
+							<p align="justify">
+								To simplify the configuration of multiple Niche Mania Websites, you can create a "Default Configuration" through 
+								your Member Account at Niche Mania. This allows you to specify all of the basic information such as:
+							</p>
+							<ul style="text-align: justify:">
+								<li>
+									Google Publisher's ID
+								</li>
+								<li>
+									Contact Information
+								</li>
+							</ul>
+							<p align="justify">
+								After doing so, whenever you install a Niche Mania Website, you can click the "Load Default Configuration" button 
+								below and your site will automatically be "Pre-Configured" with your Default Information. 
+							</p>
+							<br>
+							<img align="left" src="http://www.niche-mania.com/Images/NM_004.jpg" hspace="5" vspace="5">
+							<p align="justify">
+								<small>
+									<b>
+										CAUTION:
+									</b>
+									Although this process normally only takes a second or two, DO NOT navigate away from this page until it has completed. 
+									Doing so will corrupt your Site Configuration and it will not work properly!
+								</small>
+							</p>
+						</td>
+					<tr>
+					<tr>
+						<td>
+							<hr size="0">
+						</td>				
+					<tr>
+					<tr>
+						<td align="right">
+							<input class="iButton" onClick="this.disabled='true'; frmData.submit();" type="submit" value="Load Default Configuration" >
+						</td>				
+					<tr>
+				</table>
+			</center>
+	<?php include("Footer.php"); ?>

@@ -1,0 +1,188 @@
+# These are your ready to go Clickbank ads
+
+Replace the   xxxxxx   with your Clickbank nick name and paste
+them into your issues as sponsor ads if you want to promote the
+affiliate programs in your newsletter issues.
+
+You can edit them to meet your needs.
+
+NOTE: Clickbank has added a new hoplink encryption feature that
+will help you protect your affiliate commissions, so along with the
+standard links I have included a "Link for encryption" that will take
+you to the hoplink page for each program. There you can encrypt
+your links if you like.
+
+-----------------------------------------------------------------
+
+Product 1 -  Favorite Restaurant Dishes
+
+-----------------------------------------------------------------
+
+site link: http://www.recipesecrets.net/home.html
+affiliate link: http://xxxxxx.2COOK.hop.clickbank.net
+html link: Click Here!
+
+Link for encryption:
+http://www.clickbank.com/info/jmap.htm?vendor=2COOK
+
+ad # 1
+
+Impress Your Family & Friends With Replicas of Famous Dishes!
+With America's Restaurant Recipes, you can cook dishes like the
+PROS do at your favorite restaurants in a matter of minutes.
+Click Here: http://xxxxxx.2COOK.hop.clickbank.net
+
+ad # 2
+
+Save Money - Re-create Your Favorite Restaurant Dishes at Home!
+Cook the same delicious restaurant dishes at home for a fraction of the
+cost by following these easy step-by-step instructions - Guaranteed!
+Click Here: http://xxxxxx.2COOK.hop.clickbank.net
+
+ad # 3
+
+Uncover the Cooking Techniques Used by World Class Chefs!
+Get instant access to recipes from your favorite, famous restaurants!
+Inside America's Restaurant Recipes you'll learn how to make dozens
+of classic dishes at home in your own kitchen - 100% Guaranteed!
+Click Here: http://xxxxxx.2COOK.hop.clickbank.net
+
+ad # 4
+
+Save Money & Stop Waiting - Cook Restaurant Dishes At Home!
+Get the Step by Step Instructions for "America's Restaurant Recipes"
+and WOW Your Friends With Restaurant Dishes From Your Own
+Kitchen! Not only will you save big, you'll never wait for a table again!
+Click Here: http://xxxxxx.2COOK.hop.clickbank.net
+
+-----------------------------------------------------------------
+
+Product  2 - Healthy Foods Cookbook
+-----------------------------------------------------------------
+
+site link: http://www.healthyfoodscookbook.com
+affiliate link: http://xxxxxx.TRAVISHOUS.hop.clickbank.net
+html link: Click Here!
+
+Link for encryption:
+http://www.clickbank.com/info/jmap.htm?vendor=TRAVISHOUS
+
+ad # 1
+
+Don't Wait Another Minute - Join The Delicious Revolution Today!
+The Delicious Revolution is a no-nonsense, simple approach to
+cooking that has healthy staples & delicious splurges making it great
+for anyone wanting a balanced, healthy diet that tastes good too!
+Click Here: http://xxxxxx.TRAVISHOUS.hop.clickbank.net
+
+ad # 2
+
+Get Access - Over 100 Easy to Make Delicious & Healthy Recipes!
+Each recipe inside the Healthy Foods Cookbook has a Gorgeous
+Full Color Professional Photograph. There's simply nothing like this
+cookbook available anywhere. Never wonder, "what�s for dinner" again!
+Click Here: http://xxxxxx.TRAVISHOUS.hop.clickbank.net
+
+ad # 3
+
+Learn To Make Satisfying, Healthy Recipes Your Family Will Love!
+Have healthy foods ready fast, nearly all the recipes inside the Healthy
+Foods Cookbook take under 20 minutes & are guaranteed to impress
+your friends & family with delicious meals that are good for them too!
+Click Here: http://xxxxxx.TRAVISHOUS.hop.clickbank.net
+
+ad # 4
+
+The Delicious Revolution - Never Wonder, "What�s For Dinner" Again!
+The Delicious Revolution includes everything you need to start cooking
+easy to make healthy recipes that taste great too! - 100% Guaranteed!
+Click Here: http://xxxxxx.TRAVISHOUS.hop.clickbank.net
+
+-----------------------------------------------------------------
+
+Product  3 - Healthy Eating For Kids
+
+-----------------------------------------------------------------
+
+site link: http://healthy-eating-for-kids.com
+affiliate link: http://xxxxxx.HEALTHYKID.hop.clickbank.net
+html link: Click Here!
+
+Link for encryption:
+http://www.clickbank.com/info/jmap.htm?vendor=HEALTHYKID
+
+ad # 1
+
+"Healthy Eating for Kids" Was Written with Picky Eaters in Mind!
+Each recipe is designed to include the vitamins, minerals, & essential
+nutrients that your child needs to stay healthy, strong, focused, &
+energetic! Most recipes can be prepared in 15 minutes or less!
+Click Here: http://xxxxxx.HEALTHYKID.hop.clickbank.net
+
+ad # 2
+
+Make Proper Eating an Adventure with Healthy Eating for Kids!
+Inside you will discover delicious, child-tested recipes that are healthy,
+quick to prepare & specially designed for today's hectic lifestyle!
+Click Here: http://xxxxxx.HEALTHYKID.hop.clickbank.net
+
+ad # 3
+
+Is Your Child is a Picky Eater That Refuses to Eat Dinner?
+Healthy Eating For Kids show you how to make your child's favorite
+meals healthy, with yummy Peanut Butter & Apple Wraps, BLT Zucchini
+Boats, & Sneaky Spaghetti Sauce sure to please your picky eater!
+Click Here: http://xxxxxx.HEALTHYKID.hop.clickbank.net
+
+ad # 4
+
+Bad Nutrition - Today's Children Are Receiving a One-two Punch!
+Not only do families have less time to cook, but healthy activities like
+tag & sports are giving way to indoor pastimes like TV, computers &
+playing video games. Healthy Eating For Kids can help you fix that!
+Click Here: http://xxxxxx.HEALTHYKID.hop.clickbank.net
+
+-----------------------------------------------------------------
+
+Product  4 - Guide To Once a Month Cooking
+
+-----------------------------------------------------------------
+
+site link: http://www.frugalmom.net/cookbook
+affiliate link: http://xxxxxx.frugalmom.hop.clickbank.net
+html link: Click Here!
+
+Link for encryption:
+http://www.clickbank.com/info/jmap.htm?vendor=frugalmom
+
+ad # 1
+
+Save Big Money with Once a Month Cooking & Frugal Recipes!
+The Guide To Once a Month Cooking gives you instant access to over
+70 family-friendly recipes tested by Frugal Moms & show you step by
+step how to prepare a freezer full of home cooked meals in only 1 day!
+Click Here: http://xxxxxx.frugalmom.hop.clickbank.net
+
+ad # 2
+
+Learn How Once a Month Cooking Can Really Simplify Your Life!
+Discover how you can get a freezer full of home cooked meals by doing
+once a month cooking. Inside you will learn how to take one day &
+prepare tasty meals that will feed your family for a month - Guaranteed!
+Click Here: http://xxxxxx.frugalmom.hop.clickbank.net
+
+ad # 3
+
+Discover Frugal Mom's Proven System for Once a Month Cooking!
+Fill your freezer with delicious dinners that will simplify your life & save
+you money! Frugal Mom's Guide To Once a Month Cooking shows you
+step-by-step how to cook a freezer full of meals in 1 day - Guaranteed!
+Click Here: http://xxxxxx.frugalmom.hop.clickbank.net
+
+ad # 4
+
+Make Meal Time Simple With a Freezer Full of Home Cooked Meals!
+Inside the Frugal Mom's Guide To Once a Month Cooking you will
+discover the wonderful world of once a month cooking! Learn how it can
+save you money, simplify your life, plus keep your family full & happy!
+Click Here: http://xxxxxx.frugalmom.hop.clickbank.net

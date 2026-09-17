@@ -1,0 +1,26 @@
+# Title:
+
+Hearts Made Strong
+
+Word Count:
+466
+
+Summary:
+The heart seems to be one of the most vulnerable organs in the body because it is the one that has held the most fear, and pain. It is the one that is most afraid to open to pure unconditional love, which is where your power lies.
+
+So, in essence, when you open your heart and heal without fear, you are opening to your own spiritual power. When your journey is confused, and you are afraid to turn this way or that way, it is the confusion that keeps you from walking forth in ...
+
+Keywords:
+
+Article Body:
+The heart seems to be one of the most vulnerable organs in the body because it is the one that has held the most fear, and pain. It is the one that is most afraid to open to pure unconditional love, which is where your power lies.
+
+So, in essence, when you open your heart and heal without fear, you are opening to your own spiritual power. When your journey is confused, and you are afraid to turn this way or that way, it is the confusion that keeps you from walking forth in true connected power. It is fear that keeps the heart from unconditionally loving and stepping into your self-empowerment.
+
+Now this may seem, a bit trite or perhaps not as important as other things in your life. However, this is one of the most important aspects of your journey - to strengthen your heart into self-empowerment. This is the first step toward true healing: allowing the heart to feel and generate passion in your life.
+
+When your heart just exists and does not fully love, numbness and stagnation occurs. If there is a blockage, there is no connection to your own passion. This means there is no true connection to your own creativity, which affects the immune system and may cause physical challenges.
+
+There are exercises to help strengthen the heart. This exercise is required to go deeply into the heart on all levels -- feeling the pain, the joy, the confusion, the openness, the expansion, the repression.  As you go into that place and hold it open instead of fleeing from it, you will strengthen the heart. When you try to run from your feelings, you only exhaust the body by running from that which you cannot escape. You cannot run from your heart. The importance of going into your heart is because it is aligned with your soul and purpose. You can share and teach others how you strengthened your own being, by strengthening your connection to self.
+
+Be proud of your healing wherever it takes you. Do not be ashamed. Do not feel fear. For those of you balancing body, mind and spirit, remember that the only real strength comes from the heart. When your heart is not strong, your mind is fatigued because it clearly depends on the emotional support and faith to keep it alive. So, for those of you who are fearful about exploring your feelings, you are compromising your energy on all levels. This is an important understanding, to create a more balanced life. The rational mind has really no clear sense of soul purpose, and your body has its own limitations. The connection of the heart and the soul are what move you through time. Your healing and heart opening will support you in your new limitlessness.

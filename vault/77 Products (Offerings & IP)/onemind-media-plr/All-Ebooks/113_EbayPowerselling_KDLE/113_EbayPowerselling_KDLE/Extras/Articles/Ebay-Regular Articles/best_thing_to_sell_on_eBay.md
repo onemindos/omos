@@ -1,0 +1,29 @@
+# Don�t Just Sell Anything � Know the Best Thing to Sell on eBay
+
+For those planning to test the waters of the eBay business, whether for the fun of making some extra money or for seriously considering it as a business opportunity, there are several pointers you ought to learn and understand. There are several basics to learn once you join in the fray of eBay sellers. One of the most important of all is being constantly informed of the best thing to sell on eBay.
+
+Of course, we will not give you particular listing on the best thing to sell on eBay. Since in eBay you can sell virtually anything! You name any product and eBay most probably has it up for sale. 
+
+This does not mean, however, that once you become a seller, you can sell anything at all. Remember that you decided to become an eBay seller in order to earn profit. Thus, master the primary secret in eBay selling � getting to know the best thing to sell on eBay. Once you have an idea of the best thing to sell on eBay, you also learn how acquire this thing and just what it takes to attract customers to buy it.
+
+You may think that the best thing to sell on eBay would be the latest consumer products, well, think again. Selling latest consumer products is a good idea if you do not have such enormous competition like established online sellers and other big online companies that put up eBay. These companies have already taken first opportunity in flooding the online markets of latest consumer products. You will not stand a chance against them.
+
+The best thing to sell on eBay is an item that�s already used but still in good condition. A very specialized product is another option. This kind of product is not common and chances are only a few are selling them.  
+
+Chances are many used items that have potential to be a best thing to sell on eBay are practically lying about your house, taking up space in the attic or burning a whole in your closets. Books, toys no longer cared for, outgrown clothes, equipment or gadgets already replaced like computer, DVD, radio, stereo, etc. You can even bet that your stacks of collectible items that do not interest you anymore might make a good sale on eBay. Instead of just letting them rot away or disintegrate, you can earn a handsome profit for these used items while they are still in good condition.
+
+Finding the best thing to sell on eBay from used odds and ends in your house is a very risk-free way of getting into the eBay business. But you may also need to put up some cost. Repair, shipping and storage costs are things you need to consider. 
+
+Let�s say you don�t want to sell any of your used possessions but is still interested on entering the eBay scene. What�s the best thing to sell on eBay, then?
+
+You can still opt for selling used items by buying them where they are sold cheap. Garage sales and flea markets are some of the sources for these items. 
+
+If you prefer selling brand-new goods, these can be bought from companies that offer closeouts, clearance sales or discount stores. The best thing to sell on eBay may just come from the overstock, non-moving and seasonal items up for discounts. 
+
+Another best thing to sell on eBay is consumables. The concept is to have customers, who buy from you on eBay, do repeat business through your own web site. 
+
+Once you run out of sources to get the best thing to sell on eBay, you can always log on to the Wholesale Buying System (WBS). This gives out tips on what products to buy and where they can be bought. It has direct access to thousands of wholesale companies, that�s why.
+
+There are other ways of putting up the best thing to sell on eBay. Selling specialized products calls for a sales strategy. Know exactly what types of persons you�re targeting to buy your products and defining the kind of product you are going to sell.
+
+The best thing to sell on eBay may not be the most popular, the trendiest and the classiest items. Just know what the people buy and be resourceful. -30-

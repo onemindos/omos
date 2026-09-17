@@ -1,0 +1,88 @@
+<html><head><meta charset="UTF-8"></head><body><div>L5  PRESENCE      GPT-realtime + wearables (glasses HUD, watch, projector)</div>
+<div>L4  ORCHESTRATOR  Hermes/Legacy — memory, tools, agent routing, L0–L3  ? your &quotmanager&quot</div>
+<div>L3  SPECIALISTS   domain LLM agents (infra, security, comms, business)</div>
+<div>?????????????????????????????????????????????????????????????????????<br></div>
+<div>L2  WM CONTROL    per-robot world models, latent MPC  ? NEW (V-JEPA 2-AC, LeWM, Cosmos)</div>
+<div>L1  ALWAYS-ON     local WM perception, 24/7, token-free, emits SURPRISE  ? NEW</div>
+<div>L0  FABRIC        robots, drones, vehicles, printers, cameras — via NATSThe omnipresent &quotmanager&quot you want = <b>L4 Hermes, unchanged.</b> World models slot in at <b>L1–L2</b>, giving you the two things LLMs genuinely can't: token-free 24/7 perception, and fast physical action planning for robots/drones/vehicles. All on your existing NATS fabric — WMs become just more nodes on the mesh.<b>2027 physical AI embodiment is not a guess — it's a roadmap with hardware already shipping.</b> You are positioning at the exact intersection of NATS + physical AI + sovereign infrastructure before anyone else has put it together as a unified personal OS.ONEMIND COCKPIT</div>
+<div>??? FABRIC VIEW</div>
+<div>?   ??? Live agent roster (heartbeats, sessions active)</div>
+<div>?   ??? Node map (house, barn, office, drones, robots — live status)</div>
+<div>?   ??? Event feed (evt.&gt scrolling live)</div>
+<div>?   ??? Command dispatch (publish to bus, governance pre-check)</div>
+<div>?</div>
+<div>??? OPERATIONS</div>
+<div>?   ??? Tasks / Missions (Kanban — 6 columns)</div>
+<div>?   ??? Scheduling (natural language ? cron)</div>
+<div>?   ??? Inbox / Feed</div>
+<div>?   ??? Knowledge / Skills</div>
+<div>?</div>
+<div>??? INTELLIGENCE</div>
+<div>?   ??? Agent sessions (chat with any harness)</div>
+<div>?   ??? Memory graph</div>
+<div>?   ??? Cost / token tracking</div>
+<div>?   ??? Session replay (JetStream)</div>
+<div>?</div>
+<div>??? PHYSICAL</div>
+<div>?   ??? Drone / robot status</div>
+<div>?   ??? Camera feeds</div>
+<div>?   ??? Sensor telemetry (live charts)</div>
+<div>?   ??? Location map (GPS assets)</div>
+<div>?</div>
+<div>??? GOVERNANCE</div>
+<div>    ??? Approval queue (cmd.&gt pending)</div>
+<div>    ??? Audit log</div>
+<div>    ??? Security events</div>
+<div>    <font face="HelveticaNeue">???</font> Access levels (L0–L4)<b><span style="font-size: 16px">Think of It Like Building a House</span></b></div>
+<div>Your house has three separate things:</div>
+<ol>
+<li><b>The foundation + electrical wiring</b> — you never see it but everything runs through it. This is <b>NATS</b>. It's the nervous system.</li>
+<li><b>The rooms and appliances</b> — the stuff that actually does work. These are your <b>Python services</b> (Legacy, voice agent, watch service, sensors, bridges).</li>
+<li><b>The walls, windows, and front door</b> — what you see and touch. This is your <b>app</b> (Flutter mobile, React web dashboard).</li>
+</ol>
+<div>The confusion you've been having with Flutter is almost certainly <b>not Flutter's fault</b> — it's that the &quotelectrical wiring&quot wasn't defined clearly enough before you started building rooms. You were wiring outlets before the panel was installed.???????????????????????????????????????????????????????????????<br></div>
+<div>?            WHO DOES WHAT IN ONEMIND OS                       ?</div>
+<div>???????????????????????????????????????????????????????????????<br></div>
+<div>?  PYTHON      ?  THE BRAIN &amp NERVOUS SYSTEM                   ?</div>
+<div>?              ?  • Legacy (Hermes) — the main agent           ?</div>
+<div>?              ?  • Voice agent (LiveKit) — ears &amp mouth       ?</div>
+<div>?              ?  • Watch service — autonomous governor        ?</div>
+<div>?              ?  • NATS subscribers — event reactors          ?</div>
+<div>?              ?  • IoT bridges — sensor readers               ?</div>
+<div>?              ?  • ML / world models — perception             ?</div>
+<div>?              ?  Lives 24/7 on your server/Pi                 ?</div>
+<div>???????????????????????????????????????????????????????????????<br></div>
+<div>?  DART/       ?  THE EYES &amp HANDS (what you see &amp touch)      ?</div>
+<div>?  FLUTTER     ?  • Mobile app (iPhone, Android, tablet)       ?</div>
+<div>?              ?  • Cockpit panels (home dashboard on iPad)    ?</div>
+<div>?              ?  • Connects directly to NATS :8080 WebSocket  ?</div>
+<div>?              ?  Runs on every device you carry               ?</div>
+<div>???????????????????????????????????????????????????????????????<br></div>
+<div>?  REACT /     ?  THE COMMAND CENTER (big screen / browser)    ?</div>
+<div>?  TYPESCRIPT  ?  • Web dashboard (agenttap-style live view)   ?</div>
+<div>?              ?  • Fabric map, drone feeds, sensor charts     ?</div>
+<div>?              ?  • Connects to NATS :8080 WebSocket           ?</div>
+<div>?              ?  Runs in Brave on any machine                 ?</div>
+<div>???????????????????????????????????????????????????????????????<br></div>
+<div>?  GO          ?  THE BRIDGES (tiny always-on daemons)         ?</div>
+<div>?              ?  • NATS ? Home Assistant bridge               ?</div>
+<div>?              ?  • NATS ? ESP32/WireClaw bridge               ?</div>
+<div>?              ?  • NATS ? drone MAVLink bridge                ?</div>
+<div>?              ?  Small binary, fits on Pi Zero, runs forever  ?</div>
+<div>???????????????????????????????????????????????????????????????<br></div>
+<div>?  SQLITE      ?  THE MEMORY (everything stored locally)       ?</div>
+<div>?              ?  • Tasks, missions, knowledge, skills         ?</div>
+<div>?              ?  • Session history, events log                ?</div>
+<div>?              ?  • Works offline, works on Pi, no server      ?</div>
+<div><font face="HelveticaNeue">???????????????</font><font face=".CJKSymbolsFallbackSC-Regular">????????????????????????????????????????????????</font>What is the best way to contact you?  @Wally Quevedo wally@nats.io </div>
+<div>This cleanly separates &quotthe work&quot (durable, human) from &quotan attempt&quot (ephemeral, machine) — which is why retries, multi-agent reruns, and audit all work without hacks.</div>
+<div><br></div>
+<div><b>Where I go past Multica — the polymorphic Actor.</b> Multica made <i>agents</i> first-class members alongside humans. OneMind makes the <b>physical world</b> first-class too:</div>
+<div><tt>Actor = human | agent | node | device | squad</tt></div>
+<div><tt>        each with capabilities + an executor binding</tt><font face=".AppleSystemUIFont"><span style="font-size: 13px"><tt><br></tt></span></font></div>
+<div>Copy</div>
+<div>The critical distinction I'm keeping from them: <b>NOTIFY vs TRIGGER.</b> Humans get <i>notified</i> (an inbox, like Todoist) and choose to act. Machines get <i>triggered</i> and execute immediately. Same task board, same issue, different executor. Adding &quotdrone&quot or &quotCNC&quot later is just a new actor type with new capabilities — <b>never a schema rewrite.</b><br></div>
+<div><b>And the part that makes it an OS, not a to-do app:</b> telemetry drives the board. <font face=".AppleSystemUIFontMonospaced-Regular"><span style="font-size: 12px">tel.greenhouse.soil.moisture &lt 20</span></font> fires an event ? an autopilot creates an issue &quotwater greenhouse&quot ? assigned to the irrigation device ? it executes. The physical world creates and completes its own tasks. NATS Connect (Wombat) later lets a task fire a SaaS action or move a robot.</div>
+<div><b>Why ours beats Multica's core:</b> they poll every 3 seconds; we push. An actor's daemon holds a live subscription and gets work the instant it's assigned — lower latency, and it scales to hundreds of nodes on the same mechanism.</div>
+<div><br></div>
+</body></html>

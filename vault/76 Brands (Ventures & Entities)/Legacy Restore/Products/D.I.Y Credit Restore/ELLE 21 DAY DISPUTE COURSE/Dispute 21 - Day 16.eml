@@ -1,0 +1,940 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ac0:9388:0:0:0:0:0 with SMTP id d8csp1172729imd;
+        Fri, 15 May 2020 20:54:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzMNxeZSlq3iaJuJ0E53D3ymkEJGNzUbBlB1CjUgEnQnn5L+euoRuEbSH/R5Ay6mWyGa4Pm
+X-Received: by 2002:ac8:1aab:: with SMTP id x40mr6852909qtj.358.1589601268457;
+        Fri, 15 May 2020 20:54:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1589601268; cv=none;
+        d=google.com; s=arc-20160816;
+        b=uSo5Bl8Cx2u5H+bLxYQTchgshslQ/JEsaiSiXDZcNVrEHr3fgw64UqXOtz6vn/61n4
+         Q3EjX8D6Pyct8030YeYdMaiJYd4kKbO+78q8gTnc7HGPUwFB9VQ0l3SdXisWK97reVXr
+         gyU4ii4houwpqGQEs4LyfEa/qgOQ6o37a5CHPbrAGMuihJ8kCf+0KANbU4hs1K0OG9Jr
+         Dfyj0fXgt9xXLpKz6M9NJqaB6923DtGR7olhFabDPyQQaTBJxjgGUZMRAV7XNF/OMuUM
+         hsLm7lGCtZLqP/OzerKcARi0vd3d5QJHvaeLwI6wUmbw49VvMPDBRTWOq2NwO0P1hLj4
+         2Lkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=26CaKMsRy3HDWNVj1eyS0uT9Qwgk18pFsS+ClTcpy8Y=;
+        b=knO3wfi5C6tMXQUHSL00fd7v5pq0uK0q8n2EbYpr3nUqgCOCfrSbjlXWcSlGOAXjDi
+         NyYw78JFhs+wdeVbIjd5ngUjYstWV1Am9NWlTVbStTTLSsR9avvu+1X7fRZvwIV4dglY
+         SAz2uSokz2L9mTUmrxMwrHV7OErM6LGp/nwNjlmWKkbWmLx1n0r28ddpFt+VFKZh2Wdx
+         0kjk7Yp2XHRap3PGjYryNBHL57QPMOTwHTT0zD58g6+2GouBWG9+nduZ2K2LGM9IfyuO
+         VNqPB2WeTQaIdTivdA3STf9RAKQkYU5brCEAyyC+TeBqqjnT/zF0vZ/jE0CcJLaOb+Oy
+         heZQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=k566Cye8;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=Zdbeweuf;
+       spf=pass (google.com: domain of bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id u33si2313592qtk.261.2020.05.15.20.54.28
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2020 20:54:28 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=k566Cye8;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=Zdbeweuf;
+       spf=pass (google.com: domain of bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=26CaKMsRy3HDWNVj1eyS0uT9Qwgk18pFsS+ClTcpy8Y=;
+ b=k566Cye8OvRBS6GeFFiusQVxIgJg92S73486//Ju+lKgoDQ2vHohvdi+gGbqzy6vreDL6qIsaYI/
+   DkS66jHULE01DA/ajeGb/O7W6L3tgrhuCD4b9RT4bGh1L22Xazq3YN1YmIsqhJDSAojE4JEuOJ2O
+   5U82DHIHp3OCcH8zH4E=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=26CaKMsRy3HDWNVj1eyS0uT9Qwgk18pFsS+ClTcpy8Y=;
+ b=ZdbeweufJqZbRQZuSZcyOehto/QEPOCf9zgXIkaLtr81wHnbYALsiJhxWBP6rB6IeNnEA2pmBSP5
+   lByAcQeD0Oijwn/sayjBE02HCK0zIDRI7iIHU4hcMtOMPB34oDmlFQ49ijTqZuXBR71O7zF7wkCF
+   k/IQp/ywb9njnciP8iQ=
+Received: by s2.asa1.acemsd3.com id hnthv82lshkj for <bruce.k.cosma@gmail.com>; Sat, 16 May 2020 03:54:28 +0000 (envelope-from <bounce-549600-441-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Day 16
+Date: Fri, 15 May 2020 22:54:28 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-4167807205ebf63f4101b58.32951811_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDQxICwgbTQ1NiAsIHM3MDYw
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-441
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-441-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=441&m=456&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200516035428.31239.79701430.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-4167807205ebf63f4101b58.32951811_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public.
+Dispute 21 - Day 16:
+
+Dispute Letter Writing Tips   
+
+Bruce, picture in your mind for a moment... You own a credit
+reporting agency, and every day you literally receive "truck loads" of
+mail. 
+
+**Thousands of envelopes which must be examined, opened, recorded and
+processed; this in turn requiring thousands of computer entries and
+hundreds of employees.**There's just one problem. You, as the owner of
+a credit bureau, don't make any money dealing with all this mail!
+
+So, you develop some rules to make your business more efficient. First,
+all mail that requires a signature gets refused. Second, all letters
+that appear to come from a credit repair organization - you toss in the
+garbage! Third, all letters that look confusing you return back to the
+consumer as frivolous. Then you put the remaining dispute letters into 
+
+**two** 
+
+**piles**. Disputes that look like they've been copied out of a credit
+repair book are put into the "boiler plate" pile. And disputes that look
+to be authentically written by the consumer get put into the "original"
+pile.
+
+Now, the first pile containing "boiler plate disputes" gets assigned to
+a depart- ment, whereby the CRA employee simply translates the dispute
+into a two-digit code. 
+
+**The job of most credit bureau "investigators" (despite their title) is
+solely data entry!**That's it. And as an experienced credit bureau
+owner, you understand that 90% of consumers who use a "boiler-plate
+dispute" simply give up after the items are verified as accurate. So why
+take these disputes seriously at all?
+
+The second pile of disputes, which appear to be authentically written by
+the con- sumer and appear to be factual - you take more seriously. Not a
+bunch of "ranting and raving" about laws, procedures, court rulings, and
+the like. 
+
+**Just short, simple and concise.**The consumer who writes his or her
+own "original" dispute letter is much more likely to take the process
+seriously. And they're much more likely to send follow-up letters and
+sue for FCRA violations. That spells more trouble!
+
+Bruce, were you aware that dispute investigators at the big 3
+credit bureaus work under a quota system whereby each "investigator" is
+expected to process all the disputes of an individual consumer in less
+than a few minutes? To get the best results possible, make your dispute
+letters look and sound 
+
+**original**.
+
+TAKE THE SIMPLE ROAD WITH THE CREDIT BUREAUS
+
+Credit bureaus are well known for flagging certain catch phrases. "As
+you know, the Fair Credit Reporting Act requires you to maintain
+reasonable procedures..." This phrase is straight out of a dozen credit
+courses. Get to the point. If you've written a collection agency and
+turned down their business, here's what you can write to the credit
+bureau: "Account number [xxx] is disputed." You can get a little more
+specific: "This account was the result of identity theft." Or, "This
+account was incorrectly billed to me. See attached letter from
+creditor."
+
+They also don't need your paralegal services. There's no point in
+sending them copies of the FCRA. You're not talking to a bunch of
+attorneys. That's why in some cases it's important to contact the
+creditor while you're disputing. If the account is verified and
+remains incorrectly reported you can redispute with backup documentation
+from the creditor to prove your case. If the bureau refuses to consider
+the documenta- tion now you have some leverage. Pay a local attorney a
+few bucks to write them a letter stating an FCRA violation has occurred
+and their cooperation is recommended. You get the idea.
+
+THE BEST TIME OF YEAR TO DISPUTE CREDIT BUREAUS!
+
+The best time to make dispute requests is during the busiest time of the
+year - 
+
+**after Thanksgiving and before New Year's Day.**During these busy
+times there's a better chance that the credit bureaus fall short on
+resources to comply with the time requirements of a consumers request
+and will either be forced to delete or correct the contested items! As
+per the FCRA, credit bureaus have 30 days from the date of receipt to
+complete their investigation. If they don't complete their
+investigation in a timely manner make sure you follow-up and tell them!
+
+Copyright © 2019 EduCredit Solutions. All rights reserved.
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online at www.educreditsolutions.com
+
+Work With Elle
+
+For information regarding 1-on-1 Coaching, Staff Training and Education
+Services, you can schedule a discovery call at
+bit.ly/discoverycallwithelle 
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=441&m=456&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-4167807205ebf63f4101b58.32951811_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;} /*=0ADefault social icons */ *[class].ac-social-icon-16 {wi=
+dth:16px !important; height:16px !important;} *[class].ac-social-icon-24 {w=
+idth:24px !important; height:24px !important;} *[class].ac-social-icon-28 {=
+width:28px !important; height:28px !important;} *[class].__ac_social_icons =
+{ margin-right: 0px !important; } }=0A</style><style data-ac-keep=3D"true">=
+ @media only screen and (max-width: 320px) { #layout-row3405 img { width: 1=
+00% !important; height: auto !important; max-width: 320px !important; } #la=
+yout-row3406 img { width: 100% !important; height: auto !important; max-wid=
+th: 320px !important; } #layout-row3407 .break-line { width: 100% !importan=
+t; margin: auto !important; } div.divbody { padding: 20px !important; } .td=
+_rss .rss-item img.iphone_large_image { width: auto !important; } u + .body=
+ { display: table !important; width: 100vw !important; min-width: 100vw !im=
+portant; } u + .body table { display: table !important; width: 100% !import=
+ant; min-width: 100% !important; } u + .body td { display: block !important=
+; width: 100% !important; min-width: 100% !important; } u + .body img { dis=
+play: inline-block !important; margin: auto !important; width: auto !import=
+ant; vertical-align: bottom !important; } u + .body center { display: block=
+ !important; margin: auto !important; width:=0A100% !important; min-width: =
+100% !important; text-align: center !important; } u + .body table._ac_socia=
+l_table, u + .body table._ac_social_table td, u + .body table._ac_social_ta=
+ble div, u + .body table._ac_social_table a { display: inline-block !import=
+ant; margin: auto !important; width: auto !important; min-width: auto !impo=
+rtant; text-align: center !important; } u + .body table._ac_social_table im=
+g { display: inline-block !important; margin: auto !important; width: 32px =
+!important; min-width: 32px !important; max-width: 32px !important; }=0A}=
+=0A@media only screen and (max-width: 375px) { #layout-row3405 img { width:=
+ 100% !important; height: auto !important; max-width: 375px !important; } #=
+layout-row3406 img { width: 100% !important; height: auto !important; max-w=
+idth: 375px !important; } #layout-row3407 .break-line { width: 100% !import=
+ant; margin: auto !important; } div.divbody { padding: 20px !important; } .=
+td_rss .rss-item img.iphone_large_image { width: auto !important; } u + .bo=
+dy { display: table !important; width: 100vw !important; min-width: 100vw !=
+important; } u + .body table { display: table !important; width: 100% !impo=
+rtant; min-width: 100% !important; } u + .body td { display: block !importa=
+nt; width: 100% !important; min-width: 100% !important; } u + .body img { d=
+isplay: inline-block !important; margin: auto !important; width: auto !impo=
+rtant; vertical-align: bottom !important; } u + .body center { display: blo=
+ck !important; margin: auto !important; width: 100% !important; min-width: =
+100%=0A!important; text-align: center !important; } u + .body table._ac_soc=
+ial_table, u + .body table._ac_social_table td, u + .body table._ac_social_=
+table div, u + .body table._ac_social_table a { display: inline-block !impo=
+rtant; margin: auto !important; width: auto !important; min-width: auto !im=
+portant; text-align: center !important; } u + .body table._ac_social_table =
+img { display: inline-block !important; margin: auto !important; width: 32p=
+x !important; min-width: 32px !important; max-width: 32px !important; }=0A}=
+=0A@media only screen and (max-width: 414px) { #layout-row3405 img { width:=
+ 100% !important; height: auto !important; max-width: 414px !important; } #=
+layout-row3406 img { width: 100% !important; height: auto !important; max-w=
+idth: 414px !important; } #layout-row3407 .break-line { width: 100% !import=
+ant; margin: auto !important; } div.divbody { padding: 20px !important; } .=
+td_rss .rss-item img.iphone_large_image { width: auto !important; } u + .bo=
+dy { display: table !important; width: 100vw !important; min-width: 100vw !=
+important; } u + .body table { display: table !important; width: 100% !impo=
+rtant; min-width: 100% !important; } u + .body td { display: block !importa=
+nt; width: 100% !important; min-width: 100% !important; } u + .body img { d=
+isplay: inline-block !important; margin: auto !important; width: auto !impo=
+rtant; vertical-align: bottom !important; } u + .body center { display: blo=
+ck !important; margin: auto !important; width: 100% !important; min-width: =
+100%=0A!important; text-align: center !important; } u + .body table._ac_soc=
+ial_table, u + .body table._ac_social_table td, u + .body table._ac_social_=
+table div, u + .body table._ac_social_table a { display: inline-block !impo=
+rtant; margin: auto !important; width: auto !important; min-width: auto !im=
+portant; text-align: center !important; } u + .body table._ac_social_table =
+img { display: inline-block !important; margin: auto !important; width: 32p=
+x !important; min-width: 32px !important; max-width: 32px !important; }=0A}=
+=0A@media only screen and (max-width: 667px) { #layout-row3405 img { width:=
+ 100% !important; height: auto !important; max-width: 648px !important; } #=
+layout-row3406 img { width: 100% !important; height: auto !important; max-w=
+idth: 667px !important; } #layout-row3407 .break-line { width: 100% !import=
+ant; margin: auto !important; } div.divbody { padding: 20px !important; } .=
+td_rss .rss-item img.iphone_large_image { width: auto !important; } u + .bo=
+dy { display: table !important; width: 100vw !important; min-width: 100vw !=
+important; } u + .body table { display: table !important; width: 100% !impo=
+rtant; min-width: 100% !important; } u + .body td { display: block !importa=
+nt; width: 100% !important; min-width: 100% !important; } u + .body img { d=
+isplay: inline-block !important; margin: auto !important; width: auto !impo=
+rtant; vertical-align: bottom !important; } u + .body center { display: blo=
+ck !important; margin: auto !important; width: 100% !important; min-width: =
+100%=0A!important; text-align: center !important; } u + .body table._ac_soc=
+ial_table, u + .body table._ac_social_table td, u + .body table._ac_social_=
+table div, u + .body table._ac_social_table a { display: inline-block !impo=
+rtant; margin: auto !important; width: auto !important; min-width: auto !im=
+portant; text-align: center !important; } u + .body table._ac_social_table =
+img { display: inline-block !important; margin: auto !important; width: 32p=
+x !important; min-width: 32px !important; max-width: 32px !important; }=0A}=
+ </style><!--[if !mso]><!-- webfonts --><!--<![endif]--><!--[if lt mso 12]>=
+ <![endif]--></head><body id=3D"ac-designer" class=3D"body" style=3D"font-f=
+amily: Arial; line-height: 1.1; margin: 0px; background-color: #ffffff; wid=
+th: 100%; text-align: center;">=09=09<div style=3D"display:none; padding:0;=
+ height:1px; font-size:1px; background-color:inherit !important; color:inhe=
+rit !important; line-height:1px; mso-hide:all;">=0A=09=09=09Dispute Letter =
+Writing Basics=0A=09=09</div>=0A<div class=3D"divbody" style=3D"margin: 0px=
+; outline: none; padding: 0px; color: #000000; font-family: arial; line-hei=
+ght: 1.1; width: 100%; background-color: #ffffff; background: #ffffff; text=
+-align: center;"><table class=3D"template-table" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left" style=3D"font-size: =
+13px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0pt; backgr=
+ound-color: #ffffff; background: #ffffff;"><tr><td align=3D"center" valign=
+=3D"top" width=3D"100%"><table class=3D"template-table" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"650" bgcolor=3D"#ffffff" style=3D"fo=
+nt-size: 13px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0p=
+t; max-width: 650px;"><tr><td id=3D"layout_table_14f079866c13fce63b3874396a=
+033d93e65432e4" valign=3D"top" align=3D"center" width=3D"650" style=3D""><t=
+able cellpadding=3D"0" cellspacing=3D"0" border=3D"0" class=3D"layout layou=
+t-table root-table" width=3D"650" style=3D"font-size: 13px; min-width: 100%=
+; mso-table-lspace: 0pt;=0Amso-table-rspace: 0pt;"><tr style=3D""><td id=3D=
+"layout-row-margin3405" valign=3D"top" style=3D"padding: 0px;"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; bo=
+rder-collapse: initial !important;"><tr id=3D"layout-row3405" class=3D"layo=
+ut layout-row widget _widget_picture style3405" align=3D"center" style=3D""=
+><td id=3D"layout-row-padding3405" valign=3D"top" style=3D"padding: 1px 1px=
+ 0px 1px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt;"><tr><td class=3D"image-td" align=3D"center" valign=3D=
+"top" width=3D"648"><img src=3D"https://educreditsolutions.imgus11.com/publ=
+ic//daaf1acf5dbe217bf12557d3465eb796.png?r=3D1657148476" alt=3D"" width=3D"=
+648" style=3D"display: block; border: none; outline: none; width: 648px; op=
+acity: 1; max-width: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</ta=
+ble>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3409" vali=
+gn=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellp=
+adding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; m=
+so-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !impo=
+rtant;"><tr id=3D"layout-row3409" class=3D"layout layout-row widget _widget=
+_text style3409" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-bord=
+er3409" valign=3D"top" style=3D"border-color: #1f2129; border-style: solid;=
+ border-width: 2px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspac=
+e: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding3409" valig=
+n=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3177" cl=
+ass=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"626" style=
+=3D"margin: 0;=0Aoutline: none; padding: 0; color: inherit; font-size: 12px=
+; font-weight: inherit; line-height: 1; text-decoration: inherit; font-fami=
+ly: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0; font-size:=
+ 17px;"> <div style=3D"margin: 0; outline: none; padding: 0;"> <div style=
+=3D"margin: 0; outline: none; padding: 0;"> <div class=3D"" style=3D"margin=
+: 0; outline: none; padding: 0;"> <div class=3D"" style=3D"margin: 0; outli=
+ne: none; padding: 0;"> <i style=3D"margin: 0; outline: none; padding: 0; f=
+ont-size: 12px; font-style: italic; font-family: arial; color: #000000; fon=
+t-weight: 400;" class=3D""><span style=3D"color: #999999; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit; fo=
+nt-family: arial;" class=3D""><br class=3D"">Objective: This 21 day email c=
+ourse is designed for the student to gain a clear understanding of the cred=
+it repair process so that they can approach the client file and create an a=
+ction plan with certainty. The content of this=0Acourse is also designed to=
+ help the student effectively communicate credit information so that as a b=
+usiness owner they can feel comfortable and confident when speaking about t=
+he subject of credit to leads, clients, and the general public.</span></i><=
+div style=3D"margin: 0; outline: none; padding: 0; font-size: 17px; font-fa=
+mily: arial; font-style: normal; font-weight: 400; text-align: center; colo=
+r: #0174df;" class=3D""><span style=3D"color: #0174df; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit; font-=
+family: arial;" class=3D""><br class=3D""><span style=3D"color: inherit; fo=
+nt-size: 28.6667px; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit;" class=3D"">Dispute 21 - Day 16:<br></span><br style=3D"" cl=
+ass=3D""><span style=3D"color: #0174df; font-size: 28.6667px; font-weight: =
+400; line-height: inherit; text-decoration: inherit; font-family: arial; fo=
+nt-style: normal;" class=3D"">Dispute Letter Writing Tips=C2=A0 =C2=A0</spa=
+n><span=0Astyle=3D"color: #0174df; font-size: inherit; font-weight: 400; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial; font-styl=
+e: normal;" class=3D""><br style=3D"font-size: 18px;" class=3D""><br style=
+=3D"" class=3D""></span></span></div>=0A<div style=3D"margin: 0; outline: n=
+one; padding: 0; font-family: arial; color: #000000; font-style: normal; te=
+xt-align: center;" class=3D""><span style=3D"color: #000000; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+ font-family: arial;" class=3D""> <div style=3D"margin: 0 62.65pt 0 71.6pt;=
+ outline: none; padding: 0;"><br></div>=0A</span></div>=0A</div>=0A</div>=
+=0A</div>=0A</div>=0A<blockquote style=3D"margin: 0px 0px 0px 40px; outline=
+: none; padding: 0px; border: none; font-size: 17px;"><div style=3D"margin:=
+ 0; outline: none; padding: 0;"><div style=3D"margin: 0; outline: none; pad=
+ding: 0;"><div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"><=
+div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial; font-style: normal;"=
+>Bruce, p</span><span style=3D"color: #000000; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit; text-align: j=
+ustify;">icture</span><span style=3D"color: #000000; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit; text-al=
+ign: justify;"> </span><span style=3D"color: #000000; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit; text-a=
+lign: justify;">in</span><span=0Astyle=3D"color: #000000; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit; te=
+xt-align: justify;"> </span><span style=3D"color: #000000; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit; t=
+ext-align: justify;">your</span><span style=3D"color: #000000; font-size: i=
+nherit; font-weight: inherit; line-height: inherit; text-decoration: inheri=
+t; text-align: justify;"> </span><span style=3D"color: #000000; font-size: =
+inherit; font-weight: inherit; line-height: inherit; text-decoration: inher=
+it; text-align: justify;">mind</span><span style=3D"color: #000000; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit; text-align: justify;"> </span><span style=3D"color: #000000; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit; text-align: justify;">for</span><span style=3D"color: #000000; fon=
+t-size: inherit; font-weight: inherit; line-height:=0Ainherit; text-decorat=
+ion: inherit; text-align: justify;"> </span><span style=3D"color: #000000; =
+font-size: inherit; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit; text-align: justify;">a</span><span style=3D"color: #000000;=
+ font-size: inherit; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit; text-align: justify;"> </span><span style=3D"color: #000000=
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit; text-align: justify;">moment...</span><span style=3D"color=
+: #000000; font-size: inherit; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit; text-align: justify;"> </span><span style=3D"colo=
+r: #000000; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit; text-align: justify;">You</span><span style=3D"c=
+olor: #000000; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; text-align: justify;"> </span><span=0Astyle=
+=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; text-align: justify;">own</span><span st=
+yle=3D"color: #000000; font-size: inherit; font-weight: inherit; line-heigh=
+t: inherit; text-decoration: inherit; text-align: justify;"> </span><span s=
+tyle=3D"color: #000000; font-size: inherit; font-weight: inherit; line-heig=
+ht: inherit; text-decoration: inherit; text-align: justify;">a</span><span =
+style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit; text-align: justify;"> </span><span=
+ style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit; text-align: justify;">credit</span=
+><span style=3D"color: #000000; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit; text-align: justify;"> </spa=
+n><span style=3D"color: #000000; font-size: inherit; font-weight: inherit; =
+line-height:=0Ainherit; text-decoration: inherit; text-align: justify;">rep=
+orting</span><span style=3D"color: #000000; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit; text-align: just=
+ify;"> </span><span style=3D"color: #000000; font-size: inherit; font-weigh=
+t: inherit; line-height: inherit; text-decoration: inherit; text-align: jus=
+tify;">agency,</span><span style=3D"color: #000000; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit; text-ali=
+gn: justify;"> </span><span style=3D"color: #000000; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit; text-al=
+ign: justify;">and</span><span style=3D"color: #000000; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit; text=
+-align: justify;"> </span><span style=3D"color: #000000; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; tex=
+t-align: justify;">every day you=0Aliterally receive "truck loads" of mail.=
+ </span><b style=3D"margin: 0; outline: none; padding: 0; text-decoration: =
+inherit; text-align: justify;">Thousands of envelopes which must be examine=
+d, opened, recorded and processed; this in turn requiring thousands of comp=
+uter entries and hundreds of employees. </b><span style=3D"color: #000000; =
+font-size: inherit; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit; text-align: justify;">There=E2=80=99s </span><span style=3D"=
+color: #000000; font-size: inherit; font-weight: inherit; line-height: inhe=
+rit; text-decoration: inherit; text-align: justify;">just one problem. </sp=
+an><span style=3D"color: #000000; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit; text-align: justify;">You,=
+ </span><span style=3D"color: #000000; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit; text-align: justify;"=
+>as the owner</span><span style=3D"color: #000000;=0Afont-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit; text-al=
+ign: justify;"> </span><span style=3D"color: #000000; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit; text-a=
+lign: justify;">of</span><span style=3D"color: #000000; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit; text=
+-align: justify;"> </span><span style=3D"color: #000000; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; tex=
+t-align: justify;">a</span><span style=3D"color: #000000; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit; te=
+xt-align: justify;"> </span><span style=3D"color: #000000; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit; t=
+ext-align: justify;">credit</span><span style=3D"color: #000000; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration:=0Ain=
+herit; text-align: justify;"> </span><span style=3D"color: #000000; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit; text-align: justify;">bureau,</span><span style=3D"color: #000000; =
+font-size: inherit; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit; text-align: justify;"> </span><span style=3D"color: #000000;=
+ font-size: inherit; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit; text-align: justify;">don=E2=80=99t</span><span style=3D"co=
+lor: #000000; font-size: inherit; font-weight: inherit; line-height: inheri=
+t; text-decoration: inherit; text-align: justify;"> </span><span style=3D"c=
+olor: #000000; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; text-align: justify;">make</span><span style=
+=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; text-align: justify;"> </span><span styl=
+e=3D"color: #000000;=0Afont-size: inherit; font-weight: inherit; line-heigh=
+t: inherit; text-decoration: inherit; text-align: justify;">any</span><span=
+ style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit; text-align: justify;"> </span><spa=
+n style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-h=
+eight: inherit; text-decoration: inherit; text-align: justify;">money</span=
+><span style=3D"color: #000000; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit; text-align: justify;"> </spa=
+n><span style=3D"color: #000000; font-size: inherit; font-weight: inherit; =
+line-height: inherit; text-decoration: inherit; text-align: justify;">deali=
+ng</span><span style=3D"color: #000000; font-size: inherit; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit; text-align: justify;=
+"> </span><span style=3D"color: #000000; font-size: inherit; font-weight: i=
+nherit; line-height: inherit;=0Atext-decoration: inherit; text-align: justi=
+fy;">with</span><span style=3D"color: #000000; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit; text-align: j=
+ustify;"> </span><span style=3D"color: #000000; font-size: inherit; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit; text-align: =
+justify;">all</span><span style=3D"color: #000000; font-size: inherit; font=
+-weight: inherit; line-height: inherit; text-decoration: inherit; text-alig=
+n: justify;"> </span><span style=3D"color: #000000; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit; text-ali=
+gn: justify;">this</span><span style=3D"color: #000000; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit; text=
+-align: justify;"> </span><span style=3D"color: #000000; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; tex=
+t-align: justify;">mail!<br><br></span><span=0Astyle=3D"color: #000000; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit; text-align: justify;">So, you develop some rules to make your b=
+usiness more efficient. <span style=3D"color: #ff0000; font-size: inherit; =
+font-weight: bold; line-height: inherit; text-decoration: inherit;" class=
+=3D"">First</span>, all mail that requires a signature gets refused. <span =
+style=3D"color: #ff0000; font-size: inherit; font-weight: bold; line-height=
+: inherit; text-decoration: inherit;" class=3D"">Second</span>, all letters=
+ that appear to come from a credit repair organization - you toss in the ga=
+rbage! <span style=3D"color: #ff0000; font-size: inherit; font-weight: bold=
+; line-height: inherit; text-decoration: inherit;" class=3D"">Third</span>,=
+ all letters that look confusing you return back to the consumer as frivolo=
+us. </span><b style=3D"margin: 0; outline: none; padding: 0; text-decoratio=
+n: inherit; text-align: justify;">Then you put the remaining dispute=0Alett=
+ers into <span style=3D"color: #ff0000; font-size: inherit; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit;" class=3D""><u style=
+=3D"margin: 0; outline: none; padding: 0; color: #ff0000;">two</u> <u style=
+=3D"margin: 0; outline: none; padding: 0; color: #ff0000;">piles</u></span>=
+. </b><span style=3D"color: #000000; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit; text-align: justify;">D=
+isputes that look like they=E2=80=99ve been copied out of a credit repair b=
+ook are put into the "<span style=3D"color: #ff0000; font-size: inherit; fo=
+nt-weight: bold; line-height: inherit; text-decoration: inherit;" class=3D"=
+">boiler plate</span>" pile. And disputes that look to be authentically wri=
+tten by the consumer get put into the "<span style=3D"color: #ff0000; font-=
+size: inherit; font-weight: bold; line-height: inherit; text-decoration: in=
+herit;" class=3D"">original</span>" pile.<br><br></span><span style=3D"colo=
+r: #000000; font-size:=0Ainherit; font-weight: inherit; line-height: inheri=
+t; text-decoration: inherit; text-align: justify;">Now, </span><span style=
+=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; text-align: justify;">the first pile con=
+taining "boiler plate disputes" gets assigned to a depart- ment, whereby th=
+e CRA employee simply translates the dispute into a two-digit code. <b styl=
+e=3D"margin: 0; outline: none; padding: 0;">The job of most credit bureau "=
+investigators" (despite their title) is solely data entry! </b>That=
+=E2=80=99s it. And as an experienced credit bureau owner, you understand th=
+at 90% of consumers who use a "boiler-plate dispute" simply give up after t=
+he items are verified as accurate. So why take these disputes seriously at =
+all?<br><br></span><span style=3D"color: #000000; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit; text-align=
+: justify;">The second pile of disputes, which=0Aappear to be authentically=
+ written by the con- sumer and appear to be factual - you take more serious=
+ly. Not a bunch of "ranting and raving" about laws, procedures, court rulin=
+gs, and the like. </span><b style=3D"margin: 0; outline: none; padding: 0; =
+text-decoration: inherit; text-align: justify;">Just short, simple and conc=
+ise.<br><br></b><span style=3D"color: #000000; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit; text-align: j=
+ustify;">The consumer who writes his or her own "original" dispute letter i=
+s much more likely to take the process seriously. And they=E2=80=99re much =
+more likely to send follow-up letters and sue for FCRA violations. That spe=
+lls more trouble!<br><br></span>Bruce, w<span style=3D"color: #000000; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit; font-family: arial; text-align: inherit;">ere</span><span style=
+=3D"color: #000000; font-size: inherit; font-weight: inherit;=0Aline-height=
+: inherit; text-decoration: inherit; font-family: arial; text-align: inheri=
+t;"> </span><span style=3D"color: #000000; font-size: inherit; font-weight:=
+ inherit; line-height: inherit; text-decoration: inherit; font-family: aria=
+l; text-align: inherit;">you aware that dispute investigators at the big 3 =
+credit bureaus work under a quota system whereby each "investigator" is exp=
+ected to process all the disputes of an individual consumer in less than a =
+few minutes? <b style=3D"margin: 0; outline: none; padding: 0;">To get the =
+best results possible, make your dispute letters look and sound <u style=3D=
+"margin: 0; outline: none; padding: 0; color: #ff0000;" class=3D"">original=
+</u>.<br></b></span></div>=0A</div>=0A</div>=0A</div>=0A</blockquote><div s=
+tyle=3D"margin: 0; outline: none; padding: 0;"><div style=3D"margin: 0; out=
+line: none; padding: 0;"><blockquote style=3D"margin: 0px 0px 0px 40px; out=
+line: none; padding: 0px; border: none;" class=3D""><div class=3D"" style=
+=3D"margin: 0; outline: none; padding: 0;"><div class=3D"" style=3D"margin:=
+ 0; outline: none; padding: 0;"><span style=3D"color: #000000; font-size: i=
+nherit; font-weight: inherit; line-height: inherit; text-decoration: inheri=
+t; text-align: left; font-family: arial; font-style: italic; margin: 0;" cl=
+ass=3D""> </span> </div>=0A</div>=0A</blockquote> </div>=0A </div>=0A </div=
+>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<=
+/table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3420" v=
+align=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%=
+; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !i=
+mportant;"><tr id=3D"layout-row3420" class=3D"layout layout-row widget _wid=
+get_text style3420" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-b=
+order3420" valign=3D"top" style=3D"border-color: #1f2129; border-style: sol=
+id; border-width: 2px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-ls=
+pace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding3420" va=
+lign=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cel=
+lpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%;=
+ mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3188"=
+ class=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"626" sty=
+le=3D"margin: 0;=0Aoutline: none; padding: 0; color: inherit; font-size: 12=
+px; font-weight: inherit; line-height: 1; text-decoration: inherit; font-fa=
+mily: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0; font-siz=
+e: 17px;"> <div style=3D"margin: 0; outline: none; padding: 0;"> <div style=
+=3D"margin: 0 49.65pt 0 58.55pt; outline: none; padding: 0; text-align: cen=
+ter;"><b style=3D"margin: 0; outline: none; padding: 0; font-size: 20px;"><=
+span style=3D"color: #000000; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit;" class=3D""><br>TAKE THE SIMPL=
+E ROAD WITH THE CREDIT BUREAUS</span></b><b style=3D"margin: 0; outline: no=
+ne; padding: 0; mso-bidi-font-weight: normal;"></b></div>=0A<br><div style=
+=3D"margin: 0 32.8pt 0 42pt; outline: none; padding: 0; text-align: justify=
+;"><span style=3D"color: #000000; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;" class=3D""><br>Credit bur=
+eaus are well known for flagging certain catch phrases. "As you know, the F=
+air Credit Reporting Act requires you to maintain reasonable procedures..."=
+ This phrase is straight out of a dozen credit courses. Get to the point. I=
+f you=E2=80=99ve written a collection agency and turned down their business=
+, here=E2=80=99s what you can write to the credit bureau: "Account number [=
+xxx] is disputed." You can get a little more specific: "This account was th=
+e result of identity theft." Or, "This account was incorrectly billed to me=
+. See attached letter from creditor."</span></div>=0A<br><br><div style=3D"=
+margin: 0 32.7pt 0 42pt; outline: none; padding: 0; text-align: justify;"><=
+b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: norm=
+al;"><span style=3D"color: #000000; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;">They also don=E2=80=
+=99t need your paralegal services. </span></b><span style=3D"color: #000000=
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;">There=E2=80=99s </span><span style=3D"color: #000000; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit;">no point in sending them copies of the FCRA. You=E2=80=99re no=
+t talking to a bunch of attorneys. That=E2=80=99s why in some cases it=
+=E2=80=99s important to contact the creditor while you=E2=80=99re disputing=
+. If the account is verified and remains incorrectly reported you can redis=
+pute with backup documentation from the creditor to prove your case. If the=
+ bureau refuses to consider the=0Adocumenta- tion now you have some leverag=
+e. Pay a local attorney a few bucks to write them a letter stating an FCRA =
+violation has occurred and their cooperation is recommended. You get the id=
+ea.</span></div>=0A <br></div>=0A </div>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=
+=3D""><td id=3D"layout-row-margin3422" valign=3D"top" style=3D"padding: 5px=
+;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" s=
+tyle=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-=
+rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout-row3422=
+" class=3D"layout layout-row widget _widget_text style3422" style=3D"margin=
+: 0; padding: 0;"><td id=3D"layout-row-border3422" valign=3D"top" style=3D"=
+border-color: #000000; border-style: solid; border-width: 2px;"><table widt=
+h=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-s=
+ize: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;">=
+<tr><td id=3D"layout-row-padding3422" valign=3D"top" style=3D"padding: 20px=
+ 30px 20px 30px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: =
+0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3190" class=3D"td_text t=
+d_block" valign=3D"top" align=3D"left" width=3D"576"=0Astyle=3D"line-height=
+: 112%; margin: 0; outline: none; padding: 0; color: inherit; font-size: 12=
+px; font-weight: inherit; line-height: 1.12; text-decoration: inherit; font=
+-family: Arial; mso-line-height-rule: exactly;"> <div style=3D"line-height:=
+ 112%; margin: 0; outline: none; padding: 0; mso-line-height-rule: exactly;=
+ line-height: 1.12;" data-line-height=3D"1.12"> <div style=3D"margin: 0; ou=
+tline: none; padding: 0;"> <div style=3D"margin: 0; outline: none; padding:=
+ 0;"><div style=3D"margin: 0 0px 0 12pt; outline: none; padding: 0; text-al=
+ign: start;"><div style=3D"margin: 0; outline: none; padding: 0; color: #00=
+0000; font-family: arial; font-size: 20px; font-style: normal; text-align: =
+center;"><span style=3D"color: #000000; font-size: inherit; font-weight: bo=
+ld; line-height: inherit; text-decoration: inherit; font-family: arial;" cl=
+ass=3D"">THE BEST TIME OF YEAR TO DISPUTE CREDIT BUREAUS!</span></div>=0A<d=
+iv style=3D"margin: 0; outline: none; padding: 0; text-align: center;"><br =
+style=3D"font-size: 17px;"></div>=0A<span style=3D"color: #000000; font-siz=
+e: 17px; font-weight: bold; line-height: inherit; text-decoration: inherit;=
+ font-family: arial; font-style: normal;"> </span><span style=3D"color: #00=
+0000; font-size: 17px; font-weight: 400; line-height: inherit; text-decorat=
+ion: inherit; font-family: arial; font-style: normal; text-align: justify;"=
+>The best time to make dispute requests is during the busiest time of the y=
+ear - </span><b style=3D"margin: 0; outline: none; padding: 0; color: #0000=
+00; font-family: arial; font-size: 17px; font-style: normal; font-weight: 4=
+00; text-decoration: inherit; text-align: justify;">after Thanksgiving and =
+before New Year=E2=80=99s Day. </b><span style=3D"color: #000000; font-size=
+: 17px; font-weight: 400; line-height: inherit; text-decoration: inherit; f=
+ont-family: arial; font-style: normal; text-align: justify;">During these b=
+usy times </span><span style=3D"color: #000000; font-size: 17px; font-weigh=
+t: 400; line-height: inherit; text-decoration: inherit;=0Afont-family: aria=
+l; font-style: normal; text-align: justify;">there=E2=80=99s </span><span s=
+tyle=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: inh=
+erit; text-decoration: inherit; font-family: arial; font-style: normal; tex=
+t-align: justify;">a better chance that the credit bureaus fall short on re=
+sources to comply with the time requirements of a consumers request and wil=
+l either be forced to delete or correct the contested</span><span style=3D"=
+color: #000000; font-size: 17px; font-weight: 400; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial; font-style: normal; text-align:=
+ justify;"> </span><span style=3D"color: #000000; font-size: 17px; font-wei=
+ght: 400; line-height: inherit; text-decoration: inherit; font-family: aria=
+l; font-style: normal; text-align: justify;">items!</span><span style=3D"co=
+lor: #000000; font-size: 17px; font-weight: 400; line-height: inherit; text=
+-decoration: inherit; font-family: arial; font-style: normal; text-align:=
+=0Ajustify;"> </span><span style=3D"color: #000000; font-size: 17px; font-w=
+eight: 400; line-height: inherit; text-decoration: inherit; font-family: ar=
+ial; font-style: normal; text-align: justify;">As</span><span style=3D"colo=
+r: #000000; font-size: 17px; font-weight: 400; line-height: inherit; text-d=
+ecoration: inherit; font-family: arial; font-style: normal; text-align: jus=
+tify;"> </span><span style=3D"color: #000000; font-size: 17px; font-weight:=
+ 400; line-height: inherit; text-decoration: inherit; font-family: arial; f=
+ont-style: normal; text-align: justify;">per</span><span style=3D"color: #0=
+00000; font-size: 17px; font-weight: 400; line-height: inherit; text-decora=
+tion: inherit; font-family: arial; font-style: normal; text-align: justify;=
+"> </span><span style=3D"color: #000000; font-size: 17px; font-weight: 400;=
+ line-height: inherit; text-decoration: inherit; font-family: arial; font-s=
+tyle: normal; text-align: justify;">the</span><span style=3D"color: #000000=
+; font-size: 17px;=0Afont-weight: 400; line-height: inherit; text-decoratio=
+n: inherit; font-family: arial; font-style: normal; text-align: justify;"> =
+</span><span style=3D"color: #000000; font-size: 17px; font-weight: 400; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial; font-styl=
+e: normal; text-align: justify;">FCRA,</span><span style=3D"color: #000000;=
+ font-size: 17px; font-weight: 400; line-height: inherit; text-decoration: =
+inherit; font-family: arial; font-style: normal; text-align: justify;"> </s=
+pan><span style=3D"color: #000000; font-size: 17px; font-weight: 400; line-=
+height: inherit; text-decoration: inherit; font-family: arial; font-style: =
+normal; text-align: justify;">credit</span><span style=3D"color: #000000; f=
+ont-size: 17px; font-weight: 400; line-height: inherit; text-decoration: in=
+herit; font-family: arial; font-style: normal; text-align: justify;"> </spa=
+n><span style=3D"color: #000000; font-size: 17px; font-weight: 400; line-he=
+ight: inherit; text-decoration:=0Ainherit; font-family: arial; font-style: =
+normal; text-align: justify;">bureaus</span><span style=3D"color: #000000; =
+font-size: 17px; font-weight: 400; line-height: inherit; text-decoration: i=
+nherit; font-family: arial; font-style: normal; text-align: justify;"> </sp=
+an><span style=3D"color: #000000; font-size: 17px; font-weight: 400; line-h=
+eight: inherit; text-decoration: inherit; font-family: arial; font-style: n=
+ormal; text-align: justify;">have</span><span style=3D"color: #000000; font=
+-size: 17px; font-weight: 400; line-height: inherit; text-decoration: inher=
+it; font-family: arial; font-style: normal; text-align: justify;"> </span><=
+span style=3D"color: #000000; font-size: 17px; font-weight: 400; line-heigh=
+t: inherit; text-decoration: inherit; font-family: arial; font-style: norma=
+l; text-align: justify;">30</span><span style=3D"color: #000000; font-size:=
+ 17px; font-weight: 400; line-height: inherit; text-decoration: inherit; fo=
+nt-family: arial; font-style: normal; text-align:=0Ajustify;"> </span><span=
+ style=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: i=
+nherit; text-decoration: inherit; font-family: arial; font-style: normal; t=
+ext-align: justify;">days</span><span style=3D"color: #000000; font-size: 1=
+7px; font-weight: 400; line-height: inherit; text-decoration: inherit; font=
+-family: arial; font-style: normal; text-align: justify;"> </span><span sty=
+le=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: inher=
+it; text-decoration: inherit; font-family: arial; font-style: normal; text-=
+align: justify;">from</span><span style=3D"color: #000000; font-size: 17px;=
+ font-weight: 400; line-height: inherit; text-decoration: inherit; font-fam=
+ily: arial; font-style: normal; text-align: justify;"> </span><span style=
+=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: inherit=
+; text-decoration: inherit; font-family: arial; font-style: normal; text-al=
+ign: justify;">the</span><span style=3D"color: #000000; font-size:=0A17px; =
+font-weight: 400; line-height: inherit; text-decoration: inherit; font-fami=
+ly: arial; font-style: normal; text-align: justify;"> </span><span style=3D=
+"color: #000000; font-size: 17px; font-weight: 400; line-height: inherit; t=
+ext-decoration: inherit; font-family: arial; font-style: normal; text-align=
+: justify;">date</span><span style=3D"color: #000000; font-size: 17px; font=
+-weight: 400; line-height: inherit; text-decoration: inherit; font-family: =
+arial; font-style: normal; text-align: justify;"> </span><span style=3D"col=
+or: #000000; font-size: 17px; font-weight: 400; line-height: inherit; text-=
+decoration: inherit; font-family: arial; font-style: normal; text-align: ju=
+stify;">of</span><span style=3D"color: #000000; font-size: 17px; font-weigh=
+t: 400; line-height: inherit; text-decoration: inherit; font-family: arial;=
+ font-style: normal; text-align: justify;"> </span><span style=3D"color: #0=
+00000; font-size: 17px; font-weight: 400; line-height: inherit; text-decora=
+tion:=0Ainherit; font-family: arial; font-style: normal; text-align: justif=
+y;">receipt to complete their investigation. If they don=E2=80=99t complete=
+ their investigation in a timely manner</span><span style=3D"color: #000000=
+; font-size: 17px; font-weight: 400; line-height: inherit; text-decoration:=
+ inherit; font-family: arial; font-style: normal; text-align: justify;"> </=
+span><span style=3D"color: #000000; font-size: 17px; font-weight: 400; line=
+-height: inherit; text-decoration: inherit; font-family: arial; font-style:=
+ normal; text-align: justify;">make</span><span style=3D"color: #000000; fo=
+nt-size: 17px; font-weight: 400; line-height: inherit; text-decoration: inh=
+erit; font-family: arial; font-style: normal; text-align: justify;"> </span=
+><span style=3D"color: #000000; font-size: 17px; font-weight: 400; line-hei=
+ght: inherit; text-decoration: inherit; font-family: arial; font-style: nor=
+mal; text-align: justify;">sure</span><span style=3D"color: #000000; font-s=
+ize: 17px; font-weight: 400;=0Aline-height: inherit; text-decoration: inher=
+it; font-family: arial; font-style: normal; text-align: justify;"> </span><=
+span style=3D"color: #000000; font-size: 17px; font-weight: 400; line-heigh=
+t: inherit; text-decoration: inherit; font-family: arial; font-style: norma=
+l; text-align: justify;">you</span><span style=3D"color: #000000; font-size=
+: 17px; font-weight: 400; line-height: inherit; text-decoration: inherit; f=
+ont-family: arial; font-style: normal; text-align: justify;"> </span><span =
+style=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: in=
+herit; text-decoration: inherit; font-family: arial; font-style: normal; te=
+xt-align: justify;">follow-up</span><span style=3D"color: #000000; font-siz=
+e: 17px; font-weight: 400; line-height: inherit; text-decoration: inherit; =
+font-family: arial; font-style: normal; text-align: justify;"> </span><span=
+ style=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: i=
+nherit; text-decoration: inherit; font-family:=0Aarial; font-style: normal;=
+ text-align: justify;">and</span><span style=3D"color: #000000; font-size: =
+17px; font-weight: 400; line-height: inherit; text-decoration: inherit; fon=
+t-family: arial; font-style: normal; text-align: justify;"> </span><span st=
+yle=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: inhe=
+rit; text-decoration: inherit; font-family: arial; font-style: normal; text=
+-align: justify;">tell</span><span style=3D"color: #000000; font-size: 17px=
+; font-weight: 400; line-height: inherit; text-decoration: inherit; font-fa=
+mily: arial; font-style: normal; text-align: justify;"> </span><span style=
+=3D"color: #000000; font-size: 17px; font-weight: 400; line-height: inherit=
+; text-decoration: inherit; font-family: arial; font-style: normal; text-al=
+ign: justify;">them!</span><br></div>=0A</div>=0A</div>=0A </div>=0A<!--[if=
+ (gte mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=3D"true" data-ac-inline=
+=3D"false"> #text_div3190, #text_div3190 div { line-height: 112% !important=
+; };=0A</style>=0A<![endif]--></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</=
+table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=
+=3D"layout-row-margin3407" valign=3D"top" style=3D""><table width=3D"100%" =
+border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; =
+min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=3D"l=
+ayout-row3407" class=3D"layout layout-row widget _widget_break "><td id=3D"=
+layout-row-padding3407" valign=3D"top" style=3D"line-height: 0; mso-line-he=
+ight-rule: exactly;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspac=
+e: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; line-height: 0; m=
+so-line-height-rule: exactly;"><tr><td height=3D"10" style=3D"line-height: =
+0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A<tr><td align=3D"center"=
+ height=3D"1" width=3D"650" style=3D"line-height: 0; mso-line-height-rule: =
+exactly;"> <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" height=3D"1" width=3D"650" style=3D"font-size: 13px; min-width: au=
+to!important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse=
+: collapse; line-height: 0; mso-line-height-rule: exactly; width: 100%; max=
+-width: 100%;"><tr><td class=3D"break-line" bgcolor=3D"#000000" height=3D"1=
+" width=3D"650" style=3D"line-height: 1px; mso-line-height-rule: exactly; h=
+eight: 1px; width: 650px; background-color: #000000;"> </td>=0A </tr>=0A</t=
+able>=0A</td>=0A </tr>=0A<tr><td height=3D"10" style=3D"line-height: 0; mso=
+-line-height-rule: exactly;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</t=
+able>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3408" val=
+ign=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !impor=
+tant;"><tr id=3D"layout-row3408" class=3D"layout layout-row widget _widget_=
+text style3408" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-paddi=
+ng3408" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-wi=
+dth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"tex=
+t_div3176" class=3D"td_text td_block" valign=3D"top" align=3D"left" width=
+=3D"650" style=3D"margin: 0; outline: none; padding: 0; color: inherit; fon=
+t-size: 12px; font-weight: inherit; line-height: 1; text-decoration: inheri=
+t; font-family: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0=
+; font-size: 12px;" class=3D""><span style=3D"color: inherit; font-size: 12=
+px; font-weight:=0Ainherit; line-height: inherit; text-decoration: inherit;=
+" class=3D""> <div style=3D"margin: 0; outline: none; padding: 0; text-alig=
+n: center;" class=3D"">Copyright =C2=A9 2019 EduCredit Solutions. All right=
+s reserved.<br class=3D"">Services bought to you by Ellevation Coaching & C=
+onsulting<br class=3D""><br class=3D""></div>=0A<div style=3D"margin: 0; ou=
+tline: none; padding: 0; text-align: center;" class=3D""> <span style=3D"co=
+lor: #000000; font-size: 12px; font-weight: 400; line-height: inherit; text=
+-decoration: inherit; font-family: arial; font-style: normal;">Visit Us Onl=
+ine at </span><a href=3D"https://educreditsolutions.acemlna.com/lt.php?s=3D=
+da50c2422345422f9a0dc81917526f09&i=3D441A456A11A2412" data-ac-default-color=
+=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-=
+decoration: underline; font-family: arial; font-weight: 400; font-size: 12p=
+x; font-style: normal;" target=3D"_blank"><span style=3D"color: ; font-size=
+: inherit; font-weight: inherit; line-height: inherit; text-decoration: inh=
+erit;">www.educreditsolutions.com</span></a> <br><br><span style=3D"color: =
+inherit; font-size: inherit; font-weight: bold; line-height: inherit; text-=
+decoration: inherit;" class=3D"">Work With Elle</span><br class=3D""></div>=
+=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: center;"=
+ class=3D"">For information regarding 1-on-1 Coaching, Staff Training and E=
+ducation Services, you can schedule a discovery call at <a href=3D"https://=
+educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&=
+i=3D441A456A11A2413" data-ac-default-color=3D"1" class=3D"" target=3D"_blan=
+k" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-deco=
+ration: underline;"><span style=3D"color: ; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit;">bit.ly/discover=
+ycallwithelle</span></a></div>=0A<div style=3D"margin: 0; outline: none; pa=
+dding: 0; text-align: center;" class=3D""><br class=3D""><span style=3D"col=
+or: inherit; font-size: inherit; font-weight: bold; line-height: inherit; t=
+ext-decoration: inherit;" class=3D"">Contact Us</span><br class=3D""></div>=
+=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: center;"=
+ class=3D""><a href=3D"mailto:support@educreditsolutions.com" data-ac-defau=
+lt-color=3D"1" class=3D"" style=3D"margin: 0; outline: none; padding: 0; co=
+lor: #045fb4; text-decoration: underline;" target=3D"_blank"><span style=3D=
+"color: ; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;">support@educreditsolutions.com</span></a></div>=
+=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: center;"=
+ class=3D"">Direct: (225) 620-6202<br class=3D"">Toll-Free: 1-800-373-8491<=
+br class=3D""></div>=0A </span></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A=
+</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-marg=
+in3406" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-wi=
+dth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: i=
+nitial !important;"><tr id=3D"layout-row3406" class=3D"layout layout-row wi=
+dget _widget_picture style3406" align=3D"center" style=3D""><td id=3D"layou=
+t-row-padding3406" valign=3D"top" style=3D"padding: 20px 0 0 20px;"><table =
+width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"fo=
+nt-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0p=
+t;"><tr><td class=3D"image-td" align=3D"center" valign=3D"top" width=3D"630=
+"><img src=3D"https://educreditsolutions.imgus11.com/public//2a0ea3f14572e3=
+829345d5f92f330073.jpg?r=3D1673407472" alt=3D"" width=3D"176" style=3D"disp=
+lay: block; border: none; outline: none; width: 176px; opacity: 1; max-widt=
+h: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</t=
+r>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</div=
+>=0A<img src=3D"https://educreditsolutions.acemlna.com/lt.php?nl=3D11&c=3D4=
+41&m=3D456&s=3Dda50c2422345422f9a0dc81917526f09&l=3Dopen" border=3D"0" widt=
+h=3D"1" height=3D"1" style=3D"display:block;width:1px!important;min-width:1=
+px!important;max-width:1px!important;height:1px!important;border:0;overflow=
+:hidden;" /><br /><div id=3D"ac-footer" style=3D"clear:both;background-colo=
+r:inherit;background:inherit;min-width:100%;mso-table-lspace:0pt;mso-table-=
+rspace:0pt;padding:20px;color:#000000;font-size:11px;font-family:arial,helv=
+etica,sans-serif;line-height:140%;line-height:1.4;text-align:center;box-siz=
+ing:border-box;">=0A=09<center>=0A=09=09Sent to: <span style=3D"font-size:1=
+1px;font-family:arial,helvetica,sans-serif;font-weight:normal;text-decorati=
+on:none;outline:none;">bruce.k.cosma@gmail.com</span>=0A=09=09<br>=0A=09=09=
+<br>=0A=09=09<a href=3D"http://educreditsolutions.acemlna.com/proc.php?nl=
+=3D11&c=3D441&m=3D456&s=3Dda50c2422345422f9a0dc81917526f09&act=3Dunsub" sty=
+le=3D"font-size:11px;font-family:arial,helvetica,sans-serif;font-weight:bol=
+d;text-decoration:underline;"><span style=3D"font-weight:bold;text-decorati=
+on:underline;">Unsubscribe</span></a>=0A=09=09<br>=0A=09=09<br> EduCredit S=
+olutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, U=
+nited States=0A=09</center>=0A</div>=0A<br clear=3D"all" /></body>=0A</html=
+>
+--_=_swift-4167807205ebf63f4101b58.32951811_=_--
+

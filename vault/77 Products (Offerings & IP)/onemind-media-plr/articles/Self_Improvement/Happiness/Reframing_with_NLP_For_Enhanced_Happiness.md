@@ -1,0 +1,107 @@
+# Title:
+
+Reframing with NLP For Enhanced Happiness
+
+Word Count:
+1971
+
+Summary:
+Have you ever considered that the way in which you frame your life experiences has been a way in which orchestrated how your experience was? This article is all about how to use the notion of reframing for creating more and more well-being in life and gives practical tools that anyone can use today to enhance your awareness of this phenomena.
+
+Keywords:
+Reframing, NLP, Happiness
+
+Article Body:
+I used to work for the Independent National Newspaper in Canary Wharf, London. I can remember in the build up to Christmas, my department was having a large and expensive new computer system installed because the newspaper was being relaunched, it was when Andrew Marr and Rosie Boycott were becoming joint editors, I digress�.  The system was being put in just before Christmas, but it was a massive task, with numerous issues & overruns.  As Christmas approached, there were still a number of teething problems, which led to stretched relations between the system supplier and the newspaper staff. 
+
+At one meeting about the integration of the system, my director had been trying to get more time investment from the installation company, only to be told that their people weren�t going to be available on Christmas day.  My director was frustrated and furious, asking �What are you doing that�s more important than sorting out our system!?�  Without hesitating, the guy from the installation company said �Delivering Christmas hampers to the elderly.�  The impact was immediate; everyone in the room started laughing & my director joined them, realising that he�d perhaps been a bit unreasonable.  Everyone knew that the story about the elderly wasn�t true, but that didn�t matter � the statement had changed his perception of the situation, instantly, & he started behaving more reasonably.
+
+Changing the contextual frame:
+
+There was an advertisement for the Guardian newspaper, which showed a set of still photographs arranged in a particular action sequence.  The photographs showed a large framed man with very little hair on his head, wearing jeans and boots, running along a pathway with a real purpose.  
+
+In the first frame he is running towards an elderly lady; in the second frame, you see him knock her violently into the street; in the third frame you see him make his escape, obviously and seemingly this is another thug terrorising the elderly.  
+
+Then, when you turn the page, you are presented with some wider angle shots.  In the wide-angle shots, you see the elderly lady casually walking beside a building that has building works being carried out upon it and where a cement mixer is about to topple from a scaffold.  An alert pedestrian notices the situation and heroically runs towards the lady, pushing her clear of the building area. A moment later, the cement mixer falls to the ground in the spot where the lady was standing.  The initially perceived �thug� has in fact saved her life.
+
+By changing the frame, the creators of the advertisement had changed the context of the man�s actions.  Suddenly, what was perceived as typically criminal then became valiant and altruistic.  His actions were transformed in a moment as they were reframed. I am sure you know of many other examples of this.
+ 
+One of the presuppositions of NLP and something that fascinates and tests me, is that every behaviour is useful or valuable in some context. Upon learning and reading about this in the embryonic days of my learning, I did do my best to do the opposite! I wracked my brains for things that I just could not reframe. Of course, I could not do so for long. It�s just a matter of stretching your brain and finding a context that makes it useful; I have not always found this easy.  This process is referred to as context reframing.  
+
+Every behaviour is useful in the right context:
+
+Now here is a challenge for you. For any behaviour, no matter how frustrating or apparently without use or value, see if you can find a context where it�s useful.  Once you find such a context, a subsequent act of presenting the behaviour in the new context is reframing it. If it was originally a behaviour that was treated very seriously or was problematic, you may then also want to think about adding humour or a playfulness in the way it is re-presented;
+
+Firstly, identify a complaint, either about yourself or someone else, a simple structured to begin with, for example; �I�m too [x].� or �She�s too [y].�  (Eg. �I�m too impatient�, �He�s too selfish.�, �She�s too messy.�) 
+
+Next up, ask yourself �In what contexts would the characteristic being complained about have value and/or usefulness?�
+
+ Thirdly, create several answers to this question, and then craft it into a �reframe�.  
+
+ For example: 
+
+�I�m too impatient� 
+
+Example answer: �I bet you�re quick-thinking in an emergency.�
+
+�She�s too messy� 
+
+Example answer �She�d be good to have around if we were trying to make our home look like it had been burgled.� (I don�t like to be too serious!)
+
+�He�s too selfish�
+
+Example answer: �We�ve had so many problems with people not taking care of themselves, it�s often good to make sure you look after yourself to be in a better position to help others .�
+
+ 
+Now, I know these are a bit lame with some of my own tongue in cheek-iness added, but they don�t have to be that useful at this stage; it�s more important that you give yourself the freedom to be creative so your brain gets the pattern of what you�re doing. What�s more, when you have to do that and develop better reframes for yourself, your learning is far more comprehensive than if I were to spoon feed you responses to regurgitate.  
+
+The next step is to come up with reframes for any complaints that you (or others) have about yourself.  This can be a lot of fun if you do it with someone else.  (ie. you say �I�m too [x]� then they generate reframes.) 
+
+By the way, the example of �I�m too sexy� as in the 90s Pop Band �Right Said Fred� chart topping hit is not really appropriate ;-)  
+
+When reframing something someone says, rapport is important (otherwise reframing can seem like a very focused & deliberate attempt to annoy someone.) If you present someone with a reframe, ensure that you have a good level of rapport with them, best start with friends and/or family (assuming that you have rapport with them!)
+
+Fifth, once you get the hang of it, start looking for opportunities to use context reframing each day, starting with the less challenging ones.
+
+In a business context for example, one of the most powerful ways to use reframing is when people have objections (whether you�re selling a product, a service, an idea, or yourself.) reframing is a gentle method of working with someone as opposed to having to sell which many people are uncomfortable with. When you reframe someone�s objection, you can remove or alter its power.  I once read the objection �I�m worried � What if I train my staff and then they leave.�  The response: �Even worse, what if you don�t train your people and they stay.�  
+
+When you discover and create a way to change the context of someone�s objection, it alters the way they perceive it.  This has been know to be an extremely effective way to overcome objections entirely.
+
+Finally, for these initial steps of reframing, write a list the objections you get most frequently in business or complaints made in your life and generate a number of context reframes for each one.  Then, look forward with a sense of anticipation to the next time someone offers that objection.  Please bear in mind that you are opening up options here, not covering things up, if a particular problematic issue is occurring, sometimes it may not be appropriate to just reframe.
+
+Both my Grandparents on my fathers side were 80 two years ago and we had celebratory family gatherings. As I walked into one of the celebrations I asked the standard question "So, what's it like waking up on your 80th birthday, Grandad?"  To which he replied "Better than not waking up on your 80'th birthday".
+
+Now, I�d like to start playing with �content reframing.� If a footballer kicks the ball into his team�s net, it�s called an �own goal�, but if a soldier accidentally shoots one of his fellow soldiers, it�s called �friendly fire� (Sounds kind of cuddly, doesn�t it? But you would not want any coming your way.)  George Orwell�s 1984 had plenty of examples of content reframing (eg. the ministries of peace & truth) that live on today in many forms (a peacekeeper missile, anyone?)
+
+So, content reframing involves changing the meaning of something.
+
+Right, to develop this further, follow this procedure; identify a complaint a complaint or issue with the structure �I feel [X] when [Y] happens.� (Eg. �I feel angry when he does not help� or �I feel frustrated when I make mistakes�)
+
+Next, ask yourself �What else could this (Y) mean?�, �What else could this (X) mean?� or �What else could this situation mean?�, or ask �How can this (X) or (Y) be interpreted?
+
+Then, you can come up with several answers to these, and then create a �reframe�.  
+
+For example:
+�I feel upset when I see the mess these kids have made�
+
+Example answer: �It�s good that they can be �in the moment� without worrying about a few things being out of place.�
+Alternate example answer: �A little untidiness is a small price to pay for happy children.�
+Another example answer: �The fact that it�s messy means they�re expressing their creativity.�
+
+Obviously, if you were to offer these reframes to someone who is annoyed or frustrated, I would suggest that it would be a good idea to get in rapport with them first and of course to select your words carefully.
+
+As with my previous examples, these aren�t the most amazing reframes in the world, but they don�t have to be that useful at this stage; it�s more important that you give yourself the freedom to be creative so your brain gets the pattern of what you�re doing.  
+
+Now, you can come up with reframes for any complaints or issues that you can identify for yourself or others.  This can be a lot of fun (honestly!) if you take turns doing it with someone else.  (ie. you say �I feel [X] when [Y] happens� then they generate reframes.)  
+
+Then, once you get the hang of it, start looking for opportunities to use content reframing each day. For spreading good feelings around and helping people to lessen the easy natural way that they can sometimes get �bogged down� in the trivial.  Depends on what you consider trivial though, be careful and thoughtful.
+
+Once again, in a business sense, content reframing is also very powerful for dealing with objections of all sorts.  For example, a reframe I sometimes use when someone objects to the price of consulting with me (I am sooooo expensive!) is to respond with something along the lines of:
+
+�If you are after a cheap consultant or therapist, then you are right, I am not for you. If however, you want to invest in your future then maybe I am. If your child needed a serious operation, would you look for the cheapest surgeon? Then why look for the cheapest way to make changes in your life that are important enough to seek help with?�
+
+Again, I do have my tongue planted in my cheek as I write that riposte, however, I am sure you see where I am coming from here. 
+
+Then finally, list the objections you get most frequently & generate a number of content reframes for each one.  Then, look forward with a sense of anticipation to the next time someone offers that objection.  Remember to keep rapport with people when doing this! Or in jargon-free speak, relate, empathise, connect, get on with.
+
+Good luck with your reframing and creating more harmony.

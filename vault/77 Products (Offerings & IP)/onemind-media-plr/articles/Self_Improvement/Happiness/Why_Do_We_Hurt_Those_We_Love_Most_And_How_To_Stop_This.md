@@ -1,0 +1,54 @@
+# Title:
+
+Why Do We Hurt Those We Love Most And How To Stop This
+
+Word Count:
+1446
+
+Summary:
+We all need energy to live and to survive. As long as you think this energy has to come from other human beings, you will get caught up in struggle. Because human energy is limited. You have to fight for it.  It�s the responsibility of each and every person to generate energy by himself and not to depend on other people. Loving another human being is giving him energy! See the difference? Do you want to love your loved ones or steal their energy?
+
+Keywords:
+love, relationship, dispute, energy, victim, blame, love problems, happiness
+
+Article Body:
+You love each other but can�t manage to communicate without arguing, fighting and ending up exhausted, each one in his corner, trying to lick his wounds and thinking of how to protect one self against a new attack. And in spite of that�you love each other? How is this possible? Why do people hurt most those they love?
+
+How come we can�t express our love? How come we are full of good intentions but when it comes to reality we find ourselves again shouting and blaming the other one. And then that monster of guilt jumps out of nowhere to our throat to strangle us once again.
+
+How to stop this infernal behavior?
+
+First let me explain why this happens.
+
+We all need energy. We need energy to live and to survive. Energy comes in many forms : love, attention, interest, food, friendship, money, approval, recognition�
+
+We all need this to feel good, to build our personality and to find our place in society.
+
+But here it is : as long as we think this energy has to come from other human beings, we will get caught up in struggle. Because human energy is limited. We have to fight for it. Human energy doesn�t last. There isn�t enough of it. So we have to be the quickest, the smartest, the most beautiful one, to attract the attention from the other and to pull his energy.
+
+If this doesn�t work, we try another strategy. We try to pull attention by negative behavior. Every child learns this very quickly in his early life : when he is playing quietly on the floor with his toys, mum goes on cooking dinner or talking with daddy. But as soon as the kid hurts his little sister or is playing �sick�, mums hurries to give attention to him. She shouts maybe, she�s angry or worried, but no matter, all this is attention for the child! He learns very quickly which behavior gives him the greatest amount of attention and energy. When his mother or father looks at him, even angry, it still is energy coming his way! When they shout at him, they give him energy. Negative energy, alright, but it is better than no energy at all.
+
+When we grow up, and start to date, we discover a very interesting phenomenon : when we fall in love, we receive a lot of energy (read : attention, interest, time, love etc.) for free. The other person gives us freely and abundantly a whole bunch of energy. We don�t even have to ask for it, we don�t need to apply any strategy to pick this energy, it�s all for free! We let go of our mechanism to pull the energy of others towards us. We loosen up. We �fall� in love. We almost literally fly. We are high! Everything seems to have more colour, is more vivid, we feel lighter, life seems easy, everything goes by itself, we have the feeling we love everybody and everything, even our grunchy boss! Nothing can hurt us, we feel safe and boosted with energy. But this is his or her energy! We are flying on someone else�s energy, and human energy is limited!
+
+And that is exactly the problem! This stream of free energy begins to slow down, because the other one goes back to his business and activities he had before. Why? The body is not able to handle this amount of adrenaline for a long period of time, they say� but the real reason is we need to learn to pull our energy from somewhere else, not from a human being but from the source of energy itself.
+
+So our lover gives us less free energy than before. We were used to this energy-flow and now we have to do it again by ourselves! Free energy is so much easier! We don�t have to do any effort to get it! And now we are getting less of this free energy, we don�t want to let this happen.  At this moment our old childhood-system of capturing energy is triggered because of the scarcity of energy (there is an alarm inside us that says : �Danger! Lack of energy!�) and the old mechanism to capture energy from others starts running in our head and in our behavior. The mechanism that worked when we were a child to get the energy of our parents, will be triggered by the lack of energy now. We do what we did as a child to get energy flowing our way. 
+
+We can do this by playing the victim (�Oh poor me, look at all that I do and nobody is grateful! Look how good I am and still life strikes me with disapproval, disease and misery! Oh oh oh!�). Or we get attention by being aggressive, shouting and trying to dominate the other one. A third mechanism is harassing the other one by asking too many questions and controlling him. A fourth system is playing silence, refusing contact, not to speak and not to react, so the other one will do whatever he can to get in contact with you again and this will give you his energy.
+
+These systems will of course make the energy of the other one flowing your way. But what next? The other one is now low on energy and wants to get his energy back. So now his mechanism is triggered by his lack of energy. He will now use the system that assured him the energy of his parents when he was little, to get his energy back from you. He will either shout at you, either playing the poor one that didn�t deserve your treatment, either torture you with a bunch of questions, or refuse contact.
+
+This explains why we hurt the ones we love. First reason is we want their energy, energy they gave once for free. We hurt our loved onces most because they gave us love and energy and attention for free in the beginning and now we have to do it on our own and we are angry and want get back to them. We think we are entitled to have their energy still for free and start our mechanism to get it. Second reason we hurt them most is because of convenience : they are always around, their energy is available so when we are low on energy we try to rip their energy off, and hurt them by doing that.
+
+Stealing energy from another human being is hurting him.
+
+What can we do about this? We should only be in contact with other people when we are sure to be already filled up with energy, so we won�t steal theirs. When we are full of energy, and conscious of what happens between people, we can give the other one energy instead of ripping him off. We should not meet each other when we are low on energy. It�s the responsibility of each and every person to generate energy by himself and not to depend on other people.
+
+How to do that? By connecting to the energy that is always available. That is the energy of the Universe. The easiest way to connect to this energy is contemplate the beauty of a flower. You also can contemplate the beauty of an object or a person. You can listen to beautiful music, take a walk in nature, meditate, pray, dance, paint, read positive texts, work on your mission on earth, love your cat or dog, anything that gives you energy.
+
+Make a list of every activity and behavior that increases your energy level. As soon as you feel you�re in a conflict with your partner, boss, child, parent or whoever, do something to get yourself together and raise your energy. Don�t say anything until your energy-level is again high enough to be able to send energy to the other one. By sending energy, you are sure not to steal energy from the other one. This is an act of love. If you are not able to get your energy level any higher, go to another place, do something for you and wait until your vibrations are high enough to meet the other one again.
+
+The important thing in a relationship is not to make the other happy or to expect the other one to make you happy, but to make yourself happy and offer this happiness as a free gift to the other!
+
+Loving another human being is giving him energy!
+See the difference? Do you want to love your loved ones or steal their energy?

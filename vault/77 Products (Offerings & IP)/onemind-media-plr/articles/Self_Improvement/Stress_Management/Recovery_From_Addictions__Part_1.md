@@ -1,0 +1,80 @@
+# Title:
+
+Recovery From Addictions: Part 1
+
+Word Count:
+805
+
+Summary:
+This is the first of a 5-part series on recovery from addictions. This first part defines substance and process addictions and describes the four major false beliefs that underlie most addictions.
+
+Keywords:
+addiction, recovery, addiction recovery, drug addiction, substance abuse, alcoholism, alcohol abuse, sex addiction  
+
+Article Body:
+(This is Part 1 of a 5-part series on addiction).
+
+Just about everyone in our society is addicted to something.  Addictions can take many forms:
+
+SUBSTANCE ADDICTIONS: addiction to alcohol, recreational drugs, prescription meds, caffeine, nicotine, food, sugar, carbohydrates.
+
+PROCESS ADDICTIONS: addiction to love, connection, caretaking, anger, resistance, withdrawal, and to activities such as: 
+
+	� 	TV
+	� 	Computer/internet
+	� 	Busyness
+	� 	Gossiping
+	� 	Sports
+	� 	Exercise
+	� 	Sleep
+	� 	Work
+	� 	Making money
+	� 	Spending money
+	� 	Gambling
+	� 	Sex, masturbation, pornography
+	� 	Shopping
+	� 	Accumulating things
+	� 	Worry
+	� 	Obsessive thinking (ruminating)
+	� 	Self-criticism
+	� 	Talking a lot
+	� 	Talking on the telephone a lot
+	� 	Reading
+� 	Gathering information (if only I know enough I will feel safe)
+	� 	Meditation
+	� 	Religion
+	� 	Crime
+	� 	Danger
+�     Cutting themselves
+	� 	Glamour, beautifying
+
+We can use anything as a way of avoiding feelings and avoiding taking responsibility for our painful feelings. Whenever we engage in an activity with the intention of avoiding our feelings, we are using that activity as an addiction. We can watch TV to relax and enjoy our favorite programs, or we can watch TV to avoid our feelings. We can meditate to connect with Spirit and center ourselves, or we can meditate to bliss out and avoid responsibility for our feelings. We can read to enjoy and learn, or read to escape. Anything can be an addiction, depending upon our intention. 
+
+For example, when your intention is to take loving care of yourself and your work is something you really enjoy, then working is not being used as an addiction. But when the intent is to get approval or avoid painful feelings, then work is being used as an addiction. The same is true for most of the above behaviors � they can be addictions or not, depending upon your intent. 
+
+All of us have a wounded part of us � our wounded self or ego self � that has been programmed with many false beliefs through our growing-up years. There are four common false beliefs that underlie most addictions:
+
+1. I can�t handle my pain.
+2. I am unworthy and unlovable.
+3. Others are my source of love.
+4. I can have control over how others feel about me and treat me.
+
+I CAN�T HANDLE MY PAIN
+
+While this was true when we were small, it is not true as adults, yet many people operate as if it is true. When you believe that you are incapable of handling pain � especially the deep pain of loneliness and helplessness � then you will find many addictive ways to avoid feeling your pain. All of us are capable of learning how to manage painful feelings in ways that support our highest good, rather behaving in addictive ways that hurt us.
+
+Anything you do to avoid taking responsibility for managing your pain is self-abandonment, which creates even more pain - the deep pain of aloneness. Whether you abandon yourself to substances, processes or people, your inner child � which is your feeling self - will feel abandoned by your choice to avoid responsibility for your feelings. If you had an actual child who was in pain, and you got drunk instead of being there for that child, he or she would be in even more pain from the abandonment. It is exactly the same on the inner level. Addictive behavior is an abandonment of self and causes the very pain you are trying to avoid.
+
+I AM UNWORTHY AND UNLOVABLE
+
+When you did not receive the love you needed as a small child, you might have concluded that the reason you were not loved was because you were bad, flawed, defective, unworthy, unlovable, or unimportant. This is core shame � the false belief that there is essentially something wrong with you. When you adopt this belief, you become cut off from your Source, believing that you are unworthy of being loved by a Higher Power.  
+
+OTHERS ARE MY SOURCE OF LOVE
+
+You will become addicted to attention, approval, love, sex, or connection when you believe that another person needs to be your dependable source of love. In this case, you will be abandoning your inner child to another person, which causes as much pain as abandoning yourself to a substance. Until you learn to tap into a Higher Power as your source of love, you will continue to be addicted to people as your source of love.
+
+I CAN HAVE CONTROL OVER HOW OTHERS FEEL ABOUT ME AND TREAT ME
+
+If you believe you can control others� feelings and behavior, you will become addicted to various ways of trying to control, such as anger, judgment, blame, or people-pleasing. When you believe you can�t handle your pain and that others are your source of love, then you want control over getting that love. This is the cause of the codependency that underlies most relationship problems.
+
+There is a way to heal from addictions. The rest of the articles in this series will address the process of recovery from addictions.

@@ -1,0 +1,69 @@
+# An Abs iPod Workout Guide
+
+Many people believe that if they lift weights, or do those crunches, they will lose those lovehandles and have a tight, packed abs that they have been dreaming of. Which is why when those who have been religiously attending the gym didn't get the Jennifer Lopez bod that they have expected to have after twenty sessions of lifting and crunching their stomach like a curled shrimp in the gym, they pack their bags and never dared to step onto the gym's doorstep again. 
+
+There is nothing wrong with going to the gym and crunching and curling yourself to have tighter and tucked abdomen. There are, however, some basic preparations that you must do first before you curl and crunch. (1) Cut out the fat in your diet starting, right... now! (2) Do more stretching, and (3) Do more cardio workouts.  
+
+You can do the stretching and cardio workouts even outside the gym. Just carry your iPod, wear your sneakers and sweat and you're all set. Below are some iPod workout guides that you can work on. All you need is an iTune, determine the BPM or beats per minute of a song, and you're all set to create your own and unique iPod workout playlist.
+
+CUTTING FAT IN DIET 
+
+Abdominal muscles are the easiest part of the body to work muscles on. The only reasonwhy inspite of your abs curling workout it seems that nothing works is because your muscled are covered with fat. 
+
+Yes. You need to cut the fat. 
+
+And the first step to cut the fat is curtail intake of fat. Go for a less fat diet (not 'no fat diet.' We all need some amount of fats in our body.}.
+
+STRETCHING WITH iPod WORKOUT GUIDE
+
+Strech to improve the elasticity of your muscles and to tighten it up in a natural way. Create a Playlist, name it "Stretching" and then select your iPod Workout stretching playlist. 
+
+The best iPod workout song for stretching should be around 105 to 115 beats per minute, a song with a slow beat. 
+
+Suggested iPod workout song for stretching:
+
+There You Go - Pink
+Three AM - Matchbox 20
+Feeling So Good - Jennifer Lopez
+
+CARDIO WORKOUT WITH iPod WORKOUT GUIDE
+
+Warm up
+
+Before you do your cardio workout, have a five minute warm up first. Although stretching is already a form of warm up, it is better if you warm up by doing the stationary marching and jumping jack.
+
+BPM for warm up should be in the range of 125 to 130. Limit the playtime to 5 minutes and select by random. 
+
+Suggested iPod workout song for Warm up:
+Can't Take My Eyes Off You
+Ain't no Mountain High
+All You Need is Love
+
+CARDIO WORKOUT
+
+Lifting weights and doing a hundred crunches won't help you lose fats. The best way to lose fats is to do a fifteen-minute a day cardio workout. Create your iPod cardio workout playlist and name it "Cardio." iPod workout songs to include in your playlist must be upbeat, lively, and with no slow or mellow parts.
+
+ - Walking 
+
+BPM if you were walking, brisk walking, that is, should be in the range of 136 to 140. Limit the playtime to 5 minutes and select by random.
+
+You must follow the rhythm of the song as you walk to achieve the fifteen minute minimum daily workout. Just breathe normally or as you would when you are at rest. If you're new with walking (walking for fifteen minutes without stopping) you might experience shortness of breath at first. Don't worry, as you continue with walking while listening with your iPod workout songs, your heartbeat will beat a bit slower and then 
+will normalize.
+
+Suggested iPod workout song for Walking:
+
+You Gotta Be - Des'ree
+This Kiss - Faith Hill
+Livin' on a Prayet - Jon BonJovi
+
+ - Jogging and Running 
+
+Jogging and running should be in the range of 141 to 150. All songs under this category should be limited to 5 minutes also, and is selecte by random
+
+Suggested iPod workout song for Jogging and Running:
+
+Can't Get You Out Of My Head - Kylie Minogue
+Hollaback Girl - Gwen Stefani
+Hey Mickey 
+
+You can repeat the Walking and Jogging and Running iPod workout songs or playlist as many times as desired.

@@ -1,0 +1,9 @@
+# OneMind Voice Agent — LiveKit Voice Pipeline
+# Silero VAD (local) + Deepgram STT + Azure OpenAI LLM/TTS
+
+livekit>=1.0.0
+livekit-api>=1.0.0
+livekit-agents>=1.0.0
+livekit-plugins-silero>=1.0.0
+livekit-plugins-deepgram>=1.0.0
+livekit-plugins-openai>=1.0.0

@@ -1,0 +1,17 @@
+# Subject: DID YOU GET THIS?
+
+Hey [[firstname]],
+
+Yesterday, I sent an email regarding my latest launch - Hypnotherapy All In One:
+
+>> LINK TO YOUR SALES PAGE
+
+Remember, this is the ultimate hypnotherapy package on the Internet. Use this well.
+
+So far, there has been raving reviews about it already, and I don��t want you to miss out on this great opportunity. So grab it now before it��s sold out:
+
+>> LINK TO YOUR SALES PAGE
+
+Warm regards,
+
+[[YOURNAME]]

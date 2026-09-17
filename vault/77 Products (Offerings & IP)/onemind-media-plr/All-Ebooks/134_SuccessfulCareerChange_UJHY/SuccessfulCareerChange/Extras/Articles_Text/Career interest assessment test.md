@@ -1,0 +1,19 @@
+# Career interest assessment test
+
+If you are thinking of changing your career or just don�t know which way you want to go in the first place, you may want to take a career interest assessment test to help direct you.  Choosing the right career is an important decision, so you want to choose wisely.  We spend a majority of our time at our jobs, so being in a career that interests you is important.  A career interest assessment test can help you find a job that matches your personality, your abilities, and your talents.
+
+You might want to check with a local employment company to see if they administer career interest assessment tests.  They specialize in matching people with the right job for them, so chances are very good that they have this type of tool at their disposal and will be happy to have you take the test.  They can then also help you find the job of your dreams based on the results of your career interest assessment test.
+
+There are also a lot of career interest assessment tests available online that can be taken for free.  The test usually consists of fifty to one hundred questions and usually takes about twenty minutes to complete.  With the online tests, you are usually presented with three different job task options.  Here�s an example:
+
+Would you rather:
+
+Write a business plan
+Participate in a brainstorming session
+Formulate a company budget
+
+You will pick the option that interests you the most and the one that interests you the least leaving one of the options blank.  What these questions on a career interest assessment test do is find out what type of job that would fit best with what you like to do.  When you like what you do, your job becomes less work and more fun which is great all the way around!
+
+After you complete the test, you will be given a list of jobs and careers that might suit you.  There will usually also be a brief description of what those jobs entail as far as job duties and expectations as well as educational or special training requirements you�ll need to get into that career field.
+
+Taking a career interest assessment test is a great way to find out what job or career is best suited to you.  Many people think they would enjoy doing one job when they really aren�t a good match for that job.  That�s why there are a lot of workers that look at their jobs as tedious instead of enjoyable.  You should enjoy going to work each day, so taking a career interest assessment test can help you find a career that will not only satisfy you personally, but professionally as well.

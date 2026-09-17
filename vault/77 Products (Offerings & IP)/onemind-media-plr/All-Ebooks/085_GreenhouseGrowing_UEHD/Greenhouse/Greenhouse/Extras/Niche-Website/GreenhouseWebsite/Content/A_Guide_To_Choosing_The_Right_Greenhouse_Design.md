@@ -1,0 +1,39 @@
+# Choosing The Right Greenhouse DesignChoosing The Right Greenhouse Design
+
+When one has a greenhouse, it means that one never has to quit gardening just because of weather conditions. You can keep on propagating cuttings and seeds and grow several plant varieties whatever the season. 
+
+When choosing a greenhouse, select a greenhouse style that matches the design of your home and the layout of your garden. Weather conditions should also be taken into account, as when your area experiences heavy snows during the winter, most likely you will not select a flat or straight roof design, rather a roof that will allow the snow to slide off easily.
+
+The standard free-standing with curved or peaked roof greenhouse up to now is very popular that can be found in so many gardens. The rectangular or square shape permits for utmost growing space for plants, usually designed with benches on the sides and at the back.
+
+Lean-to or home or wall attached greenhouses designs are manufactured and used when there is limited space at the backyard.  These greenhouse designs are very accessible and convenient for connecting much needed water and power supply.
+
+When choosing a certain design in the market, the �sky's the limit�. Small solariums of various designs are widely available, medium and large sized greenhouses and even  prefabricated greenhouse kits for easy installation.
+
+Here are some greenhouse designs:
+
+1.  Gable greenhouse.  This design type usually is attached to a wall or garage or any structure utilizing only half the gable�s actual gable design. Generally, this type has flat roof panels but slightly sloping and vertical sidewalls. At times, the gable types of greenhouse are also attached to another greenhouse employing the use of the end wall rather than sidewall. 
+
+2.  Barn style greenhouse.  This design type is, as the name suggests shaped similar to a barn having wide roof and interior and with shorter walls. This design is usually incorporated in a garden of country setting or theme or a rustic garden appeal. This greenhouse design can be attached to another greenhouse or can be beautifully constructed in a garden freestanding. 
+
+3.  Dome greenhouse. This design is identical to a dome, meaning it is half a ball and placed directly on land. This design can not be attached to a structure and only can be constructed as a freestanding type of greenhouse, as this design has no sidewalls. This type of greenhouse is a bit expensive to make due to the many pieces of different glazing that generally are needed to complete this design shape. 
+
+5.  Gothic style greenhouse.  This design type has a very historical gothic appearance. The walls and roof are formed in such a manner as to create a continuous form, allowing snow to fall down easily. This design type can be either attached or freestanding, however it is usually not recommended attached except when your home�s design  is very much similar to a gothic design. 
+
+6.  Hoop greenhouse. This type of design is constructed with a metal pipe or PVC to make the hoop�s shape then enclosed with plastic covering. This type of design is very cost effective on your initial purchase, but the maintenance of continuously replacing the cover (plastic) can really add up. 
+
+One will find that the majority of greenhouses are manufactured from aluminum material that is weatherproof and lightweight. Galvanized steel also is sturdy and lightweight. Wood can also be used, but one has to make sure to use a lumber that has been pressure treated such as redwood or cedar because these are weather resistant.
+
+As to whatever greenhouse design should you decide on, be sure to look for a structure with the highest strength and stability and must have these features:
+
+�  Will be cable to endure extreme weather conditions, like very high winds and snowfall build up.
+
+�  Should have the necessary support for grow lights, sidewall shelving and hanging baskets.
+
+�  Should have an intricate detail of having hinged screened storm doors as well as large side or individual roof vents.
+
+�  A wide selection of styles and sizes offered.  Keep in mind that costs can limit your greenhouse size, however extensions can later be added when needed and when you already have enough budget for it.
+
+�  The door may be easily adjusted to be dropped or lowered into the foundation�s opening so to get rid of an elevated step when you feel that it is needed.
+
+Take note that often, most greenhouse owners complain of a limited space when they built their greenhouse on a budget. So whatever design you choose, just remember to get the largest that your money can buy.

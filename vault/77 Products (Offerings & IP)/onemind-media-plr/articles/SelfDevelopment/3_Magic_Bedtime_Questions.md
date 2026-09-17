@@ -1,0 +1,22 @@
+# title:3 Magic Bedtime Questions
+
+author:Lance E. Ong
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_3847.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+For many people, life zooms past once they reach their working age. Everyday, it's the same flash routine of waking up, going to work, coming back from work, and sleeping. It's no wonder why you'll ask yourself, "How did I get old so fast? Where did all the time go?"
+The problem is in the routine work. The human mind has this habit called deletion. Anything that keeps repeating, memory does not record, simply because it's not worth taking notice of.
+So how can we slow down our experience of time and not let our lives slip by in a flash?
+The answer lies in developing mindfulness -- a heightened state of awareness of one's thoughts, feelings, and actions. But if you can't do that yet, you can start off by practicing the 3 Magic Bedtime Questions.
+As you lie in bed at night, ask and answer these three questions before you fall asleep:
+1. What is one thing I am grateful for today?
+2. What do I look forward to tomorrow?
+3. What would I like to dream about tonight?
+Why do I call these simple questions magical? Well, let me tell you the logic behind them. The first question requires you to think through your day to find something you're grateful for. As you do that, not only will you find something to be grateful for, you will also have recalled your entire day. In Neuro-Linguistic Programming, we call this capping experience. Imagine putting your daily experience into a bottle, putting a cap on it, and giving it a name. For example, "The day I found a hundred dollar bill on the ground". Having many of these bottles in your mind, sorts your memories into significant experiences, rather than having them as one large clump called, "My Working Years -- 20 to 50 years old".
+The second question requires you to look forward in time and imagine what's going to happen tomorrow. When you have something to look forward to, it creates a natural anticipation and drive. You will feel motivated the moment you wake up. It will be the first thing that pops into your mind.
+The third question reveals your innermost desires because we naturally choose to dream about what we want and wish for. This clarifies our direction and purpose.
+Perform the 3 Magic Bedtime Questions nightly, and time will slow down. You will remember more about your life, and have greater clarity of mind to do what counts, before your time runs out.
+To develop a centered mind, I recommend reading 'Mindfulness In Plain English', by Bhante Henepola Gunaratana. In clear language, he shows you how to develop Mindfulness, through the practice of Vipassana Meditation. An insightful and well-written book.
+ZZZZZZ

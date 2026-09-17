@@ -1,0 +1,28 @@
+---
+id: plr-20260114013943-7486
+title: "Adversity Prescription   Inhale Faith Regularly"
+type: template
+path: PLR
+domain: reference
+status: reference
+created: 2026-01-14
+modified: 2026-01-14
+owner: zeus
+tags: [path/plr, type/template, status/reference, topic/motivation-success]
+ai_summary: "PLR reference - Adversity Prescription   Inhale Faith Regularly"
+---
+title:Adversity Prescription...Inhale Faith Regularly
+author:Charlene M. Proctor, Ph.D.
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_1958.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+Being a social scientist, I have been trained to find comfort in numbers, although I am equally dependent upon faith. In research, if we set a certain standard and can measure whether an idea or a result exists, then we have a construct for at least a theory. In fact, we just might have the basis for a belief. 
+Just last week, I gained further insight on this concept, when I took both my sons out to dinner at our favorite local sushi restaurant. At thirteen and eleven years of age, I was amazed at their worldview, probably as a result of some coursework theyve been exposed to on the subject of world religions. Jason, a critical thinker at thirteen, told me that society feels the need to construct belief systems  and there is not necessarily any proof behind such beliefs. He argued that humans have a natural need to do this in order to explain what cannot be explained. Without proof, he said, why should he subscribe to anything he cant see, especially God? I was further alarmed when Vaughn chimed in, putting in his two cents about why hes just not sure there is a God, Goddess, or a higher power for that matter. I have never forced them to believe anything because beliefs are something we construct as a result of our own life experiences. Their life experience will be totally different than mine. Although I can offer a foundation and continually teach them how spirit infiltrates our every move, I cant fill in the blanks for them. That, they must do on their own.
+Not to be rattled off my wise, mother-track, I realized the boys are just beginning to question the world at large. They also have a limited view because they have experienced minimal adversity, failure, loss and grief in life  some, but not enough to know how important it is to believe there is a reason for it. By the time we are 40, our adversity resum is quite long  weve got a vast inventory under our belts in multiple categories. We need to believe and depend upon reasons we cant fully explain  life seems to lead us that way in order to cope. 
+As we continued to have a spontaneous discussion about belief systems, I realized that, at their tender ages, they have already been indoctrinated into the comfort level a Cartesian viewpoint provides  if we dont see it, it doesnt exist. How did this happen, I wondered? Do our children have so much difficulty in believing and having faith because somehow physical evidence must confirm the constructs of parental belief systems? Or do they simply feel unblemished by lifes circumstances and secure enough not to feel the need to rely on faith? 
+I spent the rest of my wakame salad and miso soup time explaining that just because we dont see something doesnt mean its not there. We know love exists, even though we cannot see it. What would the world be like without love? Well then, they replied, then lets conduct some focus groups and find out what percentage of people believe in love and see if its statistically significant. Finding love, or proving the existence of love, by taking a poll first? Weve done a very good job, I silently thought, of indoctrinating our kids into a world replete with an over-estimated value of proof. 
+Overall, I think we need a little less science and a lot more faith, especially when it comes to the subject of lifes adversity. Granted, faith sometimes does not give us the level of certainty we want to accept bad circumstances. Itd be awfully nice if wed get a progress report at the days end that explained just what the heck was going on. Some days we get an unusually large dose of the nasties. But the last I checked, nobody was getting any statistical feedback in terms our soul journey g.p.a. Our scores, in terms of our progress, are greatly determined by our own self-evaluations. The knowing why of lifes circumstances cant necessarily be part of the formula because if we knew everything, the reason for everything, there would be no point in the dance. We all agree - there doesnt seem to be any consolation in not knowing. And as a researcher, it does go against my nature to come up empty handed in the knowing category - not knowing, after a really good analysis, just doesnt seem acceptable. Seems like we missed something along the way or left our part of the equation. Is it a lack of insight?
+Its because we dont always cast our net wide enough about our spiritual development. Perhaps we evolve into faith because we cant make meaning without it after enough living has gone by. Proof soothes mainly because most of us are limited to our five senses which serve as our conceptual parameters. Although some are gifted to extend past those limitations in distant realms, or have had extraordinary psychic experiences that defy current logic, the rest of us need pure faith to keep us on track. Never diminish the value of faith. Youll find less energy spent on asking why and surrender to the not knowing more readily. Find a way to develop unshakable faith in the Divine  its a participative partnership based upon trust youll need. 
+ZZZZZZ

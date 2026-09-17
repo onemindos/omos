@@ -1,0 +1,17 @@
+# When trying to improve your Personal Life Doctors are Important People
+
+When you want to improve your personal life, your health is an important issue, since you have to be healthy to have a good life. There are a lot of good doctors that can make you feel better about your self as well as make you feel healthy. It is very important to go see your local doctor once a year for your yearly exams. This will help your doctor keep an eye on your general health like your blood pressure, cholesterol, aces and pains. If your happy inside and out side you will feel, better and you will be able to change your personal life all together.
+
+About doctor visits: 
+No one can make you go see a doctor that is your right. However, you need to know that if you are not healthy your life forces will pull you down. I don think anyone likes to go see the doctor, old or young but its something we have to do in order to live a healthy life. Going to see a doctor you feel comfortable around is a start.  Some people don�t feel comfortable with doctors and that�s why they won�t go see a doctor and others may just be scared of going and finding out the unknown. This is a serious mistake. Doctors have discovered that if Alzheimer�s disease, heart disease, or other conditions are noted earlier, there are cures. Yet, many people allow their diseases to elevate until it is too late, you have no cure. If you don�t go you will never know and it could be something that can be taken care of, but if you wait, you could be facing deadly cancerous diseases. Why not go since it could save your life. You will be able to enjoy the rest or your life as a happier and healthy person inside and out.
+
+How can I find a good doctor?
+There are many ways to find a good doctor. Not every doctor is good. You want to look for caring doctors. If a doctor cares about his or her patients, it is likely you will have the right care you deserve. If you feel uncomfortable at a doctors visit, you will need to evaluate you and the doctor. If the doctor is presenting characteristics that make you feel uncomfortable, perhaps you want to consider his expertise. Is the doctor providing you excellent care? If so, perhaps you may learn how to deal with your discomforts. 
+
+Some of the ways you can find a doctors is make a appointment with a few that you think you may like and go talk to them get the feeling of them see if its feels right you may not feel comfortable so you won�t want to go on a regular basis. Maybe you can talk to friends and family and try it that way you will never know if you do not try. 
+
+Just remember many doctors are good people. They can�t help you if you don�t go to them and tell them what is wrong with you. You have to be honesty with them in order for the doctor to help you. If you feel better inside you will feel better outside, so in that case you have improved your personal life.
+
+About Healthcare and coverage: 
+Perhaps you do not have healthcare coverage, which hinders you from seeking medical care and continuing care. If this is true, we encourage you to consider Medicaid, Medicare, HMO, or other policies. 
+You have many options available to you online as well. You will find healthcare coverage for all age groups, as well as for those with special needs, such as budgets.

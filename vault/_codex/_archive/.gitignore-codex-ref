@@ -1,0 +1,91 @@
+# One Mind - Git Configuration
+# Full vault sync for multi-machine use
+
+# Ignore everything by default
+*
+
+# ============================================
+# ALLOW: Core content
+# ============================================
+!*/
+!*.md
+!*.yml
+!*.yaml
+!*.sh
+!*.json
+!.env.example
+!.gitignore
+!.gitattributes
+!.gitkeep
+
+# Assets (images, video, audio, docs)
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.webp
+!*.svg
+!*.mp4
+!*.mov
+!*.mp3
+!*.pdf
+!*.excalidraw
+
+# ============================================
+# ALLOW: Obsidian (full config + plugins + themes for portability)
+# ============================================
+!.obsidian/
+!.obsidian/**
+
+# ============================================
+# IGNORE: System files
+# ============================================
+.DS_Store
+**/.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# ============================================
+# IGNORE: Session-specific
+# ============================================
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+.obsidian/.obsidian-git-data
+.trash/
+**/.trash/
+
+# ============================================
+# IGNORE: Secrets & generated
+# ============================================
+# Private keys
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Environment files with secrets (NEVER commit these)
+.env
+**/.env
+!.env.example
+**/secrets.yaml
+**/secrets.yml
+
+# Node modules (never commit)
+**/node_modules/
+node_modules/
+
+# Legacy specific ignores
+00-09 Command (Meta)/00 Infrastructure (The Grid)/.env
+00-09 Command (Meta)/00 Infrastructure (The Grid)/config/deployed_state.yaml
+.smart-env/
+.obsidian/plugins/letta-ai-agent
+.mcp.json
+
+# ============================================
+# IGNORE: OneMind-Media folder (massive assets)
+# ============================================
+OneMind-Media/
+**/OneMind-Media/

@@ -1,0 +1,94 @@
+# OneMind Hook Registry
+# Version: 1.0.0
+# Updated: 2026-03-27
+#
+# Hooks fire at lifecycle events in the CODEX workflow.
+# Agents read this file to know what to execute at each stage.
+
+version: "1.0"
+
+events:
+
+  session-start:
+    description: "Fires when an agent begins a new interaction"
+    hooks:
+      - name: LoadContext
+        file: load-context.md
+        blocking: true
+        fail_behavior: abort
+        description: "Load all _codex/system/ identity files into context"
+        
+      - name: LoadMemory
+        file: load-memory.md
+        blocking: false
+        fail_behavior: log
+        description: "Load memory tiers for continuity"
+
+  capture:
+    description: "Fires when new information enters the system"
+    hooks:
+      - name: ClassifyInput
+        file: classify-input.md
+        blocking: false
+        fail_behavior: skip
+        description: "Determine input type and suggest template"
+
+  organize:
+    description: "Fires when content is being routed to a domain"
+    hooks:
+      - name: RouteToDomain
+        file: route-to-domain.md
+        blocking: false
+        fail_behavior: skip
+        description: "Auto-suggest destination domain based on content"
+
+  direct:
+    description: "Fires when prioritizing and planning work"
+    hooks:
+      - name: CheckGoals
+        file: check-goals.md
+        blocking: false
+        fail_behavior: skip
+        description: "Compare task against active-goals.md priorities"
+
+  execute-pre:
+    description: "Fires before executing a command or action"
+    hooks:
+      - name: SecurityValidate
+        file: security-validate.md
+        blocking: true
+        fail_behavior: abort
+        description: "Validate command safety against security patterns"
+
+  execute-post:
+    description: "Fires after an action completes"
+    hooks:
+      - name: LogAction
+        file: log-action.md
+        blocking: false
+        fail_behavior: log
+        description: "Record what was done for audit trail"
+
+  multiply:
+    description: "Fires during the review/reflection stage"
+    hooks:
+      - name: ExtractLearning
+        file: extract-learning.md
+        blocking: false
+        fail_behavior: log
+        description: "Pull patterns and insights from completed work"
+
+  session-end:
+    description: "Fires when an agent session is ending"
+    hooks:
+      - name: SaveMemory
+        file: save-memory.md
+        blocking: true
+        fail_behavior: retry
+        description: "Persist all memory tier updates to vault"
+        
+      - name: CaptureSignal
+        file: capture-signal.md
+        blocking: false
+        fail_behavior: log
+        description: "Log explicit and implicit feedback signals"

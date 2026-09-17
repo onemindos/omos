@@ -1,0 +1,33 @@
+# The Reality Behind Home Energy Consumption
+
+The Reality Behind Home Energy Consumption
+
+�Expensive� is just one of the words that people today use to describe electricity bills. It seems that every day, the cost of electricity keeps getting higher and higher. Because of this, we all tend to look towards alternative energy sources.
+
+However, as governments will tell you, the search for alternative energy sources does not come cheaply. Sometimes, the cost of developing one type of alternative energy source is just not feasible enough to be explored by the government.
+
+There is also the problem of transition from conventional energy sources to the alternative energy sources. Many people are suspicious of any new methods and would prefer to stick with their conventional electricity.
+
+However, these people are gradually being persuaded to the alternative side mainly because of the high cost of home energy consumption. New energy technology, of course, takes some time to perfect. In the meantime, there are a lot of things you can do to minimize your home energy consumption.
+
+The energy of information administration of the US department of energy has recently concluded a survey on the home energy consumption of US households during the year 2001. Through this data, we can at least gain an insight of which appliances are costing us.
+
+At the top of the list, of course, is climate control. Would you believe that American households consume 355.7 billion kWh just to keep themselves cool or hot? That�s 31.2 percent of the total home energy consumption! Do you really need to consume so much energy just to feel hot or cold? 
+
+When you use the air-conditioning system or the furnace, maybe you shouldn�t turn the thermostat up so high. It�s not like you are living in the equator or the North Pole, for crying out loud. And when you go out of the house, you do not really need to keep your air-conditioning on, do you?
+
+Think of how much you will be able to eliminate from your home energy consumption by just turning these appliances off when you are not using them.
+
+Next, we come to the kitchen. Kitchen appliances count for 26.7 percent of home energy consumption. Of course, you can�t really turn off your refrigerator when you are not home, could you? Don�t panic, however, there are a lot of alternatives in order to help you reduce your electricity bill. 
+
+Did you know that leaving the refrigerator door open increases your home energy consumption? It�s true! When you open your refrigerator door, heat rushes inside the refrigerator. This means that the fridge has to consume more electricity in order to maintain its internal temperature. If you leave the door open, you are wasting electricity!
+
+Water heating cost US households 104.1 billion kWh in electricity. Now let me ask you: is it really necessary that you use hot water when you take a bath? After all, millions of people all over the world take cold showers everyday. 
+
+Hot baths are a luxury. If people treated them as such, then they wouldn�t have any problem saving on their home energy consumption. If you do not agree with this, you have to understand that there are alternatives to using electricity to heat your water.
+
+As a matter of fact, there are solar heaters out there which not only save electricity by using solar power to heat your water, but these can also be connected to power small appliances. If everyone just invested in these ideas, people would be able to lessen their home energy consumption considerably.
+
+Now, we come to lighting. Did you know that lighting counts for 8.8 percent of home energy consumption? Now, people would agree that you need light in order to see your way around the house. However, there�s just one question: do you really need to have the lights on 24 hours? When you think about it, the sun still exists, doesn�t it? Why do some people pull down their window shades and then turn on the lights? Doesn�t that seem like a very futile gesture? 
+
+So, as you may have observed, there are a lot of easy ways by which we can cut back our home energy consumption. Just by exerting a little effort, we can save a lot of our money. Did you realize how much energy our homes consume just because of wastefulness?

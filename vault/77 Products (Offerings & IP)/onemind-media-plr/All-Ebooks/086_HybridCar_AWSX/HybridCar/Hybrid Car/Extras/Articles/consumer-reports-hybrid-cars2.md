@@ -1,0 +1,31 @@
+# Contradicting consumer reports on hybrid cars
+
+Hybrids are hot nowadays. Hybrid car uses 2 engines; one uses the traditional fuel, while the other uses the energy from a rechargeable battery.  There are also myriad of hybrid cars, to choose from. What then is or guarantee that we are protected from too much hype, instead of an honest advertising?
+
+One simplest way is through consumer reports on hybrid cars. 
+
+There are many hybrid cars information available, especially on their features, engine specifications, designs, colors and much other dizzying information.  Information from the manufacturer's website are also good source of needed preliminary knowledge n hybrid cars. But one of the most interesting array of information, and one that honest opinion or feelings about hybrid vehicles may be glimpsed is a consumer reports on hybrid cars.  
+
+Reliability of hybrid cars according to consumer reports
+
+"These hybrid systems have been very reliable," declares David Champion, senior director of Consumer Reports' auto test center. Mr. Champion noted that about 94 percent of Toyota Prius owners, who would buy another Prius, are very happy and satisfied, asserted by the influential consumer survey. This center, collects individual consumer reports on hybrid cars, and uses the statistics to come up with a talk paper.
+ 
+Mr. Champion also refers to hybrids as "mainstream technology", particularly with the introduction of the Honda Accord hybrid. The Honda hybrid clinched the honor of bagging the title of Consumer Reports Best Family Sedan. The Honda Accord hybrid, bested some 32 other models for the prestigious award.
+
+Critics, however, are not wanting. Some automobile experts and analysts have criticized the hybrid car powertrain, as flamboyant in that two engines are being used for one purpose.  Consumer Reports on the other hand, disagreed. Champion explained that the electric motor adds the power, to the engine, says Champion. 
+
+Prior to the award proper, Consumer Report conducts a testing, by applying some actual expectations of consumers to hybrid cars. The Accord hybrid for instance, achieved superior fuel efficiency unsurpassed by its conventional counterparts. 
+
+But as in other endeavor, consumer reports on hybrid cars have its other side. An alternative consumer view from the same center posited the question: "Considering a hybrid car? Don't rush out to the dealership just yet." 
+
+The individuals went on to explain that they are not against the protection of environment. The center also asserts that they are supportive for burning less fossil fuel. Their concerns, accordingly, emanates from Financial experts arguments that hybrid drivers are paying too high for an automobile that offers only marginally better fuel efficiency than the other economy cars already on the road. 
+
+Gabriel Shenhar, senior auto test engineer for Consumer Reports, said that if someone is "looking at your pocket, you're not gaining anything there anytime soon," Shenhar asserted that it is wiser, to wait until auto makers improve hybrids' powertrains and bring prices more agreeable with regular models. 
+
+The same Consumer Reports compared the 2003 Honda Civic Hybrid car, which consumes 36 miles per gallon and worth $21,000, with the 2003 Honda Civic EX, which consumes 29 miles per gallon and worth $18,500 a unit on the average. Interested to know the results? The tax break excluded, it would take a consumer 21 years in fuel savings to cover the earlier expense for buying hybrid. 
+
+And consumer reports o hybrid cars has another bad news. The people behind Edmunds.com expect that hybrids will depreciate faster than other counterpart traditional vehicles. They are also noting that the attempts of the carmakers on improving the hybrid powertrain so fast will fail to convince consumer in buying relatively new technology. 
+
+The consumer reports on hybrid cars, however, particularly that of Edmunds.com, are waiting for the for the new hybrid SUVs, the Ford Escape and the Lexus RX Hybrid, will  after entering the market for a particular period of time. If these new hybrids will eventually reach the price level, of other lightweight trucks, and will offer far better fuel savings, the better. If both are achieved, says  Edmunds.com's automotive expert Ed Hellwig, there's no reason why people will not rush to their dealer and buy one. 
+
+These are only few of the literature that deals with consumer reports on hybrid cars. It is, ultimately, depends on the consumer, to peruse on many information regarding hybrid cars.

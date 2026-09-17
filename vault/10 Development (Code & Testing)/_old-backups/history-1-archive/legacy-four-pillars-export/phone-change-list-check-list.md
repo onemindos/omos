@@ -1,0 +1,127 @@
+# Phone Change List - Check list
+
+# Phone Change List - Check list
+
+- 
+
+BANK ACCOUNTS
+
+- 
+
+PERSONAL CAPITAL
+
+- 
+
+EXPEDIA
+
+- 
+
+AIRBNB
+
+- 
+
+INVESTMENT ACCOUNTS (CHARLES SCWAB) (ETRADE) (COINBASE)
+
+- 
+
+ICLOUD/APPLE
+
+- 
+
+UBER/LYFT
+
+- 
+
+DELTA & OTHER AIRLINES
+
+- 
+
+ALL BUSINESS ACCOUNTS
+
+- 
+
+CREDIT CARDS
+
+- 
+
+DAVID SHEP - TICKETS
+
+- 
+
+SERVICE PROVIDERS
+
+- 
+
+LEGAL SHEILD
+
+- 
+
+ZELLE
+
+- 
+
+TWILIO
+
+- 
+
+PHONE NUMBER CHANGE CHECKLIST
+
+- 
+
+1PASSWORD ACCOUNTS
+
+- 
+
+GOOGLE VOICE - PERSONAL
+
+- 
+
+AT&T MAIN PERSONAL NUMBER
+
+- 
+
+INSURANCE
+
+- 
+
+SAVED CONTACTS
+
+- 
+
+ROBIN HOOD
+
+- 
+
+EZPASS
+
+- 
+
+IRS
+
+- 
+
+SOCIAL MEDIA
+
+- 
+
+CREDIT MONIORTING SERVICE
+
+- 
+
+BEST BUY
+
+- 
+
+AMAZON
+
+- 
+
+WHATS APP/ TELEGRAM
+
+- 
+
+PAYPAL
+
+- 
+
+COINBASE

@@ -1,0 +1,21 @@
+# Self Determination and Pain
+
+Most of the articles you read online are focused on people that have money. This presents a problem, since it puts a wall up against equal opportunity, which my goal is intended to bust the issues wide open by addressing issues that are more extensive. 
+ 
+The fact is many people in the world are suffering from pain. It does not matter if they are rich, poor, old, young, etc, the point is all of us are subject to pain. Not one person is obsolete; therefore, the focus of this article is to assist those living in pain, by helping them to find their way through self-determination. 
+ 
+When someone is in pain it makes it is difficult to think straight, focus, or feel good about whom they are. This is because the pain affects their emotional, mental, and physical status. It sometimes seems that no one cares about the people in the world that is suffering. 
+ 
+We all need support. We are all equal despite of what people may think and it is time people started to realize this. When you are suffering with pain and striving to find ways to build self-determination, it is time to turn in the natural direction. Many tactics have proven to assist people with minimizing pain. Some of these tactics include physical exercise, meditation, yoga, and biofeedback. 
+
+Physical exercise will not only reduce pain, it also reduces your risks of various diseases. You build confidence and self-esteem, which directs you toward building self-determination. When you feel good about whom you are, and you are not living with pain, it often changes the way you think. You feel more positive about whom you are, and you can take control of your life. Some of the basic exercises you can benefit from, reduce pain, and build self-determination are the basic stretch workouts. Pilate�s is a good workout solution, which you do not need as much exercise equipment. Stretch each morning, afternoon, and before you go to bed. You will train your muscles to relax and contract naturally, which reduces the pain. 
+
+All the solutions I have to offer you have helped me as well. Exercise three times each work. Start out a routine of 15 interval workouts and gradually work up to 45 minutes. In time, you will feel much better. 
+
+Before you can start building self-determination, you must reduce the pain. The pain will get you down and eventually tear you down. Men with prostate cancer are encouraged to meditate daily. Mediation will build your confidence, awareness, etc. You start focusing on a brighter tomorrow, rather than consume your mind focusing on the pain. Pain often develops because the muscles are unable to contract and relax naturally. You want to keep the muscles mobile, since this is what they expect to stay healthy. 
+
+Meditation is a great way to train your mind to focus on what you must do to develop self-determination. You have other options as well, but staying in the natural course will put you on a quicker road to recover. 
+
+Before you start an exercise, routine be sure to consult with your medical expert. I cannot think of one doctor in the entire world that will discourage you against exercise. The doctor that does probably does not have the latest news on fitness and health. 
+
+You can go online and research the market as well to find other ways to reduce pain and build motivation. For the most part, eliminating or reducing the pain is a great start. Do not allow procrastination or negative thinking hold you back from progressing. Use meditation if you have a nap to think negative often. You want to retrain your mind to think positive.

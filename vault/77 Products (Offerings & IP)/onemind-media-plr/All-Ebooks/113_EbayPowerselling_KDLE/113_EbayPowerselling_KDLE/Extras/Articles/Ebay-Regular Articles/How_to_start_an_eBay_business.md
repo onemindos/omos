@@ -1,0 +1,37 @@
+# EBay for starters
+
+Making money is really a hard thing to do these days, as many people want to get some extra dollars out of their unused stuffs, eBay comes along to help. Having to sell them is quite a task but no means that hard. I have stated the basic things you need to start out an eBay business. 
+
+These are for the beginners who would like to make money on eBay. The proper ingredients to having your very own cyber shop are really not that demanding. All you need is a computer, an internet connection, a digital camera, and of course, products to sell. 
+
+You can sell used items you find at garage sales, from your closet, etc. You can sell new items you find at discount prices from liquidators, dollar stores and clearance sales. If you can find a supplier who will make you a deal, you're even luckier. 
+
+Skills for the trade
+
+Marketing Skills 
+You can develop these skills as you learn how to sell various items on eBay. Read some marketing books and articles to help yourself sell things, but really, its selling them efficiently by having your own strategy which you already got from other successful entrepreneurs online. Take time to read and plan things out. You will thank yourself later for a job well dome. 
+
+Organizational Skills
+You need to keep good records of your sales and not just for tax purposes. You need to be able to keep track of which buyers have paid, which have received their items, etc. Setting up a spreadsheet with all the pertinent information should help keep this under control. You can also get affiliated with third party payment systems online. There are choices to choose from, however, they charge for about 1 percent of the item price but nothing is better than your clients having to be at ease purchasing your items. 
+
+Basic HTML Skills
+To make your auctions eye-catching and appealing, you will want to know some basic HTML skills. There are a lot of simple and basic tutorials online. Start out by searching for html tutorials, you can choose which one you like for your convenience. 
+
+Starting up on eBay
+
+Start by choosing a certain type of product to specialize in (ex. toys, clothes, etc.). That way, you can become an expert in those products and how to sell them effectively. You may want to expand your product line at a later date. 
+
+Getting started is easy. Create an eBay user ID and you're on your way. Be sure to read through the eBay selling rules and check out all the tips eBay offers along the way. 
+
+Put up only a few items to start and don't saturate your auctions with too many of the exact same item. The objective is to sell your item at the highest price. If you are selling 5 identical items, it may be harder for you to get a high price. Experiment with various selling methods and find out what works your particular items.
+
+Online Marketing Ideas
+Promote your business with your own personal web page. This can be a web page just to promote your eBay business, or it can be an online store that links to your auctions. It gives you a more established presence on the Internet and gives your clients a better sense of who you are.
+Build a mailing list. Send out an informative newsletter on a regular basis to your subscribers. Just be sure to promote your auctions in the newsletter too.
+
+Other Online Auctions
+Don't limit yourself to eBay. EBay is only one of the many online auction houses available, but it is, by far the largest. However, eBay's fees can get expensive. It may be cost effective to also sell your items on other auction sites and you may face less selling competition especially if you are selling items at a fixed price. Other auction sites might be a good opportunity for you to buy items to sell for higher prices elsewhere.
+
+So what you need is some motivation and patience to see your hard- earned money in the palms of your hand.
+
+Just remember, you may also have fewer buyers for your products and may have a lower selling price. You will need to evaluate which is the most efficient way to sell your items.

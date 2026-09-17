@@ -1,0 +1,751 @@
+# sudoku
+
+Sudoku
+sudoku puzzles
+Play Sudoku
+free sudoku
+SUDOKU
+sudoku online
+web sudoku
+online sudoku
+free sudoku puzzles
+printable sudoku
+daily sudoku
+sudoku puzzle
+sudoku.com
+free online sudoku
+printable sudoku puzzles
+sudoku free
+sudoku games
+sudoku solver
+sudoku for kids
+Sudoku puzzles
+sudoku tips
+samurai sudoku
+sudoku strategy
+free printable sudoku
+sudokus
+play sudoku
+how to play sudoku
+free printable sudoku puzzles
+easy sudoku
+sudoku rules
+print sudoku
+Sudoku Puzzles
+free sudoku games
+sudoku solutions
+free sudoku online
+solving sudoku
+sudoku game
+usa today sudoku
+sudoku printable
+Free Sudoku
+sudoku samuari
+sudoku hints
+sudoku strategies
+play sudoku online
+sudoku number game
+sudoku download
+sudoku answers
+solve sudoku
+super sudoku
+free print sudoku puzzles
+sudoku today
+sudoku print outs
+how to solve sudoku
+sudoku free online
+free sudoku download
+guardian sudoku
+mega sudoku
+sudoku daily
+killer sudoku
+monster sudoku
+sudoku print
+SUDOKU PUZZLES
+electronic sudoku
+ancient sudoku
+sudoku usa today
+sudoku electronic game
+cbs sports sudoku
+online sudoku puzzles
+sudoku puzzles online
+jigsaw sudoku
+Sudoku Solvers
+sudoku puzzles free
+SuDoku
+sudoku puzzels
+sudoku printables
+sudoku solving
+free sudoku puzzels
+sudoku of the day
+printable sudokus
+simple sudoku
+how to solve sudoku puzzles
+sudoku logic
+sudoku puzzle solver
+free online sudoku puzzles
+blank sudoku
+sudoku instructions
+sudoku quest
+sudoku + print
+Sudoku online
+sudoku generator
+mirror sudoku
+sudoku software
+kids sudoku
+printable sudoku games
+sudokufree
+sudoku game rules
+history of sudoku
+free sudoku puzzle
+life sudoku
+sudoku 16x16
+sudoku shack
+sudoku help
+sudoku palm
+create your own sudoku
+palm sudoku
+sudoku easy
+sudoku on line
+sudoku assistant
+sudoku secrets
+sudoku variations
+sudoku solution
+handheld sudoku
+sudoku game description
+sudoku uk
+pocket pc sudoku
+print sudoku puzzles
+Sudoku puzzle
+what is sudoku
+Sudokus
+sudoku forcing chains
+sudoku freeware
+sudoku palm freeware
+sudoku puzzle free
+sudoku solving strategies
+sudoku printouts
+free sudoku billions
+sudoku for palm
+Sudoku Puzzle Game with Backlight
+Electronic Sudoku
+sudoku programs
+SUDOKU UK
+sudoku puzzles for kids
+kids sudoku puzzles
+4x4 sudoku
+sudoku free puzzles
+sudoku addict
+pocket pc freeware sudoku
+samurai sudoku blank grids
+SUDOKU STRATEGY
+easy sudoku puzzles
+free sudoku game
+sudoku online free
+Sudoku for kids
+games sudoku
+sudoku techniques
+sudoku+handheld
+Sudoku games
+Online Sudoku
+my sudoku
+Samurai Sudoku
+SUDOKU ONLINE
+how to sudoku
+sudoku + solutions + free
+download free sudoku
+sudoku classic
+Shaolin Sudoku
+free sudoku tips
+the history of sudoku
+best sudoku games
+free sudoku for kids
+electronic sudoku game
+Printable Sudoku
+SUDOKU PUZZLE
+sudoku pro
+sudoku solve
+sudoku cbs
+spohgebob squarepanta sudoku
+excel sudoku
+hand held sudoku
+fee sudoku pdf
+sudoku excel
+Free Sudoku puzzles
+Blackberry Sudoku
+sudoku web
+sudoku downloads
+Free Sudoku Puzzles
+make your own sudoku
+sudoku free games
+Sudoku free
+daily sudoku puzzle
+sudoku-puzzles.net
+web sudoku puzzle answers
+fuji sudoku deluxe
+solving sudoku puzzles
+sudoku puzzles to print
+FREE SUDOKU PUZZLES
+sudoku with light game
+sudoku helper
+Sudoku Squiggly
+Sudoku download
+sudoku billions
+sudoku tabletop
+sudoku program
+sudokufreedaily
+sudoku'
+janric classic sudoku
+on line sudoku puzzles
+sudoku tricks
+free sudoku puzzles to print
+sudoku grids
+sudoku electronic
+free Sudoku
+sudoku grid
+sudoku books
+sudoku for kids, free
+cbs sudoku
+FREE SUDOKU PLAY OFF LINE
+sudoku samurai
+easy online sudoku
+sudoku free print
+free sudoku downloads
+sudoku worksheets
+printable Sudoku
+free sudokus
+HAND HELD ORGANIZER TO SOLVE SUDOKU
+samuari sudoku
+sudoku au
+sudoku tutorial
+sudoku games free
+blank sudoku grid
+SuDoKu
+sudoku generators
+samuri sudoku
+Children's Sudoku
+sudoku pronunciation
+sudoku electronic games
+how to find solutions to sudoku puzzles
+sudoku history
+sudoku websites
+sudoku mobile pc
+sudoku solvers
+pauls pages sudoku
+Sudoku tips
+sudoku+online
+sudoku contest
+sudoku puzzles, free
+giant sudoku
+sudoku blanks
+Free sudoku
+Sudoku hand held games
+sudoku solving tips
+DAILY SUDOKU
+sudoku solving program
+pocket sudoku
+free easy sudoku puzzles
+sudokulist
+online Sudoku
+dkm sudoku
+sudokus, solving
+sudoku+ free
+Sudoku for Kids
+sudoku daily puzzle
+Sudoku Solution
+free sudoku for nokia 3120 in vodafone new zealand
+free Sudoku puzzles
+sudoku creator
+mastersoft sudoku
+sudokuonline.com
+sudoku handheld electronic compare
+easter sudoku
+sudoku free download
+sudoku with stylus
+solve sudoku online
+Sudoku answers
+sudoku+samourai
+sudoku.com.au
+sudoku for dummies
+freeware sudoku
+sudoku algorithm
+free sudoku software
+play sudoku free
+online sudoku games
+easy sudoku puzzle
+Samurai sudoku
+Multi-Player Sudoku
+sudoku competition
+play online sudoku
+Sudoku Online
+handheld electronic sudoku games
+sudoku on-line
+conceptis sudoku
+sudoku how to play
+mce sudoku
+sudoku puzzles printable
+sudoku symbols
+Web Sudoku
+Sudoku.com
+16x16 sudoku
+sudoku puzzles answers
+practice sudokus
+free Sudoku for windows
+sudoku puzzle tips
+free sudoku solver
+sudoku online puzzles
+Free Sudokus
+printable sudoku puzzle
+sudoku handheld electronic
+play sudoku on line
+sudoku handheld
+the daily sudoku
+daily sudoku puzzles
+sudoku kids
+SUDOKU GAMES
+Sudoku puzzles for children
+how do you play sudoku
+solutions to sudoku puzzles
+sudoku solver algorithm
+Sudoku solver
+sudoku puzzle for kids
+SUDOKU.COM
+sudoku online games
+free printable sudoku books
+Sudoku Puzzle
+sudoku puzzle books + kids
+sudoku puzzle: solutions
+sudoku puzzles free online
+sudoku solver 4x4
+online sudoku puzzle
+Daily Sudoku
+free to print sudoku puzzles
+free printable sudokus
+How to play Sudoku
+free printable sudoku games
+printable sudoku's
+universal sudoku puzzle
+make a sudoku puzzle
+sudoku puzzle and how to solve
+sudoku online game
+25x25 sudoku solver
+sudoku puzzle printable
+solving a sudoku puzzle
+free printable sudoku puzzle
+daily sudoku on-line
+printoff Sudoku puzzles
+algorithm for solving sudoku puzzles
+free daily sudoku
+printable sudoku puzzules
+Sudoku Strategies
+solution key for any sudoku puzzle
+daily Sudoku Classic
+how to teach sudoku puzzles to children
+sudoku puzzle solving
+sudoku puzzle printouts
+Samurai Sudoku Puzzles
+how do i play sudoku
+help with Sudoku puzzle
+sudoku.com/
+lisp + sudoku solver
+sudoku puzzle online
+I give you sudoku puzzle and you solve
+totally fun free sudoku games
+Sudoku Solver
+printable sudoku puzzels
+free web sudoku
+Sudoku Games
+sudoku puzzle'
+kid sudoku puzzles
+Sudoku strategy
+Sudoku puzzle books
+sudoku puzzles on line
+Cross Sudoku puzzles
+sudoku Puzzles
+very easy sudoku puzzles
+advanced sudoku strategies
+nonomino sudoku solver
+SuDoku Puzzles
+sudoku games online
+sudoku.com.au/
+killer samurai sudoku puzzles
+jigsaw sudoku solver
+unsolvable sudoku puzzle
+hints to solve a Sudoku Puzzle
+easy printable sudoku
+can you find me some difficult sudoku puzzles
+play sudoku online free
+5 sudoku puzzles in one
+Free Sudoku Online
+sudoku puzzle solution
+sudoku puzzles with shapes
+Correct a sudoku puzzle
+solve sudoku puzzle
+The Daily Sudoku
+sudoku online play
+how to solve any sudoku puzzle
+samurai sudoku puzzles
+download sudoku puzzles
+Online Sudoku puzzles
+how to play Sudoku
+free printable Sudoku
+Print sudoku puzzles
+printable Sudoku puzzles
+sudoku puzzle+printable
+web sudokus
+free sudoku puzzles online
+WEB SUDOKU
+Free, printable Sudoku puzzles
+Where should you play sudoku
+solving hard sudoku puzzles
+origin of sudoku puzzles
+my sudoku puzzles
+hard sudoku puzzles to print
+Easy Sudoku Puzzles
+free 36x36 sudoku puzzles
+how do you solve sudoku puzzles
+printable sudoku problems
+sudoku puzzles. you can print
+sudoku solver palm tungsten
+Free printable Sudoku
+print free sudoku puzzles
+sudoku puzzles and answers - printouts
+daily sudoku online
+universal sudoku puzzle solutions
+sudoku online gree
+how to solve every sudoku puzzle
+free sudoku.com
+play sudoku for free
+Blank SUDOKU puzzle outline
+sudoku online puzzle
+Play sudoku
+sudoku puzzle book
+sudoku puzzle free printable
+printable sudoku x
+Sudoku puzzles using letters
+sudoku puzzle solvers
+buy Sudoku puzzle
+sudoku online for free
+online shopping Sudoku puzzle
+sudoku puzzles daddy
+Online Sudoku Games
+sudoku puzzle fortran solver
+PLAY SUDOKU
+sudoku puzzle download
+Sudoku puzzle solver
+play sudoku puzzles
+free Sudoku games
+a book of sudoku puzzles with the solutions
+free online sudoku games
+Kid Sudoku Puzzles
+hardest sudoku puzzles
+sudoku puzzles.com
+solve Sudoku puzzle
+online free sudoku puzzles with answers
+Sudoku puzzles online
+USA Today Sudoku Puzzle
+how to do sudoku puzzles
+playing sudoku puzzle
+samuri sudoku puzzles
+printable Sudoku Puzzles
+sudoku games to play
+Sudoku Strategy
+print sudoku puzzle
+Free Printable Sudoku
+sudoku puzzle instructions
+sudoku online free game
+sudoku puzzlesschool
+sudoku online print
+sudoku puzzles print
+printable sudoku, easy
+FREE SUDOKU ONLINE
+daily sudoku puzzles book
+Japanese sudoku puzzles
+free sudoku puzzles i can do online
+Universal Sudoku Puzzle
+play sudoku on psp
+sudoku puzzle daily book play
+Free printable Sudoku puzzles
+a sudoku puzzle
+Solving Sudoku Puzzles
+EASY SUDOKU PUZZLES
+where can i find printable Sudoku puzzles
+free printable sudoku for kids
+giant sudoku puzzles
+how to solve sudoku puzzle
+free sudoku puzzles for print
+easy sudoku puzzles for kids
+unlimited SuDoku puzzles
+sudoku solver program
+free sudoku puzzles printable
+sudoku puzzle print
+java sudoku solver
+SUDOKU SOLVER
+contest answers for sudoku.com for April 2006
+daily sudoku puzzles book play
+hot to solve sudoku puzzles
+Sudoku rules
+printable sudoku online
+SUDOKU RULES
+free printable sudoku grid
+Free Sudoku online
+sudoku online contest
+25 x 25 sudoku solver
+FREE SUDOKU PUZZLE
+free online sudoku puzzle games
+create sudoku puzzles
+free printable sudoku problems
+www.web sudoku.com
+where to find solutions to any sudoku puzzle
+play sudoku games
+sudoku puzzle for free
+Sudoku puzzles, printable, free
+sudoku puzzle solutions
+sudoku puzzles/
+SUDOKU.COM.AU
+Sudoku online puzzles
+how to play sudoku puzzles
+fortran code to solve sudoku puzzle
+sudoku puzzles to solve
+THE DAILY SUDOKU
+sudoku puzzles you can print on your computer for free
+difficult sudoku puzzle
+sudoku puzzles for children
+free AND sudoku puzzles
+News Press Daily sudoku for 4-5-06
+sudoku puzzle generator
+sudoku puzzle electronic
+CIRCLE SUDOKU PUZZLES
+daily sudoku puzzle in the newspaper
+sudoku puzzle online free
+free sudoku puzzle every day
+sudoku puzzle daily book
+Sudoku puzzles free printable
+sudoku puzzle of the day
+free easy printable sudoku puzzles
+tips to solving sudoku puzzles
+free sudoku online games
+letter sudoku puzzles
+sudoku puzzle strategy
+sudoku puzzle cheats
+sudoku puzzles free printout
+sudoku puzzle books
+FREE SUDOKU games
+sudoku puzzle game
+Kappa�s Sudoku Puzzles 204 answers
+sudoku puzzles kids
+sudoku puzzles by pappocom
+How to play sudoku
+Sudoku puzzles free
+answers to sudoku puzzles in the back of the book
+electronic sudoku puzzles
+Sudoku Puzzles Cleared
+free sudoku games online
+HOW TO PLAY SUDOKU
+FREE SUDOKU PUZZLES - DOWNLOAD FREE
+answers to sudoku puzzles
+free daily sudoku puzzles
+easy sudoku online free
+sudoku puzzles and solutions
+hard sudoku puzzles
+free printable daily sudoku
+easy free sudoku puzzles
+learn to do sudoku puzzle
+daily sudoku.com
+sudoku strategies free
+sudoku online game free
+all types of sudoku puzzles
+printable sudoku puzzles.
+printable sudoku puzzles free
+sudoku strategy tips
+sudoku puzzles tha i can print
+free, printable Sudoku
+printable sudokusudoku puzzles
+PRINTABLE SUDOKU PUZZLES
+do sudoku online
+printable free sudoku puzzles
+Easy sudoku puzzles
+sudoku puzzles print-outs
+printable easy sudoku puzzles
+Creating Sudoku Puzzles
+sudoku puzzles daily
+Cross hatch Sudoku puzzles
+web sudoku answers
+solve difficult sudoku puzzles
+SUDOKU.com
+free play sudoku
+free easy printable sudoku games
+fun printable sudokus
+free printable sudoku puzzels
+crossword, wordsearch, sudoku puzzles
+sudoku puzzlesfree
+PRINTABLE SUDOKU
+easiest sudoku puzzles
+Printable SuDoku Puzzles
+sudoku puzzles and answers
+sudoku online dxsoftware
+sudoku puzzles free printable
+free printable sudoku puzzules
+free how to play sudoku
+What are Sudoku Puzzles
+how to play SUDOKU
+experience doing Sudoku puzzles
+sudoku online mac
+how do you solve the Sudoku puzzles
+very hard sudoku puzzles
+print out sudoku puzzles
+Making Sudoku Puzzles
+daily sudoku puzzles squiggly play
+print friendly sudoku puzzles
+Free online Sudoku Puzzles
+usa today sudoku puzzle
+easy printable sudoku puzzles
+dkm sudoku online
+Sumo sudoku puzzles
+x-ywing sudoku puzzles
+sudoku puzzles letters
+web sudoku.com
+print fre sudoku puzzles
+sudoku solver how backtrack
+alphabet sudoku solver
+easter sudoku puzzle
+how to make a sudoku puzzle
+Free web sudoku
+sumo sudoku puzzles
+free online sudoku solver
+samurai sudoku solver
+Universal Sudoku Puzzle book
+sudoku puzzles with letters
+daily SuDoku puzzles
+to solve a sudoku puzzle
+sudoku puzzle answer
+sudoku rules crack
+sudoku rules extreme
+FREE SUDOKU PUZZLES WITH OUT DOWNLOADING
+solve sudoku puzzles
+strategies for solving sudoku puzzles
+PC Sudoku puzzle game
+sudoku puzzle usa
+sudoku solver step by step
+sudoku solver no gui
+play sudoku free online
+killer sudoku solver
+Check a Sudoku Puzzle
+free, printable sudoku puzzles
+ancient sudoku puzzle
+play sudoku quest online
+sudoku.com.uk
+free Printable sudoku
+free sudoku puzzles uclick
+how to Play Sudoku
+Answers for SuDoku Puzzle Medium Level
+sudoku online pencil marks
+how do i solve a sudoku puzzle
+SuDoku Puzzle Solutions
+How to make a sudoku puzzle + easy
+sudoku puzzle daily squiggly play
+sudoku puzzle game and solver
+free sudoku solver palm tungsten
+free sudoku puzzle solver
+sudoku puzzle results
+sudoku puzzle 36x36
+very easy sudoku puzzles free
+picture of a sudoku puzzle
+15000 sudoku puzzles nocd crack
+today sudoku puzzle
+DIRECTIONS ON HOW TO PLAY Sudoku
+Interactive Sudoku games + on-line newspapers
+sudoku puzzle game and
+daily sudoku free
+do a sudoku online
+today's daily sudoku puzzle play click
+sudoku puzzle help
+easy Sudoku puzzle
+Solve My Sudoku Puzzle
+small printable sudoku puzzles
+ROUND SUDOKU PUZZLES
+SuDoku online
+sudoku puzzle for
+sudoku puzzle for families
+sudoku games for ipod mini
+who to play sudoku
+download free sudoku puzzles
+sudoku online free games
+Sudoku Puzzle solution
+Make your own sudoku puzzle
+Easy Sudoku puzzles
+sudoku puzzle blanks
+how to do sudoku puzzle
+cbs daily sudoku
+how do you play Sudoku
+how to beat a sudoku puzzle
+free printable sudoku puzzles easy
+sudoku online help
+kill sudoku online
+sudoku puzzle hints
+play Sudoku online for free
+solve a sudoku puzzle
+sudoku puzzle to print
+Sudoku puzzle aids
+trick and shortcuts to solving sudoku puzzles
+SuDoku Puzzle Solutions for Medium Level
+online Sudoku puzzles
+free sudoku puzzle from time warner
+daily sudoku kids
+hints for solving sudoku puzzles
+beginner's sudoku games
+to sudoku puzzle
+easy sudoku puzzles on computer
+create sudoku puzzle
+Free Online Sudoku Puzzles
+multiple sudoku puzzles per page, printable
+free play sudoku games
+play sudoku cnn
+downloadable sudoku puzzles
+HOW TO SOLVE SUDOKU PUZZLES
+Daily suDoku
+sudoku games to play online
+printable kid sudoku games
+SEATTLE TIMES SUDOKU PUZZLES
+Sudoku puzzle answers
+sudoku online puzzle play click daily
+sudoku puzzle games
+PLAY SUDOKU ON LINE
+sudoku puzzle for kids and family
+hand held sudoku games
+Janric Classic Sudoku puzzle
+ancient sudoku online
+sudoku online van
+answers for sudoku puzzles
+print sudoku puzzles generator
+play sudoku for free online
+Daily sudoku
+free sudoku puzzles not online
+solving regular sudoku puzzles
+sudoku ONLINE FREE
+free sudoku puzzles i an do online
+sudoku puzzles/free
+printable holiday sudoku puzzles
+hard free printable sudoku
+print Sudoku puzzles
+Kappa�s Sudoku Puzzles 204
+sudoku strategy beginner
+basic sudoku games
+sudoku GAMES
+how to play sudoku free
+free sudoku games fun
+sudoku puzzle maker
+free sudoku GAMES
+Sudoku strategies
+Web sudoku
+electronic sudoku games
+how to solve Sudoku puzzles
+hints to solve Sudoku Puzzles
+SUDOKU ONLINE -
+FREE SUDOKU GAMES
+How do I play sudoku
+play sudoku online for free
+playing sudoku online
+how to play sudoku infomation
+all types sudoku puzzles
+SuDoku puzzles

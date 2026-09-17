@@ -1,0 +1,10 @@
+.DS_Store
+.env
+**/*.key
+**/*.pem
+**/secrets*
+**/node_modules/
+state/
+memory/
+.openclaw/
+

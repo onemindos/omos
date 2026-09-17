@@ -1,0 +1,20 @@
+---
+id: hp-26-20260113225955
+title: "Anger Control"
+type: reference
+path: HP
+domain: 25-49
+folder: "26"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/hp, path/hp/26, type/reference, status/active]
+ai_summary: "Anger Control"
+---
+# Anger Control
+
+Anger Control
+
+
+It is often difficulty to maintain control of your impulses when others around us make us mad. It is even more difficult when the prices in the economy increases every year, and the legal and political system is constantly putting more demands on us everyday. Most of us deal with the stressors in life as they come our way, but some of us get out of control. Management is often the solution for treating anger; however, the person must be willing to admit their actions are causing more problems. When a person acts out violently, verbally abusive, assault and so on it not only causes problem for the person out of control, it also causes problems for others. Often when a person has anger issues he or she will attack others whether physically or mentally. The angered person will often attack in a way that belittles, humiliates, harms, or threatens another life. This person will need to learn to control his or her anger, since everyone around him or her is in a degree of danger, and sometimes more danger than others. Anger is the inability to restrain the impulses, desires and emotions. When a person is out of contact with his emotions, it often creates a chaotic mind. When a person is threatened, it is always good to have a degree of anger to protect. However when a person does not have control then it can lead to trouble. Anger, sadness, joy and happy are all parts of out emotions, and when we have those emotions in control we often live a productive life. However, when we seem to a target of attack then it is more difficult for us to manage our life and anger. For example, some children go to school and each day a bully will antagonize this child pushing him beyond his or her control. The child may hold his feelings in for a period, but eventually he or she is going to loose control, since none of us is willing to continue allowing someone to make our lives miserable. Unfortunately, when this child reaches his or her limits and returns the attack on the child, he then becomes the culprit and is often punished. The bully too many times gets away with his behavior, and once the victim takes action he or she is often punished. The school personnel will often say why didn’t you tell me what was going on? However, the fact is the child most likely told the personnel and in my experiences, they rarely act. Now we have two children with anger problems and more people in trouble. This is only one of the many reasons why a person cultivates anger to a degree of explosion. Each time we are angry we feel it in our body and mind. Our body will often tense when we feel angry. If you feel this tension then it is time to step back and take control. Why am I mad? Why do I feel this way? Asking yourself questions can help you find the answers if you search your mind hard enough. Usually after a person has developed a level of anger that is out of control, they will often strike out at persons even if there is no justifiable cause. The person could have moved something that belonged to that person and they will react by saying something like you stupid moron, why in the hell did you move my belongings? I cannot believe how stupid you are. Why do you bother breathing? This is only a few examples of a verbal attack issued by an angered person. The person may attack physically by kicking, hitting, punching, spitting, or causing other types of harm to the person. It is important to get management in play if you have anger problems. If you cannot control your emotions then one day, someone will control them for you. Anger is good if you have it under control, but when you .loose control someone, someday will pay and that someone in many cases will be you as well as the trail of victims behind you.  

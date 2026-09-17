@@ -1,0 +1,67 @@
+# Enjoy Time Share Flexibility Like No Other: Buy A Trendwest Time Share
+
+There are many benefits to owning a time share. During the past decades, time sharing has become an ever growing business since its concept's inception. It makes vacationing affordable even at the most luxurious and desirable world class resorts. Hotel rooms and accommodations can not compare to the luxury brought about by owning your private vacation get away. It gives you the feeling of being in a luxurious home of your own along with the first class accommodations and services of a hotel.
+
+Trendwest Resorts, subsidiaries to Cendant Corporation, are known to be one of the finest resorts around the world that offer the most flexible time shares. It is the exclusive developer and marketer of WorldMark, the third largest vacation ownership program in the world with over 200,000 owners. Its main headquarter is in Redmond, Washington which operates WorldMark resorts in different countries including the United States, British Columbia, Mexico, Fiji and Australia. 
+
+The beautiful resorts built by Trendwest are great for vacation escapades for time share owners to enjoy fully furnished condominium units in luxurious environment. You can start enjoying your own condo unit when you buy Trendwest time share. Compared to buying a Trendwest unit full time, you can enjoy the same benefits when you buy Trendwest time share.
+
+Why buy Trendwest time share?
+
+Buying Trendwest time share means you have the freedom to go on a dream vacation whenever and wherever you want. There are over 50 resorts under the umbrella of the Trendwest networks as choices when you buy Trendwest time share. All 50 Trendwest resorts are available to all owners and potential buyers of Trendwest time share. 
+
+You also have the choice of how long you are going to stay. Either one night, one week, two weeks or more, it is up to you to decide how long you are going to enjoy your dream vacation. You may also choose from nearly 1,900 resorts in different vacation destinations through Resort Condominiums International, its international exchange partner. 
+
+You may choose from the WorldMark resorts by location (country / state / city):
+
+Arizona - Bison Ranch, Rancho Vistoso
+
+British Columbia - Cascade Lodge
+
+California - Angels Camp, Bass Lake, Big Bear, Clear Lake, Marina Dunes, Oceanside Harbor, Palm Springs, Pismo Beach, San Francisco
+
+Colorado - Steamboat Springs
+
+Florida - Ocean Walk, Orlando
+
+Fiji - Denarau Island
+
+Hawaii - Kapaa Shores, Kihei, Kona, Valley Isle
+
+Idaho - Arrow Point, McCall
+
+Illinois - Galena
+
+Louisiana - New Orleans
+
+Mexico - Coral Baja, La Paloma
+
+Missouri - Branson, Lake of the Ozarks
+
+Nevada - Las Vegas, Reno
+
+Tahoe (Stateline and Zephyr Cove)
+
+Oklahoma - Grand Lake 
+
+Oregon - Depoe Bay, Eagle Crest, Gleneden Beach, Seaside, Schooner Landing
+
+Utah - Bear Lake, St. George, Wolf Creek
+
+Washingtong - Birch Bay, Discovery Bay, Leavenworth, Lake Chelan Shores, Mariner Village, Seattle and Surfside
+
+For more information on the locations and the exact benefits you can get when you buy Trendwest time share call their Owner's Services line:
+
+1-800-722-3487 ext. 2822
+
+Other choices you have when you buy Trendwest time share are the type and features you would like to own as soon as you buy Trendwest time share. These include the number of bedrooms to fit the number of family members or friends you wish to bring along with you on your luxurious vacation at Trendwest. 
+
+Buy Trendwest time share and enjoy its flexibility. You are free to choose when and how frequent you can come and visit. You can travel when you want because you are locked into a specific time of year. Trendwest allows its time share owners the luxury to travel any time of the year. 
+
+This means that you are not tied to a specific week and to a specific unit alone. When you buy Trendwest time share, you do not have to worry if you can only take shorter and more frequent vacations. This is a very flexible system of vacationing offered to you along with the credits you enjoy after you buy Trendwest time share.
+
+When you buy Trendwest time share, you can also buy vacation credits which you can spend like money on resorts in the Trendwest network of time share resorts around the world. 
+
+If you are going to buy Trendwest time share at a resale, you are guaranteed to the exact benefits of ownership the original owner enjoyed. You will still be treated as first class guest because Trendwest if very classy in this respect. 
+
+Buy Trendwest time share and have more time away with your family and friends while enjoying a new place and embarking on an unforgettable adventure of a lifetime.

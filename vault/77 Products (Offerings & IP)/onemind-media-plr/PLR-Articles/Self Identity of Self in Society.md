@@ -1,0 +1,17 @@
+# Self Identity of Self in Society
+
+The word �society� refers to a collection of individuals who generally have common interests. However, they may have different culture or belong to diverse national identities. Therefore, a society may mean just a particular group of people of a specific nation or a wider term that includes many nations such as �western society�. It may also be a group of individuals that are bound together due to some cause. It can be religious, political cultural or many other thing. 
+
+It is the society that gives identity to an individual. An individual from his or her tender years is trained to accept the norms that have been laid by the society without raising any voice against it. 
+
+Otherwise, this may be a threat to the prevailing standards that has been laid long back by the ancestors. Even the toys that are offered to a child are biased according to the gender. A boy is always given toys like that of an airplane and a girl is always made to play with a doll or a kitchen set. Therefore, even the toys that are given to a child are the replica of their roles that they have to fulfill as adults in a society. Thus, we can say that society moulds an individual for its benefits. 
+
+Moreover, to make an identity for himself, an individual has to struggle hard to prove his worth in the society, so as to be respected by other people around him. Though the prevailing cut-throat competition and this desire to prove oneself has made people selfish enough to neglect the happiness of others at their own cost, but this shows the degradation in the inner self of an individual. 
+
+The individualism of a person makes him work for his own personal motives. The ego and the selfishness of a person stand above everything else in the society. No one at that time cares to think in the interest of the society as a whole. The increase in bribery and corruption in the world is a live example in front of us. For instance, nowadays a person would prefer it better to pay an amount than stand in a long queue to pay a telephone bill. 
+
+There is a need for man to establish his own identity but at the same time it is necessary that the growth of the inner self of a human being should not be hampered by it. The self should develop with experience and not be ruined by it. An individual should never compensate on his values and ethics to make his identity. In fact, it is these values that should guide one�s actions and behavior to achieve his or her aims in life. It is these concepts of the self that determine the ways of life of an individual. Thus, the �self� is actually a construct that affects the behavior, motivation and self-esteem of an individual. 
+
+The criticism or appreciation that we gain from society for our deeds directly affects our inner self. It either soars up our confidence, or can also create depression and anxiety in the mind of an individual. It is this society that tells us where we stand and helps us recognize our talents and weaknesses. No doubt, society is judgmental in nature but in some way it is beneficial for the overall development of an individual. 
+
+The reaction of the society towards an individual sometimes takes him to the heights of success. On the other hand, it can also ill treat and bring him back to the ground reality the other moment. Thus, there is a need for an individual to maintain a balance between his individual self and society.

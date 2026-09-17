@@ -1,0 +1,29 @@
+# Title:
+
+Why Work/Life Balance Doesn't Work
+
+Word Count:
+388
+
+Summary:
+Work/Life Balancing doesn't work!! In fact it reinforces the very problem it seeks to address. People need to integration and not balance.
+
+Keywords:
+Work life balance,work/life balance,work and home,integration,time management,leadership.
+
+Article Body:
+I can�t help feeling that using the phrase �work/life balance� reinforces the problem it seeks to address. To describe a need to balance work and life implies that work is not part of �life�. If that�s the case then approx 50% of the average persons hours on earth are devoted to non-life � surely that�s dead.
+
+People are not asking �how can I balance two opposing areas of existence?�, but �how can I live a holistic life; where all aspects of life co-exist and compliment each other and do not oppose each other?� Balancing things puts them in opposing positions � we reinforce a problem as oppose to deal with it. We need integration not balance.
+
+If you are living a non-integrated life then perhaps you need to make some major changes. Some escape home by going to work and others escape work by going home. Some people feel like two different people. The person at work is not the person at home. If that�s the case, both your team and family are missing out. For some this is so extreme they keep the two parties at arms length. They feel that if the two meet there will be some kind of implosion of realities and life will end. Actually � it�s at that point that life begins.
+
+I believe it is my reasonability as a leader and employer to care for my team. Yes, we have goals, vision, dreams and commitments � but they are meaningless if we destroy lives, demoralize people and deny children their parents input.
+
+Leaders lead people not projects.  If we do not care for our people they will not stay around. 
+
+Southwest Airlines (the most successful airline in the world!) has some ways they help people live integrated lives. How do they do this? Their office corridors are lined with photos of team members� families, wedding photos � they even have an area devoted to pets. Their people don�t leave. They are committed to the business because the business is committed to them
+
+I suggest that we need to focus on integrating all aspects of life and not attempt to balance them out. People will happily work overtime to meet a deadline when they know there is a commitment to them as a person coming back.
+
+For more infomation go to the Generous Leadership website - http://generousleadership.com

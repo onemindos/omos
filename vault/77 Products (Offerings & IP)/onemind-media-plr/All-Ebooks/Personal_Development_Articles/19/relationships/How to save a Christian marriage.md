@@ -1,0 +1,19 @@
+# How to Save A Christian Marriage
+
+A marriage is a union of a man and woman joined together by a sensitive and loving bond. It follows some principles such as to pray together, honor and respect together, give time to communicate with each other, encourage each other for progress together, honor and protect the marriage vows, avoid extra-marital affairs and thank God for your Mate & the life you live together.
+
+If you are looking for ways on how to save a Christian marriage, then it is important for you to know that Christianity recommends resolving the problems in the marital life and saving a marriage. Faithlessness is not allowed in the Christian marriage and it is considered as a great sin.  
+
+There may be some problems in marriage which may be due to extra-martial affairs, adultery, infidelity, physical, verbal or emotional abuse. However, separation or divorce is not recommended in Christian marriage. Divorce can affect the life of both the partners at physical, emotional, financial, legal, spiritual and family levels. 
+
+If you are facing the same situation and wondering about how to save a Christian marriage, then you need not worry as you have various options. First of all, you need to talk to your partner and try to understand the problems in your married life. It is always better to seek the solutions by mutual understanding.
+
+If the conflicts in your married life are because of ego, you should give away the ego and take an initiative to resolve the problems. Self-assessment is a very important step to save your marriage. Think about your mistakes and drawbacks and try to improve your behavior and avoid the things that may hurt your partner. 
+
+If you are determined to remain with your spouse forever and worried about how to save a Christian marriage, then you should opt for some changes in your behavior. If the problems in your married life are because of lack of communication, start to develop good communication between you and your partner. You should spend some time with each other and go for outing. You should express an intense passion for your partner because if you are successful in developing love for each other, then other problems can be immediately solved.
+
+Infidelity is strictly prohibited in Christian marriage. You should avoid the extra-marital affair, if how to save a Christian marriage is your query. You should be very honest with your spouse and should completely trust him/her. If your partner is abusive, try to understand him/her and understand the causes of misbehavior of your spouse and find out the solutions for that. 
+
+If you are not able to resolve the problems, then you may seek advice from your friends, family or religious leader. Christianity as a religion preaches fidelity and if necessary you can take the help of religious leaders from the church to counsel you or your spouse about what the bible has to say. This is one of the best ways on how to save a Christian marriage. You may offer the prayers to the God to save your marriage.
+
+Many couples prefer to participate in marriage counseling which can help the couples to improve their communication skills, find out their differences and clear all misunderstandings.

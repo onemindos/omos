@@ -1,0 +1,27 @@
+# Famous Filipino Entrepreneurs: Their Key Qualities That Spell Out Success
+
+When asked about what they want to become in the future, youngsters would often settle for the answer that they do want to be billionaires instead of gaining recognition from award-giving bodies, becoming popular athletes, or landing as famous scientists. What has happened to the young generation? Well, they cannot be blamed. Life has been too harsh all through these years and it is just a natural response for people to prefer gaining their billions whenever they get the chance. 
+
+Research studies show how almost a hundred thousand of people earn their millions in every year just in the entire United States! Well, majority of these people are owners of personal businesses. Simply dealing with the matter, these people have started working on their own business ventures so that they will be able to get their profits in due time. Some kind of inspiration, right? So if you want to be a millionaire, learn to work out with a worthy investment! You can always do it. Just arm yourself with enough funds and careful organization of your business plans plus the right attitude, then you can right away expect some profits rolling into your pockets. Don�t you feel excited over the matter?
+
+Okay, so you feel excited. But then becoming an entrepreneur yourself is confronted with lots of risks. It is no easy task, mind you. Take into account that not all people are qualified to be successful entrepreneurs since they are not born and made to be one. You may be very rich, famous, and influential but if you lack the traits to become successful in the area of business, then you cannot do anything with it. You cannot probably alter the course of your destiny.
+
+Now who said that only the American people are gifted to be famous entrepreneurs? Do not take away the fact that Filipinos are in more ways than one very resourceful, persevering, and determined to be millionaires as well. That is why, in the Philippine setting, there are several names that can be mentioned when it comes to being successful entrepreneurs. So what makes them famous and successful? Of course they will not be branded with such reputation if they did nothing to boost their reputations and images in the world of business.
+
+Here are some notable traits that make them famous and successful:
+
+Common Sense. Not all Filipino entrepreneurs have attained the greatest education from the finest schools. There are those who had not even experienced earning their degrees but they are in pedestals right now. The role of their common sense is very vital. In fact, one�s common sense serves as a strong foundation for his success. Common sense is literally taken as the capability to create rational judgments on certain issues. Being confronted with the harsh realities of life, Filipino entrepreneurs credit their sound judgment to their previous experiences and gained or stock knowledge. 
+
+Clear Knowledge about the Field. It will likely be easy to start a business which is in line with one�s passion, expertise, and knowledge. How can the entrepreneur create decisions if he does not even know how to run the business? 
+
+Self Confidence. Being confident allows a person to face the everyday challenges heaped upon him. If an entrepreneur lacks self confidence, he will be readily pulled down by the obstacles that come his way. Though there are no specific guarantees in the business world, yet failures must teach the entrepreneur a lesson worth remembering. Although there are downfalls suffered from, an entrepreneur must always be ready to stand up.
+
+Getting Things Done. Hardworking and persistent�Filipino entrepreneurs possess these traits. Once a thing has been planned to be started with, it must be done and finished all the way down. Self discipline must be mastered also.
+
+Being Creative. Aside from being resourceful, Filipinos are also known to be very creative. They can in fact create worthy items out of trash. Filipino entrepreneurs are creative in devising methods in line with marketing and managing their companies.
+
+Leadership Skills. How can a business run smoothly without staff members to get on with the right flow? An entrepreneur must be a good model in terms of leadership. He must have the ability to influence people and lead them into action.  
+ 
+Self Reliance. Filipinos may tend to be overconfident as others perceive them to be. But as the famous Filipino entrepreneurs turn out to be, they are able to take full responsibility of their actions. They know how to trust themselves and be decisive in making decisions.
+
+Overall, Filipino entrepreneurs are famous because they are unique in their own rights.

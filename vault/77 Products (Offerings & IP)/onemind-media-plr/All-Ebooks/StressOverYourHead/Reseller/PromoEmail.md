@@ -1,0 +1,46 @@
+# Hi ,
+
+Are you struggling with the fact that 
+you really don't know anything about 
+how to cut down on stress?
+
+It is perhaps an accepted fact that stress 
+is usually brought on by outside forces. 
+This is so ingrained in most people�s mindsets, 
+that the slightest inconvenience or signs of being 
+pushed out of the comfort zones will get some negative 
+reactions from the body, and that would be considered stress. 
+Generally outside forces are blamed for the 
+internal turmoil that stress is supposed to cause.
+
+What if I can offer you a
+solution that will help
+you to attain greatness, to become a success
+and learn about the best ways to handle stress?
+
+In this book, you will 
+learn about:
+
+- Responding to stress
+
+- Where does stress come from?
+
+- Your first step in managing stress
+
+- Easing your tension to reduce stress
+
+- many other useful things!
+
+Click here to find out more:
+
+>> Your Link
+
+With great power comes great,responsibility. Once you know
+the secrets in this amazing book, there is no going back.
+
+It's time to get moving toward developing success in 
+your life!
+
+>> Your Link
+
+Regards,

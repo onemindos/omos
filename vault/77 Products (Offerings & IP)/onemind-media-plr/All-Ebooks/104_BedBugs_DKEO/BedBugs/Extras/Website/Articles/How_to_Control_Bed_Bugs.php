@@ -1,0 +1,111 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Controlling Bed Bugs | How to Control Bed Bugs</title>
+		<meta http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="Bed bugs are unlikely and unwanted housemates you might have currently They can never be as gross and scary as other insects and pests like cockroaches, but they can be really annoying Bed bugs are insects that thrive on small holes, cracks or crevices in ...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">				
+		<meta name="Robots"				content="index,follow">				
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>		
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2" >
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdContent">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+How to Control Bed Bugs
+</b>
+<br>
+
+						<small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>Bed bugs are unlikely and unwanted housemates you might have currently. They can never be as gross and scary as other insects and pests like cockroaches, but they can be really annoying. <br><br>Bed bugs are insects that thrive on small holes, cracks or crevices in walls and floors. Generally, bed bugs like to live in dark and untidy corners or portions of the house. <br><br>Bed bugs suck blood. It is their primary means of making a living. Hence, they go out at night and suck blood from unsuspecting victims, who may be sleeping by that time. <br><br>Bed bugs do not transit or carry communicable diseases, bu their bites can get really really itchy. To some people, especially the more sensitive ones, bed bugs’ bites can pose serious health situations. <br><br>Controlling bed bugs <br><br>So the basic question you will have in mind for sure (assuming that your house is infested with bed bugs) is, “ How are bed bugs infestation controlled?”<br><br>There are a number of measures or means to control bed bugs. <br><br>For a start, you may start by preventing the occurrence or existence of bed bugs in your house. If your home is still not infested, be sure to know how to avoid them. <br><br>Cleanliness is one key factor in controlling or preventing bed bugs from thriving in your house. Be sure to make your furniture, walls, and floor spic and span.<br><br>Bed bugs love to thrive in beds, so, make sure your bed is fully protected. Regularly change your bed sheets and make sure the bed does not contain unnecessary holes or tears. <br><br>If your house already has bed bugs on it, a simple way to control infestation is by applying pesticides or insecticides to the infested areas. <br><br>A number of commercially available pesticides especially formulated for bed bugs control are available and accessible in the market. In using one, just be sure to carefully read all labels and instructions before use.<br><br>Pesticides, of course, are made up of harsh chemicals that can surely knock out insects like bed bugs. These chemicals are so harmful, that aside from controlling bed bugs, they can also pose health hazards or threats to you. <br><br>Hiring professionals <br><br>The best and probably the most intelligent solution to controlling bed bugs infestation is through seeking the professional help and services of experts---pest control companies.  <br><br>Controlling bed bugs is not a ‘spur of the moment’ thing. A  lot and thorough planning has to be conducted beforehand. Before seeking the expert help, be prepared to discard several materials and furniture, if ever the experts will advise you to. <br><br>There are a number of pest control companies in your locality. All you have to do is to pick up the phone, and wait for a few hours. <br><br>If you are living in an apartment, coordinate with your land lord or land lady. It is their responsibility to make all the necessary arrangements for pest control measures. <br><br>State and civil laws mandate them to make sure that their building is safe and pest-free. Talk to them and know the arrangements for pest control service fee payments. <br><br>When you plan to control bed bugs infestation in your home with the help of professionals, also be sure to inform or notify your neighbors.<br><br>It is because some residues or stink of the pest control chemicals might reach their homes. If ever, that will post serious health risks for them. <br><br>Because bed bugs are so persistent, expect the process of controlling them to be really tedious. Insects have that general characteristics---they are so resilient and their systems are so strong. <br><br>Normally, controlling bed bugs the professionals’ way can take a few hours, because the experts have to check for any crevices, small cracks or holes where bed bugs might be hiding. <br><br>Furniture and home accessories will also have to be checked to make sure the treatment will not miss on any single bug. <br><br>At times, pest control experts might advise you to discard several furniture, especially beds. Is because, most beds are made up foams or materials that have tiny holes on it, which is very ideal for bed bugs to hide in. <br><br>In disposing or discarding beds, be sure that it can never be used by other people again. Otherwise, bed bugs will transfer from your house to another’s.<br><br>Because environmental concerns will rule out burning, you will surely have to put the bed into a special encasing or bug, to make sure all bed bugs on it are trapped inside.
+						<br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/J_Box.php"); ?>
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php					
+				if($ShowNewsFeed)
+					{
+			?>
+						<tr>
+							<td class="tdRow" colspan="2">
+								<?=$Category;?> News and Events
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<?php include("../Includes/Google_Search.php"); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br>
+								<?php include("../Includes/NewsFeed.php"); ?>
+								<?php	
+									if ($DisplayAmazon)
+										{
+											echo "<hr>";
+											echo "<br><center>";
+											include("../Includes/Amazon_728x90.php");
+											echo "</center><br>";
+										}
+								?>
+							</td>
+						</tr>
+			<?php
+					}
+			?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

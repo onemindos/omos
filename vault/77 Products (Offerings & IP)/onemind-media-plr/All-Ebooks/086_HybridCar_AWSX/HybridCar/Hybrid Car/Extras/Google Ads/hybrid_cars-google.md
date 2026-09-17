@@ -1,0 +1,40 @@
+# Hybrid Cars
+
+Discover what hybrid vehicle is 
+right for your personal needs.
+
+Hybrid Vehicles
+Learn everything there is to know
+about hybrid cars.
+
+Hybrid Cars
+Whats all the fuss about these 
+hybrids? Find out here.
+
+Hybrids
+The most thoroughly researched
+information on hybrid vehicles.
+
+Hybrid Vehicles
+Don't buy a hybrid vehicle until 
+you read this! 
+
+Hybrid Cars
+Are hybrid vehicles right for you?
+You can answer that question here.
+
+Hybrids?
+Are hybrid vehicles right for you?
+You can answer that question here.
+
+Hybrid Cars Guide
+Don't buy a hybrid vehicle until 
+you read this!
+
+Hybrid Automobiles
+Whats all the fuss about these 
+hybrids? Find out here. 
+
+Hybrid Right For me?
+Learn everything there is to know
+about hybrid cars.

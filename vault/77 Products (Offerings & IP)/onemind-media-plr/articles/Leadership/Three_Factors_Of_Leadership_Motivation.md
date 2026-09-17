@@ -1,0 +1,53 @@
+# Title:
+
+Three Factors Of Leadership Motivation
+
+Word Count:
+1205
+
+Summary:
+Summary: Most leaders can't motivate people because they misunderstand what motivation is truly all about.  Here are three factors of motivation that can help leaders motivate people on a consistent basis.
+
+Keywords:
+leadership skill, leadership skill training, leadership development, management, management skill, management skill training, effective leadership, leadership communication, leadership communication skill, management communication, management communication skill, management training, management development, business leadership, influence leadership, motivation, motivational leadership, leadership excellence, charismatic leadership, communication, manage, organizational success, organizational development, results, leadership results, career, motivator, motivating, executive
+
+Article Body:
+PERMISSION TO REPUBLISH: This article may be republished in newsletters and on web sites provided attribution is provided to the author, and it appears with the included copyright, resource box and live web site link.  Email notice of intent to publish is appreciated but not required: mail to: brent@actionleadership.com
+
+Word count for the body: 1200 words.  
+
+Leaders do nothing more important than get results.  But you can't get results by yourself.  You need others to help you do it. And the best way to have other people get results is not by ordering them but motivating them. Yet many leaders fail to motivate people to achieve results because those leaders misconstrue the concept and applications of motivation.  
+
+To understand motivation and apply it daily, let's understand its three critical pillars.  Know these pillars and put them into action to greatly enhance your abilities to lead for results.
+  
+1.  MOTIVATION IS PHYSICAL ACTION.   "Motivation" has common roots with "motor," "momentum," "motion," "mobile," etc. � all words that denote movement, physical action.  An essential feature of motivation is physical action.   Motivation isn't about what people think or feel but what they physically do.  When motivating people to get results, challenge them to take those actions that will realize those results.
+
+I counsel leaders who must motivate individuals and teams to get results not to deliver presentations but "leadership talks."  Presentations communicate information..  But when you want to motivate people, you must do more than simply communicate information.  You must have them believe in you and take action to follow you.  A key outcome of every leadership talk must be physical action, physical action that leads to results. 
+
+For instance, I worked with the newly-appointed director of a large marketing department who wanted the department to achieve sizable increases in the results.  However, the employees were a demoralized bunch who had been clocking tons of overtime under her predecessor and were feeling angry that their efforts were not being recognized by senior management.
+
+She could have tried to order them to get the increased results.  Many leaders do that.  But order-leadership founders in today's highly competitive, rapidly changing markets.  Organizations are far more competitive when their employees instead of being ordered to go from point A to point B want to go from point A to point B.  So I suggested that she take a first step in getting the employees to increase results by motivating those employees to want to increase results.  They would "want to" when they began to believe in her leadership.  And the first step in enlisting that belief was for her to give a number of leadership talks to the employees.
+
+One of her first talks that she planned was to the department employees in the company's auditorium.  
+
+She told me, "I want them to know that I appreciate the work they are doing and that I believe that they can get the results I'm asking of them.  I want them to feel good about themselves."
+
+"Believing is not enough," I said.  "Feeling good is not enough.  Motivation must take place.  Physical action must take place.  Don't give the talk until you know what precise action you are going to have happen."
+
+She got the idea of having the CEO come into the room after the talk, shake each employee's hand, and tell each how much he appreciated their hard work �  physical action.  She didn't stop there. After the CEO left, she challenged each employee to write down on a piece of paper three specific things that they needed from her to help them get the increases in results and then hand those pieces of paper to her personally � physical action.   
+ 
+Mind you, that leadership talk wasn't magic dust sprinkled on the employees to instantly motivate them.  (To turn the department around so that it began achieving sizable increases in results, she had to give many leadership talks in the weeks and months ahead.)  But it was a beginning.  Most importantly, it was the right beginning. 
+
+2.  MOTIVATION IS DRIVEN BY EMOTION.  Emotion and motion come from the same Latin root meaning "to move".  When you want to move people to take action, engage their emotions.  An act of motivation is an act of emotion.  In any strategic management endeavor, you must make sure that the people have a strong emotional commitment to realizing it. 
+  
+When I explained this to the chief marketing officer of a worldwide services company, he said, "Now I know why we're not growing!  We senior leaders developed our marketing strategy in a bunker!  He showed me his "strategy" document.  It was some 40 pages long, single-spaced.  The points it made were logical, consistent, and comprehensive.  It made perfect sense.  That was the trouble.  It made perfect, intellectual sense to the senior leaders.  But it did not make experiential sense to middle management who had to carry it out.  They had about as much in-put into the strategy as the window washers at corporate headquarters.  So they sabotaged it in many innovative ways.  Only when the middle managers were motivated � were emotionally committed to carrying out the strategy � did that strategy have a real chance to succeed.
+
+3.  MOTIVATION IS NOT WHAT WE DO TO OTHERS.  IT'S WHAT OTHERS DO TO THEMSELVES.  The English language does not accurately depict the psychological truth of motivation.  The truth is that we cannot motivate anybody to do anything.  The people we want to motivate can only motivate themselves.  The motivator and the motivatee are always the same person.  We as leaders communicate, they motivate.  So our  "motivating" others to get results really entails our creating an environment in which they motivate themselves to get those results.
+
+For example: a commercial division leader almost faced a mutiny on his staff when in a planning session, he put next year's goals, numbers much higher than the previous year's, on the overhead.  The staff all but had to be scrapped off the ceiling after they went ballistic. "We busted our tails to get these numbers last year.  Now you want us to get much higher numbers?  No way!"		
+
+He told me.  "We can hit those numbers.  I just have to get people motivated!"
+
+I gave him my "motivator-and-motivatee-are-the-same-person!" pitch.  I suggested that he create an environment in which they could motivate themselves.  So he had them assess what   activities got results and what didn't.  They discovered that they spent more than 60 percent of their time on work that had nothing to do with getting results.  He then had them develop a plan to eliminate the unnecessary work.  Put in charge of their own destiny, they got motivated!  They developed a great plan and started to get great results.
+
+Over the long run, your career success does not depend on what schools you went to and  what degrees you have.  That success depends instead on your ability to motivate individuals and teams to get results.  Motivation is like a high voltage cable lying at your feet.  Use it the wrong way, and you'll get a serious shock.  But apply motivation the right way by understanding and using the three pillars, plug the cable in, as it were, and it will serve you well in many powerful ways throughout your career.

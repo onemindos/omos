@@ -1,0 +1,27 @@
+# How Personal Development Affects an Entrepreneur's Business
+
+An entrepreneur has two factors to face when running a business: Internal and external. The external factor involves the environment, the market, and other components outside the entrepreneur and the business.
+
+The external factors are parts of a business that you have virtually no control over. These factors present the greatest risk to a business considering the fact that you cannot do anything but adapt to them.
+
+External factors include both opportunities and threats. Opportunities are those external factors that can cause your company to prosper, provided you are able to respond to them correctly. Threats are those which can cause your downfall if you do not learn how to adapt. Sometimes, entrepreneurs even experience opportunities turning into threats and vice versa. Of course, a situation either becomes an opportunity or threat based on his or her perception.
+
+Now we come to the internal factor of business. The internal factors include the strengths and weaknesses of the entrepreneur and his or her venture. An entrepreneur's personal development affects business because of the plain and simple fact that it is a part of the internal factor.
+
+An entrepreneur's personal development touches business more often than people may think. You see, although more and more people say that separating your personal life from business is very crucial, it is just too hard, if not impossible.
+
+An entrepreneur's personal development affects business because this determines how well an entrepreneur can respond to the external factors. You see, personal development has a great impact on how you take the problems that face you in business. 
+
+Many people think that if you develop yourself professionally, then you can let go of your personal life when you are at work. Unless you have multiple personality disorder, however, you cannot just forget about your personal life once you are handling your business. An entrepreneur's personal development affects business because the way an entrepreneur adapts to the external factors is determined by his or her personality.
+
+You see, you may gain the know-how and the facts from school, but character development is only taught by life. So how do entrepreneurs gain personal development?
+
+Well, to tell you the truth, most entrepreneurs get it from their childhood. You see, there's nothing like real life experiences to develop your character. When you have faced different problems and overcome the toughest challenges of life, business can actually be a breeze.
+
+Some entrepreneurs develop their characters through years on the job. This is the reason why experienced entrepreneurs are more likely to succeed than new ones. You see, years on the business can help you cope with the different external factors that you face. Some entrepreneurs can even claim to have desensitized themselves to the different problems that one can face on a business. 
+
+However, it is said that the true character of a person is not measured by how long he resists falling, but by how often he keeps getting up. You see, the best kind of entrepreneurial character development for business is how to take your hit and not be defeated.
+
+As an entrepreneur, you will be facing defeats in your life. Bruises will form over your business reputation. Competition will leave you wanting to quit. Despite all these, you need to stand up and be victorious. Even through different trials, you must stand. Financially speaking, you need to lay it all on the line for your dream. Given time, you will realize that all the risks you took were worth the success. Hold on to your dream whenever anything threatens to break you apart. In times of trouble, let the development of your character show. 
+
+Juggling personal life and business can be hard for the entrepreneur. Balance is essential to every entrepreneur. Despite the fact that new business ventures need a constant eye, you must learn how to take care of your personal life as well. Learn how to prioritize important things. Here is a lesson: handling life and work is like juggling glass balls. You are afraid to drop one, but trying to keep them all in the air can wear you out. However, you have to realize that some of those balls are actually made of rubber and will bounce back even if you drop them.

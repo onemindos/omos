@@ -1,0 +1,16 @@
+# Subject: DID YOU GET THIS?
+
+Hey [[firstname]],
+
+Yesterday, I sent an email regarding my latest launch - The Leader's Blueprint:
+
+>> LINK TO YOUR SALES PAGE
+
+Remember, with this powerful tool, it��ll enable you to live like a true leader and turn a pack of deers into lions.
+
+So far, there has been raving reviews about it already, and I don��t want you to miss out on this great opportunity. So grab it now before it��s sold out:
+
+>> LINK TO YOUR SALES PAGE
+
+Warm regards,
+[[YOURNAME]]

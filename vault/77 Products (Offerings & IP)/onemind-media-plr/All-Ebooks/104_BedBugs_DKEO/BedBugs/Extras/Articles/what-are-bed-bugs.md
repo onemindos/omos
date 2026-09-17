@@ -1,0 +1,55 @@
+# What are Bed Bugs?
+
+If the question pumps into your head after waking up one morning and feeling several itchy parts all over your body, chances are you have been victimized by bed bugs during the night. 
+
+So what exactly are bed bugs? To answer the awkward question, bed bugs are simply insects. But like all the millions of other insect species, bed bugs have their own identity. They would not be left behind in the identity department. 
+
+Start from the scientific view. Bed bugs are scientifically labeled Cimex lectularius. They belong to the ever wide and diverse kingdom, or phylum as what can be more appropriate, called Insecta. 
+
+Did you know that if ever there might come a time when the world will be annihilated, all creatures in planet Earth, including humans and animals, will be exterminated. All but one type of creatures will vanish by then. 
+
+You got it right. Insects, with their flexibility and resilience will be left to occupy the planet. Bed bugs are among them. That is why, exterminating them will a hard feat. 
+
+How do they look like? 
+
+When viewed from the top (by the way, you would not want to look at them at any other angle, for sure), bed bugs look like flattened creatures. They are so tiny, that one can hardly see and look at them, not unless they are aided by magnifying glasses or lenses. 
+
+Bed bugs usually appear like tiny deep brown creatures. In other parts of the globe, like in Europe, bed bugs may appear differently---they may adopt white to creamy white color. 
+
+When they are fed, or just came from a meal, bed bugs look like tiny bloated creatures with black or deep red little mass in their stomach area. 
+
+That is because bed bugs principally feed on hosts� blood. Blood is the reason they live. Otherwise, they would surely not survive. 
+
+How they feed? 
+
+Do you really have to know it? Okay, for your information, bed bugs have tiny beaks, similar and smaller to that owned by mosquitoes. They use these beaks to pierce through the skin of their host. After that, when they have pierced some skin, they start sipping and sucking some blood. 
+
+Because bed bugs are so tiny, they can hardly suck about a fourth of a milliliter from you. That means the blood you will lose when bitten by a bed bus will be so negligible, you would not care at all. 
+
+Another good thing, bed bugs are proven not to carry or transmit any disease unlike their relatives, like the mosquito. 
+
+Bed bugs� bites may leave small red marks that may swell after a few hours. The bitten area would also tend to itch a lot, leaving a feeling of discomfort to the victim. 
+
+Exterminating bed bugs 
+
+There are a handful of ways or measures to kill bed bugs. The stupid way is to capture them one by one, and try to squash them out. That would surely kill them, but it will be gross, tedious, and will surely try your patience. 
+
+To be sure, applying insecticides or pesticides to infested areas can be a good and effective way. However, doing so would pose a lot of threats, to your health, and to the health of everyone in the house. 
+
+To be sure, no human can be exterminated along with the bed bugs, it would be wise to seek help of a credible and professional pest control company. 
+
+Pest control companies surely know bed bugs better. They also know how to effectively get rid of them. 
+
+Prevention 
+
+They say an ounce of prevention is more compared to pounds of cure. It is also true and applicable in the case of bed bugs. 
+
+Hygiene is important to prevent bed bugs infestation. Cleanliness would be of great help. Surely, pests like bed bugs dislike clean and tidy surroundings, for a start. 
+
+If you travel a lot, be sure to know that you may be a carrier of bed bugs. No, they would not thrive inside you or beneath your private parts. 
+
+Your baggage and the clothing you wear would somehow become a good breeding ground and traveling medium for the annoying insect. 
+
+Make sure the place you stay in is totally bug-free. When going home from a trip, it would also be advisable if you drop by the laundry shop and have your luggage washed before taking it home. 
+
+The measure would seem a little paranoid, but who cares? What is important is that you would not have another morning, when you wake up asking yourself what bed bugs are.

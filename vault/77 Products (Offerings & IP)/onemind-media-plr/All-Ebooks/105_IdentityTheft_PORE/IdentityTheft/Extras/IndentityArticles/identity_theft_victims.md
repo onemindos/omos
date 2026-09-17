@@ -1,0 +1,45 @@
+# Being an identity theft victim is not easy
+
+According to studies, there are around 10 million American victims of identity theft in the year 2003 alone. That was 3 years ago. You can expect the number to have risen over the years. 
+
+Persons who find themselves victim to this kind of crime has a lot to suffer for. Not only have they been taken advantage of, they also have to endure long hours of trying to clear up their name once again. 
+
+Since this crime does not show any signs of being stopped soon, early detection is the only other solution that should be best done. You would not want someone tampering with the credit rating you have worked so hard for, now would you?
+
+How these �thieves� got your personal information is easy enough. It can be as innocent as someone scanning through your thrash, someone watching you punch in your pin numbers over your shoulders at an ATM machine and sending emails that look as if it is a legitimate business. 
+
+Once they get all your personal information, these thieves will change your billing address. You will not be aware of this unless you know that you always get your bills in the mail, is keeping track of your charges and constantly checking credit reports. 
+
+Below are sure signs that you are an identity theft victim.
+
+1. Upon checking your credit reports, you found that there are some new charge cards from companies you do not know anything about. You might not pay attention to this yet because you think that your bank just made some mistakes in your billing. 
+
+2. You are receiving bills for new credit card accounts that you did not open. 
+
+3. You notice some changes in your credit card statement that you did not even authorize. 
+
+4. You are receiving calls from business owners regarding items that they said you bought but actually do not have any idea about. 
+
+5. Debts are starting to show on your reports and you find yourself being denied your credits. 
+
+If you are beginning to notice these things, you need not panic first. Just think that there might be some logical explanation for this. But do not forget to follow up and report these things immediately. 
+
+You may not know it yet but you might be an identity theft victim already. 
+
+In order to avoid being an unknowing victim of this crime, you have to make sure that:
+
+You are keeping a close watch on your credit card activities. Your physical card is not important to make purchases toward your account. Take note that by simply getting hold of the number on your card, any person can make charges against your credit by making online or telephone purchases. 
+
+It is a fact that majority of the people are not scrutinizing their billing statement each month. This makes it possible for identity thieves to get away with hundreds or even thousands worth of merchandise. 
+
+Try also to monitor your credit report. Once your credit report starts showing signs of having poor credit ratings when you always pay your bills on time, it is time to focus your attention to it. 
+
+Identity thieves may be spending all you money to buy items and merchandise. And you are the ones being obliged to pay the bills. Not only are they getting the money you have worked so hard for, but they are also destroying the credit ratings you have tried so hard to maintain. 
+
+Another step to take so you will not become an identity theft victim is to make payments in safe places. With thieves, you can never tell. They might appear like bystanders minding their own business but is actually looking out for you when you start writing out personal details. 
+
+Be one step ahead of them by thinking what other strategies they can use in stealing your identity. Be wary of persons you are next to when shopping and when paying bills. You might be taken advantage right there and then. 
+
+Avoiding being an identity theft victim is only a matter of being wary and smart of suspicious people around you. 
+
+Although trusting other people is a must, you just have to choose the persons who will give your trust to.

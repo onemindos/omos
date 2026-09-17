@@ -1,0 +1,31 @@
+---
+id: plr-20260114013942-8944
+title: "How To Be A Spiritual Atheist"
+type: guide
+path: PLR
+domain: reference
+status: reference
+created: 2026-01-14
+modified: 2026-01-14
+owner: zeus
+tags: [path/plr, type/guide, status/reference, topic/spirituality-newage]
+ai_summary: "PLR reference - How To Be A Spiritual Atheist"
+---
+title:How To Be A Spiritual Atheist
+author:Steve Gillman
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_4344.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+A spiritual atheist? Perhaps it's a strange concept if you only think spirituality has to mean a belief in a god. Do the two have to be related? Many people think of the historical Buddha as a spiritual person, but most don't know that he never expressed a belief in a god. He even discouraged his followers from such "speculation," preferring that they work on their salvation in this world.
+Computer Spirituality
+Imagine a computer that has begun to get so complex and powerful that it starts to ask questions "outside the box." It starts to become conscious. The first thing it would realize is that for all its computing capacity, it is still very limited. The humans who use it, most of whom can't begin to understand it's complicated algorithms, still are more powerful. They see the world more clearly.
+The computer could recite a million facts, perhaps, and yet not know what to use them for. It could describe human psychology, and yet not understand a smile. It wouldn't even know why it existed, or what it was being used for. If it came to understand these limitations, and to actually wonder about the world outside its circuits, and to desire to see more, and to grow - that would be computer spirituality.
+Atheist Spirituality
+An atheist simply doesn't believe in a god. There isn't sufficient evidence, so there is no belief. Contrary to what many think, there is no need for an atheist to disprove that a god exists, anymore than a Christian needs to disprove that the world is ruled by intelligent termites. The burden of proof is always with the person making a positive assertion.
+An atheist can recognize the mystery of life, and marvel at how everything learned deepens that mystery, pushing "final" causes further into the distance. An atheist can recognize his or her own limitations, and seek to grow, perhaps even by developing contact with "higher powers." This is an atheist spirituality. How is it different from "regular" spirituality?
+The difference is that an atheist feels no need to pretend to understand the mysteries - no need to create gods and religions to explain them. Contacting "higher powers" can simply be tuning into subconscious resources through meditation or other means. Are these "higher powers" nothing more than electrical patterns in our brains? We don't know, and we don't have to know to tap into them. 
+Is it that atheists don't want to know? It is the opposite. "Understanding" by forcing religious explanations on things short circuits any search for the truth. How can you understand and integrate new evidence when you are no longer questioning? Better to simply use spiritual tools like "intuition" and let them be understood - or not - with time and real evidence.
+Look to the past, and we see how narrow-minded people were, and how little they understood compared to us. We will appear that way to people in the future, as they will to people further into the future. We are growing in our knowledge and power, but like that spiritual computer, our circuits are in a box that we need to grow out of. Seeking the way beyond that box is what makes one a spiritual atheist.
+ZZZZZZ

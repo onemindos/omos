@@ -1,0 +1,35 @@
+# Time Management for Student Nurses
+
+Are you one among the people who have trouble in dealing with all your daily activities? Are you tired because you fail to manage all these activities? 
+
+Keep that frown away. You can manage your time in ways that are more useful in many ways. Read this article and learn how to deal with time management
+
+Typical person got many activities to do everyday. These things should be done to facilitate living. People however need to work to survive life. Earning for living is one among the major task of every individual. It is never easy to gain money; everyone should work hard for it. 
+
+It is not only the working people who experience busy lives, but almost all people including the ones that lives at home, they are the ones who do all the house hold shores. Students as well, they also live busy lives. You, as a student, know how busy a student life is. Schools have so many activities and task to be done. 
+
+Sometimes these activities are even brought home. Students are pre-occupied with these activities almost everyday of their lives. If they will not manage it well, they may neglect some of their activities that also need attention. 
+
+These activities are also worthy to our life, like bonding with family members, spending time with friends and mingling with other people. A student may need to know how to handle all their tasks well to be able to manage it properly. How are they going to manage all these task well?
+
+Being a nursing student is also a hard task. Nursing students deals with study of care to the people who need it. Nursing is the care for the sick and healthy people as well. It deals with activities such as feeding and caring for infants, promoting growth and development, promoting prevention to all the diseases, to preserve injuries and promote health faster wound healing and promoting good health to the entire citizen. 
+
+A student nurse should learn these tasks. These students are learning how to deal with diseases that are not easy to learn. As you know, science is never an easy subject but most of the subjects in nursing course are under the curriculum. 
+
+In nursing course, students need to learn many skills that are important for practicing the nurse profession. With all these activities, student nurses are not able to do some of their tasks other than learning nursing alone. 
+
+Student nurses may need to prioritize all their activities to provide more room for other activities that are important as well. Time management maybe the best tool for student nurses. 
+
+Time managements are one of the most important techniques that everyone needs to learn. This is a technique used by many people to facilitate better management of time. Activities are done in an organized manner. With the use of time management, these nursing students will be given the chance to perform other useful activities other than the nursing course itself.
+
+These are the suggested techniques that should be followed by the student nurses to manage time in a systematize manner. 
+
+First thing to do is to organize all the activities to do. Make a checklist of the tasks with proper prioritization. After the end of the day, check off the completed or accomplished tasks. This is a great help in the identification of the tasks not yet done over a day. 
+
+Begin to focus on the activities giving less priority to the things you do not need to do. Before venturing in to the activities that are not included in the list, your priority tasks must be done first. Avoid interruptions such as chatting with classmates and doing unnecessary activities. You can entertain these activities after your tasks are done. 
+
+Avoid the activities that will suck all your time. There are many activities that needs so much attention but with less productive outcome. Things like watching televisions, sending emails, chat on internet and telephone conversations are just some of the less important things you need to do for a day. Never give so much time on these activities.
+
+With proper time management, student nurses will be able to do other activities that also enhance their personality. Things like dealing with other people and establishing rapport during meeting other people.
+
+It is also healthy that people like student nurses give themselves a break from all of their activities for the day. This will be a great help to manage the precious time.

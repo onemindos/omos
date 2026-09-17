@@ -1,0 +1,61 @@
+---
+id: le-50-20260113225956
+title: "Real Estate Commission Demand Letter  1   1 "
+type: reference
+path: LE
+domain: 50-74
+folder: "50"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/le, path/le/50, type/reference, status/active]
+ai_summary: "Real Estate Commission Demand Letter  1   1 "
+---
+**OFFICIAL COMMISSION DEMAND LETTER**
+
+From
+
+\[NAME OF SENDER\]
+
+\[ADDRESS\]
+
+\[CITY, STATE\]
+
+\[ZIPCODE\]
+
+\[DATE\]
+
+Dear \[RECIPIENT\],
+
+I, \[NAME\], a licensed real estate agent in the State of \[STATE\], am
+writing this demand letter as my LAST NOTICE for the commission owed on
+the following transaction:
+
+**Property**: \[PROPERTY ADDRESS\]
+
+**Transaction Type**: ☐ Sale ☐ Lease
+
+**Commission**: \[PERCENT\]% of \$\[DOLLAR AMOUNT\]
+
+If there is no response to this demand letter by \[DATE\], all legal
+rights shall be explored, including, but not limited to, legal
+proceedings necessary in accordance with State and Federal laws.
+
+This notice of demand serves as official notice to you and may be
+tendered in court as evidence of your failure to cooperate. If legal
+action is to occur to resolve this matter, it may involve having you pay
+attorney's fees.
+
+We hope to resolve this matter as soon as possible.
+
+Sincerely,
+
+[\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_](https://esign.com/)
+
+
+---
+
+## Related
+
+- [[50-74 LE (Legacy Evolution)/50 Home (Sanctuary & Property)/50 Home|50 Home]]

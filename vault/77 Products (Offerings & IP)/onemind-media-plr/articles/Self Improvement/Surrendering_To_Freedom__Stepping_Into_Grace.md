@@ -1,0 +1,28 @@
+# Title:
+
+Surrendering To Freedom: Stepping Into Grace
+
+Word Count:
+476
+
+Summary:
+Earlier this month as I sat at the desk by the upstairs hall window, looking down on the blossoming apple trees and the vineyard beyond, I suddenly heard a fluttering sound behind me. A house finch had flown into the open window at the other end of the hall. I watched her fly around the hall and into my office where she began banging against the window, struggling to find a way out. 
+
+I entered my office and watched as she flew against the window unaware that the just 10 in...
+
+Keywords:
+
+Article Body:
+Earlier this month as I sat at the desk by the upstairs hall window, looking down on the blossoming apple trees and the vineyard beyond, I suddenly heard a fluttering sound behind me. A house finch had flown into the open window at the other end of the hall. I watched her fly around the hall and into my office where she began banging against the window, struggling to find a way out. 
+
+I entered my office and watched as she flew against the window unaware that the just 10 inches away, it was open. Slowly and peacefully I approached her with my open hands prayerfully offering guidance and help. At first she refused, fluttering with even more determination and desperation up and down the invisible obstacle that held her captive. I remained calm and present, ready to enfold her gently yet firmly when the opportunity appeared. 
+
+But suddenly, she stopped her frantic flapping and flew onto my finger, sitting there as naturally and calmly as if it was a tree branch. There was a communion in that moment, an understanding that passed between that finch and myself. I was reluctant to let go of that connection, and yet I knew that was part of our connection, part of the trust she had placed in me. 
+
+Slowly I shifted my hands towards the open side of the window. Somehow the clarity and awareness that had been lost during her struggle had returned in her calmness. She knew the instant she was in front of the opening, and immediately flew out the window to freedom, gifting me with two bright, clear chirps of gratitude as she went. 
+
+When I returned to the desk I began thinking of how much I am like that little house finch: Resisting the hands that offer me help, desperately running from the guidance that is constantly being offered. The hands may be human, or divine, or they may be the wings of a house finch, but they are always here, always reaching out gently to guide me to freedom. 
+
+Admiring the beauty of the Sonoma County landscape, I imagined myself settling into the hands of the Divine, just as that bird settled so gracefully onto my hand. I felt the release of tension and worry as I allowed myself to rest in the hands of God. 
+
+Since that day I have been away of the times when I am struggling like that finch. It sometimes feels out of my control, as if I am watching someone else struggle, unable to reach them and let them know that the window is open just a few inches away. But it is me. I am struggling. I am resisting. And like that finch, I am slowly learning to let go of that resistance, and to allow myself to be shown the way to grace and freedom.

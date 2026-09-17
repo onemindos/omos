@@ -1,0 +1,26 @@
+---
+id: plr-20260114013943-9795
+title: "Weight Training"
+type: reference
+path: PLR
+domain: reference
+status: reference
+created: 2026-01-14
+modified: 2026-01-14
+owner: zeus
+tags: [path/plr, type/reference, status/reference, topic/motivation-success]
+ai_summary: "PLR reference - Weight Training"
+---
+# Weight Training
+
+Weight Training – How to Get Started
+Weight or resistance training is highly effective and doesn’t require you to go out and buy an entire weight training gym. When first starting out with weight training you can easily use household items to add weight as you exercise. For example you can use water bottles filled with sand or even lift up a bag of potatoes. 
+Weight training can help raise your metabolism and helps you burn more fat. You should aim to weight train three times a week. A good training schedule is to alternate your weight training days with your cardio days. This allows your muscles to relax and actually grow after being worked out the day before. 
+It is possible to use your own weight during your weight training periods. A great example of this is by doing a push up. If you can’t manage a push up yet just trying holding your body off the floor. This is often referred to as a plank pose. This can be difficult to do as it takes arm strength to hold yourself even for a few seconds. 
+An easy way to do a push up is to use a set of stairs. Then just use a higher step to perform your push up. As these types of push ups get easier lower your body to the next step down until you are flat on the floor. 
+Other easy weight training exercises to get started with are tricep and bicep curls. Again this can be done with soup cans, packs of frozen veggies or a water bottle or milk jug. To target your legs you can simply add your running shoes as weight. Ankle weights are also pretty inexpensive and a great way to add some additional weight. 
+No matter what your age you really should consider adding weight training to your exercise routine. It is very important for older individuals to keep their muscle strength and weight or resistance training is perfect for that. As you age you slow done and inactivity is a sure way of helping your muscles shrink. 
+When you first start out with weight training then start slowly and use weight that feels comfortable. Your goal is to be able to lift the weight 10 times slowly. Then repeat this as another set. When this becomes easy it is time to increase your weight. 
+It will take time to see the results from your weight training, allow at least six weeks before noticing a difference. You might just see changes in your measurements first, so it is a good idea to make a note of your measurements when you first start weight training. 
+Words 446
+

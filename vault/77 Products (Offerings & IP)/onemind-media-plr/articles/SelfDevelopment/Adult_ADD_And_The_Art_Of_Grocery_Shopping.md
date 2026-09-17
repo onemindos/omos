@@ -1,0 +1,17 @@
+# title:Adult ADD And The Art Of Grocery Shopping
+
+author:John MacKenzie
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_4136.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+One of my greatest struggle with sticking to a budget, is that I always overspend what I budget on food. Here are some of my tips to help an Adult with ADD when going Grocery Shopping:
+1. Write a menu of what you want to eat for the week. Make sure to include breakfast, lunch, and snacks. There are software products available to help adults with ADD who are more visual thinkers.
+2. Based on the menu create a list of what you will need to prepare the items on your menu.
+3. Look in your cabinets and refrigerator, for items that are on your list, remove those items from your list. If you go the supermarkets to buy cleaning products or toiletries, you will need to check your bathroom, closets, and if you are like me anywhere else in the house where you put these items. Add items that you are running low on, on to the list.
+4. Can you afford the items that are on your list? This will be difficult to determine if this is the first time that you have set a limit for yourself, or if grocery shopping is new to you. Once you have shopped a couple of times with a set limit, you will understand whether your food budget is realistic, or if you will have to make changes to your limit or what you buy. A lot of adults with ADD like to use online services that will deliver the groceries to you. This can be helpful for several reasons; it will total up all you purchases before you make them, it reduce the time of a mundane task, and it helps to control impulse buying.
+5. If you are planning to go out shopping, make sure you eat a proper meal before hand. This helps you keep a clear head and reduce impulse buying, by not buying things that you are craving because you are hungry.
+6. Have you checked circulars, newspapers or the Internet for coupons for the products that are on your list? This can be dangerous because you might also be tempted to buy additional items that you do not really need. 
+7. Before you head out decide if you want to go to one store or more than one store. While you can save money by going to additional stores, I would not recommend it. First the additional money and time that you spend traveling could negate any savings that you get. Second it adds a lot of complexity to a task that should be done as simply as possible.
+ZZZZZZ

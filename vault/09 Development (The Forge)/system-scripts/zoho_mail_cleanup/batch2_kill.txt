@@ -1,0 +1,56 @@
+# Batch 2 — Newsletter/Marketing trash
+# Credit Sesame (all variants)
+hello@offers.creditsesame.com
+hello@offers1.creditsesame.com
+hello@account.creditsesame.com
+hello@updates.creditsesame.com
+hello@mail.creditsesame.com
+hello@partner1.creditsesame.com
+# Simplilearn
+updates@simplilearnmailer.com
+# Marketing spam
+jackie.anderson@marketingcampaignsexperts.co
+info@disputefox.net
+info@disputefox.email
+marketing@evotrex.com
+info@llcattorney.com
+info@wyomingllcattorney.com
+marketing@optimaed.com
+oao-info@optimaed.com
+info@softpullsolutions.com
+info@childsupportisfraud.com
+info@7figurebuilder.com
+info@7figbuilder.com
+info@mcasimplified.com
+info@moneymanagementrestoration.com
+shirley-r@b2bmarketingconference.com
+promoter@firstpromoter.com
+# TLDR
+dan@tldrnewsletter.com
+# VentureBeat
+hello@newsletters.venturebeat.com
+hello@billing.venturebeat.com
+# ClickUp
+clickupdates@mail.clickup.com
+news@mail.clickup.com
+# PagerDuty
+hello@pagerduty.com
+# Zapier
+news@send.zapier.com
+updates@send.zapier.com
+hello@send.zapier.com
+# Make
+info@make.com
+# Descript
+newsletter@marketing.descript.com
+updates@marketing.descript.com
+engagement@marketing.descript.com
+# Azure
+azure@promomail.microsoft.com
+# flowstate (music/ambient)
+flowstate@substack.com
+flowstate+ambient-country@substack.com
+# linas (daily newsletter, stale)
+linas@substack.com
+# spytalk (not aligned)
+spytalk@substack.com

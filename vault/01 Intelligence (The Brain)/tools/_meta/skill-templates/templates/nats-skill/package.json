@@ -1,0 +1,9 @@
+{
+  "name": "nats-skill",
+  "version": "1.0.0",
+  "description": "NATS cross-runtime communication skill template",
+  "main": "index.js",
+  "dependencies": {
+    "nats": "^2.28.2"
+  }
+}

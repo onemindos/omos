@@ -1,0 +1,7 @@
+# download audiobook version: http://amzn.to/2pTk09v
+
+*You can download the audiobook version of this book for free and in awesome quality when you sign up for a free trial via the link above. With this link, you get two free audiobooks too! You can cancel at anytime after you download your free audiobooks. I doubt you'll cancel it though because Audible is awesome! :)
+
+audiobook preview: https://soundcloud.com/audiolibrary-a/crush-it-by-gary-vaynerchuk-audiobook-excerpt
+
+*Note: By signing up for a free trial, you are supporting my uploads, and I am very thankful for that.

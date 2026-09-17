@@ -1,0 +1,13 @@
+name: git-sync
+description: "Every 15min — backup workspace to git"
+cron: "*/15 * * * *"
+silent: true
+steps:
+  - tool: exec
+    label: git-push
+    input:
+      cmd: |
+        cd /home/onemind/.openclaw/workspace
+        git add -A
+        git diff --cached --quiet || git commit -m "auto-backup $(date +%Y-%m-%d_%H:%M)"
+        git push origin main 2>&1 | tail -3 || echo "no remote configured"

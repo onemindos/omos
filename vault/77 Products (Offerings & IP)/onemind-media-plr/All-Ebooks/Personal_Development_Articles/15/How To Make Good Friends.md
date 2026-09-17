@@ -1,0 +1,27 @@
+# to Make Friends
+
+Everyone aims to have friends. Human is a social animal and he cannot be a loner all his life. So, he craves the accompany of people with whom he can socialise and travel. But, there are many people out there who would love to have friends but are too shy or do not know how to make friends.
+
+So, let us learn on whether it is conceivable to learn how to make friends or not. Fortunately, making friends is a skill that can be determined even by those who are very shy. Let us now see how you can learn and master the skill of making friends and keeping them with you for life.
+
+Get to Know People
+
+Unless you get to acknowledge people, you will not be cognisant of whom you would like to be friendly with. So, in order to get to know people you ought to try and talk to people whenever you get to meet someone. Some shy people might find this hard. Such people can try attempting a conversation with a total stranger like a local shopkeeper or your mechanic or some such person. You can start out with a smile and then attempting to get to do some small talk.
+
+Have a Positive Mindset
+
+Think and be positive all the while. A positive mentality will help you keep your mind and thinking positive. This positive nature will be a great attraction to meet new people and make friends.
+
+Learn to Communicate
+
+Conversation is very important in developing friendship. Communicate with whoever you meet. Learn the art of bringing in a small talk. Realize the interests of the person you meet. It is not essential to become friendly with anybody and everybody. Only if your interests are common, you can carry on to become friendlier with that person.
+
+Be Prepared to Listen
+
+While you should learn to speak and communicate, you should also let the other person to speak. You should learn to listen and ask the right questions so that you can continue the conversation going.
+
+Socialize and Move to the Next Step
+
+Socialise with people whom you feel will make good friends. If you like the person and you feel that it is time to take the relationship to the next level, you can get more personal and exchange contact information with the person. You can even out plan something together like a day out, going out for dinner or lunch, catching up on a film, etc.
+
+Friends are an important part of life. If you do not have friends and do not socialise on a regular basis, you will not understand what you are missing out on till you learn for yourself how fantastic and different it will be when you get around and make some great friends.

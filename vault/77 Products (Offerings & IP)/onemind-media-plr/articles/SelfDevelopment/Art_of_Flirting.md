@@ -1,0 +1,30 @@
+# title:Art of Flirting
+
+author:Andre Leblanc
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_1630.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+Flirting is the way most people determine whether or not a member of the opposite sex is interested in them. Following is a quick outline on how you should go about the complex, sometimes fun, sometimes not so fun, task of flirting. It all beings with your approach.
+The Approach
+One person approaches the other. They move into closer physical proximity. This much is clear: NO approach equals NO possibility of initiating contact. You must approach!
+Example: A woman sits down next to a man in a coffee shop, or a man stands near a woman in a dance club. This is the first step. Once you approach, you begin looking for the signs.
+The Signs
+The person who has been approached will always signal the other�s presence in some way�a sign. This signal is not like a train whistle, however, more a subtle body language which you can learn to recognize. For example, he or she simply may look up, move over to make room, nod slightly, or signal with a glancing eye contact.
+A display of total obliviousness to the one who is approaching generally indicates lack of interest altogether. Don�t be discouraged. But if the one you approached shows absolutely no interest, then it�s time to re-group and try again. But let�s say the approach works. You have your positive acknowledgement, now what? Time to talk
+The Verbal Exchange
+The two people may then engage in a mild verbal exchange about impersonal, unimportant matters such as the weather or the scene around them. The key word here is MILD.
+This is the classic place for the clever �line,� but cleverness is not required. At this point, a verbal exchange is not for the purpose of sharing valuable insights about life or determining philosophical compatibility. It is just a vehicle to further the developing contact.
+Examples: Verbal overtures might include anything from �please pass the pickles� to �your looking great tonight�, to �have you seen the waitress?�. Without some form of verbal response, it is highly unlikely that the next step will occur. Let�s say all is going as planned. Time for body language.
+Body Language
+Over a period of time, a couple that has begun to talk may also begin to orient themselves physically to one another, to turn toward one another until, if all is goes well, they are fully facing one another. This is your goal.
+This step can take minutes or hours . . . or weeks or months . . . to achieve. Yet, without this physical reorientation toward one another, not very much can ever happen, so give up on people who turn their back toward you for long periods of time! But if they don�t�
+Touching
+The woman or the man (most often the woman) touches the other in a light, fleeting way. Examples: A couple might accidentally brush their hands against one another while reaching for a drink, or the woman might pat the man on the arm in the middle of a shared joke. The exchange of very subtle, almost glancing touches may continue for some while, and if all goes well, can escalate into the casual affections shown by couples who are dating. If you�ve reached this point, then flirting has now become the beginning of a relationship. The Art of Flirting should always end with the beginning of a relationship. Now get out there and flirt. 
+The Art of Flirting is really the Art of making first contact. You only have one shot at making a great first impression. By following some of the guidelines we�ve established in this article, you should now be equipped to locate, approach, and ascertain whether or not your subtle flirting has opened the doors to a new and exciting relationship.
+Andre Leblanc
+Read more articles on relationship, sex and more at http://www.sasdating.com
+There are other singles waiting to talk to you at http://www.sasdating.com
+You may use this article on your webpage only if you keep in 100% intact with are link or link directly to it 
+ZZZZZZ

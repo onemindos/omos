@@ -1,0 +1,104 @@
+<?php include("Session.php"); ?>
+<?php
+
+	$strGoogle							= "disabled";
+	
+	if (isset($_POST['GooglePubID']))
+		{						
+			$_SESSION['GooglePubID']	= $_POST['GooglePubID'];
+			$_SESSION['GoogleChannel']	= $_POST['GoogleChannel'];
+			$_SESSION['GoogleLinkColor']= $_POST['GoogleLinkColor'];
+			$_SESSION['GoogleURLColor']	= $_POST['GoogleURLColor'];
+			$_SESSION['ShowGoogle']		= $_POST['ShowGoogle'];
+			$_SESSION['ShowFireFox']	= $_POST['ShowFireFox'];
+			$_SESSION['ShowSearch']		= $_POST['ShowSearch'];
+		
+			header('location: Write.php');
+		}
+?>
+	<?php include("Header.php"); ?>	
+		<form method="post" action="Google.php" name="frmData">
+			<center>
+				<table class="tblForm">
+					<tr>
+						<td align="center" style="background: url(http://www.niche-mania.com/Images/NM_006.jpg); color: #FFFFFF; font-weight: bold; height: 24px; text-align: center; vertical-align: middle;" colspan="2">
+							Adsense Settings 
+						</td>				
+					<tr>
+					<tr>
+						<td colspan="2">
+							&nbsp;
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							Publisher ID
+						</td>				
+						<td class="tdFieldValue">
+							<input class="iText" type="text" style="width: 100%;" name="GooglePubID" value="<?php echo $_SESSION['GooglePubID']; ?>">
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							Channel Code
+						</td>				
+						<td class="tdFieldValue">
+							<input class="iText" type="text" style="width: 100%;" name="GoogleChannel" value="<?php echo $_SESSION['GoogleChannel']; ?>">
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							Link Color
+						</td>				
+						<td class="tdFieldValue">
+							<input class="iText" type="text" style="width: 100%;" name="GoogleLinkColor" value="<?php echo $_SESSION['GoogleLinkColor']; ?>">
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							URL Color
+						</td>				
+						<td class="tdFieldValue">
+							<input class="iText" type="text" style="width: 100%;" name="GoogleURLColor" value="<?php echo $_SESSION['GoogleURLColor']; ?>">
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							Google Search
+						</td>				
+						<td align="left">
+							<input type="checkbox" Name="ShowSearch" value="checked" <?=$_SESSION['ShowSearch'];?>>
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							Adsense Referral
+						</td>				
+						<td align="left">
+							<input type="checkbox" Name="ShowGoogle" value="checked" <?=$_SESSION['ShowGoogle'];?>>
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+							FireFox Referral
+						</td>				
+						<td align="left">
+							<input type="checkbox" Name="ShowFireFox" value="checked" <?=$_SESSION['ShowFireFox'];?>>
+						</td>				
+					<tr>
+					<tr>
+						<td colspan="2">
+							<hr size="0">
+						</td>				
+					<tr>
+					<tr>
+						<td class="tdFieldName">
+						</td>				
+						<td class="tdFieldValue">
+							<input class="iButton" onClick="this.disabled='true'; frmData.submit();" type="submit" value=" Save Adsense Settings ">					
+						</td>				
+					<tr>
+				</table>
+			</center>
+		</form>
+	<?php include("Footer.php"); ?>

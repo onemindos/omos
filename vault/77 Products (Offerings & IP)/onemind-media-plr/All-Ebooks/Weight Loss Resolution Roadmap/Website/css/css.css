@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* CSS Document */
+
+body, h1, h2, h3, h4, h5, h6, blockquote, p{
+margin: 0;
+padding: 0;
+}
+/* CSS Document */
+
+#wrap {
+	background-color: #000000;
+	background-image: url(../images/bgheader.jpg);
+	background-repeat: repeat-x;
+}
+#wrap #header {
+	background-image: url(../images/header.jpg);
+	height: 299px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#wrap #bg {
+	background-image: url(../images/bg.jpg);
+	background-repeat: repeat-y;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#wrap2 {
+	background-image: url(../images/bgfooter.jpg);
+	background-repeat: repeat-x;
+}
+#wrap2 #footer {
+	background-image: url(../images/footer.jpg);
+	height: 200px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#wrap #bg #container {
+	width: 780px;
+	margin-right: auto;
+	margin-left: auto;
+}

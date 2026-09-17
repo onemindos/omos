@@ -1,0 +1,34 @@
+# Title:
+
+How To Optimize And Free Up Your Time
+
+Word Count:
+622
+
+Summary:
+Time is one of the most important resources that we have. Time is one thing that you can�t swap, borrow or purchase. We are all given the same 24 hours to each day. Even with all of our modern day time saving conveniences such as e-mail, fax machines, microwaves and dish washers, there is no way to get more hours into your day. It is up to each of us to make the very best use of our time since we can�t get it back. 
+
+Here are some time saving tips that you can use to optimi...
+
+Keywords:
+
+Article Body:
+Time is one of the most important resources that we have. Time is one thing that you can�t swap, borrow or purchase. We are all given the same 24 hours to each day. Even with all of our modern day time saving conveniences such as e-mail, fax machines, microwaves and dish washers, there is no way to get more hours into your day. It is up to each of us to make the very best use of our time since we can�t get it back. 
+
+Here are some time saving tips that you can use to optimize and free up your precious time: 
+
+ Double Up. One way to maximize your time is to double it up. Try exercising while vacuuming or while watching TV. While you are talking to your children, use that time to go through their back packs and ask them about their day. During your down time chats with your girlfriend on the phone, why not clip coupons or browse through the sales paper. 
+
+ Make Use of Services Available To You. Take advantage of pick-up and delivery services offered by neighborhood stores, dry cleaners and restaurants. One wonderful service to look into would be to hiring a teenager or an errand service to run certain errands for you. 
+
+ Schedule Like Tasks at The Same Time.  Instead of sitting in front of your computer all day returning e-mails as they arrive, try to return all e-mails during the same block of time. Set aside an hour or so to return multiple e-mails as opposed to doing it sporadically all day. 
+
+ Combine your outdoor errands.  When you are out grocery shopping also pick up your needed prescriptions, run to the post office and fill up your gas tank. By doing this you will not have to leave the house 3 � 4 times in the same day. 
+
+ Organize your Home.  We spend so much time looking for things, trying to re-create things that have been lost and cleaning up clutter. Create a spot in your home where you keep, record and pay your bills, store your stamps, envelopes and other things that you use frequently. Don�t forget about your children. How many minutes or hours a day do you spend looking for shoes, socks, toys or that favorite stuffed animal? Arrange things so that your children can take care of some of their everyday needs. Try using shoe racks that hang on the closet door so that your children can hang up their shoes. Use clear storage containers for small toys and a desk for storing all of the arts and crafts supplies. 
+
+ Make Use Of Small Bits of Time.  Take care of small projects during waiting periods. For example, if you find yourself waiting in the doctors office, why not use that time to plan and write out your grocery list or �To Do� list. If you use public transportation use that time to read those magazines that have been piling up.
+
+ Plan Ahead.  We can�t always foresee what will be needed but we can be prepared for certain things. Pick and set out your children�s clothes the night before. When you are cooking dinner � double the recipe and freeze half of it to be used for a meal in the upcoming weeks. Before you go to bed, create a short list of the things that you have to do the next day.
+
+Be sure to allow for some flexibility in your schedule. If the sun starts shining on what you thought was going to be a rainy day, grab those children and head to the park or take an impromptu trip to the Zoo! Just make sure to take care of yourself and be wise about your time.

@@ -1,0 +1,25 @@
+# Entrepreneurial TraitsEssential Entrepreneurial Traits
+
+It is not true that successful entrepreneurs are born that way; in fact, anyone can be a successful entrepreneur. However, there are some specific entrepreneurial traits a person must have to be successful in the field of business. Of course, entrepreneurship is not for everyone. But with these particular character traits, you can see if you really have what it takes to succeed in the highly-competitive, world of business. What are these essential entrepreneurial traits that anyone who is interested in starting a business must possess?
+
+1.  Independence � This is the most common denominator of all entrepreneurs. They want to seize control of their future; thus they decide to become their own boss instead of laboring under the gaze of a master. An entrepreneur has a strong sense of independence and will march forward with a purpose and that is to earn money through his own means and hard work.  
+
+2.  Persistence and Determination � The world of entrepreneurship is fraught with both success and failure. An important quality of a successful entrepreneur is the doggedness to continue pursuing his goal despite some setbacks and obstacles that he may encounter on the road. This persistence and determination is fueled by a burning desire to achieve his goal of succeeding in his chosen field of business.
+
+3.  Self-Confidence � Along with independence, an entrepreneur possess self-confidence. They believe in their capabilities and makes sure that they will put in their best effort into their particular endeavors and likewise expect the best results from it. The business world is very competitive and is not a place for the half-hearted. Belief in one�s capabilities is very important in achieving any goal � especially in the world of entrepreneurship. 
+
+4.  Creativity � In the business world, you can not afford to be complacent and un-creative unless you want the competition to move up on ahead of you. Thus, you really have to be very creative � you should be able to create new ideas as well as find new ways to solve problems. By this way, you can make sure that you stay ahead of the competition. Creative people are naturally curious, inquisitive, bright and highly flexible when thinking. They keenly observe their environment and have an eye for spotting new trends that could potentially be a business opportunity. 
+
+5.  Organized and goal-oriented � An entrepreneur knows the value of organization in a business endeavor. All efforts must be focused towards achieving the goal. A good entrepreneur systematizes every move he/she makes so that less time and other resources are consumed in achieving the goal, yet the goal is the best expected result, nonetheless. A good entrepreneur has the ability to consolidate his resources.
+
+6.  Visionary � An entrepreneur has a vision for his future. He/She is guided by this vision in everything he/she in his business endeavor. This vision may be for short, middle or long term, but all visions are to ultimately succeed in expanding one�s business.
+
+7.  Risk-taking and Tolerance for Failure� A good entrepreneur realizes that loss and failure are inherent in any business endeavor. Thus, an entrepreneur must always be ready to make calculated risks and face whatever consequences those risks might have. Entrepreneurs must have the courage to face failure and start again despite these setbacks. As in all fields of endeavor, the characteristic of a successful entrepreneur is in never giving up and in picking up the pieces and continuing the journey even if failure momentarily obstructs the way.
+
+8.  Perseverance and Hard Work � These are perhaps two of the most important entrepreneurial traits. In the world of business, there can be no real success without perseverance and hard work. 
+
+9.  Commitment � An entrepreneur will not achieve success if he/she gives up at the first sign of trouble. Commitment to his business and to its success springs from the urge to achieve the goal.
+
+10.  Honesty and Honor � Another very important mark of a good entrepreneur is his being honest and honorable in all his business dealings and interpersonal relationships � whether it is between business partners, employees, peers and investors. 
+
+So, do you think you have what it takes to be a successful entrepreneur? Make sure you have the above mentioned entrepreneurial traits and qualities and we assure you, you definitely have what it takes to succeed in the world of business.

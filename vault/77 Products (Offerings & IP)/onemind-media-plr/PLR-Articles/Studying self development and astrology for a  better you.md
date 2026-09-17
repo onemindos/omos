@@ -1,0 +1,13 @@
+# Studying self development and astrology for a  better you
+
+Getting to learn more about astrology is a fun idea. There are so many possibilities for self-development and one of them may be using astrology. Having fun with your life can be a challenge but if you are thinking in the right positive direction you can make it a reality for sure.  
+
+Learning about astrology can be something to do in your spare time. You can take the extra time that you have on your hands and use it to study astrology. You can go to the library and find out as much as you want about this topic. There are endless authors that love to tell the story about self-development and astrology and this is how you can apply it to your everyday life.  
+
+Taking lessons from others that already know astrology is something that can help you as well. Talking to them and finding out what there is to know about astrology and how useful it can be to make a difference in the way that you think and the ideas that you get.  Having fun with your new past time is a great way to bring new ideas and a sense of security to your life as well.  Many times people will be glad to share their insight with you about what they have learned in the astrology field.  
+
+Getting to learn astrology online is another option. You can check out the different sites and see if this is something that may interest you.  Having the ability to learn what astrology is about and how far it has come in recent years is something that you can be exited about.  Finding out what you have missed with this great passion can make you see what you are missing and how you can fulfill your life with astrology and make changes for a better you. 
+
+Self-development comes from within your body. Using your emotions and your ideas to brighten your life is something that will make you feels good about yourself and you will then see it shine through to the outside.  Having the world of astrology in your life is something that you can defiantly be excited about. Start learning now and you will be able to enjoy it for many years to come. You can use it in many different instances and take away a great learning experience.  
+
+Making life better for you and all the things that you do is something that you can be proud of.  Making changes for the good can be a lot easier when you have the power of astrology and all the signs on your side.  You are going to notice the change  along with everyone else around you.

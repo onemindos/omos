@@ -1,0 +1,106 @@
+{
+  "name": "home-assistant",
+  "version": "1.0.0",
+  "description": "General-purpose Home Assistant device control, scene activation, and status monitoring via REST API",
+  "main": "index.js",
+  "skills": ["SKILL.md"],
+  "tools": [
+    {
+      "name": "ha_control",
+      "description": "Control any Home Assistant device: turn on/off, toggle, lock/unlock, set brightness, set temperature.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Action to perform",
+            "enum": ["turn_on", "turn_off", "toggle", "lock", "unlock"]
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "HA entity ID (e.g. light.office_desk, lock.front_door, switch.garage)"
+          },
+          "brightness": {
+            "type": "number",
+            "description": "For lights: brightness 0-255. Optional."
+          },
+          "temperature": {
+            "type": "number",
+            "description": "For climate: target temperature in °F. Optional."
+          }
+        },
+        "required": ["action", "entity_id"]
+      }
+    },
+    {
+      "name": "ha_status",
+      "description": "Get a summary of the home: lights on/off count, locks locked/unlocked, climate readings.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Filter by domain: light, switch, lock, sensor, climate, etc. Omit for full summary."
+          }
+        }
+      }
+    },
+    {
+      "name": "ha_state",
+      "description": "Get the current state and attributes of a specific entity.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_id": {
+            "type": "string",
+            "description": "HA entity ID (e.g. sensor.outdoor_temp, light.barn)"
+          }
+        },
+        "required": ["entity_id"]
+      }
+    },
+    {
+      "name": "ha_scene",
+      "description": "Activate a Home Assistant scene (e.g. good_night, movie_time, morning).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scene": {
+            "type": "string",
+            "description": "Scene name or entity_id (with or without scene. prefix)"
+          }
+        },
+        "required": ["scene"]
+      }
+    },
+    {
+      "name": "ha_automation",
+      "description": "Trigger a Home Assistant automation.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "automation_id": {
+            "type": "string",
+            "description": "Automation entity_id (with or without automation. prefix)"
+          }
+        },
+        "required": ["automation_id"]
+      }
+    },
+    {
+      "name": "ha_list",
+      "description": "List entities filtered by domain (light, lock, sensor, climate, switch, etc.).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Entity domain to list (light, lock, sensor, climate, switch, cover, fan, etc.)"
+          }
+        },
+        "required": ["domain"]
+      }
+    }
+  ],
+  "dependencies": {}
+}

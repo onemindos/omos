@@ -1,0 +1,31 @@
+# Honda Hybrid Vehicles: The Hybrids Of The Future
+
+Honda Cars is planning to build a new plant in western Japan to increase its capacity to produce key components for honda hybrid vehicles. The plant is expected to start operations in 2008. The plant, once fully operational, will allow the car manufacturer giant to quadruple its current honda hybrid vehicles production level.  
+
+Last year, honda sold about 50,000 of its hybrid vehicles. Best sellers are the Civic and Accord models. The move of the Japanese owned car manufacturing to expand production was partly, due to the overwhelming acceptance of honda hybrid vehicles in the US market. 
+
+The fully redesigned 2006 Honda Civic Hybrid for instance, was awarded the World Car of the Year Award for greenest car. A 46-man jury composed of international automotive journalists paved the way for the award. The 2006 Civic Hybrid, which achieves an EPA-estimated city/highway fuel economy of 49/51 miles per gallon, was chosen t be the holder of the 2006 World Green Car Award.
+
+The Civic Hybrid 2006 edition is now equipped with a continuously variable transmission (CVT). The equipment allows the honda hybrid vehicle to deactivate all its four cylinders, and now can operate using only the electric motor in several steady-state driving situations.  
+
+This character of the civic hybrid is manifested more when compared to the 2006 Civic Sedan with automatic transmission. The civic hybrid provides a city fuel saving of approximately 63 percent increase and a highway fuel saving of approximately 27 percent increase.
+
+By the looks of it, Honda hybrid vehicles shows no abating in receiving awards. In February of this year, the all-new Civic Hybrid Sedan won the MotorWeek Drivers' Choice Award, clinching both Best of the Year and Best Small Car awards. The said honda hybrid vehicle was chosen from among 150 cars and trucks by 15 judges. Some factors used in evaluating the winner include technology, performance, technology, practicality and value. 
+
+Back with honda civic hybrid, the problem with honda hybrid vehicles designs were finally resolved with the 2006 edition. 
+
+According to journalist of the Los Angeles Time, "the Civic Hybrid's defining characteristic as its sloping windshield." The writer explained that the slicked-back windshield look is frequently used on concept cars but is eventually discarded in production proper for it creates uncontrollable flat space behind the steering wheel. 
+
+Honda hybrid vehicles designers transformed this space into an advantage, and in the process, created a handsome two-tier instrument panel limned in organic shapes.
+
+But there's more to Honda hybrid vehicles than its design. The 2006 model is more efficient in terms of combustion. It uses eight spark plugs that operate in two modes. This is done with the intake valve firing first and later, the exhaust plug. This allows for a more complete combustion of fuel, therefore a cleaner smoke. 
+
+Aside from added and more powerful batteries, the new hybrid offers an improved regenerative braking. It is less dependent on traditional braking. This was made workable with a brake pedal sensor that sends signal to the car's computer, activating systems that balance braking power between the hydraulic brakes and the electric motor. And because the all the cylinders can be deactivated during deceleration, pumping losses are immensely reduced. 
+
+This made possible the production of 170 percent more energy for the batteries. The new civic hybrid also uses multiple "load paths" to limit penetration of the car's structure by absorbing more of the crash energy, in case of accident. The Honda hybrid vehicle has also eight standard air bags, earning for it top safety rankings from NHTSA and IIHS. 
+
+The 2006 hybrid model contains also an optional navigation system with voice control. This include input jack for MP3 player and telescopic steering wheel. Turn signals were also integrated into the sideview mirrors. The model is available in two exclusive paint colors of opal silver blue and magnetic pearl. 
+
+The new and improved 2006 honda hybrid vehicle, though, fetches a slightly higher price at $21,850. Or $23,350 when equipped with optional satellite linked navigation system exclusive to the car edition. But in today's standard, its still a very affordable hybrid vehicle, ad it's a honda. 
+
+According to company officials, Honda is targeting 28,000 sales for this 2006 model before the end of the year. Perhaps, with fuel efficiency above 50, a full-hybrid system, a smooth new design, and price tag thousands below the Toyota Prius-honda hybrid vehicles might finally challenge Toyota in the area of sales.

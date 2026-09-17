@@ -1,0 +1,111 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Ipod Headphones | Two iPod Headphones Clash</title>
+		<meta http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="On the right red corner, weighing one ounce and priced at around 80 is Shure E2c Sound Isolating Earphones On the left blue corner, weighing one ounce and priced at around 30 is the Apple In Ear Headphones Let s get ready to rrrrrrrumble Which do you think...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">				
+		<meta name="Robots"				content="index,follow">				
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>		
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2" >
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdContent">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+Two iPod Headphones Clash
+</b>
+<br>
+
+						<small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>On the right red corner, weighing one ounce and priced at around $80 is Shure E2c Sound Isolating Earphones. On the left blue corner, weighing one ounce and priced at around $30 is the Apple In-Ear Headphones.<br><br>Let's get ready to rrrrrrrumble!<br><br>Which do you think is the best between these two iPod headphones?<br><br>For standard use, Apple iPod headphones seem to work fine. But the point will come wherein you will wonder, is there any iPod headphones out there that could offer me better sound, crisper, more booming base and has a surround sound quality? <br><br>This question will prompt you to Google for best iPod headphones in the market. After seeing the search results, you will be amazed that there are handful of iPod headphones out there that have features that may seem to read too technical for you. <br> <br>We have tried a couple of those so called isolating Headphones and the aurally-probing ones and we come up with the Shure E2c Sound Isolating Earphones to see if it really is better than Apple in-Ear Headphones.<br><br>The one thing that we noticed that these two iPod headphones both share is the ability to lock in the sound. The person sitting next to you wouldn't know that your iPod nano, iPod mini, iPod video or iPod shuffle is actually on. He won't hear the treble or the bass sound that comes out in that light scratching sound (which are the cons of some low standard iPod headphones offered by third party manufacturers).<br><br>In fact, if you wear these two iPod headphones in public, you won't hear that a car is coming or that the person beside you is being mugged. So, with this feature, these iPod headphones should be better be used in-doors or when you are playing text-to-speech notes or recorded lectures, or any listening activity that requires your full attention and focus.<br><br>**Design wise<br><br>Apple In-Ear iPod headphones, aesthetically speaking, looks better than Shure E2c Sound Isolating iPod headphones. Apple In-Ear Headphones has the standard Apple white and Apple sleek design that most people has come to associate with beautiful and techie gadgets.<br><br>Shure E2c Sound Isolating iPod headphones look like two sets of mechanical bugs that are to buzz their way inside your ears.<br><br>**Fitting of earpieces<br><br>Shure E2c Sound Isolating iPod headphones fits better than Apple In-Ear headphones. Many users complain that Apple In-Ear iPod headphones do not fit their ears and always slip even if you choose the right size for you. <br><br>Shure E2c Sound Isolating iPod headphones come with a foam or flex earpieces to ensure that the earpieces stays in place even if you move around. Shure E2c Sound Isolating iPod headphones, however, seem not to have the right fit for people with small ears. <br><br>Putting on these two iPod headphones for the first time will give you a strange unfamiliar sensation in your ears, such as a small pressure and a feeling of not being in this world (since you won't hear any sound from the outside world). Don't worry, you will get used to it, eventually.<br><br>**Sound Quality<br><br>Shure E2c Sound Isolating iPod headphones produce high quality sound. You will hear the deep bass in perfect balance with the treble. White noise are blocked and you will hear every note that is plucked on the guitar and every sigh and breathing made by the singer. <br><br>The sound quality of Apple In-Ear iPod headphones is disappointing. It can isolate sound, true but the bass sound cracks, especially the deep ones. You would not want to listen with these iPod headphones with fast and upbeat music because it will sound like a crackle. Best for use with country or western music.<br><br>Shure E2c Sound Isolating iPod headphones' performance is far better than Apple In-Ear iPod headphones. But this good performance comes with a price, an extra $50. If your purpose for buying an isolating iPod headphones is to listen to iPod music with clearer lyrics, then the Apple In-Ear iPod headphones fit you perfectly (or if you're a transcriptionist or a student who listens and needs to understand the recorded spoken words). It is much cheaper and can do the job of isolating of sound just right.
+						<br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/J_Box.php"); ?>
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php					
+				if($ShowNewsFeed)
+					{
+			?>
+						<tr>
+							<td class="tdRow" colspan="2">
+								<?=$Category;?> News and Events
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<?php include("../Includes/Google_Search.php"); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br>
+								<?php include("../Includes/NewsFeed.php"); ?>
+								<?php	
+									if ($DisplayAmazon)
+										{
+											echo "<hr>";
+											echo "<br><center>";
+											include("../Includes/Amazon_728x90.php");
+											echo "</center><br>";
+										}
+								?>
+							</td>
+						</tr>
+			<?php
+					}
+			?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

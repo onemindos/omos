@@ -1,0 +1,27 @@
+# Choosing to sell worldmark time share
+
+To sell worldmark time share is quite a hard to do. From being an expensive property to finding the perfect buyers for the unit, it is a game of hard work, patience and some luck on the side.  
+
+Where are the WorldMark resorts? WorldMark owns 54 condominium resorts in the  U.S., Hawaii, Mexico, Canada and Fiji, with more under way. To sell worldmark time share means you will be a member of that exclusive group of people who can afford such lifestyles. And should you become a WorldMark owner, you will receive a hardcopy directory that has the vacation credit requirements for each unit at the worldmark resort as well as information on local activities, resort amenities and seasonal attractions. 
+
+WorldMark resorts are established in prime vacation destinations those who choose to sell worldmark time share can participate in leisure activities like fishing, skiing, shopping, swimming, gambling, boating, golfing, horseback riding and hiking.
+
+How do you sell worldmark time share differently than any timeshare mprogram? When you sell WorldMark time share you don�t buy a unit, it is a pure credit-based resort system that allows you to vacation where, when and how long you want. Meanwhile, a typical timeshare program requires you to buy a specific unit in a specific resort for a allotted period each year. When you sell worldmark time share, you have maximum flexibility as an owner.
+
+Many �point-based� systems rely on the traditional timeshare model. You must still purchase a specific unit in a specific resort for a specific period each year�usually a week. That week is then converted to points that you can tradefor time at other resorts. You can even use your vacation credits at any of the 54 properties in the WorldMark network, not just the resorts. 
+
+Also, you can be assured that Trendwest and WorldMark is not a scam and are stable companies bringing your quality. Trendwest is one of the largest vacation ownership companies in the world. And their association with Cendant means they have access to services being offered by the largest company in the U.S. industry of hospitality.
+
+If you still choose to sell worldmark time share, you can make use of the power of the world wide web. By becoming members to websites that offer you to sell worldmark time share from your resort, you can be sure that the buyers are real. As a precaution, arrange to meet your buyers. 
+
+If it�s not possible, make sure that you deal with cash or confirm swaps made on the equal value of the exchange. You can also opt to post classifieds as sell worldmark time share or go to auctions like ebay.com and present your time share to the highest bidder.
+
+Make sure you know exactly what you are selling before you begin to sell worldmark time share.  If you have a Right To Use (RTU) agreement for the Time-Share for a specified number of years, be sure to include that in the finalization of the papers. Find the documents that pertain to sell worldmark time share including mortgage information, tax records, and maintenance details. 
+
+Remember also that a knowledgeable seller handles a transaction confidently. Show them that you are the boss but also be prepared to answer any question a potential buyer may have as you sell worldmark time share.
+
+In considering to sell worldmark time share, you are giving up your chance to visit other resorts. To sell worldmark time share means you throwing away a certain time to spend on the variety of vacation destinations available to you. Maybe it is better to sell worldmark time share rather than own it. Your needs may have changed and you long for other destinations. 
+
+In that case, the best way to sell worldmark time share is to search for a buyer through within your club. Besides, if you sell worldmark time share to them, they already know how the system works and it will be easier for you to close a deal. 
+
+For some, explaining how to sell worldmark time share without an actual physical property to them is different. Which is why you must also consider the time it will take to convince your buyer to take the worldmake time share off your hands.

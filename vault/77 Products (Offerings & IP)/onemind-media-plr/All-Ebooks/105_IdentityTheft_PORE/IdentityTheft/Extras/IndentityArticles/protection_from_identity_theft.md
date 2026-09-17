@@ -1,0 +1,33 @@
+# Protection from Identity Fraud: Your Business, Your Life
+
+Have you ever had a huge credit card bill without even purchasing the things listed in the credit card statement?
+
+Have you ever been arrested for outstanding parking tickets even if you know that you didn�t even commit any traffic violations?
+
+Then you might be a victim of identity theft crime.
+
+This kind of crime can be very damaging and frustrating for its victims. Not only that it the person committing this crime can steal your money, but the criminal can also ruin your reputation. Financial fraud, such as credit card fraud, bank account fraud and computer fraud are examples of identity theft. Another type of identity theft involves criminal activities committed in your name. Imagine yourself being investigated for a crime that you didn�t commit. This can be frustrating or upsetting for anyone who becomes a victim of identity theft or identity fraud.
+
+Crimes like these can be very devastating for the victims and also for the victim�s family. It can result on you being convicted for tax evasion or even fraud. There are many forms that identity theft can occur, it can simply be as simple as a lost or forgotten credit card or submitting your personal information in emails to people you don�t know.
+
+This is why you should know how to protect yourself from identity theft. It is important that you should be cautious on whom you give your personal information to and also you should be aware with all your credit cards and other things that can provide personal and financial information about you.
+
+Here are some ways to protect yourself from identity theft:
+
+�  If someone calls you and tells you that they are from the credit card company or other financial institutions, and would be asking you about your personal information, do not give it to them. Hang up the phone and call the credit card company or financial institution the caller said he or she is from.
+
+�  If you need to give out your personal information to a company, be sure that the company you�re dealing with will protect the information you give them. Ask on how secure their files are.
+
+�  It is wise that you should keep track of all the credit card purchases you made and withdrawals you made in your bank and check the billing statement and withdrawal statement carefully and thoroughly. Criminals who commit identity fraud are usually careful, purchasing only one item at a time in the duration of the credit card billing mails. If you find something irregular in your credit card billing statement, report it immediately to concerned authorities.
+
+�  Criminals who commit identity theft usually go dumpster diving. This means that they go look in garbage to obtain any discarded documents containing personal and financial information. You should be careful when you dispose of your documents containing personal and financial information. If it is possible, burn them or shred them to the point that it cannot be put back together.
+
+�  Do not carry any unnecessary documents or cards in your wallet or purse containing your personal information. A simple crime like stealing your wallet or purse can immediately turn to identity crime. This is one of the most common ways a thief uses to obtain personal information.
+
+�  It is wise to make photo copies of your credit cards, passports and other sensitive documents to easily cancel it if ever it was stolen.
+
+�  Your deposit slips is one of the easiest ways a thief can acquire your personal information. Be careful with it. Keep it in a safe place in your home and also try to be aware of it in public areas. Deposit slips can provide the thief to access your bank account.
+
+�  Your account in emails and other websites also provide personal and financial information. Be sure that you have a very secure password. Do not use easy to guess passwords such as, your birthday, or your mothers maiden name.
+
+If you suspect that you are a victim of identity theft, you should contact the concerned authorities, such as the police and fraud offices the moment you suspect it. Close your bank accounts immediately and get your credit card reissued with a different account number. Tell your bank about your suspicion by calling and stating it in writing.

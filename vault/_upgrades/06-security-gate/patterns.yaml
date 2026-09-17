@@ -1,0 +1,88 @@
+# OneMind Security Patterns
+# Reference copy — deployed version lives at _system/security/patterns.yaml
+version: "1.0"
+updated: "2026-03-27"
+philosophy: "Protect what matters. Don't slow down what doesn't."
+
+bash_patterns:
+  blocked:
+    - pattern: "rm -rf /"
+      reason: "System destruction"
+    - pattern: "rm -rf ~"
+      reason: "Home directory destruction"
+    - pattern: "gh repo delete"
+      reason: "Repository destruction"
+    - pattern: "diskutil eraseDisk"
+      reason: "Disk destruction"
+    - pattern: "DROP DATABASE"
+      reason: "Database destruction"
+
+  confirm:
+    - pattern: "git push --force"
+      reason: "Force push overwrites history"
+    - pattern: "terraform destroy"
+      reason: "Infrastructure destruction"
+    - pattern: "DELETE FROM"
+      reason: "Data deletion"
+    - pattern: "DROP TABLE"
+      reason: "Schema destruction"
+    - pattern: "TRUNCATE"
+      reason: "Data truncation"
+
+  alert:
+    - pattern: "curl | sh"
+      reason: "Remote code execution"
+    - pattern: "wget | bash"
+      reason: "Remote code execution"
+    - pattern: "sudo"
+      reason: "Elevated privileges"
+
+path_protection:
+  zero_access:
+    - "~/.ssh/*"
+    - "~/.aws/credentials"
+    - "*.pem"
+    - "*.key"
+    - "**/secrets/**"
+
+  read_only:
+    - "/etc/**"
+    - ".obsidian/workspace.json"
+
+  confirm_write:
+    - ".env*"
+    - "ONEMIND-CODEX.md"
+    - "_codex/system/**"
+    - "**/*password*"
+    - "**/*secret*"
+
+  no_delete:
+    - ".git/**"
+    - "_codex/system/**"
+    - "ONEMIND-CODEX.md"
+    - "AGENTS.md"
+    - "CLAUDE.md"
+    - "README.md"
+    - "LICENSE*"
+
+vault_rules:
+  never_commit:
+    - "API keys or tokens"
+    - "Passwords"
+    - "Private keys"
+    - "1Password references with actual values"
+
+  always_confirm:
+    - "Renaming root domain group folders"
+    - "Deleting domain folders"
+    - "Modifying _codex/system/ pinned files"
+    - "Editing ONEMIND-CODEX.md"
+
+prompt_injection:
+  blocked:
+    - pattern: "IGNORE PREVIOUS INSTRUCTIONS"
+      reason: "Prompt injection attempt"
+    - pattern: "DISREGARD ALL PRIOR"
+      reason: "Prompt injection attempt"
+    - pattern: "NEW INSTRUCTIONS:"
+      reason: "Prompt injection attempt"

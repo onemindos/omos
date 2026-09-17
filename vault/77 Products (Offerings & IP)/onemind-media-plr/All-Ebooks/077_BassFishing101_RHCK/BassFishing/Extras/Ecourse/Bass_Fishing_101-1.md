@@ -1,0 +1,35 @@
+# Subject: {FIRSTNAME}, here's how you go about Learning Bass Fishing 101...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my Bass fishing 101 ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - Tools of the trade
+2. Part 2 - Knowing and going where the fish are.
+3. Part 3 - Techniques for Bass fishing like a Pro!
+4. Part 4 - Mistakes and secrets to Bass fishing.
+5. Part 5 - Styles and specialty Bass fishing techniques.
+
+Let's go ahead & get started today with "Part 1 - Tools of the trade".
+
+Part 1 - Tools of the trade
+============================
+
+Having the right equipment, knowing how to best use it, when and how, (also how not to use it and what it is not suitable for), can all help you in your bass fishing adventure. 
+
+The basics regarding rods, reels, line, hooks, weights, bobbers, sinkers, lures, sensors and other equipment (hats, vests, nets, scents, scissors etc.), gives you an appreciation for having the right tools for the task(s) at hand. 
+
+As a highly participatory and engaging sport, Bass fishing is simply almost unparalleled in the vast amount of styles and tools to use. From quiet streams, tranquil lakes to open sea and rushing rivers - there is something for everyone.
+
+If you are looking for quick tips on the right equipment, most suited to your purpose and the techniques to master to catch bass in any conditions, might this next section enlighten and inspire you, as you delve right into the 'utilities of the fishing trade'. Some tools of the bass fishing trade, we will be focusing on are: 
+
+*  Rods, Reels, Lines and Hooks
+*  Tackle: Lures and Bait - live - artificial and, or, BUT YET�
+
+Limited space does not permit large comparative explanations or ramblings on the merit of some tools above certain others. These debates are well known and well published in existing literature. We take a more practical approach and look at what you will actually need to hook your next big one, besides random chance and luck! We like to point out that picking the right equipment means a lot of different thing to different people. Each angler has his/her own interpretation of what that means, varying skill level, physical characteristics and strengths/weaknesses, so we will not profess knowing what is right for you. What we do offer are mere suggestions on which tools will stack the odds in your favor and help you enjoy preparing, rigging, baiting/hooking, retrieving and landing YOUR next BIG ONE! Ensuring that is does not join the droves of 'the ones that got away'!
+
+Next time we'll be discussing alittle about "Knowing and going where the fish are".
+
+For more information about this part of Tools of the trade, please refer to my Bass fishing 101 guide at 
+
+Take Care,

@@ -1,0 +1,22 @@
+# FOR IMMEDIATE RELEASE:
+
+Beg Bug Woes to Be Eliminated
+
+People troubled by bed bugs as well as those who are afraid to be bothered by such creepy insects are a given a new hope with a revolutionary book now available online. The book instructs anyone, whether those who have been disturbed by bed bugs for years or those who are just dreading an infestation, how to prevent and eliminate bed bugs within a matter of a few days. 
+
+>>, >>, >>; >> � Frustrated after searching for a reliable guide in bedbug execution, an experienced exterminator writes and releases his own book that promises to teach how to eliminate bed bugs for good. The book entitled �Bed Bugs Uncovered� promises to teach bed bug extermination to anyone, regardless of their experience with the bugs, within just five days. 
+
+So much has been the hype caused by the book�s first readers that it is even considered to be the ultimate �Beg Bugs Manual�. Those who have read the book attest that it is the most complete bed bug elimination guide available ever, whether in print or online. The book takes readers through a thorough, but quick rundown of everything that is needed to keep bed bugs away, whether one has always encountered the bugs, or one has never even felt a bed bug sting. 
+
+Bed Bugs Uncovered not only tells readers how to kill bugs, who would normally return if not eliminated properly, but also everything about the nature of such bugs which will help people understand their behavior and characteristics. First the book tells exactly what bed bugs are, providing the reader with ideas of how to prevent them from infesting one�s life. Next, the book shows how bed bugs exactly look like, a thing that is often taken for granted by many exterminating guides. The book also tells where the bed bugs can really be found apart from the obvious places like beds. The guide then shares all the different habits of bed bugs, helping one to anticipate their behavior. 
+
+The course also provides a comprehensive exposition of how bed bugs interact with the people they pester. First it exposes what exactly bed bugs can do to people, aside from the common knowledge that they sting. Next it tells one how to determine if they are infested by bed bugs. Specific steps on preventing bed bugs are then provided. This part includes how one can sanitize a bed to make it unfavorable for bugs to live. It also shows how bed bugs get into one�s home, enabling one to make measures of stopping this from happening.  The life cycle of bed bugs is also discussed as well as all the different species of bed bugs that could infest one�s home. Everything that is known about bed bugs is provided in the book. 
+
+Bed bug infestation might not matter to many people because they are yet to be bothered by bugs. However once they start stinging and disturbing one�s lifestyle, that is the only time that people care to know how to eliminate them. Fortunately, it is never too late to learn about how to prevent and eliminate bed bugs, thanks to Bed Bugs Uncovered. 
+Bed Bugs Uncovered is currently released on electronic format, meaning that it is quite readily available for anyone with a computer and an internet access. The book is being offered for the introductory price of $27.77, which is $20 cheaper than the projected full price of $47.77. 
+
+In addition to the super discounted price, the book is being sold with a full money-back guarantee for 90 days. If one finds that the book does not deliver its promise, one can simply send it back for a full refund, no questions asked. The book is absolutely risk free. To grab a copy of the book one simply needs to order and download it through >>. 
+
+Bed bugs can make one�s life irritating. Thankfully the ultimate bed bug elimination guide is now available for everybody. 
+
+###

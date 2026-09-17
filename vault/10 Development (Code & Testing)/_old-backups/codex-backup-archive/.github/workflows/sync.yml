@@ -1,0 +1,235 @@
+# ⏸️  WORKFLOW PAUSED - January 18, 2026
+# To re-enable: Remove this comment block and restore original 'on:' triggers
+
+name: Vault Sync
+
+on:
+  # DISABLED - All triggers commented out
+  # schedule:
+  #   - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      sync_target:
+        description: 'Sync target'
+        required: false
+        default: 'backup'
+        type: choice
+        options:
+          - backup
+          - export-docs
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    name: Backup Vault
+    runs-on: ubuntu-latest
+    if: github.event.inputs.sync_target == 'backup' || github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get vault statistics
+        id: stats
+        run: |
+          # Count files
+          MD_COUNT=$(find . -name "*.md" -not -path "./.git/*" -not -path "./.obsidian/*" | wc -l | tr -d ' ')
+          TOTAL_FILES=$(find . -type f -not -path "./.git/*" -not -path "./.obsidian/*" | wc -l | tr -d ' ')
+
+          # Get vault size
+          VAULT_SIZE=$(du -sh . --exclude=.git --exclude=.obsidian 2>/dev/null | cut -f1 || echo "N/A")
+
+          echo "md_count=$MD_COUNT" >> $GITHUB_OUTPUT
+          echo "total_files=$TOTAL_FILES" >> $GITHUB_OUTPUT
+          echo "vault_size=$VAULT_SIZE" >> $GITHUB_OUTPUT
+
+          echo "## Vault Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "- Markdown files: $MD_COUNT" >> $GITHUB_STEP_SUMMARY
+          echo "- Total files: $TOTAL_FILES" >> $GITHUB_STEP_SUMMARY
+          echo "- Vault size: $VAULT_SIZE" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create backup archive
+        run: |
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          ARCHIVE_NAME="onemind-codex-backup-${TIMESTAMP}.tar.gz"
+
+          # Create archive excluding .git and large binary files
+          tar -czf /tmp/${ARCHIVE_NAME} \
+            --exclude='.git' \
+            --exclude='.obsidian/workspace.json' \
+            --exclude='.obsidian/workspace-mobile.json' \
+            --exclude='*.png' \
+            --exclude='*.jpg' \
+            --exclude='*.jpeg' \
+            --exclude='*.gif' \
+            .
+
+          echo "Created backup: ${ARCHIVE_NAME}"
+          ls -lh /tmp/${ARCHIVE_NAME}
+
+          echo "ARCHIVE_NAME=${ARCHIVE_NAME}" >> $GITHUB_ENV
+
+      - name: Upload to S3 (if configured)
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+        run: |
+          pip install awscli
+          aws s3 cp /tmp/${ARCHIVE_NAME} s3://onemind-backups/codex/${ARCHIVE_NAME}
+          echo "Backup uploaded to S3"
+
+      - name: Upload artifact (fallback)
+        if: ${{ secrets.AWS_ACCESS_KEY_ID == '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vault-backup-${{ github.run_number }}
+          path: /tmp/${{ env.ARCHIVE_NAME }}
+          retention-days: 30
+
+  export-docs:
+    name: Export Documentation
+    runs-on: ubuntu-latest
+    if: github.event.inputs.sync_target == 'export-docs'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Export public documentation
+        run: |
+          mkdir -p /tmp/export
+
+          # Export specific public-facing docs
+          PUBLIC_DOCS=(
+            "ONEMIND-CODEX.md"
+            "README.md"
+            "DATA-ARCHITECTURE.md"
+          )
+
+          for doc in "${PUBLIC_DOCS[@]}"; do
+            if [ -f "$doc" ]; then
+              cp "$doc" /tmp/export/
+              echo "Exported: $doc"
+            fi
+          done
+
+          # Export framework docs
+          if [ -d "00-24 UI (Unified Intelligence)/00 Framework (Doctrine)" ]; then
+            mkdir -p "/tmp/export/framework"
+            cp -r "00-24 UI (Unified Intelligence)/00 Framework (Doctrine)"/*.md /tmp/export/framework/ 2>/dev/null || true
+          fi
+
+          echo "## Exported Files" >> $GITHUB_STEP_SUMMARY
+          ls -la /tmp/export/ >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload export
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-export
+          path: /tmp/export/
+          retention-days: 7
+
+  health-check:
+    name: Vault Health Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check vault structure
+        run: |
+          echo "## Vault Health Check" >> $GITHUB_STEP_SUMMARY
+
+          # Check required directories exist
+          REQUIRED_DIRS=(
+            "00-24 UI (Unified Intelligence)"
+            "25-49 HP (Holistic Performance)"
+            "50-74 LE (Legacy Evolution)"
+            "75-99 GE (Generational Entrepreneurship)"
+          )
+
+          echo "### Directory Structure" >> $GITHUB_STEP_SUMMARY
+          for dir in "${REQUIRED_DIRS[@]}"; do
+            if [ -d "$dir" ]; then
+              echo "- ✅ $dir" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- ❌ $dir (MISSING)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          # Check for orphaned files (files not in any domain folder)
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Root Level Files" >> $GITHUB_STEP_SUMMARY
+          ROOT_MD=$(find . -maxdepth 1 -name "*.md" | wc -l | tr -d ' ')
+          echo "- Markdown files at root: $ROOT_MD" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for large files
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Large Files (>1MB)" >> $GITHUB_STEP_SUMMARY
+
+          LARGE_FILES=$(find . -type f -size +1M -not -path "./.git/*" 2>/dev/null | head -10)
+
+          if [ -z "$LARGE_FILES" ]; then
+            echo "- No files over 1MB found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "$LARGE_FILES" | while read file; do
+              SIZE=$(ls -lh "$file" | awk '{print $5}')
+              echo "- $file ($SIZE)" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+
+      - name: Check for broken internal links
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Internal Link Check (Sample)" >> $GITHUB_STEP_SUMMARY
+
+          # Simple check for common link patterns
+          BROKEN_COUNT=0
+
+          # Look for wikilinks that might be broken
+          grep -rh '\[\[.*\]\]' --include="*.md" . 2>/dev/null | head -100 | while read line; do
+            LINK=$(echo "$line" | grep -oP '\[\[\K[^\]|]+' | head -1)
+            if [ -n "$LINK" ]; then
+              # Check if file exists (simple check)
+              if ! find . -name "${LINK}.md" -o -name "${LINK}" 2>/dev/null | head -1 | grep -q .; then
+                ((BROKEN_COUNT++))
+              fi
+            fi
+          done
+
+          echo "- Sample link check completed" >> $GITHUB_STEP_SUMMARY
+
+  notify:
+    name: Sync Notification
+    runs-on: ubuntu-latest
+    needs: [backup, health-check]
+    if: always() && github.event_name == 'schedule'
+
+    steps:
+      - name: Send notification
+        if: ${{ secrets.DISCORD_WEBHOOK_URL != '' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          STATUS="✅"
+          if [ "${{ needs.backup.result }}" != "success" ]; then
+            STATUS="❌"
+          fi
+
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"embeds\": [{\"title\": \"${STATUS} OneMind Codex Daily Sync\", \"color\": 3066993, \"fields\": [{\"name\": \"Backup\", \"value\": \"${{ needs.backup.result }}\", \"inline\": true}, {\"name\": \"Health Check\", \"value\": \"${{ needs.health-check.result }}\", \"inline\": true}], \"footer\": {\"text\": \"Daily vault maintenance\"}}]}" \
+            "$DISCORD_WEBHOOK" 2>/dev/null || true

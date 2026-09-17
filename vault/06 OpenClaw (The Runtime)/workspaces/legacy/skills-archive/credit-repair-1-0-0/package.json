@@ -1,0 +1,36 @@
+{
+  "name": "credit-repair-1.0.0",
+  "version": "1.0.0",
+  "description": "Generate FCRA-compliant credit dispute letters for sending via the Lob skill",
+  "main": "index.js",
+  "tools": [
+    {
+      "name": "credit_repair",
+      "description": "Credit dispute letter generator and FCRA rights reference. Actions: 'generate_letter' (create HTML dispute letter ready for lob skill), 'get_bureau_address' (official bureau mailing address), 'list_dispute_reasons' (valid FCRA dispute grounds), 'fcra_rights' (consumer rights reference and timelines). Letter types: general_dispute, method_of_verification, debt_validation. Bureaus: experian, equifax, transunion, transunion_disputes. Generated HTML is sent via the lob skill's send_letter action.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "description": "What to do: generate_letter, get_bureau_address, list_dispute_reasons, fcra_rights" },
+          "letter_type": { "type": "string", "description": "Type of letter: general_dispute, method_of_verification, debt_validation" },
+          "bureau": { "type": "string", "description": "Credit bureau: experian, equifax, transunion, transunion_disputes" },
+          "sender_name": { "type": "string", "description": "Your full legal name" },
+          "sender_address": { "type": "string", "description": "Your street address" },
+          "sender_city": { "type": "string", "description": "Your city" },
+          "sender_state": { "type": "string", "description": "Your state (2-letter)" },
+          "sender_zip": { "type": "string", "description": "Your ZIP code" },
+          "ssn_last4": { "type": "string", "description": "Last 4 digits of SSN only (never full SSN)" },
+          "creditor_name": { "type": "string", "description": "Name of the creditor being disputed" },
+          "account_last4": { "type": "string", "description": "Last 4 digits of account number" },
+          "dispute_reason": { "type": "string", "description": "Reason for dispute (for general_dispute)" },
+          "explanation": { "type": "string", "description": "Detailed explanation of why info is inaccurate (for general_dispute)" },
+          "enclosures": { "type": "string", "description": "List of supporting documents enclosed (for general_dispute)" },
+          "original_dispute_date": { "type": "string", "description": "Date of the original dispute response (for method_of_verification)" },
+          "alleged_amount": { "type": "string", "description": "Alleged debt amount (for debt_validation)" }
+        },
+        "required": ["action"]
+      }
+    }
+  ],
+  "env": [],
+  "dependencies": {}
+}

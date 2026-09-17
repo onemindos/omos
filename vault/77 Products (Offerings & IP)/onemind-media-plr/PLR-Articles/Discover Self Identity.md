@@ -1,0 +1,20 @@
+# Discover Self Identity
+
+Self and Society 
+
+Human beings are complex individuals and no one can understand this thing much better than we, humans ourselves. Humans have always been termed as social animals and it is very true indeed. 
+
+People need a society, which they can live in, find their place in the society and develop meaningful relations with other fellow human beings. People keep trying to understand other individuals all through their lives but surprisingly, they often fail to understand their inner selves, the purpose of their lives and their relation with their inner selves and identity of the society. 
+
+Every individual has three distinctive sides to his personality. His outer self which he presents to the world, his private self which is mostly deep seated somewhere in his personality and forms the core of his inner self. The third side of an individual�s personality is his mirror or perceived self. This is that aspect of a person as the world at large and he himself believes him to be like. 
+
+Among these three selves, remains lost our self-identity and identity of the society, which needs to be acknowledged well in time in order to progress and tread on the path of self-development. A person�s public self, which he exhibits to the world, can often be the most deceiving one. If a person is quite extrovert and is considered very outgoing by his peers, he is expected to be highly optimistic, high energy and motivated in life. Nevertheless, in reality, it may be possible that an individual may be quite its opposite. In such cases, the concerned person always feels the need to mask his inner self and present an identity of what the world perceives him to be. In the process of constantly putting up with a fake exterior, he may lose touch with his inner self and his real identity. 
+
+Our inner self will remain hidden by rest of the world most of the times. It will only surface itself when an individual is faced by problems and uphill challenges in his life. The obstacles and difficulties faced by an individual can reveal a person to the best. In such situations, he forgets all about his fake exterior and his inner persona is what takes over. Thus, it will not be an exaggeration to say that our self-identity is best revealed to ourselves and the society, when we are faced with troubles and difficult situations in life. 
+Several people are often confused between the concepts of self-image and inner self.
+
+Self-image can be best defined as what we perceive of ourselves to be. It could be wrong or right depending upon how accurately a person is able to perceive himself. However, our inner self is free from all such misappropriations. It is dependent on the way our conscience works and is gradually shaped up after being influenced by a lot of factors. These factors include an individual�s past experiences and the expectations of other people from him. 
+
+However, people often tend to ignore the lessons learnt from their past experiences and tend to give much more importance to what society thinks and expects out of them. This is one of the main factors, which prevent them from progressing further in life, and they fail to figure out any meaningful relationship between themselves and the society. 
+
+Several psychologists and experienced philosophers are of the belief that people who are able to understand themselves and their relation with the society in the better manner, are generally the ones who are hailed by the society for their accomplishments in life and are considered as role model by their fellow members in the society.

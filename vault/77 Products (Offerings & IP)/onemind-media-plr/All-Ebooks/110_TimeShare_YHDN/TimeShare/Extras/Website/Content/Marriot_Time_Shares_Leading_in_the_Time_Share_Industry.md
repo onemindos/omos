@@ -1,0 +1,88 @@
+# Marriot TimesharesMarriot Time Shares: Leading in the Time Share Industry
+
+The Marriott International, Inc. is one of the leading and most famous hotel companies in the world. To date it has more than 2,600 hotel properties in the United States and 63 other countries. Even its vacation club resorts are considerably large that provides the world-renowned amenities of home with services that are normally provided by high-end hotels only.
+
+Marriot time shares available
+
+Because of the chain of the Marriott Hotels, the Marriott time shares are very plenty including the following time share Marriott Hotels in the United States:
+
+1. Arizona
+Marriott's Canyon Villas in Desert Ridge, Phoenix
+
+2. California
+Marriott's Desert Springs Villas 1 and 2 in Palm Desert
+Marriott's Shadow Ridge in Palm Desert
+Marriott's New Port Coast Villas in New Port Coast
+Marriott's Timber Lodge in South Lake Tahoe
+Marriott's Grand Residence Club Lake Tahoe in Lake Tahoe
+
+3. Colorado
+Marriott's Mountain Valley Lodge in Brokenridge
+Marriott's Streamside in Vail
+
+4. Florida
+Marriott's Beach Place Towers in Fort Lauderdale
+Marriott's Villar at Doral in Miami
+Horizons at Orlando by Marriott in Orlando
+Marriott's Cypress Harbor in Orlando
+Marriott's Grande Vista in Orlando
+Marriott's Imperial Palm Villas in Orlando
+Marriott's Royal Palms in Orlando
+Marriott's Sabal Palms in Orlando
+Marriott's Ocean Pointe in Palm Beach Shores
+Marriott's Legends Edge at Bay Point in Panama City Beach
+
+5. Hawaii
+Marriott's Kauai Beach Club in Kauai
+Marriott's Maui Ocean Beach Club in Maui
+Marriott's Ko Olina Beach Club in Oahu
+
+6. South Carolina
+Marriott's Barony Beach Club in Hilton Head Island
+Marriott's Harbour Club in Hilton Head Island
+Marriott's Harbour Point in Hilton Head Island
+Marriott's Heritage Club in Hilton Head Island
+Marriott's Monarch in Hilton Head Island
+Marriott's Sunset Pointe in Hilton Head Island
+Marriott's Ocean Watch Villas in Myrtle Beach
+
+7. Utah
+Marriott's Mountain Side in Park City
+Marriott's Summit Watch in Park City
+
+Marriott time shares are also available in other states in the country:
+Massachusetts - Marriott's Custom House in Boston
+Missouri - Horizons at Branson by Marriott in Branson
+Nevada - Marriott's Grand Chateau in Las Vegas
+New Jersey - Marriott's Fairway Villas at Seaview in Absecon
+Virginia - Marriott's Manor Club at Ford's Colony in Williamsburg
+
+In other countries outside the United States, the Marriott time shares are available in the Marriott Hotels of choice are:
+
+1. Aruba - Marriott's Aruba Ocean Club in Palm Beach
+- Marriott's Aruba Surf Club
+
+2. France - Marriott's Village d'Ile de France in Bailly Romainvilliers
+
+3. London - 47 Park Street by Marriott Grand Residence Club in Mayfair
+
+4. Spain - Marriott's Club Son Antem in Mallorca
+- Marriott's Playa Andaluza in Marbella
+
+5. Thailand - Marriott's Phuket Beach Club
+
+The list above is only part of the entire list of time share properties by Marriott International, Inc. You may inquire more on the other available Marriott time shares in the internet.
+
+Buying your Marriott time share
+
+You may choose whichever category that suits your vacation needs: beach, adventure, group travel like family, golf, resort packages, new year's eve, casino, wedding and honeymoon, luxury, mountain, hunting, December holidays or Thanksgiving, Spring break, among others for you to find the perfect Marriott time share for you. The Marriott timeshare of the right Marriott Hotel can be picked based on your choice among the chain of hotels made available by Marriott International, Inc.
+
+Factors for consideration
+
+Time shares, like Marriott time share, are usually broken into 3 categories of week desirability: season (the most desirable time), mid season (medium desirable time) and off season (least desirable time). Depending on this category, the amount of money needed to purchase, sell or rent a Marriott time share may vary.
+
+Do not buy a Marriott time share or any time share for that matter on impulse. The first one you see may be very attractive but keep on looking. Among everything that you have seen, pick the best and consult this to a professional to avoid being cheated out of your money. A time share consultant can help you in selling, buying or renting a Marriott time share.  
+
+-----
+
+Since its inception as a humble beer stand in Washington, D.C. back in the early 1920's, the Marriott Hotels and its time share have truly expanded in serving its clients. Through time shares, you can enjoy the best of what Marriot Hotels around the world can offer.

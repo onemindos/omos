@@ -1,0 +1,17 @@
+# Subject: DID YOU GET THIS?
+
+Hey [[firstname]],
+
+Yesterday, I sent an email regarding my latest launch - Dealing With Death:
+
+>> LINK TO YOUR SALES PAGE
+
+It's time to move on. How long do you want to stay in such a state of grief or if you know someone in this state, use this book to get'em out of it!
+
+So far, there has been raving reviews about it already, and I don��t want you to miss out on this great opportunity. So grab it now before it��s sold out:
+
+>> LINK TO YOUR SALES PAGE
+
+Warm regards,
+
+[[YOURNAME]]

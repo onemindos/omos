@@ -1,0 +1,23 @@
+Spyware vs. Antispyware
+
+Spyware vs. Anti-spyware: The battle for today's systems
+
+"Fight fire with fire" is an advice often handed out today to help people with various problems. In fact, this advice is being taken very seriously by people in the software industry. Many people today are becoming aware of the problems posed by malicious software. In fact, 80 percent of computer users today have their systems infected with spyware. Of these people, only about 5 percent know that they have spyware installed into their computers. These are very troubling figures indeed. This is the reason why people today look for solutions against spyware in anti-spyware tools.
+
+Anti-spyware stops spyware from doing damage to your computer using two methods: prevention and solution. 
+
+1) Prevention – Anti-spyware stops spyware from ever being installed inside your system. This is done through different ways. Some anti-spyware tools scan every type of information that passes into your computer. The anti-spyware software then checks it against a database of known spyware. Because of this, if a known spyware tries to npenetrate your system, it is immediately prevented from doing so. Of course, this is only effective as long as the spyware database is kept updated.
+
+Another method used by antispyware to prevent spyware from being installed into your system is to limit the activities of cetain programs known to be used in distributing spyware. One such program is ActiveX. By doing this, anti-spyware tools will lessen the chance that any spyware will be installed in your system.
+
+2) Solution – on the off-chance that any type of spyware already exists in your system, anti-spyware tools are also able to get rid of those. This is done by regular scanning of your system. Anti-spyware deletes spyware and makes sure that no traces remain of it to damage your computer.
+
+Usually, programmers find this type of method easier to incorporate into anti-spyware software than preventive measures. This is because of the fact that most methods used by people to introduce spyware into a system cannot be stopped without affecting the common operations of a computer. For example, some spyware creators make use of the program Flash to introduce spyware into a computer. However, some legitimate sites do use Flash to make your web surfing more entertaining. This means that disabling Flash entirely would not be feasible for many users. Hence, anti-spyware manufacturers are faced with the dilemma of setting parameters for such programs that would prevent spyware but ensure the satisfaction of the customers.
+
+Of course, there are alternatives to using anti-spyware against spyware. But these solutions may prove to be impractical. One method is to just limit your computer’s contact with other networks. This means that you should limit your internet use. 
+
+Of course, this solution would seem horrendous to some people because of the fact that most people today depend on the internet for their needs. 
+
+Another solution is to try and remove any spyware yourself. However, this may take some time and could cause some serious damage to your system if you have no idea what you are doing. Because of this, it is not really recommended that you tinker with spyware on your own.
+
+As you can see, using anti-spyware against spyware is still the best thing you can do to solve your spyware problems. By using specialized software, you can fight fire with fire and rid your system of all those problems.

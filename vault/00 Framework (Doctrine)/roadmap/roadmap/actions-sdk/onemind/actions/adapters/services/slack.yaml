@@ -1,0 +1,311 @@
+# Slack Web API
+# Docs: https://api.slack.com/methods
+
+name: slack
+base_url: https://slack.com/api
+
+auth:
+  type: bearer
+  token_env: SLACK_BOT_TOKEN
+  header: Authorization
+  prefix: Bearer
+
+default_headers:
+  Content-Type: application/json
+
+actions:
+  # ==========================================================================
+  # MESSAGES
+  # ==========================================================================
+  post_message:
+    description: "Post a message to a channel"
+    method: POST
+    path: /chat.postMessage
+    body_params:
+      - channel
+      - text
+      - blocks
+      - attachments
+      - thread_ts
+      - reply_broadcast
+      - unfurl_links
+      - unfurl_media
+      - mrkdwn
+    required: [channel]
+
+  update_message:
+    description: "Update a message"
+    method: POST
+    path: /chat.update
+    body_params:
+      - channel
+      - ts
+      - text
+      - blocks
+      - attachments
+    required: [channel, ts]
+
+  delete_message:
+    description: "Delete a message"
+    method: POST
+    path: /chat.delete
+    body_params:
+      - channel
+      - ts
+    required: [channel, ts]
+
+  get_permalink:
+    description: "Get permalink for a message"
+    method: GET
+    path: /chat.getPermalink
+    query_params:
+      - channel
+      - message_ts
+    required: [channel, message_ts]
+
+  # ==========================================================================
+  # CHANNELS
+  # ==========================================================================
+  list_channels:
+    description: "List all channels"
+    method: GET
+    path: /conversations.list
+    query_params:
+      - types
+      - exclude_archived
+      - limit
+      - cursor
+
+  get_channel:
+    description: "Get channel info"
+    method: GET
+    path: /conversations.info
+    query_params:
+      - channel
+      - include_locale
+      - include_num_members
+    required: [channel]
+
+  create_channel:
+    description: "Create a channel"
+    method: POST
+    path: /conversations.create
+    body_params:
+      - name
+      - is_private
+    required: [name]
+
+  join_channel:
+    description: "Join a channel"
+    method: POST
+    path: /conversations.join
+    body_params:
+      - channel
+    required: [channel]
+
+  leave_channel:
+    description: "Leave a channel"
+    method: POST
+    path: /conversations.leave
+    body_params:
+      - channel
+    required: [channel]
+
+  archive_channel:
+    description: "Archive a channel"
+    method: POST
+    path: /conversations.archive
+    body_params:
+      - channel
+    required: [channel]
+
+  # ==========================================================================
+  # CHANNEL HISTORY
+  # ==========================================================================
+  get_history:
+    description: "Get message history for a channel"
+    method: GET
+    path: /conversations.history
+    query_params:
+      - channel
+      - cursor
+      - inclusive
+      - latest
+      - limit
+      - oldest
+    required: [channel]
+
+  get_replies:
+    description: "Get thread replies"
+    method: GET
+    path: /conversations.replies
+    query_params:
+      - channel
+      - ts
+      - cursor
+      - inclusive
+      - latest
+      - limit
+      - oldest
+    required: [channel, ts]
+
+  # ==========================================================================
+  # USERS
+  # ==========================================================================
+  list_users:
+    description: "List all users"
+    method: GET
+    path: /users.list
+    query_params:
+      - cursor
+      - limit
+      - include_locale
+
+  get_user:
+    description: "Get user info"
+    method: GET
+    path: /users.info
+    query_params:
+      - user
+      - include_locale
+    required: [user]
+
+  lookup_by_email:
+    description: "Find user by email"
+    method: GET
+    path: /users.lookupByEmail
+    query_params:
+      - email
+    required: [email]
+
+  get_user_presence:
+    description: "Get user presence status"
+    method: GET
+    path: /users.getPresence
+    query_params:
+      - user
+    required: [user]
+
+  set_presence:
+    description: "Set user presence"
+    method: POST
+    path: /users.setPresence
+    body_params:
+      - presence
+    required: [presence]
+
+  # ==========================================================================
+  # REACTIONS
+  # ==========================================================================
+  add_reaction:
+    description: "Add a reaction to a message"
+    method: POST
+    path: /reactions.add
+    body_params:
+      - channel
+      - name
+      - timestamp
+    required: [channel, name, timestamp]
+
+  remove_reaction:
+    description: "Remove a reaction"
+    method: POST
+    path: /reactions.remove
+    body_params:
+      - channel
+      - name
+      - timestamp
+    required: [channel, name, timestamp]
+
+  # ==========================================================================
+  # FILES
+  # ==========================================================================
+  list_files:
+    description: "List files"
+    method: GET
+    path: /files.list
+    query_params:
+      - channel
+      - user
+      - types
+      - count
+      - page
+
+  get_file:
+    description: "Get file info"
+    method: GET
+    path: /files.info
+    query_params:
+      - file
+    required: [file]
+
+  delete_file:
+    description: "Delete a file"
+    method: POST
+    path: /files.delete
+    body_params:
+      - file
+    required: [file]
+
+  # ==========================================================================
+  # REMINDERS
+  # ==========================================================================
+  add_reminder:
+    description: "Create a reminder"
+    method: POST
+    path: /reminders.add
+    body_params:
+      - text
+      - time
+      - user
+    required: [text, time]
+
+  list_reminders:
+    description: "List reminders"
+    method: GET
+    path: /reminders.list
+
+  delete_reminder:
+    description: "Delete a reminder"
+    method: POST
+    path: /reminders.delete
+    body_params:
+      - reminder
+    required: [reminder]
+
+  # ==========================================================================
+  # SEARCH
+  # ==========================================================================
+  search_messages:
+    description: "Search messages"
+    method: GET
+    path: /search.messages
+    query_params:
+      - query
+      - count
+      - highlight
+      - page
+      - sort
+      - sort_dir
+    required: [query]
+
+  search_files:
+    description: "Search files"
+    method: GET
+    path: /search.files
+    query_params:
+      - query
+      - count
+      - highlight
+      - page
+      - sort
+      - sort_dir
+    required: [query]
+
+  # ==========================================================================
+  # AUTH TEST
+  # ==========================================================================
+  auth_test:
+    description: "Test authentication"
+    method: POST
+    path: /auth.test

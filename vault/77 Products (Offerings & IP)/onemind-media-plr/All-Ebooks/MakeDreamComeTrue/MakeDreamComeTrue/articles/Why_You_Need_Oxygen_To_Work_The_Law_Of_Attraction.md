@@ -1,0 +1,22 @@
+# Title:
+
+Why You Need Oxygen To Work The Law Of Attraction
+
+Word Count:
+506
+
+Summary:
+The law of attraction is all about magnetizing your visualization so that whatever that you have asked the universe for, will be attracted to you.  One of the most important practices to harness the powers of electro-magnetic energy in the body is to sleep with the head of the bed pointing North, parallel to the earth's magnetic poles.  When all the molecules in the body are synchronized in one direction, they become magnetic, and will draw whatever you wish for from the univ...
+
+Keywords:
+
+Article Body:
+The law of attraction is all about magnetizing your visualization so that whatever that you have asked the universe for, will be attracted to you.  One of the most important practices to harness the powers of electro-magnetic energy in the body is to sleep with the head of the bed pointing North, parallel to the earth's magnetic poles.  When all the molecules in the body are synchronized in one direction, they become magnetic, and will draw whatever you wish for from the universe.
+
+Another important element in harnessing this magnetic energy is the practice of deep breathing.  Oxygen is food for the brain and it has magnetic qualities.  Practice deep breathing in an opened window where the air is fresh.  Do not breathe the petrol-laden air of the streets, because they contain contaminants like carbon monoxide that poisons the body cells.  If you can help it, breathe the morning air in the garden, where fresh oxygen has just been produced from the plants' photosynthesis. Or breathe the morning air on the hills or the salty breezy air of the sea.  Oxygen makes you magnetic and causes your thoughts to attract whatever you are asking the universe.
+
+The quality of the air and the oxygen in it is best in the morning, because the production of oxygen by the plants and trees is done at night.  This is the reason why when we wake up in the morning to go to the office, we notice that the air is cool and fresh, because the oxygen has just been produced.  We become more energetic and alert when we breathe in the morning air, as compared with the afternoon air.
+
+If you can wake up at 5 am in the morning (I suggest you do because a lot of successful people wake up at this time as a matter of discipline), do your meditation, visualization and deep breathing at the same time by an opened window, provided it is not too cold.  I enjoy the stillness of dawn in New England during the spring with the fresh crispy air in the garden.  As I sit on the lawn chair I meditate, visualize and performed deep breathing and sent out my order to the universe.  With the sound of birds chirping in the distance, it makes my meditation surreal and powerful.  After spending about 20 minutes on this, I reward myself with a hot cup of tea.  What a wonderful way to start the day.
+
+The quality of the manifestations by the universe and the end result is dependant on the quality of your thought power.  The signal that you send out has to have the power of electro-magnetic energy harnessed from the earth's magnetic poles and the fresh oxygen of the morning.  When you are magnetic, the universe will hear you more clearly, because your thought waves are more powerful. You will begin to notice life starting to change for the better.  Your wishes will come true, you become healthier and more energetic, and people find you more attractive.

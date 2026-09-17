@@ -1,0 +1,9 @@
+Squeeze Page Edit Instructions
+
+Please make sure you follow these instructions to get the most out of your Squeeze Page.
+
+1. Navigate inside the folder of the squeeze page that you wish to use, open the page index.html in your favorite HTML editor, you can even use a simple text editor like notepad if you wish.
+
+2. Find the text YOUR AWEBER LIST NAME and replace it with your Aweber list name.
+
+3. Upload the contents of the folder to your web host, in your required location.

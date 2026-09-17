@@ -1,0 +1,31 @@
+# Title:
+
+Use the Law of Attraction to Manifest Outstanding Results
+
+Word Count:
+409
+
+Summary:
+How joyful could you allow yourself to be?  How much more magical could your application of the law of attraction be?  Read on to learn more.
+
+Keywords:
+law of attraction, manifesting, manifest
+
+Article Body:
+If you have gone about your life feeling frustrated, angry and stuck you can transform this lower feelings and move into an outrageous state of joy and hopefulness and begin to attract greater circumstances.
+
+The law of attraction states that like attracts like.  That simply means if you are feeling stuck and hopeless you will continue to attract more circumstances that bring about hopelessness.  
+
+One of the fastest ways to get the law of attraction to work for you is to take a period of time and do nothing more than find the things which bring you outrageous joy.  Forget about wanting a new car or more money.  Focus most on being joyful.
+
+1) Make a list of all the things which make you completely happy.  Then go out and do it.  See if you can fill an entire week of your free time with activities that are fun and emotionally rewarding to you.  
+
+2) Get a journal   Every night before bed write out your feels about the way you spent your day.  Make a point to express how you felt.  Your feelings are extremely important because they inform the law of attraction as to your present vibration.
+
+3) Each day search out activities that you may have wished to try but never got around to doing them.  The more new and fun activities that you engage in the more expanded you will feel.  You will naturally move into a higher more expanded state.  New activities open up your inner being much more than activities that you have become too familiar with.  When you are in a new environment you easily move into a more aware and open state. 
+
+By the end of the week you will be a change in your own personal energy.  Now you can begin to think more about what you would like to manifest in your life.  Be clear about your desire and allow the law of attraction to go to work to do wonders in brining about your desires.  
+
+To best apply the law of attraction you should be in a state of joy and openness.  As you go through your daily activities you may not be aware of it but you do shut down.  Everything becomes routine and you easily hold on to old thought patterns.  
+
+As you change your routine and open up you begin to see some amazing changes and your ability to master the law of attraction techniques will be greatly enhanced.

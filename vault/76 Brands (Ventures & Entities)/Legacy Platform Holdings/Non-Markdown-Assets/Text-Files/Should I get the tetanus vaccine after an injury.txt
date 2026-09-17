@@ -1,0 +1,42 @@
+It’s important to understand Tetanus:
+
+1. Tetanus is an anaerobic bacteria (spore) which means spreading can be inhibited in oxygenated environments, so if the wound bleeds there is less danger of tetanus.
+
+2. Just because you get cut on metal (rusty or not), it doesn't automatically mean tetanus bacteria is present. Tetanus is normally found in manure/dirt and not on a clean plumbing fixture. Cuts inside your home or another building reduce your chances greatly.
+
+3. Even if there was a deep puncture wound that did not bleed, caused by an object that had tetanus bacteria on it, you literally can not "vaccinate" against a bacterial infection (spore) after the exposure. The vaccine is not an instant tetanus killer. It would take weeks for your body to produce enough antibodies (provided the vaccine is even successful at all). Tetanus can kill 7-10 days after infection.
+
+4. If there were serious concerns about tetanus exposure (as previously explained) then the only thing that could help (outside of allowing the wound to bleed, if possible, and cleaning the wound with soap, water, or hydrogen peroxide) would be the TIG shot (tetanus immunoglobulin), which is an anti-toxin and not a vaccine.
+
+5. There is no "tetanus only vaccine" available in the United States, only the DTaP which is a 3-in-1 cocktail vaccine consisting of Diptheria, Tetanus & Pertussis (whooping cough) or Td (tetanus and diphtheria).
+
+To summarize:
+
+1. A tetanus shot would not help a current case of tetanus as a vaccine takes several weeks to create antibodies. If a current case of tetanus is truly a concern, the TIG shot is what should be given.
+
+2. According to the VAERS database, reactions to vaccines for tetanus and diptheria are not rare. As of August 2012, there were over 22,000 adverse reactions reported and 67 deaths.
+
+3. Lastly, the CDC states that efficacy of the tetanus toxoid has never been studied in a vaccine trial.
+
+4. Also, tetanus is actually treatable with Botox. Yes Botox.
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3564069
+
+Efficacy:
+
+The tetanus vaccine has not changed the course of the disease. As you can see above, the tetanus vaccine was only routinely administered starting in 1961 in the UK (source), however, the rate of tetanus-related deaths had been plummeting for the previous sixty years. This indicates that there was something more at hand other than the tetanus vaccine when it came to reducing incidents of tetanus. Better wound cleaning hygiene perhaps?
+
+https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6012a1.htm
+
+https://www.cdc.gov/vaccines/pubs/pinkbook/tetanus.html
+
+A 1992 report in The Journal of Neurology found that “severe (grade III) tetanus occurred in three immunized patients who had high serum levels of anti-tetanus antibody.” Regardless of their supposed vaccine protection, one of the patients in the study died as a result of tetanus. While this is obviously a small sampling, it still doesn't earn the tetanus shot a big vote of confidence for me.
+
+https://pediatrics.aappublications.org/content/135/6/1130
+
+The Tetanus Immune-globulin shot:
+
+Tetanus immune globulin (TIG) contains the tetanus antitoxin and is used to provide temporary passive immunity to tetanus. It is commercially available in the US, and is prepared from plasma of donors immunized with tetanus toxoid.
+
+The TIG contains no preservatives. Passive immunity is like what a baby gets from a mother through breast feeding. Shorter immunity but sufficient to deal with fast acting tetanus.
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3564069/

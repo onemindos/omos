@@ -1,0 +1,71 @@
+<html><head><meta charset="UTF-8"></head><body><div><b>What You Build Next (Physical Awareness Layer)</b>???????????????????????????????????????????????????????????????????????????</div>
+<div>?  NATS SUBJECTS Ñ The Complete Namespace                                  ?</div>
+<div>?                                                                          ?</div>
+<div>?  ??? AGENT PROTOCOL (Synadia Agent Protocol v0.3) ???                    ?</div>
+<div>?  agents.prompt.{agent}.{owner}.{name}    ? prompt an agent               ?</div>
+<div>?  agents.hb.{agent}.{owner}.{name}        ? heartbeat (auto)             ?</div>
+<div>?  agents.status.{agent}.{owner}.{name}    ? on-demand status             ?</div>
+<div>?                                                                          ?</div>
+<div>?  ??? FLEET (Edge Devices Ñ Physical World) ???                           ?</div>
+<div>?  fleet.telemetry.{device_id}             ? periodic sensor data          ?</div>
+<div>?  fleet.cmd.{device_id}                   ? commands TO devices           ?</div>
+<div>?  fleet.status.{device_id}                ? request/reply health          ?</div>
+<div>?  fleet.alert.{device_id}                 ? urgent events (fence, smoke)  ?</div>
+<div>?  fleet.position.{device_id}              ? GPS updates                   ?</div>
+<div>?  fleet.video.{device_id}                 ? video frame stream            ?</div>
+<div>?                                                                          ?</div>
+<div>?  ??? HOME (IoT via HomeAssistant bridge) ???                             ?</div>
+<div>?  home.state.{entity_id}                  ? entity state changes          ?</div>
+<div>?  home.cmd.{entity_id}                    ? commands to devices           ?</div>
+<div>?  home.event.{trigger}                    ? automations fired             ?</div>
+<div>?                                                                          ?</div>
+<div>?  ??? CONTEXT (Zeus Awareness Ñ KV Watches) ???                           ?</div>
+<div>?  zeus.location                           ? where you are physically      ?</div>
+<div>?  zeus.focus_mode                         ? deep work / available / sleep ?</div>
+<div>?  zeus.activity                           ? working / driving / walking   ?</div>
+<div>?  zeus.device                             ? which device active           ?</div>
+<div>?                                                                          ?</div>
+<div>?  ??? AGENT INTERNAL (JetStream Persistence) ???                          ?</div>
+<div>?  agent.{agent}.tool_call                 ? tool usage log                ?</div>
+<div>?  agent.{agent}.decision                  ? reasoning trace               ?</div>
+<div>?  agent.{agent}.error                     ? failures                      ?</div>
+<div>?  task.created.{id}                       ? new task                      ?</div>
+<div>?  task.completed.{id}                     ? task done                     ?</div>
+<div>?  comms.{platform}.{direction}            ? message log                   ?</div>
+<div>?  system.health.{node}                    ? node health                   ?</div>
+<div>?  system.backup.{timestamp}               ? backup events                 ?</div>
+<div>??????????????????????????????????????????????????????????????????????????PHYSICAL WORLD                    NATS FABRIC                     LEGACY (Brain)</div>
+<div>?????????????????                 ???????????                     ??????????????</div>
+<div><br></div>
+<div>Drone-1 GPS update ??????????? fleet.position.drone-1 ??????? nats-fleet plugin</div>
+<div>                                                                  (buffers in memory)</div>
+<div><br></div>
+<div>Fence sensor trip ???????????? fleet.alert.fence-north ?????? nats-fleet plugin</div>
+<div>                                                                  ? Legacy REACTS:</div>
+<div>                                                                    &quotAlert: north fence</div>
+<div>                                                                     breach detected.</div>
+<div>                                                                     Launching drone.&quot</div>
+<div>                                                                  ? fleet.cmd.drone-1</div>
+<div>                                                                    {action: &quotinvestigate&quot,</div>
+<div>                                                                     waypoint: [33.45,-112.07]}</div>
+<div><br></div>
+<div>Smoke detector ??????????????? home.event.smoke_alarm ??????? HA bridge</div>
+<div>                                                                  ? Legacy REACTS:</div>
+<div>                                                                    &quot? SMOKE: kitchen.</div>
+<div>                                                                     Killed HVAC. Alerting.&quot</div>
+<div>                                                                  ? Telegram to Zeus</div>
+<div>                                                                  ? fleet.cmd.irrigation</div>
+<div>                                                                    {action: &quotzone3_on&quot}</div>
+<div><br></div>
+<div>Frame glasses (you look) ????? frame-bridge plugin ?????????? Legacy processes:</div>
+<div>                                                                  &quotI see broken post.</div>
+<div>                                                                   GPS: 33.451,-112.069</div>
+<div>                                                                   Adding repair task.&quot</div>
+<div>                                                                  ? task.created.fence-repair</div>
+<div>                                                                  ? frame display: &quot? Logged&quot</div>
+<div><br></div>
+<div>Zeus drives home ????????????? zeus.location = &quotdriving&quot ???? KV watch fires</div>
+<div>                                 zeus.activity = &quotcommute&quot       ? Legacy adjusts:</div>
+<div>                                                                    &quotZeus driving. Queue</div>
+<div>                                                                     non-urgent until home.&quot</div>
+</body></html>

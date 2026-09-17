@@ -1,0 +1,141 @@
+@charset "utf-8";
+/* CSS Document */
+
+#bgtop {
+	background-image:url(images/bgall.jpg);
+	background-repeat:repeat-x;
+	margin:0px;
+	background-position: center top;
+}
+#header {
+	background-image: url(images/header.jpg);
+	height: 190px;
+	width: 691px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}
+
+#body {
+	background-image: url(images/body.jpg);
+	background-repeat: repeat-y;
+	height: auto;
+	width: 691px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	overflow: hidden;
+}
+
+#footerbg {
+	height: 120px;
+	width: 100%;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	background-image: url(images/footerbg.jpg);
+}
+
+#footer {
+	height: 120px;
+	width: 691px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	overflow: hidden;
+	background-image: url(images/footer.jpg);
+}
+#contentbox {
+	margin-right: 40px;
+	margin-left: 40px;
+}
+
+
+
+h1, h2, h3, h4, h5, h6 {
+	padding-bottom: 5px;
+	color: #333333;
+	letter-spacing: -1px;
+	line-height: 1em;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+	font-size: 40px;
+	margin: 0px;
+}
+h2 {
+	font-size: 28px;
+	margin: 0px;
+}
+h3 {
+	font-size: 22px;
+	margin: 0px;
+}
+h4 {
+	font-size: 18px;
+	margin: 0px;
+}
+h5 {
+	font-size: 16px;
+	margin: 0px;
+}
+h6 {
+	font-size: 14px;
+	margin: 0px;
+}
+
+p {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	line-height:24px;
+	margin-top:20px;
+	color: #333333;
+}
+p a {
+	color: #3366FF;
+}
+p  a:hover {
+	color: #9B0707;
+	text-decoration: none;
+}
+.p-small {
+	font-family: Tahoma, Arial;
+	font-size: 12px;
+	color: #464646;
+}
+.red {
+	color: #9b0707;
+}
+.blue {
+	color: #2C6185;
+}
+.johnsonbox {
+	background-color: #f4f4f4;
+	height: auto;
+	width: 70%;
+	margin-top: 30px;
+	margin-right: auto;
+	margin-bottom: 30px;
+	margin-left: auto;
+	border: 6px dashed #9b0707;
+	padding: 30px;
+}
+#footer .text {
+	margin-top: 160px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333;
+}
+#footer a {
+	text-decoration:none;
+	color:#333;
+}
+#footer a:hover {
+	color:#333;
+}

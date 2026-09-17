@@ -1,0 +1,111 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Bed Bugs Mites Spray | Of Bed Bugs and Of Pesticides</title>
+		<meta http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="Movies may currently depict them as loveable and fun creatures which almost always embark on humorous and insightful adventures Science may always regard them as awesome and wonderful creatures because of their structure and characteristics But in reality,...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">				
+		<meta name="Robots"				content="index,follow">				
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>		
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2" >
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdContent">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+Of Bed Bugs and Of Pesticides
+</b>
+<br>
+
+						<small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>Movies may currently depict them as loveable and fun creatures which almost always embark on humorous and insightful adventures. Science may always regard them as awesome and wonderful creatures because of their structure and characteristics.<br><br>But in reality, for sure, you will always despise them. All the descriptions are referring to mites and bed bugs. <br><br>Bed bugs and mites are tiny little insects that normally thrive in our home. Something must be in them that they really do love to live with people or be unlikely and unwanted transients to people’s homes.<br><br>Unlike several organisms, which scientifically, live with you in your home under a relationship called ‘commesalism’ (where their presence will not be regarded as burden), mites and bed bugs are dislike because they affect and pester people. <br><br>Mites on their part eat wood and destroy several vulnerable furniture or fixtures in your home. There are only several on limited occasions that mites are reported to bite people or animals. Normally, that is not their intention because that is not their thing. <br><br>Bed bugs, on the other hand, have to bite people to survive. It is because bed bugs suck blood from unsuspicious and unwilling hosts or victims for nourishment. <br><br>Bed bugs have long and elongated but sharp beaks that help them pierce through hosts’ skin to enjoy the abundant reserve or resources of blood.<br><br>Usually, bed bugs go out and hunt or suck blood at night, when the unsuspecting victim is usually asleep. Bed bugs’ bites are normally negligible, you can hardly feel them. That is because bed bugs are so tiny and miniscule. <br><br>Don’t worry. Bed bugs can never suck too much blood from you. Normally, a single bed bug can suck only a sixteenth of a milliliter of blood from you. <br><br>That amount is so negligible. <br><br>Controlling mites and bed bugs <br><br>The discomfort caused by mites and bed bugs are so annoying that you will surely always want to eliminate them totally from your life and from your home. <br><br>That is why, since time immemorial, there are lots of pesticides and insecticides that abound in the market to exterminate mites and bed bugs. <br><br>Substances that aim to control and kill bed bugs and mites normally, and more often, come in the form of sprays. It is because through this form, the protective covering or wax-like substances in mites’ and bed bugs’ skin is destroyed. <br><br>Anti-mites and bed bugs sprays have common ingredients. All of these sprays have powderized glass or silica powder. When you say powderized, they are ground down to the tiniest and smallest size possible. <br><br>Why glass and silica? We know that the two substances can cut through any surface. Because mites’ and bed bugs’ skins are so hard and protected, it will take too harsh and potent materials to cut through their skin.<br><br>Powderized glass and silica will do the wonder. <br><br>Sprays that kill mites and bed bugs work in  way that the chemicals are mixed with them. After spraying, or after the mites and bed bugs are sprayed on with pesticides and insecticides, the powderized glass and silica cuts through their skin. <br><br>After that, the mites’ and bed bugs’ skin will be ruined. That is the time the chemical will get in. The system of mites and bed bugs will then be vulnerable without their protective covering. <br><br>Chemicals normally get in to dry out or take away moisture from the insides or viscera of mites and bed bugs. <br><br>Through the process, mites and bed bugs will surely be killed. <br><br>Be careful <br><br>However potent they may be in killing or exterminating mites and bed bugs, be sure to handle pesticides and insecticides with utmost care. <br><br>Read all labels of such sprays before finally suing them so you will have an idea how extremely poisonous they can get. <br><br>Also take note of the precautionary measures and first aid recommendations advised by the manufacturers of such sprays in case you accidentally inhaled or take in such substances. <br><br>Even if its very important or even if it becomes your top priority to get rid of mites and bed bugs in your home, be sure you are safe all through out the process. Don’t be exterminated along with them.
+						<br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/J_Box.php"); ?>
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php					
+				if($ShowNewsFeed)
+					{
+			?>
+						<tr>
+							<td class="tdRow" colspan="2">
+								<?=$Category;?> News and Events
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<?php include("../Includes/Google_Search.php"); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br>
+								<?php include("../Includes/NewsFeed.php"); ?>
+								<?php	
+									if ($DisplayAmazon)
+										{
+											echo "<hr>";
+											echo "<br><center>";
+											include("../Includes/Amazon_728x90.php");
+											echo "</center><br>";
+										}
+								?>
+							</td>
+						</tr>
+			<?php
+					}
+			?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

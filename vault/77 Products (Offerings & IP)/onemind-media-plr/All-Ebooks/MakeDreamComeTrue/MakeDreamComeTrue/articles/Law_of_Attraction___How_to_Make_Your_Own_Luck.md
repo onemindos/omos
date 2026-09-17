@@ -1,0 +1,30 @@
+# Title:
+
+Law of Attraction   How to Make Your Own Luck
+
+Word Count:
+335
+
+Summary:
+There is a secret to being lucky.  Those who are lucky know that what they presently have does not alter their luck.
+
+Keywords:
+law of attraction, manifesting, manifest
+
+Article Body:
+Do you ever wonder what makes one man more successful at one thing while another fails miserably at the very same thing?  Often if you interview people who are successful at attracting wealth they all have one thing in common.  They all feel lucky.
+
+What is it to feel lucky really?  It all comes back to the law of attraction and that inner feeling that a person has.  The feeling of luck is like blind faith.  It's an inner tone that makes you feel that anything is possible.
+
+When a person feels lucky they are resonating similarly to that state of joy, hope and excitement.  All those feelings are high vibration.  The higher your vibration the faster
+your ability to manifest what you want.
+
+You can put the law of attraction to work much faster by allowing yourself to simply feel lucky.  Put aside your concerns for how something will come about.  Most wealthy people will tell you that they had no idea how their plans were going to come about but they keep that good feeling of luck and hope inside.
+
+I had a great conversation recently with a man who teaches Ti-chi, jokingly he said, don't you feel lucky after having sex?"  He went on to explain that that feeling of greater possibility comes to use when we engage in moments of surrendering to joy.
+
+The more you allow yourself to open up to blissful feelings the luckier you actually become.  It's not the other way around.  Most people feel that they are lucky after something happens.  
+
+Feeling lucky first allows the law of attraction to work with you at that higher expanded vibration allowing your desires to manifest with greater ease.
+
+Sometimes someone wins the lottery and when that person is interviewed they often say, "I just felt so lucky today and so I plaid and now I have won."  Prior to wining maybe that person had nothing at all but the feeling of being expanded, hopeful and lucky.

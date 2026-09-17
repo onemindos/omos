@@ -1,0 +1,1047 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ac0:8d52:0:0:0:0:0 with SMTP id u18csp317602ima;
+        Thu, 30 Apr 2020 20:34:09 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKPAIENT0xFNqpxPRK3holyv+dBCtywBHu0zvO3EDT5d0nNhI7XBVMNu7Agzd9sQZpPkFAN
+X-Received: by 2002:ac8:6f6c:: with SMTP id u12mr1812304qtv.103.1588304049327;
+        Thu, 30 Apr 2020 20:34:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1588304049; cv=none;
+        d=google.com; s=arc-20160816;
+        b=y6e2WJ4cwl1a0iRW1b70SX8iYHsEbkLJ4HTD19mPp+u/9Wbf6LayTVYxpK4rFxwu1g
+         Te1ba77oLP/+jTeFEhsG8br6xFizC8JHOwIcw8ft8mth44Iub8wMKJXSuh0B6iRbGIrp
+         n+Fp9GK/HM8UejfO3IDnYGLLZrgKCKZyVkgCn95bYfA/WzhWjebA1RXMVYy5vUsaK3R0
+         19EaIOqQksIDKTtnaaL6i004GtKU01S6NYCFMaBq5nisADLJkdjAX8upAsmbOTzAkA6C
+         ZYBseluj7A54J+5xP/z8PrdHUmcGDgrefCmdtUyDrTqG3kbJIyLuazsz+jK1lKiB4zfh
+         MTTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=wbINr1yzDd1Bu62LHjIUajE5rL+LnHAkSTj3GGK0oIo=;
+        b=dFqk4qXXF1RNjIMxsCqrVNOb661RGa+oiK088L5y2sq6jmN1jBEsXsTBkSYGQrxcDO
+         rOQi8/2eZiGroNiCFFW7SLCA3d1Md9cg8YhFDgyRobK6bVXI6C8N6Nmx/4rRbS/2dsov
+         lxgUDKwnLktlsRYCQRBvAG+12ng0NiFTahobYgayDy3n7mI57YIxMghe4amGqfAG1atC
+         y6UfsN1sF8wvbily4zsVddOPnJhQ0AVcHCxaPU42fuo/D7RpZHnEl/j0MvRHXjyehqZT
+         3id6M5klgNHwhrk39gcJvNOyHs/8g9g26e9uisua5Uf/aNszb2DZgyX5XNccNGYKsq4b
+         TZHg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b="P3eg/8B4";
+       dkim=pass header.i=@acems1.com header.s=dk header.b="M/AzBGGf";
+       spf=pass (google.com: domain of bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id z12si911301qkz.166.2020.04.30.20.34.08
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 20:34:09 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b="P3eg/8B4";
+       dkim=pass header.i=@acems1.com header.s=dk header.b="M/AzBGGf";
+       spf=pass (google.com: domain of bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=wbINr1yzDd1Bu62LHjIUajE5rL+LnHAkSTj3GGK0oIo=;
+ b=P3eg/8B4aLZNocmX5aER3GFlI/vY7LZLblHbTCgfxyWr4sjr+6ti7KhBsShHmnqFHwP4fSYrc08A
+   5dPHJ3iT0vFVSkzMsovP7w6VQj33VskKe+8YN82NvM1YNl8R4vUC1WaC4SSinfGGMtAXSkFy9tGf
+   tnjnhGACF4jb1+520ME=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=wbINr1yzDd1Bu62LHjIUajE5rL+LnHAkSTj3GGK0oIo=;
+ b=M/AzBGGfFQ1oU3ppOih5OiTYChjohaa9iZg4KwngL2fX/QFZSdq5eP61CFbK4PdohZpqf/zOmnP3
+   mIkAxjzu955bOrfD0nOTFBvuC8meuPtHIRAWrD1yRBbdc4yY/e6IljBrgfkBR1YVPbCcwxX9oz3L
+   wqDBMOJGUj2R608qLU4=
+Received: by s2.asa1.acemsd3.com id hlecb02lshk3 for <bruce.k.cosma@gmail.com>; Fri, 1 May 2020 03:34:08 +0000 (envelope-from <bounce-549600-425-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Day 5
+Date: Thu, 30 Apr 2020 22:34:08 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-20021654935eab98b0b0c573.70053546_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDI1ICwgbTQzOSAsIHM1Njk0
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-425
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-425-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=425&m=439&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200501033408.21408.560126639.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-20021654935eab98b0b0c573.70053546_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public. *This is not legal advice. I do
+not offer legal advice. If you need legal advice seek legal counsel.
+Please be advised, the information shared in this guide is for
+educational and  informational purposes only.* 
+
+Dispute 21 - Day 5:
+
+Defeating Debt Collectors Pt. I
+
+Bruce, don't let collection accounts stress you out. Simply put,
+most debt collectors are powerless! They only have the power to scare
+you over the telephone. You can stop their telephone calls and get them
+off of your client's credit reports with the proper letter, as I will
+show you in 
+
+**today's lesson**. This breakdown of information is for you to
+understand the different ways debt collectors, junk debt buyers and
+collection attorneys can come at you or your clients and why the legal
+letter writing I will show you how to do will work in each situation. 
+
+When a new collection hits the credit report or a debt collector begins
+to contact a client over a debt, as the credit specialist you become
+their advisor. Your client may often seek advice from you in dealing
+with the constant phone calls they are receiving or you may want to
+educate your client on what to do when faced with a call by a debt
+collector. 
+
+**Within this lesson** we will cover how to handle being contacted by a
+debt collector, consumer rights, and 
+
+**5 ways defeat debt** collectors and get collection accounts removed
+from the credit report. 
+
+**No.1**
+
+**Force The Debt Collector to Communicate with You In Writing.**
+
+****
+There is No Need to Communicate with Debt Collectors over the Telephone.
+Debt collectors rely on your guilt about your debt and your inherent
+honesty to do their job FOR them. On the phone they know exactly what to
+say to push your buttons and get you to admit you owe the debt. Their
+collection psychology is to play on the guilt and fears of responsible
+debtors. Your collection psychology should be, "Be Difficult to Deal
+with!" 
+
+When educating your client's about debt collection calls, it's
+important to let them know that the best thing to do is not to answer
+the phone when a collector calls, or hang up when they identify
+themselves. There is no need for telephone communications with anyone
+collecting a debt. There is no legal substance to these telephone
+communications. 
+
+To pursue you legally, debt collectors must notify you in writing.
+Therefore, You do not have to talk to them. I always warn my clients
+that Debt Collectors will lie and say anything to scare them into
+talking or making even the slightest admission of guilt and turning it
+around in the collector's favor. If they must allow curiosity to get the
+better of them, advise your client to answer the phone, then immediately
+get the name, location and number of the collection firm calling. Next,
+tell them, "I do not discuss my personal financial affairs over the
+telephone with someone I do not know and I request that any further
+communication is done in writing." Then, advise them to immediately hang
+up the phone.
+
+**Why These Instructions Are Important**
+
+The best time to catch a debtor off guard and the hardest time for him
+or her to deny and dispute the debt is on the first "ambush" call. This
+call usually happens before you receive your mini-Miranda notice from
+this new collection agency telling you of your right to dispute the
+debt. The ambush call usually starts with the big lie, "I am calling to
+let you know that your court summons for [this debt] is going in the
+mail in a few days. This is your last chance to pay the debt or set up a
+payment plan with us." Now they've got you scared. And, now they get
+you to admit to the debt and to share personal information, your SSI
+number, maybe even your bank account number so they can quickly receive
+a partial payment from you to make the phony lawsuit go away. 
+
+This approach has frightened many consumers who have experienced it. The
+most important thing to remember and advise your client do is deny and
+dispute. 
+A supposed call from a "debt collector" is just a voice on the other end
+of the line, who could be anyone. They have no legal standing. Your
+client's personal finances are none of their business. At this point,
+they have NOT received a mini-Miranda notice from the collection firm
+because if you remember from an earlier lesson, the collection agency is
+required to send notice within 5 days of the initial contact and that
+notice is only valid when it is in writing. This is why it is important
+to advise the client, when a debt collector calls, to tell them they do
+not discuss their personal finances over the phone with unknown
+strangers. Then, hang up. Do not give them any information. Always force
+the collector to communicate in writing.
+
+**No.2**
+
+**Debt Validation Letters**
+
+****
+The debt validation letter is the strongest weapon you have against debt
+collectors, if you use it properly. 
+
+Fair Debt Collection Practices Act, Section 809(b), Validation of Debts
+(b) If the consumer notifies the debt collector in writing within the
+thirty-day period described in subsection (a) that the debt, or any
+portion thereof, is disputed, or that the consumer requests the name and
+address of the original creditor, the debt collector shall cease
+collection of the debt, or any disputed portion thereof, until the debt
+collector obtains verification of the debt or any copy of a judgment, or
+the name and address of the original creditor . . . 
+
+The Fair Debt Collection Practices Act's Validation of Debts applies
+to communications from all entities trying to collect a debt including
+collection agencies, collection attorneys and junk debt buyers. The
+Federal Trade Commission has interpreted the FDCPA Validation of Debts
+section to mean debt collectors must provide some proof from the
+original creditor as to the identity of the consumer and the amount
+allegedly owed. In an earlier lesson you received a resource of a letter
+from the FTC communicating this interpretation; you can view it again
+here. 
+
+Most debt collectors stop communicating with a consumer after they
+receive a debt validation letter (DV) from that alleged debtor. If they
+do not validate, then they cannot legally communicate with you. They
+also cannot put a negative listing on the credit report. 
+
+To get the most out of the debt validation process:
+
+1) Send debt validation letters Certified Mail Return Receipt (CMRR). To
+cut cost, you can opt to have the receipt delivered electronically by
+using the tracking number to log in and see when the letter was
+received.
+
+2) Always reply to the first mini-Miranda from a new collector or junk
+debt buyer within 30 days of receipt of it. 
+
+3) Always file the mini-Miranda and the DV response to maintain good
+records of your contacts with debt collectors. 
+
+4) Always check the client's state's database of licensed debt
+collectors. If a collector is not on it, point out their violation in
+your DV letter.
+
+5) Always reply with another DV letter to any attempt to validate the
+debt stating that the attempt is insufficient. (A sample follow-up
+letter will be included in an upcoming lesson.) 
+
+6) Be sure to tell the collector their claim is denied and disputed and
+to cease all collection activities including putting negative listings
+on your credit reports. 
+
+7) Demand a lot of information in your DV letter (see letter below).
+Another goal of debt validation is to see what the collector has for
+documentation on your debt. 
+
+8) Always demand complete documentation; your contract with them and a
+full accounting of all the payments, charges, interest and penalties
+that go into the total alleged amount owed, a sworn affidavit supporting
+that documentation, as well as proof of ownership of the debt if it is a
+junk debt buyer coming after you. 
+
+What follows is a letter I have used to great success. I have used red
+ink to explain why each component in the letter is important.
+
+May 17, 20XX 
+
+CMRR - 7005 1820 0004 1693 5177 
+
+[Substitute the red parts with your particular information] 
+
+[This is the absolute proof positive that you sent the letter certified
+mail return receipt requested. This 20 digit number comes off the
+receipt filled out and mailed by you that gets signed upon delivery.
+Otherwise, a collection agency or collection attorney could say that the
+receipt was for something else you sent them, and not the DV letter.] 
+
+Collection Agency, Junk Debt Buyer or Collection Law Firm Name 
+Street Address 
+City, State Zip Code 
+
+Re: Acct. # 212990 
+
+[You should include this to be sure they record your DV letter properly.
+This is the debt collector's account number for your credit card debt.
+Usually it is not the same number as the credit card account number. To
+avoid subtly admitting to the debt, you do not want to use the credit
+card number, if they do not use it in their communication to you.] 
+
+To Whom It May Concern, 
+
+Please note my correct address at the head and foot of this letter. 
+
+[If you have changed your address and the mini-Miranda was forwarded
+from your old address, you want to make sure you are on record informing
+them of your correct address. Otherwise they COULD eventually serve you
+a summons at your old address, which you would not receive. Then they
+could pursue a default judgment against you without your knowledge.] 
+
+This letter is being sent to you in response to your letter received
+April 29, 20XX. 
+
+This is a notice that your claim is denied and disputed. 
+
+Under the Fair Debt Collections Practices Act (FDCPA), I have the right
+to request validation of the debt you say I owe.
+
+I am requesting proof that: 
+
+1) I am indeed the party you are asking to pay this debt; 
+
+2) You possess original creditor documentation/business records with a
+full accounting using Generally Accepted Accounting Principles (charges,
+payments, interest, etc.) of the amount of this debt that can be
+presented as evidence. Also explain and show me how you calculated what
+you say I owe;
+  
+3) Your claim is legally supported by a sworn affidavit from someone
+with personal knowledge of these business records; 
+
+4) There is some valid contractual obligation which is binding on me to
+pay this debt, and 
+
+5) You, as a debt collection agency 
+
+**[or collection law firm or junk debt buyer],** produce documentation
+from the alleged 
+
+**[Always use the word alleged when referring to the debtor, creditor or
+the debt.]**creditor authorizing you to contact me and pursue the
+collection of an alleged debt. [If it is a Junk Debt Buyer or a
+collector for a JDB, that you or your client has ownership of this
+debt.] 
+
+**[These five points are to illustrate you are aware of your rights and
+know what to demand for documentation to dissuade them from pursuing you
+in court or an arbitration forum.]** 
+
+Your legal staff will agree that compliance with this request is
+required under the laws of [your state] and Federal Statutes. 
+
+Also be advised that this letter is not only a formal dispute, but a
+request that you stop any and all collection activities pursuant to the
+Fair Debt Collection Practices Act.
+
+**[This is very important to include. After CMRRR receipt of this they
+will be in violation of the FDCPA if they contact you again except to
+validate. Each contact will make them liable for a $1000 penalty award
+under the FDCPA. So they either pursue you in court or, more wisely,
+play the numbers game with other less well-prepared alleged debtors.]**
+
+As you can see, the debt validation letter is an extensive request of
+specific documentation and information that a collection agency,
+collection law firm or junk debt buyer must provide in order to properly
+validate and legally collect on a debt. Also, as number 5 outlines, the
+request for the type of information and details you request will be
+dependent upon what type of Collection Company you and your client are
+dealing with. 
+
+I always like to make the disclaimer that no letter alone gets a
+deletion. The only thing that gets deletions is the law. For this
+reason, the foundation of your letters should constitute the basis of
+consumer law. The letter above is written based on the interpretation of
+the FDCPA and what a consumer has the right to request from a debt
+collector to sufficiently validate a debt. I do believe that this is the
+reason it has been highly successful over the years in folding many
+collection companies into ceasing the collection of debt and if you
+choose to add this weapon to your letter library I hope that if brings
+just as much success for you.
+
+In the next lesson...
+
+Did you know that credit card debt and the collection of a debt by a
+credit card bank is different from other types of debt and requires a
+slightly different approach and request. If you didn't, you will want
+to tune in to the next lesson where we will discuss Credit Card Debt
+Collection and Validation.
+
+Copyright © 2019 EduCredit Solutions. All rights reserved. 
+
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online
+www.educreditsolutions.com  
+
+Work With Elle
+For information regarding 1-on-1 Coaching, Staff Training and Services,
+you can schedule a discovery call at bit.ly/discoverycallwithelle
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=425&m=439&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-20021654935eab98b0b0c573.70053546_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;}=0A/*-------------------------------------------------------=
+------------------*\ Product Widget \*-------------------------------------=
+------------------------------------*/ .td_product > div { float: none !imp=
+ortant; width: 100% !important; margin-bottom: 20px !important; } .td_produ=
+ct > div img { width: 75% !important; } /* Default social icons */ *[class]=
+.ac-social-icon-16 {width:16px !important; height:16px !important;} *[class=
+].ac-social-icon-24 {width:24px !important; height:24px !important;} *[clas=
+s].ac-social-icon-28 {width:28px !important; height:28px !important;} *[cla=
+ss].__ac_social_icons { margin-right: 0px !important; } }=0A</style><style =
+data-ac-keep=3D"true"> @media only screen and (max-width: 320px) { #layout-=
+row3201 img { width: 100% !important; height: auto !important; max-width: 3=
+20px !important; } #layout-row3205 img { width: 100% !important; height: au=
+to !important; max-width: 320px !important; } div.divbody { padding: 20px !=
+important; } .td_rss .rss-item img.iphone_large_image { width: auto !import=
+ant; } u + .body { display: table !important; width: 100vw !important; min-=
+width: 100vw !important; } u + .body table { display: table !important; wid=
+th: 100% !important; min-width: 100% !important; } u + .body td { display: =
+block !important; width: 100% !important; min-width: 100% !important; } u +=
+ .body img { display: inline-block !important; margin: auto !important; wid=
+th: auto !important; vertical-align: bottom !important; } u + .body center =
+{ display: block !important; margin: auto !important; width: 100% !importan=
+t; min-width: 100% !important; text-align: center !important; } u +=0A.body=
+ table._ac_social_table, u + .body table._ac_social_table td, u + .body tab=
+le._ac_social_table div, u + .body table._ac_social_table a { display: inli=
+ne-block !important; margin: auto !important; width: auto !important; min-w=
+idth: auto !important; text-align: center !important; } u + .body table._ac=
+_social_table img { display: inline-block !important; margin: auto !importa=
+nt; width: 32px !important; min-width: 32px !important; max-width: 32px !im=
+portant; }=0A}=0A@media only screen and (max-width: 375px) { #layout-row320=
+1 img { width: 100% !important; height: auto !important; max-width: 375px !=
+important; } #layout-row3205 img { width: 100% !important; height: auto !im=
+portant; max-width: 375px !important; } div.divbody { padding: 20px !import=
+ant; } .td_rss .rss-item img.iphone_large_image { width: auto !important; }=
+ u + .body { display: table !important; width: 100vw !important; min-width:=
+ 100vw !important; } u + .body table { display: table !important; width: 10=
+0% !important; min-width: 100% !important; } u + .body td { display: block =
+!important; width: 100% !important; min-width: 100% !important; } u + .body=
+ img { display: inline-block !important; margin: auto !important; width: au=
+to !important; vertical-align: bottom !important; } u + .body center { disp=
+lay: block !important; margin: auto !important; width: 100% !important; min=
+-width: 100% !important; text-align: center !important; } u + .body table._=
+ac_social_table, u +=0A.body table._ac_social_table td, u + .body table._ac=
+_social_table div, u + .body table._ac_social_table a { display: inline-blo=
+ck !important; margin: auto !important; width: auto !important; min-width: =
+auto !important; text-align: center !important; } u + .body table._ac_socia=
+l_table img { display: inline-block !important; margin: auto !important; wi=
+dth: 32px !important; min-width: 32px !important; max-width: 32px !importan=
+t; }=0A}=0A@media only screen and (max-width: 414px) { #layout-row3201 img =
+{ width: 100% !important; height: auto !important; max-width: 414px !import=
+ant; } #layout-row3205 img { width: 100% !important; height: auto !importan=
+t; max-width: 414px !important; } div.divbody { padding: 20px !important; }=
+ .td_rss .rss-item img.iphone_large_image { width: auto !important; } u + .=
+body { display: table !important; width: 100vw !important; min-width: 100vw=
+ !important; } u + .body table { display: table !important; width: 100% !im=
+portant; min-width: 100% !important; } u + .body td { display: block !impor=
+tant; width: 100% !important; min-width: 100% !important; } u + .body img {=
+ display: inline-block !important; margin: auto !important; width: auto !im=
+portant; vertical-align: bottom !important; } u + .body center { display: b=
+lock !important; margin: auto !important; width: 100% !important; min-width=
+: 100% !important; text-align: center !important; } u + .body table._ac_soc=
+ial_table, u +=0A.body table._ac_social_table td, u + .body table._ac_socia=
+l_table div, u + .body table._ac_social_table a { display: inline-block !im=
+portant; margin: auto !important; width: auto !important; min-width: auto !=
+important; text-align: center !important; } u + .body table._ac_social_tabl=
+e img { display: inline-block !important; margin: auto !important; width: 3=
+2px !important; min-width: 32px !important; max-width: 32px !important; }=
+=0A}=0A@media only screen and (max-width: 667px) { #layout-row3201 img { wi=
+dth: 100% !important; height: auto !important; max-width: 648px !important;=
+ } #layout-row3205 img { width: 100% !important; height: auto !important; m=
+ax-width: 667px !important; } div.divbody { padding: 20px !important; } .td=
+_rss .rss-item img.iphone_large_image { width: auto !important; } u + .body=
+ { display: table !important; width: 100vw !important; min-width: 100vw !im=
+portant; } u + .body table { display: table !important; width: 100% !import=
+ant; min-width: 100% !important; } u + .body td { display: block !important=
+; width: 100% !important; min-width: 100% !important; } u + .body img { dis=
+play: inline-block !important; margin: auto !important; width: auto !import=
+ant; vertical-align: bottom !important; } u + .body center { display: block=
+ !important; margin: auto !important; width: 100% !important; min-width: 10=
+0% !important; text-align: center !important; } u + .body table._ac_social_=
+table, u +=0A.body table._ac_social_table td, u + .body table._ac_social_ta=
+ble div, u + .body table._ac_social_table a { display: inline-block !import=
+ant; margin: auto !important; width: auto !important; min-width: auto !impo=
+rtant; text-align: center !important; } u + .body table._ac_social_table im=
+g { display: inline-block !important; margin: auto !important; width: 32px =
+!important; min-width: 32px !important; max-width: 32px !important; }=0A} <=
+/style><!--[if !mso]><!-- webfonts --><!--<![endif]--><!--[if lt mso 12]> <=
+![endif]--></head><body id=3D"ac-designer" class=3D"body" style=3D"font-fam=
+ily: Arial; line-height: 1.1; margin: 0px; background-color: #ffffff; width=
+: 100%; text-align: center;">=09=09<div style=3D"display:none; padding:0; h=
+eight:1px; font-size:1px; background-color:inherit !important; color:inheri=
+t !important; line-height:1px; mso-hide:all;">=0A=09=09=09The Debt Validati=
+on Letter=0A=09=09</div>=0A<div class=3D"divbody" style=3D"margin: 0px; out=
+line: none; padding: 0px; color: #000000; font-family: arial; line-height: =
+1.1; width: 100%; background-color: #ffffff; background: #ffffff; text-alig=
+n: center;"><table class=3D"template-table" border=3D"0" cellpadding=3D"0" =
+cellspacing=3D"0" width=3D"100%" align=3D"left" style=3D"font-size: 14px; m=
+in-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-co=
+lor: #ffffff; background: #ffffff;"><tr><td align=3D"center" valign=3D"top"=
+ width=3D"100%"><table class=3D"template-table" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" width=3D"650" bgcolor=3D"#ffffff" style=3D"font-size:=
+ 14px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0pt; max-w=
+idth: 650px;"><tr><td id=3D"layout_table_01272291703899afbc97d03b02ef773001=
+61455c" valign=3D"top" align=3D"center" width=3D"650" style=3D""><table cel=
+lpadding=3D"0" cellspacing=3D"0" border=3D"0" class=3D"layout layout-table =
+root-table" width=3D"650" style=3D"font-size: 14px; min-width: 100%; mso-ta=
+ble-lspace: 0pt;=0Amso-table-rspace: 0pt;"><tr style=3D""><td id=3D"layout-=
+row-margin3201" valign=3D"top" style=3D"padding: 0px;"><table width=3D"100%=
+" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px=
+; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-col=
+lapse: initial !important;"><tr id=3D"layout-row3201" class=3D"layout layou=
+t-row widget _widget_picture style3201" align=3D"center" style=3D""><td id=
+=3D"layout-row-padding3201" valign=3D"top" style=3D"padding: 1px 1px 0px 1p=
+x;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" =
+style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table=
+-rspace: 0pt;"><tr><td class=3D"image-td" align=3D"center" valign=3D"top" w=
+idth=3D"648"><img src=3D"https://educreditsolutions.imgus11.com/public//97c=
+d1fff5424dd2b4faa8427193709b8.png?r=3D325343733" alt=3D"" width=3D"648" sty=
+le=3D"display: block; border: none; outline: none; width: 648px; opacity: 1=
+; max-width: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A<=
+/td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3200" valign=3D"to=
+p" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"=
+0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-l=
+space: 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><t=
+r id=3D"layout-row3200" class=3D"layout layout-row widget _widget_text styl=
+e3200" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-padding3200" v=
+align=3D"top" style=3D"padding: 20px 30px 20px 30px;"><table width=3D"100%"=
+ border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px;=
+ min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=
+=3D"text_div2968" class=3D"td_text td_block" valign=3D"top" align=3D"left" =
+width=3D"590" style=3D"line-height: 112%; margin: 0; outline: none; padding=
+: 0; color: inherit; font-size: 12px; font-weight: inherit; line-height: 1.=
+12; text-decoration: inherit; font-family: Arial; mso-line-height-rule: exa=
+ctly;"> <div style=3D"line-height: 112%; margin: 0; outline: none;=0Apaddin=
+g: 0; mso-line-height-rule: exactly; line-height: 1.12;" class=3D"" data-li=
+ne-height=3D"1.12"> <div style=3D"margin: 0; outline: none; padding: 0; tex=
+t-align: left;" class=3D""><div style=3D"margin: 0; outline: none; padding:=
+ 0; text-align: left;" class=3D""><i style=3D"margin: 0; outline: none; pad=
+ding: 0; mso-bidi-font-style: normal;" class=3D""><span style=3D"color: inh=
+erit; font-size: inherit; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit; font-family: arial;" class=3D""><span style=3D"color: =
+#999999; font-size: inherit; font-weight: bold; line-height: inherit; text-=
+decoration: inherit;" class=3D"">Objective: This 21 day email course is des=
+igned for the student to gain a clear understanding of the credit repair pr=
+ocess so that they can approach the client file and create an action plan w=
+ith certainty. The content of this course is also designed to help the stud=
+ent effectively communicate credit information so that as a business owner =
+they can feel=0Acomfortable and confident when speaking about the subject o=
+f credit to leads, clients, and the general public. <i style=3D"margin: 0; =
+outline: none; padding: 0; font-style: italic; font-family: arial; color: #=
+999999; font-size: 12px;"><span style=3D"color: #999999; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; fon=
+t-family: arial;">*<span style=3D"color: #999999; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit; font-famil=
+y: arial;">This is not legal advice. I do not offer legal advice. If you ne=
+ed legal advice seek legal counsel. Please be advised, the information shar=
+ed in this guide is for educational and =C2=A0informational purposes only.*=
+</span></span></i> </span><span style=3D"color: inherit; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; mso=
+-spacerun: yes;" class=3D""> </span></span></i><br class=3D""><div style=3D=
+"margin: 0; outline: none; padding: 0;=0Atext-align: center;" class=3D""><s=
+pan style=3D"color: #2a65c5; font-size: 28.6667px; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;" class=3D=
+""><br class=3D"">Dispute 21 - Day 5:</span></div>=0A<br class=3D""><div st=
+yle=3D"margin: 0; outline: none; padding: 0; text-align: center;" class=3D"=
+"><span style=3D"color: #2a65c5; font-size: 28.6667px; font-weight: inherit=
+; line-height: inherit; text-decoration: inherit;">Defeating Debt Collector=
+s Pt. I</span></div>=0A<br class=3D""><span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit; font-family: arial;" class=3D""> </span><br class=3D""><br class=
+=3D""><span style=3D"color: inherit; font-size: 19px; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;" class=3D""> <span style=
+=3D"color: #000000; font-size: inherit; font-weight: 400; line-height: inhe=
+rit; text-decoration: inherit; font-family: arial; font-style: normal;">Bru=
+ce, don't let collection accounts stress you out. Simply put, most debt col=
+lectors are powerless! </span>They only have the power to scare you over th=
+e telephone. You can stop their telephone calls and get them off of your cl=
+ient=E2=80=99s credit reports with the proper letter, as I will show you in=
+ <b style=3D"margin: 0; outline: none; padding: 0;" class=3D"">today=
+=E2=80=99s lesson</b>. This breakdown of information is for you to understa=
+nd the different ways debt collectors, junk debt buyers and=0Acollection at=
+torneys can come at you or your clients and why the legal letter writing I =
+will show you how to do will work in each situation. <br class=3D""><br cla=
+ss=3D""> When a new collection hits the credit report or a debt collector b=
+egins to contact a client over a debt, as the credit specialist you become =
+their advisor. Your client may often seek advice from you in dealing with t=
+he constant phone calls they are receiving or you may want to educate your =
+client on what to do when faced with a call by a debt collector. <b style=
+=3D"margin: 0; outline: none; padding: 0;" class=3D"">Within this lesson</b=
+> we will cover how to handle being contacted by a debt collector, consumer=
+ rights, and <b style=3D"margin: 0; outline: none; padding: 0;" class=3D"">=
+5 ways defeat debt</b> collectors and get collection accounts removed from =
+the credit report. <br class=3D""></span><b style=3D"margin: 0; outline: no=
+ne; padding: 0; font-size: 19px;" class=3D""><br class=3D""><div style=3D"m=
+argin: 0;=0Aoutline: none; padding: 0; text-align: center;"><b class=3D"" s=
+tyle=3D"margin: 0; outline: none; padding: 0; text-decoration: inherit;">No=
+.1 </b></div>=0A</b><div style=3D"margin: 0; outline: none; padding: 0; fon=
+t-size: 19px; text-align: center;"><b class=3D"" style=3D"margin: 0; outlin=
+e: none; padding: 0; color: inherit; text-decoration: inherit;">Force The D=
+ebt Collector to Communicate with You In Writing.</b></div>=0A<b style=3D"m=
+argin: 0; outline: none; padding: 0; font-size: 15px;" class=3D""> </b><br =
+class=3D""><span style=3D"color: inherit; font-size: 19px; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;" class=3D""> There is=
+ No Need to Communicate with Debt Collectors over the Telephone. Debt colle=
+ctors rely on your guilt about your debt and your inherent honesty to do th=
+eir job FOR them. On the phone they know exactly what to say to push your b=
+uttons and get you to admit you owe the debt. Their collection psychology i=
+s to play on the guilt and fears of responsible debtors. Your collection ps=
+ychology should be, "Be Difficult to Deal with!" <br class=3D""><br class=
+=3D""> When educating your client=E2=80=99s about debt collection calls, it=
+=E2=80=99s important to let them know that the best thing to do is not to a=
+nswer the phone when a collector calls, or hang up when they identify thems=
+elves. There is no need for telephone communications with anyone collecting=
+ a debt. There is no=0Alegal substance to these telephone communications. <=
+br class=3D""><br class=3D"">To pursue you legally, debt collectors must no=
+tify you in writing. Therefore, You do not have to talk to them. I always w=
+arn my clients that Debt Collectors will lie and say anything to scare them=
+ into talking or making even the slightest admission of guilt and turning i=
+t around in the collector's favor. If they must allow curiosity to get the =
+better of them, advise your client to answer the phone, then immediately ge=
+t the name, location and number of the collection firm calling. Next, tell =
+them, "I do not discuss my personal financial affairs over the telephone wi=
+th someone I do not know and I request that any further communication is do=
+ne in writing." Then, advise them to immediately hang up the phone.<br clas=
+s=3D""><br class=3D""></span><div style=3D"margin: 0; outline: none; paddin=
+g: 0; text-align: left; font-size: 19px;"><b class=3D"" style=3D"margin: 0;=
+ outline: none; padding: 0; color:=0Ainherit; text-decoration: underline;">=
+Why These Instructions Are Important<br></b></div>=0A <div style=3D"margin:=
+ 0; outline: none; padding: 0; text-align: left; font-size: 19px;">The best=
+ time to catch a debtor off guard and the hardest time for him or her to de=
+ny and dispute the debt is on the first "ambush" call. This call usually ha=
+ppens before you receive your mini-Miranda notice from this new collection =
+agency telling you of your right to dispute the debt. The ambush call usual=
+ly starts with the big lie, "I am calling to let you know that your court s=
+ummons for [this debt] is going in the mail in a few days. This is your las=
+t chance to pay the debt or set up a payment plan with us." Now they=
+=E2=80=99ve got you scared. And, now they get you to admit to the debt and =
+to share personal information, your SSI number, maybe even your bank accoun=
+t number so they can quickly receive a partial payment from you to make the=
+ phony lawsuit go away. <br></div>=0A<span style=3D"color: inherit; font-si=
+ze: 19px; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit;" class=3D""><br class=3D""> This approach has frightened many consumer=
+s who have experienced it. The most important thing to remember and advise =
+your client do is deny and dispute. <br class=3D""> A supposed call from a =
+"debt collector" is just a voice on the other end of the line, who could be=
+ anyone. They have no legal standing. Your client=E2=80=99s personal financ=
+es are none of their business. At this point, they have NOT received a mini=
+-Miranda notice from the collection firm because if you remember from an ea=
+rlier lesson, the collection agency is required to send notice within 5 day=
+s of the initial contact and that notice is only valid when it is in writin=
+g. This is why it is important to advise the client, when a debt collector =
+calls, to tell them they do not discuss their personal finances over the ph=
+one with unknown strangers. Then, hang up. Do not give=0Athem any informati=
+on. Always force the collector to communicate in writing.<br class=3D""></s=
+pan><b style=3D"margin: 0; outline: none; padding: 0; font-size: 21px;" cla=
+ss=3D""><br class=3D""><div style=3D"margin: 0; outline: none; padding: 0; =
+text-align: center;"><b class=3D"" style=3D"margin: 0; outline: none; paddi=
+ng: 0; text-decoration: inherit;">No.2</b></div>=0A</b><div style=3D"margin=
+: 0; outline: none; padding: 0; font-size: 21px; text-align: center;"><b cl=
+ass=3D"" style=3D"margin: 0; outline: none; padding: 0; color: inherit; tex=
+t-decoration: inherit;">Debt Validation Letters </b></div>=0A<b style=3D"ma=
+rgin: 0; outline: none; padding: 0; font-size: 15px;" class=3D""> </b><br c=
+lass=3D""><span style=3D"color: inherit; font-size: 19px; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;" class=3D""> The debt =
+validation letter is the strongest weapon you have against debt collectors,=
+ if you use it properly. <br><br class=3D""> Fair Debt Collection Practices=
+ Act, Section 809(b), Validation of Debts (b) If the consumer notifies the =
+debt collector in writing within the thirty-day period described in subsect=
+ion (a) that the debt, or any portion thereof, is disputed, or that the con=
+sumer requests the name and address of the original creditor, the debt coll=
+ector shall cease collection of the debt, or any disputed portion thereof, =
+until the debt collector obtains verification of the debt or any copy of a =
+judgment, or the name and address of the original creditor . . . <br class=
+=3D""><br>The Fair Debt Collection Practices Act=E2=80=99s Validation of De=
+bts applies=0Ato communications from all entities trying to collect a debt =
+including collection agencies, collection attorneys and junk debt buyers. T=
+he Federal Trade Commission has interpreted the FDCPA Validation of Debts s=
+ection to mean debt collectors must provide some proof from the original cr=
+editor as to the identity of the consumer and the amount allegedly owed. In=
+ an earlier lesson you received a resource of a letter from the FTC communi=
+cating this interpretation; you can view it again here. <br class=3D""><br>=
+Most debt collectors stop communicating with a consumer after they receive =
+a debt validation letter (DV) from that alleged debtor. If they do not vali=
+date, then they cannot legally communicate with you. They also cannot put a=
+ negative listing on the credit report. <br class=3D""><br><span style=3D"c=
+olor: inherit; font-size: inherit; font-weight: bold; line-height: inherit;=
+ text-decoration: inherit;" class=3D"">To get the most out of the debt vali=
+dation process:</span><br=0Aclass=3D"" style=3D"font-weight: bold;"><br>1) =
+Send debt validation letters Certified Mail Return Receipt (CMRR). To cut c=
+ost, you can opt to have the receipt delivered electronically by using the =
+tracking number to log in and see when the letter was received.<br><br clas=
+s=3D""> 2) Always reply to the first mini-Miranda from a new collector or j=
+unk debt buyer within 30 days of receipt of it. <br><br class=3D""> 3) Alwa=
+ys file the mini-Miranda and the DV response to maintain good records of yo=
+ur contacts with debt collectors. <br><br class=3D""> 4) Always check the c=
+lient=E2=80=99s state=E2=80=99s database of licensed debt collectors. If a =
+collector is not on it, point out their violation in your DV letter.<br><br=
+ class=3D""> 5) Always reply with another DV letter to any attempt to valid=
+ate the debt stating that the attempt is insufficient. (A sample follow-up =
+letter will be included in an upcoming lesson.) <br><br class=3D""> 6) Be s=
+ure to tell the collector their claim is denied and=0Adisputed and to cease=
+ all collection activities including putting negative listings on your cred=
+it reports. <br><br class=3D""> 7) Demand a lot of information in your DV l=
+etter (see letter below). Another goal of debt validation is to see what th=
+e collector has for documentation on your debt. <br><br class=3D""> 8) Alwa=
+ys demand complete documentation; your contract with them and a full accoun=
+ting of all the payments, charges, interest and penalties that go into the =
+total alleged amount owed, a sworn affidavit supporting that documentation,=
+ as well as proof of ownership of the debt if it is a junk debt buyer comin=
+g after you. <br><br class=3D""> What follows is a letter I have used to gr=
+eat success. I have used red ink to explain why each component in the lette=
+r is important.</span><br class=3D""></div>=0A</div>=0A </div>=0A<!--[if (g=
+te mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=3D"true" data-ac-inline=3D=
+"false"> #text_div2968, #text_div2968 div { line-height: 112% !important; }=
+;=0A</style>=0A<![endif]--></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</tab=
+le>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3209" valig=
+n=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadd=
+ing=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-=
+table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !importa=
+nt;"><tr id=3D"layout-row3209" class=3D"layout layout-row widget _widget_te=
+xt style3209" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border3=
+209" valign=3D"top" style=3D"border-color: #0a0909; border-radius: 0px; bor=
+der-style: solid; border-width: 6px;"><table width=3D"100%" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%=
+; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-p=
+adding3209" valign=3D"top" style=3D"padding: 20px 30px 20px 30px;"><table w=
+idth=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"fon=
+t-size: 14px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt=
+;"><tr><td id=3D"text_div2977" class=3D"td_text td_block" valign=3D"top" al=
+ign=3D"left"=0Awidth=3D"578" style=3D"line-height: 112%; margin: 0; outline=
+: none; padding: 0; color: inherit; font-size: 12px; font-weight: inherit; =
+line-height: 1.12; text-decoration: inherit; font-family: Arial; mso-line-h=
+eight-rule: exactly;"> <div style=3D"line-height: 112%; margin: 0; outline:=
+ none; padding: 0; font-size: 16px; mso-line-height-rule: exactly; line-hei=
+ght: 1.12;" data-line-height=3D"1.12"> <div style=3D"margin: 0; outline: no=
+ne; padding: 0;"> <div style=3D"margin: 0; outline: none; padding: 0; color=
+: #ff0000;"> <span style=3D"color: #ff0000; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">May =
+17, 20XX <br></span><br><span style=3D"color: #000000; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;" clas=
+s=3D""> CMRR</span> =E2=80=93 <span style=3D"color: #ff0000; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+"><span style=3D"color: #ff0000; font-size:=0Ainherit; font-weight: inherit=
+; line-height: inherit; text-decoration: inherit;" class=3D"">7005 1820 000=
+4 1693 5177</span> <br></span><br><span style=3D"color: inherit; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit; font-style: italic;" class=3D"">[Substitute the red parts with your pa=
+rticular information] <br><br> [This is the absolute proof positive that yo=
+u sent the letter certified mail return receipt requested. This 20 digit nu=
+mber comes off the receipt filled out and mailed by you that gets signed up=
+on delivery. Otherwise, a collection agency or collection attorney could sa=
+y that the receipt was for something else you sent them, and not the DV let=
+ter.] </span><br><br><span style=3D"color: #ff0000; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;" class=
+=3D""><span style=3D"color: #ff0000; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit;">Collection=0AAgency, J=
+unk Debt Buyer or Collection Law Firm Name </span><br style=3D"color: #ff00=
+00;"><span style=3D"color: #ff0000; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;">Street Address </span><=
+br style=3D"color: #ff0000;"></span><span style=3D"color: #ff0000; font-siz=
+e: inherit; font-weight: inherit; line-height: inherit; text-decoration: in=
+herit;"><span style=3D"color: #ff0000; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;" class=3D"">City, Sta=
+te Zip Code</span> </span><br><br><span style=3D"color: #045fb4; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit;" class=3D""><span style=3D"color: #045fb4; font-size: inherit; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit;">Re</span>:<=
+/span> <span style=3D"color: #ff0000; font-size: inherit; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;" class=3D"">Acct. # 21=
+2990=0A<br></span><br><span style=3D"color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit; font-st=
+yle: italic;" class=3D""> [You should include this to be sure they record y=
+our DV letter properly. This is the debt collector=E2=80=99s account number=
+ for your credit card debt. Usually it is not the same number as the credit=
+ card account number. To avoid subtly admitting to the debt, you do not wan=
+t to use the credit card number, if they do not use it in their communicati=
+on to you.] </span><br><br><span style=3D"color: #045fb4; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;"><=
+span style=3D"color: #045fb4; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit;" class=3D"">To Whom It May Con=
+cern, </span><br style=3D"color: #045fb4;"></span><br><span style=3D"color:=
+ #045fb4; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;"=0Aclass=3D"">Please note my correct address at th=
+e head and foot of this letter. <br></span><br><span style=3D"color: inheri=
+t; font-size: inherit; font-weight: inherit; line-height: inherit; text-dec=
+oration: inherit; font-style: italic;" class=3D"">[If you have changed your=
+ address and the mini-Miranda was forwarded from your old address, you want=
+ to make sure you are on record informing them of your correct address. Oth=
+erwise they COULD eventually serve you a summons at your old address, which=
+ you would not receive. Then they could pursue a default judgment against y=
+ou without your knowledge.] <br></span><br><span style=3D"color: #045fb4; f=
+ont-size: inherit; font-weight: inherit; line-height: inherit; text-decorat=
+ion: inherit;"><span style=3D"color: #045fb4; font-size: inherit; font-weig=
+ht: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">Th=
+is letter is being sent to you in response to your letter received</span> <=
+/span><span style=3D"color: #ff0000; font-size:=0Ainherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"><span style=3D"color=
+: #ff0000; font-size: inherit; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit;" class=3D"">April 29, 20XX.</span> <br></span><br=
+><span style=3D"color: #045fb4; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit;" class=3D""><span style=3D"c=
+olor: #045fb4; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit;">This is a notice that your claim is denied a=
+nd disputed. </span><br style=3D"color: #045fb4;"><span style=3D"color: #04=
+5fb4; font-size: inherit; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit;"><br style=3D"color: #045fb4;">Under the Fair Debt Col=
+lections Practices Act (FDCPA), I have the right to request validation of t=
+he debt you say I owe.</span><br style=3D"color: #045fb4;"><span style=3D"c=
+olor: #045fb4; font-size: inherit; font-weight: inherit; line-height:=0Ainh=
+erit; text-decoration: inherit;"><br style=3D"color: #045fb4;">I am request=
+ing proof that: </span><br style=3D"color: #045fb4;"><span style=3D"color: =
+#045fb4; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit;"><br style=3D"color: #045fb4;">1) I am indeed the p=
+arty you are asking to pay this debt; <br style=3D"color: #045fb4;"></span>=
+<br style=3D"color: #045fb4;"><span style=3D"color: #045fb4; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+">2) You possess original creditor documentation/business records with a fu=
+ll accounting using Generally Accepted Accounting Principles (charges, paym=
+ents, interest, etc.) of the amount of this debt that can be presented as e=
+vidence. Also explain and show me how you calculated what you say I owe;<br=
+ style=3D"color: #045fb4;">=C2=A0=C2=A0</span><br style=3D"color: #045fb4;"=
+><span style=3D"color: #045fb4; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit;=0Atext-decoration: inherit;">3) Your claim is legally =
+supported by a sworn affidavit from someone with personal knowledge of thes=
+e business records; <br style=3D"color: #045fb4;"></span><br style=3D"color=
+: #045fb4;"><span style=3D"color: #045fb4; font-size: inherit; font-weight:=
+ inherit; line-height: inherit; text-decoration: inherit;">4) There is some=
+ valid contractual obligation which is binding on me to pay this debt, and =
+<br style=3D"color: #045fb4;"></span><br style=3D"color: #045fb4;"></span><=
+span style=3D"color: #045fb4; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit;"><span style=3D"color: #045fb4=
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;" class=3D"">5) You, as a debt collection agency</span> </s=
+pan><i style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-style: =
+normal;">[or collection law firm or junk debt buyer],</i> <span style=3D"co=
+lor: #045fb4; font-size: inherit; font-weight:=0Ainherit; line-height: inhe=
+rit; text-decoration: inherit;" class=3D""><span style=3D"color: #045fb4; f=
+ont-size: inherit; font-weight: inherit; line-height: inherit; text-decorat=
+ion: inherit;">produce documentation from the <span style=3D"color: #000000=
+; font-size: inherit; font-weight: bold; line-height: inherit; text-decorat=
+ion: inherit;" class=3D"">alleged</span></span><span style=3D"color: #00000=
+0; font-size: inherit; font-weight: inherit; line-height: inherit; text-dec=
+oration: inherit;" class=3D""> <i style=3D"margin: 0; outline: none; paddin=
+g: 0; color: #000000;">[Always use the word alleged when referring to the d=
+ebtor, creditor or the debt.] </i></span><span style=3D"color: #045fb4; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit;">creditor authorizing you to contact me and pursue the collecti=
+on of an alleged debt.</span></span> <span style=3D"color: inherit; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit;=0Atext-decoration:=
+ inherit; font-style: italic;" class=3D"">[If it is a Junk Debt Buyer or a =
+collector for a JDB, <span style=3D"color: #000000; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;">that yo=
+u or your client has ownership of this debt.</span>] </span><br><br><i styl=
+e=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-style: normal;">[T=
+hese five points are to illustrate you are aware of your rights and know wh=
+at to demand for documentation to dissuade them from pursuing you in court =
+or an arbitration forum.]</i> <br><br><span style=3D"color: #045fb4; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;" class=3D""><span style=3D"color: #045fb4; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;">Your le=
+gal staff will agree that compliance with this request is required under th=
+e laws of [your state] and Federal Statutes. <br style=3D"color:=0A#045fb4;=
+"></span><br style=3D"color: #045fb4;"></span><span style=3D"color: #045fb4=
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;"><span style=3D"color: #045fb4; font-size: inherit; font-w=
+eight: inherit; line-height: inherit; text-decoration: inherit;" class=3D""=
+>Also be advised that this letter is not only a formal dispute, but a reque=
+st that you stop any and all collection activities pursuant to the Fair Deb=
+t Collection Practices Act.</span><br style=3D"color: #045fb4;"></span><br>=
+<i style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-style: norm=
+al;">[This is very important to include. After CMRRR receipt of this they w=
+ill be in violation of the FDCPA if they contact you again except to valida=
+te. Each contact will make them liable for a $1000 penalty award under the =
+FDCPA. So they either pursue you in court or, more wisely, play the numbers=
+ game with other less well-prepared alleged debtors.]</i><br></div>=0A </di=
+v>=0A </div>=0A<!--[if (gte mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=
+=3D"true" data-ac-inline=3D"false"> #text_div2977, #text_div2977 div { line=
+-height: 112% !important; };=0A</style>=0A<![endif]--></td>=0A</tr>=0A</tab=
+le>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A<tr style=3D""><td id=3D"layout-row-margin3210" valign=3D"top" style=3D"=
+padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace: 0pt; =
+mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layo=
+ut-row3210" class=3D"layout layout-row widget _widget_text style3210" style=
+=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border3210" valign=3D"top"=
+ style=3D"border-color: #ffffff; border-radius: 0px; border-style: solid; b=
+order-width: 1px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace:=
+ 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-padding3210" valign=
+=3D"top" style=3D"padding: 20px 30px 20px 30px;"><table width=3D"100%" bord=
+er=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-=
+width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"t=
+ext_div2978" class=3D"td_text td_block" valign=3D"top" align=3D"left"=0Awid=
+th=3D"588" style=3D"line-height: 112%; margin: 0; outline: none; padding: 0=
+; color: inherit; font-size: 12px; font-weight: inherit; line-height: 1.12;=
+ text-decoration: inherit; font-family: Arial; mso-line-height-rule: exactl=
+y;"> <div style=3D"line-height: 112%; margin: 0; outline: none; padding: 0;=
+ font-size: 19px; mso-line-height-rule: exactly; line-height: 1.12;" data-l=
+ine-height=3D"1.12"> <div style=3D"margin: 0; outline: none; padding: 0;"> =
+<div style=3D"margin: 0; outline: none; padding: 0;"> As you can see, the d=
+ebt validation letter is an extensive request of specific documentation and=
+ information that a collection agency, collection law firm or junk debt buy=
+er must provide in order to properly validate and legally collect on a debt=
+. Also, as number 5 outlines, the request for the type of information and d=
+etails you request will be dependent upon what type of Collection Company y=
+ou and your client are dealing with. <br><b style=3D"margin: 0; outline: no=
+ne; padding: 0;=0Amso-bidi-font-weight: normal;"></b><br> I always like to =
+make the disclaimer that no letter alone gets a deletion. The only thing th=
+at gets deletions is the law. For this reason, the foundation of your lette=
+rs should constitute the basis of consumer law. The letter above is written=
+ based on the interpretation of the FDCPA and what a consumer has the right=
+ to request from a debt collector to sufficiently validate a debt. I do bel=
+ieve that this is the reason it has been highly successful over the years i=
+n folding many collection companies into ceasing the collection of debt and=
+ if you choose to add this weapon to your letter library I hope that if bri=
+ngs just as much success for you.<br><br><span style=3D"color: inherit; fon=
+t-size: inherit; font-weight: bold; line-height: inherit; text-decoration: =
+inherit;" class=3D"">In the next lesson=E2=80=A6</span><br><br>Did you know=
+ that credit card debt and the collection of a debt by a credit card bank i=
+s different from other types of=0Adebt and requires a slightly different ap=
+proach and request. If you didn=E2=80=99t, you will want to tune in to the =
+next lesson where we will discuss Credit Card Debt Collection and Validatio=
+n.<br></div>=0A </div>=0A </div>=0A<!--[if (gte mso 12)&(lte mso 15) ]>=0A<=
+style data-ac-keep=3D"true" data-ac-inline=3D"false"> #text_div2978, #text_=
+div2978 div { line-height: 112% !important; };=0A</style>=0A<![endif]--></t=
+d>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3211" valign=
+=3D"top" style=3D""><table width=3D"100%" border=3D"0" cellpadding=3D"0" ce=
+llspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspace=
+: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-row3211" class=3D"layout la=
+yout-row widget _widget_text " style=3D"margin: 0; padding: 0;"><td id=3D"l=
+ayout-row-padding3211" valign=3D"top"><table width=3D"100%" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%=
+; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div2979=
+" class=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"650" st=
+yle=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: 12p=
+x; font-weight: inherit; line-height: 1; text-decoration: inherit; font-fam=
+ily: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0; font-size=
+: 12px;" class=3D""><span style=3D"color: inherit; font-size: 12px; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">=
+ <div=0Astyle=3D"margin: 0; outline: none; padding: 0; text-align: center;"=
+ class=3D""><br><div style=3D"margin: 0; outline: none; padding: 0; text-al=
+ign: left;"><div style=3D"margin: 0; outline: none; padding: 0; text-align:=
+ center;">Copyright =C2=A9 2019 EduCredit Solutions. All rights reserved. <=
+/div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: cen=
+ter;">Services bought to you by Ellevation Coaching & Consulting</div>=0A</=
+div>=0A<br class=3D""></div>=0A<div style=3D"margin: 0; outline: none; padd=
+ing: 0; text-align: center;" class=3D""> <span style=3D"color: #000000; fon=
+t-size: 12px; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit; font-family: arial; font-style: normal;"><span style=3D"color: inh=
+erit; font-size: inherit; font-weight: bold; line-height: inherit; text-dec=
+oration: inherit;" class=3D"">Visit Us Online</span><br></span><a href=3D"h=
+ttps://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917=
+526f09&i=3D425A439A11A2321" data-ac-default-color=3D"1" style=3D"margin: 0;=
+ outline: none; padding: 0; color: #045fb4; text-decoration: underline; fon=
+t-family: arial; font-weight: 400; font-size: 12px; font-style: normal;" ta=
+rget=3D"_blank"><span style=3D"color: ; font-size: inherit; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit;">www.educreditsoluti=
+ons.com</span></a> <br><br class=3D""></div>=0A<div style=3D"margin: 0; out=
+line: none; padding: 0; text-align: center;" class=3D""><span style=3D"colo=
+r: inherit; font-size: inherit; font-weight: bold; line-height: inherit; te=
+xt-decoration: inherit;" class=3D"">Work With Elle</span><br>For informatio=
+n regarding 1-on-1 Coaching, Staff Training and Services, you can schedule =
+a discovery call at <a href=3D"https://educreditsolutions.acemlna.com/lt.ph=
+p?s=3Dda50c2422345422f9a0dc81917526f09&i=3D425A439A11A2318" data-ac-default=
+-color=3D"1" class=3D"" target=3D"_blank" style=3D"margin: 0; outline: none=
+; padding: 0; color: #045fb4; text-decoration: underline;"><span style=3D"c=
+olor: ; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;">bit.ly/discoverycallwithelle</span></a></div>=0A<di=
+v style=3D"margin: 0; outline: none; padding: 0; text-align: center;" class=
+=3D""><br class=3D""><span style=3D"color: inherit; font-size: inherit; fon=
+t-weight: bold; line-height: inherit; text-decoration: inherit;" class=3D""=
+>Contact Us</span><br class=3D""></div>=0A<div style=3D"margin: 0; outline:=
+ none; padding: 0; text-align: center;" class=3D""><a href=3D"mailto:suppor=
+t@educreditsolutions.com" data-ac-default-color=3D"1" class=3D"" style=3D"m=
+argin: 0; outline: none; padding: 0; color: ; text-decoration: underline;" =
+target=3D"_blank"><span style=3D"color: ; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit;">support@educredit=
+solutions.com</span></a></div>=0A<div style=3D"margin: 0; outline: none; pa=
+dding: 0; text-align: center;" class=3D""><br></div>=0A<div style=3D"margin=
+: 0; outline: none; padding: 0; text-align: center;" class=3D"">Direct: (22=
+5) 620-6202<br class=3D"">Toll-Free: 1-800-373-8491<br class=3D""></div>=0A=
+ </span></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td=
+>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3205" valign=3D"top" =
+style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" =
+cellspacing=3D"0" style=3D"font-size: 14px; min-width: 100%; mso-table-lspa=
+ce: 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><tr i=
+d=3D"layout-row3205" class=3D"layout layout-row widget _widget_picture styl=
+e3205" align=3D"center" style=3D""><td id=3D"layout-row-padding3205" valign=
+=3D"top" style=3D"padding: 20px 0 0 20px;"><table width=3D"100%" border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 14px; min-width:=
+ 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=3D"imag=
+e-td" align=3D"center" valign=3D"top" width=3D"630"><img src=3D"https://edu=
+creditsolutions.imgus11.com/public//2a0ea3f14572e3829345d5f92f330073.jpg?r=
+=3D884790228" alt=3D"" width=3D"176" style=3D"display: block; border: none;=
+ outline: none; width: 176px; opacity: 1; max-width: 100%;"></td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</div>=0A<img src=3D"https=
+://educreditsolutions.acemlna.com/lt.php?nl=3D11&c=3D425&m=3D439&s=3Dda50c2=
+422345422f9a0dc81917526f09&l=3Dopen" border=3D"0" width=3D"1" height=3D"1" =
+style=3D"display:block;width:1px!important;min-width:1px!important;max-widt=
+h:1px!important;height:1px!important;border:0;overflow:hidden;" /><br /><di=
+v id=3D"ac-footer" style=3D"clear:both;background-color:inherit;background:=
+inherit;min-width:100%;mso-table-lspace:0pt;mso-table-rspace:0pt;padding:20=
+px;color:#000000;font-size:11px;font-family:arial,helvetica,sans-serif;line=
+-height:140%;line-height:1.4;text-align:center;box-sizing:border-box;">=0A=
+=09<center>=0A=09=09Sent to: <span style=3D"font-size:11px;font-family:aria=
+l,helvetica,sans-serif;font-weight:normal;text-decoration:none;outline:none=
+;">bruce.k.cosma@gmail.com</span>=0A=09=09<br>=0A=09=09<br>=0A=09=09<a href=
+=3D"http://educreditsolutions.acemlna.com/proc.php?nl=3D11&c=3D425&m=3D439&=
+s=3Dda50c2422345422f9a0dc81917526f09&act=3Dunsub" style=3D"font-size:11px;f=
+ont-family:arial,helvetica,sans-serif;font-weight:bold;text-decoration:unde=
+rline;"><span style=3D"font-weight:bold;text-decoration:underline;">Unsubsc=
+ribe</span></a>=0A=09=09<br>=0A=09=09<br> EduCredit Solutions, 9618 Jeffers=
+on Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States=0A=09</ce=
+nter>=0A</div>=0A<br clear=3D"all" /></body>=0A</html>
+--_=_swift-20021654935eab98b0b0c573.70053546_=_--
+

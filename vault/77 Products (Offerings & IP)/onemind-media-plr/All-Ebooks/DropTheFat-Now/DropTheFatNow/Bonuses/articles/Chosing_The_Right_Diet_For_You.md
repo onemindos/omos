@@ -1,0 +1,25 @@
+# Title:
+
+Chosing The Right Diet For You
+
+Word Count:
+517
+
+Summary:
+There are so many different and varied diets floating around today that it can be quite difficult to make a decision regarding which one is right for you when you feel it�s time to lose weight. Some diets emphasize low fat while others insist low calories are the way to go. Still yet, other diet gurus are adamant that in order to meet your weight loss goals you must cut out all forms of carbohydrates.
+
+Keywords:
+Weight loss, Diet, Lose weight
+
+Article Body:
+There are so many different and varied diets floating around today that it can be quite difficult to make a decision regarding which one is right for you when you feel it�s time to lose weight. Some diets emphasize low fat while others insist low calories are the way to go. Still yet, other diet gurus are adamant that in order to meet your weight loss goals you must cut out all forms of carbohydrates. One diet seems to combine factors from at least two other well known diets with claims to produce an optimum fat burning weight loss program. Then there are the various other diets that have circulated around the world for years with numerous success stories such as the cabbage soup diet and the cider vinegar diet. Which diets really work and more importantly; which diet is right for you? 
+
+One of the most important factors you must consider when contemplating any diet plan is whether you will learn how to eat healthy and nutritionally sound through the plan. Unfortunately, a number of different diets that boast incredible results do so through nutritionally bankrupt methods. Often referred to as fad diets, these weight loss programs encourage you to indulge in eating habits that can do more harm than good. 
+
+Many weight loss programs promise almost instantaneous results and for awhile at least; it seems as though your weight loss dreams may have finally come true through the presence of this type of diet. Then the sad reality sets in. You realize there is no possible way you can stay on this diet for the rest of your life. This is an important factor to consider; because ideally you should be looking for a healthy weight loss and maintenance program not a diet. Although a very low-calorie, high or liquid diet or even a diet that only lasts for a few days may allow you to initially lose some weight, you will inevitably find that your weight loss problems recur when a vengeance at a later point. Instead of looking for a miracle cure, look for a weight loss program that can help you to achieve your goals on a permanent basis. 
+
+For those of us who would prefer to avoid exercise like the plague, any weight loss program that promises we can reach our goals without that dreaded E word is a lifesaver. Unfortunately, long term weight loss simply isn�t possible without taking part in a sensible exercise routine. Sad, but true. 
+
+When considering engaging in any weight loss program or diet, always ask yourself the following questions 1. Will I learn to take part in a healthy, nutritionally sound eating plan through this diet? 2. Is this a diet I can stick with long term? and 3. Does this diet combine sensible eating with moderate exercise? 
+
+When you find a diet or weight loss program that meets all of these conditions, you know that you have found the right diet for you. As with any diet, it�s always a good idea to check with your physician before engaging in any weight loss program.

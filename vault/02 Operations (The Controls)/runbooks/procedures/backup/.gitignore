@@ -1,0 +1,4 @@
+# Backup snapshots — local only, not committed to git
+*
+!README.md
+!.gitignore

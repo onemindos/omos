@@ -1,0 +1,22 @@
+# What You Should Know About Your Pregnancy Diet
+
+When it comes to pregnancy nutrition getting enough protein is key throughout your nine months of pregnancy. This will give you and the baby all you need for healthy development to occur. Protein is a vital building block of your eating plan during pregnancy because it provides all the amino acids necessary for your baby�s brain and cognitive development. 
+
+Protein is also important in curbing appetite and in evening out fluctuating blood sugar levels. You should make sure every meal including snacks contains some protein. There is some confusion about which protein types are best to seek out. Let�s have a look. 
+
+Organic Eggs
+Eggs have really come under pressure in the past few years. There�s been concern over cholesterol, but more recent research has shown that these concerns are unfounded and that eggs are actually an excellent source of Omega 3 fatty acids and protein.
+
+Organic Meat
+Meat is the most obvious protein source, especially chicken and beef. However, there have been some serious concerns relating to the hormones used in some meat, which is why it�s best to switch to organic meat. 
+
+Seafood
+There are some serious concerns relating to mercury in many different types of seafood. When you are pregnant, these concerns are even bigger as they can affect the fetus. While you should avoid seafood that is known to be high in mercury, other seafood is fine to eat such as shrimp, lobster, crab, anchovies, sardines, and salmon. However, you should not eat no more than two 6-ounce servings twice a week. 
+
+Soy Product
+Pregnant women should avoid soy products for a couple of reasons. Soy products have a lot of preservatives in them, which can be unsafe. You should avoid all preservatives. Soy has also been linked to the under-development of the sex organs of fetuses, which can have long reaching consequences for the child. It�s best to err on the side of caution and just avoid soy products.
+
+Nuts
+Nuts or nut butter is also a good source of protein especially if you aren�t fond of meat. They are readily available, convenient, and an excellent source of protein. They are also high in healthy fats, which can help with cognitive function and your brain development of your baby. It will also help you to feel fuller so you are less likely to overeat and become overweight. Look for raw nuts and organic whenever possible. 
+
+There you have it � some great information on what you should know about your pregnancy diet. Now relax, and enjoy the time before your baby arrives.

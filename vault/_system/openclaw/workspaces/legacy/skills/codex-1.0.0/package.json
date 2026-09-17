@@ -1,0 +1,88 @@
+{
+  "name": "codex-1.0.0",
+  "version": "1.0.0",
+  "description": "Native interface to the OneMind Codex knowledge vault",
+  "main": "index.js",
+  "skills": ["SKILL.md"],
+  "tools": [
+    {
+      "name": "codex_capture",
+      "description": "Create a new note in the codex with proper frontmatter and template",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "description": "Note title" },
+          "type": { "type": "string", "enum": ["note", "decision", "sop", "project", "person", "review", "log"], "description": "Document type" },
+          "domain": { "type": "string", "description": "Target domain code (e.g. '08' for Infrastructure). Omit to put in inbox." },
+          "content": { "type": "string", "description": "Note content (markdown)" },
+          "tags": { "type": "array", "items": { "type": "string" }, "description": "Tags in namespace/value format" }
+        },
+        "required": ["title", "type", "content"]
+      }
+    },
+    {
+      "name": "codex_search",
+      "description": "Search the codex using tiered loading (L0 folder scan → L1 README + file list → L2 full read)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "What to search for" },
+          "domain": { "type": "string", "description": "Domain code to search within (e.g. '08'). Omit to search all." },
+          "level": { "type": "string", "enum": ["L0", "L1", "L2", "auto"], "default": "auto", "description": "How deep to search. Auto starts shallow, deepens as needed." }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "codex_organize",
+      "description": "Move items from inbox to the correct 00-99 domain folder",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file": { "type": "string", "description": "Specific file path to organize (relative to codex root)" },
+          "target_domain": { "type": "string", "description": "Target domain code (e.g. '08')" },
+          "process_all": { "type": "boolean", "description": "Process all inbox items", "default": false }
+        }
+      }
+    },
+    {
+      "name": "codex_reflect",
+      "description": "Run a reflection cycle following _codex/skills/reflect.md",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cadence": { "type": "string", "enum": ["daily", "weekly", "monthly"], "description": "Reflection cadence" }
+        },
+        "required": ["cadence"]
+      }
+    },
+    {
+      "name": "codex_consolidate",
+      "description": "Merge scattered notes on a topic into one curated document",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "topic": { "type": "string", "description": "Topic to consolidate notes about" },
+          "source_files": { "type": "array", "items": { "type": "string" }, "description": "Specific files to consolidate (relative to codex root)" }
+        }
+      }
+    },
+    {
+      "name": "codex_health",
+      "description": "Audit vault health: inbox overflow, orphans, missing frontmatter, broken links",
+      "parameters": { "type": "object", "properties": {} }
+    },
+    {
+      "name": "codex_tree",
+      "description": "Show codex folder structure at a given depth",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "Subfolder to list (relative to codex root). Omit for root.", "default": "" },
+          "depth": { "type": "number", "description": "How many levels deep to show", "default": 2 }
+        }
+      }
+    }
+  ],
+  "dependencies": {}
+}

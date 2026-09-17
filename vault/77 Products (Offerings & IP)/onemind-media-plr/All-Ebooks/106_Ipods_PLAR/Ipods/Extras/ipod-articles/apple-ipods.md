@@ -1,0 +1,64 @@
+# Apple iPods on Parade
+
+At the time when everything is going digital and the technological world had been bombarded with digital this and digital that -- digital camera, digital camcorder, handhelds, digital celfone, laptops -- Apple Computers saw nothing much digital in audio technology, except maybe for the compact disc players. In 2000, Apple had decided to tap this unchartered market, with Jon Rubenstein as the Chief Engineer of the iPod project. A year after, released the first generation of Apple iPods.
+
+GENERATIONS OF APPLE iPODS
+
+Currently, Apply iPods come in three iPod names. Technical specifications of  these Apple Ipods differ either in storage capacities or in exterior design, weight, and size. As of February 7, 2006, the Apple iPods are classified into the following:
+
+- iPod (Original) (Capacity: 30 GB and 60 GB)
+- iPod Nano (Capacity: 1GB, 2GB, and 4 GB)
+- iPod Shuffle (Capacity: 512 MB and 1GB)
+
+Two years ago, in 2004, Apple released Ipod Mini (4 GB and 6 GB in various pastel colors). iPod Mini's marketing was discontinued in September 2005 and was replaced by iPod Nano, which was 62% thinner and has a color screen.
+
+Since Apple iPod's release in 2001, Apple has sold 42 million units. Which is why Apple iPods has been constantly re-engineered to cater the growing demands for faster, sleeker, and feature-packed Apple iPods.
+
+Apple iPods have evolved from monochrome (black and white) screen, the first generation, to its color screen with video player, the fifth generation of Apple iPods. 
+
+APPLE iPODS ON PARADE
+
+1. Apple iPods (Original)
+ 1.1. First Generation of Apple iPods
+
+Criticized for being costly for an initial release, the $399 First Generation Apple iPods were, nonetheless, instant hit. Apple iPods, after the October 29, 2001 release, dominated the digital audio player market, quickly overtaking sales of MP3 players (such as JukeBox and the NOMAD).
+
+The first generation of Apple iPods was designed with a mechanical scroll wheel that was divided  in four buttons that worked as Menu, Play or Pause, Back, and Forward. Apple iPods' scroll wheel has become a prominent design and feature of Apple iPods.
+
+  1.2 Second Generation of Apple iPods
+
+This was the first generation of an iPod that was compatible with Microsoft Windows OS. Although it also had the prominent scroll wheel feature,  the mechanical wheel of first generation was replaced by a touch-sensitive wheel, now know as teh "touch wheel."
+
+  1.3 Third Generation of Apple iPods
+
+The "ultrathin" Apple iPods were shown to the public on April 28, 2003. Apple CEO Steve Jobs introduced these slightly smaller, and with beveled edges iPod series to the public as the third generation line of Apple iPods. 
+
+Aside from being ultrathin, this was the first set of Apple iPods that had a built-in Hi-Speen USB connectivity.
+
+  1.4 Fourth Generation of Apple iPods
+
+If third generation Apple iPods were called ultrathin, I don't know what to call the fourth generation of Apple iPods which are slimmer than the ultrathin line. The sleek and trendy design had skyrocketed Apple's sales, and made the name iPod synonymous with digital audio player. 
+
+This generation of iPod was introduced with the monochrome screen; but after a few months, only, it was marketed with a color screen and thus named: iPod photos. 
+
+  1.5 Fifth Generation of Apple iPods
+
+Apple launched in October 12, 2005 the fifth generation and was quickly known to the public as video iPod or iPod video, although Apple refer to it as the Fifth Generation iPod
+
+2. iPod Nano
+
+2.1. iPod Mini
+
+Digital player manufacturers such as Creative and Digital Networks released digital audio players smaller than that of iPods sometime in 2003. Their Zen Micro and Rico Carbon products were starting to attract a number of supporters and this had prompted Apple to create their own line of small iPods; thus, the birth of iPod Mini. The 4 to 6 GB storage of iPod mini was made possible by using Microdrive hard drives. 
+
+2.2. iPod Nano
+
+On September 7, 2005 Apple announced that marketing of iPod minis would be discontinued to be replaced by a thinner and color screen iPod, which Apple named as "iPod Nano."
+
+3. iPod Shuffle
+
+Apple iPods were known for using Microdrive hard drives. Although most of iPod's competitors were already using flash memory for their digital audio player, Apple didn't jumped the flash bandwagon immediately. Apple waited until 2005 to release an iPod using flash memory instead of Microdrive, and named it "iPod Shuffle."
+
+Keeping up with the taglines, "Give chance a chance" and "Life is a random," iPod shuffle plays music in random order although users can still play songs in order that has been set in iTunes.
+
+iPod Shuffle has no screen. Its size is as small as a pack of chewing gum, and weighs less than an ounce.

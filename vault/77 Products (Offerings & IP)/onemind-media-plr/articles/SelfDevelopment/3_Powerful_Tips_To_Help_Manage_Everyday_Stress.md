@@ -1,0 +1,26 @@
+# title:3 Powerful Tips To Help Manage Everyday Stress
+
+author:Jerome Grazier
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_3535.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+Often times stress will manifest when we carry over yesterday�s concerns into our present day concerns. An accumulation will almost always end up in a high stress level. Therefore, we must be able to �dump� all of our concerns from the previous day or days and concentrate wholly on our today.
+So here are 3 stress busting tips 
+- Stress Busting Tip #1 
+Resolve right now to release every thought from yesterday and be only mindful of the now�. this thought only...this breath...this moment. Take in three very deep breaths and slowly release each one.
+At the same time feel each and every concern, each and every problem, and each and every unresolved moment, begin to dissolve. You can deal with them at a later time. For now, you are only to be in this very moment.
+Now go to your inner quiet place. Go deep inside to a place where you feel that you are at peace and then just relax and breathe in deeply and enjoy the feeling of being at one and at peace within yourself.
+Use this special time and place to be calm. Free your mind and body of all worry, all regret, all disappointment, all anger and grief.
+- Stress Busting Tip #2 
+Next, think of one particular act, such as rocking your baby, taking a quick stroll, raking the leaves, and do that one simple thing. All the while, your mind is quiet and calm and you are in your own special place within.
+Practice this act of quiet and calm each day and you will see that you will accomplish so much more. At the first sign of being stressed, go back to this mindful, quiet place and start all over again until you have reached your inner place of calm.
+- Stress Busting Tip #3 
+The very best thing that you can do for yourself is to eat, drink and rest � to your health!
+Stress is easily brought on by not eating and drinking properly. When you don�t get the number of hours of sleep that you need each night, you are only setting yourself up for additional stress.
+Limit the amount of salt, sugar, caffeine and alcohol in your diet. Drink plenty of clean, pure water each day and do at least moderate exercise each day. This will breathe new life into your skin, hair and will nourish all of your vital organs.
+Take time to breathe properly! Take deep belly breathes to send pure oxygen to all of your body. Laugh and then laugh some more. It is food for the soul! Spend time doing the things that please you most. Engage in healthy and fulfilling relationships and work on problems that would erode the closeness that you have with someone special.
+When we are content and living a balanced life everyday stresses seem to pale in comparison. We are better equipped to deal with the unexpected.
+You can take control today! Isolate only one particular stressor in your life and then work on it until you regain control. At the very least, have some new hope!
+ZZZZZZ

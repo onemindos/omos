@@ -1,0 +1,89 @@
+# Title:
+
+The Law Of Attraction And Relationships
+
+Word Count:
+1543
+
+Summary:
+The Law of Attraction is an extremely powerful force which effects our lives, whether or not we are aware of how it is working.
+
+Keywords:
+law of attraction, relationship, mistake, attract, vibration, coaching, counselling, emotions, awareness, manifest
+
+Article Body:
+Have you ever had the experience of a stranger coming out of the blue and having a piece of information that you needed? Have you ever been steered away from making a mistake by a friend or stranger in the right place at the right time? Can you recall what this felt like?
+
+Have you ever sensed your role in another person's manifestation of an experience? You perhaps gave them something, or did something that felt right for you and for them was an uncanny coincidence. Have you ever found yourself in the right place to provide something important for another person? Perhaps you felt compelled to talk to a stranger and you had the piece of information they were looking for?
+
+I call this interplay between individuals 'Dancing.' We dance with others during every day of our lives. When we are open and willing, we participate and assist in the manifestation of their experience and others do the same for us. Some of these experiences are positive, and we feel like we are in the very flow of life. Other experiences are more challenging, or even negative, and can leave us questioning how we came to attract such a negative or painful experience into our lives.
+
+Law of Attraction and Relationships:
+
+As a therapist, coach and individual, I have come to understand the Law of Attraction as an extremely powerful force which effects our lives, whether or not we are aware of how it is working at any one time. Simply put, what we give our focus, emotion, and attention, we attract into our lives. Moving towards deliberate attraction requires an awareness of our intention, attention and emotional state. In a sense, we move from subconsciously creating events in our lives to consciously and deliberately affecting our experience.
+
+When talking about the law of attraction in relationships, several questions come up. These include: Can we attract a specific person into our lives? Am I responsible - did I attract - this abuse from my colleague, partner, friend, or family member? How can I attract the relationship I want? 
+
+One of the issues these questions have in common is a search for where our responsibility ends and another person's begins. 
+
+Matching (Picking our Partners)
+
+Everyone that you attract into our lives and engage with, are a match to something that you are vibrating at either a conscious or subconscious level. 
+
+If we want to know what you are vibrating, look at who you are attracting. It is a perfect match!
+
+There are different kinds of matches to our vibrations. The most obvious is when we get a similar match. 
+
+Ideally, we want to feel empowered, optimistic and joyful and attract other empowered and optimistic people to us in all aspects of our life. When this happens, there is a sharing and connection that feels wonderful. It is a perfect match!
+
+When feeling down, (low vibration), you may attract a friend who calls to complain about all the things they are down about. In this case, our low vibration is attracting someone of similar vibration. We will often engage with the person and stay at that low vibration or perhaps collectively go lower. How does this feel?
+
+Other Matches
+
+Have you ever had a friend or client stuck in a 'victim vibration' who seemed to attract abusive partners in their romantic or business relationships? Their vibration as a victim can be a match to a potential abuser. A second match to the 'victim vibration' is the rescuer. Rescuers, victims and abusers create what we know as the 'victim' or 'drama' triangle. These three roles vibrate matches to each other and individuals often get stuck moving from point to point in the triangle. In one relationship they may be the victim. IN the next, they mat be the rescuer or the abuser.
+
+For example, many of the youth I have worked with in custody fall into this trap. They are often violent to 'rescue' a friend or to avenge a wrong. When caught, they feel victimized by police. When sentenced to custody, they feel like a victim of the justice system. They talk about getting even (offender role), blaming others for their situation (victim role) and wanting to stay with their boy or girl friend to keep them from getting into trouble (rescuer role). They continue to attract the same three matches into their lives and custody becomes a revolving door.
+
+There are other less obvious variations of this triangle. Chronically sick individuals, very desperate or needy people, often vibrate matches for people who try to help them or use them in some way. 
+
+DRAMA TRIANGLE
+
+Vulnerability
+
+Most children and many adults live their lives unconscious of the law of attraction and the many other forces at work in creating their experience. Such people are unaware of the effect of their attention, focus and emotions. Their energy may be scattered rather than focussed and their emotions may be mixed and reactive. Such people are 'vulnerable' and can become unconscious participants in the more focussed and deliberate manifestation of others. 
+
+We know that most offenders pick their victims. This is a fact. They unconsciously or consciously match vulnerable children, adults, (banks etc.) at an intuitive level. Younger children, the elderly, or adults with disabilities are often chosen for this reason. Children, and some adults are then vulnerable to become part of a more deliberate plan and action by someone with greater intention, emotion and focus. 
+
+In addition, there are individuals who use these same laws of attraction to manifest power for themselves, or harm to others. They believe they are right, entitled, or are unconsciously driven to such experiences. In some cases their focus is collective and extremely powerful. Terrorists and other fear-based organizations are examples of this dynamic. 
+
+Free Choice
+
+I once had a very amazing conversation with a Native teacher about the three concepts of destiny, potential, and free choice. To the best of my recollection, this is how he defined these concepts. 
+
+Destiny: Is an opportunity to fulfill a life's purpose. It is a predetermined circumstance that will manifest at some point in life. Some Native groups believe that we are born with predestined challenges that were agreed upon by our ancestors before our birth. Other Native groups believe that there are 'deals' made with other souls before birth to be part of their enlightenment challenge here on earth. 
+
+Potential: When we are challenged, the experience has the potential to be a powerful healing or destructive force. If we rise to the challenge and act out of integrity and grace, we heal both present and past issues related to the event. If we fail the challenge, we hurt ourselves and others involved.
+
+Free Choice: We all have free choice. This is why we cannot attract a person to us who does not want to engage with us. We choose whom we engage with and we choose our actions. 
+
+We attract matches into our lives. It is our choice to engage with them or not. We are responsible for our actions. They are responsible for what they choose to do. 
+
+As we become more aware, we can also consider matches and experiences as powerful information and feedback as to what we are vibrating. We can also choose to engage or not engage, stay or leave. We can also choose to use this information to move ourselves to a different level of vibration. 
+
+Implications for Law Of Attraction Practitioners
+
+Working with Others
+
+Many of my coaching and counseling clients have been engaged in some form of the drama triangle (above). I have found the Law of Attraction tools to be very helpful in teaching an awareness of their emotions and how they are affecting their experience. They can learn that when they are in a 'poor me,' or 'victim' vibration, they are going to attract matches and choose to engage or not. They also learn the importance of changing their vibration and witnessing a change in the people they attract. By choosing a different vibration, they become empowered and even begin to heal!
+
+Implications for Practitioners and Coaches
+
+For law of attraction practitioners and coaches, we put out the intention of assisting others and attract such experiences to ourselves in the form of clients. We offer ourselves as 'helpers' for individuals who are choosing to manifest events in their lives. This experience is often very intuitive and joyful. We feel like we are in the flow of life.
+
+Have you also experienced this intention bubbling over to experiences outside of you practice as well? 
+
+At times, we will attract people who will want to elevate us to heroes and rescuers. They will say things like "no-one understands me but you." "Without you I would be lost...." They want direct advice - for you to make the decisions. This however, does not empower, it keeps them in their comfortable 'victim' role. Counselors and coaches may become seduced into the role of rescuer and join the client in the drama triangle. How might this impact our lives outside of the office?
+
+In Closing
+
+As law of attraction practitioners and coaches, we can share powerful information and tools to empower others to make their own decisions and assume a new kind of responsibility in their relationships. We can empower others to dance with grace and integrity towards joyful and fulfilling relationships!

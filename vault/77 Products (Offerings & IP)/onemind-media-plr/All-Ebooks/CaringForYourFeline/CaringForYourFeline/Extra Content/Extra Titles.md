@@ -1,0 +1,312 @@
+# Extra Titles
+
+-----------------------------
+
+Extra Titles
+
+Use these with your opening, closing and paragraph files
+to create new articles.
+-----------------------------
+
+What You Don't Know About Caring For Your Cat May Shock You
+
+The Low Down on Caring For Your Cat Exposed
+
+Dirty Facts About Caring For Your Cat Revealed
+
+7 Questions and Answers to Caring For Your Cat
+
+The Downside Risk of Caring For Your Cat That No One is Talking
+About
+
+The Top 5 Most Asked Questions About Caring For Your Cat
+
+What Everybody Dislikes About Caring For Their Cat And Why
+
+Caring For Your Cat - An In Depth Analysis on What Works and What
+Doesn't
+
+What Caring For Your Cat Is - And What it is Not
+
+Want to Know More About Caring For Your Cat?
+
+Here's What I Know About Caring Cats
+
+Caring For Your Cat The Right Way
+
+Outrageous And Easy Cat Training Tips
+
+5 Closely-Guarded Caring For Your Cat Secrets Explained
+
+Caring For Your Cat Simple Tips Exposed
+
+The Debate Over Caring For Feral Cat's
+
+7 Ways to Guard Against Cat Illnesses
+
+The Undeniable Truth About Caring For Your Cat That No One Is Telling
+You
+
+What Everybody Else Does When It Comes To Caring For Cats
+And What You Should Do Different
+
+The Idiot's Guide To Caring For Your Cat Explained
+
+Unknown Facts About Caring For Your Cat Revealed By The Experts
+
+The Hidden Truth on Caring For Your Cat Exposed
+
+The Secret of Caring For Your Cat That No One is Talking About
+
+The Unexposed Secret of Caring For Your Cat
+
+The Caring For Your Cat Diaries
+
+Caring For Your Cat - An Overview
+
+The Ugly Side of Caring For Your Cat
+
+An Unbiased View of Caring For Your Cat
+
+What's Really Happening With Caring For Your Cat
+
+The Ultimate Guide To Caring For Your Cat
+
+5 Simple Facts About Caring For Your Cat Explained
+
+What To Do About Caring For Your Cat Before It's Too Late
+
+The Secret For Caring For Your Cat Revealed in 5 Simple Steps
+
+The Ultimate Solution For Caring For Your Cat That You Can Learn
+About Today
+
+Be The First To Read What The Experts Are Saying About Caring For
+Your Cat
+
+The Truth About Caring For Your Cat
+
+Find Out Who's Talking About Caring For Your Cat And Why You
+Should Be Concerned
+
+5 Odd-Ball Tips on Caring For Your Cat
+
+The Caring For Your Cat Chronicles
+
+Kids, Work and Caring For Your Cat
+
+7 Shocking Facts About Caring For Your Cat Told By An Expert
+
+The Insider Secret on Caring For Your Cat Uncovered
+
+What Everyone is Saying About Caring For Your Cat Is Dead Wrong
+And Why
+
+The Insider Secrets of Caring For Your Cat Discovered
+
+The Unexplained Mystery Into Caring For Your Cat Uncovered
+
+The Insider Secrets For Caring For Your Cat Exposed
+
+Effective Strategies For Caring For Your Cat That You Can Use
+Starting Today
+
+What You Need To Know About Caring For Your Cat And Why
+
+Why Nobody is Talking About Caring For Your Cat And What You
+Should Do Today
+
+The Death of Caring For Your Cat
+
+The Birth of Caring For Your Cat
+
+Rumors, Lies and Caring For Your Cat
+
+The Most Overlooked Fact About Caring For Your Cat Revealed
+
+The Forbidden Truth About Caring For Your Cat Revealed By An Old
+Pro
+
+A Simple Trick For Caring For Your Cat Revealed
+
+5 Simple Tactics For Caring For Your Cat Uncovered
+
+What You Can Do About Caring For Your Cat Starting In The Next 10
+Minutes
+
+What The Experts Aren't Saying About Caring For Your Cat And How It
+Affects You
+
+5 Tips on Caring For Your Cat You Can Use Today
+
+Why Everyone Is Dead Wrong About Caring For Your Cat And Why
+You Must Read This Report
+
+The Ultimate Strategy For Caring For Your Cat
+
+3 Tips For Caring For Your Cat You Can Use Today
+
+How To Find Out Everything There Is To Know About Caring For Your
+Cat In 5 Simple Steps
+
+Shocking Information About Caring For Your Cat Exposed
+
+What Everyone Is Saying About Caring For Your Cat And What You
+Should Do
+
+The Single Best Strategy To Use For Caring For Your Cat Revealed
+
+The Unadvertised Details Into Caring For Your Cat That Most People
+Don't Know About
+
+The Leaked Secret to Caring For Your Cat Discovered
+
+Warning Signs on Caring For Your Cat You Should Know
+
+The Most Overlooked Solution For Caring For Your Cat
+
+Unknown Facts About Caring For Your Cat Made Known
+
+Unanswered Questions Into Caring For Your Cat Revealed
+
+Rumored Buzz on Caring For Your Cat Exposed
+
+Detailed Notes on Caring For Your Cat In Step by Step Order
+
+The Untold Story on Caring For Your Cat That You Must Read or Be
+Left Out
+
+Hidden Answers To Caring For Your Cat Revealed
+
+Instant Solutions To Caring For Your Cat In Step by Step Detail
+
+Unanswered Questions on Caring For Your Cat That You Should Know
+About
+
+Confidential Information on Caring For Your Cat That Only The Experts
+Know Exist
+
+Shortcuts To Caring For Your Cat That Only A Few Know About
+
+The Basics of Caring For Your Cat That You Both Can Benefit From
+Now
+
+The True Story About Caring For Your Cat That The Experts Don't Want
+You To Know
+
+Why Everybody Is Talking About Cat Care...The Simple Truth Revealed
+
+New Questions About Caring For Your Cat Answered And Why You
+Must Read Every Word of This Report
+
+Brief Article Teaches You The Ins and Outs of Caring For Your Cat And
+What You Should Do Today
+
+New Article Reveals The Low Down on Caring For Your Cat
+
+Why Almost Everything You've Learned About Caring For Your Cat Is
+Wrong And What You Should Know
+
+Unbiased Article Reveals 5 New Things About Caring For Your Cat
+That Nobody Is Talking About
+
+Short Article Reveals The Undeniable Facts About Caring For Your Cat
+
+New Ideas Into Caring For Your Cat Never Before Revealed
+
+What You Should Do To Find Out About Caring For Your Cat The Right
+Way
+
+Unusual Article Uncovers The Best Tips for Caring For Your Cat
+
+Get The Scoop on Caring For Your Cat Before You're Too Late
+
+If You Read Nothing Else Today, Read This Report on Caring For Your
+Cat
+
+Uncommon Article Gives You The Facts on Caring For Your Cat
+
+What You Don't Know About Caring For Your Cat
+
+The Unanswered Questions on Caring For Your Cat
+
+Lies You've Been Told About Caring For Your Cat
+
+The Secret To Caring For Your Cat
+
+5 Essential Elements For Caring For Your Cat
+
+Ideas, Formulas And Shortcuts For Caring For Your Cat
+
+All About Caring For Your Cat
+
+New Step by Step Roadmap For Caring For Your Cat
+
+The New Way to Caring For Your Cat Just Released
+
+A Deadly Mistake Uncovered on Keeping Your Cat Healthy
+
+The 5-Second Trick For Teaching Your Cat Tricks
+
+The 2-Minute Rule for Caring For Your Cat
+
+The Biggest Myth About Caring For Your Cat Exposed
+
+The Do's and Don'ts Of Caring For Your Cat
+
+A Review Of Basic Cat Care Techniques
+
+The Little-Known Secrets To Caring For Your Cat
+
+The Fundamentals Of Caring For Your Cat Revealed
+
+The One Thing You Must Do To Keep Your Cat Healthy
+
+The Do This, Get That Guide On Caring For Your Cat
+
+The Lost Secret Of Keeping Your Cat From Getting Sick
+
+Whispered  Secrets - Caring For Your Cat The Right Way
+
+A Secret Weapon For Keeping Your Cat Healthy and Happy
+
+Caring For Your Cat - Finally The Fundamentals Explained
+
+Whatever They Told You About Caring For Your Cat Is Dead
+Wrong...And Here's Why
+
+Simple Tips On Caring For Your Cat
+
+Facts, Fiction and Caring For Your Cat
+
+Caring For Your Cat for Dummies
+
+Caring For Your Cat No Longer a Mystery
+
+The New Fuss About Properly Caring For Your Cat
+
+A Startling Facts about Caring For Your Cat Uncovered
+
+The Foolproof Cat Training Strategy
+
+Things You Won't Like About Caring For Your Cat And Things You Will
+
+The Ultimate Caring For Your Cat Trick
+
+The Tried and True Method for Caring For Your Cat Step by Step
+
+The Honest to Goodness Truth on Caring For Your Cat
+
+The Number One Question You Must Ask About Caring For Your Cat
+
+Caring For Your Cat?
+
+Who Else Wants To Learn All About Caring For Cats?
+
+The Number One Article on Caring For Your Cat
+
+Caring For Your Cat Secrets That No One Else Knows About
+
+5 Winning Strategies To Use When Caring For Your Cat
+
+What You Don't Know About Caring For Your Cat

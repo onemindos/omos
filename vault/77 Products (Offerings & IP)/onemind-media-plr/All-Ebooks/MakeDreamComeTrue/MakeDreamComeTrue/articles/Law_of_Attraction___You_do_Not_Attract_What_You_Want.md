@@ -1,0 +1,33 @@
+# Title:
+
+Law of Attraction - You do Not Attract What You Want
+
+Word Count:
+412
+
+Summary:
+Your wanting is killing your ability to attract what you want.  The more you want the hard it is to get what it is you truly desire.
+
+Keywords:
+law of attraction, attraction, manifesting, manifest
+
+Article Body:
+If there is one secret to the attraction process it is this one nugget of truth.  Try to master it and you will find a big difference in your ability to attract easily and faster than ever before.
+
+What is this secret you are asking?  First ask yourself, "What do I want?"  Make a list of those things you want.  Now ask yourself how does it feel when you do think of those things.  Most people will tell you that they feel sad, frustrated down and needy.  All those feelings are in total disharmony with the actual feeling of having.
+
+Now ask yourself how would you feel if you NOW had all the money in the world to do the things that you really want to do?  
+
+Can you feel just how different that feeling is?  There is a distinct feeling of pretending or imagining what it is to now have the thing that you "want."  
+
+To successfully apply the law of attraction you must move into the feeing of having as apposed to the feeling of wanting.  One of the most difficult things for most people to do is to bring themselves into the feeling of having.  It's not easy but there are many techniques that can easily bring you into that state with great easy.  
+
+The mehtod to successfully manifesting is to vibrate on the state of already having and the more you can feel yourself in a clear, balanced and rich state with an abundance of energy the faster you can materialize what you want.
+
+There are many ancient teachings that use various spiritual tools to bring themselves into a fast alignment to manifest in magical ways.  What we struggle with such as money, home, relationships could easily be gained as we learner the be in the state of harmony with those things.
+
+The law of attraction and the principles of manifesting are actually quite fun if you can simple move out of the heavy states of fear and neediness.
+
+A child would learn to manifest much faster than an adult.  Most adults struggle simple to believe that the law of attraction actually works.  That happens to be the biggest obstacle to apply the attraction principles.  If believing is so hard to do then its only natural that there would be lots of fear and tension associated with attracting.  
+
+If you are fearful and have any doubt then you are in the state of wanting and not having.

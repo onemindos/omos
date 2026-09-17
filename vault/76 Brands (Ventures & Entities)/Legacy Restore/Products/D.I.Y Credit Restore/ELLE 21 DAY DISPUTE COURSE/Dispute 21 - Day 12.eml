@@ -1,0 +1,1710 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ad5:55cf:0:0:0:0:0 with SMTP id e15csp1047536imq;
+        Sat, 9 May 2020 20:44:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLIZfz26U7j4m33QZG3fkhf1hhF1H1AHrLWntcBIXELyHzjW+Yv0AHQ9m8iPbqhvqW5Riy4
+X-Received: by 2002:ac8:35c7:: with SMTP id l7mr10645158qtb.156.1589082285456;
+        Sat, 09 May 2020 20:44:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1589082285; cv=none;
+        d=google.com; s=arc-20160816;
+        b=PsqFmrOqVXDCFQDQKtL+1j2nxxrYSHYnsVsmoJilG3iAdVxKwKeUvYhl7kGV6jeyDc
+         isRoZEMPBOFMgD2xglvRipMiJxQY6RPExuL3XqeoWM/5Os5HhwNDhmM7sMBcvfnvpi9a
+         0SJUAqaZRAhwLELR9ZpZmWue02EDprFVuVB1W6qfTybWRg/HC4bT5yRRroA1Glc/PNE9
+         U6XYuKDz2Kj6Y1rtGOACgon1yvWQG71pCFrszDhvVROU7vVe9kQg8z2DYxA0foUKjxm1
+         UVlTmvVBHNGEsDw/NFeLstqL1etBHwV1D4bEK6GiehmiTKJJBywBeWT5uNm4ilFnZU+m
+         5Q1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=D6T8VzCukaCmM5JPcOIJCfpsAVeSr3OhturshYszUhI=;
+        b=0hYAtqZtYoSArLFDOGAW2B+axYl3QtzuaWegmbmwb2AOf4yjLNki8LJa4atMPtzmMM
+         DgD03i3V1tawY+XZaVt4HyHuzc0rPrgkdvZCi3YwfCRxwAmyp5cKLlneoqYK0McBtPBL
+         n/92QD0oQpZ/pHCG08oAzbnPA6PgZCxpXAaH3A4YpOwEdXXSMOSmD+9Jgs2gqkbef9YQ
+         gjCwZLqY4AfLr9XZgrRQleOyWyiY9ev+ntOtuka6Mh7aUtmRxxiQHjby8pYNTtzVOYQe
+         P40wnenfR9Ddbkjrwkjaz5p0oqGXZSut4ZBVhGs7ZMDQP+EuDYqWa1WFoOp/q9nOrsk1
+         yt9Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=HvN6+xms;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=fS6Ej1MP;
+       spf=pass (google.com: domain of bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id c9si3562529qtq.375.2020.05.09.20.44.45
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 20:44:45 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=HvN6+xms;
+       dkim=pass header.i=@acems1.com header.s=dk header.b=fS6Ej1MP;
+       spf=pass (google.com: domain of bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=D6T8VzCukaCmM5JPcOIJCfpsAVeSr3OhturshYszUhI=;
+ b=HvN6+xmsmc1HUy63kbG6CE+DjkyogkTj9hFdVfFPCQZs3Zz88KFLzdyIF6DzvECRhm1Xv7s32yjq
+   dECVSi2SD2vjjSBRmJ7bfl2ATLtvrQPFwU9m4cmroK56ZKYxcIFqg0TlgpD+Ufe3d8q8yk9Z1aXa
+   x1GJHvg795z6r9Gp+sU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=D6T8VzCukaCmM5JPcOIJCfpsAVeSr3OhturshYszUhI=;
+ b=fS6Ej1MP+ysCHGgQ6ZzwsbsBj3z8uXteIRLscWl3SdGjYD9lKW/8lMDXstUmLaiQ9HgOeKWxxOS/
+   G26jBM4GaFRjtOj36xsOrHG6FvxxxS236SLXILgkKwG+RoeB5HgqrPmAF/S9HGkqegtS2LxIQiMe
+   Ok2hlgUQDmx/WHirgPQ=
+Received: by s2.asa1.acemsd3.com id hmtsaq2lshko for <bruce.k.cosma@gmail.com>; Sun, 10 May 2020 03:44:45 +0000 (envelope-from <bounce-549600-434-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Day 12
+Date: Sat, 09 May 2020 22:44:44 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-14834506645eb778acf2fa57.96650032_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDM0ICwgbTQ0OCAsIHM2NTI1
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-434
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-434-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=434&m=448&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200510034445.576.620159626.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-14834506645eb778acf2fa57.96650032_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public.
+Dispute 21 - Day 12:
+FCRA Study 
+
+Furnisher
+Guidelines, Regulations, & Reinvestigations
+
+Bruce, today we'll begin to taking a first look at the The Fair
+Credit Reporting Act and how it relates to companies that report
+information on consumers to the various reporting agencies. 
+
+Information in credit reports is used to determine a person's
+eligibility for credit, employment, insurance and rental housing and
+errors in a report can result in denial of those benefits or higher
+costs. 
+
+If a furnisher reports information about consumers to consumer reporting
+agencies (CRAs) - like a credit bureau, tenant screening company, or
+check verification service - they have legal obligations under the
+Fair Credit Reporting Act.
+
+The FTC enforces this, and has guidance about the furnisher's
+responsibilities to report information that's accurate and complete, and
+to investigate consumer disputes about the accuracy of information they
+provide. 
+
+In this lesson, you will learn (1) the guidelines and policy regulations
+furnishers must abide by; (2) the circumstances under which a furnisher
+of information is and isn't required to conduct a re-investigation of
+your dispute and; (3) what your direct disputes to the furnisher must
+contain. Today's information is important because without this knowledge
+it's likely you may not get a response, or at least the response that
+you desire, when disputing directly with the furnisher.
+
+Let's begin...
+
+**Section 623**of the Fair Credit Reporting Act (FCRA) requires the
+federal banking agencies (Agencies) and the Federal Trade Commission
+(FTC) to:
+
+1. Issue 
+
+**guidelines for** use by furnishers regarding the 
+
+**accuracy** and 
+
+**integrity** 
+
+**of the information** about consumers that 
+
+**they furnish** to consumer reporting agencies;
+
+2. 
+
+**Prescribe** regulations requiring furnishers to establish 
+
+**reasonable policies and procedures for implementing the guidelines**;
+and
+
+3. The 
+
+**circumstances under which a furnisher must reinvestigate
+disputes**concerning the accuracy of information contained in a consumer
+report based on a direct request from a consumer. 
+
+Let's take a look at these requirements in depth...
+
+        
+I. 
+
+**Issue guidelines for use by furnishers regarding the accuracy and
+integrity of the information about consumers that they furnish to
+consumer reporting agencies**
+
+a.      "
+
+**Furnisher**" means an entity that furnishes information relating to
+consumers to one or more consumer reporting agencies for inclusion in a
+consumer report. An entity is not a furnisher when it:
+
+i.     Provides information to a consumer reporting agency solely to
+obtain a consumer report in accordance with the permissible purposes
+outlined in sections 604(a) and 604(f) of the FCRA;
+
+ii.     Is acting as a "consumer reporting agency" as defined in
+section 603(f) of the FCRA;
+
+iii.     Is a consumer to whom the furnished information pertains;
+or 
+
+iv.     Is a neighbor, friend, or associate of the consumer, or
+another individual with whom the consumer is acquainted or who may have
+knowledge about the consumer, and who provides information about the
+consumer's character, general reputation, personal characteristics, or
+mode of living in response to a specific request from a consumer
+reporting agency.
+b.     "
+
+**Accuracy**" means that the information a furnisher provides to a
+consumer reporting agency about an account or other relationship with
+the consumer correctly: 
+
+****i.     Reflects the terms of and liability for the account or
+other relationship;
+
+****ii.     Reflects the consumer's performance and other conduct
+with respect to the account or other relationship; and
+
+****iii.     Identifies the appropriate consumer.
+
+****iv.     The FTC's Furnisher Rule Says:
+
+****1.  (To The Furnisher) When you provide information to a CRA, you
+have obligations under the FCRA to ensure the accuracy of the
+information you furnish. As a rule, it's illegal to report information
+that you know or believe is inaccurate. You have "reasonable cause to
+believe" that information is inaccurate if you have knowledge, other
+than allegations from the consumer that would lead a reasonable person
+to doubt the accuracy of the information. FCRA Section 623(a)(1)(A) You
+may be exempt from this requirement if you give an address for 2
+consumers to report inaccurate information, but you cannot, under any
+circumstances, report information the consumer has told you is
+inaccurate if it is, in fact, inaccurate. FCRA Section 623(a)(1)(C)
+c. "
+
+**Integrity**" means that the information a furnisher provides to a
+consumer reporting agency about an account or other relationship with
+the consumer: 
+
+****i.     Is substantiated by the furnisher's records at the time
+it is furnished;
+
+****ii.     Is furnished in a form and manner that is designed to
+minimize the likelihood that the information may be incorrectly
+reflected in a consumer report; and
+
+****iii.     Includes:
+
+****1.  The information in the furnisher's possession about the
+account or other relationship that the relevant Agency has determined
+that the absence of which would likely be materially misleading in
+evaluating a consumer's creditworthiness, credit standing, credit
+capacity, character, general reputation, personal characteristics, or
+mode of living; and
+
+****2. The credit limit, if applicable and in the furnisher's
+possession. 
+
+II. Reasonable policies and procedures concerning the accuracy and
+integrity of furnished information and Interagency Guidelines.
+
+a.  Each furnisher must establish and implement reasonable written
+policies and procedures regarding the accuracy and integrity of consumer
+information that it furnishes to a consumer reporting agency. The
+policies and procedures
+
+i.       Must be appropriate to the nature, size, complexity, and
+scope of your activities;
+
+ii.       Must be reviewed periodically and updated, as necessary;
+
+iii.       Should ensure that information provided to a CRA is for
+the right person;
+
+iv.       Reflects the terms of the account and the consumer's
+performance on the account;
+
+v.       Require maintenance of records for a reasonable amount of
+time;
+
+vi.       Establish internal controls for the accuracy and
+integrity of information, such as through random sampling;
+
+vii.       Prevent re-aging (inaccurately changing the date of
+first delinquency on a consumer's account to a later date) and
+duplicative reporting, particularly following portfolio acquisitions or
+sales, mergers, and other transfers; and
+
+viii.       Require updating of furnished information where
+necessary.
+
+a.      Information should:
+
+i.     Be substantiated by your records when it is furnished;
+
+ii.     Include consumer identifiers, like name(s), date of birth,
+Social Security number, telephone number(s), or address(es); and
+
+iii.     Be furnished in a standardized form and specify the time
+period it pertains to.
+
+III. A furnisher 
+
+**must conduct a reasonable investigation of a direct dispute** (unless
+exceptions, described later, apply) if the dispute relates to: 
+
+a.       The consumer's liability for a credit account or other
+debt with the furnisher, such as direct disputes relating to whether
+there is or has been identify theft or fraud against the consumer,
+whether there is individual or joint liability on an account, or whether
+the consumer is an authorized user of a credit account;
+
+b.     The terms of a credit account or other debt with the
+furnisher, such as, direct disputes relating to the type of account,
+principal balance, scheduled payment amount on an account, or the amount
+of the credit limit on an open-end account.
+
+c.       The consumer's performance or other conduct concerning an
+account or other relationship with the furnisher such as, direct
+disputes relating to the current payment status, high balance, payment
+date, the payment amount, or the date an account was opened or closed;
+or
+
+d.     Any other information contained in a consumer report
+regarding an account or other relationship with the furnisher that bears
+on the consumer's creditworthiness, credit standing, credit capacity,
+character, general reputation, personal characteristics, or mode of
+living.
+
+**Exceptions**
+The direct dispute requirements do not apply to a furnisher 
+
+**if the direct dispute relates to**: 
+
+****
+a.       The consumer's identifying information such as name(s),
+date of birth, Social Security number, telephone number(s), or
+address(es);
+
+b.     The identity of past or present employers;
+
+c.       Inquiries or requests for a consumer report;
+
+d.     Information derived from public records, such as judgments,
+bankruptcies, liens, and other legal matters (unless the information was
+provided by a furnisher with an account or other relationship with the
+consumer);
+
+e.     Information related to fraud alerts or active duty alerts; or
+
+f.        Information provided to a consumer reporting agency by
+another furnisher.
+
+The direct dispute requirements also do not apply if the furnisher has a
+reasonable belief that the direct dispute is: 
+
+a.       Submitted by a credit repair organization;
+
+b.     Is prepared on behalf of the consumer by a credit repair
+organization; or
+
+c.       Is submitted on a form supplied to the consumer by a
+credit repair organization.
+
+**Direct Dispute Address**
+
+A furnisher is required to investigate a direct dispute only if a
+consumer submits a dispute notice to the furnisher at: 
+
+****
+a.       The address provided by a furnisher and listed on a
+consumer report relating to the consumer;
+
+b.     An address clearly and conspicuously specified by the
+furnisher that is provided to the consumer in writing or electronically
+(if the consumer has agreed to the electronic delivery of information
+from the furnisher); or
+
+c.       Any business address of the furnisher if the furnisher
+has not provided a specific address for submitting direct disputes.
+
+**Direct Dispute Notice Contents**
+
+A dispute notice from a consumer must include: 
+
+****
+a.       Sufficient information to identify the account or other
+relationship that is in dispute, such as an account number and the name,
+address, and telephone number of the consumer;
+
+b.     The specific information that the consumer is disputing and
+an explanation of the basis for the dispute; and
+
+c.       All supporting documentation or other information
+reasonably required by the furnisher to substantiate the basis of the
+dispute. This documentation may include, for example, a copy of the
+relevant portion of the consumer report that contains the allegedly
+inaccurate information; a police report; a fraud or identity theft
+affidavit; a court order; or account statements.
+
+In tomorrow's lesson ,we'll cover the obligations of the furnisher when
+reporting to the Credit Reporting Agencies (CRAs).
+
+Copyright © 2019 EduCredit Solutions. All rights reserved.
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online at www.educreditsolutions.com
+
+Work With Elle
+
+For information regarding 1-on-1 Coaching, Staff Training and Education
+Services, you can schedule a discovery call at
+bit.ly/discoverycallwithelle 
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=434&m=448&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-14834506645eb778acf2fa57.96650032_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;}=0A/*-------------------------------------------------------=
+------------------*\ Product Widget \*-------------------------------------=
+------------------------------------*/ .td_product > div { float: none !imp=
+ortant; width: 100% !important; margin-bottom: 20px !important; } .td_produ=
+ct > div img { width: 75% !important; } /* Default social icons */ *[class]=
+.ac-social-icon-16 {width:16px !important; height:16px !important;} *[class=
+].ac-social-icon-24 {width:24px !important; height:24px !important;} *[clas=
+s].ac-social-icon-28 {width:28px !important; height:28px !important;} *[cla=
+ss].__ac_social_icons { margin-right: 0px !important; } }=0A</style><style =
+data-ac-keep=3D"true"> @media only screen and (max-width: 320px) { #layout-=
+row3292 img { width: 100% !important; height: auto !important; max-width: 3=
+20px !important; } #layout-row3293 img { width: 100% !important; height: au=
+to !important; max-width: 320px !important; } #layout-row3295 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width:=0A100% !=
+important; min-width: 100% !important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 375px) { #layout-=
+row3292 img { width: 100% !important; height: auto !important; max-width: 3=
+75px !important; } #layout-row3293 img { width: 100% !important; height: au=
+to !important; max-width: 375px !important; } #layout-row3295 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 414px) { #layout-=
+row3292 img { width: 100% !important; height: auto !important; max-width: 4=
+14px !important; } #layout-row3293 img { width: 100% !important; height: au=
+to !important; max-width: 414px !important; } #layout-row3295 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A}=0A@media only screen and (max-width: 667px) { #layout-=
+row3292 img { width: 100% !important; height: auto !important; max-width: 6=
+48px !important; } #layout-row3293 img { width: 100% !important; height: au=
+to !important; max-width: 667px !important; } #layout-row3295 .break-line {=
+ width: 100% !important; margin: auto !important; } div.divbody { padding: =
+20px !important; } .td_rss .rss-item img.iphone_large_image { width: auto !=
+important; } u + .body { display: table !important; width: 100vw !important=
+; min-width: 100vw !important; } u + .body table { display: table !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body td { dis=
+play: block !important; width: 100% !important; min-width: 100% !important;=
+ } u + .body img { display: inline-block !important; margin: auto !importan=
+t; width: auto !important; vertical-align: bottom !important; } u + .body c=
+enter { display: block !important; margin: auto !important; width: 100% !im=
+portant; min-width: 100%=0A!important; text-align: center !important; } u +=
+ .body table._ac_social_table, u + .body table._ac_social_table td, u + .bo=
+dy table._ac_social_table div, u + .body table._ac_social_table a { display=
+: inline-block !important; margin: auto !important; width: auto !important;=
+ min-width: auto !important; text-align: center !important; } u + .body tab=
+le._ac_social_table img { display: inline-block !important; margin: auto !i=
+mportant; width: 32px !important; min-width: 32px !important; max-width: 32=
+px !important; }=0A} </style><!--[if !mso]><!-- webfonts --><!--<![endif]--=
+><!--[if lt mso 12]> <![endif]--></head><body id=3D"ac-designer" class=3D"b=
+ody" style=3D"font-family: Arial; line-height: 1.1; margin: 0px; background=
+-color: #ffffff; width: 100%; text-align: center;"><div class=3D"divbody" s=
+tyle=3D"margin: 0px; outline: none; padding: 0px; color: #000000; font-fami=
+ly: arial; line-height: 1.1; width: 100%; background-color: #ffffff; backgr=
+ound: #ffffff; text-align: center;"><table class=3D"template-table" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left" st=
+yle=3D"font-size: 13px; min-width: auto; mso-table-lspace: 0pt; mso-table-r=
+space: 0pt; background-color: #ffffff; background: #ffffff;"><tr><td align=
+=3D"center" valign=3D"top" width=3D"100%"><table class=3D"template-table" b=
+order=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"650" bgcolor=3D"#f=
+fffff" style=3D"font-size: 13px; min-width: auto; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt; max-width: 650px;"><tr><td=0Aid=3D"layout_table_3981fc=
+2e1ffc0f7e8ba28329f30c92024b06c36e" valign=3D"top" align=3D"center" width=
+=3D"650" style=3D""><table cellpadding=3D"0" cellspacing=3D"0" border=3D"0"=
+ class=3D"layout layout-table root-table" width=3D"650" style=3D"font-size:=
+ 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr =
+style=3D""><td id=3D"layout-row-margin3292" valign=3D"top" style=3D"padding=
+: 0px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D=
+"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-t=
+able-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout-ro=
+w3292" class=3D"layout layout-row widget _widget_picture style3292" align=
+=3D"center" style=3D""><td id=3D"layout-row-padding3292" valign=3D"top" sty=
+le=3D"padding: 1px 1px 0px 1px;"><table width=3D"100%" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=3D"image-td" alig=
+n=3D"center" valign=3D"top" width=3D"648"><img=0Asrc=3D"https://educreditso=
+lutions.imgus11.com/public//2d4ad5b6df654515bf805cdebd5e4c1c.png?r=3D550794=
+482" alt=3D"" width=3D"648" style=3D"display: block; border: none; outline:=
+ none; width: 648px; opacity: 1; max-width: 100%;"></td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layo=
+ut-row-margin3332" valign=3D"top" style=3D"padding: 5px;"><table width=3D"1=
+00%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 1=
+3px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-=
+collapse: initial !important;"><tr id=3D"layout-row3332" class=3D"layout la=
+yout-row widget _widget_text style3332" style=3D"margin: 0; padding: 0;"><t=
+d id=3D"layout-row-padding3332" valign=3D"top" style=3D"padding: 5px;"><tab=
+le width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt;"><tr><td id=3D"text_div3100" class=3D"td_text td_block" valign=3D"top=
+" align=3D"left" width=3D"630" style=3D"margin: 0; outline: none; padding: =
+0; color: inherit; font-size: 12px; font-weight: inherit; line-height: 1; t=
+ext-decoration: inherit; font-family: Arial;"> <div style=3D"margin: 0; out=
+line: none; padding: 0; font-size: 17px;" class=3D""> <div class=3D"" style=
+=3D"margin: 0; outline: none;=0Apadding: 0;"> <div class=3D"" style=3D"marg=
+in: 0; outline: none; padding: 0;"> <i style=3D"margin: 0; outline: none; p=
+adding: 0; font-style: italic; font-family: arial; color: #000000; font-siz=
+e: 12px; font-weight: 400;" class=3D""><span style=3D"color: #999999; font-=
+size: inherit; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit; font-family: arial;" class=3D""><br class=3D"">Objective: This 21=
+ day email course is designed for the student to gain a clear understanding=
+ of the credit repair process so that they can approach the client file and=
+ create an action plan with certainty. The content of this course is also d=
+esigned to help the student effectively communicate credit information so t=
+hat as a business owner they can feel comfortable and confident when speaki=
+ng about the subject of credit to leads, clients, and the general public.</=
+span></i><div style=3D"margin: 0; outline: none; padding: 0; font-family: a=
+rial; font-style: normal; font-weight: 400;=0Atext-align: center; color: #0=
+174df;" class=3D""><span style=3D"color: #0174df; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit; font-famil=
+y: arial;" class=3D""><br class=3D""><span style=3D"color: inherit; font-si=
+ze: 28.6667px; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;" class=3D"">Dispute 21 - Day 12:</span><br style=3D"" class=3D"">=
+<span style=3D"color: #0174df; font-size: 28.6667px; font-weight: 400; line=
+-height: inherit; text-decoration: inherit; font-family: arial; font-style:=
+ normal;" class=3D"">FCRA Study </span><span style=3D"color: #0174df; font-=
+size: inherit; font-weight: 400; line-height: inherit; text-decoration: inh=
+erit; font-family: arial; font-style: normal;" class=3D""><br style=3D"font=
+-size: 18px;" class=3D""><br style=3D"" class=3D""></span></span></div>=0A<=
+div style=3D"margin: 0; outline: none; padding: 0; font-family: arial; colo=
+r: #000000; font-size: 12px; font-style: normal; text-align: center;" class=
+=3D""><span style=3D"color: #000000; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit; font-family: arial;" cl=
+ass=3D""><span style=3D"color: inherit; font-size: 25px; font-weight: bold;=
+ line-height: inherit; text-decoration: inherit; font-family: arial;" class=
+=3D"">Furnisher<br style=3D"" class=3D"">Guidelines, Regulations, & Reinves=
+tigations</span><br style=3D"" class=3D""><br style=3D"" class=3D""></span>=
+</div>=0A<span style=3D"color: #000000; font-size: 12px; font-weight: 400; =
+line-height: inherit; text-decoration: inherit; font-family: arial; font-st=
+yle: normal;" class=3D""><br style=3D"" class=3D""><br style=3D"" class=3D"=
+"></span><span style=3D"color: inherit; font-size: 17px; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit;" class=3D""><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial; font-style: normal;"=
+ class=3D""><span style=3D"color: inherit; font-size: inherit; font-weight:=
+ inherit; line-height: inherit; text-decoration: inherit;" class=3D"">Bruce=
+, today we=E2=80=99ll begin to taking a first look at the The Fair Credit R=
+eporting Act and how it relates to companies that report information on con=
+sumers to the various reporting agencies. <br class=3D""><br class=3D""><di=
+v style=3D"margin: 0; outline: none; padding: 0; color: #000000; font-famil=
+y: arial; font-size: 17px; font-style:=0Anormal; font-weight: 400; text-ali=
+gn: start;" class=3D""><span style=3D"color: #000000; font-size: inherit; f=
+ont-weight: 400; line-height: inherit; text-decoration: inherit; font-famil=
+y: arial;" class=3D"">Information in credit reports is used to determine a =
+person=E2=80=99s eligibility for credit, employment, insurance and rental h=
+ousing and errors in a report can result in denial of those benefits or hig=
+her costs. <br class=3D""><br class=3D""><span style=3D"color: inherit; fon=
+t-size: 17px; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit; font-family: arial; font-style: normal; text-align: start; margin:=
+ 0;" class=3D"">If a furnisher reports information about consumers to consu=
+mer reporting agencies (CRAs) =E2=80=94 like a credit bureau, tenant screen=
+ing company, or check verification service =E2=80=94 they have legal obliga=
+tions under the Fair Credit Reporting Act.</span><br class=3D""><br style=
+=3D"font-family: arial; font-weight: 400; color: #000000; font-size: 17px;=
+=0Afont-style: normal;" class=3D""><span style=3D"color: inherit; font-size=
+: 17px; font-weight: inherit; line-height: inherit; text-decoration: inheri=
+t; font-family: arial; font-style: normal; text-align: start; margin: 0;" c=
+lass=3D"">The FTC enforces this, and has guidance about the furnisher's res=
+ponsibilities to report information that's accurate and complete, and to in=
+vestigate consumer disputes about the accuracy of information they provide.=
+</span> </span></div>=0A</span><br style=3D"" class=3D""><span style=3D"col=
+or: inherit; font-size: inherit; font-weight: inherit; line-height: inherit=
+; text-decoration: inherit;" class=3D"">In this lesson, you will learn </sp=
+an><span style=3D"color: inherit; font-size: inherit; font-weight: bold; li=
+ne-height: inherit; text-decoration: inherit;" class=3D"">(1) </span><span =
+style=3D"color: inherit; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;" class=3D"">the guidelines and poli=
+cy regulations furnishers must abide by; </span><span style=3D"color: inher=
+it; font-size: inherit; font-weight: bold; line-height: inherit; text-decor=
+ation: inherit;" class=3D"">(2)</span><span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;" class=3D""> the circumstances under which a furnisher of informat=
+ion is and isn't required to conduct a re-investigation of your dispute and=
+; </span><span style=3D"color: inherit; font-size:=0Ainherit; font-weight: =
+bold; line-height: inherit; text-decoration: inherit;" class=3D"">(3)</span=
+><span style=3D"color: inherit; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit;" class=3D""> what your direc=
+t disputes to the furnisher must contain. Today's information is important =
+because without this knowledge it's likely </span><span style=3D"color: #00=
+0000; font-size: inherit; font-weight: 400; line-height: inherit; text-deco=
+ration: inherit; font-family: arial; font-style: normal;" class=3D"">you ma=
+y not get a response, or at least the response that you desire, when disput=
+ing directly with the furnisher.<br class=3D""></span><span style=3D"color:=
+ inherit; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;" class=3D""> </span></span> <br class=3D""><span s=
+tyle=3D"color: inherit; font-size: inherit; font-weight: bold; line-height:=
+ inherit; text-decoration: inherit;" class=3D"">Let's begin...</span><br=0A=
+class=3D""><b style=3D"margin: 0; outline: none; padding: 0; font-family: a=
+rial; color: inherit; text-align: inherit; text-decoration: inherit;" class=
+=3D""><u style=3D"margin: 0; outline: none; padding: 0; font-family: arial;=
+" class=3D""><br class=3D"">Section 623 </u>of the Fair Credit Reporting Ac=
+t </b><span style=3D"color: #000000; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit; font-family: arial; tex=
+t-align: inherit;" class=3D"">(FCRA) requires the federal banking agencies =
+(Agencies) and the Federal Trade Commission (FTC) to:</span><br class=3D"">=
+</span></div>=0A</div>=0A<div style=3D"margin: 0; outline: none; padding: 0=
+; font-size: 17px;" class=3D""><div class=3D"" style=3D"margin: 0; outline:=
+ none; padding: 0;"><br style=3D"margin-right: 0px; margin-left: 0px; font-=
+family: arial; color: #000000; font-style: normal; font-weight: 400; text-a=
+lign: left;font-family: arial; font-weight: inherit; color: inherit;font-fa=
+mily: arial; font-weight: inherit; color: inherit;" class=3D""></div>=0A</d=
+iv>=0A<blockquote style=3D"margin: 0px 0px 0px 40px; outline: none; padding=
+: 0px; border: none; font-size: 17px;" class=3D""><span style=3D"color: #00=
+0000; font-size: inherit; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit; font-family: arial; font-style: italic;" class=3D"">1.=
+ Issue </span><b style=3D"margin: 0; outline: none; padding: 0; color: inhe=
+rit; font-family: arial; font-style: italic; text-decoration: inherit;" cla=
+ss=3D""><u style=3D"margin: 0; outline: none; padding: 0; font-family: aria=
+l;" class=3D"">guidelines for</u></b><span style=3D"color: #000000; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit; font-family: arial; font-style: italic;" class=3D""> use by furnish=
+ers regarding the </span><b style=3D"margin: 0; outline: none; padding: 0; =
+color: inherit; font-family: arial; font-style: italic; text-decoration: in=
+herit;" class=3D""><u style=3D"margin: 0; outline: none; padding: 0; font-f=
+amily: arial;"=0Aclass=3D"">accuracy</u></b><span style=3D"color: #000000; =
+font-size: inherit; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit; font-family: arial; font-style: italic;" class=3D""> and </s=
+pan><b style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-=
+family: arial; font-style: italic; text-decoration: inherit;" class=3D""><u=
+ style=3D"margin: 0; outline: none; padding: 0; font-family: arial;" class=
+=3D"">integrity</u></b><span style=3D"color: #000000; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit; font-f=
+amily: arial; font-style: italic;" class=3D""> </span><b style=3D"margin: 0=
+; outline: none; padding: 0; color: inherit; font-family: arial; font-style=
+: italic; text-decoration: inherit;" class=3D""><u style=3D"margin: 0; outl=
+ine: none; padding: 0; font-family: arial;" class=3D"">of the information</=
+u></b><span style=3D"color: #000000; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit;=0Afont-family: arial; f=
+ont-style: italic;" class=3D""> about consumers that </span><b style=3D"mar=
+gin: 0; outline: none; padding: 0; color: inherit; font-family: arial; font=
+-style: italic; text-decoration: inherit;" class=3D""><u style=3D"margin: 0=
+; outline: none; padding: 0; font-family: arial;" class=3D"">they furnish</=
+u></b><span style=3D"color: #000000; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit; font-family: arial; fon=
+t-style: italic;" class=3D""> to consumer reporting agencies;</span></block=
+quote><div style=3D"margin: 0; outline: none; padding: 0; font-size: 17px;"=
+ class=3D""><div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"=
+><br style=3D"margin-right: 0px; margin-left: 0px; font-family: arial; colo=
+r: #000000; font-style: normal; font-weight: 400; text-align: left;font-fam=
+ily: arial; font-weight: inherit; color: inherit;font-family: arial; font-w=
+eight: inherit; color: inherit;font-family: arial; font-weight: inherit; co=
+lor:=0Ainherit; font-style: italic;font-family: arial; font-weight: inherit=
+; color: #000000;" class=3D""></div>=0A</div>=0A<blockquote style=3D"margin=
+: 0px 0px 0px 40px; outline: none; padding: 0px; border: none; font-size: 1=
+7px;" class=3D""><div class=3D"" style=3D"margin: 0; outline: none; padding=
+: 0;"><div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"><span=
+ style=3D"color: inherit; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit; font-family: arial; font-style: it=
+alic; text-align: left; margin: 0;" class=3D""><span style=3D"color: #00000=
+0; font-size: inherit; font-weight: inherit; line-height: inherit; text-dec=
+oration: inherit; font-family: arial;" class=3D"">2. </span><b style=3D"mar=
+gin: 0; outline: none; padding: 0; font-family: arial;" class=3D""><u style=
+=3D"margin: 0; outline: none; padding: 0; font-family: arial;" class=3D"">P=
+rescribe</u></b><span style=3D"color: #000000; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit; font-family: =
+arial;" class=3D""> regulations requiring furnishers to establish </span><b=
+=0Astyle=3D"margin: 0; outline: none; padding: 0; font-family: arial;" clas=
+s=3D""><u style=3D"margin: 0; outline: none; padding: 0; font-family: arial=
+;" class=3D"">reasonable policies and procedures for implementing the guide=
+lines</u></b><span style=3D"color: #000000; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit; font-family: ari=
+al;" class=3D"">; and<br style=3D"" class=3D""></span></span></div>=0A</div=
+>=0A</blockquote><div style=3D"margin: 0; outline: none; padding: 0; font-s=
+ize: 17px;" class=3D""><div class=3D"" style=3D"margin: 0; outline: none; p=
+adding: 0;"><br style=3D"margin-right: 0px; margin-left: 0px; font-family: =
+arial; color: #000000; font-style: normal; font-weight: 400; text-align: le=
+ft;font-family: arial; font-weight: inherit; color: inherit;font-family: ar=
+ial; font-weight: inherit; color: inherit;font-family: arial; font-weight: =
+inherit; color: inherit; font-style: italic;font-family: arial; font-weight=
+: inherit; color: #000000;" class=3D""></div>=0A</div>=0A<blockquote style=
+=3D"margin: 0px 0px 0px 40px; outline: none; padding: 0px; border: none; fo=
+nt-size: 17px;" class=3D""><div class=3D"" style=3D"margin: 0; outline: non=
+e; padding: 0;"><div class=3D"" style=3D"margin: 0; outline: none; padding:=
+ 0;"><span style=3D"color: inherit; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit; font-family: arial; font=
+-style: italic; text-align: left; margin: 0;" class=3D""><span style=3D"col=
+or: #000000; font-size: inherit; font-weight: inherit; line-height: inherit=
+; text-decoration: inherit; font-family: arial;" class=3D"">3. The </span><=
+b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;" class=
+=3D""><u style=3D"margin: 0; outline: none; padding: 0; font-family: arial;=
+" class=3D"">circumstances under which a furnisher must reinvestigate dispu=
+tes<br class=3D""></u></b><span style=3D"color: #000000; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; fon=
+t-family: arial;"=0Aclass=3D"">concerning the accuracy of information conta=
+ined in a consumer report based on a direct request from a consumer.</span>=
+</span> </div>=0A</div>=0A</blockquote> </div>=0A</td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layo=
+ut-row-margin3291" valign=3D"top" style=3D"padding: 0;"><table width=3D"100=
+%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13p=
+x; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-co=
+llapse: initial !important;"><tr id=3D"layout-row3291" class=3D"layout layo=
+ut-row widget _widget_text style3291" style=3D"margin: 0; padding: 0;"><td =
+id=3D"layout-row-border3291" valign=3D"top" style=3D"border-color: #000000;=
+ border-style: solid; border-width: 3px;"><table width=3D"100%" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: =
+100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-r=
+ow-padding3291" valign=3D"top" style=3D"padding: 20px 30px 20px 30px;"><tab=
+le width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace:=
+ 0pt;"><tr><td id=3D"text_div3059" class=3D"td_text td_block" valign=3D"top=
+" align=3D"left" width=3D"584"=0Astyle=3D"line-height: 112%; margin: 0; out=
+line: none; padding: 0; color: inherit; font-size: 12px; font-weight: inher=
+it; line-height: 1.12; text-decoration: inherit; font-family: Arial; mso-li=
+ne-height-rule: exactly;"> <div style=3D"line-height: 112%; margin: 0; outl=
+ine: none; padding: 0; font-size: 17px; mso-line-height-rule: exactly; line=
+-height: 1.12;" data-line-height=3D"1.12"> <div style=3D"margin: 0; outline=
+: none; padding: 0;"> <div class=3D"" style=3D"margin: 0; outline: none; pa=
+dding: 0;"> <div style=3D"margin: 0; outline: none; padding: 0;" class=3D""=
+> <div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"> <div sty=
+le=3D"margin: 0; outline: none; padding: 0;" class=3D""> <div style=3D"marg=
+in: 0; outline: none; padding: 0; text-align: left;" class=3D""><div style=
+=3D"margin: 0; outline: none; padding: 0; text-align: left;" class=3D""><sp=
+an style=3D"color: inherit; font-size: inherit; font-weight: bold; line-hei=
+ght: inherit; text-decoration: inherit;">Let=E2=80=99s take a look at these=
+=0Arequirements in depth=E2=80=A6</span><br></div>=0A<div style=3D"margin: =
+0; outline: none; padding: 0; text-align: left;" class=3D""><b style=3D"mar=
+gin: 0; outline: none; padding: 0; mso-bidi-font-weight: normal;" class=3D"=
+"><span style=3D"color: inherit; font-size: inherit; font-weight: inherit; =
+line-height: inherit; text-decoration: inherit; mso-bidi-font-family: Calib=
+ri; mso-bidi-theme-font: minor-latin; mso-list: Ignore;" class=3D""><span s=
+tyle=3D"color: inherit; font-size: inherit; font-weight: normal; line-heigh=
+t: inherit; text-decoration: inherit; font-style: normal; font-family: aria=
+l;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0 <br class=3D""></span>=
+I.<span style=3D"color: inherit; font-size: inherit; font-weight: normal; l=
+ine-height: inherit; text-decoration: inherit; font-style: normal; font-fam=
+ily: arial;" class=3D""> </span></span></b><b style=3D"margin: 0; outline: =
+none; padding: 0; mso-bidi-font-weight: normal;" class=3D"">Issue guideline=
+s for use by furnishers regarding the accuracy and integrity of the informa=
+tion about consumers that they=0Afurnish to consumer reporting agencies<br =
+class=3D""><br class=3D""></b></div>=0A</div>=0A</div>=0A</div>=0A</div>=0A=
+</div>=0A<blockquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0=
+px; border: none;" class=3D""><div class=3D"" style=3D"margin: 0; outline: =
+none; padding: 0;"><div style=3D"margin: 0; outline: none; padding: 0;" cla=
+ss=3D""><div class=3D"" style=3D"margin: 0; outline: none; padding: 0;"><di=
+v style=3D"margin: 0; outline: none; padding: 0;" class=3D""><div style=3D"=
+margin: 0; outline: none; padding: 0; text-align: left;" class=3D""><div st=
+yle=3D"margin: 0; outline: none; padding: 0; text-align: left;" class=3D"">=
+<b style=3D"margin: 0; outline: none; padding: 0; mso-bidi-font-weight: nor=
+mal;" class=3D""></b><b style=3D"margin: 0; outline: none; padding: 0; text=
+-decoration: inherit;" class=3D"">a.<span style=3D"color: inherit; font-siz=
+e: inherit; font-weight: normal; line-height: inherit; text-decoration: inh=
+erit; font-family: arial;" class=3D"">=C2=A0 =C2=A0 =C2=A0=C2=A0</span></b>=
+<span style=3D"color: #000000; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit;" class=3D"">"</span><b=0Astyl=
+e=3D"margin: 0; outline: none; padding: 0; text-decoration: inherit;" class=
+=3D"">Furnisher</b><span style=3D"color: #000000; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit;" class=3D"=
+">" means an entity that furnishes information relating to consumers to one=
+ or more consumer reporting agencies for inclusion in a consumer report. An=
+ entity is not a furnisher when it:<br class=3D""></span></div>=0A</div>=0A=
+</div>=0A</div>=0A</div>=0A</div>=0A</blockquote><blockquote style=3D"margi=
+n: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=3D""><br c=
+lass=3D""><blockquote style=3D"margin: 0 0 0 40px; outline: none; padding: =
+0px; border: none;" class=3D""><div style=3D"margin: 0; outline: none; padd=
+ing: 0;" class=3D""><div style=3D"margin: 0; outline: none; padding: 0;" cl=
+ass=3D""><div style=3D"margin: 0; outline: none; padding: 0; text-align: le=
+ft;" class=3D""><div style=3D"margin: 0; outline: none; padding: 0; text-al=
+ign: left;" class=3D""><b style=3D"margin: 0; outline: none; padding: 0; te=
+xt-decoration: inherit;" class=3D"">i.<span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: normal; line-height: inherit; text-decoration: i=
+nherit; font-family: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b=
+><span style=3D"color: #000000; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit;" class=3D"">Provides informa=
+tion to a consumer reporting agency solely to obtain a consumer report in a=
+ccordance with the=0Apermissible purposes outlined in sections <span style=
+=3D"color: inherit; font-size: inherit; font-weight: bold; line-height: inh=
+erit; text-decoration: inherit;" class=3D"">604(a)</span> and <span style=
+=3D"color: inherit; font-size: inherit; font-weight: bold; line-height: inh=
+erit; text-decoration: inherit;" class=3D"">604</span><span style=3D"color:=
+ inherit; font-size: inherit; font-weight: bold; line-height: inherit; text=
+-decoration: inherit;" class=3D"">(f)</span> of the FCRA;<br class=3D""><br=
+ class=3D""></span><b style=3D"margin: 0; outline: none; padding: 0; text-d=
+ecoration: inherit;" class=3D"">ii.<span style=3D"color: inherit; font-size=
+: inherit; font-weight: normal; line-height: inherit; text-decoration: inhe=
+rit; font-family: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><s=
+pan style=3D"color: #000000; font-size: inherit; font-weight: inherit; line=
+-height: inherit; text-decoration: inherit;" class=3D"">Is acting as a "con=
+sumer reporting agency" as defined in section <span class=3D""=0Astyle=3D"c=
+olor: inherit; font-size: inherit; font-weight: bold; line-height: inherit;=
+ text-decoration: inherit;">603(f) of the FCRA</span>;<br class=3D""><br cl=
+ass=3D""></span><b style=3D"margin: 0; outline: none; padding: 0; text-deco=
+ration: inherit;" class=3D"">iii.<span style=3D"color: inherit; font-size: =
+inherit; font-weight: normal; line-height: inherit; text-decoration: inheri=
+t; font-family: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><spa=
+n style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-h=
+eight: inherit; text-decoration: inherit;" class=3D"">Is a consumer to whom=
+ the furnished information pertains; or <br class=3D""><br class=3D""></spa=
+n></div>=0A</div>=0A</div>=0A</div>=0A</blockquote></blockquote><blockquote=
+ style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;" c=
+lass=3D""><blockquote style=3D"margin: 0 0 0 40px; outline: none; padding: =
+0px; border: none;" class=3D""><b style=3D"margin: 0; outline: none; paddin=
+g: 0; text-decoration: inherit;" class=3D"">iv.<span style=3D"color: inheri=
+t; font-size: inherit; font-weight: normal; line-height: inherit; text-deco=
+ration: inherit; font-family: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=
+=A0 </span></b><span style=3D"color: #000000; font-size: inherit; font-weig=
+ht: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">Is=
+ a neighbor, friend, or associate of the consumer, or another individual wi=
+th whom the consumer is acquainted or who may have knowledge about the cons=
+umer, and who provides information about the consumer's character, general =
+reputation, personal characteristics, or mode of living in response to a sp=
+ecific request from a consumer reporting agency.</span></blockquote><blockq=
+uote=0Astyle=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: no=
+ne;" class=3D""><br class=3D"" style=3D"color: #000000;"></blockquote><span=
+ style=3D"color: #000000; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit;" class=3D""> <b style=3D"margin: 0=
+; outline: none; padding: 0; font-family: arial; color: #000000; font-style=
+: normal;" class=3D"">b.<span style=3D"color: #000000; font-size: inherit; =
+font-weight: normal; line-height: inherit; text-decoration: inherit; font-f=
+amily: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=
+=3D"color: #000000; font-size: inherit; font-weight: 400; line-height: inhe=
+rit; text-decoration: inherit; font-family: arial; font-style: normal;" cla=
+ss=3D"">"</span><b style=3D"margin: 0; outline: none; padding: 0; font-fami=
+ly: arial; color: #000000; font-style: normal;" class=3D"">Accuracy</b><spa=
+n style=3D"color: #000000; font-size: inherit; font-weight: 400; line-heigh=
+t: inherit; text-decoration: inherit; font-family: arial;=0Afont-style: nor=
+mal;" class=3D"">" means that the information a furnisher provides to a con=
+sumer reporting agency about an account or other relationship with the cons=
+umer correctly:</span><span style=3D"color: #000000; font-size: inherit; fo=
+nt-weight: 400; line-height: inherit; text-decoration: inherit; font-family=
+: arial; font-style: normal;" class=3D""> </span> </span></blockquote><bloc=
+kquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: no=
+ne;" class=3D""><b style=3D"margin: 0; outline: none; padding: 0; color: in=
+herit; font-family: arial; text-decoration: inherit;" class=3D""></b></bloc=
+kquote><blockquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px=
+; border: none;" class=3D""><blockquote style=3D"margin: 0 0 0 40px; outlin=
+e: none; padding: 0px; border: none;" class=3D""><b style=3D"margin: 0; out=
+line: none; padding: 0; color: inherit; font-family: arial; text-decoration=
+: inherit;" class=3D""><br class=3D""></b></blockquote><blockquote style=3D=
+"margin: 0 0 0 40px;=0Aoutline: none; padding: 0px; border: none;" class=3D=
+""><b style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-f=
+amily: arial; text-decoration: inherit;" class=3D"">i.<span style=3D"color:=
+ inherit; font-size: inherit; font-weight: normal; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial;" class=3D"">=C2=A0=C2=A0=C2=
+=A0=C2=A0 </span></b><span style=3D"color: #000000; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit; font-fam=
+ily: arial;" class=3D"">Reflects the terms of and liability for the account=
+ or other relationship;</span></blockquote><blockquote style=3D"margin: 0 0=
+ 0 40px; outline: none; padding: 0px; border: none;" class=3D""><b style=3D=
+"margin: 0; outline: none; padding: 0; font-family: arial; color: inherit; =
+text-decoration: inherit;" class=3D""><br class=3D""></b></blockquote><bloc=
+kquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: no=
+ne;" class=3D""><b style=3D"margin: 0; outline: none; padding: 0; font-fami=
+ly:=0Aarial; color: inherit; text-decoration: inherit;" class=3D"">ii.<span=
+ style=3D"color: inherit; font-size: inherit; font-weight: normal; line-hei=
+ght: inherit; text-decoration: inherit; font-family: arial;" class=3D"">=
+=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=3D"color: #000000; font-siz=
+e: inherit; font-weight: 400; line-height: inherit; text-decoration: inheri=
+t; font-family: arial;" class=3D"">Reflects the consumer's performance and =
+other conduct with respect to the account or other relationship; and</span>=
+</blockquote><blockquote style=3D"margin: 0 0 0 40px; outline: none; paddin=
+g: 0px; border: none;" class=3D""><b style=3D"margin: 0; outline: none; pad=
+ding: 0; font-family: arial; color: inherit; text-decoration: inherit;" cla=
+ss=3D""><br class=3D""></b></blockquote><blockquote style=3D"margin: 0 0 0 =
+40px; outline: none; padding: 0px; border: none;" class=3D""><b style=3D"ma=
+rgin: 0; outline: none; padding: 0; font-family: arial; color: inherit; tex=
+t-decoration: inherit;" class=3D"">iii.<span style=3D"color:=0Ainherit; fon=
+t-size: inherit; font-weight: normal; line-height: inherit; text-decoration=
+: inherit; font-family: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span>=
+</b><span style=3D"color: #000000; font-size: inherit; font-weight: 400; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;" class=3D=
+"">Identifies the appropriate consumer.</span></blockquote><blockquote styl=
+e=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=
+=3D""><b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;=
+ color: inherit; text-decoration: inherit;" class=3D""><br class=3D""></b><=
+/blockquote><blockquote style=3D"margin: 0 0 0 40px; outline: none; padding=
+: 0px; border: none;" class=3D""><b style=3D"margin: 0; outline: none; padd=
+ing: 0; font-family: arial; color: inherit; text-decoration: inherit;" clas=
+s=3D"">iv.<span style=3D"color: inherit; font-size: inherit; font-weight: n=
+ormal; line-height: inherit; text-decoration: inherit; font-family: arial;"=
+ class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span=0Astyle=3D"color: #00=
+0000; font-size: inherit; font-weight: 400; line-height: inherit; text-deco=
+ration: inherit; font-family: arial;" class=3D"">The FTC=E2=80=99s Furnishe=
+r Rule Says:</span></blockquote><blockquote style=3D"margin: 0 0 0 40px; ou=
+tline: none; padding: 0px; border: none;" class=3D""><b style=3D"margin: 0;=
+ outline: none; padding: 0; color: inherit; font-family: arial; text-decora=
+tion: inherit;" class=3D""><br class=3D""></b></blockquote></blockquote><bl=
+ockquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: =
+none;" class=3D""><blockquote style=3D"margin: 0 0 0 40px; outline: none; p=
+adding: 0px; border: none;" class=3D""><blockquote style=3D"margin: 0 0 0 4=
+0px; outline: none; padding: 0px; border: none;" class=3D""><b style=3D"mar=
+gin: 0; outline: none; padding: 0; color: inherit; font-family: arial; text=
+-decoration: inherit;" class=3D"">1.<span style=3D"color: inherit; font-siz=
+e: inherit; font-weight: normal; line-height: inherit; text-decoration: inh=
+erit; font-family:=0Aarial;" class=3D"">=C2=A0=C2=A0</span></b><span style=
+=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial;" class=3D"">(To The =
+Furnisher) When you provide information to a CRA, you have obligations unde=
+r the FCRA to ensure the accuracy of the information you furnish. As a rule=
+, it=E2=80=99s illegal to report information that you know or believe is in=
+accurate. You have "reasonable cause to believe" that information is inaccu=
+rate if you have knowledge, other than allegations from the consumer that w=
+ould lead a reasonable person to doubt the accuracy of the information. </s=
+pan><span style=3D"color: inherit; font-size: inherit; font-weight: bold; l=
+ine-height: inherit; text-decoration: inherit; font-family: arial;" class=
+=3D"">FCRA Section 623(a)(1)(A) </span></blockquote><blockquote style=3D"ma=
+rgin: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=3D""><s=
+pan style=3D"color: #000000; font-size: inherit;=0Afont-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;" class=3D=
+"">You may be exempt from this requirement if you give an address for 2 con=
+sumers to report inaccurate information, but you cannot, under any circumst=
+ances, report information the consumer has told you is inaccurate if it is,=
+ in fact, inaccurate. </span><span style=3D"color: inherit; font-size: inhe=
+rit; font-weight: bold; line-height: inherit; text-decoration: inherit; fon=
+t-family: arial;" class=3D"">FCRA Section 623(a)(1)(C)</span></blockquote><=
+/blockquote></blockquote><blockquote style=3D"margin: 0 0 0 40px; outline: =
+none; padding: 0px; border: none;" class=3D""><blockquote style=3D"margin: =
+0 0 0 40px; outline: none; padding: 0px; border: none;" class=3D""><br clas=
+s=3D""></blockquote></blockquote><blockquote style=3D"margin: 0 0 0 40px; o=
+utline: none; padding: 0px; border: none;" class=3D""><b class=3D"" style=
+=3D"margin: 0; outline: none; padding: 0; text-decoration: inherit;"> <b=0A=
+style=3D"margin: 0; outline: none; padding: 0; font-family: arial; color: #=
+000000; font-style: normal;" class=3D"">c.<span style=3D"color: inherit; fo=
+nt-size: inherit; font-weight: normal; line-height: inherit; text-decoratio=
+n: inherit; font-family: arial;" class=3D""> </span></b><span style=3D"colo=
+r: #000000; font-size: inherit; font-weight: 400; line-height: inherit; tex=
+t-decoration: inherit; font-family: arial; font-style: normal;" class=3D"">=
+"</span><b style=3D"margin: 0; outline: none; padding: 0; font-family: aria=
+l; color: #000000; font-style: normal;" class=3D"">Integrity</b><span style=
+=3D"color: #000000; font-size: inherit; font-weight: 400; line-height: inhe=
+rit; text-decoration: inherit; font-family: arial; font-style: normal;" cla=
+ss=3D"">" means that the information a furnisher provides to a consumer rep=
+orting agency about an account or other relationship with the consumer:</sp=
+an><span style=3D"color: #000000; font-size: inherit; font-weight: 400; lin=
+e-height: inherit;=0Atext-decoration: inherit; font-family: arial; font-sty=
+le: normal;" class=3D""> </span> </b></blockquote><blockquote style=3D"marg=
+in: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=3D""><b c=
+lass=3D"" style=3D"margin: 0; outline: none; padding: 0; text-decoration: i=
+nherit;"><br class=3D""></b></blockquote><blockquote style=3D"margin: 0 0 0=
+ 40px; outline: none; padding: 0px; border: none;" class=3D""><blockquote s=
+tyle=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;" cla=
+ss=3D""><b class=3D"" style=3D"margin: 0; outline: none; padding: 0; text-d=
+ecoration: inherit;">i.<span style=3D"color: inherit; font-size: inherit; f=
+ont-weight: normal; line-height: inherit; text-decoration: inherit; font-fa=
+mily: arial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=3D=
+"color: #000000; font-size: inherit; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit;" class=3D"">Is substantiated by the furnish=
+er's records at the time it is furnished;</span></blockquote><blockquote=0A=
+style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;" cl=
+ass=3D""><b class=3D"" style=3D"margin: 0; outline: none; padding: 0; text-=
+decoration: inherit;"><br class=3D""></b></blockquote><blockquote style=3D"=
+margin: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=3D"">=
+<b class=3D"" style=3D"margin: 0; outline: none; padding: 0; text-decoratio=
+n: inherit;">ii.<span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: normal; line-height: inherit; text-decoration: inherit; font-family: a=
+rial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=3D"color:=
+ #000000; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;" class=3D"">Is furnished in a form and manner that=
+ is designed to minimize the likelihood that the information may be incorre=
+ctly reflected in a consumer report; and</span></blockquote><blockquote sty=
+le=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=
+=3D""><b class=3D"" style=3D"margin: 0; outline: none;=0Apadding: 0; text-d=
+ecoration: inherit;"><br class=3D""></b></blockquote><blockquote style=3D"m=
+argin: 0 0 0 40px; outline: none; padding: 0px; border: none;" class=3D""><=
+b class=3D"" style=3D"margin: 0; outline: none; padding: 0; text-decoration=
+: inherit;">iii.<span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: normal; line-height: inherit; text-decoration: inherit; font-family: a=
+rial;" class=3D"">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=3D"color:=
+ #000000; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;" class=3D"">Includes:</span></blockquote><blockquo=
+te style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: none;"=
+ class=3D""><b class=3D"" style=3D"margin: 0; outline: none; padding: 0; te=
+xt-decoration: inherit;"><br class=3D""></b></blockquote></blockquote><bloc=
+kquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: no=
+ne;" class=3D""><blockquote style=3D"margin: 0 0 0 40px; outline: none; pad=
+ding: 0px; border: none;"=0Aclass=3D""><blockquote style=3D"margin: 0 0 0 4=
+0px; outline: none; padding: 0px; border: none;" class=3D""><b class=3D"" s=
+tyle=3D"margin: 0; outline: none; padding: 0; text-decoration: inherit;">1.=
+<span style=3D"color: inherit; font-size: inherit; font-weight: normal; lin=
+e-height: inherit; text-decoration: inherit; font-family: arial;" class=3D"=
+">=C2=A0=C2=A0</span></b><span style=3D"color: #000000; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit;" cla=
+ss=3D"">The information in the furnisher's possession about the account or =
+other relationship that the relevant Agency has determined that the absence=
+ of which would likely be materially misleading in evaluating a consumer's =
+creditworthiness, credit standing, credit capacity, character, general repu=
+tation, personal characteristics, or mode of living; and</span></blockquote=
+><blockquote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; bord=
+er: none;" class=3D""><b class=3D"" style=3D"margin: 0; outline:=0Anone; pa=
+dding: 0; text-decoration: inherit;"><br class=3D""></b></blockquote><block=
+quote style=3D"margin: 0 0 0 40px; outline: none; padding: 0px; border: non=
+e;" class=3D""><b class=3D"" style=3D"margin: 0; outline: none; padding: 0;=
+ text-decoration: inherit;">2.<span style=3D"color: inherit; font-size: inh=
+erit; font-weight: normal; line-height: inherit; text-decoration: inherit; =
+font-family: arial;" class=3D""> </span></b><span style=3D"color: #000000; =
+font-size: inherit; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit;" class=3D"">The credit limit, if applicable and in the furni=
+sher=E2=80=99s possession.</span></blockquote></blockquote></blockquote> </=
+div>=0A </div>=0A<!--[if (gte mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=
+=3D"true" data-ac-inline=3D"false"> #text_div3059, #text_div3059 div { line=
+-height: 112% !important; };=0A</style>=0A<![endif]--></td>=0A</tr>=0A</tab=
+le>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A<tr style=3D""><td id=3D"layout-row-margin3333" valign=3D"top" style=3D"=
+padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; =
+mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layo=
+ut-row3333" class=3D"layout layout-row widget _widget_text style3333" style=
+=3D"margin: 0; padding: 0;"><td id=3D"layout-row-border3333" valign=3D"top"=
+ style=3D"border-color: #000000; border-style: solid; border-width: 3px;"><=
+table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt;"><tr><td id=3D"layout-row-padding3333" valign=3D"top" style=3D"pad=
+ding: 20px 30px 20px 30px;"><table width=3D"100%" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-tab=
+le-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3101" class=
+=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"584"=0Astyle=
+=3D"line-height: 112%; margin: 0; outline: none; padding: 0; color: inherit=
+; font-size: 12px; font-weight: inherit; line-height: 1.12; text-decoration=
+: inherit; font-family: Arial; mso-line-height-rule: exactly;"> <div style=
+=3D"line-height: 112%; margin: 0; outline: none; padding: 0; font-size: 17p=
+x; mso-line-height-rule: exactly; line-height: 1.12;" data-line-height=3D"1=
+.12"> <div style=3D"margin: 0; outline: none; padding: 0; color: #000000; f=
+ont-family: arial;"> <span style=3D"color: #000000; font-size: inherit; fon=
+t-weight: 400; line-height: inherit; text-decoration: inherit; font-style: =
+normal; font-family: arial; text-align: left; margin: 0;" class=3D""><span =
+style=3D"color: inherit; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit; text-align: left; font-family: aria=
+l; margin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-famil=
+y: arial;"><span style=3D"color: inherit; font-size: inherit; font-weight: =
+inherit;=0Aline-height: inherit; text-decoration: inherit; font-family: ari=
+al;">II.<span style=3D"color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit; font-family: arial; f=
+ont-style: normal;"> </span></span></b><span style=3D"color: inherit; font-=
+size: inherit; font-weight: bold; line-height: inherit; text-decoration: in=
+herit; font-family: arial;">Reasonable policies and procedures concerning t=
+he accuracy and integrity of furnished information and Interagency Guidelin=
+es.<br style=3D""></span></span><br></span><div style=3D"margin: 0 0px 0 40=
+px; outline: none; padding: 0; font-family: arial; color: #000000; font-sty=
+le: normal; font-weight: 400; text-align: left;"><span style=3D"color: inhe=
+rit; font-size: inherit; font-weight: inherit; line-height: inherit; text-d=
+ecoration: inherit; font-family: arial; text-align: left; margin: 0;" class=
+=3D""><span style=3D"color: inherit; font-size: inherit; font-weight: inher=
+it; line-height: inherit;=0Atext-decoration: inherit; font-family: arial; t=
+ext-align: left; margin: 0;"><b style=3D"margin: 0; outline: none; padding:=
+ 0; font-family: arial;">a.<span style=3D"color: inherit; font-size: inheri=
+t; font-weight: normal; line-height: inherit; text-decoration: inherit; fon=
+t-family: arial;">=C2=A0=C2=A0</span></b><span style=3D"color: #000000; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit; font-family: arial;">Each furnisher must establish and implemen=
+t reasonable written policies and procedures regarding the accuracy and int=
+egrity of consumer information that it furnishes to a consumer reporting ag=
+ency. The policies and procedures<br style=3D""><br style=3D""></span></spa=
+n><br></span></div>=0A<div style=3D"margin: 0 0px 0 40px; outline: none; pa=
+dding: 0; font-family: arial; color: #000000; font-style: normal; font-weig=
+ht: 400; text-align: left;"><div style=3D"margin: 0 0px 0 40px; outline: no=
+ne; padding: 0; font-family: arial;"><span style=3D"color: inherit; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit; font-family: arial; text-align: left; margin: 0;" class=3D""><span =
+style=3D"color: inherit; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit; font-family: arial; text-align: lef=
+t; margin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-famil=
+y: arial;">i.<span style=3D"color: inherit; font-size: inherit; font-weight=
+: normal; line-height: inherit; text-decoration: inherit; font-family: aria=
+l;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #=
+000000; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit; font-family: arial;">Must be appropriate to=0Athe na=
+ture, size, complexity, and scope of your activities;<br style=3D""><br sty=
+le=3D""></span><b style=3D"margin: 0; outline: none; padding: 0; font-famil=
+y: arial;">ii.<span style=3D"color: inherit; font-size: inherit; font-weigh=
+t: normal; line-height: inherit; text-decoration: inherit; font-family: ari=
+al;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: =
+#000000; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial;">Must be reviewed periodically =
+and updated, as necessary;<br style=3D""><br style=3D""></span><b style=3D"=
+margin: 0; outline: none; padding: 0; font-family: arial;">iii.<span style=
+=3D"color: inherit; font-size: inherit; font-weight: normal; line-height: i=
+nherit; text-decoration: inherit; font-family: arial;">=C2=A0=C2=A0=C2=
+=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #000000; font-size: =
+inherit; font-weight: inherit; line-height: inherit; text-decoration: inher=
+it; font-family: arial;">Should ensure that information provided to a CRA=
+=0Ais for the right person;<br style=3D""><br style=3D""></span><b style=3D=
+"margin: 0; outline: none; padding: 0; font-family: arial;">iv.<span style=
+=3D"color: inherit; font-size: inherit; font-weight: normal; line-height: i=
+nherit; text-decoration: inherit; font-family: arial;">=C2=A0=C2=A0=C2=
+=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #000000; font-size: =
+inherit; font-weight: inherit; line-height: inherit; text-decoration: inher=
+it; font-family: arial;">Reflects the terms of the account and the consumer=
+=E2=80=99s performance on the account;<br style=3D""><br style=3D"">v</span=
+><b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;">.<s=
+pan style=3D"color: inherit; font-size: inherit; font-weight: normal; line-=
+height: inherit; text-decoration: inherit; font-family: arial;">=C2=A0=
+=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #000000; fo=
+nt-size: inherit; font-weight: inherit; line-height: inherit; text-decorati=
+on: inherit; font-family: arial;">Require maintenance of records for a reas=
+onable amount of=0Atime;<br style=3D""><br style=3D"">vi</span><b style=3D"=
+margin: 0; outline: none; padding: 0; font-family: arial;">.<span style=3D"=
+color: inherit; font-size: inherit; font-weight: normal; line-height: inher=
+it; text-decoration: inherit; font-family: arial;">=C2=A0=C2=A0=C2=A0=C2=
+=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #000000; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit; fo=
+nt-family: arial;">Establish internal controls for the accuracy and integri=
+ty of information, such as through random sampling;<br style=3D""><br style=
+=3D"">vii</span><b style=3D"margin: 0; outline: none; padding: 0; font-fami=
+ly: arial;">.<span style=3D"color: inherit; font-size: inherit; font-weight=
+: normal; line-height: inherit; text-decoration: inherit; font-family: aria=
+l;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #=
+000000; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit; font-family: arial;">Prevent re-aging (inaccurately =
+changing the date of=0Afirst delinquency on a consumer=E2=80=99s account to=
+ a later date) and duplicative reporting, particularly following portfolio =
+acquisitions or sales, mergers, and other transfers; and<br style=3D""><br =
+style=3D"">viii</span><b style=3D"margin: 0; outline: none; padding: 0; fon=
+t-family: arial;">.<span style=3D"color: inherit; font-size: inherit; font-=
+weight: normal; line-height: inherit; text-decoration: inherit; font-family=
+: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"co=
+lor: #000000; font-size: inherit; font-weight: inherit; line-height: inheri=
+t; text-decoration: inherit; font-family: arial;">Require updating of furni=
+shed information where necessary.<br style=3D""></span></span><br></span></=
+div>=0A</div>=0A<div style=3D"margin: 0 0px 0 40px; outline: none; padding:=
+ 0; font-family: arial; color: #000000; font-style: normal; font-weight: 40=
+0; text-align: left;"><div style=3D"margin: 0 0px 0 40px; outline: none; pa=
+dding: 0; font-family: arial;"><div style=3D"margin: 0 0px 0 40px; outline:=
+ none; padding: 0; font-family: arial;"><span style=3D"color: inherit; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit; font-family: arial; text-align: left; margin: 0;" class=3D""><sp=
+an style=3D"color: inherit; font-size: inherit; font-weight: inherit; line-=
+height: inherit; text-decoration: inherit; font-family: arial; text-align: =
+left; margin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-fa=
+mily: arial;">a.<span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: normal; line-height: inherit; text-decoration: inherit; font-family: a=
+rial;">=C2=A0 =C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #000000; =
+font-size: inherit; font-weight: inherit; line-height:=0Ainherit; text-deco=
+ration: inherit; font-family: arial;">Information should:<br style=3D""></s=
+pan></span><br></span></div>=0A</div>=0A</div>=0A<div style=3D"margin: 0 0p=
+x 0 40px; outline: none; padding: 0; font-family: arial; color: #000000; fo=
+nt-style: normal; font-weight: 400; text-align: left;"><div style=3D"margin=
+: 0 0px 0 40px; outline: none; padding: 0; font-family: arial;"><div style=
+=3D"margin: 0 0px 0 40px; outline: none; padding: 0; font-family: arial;"><=
+div style=3D"margin: 0 0px 0 40px; outline: none; padding: 0; font-family: =
+arial;"><span style=3D"color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit; text-align: left; fon=
+t-family: arial; margin: 0;" class=3D""><b style=3D"margin: 0; outline: non=
+e; padding: 0; font-family: arial;">i.<span style=3D"color: inherit; font-s=
+ize: inherit; font-weight: normal; line-height: inherit; text-decoration: i=
+nherit; font-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span styl=
+e=3D"color: #000000; font-size: inherit; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit; font-family: arial;">Be substantiated b=
+y your records=0Awhen </span><span style=3D"color: #000000; font-size: inhe=
+rit; font-weight: inherit; line-height: inherit; text-decoration: inherit; =
+font-family: arial;">it is furnished;<br style=3D""><br style=3D""></span><=
+b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;">ii.<s=
+pan style=3D"color: inherit; font-size: inherit; font-weight: normal; line-=
+height: inherit; text-decoration: inherit; font-family: arial;">=C2=A0=
+=C2=A0=C2=A0=C2=A0 </span></b><span style=3D"color: #000000; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+ font-family: arial;">Include consumer identifiers, like name(s), date of b=
+irth, Social Security number, telephone number(s), or address(es); and<br s=
+tyle=3D""><br style=3D""></span><b style=3D"margin: 0; outline: none; paddi=
+ng: 0; font-family: arial;">iii.<span style=3D"color: inherit; font-size: i=
+nherit; font-weight: normal; line-height: inherit; text-decoration: inherit=
+; font-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=3D"c=
+olor:=0A#000000; font-size: inherit; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit; font-family: arial;">Be furnished in a stan=
+dardized form and specify the time period it pertains to.</span></span></di=
+v>=0A</div>=0A</div>=0A</div>=0A</div>=0A </div>=0A<!--[if (gte mso 12)&(lt=
+e mso 15) ]>=0A<style data-ac-keep=3D"true" data-ac-inline=3D"false"> #text=
+_div3101, #text_div3101 div { line-height: 112% !important; };=0A</style>=
+=0A<![endif]--></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-m=
+argin3334" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-w=
+idth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: =
+initial !important;"><tr id=3D"layout-row3334" class=3D"layout layout-row w=
+idget _widget_text style3334" style=3D"margin: 0; padding: 0;"><td id=3D"la=
+yout-row-border3334" valign=3D"top" style=3D"border-color: #000000; border-=
+style: solid; border-width: 3px;"><table width=3D"100%" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"layout-row-paddi=
+ng3334" valign=3D"top" style=3D"padding: 20px 30px 20px 30px;"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><=
+tr><td id=3D"text_div3102" class=3D"td_text td_block" valign=3D"top" align=
+=3D"left" width=3D"584"=0Astyle=3D"line-height: 112%; margin: 0; outline: n=
+one; padding: 0; color: inherit; font-size: 12px; font-weight: inherit; lin=
+e-height: 1.12; text-decoration: inherit; font-family: Arial; mso-line-heig=
+ht-rule: exactly;"> <div style=3D"line-height: 112%; margin: 0; outline: no=
+ne; padding: 0; font-size: 17px; mso-line-height-rule: exactly; line-height=
+: 1.12;" data-line-height=3D"1.12"> <div style=3D"margin: 0; outline: none;=
+ padding: 0; color: #000000; font-family: arial;"> <span style=3D"color: #0=
+00000; font-size: inherit; font-weight: 400; line-height: inherit; text-dec=
+oration: inherit; font-style: normal; font-family: arial; text-align: left;=
+ margin: 0;" class=3D""><span style=3D"color: inherit; font-size: inherit; =
+font-weight: bold; line-height: inherit; text-decoration: inherit; text-ali=
+gn: left; font-family: arial; margin: 0;"><span style=3D"color: inherit; fo=
+nt-size: inherit; font-weight: inherit; line-height: inherit; text-decorati=
+on: inherit; font-family: arial;">III.<span=0Astyle=3D"color: inherit; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit; font-family: arial; font-style: normal;"> </span></span>A furnis=
+her <u style=3D"margin: 0; outline: none; padding: 0; font-family: arial;">=
+must conduct a reasonable investigation of a direct dispute</u> (unless exc=
+eptions, described later, apply) if the dispute relates to: <br style=3D"">=
+</span><br></span><div style=3D"margin: 0 0px 0 40px; outline: none; paddin=
+g: 0; font-family: arial; color: #000000; font-style: normal; font-weight: =
+400; text-align: left;"><span style=3D"color: inherit; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit; font-=
+family: arial; text-align: left; margin: 0;" class=3D""><span style=3D"colo=
+r: inherit; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit; font-family: arial; text-align: left; margin: 0;=
+"><b style=3D"margin: 0; outline: none; padding: 0; font-family:=0Aarial;">=
+a.<span style=3D"color: inherit; font-size: inherit; font-weight: normal; l=
+ine-height: inherit; text-decoration: inherit; font-family: arial;">=C2=
+=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #000000;=
+ font-size: inherit; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit; font-family: arial;">The consumer's liability for a credit =
+account or other debt with the furnisher, such as direct disputes relating =
+to whether there is or has been identify theft or fraud against the consume=
+r, whether there is individual or joint liability on an account, or whether=
+ the consumer is an authorized user of a credit account;<br style=3D""><br =
+style=3D""></span><b style=3D"margin: 0; outline: none; padding: 0; font-fa=
+mily: arial;">b.<span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: normal; line-height: inherit; text-decoration: inherit; font-family: a=
+rial;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><span style=3D"color: #000000; f=
+ont-size: inherit; font-weight: inherit; line-height:=0Ainherit; text-decor=
+ation: inherit; font-family: arial;">The terms of a credit account or other=
+ debt with the furnisher, such as, direct disputes relating to the type of =
+account, principal balance, scheduled payment amount on an account, or the =
+amount of the credit limit on an open-end account.<br style=3D""><br style=
+=3D""></span><b style=3D"margin: 0; outline: none; padding: 0; font-family:=
+ arial;">c.<span style=3D"color: inherit; font-size: inherit; font-weight: =
+normal; line-height: inherit; text-decoration: inherit; font-family: arial;=
+">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></b><span style=3D"color: #00=
+0000; font-size: inherit; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit; font-family: arial;">The consumer's performance or oth=
+er conduct concerning an account or other relationship with the furnisher s=
+uch as, direct disputes relating to the current payment status, high balanc=
+e, payment date, the payment amount, or the date an account was opened or c=
+losed; or<br=0Astyle=3D""><br style=3D""></span><b style=3D"margin: 0; outl=
+ine: none; padding: 0; font-family: arial;">d.<span style=3D"color: inherit=
+; font-size: inherit; font-weight: normal; line-height: inherit; text-decor=
+ation: inherit; font-family: arial;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></b><s=
+pan style=3D"color: #000000; font-size: inherit; font-weight: inherit; line=
+-height: inherit; text-decoration: inherit; font-family: arial;">Any other =
+information contained in a consumer report regarding an account or other re=
+lationship with the furnisher that bears on the consumer's creditworthiness=
+, credit standing, credit capacity, character, general reputation, personal=
+ characteristics, or mode of living.</span></span><br></span></div>=0A<span=
+ style=3D"color: #000000; font-size: inherit; font-weight: 400; line-height=
+: inherit; text-decoration: inherit; font-style: normal; text-align: left; =
+font-family: arial; margin: 0;" class=3D""><span style=3D"color: inherit; f=
+ont-size: inherit; font-weight: inherit; line-height: inherit; text-decorat=
+ion: inherit; font-family: arial; text-align: left; margin: 0;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial; text-align: left; ma=
+rgin: 0;"><div style=3D"margin: 0 0px 0 1in; outline: none; padding: 0; fon=
+t-family: arial;"><b style=3D"margin: 0; outline: none; padding: 0; font-fa=
+mily: arial; font-weight: inherit; color: inherit;"></b></div>=0A<span styl=
+e=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit; font-family: arial;"><br style=3D""><b =
+style=3D"margin: 0; outline: none; padding: 0; font-family: arial;"><br sty=
+le=3D"">Exceptions<br style=3D""></b><br style=3D"">The direct dispute requ=
+irements do not apply to a furnisher <u style=3D"margin: 0; outline: none; =
+padding: 0; font-family: arial;">if the direct dispute relates to</u>: <b s=
+tyle=3D"margin: 0; outline: none; padding: 0; font-family: arial;"><br styl=
+e=3D""></b></span></span><br></span><div style=3D"margin: 0 0px 0 40px; out=
+line: none; padding: 0; font-family: arial;"><span style=3D"color: inherit;=
+ font-size: inherit; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit; font-family: arial; text-align: left; margin: 0;"><b style=
+=3D"margin: 0; outline: none; padding: 0; font-family: arial;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit;=0Atext-decoration: inherit; font-family: arial;">a.<span style=3D"=
+color: inherit; font-size: inherit; font-weight: normal; line-height: inher=
+it; text-decoration: inherit; font-family: arial; font-style: normal;">=
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></span></b>The consumer=
+=E2=80=99s identifying information such as name(s), date of birth, Social S=
+ecurity number, telephone number(s), or address(es);</span></div>=0A<br sty=
+le=3D"margin-right: 0px; margin-left: 0px; font-family: arial;margin-right:=
+ 0px; margin-left: 0px; font-family: arial;margin-right: 0px; margin-left: =
+0px; font-family: arial; text-align: left;"><div style=3D"margin: 0 0px 0 4=
+0px; outline: none; padding: 0; font-family: arial;"><span style=3D"color: =
+inherit; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial; text-align: left; margin: 0;"><=
+b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;"><span=
+ style=3D"color: inherit; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit; font-family: arial;">b.<span style=
+=3D"color: inherit; font-size: inherit; font-weight: normal; line-height: i=
+nherit; text-decoration: inherit; font-family: arial; font-style: normal;">=
+=C2=A0=C2=A0=C2=A0=C2=A0 </span></span></b>The identity of past or present =
+employers;</span></div>=0A<br style=3D"margin-right: 0px; margin-left: 0px;=
+ font-family: arial;margin-right: 0px; margin-left: 0px; font-family: arial=
+;margin-right: 0px; margin-left: 0px; font-family: arial; text-align: left;=
+"><div style=3D"margin: 0 0px 0 40px; outline: none; padding: 0; font-famil=
+y: arial;"><span style=3D"color: inherit; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit; font-family: arial=
+; text-align: left; margin: 0;"><b style=3D"margin: 0; outline: none; paddi=
+ng: 0; font-family: arial;"><span style=3D"color: inherit; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit; f=
+ont-family: arial;">c.<span style=3D"color: inherit; font-size: inherit; fo=
+nt-weight: normal; line-height: inherit; text-decoration: inherit; font-fam=
+ily: arial; font-style: normal;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</spa=
+n></span></b>Inquiries or requests for a consumer report;</span></div>=0A<b=
+r style=3D"margin-right: 0px; margin-left: 0px; font-family: arial;margin-r=
+ight: 0px; margin-left: 0px; font-family: arial;margin-right: 0px; margin-l=
+eft: 0px; font-family: arial; text-align: left;"><div style=3D"margin: 0 0p=
+x 0 40px; outline: none; padding: 0; font-family: arial;"><span style=3D"co=
+lor: inherit; font-size: inherit; font-weight: inherit; line-height: inheri=
+t; text-decoration: inherit; font-family: arial; text-align: left; margin: =
+0;"><b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;">=
+<span style=3D"color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;">d.<span =
+style=3D"color: inherit; font-size: inherit; font-weight: normal; line-heig=
+ht: inherit; text-decoration: inherit; font-family: arial; font-style: norm=
+al;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></span></b>Information derived from pu=
+blic records, such as judgments, bankruptcies, liens, and other legal matte=
+rs (unless the information was=0Aprovided by a furnisher with an account or=
+ other relationship with the consumer);</span></div>=0A<br style=3D"margin-=
+right: 0px; margin-left: 0px; font-family: arial;margin-right: 0px; margin-=
+left: 0px; font-family: arial;margin-right: 0px; margin-left: 0px; font-fam=
+ily: arial; text-align: left;"><div style=3D"margin: 0 0px 0 40px; outline:=
+ none; padding: 0; font-family: arial;"><span style=3D"color: inherit; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit; font-family: arial; text-align: left; margin: 0;"><span style=3D=
+"color: inherit; font-size: inherit; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit; text-align: left; font-family: arial; margi=
+n: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-family: arial=
+;"><span style=3D"color: inherit; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit; font-family: arial;">e.<sp=
+an style=3D"color: inherit; font-size: inherit; font-weight: normal; line-h=
+eight: inherit; text-decoration: inherit; font-family: arial; font-style:=
+=0Anormal;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></span></b>Information related =
+to fraud alerts or active duty alerts; or</span><br></span></div>=0A<br sty=
+le=3D"margin-right: 0px; margin-left: 0px; font-family: arial;margin-right:=
+ 0px; margin-left: 0px; font-family: arial;margin-right: 0px; margin-left: =
+0px; font-family: arial; text-align: left;"><div style=3D"margin: 0 0px 0 4=
+0px; outline: none; padding: 0; font-family: arial;"><span style=3D"color: =
+inherit; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial; text-align: left; margin: 0;"><=
+span style=3D"color: inherit; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit; text-align: left; font-family:=
+ arial; margin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-=
+family: arial;"><span style=3D"color: inherit; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit; font-family: =
+arial;">f.<span style=3D"color: inherit; font-size: inherit; font-weight: n=
+ormal; line-height: inherit; text-decoration: inherit; font-family: arial; =
+font-style:=0Anormal;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0</span></=
+span></b>Information provided to a consumer reporting agency by another fur=
+nisher.</span><br></span></div>=0A<span style=3D"color: inherit; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit; font-family: arial; text-align: left; margin: 0;"><span style=3D"color=
+: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit; text-align: left; font-family: arial; margin: 0;"=
+><br style=3D""><br>The direct dispute requirements also do not apply if th=
+e furnisher has a reasonable belief that the direct dispute is: <br style=
+=3D""></span><br></span><div style=3D"margin: 0 0px 0 40px; outline: none; =
+padding: 0; font-family: arial;"><span style=3D"color: inherit; font-size: =
+inherit; font-weight: inherit; line-height: inherit; text-decoration: inher=
+it; font-family: arial; text-align: left; margin: 0;"><b style=3D"margin: 0=
+; outline: none; padding: 0; font-family: arial;"><span style=3D"color: inh=
+erit; font-size: inherit; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit; font-family: arial;">a.<span=0Astyle=3D"color: inherit=
+; font-size: inherit; font-weight: normal; line-height: inherit; text-decor=
+ation: inherit; font-family: arial; font-style: normal;">=C2=A0=C2=A0=C2=
+=A0=C2=A0 =C2=A0=C2=A0</span></span></b>Submitted by a credit repair organi=
+zation;</span></div>=0A<br style=3D"margin-right: 0px; margin-left: 0px; fo=
+nt-family: arial;margin-right: 0px; margin-left: 0px; font-family: arial;ma=
+rgin-right: 0px; margin-left: 0px; font-family: arial; text-align: left;"><=
+div style=3D"margin: 0 0px 0 40px; outline: none; padding: 0; font-family: =
+arial;"><span style=3D"color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit; font-family: arial; t=
+ext-align: left; margin: 0;"><b style=3D"margin: 0; outline: none; padding:=
+ 0; font-family: arial;"><span style=3D"color: inherit; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit; font=
+-family: arial;">b.<span style=3D"color: inherit; font-size: inherit; font-=
+weight: normal; line-height: inherit; text-decoration: inherit; font-family=
+: arial; font-style: normal;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></span></b>Is=
+ prepared on behalf of the consumer by a credit repair organization; or</sp=
+an></div>=0A<br style=3D"margin-right: 0px; margin-left: 0px; font-family: =
+arial;margin-right: 0px; margin-left: 0px; font-family: arial;margin-right:=
+ 0px; margin-left: 0px; font-family: arial; text-align: left;"><div style=
+=3D"margin: 0 0px 0 40px; outline: none; padding: 0; font-family: arial;"><=
+span style=3D"color: inherit; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit; font-family: arial; text-align=
+: left; margin: 0;"><span style=3D"color: inherit; font-size: inherit; font=
+-weight: inherit; line-height: inherit; text-decoration: inherit; text-alig=
+n: left; font-family: arial; margin: 0;"><b style=3D"margin: 0; outline: no=
+ne; padding: 0; font-family: arial;"><span style=3D"color: inherit; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit; font-family: arial;">c.<span style=3D"color: inherit; font-size: in=
+herit; font-weight: normal; line-height: inherit; text-decoration: inherit;=
+ font-family: arial; font-style:=0Anormal;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
+=A0=C2=A0</span></span></b>Is submitted on a form supplied to the consumer =
+by a credit repair organization.</span><br></span></div>=0A<span style=3D"c=
+olor: inherit; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; font-family: arial; text-align: left; margin:=
+ 0;"><span style=3D"color: inherit; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit; text-align: left; font-f=
+amily: arial; margin: 0;"><b style=3D"margin: 0; outline: none; padding: 0;=
+ font-family: arial;"><br style=3D""><br style=3D""><br style=3D"">Direct D=
+ispute Address</b><br style=3D""><br style=3D"">A furnisher is required to =
+investigate a direct dispute only if a consumer submits a dispute notice to=
+ the furnisher at: <b style=3D"margin: 0; outline: none; padding: 0; font-f=
+amily: arial;"><br style=3D""></b></span><br></span><div style=3D"margin: 0=
+ 0px 0 40px; outline: none; padding: 0; font-family: arial;"><span style=3D=
+"color: inherit; font-size: inherit; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit; font-family: arial; text-align: left; margi=
+n: 0;"><span=0Astyle=3D"color: inherit; font-size: inherit; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit; text-align: left; fo=
+nt-family: arial; margin: 0;"><b style=3D"margin: 0; outline: none; padding=
+: 0; font-family: arial;"><span style=3D"color: inherit; font-size: inherit=
+; font-weight: inherit; line-height: inherit; text-decoration: inherit; fon=
+t-family: arial;">a.<span style=3D"color: inherit; font-size: inherit; font=
+-weight: normal; line-height: inherit; text-decoration: inherit; font-famil=
+y: arial; font-style: normal;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span>=
+</span></b>The address provided by a furnisher and listed on a consumer rep=
+ort relating to the consumer;</span><br></span></div>=0A<br style=3D"margin=
+-right: 0px; margin-left: 0px; font-family: arial;margin-right: 0px; margin=
+-left: 0px; font-family: arial;margin-right: 0px; margin-left: 0px; font-fa=
+mily: arial; text-align: left;"><div style=3D"margin: 0 0px 0 40px; outline=
+: none; padding: 0; font-family: arial;"><span style=3D"color: inherit; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit; font-family: arial; text-align: left; margin: 0;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; text-align: left; font-family: arial; ma=
+rgin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-family: ar=
+ial;"><span style=3D"color: inherit; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit; font-family: arial;">b.=
+<span style=3D"color: inherit; font-size: inherit; font-weight: normal; lin=
+e-height: inherit; text-decoration: inherit; font-family: arial; font-style=
+:=0Anormal;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></span></b>An address clearly =
+and conspicuously specified by the furnisher that is provided to the consum=
+er in writing or electronically (if the consumer has agreed to the electron=
+ic delivery of information from the furnisher); or</span><br></span></div>=
+=0A<br style=3D"margin-right: 0px; margin-left: 0px; font-family: arial;mar=
+gin-right: 0px; margin-left: 0px; font-family: arial;margin-right: 0px; mar=
+gin-left: 0px; font-family: arial; text-align: left;"><div style=3D"margin:=
+ 0 0px 0 40px; outline: none; padding: 0; font-family: arial;"><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial; text-align: left; ma=
+rgin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; font-family: ar=
+ial;"><span style=3D"color: inherit; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit; font-family: arial;">c.=
+<span style=3D"color: inherit; font-size: inherit; font-weight: normal; lin=
+e-height: inherit; text-decoration: inherit; font-family: arial; font-style=
+: normal;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></span></b>Any busin=
+ess address of the furnisher if the furnisher has not provided a specific a=
+ddress for submitting direct=0Adisputes.</span></div>=0A<span style=3D"colo=
+r: inherit; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit; font-family: arial; text-align: left; margin: 0;=
+"><span style=3D"color: inherit; font-size: inherit; font-weight: inherit; =
+line-height: inherit; text-decoration: inherit; text-align: left; font-fami=
+ly: arial; margin: 0;"><b style=3D"margin: 0; outline: none; padding: 0; fo=
+nt-family: arial;"><br style=3D""><br><br style=3D"">Direct Dispute Notice =
+Contents</b><br style=3D""><br style=3D"">A dispute notice from a consumer =
+must include: <b style=3D"margin: 0; outline: none; padding: 0; font-family=
+: arial;"><br style=3D""></b></span><br></span><div style=3D"margin: 0 0px =
+0 40px; outline: none; padding: 0; font-family: arial;"><span style=3D"colo=
+r: inherit; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit; font-family: arial; text-align: left; margin: 0;=
+"><b style=3D"margin: 0; outline: none; padding: 0; font-family: arial;"><s=
+pan=0Astyle=3D"color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;">a.<span =
+style=3D"color: inherit; font-size: inherit; font-weight: normal; line-heig=
+ht: inherit; text-decoration: inherit; font-family: arial; font-style: norm=
+al;">=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0</span></span></b>Sufficient info=
+rmation to identify the account or other relationship that is in dispute, s=
+uch as an account number and the name, address, and telephone number of the=
+ consumer;</span></div>=0A<br style=3D"margin-right: 0px; margin-left: 0px;=
+ font-family: arial;margin-right: 0px; margin-left: 0px; font-family: arial=
+;margin-right: 0px; margin-left: 0px; font-family: arial; text-align: left;=
+"><div style=3D"margin: 0 0px 0 40px; outline: none; padding: 0; font-famil=
+y: arial;"><span style=3D"color: inherit; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit; font-family: arial=
+; text-align: left; margin: 0;"><b style=3D"margin: 0; outline: none; paddi=
+ng: 0; font-family: arial;"><span style=3D"color: inherit; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit; f=
+ont-family: arial;">b.<span style=3D"color: inherit; font-size: inherit; fo=
+nt-weight: normal; line-height: inherit; text-decoration: inherit; font-fam=
+ily: arial; font-style: normal;">=C2=A0=C2=A0=C2=A0=C2=A0 </span></span></b=
+>The specific information that the consumer is disputing and an explanation=
+ of the basis for the dispute; and</span></div>=0A<br style=3D"margin-right=
+: 0px; margin-left: 0px; font-family: arial;margin-right: 0px; margin-left:=
+ 0px; font-family: arial;margin-right: 0px; margin-left: 0px; font-family: =
+arial; text-align: left;"><div style=3D"margin: 0 0px 0 40px; outline: none=
+; padding: 0; font-family: arial;"><span style=3D"color: inherit; font-size=
+: inherit; font-weight: inherit; line-height: inherit; text-decoration: inh=
+erit; text-align: left; font-family: arial; margin: 0;"><b style=3D"margin:=
+ 0; outline: none; padding: 0; font-family: arial;"><span style=3D"color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit; font-family: arial;">c.<span style=3D"color: inherit=
+; font-size: inherit; font-weight: normal; line-height: inherit; text-decor=
+ation: inherit; font-family: arial; font-style: normal;">=C2=A0=C2=A0=C2=
+=A0=C2=A0 =C2=A0=C2=A0</span></span></b>All supporting documentation or oth=
+er information reasonably required by the furnisher to substantiate the bas=
+is of the dispute.=0AThis documentation may include, for example, a copy of=
+ the relevant portion of the consumer report that contains the allegedly in=
+accurate information; a police report; a fraud or identity theft affidavit;=
+ a court order; or account statements.</span></div>=0A</span> <br></div>=0A=
+ </div>=0A<!--[if (gte mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=3D"tru=
+e" data-ac-inline=3D"false"> #text_div3102, #text_div3102 div { line-height=
+: 112% !important; };=0A</style>=0A<![endif]--></td>=0A</tr>=0A</table>=0A<=
+/td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr st=
+yle=3D""><td id=3D"layout-row-margin3336" valign=3D"top" style=3D"padding: =
+0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" =
+style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table=
+-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout-row333=
+6" class=3D"layout layout-row widget _widget_text style3336" style=3D"margi=
+n: 0; padding: 0;"><td id=3D"layout-row-border3336" valign=3D"top" style=3D=
+"border-color: #000000; border-style: solid; border-width: 3px;"><table wid=
+th=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-=
+size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"=
+><tr><td id=3D"layout-row-padding3336" valign=3D"top" style=3D"padding: 20p=
+x 30px 20px 30px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace:=
+ 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3104" class=3D"td_text =
+td_block" valign=3D"top" align=3D"left" width=3D"584"=0Astyle=3D"line-heigh=
+t: 112%; margin: 0; outline: none; padding: 0; color: inherit; font-size: 1=
+2px; font-weight: inherit; line-height: 1.12; text-decoration: inherit; fon=
+t-family: Arial; mso-line-height-rule: exactly;"> <div style=3D"line-height=
+: 112%; margin: 0; outline: none; padding: 0; mso-line-height-rule: exactly=
+; line-height: 1.12; font-size: 15px; color: #000000; font-family: arial;" =
+data-line-height=3D"1.12"> <span style=3D"color: #000000; font-size: 15px; =
+font-weight: 400; line-height: inherit; text-decoration: inherit; font-fami=
+ly: arial; font-style: normal;" class=3D"">In tomorrow's lesson ,we'll cove=
+r the obligations of the furnisher when reporting to the Credit Reporting A=
+gencies (CRAs).</span><br class=3D""></div>=0A<!--[if (gte mso 12)&(lte mso=
+ 15) ]>=0A<style data-ac-keep=3D"true" data-ac-inline=3D"false"> #text_div3=
+104, #text_div3104 div { line-height: 112% !important; };=0A</style>=0A<![e=
+ndif]--></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin329=
+5" valign=3D"top" style=3D""><table width=3D"100%" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-tab=
+le-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-row3295" class=3D"=
+layout layout-row widget _widget_break "><td id=3D"layout-row-padding3295" =
+valign=3D"top" style=3D"line-height: 0; mso-line-height-rule: exactly;"><ta=
+ble width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt; border-collapse: collapse; line-height: 0; mso-line-height-rule: e=
+xactly;"><tr><td height=3D"10" style=3D"line-height: 0; mso-line-height-rul=
+e: exactly;"></td>=0A</tr>=0A<tr><td align=3D"center" height=3D"1" width=3D=
+"650" style=3D"line-height: 0; mso-line-height-rule: exactly;"> <table alig=
+n=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" height=3D"1" =
+width=3D"650" style=3D"font-size: 13px; min-width: auto!important; mso-tabl=
+e-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; line-heigh=
+t: 0; mso-line-height-rule: exactly; width: 100%; max-width: 100%;"><tr><td=
+ class=3D"break-line" bgcolor=3D"#000000" height=3D"1" width=3D"650" style=
+=3D"line-height: 1px; mso-line-height-rule: exactly; height: 1px; width: 65=
+0px; background-color: #000000;"> </td>=0A </tr>=0A</table>=0A</td>=0A </tr=
+>=0A<tr><td height=3D"10" style=3D"line-height: 0; mso-line-height-rule: ex=
+actly;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A<tr style=3D""><td id=3D"layout-row-margin3298" valign=3D"top" style=3D"=
+padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspaci=
+ng=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; =
+mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layo=
+ut-row3298" class=3D"layout layout-row widget _widget_text style3298" style=
+=3D"margin: 0; padding: 0;"><td id=3D"layout-row-padding3298" valign=3D"top=
+" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-ls=
+pace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3066" class=3D"td_=
+text td_block" valign=3D"top" align=3D"left" width=3D"650" style=3D"margin:=
+ 0; outline: none; padding: 0; color: inherit; font-size: 12px; font-weight=
+: inherit; line-height: 1; text-decoration: inherit; font-family: Arial;"> =
+<div style=3D"margin: 0; outline: none; padding: 0; font-size: 12px;" class=
+=3D""><span style=3D"color: inherit; font-size: 12px; font-weight:=0Ainheri=
+t; line-height: inherit; text-decoration: inherit;" class=3D""> <div style=
+=3D"margin: 0; outline: none; padding: 0; text-align: center;" class=3D"">C=
+opyright =C2=A9 2019 EduCredit Solutions. All rights reserved.<br class=3D"=
+">Services bought to you by Ellevation Coaching & Consulting<br class=3D"">=
+<br class=3D""></div>=0A<div style=3D"margin: 0; outline: none; padding: 0;=
+ text-align: center;" class=3D""> <span style=3D"color: #000000; font-size:=
+ 12px; font-weight: 400; line-height: inherit; text-decoration: inherit; fo=
+nt-family: arial; font-style: normal;">Visit Us Online at </span><a href=3D=
+"https://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc819=
+17526f09&i=3D434A448A11A2356" data-ac-default-color=3D"1" style=3D"margin: =
+0; outline: none; padding: 0; color: #045fb4; text-decoration: underline; f=
+ont-family: arial; font-weight: 400; font-size: 12px; font-style: normal;" =
+target=3D"_blank"><span style=3D"color: ; font-size: inherit; font-weight: =
+inherit; line-height: inherit; text-decoration: inherit;">www.educreditsolu=
+tions.com</span></a> <br><br><span style=3D"color: inherit; font-size: inhe=
+rit; font-weight: bold; line-height: inherit; text-decoration: inherit;" cl=
+ass=3D"">Work With Elle</span><br class=3D""></div>=0A<div style=3D"margin:=
+ 0; outline: none; padding: 0; text-align: center;" class=3D"">For informat=
+ion regarding 1-on-1 Coaching, Staff Training and Education Services, you c=
+an schedule a discovery call at <a href=3D"https://educreditsolutions.aceml=
+na.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f09&i=3D434A448A11A2357" dat=
+a-ac-default-color=3D"1" class=3D"" target=3D"_blank" style=3D"margin: 0; o=
+utline: none; padding: 0; color: #045fb4; text-decoration: underline;"><spa=
+n style=3D"color: ; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;">bit.ly/discoverycallwithelle</span></a>=
+</div>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: ce=
+nter;" class=3D""><br class=3D""><span style=3D"color: inherit; font-size: =
+inherit; font-weight: bold; line-height: inherit; text-decoration: inherit;=
+" class=3D"">Contact Us</span><br class=3D""></div>=0A<div style=3D"margin:=
+ 0; outline: none; padding: 0; text-align: center;" class=3D""><a href=3D"m=
+ailto:support@educreditsolutions.com" data-ac-default-color=3D"1" class=3D"=
+" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-decor=
+ation: underline;" target=3D"_blank"><span style=3D"color: ; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+">support@educreditsolutions.com</span></a></div>=0A<div style=3D"margin: 0=
+; outline: none; padding: 0; text-align: center;" class=3D"">Direct: (225) =
+620-6202<br class=3D"">Toll-Free: 1-800-373-8491<br class=3D""></div>=0A </=
+span></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3293" valign=3D"top" s=
+tyle=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspac=
+e: 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=
+=3D"layout-row3293" class=3D"layout layout-row widget _widget_picture style=
+3293" align=3D"center" style=3D""><td id=3D"layout-row-padding3293" valign=
+=3D"top" style=3D"padding: 20px 0 0 20px;"><table width=3D"100%" border=3D"=
+0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width:=
+ 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=3D"imag=
+e-td" align=3D"center" valign=3D"top" width=3D"630"><img src=3D"https://edu=
+creditsolutions.imgus11.com/public//2a0ea3f14572e3829345d5f92f330073.jpg?r=
+=3D2118993500" alt=3D"" width=3D"176" style=3D"display: block; border: none=
+; outline: none; width: 176px; opacity: 1; max-width: 100%;"></td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</div>=0A<img src=3D"https=
+://educreditsolutions.acemlna.com/lt.php?nl=3D11&c=3D434&m=3D448&s=3Dda50c2=
+422345422f9a0dc81917526f09&l=3Dopen" border=3D"0" width=3D"1" height=3D"1" =
+style=3D"display:block;width:1px!important;min-width:1px!important;max-widt=
+h:1px!important;height:1px!important;border:0;overflow:hidden;" /><br /><di=
+v id=3D"ac-footer" style=3D"clear:both;background-color:inherit;background:=
+inherit;min-width:100%;mso-table-lspace:0pt;mso-table-rspace:0pt;padding:20=
+px;color:#000000;font-size:11px;font-family:arial,helvetica,sans-serif;line=
+-height:140%;line-height:1.4;text-align:center;box-sizing:border-box;">=0A=
+=09<center>=0A=09=09Sent to: <span style=3D"font-size:11px;font-family:aria=
+l,helvetica,sans-serif;font-weight:normal;text-decoration:none;outline:none=
+;">bruce.k.cosma@gmail.com</span>=0A=09=09<br>=0A=09=09<br>=0A=09=09<a href=
+=3D"http://educreditsolutions.acemlna.com/proc.php?nl=3D11&c=3D434&m=3D448&=
+s=3Dda50c2422345422f9a0dc81917526f09&act=3Dunsub" style=3D"font-size:11px;f=
+ont-family:arial,helvetica,sans-serif;font-weight:bold;text-decoration:unde=
+rline;"><span style=3D"font-weight:bold;text-decoration:underline;">Unsubsc=
+ribe</span></a>=0A=09=09<br>=0A=09=09<br> EduCredit Solutions, 9618 Jeffers=
+on Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States=0A=09</ce=
+nter>=0A</div>=0A<br clear=3D"all" /></body>=0A</html>
+--_=_swift-14834506645eb778acf2fa57.96650032_=_--
+

@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+
+body, h1, h2, h3, h4, h5, h6, blockquote, p{
+margin: 0;
+padding: 0;
+}
+#wrap2 {
+	background-image: url(../images/bgfooter.jpg);
+	background-repeat: repeat-x;
+}
+#wrap2 #footer {
+	background-image: url(../images/footer.jpg);
+	height: 183px;
+	width: 930px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+/* CSS Document */
+
+#wrap {
+	background-image: url(../images/bgheader.jpg);
+	background-repeat: repeat-x;
+	background-color: #000000;
+}
+#wrap #bg {
+	background-image: url(../images/bg.jpg);
+	background-repeat: repeat-y;
+	width: 930px;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: hidden;
+}
+#wrap #bg #header {
+	background-image: url(../images/header.jpg);
+	background-repeat: no-repeat;
+	width: 930px;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: hidden;
+}
+#wrap #bg #header #container {
+	width: 650px;
+	margin-top: 300px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}

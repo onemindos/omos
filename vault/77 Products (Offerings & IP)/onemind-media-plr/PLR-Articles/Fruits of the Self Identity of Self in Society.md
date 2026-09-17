@@ -1,0 +1,20 @@
+# Fruits of the Self Identity of Self in Society
+
+There are various aspects of life that govern self-identity. The various elements, which help in the development of self-identity of an individual, are confidence, self-discipline, feelings, emotions and thoughts. There is a difference between feelings and emotions. Feelings are measured to a restricted area whereas emotions are on a wider perspective. Emotions include feelings and thoughts. The other things such as attitudes, behaviors of a person play a vital role in the growth of self-identity. We must learn and understand this to succeed at establishing our identity. 
+
+Self of a soul governs self-identity of a person. The self of a person helps to act and think. This means that a person�s action develops his self-identity. For developing self-identity leadership qualities are required such as honesty, values, vision, knowledge and persistence. Self-leadership qualities of a person include self-identity, personal growth and self-regulation. When a person starts analyzing himself, he comes across his positive and negative aspects. This needs self-understanding of your own self. The other thing required for understanding yourself, self-awareness plays an important role. Self-understanding of the soul also includes recognizing about person�s weakness, strengths, needs and emotions.  
+
+Self-awareness, self-understanding is both interlinked. Self-confidence also governs self-identity. Self-awareness also helps in bringing about the nature of a person and how can he be perceived by others.  
+
+When a person plans to achieve his goals and ambitions, self-assessment of the soul is required. This means by self-assessing your self and soul, a person comes across his capabilities and abilities. For the fulfillment of goals and ambitions of a person, self-confidence is required. Self-confidence will help a person to cultivate his abilities to bring a positive outcome. The last feature comes as self-consciousness, which makes a person know about his behaviors and feelings. These leadership qualities help a person in cultivating his self-identity. These are the fruits sown in a human soul and mind. 
+
+Self-identity of a person should be impressive because then only the person is accepted by the society. Evil people are not accepted by the society. It is the people who form society. Human beings are a part of society. They play a vital role in the formation of society. That is without them the society cannot be formed. A person�s self, which consists of envy, sloth, pride, lust, anger, gluttony and lechery, are thrown out of the society. This is their self-identity.
+An individual�s self should spread happiness, joy, love, affection in other�s life. 
+
+In this way a person�s self-identity is tested. Self-improvement of soul is very necessary for a strong and efficient self-identity.
+
+Self-discipline helps in building a person�s will power and further enhances him for motivation in life. Self-discipline is a tool that connects a person�s past with the present and then to his future. It is sowed first and then reaped. A person who is self-disciplined in his life can easily achieve goals and ambitions. It becomes a habit. Self-discipline is a key to success. A person, who is not disciplined and serious in life, leads to serious implications. Planning in life can lead to self-discipline. A person�s priorities should be set to face challenges.
+
+Self-discipline should be passionate. A person can exercise self-discipline in his life by working out various exercises such as meditation, yoga and aerobics.
+
+A person�s mind should be stable and balanced. If a person is facing any problem in life, he can refer to a psychologist. A psychologist will solve all the problems of a person. A person will soon see a change in his life and will feel relax. The fruits will immediately ripe and are ready for consuming.

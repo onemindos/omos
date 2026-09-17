@@ -1,0 +1,40 @@
+# Adware Spyware Removal
+
+Learn About Spyware Now
+Internets Best Resourse
+
+Don't Be The Next Victim
+Get Info One the Webs Biggest 
+Problem For ID Theft, NOW
+
+Protect Yourself Today
+Learn How To Safeguard Your PC
+Get Rid Of The Problem NOW
+
+Take Action Now
+Don't Let Spyware Get You
+Anti Spyware Help And Prevention
+
+Safeguard Your PC Today
+Prevent Adware/Spyware Today
+Learn More Than Anyone Else!
+
+PC Secutity That Works
+Learn How To PRotect Your PC
+Fast, Easy And Very Effective
+
+Stop Adware/Spyware Now
+Protect Your Identity Today
+Easy, Fast And Simple, Learn How!
+
+Protect Your PC 
+Learn How To In Mere Minutes
+Spyware Info That Tells All
+
+Clean Up Your Computer
+Get Rid Of Adware/Spyware Today
+Learn How To In Mere Minutes
+
+No More Spyware Worries
+Never Worry About Spyware Again
+Safeguard Your PC Today

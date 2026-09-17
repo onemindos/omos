@@ -1,0 +1,46 @@
+# Subject: {FIRSTNAME}, here's how you go about adapting lean maufacturing into your business ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my lean manufacturing ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - What is lean manufacturing?
+2. Part 2 - Lean manufacturing tools
+3. Part 3 - Questions, diagnostics and assesments
+4. Part 4 - Areas in business where lean can help
+5. Part 5 - Ten steps to enable lean manufacturing into your business
+
+Let's go ahead & get started today with "Areas in business where lean can help".
+
+Part 4 - Areas in business where lean can help
+===========================
+Other aspects of lean to consider for LM deployment in your business are as follows:
+
+Leadership
+
+Initiative and leading by example from the top is key. The main flag-bearer and champion of this LM process and initiative starts with the business leader (CEO/President) and the senior management team. Buy-in and support can make or break the efforts of LM. 
+
+Personal, hands-on, practical engagement, commitment, practice and even reward for full participation in these initiatives, being the drivers of performance per se is critical to and for LM success. Inspire and mobilize others. 
+
+Corporate, business culture and infrastructure, support and championing of the LM efforts contribute to the momentum and success of it throughout the organization. 
+
+Include and engage EVERYONE! LM provides you the opportunity to harness and leverage the talents of the entire workforce and collective,  not merely a hand-full of individuals or some employees. MAKE EVERYONE COUNT AND CONTRIBUTE! 
+
+If lasting results and sustained top performance matters to you and your business here are the means 
+to that end in the LM toolkit! 
+
+Metrics and goals make things easier to achieve and practically act upon, effect, change, impact, reshape etc. MAKE EVERY ASPECT OF YOUR BUSINESS COUNT!
+
+Infrastructure, support and deployment
+
+Share the commitment, discipline and persistent toil to get to where you need to be. It starts with everyone, not just some! Have you customers front-of-mind at every step, process and corner of what you are doing, planning, improving, know what they value, why and how to get it to them quickly, effectively, consistently and affordably, anytime, every time! SHIFT YOUR FOCUS. 
+
+Shareholder value and $$ impact is a good guidelines for priorities and activity within LM. IMPROVEMENTS CAN/SHOULD BE MEASURABLE AND ACTAULLY TRACKED!
+
+Engage everyone in the process, assign roles and responsibilities and tap into the full potential everyone has to bring to the table. Committed resources, time and training (initial investment) will pay off quickly. Mobilize your workforce and enable, empower and energize them.
+
+Next time we'll be discussing alittle about "Ten steps to enable lean manufacturing into your business".
+
+For more information about this part of Areas in business where lean can help, please refer to my definitive guide to lean manufacturing at 
+
+Take Care,

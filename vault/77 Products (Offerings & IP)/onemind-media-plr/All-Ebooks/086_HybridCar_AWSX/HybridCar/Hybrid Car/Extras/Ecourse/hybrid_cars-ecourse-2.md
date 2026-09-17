@@ -1,0 +1,62 @@
+# Subject: {FIRSTNAME}, here's how you go about deciding which hybrid car is right for you ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my hybrid cars ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - An eclectic list of the different types of hybrid vehicles
+2. Part 2 - The five types of hybrid technology available to automakers
+3. Part 3 - What to look for and how to make up your mind
+4. Part 4 - The benefits and advantages of owning a hybrid car
+5. Part 5 - Unleashing the future.
+
+Let's go ahead & get started today with "The five types of hybrid technology available to automakers".
+
+Part 2 - The five types of hybrid technology available to automakers
+============================
+Different Types of Hybrid Cars
+
+MORE ON parallel hybrids 
+ 
+-	uses both a fuel tank with gasoline and a set of batteries.  Both the engine and the electric motor can turn the transmission at the same time.  
+-	fuel tank and the gas engine connect to the transmission and the batteries and electric motor connect to the transmission separately.  
+
+MORE ON series hybrids
+
+-	gasoline engine turns a generator
+-	generator either charges the batteries or powers the electric motor that is used to turn the transmission.  
+-	gasoline engine is not used to power the vehicle directly.  
+-	all of the components eventually connect with the transmission
+
+Hybrid cars typically produce less power. They are however very light weight and well designed to compensate for that.  Typically, carbon fiber or aluminum is used. 
+
+Aerodynamic characteristics are more prevalent than on most other cars, cutting down on drag and wind resistance, noise etc. Excellent fuel economy and helping the environment by cutting down on pollution are definite bonuses from driving these vehicles.   
+
+What Motivates You To Buy/Not Buy A Hybrid Car	
+What To Look For And How To Make Up Your Mind
+
+Pay close attention to its appeal and promise, potential and possibilities � these are all factors that draw in the masses and the diverse crowd of interested consumers in these new automotive genius on our roads. Here just some of the �perks� and bonuses:
+
+Eco-smart and environmentally  conscious we can all certainly appreciate the qualities and benefits that these vehicles bring with them. 
+
+Fuel economy
+
+Reduced emissions, less pollution, 
+
+slower depreciation
+
+great savings for the pocketbook, 
+
+less reliance on fossil fuels in the future
+
+Lower fuel emissions help to curb the infamous "Greenhouse Effect" and saves the ozone and atmosphere, the air that we and children are left to breathe and live off of
+
+High-demand for Hybrid cars let them hold their value much longer as supply and demand still fuels these fires!
+
+Burning of fossil fuels are reduced effectively, supplemented and complemented by alternative power sources Annual savings on gas, better fuel economy, needing less. Alternative solutions to gasoline, internal combustion engines that are no more or less effective, just worse pollutants or our air and world!
+
+Next time we'll be discussing alittle about "What to look for and how to make up your mind".
+
+For more information about this part of The five types of hybrid technology available to automakers, please refer to my definitive guide to hybrid cars at 
+
+Take Care,

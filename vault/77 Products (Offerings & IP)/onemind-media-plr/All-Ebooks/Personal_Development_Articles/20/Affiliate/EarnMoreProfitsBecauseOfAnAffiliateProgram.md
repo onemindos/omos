@@ -1,0 +1,19 @@
+# Earn More Profits Because Of An Affiliate Program
+
+Affiliate marketers start out sifting through the many affiliate programs and direct merchants to join in a bid to earn money online.
+This can be quite a daunting task for the new affiliate. The questions arise, 'should I join affiliate programs?', or 'should I join direct merchants?', or 'should I do both?'.
+Joining direct merchants can be time consuming. First of all, you have to search which merchants you would like to join and then complete individual applications to these merchants. 
+
+However, many direct merchants offer lifetime or recurring cookies, as well as commissions for sub affiliates, and 2nd tier commission payments. These affiliate commission structures can come in quite handy for an affiliate marketer.
+Joining affiliate programs can be regarded as a good move in that you're able to join with the one program but join bulk merchants, promote products and merchants, and receive one big payment each month, if you've put in the hard work for it.
+
+Affiliate lifetime commissions, or residual commissions, as they are also known, are usually received by subscriptions and memberships where you can rely on affiliate commissions being received as long as the member is subscribed to the particular service. Why earn affiliate commission from one customer for one products, when you can earn affiliate commission for a lifetime? 
+
+There's just really no comparison whatsoever, there is no doubt about that people.
+Other affiliate merchants offer lifetime cookies which never expire. This means if a prospective customer visits your site, clicks on your link, and buys something in 2 years time, you still get paid for it. Many cookies through affiliate programs expire after 30 days, some even less, so affiliate tracking and cookie expiration is definitely something an affiliate marketer should research before signing up for an affiliate program.
+
+An affiliate program is based on many different and unique ideas and by operating one accordingly you can rest assured that your business will benefit tremendously because of it. It is up to you to ensure that your future finances are all in tact and that you can live comfortable. By relying on an affiliate program you can be sure when you lay down at night that the bills will all be getting paid and on time too. 
+
+Earn more profits because of an affiliate program and when you first start seeing the results pouring in you are probably going to be quite amazed with the whole event. This could just be your time to shine, you really never know now do you, unless you give it a good honest try. Research more thoroughly so that you can have a more relaxed, financially free life when you are older and wanting to enjoy more. 
+
+An affiliate program description can be determined by just doing some simple research but in order to fully understand it you are probably going to have to get your feet wet first. It is going to take some time to get to that point so make sure that you remember to stay patient and understand that it is all going to happen for you before too long because of your dedication and determination.

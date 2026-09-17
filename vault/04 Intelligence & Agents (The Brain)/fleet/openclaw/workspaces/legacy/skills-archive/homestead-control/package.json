@@ -1,0 +1,81 @@
+{
+  "name": "homestead-control",
+  "version": "1.0.0",
+  "description": "6-building homestead monitoring and control for OneMind OS",
+  "main": "index.js",
+  "skills": ["SKILL.md"],
+  "tools": [
+    {
+      "name": "homestead_status",
+      "description": "Get aggregated status for one or all 6 homestead buildings. Queries node heartbeats + WireClaw sensor data in parallel.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "building": {
+            "type": "string",
+            "description": "Specific building node ID. Omit to query all 6.",
+            "enum": ["main-house", "office", "dojo", "greenhouse", "guest-house", "barn"]
+          },
+          "include_sensors": {
+            "type": "boolean",
+            "description": "Include WireClaw sensor data (temp, humidity, soil, motion, etc.)",
+            "default": true
+          },
+          "include_diagnostics": {
+            "type": "boolean",
+            "description": "Include node diagnostics (disk, uptime, network)",
+            "default": false
+          }
+        }
+      }
+    },
+    {
+      "name": "homestead_alert",
+      "description": "Publish a homestead alert to NATS for logging, notification, and multi-agent routing",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "building": {
+            "type": "string",
+            "description": "Building node ID where the alert originated",
+            "enum": ["main-house", "office", "dojo", "greenhouse", "guest-house", "barn"]
+          },
+          "severity": {
+            "type": "string",
+            "description": "Alert severity level",
+            "enum": ["critical", "high", "warning", "info"]
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable alert message"
+          },
+          "route_to": {
+            "type": "string",
+            "description": "Agent to route alert to (legacy handles directly, le for maintenance, hp for wellness, ge for economics)",
+            "enum": ["legacy", "le", "hp", "ge"],
+            "default": "legacy"
+          },
+          "data": {
+            "type": "object",
+            "description": "Additional structured data for the alert"
+          }
+        },
+        "required": ["building", "severity", "message"]
+      }
+    }
+  ],
+  "dependencies": {
+    "nats": "^2.18.0"
+  },
+  "keywords": [
+    "openclaw",
+    "skill",
+    "homestead",
+    "iot",
+    "wireclaw",
+    "heyclaw",
+    "nats"
+  ],
+  "author": "Zeus Delacruz / OneMind OS",
+  "license": "MIT"
+}

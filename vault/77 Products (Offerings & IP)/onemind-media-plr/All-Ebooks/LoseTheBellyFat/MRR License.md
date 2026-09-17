@@ -1,0 +1,9 @@
+# Master Resell Rights License Terms:
+
+Yes can be sold
+Yes can sell/resell rights/master resell rights to this product.
+Yes you may edit the squeeze page.
+Yes can be added to a paid membership site.
+Yes CAN give the product away for FREE.
+
+No cannot sell private label rights.

@@ -1,0 +1,47 @@
+# Hi ,
+
+Are you struggling with the fact that 
+you really don't know anything about 
+how to put a childcare business together?
+
+If an individual is considering venturing 
+into the childcare venture as a business 
+entity there should be some training and 
+certification points that should be considered. 
+Without these elements, getting the 
+supporting documentations that 
+would help to legitimize the 
+establishment would be difficult indeed.
+
+What if I can offer you a
+solution that will help
+you to attain greatness, to become a success
+and learn about the best ways be a success 
+in this business?
+
+In this book, you will 
+learn about:
+
+- Childcare Basics
+
+- Type Of Center
+
+- Training And Certification
+
+- Legal Requirements
+
+- many other useful things!
+
+Click here to find out more:
+
+>> Your Link
+
+With great power comes great,responsibility. Once you know
+the secrets in this amazing book, there is no going back.
+
+It's time to get moving toward developing success in 
+your business!
+
+>> Your Link
+
+Regards,

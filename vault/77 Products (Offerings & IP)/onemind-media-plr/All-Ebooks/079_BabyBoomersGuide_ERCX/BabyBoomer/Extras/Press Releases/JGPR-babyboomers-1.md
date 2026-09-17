@@ -1,0 +1,34 @@
+# FOR IMMEDIATE RELEASE:
+
+Baby Boomers� Worries to Disappear
+
+People born during what is known as the baby boom era who might be worried about their coming years need no longer be feel perplexed thanks to an amazing volume, which promises to arm them with the necessary information about their maturing years. The electronic course guarantees to educate any baby boomer all the secrets for successful aging in just a matter of some five days, helping them secure the social, financial, and physical aspects of their lives. 
+
+Marion, Iowa (PRWEB) Month Day, Year � moved by the concerns of peers, an enterprising baby boomer finally decides to compile 20-years worth of helpful information for other members of the baby boom generation. The electronic book entitled Ultimate Baby Boomers Guide comprises all the essential information about living as a baby boomer in present times, helping one know how to stay in good health and maintain stable finances. 
+
+So much hype has been reported of the book. During its test circulation, early readers where quite thrilled about the comprehensive coverage of the group that they claim this book to be THE �manual for baby boomers�. The volume supposedly encompasses everything that can be learned about successful lifestyles for baby boomers, freeing one of the worries that comes with aging. While the volume primarily aims to educate baby boomers about financial matters, it also covers other important aspects of lving such as health and family. 
+
+To see what �Ultimate Baby Boomers Guide� can offer, here is a sneak preview of the books extensive coverage:
+
+- It reveals the long feared truth about getting older. 
+- It explains the best and appropriate diet for people born in the baby boom age. 
+- It discloses the secrets for avoiding Alzheimer�s disease. 
+- It discusses the great importance of getting physically fit at any age. 
+- It teaches how to become physically fit and maintain physical fitness.
+- It instructs how one can manage money well as one approaches senior age. 
+- It divulges certain key changes in lifestyle that can greatly produce positive results. 
+- It lists down what baby boomers should do to achieve and maintain success in life. 
+- It shows how one can eliminate sugar from his or her diet. 
+- It teaches how one can improve the hearts function. 
+- It instructs readers how to build strength to keep up with their active grandchildren. 
+- It helps one to discover the real supplements that can maximize their vigor. 
+- It teaches how one can plan well for spending hard-earned money. 
+- It discusses how one can manage the stresses typically faced by baby boomers. 
+
+These useful information and even many others are provided in this wonderful book. 
+
+Ultimate Baby Boomers Guide may seem to be a book that is too comprehensive to be affordable, however, it comes quite cheaply at just $27.77. It is supposed to be sold for $47.77 but as a promotional offer, $20 were stripped off. The ebook also comes with a full money-back guarantee for three months, making purchases risk free. Since it is an ebook, people can get a copy practically anytime, anywhere. 
+  
+The baby boom age is one of the most exciting generations that has produced great personalities such as Michael Jackson, Madonna, Bono, Tony Blair, among many others and perhaps this book can help other baby boomers lead successful lives like these people. To know more about the Ultimate Baby Boomers Guide, one can visit http://www.brandonbranon.com/pr/babyboomers/. 
+
+###

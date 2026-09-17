@@ -1,0 +1,18 @@
+# title:Meditate to Unlock Your Hidden Potential � Part 1
+
+author:Paul M. Jerard Jr.
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_2822.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+Meditation is often misunderstood by those who do not practice it. Very often, I hear meditation referred to as, �altered states of consciousness.� That sounds more like intoxicants, rather than bringing clarity to a cluttered mind. Without going too deep into what meditation is, or is not, let�s focus on one of the many things a daily meditation practice can do for you.
+Meditation is commonly seen in many Yoga classes, but it has been practiced by a variety of cultures, including Roman Catholic priests, as well as Japanese Samurai, who practiced a form of Zen meditation. I mention this so you can see the full spectrum of meditation and its many facets.
+There are many varieties and types of meditation, but the easiest form to learn is, �breath awareness meditation.� Compared to many other meditation techniques, this will enable anyone to experience the benefits of meditation in much less time.
+At this point, let�s consider that meditation and Yoga teachers often compare the mind to a monkey. Many thoughts are running through your brain, at the same time, and it is hard to control all of your impulses - let alone, sit still and meditate. So why go through all this trouble?
+Meditation has many rewards, and we will now consider one of extreme value. Through daily practice of meditation, you will release the unlimited potential of your mind. The ability to change, or alter the universe, starts as a single thought within your mind.
+One human decided to harness the power of fire, and did he/she foresee the global warming effect? How could he/she imagine where we are now? This is just one of many thousands of examples of Karma - the law of cause and effect. Therefore, one seemingly small change, of any kind, will have a ripple effect on the universe.
+Some of the seeds to change the universe, rests locked up in your mind, but you have the ability to shape the future by any small changes that you make. Let�s say you have a friend, family member, or associate, who cares for you deeply, but, up to now, you have always taken it for granted. Can you imagine what would happen if you take the time to groom that relationship? The answer is you would have a loyal ally and all you had to show was kindness or appreciation.
+You have the ability to alter your own personality and affect the world around you. Hopefully, your personality will always continue to change for the better; if so, this will alter everyone around you for the best.
+
+ZZZZZZ

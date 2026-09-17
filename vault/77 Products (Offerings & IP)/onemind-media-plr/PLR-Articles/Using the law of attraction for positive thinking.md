@@ -1,0 +1,17 @@
+# Using the law of attraction for positive thinking
+
+You will find that the law of attraction and positive thinking go hand and hand. You will find that there are a lot of ways that you can use the law of attraction to boast a positive attitude, however, you will want to consider that there are some things that you are going to have to do in order to keep the law of attraction working for you and learn how to think positive all the time. You can't really be positive all the time, because there are times where weakness will prevail, but you will need to fight the urges and fight the need to bring negative energy into your life. 
+
+First you will need to use the law of attraction and lighten up a little bit. When you take yourself too seriously, you just look stupid. You will also find that humor will make you feel better and there are many physiological benefits from laughter. You will find that the minute you lighten up you will feel the stress and intention ease. You will also be more alert when you lighten up. 
+
+Don't forget to laugh, and laugh often. There are going to be times through the process of the law of attraction that will get overwhelming, however, you will need to laugh just to laugh. You know a lot of people find that when they laugh thinks just seem to be a whole lot better, even at the worst of times. 
+
+If you really want to learn anything from the experience of using the law of attraction then you will need to learn how to appreciate the things that you have and be thankful. You need to show those who you care about that you also appreciate them because what you give to the world, you get from the world. For you to love, you need to give love. With that said, you will find life will get easier if you learn how to open minded and appreciate the things that you got. 
+
+Also, you need to expect that opportunity is just around the bay. You need to accept the amazing things that are offered to you and you need to make sure that you show others that you appreciate the opportunities. However, keep in mind that common sense is the perfect gift that any parent may give their child, so you need to use common sense in cases of opportunity. 
+
+Also, you need to learn how to listen to your gut feelings. Most of the time you are right; consider the fact that you may know what is best for you after all. A lot of people will go against their intuition and each time that they do, they seem to get lost. It's always best to put some trust and faith in yourself, because, with the law of attraction, you depend on it. 
+
+Finally, for this to work for you and for you to find a positive outlook on life, you need to wonder. You should wonder what it is that your life means to the rest of the universe (because everyone has a place and a purpose in life). You also need to take the time to just lay on the ground and watch the clouds. It's always a good idea to bring yourself back to the childish wonders because it's the only way to keep both feet on the ground. 
+
+Keep in mind that if you are looking to get the most out of the law of attraction, you will need to use your time wisely and you need to keep your positive attitude and reflection on life to be positive as well.

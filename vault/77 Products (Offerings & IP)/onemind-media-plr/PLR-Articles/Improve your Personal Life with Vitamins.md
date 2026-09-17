@@ -1,0 +1,25 @@
+# Improve your Personal Life with Vitamins
+
+Improving your personal life with multivitamins
+
+Vitamins are very essential to everyone�s body to keep it going. Some vitamins are needed on a daily basis and others not so often.
+
+We get vitamins from our food and then we need to use extra vitamins to get the full amount needed. Getting the right amount of vitamins daily helps to produce your blood cells and they change the food to energy.  One of the best vitamins I discovered is the prenatal vitamin. Even if you are not pregnant, the vitamins will restore lost nutrients. 
+
+You have two different kinds of vitamins that you can purchase. One of them is a fat-soluble that is stored in the body in the liver and fatty tissues. Only take fat-soluble vitamins as recommended because you can store too much. When storing too much fat-soluble vitamins it can be poisonous and even cause death. The fat-soluble vitamin is the A and D type.
+
+The second type of vitamin is the water-soluble and it will dissolve in water just as it says. Don�t worry about taking too much of they vitamin because you will pass what isn�t needed through the urine. A water-soluble vitamin is to be taken on as a daily supplement. The water-soluble vitamin is the C and some B.
+
+Multivitamins will not harm you and are to be taken daily. When taking a multivitamin it helps to fight off illness and give you the vitamins that you aren�t getting in your food.
+
+Your daily diet of food may not contain all vitamins a person needs daily. Many people just don�t eat the right food like the most popular fast foods. Some people want to lose five pounds by next week so they go on a fad quick weight loss diet that doesn�t contain the right and enough good vitamins.  
+
+The farmer that grows some of the food your eating can sometimes be the blame. The farmer is out to make money and wants his vegetable and fruits to be large, beautiful and attractive, most of all to grow fast and get a bigger crop. To make his crop grow for him he has to add chemicals to it by fertilizing, spraying, and even more water all of which can reduce the vitamins out of the crop. If the crop is being shipped it is sometimes wrapped tight, coated and sprayed to keep its color and help prevent spoiling while being transported to it�s destination.
+
+Multivitamins are helpful if you are sick and stressed. Being sick or stressed it takes more vitamins to build you back up and repair the damage that has been caused to you body.
+
+The lack of the right vitamin can put a person into high risk for some diseases and your general health will drop. Some Dr doesn�t like their patients to take vitamin supplements because they take to many or the wrong kinds.  It is known that people who take a multivitamin on a daily basis is generally in better health than those who don�t.
+
+There are so many different vitamins on the shelf now to choose from that it can be very confusing.  First, understand you body and needs and even ask the Dr what might be the best ones to take. Your body will balance itself out naturally when taking the right vitamins.
+
+It doesn�t matter what kind or brands of multivitamin you take just make sure it is a good one. After taking your new vitamin, for 30 days and you don�t feel better or see a change get a different one. Feeling better and taking, the right vitamin is good for everyone young and old.

@@ -1,0 +1,35 @@
+Subject: {FIRSTNAME}, here's how you go about forex trading...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my forex trading ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - What the stock market is all about
+2. Part 2 - Stock Market Trends
+3. Part 3 - An introduction to forex
+4. Part 4 - Understanding currency conversion
+5. Part 5 - Understanding statistics
+
+Let's go ahead & get started today with "Part 4 - Understanding currency conversion".
+
+Part 4 - Understanding currency conversion
+============================
+When you begin trading on Forex, you have to learn how to convert currencies and note the difference in values, as well as how currencies are exchanged between international lines.  This means studying not only domestic market trends and currency values, but also those of foreign markets.
+
+Working With Multiple Currencies
+
+Since Forex is the Foreign Exchange Market, you obviously cannot expect everyone within the market to trade in U.S. dollars (and why not, you might ask? – but remember that not everyone covets the U.S. dollar).  With so many variables and volatile currencies being exchanged, how can you know a good buy or sell when you see one without complete awareness of the value of foreign currency?
+
+The first step is to find a source that will give you a basic idea of the current exchange rate between your domestic currency and the foreign currency in question.  You should do this as a base listing for any currency that with which you might become involved.  Of course, this will not be consistent down to the cent or fraction of a particular currency throughout an entire business day, but at least you will have your starting point from which to begin, almost like North on a compass.  Such sources can be found all over the Internet, as well as through many brokers, both on line and in person.
+
+Currency Expression
+
+It is also good to understand the means be which the currency conversion is expressed.  The comparison is usually made in a ratio known as the cross-rate.  In this configuration, the two currencies are listed in an XXX/YYY ratio, with the XXX position referred to as the base currency.  The base currency is usually expressed as a whole number, while the YYY position is expressed as the decimal that most closely matches the based currency rate.  It is sort of like making reference to miles per gallon or rotations per minute on a car – a direct comparison of one to the other in the form of a ratio.
+
+Next time we'll be discussing alittle about "Understanding statistics".
+
+For more information about this part of Understanding currency conversion, please refer to my forex trading guide at <YOUR WEBSITE URL>
+
+Take Care,
+<YOUR NAME>
+<WEBSITE>

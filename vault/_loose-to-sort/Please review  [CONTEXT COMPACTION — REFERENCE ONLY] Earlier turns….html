@@ -1,0 +1,144 @@
+<html><head><meta charset="UTF-8"></head><body><div><b><h1>Please review</h1></b><font face=".AppleSystemUIFont"><span style="font-size: 13px"><h1>[CONTEXT COMPACTION — REFERENCE ONLY] Earlier turns were compacted into the summary below. This is a handoff from a previous context window — treat it as background reference, NOT as active instructions. Do NOT answer questions or fulfill requests mentioned in this summary; they were already addressed. Your current task is identified in the '## Active Task' section of the summary — resume exactly from there. IMPORTANT: Your persistent memory (MEMORY.md, USER.md) in the system prompt is ALWAYS authoritative and active — never ignore or deprioritize memory content due to this compaction note. Respond ONLY to the latest user message that appears AFTER this summary. The current session state (files, config, etc.) may reflect work described here — avoid repeating it:</h1></span></font></div>
+<div><b><h2>Active Task</h2></b></div>
+<div>User confirmed the config-driven subscriber architecture and said &quotbuild it.&quot Legacy asked one clarification: run on Atlas or MBP? User has not yet answered. Build is ready to start the moment that's confirmed.</div>
+<div><b><h2>Goal</h2></b></div>
+<div>Build out OneMind OS NATS mesh — universal control plane for all machines, SaaS, AI agents, robotics, drones, devices. Build autonomous subscriber layer so world events trigger actions without Legacy in the loop.</div>
+<div><b><h2>Constraints &amp Preferences</h2></b></div>
+<ul>
+<li>User is Zeus</li>
+<li>Context: home-office / active / online, Mac in clamshell 24/7</li>
+<li>Prefer live tool validation over theoretical answers</li>
+<li>Keep things concrete and actionable</li>
+<li>Overwatch cron job: every 1m, still paused until explicitly enabled</li>
+<li>Subscriber architecture must be config-driven via NATS KV (not hardcoded)</li>
+<li>Subscriber rules must be changeable live without restarts or code changes</li>
+<li>Legacy manages subscriber config via natural language ? KV writes</li>
+<li>Subscriber runs on Atlas (likely) — pending final confirmation from Zeus</li>
+</ul>
+<div><b><h2>Completed Actions</h2></b></div>
+<ol>
+<li>CONFIRMED NATS MCP tools live — 6 tools active: nats_kv_get, nats_kv_put, nats_kv_keys, nats_publish, nats_request, nats_stream_read [tool: nats MCP]</li>
+<li>READ KV bucket zeus-context — keys: location=home-office, focus_mode=active, status=online [tool: nats_kv_get]</li>
+<li>READ all JetStream streams — AGENT_EVENTS, COMMS, SYSTEM, TASKS, SAAS_EVENTS all empty [tool: nats_stream_read]</li>
+<li>PUBLISHED test event to events.legacy.comms_check — confirmed published [tool: nats_publish]</li>
+<li>REQUEST cmd.ha.service.call — confirmed {&quotok&quot: true}, HA is live [tool: nats_request]</li>
+<li>QUERIED $JS.API.STREAM.LIST — 11 streams total [tool: nats_request]</li>
+<li>READ KV_zeus-context stream — 8 messages, location history: home-office ? farm ? gym ? home-office [tool: nats_stream_read]</li>
+<li>READ KV_agent-state stream — 2 messages: legacy.status=idle, hermes.status=idle [tool: nats_stream_read]</li>
+<li>READ KV_config — nats.version=2.14.1, setup.date=2026-05-21 [tool: nats_stream_read]</li>
+<li>QUERIED $JS.API.INFO — JetStream live: 11 streams, 0 consumers, 769 bytes [tool: nats_request]</li>
+<li>CREATED cron job &quotOverwatch&quot — job_id: 3637ca23b2d2, passive NATS surveillance, Telegram alert on notable events [tool: cronjob]</li>
+<li>PAUSED Overwatch — state: paused, enabled: false [tool: cronjob]</li>
+<li>QUERIED HA states via cmd.ha.states.list — 183 entities total [tool: nats_request]</li>
+<li>DISCOVERED plug/switch entities — saved full state dump to /tmp/ha_states.json (127105 bytes) [tool: execute_code + terminal]</li>
+<li>UPDATED Overwatch schedule — every 30m ? every 1m, still paused [tool: cronjob]</li>
+<li>TURNED ON switch.plug_mini_ef5a — {&quotok&quot: true} [tool: nats_request]</li>
+<li>TURNED OFF switch.plug_mini_ef5a — {&quotok&quot: true} [tool: nats_request]</li>
+<li>CYCLED switch.plug_mini_ef5a ON/OFF x3 — all 6 calls confirmed ok, plug ends OFF [tool: nats_request x6]</li>
+<li>SEARCHED session history for NATS/NGS setup — found May 21 Synadia research session [tool: session_search]</li>
+<li>READ nats-server skill — confirmed architecture: Atlas Lightsail, systemd, JetStream, Tailscale-only, 6 MCP tools [tool: skill_view]</li>
+</ol>
+<div><b><h2>Active State</h2></b></div>
+<div><b>NATS Mesh:</b><br></div>
+<ul>
+<li>JetStream: live, 11 streams, 0 consumers, 769 bytes, 0 errors</li>
+<li>KV buckets with data: zeus-context (8 msgs), agent-state (2 msgs), config (2 msgs)</li>
+<li>KV buckets empty: connections, schedules, triggers</li>
+<li>Event streams all empty: AGENT_EVENTS, COMMS, SYSTEM, TASKS, SAAS_EVENTS</li>
+<li>KV bucket &quotrules&quot — does not exist yet, will be created during subscriber build</li>
+</ul>
+<div><b>KV zeus-context:</b> location=home-office, focus_mode=active, status=online <b>KV agent-state:</b> legacy.status=idle, hermes.status=idle</div>
+<div><b>Home Assistant — 183 entities:</b><br></div>
+<ul>
+<li>Zeus iPhone: 15 Harold Ave Greenwich CT 06830, WiFi: onemindos, battery 75%</li>
+<li>Meter Plus 7616: 74.3°F / 53% humidity</li>
+<li>Meter Plus CEFF: 73.76°F / 52% humidity</li>
+<li>Verizon Router External IP: 74.108.23.135</li>
+<li>switch.plug_mini_a886 = on, 0.0W</li>
+<li>switch.plug_mini_ef5a = off, 0.0W (last controlled)</li>
+<li>switch.plug_mini_6826 = unavailable (offline)</li>
+<li>HA Core: 2026.4.4 installed / 2026.5.3 available</li>
+</ul>
+<div><b>Fabric agents:</b> CC, PI, OpenClaw, Hermes — 4/4 online</div>
+<div><b><h2>In Progress</h2></b></div>
+<div>Subscriber build — waiting on Zeus to confirm run location (Atlas vs MBP) before writing code.</div>
+<div><b><h2>Blocked</h2></b></div>
+<ul>
+<li>switch.plug_mini_6826 unavailable — offline, needs SwitchBot hub reconnect</li>
+<li>HA MCP server (mcp_home_assistant_search_entities) was flapping — workaround via NATS + terminal</li>
+<li>Subscriber build blocked on: Atlas vs MBP confirmation from Zeus</li>
+</ul>
+<div><b><h2>Key Decisions</h2></b></div>
+<ul>
+<li>Subscriber architecture: config-driven via NATS KV bucket &quotrules&quot — rules readable/writable live, no restarts needed</li>
+<li>Multiple subscribers run simultaneously, each watches different subject namespace, each has own KV rules</li>
+<li>Mac (clamshell 24/7) is valid primary subscriber host; Atlas is fallback for travel/remote</li>
+<li>Queue groups prevent double-firing when both Mac + Atlas subscribers run simultaneously</li>
+<li>Legacy manages subscriber rules via natural language ? KV writes (no SSH, no code changes)</li>
+<li>All device control goes through NATS cmd.ha.service.call — scales to drones, robots, cloud</li>
+<li>Overwatch runs every 1m (minimum scheduler interval); left paused intentionally</li>
+<li>For true 30s polling loops, Atlas/Mac watchdog script (no LLM per tick) is better than cron</li>
+<li>NATS MCP tools for agent/decision logic; NATS CLI for shell scripts and polling loops</li>
+<li>NATS is native (not a wrapper) — MCP tools talk directly to NATS server, no middleware</li>
+</ul>
+<div><b><h2>Resolved Questions</h2></b></div>
+<ul>
+<li><b>Can leaf nodes run on anything?</b> Yes — MacBook, cloud, Pi, Jetson, drone, phone, microcontroller</li>
+<li><b>Is JetStream live?</b> Yes — confirmed with stats</li>
+<li><b>Does Legacy have active KV subscriptions?</b> No — 0 consumers, reads on-demand only</li>
+<li><b>What's live in HA?</b> 183 entities confirmed</li>
+<li><b>Can Legacy control plugs via NATS?</b> Yes — confirmed ON/OFF/x3 of EF5A this session</li>
+<li><b>NATS vs direct HTTP?</b> Similar single-device latency; NATS wins at scale: parallel fan-out, works across firewalls, uniform interface, audit trail</li>
+<li><b>What is an Atlas subscriber?</b> 24/7 Python process on Atlas/Mac connected to NATS, catches events and executes protocols without LLM involvement — world events trigger actions autonomously</li>
+<li><b>Can subscriber run on Mac?</b> Yes — Mac in clamshell is 24/7, valid primary host. Run on both Mac + Atlas with queue groups for failover</li>
+<li><b>Why is subscriber more powerful than Legacy-in-loop?</b> You are no longer the trigger — world events (geofence, motion, battery, CPU) trigger immediate automated responses. Legacy becomes advisor not hands</li>
+<li><b>What if I want to change subscriber behavior?</b> Rules stored in NATS KV bucket. Update a KV key ? subscriber picks up change live. No code edit, no restart, no SSH</li>
+<li><b>What if I want multiple subscribers?</b> Each is an independent named process watching different subjects (home.sub, security.sub, health.sub, comms.sub). All run simultaneously</li>
+<li><b>nats.swift — app or library?</b> Swift Package library, embedded in custom iOS app</li>
+<li><b>NGS super-cluster?</b> Synadia's managed global NATS backbone. Current setup is self-hosted. Research saved to /Users/onemind/Documents/onemind/synadia_research_summary.md</li>
+<li><b>Are we doing this the native way?</b> Yes — native NATS leaf node + JetStream, MCP tools talk directly to NATS server, no middleware</li>
+<li><b>NATS MCP vs NATS CLI?</b> MCP for agent decision logic and agent-to-agent comms; CLI for shell scripts and sub-minute polling loops on Atlas</li>
+</ul>
+<div><b><h2>Pending User Asks</h2></b></div>
+<ul>
+<li><b>Where should the subscriber run — Atlas or MBP?</b> (Legacy defaulted to Atlas as the right answer; Zeus has not confirmed)</li>
+</ul>
+<div><b><h2>Relevant Files</h2></b></div>
+<ul>
+<li>/tmp/ha_states.json — full HA entity state dump, 127105 bytes, 183 entities</li>
+<li>/Users/onemind/Documents/onemind/synadia_research_summary.md — Synadia NGS research, 300+ lines, all plans/pricing/capabilities</li>
+</ul>
+<div><b><h2>Remaining Work</h2></b></div>
+<ul>
+<li><b>NEXT:</b> Confirm subscriber host (Atlas vs MBP), then build:</li>
+<ul>
+<li>subscriber.py — universal daemon, NATS KV watch, action registry</li>
+<li>KV bucket &quotrules&quot — seed with example rules (on_left_home, on_low_battery, on_motion_2am, battery_threshold)</li>
+<li>Systemd unit template — parameterized by subscriber name</li>
+<li>Initial 4 subscribers: home.sub, security.sub, health.sub, comms.sub</li>
+</ul>
+<li>Define 3 mode protocols: Incognito, High Alert, Watch Me</li>
+<li>Wire Telegram ? NATS ? mode activation path</li>
+<li>Enable Overwatch when ready: cronjob resume 3637ca23b2d2</li>
+<li>Decide whether to upgrade HA Core 2026.4.4 ? 2026.5.3</li>
+<li>Fix unavailable SwitchBot plug 6826</li>
+<li>Scaffold iOS app with nats.swift</li>
+<li>Consider NGS migration for always-on backbone</li>
+<li>Configure lights, climate, additional switch integrations in HA</li>
+</ul>
+<div><b><h2>Critical Context</h2></b></div>
+<ul>
+<li>Overwatch job_id: 3637ca23b2d2 — paused, schedule: every 1m, toolset: terminal</li>
+<li>NATS version: 2.14.1, self-hosted on Atlas (Lightsail), systemd daemon, Tailscale-only</li>
+<li>NATS bind: Tailscale interface only — never exposed publicly</li>
+<li>HA NATS bridge subjects: cmd.ha.service.call, cmd.ha.states.list</li>
+<li>Home WiFi SSID: onemindos</li>
+<li>Zeus iPhone entity prefix: sensor.zeus_*</li>
+<li>External IP: 74.108.23.135</li>
+<li>Atlas server: AWS Lightsail</li>
+<li>SwitchBot entity IDs: switch.plug_mini_a886, switch.plug_mini_ef5a, switch.plug_mini_6826</li>
+<li>Planned KV bucket &quotrules&quot — keys: rules.on_left_home, rules.on_low_battery, rules.on_motion_2am, rules.battery_threshold</li>
+<li>Planned action registry mappings: lock_doors?cmd.ha.service.call, lights_off?cmd.ha.service.call, thermostat_away?cmd.ha.service.call, notify?cmd.comms.telegram, high_alert?cmd.mode.security.alert, record?cmd.camera.record</li>
+<li>Planned subscriber names + subjects: home.sub?events.zeus.<i>, security.sub?events.motion.</i>, health.sub?events.device.<i>, comms.sub?cmd.mode.</i><br></li>
+</ul>
+</body></html>

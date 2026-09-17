@@ -1,0 +1,376 @@
+Nos	Count	Predict	Keyword
+---------------------------------------------------------------------
+1	457	590	timeshares
+2	176	227	timeshares for sale
+3	63	81	Timeshares for Sale
+4	56	72	florida timeshares
+5	52	67	lake powell timeshares
+6	50	65	houseboat timeshares
+7	46	59	selling timeshares
+8	45	58	Timeshares for Rent
+9	37	48	rci timeshares
+10	35	45	timeshares for rent
+11	34	44	Timeshares
+12	33	43	spinnaker at shipyard timeshare resale
+13	33	43	marriott timeshares
+14	31	40	timeshares only
+15	29	37	orlando timeshares
+16	28	36	timeshares orlando
+17	26	34	sheraton timeshares
+18	25	32	fairfield timeshares
+19	25	32	Marriott Timeshares
+20	24	31	las vegas timeshares for rent
+21	24	31	Timeshares by Owner
+22	23	30	Rci Timeshares
+23	21	27	sell timeshares
+24	20	26	las vegas timeshares
+25	17	22	buy timeshares
+26	17	22	boat timeshares
+27	16	21	westgate timeshares
+28	16	21	RCI timeshares
+29	16	21	PUEBLO BONITO TIMESHARES
+30	16	21	Grand Mayan Maya Riviera timeshares
+31	16	21	worldmark timeshares
+32	15	19	TIMESHARES
+33	15	19	place at the beach iii timeshare sales
+34	15	19	Litchfield by the Sea timeshares
+35	15	19	place at beach iii timeshare
+36	15	19	yacht timeshares
+37	14	18	timeshares by owner
+38	14	18	timeshares for rent in London
+39	14	18	puerto rico timeshares
+40	13	17	Timeshares in Branson, MO
+41	13	17	timeshares to buy
+42	13	17	hawaii timeshares
+43	13	17	Rci Timeshares for Sale
+44	12	16	timeshares for sale by owner
+45	12	16	silverleaf timeshares
+46	12	16	discounted timeshares
+47	11	14	Timeshares+by+owner
+48	11	14	holiday timeshares
+49	11	14	marriot grande vista timeshares
+50	11	14	club interwest timeshares
+51	11	14	timeshares for sale myrtle beach, sc
+52	11	14	Timeshares Only
+53	10	13	timeshares only rip off
+54	10	13	timeshares to rent in tampa, fl
+55	10	13	marriot timeshares
+56	10	13	SELL TIMESHARES
+57	9	12	timeshares bc
+58	9	12	VILLIAGE GREEN AT STOWE TIMESHARE
+59	9	12	orange lake timeshares
+60	9	12	fairmont hillside riverside timeshare resale
+61	9	12	canmore timeshares
+62	9	12	Selling Timeshares - NY
+63	9	12	Dog-friendly timeshares San Diego county
+64	9	12	sunterra timeshares
+65	9	12	interwest timeshares
+66	9	12	RCI Timeshares
+67	9	12	Fairfield Timeshares
+68	9	12	hyatt timeshares
+69	9	12	vacation timeshares
+70	8	10	hilton timeshares
+71	8	10	maui timeshares
+72	8	10	myrtle beach timeshares for sale
+73	8	10	Vacation Timeshares
+74	8	10	Sold prices Pono Kai Timeshares
+75	8	10	aruba timeshares
+76	8	10	timeshare units at Las Palmas by the Sea
+77	8	10	Marriott Timeshares for Sale
+78	8	10	florida keys timeshares
+79	8	10	timeshares for rent in tampa, florida
+80	8	10	Hilton Head Timeshares
+81	8	10	orlando realtor timeshares
+82	8	10	Timeshares sell
+83	7	9	starwood resorts timeshares
+84	7	9	Buying uses resale timeshares
+85	7	9	st james place timeshares for sale
+86	7	9	timeshares at myrtle beach
+87	7	9	Timeshares Fairfield
+88	7	9	Timeshares - Branson, MO
+89	7	9	timeshare resales in panama city beach
+90	7	9	key west timeshares
+91	7	9	bluegreen timeshare points for sale
+92	7	9	timesharesonly.com
+93	7	9	las vegas timeshares free tickets
+94	7	9	a place at the beach III timeshares
+95	7	9	timeshares in St Thomas
+96	7	9	timeshares for sale in Sunrise Cove, Spirit Lake, Iowa
+97	7	9	buying timeshares
+98	7	9	arizona timeshares
+99	7	9	timeshareresales
+100	7	9	timeshares myrtle beach south carolina
+101	7	9	orlando timeshares for sale
+102	7	9	timeshares now
+103	7	9	resale timeshares
+104	6	8	resale of disney timeshares
+105	6	8	Timeshares for sale
+106	6	8	message boards for selling timeshares
+107	6	8	timeshares for rent in san diego california
+108	6	8	Disney Timeshares
+109	6	8	foreclosed timeshares
+110	6	8	Marriott Vacation Club Timeshares
+111	6	8	Timeshares WITHOUT any credit check
+112	6	8	marriott timeshares for rent
+113	6	8	timeshares+orlando
+114	6	8	south africa timeshares
+115	6	8	timeshares directly from owners
+116	6	8	starwood timeshares
+117	6	8	disney timeshares
+118	6	8	marriott timeshares home page
+119	6	8	timeshares in key west
+120	6	8	we buy timeshares
+121	6	8	Myrtle Beach timeshares
+122	6	8	bid on timeshares
+123	6	8	deeded timeshares auction
+124	6	8	bluegreen timeshares
+125	6	8	timeshares for sale at massanutten
+126	6	8	branson timeshares
+127	5	6	Las Vegas timeshares
+128	5	6	nevada rci + interval timeshares
+129	5	6	hawaii vacation timeshares RENTALS
+130	5	6	timeshares for sale orlando
+131	5	6	virginia beach 3 day 2 night timeshares
+132	5	6	timeshares to rent
+133	5	6	wells beach maine timeshares
+134	5	6	Ron Richmond timeshares
+135	5	6	grand beach resort orlando timeshares for sale
+136	5	6	timeshares for sale in lake tahoe
+137	5	6	Reed Resale timeshares
+138	5	6	timesharesales
+139	5	6	orlando vacation deals, timeshares
+140	5	6	timeshares in vegas
+141	5	6	RCI TIMESHARES
+142	5	6	moon palace timeshares
+143	5	6	timeshare for sale by owner
+144	5	6	myrtle beach timeshares
+145	5	6	carribbean timeshares
+146	5	6	how to foreclose on a timeshare interest
+147	5	6	Pono Kai Timeshares
+148	5	6	charter club naples bay timeshare for sale
+149	5	6	Orlando Timeshares
+150	5	6	timesharerentals
+151	5	6	free timeshares
+152	5	6	Worldmark Timeshares
+153	5	6	GET OUT OF TIMESHARE CONDIMINIUM LEASE
+154	5	6	about timeshares
+155	5	6	Selling Timeshares
+156	5	6	cancun timeshares
+157	5	6	timesharesonly
+158	5	6	people renting timeshares in north myrtle beach
+159	5	6	top 5 timeshares
+160	5	6	Venice Timeshares
+161	5	6	timeshares for sale and sint maarten
+162	4	5	How Do Timeshares Work
+163	4	5	fairmont timeshares
+164	4	5	Pueblo Bonito rose, timeshares for sale
+165	4	5	class action timeshare south carolina
+166	4	5	timeshares for sale in mexico
+167	4	5	orange lake timeshares for sale
+168	4	5	rca timeshares
+169	4	5	timeshares in williamsburg virginia for rent
+170	4	5	timesharerentals.com
+171	4	5	timesharesarasotafree
+172	4	5	sunterra sedona timeshares
+173	4	5	timeshares for sale in aust
+174	4	5	timeshares kauai shearwater
+175	4	5	timeshares for rent by owner
+176	4	5	timeshares in hawaii
+177	4	5	Nantucket timeshares
+178	4	5	my company can use your timeshare
+179	4	5	timesharesalespeople
+180	4	5	understanding timeshares
+181	4	5	Timeshares Quick Sale International ripoff
+182	4	5	resale timeshares maine
+183	4	5	average room rate for a marriott timeshare
+184	4	5	mexico timeshares
+185	4	5	hawaii vacation timeshares
+186	4	5	door county timeshares for sale
+187	4	5	timeshares for rent at peppertree ocean club
+188	4	5	lenders who refinance timeshares
+189	4	5	timeshares.com
+190	4	5	sandy point beach club timeshare sale
+191	4	5	nevada timeshares
+192	4	5	timeshares for sale, pueblo bonito rose
+193	4	5	Daytona Timeshares
+194	4	5	DISNEY TIMESHARES
+195	4	5	complaints about timeshare acquisitions llc
+196	4	5	st croix timeshares
+197	4	5	timeshares fo sale in florida
+198	4	5	fairfield timeshare in myrtle beach
+199	4	5	vacation timeshares honolulu
+200	4	5	how to sell timeshares
+201	4	5	saint marteen timeshares
+202	4	5	pono kai timeshares
+203	4	5	rpi timeshares
+204	4	5	timeshares for sale in grancanaria
+205	4	5	timeshares australia
+206	4	5	cheap timeshares
+207	4	5	sell off timeshares
+208	4	5	Marriott Timeshares Puerto Rico
+209	4	5	quarter share timeshares
+210	4	5	Mountain Club on Loon timeshares for sale
+211	4	5	intrawest timesharew
+212	4	5	timesharenews.com
+213	4	5	las vegas timeshares for rent in may
+214	4	5	last minute timeshares
+215	4	5	Timeshares in Michigan
+216	4	5	timeshares resales st. maarten
+217	4	5	otter rock timeshares
+218	4	5	timeshareclearinghouse
+219	4	5	Timeshares Rent Orlando
+220	3	4	timeshares, what is, the meaning of, definition
+221	3	4	disneyworld timeshares
+222	3	4	marriott aruba surf and ocean club timeshares
+223	3	4	timeshares listing
+224	3	4	timeshares pros and cons
+225	3	4	TIMESHARES ONLY
+226	3	4	marriott resort timeshares
+227	3	4	puerto vallarta Timeshares for Rent
+228	3	4	resort timeshares
+229	3	4	pueblo bonito los cabos timeshares
+230	3	4	timeshareacquisitions.net
+231	3	4	Tom Costa Rica condo timeshare freedom program
+232	3	4	timeshareuk
+233	3	4	Bangkok Timeshares
+234	3	4	Missouri + Timeshares
+235	3	4	timeshares in orlando florida
+236	3	4	foreclosure timeshares
+237	3	4	sapphire bay timeshares
+238	3	4	rent timeshares
+239	3	4	What does Dave Ramsey say about Timeshares
+240	3	4	drawbacks of timeshares
+241	3	4	How Can I Sell My Timeshare for Cash
+242	3	4	timeshARES.COM
+243	3	4	RESALE TIMESHARES
+244	3	4	Venice, Italy Timeshares
+245	3	4	timeshares for dale
+246	3	4	tennessee timeshares
+247	3	4	timeshares puerto vallarta free airline
+248	3	4	Timeshares lockout
+249	3	4	information on timeshare leal documents on for sale by owner
+250	3	4	timeshares florida
+251	3	4	tahoe timeshares
+252	3	4	sanibel timeshares
+253	3	4	ruidoso timeshares
+254	3	4	timeshares in solana beach
+255	3	4	Mustang Island Timeshares, Texas,
+256	3	4	Virginia Timeshares
+257	3	4	Value of Timeshares
+258	3	4	TURKS & CAICOS TIMESHARES
+259	3	4	trying out timeshares
+260	3	4	new smyrna beach timeshare resales
+261	3	4	virginia timeshares
+262	3	4	san antonio timeshares
+263	3	4	Timeshares in Pigeon Forge
+264	3	4	trendwest timeshares
+265	3	4	outer banks timeshares
+266	3	4	lake tahoe timeshares
+267	3	4	TImeshares Las Vegas, NV
+268	3	4	Trendwest timeshares
+269	3	4	royal sunset mexico timeshares
+270	3	4	puerto vallarta all inclusive timeshares
+271	3	4	Sedona timeshares
+272	3	4	Costa Rica condo timeshare freedom network program
+273	3	4	RCI timeshares in fiji
+274	3	4	Las Vegas, Nevada Timeshares
+275	3	4	rpmi timeshares
+276	3	4	hawaii timeshares kauai
+277	3	4	saint martin timeshares
+278	3	4	hanalei bay resort timeshares
+279	3	4	timeshares at the rocks in scottsdale arizona
+280	3	4	timeshareonly.com
+281	3	4	Timeshares for rent St. George Utah
+282	3	4	santa fe timeshares
+283	3	4	free tickets from timeshares in orlando
+284	3	4	timeshares gatlinburg tennessee
+285	3	4	pueblo bonito timeshares
+286	3	4	caribbean timeshares
+287	3	4	timeshareware
+288	3	4	hilton head gold crown timeshares
+289	3	4	marriott timeshares and boston
+290	3	4	Rci Aruba Timeshares
+291	3	4	texas timeshares
+292	3	4	Jamaican timeshares
+293	3	4	only timeshares
+294	3	4	interval timeshares
+295	3	4	used timeshares
+296	3	4	carlsbad inn timeshare for sale
+297	3	4	italian timeshares
+298	3	4	florida AND timeshares
+299	3	4	cranberry timeshares
+300	3	4	timeshares in pa
+301	3	4	timeshareadventures
+302	3	4	timeshares offers in orlando
+303	3	4	whistler timeshares
+304	3	4	timeshares in keystone
+305	3	4	Why invest in Ivory Coast Timeshares
+306	3	4	Playa Grande ridge timeshares Cabo, mexico
+307	3	4	timesharesales.com
+308	3	4	gold crown, red, timeshares for sale
+309	3	4	timeshares in myrtle beach
+310	3	4	rv timeshares
+311	3	4	TIMESHARE SALE, TAXABLE BY IRS
+312	3	4	boston timeshares
+313	3	4	florida key west timeshares
+314	3	4	Hawaiian Timeshares for Rent
+315	3	4	lake powell houseboat timeshares
+316	3	4	Top 50 Timeshares in Florida
+317	3	4	All inclusive resort timeshares
+318	3	4	cheap timeshares for sale
+319	3	4	timesharesbyowner
+320	3	4	RCI TIMESHARES IN THE RIVIERA
+321	2	3	disney world timeshares
+322	2	3	club cascadas de baja timeshares
+323	2	3	refinancing timeshares
+324	2	3	mayan group timeshares
+325	2	3	south african timeshares
+326	2	3	hyatt timeshares for sale
+327	2	3	christian timeshares
+328	2	3	colorado timeshares for sale
+329	2	3	westin timeshares
+330	2	3	gulf breeze timeshares
+331	2	3	marriott resorts timeshares
+332	2	3	allegro timeshares for sale
+333	2	3	timeshares in san fransico
+334	2	3	Marriott spain timeshares
+335	2	3	sales job selling timeshares
+336	2	3	nevada rci timeshares
+337	2	3	Timeshares Only experiences
+338	2	3	timeshares only problem
+339	2	3	timeshares for Sale in Orlando Florida
+340	2	3	sedona timeshares for sale
+341	2	3	marriot timesharesvacations.com
+342	2	3	timeshares for sale waterfront
+343	2	3	rci timeshares for sale
+344	2	3	florida timeshares for sale
+345	2	3	sunset resorts timeshares for sale
+346	2	3	mexico timeshares for sale
+347	2	3	Fairfield timeshares for sale
+348	2	3	perdido key, florida timeshares
+349	2	3	hawaii timeshares for sale
+350	2	3	Timeshares for sale, Cabo San Lucas
+351	2	3	timeshares for sale in caribbean
+352	2	3	Island Seas timeshares for sale
+353	2	3	Advice on Selling Timeshares
+354	2	3	marriott surf club timeshares for rent
+355	2	3	Disney Timeshares for Sale
+356	2	3	turks & caicos timeshares for sale
+357	2	3	timeshares for rent in virginia beach
+358	2	3	pagosa springs timeshares for sale
+359	2	3	Selling timeshares websites
+360	2	3	timeshares for rent 2007
+361	2	3	Timeshares For Sale By Owner
+362	2	3	timeshares for rent kauai
+363	2	3	Timeshares for Sale and Hilton Head Island
+364	2	3	timeshares for sale art supplies
+365	2	3	timeshares for sale san fransisco
+366	2	3	phoenix arizona timeshares for rent
+367	2	3	timeshares for sale in acapulco
+368	2	3	timeshares for rent in hawaii
+369	2	3	grandview timeshares for sale
+370	2	3	TIMESHARES FOR SALE
+371	2	3	marriott timeshares hawaii
+372	2	3	timeshares for sale in delaware
+373	2	3	timeshares for rent in illinois
+374	2	3	timeshares for sale in Lake Tahoe

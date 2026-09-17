@@ -1,0 +1,34 @@
+# Subject: {FIRSTNAME}, here's how you go about Knowing and going where the fish are...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my Bass fishing 101 ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - Tools of the trade
+2. Part 2 - Knowing and going where the fish are.
+3. Part 3 - Techniques for Bass fishing like a Pro!
+4. Part 4 - Mistakes and secrets to Bass fishing.
+5. Part 5 - Styles and specialty Bass fishing techniques.
+
+Let's go ahead & get started today with "Part 2 - Knowing and going where the fish are".
+
+Part 2 - Knowing and going where the fish are
+============================
+
+Bass defined: A fighter, ever-elusive, choice game-fish, predator by nature and reputation, the one sought-after, prized hook, catch, reel-in and land, of many an aspiring angler. 
+
+How to catch Bass AND then catch more, larger bass, more often, in more places, with more consistency, having a pro-active plan and approach, stacking the odds in your favor to succeed, catching more fish and enjoying the process, is what this basic guide is all about. 
+
+The hunter becomes the hunted - learn how a small change in your paradigm, thinking and approach can lead to bass-angling success! Start thinking like the watery hunter, become and understand the bass as a hunter. Observe, learn, follow, study and use its natural habit, preferences, patterns, habits, prey and choice of food, in your angling-strategy, and you will have some interesting fish-tales to tell. (None of them tall tales of course,  we hope!)� and yes, we may even learn something from the ones that get/got away! 
+
+So, without further ado, let us get our rods and reels going�
+
+If you were told that, there is one particular species of fish that most would describe as tough-minded, smart, outwitting and elusively hard to catch, then it the Bass - in all its shapes, sizes, iterations and sub-classes. 
+
+It rings true, no matter what the context, body of water, special and or any situation or condition, regardless of secrets, tips, proven science, technique and intent in the world! Bass fishing is challenging and rewarding at the same time. To ensure hours of countless pleasure, follow the pointers (and add some of your own here too!) provided here, for Bass fishing 101 and be ready to hook the next big one� repeatedly, and actually be able to ENJOY it too!
+
+Next time we'll be discussing alittle about "Techniques for Bass fishing like a Pro".
+
+For more information about this part of Knowing and going where the fish are, please refer to my Bass fishing 101 guide at 
+
+Take Care,

@@ -1,0 +1,22 @@
+body {
+	font-family: Verdana;
+	font-size:11px;
+}
+
+td {
+	font-family: Verdana;
+	font-size:11px;
+}
+
+th {
+	font-family: Verdana;
+	font-size:11px;
+}
+.a {
+	color: #FFFFFF;
+}
+.border {
+
+	border: 1 solid #000066;
+
+}

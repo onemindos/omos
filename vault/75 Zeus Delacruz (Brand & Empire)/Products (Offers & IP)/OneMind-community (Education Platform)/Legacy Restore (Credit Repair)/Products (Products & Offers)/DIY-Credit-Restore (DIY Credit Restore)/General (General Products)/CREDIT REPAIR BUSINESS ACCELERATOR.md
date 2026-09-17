@@ -1,0 +1,465 @@
+---
+id: ge-78-20260113225956
+title: "CREDIT REPAIR BUSINESS ACCELERATOR"
+type: reference
+path: GE
+domain: 75-99
+folder: "78"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/ge, path/ge/78, type/reference, status/active, entity/restore]
+ai_summary: "CREDIT REPAIR BUSINESS ACCELERATOR"
+---
+**[CREDIT REPAIR BUSINESS ACCELERATOR PROGRAM]{.ul}**
+
+**TEAM NEEDED FOR MENTORSHIP:**
+
+-   ADMIN FOR ONBOARDING AND CLIENT SUCCESS
+
+-   GHL TECH (FIVERR)
+
+**BRANDS BEING USED:**
+
+CREDIT EXECUTIVE CREDIT REPAIR BUSINESS ACCELRATOR PROGRAM (TRADEMARK)
+
+AUTOMATE MY CREDIT EMPIRE GHL WHITE LABEL (TRADE MARK?)
+
+LAUNCH LIST:
+
+MARKETING SETUP
+
+AUTOMATION SETUP (FULFILMENT) (PAYMENT) (ZAPS) (ONBOARDING)
+
+**[PRICING: (PAYMENT LAWS)]{.ul}**
+
+-   MONTHLY STRUCTURE (BILLSBY)
+
+-   PAY PER DELETE (FRESH BOOKS)
+
+**[WHAT YOUR CREDIT REPAIR BUSINESS WILL OFFER:]{.ul}**
+
+-   CREDIT FOUNDATION COURSE
+
+```{=html}
+<!-- -->
+```
+-   MONTHLY UPDATES
+
+-   CLIENT PORTAL
+
+> LIVE TRAINING TOOLS TO BE SHOWN:
+
+-   LASTPASS (FOR ACCOUNT ACCESS)
+
+-   SLACK (TEAM COMMUNICATION)
+
+-   ONLINE.PH & UPWORK (HIRING SCRIPTS) PLUG AND PLAY
+
+-   MERCHANT ACCOUNT (5 STAR PROCESSING AND BILLSBY)
+
+-   G-SUITE (TEAM EMAIL MANAGEMENT)
+
+-   RAPID DISPUTE PRO SETUP
+
+-   ZOOM (FOR TEAM MEETINGS)
+
+-   CREDIT REPAIR CLOUD (CLIENT CRM)
+
+**4^TH^ QUARTER MARKETING PLAN**
+
+BLACK FRIDAY
+
+CYBER MONDAY
+
+CHRISTMAS
+
+NEW YEARS
+
+**WHAT IM OFFERING:**
+
+-   CR BUSINESS COURSE
+
+-   AUTOMATION GHL COURSE
+
+-   VEGAS AUTOMATION MASTERMIND FOOTAGE
+
+-   SALES SCRIPTS
+
+-   GHL SYSTEM (WITH SETUP) W COURSE ON HOW TO USE (UPDATES)
+
+-   MASTERMIND INVITE IN PERSON
+
+-   TRELLO BOARD FOR DISPUTES (IMPORT IN INFINITY)
+
+-   EXPERTS FOR MARKETING AND DISPUTES, VA'S, BUSINESS CREDIT
+
+-   CREDIT REPAIR APPT FUNNELS
+
+-   CREDIT WEBSITE TEMPS X3
+
+-   EMAIL TEMEPLATES & AUTOMATION (ACTIVE CAMPAIGN)
+
+-   HIRING PIPELINE
+
+-   CREDIT BUILDING COURSE STRUCTURE
+
+-   EMAIL CAMPAIGNS (GHL)
+
+-   MARKETING FLOW SHEET
+
+-   HOW TO KEEP FILES ON GOOGLE DRIVE (OR HARD COPIES)
+
+-   DELEGATION STRUCUTRE
+
+-   Factual disputing ---\>Metro 2
+
+-   FRESHBOOK FOR PPD METHODS
+
+-   ONE AND DONE MARKETING STRAEGY (WHIMSCIAL)
+
+-   CREATE BUSINESS PLAN (CREDIT REPAIR) WITH TEMP
+
+-   INFINITY STRCUTURE
+
+-   SALES TRAINING WITH SCRIPTS
+
+-   DISPUTE FLOW TRAINING
+
+-   EXPERTS FOR TAXES (PARTNERSHIP)
+
+-   WHIMISCAL BLUEPRINTS (ZAPIER??)
+
+-   CREDIT REPAIR AGREEMENTS AND DISCLOSURES
+
+-   HIRING JOB POSTS FOR ALL POSITONS (PLUG AND PLAY)
+
+-   FACEBOOK BUSINESS & PERSONAL PAGE, IG PAGE CLEAN UP
+
+-   IG PAGE
+
+-   TEAM COMMUNICATION STRUCTURE (DAILY MORNING MEETINGS WITH ADMIN)
+
+-   3 PIPELINES X3
+
+-   FUNNEL X3
+
+-   WEBSITES X3
+
+-   TRIGGERS SETUP
+
+-   TEXT MESSAGE TEMPS FOR AUTOMATION
+
+-   EMAIL CAMPAIGNS TEMPS
+
+-   CUSTOMER SERVICE (TICKET SYSTEM) - (EMAIL)
+
+-   Custom plan/ blue print w/ 1 on 1 (action plan)
+
+-   TWILIO SETUP (NEED ACCESS)
+
+-   MAILGUN ACCOUNT SETUP (NEED ACCESS)
+
+-   DOMAIN SETUP (NEED ACCESS TO HOST)
+
+-   GMAIL FOR BUSINESS
+
+-   CLIENT COURSE CREATION OUTLINE & SETUP
+
+-   IDIQ AFFILAITE PLUG
+
+-   GETTING PAID FOR CONSULTATIONS (20\$ A PERSON)
+
+WHAT YOU'LL RECEIVE
+
+-   CREDIT REPAIR BUSINESS ACCELATROR COURSE W/ OVER 50+ VIDEOS
+
+-   ONE 30 MIN STATERGY SESSION WITH THE CREDIT EXECUTIVE
+
+-   FREE TRIAL TO RAPID DISPUTE PRO (DISPUTE BUTTON)
+
+-   THE AUTOMATE MY CREDIT EMPIRE FULL AUTOMATION SYSTEM
+
+-   SALES SCRIPT
+
+-   VEGAS AUTOMATION MASTERMIND FOOTAGE
+
+-   FULL SCALE DISPUTE FLOW WITH OVER 40+ LETTERS
+
+-   HIRING PIPELINE FOR VA'S
+
+-   CREDIT REPAIR RESOURCE LIBARAY (CREDIT REPAIR BLUEPRINTS) WHIMISCAL
+
+-   DELEGATION STRUTURE FOR SCALING
+
+-   FULL SCALE COMPANY MANAGEMENT TEMP WITH OUR PROJECT MANAGER
+
+-   CREDIT REPAIR AGREEMENTS AND DISCLOSURE
+
+-   HIRING JOB POSTS FOR ALL POSITIONS (PLUG AND PLAY)
+
+WHAT YOU'LL LEARN
+
+-   FULL CREDIT REPAIR BUSINESS STRUCTURE
+
+-   SALES TRAINING W/ SCRIPTS
+
+-   DISPUTE TACTICS INCLUDING FACTUAL DISPUTING / METRO 2
+
+-   PAID MARKETING METHODS (EXPERT TRAINING)
+
+-   ORGANIC MARKETING METHODS
+
+-   CUSTOMER SUPPORT METHODS
+
+-   COMPLIANCE TRAINING (EXPERT TRAINING)
+
+-   HOW TO HIRE THE RIGHT VA'S FOR YOUR EMPIRE
+
+-   HOW TO CLEAN UP YOUR SOCIAL MEDIA TO ATTRACT FOR TRAFFIC
+
+-   CREDIT MONITORING TRAINING(SMART CREDIT AND IDIQ)
+
+-   HOW TO GET PAID DOING CONSULTATIONS ON THE BACK-END
+
+-   BRANDING (DOMAIN, TRADEMARKS,
+
+WHAT YOU WILL LEAVE WITH:
+
+-   AUTOMATED
+
+-   PROFITABLE
+
+-   SUSTAINABLE
+
+-   RECESSION PROOF BUSINESS
+
+**[MANAGEMENTA CECR ADMIN]{.ul}**
+
+-   Admin hire
+
+-   Sops
+
+-   Payroll
+
+-   Hiring process
+
+-   Daily management communication/ morning rev up meeting
+
+-   Reporting - daily/ weekly/ monthly of overall performance (sales)
+    (disputes) (customer
+
+service) (marketing)
+
+**[SALES:]{.ul}**
+
+-   Marketing booster
+
+-   Sale lead manager
+
+-   Webinar - Dene fits (API) book a call option
+
+-   Dene fits finance - credit builder → payment plan
+
+-   Ad's setup → book appt/ messenger ads/ IG automation (many chat)
+
+**[What we offer:]{.ul}**
+
+-   CFC
+
+-   1 on 1 credit consulting (add new calendar \[ \[ customer service
+    team\] \])
+
+-   Monthly updates
+
+-   Client portal
+
+-   Money back guarantee
+
+-   24/7 customer service (answer to connect)
+
+\*\*\* Transformation not Transaction \*\*\*
+
+**[DISPUTES:]{.ul}**
+
+-   Trello board method --- add on training (add letter to crc)
+
+-   Dispute button add on
+
+-   Consumer lawyer
+
+**[CUSTOMER SERVICE:]{.ul}**
+
+-   Add 1 on 1 calendar for CS (consulting) (done by CS)
+
+-   Client success manager → manages monthly updates
+
+-   Customer Retention
+
+**[MARKETING:]{.ul}**
+
+-   ORGANIC MARKETING AUTOMATED (SOCIAL MEDIA)
+
+-   COMPANY WEBSITE → SEO (WP)
+
+> **[FACEBOOK ADS SETUP]{.ul}**
+
+**[PIXEL NEEDS TO BE SHARED FROM ANOTHER BUSINESS MANAGER (MOMMIES
+ACCOUNT)]{.ul}**
+
+**[Facebook campaigns for lead magnets x4]{.ul}**
+
+-   Direct ad campaigns
+
+-   Retargeting campaigns LEAD TO (CREDIT EXECUTIVE CREDIT REPAIR)
+    (D.I.Y COURSE) (CREDIT FOUNDATION COURSE)
+
+-   Lookalike audience campaign
+
+-   Set up pixel tracking
+
+**[Facebook campaigns for credit foundation course]{.ul}**
+
+-   Direct ad campaigns
+
+-   Retargeting campaigns
+
+-   Lookalike audience campaign
+
+-   Set up pixel tracking
+
+**[Facebook campaigns for credit executive credit repair:]{.ul}**
+
+-   Direct ad campaigns
+
+-   Retargeting campaigns
+
+-   Lookalike audience campaign
+
+-   Set up pixel tracking
+
+**[Facebook campaigns for D.I.Y course:]{.ul}**
+
+-   Direct ad campaigns
+
+-   Retargeting campaigns
+
+-   Lookalike audience campaign
+
+-   Set up pixel tracking
+
+**[Check list]{.ul}**
+
+-   All funnels should have videos
+
+-   Links for all the funnels should be on this sheet
+
+-   Videos for ads will be put into a folder for setup
+
+-   All copy for ads should be on this sheet also (Facebook library)
+
+**[Free Training]{.ul}**
+
+WEBINAR TRAINING: FOLDER ON DESKTOP (GODWIN TEMP FOR GHL)
+
+-   AUTOMATED, PROFITABLE, SUSTAINABLE, RECESSION PROOF BUSINESS
+
+-   SETUP PRESENTATION
+
+-   SETUP AUTOMATION AND ZAPS FOR WEBINAR
+
+-   SETUP EVERWEBINAR
+
+-   SETUP MARKETING FOR WEBINAR (FREE TRAINING) (EMAIL MARKETING) (FREE
+    COURSE)
+
+-   SETUP FUNNEL FOR WEBINAR)
+
+**WEBINAR SCRIPT:**
+
+-   FUNNEL FRONT PAGE VIDEOS(POWERPOINT)
+
+-   WHO AM I?
+
+-   WHY CREDIT REPAIR (BUSINESS POTENTIAL) (RECESSION PROOF)
+
+-   ABOUT THE PROGRAM (WHAT ARE THE OUTCOMES) AUTOMATED, SUSTAINABLE,
+    PROFITABLE
+
+-   WHAT WE WILL COVER (COURSE OUTLINE)
+
+-   WHAT YOU'LL RECEIVE (ALL THE LISTS)
+
+-   OFFER (DIFFERENT PRICES) W/ CALL TO ACTION
+
+**This training consistent of going over:**
+
+**5 PILLARS OF CREDIT REPAIR:**
+
+1.  **MARKETING (LEAD GEN)**
+
+-   **BRANDING (SOCIAL MEDIA) (WEBSITE)**
+
+-   **ORGANIC**
+
+-   **PAID ADS**
+
+-   **AFFILIATES**
+
+2.  **SALES**
+
+-   **GHL SALES SYSTEM (PIPELINE) (SCRIPTS)**
+
+-   **BRIEF SALES TRAINING (ONLINE VS PHONE)**
+
+3.  **CUSTOMER SERVICE**
+
+-   **GHL TICKET SYSTEM**
+
+-   **GHL UPDATING SYSTEM**
+
+4.  **DISPUTES (CRC) (BUTTON) (DISPUTE FLOW)**
+
+-   **EXECUTIVE DISPUTE FLOW**
+
+-   **CRC BUTTON (FAXING AND MAILING)**
+
+5.  **MANAGNING (TAXES) (CEO DAY TO DAY)**
+
+-   **SOPS**
+
+-   **TAXES (MONEY)**
+
+-   **BRANDING**
+
+**ADDITIONAL AUTOMATION TOOLS TO BE SHOWN LIVE**
+
+**HUBSTAFF (TO MANAGE VA'S AND PAYROLL)**
+
+-   **LASTPASS (FOR ACCOUNT ACCESS)**
+
+-   **SLACK (TEAM COMMUNICATION)**
+
+-   **ONLINE.PH & UPWORK (HIRING VA'S**
+
+-   **MERCHANT ACCOUNT (RECURLY, AUTHOIZE.NET)**
+
+-   **G-SUITE (TEAM EMAIL MANAGEMENT)**
+
+-   **LETTER STREAM (MAILING ONLINE)**
+
+-   **HUMBLE FAX (FAXING DISPUTES)**
+
+-   **ZOOM (FOR TEAM MEETING)**
+
+-   **SO TELL US (FOR CUSTOMER REVIEWS)**
+
+-   **CREDIT REPAIR CLOUD (CLIENT CRM)**
+
+
+---
+
+## Related
+
+- [[75-99 GE (Generational Empire)/75 Zeus Delacruz (Brand & Empire)/75 Zeus Delacruz|75 Zeus Delacruz (Brand & Empire)]]

@@ -1,0 +1,10 @@
+# Master Resell Rights Terms and Conditions
+
+[YES] Can edit the sales letter
+[YES] Can sell and keep 100% of the sales.
+[YES] Can be bundled into another paid package and sell at a higher price.
+[YES] Can be used as a bonus to another product you are selling.
+[YES] Can be sold in a Dime sale event.
+[YES] Can be added into a paid membership site.
+[YES] Can sell with Resell / Master Resell Rights.
+[NO] Can be given away for free.

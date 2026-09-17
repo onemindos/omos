@@ -1,0 +1,55 @@
+# 711
+
+Of Bed Bugs and Of Pesticides
+
+Movies may currently depict them as loveable and fun creatures which almost always embark on humorous and insightful adventures. Science may always regard them as awesome and wonderful creatures because of their structure and characteristics.
+
+But in reality, for sure, you will always despise them. All the descriptions are referring to mites and bed bugs. 
+
+Bed bugs and mites are tiny little insects that normally thrive in our home. Something must be in them that they really do love to live with people or be unlikely and unwanted transients to people�s homes.
+
+Unlike several organisms, which scientifically, live with you in your home under a relationship called �commesalism� (where their presence will not be regarded as burden), mites and bed bugs are dislike because they affect and pester people. 
+
+Mites on their part eat wood and destroy several vulnerable furniture or fixtures in your home. There are only several on limited occasions that mites are reported to bite people or animals. Normally, that is not their intention because that is not their thing. 
+
+Bed bugs, on the other hand, have to bite people to survive. It is because bed bugs suck blood from unsuspicious and unwilling hosts or victims for nourishment. 
+
+Bed bugs have long and elongated but sharp beaks that help them pierce through hosts� skin to enjoy the abundant reserve or resources of blood.
+
+Usually, bed bugs go out and hunt or suck blood at night, when the unsuspecting victim is usually asleep. Bed bugs� bites are normally negligible, you can hardly feel them. That is because bed bugs are so tiny and miniscule. 
+
+Don�t worry. Bed bugs can never suck too much blood from you. Normally, a single bed bug can suck only a sixteenth of a milliliter of blood from you. 
+
+That amount is so negligible. 
+
+Controlling mites and bed bugs 
+
+The discomfort caused by mites and bed bugs are so annoying that you will surely always want to eliminate them totally from your life and from your home. 
+
+That is why, since time immemorial, there are lots of pesticides and insecticides that abound in the market to exterminate mites and bed bugs. 
+
+Substances that aim to control and kill bed bugs and mites normally, and more often, come in the form of sprays. It is because through this form, the protective covering or wax-like substances in mites� and bed bugs� skin is destroyed. 
+
+Anti-mites and bed bugs sprays have common ingredients. All of these sprays have powderized glass or silica powder. When you say powderized, they are ground down to the tiniest and smallest size possible. 
+
+Why glass and silica? We know that the two substances can cut through any surface. Because mites� and bed bugs� skins are so hard and protected, it will take too harsh and potent materials to cut through their skin.
+
+Powderized glass and silica will do the wonder. 
+
+Sprays that kill mites and bed bugs work in  way that the chemicals are mixed with them. After spraying, or after the mites and bed bugs are sprayed on with pesticides and insecticides, the powderized glass and silica cuts through their skin. 
+
+After that, the mites� and bed bugs� skin will be ruined. That is the time the chemical will get in. The system of mites and bed bugs will then be vulnerable without their protective covering. 
+
+Chemicals normally get in to dry out or take away moisture from the insides or viscera of mites and bed bugs. 
+
+Through the process, mites and bed bugs will surely be killed. 
+
+Be careful 
+
+However potent they may be in killing or exterminating mites and bed bugs, be sure to handle pesticides and insecticides with utmost care. 
+
+Read all labels of such sprays before finally suing them so you will have an idea how extremely poisonous they can get. 
+
+Also take note of the precautionary measures and first aid recommendations advised by the manufacturers of such sprays in case you accidentally inhaled or take in such substances. 
+
+Even if its very important or even if it becomes your top priority to get rid of mites and bed bugs in your home, be sure you are safe all through out the process. Don�t be exterminated along with them.

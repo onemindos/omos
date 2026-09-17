@@ -1,0 +1,14 @@
+# title:Belief, Opinion, Pride, Expectation
+
+author:Ryan Fyfe
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_3229.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+None of us can predict the future, but we can choose which paths that we take. What's the big deal with people expecting you to do what everyone else does? Mathew verses 7-14 says that there are two paths. One more travelled and one less travelled. You think people would be excited for you to do something different. Belief. So your a bum when you go your own way, but then suddenly your succesful when you make something of yourself.
+It's the dollar that talks soo loudly these days. It's terribly distracting. Like you're trying to keep things low profile, but it's turning up the volume with "Black or White" on. Your parents want you to be quiet. And It's not like the knocking on the door stops either; With increased success comes increased responsibility. Apparently we're not running around the Fort Saskatchewan Mall with ripped Ninja Turtle sweat pants anymore. By that I mean kids. - and that's not a cheap stab at Michael.
+We all, always, have something to say about everything. Opinion. Why is it that some people are more stuck on theirs than others. Why do they feel like they have to push it on you? You've got life no further figured out than anyone else; However when most of us look at our lives we do think that we've got it all figured out. We all think that we are going to cross the finish line in first place. Amazing how most of us aren't even in the drivers seat. Nobody likes different, until different becomes good. What about being happy for others with where they are at? Money even talks at a time like this. Who said money couldn't buy happiness? Tell that to someone who is hungry. Is happiness having a full stomach? Ricies.
+It's Human Nature: We exploit everything, until we either fall, or realize that it doesn't matter how much we have that it will never be enough. Pride. Sadly, that will keep alot of us going even after we come to that understanding.
+Do you remember the time when you looked in the mirror and saw yourself. I was told early in grade school that people are a reflection of eachother. Expectation. Is that why are minds are full of what other people want from us? Why do we always measure ourself against the success and failures of others. What do you think we would look like if we were alone. Would Hair Gel have been invented? What about Nail Polish? Would people know who Louis Vuitton is? What about Versace? Actually I doubt it and I think Louis and Gianni would have to find new jobs.
+ZZZZZZ

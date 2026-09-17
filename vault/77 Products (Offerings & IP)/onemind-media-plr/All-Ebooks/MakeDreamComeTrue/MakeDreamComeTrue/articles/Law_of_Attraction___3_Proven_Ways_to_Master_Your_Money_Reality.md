@@ -1,0 +1,36 @@
+# Title:
+
+Law of Attraction   3 Proven Ways to Master Your Money Reality
+
+Word Count:
+559
+
+Summary:
+The universe is an ever unfolding world of mystery.  When you discover the secrets to being a cosmic magnet the world and money will honor your desires.
+
+Keywords:
+law of attraction, laws of attraction, attraction, manifesting, manifest
+
+Article Body:
+The law of attraction, like all other laws, have guidelines that need to be applied for maximum success.  While affirmations work for many things they don't often work very well for manifesting money and that is because of the deeply entrenched belief that most people have about money.  It could take lifetimes for those beliefs to change and while that belief is unchanged the money problems continue.
+
+ Have you ever noticed that the things you seem to have the most difficulty with are those things which have power over you?  Money happens to be one thing in physical realty that has power over most people.   If you understood the nature of realty and how it works money would cease to be a problem.  It does not have to be this way when you known the post powerful cosmic tools that govern reality. 
+
+You can easily switch the dynamic and begin to master money with these three proven steps.  
+
+You become the Master and money Becomes the Servant.
+Switch your perspective and your world will change.  Money is an entity which is here to serve you.  You are the divine one, here to experience life in this physical boy.  You should never be a slave to money rather should become master above money while money serves you.  
+
+It's a tiny shift in perspective but a powerful one.  
+
+  Experience is More Important Than Money
+
+Most everyone is trying to use the law of attraction to manifest more money but most people are going about it the wrong way.  They are chasing money as opposed to having money come to them.  If you limit the things you think you need and begin to focus more on experience than having "things," you can free up your ability to become a magnet.
+
+The more experiences you have the more expanded you become.  Money flows to one who is in an expanded state.  The more experiences you have the richer you feel and the richer you act.  You value life and the uniqueness of experience much more than you value things.  In that state you are not wanting money but money will come and come abundantly. The law of attraction honors that state of being and rewards you for it. As you increase your life experiences you will begin to increase your vibration.
+
+ Higher Vibration Makes You a Powerful Money Magnet
+
+As you expand in vibration you increase your ability to draw things to you easily.  Higher vibration means more power.  There are many advanced manifesting techniques that can dramatically shift your law of attraction practices to the next level.  They are phenomenal when used with a clear intention.  Shifting your vibration can be quite hard for the average person.  When you are bombarded by the daily frustrations of the day, you may doubt that the law of attraction is even working in your favor. 
+
+Advance cosmic law of attraction techniques balance you out.  They remove mental physical and emotional blocks that are unseen to your present self.  They intensify your desires and draw them much easier to you.  You will become an easy magnet for money without the struggle.  What you want wants you.  While others wait weeks and months for what they want the cosmic forces help you in manifesting faster.  It's purely magical!

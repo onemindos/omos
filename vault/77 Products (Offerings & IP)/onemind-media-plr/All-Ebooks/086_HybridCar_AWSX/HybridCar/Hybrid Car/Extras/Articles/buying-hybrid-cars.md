@@ -1,0 +1,37 @@
+# Hybrid Cars: The Future Vehicle Of Today�s Roads
+
+Buying hybrid cars can be a little bit more complicated than what you might think. The complication though, is not on the �buying hybrid car� part, but how to go about the myriad of hybrid cars to choose from. But just like in any other activities, there are some basics needed to be understood. 
+
+It is understood though that on this note, we have a basic understanding regarding the nature of hybrid cars, or hybrid electric vehicle (HEV). HEV has two energy sources for its engines: electric and combustion. On ordinary situation, like careening down the highway, this car generally runs on one or the other of the source, until the driver needs more power such as faster acceleration. 
+
+When this happened, the two engines will operate in unison. HEV cars are low emission, fuel efficient, some of the characteristics worth considering when people are considering buying hybrid cars.
+
+In addition, hybrid cars recharge their batteries while being drive. This removes the necessity of plugging the car for electricity. This is unlike pure electric cars, which needed to be plugged in wall sockets, like an ordinary appliance unit.
+
+There are also other considerations before the actual buying is considered.
+
+1. Prospective buyers should have some level of understanding with terms or lingo related in buying hybrid cars.  According to the California Air Resources Board, Ultra Low-Emission Vehicle is a car with 50 percent cleaner emission, compared with a new 2001 model car. 
+
+A Super Ultra Low-Emission Vehicle emits 90 % cleaner than average new 2002 model car. There are zero-emission cars however, are purely electric vehicles, not hybrid cars. But pure electric cars are, at this moment, impractical to produce. 
+
+2. Before buying hybrid cars, consumers should also consider their work areas, and home location. Hybrid cars are for urban or suburban area. Short distance trips are superb for fuel savings, when hybrid cars are using electric engines at low RPMs. According to experts, driving on a highway or interstate travel won�t see much of the expected fuel reduction. 
+  
+3. The other consideration for consumer before finally buying hybrid cars is the cost. Hybrid cars, are admittedly, priced higher than gas-powered counterparts. This is due because of the low production numbers, and the considerably complex mechanical process. But these concerns are readily compensated in the long run, by fuel saving. 
+
+Buying hybrid cars at present is encouraged by the Federal State, due to the long term benefits of limiting fuel usage. There several tax deduction for new buyers of hybrid cars. Several cities are offering free parking as an additional incentive for low-emissions vehicles.
+
+The historical road traveled by hybrid cars
+
+There are also other beliefs behind these types of vehicles, which make buying hybrid cars for some a serious consideration. 
+
+One is the idea that hybrid car is a new phenomenon. In the earl 1900�s, American car manufacturers are producing electric, steam, and gasoline cars in equal numbers. By then, buying hybrid vehicle is as normal as buying ordinary car. 
+
+Eventually, some engineers figured out that a vehicle with multiple sources of power is possible. In 1905, a certain American engineer named H. Piper filed for the first patent for a vehicle, with engines for gas and electric. 
+
+A decade after electric self-starter made gasoline-run cars more feasible. Hybrids and other alternative were almost wiped from the market.  The following years from this period was characterized cheap oil, made possible by the almost inexhaustible oil fields of the Arab world. This discouraged auto engineers to continue developing alternative cars. 
+
+The oil price hikes of 1970s, coupled with growing awareness of environmental concerns, driven engineers back to their drawing boards for new designs. Extensive and experimentation 1980s produced the hybrids in the U.S. in 2000. The earlier experience of the market on mass-produced hybrid vehicles has given engineers the encouragement to come up with complex systems, making multiple sources of power in a car possible.
+
+In an interview by the Associated Press, Mr. Jim Press, president of Toyota Motor Sales USA, said: �I think everything will be a hybrid, eventually. It will either be a gas hybrid, a diesel hybrid, or a fuel-cell hybrid.� 
+
+From here, it is safe to declare that people buying hybrid cars, are people buying the future vehicles.

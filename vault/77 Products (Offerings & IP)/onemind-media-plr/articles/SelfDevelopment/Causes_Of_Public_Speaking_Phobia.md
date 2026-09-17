@@ -1,0 +1,29 @@
+# title:Causes Of Public Speaking Phobia
+
+author:James Masterson
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_4217.shtml
+date_saved:2007-07-25 12:30:19
+category:self_improvement_and_motivation
+article:
+
+According to World Book Online Research Encyclopedia, "Phobia is an unreasonable yet strong fear of a certain object, class of objects or a situation." People who suffer phobia have a compelling desire to avoid the object or situation that causes their stress. 
+Phobia may be classified into two types:
+� Specific Phobia, such as fear of animals (i.e. Arachnophobia - Fear of spiders; Necrophobia - Fear of death or dead things).
+� Social Phobia is an anxiety disorder where the sufferer fears being assessed adversely in front of a group. Thus, Public speaking phobia is an over-emphasized fear of speaking in front of a group.
+According to World Psychiatric Association (1995), Social Phobia affects one to 10 people at some stage of their lives. Sufferers experience dizziness, muscle tension, trembling, blushing and/or sweating, and even heart palpitations when exposed to the feared object or situation. Others do not manifest physical symptoms but they are overtly conscious of how others react to them. They also have a tendency to underestimate their capability to overcome the feared situation.
+Among the common effects of Social Phobia in a person are:
+� Unstable employment record
+� Have less or no friends
+� Being single
+� Having a low educational attainment
+Studies show that public speaking phobia, and most phobias, develop in middle or late childhood stage. It usually starts from an unpleasant experience like being humiliated in front of the class; this unpleasant experience gets stored in the child's memory and is brought up when faced with similar situations.
+Children who have been exposed to people with public speaking phobia, like their parents or friends, learn the phobia by hearing them. They immediately conclude that what they have heard of is true without actually verifying the facts.
+Research also shows that genetics also play an important role in developing phobias. It has a tendency to occur in families. Phobias are mostly likely to occur in identical twins, than in fraternal twins.
+Luckily, there are many ways to treat Phobia. 
+� PERSONAL MOTIVATION. There are many self-help books that can help you overcome your public speaking phobia. Your desire to overcome your fear is the most important factor of treatment.
+� PROFESSIONAL TREATMENT. If self-treatment does not work for you, you can seek help from a professional. Exposure to therapy is a good example of this method, which focuses on the behavior instead of the thoughts of the sufferer.
+� Other kinds of treatment include:
+� Counseling - discussing your phobia with a professional.
+� Hypnosis
+� Medication - This method is used if the sufferer has other mental conditions that are affected by the phobia. The use of these drugs can only be used for a short period of time. Using medication alone cannot cure the phobia.
+ZZZZZZ

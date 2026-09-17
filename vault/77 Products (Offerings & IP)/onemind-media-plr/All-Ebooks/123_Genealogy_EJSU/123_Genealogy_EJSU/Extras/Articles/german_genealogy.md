@@ -1,0 +1,17 @@
+# German Genealogy: Finding Your German Ancestors
+
+The United States of America is a country with diverse races and is considered to be the melting pot of cultures in the world. In this country, you will find different races and mixed culture. The United States is composed of Native Americans, Americans, British, Irish, Asian, and even German races. You have to consider that there are about 300 million people living in the United States today.
+
+Today, the largest self-reported ethnic group living in the United States is German Americans. In fact, there is an estimated 47 million German Americans according to the year 2000 census of the United States. As you can see, there is a great possibility that you have German blood running through your veins. If you do, and if you are interested with your German ancestry, you can consider retracing it by hiring a genealogist.
+
+You have to consider that a series of world events have made it possible for people to migrate to the United States. The first German Americans migrated to the United States during the years 1680s to 1760s. From there on, the Germans was the largest group of immigrants in the United States of America. Because of the worsening opportunities of owning farm lands in Germany, conscription to the military, and persecution of religious groups, Germans made a choice to migrate to the United States.
+
+Because of the opportunity to own farm lands in the United States, the freedom it offers to practice religion, non-existent military conscription, and better economy, Germans have made the United States of America as the prime country to migrate in.
+
+During the World War II where Adolf Hitler came to power and started persecuting and killing German Jews, many of Germans migrated to the United States of America seeking refuge.
+
+As you can see, series of world events made Germans to migrate to the United States. If you have an Aryan surname or if your grandparents or great-grandparents have Aryan surnames, you can be sure that you have German ancestry. You have to consider that finding out your own ancestry can be quite a task to accomplish. This is why you should try and seek the help of a genealogist who specializes in American German ancestry. Who knows? Maybe you can even trace your ancestry and may find that you are related to some of the worlds famous Germans, such as Oskar Schindler who is known to save thousands or even millions of Jews from Adolf Hitler's gas chambers. Or, it is also possible that you may even be related to Albert Einstein or the former American President Dwight D. Eisenhower.
+
+There are hundreds more of prominent German Americans who contributed a lot to society. In fact, even Elvis Presley has German blood.
+
+So, if you have German ancestry and you want to know about your family's history or you want to know your long lost relatives, you can consider hiring a genealogist to trace your German ancestry. With the available technology today, they may even find your distant relatives living in Germany today.

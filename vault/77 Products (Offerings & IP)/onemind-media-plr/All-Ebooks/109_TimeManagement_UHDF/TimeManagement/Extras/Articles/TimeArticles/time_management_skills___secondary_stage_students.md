@@ -1,0 +1,33 @@
+# Time Management Skills is Crucial for Secondary Stage Students
+
+Based on some studies, 40 percent of secondary stage students drop their focus, effectiveness and self-esteem at this period of their educational life. Most of the time, the student finds it hard to organize their work during hectic schedules. It is very normal; many of the secondary stage students experience the same problems, although some of them could handle it better than the others. 
+
+Aside from that, most of the secondary stage students work too hard about their lessons. Having enough time is one of the basic problems. As a result of this, they feel very busy, exhausted, stressed out and disorganized.  
+
+Having time control and organized goals is certainly a hard job.  Fortunately there is a better way. By using time management skills a student can cope up with those difficulties and troubles. 
+
+A time management skill is necessary for secondary stage students. By using time management skills, students can be able to gain practical techniques. Most of these techniques can assist them in their homework, projects, sports, and other form of activities. According to some psychiatrist and guidance counselors of different schools, time management skills can be the pillars of student�s success. 
+
+As a matter of fact, the student can use the time skills and techniques to overcome the overloaded feeling. Having this kind of feeling is normal anyway for most of the students. But through some time skills and techniques students can gain self-confidence to overcome their burden. 
+
+Not only that, there was a study conducted on several universities in United States. That study exposed that time management is the most effective tool to having a worry-free and well organized secondary education. It also becomes one of the biggest advantages in order for the students to set up an impressive track record for achievement. Aside from that, the students also learn how to set goals for their careers. 
+
+Generally speaking, skills tackled in this article will serve as a guide for most of the secondary level students. Here are some basic importances of time management skills.
+
+�  The student will learn how to become a highly effective individual. 
+�  Time management skills will also show the students how to identify and focus on the activities. The goal must be set based on the priority. The activity which will give greatest return must be given the top priority.   
+�  Goal setting is the best lesson a student can find trough management skills. Furthermore, goal setting is also vital and important features for deciding life goals and achievements. 
+�  Secondary stage students can also maintain a good quality of work. By using time management skills, the students can easily make themselves more creative. 
+
+Secondary stage students must enjoy their life. While time works against them, they should have the capability to turn time as their biggest assets. Managing time properly can find ways to boost up their productivity. 
+
+Skills and techniques for managing time is just a simple strategy. On the other hand, if the students spend time poorly, a domino effect can take place. For example, if a day was spent unwisely the next day will be a tendency to an overload of work. The tendency is the students must work harder. They get more stressed and exhausted. 
+
+There are several course outlines that are involved in time management skills.  Here are some of the topics that are specially made for many students. It gives the students an idea about budgeting time and planning some goals.  
+
+�  Realistic Planning. The goal of the students must be set for the next few weeks. By doing this, the student can have a preview about their plans. It will also help the students to accomplish some objectives exclusively within that particular week. 
+�  Stress and pressure absorption. Stress and pressures are one of the worst enemies of students especially during examination week. Having this kind of skills can help the students in managing their attention and focus.   
+�  Be the task master. Most of the basic skills and techniques can help the students to be more responsible. Most of the course outline involving in this topic must teach the students how to handle themselves. 
+�  Objective Picture. The student must be flexible enough to switch from immediate task to another. The time management skills teach the students to learn the importance of objective planning. 
+
+The importance of time management is by knowing the value of goal setting. Time is very influential attributes in achieving objectives. Above all, time management skills can increase the personal efficiency of the students.

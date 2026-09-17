@@ -1,0 +1,7 @@
+{
+  "name": "find-skills",
+  "version": "0.1.0",
+  "description": "Discover and install agent skills from the open skills ecosystem via skills.sh",
+  "main": "index.js",
+  "dependencies": {}
+}

@@ -1,0 +1,34 @@
+---
+id: plr-20260114013934-8523
+title: "Success Through The Eyes Of A Child"
+type: reference
+path: PLR
+domain: reference
+status: reference
+created: 2026-01-14
+modified: 2026-01-14
+owner: zeus
+tags: [path/plr, type/reference, status/reference, topic/self-help-education]
+ai_summary: "PLR reference - Success Through The Eyes Of A Child"
+---
+title:Success Through The Eyes Of A Child
+author:Barbara C White
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_2811.shtml
+date_saved:2007-07-25 12:30:18
+category:self_improvement_and_motivation
+article:
+
+Adults, with eyes to see, can learn so much about success in life from children. 
+When a baby is born, it has instinctively in it everything needed to succeed in life. A child is like a fresh piece of canvas, ready to become a unique contribution to the world. A child has had less exposure to adult conditioning with regards to behaviour and expectations. Every child has the seeds of success for life within them. By observing children being children, adults can re-learn principles of success that have been buried by their adult world. 
+As I was driving home last week, I noticed a little boy and his mother by the side of the road. They had stopped walking and the mother was adjusting a toy crossbow to fit more comfortably over the boys shoulder. I realized that at that moment in the heart and mind of that small boy, he was not on a sidewalk by a busy road. Perhaps he was hunting in a forest, or was an intrepid explorer of the unknown, ready to pull out his bow and arrows at the slightest hint of danger. In his imagination he was a hero, confident, skilled, and brave. He was alert, prepared, with the expectation of overcoming danger or threat with his skill and swift reflexes.
+For a child involved in imaginative play, there is very little distinction between fantasy and reality. Children live and play out their dreams totally in the moment. 
+There are many principles of success that can be learned by looking through the eyes of a child. Childrens eyes see with clarity and perception and reflect the reality of who they are. Children are uncluttered by training, brainwashing, and by living according to the unwritten rules and etiquette that have assailed the adult mind. For a child life has limitless possibilities that have not been squashed by logic, common sense, or limiting expectations that become part of the adult mind. 
+What principle of success can be drawn from the little boy with his bow and arrow?
+One of the most powerful and yet unused principles of success is the process of visualization. Visualization is the act of creating compelling and vivid pictures in your mind. This is just what the little boy was doing. He was that hero; he acted like him, dressed like him, and could picture himself in another time and another place. For him, it seemed like reality. This is a spontaneous, natural process for a child.
+Researchers have found that visualization accelerates achievement in powerful ways. It has been proved by research that when performing any task in life the brain uses the same identical processes that it would if you were only vividly visualizing that activity. The brain sees no difference at all between visualizing something and actually doing it.
+This principle also is applicable when a person is learning something new. Visualization makes the brain achieve more. In a study by researchers at Harvard University, it was found that students who visualized in advance were able to perform tasks with nearly 100 percent accuracy. Students who performed tasks without using visualization only achieved 55 percent accuracy.
+Visualization is frequently used by Olympic and professional athletes to improve performance. 
+Jack Nicklaus, a legend in the golfing world, once described how he uses visualization. I never hit a shot, not even in practice, without having a very sharp in-focus picture of it in my head. Its like a color movie. First I see where I want it to finish, nice and white and sitting high on the bright green grass. Then the scene quickly changes, and I see the ball going there: its path, trajectory, and shape, even its behaviour on landing. Then theres a sort of fade out, and the next scene shows me making the kind of swing that will turn the previous images into reality. The results of the power of visualization for Jack Nicklaus are convincing: he has won over 100 tournaments earning over 5.7 million in the process.
+For a child a high proportion of time is spent in visualization. Adults may say, Hes only playing and not see the potential power for success that the child is practicing. Visualization is a process that is naturally strong in the learning and formative years of the child. Research now confirms that visualization activates the creative powers of the subconscious mind. It focuses the brain by programming its reticular activating system (RAS) to notice available resources that were always there but previously unnoticed. Visualization, incredibly, also magnetizes and attracts you to the people, resources, and opportunities you need to achieve your goal.
+Next time you see children playing, pause to watch visualization in its purest form. What can you learn and apply to your own life to accelerate and achieve greater success using the principle of visualization?
+ZZZZZZ

@@ -1,0 +1,15 @@
+# Pregnancy Nutrition Wholesale and Processed Foods
+
+Pregnant women commonly ask whether it�s okay to eat proceeded foods when you are seeking optimal nutrition during pregnancy. And the answer is�. Yes and no. If you are focusing on keeping your weight gain lower while keeping your baby healthy, then saying no to processed foods is a going to be a real benefit to you.
+
+Then again, processed foods are part of our culture and imagining life without them can be difficult. Let�s look at the pros and cons of processed foods and whole foods.
+
+Processed foods offer us convenience over unprocessed foods. If you find yourself growing hungry while out running doing your errands, it�s quick and easy to stop at a fast food restaurant, order, and be on your way in minutes. Processed food is also much cheaper than whole foods. 
+
+If you are on a budget then processed foods may seem like the logical way to inexpensively stay full and satisfy your cravings. In fact, you might think that having lunch meat while you are pregnant is the perfect way to make sure you get your protein at each meal without the expense of purchasing and preparing lean cuts of meat. 
+
+However, there are many disadvantages to processed foods including that they are packed with fillers, calories, and sodium. This can cause you to gain excess weight, cause fluid retention, lead to indigestion or bloating, and not provide the best nutrition for you and your baby. At best, they should be used as a short time solution occasionally.
+
+Most of us are already aware of the pros to eating a diet made of whole foods. They are higher in vitamins, minerals, protein and fiber, all of which are important to a healthy successful pregnancy. Whole foods, especially organic whole foods, are chemical free, hormone free and do not contain many of the questionable fillers that can be harmful to a developing fetus. Even though these foods seem more expensive, they actually are better value because you stay full for longer and you get the nutritional value. 
+
+The main disadvantages include cost and preparation time. It can seem like a lot of effort to prepare a meal when you can grab something on the go. You really can have the best of both worlds. Start by slowly incorporating whole foods into your life. One of the best places to buy whole foods is a local farmer�s market where you�ll find organic fruits, vegetables, and meat that�s fresh. Start by changing your habits slowly. For example, try taking an apple with you along with some nuts when you are out running errands or eat before you go so you aren�t hungry while out. Be creative.

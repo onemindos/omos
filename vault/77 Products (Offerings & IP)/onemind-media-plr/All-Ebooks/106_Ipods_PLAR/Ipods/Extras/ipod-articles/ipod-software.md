@@ -1,0 +1,29 @@
+# Guide to Good Software for Your iPod
+
+New users of the ipod are having difficulty putting on songs on their device. Some complain about some of their play list getting lost after it has been uploaded from the computer. Some are really just not used to it and are having trouble with the very process itself. Addressing this problem, different companies have come up with softwares that will make the use of the ipod not that stressful. 
+
+Adding and uploading playlist, songs, videos and etc. will no longer have a hard time as it has been made easy for them. If you decide to use one of these softwares, you should not forget to read instructions first. 
+
+Also, you will still be doing most of the work so do not expect the computer, the ipod, and the software to do it all by themselves.
+
+One thing that makes the apple iPod unique is the addition of different iPod software you can add to your gadget. These softwares make it easy for you and add a little more spice to your iPod. Ipod software will help you personalize your little gadget as you use it throughout the day and as you download music to it. 
+
+The software can be acquired through download and is very easy to install. Just connect your ipod to your personal computer and wait for it to be transferred. After that, enjoy the wonders of the software which is so positively sure that you will definitely enjoy. 
+
+There is a lot of ipod software out there and here is just a small list you can use on your gadget. But I have chosen to show you four softwares for a more easy and convenient use. It is now up to you to choose which Ipod software you need. On my list are the newest software released up to date. 
+
+First on my list is the Anapod Explorer 8. Anapod Explorer 8 was created by Windows for the sole purpose of serving Ipod users. The anapod is basically an alternate for itunes. It can copy your music and back to your personal computer and brings your ipod into the windows explorer. 
+
+This can be found as a device under my computer. It will give you a more familiar windows explorer interface and this will make it easier for you to transfer and manage your on-board music, play list and more. Transfer from your computer to your ipod or from your ipod to your computer does not get any easier than this. 
+
+There is also an add-on to this ipod software. It includes the AnapodSQL and the rare Anapod Xtreamer which is a web based streaming interface. Basically, anapod is a backup software for your easy use.
+
+Another Ipod software is the PodUtil 2.5.1. PodUtil is an Ipod software that is so easy to use. It is for viewing the songs on your Ipod and transferring it to your computer for a more customizable an organized manner. Then, it will automatically add them to itunes and you will be able to rebuild your play list as you wish. Again, another ipod software that makes organizing and transferring music and play lists easier.
+
+Aside from the two mentioned, there is also the gtkpod 0.88. gtkpod is a platform independent GUI for apple ipod that uses gtk2. This ipod software allows you to upload songs and play list to your ipod. It supports ID# tag editing, multiple charsets for ID3 tags, detects duplicate songs, and also allows offline modification of the database with later synchronization, and more.
+
+Lastly, there is the ipod.itunes 3.0. This ipod software has the capability to add missing songs, videos, playlist, ratings, played dates, and play counts in both directions between ipod and itunes. 
+
+This software is designed to keep songs, videos, and playlists on different Macs and ipods up to date, and can perform a full restore of these items after a hard disk failure. Now, that is efficiency. The software updates foreign ipods not linked to your itunes library without deleting its content.
+
+Now remember, these ipod softwares are add-ons to your gadget for easy use, but that does not mean that it will do everything for you. Of course, it is still you who will do all the work so that you will have a good time with your ipod.

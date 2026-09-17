@@ -1,0 +1,237 @@
+# Nos	Count	Predict	Keyword
+
+---------------------------------------------------------------------
+1	1652	2134	bed bugs
+2	136	176	Bed Bugs
+3	45	58	BED BUGS
+4	41	53	bed bugs bites
+5	39	50	how to get rid of bed bugs
+6	37	48	What Do Bed Bugs Look like
+7	33	43	Bed bugs
+8	29	37	pictures of bed bugs
+9	26	34	getting rid of bed bugs
+10	26	34	Treat Bed Bugs
+11	24	31	what are bed bugs
+12	21	27	Controlling Bed Bugs
+13	17	22	court ruling on Bed Bugs
+14	15	19	rid of bed bugs
+15	13	17	safe way to kill bed bugs
+16	13	17	how to kill bed bugs
+17	13	17	Bed Bugs Getting Rid of
+18	12	16	bed bugs pictures
+19	12	16	bed bugs bite
+20	11	14	How do you get rid of bed bugs
+21	11	14	what do bed bugs look like
+22	10	13	bed bugs symptoms
+23	10	13	get rid bed bugs
+24	10	13	bed bugs getting rid of
+25	9	12	the bed bugs
+26	9	12	get rid of bed bugs
+27	8	10	herbs to treat bed bugs
+28	8	10	tv series manager of the bed bugs
+29	8	10	pics of bed bugs
+30	8	10	for bed bugs
+31	8	10	herbs to get rid of bed bugs
+32	8	10	reported cases of bed bugs in las vegas
+33	7	9	articles on bed bugs
+34	7	9	bed bugs new york city
+35	7	9	bed bugs in hotels
+36	7	9	pictures of bed bugs bites
+37	7	9	native indian remedies to get rid of bed bugs
+38	7	9	kill bed bugs
+39	7	9	Bed Bugs How to Kill
+40	6	8	exterminating bed bugs
+41	6	8	get bed bugs out of clothes
+42	6	8	the bed bugs bite
+43	6	8	Bed Bugs Insect
+44	6	8	pictures bed bugs
+45	6	8	sabres bed bugs
+46	6	8	bed bugs life cicle
+47	6	8	t let the bed bugs bite
+48	6	8	t let the bed bugs
+49	6	8	let the bed bugs
+50	6	8	bed bugs in
+51	5	6	bed bugs delaware
+52	5	6	Home recipes to kill bed bugs
+53	5	6	bed bugs in hotel
+54	5	6	bed bugs manager
+55	5	6	let the bed bugs bite
+56	5	6	do bed bugs
+57	5	6	of bed bugs
+58	5	6	home remedies for bed bugs
+59	5	6	are bed bugs
+60	5	6	don t let the bed bugs bite
+61	5	6	how many eggs do bed bugs lie
+62	5	6	hotel pennsylvania bed bugs
+63	5	6	bed bugs buffalo hotels
+64	5	6	to get rid of bed bugs
+65	5	6	bed bugs and
+66	5	6	bed bugs perth western australia
+67	5	6	don t let the bed bugs
+68	5	6	bed bugs in new york city hotel rooms
+69	5	6	bed bugs paris las vegas
+70	5	6	and bed bugs
+71	5	6	to kill bed bugs
+72	4	5	bed bugs bite welts picture
+73	4	5	all the kinds of bed bugs
+74	4	5	rid bed bugs out of clothes
+75	4	5	bed bugs extermination
+76	4	5	images of bed bugs, mites, & any other common household bugs
+77	4	5	employee gets bed bugs on business trip
+78	4	5	bed bugs denver colorado
+79	4	5	herbal remedies rid bed bugs
+80	4	5	bed bugs lifespan
+81	4	5	bed bugs bites pictures
+82	4	5	san francisco hotels bed bugs
+83	4	5	bed bugs picture
+84	4	5	biting bed bugs
+85	4	5	dust mites bed bugs
+86	4	5	bed bugs photos
+87	4	5	where do bed bugs bite
+88	4	5	hotel bed bugs
+89	4	5	bed bugs treatment
+90	4	5	bED BUGS
+91	4	5	a bed bugs life spand
+92	4	5	homeopathic remidy for bed bugs
+93	4	5	bed bugs and chinch
+94	4	5	bed bugs and how long live
+95	3	4	bed bugs grey
+96	3	4	rise in bed bugs
+97	3	4	Getting Rid of Bed Bugs
+98	3	4	bed bugs on cruise ship
+99	3	4	bed bugs bites blister
+100	3	4	can you see bed bugs
+101	3	4	san francisco bed bugs
+102	3	4	employee travel bed bugs
+103	3	4	bed bugs mattresses
+104	3	4	BED BUGS IN HOTELS
+105	3	4	bed bugs+minnesota
+106	3	4	Pictures of Bed Bugs Bites
+107	3	4	san francisco marriott bed bugs
+108	3	4	Images of Bed Bugs
+109	3	4	bed bugs boston hotels
+110	3	4	bed bugs in minnesota
+111	3	4	How to Get Rid of Bed Bugs
+112	3	4	exterminate bed bugs
+113	3	4	bed bugs eastern new mexico
+114	3	4	photos of bed bugs
+115	3	4	native american remedy for bed bugs
+116	3	4	bed bugs + removal
+117	3	4	bed bugs extermination nontoxic
+118	3	4	bed bugs canada
+119	3	4	bed bugs in Savannah, GA
+120	3	4	picture of bed bugs
+121	3	4	Pictures of Bed Bugs
+122	3	4	forum bed bugs california hotels
+123	3	4	dateline bed bugs
+124	3	4	1800's bed bugs
+125	3	4	bed bugs AND great wolf lodge
+126	3	4	scabies and bed bugs
+127	2	3	signs of bed bugs
+128	2	3	bed bugs cure
+129	2	3	Bed Bugs and NYC
+130	2	3	tanning bed bugs
+131	2	3	Bed bugs + news
+132	2	3	information on bed bugs
+133	2	3	British sensation the bed bugs
+134	2	3	Florida bed bugs
+135	2	3	bed bugs .com
+136	2	3	Middle East Bed Bugs
+137	2	3	guy who raises bed bugs
+138	2	3	cleaning item, bed bugs
+139	2	3	bed bugs control
+140	2	3	manager of the bed bugs
+141	2	3	ticks bed bugs flees
+142	2	3	bed bugs, bed mites, dust mites, allergens
+143	2	3	pictures of people bitten by bed bugs
+144	2	3	marriott bed bugs
+145	2	3	bed bugs rash
+146	2	3	characteristics of a bed bugs
+147	2	3	monte carlo casino bed bugs
+148	2	3	don't let the bed bugs bite
+149	2	3	all about bed bugs and what they do a night
+150	2	3	bed bugs memphis tn
+151	2	3	herbal treatment of bed bugs
+152	2	3	bed bugs message boards
+153	2	3	go to sleep little creep may the bed bugs bite your feet
+154	2	3	bed bugs kill
+155	2	3	great wolf lodge bed bugs story
+156	2	3	GET RID OF BED BUGS
+157	2	3	bed bugs in jamaica
+158	2	3	Pest Control Bed Bugs
+159	2	3	bed bugs crowne plaza hotels
+160	2	3	bed bugs florida
+161	2	3	bed bugs los vegus
+162	2	3	Bed Bugs Come from
+163	2	3	bed bugs trreatment
+164	2	3	Where Do Bed Bugs Come from
+165	2	3	eradicate bed bugs
+166	2	3	Bed Bugs Hotel Lawsuit
+167	2	3	bed bugs that affect only one room and some pictures
+168	2	3	bed bugs and hotels
+169	2	3	identification of bed bugs
+170	2	3	the bed bugs tv
+171	2	3	Bear Bed Bugs
+172	2	3	bed bugs and scabies
+173	2	3	bed bugs pictures of what bites look like
+174	2	3	foam mattress bed bugs
+175	2	3	How Do You Get Rid of Bed Bugs
+176	2	3	fleas vs bed bugs
+177	2	3	lullaby song may the bed bugs bite your feet
+178	2	3	How to Remove Bed Bugs from your room
+179	2	3	bed bugs car seats
+180	2	3	Bed Bugs Mattresses
+181	2	3	dateline show on bed bugs
+182	2	3	Dr. Myles Bader bed bugs
+183	2	3	saying like don't let the bed bugs bite
+184	2	3	times square marriott residence inn bed bugs
+185	2	3	bed bugs and dust mytes
+186	2	3	bed bugs changes over time
+187	2	3	wht do bites from bed bugs look like
+188	2	3	the rock band BED BUGS
+189	2	3	bed bugs and mississippi
+190	2	3	preventing bed bugs
+191	2	3	bed bugs+jamaica
+192	2	3	good night, sleep tight, don't let the bed bugs bite
+193	2	3	bed bugs hotel prevention OR remediation
+194	2	3	bed bugs toronto city tv
+195	2	3	herbal remediesrid bed bugs out of clothes
+196	2	3	Home recipes bed bugs
+197	2	3	What Is a Bed Bugs Defense Mechanisms
+198	2	3	bed bugs you can't see
+199	2	3	were are bed bugs habitat
+200	2	3	Do You Have Bed Bugs and IFAS
+201	2	3	bed bugs new york city hotels
+202	2	3	Eco Lab bed bugs
+203	2	3	msnbc bed bugs
+204	2	3	Bed Bugs Bites
+205	2	3	the Bed Bugs
+206	2	3	list of bed bugs
+207	2	3	bed bugs marriott marquis new york
+208	2	3	bed bugs, lice
+209	2	3	bed bugs in the middle east
+210	2	3	Bed Bugs and kerosen
+211	2	3	prevent from bed bugs
+212	2	3	bed bugs centralia,il
+213	2	3	bed bugs new york hotels
+214	2	3	cast skin of bed bugs
+215	2	3	bed bugs and ahla
+216	2	3	carter bed bugs crib bumper
+217	2	3	hyatt new york bed bugs
+218	2	3	60 min bed bugs
+219	2	3	great wolf lodge bed bugs story kansas city star
+220	2	3	hyatt bed bugs
+221	2	3	Bed Bugs Dr. Myles Bader
+222	2	3	bed bugs desert eliminate
+223	2	3	list of hotels with bed bugs
+224	2	3	pest control - bed bugs
+225	2	3	Treatment for Bed Bugs
+226	2	3	bed Bugs
+227	2	3	management the bed bugs
+228	2	3	natural remedy to get rid of bed bugs
+229	2	3	tenant rights bed bugs
+230	2	3	bed bugs in New Jersey
+231	2	3	habitation of a bed bugs
+232	2	3	bed bugs New York City DOH
+233	2	3	bed bugs litigation
+234	2	3	bed bugs washington dc

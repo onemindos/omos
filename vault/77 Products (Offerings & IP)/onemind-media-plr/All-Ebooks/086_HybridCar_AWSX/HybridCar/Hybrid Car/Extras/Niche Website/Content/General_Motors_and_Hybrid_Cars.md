@@ -1,0 +1,49 @@
+# Gm Hybrid CarsGeneral Motors and Hybrid Cars
+
+General Motors has long been bludgeoned into backing the supporting hybrid car technology.
+
+The car making company has already suffered blows not from pro-hybrid fanatics or not even from environmentalists but mostly from the market itself.
+
+Almost all news article and analyses that tackle GM�s softening financial performance mention GM�s missteps regarding hybrid cars. For instance, CBS News tagged GM as road kill amid the rising hybrid cars demand.
+
+But much to credits, GM has been taking lumps, has been humble in admitting miscalculations, and finally has been abruptly and surely jumping on the bandwagon for hybrid.
+
+Queue from competitor
+
+At the end of the year 2004, incidentally also the year when rival Toyota�s Toyota Prius created a wave in the market, GM had announced an alliance with another major car maker, DaimlerChrysler in a joint effort to build and assemble hybrid cars of the future.
+
+At the time, GM humbly admitted and apologized for its past lax treatment for need to ramp up development of hybrid cars. Now, the apology translates to missed revenues, because GM is still not on top in terms of developing and selling hybrid cars.
+
+When oil and gasoline prices started rising in 2005, GM admittedly made the mistake of not taking as seriously the potential opportunities posed by the times.
+
+No one has foreseen that oil prices would continue to sky rocket then, because apparently, the situation in the Middle East then seemed to be greatly improving.
+
+High standards
+
+By the summer of 2005, GM�s hybrid car version was almost complete. GM then started a strategy to greatly and strongly focus on car hybrids, whether mild hybrids, full-massive hybrids or intermediate hybrids.
+
+GM boasted at the time that it was the only car manufacturing firm that passionately pursue manufacturing of ultra-mild hybrid car systems, like the high-standard Belt Alternator Starters or BAS.
+
+GM said by being so, its hybrids in the future would be less expensive but will surely generate much savings for the consumers� or users� gasoline consumption bills.
+
+By that time, GM was already quick to assert that its forthcoming 2007 Saturn VUE hybrid would be the first and pioneering hybrid car that would be using the ultra and high-standard BAS.
+
+Another hybrid system
+
+GM is understood to also be actively pursuing developing and adopting a full hybrid system that would be a significant and major breakthrough in the emerging hybrid car technology.
+
+The �two-mode hybrid� system is expected to lead GM into once again dominating not just the local but also the global car manufacturing and distributing industry.
+
+The hybrid system would be a part of GM�s scheme to assemble hybrid cars that would have improved fuel economy. The more interesting feature to come up with GM�s future hybrid cars using the new system is the speed capacity.
+
+GM is apparently and undoubtedly a believer in hybrid cars. By that, it is expected that the company�s future car products will be able to make believers out of the ever-insatiable American public.
+
+GM plans to further deliver superior and quality hybrid vehicles in the future. The company plans to roll out hybrid car products that boast of fuel efficiency, performance and impressive gains.
+
+GM�s strategy
+
+GM�s strategy of rolling out more powerful hybrid cars in the future is tipped at the company�s response to rising need to finally snatch up again its leadership in the car industry.
+
+Through the years, the company has shed its position in favour of Japanese car makers Toyota and Honda. However, analysts and experts expect GM to make use of its superior hybrid cars to get into the top spot once again.
+
+The strategy may seem to obvious and apparent, but it is one that would surely get things done. Wait for a few more years and let history and hybrid reception decide on GM�s future.

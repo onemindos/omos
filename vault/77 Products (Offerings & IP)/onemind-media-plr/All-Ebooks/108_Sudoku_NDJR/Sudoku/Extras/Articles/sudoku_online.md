@@ -1,0 +1,35 @@
+# Play Sudoku Online on these 5 great Sudoku Websites!
+
+Sudoku is an abbreviation of the Japanese phrase �Suuji wa dokushin ni kagiru�, which means �the digits must remain single�.  Sudoku was designed by Howard Garnes, a 74�year old architect and freelance puzzle maker, and was first published in 1979 in a New York puzzle magazine, Dell Pencil Puzzles and Word Games.  It was first entitled as Number Place.
+
+Japanese paper Monthly Nikolist first printed Number Place on April 1984 as �Suuji wa dokushin ni kagiru�, as named by Kaji Maki, the president of the Nikoli company.  To this day, Nikoli holds the copyright to the name Sudoku.  Other publications use other names for Sudoku.
+
+Sudoku is played on a 9X9 grid, with 3x3 subgrids referred to as regions, boxes, blocks, or even quadrants.  In each box, some cells already have numbers, called given, or clues.  A player has to place a number in each of the empty squares of the box in such a way that the box contains the numbers 1 to 9 exactly once.  
+
+Take note that each puzzle has only one valid solution.
+
+Sudoku has successfully invaded publications all over the world, from newspapers to puzzle books.  Now, you can play Sudoku even on your computer or mobile phone! Online versions of Sudoku can be found almost everywhere on the Internet, complete with random puzzles, solving tips, and even different downloadable versions of the game itself!  The following are just some of the websites that offer you a chance to play the addictive number puzzle game, Sudoku.
+
+1) www.websudoku.com 
+
+This site lets you play Sudoku on 4 different levels of difficulty: Easy, Medium, Hard, and Evil (obviously the VERY DIFFICULT level).  A randomly generated puzzle from billions of puzzles will be presented to players every time the site is first accessed.  You can choose your level of play and have the site generate a different puzzle.  A clicking a button allows you to see how well you have solved the current puzzle. Each row or column that has wrong inputted numbers will be highlighted red.  You can even download PC and mobile phone versions of the game here!  Plus lots of other helpful Sudoku stuff can be found here.
+
+2) http://www.dkmsoftware.com/sudoku/
+
+You can play Sudoku online here.  Choose from 4 difficulty levels: Easy, Medium, Hard, and Supreme. You can save or load a specific puzzle that you have played here.  For those who love to create puzzles, or want to try making one, this site allows you to do that.  You can download the Pocket PC free trial version, or the full version for $11.95.  The site also has a desktop PC version of Sudoku, which has a free trial version, and the $14.95 full version. 
+
+This site has a variation of Sudoku, named Sudoku Sniper.  This version allows you to play against another human as both of you try to solve a puzzle simultaneously.  You can download the trial version for free, or the Pocket PC full version for $11.95.
+
+3) www.miniclip.com
+
+Even the most popular website of mini�games offers its patrons and other players it�s own version of Sudoku.  This online version has cute, smooth graphics.  You can place the numbers on the empty squares using the mouse, or the numberpad on your keyboard.  You can even discuss anything about the game on miniclip.com�s forums page.  You can even print a simple black and white copy of the puzzle you are playing!  Miniclip offers help on the game, and lets you post your score on the online scoreboard to see how you well you did compared to other gamers.
+
+4) www.fingertime.com
+
+This website also offers a simple graphical version of Sudoku that you should play online.  Click and hold the mouse button on an empty square, select the number you want to place, and release the button.  If the number is wrong, the square will be red.  If the number you�ve selected should be placed on nearby squares, the game will automatically load them.  The keyboard can also be used to play this game.  Playing tips are offered here.  A new puzzle is generated daily, and the solution to the previous day�s puzzle can be seen the next day.  You can see your score on the online leaderboard.
+
+5) http://www.sudokufun.com/
+
+This site is a SPEED SITE! A random puzzle is generated everyday.  Players, registered or not, can try and solve the puzzle at the fastest time possible.  Solve the puzzle using your mouse and keyboard, enter any name, and submit your solution.  The site will tell you if your solution is wrong.  The puzzle will be changed once 7 players were able to solve the current puzzle.  Results as to the fastest times will not be posted until the puzzle has been solved by 7 people so the excitement and tension here is high!  Tons of Sudoku stuff are also available here, particularly for registered users.  Registration is free so check this out.
+
+There are tons of sites that will let you play Sudoku online.  Feel free to browse the web.  For now, these 5 sites will give your HOURS of Sudoku playing time and LOTS of SUDOKU resources.  Enjoy yourself and good luck!

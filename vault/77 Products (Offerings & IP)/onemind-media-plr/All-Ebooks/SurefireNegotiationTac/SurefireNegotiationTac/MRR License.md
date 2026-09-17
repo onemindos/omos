@@ -1,0 +1,16 @@
+# Master Resell Rights Terms & Conditions
+
+[YES] Can put your name on the sales page.
+[YES] Can be added into PAID membership sites.
+[YES] Can be sold.
+[YES] Can be packaged.
+[YES] Can be offered as a bonus.
+[YES] Can be sold on auction sites.
+[YES] Can be published offline.
+[YES] Can convey (Master) Resell Rights.
+[NO] Can be edited.
+[NO] Can be broken down into articles.
+[NO] Can be used as web or e-zine content.
+[NO] Can be given away for free (any format).
+[NO] Can be added into free membership sites.
+[NO] Can sell Private Label Rights.

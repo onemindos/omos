@@ -1,0 +1,53 @@
+What You Need to Know About Your iPod's Battery
+
+iPod's battery life is an issue to most iPod users.  Users say that an iPod battery degrades over time and is irreplaceable. Users' contention have certain bearing since (1) the iPod battery is lithium-based, its recharge cycles last roughly around 300 to 500 times and it really does degrade over time, and (2) apple's design of an iPod battery is done in such a way that users cannot easily replace the internal lithium ion battery with a new one.
+
+So, many ask, are iPods made to be a disposable digital audio player.
+
+The answer is no. 
+
+Apple designed iPods to last a long time. But since an iPod battery is lithium based, we cannot expect it to last longer than two years. 300 to 500 complete charges and discharges wears down the power of a lithium battery. Apple, nevertheless, published guidelines about iPod battery on its website and gave tips on how to maximize the life of an iPod battery.
+
+An iPod battery cannot be removed or be replaced the way a user does with a digital celfone by just clicking the open button at the back of the unit to remove and replace the battery when it wears down. The iPod battery is integrated in the circuitry. 
+
+You will ask now, why did Apple engineered the iPod this way?
+
+Apple integrated its iPod battery with the main circuitry to achieve the ultra thin and ultra sleek design that it boasts. If the iPod battery is removable, the iPods will be as bulky as regular digital celfones. 
+
+Previously, Apple does not accept replacement of a worn-out iPod battery. Under their official policy customer should buy a refurbished replacement worth as much as a brand new iPod. 
+
+Because of this situation, third-party manufacturers offered battery replacement kits, with instructions on how to disassemble, remove and replace the iPod battery and then reassemble your iPod. 
+
+It was only on November 14, 2003 that Apple had announced a cheaper battery replacement program. The battery replacement program which costs $99 had been trimmed down to $59.
+
+Some tips to maximize your iPod battery's power.
+
+Keep your iPod at room temp.
+
+An iPod battery works at its best when the iPod is at room temperature, between 0° to 35° C (or 32° to 95° F). 
+
+If your iPod has stayed in the cold for many hours, let it warm up first before turning it on. Otherwise, a low-battery warning will appear and the iPod won't turn on unless you recharge it. But you wouldn't want to recharge it because it will deduct a recharge cycle to its 300 to 500 recharging cycle, right? So use it at room temperature and don't forget it! If after warming up your iPod remains asleep, do this: connect the iPod to the power adapter. Press the Menu + Play or Pause buttons. Do this repeatedly until the Apple logo appears.
+
+* Do not leave your iPod inside a car, especially during at noontime. 
+* Do not expose your iPod to direct sunlight.
+
+Extra tips
+
+*When charging
+
+An iPod battery can be fast-charged in an hour with eight percent (80) of its capacity. But it would be better if you charge it for four (4) hours fully recharge the iPod battery to 100%. This will save you discharge and recharge cycles by 20% for every recharging.
+
+An iPod battery slowly empties even when the iPod unit is not in use. The iPod uses, even when asleep, a small wattage of current. So, store your iPod in room temperature to maximize the battery and slow down the draining of power. If you do this your iPod batter can last from 16 to 28 days.
+
+Important!
+
+* Empty the iPod battery fully before you recharge it. 
+* iPod skins and iPod covers look good on your iPod, but please do not charge your iPod while it is still dressed with iPod skin or cover.
+
+When unattended, Press the Pause
+
+Pause your iPod if you will leave it on a table to pee, or do anything else. iPod will continue to play if left playing until the iPod battery drains out. Always turn off your iPod when not in use to save battery life. 
+
+Backlighting
+
+When the room is well lit, you do not need backlighting. Backlighting can use use up a lot of your reserved battery power. Turn off backlighting when you do not need it. Select: Settings > Backlight Timer > Off.

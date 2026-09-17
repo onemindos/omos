@@ -1,0 +1,260 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database with pgvector extension
+  dify-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: dify-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dify
+      POSTGRES_PASSWORD: eGjLHErARqZxxDlpRrsG4TCyDmeyF1v/
+      POSTGRES_DB: dify
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - dify_postgres_data:/var/lib/postgresql/data
+    networks:
+      - legacy_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U dify']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Redis for caching and queue
+  dify-redis:
+    image: redis:7-alpine
+    container_name: dify-redis
+    restart: unless-stopped
+    volumes:
+      - dify_redis_data:/data
+    command: redis-server --requirepass 2MehsKm00ldzVYo6uG06pkn4J8hr5Mnw
+    networks:
+      - legacy_network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Dify API service
+  dify-api:
+    image: langgenius/dify-api:latest
+    container_name: dify-api
+    restart: unless-stopped
+    environment:
+      # Mode
+      MODE: api
+      
+      # Startup mode (api for API service)
+      LOG_LEVEL: INFO
+      DEBUG: 'false'
+      FLASK_DEBUG: 'false'
+      
+      # Secret key - CHANGE THIS!
+      SECRET_KEY: z8vhQ64BoqUbCAbxe0oY/Cdt8nn420j97dwpM8weYTs3LloxdqhdIqiD
+      
+      # Database configuration
+      DB_USERNAME: dify
+      DB_PASSWORD: eGjLHErARqZxxDlpRrsG4TCyDmeyF1v/
+      DB_HOST: dify-postgres
+      DB_PORT: 5432
+      DB_DATABASE: dify
+      
+      # Redis configuration
+      REDIS_HOST: dify-redis
+      REDIS_PORT: 6379
+      REDIS_USERNAME: ''
+      REDIS_PASSWORD: 2MehsKm00ldzVYo6uG06pkn4J8hr5Mnw
+      REDIS_DB: 0
+      REDIS_USE_SSL: 'false'
+      
+      # Celery configuration (uses Redis)
+      CELERY_BROKER_URL: redis://:2MehsKm00ldzVYo6uG06pkn4J8hr5Mnw@dify-redis:6379/1
+      BROKER_USE_SSL: 'false'
+      
+      # Storage configuration
+      STORAGE_TYPE: local
+      STORAGE_LOCAL_PATH: /app/api/storage
+      
+      # Vector store configuration (using pgvector)
+      VECTOR_STORE: pgvector
+      PGVECTOR_HOST: dify-postgres
+      PGVECTOR_PORT: 5432
+      PGVECTOR_USER: dify
+      PGVECTOR_PASSWORD: eGjLHErARqZxxDlpRrsG4TCyDmeyF1v/
+      PGVECTOR_DATABASE: dify
+      
+      # CORS configuration
+      WEB_API_CORS_ALLOW_ORIGINS: https://dify.zeusops.dev
+      CONSOLE_CORS_ALLOW_ORIGINS: https://dify.zeusops.dev
+      
+      # Application URLs
+      CONSOLE_API_URL: https://dify.zeusops.dev
+      CONSOLE_WEB_URL: https://dify.zeusops.dev
+      SERVICE_API_URL: https://dify.zeusops.dev
+      APP_WEB_URL: https://dify.zeusops.dev
+      FILES_URL: https://dify.zeusops.dev
+      
+      # File upload limits (MB)
+      UPLOAD_FILE_SIZE_LIMIT: 15
+      UPLOAD_FILE_BATCH_LIMIT: 5
+      UPLOAD_IMAGE_FILE_SIZE_LIMIT: 10
+      
+      # Security
+      CODE_EXECUTION_ENDPOINT: http://dify-sandbox:8194
+      CODE_EXECUTION_API_KEY: dify-sandbox
+      CODE_MAX_NUMBER: 9223372036854775807
+      CODE_MIN_NUMBER: -9223372036854775808
+      CODE_MAX_STRING_LENGTH: 80000
+      TEMPLATE_TRANSFORM_MAX_LENGTH: 80000
+      CODE_MAX_STRING_ARRAY_LENGTH: 30
+      CODE_MAX_OBJECT_ARRAY_LENGTH: 30
+      CODE_MAX_NUMBER_ARRAY_LENGTH: 1000
+      
+      # Timezone
+      TZ: America/New_York
+    volumes:
+      - dify_app_storage:/app/api/storage
+    networks:
+      - legacy_network
+    depends_on:
+      dify-postgres:
+        condition: service_healthy
+      dify-redis:
+        condition: service_healthy
+
+  # Dify worker for background tasks
+  dify-worker:
+    image: langgenius/dify-api:latest
+    container_name: dify-worker
+    restart: unless-stopped
+    environment:
+      # Mode
+      MODE: worker
+      
+      LOG_LEVEL: INFO
+      DEBUG: 'false'
+      
+      # Secret key - MUST MATCH API
+      SECRET_KEY: z8vhQ64BoqUbCAbxe0oY/Cdt8nn420j97dwpM8weYTs3LloxdqhdIqiD
+      
+      # Database configuration
+      DB_USERNAME: dify
+      DB_PASSWORD: eGjLHErARqZxxDlpRrsG4TCyDmeyF1v/
+      DB_HOST: dify-postgres
+      DB_PORT: 5432
+      DB_DATABASE: dify
+      
+      # Redis configuration
+      REDIS_HOST: dify-redis
+      REDIS_PORT: 6379
+      REDIS_USERNAME: ''
+      REDIS_PASSWORD: 2MehsKm00ldzVYo6uG06pkn4J8hr5Mnw
+      REDIS_DB: 0
+      REDIS_USE_SSL: 'false'
+      
+      # Celery configuration
+      CELERY_BROKER_URL: redis://:2MehsKm00ldzVYo6uG06pkn4J8hr5Mnw@dify-redis:6379/1
+      BROKER_USE_SSL: 'false'
+      
+      # Storage configuration
+      STORAGE_TYPE: local
+      STORAGE_LOCAL_PATH: /app/api/storage
+      
+      # Vector store configuration
+      VECTOR_STORE: pgvector
+      PGVECTOR_HOST: dify-postgres
+      PGVECTOR_PORT: 5432
+      PGVECTOR_USER: dify
+      PGVECTOR_PASSWORD: eGjLHErARqZxxDlpRrsG4TCyDmeyF1v/
+      PGVECTOR_DATABASE: dify
+      
+      # Timezone
+      TZ: America/New_York
+    volumes:
+      - dify_app_storage:/app/api/storage
+    networks:
+      - legacy_network
+    depends_on:
+      dify-postgres:
+        condition: service_healthy
+      dify-redis:
+        condition: service_healthy
+
+  # Dify web frontend
+  dify-web:
+    image: langgenius/dify-web:latest
+    container_name: dify-web
+    restart: unless-stopped
+    environment:
+      # Edition (SELF_HOSTED for on-premise)
+      EDITION: SELF_HOSTED
+      DEPLOY_ENV: PRODUCTION
+      CONSOLE_API_URL: http://dify-api:5001
+      APP_API_URL: http://dify-api:5001
+      SENTRY_DSN: ''
+      TZ: America/New_York
+    networks:
+      - legacy_network
+    depends_on:
+      - dify-api
+
+  # Nginx reverse proxy for Dify
+  dify-nginx:
+    image: nginx:alpine
+    container_name: dify-nginx
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/proxy.conf:/etc/nginx/proxy.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - dify_nginx_cache:/var/cache/nginx
+      - dify_nginx_logs:/var/log/nginx
+    networks:
+      - legacy_network
+    depends_on:
+      - dify-api
+      - dify-web
+
+  # Sandbox for code execution (Python/Node.js code nodes)
+  dify-sandbox:
+    image: langgenius/dify-sandbox:latest
+    container_name: dify-sandbox
+    restart: unless-stopped
+    environment:
+      API_KEY: dify-sandbox
+      GIN_MODE: release
+      WORKER_TIMEOUT: 15
+      ENABLE_NETWORK: 'true'
+      HTTP_PROXY: ''
+      HTTPS_PROXY: ''
+      SANDBOX_PORT: 8194
+    volumes:
+      - dify_sandbox_dependencies:/dependencies
+    networks:
+      - legacy_network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  dify_postgres_data:
+    driver: local
+  dify_redis_data:
+    driver: local
+  dify_app_storage:
+    driver: local
+  dify_nginx_cache:
+    driver: local
+  dify_nginx_logs:
+    driver: local
+  dify_sandbox_dependencies:
+    driver: local
+
+networks:
+  legacy_network:
+    external: true

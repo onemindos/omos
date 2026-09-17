@@ -1,0 +1,111 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Free Ipod Videos | All About the Apple iPod</title>
+		<meta http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="The Apple iPod has been on the music scene for sometime Users of the Apple iPod have posted many reviews through the years iPod reviews, iPod hackings, as well as free iPod videos are posted all over the Internet iPod users have the following to say about ...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">				
+		<meta name="Robots"				content="index,follow">				
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>		
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2" >
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdContent">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+All About the Apple iPod
+</b>
+<br>
+
+						<small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>The Apple iPod has been on the music scene for sometime. Users of the Apple iPod have posted many reviews through the years. iPod reviews, iPod hackings, as well as free iPod videos are posted all over the Internet.<br><br>iPod users have the following to say about the Apple iPod:<br><br>1. The Apple iPod has a hard drive that can hold more than 5,000 songs. The number of songs that can be stored in an Apple iPod is enough that users can expect to listen to a non-stop music experience using the Apple iPod. This hard drive has a forty gigabytes of space available for the 5,000 songs. The free iPod videos are also included.   <br><br>2. The Apple iPod was manufactured in such a way that the control buttons are incorporated in a sleek design that ergonomically provides ease of movement to the user. The ergonomic design is called the Click Wheel. <br><br>Using the Click Wheel, Apple iPod users can now easily browse through their favorite free iPod videos. The Apple iPod users can either fast forward, play, pause or stop, and control the reverse. An added plus is the access of the menu via the Click Wheel.<br><br>3. The Apple iPod have enough battery life that coudl make it possible for non-stop playing of songs or free iPod videos. Apple iPod users are capable of the set up of a playlist of songs or free iPod videos on the Apple iPod.  <br><br>4. With the shuffle function of the Apple iPod, users can choose randomly the free iPod videos they want to watch and the MP3 songs that they want to hear. <br><br>5. The Apple iPod is not only an excellent audio player but also an excellent player for the free iPod videos. The system menu of the Apple iPod is super intuitive. The sound quality is world class, The storage size is sufficient to store not only MP3 songs but free iPod videos. Lastly, the Apple iPod has an assortment of accessories available for use.  <br><br>6. The Apple iPod was said to have a poor post sales service. One user of the Apple iPod claimed that he was just watching free iPod videos when the LCD screen suddenly went broke. <br><br>The service representative of the Apple iPod, however, claimed that the service warranty of the Apple iPod does not include abuse. In this case, it was decided that it was abuse and the Apple iPod was now beyond warranty. <br><br>7. The Apple iPod also has a clear lineage of the warranty. Several users of the Apple iPod claimed to experience weird things on their iPods after the termination date of the warranty. <br><br>Below are some of the faulty events that user of Apple iPods experiences:<br><br>a. The Apple iPod is claimed to be skip-free in playing free iPod videos, but after the warranty period, it started skipping free iPod videos.<br><br>b. The Apple iPod is claimed to have a long life battery, but after the warranty period, the battery was constantly experiencing shortage in power especially in playing free iPod videos.<br><br>c. The Apple iPod is claimed to have a robust hard drive, but after the warranty period, the hard drive of the Apple iPod usually fails.<br><br>8. The Apple iPod was also reported at one time or another as having a software bug or design flaw. Music tracks or free iPod videos being played are meant to be skip-free and to flow continuously from one track or video to the next. The Apple iPod, according to some users stalls for even a single moment between tracks. <br><br>9. The Apple iPod is said to be the best in MP3 audio playing. Users, however, pray that Apple would try to improve the video playing capability of the iPod such that playing free iPod videos would not be a hassle. Making the video player more perfect would definitely boost the sales of the Apple iPod. <br><br>10. The Apple iPod is also said to be susceptible to static. Some users reported that the Apple iPod could easily affected by static when put inside a coat pocket. Static caused the Apple iPod to switch off suddenly at times. This has an effect to the overall circuitry.
+						<br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/J_Box.php"); ?>
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php					
+				if($ShowNewsFeed)
+					{
+			?>
+						<tr>
+							<td class="tdRow" colspan="2">
+								<?=$Category;?> News and Events
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<?php include("../Includes/Google_Search.php"); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br>
+								<?php include("../Includes/NewsFeed.php"); ?>
+								<?php	
+									if ($DisplayAmazon)
+										{
+											echo "<hr>";
+											echo "<br><center>";
+											include("../Includes/Amazon_728x90.php");
+											echo "</center><br>";
+										}
+								?>
+							</td>
+						</tr>
+			<?php
+					}
+			?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

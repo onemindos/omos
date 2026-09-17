@@ -1,0 +1,101 @@
+[
+  {
+    "index": 0,
+    "speaker": "legacy",
+    "scene": "hook",
+    "text": "Every night you close fifty apps. Every morning you open them again. And none of them... remember why.",
+    "file": "00-legacy-hook.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 1,
+    "speaker": "legacy",
+    "scene": "hook",
+    "text": "What if something did?",
+    "file": "01-legacy-hook.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 2,
+    "speaker": "legacy",
+    "scene": "problem",
+    "text": "Your AI can write your code. Answer your questions. Generate your images. But it doesn't know your goals. It doesn't know the people you love. It doesn't know... you.",
+    "file": "02-legacy-problem.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 3,
+    "speaker": "legacy",
+    "scene": "solution",
+    "text": "We built One Mind to change that.",
+    "file": "03-legacy-solution.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 4,
+    "speaker": "zeus",
+    "scene": "solution",
+    "text": "One method. One vault. One AI that understands your entire life.",
+    "file": "04-zeus-solution.mp3",
+    "voice": "echo",
+    "speed": 1
+  },
+  {
+    "index": 5,
+    "speaker": "legacy",
+    "scene": "solution",
+    "text": "Capture... Organize... Direct... Execute... and then — multiply.",
+    "file": "05-legacy-solution.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 6,
+    "speaker": "legacy",
+    "scene": "model",
+    "text": "Three domains of your life. Your self. Your foundation. Your endeavor. All running on one sovereign operating layer.",
+    "file": "06-legacy-model.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 7,
+    "speaker": "zeus",
+    "scene": "model",
+    "text": "Plain markdown. No lock-in. Yours forever.",
+    "file": "07-zeus-model.mp3",
+    "voice": "echo",
+    "speed": 1
+  },
+  {
+    "index": 8,
+    "speaker": "legacy",
+    "scene": "proof",
+    "text": "This isn't another productivity app. This is the operating system for your life.",
+    "file": "08-legacy-proof.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  },
+  {
+    "index": 9,
+    "speaker": "zeus",
+    "scene": "cta",
+    "text": "One Mind.",
+    "file": "09-zeus-cta.mp3",
+    "voice": "echo",
+    "speed": 1
+  },
+  {
+    "index": 10,
+    "speaker": "legacy",
+    "scene": "cta",
+    "text": "Start building your codex.",
+    "file": "10-legacy-cta.mp3",
+    "voice": "nova",
+    "speed": 0.92
+  }
+]

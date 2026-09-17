@@ -1,0 +1,36 @@
+name: project-state
+description: "Keep workspace/state/projects.yaml current — read every heartbeat, update on changes"
+triggers:
+  - cron: "0 */4 * * *"
+    timezone: "America/New_York"
+    label: scheduled-review
+steps:
+  - tool: sessions_send
+    label: update-state
+    input:
+      agentId: legacy
+      message: |
+        PROJECT STATE SYNC — maintain workspace/state/projects.yaml
+
+        1. Read workspace/state/projects.yaml (create from template if missing)
+        2. Review today's memory (workspace/memory/{today}.md) for any project updates
+        3. Update project states accordingly — move things between active/blocked/done
+        4. If any project has been in "blocked" for 3+ days, DM Zeus on Discord
+        5. Write updated YAML back to workspace/state/projects.yaml
+        6. Reply: "State sync complete. Active: X, Blocked: Y, Done this week: Z"
+
+        YAML template if file missing:
+        ---
+        last_updated: {ISO datetime}
+        projects:
+          - id: onemind-os-v04
+            name: OneMind OS v0.4
+            status: active
+            pillar: UI
+            priority: 1
+            current_focus: "OpenClaw deployment + ecosystem integration"
+            next_action: "Install clawsec, supermemory plugins"
+            blocked_since: null
+            notes: ""
+        weekly_wins: []
+        ---

@@ -1,0 +1,53 @@
+name: update-openclaw
+description: "Update OpenClaw gateway to latest npm release on VPS, then restart and remind Zeus to rebuild the iOS app"
+steps:
+  - tool: exec
+    label: check-current-version
+    input:
+      cmd: openclaw --version 2>&1 | head -1
+    onSuccess: "Current version: {{output}}"
+
+  - tool: exec
+    label: npm-update
+    input:
+      cmd: npm install -g openclaw@latest 2>&1 | tail -5
+    onSuccess: "npm update complete"
+    onFailure: "npm update failed — check VPS connectivity"
+
+  - tool: exec
+    label: tailscale-serve-ensure
+    input:
+      cmd: tailscale serve status 2>&1 | grep -q "18789" || tailscale serve --bg --yes 18789
+    onSuccess: "Tailscale serve confirmed active"
+
+  - tool: exec
+    label: restart-service
+    input:
+      cmd: systemctl restart openclaw && sleep 5 && systemctl is-active openclaw
+    onSuccess: "OpenClaw restarted — status: {{output}}"
+    onFailure: "Restart failed — check journalctl -u openclaw"
+
+  - tool: exec
+    label: health-check
+    input:
+      cmd: curl -s http://127.0.0.1:18789/healthz
+    onSuccess: "Health check: {{output}}"
+
+  - tool: exec
+    label: new-version
+    input:
+      cmd: openclaw --version 2>&1 | head -1
+    onSuccess: "Now running: {{output}}"
+
+  - tool: message
+    label: remind-app-rebuild
+    input:
+      text: |
+        ✅ Gateway updated to {{output}}.
+
+        Next steps for Zeus:
+        1. Bump bundle version in command-center/ios-app/project.yml
+           (CFBundleShortVersionString + CFBundleVersion in all 6 targets)
+        2. Rebuild iOS app:  cd command-center/ios-app && ./scripts/build-and-install.sh
+        3. Rebuild Mac app:  ./scripts/build-and-install.sh mac
+        4. Update "Current version" in command-center/ios-app/README.md Update Playbook

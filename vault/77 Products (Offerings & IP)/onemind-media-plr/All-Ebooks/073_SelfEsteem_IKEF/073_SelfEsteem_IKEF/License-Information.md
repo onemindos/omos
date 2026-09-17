@@ -1,0 +1,17 @@
+# Private Label Rights Terms & Conditions
+
+[YES] Can be edited.
+[YES] Can put your name as the author.
+[YES] Can be broken down into articles.
+[YES] Can be used as web or e-zine content.
+[YES] Can be added into membership sites.
+[YES] Can be sold in any format.
+[YES] Can be packaged.
+[YES] Can be offered as a bonus.
+[YES] Can be given away (in any format).
+[YES] Can be sold on auction sites.
+[YES] Can offer (Master) Resell Rights.
+[YES] Can resell Private Label Rights.
+[YES] Can be published offline.
+
+In short, you can do literally anything you want with this product

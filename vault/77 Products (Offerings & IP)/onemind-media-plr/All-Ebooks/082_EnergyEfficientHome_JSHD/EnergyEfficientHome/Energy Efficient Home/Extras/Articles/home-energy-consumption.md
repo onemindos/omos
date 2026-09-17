@@ -1,0 +1,35 @@
+# Home Energy Consumption
+
+5 Ways to Cut Down Your Home Energy Consumption
+
+If you have been receiving high electric bill month after month, then be alarmed. You might be using your appliances more what your require them. 
+
+Normally, a regular American household would consume between $1500 and $2000 on electric bills alone. If you happen to fall between these figures, then you can consider yourself as a regular homeowner that uses electricity that is not really needed. Why? One reason: You don�t need to spend as much as $2000 a year for energy. And you don�t even have to spend more than that either. You see, a regular household that spends at this amount often wastes power and of course money. And with an increased electric rate, the bills will go even higher. 
+
+Want to do some changes?
+
+Then, here are the things you should know. The 5 ways to cut down your home energy consumption:
+
+1.  The thermostat control
+
+When you want your room to be super cool because you are sweating from the inside, you simple don�t turn the thermostat super low. Remember this: the thermostat will not run as quickly as you want. It will run on the same level all throughout until it reaches the temperature you set. So whether you gradually switch your thermostat low or instantly set it on its lowest, you will receive the same result. The main difference is, you only spend more energy when you think you can get your room to cool quickly if you set your thermostat low. 
+
+Think of it this way: You are driving at 5mph when you suddenly shift to 5th gear. What you will get? More pressure on the pedal with lesser speed gained. In other words, you waste so much gas but do not instant speed.
+
+Also, to further cut down your electric bill, you can set the thermostat several degrees lower when you are out or when you sleep. 
+
+2.  Several small consumptions add up
+
+Your iPod charger, cellphone charger, and other chargers that are plugged 24/7 can cost you additional digits on your electric bill. This also goes to your night-lights that are switched on all day, all night. Also, your digital clocks and pots that are plugged since brought to the house consume high home energy. The computer monitor that is left on the whole day adds up to your electric bill. All these contribute to the cost you pay for your electric bill. Imagine this: these things that you think do not contribute so much adds 5% on your electric bill.  
+
+3.  The cool way
+
+You don�t need a warm water to wash your clothes. Oh, you think that warm water kills germs on your clothes. Well, you don�t need them. Settle for cold water. You can save as much as 90% on your washing machine�s electric consumption of you don�t use water heater.
+
+4.  Sealing the leaks
+
+Leaks can come from doors, sills, windows, cracks on the walls, and joints. And making sure that these leaks are given proper attention would yield to saving in the long run. Make sure that your doors are closed properly. If there are spaces, seal them. This goes with all the doors from garage doors, exterior doors, operable windows, to door of the attic. Use sealants such as weather strippers. Windows should also be free from leaks. Cover them with plastic coating so that the heat will be contained inside your home. Cracks on the walls should also be sealed. Regular sealants will instantly do the jobs. The reason for doing this is that you need to keep the heat contained inside your home so that the heating system would not need to do extra work due to heat loss from these leaks. 
+
+5.  Keep them small
+
+If you are dinning alone and would want to warm up left over straight from your fridge, do not use large pots or ovens. Instead, settle for small pots and microwave. Small pots require less heat while microware has use lesser power than oven. Small burner instead of large burner is more ideal in preparing meals for two reason: one, it consumes less electricity, and two, it your air conditioning would not work double time cooling down the room. According to the American Council for an Energy-Efficient Economy, you can save from 30 to 40% on energy cost if you follow these ways.

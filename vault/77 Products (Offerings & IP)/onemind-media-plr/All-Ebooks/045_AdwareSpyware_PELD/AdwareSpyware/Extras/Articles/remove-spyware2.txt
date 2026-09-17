@@ -1,0 +1,23 @@
+Remove Spyware 2
+
+Arm you Computer against Spyware
+
+You might have received all those cool pop-up advertisement, screensavers stuff in your computer. Cool isn’t it? Well, it might be cool to have that stuff downloaded and installed in your computer but you’d better be careful there. That stuff could be one of the many spyware.  
+
+What really is spyware? Any malicious software that is designed to covertly gather user’s personal information or intercepts the computer’s operation without the user’s consent is called spyware. There are misconceptions between spyware and adware.  Adware is the term used to refer to any software which displays advertisement with or without user’s consent. Spyware collects information and sends it out through a background internet connection without user’s knowledge.  There is a more malicious version of spyware that can try to intercept user’s passwords or even credit card numbers. Spyware also silently tracks and gathers user’s information and data for advertisement purposes. The functionality and form may differ depending on the intentions of the vendor.  
+
+How this spyware get installed in your computer? A common way to become a victim of spyware is to download peer-to-peer file sharing applications.  There are freeware and shareware programs such as Limewire and GoZilla that has spyware. Unlike virus, spyware does not usually self-replicate. However, virus and spyware both exploit and infect computers for the same purpose which is for commercial gain.
+
+Spyware exists as an independent executable programs which means it has an ability to read cookies, snoop other applications, monitor keystrokes or scan files on hard drive. It can even install other spyware without your knowledge. Spyware can affect the system performance and stability of your computer system such as, disk usage, can interfere network traffic which causes difficulty in connecting to the internet.
+
+If your computer is infected with this spyware, how are you going to remove spyware and make sure no more spyware that can be installed in your computer? Spyware is a costly problem.  
+
+You can manually remove spyware but this can be very difficult and can be very complicated in searching for the hidden components that has been installed in your computer. Some of these programs got to great lengths to hide on user’s system and you might still require assistance. 
+
+There are free Anti Spyware and Spyware removal programs that are designed to safely remove or block spyware. The two most popular anti spyware softwares are Lavasoft’s Ad-ware and Spybot.  These two have both gained their popularity as effective tool than can remove and intercept spyware.  There are recently anti spyware programs that can help remove and protect your computer from spyware.  These are the Spy Sweeper of WebRoot and X-cleaner from Xblock. There are also the earlier versions of these anti spyware programs such as, SpywareBlaster, GIANT Antispyware which has been recently acquired by Microsoft, PC Tools’ Spyware Doctor and Anti-Spyware by Trend Micro.
+
+There are also some released numbers of suspected fake anti spyware programs that does not remove installed spyware. These fake anti spyware are suspected to install spyware in your computer instead of removing them. If you have used any of these suspected fake anti-spyware programs it would be better if you rescan your computer for installed spyware using those reliable, credible and tested anti spyware that can really remove spyware.
+
+Some used firewall and web proxies to block access to sites that are known to install spyware as an approach to blocking spyware. Other uses other web browsers such as Mozilla Firefox.
+
+Exchanging of vital information in the Internet is very common nowadays; as a result there are also malicious people that would try to steal this information for their own gain. It is best to combat yourself and your computer against them. 

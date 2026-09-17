@@ -1,0 +1,20 @@
+# Competence Leading to Improve Personal Life
+
+Do you have the competence to improve your everyday living and overall humane existence, or do you lack this quality? To improve personal living you have to find competence to take control. Our life is the personal way we as humans life. It is our way of making choices, which contributes to our person. In life we have inner coaches, counselors, etc that help us to achieve in life. We also have helpful experts in the world who will take the time to help those who find it difficult to help self. You have many options and resources available to you. 
+
+How to use competence: 
+Competence is earned. You must learn how to build competence to use it. A person with competence will take what they learn and use it to solve different situations in their life. They will make what they learn second to the first nature they intend to acquire. A competent person always sees the new light at the end of each tunnel. 
+
+When a person has competence, he or she feels joyful. A joyful person will consider each incident, experience etc in life as something they can learn from, as well this person will not allow bad weigh him or her down. The person will take the bad, see new light and continuing learning from his or her mistakes. 
+
+We hear bad news each day. The US is battling hard with other countries. This is out of our control. Therefore, we must see the new light. For instance, you can say �I do not have control over the world, yet I have control over my actions.� Once you see that you can only change you, you will live happier and free of chaos. 
+
+You will need to learn how to suspend judgments of self and others. You are not the Man in control. Only one spiritual being has the right to call judgment down on anyone. Let this Man take the weight on His shoulders. You may need to pray often to cease judging self and others. since this is a common problem, we face in the world. It is habitually seen in nearly everyone you meet. 
+
+It is ok to have opinions, but when you do not have facts to support your claims, why speak. Too many times people suspect, offer opinions, speculate, or jump to conclusions, which has caused major problems in the world. If you do not have facts behind you, or to support what you say, shut up. Allow someone else in the world to make the next mistake. 
+
+If you want to live happier, you will need to build your energy. To build energy you will need to eat proper, exercise and take good care of you. You will need to associate with positive people and learn to help others as well as yourself. The more effort you put forth, the more you will get back from your efforts. 
+
+Next, you want to consider your health. Frequent doctor visits, exercise, eating right and avoiding harmful chemicals and substances are a start to bettering your health. 
+
+Once you get your health in check, you can move to build self-awareness. In fact, you should have a degree of this already built, since you needed it to see how to improve your overall life. Self-awareness is the process of evaluating self. When you can sit back and look at you, you have self-awareness. What can I do to change bad habits. How do my bad habits help me. Remember, laugh as you evaluate yourself to keep from going insane.

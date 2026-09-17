@@ -1,0 +1,31 @@
+# Subject: {FIRSTNAME}, here's how you go about discovering Styles and specialty Bass fishing techniques...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my Bass fishing 101 ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - Tools of the trade
+2. Part 2 - Knowing and going where the fish are.
+3. Part 3 - Techniques for Bass fishing like a Pro!
+4. Part 4 - Mistakes and secrets to Bass fishing.
+5. Part 5 - Styles and specialty Bass fishing techniques.
+
+Let's go ahead & get started today with "Part 5 - Styles and specialty Bass fishing techniques".
+
+Part 5 - Styles and specialty Bass fishing techniques
+============================
+
+Skipping 
+This technique might remind you a lot of throwing rocks onto the surface of the water to see it 'skip'. As a water/top-water disturbance and movement simulator, it triggers and teases our predator to come up and see what is there to eat/attack. 
+
+Spinning rods and reel combo is best used for this technique - perfect for fishing and reaching bass where they swim and hide under piers, docks and  pontoons. Also useful for getting under and into underbrush and growth. Remember their 'comfort zone'. On sunny days, bass look for shade, food and shelter and often rest here in shady areas, under cover of structure. 
+
+Ripping
+Some call this the throw it out, twitch, jerk and go method. A medium-action rod with parabolic bend and action to it. If might actually trick our bass-friend into thinking there is a 'wounded' prey around. Like a pro, let the worm drop and settle to the bottom,  remaining there for a period of time.  Reel some slack out of the line, picking up the worm with a long, sharp upsweep of the rod tip. Let 'er rip! Let it drop down again to the bottom, under tension while slowly lowering the rod tip - keep on imitating live prey like this, moving, swimming and bobbing about and your predator will strike it with a vengeance. 
+
+Drift Trolling
+Trailing behind the boat, covering the bottom worms crawl and move, simulating prey in its purest form. Raise and lower it occasionally, looking natural and alluring to any bass in the vicinity hunting for a tasty morsel. 
+
+This concludes our 5 part ecourse on "Bass Fishing 101" Please visit my Bass Fishing guide to discover the rest of the information you've been searching for at 
+
+Take Care,

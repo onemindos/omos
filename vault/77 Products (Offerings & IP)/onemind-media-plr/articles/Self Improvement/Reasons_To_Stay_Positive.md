@@ -1,0 +1,47 @@
+# Title:
+
+Reasons To Stay Positive
+
+Word Count:
+868
+
+Summary:
+You surely have heard about "positive thinking", but why bother? Is there any reason you should make the effort to retain only positive thoughts? This article shares some ideas why you may in fact want to make this effort.
+
+Higher Productivity
+
+Maintaining a positive attitude may lead to higher productivity, whether in your career or personal life. When you are negative, you tend to give up more easily, get frustrated, get easily distracted, and drag your feet. A simple t...
+
+Keywords:
+positive thinking, staying positive, positive article
+
+Article Body:
+You surely have heard about "positive thinking", but why bother? Is there any reason you should make the effort to retain only positive thoughts? This article shares some ideas why you may in fact want to make this effort.
+
+Higher Productivity
+
+Maintaining a positive attitude may lead to higher productivity, whether in your career or personal life. When you are negative, you tend to give up more easily, get frustrated, get easily distracted, and drag your feet. A simple thing such as how you think can make a world of difference. W. Clement Stone spoke of this when he said "There is little difference in people, but that little difference makes a big difference. The little difference is attitude.The big difference is whether it is positive or negative.". Whether you want higher productivity is up to you, however consider the cause and effect of your attitude. Zig Ziglar also spoke of this when he said "Positive thinking will let you do everything better than negative thinking will.".
+
+Better Relationships
+
+Who wants to be around a negative person? Do you? When you are negative, you are sending out signals to others to stay away from you, unless perhaps they are also negative and seek a similar mindset. Do you want to attract negative people, or positive people? Ken Keyes Jr. touched on the reality of this when he said "A loving person lives in a loving world. A hostile person lives in a hostile world; everyone you meet is your mirror." Your attitude affects both personal relationships, and career relationships. While the impact of your attitude in a personal relationship is perhaps more obvious, in the workplace it's often less obvious. It's the relationships, trust, and rapport you build with others which contribute greatly to advancement opportunities, and should not be overlooked.
+
+Better Health
+
+Both modern medical providers and ancient practitioners have said that your attitude can affect your health. Your body takes queues from your mind, and negative thoughts can be disruptive to your internal body processes. Handling stress is a key challenge for us, to avoid stress-induced illnesses. The reverse is also true that having good health will contribute towards a positive attitude, so take care of your body! A holistic approach is to focus on your mind and body together, ensuring you are eating well and getting exercise.
+
+Happiness
+
+Happiness is perhaps one of the most important things of all, what good are the other things above if you aren't happy? Financial success doesn't necessarily equate to happiness, many wealthy people are quite unhappy. Happiness is really a state of mind, and we have complete control of our own minds. Unfortunately, many leave their thoughts and emotions on "autopilot", never deciding for themselves how they want to think. Maintaining a positive attitude equates to a decision to be happy, it's your choice! Buddha summarized how to remain happy no matter how bad things may seem when he said "Let us rise up and be thankful, for if we didn't learn a lot today, at least we learned a little, and if we didn't learn a little, at least we didn't get sick, and if we got sick, at least we didn't die; so, let us all be thankful.". It's also important to not miss the things that truly make us happy, which is not typically money, but often little things we take for granted. As Robert Brault said, "Enjoy the little things, for one day you may look back and realize they were the big things.".
+
+Spiritual Growth
+
+If you believe in a creator, or practice a religious belief, then you may also believe that remaining positive is part of a spiritual growth path. Many religions teach this basic premise, that we should remain positive and trust in our creator no matter how bad things may seem. Even if you don't have spiritual beliefs, perhaps you feel something within your conscience that urges you to be positive, and thus have a positive impact on others in your life. Being positive makes others feel good, which is rewarding in itself.
+
+You Are Your Thoughts
+
+What are you but your thoughts? Mahatma Gandhi said "A man is but the product of his thoughts what he thinks, he becomes." What do you want to be? Your thoughts have more impact than you realize, and define who you are, how others react to you, what comes into your life, and how you will be remembered when you are no longer here. What type of person do you want to be? Make sure your thoughts and attitudes support your definition of yourself!
+
+How to Do It
+
+How to maintain a positive attitude is a subject for a different article as there are many methods to achieve it. However, deciding you WANT to do this is a key first step, and can lead you towards pursuing methods which work for you. A good second step is to begin to simply recognize when you are not feeling positive, and pause to reflect on whether you want to CHOOSE to feel that way or not. Getting your mind out of autopilot puts you back into control, which is fundamental to changing your attitude.

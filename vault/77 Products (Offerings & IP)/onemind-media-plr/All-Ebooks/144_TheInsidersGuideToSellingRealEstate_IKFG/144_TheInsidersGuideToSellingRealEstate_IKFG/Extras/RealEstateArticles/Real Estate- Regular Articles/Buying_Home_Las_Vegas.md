@@ -1,0 +1,36 @@
+# Advantages of Buying Homes in Las Vegas
+
+Las Vegas is a great place to live, imagine yourself just a minute ride into streets that is lined up with casinos, theater shows and spa parlors. Las Vegas is really a haven for all people of all races and age.
+
+If you are thinking of living and buying a home in Las Vegas then you should keep these things in mind. 
+
+Las Vegas is full of luxurious houses and people would always think that only rich people live in here. That is the common thoughts that always come into our minds when we think of buying home in Las Vegas. 
+
+We usually think that why should I buy a house in Las Vegas when I don�t have the money for it? Why don�t we rephrase it to this one, what are the options I have so that I can buy a house in Las Vegas and be able to get the benefits of the people living in there?
+
+For many grounds, Las Vegas continues to rank as the greatest growing city area in the United States, with a standard 6,000 new residents arriving monthly. Maybe Las Vegas' growth has to do with the area's low unemployment rate; for over a decade, Las Vegas has maintained the top employment growth in the United States.
+
+As you know Las Vegas has a very friendly tax structure attracting more than hundreds of companies and entrepreneurs in the state
+
+Or maybe it's the fact that, once you step away from the casinos and the neon, Las Vegas is a city much like many others around the country, with quality schools and institutions of higher learning, houses of worship, libraries, fine restaurants and enriching cultural events. 
+
+A wide array of year-round recreational opportunities, friendly people and abundant affordable housing also makes Las Vegas a great place not just to work but also to live and play.
+ 
+With an average of 310 days of sunshine annually, Las Vegas easily ranks as one of the top holiday recreational destinations in the world. 
+
+While daytime temperatures usually exceed 100�F during the summer months, they usually dip into the 70s in the evening. The average daily temperature during the winter months is a crisp 48�F, well above bone-chilling temperatures in other parts of the country. This makes it a very good living place all year round.
+
+Thanks to its pleasant climate, Las Vegas offers myriad recreational and residence opportunities with activities designed for all ages, ranging from swimming, skiing at Mt. Charleston and boating on Lake Mead, to softball, football and soccer. 
+
+The city and Clark County are home to more than 90 public parks, numerous tennis, basketball and racquetball courts, and more than 30 public, semi-private and private golf courses.
+Despite the "Sin City" tag that was posted on Las Vegas, it was able to grow into an attractive and beautiful place to live in and raise a family. 
+
+Another good thing about buying home in Las Vegas is the community bonding, the community consistently comes together to meet the growing demand for family-oriented activities and schools, as well as such vital infrastructure needs as new road construction and improved water delivery systems.
+
+Thanks to its thriving economy and friendly tax rates, buying home in Las Vegas has become cheaper but not lesser the quality. 
+
+The median cost of a three-bedroom home is lower than in many other cities in the West, while utility costs, such as electricity and water, rank among the lowest in the country. These factors combine to stretch the paycheck a lot further in Las Vegas than in many other cities. 
+
+Plus, even though it sits alone in the northeast corner of the Mojave Desert, Las Vegas is just a short plane ride from the beaches of southern California, Phoenix, the majestic Grand Canyon, historic Salt Lake City, the beautiful San Francisco Bay Area and other popular destinations in the West. 
+
+Buying homes in Las Vegas is a fun adventure to go into, and living in there permanently is such a great thing to experience. Las Vegas is full of activities from its lush natural resources up to its skyscraper and dazzling casino filled cities. Surely living here is a once in a lifetime experience that you should go into.

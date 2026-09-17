@@ -1,0 +1,40 @@
+{
+  "name": "uber-1.0.0",
+  "version": "1.0.0",
+  "description": "Request and manage Uber rides — fare estimates, ride requests, status tracking, cancellation",
+  "main": "index.js",
+  "tools": [
+    {
+      "name": "uber",
+      "description": "Universal Uber ride tool. Actions: 'products' (list available), 'estimate' (get fare/time quote), 'request' (book a ride), 'status' (track current ride), 'cancel' (cancel ride), 'history' (recent rides), 'auth_url' (get OAuth setup URL). Uses sandbox by default for safety.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "What to do: products, estimate, request, status, cancel, history, auth_url"
+          },
+          "start_lat": { "type": "number", "description": "Pickup latitude" },
+          "start_lng": { "type": "number", "description": "Pickup longitude" },
+          "end_lat": { "type": "number", "description": "Destination latitude" },
+          "end_lng": { "type": "number", "description": "Destination longitude" },
+          "start_address": { "type": "string", "description": "Pickup address (for display only)" },
+          "end_address": { "type": "string", "description": "Destination address (for display only)" },
+          "product_id": { "type": "string", "description": "Uber product ID (UberX, UberXL, etc.)" },
+          "ride_id": { "type": "string", "description": "Request ID (for status/cancel)" },
+          "seat_count": { "type": "number", "description": "Number of seats (default: 1)" }
+        },
+        "required": ["action"]
+      }
+    }
+  ],
+  "env": [
+    { "name": "UBER_SERVER_TOKEN", "description": "Server token for price/product queries (no OAuth needed)", "required": true },
+    { "name": "UBER_ACCESS_TOKEN", "description": "OAuth2 access token for ride requests (run auth_url flow first)", "required": false },
+    { "name": "UBER_CLIENT_ID", "description": "OAuth2 client ID (for auth_url generation)", "required": false },
+    { "name": "UBER_CLIENT_SECRET", "description": "OAuth2 client secret", "required": false },
+    { "name": "UBER_REDIRECT_URI", "description": "OAuth2 redirect URI (default: http://localhost:8080/callback/uber)", "required": false },
+    { "name": "UBER_USE_PRODUCTION", "description": "Set to 'true' for real rides (default: false = sandbox)", "required": false }
+  ],
+  "dependencies": {}
+}

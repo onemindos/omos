@@ -1,0 +1,13 @@
+# Teaching Career Planning Across the Curriculum
+
+Teaching across the curriculum is an increasingly popular way of instructing students because it covers a variety of subjects in one lesson � which is why it is especially important in the career planning field as well.  Let�s say you have a high school student who isn�t quite sure what he or she wants to do for a career.  Teaching across the curriculum involves all subjects in one main lesson topic and can really help with that high school student when he or she is planning a career for the future.
+
+When an instructor teaches across the curriculum, he or she is incorporating all subjects into a lesson plan.  That means that one lesson includes instruction in art, science, reading, math, English, and social studies.  Teaching across the curriculum allows a student to be introduced to various ways to incorporate learning into life and that includes career planning as he or she gets older.
+
+Career planning cannot start early enough although we think that elementary students should really be concentrating on something more along the lines of the next kick ball game on the playground during recess.  However, in high school, career planning should really begin in earnest, and when the course includes teaching across the curriculum, that student will be introduced to ways that all different subject areas in school can apply to a career choice.
+
+More and more teachers have been learning how to teach across the curriculum.  It is an excellent way to show students how different subjects apply to all aspects of life.  In career planning decisions, knowing this information is wonderful for preparing the student for a jump into college and then the career world.  That�s why it�s important for a teacher to teach across the curriculum � to help the student in his or her career planning aspirations.
+
+At the career planning center, you may find classes and seminars that implement teaching across the curriculum.  That�s because they know the value of introducing people and students to the various ways that all subjects in education can be advantageous in almost any career.  After all, even art can be implemented into an accounting career.  Imagine the beauty of a spreadsheet that is created in a publishing program that looks appealing to the eye.  Right there, you have math incorporated with art!
+
+Teaching across the curriculum in schools should and probably will continue.  When it comes to career planning, teaching across the curriculum is a great way to help students choose a career they will love and will be able to succeed at.

@@ -1,0 +1,23 @@
+Spyware Doctor 2
+
+What a Spyware Doctor can do
+
+Spyware has been one of the unsurpassed security threats to computer systems mostly those who uses windows operating system. Once the computer is infected by spyware, the user experiences non-stop pop-up windows containing advertisements. The performance of the computer will slow down because spyware tends to consume a lot of memory resources.
+
+The spyware is an unwanted program built to run on computers and sends the entire user’s information. It tracks all the users’ online activity and gathers information live while surfing the net. Many of these spyware steal user identity or use personal information like accounts and other private information. Some gain benefits on the clicks of their banners by means of affiliate marketing. 
+
+Now, how do users prevent spyware from infecting their computer? There are spyware removers that can be downloaded in the internet. But beware of the freeware packages because some of them are spyware. Instead of deleting and removing spyware it will just add up to spyware installed in computer. Known spyware removers can be downloaded directly from the websites and one of these is the spyware doctor.
+
+The spyware doctor is one of the mostly picked and downloaded spyware removers. It is developed by PC tools for spyware removal, a product of Microsoft Windows. To purchase a product, you will subscribe in spyware doctor and it is bundled with a one year license for program updates and database. This is a safe program that is registered and greatly known as excellent in removing spyware. You can try the Spyware Doctor Trial version which can be downloaded for free but with limited functions, unlike the registered version.
+
+Spyware doctor can easily and quickly remove adware, spyware, key loggers, Trojan horses and dialers. It includes On Guard feature that provide a real-time protection and prevent new spyware infections. The user is protected while working and doesn’t need to scan manually to detect new virus.
+
+Spyware can be found anywhere in computer. So it is advisable to remove it immediately once you discover it. There are several ways to remove and check manually whether your computer is infected by spyware. Here are some tips to remove spyware if you do not have a spyware doctor.
+
+Check the tasklist. Task list shows all the programs that are currently running in computer. If you see an application that is not familiar to you can eliminate or end the process immediately. It can be a spyware or adware.
+
+Verify start up list. Most spyware start automatically when you run windows. It is important to verify all the programs that includes in start up list and remove those unwanted programs. Run the ms config to view all programs that are included in the start-up list.
+
+Check Program list and look for unfamiliar programs. Check your installed programs in Programs Menu or Control Panel then Add/Remove Programs. Choose the program that is malicious or you do not know installed program and uninstall them. These are spyware installed on your computer and keeps on running while you are logged on.
+
+Remember that not all spyware can be removed by spyware removal tools. You can always remove or delete it manually. There are sites that will guide you on how to remove spyware manually. Try to browse so that you’ll have an idea on how to handle and get rid of spyware. 

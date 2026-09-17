@@ -1,0 +1,26 @@
+[Unit]
+Description=OneMind OS — OpenClaw Gateway (Legacy's Runtime)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=onemind
+Group=onemind
+WorkingDirectory=/home/onemind/.openclaw
+# Bootstrap file: ONLY OP_SERVICE_ACCOUNT_TOKEN + static non-secret vars.
+# All other secrets are fetched from 1Password at runtime via op run.
+EnvironmentFile=-/opt/onemind/.env.sa
+ExecStart=/usr/bin/op run --env-file=/opt/onemind/.env.tpl -- /usr/bin/openclaw gateway
+Restart=always
+RestartSec=10
+StartLimitBurst=5
+StartLimitIntervalSec=300
+LimitNOFILE=65536
+MemoryMax=4G
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=openclaw
+
+[Install]
+WantedBy=multi-user.target

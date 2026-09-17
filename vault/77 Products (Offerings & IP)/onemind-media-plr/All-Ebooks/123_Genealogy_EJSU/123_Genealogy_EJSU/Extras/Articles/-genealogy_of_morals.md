@@ -1,0 +1,17 @@
+# On The Genealogy of Morals: A Polemic
+
+If you are interested in knowing about the birth of Christianity and about morals then the book by Nietzsche is the one you should read. The book is titled On the Genealogy of Morals and is a polemical work of philosophy. Published in 1887, philosophers worldwide have regarded this book as one of the best philosophical book ever made.
+
+First of all, this book was made by Friedrich Nietzsche because his first one, Beyond Good and Evil was considered to be too complicated to understand and does not explain all about morals. The book, On the Genealogy of Morals is primarily focused on morality and its origins. It emphasizes more on Christian morality and moral prejudice.
+
+In this book you will find three essays namely "Good and Evil, Good and Bad", "Guilt', 'Bad Conscience', and Related Matters", and the third essay is called "What do ascetic ideals mean?" As you can see, the On the Genealogy of Morals book focuses a lot about morality and Christianity. You have to consider that morality is quite a broad word to understand and many people have different morality.
+
+You have to consider that many people have different perceptions of what is good and what is bad. Because of this, there will be a conflict of morality. In fact, this book has stated that humans don�t even know themselves even if they have vast knowledge. In short, many people don�t know what morality is and they have different ideals where it is difficult to understand what is moral and what is not.
+
+Although there are laws about morality, you have to consider that it still conflicts with other ideals. There are different philosophies about morality and many people have different perceptions. What this book will explain is about the origins of morality and will mainly concentrate on the widely accepted Christian morality. As you may know, Christian morality is filled with different ideals that seem favorable in the human way of life. You have to understand that many religions have different morality. However, Christian morality is widely accepted because of its ideals and many people consider the philosophy behind Christianity is right.
+
+For example, in the past people consider slavery as part of life and is part of their moral principles. However, as time changes and as society evolves, slavery is now viewed as immoral in modern countries.
+
+This book also explains about the human conscience and regards it as the voice of God in man. As you read further on, you will see that guilt is also an issue in morality. For example, if you hurt a person or kill a person, do you feel guilt? Many societies today views hurting or killing a person as immoral and for good reasons too. The Christian values state that it is wrong to kill or hurt someone. Because of this education and this ideals that have been imprinted in one's mind since childhood, you will feel guilty about hurting or killing a person.
+
+These are some of the things that you can expect in On the Genealogy of Morals. You have to consider that this book is quite hard to understand. You will also need to adjust to the philosophical way of thinking in order to fully understand the contents inside this book.

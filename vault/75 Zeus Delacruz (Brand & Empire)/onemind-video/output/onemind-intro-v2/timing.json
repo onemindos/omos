@@ -1,0 +1,232 @@
+{
+  "s01": {
+    "duration": 6.648,
+    "frames": 200,
+    "lines": [
+      {
+        "speaker": "zeus",
+        "duration": 6.648
+      }
+    ]
+  },
+  "s02": {
+    "duration": 23.908,
+    "frames": 718,
+    "lines": [
+      {
+        "speaker": "zeus",
+        "duration": 10.584
+      },
+      {
+        "speaker": "legacy",
+        "duration": 8.04
+      },
+      {
+        "speaker": "zeus",
+        "duration": 4.584
+      }
+    ]
+  },
+  "s03": {
+    "duration": 34.832,
+    "frames": 1045,
+    "lines": [
+      {
+        "speaker": "zeus",
+        "duration": 10.416
+      },
+      {
+        "speaker": "legacy",
+        "duration": 2.376
+      },
+      {
+        "speaker": "zeus",
+        "duration": 8.376
+      },
+      {
+        "speaker": "legacy",
+        "duration": 8.328
+      },
+      {
+        "speaker": "zeus",
+        "duration": 3.936
+      }
+    ]
+  },
+  "s04": {
+    "duration": 30.402,
+    "frames": 913,
+    "lines": [
+      {
+        "speaker": "legacy",
+        "duration": 13.248
+      },
+      {
+        "speaker": "zeus",
+        "duration": 6.216
+      },
+      {
+        "speaker": "legacy",
+        "duration": 8.016
+      },
+      {
+        "speaker": "zeus",
+        "duration": 1.872
+      }
+    ]
+  },
+  "s05": {
+    "duration": 39.416,
+    "frames": 1183,
+    "lines": [
+      {
+        "speaker": "legacy",
+        "duration": 10.584
+      },
+      {
+        "speaker": "zeus",
+        "duration": 2.784
+      },
+      {
+        "speaker": "legacy",
+        "duration": 7.944
+      },
+      {
+        "speaker": "zeus",
+        "duration": 2.136
+      },
+      {
+        "speaker": "legacy",
+        "duration": 14.568
+      }
+    ]
+  },
+  "s06": {
+    "duration": 38.264,
+    "frames": 1148,
+    "lines": [
+      {
+        "speaker": "legacy",
+        "duration": 5.832
+      },
+      {
+        "speaker": "zeus",
+        "duration": 3.48
+      },
+      {
+        "speaker": "legacy",
+        "duration": 15.096
+      },
+      {
+        "speaker": "zeus",
+        "duration": 1.728
+      },
+      {
+        "speaker": "legacy",
+        "duration": 10.728
+      }
+    ]
+  },
+  "s07": {
+    "duration": 27.316,
+    "frames": 820,
+    "lines": [
+      {
+        "speaker": "zeus",
+        "duration": 9.192
+      },
+      {
+        "speaker": "legacy",
+        "duration": 7.8
+      },
+      {
+        "speaker": "zeus",
+        "duration": 9.624
+      }
+    ]
+  },
+  "s08": {
+    "duration": 27.92,
+    "frames": 838,
+    "lines": [
+      {
+        "speaker": "zeus",
+        "duration": 3.912
+      },
+      {
+        "speaker": "legacy",
+        "duration": 1.536
+      },
+      {
+        "speaker": "zeus",
+        "duration": 6.768
+      },
+      {
+        "speaker": "legacy",
+        "duration": 2.568
+      },
+      {
+        "speaker": "zeus",
+        "duration": 11.736
+      }
+    ]
+  },
+  "s09": {
+    "duration": 32.106,
+    "frames": 964,
+    "lines": [
+      {
+        "speaker": "legacy",
+        "duration": 8.304
+      },
+      {
+        "speaker": "zeus",
+        "duration": 0.528
+      },
+      {
+        "speaker": "legacy",
+        "duration": 15.648
+      },
+      {
+        "speaker": "zeus",
+        "duration": 6.576
+      }
+    ]
+  },
+  "s10": {
+    "duration": 24.772,
+    "frames": 744,
+    "lines": [
+      {
+        "speaker": "legacy",
+        "duration": 3.312
+      },
+      {
+        "speaker": "zeus",
+        "duration": 9.024
+      },
+      {
+        "speaker": "legacy",
+        "duration": 11.736
+      }
+    ]
+  },
+  "s11": {
+    "duration": 7.276,
+    "frames": 219,
+    "lines": [
+      {
+        "speaker": "zeus",
+        "duration": 1.104
+      },
+      {
+        "speaker": "legacy",
+        "duration": 2.016
+      },
+      {
+        "speaker": "zeus",
+        "duration": 3.456
+      }
+    ]
+  }
+}

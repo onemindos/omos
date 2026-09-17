@@ -1,0 +1,36 @@
+# Sudoku Solvers: Mastering an Addicting Number Puzzle Game
+
+Have you ever tried playing Sudoku? 
+
+Did you solve it all by yourself or did you just put down the pen and the puzzle, and then just left? Why can�t some people solve it? Its not that Sudoku is just for people who are adept in math, some are just more skilled with this addicting puzzle game. For those having a hard time solving Sudoku puzzles or are just newbies, they can make use of a special program that can solve the puzzle for them, this are called Sudoku solvers.
+
+Sudoku, a number puzzle that is widely popular in the world, mainly in Japan and in the United States, is commonly known as a number place in which it�s a logic-based placement puzzle where you can enter the digits 1 to 9 in each cell of a 9x9 grid and made up of 3x3 subgrids or sometimes called regions. 
+
+To start playing, you are given numerals in certain cells that you can use as your clues. Your goal is to fill all the blank cells with a digit each, so each row, column, and regions contains the numbers 1 to 9 for only once. Each numeral occurs only once in each different direction, hence the �single number� method is implied to the puzzle�s identity.
+
+Difficulty ratings of Sudoku are published in papers, which can be downloaded in computers like a handy electronic sudoku game. Online sites can be ranked according to the number of �givens� placed in the cells. However, sometimes it has little effect or bearing on the puzzle�s difficulty. A puzzle with a minimum number of givens may actually be easy to solve while a puzzle with more than the average number of givens can be very hard to solve, the difficulty rating will depend on the relevance and positioning of the �givens� rather than on how many numbers are placed in the cells.
+
+For in a Sudoku game, it can be solved either by logic or by help of computers. Many online sites offer games that can be solved automatically when you click on solvers. Sudoku solvers are strategies and approaches on how you can solve the puzzle game.
+
+Think of the 9x9 grids and 3x3 subgrids. Think of the many possibilities where the �givens� are placed. With a very difficult rating, you will finish the game in hours, in days, or even in weeks. With hundreds of billions of number combination in the grid, you�ll need a Sudoku solver. But where can you find solvers?
+
+It�s much better if you play Sudoku in a computer than in published in papers. Sudoku in papers can take a long time for you for you to solve the game, while Sudoku game in your computer or in a website can enable you to strategize much better with different options and approaches of solutions. Whereas, when the puzzle game is in a computer, Sudoku solvers can be downloaded in many versions from your preferred sudoku sites. The best thing about downloading solvers is it doesn�t only produce solutions, it can also be emailed to multiple recipients. 
+
+In downloading your Sudoku solver version, you must be familiar on how it works because in most download websites, many solver versions are accompanied with a charge of a corresponding amount for you to download it or use it. For beginners who want their solvers, there are a lot of available free but older versions. Sometimes it cannot accommodate the different kind of solutions for new Sudoku puzzles.
+
+There are lots of varieties of Sudoku solvers out in the World Wide Web, but you must find versions that are designed to make the solutions faster and easier. Your Sudoku solvers must provide the following capabilities:
+
+�  Integrates help, which includes all the explanations regarding the rules for solving the number puzzle.
+�  Input capability must be enhanced.
+�  Improved screen appearance
+�  Can save and load the puzzles with its solutions.
+�  Can scan for input data errors.
+�  Quick solution times
+�  Can identify malformed puzzles
+�  With complete training mode for step-by-step solutions with corresponding commentaries.
+�  Can maintain multiple email templates.
+�  Full manual with rule explanations.
+
+So, for sudoku solvers, it will help you to find the appropriate and proper solutions wherein you can really determine how the problem can be solved. Sudoku solvers will show different ideas in such a way that when you play again with another kind of �givens�, and you will learn and know where to start.
+
+If you have difficulty in solving a particular Sudoku puzzle, download a Sudoku solver for you to better understand the logic and the strategy behind the puzzle.

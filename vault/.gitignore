@@ -1,0 +1,68 @@
+# ============================================
+# VAULT .gitignore — protect what must never touch git
+# ============================================
+
+# --- CREDENTIALS & SECRETS ---
+Credentials/
+**/Credentials/
+**/secrets/
+**/ssh/
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.keystore
+*accessKeys*
+**/SENSITIVE-*
+**/identity-scans/
+
+# --- BINARY FILES (stay in om-files, not git) ---
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.svg
+*.ico
+*.webp
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.m4a
+*.flac
+*.aac
+*.ogg
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+*.dmg
+*.iso
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.epub
+*.apk
+
+# --- OS JUNK ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# --- IMPORT ARTIFACTS (clean up later) ---
+notion-import*/
+obsidian-import*/
+_byte-matched-dupes/
+__sorted-duplicates-docs/

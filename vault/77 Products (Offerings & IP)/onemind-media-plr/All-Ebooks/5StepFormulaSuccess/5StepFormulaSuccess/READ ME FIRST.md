@@ -1,0 +1,16 @@
+# Thank you for purchasing the Life Transformation Package.
+
+The first thing you need to do is listen to the LifeTransformationAudio.mp3 file. 
+
+This is the call with Daniel Taylor and I where we discuss a whole range of topics. 
+
+Once you have listened to the audio you can then use the Life Transformation Workbook to learn
+the specific steps on how to implement the things discussed in the audio. 
+
+There is also a guided meditation audio that you can use after you have listened to the Life Transformation
+Audio and gone through the workbook. 
+The final folder in this package contains your two bonus reports. 
+
+Thank you again for purchasing this package and I hope you get the absolute most out of it. 
+
+Tristan Bull

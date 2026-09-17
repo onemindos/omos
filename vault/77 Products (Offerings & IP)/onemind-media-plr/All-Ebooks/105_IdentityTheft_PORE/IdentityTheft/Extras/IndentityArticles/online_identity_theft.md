@@ -1,0 +1,49 @@
+# Combating Online Identity Theft
+
+It is quite disquieting for you to know that aside from the irritating viruses that plague your computers before, there is another problem arising in the web world. 
+
+Yes, it is true, whether you will like the news or not, you have to be aware about it. 
+
+Identity theft is considered as fast-growing crime nowadays. It ruins several forms of personal transactions already. 
+
+How does it happen? What are the effects of identity theft? Are there ways to prevent identity theft? 
+
+Most of them are the questions that you need to learn about identity theft. 
+
+In United States, identity theft is not an unusual issue anymore. In fact, several bureaus are already making immediate actions in order to eradicate the problem although they find it somehow difficult.
+
+Identity theft has many aspects to consider. It also concerns several fields of thefts. Almost in every day of your living or in every corner of the street, you can be a victim of identity theft
+
+Don�t you know that identity theft has also reached the web world with their wide web of deceit? This is whet you call online identity theft. It does not make any differences with other forms of identity theft, only that it happens online through your computer systems.
+
+Identity theft happens when your personal information including name, bank accounts and other posted information in the Internet are stolen by someone and used these information to commit a fraudulent act or other forms of crime. 
+
+By checking your bank account information, you will eventually notice that you are already bankrupt because identity thieves assumed your identity to steal your money from you.
+
+At present, with our electronic environment, there is an easiest way to execute identity theft. Online identity theft is executed through a process known as web spoofing. 
+
+It reproduces exactly the same domain name of a particular website primarily controlled by the identity thief f. In other words, he has the authority to manipulate all the forms of business transaction that will pass through a certain website.
+
+How does the web spoofing works? Three basic components make the thief manipulate online identity theft. He/she has the sole right of maneuvering all the transactions in the website.
+
+1.  Domain name- This serves as the primary identity of the website. Usually, domain names can be bought from several online sources for a minimal amount. 
+
+A domain name consists of characters such as letter, dash and numbers. It will represent the name of the site.
+
+2.  Actual content- This is the second main component in order to publish a site. The very important factor to consider here is the HTML and the streaming media.
+
+3.  Web Hosting- After manipulating all his plans with the online identity theft, this is now the last step the thief is going to do. On this part, the thief will not only claim the website but also the company�s principals and employees.
+
+Online identity theft is a big menace to the website owners. All of the profit that will suppose to go in their company can be stolen instantly. 
+
+Even the potential clients subscribing in their sites can also be fooled with the thieves that will reproduce exactly the same website as yours.
+
+In some of the identity theft, there is a way to prevent it. Moreover, in online identity theft, the website conp0anbty also think of the best possible means to protect their sites from being inflicted by the online identity thieves.
+
+First, it is better if you can purchase for the best anti-virus programs. One of the strategies of the thief for stealing your online identity is through certain viruses. 
+
+If you will keep your computers protected from the said virus, there is a lesser chance for your computer to be conquered by evildoers.
+
+Second, it is also important that you use secure servers with the ability to be transmitted over your web. Be sure that you are also well informed about the company that you are dealing business with particularly when you start to give your online information to them.
+
+Always get your websites protected from online identity theft!

@@ -1,0 +1,41 @@
+# Subject: {FIRSTNAME}, here's how you go about getting the most from your online poker career ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my online poker ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - The history of online poker
+2. Part 2 - Poker 101
+3. Part 3 - Playing texas hold'em
+4. Part 4 - Pot odds and outs
+5. Part 5 - Playing the river
+
+Let's go ahead & get started today with "Part 3 - Playing texas hold'em".
+
+Part 3 - Playing texas hold'em
+============================
+Hold 'em is probably the best known and most popular form of poker today. 
+
+       Each player starts with two hole cards. There are three rounds of community cards. These are dealt face up, for every player to use, with betting after each round. Players make the best 5-card hand using any combination of the five community cards and two hole cards.
+
+       Each new hand begins with a small blind, a big blind, and a round of betting. The betting rules vary depending upon whether the game is Limit, Pot Limit or No Limit.
+
+Once the first round of betting is complete, the dealer then puts out the first three community cards, or "the flop". There is a round of betting.  The dealer then puts out the fourth community card or "the turn". There is a round of betting.  The dealer then puts out the fifth community card or "the river". There is a final round of betting.  After the last round of betting, the pot is awarded to the best hand. 
+
+        All Hold 'em games include a small blind and big blind. These are forced bets, and are determined by the position of the button. These bets are considered live, and every player in the hand must either call the big blind, raise, or fold. The button moves clockwise around the table, giving each player a turn being the button, small blind, and big blind.
+
+In Limit Hold 'em, each betting round has a fixed bet. In $5/$10, the small blind is $2.50, the big blind is $5, and the first two rounds of betting are in increments of $5. The last two rounds of betting are in increments of $10. There is a maximum of three re-raises per betting round. 
+
+         In Pot Limit, a player can bet any amount from the minimum bet to the size of the pot. In a $5/$10 pot-limit game, the small blind is $5 and the big blind is $10. The first player can call the big blind (in this case, $10), or raise to any amount up to the size of the pot. A raise must either equal or exceed the previous bet or raise. In this case, a pot-sized raise would be $25 ($5 small blind + $10 big blind + $10 call), meaning that, in total, player three can bet up $35. Supposing player three makes a pot-sized raise, the total pot is now $50. 
+
+          If the next player wants into the hand, they must call $35, which is the size of player three's bet. If they want to raise the maximum, they would bet $120, which equals the size of the pot ($50) plus a $70 raise ($35 call + $35 raise). 
+
+          In No Limit, a player can bet any amount from the minimum bet to the maximum number of chips they have in front of them. As in pot limit, a $5/$10 No Limit game means blinds of $5 and $10.
+
+	  Here are some general guidelines for pocket cards.  They are not steadfast, but can give you something to go by.  Of course, the (S) means suited.
+
+Next time we'll be discussing alittle about "Playing texas hold'em".
+
+For more information about this part of Playing texas hold'em, please refer to my definitive guide to online poker at 
+
+Take Care,

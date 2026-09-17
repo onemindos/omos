@@ -1,0 +1,39 @@
+# Title:
+
+The Fear of Expressing Anger
+
+Word Count:
+696
+
+Summary:
+There is much to learn from anger, yet many people are afraid of this feeling because they don�t know how to express anger in ways that are helpful rather than harmful. I teach a process at my weekend Inner Bonding workshops called �The Anger Process.� This powerful process, which is described below, is not only for releasing pent-up anger in harmless ways, but for discovering what your responsibility is in any conflict with another person.
+
+Keywords:
+expressing anger, getting angry
+
+Article Body:
+There is much to learn from anger, yet many people are afraid of this feeling because they don�t know how to express anger in ways that are helpful rather than harmful. I teach a process at my weekend Inner Bonding workshops called �The Anger Process.� This powerful process, which is described below, is not only for releasing pent-up anger in harmless ways, but for discovering what your responsibility is in any conflict with another person.
+
+Often, when I describe this process in a workshop, some people get anxious and want to leave. They are afraid of anger and of expressing their anger. This is invariably because they come from a family where one or both of their parents or other caregivers were angry in a mean, violent way � a way that caused harm to others. These people are so afraid of being like their mother or father that they repress their anger, taking it out on themselves instead of others.
+
+Neither dumping anger on others nor repressing it and taking it out on oneself is healthy. Anger expressed in these ways is about controlling rather than learning. Venting anger on another is about controlling through intimidation and blame. Anger dumped on oneself is about controlling feelings that are harder to feel than anger, such as fear, anxiety, loneliness, or helplessness over others.
+
+Anger is an important emotion. It is here to tell us something, to teach us how we are thinking or behaving that is not in our highest good. You may have been taught that other people�s behavior causes your anger, yet this is generally not true. Others may behave in ways that you don�t like, but your anger at them is frequently a projection of how you are not taking care of yourself � a way to control them rather than take care of yourself.
+
+It�s important to differentiate between blaming anger and justified anger, which is really outrage. Outrage is the feeling we have when there is injustice, such as seeing someone abuse a child. Outrage moves us to take appropriate, loving action in our own or others behalf.
+
+Blaming anger comes from feeling like a victim and gets us off the hook from having to take personal responsibility for ourselves. This anger does not lead to learning or to healthy action.
+
+The anger process is a way of expressing anger that leads to learning and growth. When people in my workshop want to leave rather than do the process, I explain to them that it is very important for them to reassure the frightened child within that this anger is not like their father�s or mother�s anger � it is not being expressed with the intent to control. It is being expressed with the intent to learn.
+
+The Anger Process is a three-step process:
+
+Fully express anger toward a person you are presently angry with (not in their presence!). You can yell, call names, kick something, and pound with fists on a pillow or with a bat, but you cannot harm yourself or anyone else.
+
+Ask yourself who this person reminds you of in the past � parent, teacher, sibling, friend - and then let the angry part of you again fully express the anger.
+
+Finally - and this is the most important part - allow the angry child within to express his or her anger at you, the adult, for any ways you are not taking care of yourself in this conflict, or any ways you are treating yourself badly.
+
+Step Three is the most important part, because it brings the issue home to personal responsibility. If you just do the first two parts, you are left feeling like an angry victim. The anger that comes from being a victim is a bottomless pit and will never lead to learning and resolution.
+
+Once you understand that you can express your anger with an intention to learn, your fear of your own anger will go away. You don�t have to repress your anger in order to not be like your parents. You can express it harmlessly in The Anger Process and learn about what your anger is trying to tell you.

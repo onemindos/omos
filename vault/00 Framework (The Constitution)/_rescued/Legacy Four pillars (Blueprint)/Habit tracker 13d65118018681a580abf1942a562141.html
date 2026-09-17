@@ -1,0 +1,686 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Habit tracker</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="13d65118-0186-81a5-80ab-f1942a562141" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">☑️</span></div><h1 class="page-title">Habit tracker</h1><p class="page-description"></p></header><div class="page-body"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="13d65118-0186-81e8-8017-e7eb74870d4d"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Click the <mark class="highlight-gray"><code>+ Add a new month</code></mark> button to create a new empty month to track your habits. Close the ring at the bottom of each habit card by checking off each habit you complete!</div></figure><p id="13d65118-0186-81f7-a4ec-e94967d8781c" class="">
+</p><p id="13d65118-0186-817f-8417-eb2a4a1f6c58" class="">
+</p><div id="13d65118-0186-8165-bf89-e1cce2a78e84" class="collection-content"><h4 class="collection-title">January — Habit Tracker</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesTitle"><path d="M0.637695 13.1914C1.0957 13.1914 1.32812 13 1.47852 12.5215L2.24414 10.3887H6.14746L6.90625 12.5215C7.05664 13 7.2959 13.1914 7.74707 13.1914C8.22559 13.1914 8.5332 12.9043 8.5332 12.4531C8.5332 12.2891 8.50586 12.1523 8.44434 11.9678L5.41602 3.79199C5.2041 3.21777 4.82129 2.9375 4.19922 2.9375C3.60449 2.9375 3.21484 3.21777 3.0166 3.78516L-0.0322266 12.002C-0.09375 12.1797 -0.121094 12.3232 -0.121094 12.4668C-0.121094 12.918 0.166016 13.1914 0.637695 13.1914ZM2.63379 9.12402L4.17871 4.68066H4.21973L5.76465 9.12402H2.63379ZM12.2793 13.2324C13.3115 13.2324 14.2891 12.6787 14.7129 11.8037H14.7402V12.5762C14.7471 12.9863 15.0273 13.2393 15.4238 13.2393C15.834 13.2393 16.1143 12.9795 16.1143 12.5215V8.00977C16.1143 6.49902 14.9658 5.52148 13.1543 5.52148C11.7666 5.52148 10.6592 6.08887 10.2695 6.99121C10.1943 7.15527 10.1533 7.3125 10.1533 7.46289C10.1533 7.81152 10.4062 8.04395 10.7686 8.04395C11.0215 8.04395 11.2129 7.94824 11.3496 7.73633C11.7529 6.99121 12.2861 6.65625 13.1064 6.65625C14.0977 6.65625 14.6992 7.20996 14.6992 8.1123V8.67285L12.5664 8.7959C10.7686 8.8916 9.77734 9.69824 9.77734 11.0107C9.77734 12.3369 10.8096 13.2324 12.2793 13.2324ZM12.6621 12.1387C11.8008 12.1387 11.2129 11.667 11.2129 10.9561C11.2129 10.2725 11.7598 9.82129 12.7578 9.75977L14.6992 9.62988V10.3203C14.6992 11.3457 13.7969 12.1387 12.6621 12.1387Z"></path></svg></span>Day</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesFormula"><path d="M5.04688 14.3604H11.2744C11.7324 14.3604 12.0537 14.0801 12.0537 13.6494C12.0537 13.2119 11.7324 12.9248 11.2744 12.9248H5.81934V12.8564L9.30566 8.82324C9.54492 8.57031 9.6748 8.29688 9.6748 8.0166C9.6748 7.73633 9.54492 7.45605 9.29883 7.20996L5.81934 3.2793V3.21094H11.2812C11.7393 3.21094 12.0537 2.92383 12.0537 2.48633C12.0537 2.05566 11.7393 1.77539 11.2812 1.77539H5.05371C4.34277 1.77539 3.95312 2.26758 3.95312 2.81445C3.95312 3.12207 4.07617 3.44336 4.33594 3.69629L8.15039 7.96875V8.05078L4.3291 12.4395C4.06934 12.6924 3.94629 13.0137 3.94629 13.3213C3.94629 13.8682 4.33594 14.3604 5.04688 14.3604Z"></path></svg></span>Progress</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesCheckbox"><path d="M3.85742 14.4561H12.1357C13.6123 14.4561 14.3779 13.6904 14.3779 12.2344V3.91504C14.3779 2.45215 13.6123 1.69336 12.1357 1.69336H3.85742C2.38086 1.69336 1.61523 2.45215 1.61523 3.91504V12.2344C1.61523 13.6973 2.38086 14.4561 3.85742 14.4561ZM3.93945 13.1162C3.30371 13.1162 2.95508 12.7812 2.95508 12.1182V4.02441C2.95508 3.36133 3.30371 3.0332 3.93945 3.0332H12.0537C12.6826 3.0332 13.0381 3.36133 13.0381 4.02441V12.1182C13.0381 12.7812 12.6826 13.1162 12.0537 13.1162H3.93945ZM7.26855 11.3115C7.51465 11.3115 7.72656 11.1885 7.87012 10.9697L10.9258 6.19141C11.0146 6.04785 11.0967 5.88379 11.0967 5.72656C11.0967 5.3916 10.7959 5.16602 10.4746 5.16602C10.2695 5.16602 10.085 5.27539 9.94141 5.50781L7.24121 9.8418L5.96973 8.22168C5.80566 8.00977 5.6416 7.93457 5.43652 7.93457C5.10156 7.93457 4.8418 8.20117 4.8418 8.54297C4.8418 8.70703 4.90332 8.85742 5.01953 9.00098L6.63281 10.9697C6.81738 11.209 7.01562 11.3115 7.26855 11.3115Z"></path></svg></span>✍️ Journaling</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesCheckbox"><path d="M3.85742 14.4561H12.1357C13.6123 14.4561 14.3779 13.6904 14.3779 12.2344V3.91504C14.3779 2.45215 13.6123 1.69336 12.1357 1.69336H3.85742C2.38086 1.69336 1.61523 2.45215 1.61523 3.91504V12.2344C1.61523 13.6973 2.38086 14.4561 3.85742 14.4561ZM3.93945 13.1162C3.30371 13.1162 2.95508 12.7812 2.95508 12.1182V4.02441C2.95508 3.36133 3.30371 3.0332 3.93945 3.0332H12.0537C12.6826 3.0332 13.0381 3.36133 13.0381 4.02441V12.1182C13.0381 12.7812 12.6826 13.1162 12.0537 13.1162H3.93945ZM7.26855 11.3115C7.51465 11.3115 7.72656 11.1885 7.87012 10.9697L10.9258 6.19141C11.0146 6.04785 11.0967 5.88379 11.0967 5.72656C11.0967 5.3916 10.7959 5.16602 10.4746 5.16602C10.2695 5.16602 10.085 5.27539 9.94141 5.50781L7.24121 9.8418L5.96973 8.22168C5.80566 8.00977 5.6416 7.93457 5.43652 7.93457C5.10156 7.93457 4.8418 8.20117 4.8418 8.54297C4.8418 8.70703 4.90332 8.85742 5.01953 9.00098L6.63281 10.9697C6.81738 11.209 7.01562 11.3115 7.26855 11.3115Z"></path></svg></span>👟 Running</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesCheckbox"><path d="M3.85742 14.4561H12.1357C13.6123 14.4561 14.3779 13.6904 14.3779 12.2344V3.91504C14.3779 2.45215 13.6123 1.69336 12.1357 1.69336H3.85742C2.38086 1.69336 1.61523 2.45215 1.61523 3.91504V12.2344C1.61523 13.6973 2.38086 14.4561 3.85742 14.4561ZM3.93945 13.1162C3.30371 13.1162 2.95508 12.7812 2.95508 12.1182V4.02441C2.95508 3.36133 3.30371 3.0332 3.93945 3.0332H12.0537C12.6826 3.0332 13.0381 3.36133 13.0381 4.02441V12.1182C13.0381 12.7812 12.6826 13.1162 12.0537 13.1162H3.93945ZM7.26855 11.3115C7.51465 11.3115 7.72656 11.1885 7.87012 10.9697L10.9258 6.19141C11.0146 6.04785 11.0967 5.88379 11.0967 5.72656C11.0967 5.3916 10.7959 5.16602 10.4746 5.16602C10.2695 5.16602 10.085 5.27539 9.94141 5.50781L7.24121 9.8418L5.96973 8.22168C5.80566 8.00977 5.6416 7.93457 5.43652 7.93457C5.10156 7.93457 4.8418 8.20117 4.8418 8.54297C4.8418 8.70703 4.90332 8.85742 5.01953 9.00098L6.63281 10.9697C6.81738 11.209 7.01562 11.3115 7.26855 11.3115Z"></path></svg></span>💤 8hrs of sleep</th><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesCheckbox"><path d="M3.85742 14.4561H12.1357C13.6123 14.4561 14.3779 13.6904 14.3779 12.2344V3.91504C14.3779 2.45215 13.6123 1.69336 12.1357 1.69336H3.85742C2.38086 1.69336 1.61523 2.45215 1.61523 3.91504V12.2344C1.61523 13.6973 2.38086 14.4561 3.85742 14.4561ZM3.93945 13.1162C3.30371 13.1162 2.95508 12.7812 2.95508 12.1182V4.02441C2.95508 3.36133 3.30371 3.0332 3.93945 3.0332H12.0537C12.6826 3.0332 13.0381 3.36133 13.0381 4.02441V12.1182C13.0381 12.7812 12.6826 13.1162 12.0537 13.1162H3.93945ZM7.26855 11.3115C7.51465 11.3115 7.72656 11.1885 7.87012 10.9697L10.9258 6.19141C11.0146 6.04785 11.0967 5.88379 11.0967 5.72656C11.0967 5.3916 10.7959 5.16602 10.4746 5.16602C10.2695 5.16602 10.085 5.27539 9.94141 5.50781L7.24121 9.8418L5.96973 8.22168C5.80566 8.00977 5.6416 7.93457 5.43652 7.93457C5.10156 7.93457 4.8418 8.20117 4.8418 8.54297C4.8418 8.70703 4.90332 8.85742 5.01953 9.00098L6.63281 10.9697C6.81738 11.209 7.01562 11.3115 7.26855 11.3115Z"></path></svg></span>🧘 Meditation</th></tr></thead><tbody><tr id="13d65118-0186-8147-8bd3-e616715e20be"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/1st%2013d65118018681478bd3e616715e20be.html">1st</a></td><td class="cell-lLv}">4</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-815a-999b-d51861674624"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/2nd%2013d651180186815a999bd51861674624.html">2nd</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81f6-828e-e7def2225c44"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/3rd%2013d65118018681f6828ee7def2225c44.html">3rd</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81f6-82f6-df439001003d"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/4th%2013d65118018681f682f6df439001003d.html">4th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81a8-8874-e2a4d0b0f92e"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/5th%2013d65118018681a88874e2a4d0b0f92e.html">5th</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-8105-b5f6-dc2dc329246e"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/6th%2013d6511801868105b5f6dc2dc329246e.html">6th</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81be-bd73-c824c1563e3f"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/7th%2013d65118018681bebd73c824c1563e3f.html">7th</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81f7-a114-dec791533486"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/8th%2013d65118018681f7a114dec791533486.html">8th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-8174-821f-cf9f414373af"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/9th%2013d6511801868174821fcf9f414373af.html">9th</a></td><td class="cell-lLv}">4</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-8104-b234-c24287a6bd7f"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/10th%2013d6511801868104b234c24287a6bd7f.html">10th</a></td><td class="cell-lLv}">0</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-8168-81e9-d8174ec8c3c3"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/11th%2013d651180186816881e9d8174ec8c3c3.html">11th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-817f-8b83-e9eebae9056c"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/12th%2013d651180186817f8b83e9eebae9056c.html">12th</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-819a-973d-c4e0014f7c5f"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/13th%2013d651180186819a973dc4e0014f7c5f.html">13th</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81b8-8d94-d3c0e835e91b"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/14th%2013d65118018681b88d94d3c0e835e91b.html">14th</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81b0-b5f7-e73d1574c46d"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/15th%2013d65118018681b0b5f7e73d1574c46d.html">15th</a></td><td class="cell-lLv}">4</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-8172-9b40-f720c96c9e52"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/16th%2013d65118018681729b40f720c96c9e52.html">16th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81b5-903b-f7cef30dcf52"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/17th%2013d65118018681b5903bf7cef30dcf52.html">17th</a></td><td class="cell-lLv}">0</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-8171-a185-d11d4888bb0f"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/18th%2013d6511801868171a185d11d4888bb0f.html">18th</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81c5-b514-c25742ac5dda"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/19th%2013d65118018681c5b514c25742ac5dda.html">19th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81dc-8c34-eae6cfeb14d2"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/20th%2013d65118018681dc8c34eae6cfeb14d2.html">20th</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81c8-a0af-e7ffd39078c1"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/21st%2013d65118018681c8a0afe7ffd39078c1.html">21st</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81eb-8d62-f73866abcee1"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/22nd%2013d65118018681eb8d62f73866abcee1.html">22nd</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-8135-b6b0-c2c582bc895d"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/23rd%2013d6511801868135b6b0c2c582bc895d.html">23rd</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81f8-8eeb-dc7312c9b7ae"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/24th%2013d65118018681f88eebdc7312c9b7ae.html">24th</a></td><td class="cell-lLv}">4</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-81b4-a248-f1e0919ef6dc"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/25th%2013d65118018681b4a248f1e0919ef6dc.html">25th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-8113-b900-f2433ecbd2d2"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/26th%2013d6511801868113b900f2433ecbd2d2.html">26th</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-off"></div></td></tr><tr id="13d65118-0186-81bc-8baf-f1a4758472e8"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/27th%2013d65118018681bc8baff1a4758472e8.html">27th</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-816d-a802-dd1c4c4f8776"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/28th%2013d651180186816da802dd1c4c4f8776.html">28th</a></td><td class="cell-lLv}">2</td><td class="cell-N&quot;^."><div class="checkbox checkbox-on"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-811f-a1f6-facc60909291"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/29th%2013d651180186811fa1f6facc60909291.html">29th</a></td><td class="cell-lLv}">3</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-on"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-on"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-810e-8cdb-dfb01372303e"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/30th%2013d651180186810e8cdbdfb01372303e.html">30th</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr><tr id="13d65118-0186-818d-bd7d-c057c24cf1f1"><td class="cell-title"><a href="Habit%20tracker%2013d65118018681a580abf1942a562141/January%20%E2%80%94%20Habit%20Tracker%2013d6511801868165bf89e1cce2a78e84/31st%2013d651180186818dbd7dc057c24cf1f1.html">31st</a></td><td class="cell-lLv}">1</td><td class="cell-N&quot;^."><div class="checkbox checkbox-off"></div></td><td class="cell-8R*c"><div class="checkbox checkbox-off"></div></td><td class="cell-jFo]"><div class="checkbox checkbox-off"></div></td><td class="cell-Gb&gt;3"><div class="checkbox checkbox-on"></div></td></tr></tbody></table><br/><br/></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

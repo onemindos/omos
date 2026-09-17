@@ -1,0 +1,135 @@
+{
+  "name": "nats-manager-1.0.0",
+  "version": "1.0.0",
+  "description": "NATS server monitoring and JetStream management — query health, inspect streams/consumers, view connections, and manage the nervous system",
+  "main": "index.js",
+  "tools": [
+    {
+      "name": "nats_health",
+      "description": "Get NATS server health including uptime, CPU, memory, connections, subscriptions, messages in/out rates. The quick pulse-check for the nervous system.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "nats_connections",
+      "description": "List all active NATS connections with client name, IP, subscriptions, and message rates. Shows who's connected to the nervous system.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "sort": {
+            "type": "string",
+            "enum": ["cid", "subs", "msgs_to", "msgs_from", "bytes_to", "bytes_from", "idle", "start"],
+            "description": "Sort connections by field (default: msgs_to)"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Max connections to return (default: 50)"
+          }
+        }
+      }
+    },
+    {
+      "name": "nats_streams",
+      "description": "List all JetStream streams with message counts, storage size, consumer counts, and config. The overview of all persistent data channels.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "nats_stream_detail",
+      "description": "Get detailed info about a specific JetStream stream including config, state, subjects, and consumer list.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stream": {
+            "type": "string",
+            "description": "Stream name (e.g. 'SYSTEM', 'DIGITAL', 'PHYSICAL')"
+          }
+        },
+        "required": ["stream"]
+      }
+    },
+    {
+      "name": "nats_consumers",
+      "description": "List all consumers on a JetStream stream with delivery status, ack pending, and last activity.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stream": {
+            "type": "string",
+            "description": "Stream name to list consumers for"
+          }
+        },
+        "required": ["stream"]
+      }
+    },
+    {
+      "name": "nats_subscriptions",
+      "description": "List all active subscriptions across the server. Shows what subjects are being listened to and by whom.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_subject": {
+            "type": "string",
+            "description": "Optional: filter to subscriptions matching this subject pattern"
+          }
+        }
+      }
+    },
+    {
+      "name": "nats_stream_create",
+      "description": "Create a new JetStream stream for persistent message storage. Use for setting up new event channels.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stream": {
+            "type": "string",
+            "description": "Stream name in UPPER_CASE (e.g. 'SYSTEM', 'DIGITAL')"
+          },
+          "subjects": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Subject patterns this stream captures (e.g. ['system.>', 'nexus.>'])"
+          },
+          "max_age_hours": {
+            "type": "number",
+            "description": "Max message retention in hours (default: 168 = 7 days)"
+          },
+          "max_bytes": {
+            "type": "number",
+            "description": "Max storage in bytes (default: 104857600 = 100MB)"
+          },
+          "storage": {
+            "type": "string",
+            "enum": ["file", "memory"],
+            "description": "Storage type (default: file)"
+          }
+        },
+        "required": ["stream", "subjects"]
+      }
+    },
+    {
+      "name": "nats_stream_purge",
+      "description": "Purge all messages from a JetStream stream. Use with caution — data is permanently deleted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stream": {
+            "type": "string",
+            "description": "Stream name to purge"
+          }
+        },
+        "required": ["stream"]
+      }
+    }
+  ],
+  "env": ["NATS_MONITOR_URL"],
+  "dependencies": {
+    "nats": "^2.28.0"
+  }
+}

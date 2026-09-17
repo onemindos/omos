@@ -1,0 +1,22 @@
+# Positive Reflections will Help Improve your Personal Life
+
+If you want, to change your old habits into new habits you can but you will have to let go of all your old habits. For some of us it is hard to change, yet if you take steps to learn ways to change you will find positive reflections. 
+
+Many people are brought up lying to self and others. This happens because we are plagued by a world filled with opinions, philosophy, theories, suspicion, guesses, and conclusions. You have to learn how to find your own truth before you can improve your life. 
+
+What are some of the things I can do to change my bad ways to good ways?
+This is going to be completely up to you. We can only offer you helpful tips, but it takes you to try out new tactics that helps you to grow. No one can change you, but you. when your ready to do this you can do this with out any ones help. You can learn to build the inner gifts you have within you. The qualities you have include self-esteem, confidence, trust, self-awareness, self-motivation and so on. each quality you can build to improve your personal life. You have to figure out what works for you. 
+
+For one thing, you need to decide what is making you do what you do and figure out a way to do the right thing. So if it is the people you hang out with maybe you should find some one else to hang with. Maybe people from a support group or a group from your church can help you find ways to change your habits. The first things you have to do however, are stop lying to your self about what ever and make it right with you. You have to learn how to make good decisions by evaluating the consequences. 
+
+It is easier than you believe. For instance, would you allow a drunk person drive you home? If you would then you made a bad decision that could cost your life, or have you tossed in jail. If you are sober, why not drive the drunk person home. 
+
+Positive reflections include friends and family. If your family members are dragging you down, or your friends are holding you back, you have to make a choice. The choice may include removing these people from your life. We can all live productively and happy without family and friends if need be, but one thing you don�t want is someone holding you back. 
+
+To develop new skills that guide you to remove bad habits, try using your conscious mind. When you observe, listen and hear the things around you, you learn more than you would reading a book. Observation is the key to achieve. Observation, includes self-awareness. Stand back and take a hard look at you. Do not persecute or self-judge, rather look for ways to make your life better. 
+
+Do you smoke? 
+Smoking is the number one reason that people get lung cancer. Smoking is not good for you. If you can quite on your own, great, yet if you need help, ask. 
+
+Do you drink excessively? 
+Do you know the side effects of drinking excessively? If not visit the Internet and learn more about what alcohol can do to you. On the other hand, if you can control alcohol, drink three drinks per week. Studies has shown that drinking three alcohol beverages weekly can reduce the risks of heart disease, Alzheimer�s disease and so on. If you take drugs, you want to find a way to take control of your life also.

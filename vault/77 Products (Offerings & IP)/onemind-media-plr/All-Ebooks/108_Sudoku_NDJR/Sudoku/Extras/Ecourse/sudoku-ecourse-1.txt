@@ -1,0 +1,33 @@
+Subject: {FIRSTNAME}, here's how you go about solving sudoku puzzles ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my sudoku puzzle secrets ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - The math behind sudoku.
+2. Part 2 - Solution methods-scanning.
+3. Part 3 - Beginning the challenge.
+4. Part 4 - Searching for the lone number.
+5. Part 5 - Eliminate the extraneous.
+
+Let's go ahead & get started today with "Part 1 - The math behind sudoku".
+
+Part 1 - The math behind sudoku
+============================
+The Sudoku puzzle is unlike most puzzles in that it is based on mathematical structure and requires some level of logic in order to be solved.  The main basis behind solving Sudoku is called “NP-complete” because it is solved on n2 x n2 grids of n x n cells.  It is this concept that makes Sudoku so difficult to solve.  When you put cells on grids and throw in a few “givens” it takes some determining finite power to solve the puzzle correctly.
+ 
+Sudoku has what is known as a “game tree”.  The game tree of this puzzle game is quite large and, when there is only one solution to be found, makes solving it fast an unfeasible plan.  There are, however, tips that you can use to solve Sudoku as fast as possible.  
+
+Perhaps an easy way of describing the solution of a Sudoku puzzle is to call it a “graph coloring problem”.  The basic goal of the puzzle is to build, in its standard form of 9 x 9, a coloring grid.  The entirety of the graph is composed of 81 vertices, with one vertex for every cell on the grid.  Each of the vertices can be named with pairs that are ordered and where “x” and “y” are integers anywhere from one to nine.  This means that two separate vertices are names and are connected by an edge if, and only if the edges match.  The Sukoku puzzle is eventually solved by assigning an integer, from one to nine, to each of the vertices in a way where the vertices connected by an edge don't have the same integer assigned to them.
+
+A Latin Square
+
+The solution of the Sudoku grid is much like a Latin square.  There are, however, less solution grids for Sudoku, than there are Latin squares.  This is because Sudoku has the additional problem of multiple regions.  Still, there are endless solution grids for the Sudoku puzzle.  In 2005 Bertram Felgenhauer calculated the number to be about 6,670,903,752,021,072,936,960.  He arrived at this number using logical computations.  The analysis of the number of solution grids was further simplified by Frazer Jarvis and Ed Russell.  It has not yet been calculated how many solution grids there are for the 16 x 16 Sudoku puzzle.
+
+Next time we'll be discussing alittle about "Solution methods-scanning".
+
+For more information about this part of The math behind sudoku, please refer to my definitive guide to sudoku at <YOUR WEBSITE URL>
+
+Take Care,
+<YOUR NAME>
+<WEBSITE>

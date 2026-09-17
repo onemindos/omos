@@ -1,0 +1,210 @@
+# Notion API
+# Docs: https://developers.notion.com/reference
+
+name: notion
+base_url: https://api.notion.com/v1
+
+auth:
+  type: bearer
+  token_env: NOTION_API_TOKEN
+  header: Authorization
+  prefix: Bearer
+
+default_headers:
+  Content-Type: application/json
+  Notion-Version: "2022-06-28"
+
+actions:
+  # ==========================================================================
+  # SEARCH
+  # ==========================================================================
+  search:
+    description: "Search across all pages and databases"
+    method: POST
+    path: /search
+    body_params:
+      - query
+      - filter
+      - sort
+      - start_cursor
+      - page_size
+
+  # ==========================================================================
+  # PAGES
+  # ==========================================================================
+  get_page:
+    description: "Get a page by ID"
+    method: GET
+    path: /pages/{page_id}
+    path_params: [page_id]
+    required: [page_id]
+
+  create_page:
+    description: "Create a new page"
+    method: POST
+    path: /pages
+    body_params:
+      - parent
+      - properties
+      - children
+      - icon
+      - cover
+    required: [parent, properties]
+
+  update_page:
+    description: "Update a page's properties"
+    method: PATCH
+    path: /pages/{page_id}
+    path_params: [page_id]
+    body_params:
+      - properties
+      - icon
+      - cover
+      - archived
+    required: [page_id]
+
+  archive_page:
+    description: "Archive a page"
+    method: PATCH
+    path: /pages/{page_id}
+    path_params: [page_id]
+    body_params:
+      - archived
+    required: [page_id]
+
+  # ==========================================================================
+  # DATABASES
+  # ==========================================================================
+  get_database:
+    description: "Get a database by ID"
+    method: GET
+    path: /databases/{database_id}
+    path_params: [database_id]
+    required: [database_id]
+
+  query_database:
+    description: "Query a database"
+    method: POST
+    path: /databases/{database_id}/query
+    path_params: [database_id]
+    body_params:
+      - filter
+      - sorts
+      - start_cursor
+      - page_size
+    required: [database_id]
+
+  create_database:
+    description: "Create a database"
+    method: POST
+    path: /databases
+    body_params:
+      - parent
+      - title
+      - properties
+      - icon
+      - cover
+    required: [parent, title, properties]
+
+  update_database:
+    description: "Update a database"
+    method: PATCH
+    path: /databases/{database_id}
+    path_params: [database_id]
+    body_params:
+      - title
+      - properties
+    required: [database_id]
+
+  # ==========================================================================
+  # BLOCKS
+  # ==========================================================================
+  get_block:
+    description: "Get a block by ID"
+    method: GET
+    path: /blocks/{block_id}
+    path_params: [block_id]
+    required: [block_id]
+
+  get_block_children:
+    description: "Get children blocks of a block"
+    method: GET
+    path: /blocks/{block_id}/children
+    path_params: [block_id]
+    query_params:
+      - start_cursor
+      - page_size
+    required: [block_id]
+
+  append_block_children:
+    description: "Append children blocks to a block"
+    method: PATCH
+    path: /blocks/{block_id}/children
+    path_params: [block_id]
+    body_params:
+      - children
+      - after
+    required: [block_id, children]
+
+  update_block:
+    description: "Update a block"
+    method: PATCH
+    path: /blocks/{block_id}
+    path_params: [block_id]
+    body_params:
+      - archived
+      - type
+    required: [block_id]
+
+  delete_block:
+    description: "Delete a block"
+    method: DELETE
+    path: /blocks/{block_id}
+    path_params: [block_id]
+    required: [block_id]
+
+  # ==========================================================================
+  # USERS
+  # ==========================================================================
+  get_users:
+    description: "Get all users"
+    method: GET
+    path: /users
+    query_params:
+      - start_cursor
+      - page_size
+
+  get_user:
+    description: "Get a user by ID"
+    method: GET
+    path: /users/{user_id}
+    path_params: [user_id]
+    required: [user_id]
+
+  get_me:
+    description: "Get the bot user"
+    method: GET
+    path: /users/me
+
+  # ==========================================================================
+  # COMMENTS
+  # ==========================================================================
+  get_comments:
+    description: "Get comments on a block or page"
+    method: GET
+    path: /comments
+    query_params:
+      - block_id
+      - start_cursor
+      - page_size
+    required: [block_id]
+
+  create_comment:
+    description: "Create a comment"
+    method: POST
+    path: /comments
+    body_params:
+      - parent
+      - rich_text
+      - discussion_id
+    required: [parent, rich_text]

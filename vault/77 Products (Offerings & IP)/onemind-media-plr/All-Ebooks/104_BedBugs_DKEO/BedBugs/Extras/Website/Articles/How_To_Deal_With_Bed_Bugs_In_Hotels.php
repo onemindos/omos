@@ -1,0 +1,111 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Bed Bugs In Hotels | How To Deal With Bed Bugs In Hotels</title>
+		<meta http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="The number one carrier of bed bugs in hotels is the mattress This should not be a surprise, as bed bugs are known to lurk in the bed, hence the name bed bug  The growing number of complaints from travelers about bed bugs in hotels where they stayed have be...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">				
+		<meta name="Robots"				content="index,follow">				
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>		
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2" >
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdContent">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+How To Deal With Bed Bugs In Hotels
+</b>
+<br>
+
+						<small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>The number one carrier of bed bugs in hotels is the mattress. This should not be a surprise, as bed bugs are known to lurk in the bed, hence the name “bed bug.” The growing number of complaints from travelers about bed bugs in hotels where they stayed have been steadily increasing.<br><br>Why the infestation? No one exactly knows but there is a rumor about bed bugs in hotels becoming immune to the regular insecticide used on them. A sort of mutated generation of bed bugs in hotels, if you like. Although this could make a great horror B movie, the truth may shock you.<br><br>Infestations of bed bugs in hotels were common in the United States before World War II. But the improvements in hygiene, and the widespread use of DDT dusting during the 1940s and '50s, the bed bugs in hotels vanished. The specie flourished in other parts of the world like Africa, South and Central Europe and Asia. <br><br>The bed bugs in hotels have now returned. This is blamed on the increase in tourists and immigrants staying in their establishments and unknowingly leaves behind a souvenir. Just one female bed bug can produce five eggs a day and could leave three generations of bed bugs in hotels.<br><br>Some scientists believe that the reappearance of bed bugs in hotels is due to the cutback on the quality of pesticides. DDT was banned in the 1960’s and it was the only insecticide used which effectively killed the bed bugs in hotels.<br><br>One cause for concern regarding the bed bugs in hotels is that they just don’t flourish in cheap, musty motels. Even the expensive ones are being infested. Because of this, these establishments are losing money fast with court appearance for cases filed by unsatisfied patrons.<br><br>The bed bugs in hotels are the same bed bugs at home. They are small, nasty, brownish, round and flat insects that closely resemble a tick. These insects choose no one. It is happy just to find a warm place to live and breed in, somewhere near their food source – people.<br><br>Bed bugs are patient insects. They can live up to a year without blood meal. And their size makes it hard for people to see them. Their victims don’t feel even their bites. Bed bugs feed by piercing the skin with its elongated beak and they inject a small amount of anesthesia- like substance that makes them undetectable. The only sign you’ve been visited by a bed bug is if you have an itchy, swelling welt the next day.<br><br>The bed bugs in hotels are becoming a nuisance for the management. It tarnishes their reputation and leaves a bad impression on the customer. But what’s more appalling is the way they handle bed bugs in hotels. <br><br>Instead of having to provide remedies for the patrons, the staff often just dismisses the incident. This has incurred the wrath of some patrons and the bed bugs in hotels now enter the courtroom. There was one case were bed bugs in hotels were too much that they decided to sue the hotel for damages. They content that because the management did not disclose their problem with bed bugs in hotels, they risked the health and well being of the patrons. The court found the hotel guilty.<br><br>That’s the problem with bed bugs in hotels nowadays. Although they bed bugs do not only appear in hotels, the fact that the establishments do not resolve their infestation is what irks patrons.<br><br>It is their duty to provide with good service and a clean environment, free from bed bugs in hotels. Or should they really have a bad infestation, there are available pest control experts that can remedy the bed bugs in hotels situation. <br><br>As a traveler, you should take the precaution whenever going to hotels. Always bring along an anti-itch cream just in case. Before you check-in, you can ask around about how clean the hotel is.  The Internet is a great source of information, with hotel reviews and ratings. Look for comments regarding the patron’s personal experience. It can help you decide on what hotel to go to on your next trip.<br><br>Now should the hotel misinform you about their bed bug infestation, you can use that as grounds for making a complaint and shutting the place down.
+						<br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/J_Box.php"); ?>
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php					
+				if($ShowNewsFeed)
+					{
+			?>
+						<tr>
+							<td class="tdRow" colspan="2">
+								<?=$Category;?> News and Events
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<?php include("../Includes/Google_Search.php"); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br>
+								<?php include("../Includes/NewsFeed.php"); ?>
+								<?php	
+									if ($DisplayAmazon)
+										{
+											echo "<hr>";
+											echo "<br><center>";
+											include("../Includes/Amazon_728x90.php");
+											echo "</center><br>";
+										}
+								?>
+							</td>
+						</tr>
+			<?php
+					}
+			?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

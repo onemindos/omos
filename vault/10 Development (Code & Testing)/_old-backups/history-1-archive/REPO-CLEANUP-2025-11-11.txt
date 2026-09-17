@@ -1,0 +1,15 @@
+Local Repository Dify Cleanup
+Date: Tue Nov 11 17:07:22 EST 2025
+
+Removed:
+1. CAPABILITIES/digital-actions/workflow-automation/dify/ (entire directory)
+2. ENVIRONMENTS/production/deploy-dify.sh
+3. scripts/deploy-dify.sh (symlink)
+4. Dify domain block from Caddyfile.optimized
+
+Backup Location: /Users/zeuslegacy/repo-cleanup-backup-20251111_170722
+
+Next Steps:
+- Review and update documentation files that mention Dify
+- Update GitHub workflows to remove Dify-related jobs
+- Consider updating README.md to reflect Dify removal

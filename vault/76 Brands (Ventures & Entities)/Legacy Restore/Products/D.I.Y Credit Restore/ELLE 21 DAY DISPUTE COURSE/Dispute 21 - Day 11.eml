@@ -1,0 +1,1450 @@
+Delivered-To: bruce.k.cosma@gmail.com
+Received: by 2002:ad5:55cf:0:0:0:0:0 with SMTP id e15csp267024imq;
+        Fri, 8 May 2020 20:44:13 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL5ftrUucgSRPtyT6wxlpXY+aS86DzFLnHy8g4IWNJDthHCZvPCcnlQD53V526MRMWtCSHA
+X-Received: by 2002:ac8:1385:: with SMTP id h5mr335860qtj.124.1588995853041;
+        Fri, 08 May 2020 20:44:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1588995853; cv=none;
+        d=google.com; s=arc-20160816;
+        b=p+pQDXsV5eU3MMmk3M42QGm1m6ugBRl9G1rCuE3krPruBwhnFczyqsk2lPBUdz830V
+         xOOxVD4k6BPi1MyIT1OGSJV87gPHBY/ojifmzjAM5vkP6s/jZOqsPnT5ZRnQ9yEHE9qc
+         KSp0NYw23MTQFx/TeofiuSC8pLBr9lJGzni773DY/weSBBe+RZAf8NKGYYQdFMrjWdBn
+         jwQVmNfTSHWfVAHIpepWfwjs49bmbFdt0kjwqOubqmZuxHQHcsiS0F/3VDfd7fnDfLyK
+         z832Ity1BXaQr1ppng5zub6zbopf+tFWQaeWpPLaBkx9b5M31H/HzdIdXxDDrSO0PLeN
+         Mu3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:list-unsubscribe:feedback-id:sender
+         :content-transfer-encoding:mime-version:date:subject:from:to
+         :dkim-signature:dkim-signature;
+        bh=sUDmw0PQHWNO7MBnpmE/GUz/LibJ+kPLuv5K4ne2RIQ=;
+        b=T72Nt1YHib51KkbowrLhVcKtMHfreTSVLffuaDOgP8mH6rMy9/5y8/p/obub2t8p4H
+         2wT4PjYeykv7grH8qrzFw2WevVXmiUEAjOQqMhBtpxbP4RzvunSZY6tjet1NWW/x22h/
+         vHQSID9iB8iw9BkWqAyOz+vt7GnmQ+D+9kPE+ME1EOslPBaML3EHvdZXq4pQWe5oVu30
+         YrKaIxwR4OWgcOKXYrn+r3l6/B4SmiSCp5hhrO98pmFfLEibh0jmvGr5ERqMsNiJ+55s
+         5EyzsHsix8EHoo4hBO2fXWS9JBbveVWOXqTmAXjO1IdqaxLrZJw8GgVF9HYmyFEAF9hO
+         f7mA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=1ojeR0Ah;
+       dkim=pass header.i=@acems1.com header.s=dk header.b="n/fLMBEA";
+       spf=pass (google.com: domain of bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+Return-Path: <bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>
+Received: from s2.asa1.acemsd3.com (s2.asa1.acemsd3.com. [192.92.97.133])
+        by mx.google.com with ESMTPS id p10si2002843qkm.267.2020.05.08.20.44.12
+        for <bruce.k.cosma@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 20:44:12 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) client-ip=192.92.97.133;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@s2.asa1.acemsd3.com header.s=dk header.b=1ojeR0Ah;
+       dkim=pass header.i=@acems1.com header.s=dk header.b="n/fLMBEA";
+       spf=pass (google.com: domain of bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com designates 192.92.97.133 as permitted sender) smtp.mailfrom="bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com";
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=educreditsolutions.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=s2.asa1.acemsd3.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ i=educreditsolutions.activehosted.com@s2.asa1.acemsd3.com;
+ bh=sUDmw0PQHWNO7MBnpmE/GUz/LibJ+kPLuv5K4ne2RIQ=;
+ b=1ojeR0AhcQOsoa5v3Sut4djaW38XVNmXChsek4CtAvJIinaYPDw+jABzy9Ek2+VlR6mokIw0rPwT
+   rb9c8h+n8ieE9h5DHWVVDIsiFqmeE9J054XscFDETjLrm/IbLm7yPtF3910uV8iaNxQTLr+D+Fpi
+   oabQdn3/aakQST9zdVA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=dk; d=acems1.com;
+ h=To:From:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+ Sender:List-Unsubscribe:Message-ID;
+ bh=sUDmw0PQHWNO7MBnpmE/GUz/LibJ+kPLuv5K4ne2RIQ=;
+ b=n/fLMBEA0a/dIUsVexffy8C03G2N+q24yAEIjLaRRMKJWWJgwdofqeAPemj217+0EWd5LxRsjQTb
+   flLL9i0Gz6Gh/qbqkvPyyBBPjWV0DSq9bq+J/ZalsS1/NIy86+nou2CmdBdLlAZ2+4pBHUp4y/pS
+   XxZn42nPsgSK3kfXG4U=
+Received: by s2.asa1.acemsd3.com id hmojgo2lshka for <bruce.k.cosma@gmail.com>; Sat, 9 May 2020 03:44:12 +0000 (envelope-from <bounce-549600-433-366-bruce.k.cosma=gmail.com@s2.asa1.acemsd3.com>)
+To: "Bruce Cosma" <bruce.k.cosma@gmail.com>
+From: "EduCredit Solutions" <Support@educreditsolutions.com>
+Subject: Dispute 21 - Day 11
+Date: Fri, 08 May 2020 22:44:12 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift-13703074125eb6270cab8040.60389559_=_"
+Content-Transfer-Encoding: 7bit
+Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Sender: <educreditsolutions.activehosted.com@s2.asa1.acemsd3.com>
+X-Report-Abuse: Please report abuse to abuse@activecampaign.com
+X-mid: YnJ1Y2Uuay5jb3NtYUBnbWFpbC5jb20gLCBjNDMzICwgbTQ0NyAsIHM2NDE3
+Feedback-ID: 549600:activecampaign
+X-250ok-CID: 549600-433
+List-Unsubscribe: <mailto:unsubscribe-ffcf9d879cb369d5de66c39c39496a5b-433-da50c2422345422f9a0dc81917526f09@s2.asa1.acemsd3.com>,
+ <https://educreditsolutions.acemlna.com/box.php?nl=11&c=433&m=447&s=da50c2422345422f9a0dc81917526f09&funcml=unsub2&luha=1>
+Message-ID: <20200509034412.24236.1053627758.swift@educreditsolutions.activehosted.com>
+
+
+--_=_swift-13703074125eb6270cab8040.60389559_=_
+Content-Type: text/plain; charset=utf-8
+
+Objective: This 21 day email course is designed for the student to gain
+a clear understanding of the credit repair process so that they can
+approach the client file and create an action plan with certainty. The
+content of this course is also designed to help the student effectively
+communicate credit information so that as a business owner they can feel
+comfortable and confident when speaking about the subject of credit to
+leads, clients, and the general public. 
+
+DISCLAIMER: This email course is for educational and informational
+purposes only. No Strategy or Method is GUARANTEED to work 100% of the
+time. All strategies or dispute tactics presented throughout this email
+course have been tested, used by, and helpful to many credit repair
+professionals. Use the strategies presented in the lessons as you see
+fit, but understand that information is ever-changing in this industry. 
+
+Dispute 21 - Day 11:
+Outsmarting e-OSCAR
+
+Bruce, the second line of defense against your disputes is e-OSCAR
+(
+
+**Online Solution for Complete and Accurate Reporting**). e-OSCAR is A
+web based automated dispute system used by all three credit bureaus. 
+This is the computer where the credit bureaus input your disputes. 
+From here the disputes are delivered to the creditor or Data Furnisher
+whose item you are disputing.
+
+Again, the best success in disputing comes from human confusion and
+error.  E-OSCAR is one more way the credit bureaus automate the process
+to try to eliminate the possibility of human error. But these are the
+very errors you as a disputer want to prey on to get some of your
+negative and inaccurate items deleted.
+
+E-OSCAR reads your dispute and assigns a 2 digit reason code.  The code
+reflects the reason for the dispute; such as the account is not yours,
+you were never late, etc. 
+
+This is not an exhaustive list, but it show many of the common e-OSCAR
+dispute reason codes assigned to disputes based on the language in
+dispute letters.
+
+This is the ONLY content that is pulled out of your dispute letters, and
+the only content the creditors and the bureaus care about.  They look
+at what account you are disputing, and the reason for the dispute. 
+
+It doesn't matter to them if your letter comes from an attorney, or if
+your story reads like a Greek tragedy.  All they care about is the
+reason code.  Regardless of whether your dispute letter ends up with
+OCR or a human at the credit bureaus, the only thing they enter to be
+passed on is the REASON for your dispute, in a code format.  
+
+The creditor responsible for the item under dispute never sees the
+letter.  The only information the creditor gets is the account that is
+being disputed, the name of the consumer who is disputing it, and the 2
+character reason code for why the account is being disputed.
+
+The creditor then validates the account as accurate, or acknowledges
+that the disputed item is incorrect and deletes it.  If the creditor
+fails to respond within 30 days, the credit bureaus delete the item.
+Again, all the creditor has to do is verify the account on their end,
+and in one click they can validate the item if they find it to be
+accurate.  
+
+With the use of e-OSCAR, any documentation you have to support your case
+never even makes it to the creditor. There have even been court cases
+against the credit bureaus in this matter due to their method's
+complete lack of any real investigation into the validity of a dispute.
+In two of those cases --Cushman Versus Trans Union and Stevenson Versus
+Trans Union ---the credit bureaus lost since they were found to do
+nothing more than copy the creditor's information instead of actually
+investigating.  
+
+E-Oscar automation is a beautiful thing for the credit industry as it
+eliminates most of the actual investigation completely; as well as
+getting rid of most human errors on the part of both the credit bureau
+and creditor. 
+
+**Success with e-OSCAR**
+Since e-OSCAR, is only a computer, like any computer, it can be
+beaten.  You just need to understand how it works and know what to do
+to beat the system.  
+All disputes come from e-OSCAR as an Automated Universal Data Form.  
+Below is a copy of this form so you can see the basic questions that are
+asked.  At the top right you can also see the section for the 2
+character dispute code.
+
+The first way to beat e-OSCAR is to use the methods mentioned in the
+lesson on OCR.  The methods should confuse OCR enough that it will pass
+your information along into the hands of a human instead of directly to
+e Oscar.  The human "investigator" will then input the information
+manually into e-OSCAR which is your first window for an error to be
+made.
+
+Another successful way to deal with e-OSCAR is to use an old advanced
+dispute strategy of mailing your disputes to multiple credit bureau
+addresses.  You might not know this but the credit bureaus maintain
+these different addresses as a tactic to confuse YOU, so a little
+turnabout is definitely fair play here!
+Now you can use the credit bureaus' multiple addresses against them to
+get your client's negative items deleted.  First, prepare your
+dispute letters, and make 5 copies.   
+
+Next, mail them to 5 of the credit bureaus addresses.  Make sure you
+mail them within 2 days of each other.  Then wait for the response and
+see the results. (Be sure that you are sending your personal information
+removal letters before beginning your disputes. We will discuss more on
+this once we get into creating a dispute flow) 
+I have provided you with a complete list of credit bureau addresses
+below.
+
+What happens at the bureaus? Multiple people at multiple bureau
+locations receive the disputes at about the same time.  They then input
+the dispute character code into e-OSCAR and the dispute is delivered to
+the creditors.
+The creditor then sees multiple red flags showing an item has been
+disputed -- 5 disputes for the same account.  In most cases they will
+delete 4 of the 5, and respond to only 1.  In reality, what they are
+doing is failing to respond to 4 disputes, which will result in the item
+being deleted 30 days later.
+
+The creditor thinks they validated the item to which they responded, but
+in reality the item is deleted. The deletion will be permanent since the
+creditor mistakenly believes it's been validated.
+
+These tactics are effective in overwhelming and confusing both the
+bureaus and the creditors.  Taken together with the methods outlined in
+the OCR lesson, they may help you efficiently dispute and delete many of
+your client's derogatory account items.
+
+ 
+
+**Trans Union**
+P.O. Box 2000
+Chester, PA 19022
+
+P.O. Box 1000
+Chester, PA19022
+
+P.O. Box 34012
+
+Fullerton, CA92831
+
+P.O. Box 6790
+
+Fullerton, CA92834
+
+P.O. Box 3000
+
+Crum Lynne, PA19022
+
+Super. Legal Dept.
+
+Trans Union LLC
+
+555 West Adams
+
+Chicago, IL60661
+
+Experian
+P.O. Box 2002
+Allen, TX 75013-2002
+
+P.O. Box 9556
+Allen, TX 75013
+
+P.O. Box 2104
+
+Allen, TX75013
+
+P.O. Box 9600
+
+Allen, TX75013
+
+P.O. Box 9702
+
+Allen, TX 75013
+
+475 Anton Blvd
+
+Costa Mesa, CA 92626
+
+701 Experian Parkway, 
+Allen, TX  75013
+
+P.O. Box 9554
+
+Allen, TX 75013
+
+Sup. Legal Dept.
+
+Experian
+
+P.O. Box 1240
+
+Allen, TX75002
+
+Equifax
+P.O. Box 105518
+Atlanta, GA 30348
+
+P.O. Box 10596
+
+Atlanta, GA 30348
+
+P.O. Box 105788
+
+Atlanta, GA 30348
+
+P.O. Box 105873
+
+Atlanta, GA 30348
+
+P.O. Box 740241
+
+Atlanta, GA 30348
+
+P.O. Box 740256
+
+Atlanta, GA 30374
+
+Supervisor Legal Dept, 
+
+Equifax
+
+P.O. Box 740193
+
+Atlanta, GA30374
+
+*Please fact check for updates on bureau addresses as they often change
+them to confuse consumers*
+
+Copyright © 2019 EduCredit Solutions. All rights reserved.
+Services bought to you by Ellevation Coaching & Consulting
+
+Visit Us Online at www.educreditsolutions.com 
+
+Work With Elle
+
+For information regarding 1-on-1 Coaching, Staff Training and Education
+Services, you can schedule a discovery call at
+bit.ly/discoverycallwithelle 
+
+Contact Us
+
+support@educreditsolutions.com 
+
+Direct: (225) 620-6202
+Toll-Free: 1-800-373-8491
+_________________
+
+Sent to bruce.k.cosma@gmail.com
+
+Unsubscribe:
+http://educreditsolutions.acemlna.com/proc.php?nl=11&c=433&m=447&s=da50c2422345422f9a0dc81917526f09&act=unsub
+
+EduCredit Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, United States
+--_=_swift-13703074125eb6270cab8040.60389559_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html>=0A<head><!--[if !mso]><meta http-equiv=3D"X-UA-Compat=
+ible" content=3D"IE=3Dedge"><!--<![endif]--><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3Dutf-8"><meta http-equiv=3D"Content-Langu=
+age" content=3D"en-us"><meta name=3D"format-detection" content=3D"telephone=
+=3Dno"><meta name=3D"format-detection" content=3D"date=3Dno"><meta name=3D"=
+format-detection" content=3D"address=3Dno"><meta name=3D"format-detection" =
+content=3D"email=3Dno"><style data-ac-keep=3D"true"> .ExternalClass { width=
+: 100%; background: inherit; background-color: inherit; } .ExternalClass p,=
+ .ExternalClass ul, .ExternalClass ol { Margin: 0; } .undoreset div p, .und=
+oreset p { margin-bottom: 20px; } div[class^=3D"aolmail_divbody"] { overflo=
+w: auto; } [owa] #ac-footer { padding: 20px 0px !important; background: inh=
+erit; background-color: inherit; } </style><style data-ac-keep=3D"true">=0A=
+@media only screen and (max-width: 600px) { /*-----------------------------=
+--------------------------------------------*\ Abandoned Cart widget \*----=
+--------------------------------------------------------------------*/ .td_=
+abandoned-cart img {display: block;padding-right: 0 !important;padding-bott=
+om: 0 !important;width: 100% !important;max-width: 100% !important;height: =
+auto !important;} body { padding: 0!important; font-size:1em!important; } *=
+ { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing:=
+ border-box; } *[class].divbody {-webkit-text-size-adjust:none !important; =
+width:auto !important;} *[class].td_picture img {width:auto !important;} *[=
+class].td_text { line-height: 110%; } *[class].td_button { width: auto; } /=
+* Collapse all block elements */ :not(.body) table { display: block!importa=
+nt; float:none!important; border-collapse:collapse !important; width:100% !=
+important; min-width:100% !important; clear:both!important; } :not(.body) t=
+head,=0A:not(.body) tbody, :not(.body) tr { display:block!important; float:=
+none!important; width:100% !important; } :not(.body) th, :not(.body) td, :n=
+ot(.body) p { display:block!important; float:none!important; width:100% !im=
+portant; clear:both!important; } /* Remove browser default styling for elem=
+ents */ ul, ol { margin-left: 20px; margin-bottom: 10px; margin-top: 10px; =
+-webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-padding-start: 0=
+; } /* Set default height for spacer once collapse */ *[class].spacer { hei=
+ght: auto!important; } a[href^=3Ddate]{ color:inherit !important; text-deco=
+ration:none !important;} a[href^=3Dtelephone]{ color:inherit !important; te=
+xt-decoration:none !important;} a[href^=3Daddress]{ color:inherit !importan=
+t; text-decoration:none !important;} a[href^=3Demail]{ color:inherit !impor=
+tant; text-decoration:none !important;} /* Default table cell height */ td[=
+height=3D"12"]{height:12px!important;font-size:12px!important;line-height:1=
+2px!important;}=0A/*-------------------------------------------------------=
+------------------*\ Product Widget \*-------------------------------------=
+------------------------------------*/ .td_product > div { float: none !imp=
+ortant; width: 100% !important; margin-bottom: 20px !important; } .td_produ=
+ct > div img { width: 75% !important; } /* Default social icons */ *[class]=
+.ac-social-icon-16 {width:16px !important; height:16px !important;} *[class=
+].ac-social-icon-24 {width:24px !important; height:24px !important;} *[clas=
+s].ac-social-icon-28 {width:28px !important; height:28px !important;} *[cla=
+ss].__ac_social_icons { margin-right: 0px !important; } }=0A</style><style =
+data-ac-keep=3D"true"> @media only screen and (max-width: 320px) { #layout-=
+row3277 img { width: 100% !important; height: auto !important; max-width: 3=
+20px !important; } #layout-row3278 img { width: 100% !important; height: au=
+to !important; max-width: 320px !important; } #layout-row3283 img { width: =
+100% !important; height: auto !important; max-width: 320px !important; } #l=
+ayout-row3285 .break-line { width: 100% !important; margin: auto !important=
+; } #layout-row3287 img { width: 100% !important; height: auto !important; =
+max-width: 320px !important; } div.divbody { padding: 20px !important; } .t=
+d_rss .rss-item img.iphone_large_image { width: auto !important; } u + .bod=
+y { display: table !important; width: 100vw !important; min-width: 100vw !i=
+mportant; } u + .body table { display: table !important; width: 100% !impor=
+tant; min-width: 100% !important; } u + .body td { display: block !importan=
+t; width: 100% !important; min-width: 100% !important; } u + .body=0Aimg { =
+display: inline-block !important; margin: auto !important; width: auto !imp=
+ortant; vertical-align: bottom !important; } u + .body center { display: bl=
+ock !important; margin: auto !important; width: 100% !important; min-width:=
+ 100% !important; text-align: center !important; } u + .body table._ac_soci=
+al_table, u + .body table._ac_social_table td, u + .body table._ac_social_t=
+able div, u + .body table._ac_social_table a { display: inline-block !impor=
+tant; margin: auto !important; width: auto !important; min-width: auto !imp=
+ortant; text-align: center !important; } u + .body table._ac_social_table i=
+mg { display: inline-block !important; margin: auto !important; width: 32px=
+ !important; min-width: 32px !important; max-width: 32px !important; }=0A}=
+=0A@media only screen and (max-width: 375px) { #layout-row3277 img { width:=
+ 100% !important; height: auto !important; max-width: 375px !important; } #=
+layout-row3278 img { width: 100% !important; height: auto !important; max-w=
+idth: 375px !important; } #layout-row3283 img { width: 100% !important; hei=
+ght: auto !important; max-width: 375px !important; } #layout-row3285 .break=
+-line { width: 100% !important; margin: auto !important; } #layout-row3287 =
+img { width: 100% !important; height: auto !important; max-width: 375px !im=
+portant; } div.divbody { padding: 20px !important; } .td_rss .rss-item img.=
+iphone_large_image { width: auto !important; } u + .body { display: table !=
+important; width: 100vw !important; min-width: 100vw !important; } u + .bod=
+y table { display: table !important; width: 100% !important; min-width: 100=
+% !important; } u + .body td { display: block !important; width: 100% !impo=
+rtant; min-width: 100% !important; } u + .body img { display: inline-block=
+=0A!important; margin: auto !important; width: auto !important; vertical-al=
+ign: bottom !important; } u + .body center { display: block !important; mar=
+gin: auto !important; width: 100% !important; min-width: 100% !important; t=
+ext-align: center !important; } u + .body table._ac_social_table, u + .body=
+ table._ac_social_table td, u + .body table._ac_social_table div, u + .body=
+ table._ac_social_table a { display: inline-block !important; margin: auto =
+!important; width: auto !important; min-width: auto !important; text-align:=
+ center !important; } u + .body table._ac_social_table img { display: inlin=
+e-block !important; margin: auto !important; width: 32px !important; min-wi=
+dth: 32px !important; max-width: 32px !important; }=0A}=0A@media only scree=
+n and (max-width: 414px) { #layout-row3277 img { width: 100% !important; he=
+ight: auto !important; max-width: 414px !important; } #layout-row3278 img {=
+ width: 100% !important; height: auto !important; max-width: 414px !importa=
+nt; } #layout-row3283 img { width: 100% !important; height: auto !important=
+; max-width: 414px !important; } #layout-row3285 .break-line { width: 100% =
+!important; margin: auto !important; } #layout-row3287 img { width: 100% !i=
+mportant; height: auto !important; max-width: 414px !important; } div.divbo=
+dy { padding: 20px !important; } .td_rss .rss-item img.iphone_large_image {=
+ width: auto !important; } u + .body { display: table !important; width: 10=
+0vw !important; min-width: 100vw !important; } u + .body table { display: t=
+able !important; width: 100% !important; min-width: 100% !important; } u + =
+.body td { display: block !important; width: 100% !important; min-width: 10=
+0% !important; } u + .body img { display: inline-block=0A!important; margin=
+: auto !important; width: auto !important; vertical-align: bottom !importan=
+t; } u + .body center { display: block !important; margin: auto !important;=
+ width: 100% !important; min-width: 100% !important; text-align: center !im=
+portant; } u + .body table._ac_social_table, u + .body table._ac_social_tab=
+le td, u + .body table._ac_social_table div, u + .body table._ac_social_tab=
+le a { display: inline-block !important; margin: auto !important; width: au=
+to !important; min-width: auto !important; text-align: center !important; }=
+ u + .body table._ac_social_table img { display: inline-block !important; m=
+argin: auto !important; width: 32px !important; min-width: 32px !important;=
+ max-width: 32px !important; }=0A}=0A@media only screen and (max-width: 667=
+px) { #layout-row3277 img { width: 100% !important; height: auto !important=
+; max-width: 648px !important; } #layout-row3278 img { width: 100% !importa=
+nt; height: auto !important; max-width: 667px !important; } #layout-row3283=
+ img { width: 100% !important; height: auto !important; max-width: 667px !i=
+mportant; } #layout-row3285 .break-line { width: 100% !important; margin: a=
+uto !important; } #layout-row3287 img { width: 100% !important; height: aut=
+o !important; max-width: 667px !important; } div.divbody { padding: 20px !i=
+mportant; } .td_rss .rss-item img.iphone_large_image { width: auto !importa=
+nt; } u + .body { display: table !important; width: 100vw !important; min-w=
+idth: 100vw !important; } u + .body table { display: table !important; widt=
+h: 100% !important; min-width: 100% !important; } u + .body td { display: b=
+lock !important; width: 100% !important; min-width: 100% !important; } u + =
+.body img { display: inline-block=0A!important; margin: auto !important; wi=
+dth: auto !important; vertical-align: bottom !important; } u + .body center=
+ { display: block !important; margin: auto !important; width: 100% !importa=
+nt; min-width: 100% !important; text-align: center !important; } u + .body =
+table._ac_social_table, u + .body table._ac_social_table td, u + .body tabl=
+e._ac_social_table div, u + .body table._ac_social_table a { display: inlin=
+e-block !important; margin: auto !important; width: auto !important; min-wi=
+dth: auto !important; text-align: center !important; } u + .body table._ac_=
+social_table img { display: inline-block !important; margin: auto !importan=
+t; width: 32px !important; min-width: 32px !important; max-width: 32px !imp=
+ortant; }=0A} </style><!--[if !mso]><!-- webfonts --><!--<![endif]--><!--[i=
+f lt mso 12]> <![endif]--></head><body id=3D"ac-designer" class=3D"body" st=
+yle=3D"font-family: Arial; line-height: 1.1; margin: 0px; background-color:=
+ #ffffff; width: 100%; text-align: center;">=09=09<div style=3D"display:non=
+e; padding:0; height:1px; font-size:1px; background-color:inherit !importan=
+t; color:inherit !important; line-height:1px; mso-hide:all;">=0A=09=09=09By=
+passing e-OSCAR=0A=09=09</div>=0A<div class=3D"divbody" style=3D"margin: 0p=
+x; outline: none; padding: 0px; color: #000000; font-family: arial; line-he=
+ight: 1.1; width: 100%; background-color: #ffffff; background: #ffffff; tex=
+t-align: center;"><table class=3D"template-table" border=3D"0" cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"left" style=3D"font-size: =
+13px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0pt; backgr=
+ound-color: #ffffff; background: #ffffff;"><tr><td align=3D"center" valign=
+=3D"top" width=3D"100%"><table class=3D"template-table" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" width=3D"650" bgcolor=3D"#ffffff" style=3D"fo=
+nt-size: 13px; min-width: auto; mso-table-lspace: 0pt; mso-table-rspace: 0p=
+t; max-width: 650px;"><tr><td id=3D"layout_table_e542b053e761b4d2242b3903a7=
+540efc51ccb5e2" valign=3D"top" align=3D"center" width=3D"650" style=3D""><t=
+able cellpadding=3D"0" cellspacing=3D"0" border=3D"0" class=3D"layout layou=
+t-table root-table" width=3D"650" style=3D"font-size: 13px; min-width: 100%=
+; mso-table-lspace: 0pt;=0Amso-table-rspace: 0pt;"><tr style=3D""><td id=3D=
+"layout-row-margin3277" valign=3D"top" style=3D"padding: 0px;"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; bo=
+rder-collapse: initial !important;"><tr id=3D"layout-row3277" class=3D"layo=
+ut layout-row widget _widget_picture style3277" align=3D"center" style=3D""=
+><td id=3D"layout-row-padding3277" valign=3D"top" style=3D"padding: 1px 1px=
+ 0px 1px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt;"><tr><td class=3D"image-td" align=3D"center" valign=3D=
+"top" width=3D"648"><img src=3D"https://educreditsolutions.imgus11.com/publ=
+ic//9bf832a29f718981b2f9f964ba984fc5.png?r=3D2087932486" alt=3D"" width=3D"=
+648" style=3D"display: block; border: none; outline: none; width: 648px; op=
+acity: 1; max-width: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</ta=
+ble>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3276" vali=
+gn=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso=
+-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial !import=
+ant;"><tr id=3D"layout-row3276" class=3D"layout layout-row widget _widget_t=
+ext style3276" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-paddin=
+g3276" valign=3D"top" style=3D"padding: 20px 30px 20px 30px;"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><=
+tr><td id=3D"text_div3044" class=3D"td_text td_block" valign=3D"top" align=
+=3D"left" width=3D"590" style=3D"line-height: 112%; margin: 0; outline: non=
+e; padding: 0; color: inherit; font-size: 12px; font-weight: inherit; line-=
+height: 1.12; text-decoration: inherit; font-family: Arial; mso-line-height=
+-rule: exactly;"> <div style=3D"line-height: 112%; margin: 0; outline: none=
+;=0Apadding: 0; mso-line-height-rule: exactly; line-height: 1.12;" data-lin=
+e-height=3D"1.12"><div class=3D"droparea" contenteditable=3D"false" style=
+=3D"margin: 0; outline: none; padding: 0;"></div>=0A<div class=3D"droparea"=
+ contenteditable=3D"false" style=3D"margin: 0; outline: none; padding: 0;">=
+</div>=0A <div style=3D"margin: 0; outline: none; padding: 0;"> <div style=
+=3D"margin: 0; outline: none; padding: 0;"><div class=3D"droparea" contente=
+ditable=3D"false" style=3D"margin: 0; outline: none; padding: 0;"></div>=0A=
+ <div style=3D"margin: 0; outline: none; padding: 0;"> <div style=3D"margin=
+: 0; outline: none; padding: 0;" class=3D""> <div style=3D"margin: 0; outli=
+ne: none; padding: 0; text-align: left;" class=3D""><div style=3D"margin: 0=
+; outline: none; padding: 0; text-align: left;" class=3D""><i style=3D"marg=
+in: 0; outline: none; padding: 0; mso-bidi-font-style: normal;" class=3D"">=
+<span style=3D"color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;" class=3D=
+""><span style=3D"color: #999999; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;" class=3D"">Objective: Thi=
+s 21 day email course is designed for the student to gain a clear understan=
+ding of the credit repair process so that they can approach the client file=
+ and create an action plan with certainty. The content of this course is al=
+so designed to help the student effectively communicate credit information =
+so that as a business owner=0Athey can feel comfortable and confident when =
+speaking about the subject of credit to leads, clients, and the general pub=
+lic. <br><br><span style=3D"color: inherit; font-size: inherit; font-weight=
+: bold; line-height: inherit; text-decoration: inherit;" class=3D"">DISCLAI=
+MER: This email course is for educational and informational purposes only. =
+No Strategy or Method is GUARANTEED to work 100% of the time. All strategie=
+s or dispute tactics presented throughout this email course have been teste=
+d, used by, and helpful to many credit repair professionals. Use the strate=
+gies presented in the lessons as you see fit, but understand that informati=
+on is ever-changing in this industry. </span></span><span style=3D"color: i=
+nherit; font-size: inherit; font-weight: bold; line-height: inherit; text-d=
+ecoration: inherit;" class=3D""> </span></span></i><br class=3D""><div styl=
+e=3D"margin: 0; outline: none; padding: 0; text-align: center;" class=3D"">=
+<span style=3D"color: #2a65c5; font-size:=0A28.6667px; font-weight: inherit=
+; line-height: inherit; text-decoration: inherit; font-family: arial;" clas=
+s=3D""><br class=3D"">Dispute 21 - Day 11:<br><span style=3D"color: inherit=
+; font-size: inherit; font-weight: bold; line-height: inherit; text-decorat=
+ion: inherit;" class=3D"">Outsmarting e-OSCAR</span></span></div>=0A<br cla=
+ss=3D""><br><span style=3D"color: inherit; font-size: 18px; font-weight: in=
+herit; line-height: inherit; text-decoration: inherit;" class=3D"">Bruce, t=
+he second line of defense against your disputes is e-OSCAR (<i style=3D"mar=
+gin: 0; outline: none; padding: 0; mso-bidi-font-style: normal;">Online Sol=
+ution for Complete and Accurate Reporting</i>). <span style=3D"color: inher=
+it; font-size: inherit; font-weight: inherit; line-height: inherit; text-de=
+coration: inherit; mso-spacerun: yes;"> </span>e-OSCAR is A web based autom=
+ated dispute system used by all three credit bureaus.<span style=3D"color: =
+inherit; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>This is the compu=
+ter where the credit bureaus input your disputes.<span style=3D"color: inhe=
+rit; font-size: inherit; font-weight: inherit; line-height: inherit; text-d=
+ecoration: inherit; mso-spacerun: yes;">=C2=A0 </span>From here the dispute=
+s are=0Adelivered to the creditor or Data Furnisher whose item you are disp=
+uting.<br><br>Again, the best success in disputing comes from human confusi=
+on and error.<span style=3D"color: inherit; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit; mso-spacerun: ye=
+s;">=C2=A0 </span>E-OSCAR is one more way the credit bureaus automate the p=
+rocess to try to eliminate the possibility of human error. <span style=3D"c=
+olor: inherit; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; mso-spacerun: yes;"> </span>But these are the=
+ very errors you as a disputer want to prey on to get some of your negative=
+ and inaccurate items deleted.<br><br>E-OSCAR reads your dispute and assign=
+s a 2 digit reason code.=C2=A0 The code reflects the reason for the dispute=
+; such as the account is not yours, you were never late, etc. </span><div s=
+tyle=3D"margin: 0; outline: none; padding: 0; font-size: 12px; text-align: =
+center;"></div>=0A</div>=0A</div>=0A </div>=0A </div>=0A </div>=0A </div>=
+=0A </div>=0A<!--[if (gte mso 12)&(lte mso 15) ]>=0A<style data-ac-keep=3D"=
+true" data-ac-inline=3D"false"> #text_div3044, #text_div3044 div { line-hei=
+ght: 112% !important; };=0A</style>=0A<![endif]--></td>=0A</tr>=0A</table>=
+=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layo=
+ut-row-margin3283" valign=3D"top" style=3D""><table width=3D"100%" border=
+=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-wi=
+dth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-=
+row3283" class=3D"layout layout-row widget _widget_picture " align=3D"left"=
+><td id=3D"layout-row-padding3283" valign=3D"top"><table width=3D"100%" bor=
+der=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min=
+-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class=
+=3D"image-td" align=3D"left" valign=3D"top" width=3D"650"><img src=3D"https=
+://educreditsolutions.imgus11.com/public//6542892cb5fe6aafbe200c1d1784609a.=
+jpg?r=3D509897067" alt=3D"" width=3D"650" style=3D"display: block; border: =
+none; outline: none; width: 650px; opacity: 1; max-width: 100%;"></td>=0A</=
+tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D"">=
+<td id=3D"layout-row-margin3289" valign=3D"top" style=3D"padding: 0px;"><ta=
+ble width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspa=
+ce: 0pt; border-collapse: initial !important;"><tr id=3D"layout-row3289" cl=
+ass=3D"layout layout-row widget _widget_text style3289" style=3D"margin: 0;=
+ padding: 0;"><td id=3D"layout-row-padding3289" valign=3D"top" style=3D"pad=
+ding: 0px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacin=
+g=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; m=
+so-table-rspace: 0pt;"><tr><td id=3D"text_div3057" class=3D"td_text td_bloc=
+k" valign=3D"top" align=3D"left" width=3D"650" style=3D"margin: 0; outline:=
+ none; padding: 0; color: inherit; font-size: 12px; font-weight: inherit; l=
+ine-height: 1; text-decoration: inherit; font-family: Arial;"> <div style=
+=3D"margin: 0; outline: none; padding: 0; text-align: center;"><span style=
+=3D"color: inherit; font-size: inherit;=0Afont-weight: bold; line-height: i=
+nherit; text-decoration: inherit; font-style: italic;" class=3D"">This is n=
+ot an exhaustive list, but it show many of the common e-OSCAR dispute reaso=
+n codes assigned to disputes based on the language in dispute letters.</spa=
+n></div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</=
+tr>=0A<tr style=3D""><td id=3D"layout-row-margin3284" valign=3D"top" style=
+=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace:=
+ 0pt; mso-table-rspace: 0pt; border-collapse: initial !important;"><tr id=
+=3D"layout-row3284" class=3D"layout layout-row widget _widget_text style328=
+4" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row-padding3284" valig=
+n=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpa=
+dding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; ms=
+o-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3052" cl=
+ass=3D"td_text td_block" valign=3D"top" align=3D"left" width=3D"630" style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: 12px; =
+font-weight: inherit; line-height: 1; text-decoration: inherit; font-family=
+: Arial;"> <div style=3D"margin: 0; outline: none; padding: 0; font-size: 1=
+8px;"> <div style=3D"margin: 0; outline: none; padding: 0;"> <span=0Astyle=
+=3D"color: #000000; font-size: inherit; font-weight: 400; line-height: inhe=
+rit; text-decoration: inherit; font-family: arial; font-style: normal;">Thi=
+s is the ONLY content that is pulled out of your dispute letters, and the o=
+nly content the creditors and the bureaus care about.<span style=3D"color: =
+inherit; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial;">=C2=A0=C2=A0</span>They look a=
+t what account you are disputing, and the reason for the dispute.</span><sp=
+an style=3D"color: #000000; font-size: inherit; font-weight: 400; line-heig=
+ht: inherit; text-decoration: inherit; font-family: arial; font-style: norm=
+al;"> </span><span style=3D"color: #000000; font-size: inherit; font-weight=
+: 400; line-height: inherit; text-decoration: inherit; font-family: arial; =
+font-style: normal;"><br style=3D""><br style=3D""><span style=3D"color: in=
+herit; font-size: inherit; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit;=0Afont-family: arial;">It doesn=E2=80=99t matter to t=
+hem if your letter comes from an attorney, or if your story reads like a Gr=
+eek tragedy.<span style=3D"color: inherit; font-size: inherit; font-weight:=
+ inherit; line-height: inherit; text-decoration: inherit; font-family: aria=
+l;">=C2=A0=C2=A0</span>All they care about is the reason code.<span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial;">=C2=A0=C2=A0</span>=
+Regardless of whether your dispute letter ends up with OCR or a human at th=
+e credit bureaus, the only thing they enter to be passed on is the REASON f=
+or your dispute, in a code format.<span style=3D"color: inherit; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit; font-family: arial;">=C2=A0=C2=A0<br style=3D""></span></span><br styl=
+e=3D""><span style=3D"color: inherit; font-size: inherit; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit; font-family:=0Aarial;"=
+>The creditor responsible for the item under dispute never sees the letter.=
+<span style=3D"color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; font-family: arial;">=C2=
+=A0=C2=A0</span>The only information the creditor gets is the account that =
+is being disputed, the name of the consumer who is disputing it, and the 2 =
+character reason code for why the account is being disputed.<br style=3D"">=
+</span><br style=3D""><span style=3D"color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit; font-fa=
+mily: arial;">The creditor then validates the account as accurate, or ackno=
+wledges that the disputed item is incorrect and deletes it.<span style=3D"c=
+olor: inherit; font-size: inherit; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit; font-family: arial;">=C2=A0=C2=A0</span>If th=
+e creditor fails to respond within 30 days, the credit bureaus delete the i=
+tem.</span><br style=3D""><span=0Astyle=3D"color: inherit; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit; f=
+ont-family: arial;">Again, all the creditor has to do is verify the account=
+ on their end, and in one click they can validate the item if they find it =
+to be accurate.<span style=3D"color: inherit; font-size: inherit; font-weig=
+ht: inherit; line-height: inherit; text-decoration: inherit; font-family: a=
+rial;">=C2=A0=C2=A0<br style=3D""></span></span><br style=3D""><span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial;">With the use of e-O=
+SCAR, any documentation you have to support your case never even makes it t=
+o the creditor.<span style=3D"color: inherit; font-size: inherit; font-weig=
+ht: inherit; line-height: inherit; text-decoration: inherit; font-family: a=
+rial;"> </span>There have even been court cases against the credit bureaus =
+in this matter due to their method=E2=80=99s complete lack of any=0Areal in=
+vestigation into the validity of a dispute.</span><br style=3D""><span styl=
+e=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit; font-family: arial;">In two of those ca=
+ses --Cushman Versus Trans Union and Stevenson Versus Trans Union ---the cr=
+edit bureaus lost since they were found to do nothing more than copy the cr=
+editor=E2=80=99s information instead of actually investigating.<span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; font-family: arial;">=C2=A0=C2=A0</span>=
+</span><br style=3D""><br style=3D""><span style=3D"color: inherit; font-si=
+ze: inherit; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit; font-family: arial;">E-Oscar automation is a beautiful thing for th=
+e credit industry as it eliminates most of the actual investigation complet=
+ely; as well as getting rid of most human errors on the part of both the cr=
+edit bureau and=0Acreditor.</span></span> </div>=0A </div>=0A</td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td=
+ id=3D"layout-row-margin3285" valign=3D"top" style=3D""><table width=3D"100=
+%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13p=
+x; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=
+=3D"layout-row3285" class=3D"layout layout-row widget _widget_break "><td i=
+d=3D"layout-row-padding3285" valign=3D"top" style=3D"line-height: 0; mso-li=
+ne-height-rule: exactly;"><table width=3D"100%" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; line-height:=
+ 0; mso-line-height-rule: exactly;"><tr><td height=3D"10" style=3D"line-hei=
+ght: 0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A<tr><td align=3D"ce=
+nter" height=3D"1" width=3D"650" style=3D"line-height: 0; mso-line-height-r=
+ule: exactly;"> <table align=3D"center" border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" height=3D"1" width=3D"650" style=3D"font-size: 13px; min-widt=
+h: auto!important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-col=
+lapse: collapse; line-height: 0; mso-line-height-rule: exactly; width: 100%=
+; max-width: 100%;"><tr><td class=3D"break-line" bgcolor=3D"#000000" height=
+=3D"1" width=3D"650" style=3D"line-height: 1px; mso-line-height-rule: exact=
+ly; height: 1px; width: 650px; background-color: #000000;"> </td>=0A </tr>=
+=0A</table>=0A</td>=0A </tr>=0A<tr><td height=3D"10" style=3D"line-height: =
+0; mso-line-height-rule: exactly;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin328=
+6" valign=3D"top" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0=
+" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: =
+100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initia=
+l !important;"><tr id=3D"layout-row3286" class=3D"layout layout-row widget =
+_widget_text style3286" style=3D"margin: 0; padding: 0;"><td id=3D"layout-r=
+ow-padding3286" valign=3D"top" style=3D"padding: 5px;"><table width=3D"100%=
+" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px=
+; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td i=
+d=3D"text_div3054" class=3D"td_text td_block" valign=3D"top" align=3D"left"=
+ width=3D"630" style=3D"margin: 0; outline: none; padding: 0; color: inheri=
+t; font-size: 12px; font-weight: inherit; line-height: 1; text-decoration: =
+inherit; font-family: Arial;"> <div style=3D"margin: 0; outline: none; padd=
+ing: 0; font-size: 18px;"> <div style=3D"margin: 0; outline: none; padding:=
+ 0;"> <b=0Astyle=3D"margin: 0; outline: none; padding: 0;"><i style=3D"marg=
+in: 0; outline: none; padding: 0; mso-bidi-font-style: normal;"><u style=3D=
+"margin: 0; outline: none; padding: 0;" class=3D"">Success with e-OSCAR<br>=
+</u></i></b><br> Since e-OSCAR, is only a computer, like any computer, it c=
+an be beaten.<span style=3D"color: inherit; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit; mso-spacerun: ye=
+s;">=C2=A0 </span>You just need to understand how it works and know what to=
+ do to beat the system.<span style=3D"color: inherit; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit; mso-sp=
+acerun: yes;">=C2=A0 </span><br> All disputes come from e-OSCAR as an Autom=
+ated Universal Data Form.<span style=3D"color: inherit; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit; mso-=
+spacerun: yes;">=C2=A0 </span><br> Below is a copy of this form so you can =
+see the basic questions that are=0Aasked.<span style=3D"color: inherit; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit; mso-spacerun: yes;">=C2=A0 </span>At the top right you can also=
+ see the section for the 2 character dispute code.<br><br>The first way to =
+beat e-OSCAR is to use the methods mentioned in the lesson on OCR.<span sty=
+le=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>The =
+methods should confuse OCR enough that it will pass your information along =
+into the hands of a human instead of directly to e Oscar.<span style=3D"col=
+or: inherit; font-size: inherit; font-weight: inherit; line-height: inherit=
+; text-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>The human "in=
+vestigator" will then input the information manually into e-OSCAR which is =
+your first window for an error to be made.</div>=0A </div>=0A</td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td=
+ id=3D"layout-row-margin3287" valign=3D"top" style=3D""><table width=3D"100=
+%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13p=
+x; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr id=
+=3D"layout-row3287" class=3D"layout layout-row widget _widget_picture " ali=
+gn=3D"left"><td id=3D"layout-row-padding3287" valign=3D"top"><table width=
+=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-si=
+ze: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><=
+tr><td class=3D"image-td" align=3D"left" valign=3D"top" width=3D"650"><img =
+src=3D"https://educreditsolutions.imgus11.com/public//3b49780eb96a9d26e64e5=
+b2be9f92035.jpg?r=3D984493359" alt=3D"" width=3D"650" style=3D"display: blo=
+ck; border: none; outline: none; width: 650px; opacity: 1; max-width: 100%;=
+"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr=
+ style=3D""><td id=3D"layout-row-margin3288" valign=3D"top" style=3D"paddin=
+g: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt; border-collapse: initial !important;"><tr id=3D"layout=
+-row3288" class=3D"layout layout-row widget _widget_text style3288" style=
+=3D"margin: 0; padding: 0;"><td id=3D"layout-row-padding3288" valign=3D"top=
+" style=3D"padding: 5px;"><table width=3D"100%" border=3D"0" cellpadding=3D=
+"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-=
+lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D"text_div3056" class=3D"t=
+d_text td_block" valign=3D"top" align=3D"left" width=3D"630" style=3D"margi=
+n: 0; outline: none; padding: 0; color: inherit; font-size: 12px; font-weig=
+ht: inherit; line-height: 1; text-decoration: inherit; font-family: Arial;"=
+> <div style=3D"margin: 0; outline: none; padding: 0; font-size: 18px;"> <d=
+iv style=3D"margin: 0; outline: none; padding: 0;"> Another=0Asuccessful wa=
+y to deal with e-OSCAR is to use an old advanced dispute strategy of mailin=
+g your disputes to multiple credit bureau addresses.<span style=3D"color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>You might not know=
+ this but the credit bureaus maintain these different addresses as a tactic=
+ to confuse YOU, so a little turnabout is definitely fair play here!<br> No=
+w you can use the credit bureaus=E2=80=99 multiple addresses against them t=
+o get your client=E2=80=99s negative items deleted.<span style=3D"color: in=
+herit; font-size: inherit; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>First, prepare your=
+ dispute letters, and make 5 copies.<span style=3D"color: inherit; font-siz=
+e: inherit; font-weight: inherit; line-height: inherit; text-decoration: in=
+herit; mso-spacerun: yes;">=C2=A0=C2=A0 <br></span><br> Next, mail them to =
+5 of the credit bureaus=0Aaddresses.<span style=3D"color: inherit; font-siz=
+e: inherit; font-weight: inherit; line-height: inherit; text-decoration: in=
+herit; mso-spacerun: yes;">=C2=A0 </span>Make sure you mail them within 2 d=
+ays of each other.<span style=3D"color: inherit; font-size: inherit; font-w=
+eight: inherit; line-height: inherit; text-decoration: inherit; mso-spaceru=
+n: yes;">=C2=A0 </span>Then wait for the response and see the results. (Be =
+sure that you are sending your personal information removal letters before =
+beginning your disputes. We will discuss more on this once we get into crea=
+ting a dispute flow)<span style=3D"color: inherit; font-size: inherit; font=
+-weight: inherit; line-height: inherit; text-decoration: inherit; mso-space=
+run: yes;"> </span><br> I have provided you with a complete list of credit =
+bureau addresses below.<br><br> What happens at the bureaus?<span style=3D"=
+color: inherit; font-size: inherit; font-weight: inherit; line-height: inhe=
+rit; text-decoration: inherit; mso-spacerun:=0Ayes;"> </span>Multiple peopl=
+e at multiple bureau locations receive the disputes at about the same time.=
+<span style=3D"color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit; mso-spacerun: yes;">=C2=A0 </=
+span>They then input the dispute character code into e-OSCAR and the disput=
+e is delivered to the creditors.<br> The creditor then sees multiple red fl=
+ags showing an item has been disputed -- 5 disputes for the same account.<s=
+pan style=3D"color: inherit; font-size: inherit; font-weight: inherit; line=
+-height: inherit; text-decoration: inherit; mso-spacerun: yes;">=C2=A0 </sp=
+an>In most cases they will delete 4 of the 5, and respond to only 1.<span s=
+tyle=3D"color: inherit; font-size: inherit; font-weight: inherit; line-heig=
+ht: inherit; text-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>In=
+ reality, what they are doing is failing to respond to 4 disputes, which wi=
+ll result in the item being deleted 30 days later.<br><br> The=0Acreditor t=
+hinks they validated the item to which they responded, but in reality the i=
+tem is deleted.<span style=3D"color: inherit; font-size: inherit; font-weig=
+ht: inherit; line-height: inherit; text-decoration: inherit; mso-spacerun: =
+yes;"> </span>The deletion will be permanent since the creditor mistakenly =
+believes it=E2=80=99s been validated.<br><br> These tactics are effective i=
+n overwhelming and confusing both the bureaus and the creditors.<span style=
+=3D"color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit; mso-spacerun: yes;">=C2=A0 </span>Taken =
+together with the methods outlined in the OCR lesson, they may help you eff=
+iciently dispute and delete many of your client=E2=80=99s derogatory accoun=
+t items.</div>=0A </div>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</tab=
+le>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin3282" valig=
+n=3D"top" style=3D""><table width=3D"100%" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspac=
+e: 0pt; mso-table-rspace: 0pt;"><tr id=3D"layout-row3282" class=3D"layout l=
+ayout-row widget _widget_spacer "><td id=3D"layout-row-padding3282" valign=
+=3D"top"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt;"><tr><td valign=3D"top" height=3D"30"><div class=3D"sp=
+acer" style=3D"margin: 0; outline: none; padding: 0; height: 30px;"><table =
+cellpadding=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"fo=
+nt-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0p=
+t;"><tr><td class=3D"spacer-body" valign=3D"top" height=3D"30" width=3D"650=
+">=C2=A0</td>=0A</tr>=0A</table>=0A</div>=0A</td>=0A</tr>=0A</table>=0A</td=
+>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-=
+margin3279" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" bord=
+er=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-=
+width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse:=
+ initial !important;"><tr id=3D"layout-row3279" class=3D"layout layout-row =
+widget _widget_text style3279" style=3D"margin: 0; padding: 0;"><td id=3D"l=
+ayout-row-border3279" valign=3D"top" style=3D"border-color: #0a0909; border=
+-radius: 0px; border-style: solid; border-width: 6px;"><table width=3D"100%=
+" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px=
+; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td i=
+d=3D"layout-row-padding3279" valign=3D"top" style=3D"padding: 20px 30px 20p=
+x 30px;"><table width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" style=3D"font-size: 13px; min-width: 100%; mso-table-lspace: 0pt; ms=
+o-table-rspace: 0pt;"><tr><td id=3D"text_div3047" class=3D"td_text td_block=
+" valign=3D"top" align=3D"left"=0Awidth=3D"578" style=3D"line-height: 112%;=
+ margin: 0; outline: none; padding: 0; color: inherit; font-size: 12px; fon=
+t-weight: inherit; line-height: 1.12; text-decoration: inherit; font-family=
+: Arial; mso-line-height-rule: exactly;"> <div style=3D"line-height: 112%; =
+margin: 0; outline: none; padding: 0; mso-line-height-rule: exactly; line-h=
+eight: 1.12; font-size: 15px;" data-line-height=3D"1.12"> <span style=3D"co=
+lor: inherit; font-size: 15px; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit;" class=3D""><b style=3D"margin: 0; outline: none;=
+ padding: 0; mso-bidi-font-weight: normal;"><u style=3D"margin: 0; outline:=
+ none; padding: 0;">Trans Union</u></b><br> P.O. Box 2000<br> Chester, PA 1=
+9022<br><br> P.O. Box 1000<br><place w:st=3D"on"><city w:st=3D"on">Chester<=
+/city>, <state w:st=3D"on">PA</state><postalcode w:st=3D"on">19022</postalc=
+ode></place><p style=3D"margin: 0; outline: none; padding: 0; color: inheri=
+t; font-size: inherit; font-weight: inherit; line-height:=0Ainherit; text-d=
+ecoration: inherit;"></p>=0A</span><p style=3D"margin: 0; outline: none; pa=
+dding: 0; color: inherit; font-size: inherit; font-weight: inherit; line-he=
+ight: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" st=
+yle=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inherit; f=
+ont-size: 15px; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color:=
+ inherit; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padd=
+ing: 0; color: inherit; font-size: inherit; font-weight: inherit; line-heig=
+ht: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" styl=
+e=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inherit; fon=
+t-size: 15px; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A<address w:st=3D"on"><street w:st=3D"on"><br>P.O. Box</str=
+eet> 34012</address><p style=3D"margin: 0; outline: none; padding: 0; color=
+: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; =
+text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; pad=
+ding: 0; color: inherit; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" sty=
+le=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inherit; fo=
+nt-size: 15px; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;"><place w:st=3D"on"><city w:st=3D"on">Fullerton</city>, <state w:=
+st=3D"on">CA</state><postalcode w:st=3D"on">92831</postalcode></place></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0=
+ 0.0001pt 0; outline: none; padding: 0; color: inherit; font-size: 15px; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0=
+ 0.0001pt 0; outline: none; padding: 0; color: inherit; font-size: 15px; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<address w:st=3D"on"><street w:st=3D"on"><br>P.O. Box</street> 6790</add=
+ress><p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font=
+-size: inherit; font-weight: inherit; line-height: inherit; text-decoration=
+: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color:=
+ inherit; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0=
+ 0 0.0001pt 0; outline: none; padding: 0; color: inherit; font-size: 15px; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;"><pla=
+ce w:st=3D"on"><city w:st=3D"on">Fullerton</city>, <state w:st=3D"on">CA</s=
+tate><postalcode w:st=3D"on">92834</postalcode></place></p>=0A<p style=3D"m=
+argin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; o=
+utline: none; padding: 0; color: inherit; font-size: 15px; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"m=
+argin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; o=
+utline: none; padding: 0; color: inherit; font-size: 15px; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"></p>=0A<address w:st=
+=3D"on"><street w:st=3D"on"><br>P.O. Box</street> 3000</address><p style=3D=
+"margin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; o=
+utline: none; padding: 0; color: inherit; font-size: 15px; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"><place w:st=3D"on"><=
+city w:st=3D"on">Crum Lynne</city>, <state w:st=3D"on">PA</state><postalcod=
+e w:st=3D"on">19022</postalcode></place></p>=0A<p style=3D"margin: 0; outli=
+ne: none; padding: 0; color: inherit; font-size: inherit; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"ma=
+rgin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A=
+ <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; pad=
+ding: 0; color: inherit; font-size: 15px; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline=
+: none; padding: 0; color: inherit; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"marg=
+in: 0; outline: none; padding: 0; color: inherit; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A <=
+p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; paddi=
+ng: 0; color: inherit; font-size: 15px; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;">Super. Legal Dept.</p>=0A<p style=3D"ma=
+rgin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A=
+<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size=
+: inherit; font-weight: inherit; line-height: inherit; text-decoration: inh=
+erit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outl=
+ine: none; padding: 0; color: inherit; font-size: 15px; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;"><br>Trans Union LLC</p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0=
+ 0.0001pt 0; outline: none; padding: 0; color: inherit; font-size: 15px; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;">555 We=
+st <place w:st=3D"on">Adams</place></p>=0A<p style=3D"margin: 0; outline: n=
+one; padding: 0; color: inherit; font-size: inherit; font-weight: inherit; =
+line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin:=
+ 0; outline: none; padding: 0; color: inherit; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A <p c=
+lass=3D"MsoNormal" style=3D"margin: 0; outline: none; padding: 0; color: in=
+herit; font-size: 15px; font-weight: inherit; line-height: inherit; text-de=
+coration: inherit;"><place w:st=3D"on" style=3D"" class=3D""><city w:st=3D"=
+on">Chicago</city>, <state w:st=3D"on">IL</state><postalcode w:st=3D"on">60=
+661</postalcode></place></p>=0A<p style=3D"margin: 0; outline: none; paddin=
+g: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline=
+: none; padding: 0; color: inherit; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"Mso=
+Normal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: =
+inherit; font-size: 15px; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding:=
+ 0; color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: =
+none; padding: 0; color: inherit; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;"></p>=0A <br><p class=3D"M=
+soNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color=
+: inherit; font-size: 15px; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; paddin=
+g: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;"><b style=3D"margin: 0; outline: none;=
+ padding: 0; mso-bidi-font-weight: normal;"><u style=3D"margin: 0; outline:=
+ none; padding: 0;"><span style=3D"color: inherit; font-size: 15px; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit;">Experian</s=
+pan></u></b><br><span style=3D"color: inherit; font-size: 15px; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit;" class=3D"">P.O.=
+ Box 2002<br> Allen, TX 75013-2002<br><br> P.O. Box 9556<br> Allen, TX 7501=
+3<br><br style=3D"mso-ignore:vglayout" clear=3D"ALL"></span></p>=0A<p style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;"><=
+/p>=0A<p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none=
+; padding: 0; color: inherit; font-size: 15px; font-weight: inherit; line-h=
+eight: inherit; text-decoration: inherit;"></p>=0A<address w:st=3D"on"><str=
+eet w:st=3D"on">P.O. Box</street> 2104</address><p style=3D"margin: 0; outl=
+ine: none; padding: 0; color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"m=
+argin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; =
+padding: 0; color: inherit; font-size: 15px; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;"><place w:st=3D"on"><city w:st=3D"o=
+n">Allen</city>, <state w:st=3D"on">TX</state><postalcode w:st=3D"on">75013=
+</postalcode></place></p>=0A<p style=3D"margin: 0; outline: none; padding: =
+0; color: inherit; font-size: inherit; font-weight: inherit; line-height: i=
+nherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: n=
+one; padding: 0; color: inherit; font-size: inherit; font-weight: inherit; =
+line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNor=
+mal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inh=
+erit; font-size: 15px; font-weight: inherit; line-height: inherit; text-dec=
+oration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0;=
+ color: inherit; font-size: inherit; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: non=
+e; padding: 0; color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNorma=
+l" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inher=
+it; font-size: 15px; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit;"><br>P.O. Box 9600</p>=0A<p style=3D"margin: 0; outline: no=
+ne; padding: 0; color: inherit; font-size: inherit; font-weight: inherit; l=
+ine-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: =
+0; outline: none; padding: 0; color: inherit; font-size: inherit; font-weig=
+ht: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A <p cl=
+ass=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: =
+0; color: inherit; font-size: 15px; font-weight: inherit; line-height: inhe=
+rit; text-decoration: inherit;"><place w:st=3D"on"><city w:st=3D"on">Allen<=
+/city>, <state w:st=3D"on">TX</state><postalcode w:st=3D"on">75013</postalc=
+ode></place></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color:=
+ inherit; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padd=
+ing: 0; color: inherit; font-size: inherit; font-weight: inherit; line-heig=
+ht: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" styl=
+e=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inherit; fon=
+t-size: 15px; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; paddin=
+g: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=
+=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inherit; font=
+-size: 15px; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit;"></p>=0A<address w:st=3D"on"><street w:st=3D"on"><br>P.O. Box</stre=
+et> 9702</address><p style=3D"margin: 0; outline: none; padding: 0; color: =
+inherit; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; paddi=
+ng: 0; color: inherit; font-size: inherit; font-weight: inherit; line-heigh=
+t: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=
+=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: inherit; font=
+-size: 15px; font-weight: inherit; line-height: inherit; text-decoration: i=
+nherit;">Allen, TX 75013</p>=0A<p style=3D"margin: 0; outline: none; paddin=
+g: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline=
+: none; padding: 0; color: inherit; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"Mso=
+Normal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: =
+inherit; font-size: 15px; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding:=
+ 0; color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: =
+none; padding: 0; color: inherit; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNo=
+rmal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color: in=
+herit; font-size: 15px; font-weight: inherit; line-height: inherit; text-de=
+coration: inherit;"><br>475 Anton Blvd</p>=0A<p style=3D"margin: 0; outline=
+: none; padding: 0; color: inherit; font-size: inherit; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"marg=
+in: 0; outline: none; padding: 0; color: inherit; font-size: inherit; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A <=
+p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; paddi=
+ng: 0; color: inherit; font-size: 15px; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;">Costa Mesa, CA 92626</p>=0A<p style=3D"=
+margin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; o=
+utline: none; padding: 0; color: inherit; font-size: 15px; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"m=
+argin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; o=
+utline: none; padding: 0; color: inherit; font-size: 15px; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"><street w:st=3D"on">=
+</street></p>=0A<address w:st=3D"on"><br>701 Experian Parkway, <br>Allen, T=
+X=C2=A0 75013<br><br>P.O. Box 9554</address><p style=3D"margin: 0; outline:=
+ none; padding: 0; color: inherit; font-size: inherit; font-weight: inherit=
+; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margi=
+n: 0; outline: none; padding: 0; color: inherit; font-size: inherit; font-w=
+eight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A <p=
+ class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; paddin=
+g: 0; color: inherit; font-size: 15px; font-weight: inherit; line-height: i=
+nherit; text-decoration: inherit;"><city w:st=3D"on">Allen</city>, <state w=
+:st=3D"on">TX</state> 75013</p>=0A<p style=3D"margin: 0; outline: none; pad=
+ding: 0; color: inherit; font-size: inherit; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outl=
+ine: none; padding: 0; color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"=
+MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; colo=
+r: inherit; font-size: 15px; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; paddi=
+ng: 0; color: inherit; font-size: inherit; font-weight: inherit; line-heigh=
+t: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outlin=
+e: none; padding: 0; color: inherit; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"Ms=
+oNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padding: 0; color:=
+ inherit; font-size: 15px; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit;">Sup. Legal Dept.</p>=0A<p style=3D"margin: 0; outlin=
+e: none; padding: 0; color: inherit; font-size: inherit; font-weight: inher=
+it; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"mar=
+gin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; font=
+-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A =
+<p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: none; padd=
+ing: 0; color: inherit; font-size: 15px; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit;"><br>Experian</p>=0A<p style=3D"margin:=
+ 0; outline: none; padding: 0; color: inherit; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A<p st=
+yle=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 0.0001pt 0; outline: =
+none; padding: 0; color: inherit; font-size: 15px; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit;"></p>=0A<address w:st=3D"on">=
+<street w:st=3D"on">P.O. Box</street> 1240</address><p style=3D"margin: 0; =
+outline: none; padding: 0; color: inherit; font-size: inherit; font-weight:=
+ inherit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;"><=
+/p>=0A <p class=3D"MsoNormal" style=3D"margin: 0; outline: none; padding: 0=
+; color: inherit; font-size: 15px; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit;"><place w:st=3D"on" style=3D"" class=3D""><ci=
+ty w:st=3D"on">Allen</city>, <state w:st=3D"on">TX</state><postalcode w:st=
+=3D"on">75002<br><br><br><b style=3D"margin: 0; outline: none; padding: 0; =
+mso-bidi-font-weight: normal;"><u style=3D"margin: 0; outline: none; paddin=
+g: 0;"><span lang=3D"PT-BR" style=3D"color: inherit; font-size: 15px; font-=
+weight: inherit; line-height: inherit; text-decoration: inherit;">Equifax</=
+span></u></b><br><span lang=3D"PT-BR" style=3D"color: inherit; font-size: 1=
+5px; font-weight: inherit; line-height: inherit; text-decoration: inherit;"=
+>P.O. Box 105518</span><br><span lang=3D"PT-BR" style=3D"color: inherit; fo=
+nt-size: 12pt; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;">Atlanta, GA 30348</span></postalcode></place></p>=0A<p style=3D"=
+margin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0=
+ .0001pt 0; outline: none; padding: 0; color: inherit; font-size: inherit; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: 12pt; font-weight: inherit; line-height: inherit; text-decoration: inh=
+erit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inhe=
+rit; font-size: inherit; font-weight: inherit; line-height: inherit; text-d=
+ecoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .0=
+001pt 0; outline: none; padding: 0; color: inherit; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;"><span l=
+ang=3D"PT-BR" style=3D"color: inherit; font-size: 12pt; font-weight: inheri=
+t; line-height: inherit; text-decoration: inherit;"><br>P.O. Box 10596</spa=
+n></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; =
+font-size: inherit; font-weight: inherit; line-height: inherit; text-decora=
+tion: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; co=
+lor: inherit; font-size: inherit; font-weight: inherit; line-height: inheri=
+t; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margi=
+n: 0 0 .0001pt 0; outline: none; padding: 0; color: inherit; font-size: inh=
+erit; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+"><span lang=3D"PT-BR" style=3D"color: inherit; font-size: 12pt; font-weigh=
+t: inherit; line-height: inherit; text-decoration: inherit;">Atlanta, GA 30=
+348</span></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: i=
+nherit; font-size: inherit; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; paddin=
+g: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height=
+: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=
+=3D"margin: 0 0 .0001pt 0; outline: none; padding: 0; color: inherit; font-=
+size: inherit; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: =
+inherit; font-size: 12pt; font-weight: inherit; line-height: inherit; text-=
+decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding:=
+ 0; color: inherit; font-size: inherit; font-weight: inherit; line-height: =
+inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D=
+"margin: 0 0 .0001pt 0; outline: none; padding: 0; color: inherit; font-siz=
+e: inherit; font-weight: inherit; line-height: inherit; text-decoration: in=
+herit;"><span lang=3D"PT-BR" style=3D"color: inherit; font-size: 12pt; font=
+-weight: inherit; line-height: inherit; text-decoration: inherit;"><br>P.O.=
+ Box 105788</span></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; =
+color: inherit; font-size: inherit; font-weight: inherit; line-height: inhe=
+rit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none=
+; padding: 0; color: inherit; font-size: inherit; font-weight: inherit; lin=
+e-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal=
+" style=3D"margin: 0 0 .0001pt 0; outline: none; padding: 0; color: inherit=
+; font-size: inherit; font-weight: inherit; line-height: inherit; text-deco=
+ration: inherit;"><span lang=3D"PT-BR" style=3D"color: inherit; font-size: =
+12pt; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+">Atlanta, GA 30348</span></p>=0A<p style=3D"margin: 0; outline: none; padd=
+ing: 0; color: inherit; font-size: inherit; font-weight: inherit; line-heig=
+ht: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outli=
+ne: none; padding: 0; color: inherit; font-size: inherit; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"M=
+soNormal" style=3D"margin: 0 0 .0001pt 0; outline: none; padding: 0; color:=
+ inherit; font-size: inherit; font-weight: inherit; line-height: inherit; t=
+ext-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padd=
+ing: 0; color: inherit; font-size: 12pt; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline:=
+ none; padding: 0; color: inherit; font-size: inherit; font-weight: inherit=
+; line-height: inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoN=
+ormal" style=3D"margin: 0 0 .0001pt 0; outline: none; padding: 0; color: in=
+herit; font-size: inherit; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit;"><span lang=3D"PT-BR" style=3D"color: inherit; font-s=
+ize: 12pt; font-weight: inherit; line-height: inherit; text-decoration: inh=
+erit;"><br>P.O. Box 105873</span></p>=0A<p style=3D"margin: 0; outline: non=
+e; padding: 0; color: inherit; font-size: inherit; font-weight: inherit; li=
+ne-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0=
+; outline: none; padding: 0; color: inherit; font-size: inherit; font-weigh=
+t: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A <p cla=
+ss=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0; outline: none; padding: 0;=
+ color: inherit; font-size: inherit; font-weight: inherit; line-height: inh=
+erit; text-decoration: inherit;"><span lang=3D"PT-BR" style=3D"color: inher=
+it; font-size: 12pt; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit;">Atlanta, GA 30348</span></p>=0A<p style=3D"margin: 0; outl=
+ine: none; padding: 0; color: inherit; font-size: inherit; font-weight: inh=
+erit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"m=
+argin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fo=
+nt-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0; outline: none; p=
+adding: 0; color: inherit; font-size: inherit; font-weight: inherit; line-h=
+eight: inherit; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; ou=
+tline: none; padding: 0; color: inherit; font-size: 12pt; font-weight: inhe=
+rit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=3D"ma=
+rgin: 0; outline: none; padding: 0; color: inherit; font-size: inherit; fon=
+t-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A=
+ <p class=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0; outline: none; padd=
+ing: 0; color: inherit; font-size: inherit; font-weight: inherit; line-heig=
+ht: inherit; text-decoration: inherit;"><span lang=3D"PT-BR" style=3D"color=
+: inherit; font-size: 12pt; font-weight: inherit; line-height: inherit; tex=
+t-decoration: inherit;"><br>P.O. Box 740241</span></p>=0A<p style=3D"margin=
+: 0; outline: none; padding: 0; color: inherit; font-size: inherit; font-we=
+ight: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A<p s=
+tyle=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: in=
+herit; font-weight: inherit; line-height: inherit; text-decoration: inherit=
+;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0; outline: =
+none; padding: 0; color: inherit; font-size: inherit; font-weight: inherit;=
+ line-height: inherit; text-decoration: inherit;"><span lang=3D"PT-BR" styl=
+e=3D"color: inherit; font-size: 12pt; font-weight: inherit; line-height: in=
+herit; text-decoration: inherit;">Atlanta, GA 30348</span></p>=0A<p style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;"><=
+/p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0;=
+ outline: none; padding: 0; color: inherit; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: 12pt; =
+font-weight: inherit; line-height: inherit; text-decoration: inherit;"></p>=
+=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0; ou=
+tline: none; padding: 0; color: inherit; font-size: inherit; font-weight: i=
+nherit; line-height: inherit; text-decoration: inherit;"><span lang=3D"PT-B=
+R" style=3D"color: inherit; font-size: 12pt; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;"><br>P.O. Box 740256</span></p>=0A<=
+p style=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size:=
+ inherit; font-weight: inherit; line-height: inherit; text-decoration: inhe=
+rit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inher=
+it; font-size: inherit; font-weight: inherit; line-height: inherit; text-de=
+coration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .00=
+01pt 0; outline: none; padding: 0; color: inherit; font-size: inherit; font=
+-weight: inherit; line-height: inherit; text-decoration: inherit;"><span la=
+ng=3D"PT-BR" style=3D"color: inherit; font-size: 12pt; font-weight: inherit=
+; line-height: inherit; text-decoration: inherit;">Atlanta, GA 30374</span>=
+</p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; fo=
+nt-size: inherit; font-weight: inherit; line-height: inherit; text-decorati=
+on: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; colo=
+r: inherit; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin:=
+ 0 0 .0001pt 0; outline: none; padding: 0; color: inherit; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit;">=
+</p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; fo=
+nt-size: 12pt; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: =
+inherit; font-size: inherit; font-weight: inherit; line-height: inherit; te=
+xt-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 =
+0 .0001pt 0; outline: none; padding: 0; color: inherit; font-size: inherit;=
+ font-weight: inherit; line-height: inherit; text-decoration: inherit;"><sp=
+an style=3D"color: inherit; font-size: 12pt; font-weight: inherit; line-hei=
+ght: inherit; text-decoration: inherit;"><br>Supervisor Legal Dept, </span>=
+</p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; fo=
+nt-size: inherit; font-weight: inherit; line-height: inherit; text-decorati=
+on: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding: 0; colo=
+r: inherit; font-size: inherit; font-weight: inherit; line-height: inherit;=
+ text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin:=
+ 0 0 .0001pt 0; outline: none; padding: 0; color: inherit; font-size: inher=
+it; font-weight: inherit; line-height: inherit; text-decoration: inherit;">=
+<span style=3D"color: inherit; font-size: 12pt; font-weight: inherit; line-=
+height: inherit; text-decoration: inherit;">Equifax</span></p>=0A<p style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;"><=
+/p>=0A<p style=3D"margin: 0; outline: none; padding: 0; color: inherit; fon=
+t-size: inherit; font-weight: inherit; line-height: inherit; text-decoratio=
+n: inherit;"></p>=0A <p class=3D"MsoNormal" style=3D"margin: 0 0 .0001pt 0;=
+ outline: none; padding: 0; color: inherit; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A<address=
+ w:st=3D"on"><street w:st=3D"on"><span style=3D"color: inherit; font-size: =
+12pt; font-weight: inherit; line-height: inherit; text-decoration: inherit;=
+">P.O. Box</span></street><span style=3D"color: inherit; font-size: 12pt; f=
+ont-weight: inherit; line-height: inherit; text-decoration: inherit;"> 7401=
+93</span></address><p style=3D"margin: 0; outline: none; padding: 0; color:=
+ inherit; font-size: 12pt; font-weight: inherit; line-height: inherit; text=
+-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none; padding=
+: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height:=
+ inherit; text-decoration: inherit;"></p>=0A <p class=3D"MsoNormal" style=
+=3D"margin: 0 0 .0001pt 0; outline: none; padding: 0; color: inherit; font-=
+size: inherit; font-weight: inherit; line-height: inherit; text-decoration:=
+ inherit;"><place w:st=3D"on"><city w:st=3D"on"><span style=3D"color: inher=
+it; font-size: 12pt; font-weight: inherit; line-height: inherit; text-decor=
+ation: inherit;">Atlanta</span></city><span style=3D"color: inherit; font-s=
+ize: 12pt; font-weight: inherit; line-height: inherit; text-decoration: inh=
+erit;">, <state w:st=3D"on">GA</state><postalcode w:st=3D"on">30374</postal=
+code></span></place></p>=0A<p style=3D"margin: 0; outline: none; padding: 0=
+; color: inherit; font-size: 12pt; font-weight: inherit; line-height: inher=
+it; text-decoration: inherit;"></p>=0A<p style=3D"margin: 0; outline: none;=
+ padding: 0; color: inherit; font-size: inherit; font-weight: inherit; line=
+-height: inherit; text-decoration: inherit;"></p>=0A <p style=3D"margin: 0;=
+ outline: none; padding: 0; color: inherit; font-size: inherit; font-weight=
+: inherit; line-height: inherit; text-decoration: inherit;"></p>=0A<p style=
+=3D"margin: 0; outline: none; padding: 0; color: inherit; font-size: inheri=
+t; font-weight: inherit; line-height: inherit; text-decoration: inherit;"><=
+/p>=0A <p style=3D"margin: 0; outline: none; padding: 0; color: inherit; fo=
+nt-size: inherit; font-weight: inherit; line-height: inherit; text-decorati=
+on: inherit;"></p>=0A <br><div style=3D"margin: 0; outline: none; padding: =
+0;">*Please fact check for updates on bureau addresses as they often change=
+ them to confuse consumers*</div>=0A</div>=0A<!--[if (gte mso 12)&(lte mso =
+15) ]>=0A<style data-ac-keep=3D"true" data-ac-inline=3D"false"> #text_div30=
+47, #text_div3047 div { line-height: 112% !important; };=0A</style>=0A<![en=
+dif]--></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=
+=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-margin329=
+0" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" border=3D"0" =
+cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-width: 10=
+0%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: initial =
+!important;"><tr id=3D"layout-row3290" class=3D"layout layout-row widget _w=
+idget_text style3290" style=3D"margin: 0; padding: 0;"><td id=3D"layout-row=
+-padding3290" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" bo=
+rder=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; mi=
+n-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td id=3D=
+"text_div3058" class=3D"td_text td_block" valign=3D"top" align=3D"left" wid=
+th=3D"650" style=3D"margin: 0; outline: none; padding: 0; color: inherit; f=
+ont-size: 12px; font-weight: inherit; line-height: 1; text-decoration: inhe=
+rit; font-family: Arial;"> <div style=3D"margin: 0; outline: none; padding:=
+ 0; font-size: 12px;" class=3D""><span style=3D"color: inherit; font-size: =
+12px; font-weight:=0Ainherit; line-height: inherit; text-decoration: inheri=
+t;" class=3D""> <div style=3D"margin: 0; outline: none; padding: 0; text-al=
+ign: center;" class=3D"">Copyright =C2=A9 2019 EduCredit Solutions. All rig=
+hts reserved.<br class=3D"">Services bought to you by Ellevation Coaching &=
+ Consulting<br class=3D""><br class=3D""></div>=0A<div style=3D"margin: 0; =
+outline: none; padding: 0; text-align: center;" class=3D""> <span style=3D"=
+color: #000000; font-size: 12px; font-weight: 400; line-height: inherit; te=
+xt-decoration: inherit; font-family: arial; font-style: normal;">Visit Us O=
+nline at </span><a href=3D"https://educreditsolutions.acemlna.com/lt.php?s=
+=3Dda50c2422345422f9a0dc81917526f09&i=3D433A447A11A2352" data-ac-default-co=
+lor=3D"1" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; te=
+xt-decoration: underline; font-family: arial; font-weight: 400; font-size: =
+12px; font-style: normal;" target=3D"_blank"><span style=3D"color: ; font-s=
+ize: inherit; font-weight: inherit; line-height: inherit; text-decoration: =
+inherit;">www.educreditsolutions.com</span></a> <br><br><span style=3D"colo=
+r: inherit; font-size: inherit; font-weight: bold; line-height: inherit; te=
+xt-decoration: inherit;" class=3D"">Work With Elle</span><br class=3D""></d=
+iv>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: cente=
+r;" class=3D"">For information regarding 1-on-1 Coaching, Staff Training an=
+d Education Services, you can schedule a discovery call at <a href=3D"https=
+://educreditsolutions.acemlna.com/lt.php?s=3Dda50c2422345422f9a0dc81917526f=
+09&i=3D433A447A11A2353" data-ac-default-color=3D"1" class=3D"" target=3D"_b=
+lank" style=3D"margin: 0; outline: none; padding: 0; color: #045fb4; text-d=
+ecoration: underline;"><span style=3D"color: ; font-size: inherit; font-wei=
+ght: inherit; line-height: inherit; text-decoration: inherit;">bit.ly/disco=
+verycallwithelle</span></a></div>=0A<div style=3D"margin: 0; outline: none;=
+ padding: 0; text-align: center;" class=3D""><br class=3D""><span style=3D"=
+color: inherit; font-size: inherit; font-weight: bold; line-height: inherit=
+; text-decoration: inherit;" class=3D"">Contact Us</span><br class=3D""></d=
+iv>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: cente=
+r;" class=3D""><a href=3D"mailto:support@educreditsolutions.com" data-ac-de=
+fault-color=3D"1" class=3D"" style=3D"margin: 0; outline: none; padding: 0;=
+ color: #045fb4; text-decoration: underline;" target=3D"_blank"><span style=
+=3D"color: ; font-size: inherit; font-weight: inherit; line-height: inherit=
+; text-decoration: inherit;">support@educreditsolutions.com</span></a></div=
+>=0A<div style=3D"margin: 0; outline: none; padding: 0; text-align: center;=
+" class=3D"">Direct: (225) 620-6202<br class=3D"">Toll-Free: 1-800-373-8491=
+<br class=3D""></div>=0A </span></div>=0A</td>=0A</tr>=0A</table>=0A</td>=
+=0A</tr>=0A</table>=0A</td>=0A</tr>=0A<tr style=3D""><td id=3D"layout-row-m=
+argin3278" valign=3D"top" style=3D"padding: 0;"><table width=3D"100%" borde=
+r=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"font-size: 13px; min-w=
+idth: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: =
+initial !important;"><tr id=3D"layout-row3278" class=3D"layout layout-row w=
+idget _widget_picture style3278" align=3D"center" style=3D""><td id=3D"layo=
+ut-row-padding3278" valign=3D"top" style=3D"padding: 20px 0 0 20px;"><table=
+ width=3D"100%" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D"f=
+ont-size: 13px; min-width: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0=
+pt;"><tr><td class=3D"image-td" align=3D"center" valign=3D"top" width=3D"63=
+0"><img src=3D"https://educreditsolutions.imgus11.com/public//2a0ea3f14572e=
+3829345d5f92f330073.jpg?r=3D1870747911" alt=3D"" width=3D"176" style=3D"dis=
+play: block; border: none; outline: none; width: 176px; opacity: 1; max-wid=
+th: 100%;"></td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</=
+tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</td>=0A</tr>=0A</table>=0A</di=
+v>=0A<img src=3D"https://educreditsolutions.acemlna.com/lt.php?nl=3D11&c=3D=
+433&m=3D447&s=3Dda50c2422345422f9a0dc81917526f09&l=3Dopen" border=3D"0" wid=
+th=3D"1" height=3D"1" style=3D"display:block;width:1px!important;min-width:=
+1px!important;max-width:1px!important;height:1px!important;border:0;overflo=
+w:hidden;" /><br /><div id=3D"ac-footer" style=3D"clear:both;background-col=
+or:inherit;background:inherit;min-width:100%;mso-table-lspace:0pt;mso-table=
+-rspace:0pt;padding:20px;color:#000000;font-size:11px;font-family:arial,hel=
+vetica,sans-serif;line-height:140%;line-height:1.4;text-align:center;box-si=
+zing:border-box;">=0A=09<center>=0A=09=09Sent to: <span style=3D"font-size:=
+11px;font-family:arial,helvetica,sans-serif;font-weight:normal;text-decorat=
+ion:none;outline:none;">bruce.k.cosma@gmail.com</span>=0A=09=09<br>=0A=09=
+=09<br>=0A=09=09<a href=3D"http://educreditsolutions.acemlna.com/proc.php?n=
+l=3D11&c=3D433&m=3D447&s=3Dda50c2422345422f9a0dc81917526f09&act=3Dunsub" st=
+yle=3D"font-size:11px;font-family:arial,helvetica,sans-serif;font-weight:bo=
+ld;text-decoration:underline;"><span style=3D"font-weight:bold;text-decorat=
+ion:underline;">Unsubscribe</span></a>=0A=09=09<br>=0A=09=09<br> EduCredit =
+Solutions, 9618 Jefferson Hwy., Ste. D #310, Baton Rouge, Louisiana 70809, =
+United States=0A=09</center>=0A</div>=0A<br clear=3D"all" /></body>=0A</htm=
+l>
+--_=_swift-13703074125eb6270cab8040.60389559_=_--
+

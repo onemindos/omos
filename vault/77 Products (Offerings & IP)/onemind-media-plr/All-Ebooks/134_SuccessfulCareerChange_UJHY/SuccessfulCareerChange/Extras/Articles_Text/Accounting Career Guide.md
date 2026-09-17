@@ -1,0 +1,11 @@
+# Accounting Career Guide
+
+If you are interested in getting into the field of accounting, you may want to find a career guide to get you well on your way.  There are many career guides out there that can provide some extremely beneficial information to get you into the job of your dreams.  If you�ve always dreamed of an accounting job, an accounting career guide will help put you on the path toward a successful job in the accounting industry where you can realize amazing success and great advancement.
+
+You see, the best part about working in the field of accounting is that there are so many places you can go once you have an �in� into a company.  Of course, most people start out as simple payroll clerks and then advance through the ranks towards their ultimate goals.  Which means you must have a goal when you are trying to achieve a successful career in the accounting field.  That�s where an accounting career guide comes in.
+
+What the accounting career guide does is show you where to start and where you can go with a little hard work and initiative.  It can outline all of the careers that are in the accounting field as well as tell you what you will need to do to advance through the ranks and achieve your ultimate career goal � whatever that might be.  And that�s where the accounting career guide comes into play.  It can help you identify where exactly you want to be in your career and then you can set goals to help keep you in line with where you want to be.
+
+The field of accounting is a lucrative place to be as there are many different jobs that you can do in this career path.  Usually, you will start out small as a clerk and then you can advance through the ranks into a certified public accountant, an auditor, and even a chief financial officer of a company.  The possibilities are really endless, but you�ll need a plan first.
+
+Find an accounting career guide that will help you know what to expect in specific jobs as well as any special training that will help you succeed.  An accounting career guide will also help you know how to advance within your company and finally achieve the job of your dreams.  You can start small and then finally get to where you want to be with a little hard work as well as the help of an accounting career guide to start you on your way.

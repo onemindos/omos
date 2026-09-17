@@ -1,0 +1,320 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "github-copilot/claude-haiku-4.5",
+        "fallbacks": [
+          "amazon-bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0"
+        ]
+      },
+      "models": {
+        "amazon-bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+          "alias": "Haiku 4.5 [bedrock]"
+        },
+        "amazon-bedrock/us.anthropic.claude-opus-4-6": {
+          "alias": "Opus 4.6 [bedrock]"
+        },
+        "amazon-bedrock/us.anthropic.claude-sonnet-4-6": {
+          "alias": "Sonnet 4.6 [bedrock]"
+        },
+        "github-copilot/claude-haiku-4.5": {
+          "alias": "Haiku 4.5 [GH]"
+        },
+        "github-copilot/claude-opus-4.5": {
+          "alias": "Opus 4.5 [GH]"
+        },
+        "github-copilot/claude-opus-4.6": {
+          "alias": "Opus 4.6 [GH]"
+        },
+        "github-copilot/claude-opus-4.7": {
+          "alias": "Opus 4.7 [GH]"
+        },
+        "github-copilot/claude-sonnet-4": {
+          "alias": "Sonnet 4 [GH]"
+        },
+        "github-copilot/claude-sonnet-4.5": {
+          "alias": "Sonnet 4.5 [GH]"
+        },
+        "github-copilot/claude-sonnet-4.6": {
+          "alias": "Sonnet 4.6 [GH]"
+        },
+        "github-copilot/gemini-2.5-pro": {
+          "alias": "Gemini 2.5 Pro [GH]"
+        },
+        "github-copilot/gemini-3-flash": {
+          "alias": "Gemini 3 Flash [GH]"
+        },
+        "github-copilot/gemini-3.1-pro": {
+          "alias": "Gemini 3.1 Pro [GH]"
+        },
+        "github-copilot/goldeneye": {
+          "alias": "Goldeneye [GH]"
+        },
+        "github-copilot/gpt-4.1": {
+          "alias": "GPT-4.1 [GH]"
+        },
+        "github-copilot/gpt-5-mini": {
+          "alias": "GPT-5 Mini [GH]"
+        },
+        "github-copilot/gpt-5.2": {
+          "alias": "GPT-5.2 [GH]"
+        },
+        "github-copilot/gpt-5.2-codex": {
+          "alias": "GPT-5.2 Codex [GH]"
+        },
+        "github-copilot/gpt-5.3-codex": {
+          "alias": "GPT-5.3 Codex [GH]"
+        },
+        "github-copilot/gpt-5.4": {
+          "alias": "GPT-5.4 [GH]"
+        },
+        "github-copilot/gpt-5.4-mini": {
+          "alias": "GPT-5.4 Mini [GH]"
+        },
+        "github-copilot/gpt-5.4-nano": {
+          "alias": "GPT-5.4 Nano [GH]"
+        },
+        "github-copilot/grok-code-fast-1": {
+          "alias": "Grok Code Fast [GH]"
+        },
+        "github-copilot/raptor-mini": {
+          "alias": "Raptor Mini [GH]"
+        }
+      },
+      "sandbox": {
+        "mode": "off"
+      },
+      "subagents": {
+        "model": "github-copilot/claude-haiku-4.5"
+      },
+      "thinkingDefault": "adaptive"
+    },
+    "list": [
+      {
+        "id": "sentinel",
+        "default": true,
+        "name": "Sentinel",
+        "workspace": "/home/ubuntu/.openclaw/workspace",
+        "model": {
+          "primary": "github-copilot/claude-haiku-4.5",
+          "fallbacks": [
+            "amazon-bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0"
+          ]
+        },
+        "skills": [
+          "agent-sentinel",
+          "onemind-maintainer",
+          "taskflow",
+          "tavily",
+          "summarize",
+          "telegram",
+          "onemind-inbox",
+          "onemind-sync"
+        ]
+      }
+    ]
+  },
+  "auth": {
+    "profiles": {
+      "github-copilot:github": {
+        "mode": "token",
+        "provider": "github-copilot"
+      }
+    }
+  },
+  "bindings": [
+    {
+      "type": "route",
+      "agentId": "main",
+      "match": {
+        "channel": "discord",
+        "peer": {
+          "kind": "channel",
+          "id": "1482355265092190319"
+        }
+      }
+    },
+    {
+      "type": "route",
+      "agentId": "main",
+      "match": {
+        "channel": "telegram"
+      }
+    }
+  ],
+  "gateway": {
+    "auth": {
+      "mode": "none",
+      "token": "lK5vpaYD2ZHKonbov7RvYVwOIOneaDoS"
+    },
+    "bind": "loopback",
+    "controlUi": {
+      "allowedOrigins": [
+        "https://omos-sentinel.tail717ba0.ts.net"
+      ],
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "mode": "local",
+    "port": 18789,
+    "tailscale": {
+      "mode": "serve"
+    },
+    "trustedProxies": [
+      "127.0.0.1"
+    ]
+  },
+  "meta": {
+    "lastTouchedAt": "2026-05-11T09:00:20.466Z",
+    "lastTouchedVersion": "2026.5.7"
+  },
+  "plugins": {
+    "allow": [
+      "discord",
+      "telegram",
+      "github-copilot",
+      "amazon-bedrock",
+      "file-transfer",
+      "memory-core",
+      "openshell",
+      "thread-ownership",
+      "webhooks",
+      "browser",
+      "active-memory",
+      "device-pair",
+      "llm-task",
+      "memory-wiki",
+      "phone-control",
+      "skill-workshop"
+    ],
+    "entries": {
+      "amazon-bedrock": {
+        "enabled": true
+      },
+      "browser": {
+        "enabled": false
+      },
+      "device-pair": {
+        "enabled": false
+      },
+      "discord": {
+        "enabled": true
+      },
+      "file-transfer": {
+        "enabled": false
+      },
+      "github-copilot": {
+        "enabled": true
+      },
+      "memory-core": {
+        "enabled": true
+      },
+      "openshell": {
+        "enabled": true
+      },
+      "skill-workshop": {
+        "enabled": true
+      },
+      "telegram": {
+        "enabled": true
+      },
+      "thread-ownership": {
+        "enabled": true
+      },
+      "webhooks": {
+        "enabled": true
+      },
+      "active-memory": {
+        "enabled": false
+      },
+      "llm-task": {
+        "enabled": true
+      },
+      "memory-wiki": {
+        "enabled": false
+      },
+      "phone-control": {
+        "enabled": false
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "8684619971:AAH7q0DhymiQgno9mcP3jIrBAxXYXWG8kiI",
+      "groupPolicy": "allowlist",
+      "dmPolicy": "open",
+      "commands": {
+        "native": "auto"
+      },
+      "streaming": {
+        "mode": "partial"
+      },
+      "groups": {},
+      "allowFrom": [
+        "*"
+      ],
+      "execApprovals": {
+        "enabled": true,
+        "approvers": [
+          "577573558"
+        ],
+        "target": "dm"
+      }
+    },
+    "discord": {
+      "enabled": true,
+      "token": "MTQ4MjMxOTg2NzUyNzgyNzU0OA.GErDWc.neOMR7WoIA21mqxCwRt83DPUvkBzZumY2fQ8uA",
+      "allowFrom": [
+        "1024395579742228570"
+      ],
+      "streaming": {
+        "mode": "off"
+      },
+      "threadBindings": {
+        "enabled": true
+      },
+      "guilds": {
+        "1453411552181883027": {
+          "requireMention": false,
+          "channels": {
+            "1482355265092190319": {
+              "requireMention": false,
+              "enabled": true
+            }
+          }
+        }
+      },
+      "execApprovals": {
+        "enabled": true,
+        "approvers": [
+          "1024395579742228570"
+        ],
+        "target": "channel",
+        "cleanupAfterResolve": true
+      }
+    }
+  },
+  "skills": {
+    "entries": {
+      "apple-notes": {
+        "enabled": false
+      },
+      "apple-reminders": {
+        "enabled": false
+      },
+      "bear-notes": {
+        "enabled": false
+      },
+      "blogwatcher": {
+        "enabled": false
+      }
+    }
+  },
+  "session": {
+    "maintenance": {
+      "mode": "enforce",
+      "pruneAfter": "14d",
+      "maxEntries": 200
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# A Pregnancy Diet Plan That Works
+
+Congratulations on your pregnancy! Of course, the first thing that�s on your mind is staying healthy throughout your pregnancy. Part of staying healthy is ensuring you have a pregnancy diet plan that works. 
+
+There are a number of reasons why moms who are expecting need to understand healthy nutrition but the most important is because of the impact what you eat has on your baby. A healthy diet is good for both you and your baby.
+
+Weight gain goes with being pregnant. In fact, it is a positive thing for both mom and baby. This is how nature begins to prepare your body for what is to come. A healthy diet is an excellent way to provide the nutrient for proper weight gain rather than excessive weight gain. When you gain the right amount of weight it will be much easier to lose after the baby is born. 
+
+There has also been a direct connection established between your nutritional health and how the effect it has on children later in their life. It�s been established that everything you do in those nine months from your physical activity to the fluids you drink will affect your child�s current growth and the child�s future growth. What you eat while you are pregnancy has the potential to prevent future health problems with your child and you. And of course, the food you eat now will affect your weight gain throughout your pregnancy.
+
+During the first trimester, it is important that you make sure to limit any excess calorie intake. After the first 12 weeks pass, you can add an additional 300 calories per day in addition to your regular calorie intake. 
+
+If you are of normal weight, you should expect to gain 25 to 35 pounds during your pregnancy. You should limit your weight gain to no more than 5-10 pounds in the first 20 weeks, and then following that a pound per week. Doctors advise that you lose some weight before becoming pregnant if you are overweight. This will make it easier for you to keep extra weight off during your pregnancy and to lose it after the birth. Statistically women who are overweight have a significantly higher emergency cesarean rate, miscarriage rate, more incidents of gestational diabetes and suffer from high blood pressure more often.
+
+To significantly increase the likelihood of a healthy pregnancy make sure that you eat a nutritional diet, high in fresh fruits and vegetables, whole grains, lean meats, and protein, while avoiding processed foods.

@@ -1,0 +1,121 @@
+<?php include("../Includes/Configure.php"); ?>
+<html>
+	<head>
+		<title>Buying Homes In Portugal  | Buying Homes in Portugal: A Way to A New Paradise</title>
+		<META http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Creator"			content="Kotzakoliou, SSA - http://www.niche-mania.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="Buying Homes in Portugal: A Way to A New Paradise - In Portugal, there are so many different cities and towns that you can choose to go to or buy property from. There are certain things to be considered in buying a property, the weather, best location, can bite your taste and comforts you. In Portugal, they">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">
+		<meta name="Robots"				content="index,follow">
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<p style="margin-bottom: 5; margin-right: 10;">
+						<?php include("../Includes/Menu.php"); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdLeft">
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+				<td class="tdContent">
+					<br>
+					<p>
+						<b>Buying Homes in Portugal: A Way to A New Paradise </b>
+						<br>
+						<b>
+							<small>
+								
+							</small>
+						</b>
+						<br>
+						<br>
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						In Portugal, there are so many different cities and towns that you can choose to go to or buy property from. There are certain things to be considered in buying a property, the weather, best location, can bite your taste and comforts you. In Portugal, they are abundant of that domain.
+<br><br>
+Like other countries there are rules to be followed in having a property. Here are the some of the basic steps to help you understand the procedures and legal acts that are required in acquiring a property in Portugal:
+<br><br>
+•  The use of government licensed estate agent, for at least they are bonded by State in the form of an Insurance Cover that may be claimed against in the case of proven dispute.
+<br><br>
+•  Buyer may also use the so called Contrato de Promessa de Compra e Venda or Promissory Contract detailing the conditions of the Sale. This contract is then legalized by registering it in the Notary Office. 
+<br><br>
+•  This contract is legally binding on both sides and the law requires the seller to repay twice the deposit should he withdraw from the sale. Likewise, if the buyer fails to complete, he forfeits the total of his deposit. There are specific laws relating to this act that a lawyer will be able to explain.
+<br><br>
+•  In having a lawyer to represent the buyer in their transaction, he or she needs a document named Procuração Publica,  prepared with the necessary details and then in the Notary Office, this document is signed and registered by the Notary. 
+<br><br>
+•  Every buyer is required to obtain a Fiscal Number from the local Tax Office or Finanças.
+<br><br>
+•  Proceeding to act of purchase, the purchase will be subject to a Municipal payment named IMT - Imposto Municipal sobre Transamissões which as from the 1st of January 2003 replaces the previous tax payment named SISA. This payment is paid in the local Tax Office nearest to the property. The amount to be paid is related in terms of percentage by platforms to the cost of the property being purchased. In limited cases the buyer will be exempt from paying this tax.
+<br><br>
+•  When all requirements have been completed the transaction can proceed in any Notary Office. This act is known as the Escritura de Compra e Venda which takes place in front of the selected Notary and is recorded in his official books. The Notary will check prior to the act of sale that all the necessary documents are correct to ensure that the sale can precede according to the facts provided. 
+<br><br>
+It is at this moment that payment is normally completed to the seller, and when applicable, the balance of purchase has to be made according to the signed Contract in Point 2 above. After the act is recorded the Notary Office, it will issue a photocopy of the entry which is the proof to the buyer that the act has officially taken place. The photocopy will carry the seal of the Notary but as further official copies can be requested at any time this document should not be mistaken for a Title Deed- as known in the UK.
+<br><br>
+Every year all the owners of any property is required to pay the annual tax called IMI (formerly know as Contribução Autarquica). It is most important to pay these charges as the failure for doing so eventually results in the property being placed for sale on the market by the State and goes to the highest bidder.
+<br><br> 
+Having a new life in Portugal is not hard. There are many ways how to earn money and let your self survive in daily needs, like there are investment opportunities. The ongoing Reform in the Forestry Sector creates a positive differentiation, favoring large-size forestry areas and allowing new plantations to access high-quality soils. 
+<br><br>
+Portugal’s temperate climate and soil quality offer optimal growth conditions for valuable species such as cork, eucalyptus, pine and other noble woods, which can help one to supply their needs.
+<br><br>
+Portugal is a place that anawers your dreams. It is a paradise created by God for the people of the new generations.  So what are you waiting for? Grab a piece of land from this exotic place and enjoy life in a laidback way.
+						<br>
+						<br>
+						
+					</p>
+					<br>
+					<?php	
+						if ($DisplayAmazon)
+							{
+								echo "<br><center>";
+								include("../Includes/Amazon_468x60.php");
+								echo "</center><br>";
+							}
+					?>					
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2">
+					<?=$Category;?> News and Events
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<?php include("../Includes/Google_Search.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<br>
+					<?php include($Domain."Includes/NewsFeed.php?CAT=Buying+Homes+In+Portugal+"); ?>
+					<?php	
+						if ($DisplayAmazon)
+							{
+								echo "<br><center>";
+								include("../Includes/Amazon_728x90.php");
+								echo "</center><br>";
+							}
+					?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdFooter" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>
+

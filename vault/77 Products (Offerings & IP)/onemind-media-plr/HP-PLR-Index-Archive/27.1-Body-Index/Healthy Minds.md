@@ -1,0 +1,23 @@
+---
+id: hp-27-20260113225955
+title: "Healthy Minds"
+type: reference
+path: HP
+domain: 25-49
+folder: "27"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/hp, path/hp/27, type/reference, status/active]
+ai_summary: "Healthy Minds"
+---
+# Healthy Minds
+
+Healthy Minds
+
+Healthy minds and mental health is a revolutionary status that we all must face everyday. We all face many problems everyday including terrorism, child abuse, rape, and murder and so forth whether indirectly or directly. There is no escape, so who is really out in this world with a healthy mind? NO ONE! If you honestly think that you are an exception to the rule then you are on the path to destruction. Even professionals are plagued with problems and if they say they are not, then you had better see someone else immediately. The fact is most psychological professionals go into the business trying to escape their own realities in life. Many professionals would rather help someone else while burying their problems under the surface. 
+Mental health related issues interrupt even professionals in the criminal system every single day. There is no one in this world excluded from mental illness. 
+There are all types of people in the world, starting with business related people who think they do not have a problem. Do you know what they do every night when they go home? Do you know how they handle their stressors? If you do, no need to read on, since I am out to revenge those that believe they have all the answers to each problem we face everyday of our lives, whether it is directly or indirectly. I am out to avenge those that believe they are special and everyone around them has a problem. I am a realist, an expert in many fields and a woman that has gone all lengths to correct many opinions, theories, guesses and so forth. I do not believe that a person has the right to disregard another simply because they believe someone is imagining things. Rather, I will look closely at a person with mental illnesses and regard them before I will regard the so-called normal. Let me hit you with my best shot. Contributes to Pat Benetar, we can see that there are many individuals in life and all of us have our own state of mind.  We have schizophrenias, psychotics, bipolar, depressive, psychopathic, sociopath, and so forth. The problem is we are not agreeing on one belief. We have people that believe the law is right in all areas, but others that claim the law is controlling, which in fact, this second dis right in a large way. 
+In reality psychopathic and sociopath as well as other mental ill individuals are deemed GENUISES. Now we have a bunch of geniuses in life and a lot of average thinkers, so what are we going to do? When you are looking at geniuses verses common thinkers there are going to be conflicts, and each one will have their own state of mind devoid the other. We are talking CONTROVERSY!  
+Controversy? Let’s run like hell until we get there. When we do not understand something it is called IGNORANT. When we understand but refuse to accept it, is called STUPID. Now, if you think I am insulting, well, let’s take a closer look at what I am talking about and then you go ahead and judge me. OK. Ignorant, we have a problem; someone else does not see life the way we see life…HUM! Ok…I see it now. You are different from the other person you are talking to, and I am not seeing why this person thinks this way? HUM! Is it possible this person lived more than I lived? Does this person have more experience? Is it possible this person has a medical related problem that is instigating their psychological impairment? Is it possible that the mind is affected and the body is not? What about the nervous system, how does it contribute to the mental status of the person? HUM! I am going to let you answer these questions yourself, since I do not have time to waste time. But, after years of living, it should be obvious. We are talking about some real-life problems here and everyone is ignoring them, or disregarding them, stating that everyone should be treated the same. WRONG! Are you going to treat someone with Schizophrenia the same as you would treat a common mental ill individual? NO! IF you do, you are the one with more problems than the one that suffers Schizophrenia. The fact is these people are suffering and if you continue to ignore them, you will suffer too. While you are sitting around blaming the victim, you might as well sit around and blame yourself. There are many cognitive disorders that we will discuss in the next article, however understanding which is cognitive and what is not can help us to understand mental illnesses. 

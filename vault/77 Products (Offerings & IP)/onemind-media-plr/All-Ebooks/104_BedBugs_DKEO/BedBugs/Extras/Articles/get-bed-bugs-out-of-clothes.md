@@ -1,0 +1,37 @@
+# Get the Bed Bugs Out of Your Clothes
+
+Bed bugs have been exterminated from the US soil sometime in 1940's and the 1950's. The use of DDT has been succesful in eradicating these pests. However, international travelling and immigration have brought back to the US the exterminated, blook sucking pests. And establishments that are said to be the bed bugs exchange centers are: One, busses, two, trains, three, cabs, four, airplanes, and five, hotel rooms, six, motels and breakfast-inns.
+
+ 
+
+Don't you notice that the places where you can see bed bugs from and out of your clothes are transportation carriage and the place where travellers stay for the night? Right. Bed bugs are travellers and hitchhikers. You must know the ways on how to get the bed bugs out of your clothes when you get into these places.
+
+ 
+
+You cannot get bed bugs out of your clothes simply by avoiding the mentioned hotspots. These places are unavoidable. They are part of our lives. But if you want to keep your house clean and free from bed bugs infestation, check out these Tips on How to Get the Bed bugs Out of Your Clothes.
+
+** Simple Tips on How to Get the Bed Bugs Out of Your Clothes
+
+Tip # 1: In a hotel, you can get bed bugs out of your clothes if you shake off your clean and used clothes for bed bugs the night before you check out. Having bed bugs in your things or clothes does not mean that you are filthy and stinking. Bed bugs do not stay on a certain area or place because it is clean or filthy. They stay in a place because they are attracted to carbon monoxide, of which humans exhale, and they feed on human blood.
+
+ 
+
+Tip # 2: To get the bed bugs out of your clothes, you must make sure that the suitcase on which you will encase it is bed bugs free. Even if you shake your clothes just to get bed bugs out of your clothes, it won't do good since the very suitcase that will carry your clothes with has bed bugs inside.
+
+The night before you leave your hotel, remove any items that you have and the clothes inside your suitcase. Buy a water based insect killer and spray on the insecticide around the suitcase. Don't spray on inside.
+
+ 
+
+Then place your belongings and other items inside a clean, dry, bath tub. Bed bugs don't like ceramics and marbles much, so they won't be present anywhere near the tub. However, all the wood furniture near your bed are undoubtedly infested.
+
+Tip # 3: Surer way to get bed bugs out of your clothes is to have your clothes, clean and used, to the laundry. Ask the laundryman to soak it in warm water for twenty minutes. Clinging nymps on your used clothes, especially the clothes you used on bed, will die when soaked in warm water.
+
+ 
+
+Tip # 4: You can get bed bugs out of your clothes if you will resist the urge to sleep on the bed before you leave. The bed bugs may cling onto your sleeves as its last shot to draw blood from you and stay there before you leave.
+
+ 
+
+Tip # 5: When you get home, remove all your clothing, and even socks, and soak them in warm water for twenty minutes. Do this immediately to avoid speading bed bugs around your house in case a female bed bug hitched at your collar or sleeve. A single female bed bug lays 300 eggs. And adult bed bugs can last for eighteen months even without feeding.
+
+You might think that following the tips abovementioned will make you look like a person sufferring from obsessive compulsive. This is untrue. This is the best measure to do to avoid having your house getting infested with these nasty bugs. They are very hard to terminate once they invade your household. The best remedy for a bed bug infested home is to throw away every furniture around and abandon the place for three years. So which is easier and better to do? Prevent the bed bugs from coming your house or exterminate them instead?

@@ -1,0 +1,49 @@
+# Bed Bugs InsectThe Insect Called Bed Bugs
+
+There are close to about a million species or kinds of insects living in our planet. There are millions more that had been extinct through the years because of natural phenomenon like climate change and man-made environment changes. 
+
+But did you know that insects are the most resilient living organisms? Yes, it is true. They are so resilient that thousands of species can live for years without nourishment or feeding. 
+
+Studies and scientists� assertions also note that if an annihilation do happen in the planet, every living creature will be affected and annihilated except for insects.
+
+Insects are gifted with protective structures, usually in the outermost layer of their skin or physical structures. These protective layers, which are naturally and usually characterized by wax-like substances, are what makes insect very resilient and adoptive to harsh physical environmental changes.
+
+Insects also have extremely low threshold to pain. Even if you crash an insect, or take out a wing, or handicap it, it would still strive to move away from you or from any attacker. 
+
+Bed bugs 
+
+Bed bugs is only one among the millions, if not billions or trillions, of insects living with us in this planet called Earth. 
+
+Bed bugs also belong to kingdom Insecta, is scientifically known as Cimex lectularius. 
+
+Bed bugs are so tiny that you can hardly see them even in broad daylight. But there are bed bugs that can grow to about one fourth of an inch, the most they can grow. These bed bugs are the mature ones that have regular source of food and good natural or conducive habitat. 
+
+Bed bugs, like most other insects, live in places that are usually neglected by people. 
+
+In your room, you can probably see and find bed bugs inside small and tiny crevices, cracks or holes in the wall, the ceiling, the floor, some furniture or even your bed.
+
+Bed bugs are among those kinds of insects that sleep or hide during daytime to finally come out and hunt for food at night time. Call its mart, but such insects have amazing biological clocks that know when it is time to go out and look out for prospective and unsuspicious victims. 
+
+Bed bugs� food
+
+Bed bugs do not eat anything but blood. However, the blood needed by bed bugs for nourishment should come from mammals, or hot-blooded animals. Again, they might be smart enough because they can tell by mere smelling if a prospective victim or host is hot-blooded or not.
+
+Bed bugs suck blood of people. But their food requirement is not limited to people�s blood. They can also suck, as alternatives, blood of dogs, cats, birds, or whatever animal or pet they can get their mouth into.
+
+Bed bugs are among those insects that are given structures like beaks that can pierce into victim�s skin. Such insects use those structures to suck and sip blood from victims. 
+
+Insects normally are not carnivorous. So are bed bugs. But you may have a different classification for them because of their eating habit. Somehow, they can be related to vampires. Don�t be amazed. Of course, that is just to tickle you with a little sense of humor. 
+
+Because bed bugs, and similar insects, prey on and eat blood, it follows that their excretion is also having resemblance to blood. As they say, what goes in is also what goes out. 
+
+Hence, you can find that bed bugs� craps and pee are red or deep-red colored. They may appear as such tiny red stains in your bed, your bed sheet, furniture surfaces or wherever they may have contact with. 
+
+Insects like that are normally detected because of their excretion. Somehow, these craps betray them. 
+
+Bed bugs and other insects 
+
+Because bed bugs belong to the insects� family, naturally it follows that they are bonafide insects. Classifying them or grouping them with blood-sucking insects will be logical. 
+
+However, be informed that, yes, bed bugs do suck blood, but they are very safe. Unlike mosquitoes, which transmit and transfer diseases form one person to another, bed bugs� bites are not that notorious.
+
+Scientists have found that bed bugs� stomachs have linings and peptides that will not allow bacteria, fungi and viruses to thrive. It may be a consolation for you.

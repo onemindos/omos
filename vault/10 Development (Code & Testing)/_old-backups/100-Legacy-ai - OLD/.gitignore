@@ -1,0 +1,34 @@
+# Media files - DO NOT sync to Git
+07-Resources/Media-Private/**
+07-Resources/Media-Working/**
+*.mp3
+*.mp4
+*.mov
+*.avi
+
+# Large documents - sync separately
+07-Resources/Documents/**/*.pdf
+
+# Large PDFs (over 5MB - use Git LFS for smaller PDFs)
+*.pdf
+
+# Office documents (binary, not Git-friendly)
+*.docx
+*.pptx
+*.xlsx
+*.doc
+*.ppt
+*.xls
+*.potx
+
+# Obsidian workspace (personal settings)
+.obsidian/workspace*.json
+.obsidian/workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+~$*

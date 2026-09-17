@@ -1,0 +1,18 @@
+# Thinking Before You Act in Self Mastery
+
+Why it is important to think before you act?
+It is important to think before you act, since you do not want to go through life regretting every decision you make. When you make spontaneous decisions, often you will look back at the consequences and regret the decisions. Although you will make mistakes along the way, you want to learn to think before you act to limit your consequences. Instead of feeling like a failure when you make a mistake, use the failure as a weapon to take back control of your life. DO not make excuses however, allowing your failures to be a reason for you to continue making mistakes.
+
+When you fail to think about something before you make a decision, it could cost you a lot in the future. Try to slow down and think about what you are doing before you act. For example, if you decide to visit somewhere, you that it could present risks or you could run into troubles, since it is a part of life. Think about what could happen before you venture into the trip so that you can prepare, and setup backup plans to protect you. You want to stop and think about what your heart and mind is telling you before you do anything first. No matter what it is, you should think before you act on anything. If you make this your golden rule then you should not have anything to worry about regardless.
+
+If you take time to think out your action you wont be apt to lie, this is when you have done something wrong and you have to come up with something right away to get yourself out of trouble then your going to lie to get out of what you don�t yourself into. This is very normal for most of us you do not want to get into trouble so you are going to lie to get out of it. 
+
+There is a lot of reason that you should always think about what your going to do this could be something wrong or something that you right. You don�t want to make your mind up with out thinking of all the good things as well as all the bad things that might or could happen to you. All you have to is make this your golden rule never make your mind up on an empty stomach another words don�t act with out thinking and you should be just fine. It�s not any different if it is something that is a good thing or a bad thing you should always think first.
+
+Try to always listen to your heart if it is telling you something then do it. Follow your heart and you�re inside feeling. Listening to what your heart and mind is telling you can help you face problems in the self-mastery processes. 
+
+Thinking before you act is something of great interest to self-mastery, since self-mastery is the process of taking control of your thoughts, feelings, and behaviors. 
+
+It is growing phases we all have to go through, so as you work on thinking before you act to improve your self-mastery skills, do not feel upset when something goes wrong. You will make plenty of mistakes along the way. The best way to deal with the setbacks is to accept that you are human and will make mistakes, yet learn from those mistakes. It will make you stronger in the end. 
+
+You have inner strengths that you can draw from to help you manipulate through the self-mastery processes of development. We encourage you to find information that helps you to understand how you can draw from these inner strengths. It pays to sit down and write down your weaknesses and strengths so that you can use your strengths to your advantage.

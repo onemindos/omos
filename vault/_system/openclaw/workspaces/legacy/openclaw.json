@@ -1,0 +1,489 @@
+{
+  "$schema": "https://openclaw.ai/schema/config/v1",
+
+  // ============================================================
+  // OneMind OS — OpenClaw Gateway Configuration
+  // Legacy Runtime: Sovereign AI consciousness layer
+  // ============================================================
+
+  "gateway": {
+    "bind": "tailscale",
+    "port": 18789,
+    "auth": {
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+
+  // ============================================================
+  // SESSION: Isolate context per channel+sender
+  // ============================================================
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+
+  // ============================================================
+  // BINDINGS: Route Discord channels → agents (codex pillar layout)
+  // ============================================================
+  "bindings": [
+    // 🧭 COMMAND CENTER
+    { "agentId": "legacy",   "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1478604243509448705" } } },
+    // 🧠 UNIFIED INTELLIGENCE (00-24 UI)
+    { "agentId": "grid",     "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445951805096007" } } },
+    { "agentId": "guardian", "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445943789785180" } } },
+    // 💪 HOLISTIC PERFORMANCE (25-49 HP)
+    { "agentId": "spartan",  "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445911707549750" } } },
+    { "agentId": "oracle",   "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480450417522643127" } } },
+    // 🏠 LEGACY EVOLUTION (50-74 LE)
+    { "agentId": "eden",     "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445924202385499" } } },
+    { "agentId": "haven",    "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445937665966161" } } },
+    // 🚀 GENERATIONAL ENTERPRISE (75-99 GE)
+    { "agentId": "empire",   "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445930661744801" } } },
+    { "agentId": "trinity",  "match": { "channel": "discord", "peer": { "kind": "channel", "id": "1480445958876827714" } } }
+  ],
+
+  // ============================================================
+  // AGENT: Legacy
+  // ============================================================
+  "agents": {
+    "defaults": {
+      "workspace": "${OPENCLAW_WORKSPACE:-~/.openclaw/workspace}",
+      "model": "${LEGACY_MODEL:-azure-openai/gpt-4o}",
+      "models": [
+        "azure-openai/gpt-5.2",
+        "azure-openai/gpt-4o",
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini"
+      ],
+      "heartbeat": {
+        "every": "30m",
+        "target": "telegram",
+        "to": "${ZEUS_TELEGRAM_ID}",
+        "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+        "activeHours": {
+          "start": "07:00",
+          "end": "23:00",
+          "timezone": "America/New_York"
+        }
+      },
+      "subagents": {
+        "maxSpawnDepth": 2,
+        "maxChildrenPerAgent": 5,
+        "maxConcurrent": 8,
+        "model": "azure-openai/gpt-4o",
+        "thinking": "medium"
+      },
+      "memorySearch": {
+        "provider": "openai",
+        "model": "text-embedding-3-small",
+        "query": {
+          "hybrid": {
+            "enabled": true,
+            "vectorWeight": 0.7,
+            "textWeight": 0.3,
+            "candidateMultiplier": 4,
+            "mmr": {
+              "enabled": true,
+              "lambda": 0.7
+            },
+            "temporalDecay": {
+              "enabled": true,
+              "halfLifeDays": 30
+            }
+          }
+        }
+      }
+    },
+    "list": [
+      {
+        "id": "legacy",
+        "default": true,
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/legacy",
+        "heartbeat": {
+          "every": "30m",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}"
+        },
+        "tools": {
+          "profile": "full",
+          "alsoAllow": ["lobster", "voice_call"]
+        }
+      },
+      {
+        "id": "spartan",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/spartan",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/25-49 HP (Holistic Performance)"]
+        },
+        "heartbeat": {
+          "every": "1h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "06:00",
+            "end": "22:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "todoist", "obsidian", "weather"]
+        }
+      },
+      {
+        "id": "oracle",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/oracle",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/25-49 HP (Holistic Performance)"]
+        },
+        "heartbeat": {
+          "every": "1h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "07:00",
+            "end": "22:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "todoist", "obsidian", "weather"]
+        }
+      },
+      {
+        "id": "eden",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/eden",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/50-74 LE (Legacy Evolution)"]
+        },
+        "heartbeat": {
+          "every": "1h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "08:00",
+            "end": "21:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "todoist", "obsidian"]
+        }
+      },
+      {
+        "id": "empire",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/empire",
+        "model": "azure-openai/gpt-5.2",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/75-99 GE (Generational Entrepreneurship)"]
+        },
+        "heartbeat": {
+          "every": "1h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "07:00",
+            "end": "23:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "todoist", "obsidian", "zoho-crm"]
+        }
+      },
+      {
+        "id": "haven",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/haven",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/50-74 LE (Legacy Evolution)"]
+        },
+        "heartbeat": {
+          "every": "1h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "06:00",
+            "end": "21:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "todoist", "obsidian", "home-assistant", "weather"]
+        }
+      },
+      {
+        "id": "guardian",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/guardian",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/00-24 UI (Unified Intelligence)"]
+        },
+        "heartbeat": {
+          "every": "2h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "08:00",
+            "end": "22:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "todoist", "obsidian", "onepassword"]
+        }
+      },
+      {
+        "id": "grid",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/grid",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/00-24 UI (Unified Intelligence)"]
+        },
+        "heartbeat": {
+          "every": "1h",
+          "target": "telegram",
+          "to": "${ZEUS_TELEGRAM_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK."
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "group:memory", "github-api", "obsidian", "exec"]
+        }
+      },
+      {
+        "id": "trinity",
+        "workspace": "/home/onemind/onemind-os/openclaw/workspaces/trinity",
+        "memorySearch": {
+          "extraPaths": ["/home/onemind/onemind-os/codex/75-99 GE (Generational Entrepreneurship)"]
+        },
+        "heartbeat": {
+          "every": "2h",
+          "target": "discord",
+          "to": "${DISCORD_COMMUNITY_CHANNEL_ID}",
+          "prompt": "Read HEARTBEAT.md. Follow it strictly. If nothing needs attention, reply HEARTBEAT_OK.",
+          "activeHours": {
+            "start": "09:00",
+            "end": "22:00",
+            "timezone": "America/New_York"
+          }
+        },
+        "tools": {
+          "profile": "messaging",
+          "allow": ["web_fetch", "web_search", "discord", "group:memory", "todoist", "obsidian"]
+        }
+      }
+    ]
+  },
+
+  // ============================================================
+  // CHANNELS (WhatsApp removed — Telegram is primary)
+  // ============================================================
+  "channels": {
+    "telegram": {
+      "botToken": "${TELEGRAM_BOT_TOKEN}",
+      "allowFrom": ["${ZEUS_TELEGRAM_ID}"]
+    },
+    "discord": {
+      "botToken": "${DISCORD_BOT_TOKEN}",
+      "groupPolicy": "allowlist",
+      "guilds": {
+        "1453411552181883027": {
+          "channels": {
+            // 🧭 COMMAND CENTER
+            "1478604243509448705": { "allow": true },
+            "1478604235494133801": { "allow": true },
+            "1478604238287536148": { "allow": true },
+            "1478604241013833859": { "allow": true },
+            // 🧠 UNIFIED INTELLIGENCE
+            "1480445951805096007": { "allow": true },
+            "1480445943789785180": { "allow": true },
+            // 💪 HOLISTIC PERFORMANCE
+            "1480445911707549750": { "allow": true },
+            "1480450417522643127": { "allow": true },
+            // 🏠 LEGACY EVOLUTION
+            "1480445924202385499": { "allow": true },
+            "1480445937665966161": { "allow": true },
+            // 🚀 GENERATIONAL ENTERPRISE
+            "1480445930661744801": { "allow": true },
+            "1480445958876827714": { "allow": true }
+          }
+        }
+      },
+      "threadBindings": {
+        "enabled": true,
+        "idleHours": 24,
+        "spawnSubagentSessions": true
+      }
+    },
+    "imessage": {
+      "allowFrom": ["${ZEUS_PHONE_NUMBER}"]
+    }
+  },
+
+  // ============================================================
+  // VOICE: Talk Mode + Voice Wake + Voice Calls
+  // ============================================================
+  "talk": {
+    "voiceId": "${ELEVENLABS_VOICE_ID}",
+    "modelId": "eleven_turbo_v2_5",
+    "interruptOnSpeech": true
+  },
+
+  "plugins": {
+    "slots": {
+      "memory": "none"
+    },
+    "entries": {
+      "voice-call": {
+        "enabled": true,
+        "config": {
+          "provider": "twilio",
+          "fromNumber": "${TWILIO_FROM_NUMBER}",
+          "twilio": {
+            "accountSid": "${TWILIO_ACCOUNT_SID}",
+            "authToken": "${TWILIO_AUTH_TOKEN}"
+          },
+          "serve": {
+            "port": 3334,
+            "path": "/voice/webhook"
+          },
+          "outbound": {
+            "defaultMode": "conversation"
+          },
+          "inboundPolicy": "allowlist",
+          "allowFrom": ["${ZEUS_PHONE_NUMBER}"],
+          "inboundGreeting": "Legacy here. What do you need?"
+        }
+      },
+      "lobster": {
+        "enabled": true
+      }
+    }
+  },
+
+  // ============================================================
+  // WEB TOOLS
+  // ============================================================
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "maxResults": 8
+      },
+      "fetch": {
+        "enabled": true,
+        "maxCharsCap": 50000
+      }
+    },
+    "exec": {
+      "host": "gateway",
+      "security": "allowlist",
+      "applyPatch": {
+        "enabled": true
+      }
+    },
+    "loopDetection": {
+      "enabled": true,
+      "warningThreshold": 10,
+      "criticalThreshold": 20
+    }
+  },
+
+  // ============================================================
+  // CRON JOBS: Persistent scheduled tasks
+  // ============================================================
+  "cron": {
+    "enabled": true,
+    "maxConcurrentRuns": 3,
+    "jobs": [
+      {
+        "name": "morning-brief",
+        "schedule": "0 7 * * *",
+        "timezone": "America/New_York",
+        "agentId": "legacy",
+        "prompt": "Run the morning-brief lobster routine. Summarize: weather, today's calendar, overdue Todoist tasks, any overnight alerts."
+      },
+      {
+        "name": "health-check",
+        "schedule": "0 */6 * * *",
+        "timezone": "America/New_York",
+        "agentId": "grid",
+        "prompt": "Run the health-check lobster routine. Check VPS resources, Docker containers, NATS connectivity, and service status. Report any issues."
+      },
+      {
+        "name": "evening-digest",
+        "schedule": "0 21 * * *",
+        "timezone": "America/New_York",
+        "agentId": "legacy",
+        "prompt": "Summarize today: tasks completed, messages received, any unresolved items. Write a brief entry to today's memory log."
+      }
+    ]
+  },
+
+  // ============================================================
+  // WEBHOOKS: Receive events from NATS bridge + external systems
+  // ============================================================
+  "hooks": {
+    "enabled": true,
+    "token": "${OPENCLAW_HOOKS_TOKEN}",
+    "path": "/hooks",
+    "allowedAgentIds": ["legacy", "spartan", "oracle", "eden", "empire", "haven", "guardian", "grid", "trinity"],
+    "defaultSessionKey": "hook:ingress",
+    "presets": ["gmail"],
+    "mappings": {
+      "nats-event": {
+        "action": "wake",
+        "match": {
+          "source": "nats"
+        }
+      },
+      "agno-result": {
+        "action": "agent",
+        "agentId": "legacy",
+        "deliver": true,
+        "channel": "last"
+      },
+      "ha-alert": {
+        "action": "agent",
+        "agentId": "haven",
+        "deliver": true,
+        "channel": "telegram",
+        "to": "${ZEUS_TELEGRAM_ID}"
+      },
+      "circle-member": {
+        "action": "agent",
+        "agentId": "trinity",
+        "deliver": false
+      }
+    }
+  },
+
+  // ============================================================
+  // MESSAGES: TTS — OpenAI gpt-4o-mini-tts (unified for all)
+  // ============================================================
+  "messages": {
+    "tts": {
+      "auto": "always",
+      "provider": "openai",
+      "openai": {
+        "model": "gpt-4o-mini-tts",
+        "voice": "onyx"
+      }
+    }
+  },
+
+  // ============================================================
+  // SKILLS
+  // ============================================================
+  "skills": {
+    "enabled": true
+  }
+}

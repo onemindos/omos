@@ -1,0 +1,14 @@
+# Subject: DID YOU GET THIS?
+
+Hey [[firstname]],
+Yesterday, I sent an email regarding my latest launch - Savvy Salesmanship:
+
+>> LINK TO YOUR SALES PAGE
+
+Remember, with this sales bible, you will definitely break all the sales barriers you have never thought possible at all. It's time to make massive money - the stuff you have dreamed of by using this book.
+
+So far, there has been raving reviews about it already, and I don��t want you to miss out on this great opportunity. So grab it now before it��s sold out:
+>> LINK TO YOUR SALES PAGE
+
+Warm regards,
+[[YOURNAME]]

@@ -1,0 +1,45 @@
+# Subject: {FIRSTNAME}, here's how you go about making your home energy & cost effcient ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my energy efficient home ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - Determining current costs.
+2. Part 2 - Cost over savings analysis.
+3. Part 3 - Getting started finding your biggest needs.
+4. Part 4 - Start small for big savings.
+5. Part 5 - Your window savings.
+
+Let's go ahead & get started today with "Determining current costs".
+
+Part 1 - Determining current costs
+============================
+One of the first things that you should do when looking at your ability to make your home more cost efficient is to know just what you are currently paying.  
+
+By taking the time to determine what you are currently spending on energy, you can better determine which areas you have the potential to save with.  In each area of the country, there are different rates, different co ops and a wide range of different types of fuel to take into consideration.  
+
+It is up to you to find out what you are paying based on your monthly bill payments.  Look at those payments and notice two things.  
+
+�  What is the amount that you pay per unit that you use of that fuel type?
+
+�  What is the amount of that fuel type that you use per month in units?
+
+Your goal, then, is to notice how you can change these.  
+
+Can You Lower The Cost Per Unit?
+
+The first way to determine if you can lower you costs with your fuel usage is to determine if you have the most cost effective provider of that fuel.
+
+In many areas of the country, there are several providers of each type of fuel that you need.  For example, you may have a choice in which gas company you use or which electric company that you use.  If that is the case, then you should determine which is capable of providing you with the lowest rate per unit of fuel used.  
+
+To find out if you have an option in this service, simply contact your local government.  They can easily tell you which providers are available as well as provide contact information to you.  
+
+Then, give each provider a call and ask them if they do in fact provide to your home.  If so, then ask what their rates per unit are, as well as any transfer or account set up fees that they may have.  Do this for all of the providers in your area until you find the most affordable choice.  
+
+By doing this, you can instantly save money without having to worry about investing anything but a few minutes of your time.
+
+Next time we'll be discussing alittle about "Cost over savings analysis".
+
+For more information about this part of Determining current costs, please refer to my definitive guide to energy efficient homes at 
+
+Take Care,

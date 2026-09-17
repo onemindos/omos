@@ -1,0 +1,48 @@
+Lean Manufacturing in Steel Companies
+
+Steel companies have caught up with the fever and are trying to implement lean manufacturing in their operations. Lean manufacturing of steel is a production process that seeks to eliminate waste in all steel  production phases with the end purpose of satisfying the customer. 
+
+Results of a successful implementation of lean manufacturing of steel are monumental: huge reductions in production cost and inventory and cycle times, large gains in quality, and evident improvements in delivery reliability. 
+
+Traditional approaches to implement basic lean manufacturing in companies involve :
+
+(a) a top-down rolling out of concepts 
+
+(b) installing and following goal-curves across management levels, meaning departmental goals must be in sync with each other and people are held accountable to meeting their targets 
+
+(c) doing the easy tasks first and gaining momentum from small successful results 
+
+(d) interactive education and creating at atmosphere that welcomes taking risks and 
+
+(e) initiating a pilot project before wide scale implementation. 
+
+Although very worthwhile, lean manufacturing is a very complicated process by itself. Lean manufacturing of steel even creates unique problems. 
+
+Steel parts that carry loads like automotive trains, jet engines, industrial bearings and metal-forming machinery are produced in a time-consuming multi-step process that involves a lot of grinding and polishing. 
+
+Steel parts are first molded out of metal that is relatively soft and then hardened by being subjected to high heat and quickly cooled in a liquid, or "quenched." After this, steel parts still require precision finishing processes to produce ultra-smooth surfaces that reduce friction and wear
+
+In steel production, equipments are often physically huge that rearrangement of these to reduce unnecessary human and machine movements may be unrealistic. Some processes in manufacturing of steel must be performed in large batches. 
+
+Because of the size of the products made, cycle time is often longer than in other manufacturing businesses. Metallurgical constraints limit the aggressive acceleration of heat-up and cool-down cycles. 
+
+Difficult equipment set-up increase production time, effort, yield loss and equipment deterioration. Protective inventories are necessary to avoid costly “out of metal” conditions during bottleneck operations and cannot be avoided.Traditional “kanban” or “signal controls are not suitable because some mills have a variety of routings and passes on the same equipment. 
+
+Also, unions and uncooperative labor relations make empowerment of employees and team building difficult to establish. 
+
+Despite these drawbacks, there have been success stories of lean manufacturing of steel. 
+
+In order to slash manufacturing costs by up to 30 percent and as to add $6 billion to the U.S. economy every year, Edison Materials Technology Center developed and refine, from 2000 to 2005, an innovative technique for making a wide array of hardened steel parts through lean manufacturing of steel. 
+
+“Hard turning”, a method to forge hot metal into nearly perfect parts and hardening and machining these after, was discovered to eliminate waste and possibly the need for polluting oils which are used in cutting and grinding. If hard turning will be applied to manufacture gears and turbine blades, this would meet EMTC’s goals. 
+
+EMTC has developed hard-turning technologies and a complete prototype system. Other members of the team are Delphi Automotive Systems, Torrington Co., Kennametal, Third Wave, Hardinge, Inc., Masco Tech, Georgia Institute of Technology, and Ohio State University. 
+
+Applying lean manufacturing of steel, Cairns Steel Fabricators also doubled its capacity and improved productivity. Established in 1979, CSF is a company focusing on steel fabrication and erection which employs around 60 personnel and handles 150 tonnes of steel per week. 
+
+QMI solutions offered a holistic approach to lean manufacturing of steel through its ProEdge Manufacturing Excellence program. 
+
+To ensure lean manufacturing of steel, CSF decided to address its internal processes first before expanding. CSF altered factory layout, house keeping and machinery setup. Efficient use of space and equipment resulted to increased productivity. 
+
+CSF positioned individual work areas in specific spots and color-coded tools to ensure they are returned to their proper places. In CSF’s case, it was important to look at the “little everyday things” in order to make the system leaner.
+

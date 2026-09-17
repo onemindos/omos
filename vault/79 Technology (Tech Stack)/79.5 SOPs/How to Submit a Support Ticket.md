@@ -1,0 +1,17 @@
+---
+id: ge-79-20260113225956
+title: "How to Submit a Support Ticket"
+type: sop
+path: GE
+domain: 75-99
+folder: "79"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/ge, path/ge/79, type/sop, status/active]
+ai_summary: "How to Submit a Support Ticket"
+---
+# How to Submit a Support Ticket
+
+Parent item: Setting Up Tech Support Requests (Setting%20Up%20Tech%20Support%20Requests%20261809e2458780a9bacfffddc0b9dc8f.md)

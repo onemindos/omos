@@ -1,0 +1,57 @@
+# Subject: {FIRSTNAME}, here's how you go about deciding which hybrid car is right for you ...
+
+Hello {FIRSTNAME},
+
+Thank you for subscribing to my hybrid cars ecourse! In this ecourse you'll learn all about:
+
+1. Part 1 - An eclectic list of the different types of hybrid vehicles
+2. Part 2 - The five types of hybrid technology available to automakers
+3. Part 3 - What to look for and how to make up your mind
+4. Part 4 - The benefits and advantages of owning a hybrid car
+5. Part 5 - Unleashing the future.
+
+Let's go ahead & get started today with "The benefits and advantages of owning a hybrid car".
+
+Part 4 - The benefits and advantages of owning a hybrid car
+============================
+Benefits And Advantages Of Owning A Hybrid Car
+
+If you are still not convinced that a hybrid is right for you, that is perfectly fine. 
+
+JUST NOTE AND REMEMBER: 
+
+There are definite differences between a gasoline-engine car and a hybrid car.  Look around you. Ask yourself. Have you seen a hybrid vehicle in the last week? It is true, more and more they are making their way onto our roads,  driveways, parking lots and garages. 
+
+Just to illustrate a point �hybrid machines� like these have been in use in other equipment long before personal commute vehicles and transportation we see today. Diesel-electric trains and locomotives, buses, submarines and cruise-ships (nuclear-electric). 
+
+Why do we want to Use Hybrid Cars?
+
+It is designed specifically for a purpose and intent � clean running and efficient. 
+
+Increasing the mileage
+
+Reducing the emissions of a gas-powered car
+
+Having more power than the electric car.  
+
+Cut down on unnecessary pollution
+
+Avoid rising gasoline pricing and costly fill-ups at the pump
+
+Enough horsepower to deliver the power and performance that you need. 
+
+Engine is much lighter so that the car will not have to use extra energy in order to accelerate.
+
+Components are smaller requiring less fuel	using less fuel when starting up, getting better gas mileage, using less all-round!
+
+Fuel-efficient, eco-friendly and conscious, stylish
+
+There are many great reasons to invest in hybrids. Some individuals or interest groups will argue that the pricing is still too high, technology too expensive. Fact is the market is growing and expanding with more models launching every year and automakers jumping at the chance to infuse their market. Stay tuned� this is NOT just another fad! 
+
+Here are quick examples for your review of TWO GREAT cars that are available right now! They are also amongst the top sellers, high in demand and most frequently purchased. 
+
+Next time we'll be discussing a little about "Unleashing the future".
+
+For more information about this part of The benefits and advantages of owning a hybrid car, please refer to my definitive guide to hybrid cars at 
+
+Take Care,

@@ -1,0 +1,33 @@
+/* CSS */
+
+body{
+	margin: 0;
+	padding: 0;
+	background: #fff;
+}
+.container{
+	width: 940px;
+	margin: 0 auto;
+}
+.top{
+	background: url(../img/bg-top.png) repeat-x;
+	height: 300px;
+}
+.logo{
+	background: url(../img/top.png) no-repeat;
+	height: 300px;
+}
+.content{
+	background: url(../img/content.png) repeat-y;
+}
+.content-desc{
+	padding: 1px 90px;
+}
+.bottom{
+	background: url(../img/bg-bottom.png) repeat-x;
+	height: 138px;
+}
+.bottom-logo{
+	background: url(../img/bottom.png) no-repeat;
+	height: 138px;
+}

@@ -1,0 +1,146 @@
+/Users/zeuslegacy/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+======================================================================
+DNS AUDIT REPORT - OneMind Email Implementation
+======================================================================
+
+
+======================================================================
+✅ DOMAIN: onemindcodex.com
+======================================================================
+Zone ID: a64ac3c6ee48b79985f9bef31130fc5e
+Status: active
+
+📧 MX Records (Mail Exchange):
+   Priority  10: onemindcodex.com → mx.zoho.com
+   Priority  20: onemindcodex.com → mx2.zoho.com
+   Priority  50: onemindcodex.com → mx3.zoho.com
+
+🔐 TXT Records (Email Authentication):
+   ✅ DKIM: 912934344._domainkey.onemindcodex.com
+      "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCeOpbSSrrgTpc8yNopBRzLOBniKcsYrl...
+   ✅ DKIM: omc._domainkey.onemindcodex.com
+      "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsFFSnFIOKTI7Lsf+m...
+   ✅ SPF: onemindcodex.com
+      "v=spf1 include:one.zoho.com ~all"
+   ✅ DKIM: zc856175981._domainkey.onemindcodex.com
+      "k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsiI6+DgLk/IhQ47fKhJA59VYaN...
+   ⚠️  DMARC: NOT FOUND
+      Add: v=DMARC1; p=quarantine; rua=mailto:dmarc@onemindcodex.com
+
+🔗 CNAME Records: 1 found (showing first 5)
+   zb78191466.onemindcodex.com → zmverify.zoho.com
+
+======================================================================
+✅ DOMAIN: zeusdelacruz.me
+======================================================================
+Zone ID: 935dd4163944603835d1989cdcd30270
+Status: active
+
+📧 MX Records (Mail Exchange):
+   Priority  10: zeusdelacruz.me → mx.zoho.com
+   Priority  20: zeusdelacruz.me → mx2.zoho.com
+   Priority  50: zeusdelacruz.me → mx3.zoho.com
+
+🔐 TXT Records (Email Authentication):
+   ✅ DKIM: 132845228._domainkey.zeusdelacruz.me
+      "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCQviDRltxVhdMWxpO2XrHCwpVQQLTslt...
+   ✅ DKIM: zc856175981._domainkey.zeusdelacruz.me
+      "k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuyJch3YCHZ15B8ZtO8zg7j05bN...
+   ✅ SPF: zeusdelacruz.me
+      "v=spf1 include:zohomail.com include:one.zoho.com ~all"
+   ✅ DKIM: zeusdkim._domainkey.zeusdelacruz.me
+      "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg6mJXoc3147EacYVo...
+   ⚠️  DMARC: NOT FOUND
+      Add: v=DMARC1; p=quarantine; rua=mailto:dmarc@onemindcodex.com
+
+🌐 A Records: 2 found (showing first 3)
+   zeusdelacruz.me → 15.197.148.33
+   zeusdelacruz.me → 3.33.130.190
+
+🔗 CNAME Records: 2 found (showing first 5)
+   _domainconnect.zeusdelacruz.me → _domainconnect.gd.domaincontrol.com
+   www.zeusdelacruz.me → zeusdelacruz.me
+
+======================================================================
+✅ DOMAIN: zeusdelacruz.com
+======================================================================
+Zone ID: 223d69a6b69728e72d9d6e2dcb1ab916
+Status: active
+
+📧 MX Records (Mail Exchange):
+   Priority  10: zeusdelacruz.com → mx.zoho.com
+   Priority  20: zeusdelacruz.com → mx2.zoho.com
+   Priority  50: zeusdelacruz.com → mx3.zoho.com
+
+🔐 TXT Records (Email Authentication):
+   ✅ DKIM: 30112325349._domainkey.zeusdelacruz.com
+      "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIsnrX5esGQRLEPqXUCvumNhlvggdeyp...
+   ✅ DKIM: zc856175981._domainkey.zeusdelacruz.com
+      "k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApjfkpn+6wnGEGbUw3bSH1Bu+e0...
+   ✅ DKIM: zd._domainkey.zeusdelacruz.com
+      "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArOHuRrqaFjtK12xYC...
+   ✅ SPF: zeusdelacruz.com
+      "v=spf1 include:one.zoho.com ~all"
+   ⚠️  DMARC: NOT FOUND
+      Add: v=DMARC1; p=quarantine; rua=mailto:dmarc@onemindcodex.com
+
+======================================================================
+✅ DOMAIN: legacyhq.ai
+======================================================================
+Zone ID: 1ba83e132544a7c203d472fd8401856e
+Status: active
+
+📧 MX Records (Mail Exchange):
+   Priority  10: legacyhq.ai → mx.zoho.com
+   Priority  20: legacyhq.ai → mx2.zoho.com
+   Priority  50: legacyhq.ai → mx3.zoho.com
+
+🔐 TXT Records (Email Authentication):
+   ✅ SPF: legacyhq.ai
+      "v=spf1 include:zohomail.com ~all"
+   ✅ DKIM: legacyhqai._domainkey.legacyhq.ai
+      "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy+6tzm1/f5Tc/I/0R...
+   ⚠️  DMARC: NOT FOUND
+      Add: v=DMARC1; p=quarantine; rua=mailto:dmarc@onemindcodex.com
+
+🔗 CNAME Records: 5 found (showing first 5)
+   forms.legacyhq.ai → forms.cs.zohohost.com
+   help.legacyhq.ai → desk.cs.zohohost.com
+   onmp8ln0l.legacyhq.ai → zhs.zohosites.com
+   www.legacyhq.ai → zhs.zohosites.com
+   zd9308c8978067e3014c0805b8941ee584.legacyhq.ai → desk.cs.zohohost.com
+
+======================================================================
+✅ DOMAIN: legacyrestore.co
+======================================================================
+Zone ID: bdafa529f7e42b5460ea17fd31bbc359
+Status: active
+
+📧 MX Records (Mail Exchange):
+   Priority  10: legacyrestore.co → mx.zoho.com
+   Priority  20: legacyrestore.co → mx2.zoho.com
+   Priority  50: legacyrestore.co → mx3.zoho.com
+
+🔐 TXT Records (Email Authentication):
+   ✅ DKIM: 1311956871._domainkey.legacyrestore.co
+      "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxpsJn0CuC21GEaYoXYDDTG1ZKj3Uj5u...
+   ✅ SPF: legacyrestore.co
+      "v=spf1 include:one.zoho.com ~all"
+   ✅ DKIM: restore._domainkey.legacyrestore.co
+      "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA8FskB5WkrS0XkBOTh...
+   ✅ DKIM: zc856175981._domainkey.legacyrestore.co
+      "k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsG2hX6cygWzeiIgK3ub9d7Ss62...
+   ⚠️  DMARC: NOT FOUND
+      Add: v=DMARC1; p=quarantine; rua=mailto:dmarc@onemindcodex.com
+
+======================================================================
+DNS AUDIT COMPLETE
+======================================================================
+
+📋 SUMMARY:
+Next Steps:
+1. Review MX records - ensure all domains point to Zoho
+2. Verify SPF/DKIM/DMARC configuration
+3. Add missing DNS records where needed
+4. Proceed to Phase 3: Zoho Mail Setup

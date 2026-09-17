@@ -1,0 +1,19 @@
+# Professional Genealogy Research Advantages: The Gift of Learning Your Ancestry
+
+Many people are eager to find out their ancestors as well as where they come from. Thus, learning the history of your family becomes a popular objective.  It can start from a hobby during weekends to everyday pastime and even to a regular job. In fact, a very attractive alternative for a day job or incomplete research is to rely on a genealogy research done by professionals. The advantages that it provides can be a gift for you. 
+
+1.	Speed. Using trained and certified genealogists in conducting research can allow you to take the advantages of their previous experiences and expertise. Certified genealogists already know what they are going to do thus their research are efficient. Let their efficiency and speed work for you. 
+
+2.	Training. Trained genealogists always have systematic plans. Their tasks are listed from the very beginning of the research until the end. They get the most relevant and the best information rather than sifting over countless census, probates, and other records. Their experience combined with a thorough training is effective for knowing what to find, where to find, and how to find. Researching your family history requires knowledge of various resources, from books to microfilms to computerized records, from correspondence indices to probates to censuses.  
+
+3.	Geographical access. Even though the internet has become a good source for plenty of records, some information are not yet entered in the computer. To obtain these records, you need to send money and letters to archive offices located in far places. When you choose a professional research service, make sure that the location is closer to a huge resource such as the Family History Library, or the National Archives, each stores millions of important documents. 
+
+4.	Accuracy. Many years of genealogy practice exposes you to a lot of conflicting information. For example you have learned from your mother that the birthday of your great grandmother is in June however the official record reveals that it is February. There also instances that the documents disagree. You should be able to determine the right source. Say, John Smith is your great grandfather and he passed away in 1995. So, how would you be able to find the true John Smith? 
+
+Trained researchers already know everything on how to analyze conflicting sources as well as identify the individuals accurately. Based on their experience and training, they are able to judge the date that appears to be more accurate. Likewise, they can determine your ancestor with the name of John Smith.
+
+Assessment of source material takes several years of experience in the field of genealogy. Professional genealogists can ensure that their works have accuracy.  
+
+5.	Qualified access. Most resources are very sensitive. Some have even restricted access. Many archives have strict rules regarding the use of their resources. It can include the person who wants to access particular information, the procedure of accessing the materials, the researcher's return incentives, and others. Certified genealogists are familiarized with these restrictions already. They have the expertise in researching in such environments and handling documents. Moreover, only professional genealogists are permitted to do the research in archives with only limited access. 
+
+Learning your ancestry is fun as well as a unique gift. Remember, to avoid any hassles, ask for the help of professionals.

@@ -1,0 +1,57 @@
+# Debunking RCI Time Shares
+
+Time share resorts came forth during the early 1960's somewhere within Europe. Its early beginnings were from France. Somewhere in the French Alps, a developer have devised a way to motivate people to occupy his ski resort. He encouraged his patrons to purchase fractional ownerships of his resort instead of just renting every time they decide to go on vacation.
+
+The occupancy of his ski resort increased which led to a revenue gain. The new marketing scheme spread like wildfire amongst the other resorts in the French Alps who quickly adapted the idea. Not long, thereafter, a new industry was born, the time share industry.
+
+The time share industry boasts of a total sales amounting to more than 9 billion dollars yearly. This estimate only includes about 5,000 time share resorts all over the world. Presently, time shares have reached a global level of trade much like money. The movement of time shares is as fluid as currency in stock trading.
+
+Through the years, the use of time shares has evolved and gave birth to many options available to the owner. Here are some of the options:
+
+1. Use of time share week
+
+Time shares are usually incremented into weeks. Owners of time shares have the option to use their time share every year.
+
+2. Time share rental
+
+Over the years, time share rental increased in frequency due to the accommodation needs of travelers and adventurers. Along with demand comes opportunity for business men owning time shares but not necessarily always needing them.
+
+3. Time shares as gifts
+
+Owners also have the option to provide their families or close acquaintances with time shares as gifts.
+
+4. Time share exchanges
+
+The latest trend that has been observed by the industry is time share exchanges. Owners of time shares now have a more varied option due to this scheme. Time share exchange can be in two ways:
+
+a. Internal exchange
+
+In this kind of exchange, time share owners can exchange with other people owning time shares of the same resort under a common umbrella group.
+
+b. External exchange
+
+In this kind of exchange, time share owners have the option to exchange their time shares with other time share resorts all over the world.
+
+Currently, there are two largest exchange agencies available for time share owners. These are the Resort Condominiums International or RCI and Interval International or II.
+
+RCI Time Share 
+
+A RCI time share owner has the option of exchanging his time share interval for a possible stay at one of the five thousand resorts available worldwide.
+
+A RCI time share owner also have varied resort affiliations. Members of this program of RCI can, however, only exchange with the affiliate resorts of RCI. A RCI time share is only available for exchange to a RCI resort and not an II resort. 
+
+Also, at the current status of the affiliation programs, there is no dual affiliation for a RCI time share. A particular resort would only be either affiliated with RCI or II but not both.
+
+RCI is the largest exchange agency. It has over 3,800 resorts under its turf; divided between its available weeks or Points Program. Compared to the 2,000 resorts of II, owning a RCI time share is definitely also the best choice to make.
+
+A RCI time share as well as II time share have membership and exchange charges. Both RCI time share and II time share agencies also have the reserved right to bar members from time share rentals after the exchange.
+
+Before registration with an exchange agency, it is important to consider the particular location of a resort that a prospective client desires to held his vacation. Vacation resorts that you may want to visit should be identified so you would be able to know if you have to register at RCI or II.
+
+A RCI time share is the best choice for a time share. It certainly has more benefits than a II time share. 
+
+Independent Time Share Exchange
+
+Choosing either a RCI time share or Ii time share, clients also have another choice regarding the exchange of time shares. 
+
+To avoid the exchange and membership fees that are incurred when exchanging through RCI or II, time share owners usually arrange direct exchanges. But this independent exchange has a rarity since both owners should both agree on the location and weeks that either of them have for exchange. Both owners should mutually desire the time share of each other.

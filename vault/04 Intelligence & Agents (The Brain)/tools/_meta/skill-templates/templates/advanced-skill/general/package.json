@@ -1,0 +1,7 @@
+{
+  "name": "advanced-skill",
+  "version": "1.0.0",
+  "description": "Advanced full-featured OpenClaw skill template",
+  "main": "index.js",
+  "dependencies": {}
+}

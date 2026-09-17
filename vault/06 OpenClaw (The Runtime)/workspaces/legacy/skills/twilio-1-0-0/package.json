@@ -1,0 +1,48 @@
+{
+  "name": "twilio-1.0.0",
+  "version": "1.0.0",
+  "description": "SMS and voice call delivery via Twilio — for alerts, HITL escalation, and critical notifications",
+  "main": "index.js",
+  "skills": ["SKILL.md"],
+  "tools": [
+    {
+      "name": "sms_send",
+      "description": "Send an SMS to Zeus (or a custom number) via Twilio. Use for urgent alerts, HITL responses, and escalation when Discord/Telegram are unreachable.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Text message to send. Max 1600 characters."
+          },
+          "to": {
+            "type": "string",
+            "description": "Phone number to send to in E.164 format (e.g. +13475551234). Defaults to ZEUS_PHONE_NUMBER env var."
+          }
+        },
+        "required": ["message"]
+      }
+    },
+    {
+      "name": "voice_call",
+      "description": "Initiate a voice call to Zeus via Twilio that speaks a message aloud. Use ONLY for critical escalation when Zeus has not acknowledged a high-priority request within the timeout period.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message to speak when the call connects. Max 200 characters."
+          },
+          "to": {
+            "type": "string",
+            "description": "Phone number to call in E.164 format. Defaults to ZEUS_PHONE_NUMBER env var."
+          }
+        },
+        "required": ["message"]
+      }
+    }
+  ],
+  "env": {
+    "required": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER", "ZEUS_PHONE_NUMBER"]
+  }
+}

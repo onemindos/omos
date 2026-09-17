@@ -1,0 +1,61 @@
+# What YOu Need to Know About Time Share Sales
+
+It was found out recently that 87% of salary eligible households are very much aware of time shares. Salary eligible households have incomes of 30 thousand dollars or more. This is a positive note for time share sales. Incomes that are within this range are usually leveled as a prime age range. From a study in the US, about half its population is either currently within the prime age range or will be able to reach it in the next 2 decades. 
+
+Ever since its first conception in the 1960's by a developer with a ski resort in the French Alps, the time share industry has been flourishing having an estimated annual total sales of US$ 9 billion. This amount covers more than 5,000 time share resorts all over the world. 
+
+The time share industry is a very profitable industry that resort developers are constantly on the look-out in searching to transform or convert existing buildings, either wholly or partially, into time share resorts. They also have the option to work with developers of new and upcoming buildings that are still in the planning stages. 
+
+Time Share Sales
+
+Time share sales are also on an all-time high and is constantly moving in trading. Time share sales is one of the options available to a time share owner. Other options available to the time share owner are enumerated below:  
+
+1. Time share owners can readily use it.
+
+2. Time share owners have an option to make it available for rent.
+
+3. Time share owners can present it as a gift to family and friends.
+
+4. Time share owners can exchange it internally with other resorts within the resort developer group.
+
+5. Time share owners can exchange it externally with other resorts all over the world. These resorts number to about a thousand. 
+
+For owners that are interested in advertising their time share sales over the Internet, below are some of the processes that advertising websites ought to follow:
+
+1. Sign up with a recognized and respectable advertising website.
+
+Usually, experienced owners with time share sales can readily give you advice on what particular website to post your time shares for sale. 
+
+Acquire intelligent information about the time share industry and about time share sales. More often than not, a name of an advertising company would appear with impeccable track record.  
+
+2. Place the property in the online database
+
+Time share advertising Websites have an online database of all time share sales and rentals. 
+
+Usually, these websites would convene with you regarding what information would be included on the database. They would also give you advice on what is the latest trend in the time share sales industry.
+
+The following information would most probably be provided to you:
+	
+a. The on and off season of time share sales
+b. The current worth of time share sales
+c. Projection on future time share sales
+d. Current market for the time share sales
+e. Statistics on the marketability of time shares.
+   
+From these insights, you would be given time to decide what offers to make to give your time share sales an advantage over other time share sales. 
+
+3. Advertising websites should actively market the property to prospective buyers/renters.
+
+Advertising websites tend to overlook particular time shares for sale if the time share owner does not conduct periodic follow-up on the status of his time share sales.
+
+Even so, the advertising website has the responsibility to effectively market your time shares and to provide you with updates regarding current trends and market status.  
+
+4. Advertising websites should screen offers.
+
+Advertising websites also have the responsibility to screen offers, provide you with their analysis and recommendation, and acquire your concurrence.
+
+The Internet is a viable source of information regarding the availability of time share sales. Buyers of time shares usually make counter-offers or requests for further information regarding the time share. The website should make it more convenient for the owner of the time shares by being the one to screen and analyze the counter-offers, provide necessary information as needed and make a report to the time share owner about the status of his time shares.    
+
+5. Advertising websites help time share owners in their sale via a title company.
+
+Advertising websites also provide assistance to time share owners if they want the time share sales be made via a title company. These websites can cover the processes to complete the transfer of title or provide the owner with the proper steps to take in transferring the rights to the time share.

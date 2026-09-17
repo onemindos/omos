@@ -1,0 +1,66 @@
+Remove Spyware
+
+Operation: Remove Spyware
+
+If you’re a personal computer owner and Internet user, you’re very much aware of the benefits we all get from them.  
+
+They make our lives easier in many ways.  May it be for our comfort, leisure, learning, or business, we’re all thankful that they were both invented and came to our lives. 
+
+However, with the invention of the personal computer and the Internet, many unscrupulous businessmen also decided to earn money in expense of making our lives harder through the use of deceit and installation of the so-called spyware. 
+
+A spyware is any malicious software installed to our computers without our knowledge and is designed to track our computer use, usually for advertising purposes, but at times for tracking passwords, personal identification numbers, and credit card numbers.  
+
+The software also slows down Internet connection and may even cause our computer to crash, making us lose valuable stored information. 
+
+So how do we remove spyware from the computer system? 
+
+There are numerous programs available in the Internet.  Most of them are programs designed especially for Microsoft Windows.  They all stop, detect, and remove spyware, though some anti-virus programs can also detect and remove spyware.  
+
+Here are some of the programs that you may download through the Internet for free or for a fee:
+
+1.	SpywareBlaster
+
+•	This anti-spyware and adware free software is designed for Microsoft Windows.   
+
+•	Maintained by Javacool Software, SpywareBlaster stops the installation of nearly all ActiveX-based spyware, dialers, adware, browser hijackers, and other unnecessary programs from the user’s personal computer. 
+
+•	Spyware Blaster works by blacklisting the class identifier of many malware programs, hindering them from entering and destroying a protected personal computer. 
+
+•	It also permits the user to avoid privacy hazards like tracking cookies and controls the actions of websites that distribute spyware and adware. 
+
+•	The software supports several browsers such as Internet Explorer, Mozilla, Mozilla Firefox, and Netscape. 
+
+2.	Ad-Aware
+
+•	Again, this software is designed for Microsoft Windows. 
+
+•	Maintained by Lavasoft AB Sweden, Ad-Aware has a freeware version, Ad-Aware Personal, and two commercial versions, Ad-Aware Plus and Ad-Aware Professional.  
+
+•	The free version is very much compatible with Microsoft Windows 98, Me, NT, 2000, XP, 2003, and Vista. 
+
+•	Ad-Aware Personal has been a part of the Google Pack since June 2006. 
+
+•	The advantage of using the Plus and Professional version lie on the inclusion of real-time scanning. Meaning, users are protected when browsing the Internet and users are not required to scan manually unlike in the freeware version. 
+
+3.	ZeroSpyware Screenshot
+
+•	No surprise here. ZeroSpyware Screenshot is designed again for Microsoft Windows. 
+
+•	Developed and maintained by FBM Software for Windows, making it a shareware. 
+
+•	This anti-spyware can scan and remove many, though not all, adware and spyware programs,             including trojans, rootkits, browser hijackers, dialers, keyloggers, and surveillance software. 
+
+•	This software has a built-in customer support system and a Flash-based interface. 
+
+•	It was once listed as a rogue anti-spyware, but with the revisions done on it, issues hounding it             were resolved. 
+
+4.	Windows Malicious Software Removal Tool
+
+•	This software was released in January 2005, but is updated every month through Windows Update. 
+
+•	Released as a basic virus removal tool by Microsoft, it aims to help as many users as possible by providing basic anti-virus security. 
+
+•	Microsoft claims to have helped remove approximately 16 million malicious software infections since its release. The company’s report also says the tool removes malicious software on 1 out of 313 computers it is run on. 
+
+There you have it, folks!  These are just some of the programs that can help you remove spyware from your computer. Just look for them in the Internet.  Good luck searching and happy removing those pesky spyware and adware. 
+

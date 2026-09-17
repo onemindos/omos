@@ -1,0 +1,43 @@
+Subject: {FIRSTNAME},Is Adware/Spyware Legal
+
+Hello {FIRSTNAME},
+
+Last time we learned about whether or not adware/spyware can destroy.
+
+This time we will learn if adware/spyware is legal or not
+
+Part 2
+_________________________________________________________
+
+A common question that is asked is whether spyware and adware is actually legal.  The fact is that in most cases the answer is, no, its not.  But, that doesn’t always stop all crime.
+
+What is illegal is being able to get into anyone’s computer without their authorization for any reason.  In the United States, the law that covers this is the Computer Fraud and Abuse Act.  
+
+Since part of the definition of spyware and adware is that the process itself requires that a user download the program without the knowledge and/or consent of the user then it is quite illegal in itself.  It is a tricky law, though, that is very open to consideration.  
+
+It is so difficult to prosecute those that make and distribute spyware and adware that it is, in fact, something rarely done.  In some cases, many of these companies operate as standard businesses.  It’s not a hidden trade in any way, in many situations.
+
+Why is it so difficult?  One of the reasons this is the case is the fact that they have to prove that you didn’t want to download the software in the first place.
+
+Let’s say that you were using shareware and the process included spyware.  Some spyware providers claim that you signed up for the spyware as part of the bundle of applications.
+
+Another consideration is just how you give your consent.  Be honest, how many times have you read through those long, “Read me” agreements before purchasing or downloading some type of software?  
+
+If you don’t read the End User License Agreement, as they are called, and click “yes, you agree” and continue, guess who’s legally responsible for whatever happens?
+
+To make this even worse, many of the spyware and adware companies will make these agreements excessively long and difficult to read and understand.  You get frustrated and just hit that button.
+
+Of course, in most cases of spyware and adware, there is no agreement to sign anyway.  The fact is that many of these are drive by downloads that you’ll never know the program is there.  In this case, there is no contract at all and therefore nothing to hold you to them.
+
+The good news is that throughout the United States and in countries such as Australia, there is much law making happening to provide some protection from spyware and adware to the public.
+
+In Iowa and Washington, within the United States, there have been laws passed that offer some protection.  In tehse laws, specific types of spyware are targeted and made to be criminalizing acts.  
+
+
+For more information about Adware/Spyware, please refer to my website   <YOUR WEBSITE URL>
+
+Take Care,
+<YOUR NAME>
+<WEBSITE>
+
+

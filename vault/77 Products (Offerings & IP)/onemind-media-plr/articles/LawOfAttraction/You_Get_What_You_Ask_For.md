@@ -1,0 +1,36 @@
+# Title:
+
+You Get What You Ask For
+
+Word Count:
+676
+
+Summary:
+In life we get what we ask for. Everything starts with a thought. A thought is an energy. Energy wants to manifest itself. A lot of thoughts in the same direction will, that�s for sure, manifest in the real world. This is the process of creation. Start thinking positive thoughts. Think only thoughts you wish to see happen in real life. Think only what you want to become true.
+
+Keywords:
+power, mind, thoughts, thinking process, positive mindset, creation, realisation, success
+
+Article Body:
+In life we get what we ask for.
+
+Now you surely say that it isn�t true. You say you ask for freedom and happiness and all you got was feeling imprisoned and bad.
+
+Let�s have a closer look to how creation works and how our subconscious mind works. Because it�s the same.
+
+Everything that exists is created in someone�s mind. Everything starts with a thought. A thought is an energy. Energy wants to manifest itself. A lot of thoughts in the same direction will, that�s for sure, manifest in the real world.
+
+This is the process of creation. 
+We are created by the same process. We use this process of creation all the time, 
+without knowing it.
+
+When we are not conscious, then we are like most people and use this power to create a negative life. We have negative thoughts and get negative results.
+Once we learn how to think positive thoughts, we will get positive results in our life.
+
+How come? Our subconscious mind is like the earth. It does not interfere with what we sow. Earth does not say :�Nja I have enough of these carottes, it�s every time the same thing, I will make potatoes of it!� Earth does not say : �Bah I don�t like red flowers, I will turn the red into blue for these roses!� Earth does not interfere. Earth is patient, works in silence and gives us exactly what we put in it. And we KNOW that! We know we will get exactly what we put in the earth. When we put yellow flowers in it, we don�t expect them to be red when they blossom. When we sow roses in the garden we don�t expect onions to come out in spring!
+
+And yet that�s how we react in real life. We sow onions and expect roses. We sow negative thoughts in our mind (onions) and expect good things (roses) to come out! We fool ourselves! And we blame others. We look for who can possibly be the fault of that (usually we blame the parents or the husband/wife for what goes wrong in our life). And then we cry and say we don�t have any luck in our lives. We look at the neighbour and think he�s lucky because he has roses in his garden, and we wonder what we did to the world to deserve only onions in our garden!
+
+When the mainstream of your thoughts is negative, let�s say for 85 %, than the outcome will be negative for 85%. Your thoughts fall into your subconscious mind, which executes exactly what you put in it. It is like the earth. It is like a computer. When you type in your computer : �I am stupid, I am fat, I am ugly, nobody loves me�, are you angry with your printer when the paper comes out that says �I am stupid, I am fat, I am ugly, nobody loves me�? Do you throw a shoe at your computer and do you yell at him that he is the fault of everything that�s going wrong? No, because you know you put that information in it and your computer does not interfere. The output matches exactly the input.
+
+So works our subconscious mind. If you don�t like the output, change the input. You get exactly what you ask for = what you think of the whole day. Don�t be angry with your life. You are not angry with the onions, are you? You are not angry with your computer, are you? Instead of being angry, learn how it works and learn to get positive results in your life. Start thinking positive thoughts. Think only thoughts you wish to see happen in real life. Think only what you want to become true. And wait for a while, be patient. One day you will harvest what you sew, like you know earth will give you back what you put in it. It is never lost. Just wait and see.

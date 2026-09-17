@@ -1,0 +1,46 @@
+# Linear API (REST-like endpoints)
+# Docs: https://developers.linear.app/docs
+
+name: linear
+base_url: https://api.linear.app
+
+auth:
+  type: bearer
+  token_env: LINEAR_API_KEY
+  header: Authorization
+  prefix: Bearer
+
+default_headers:
+  Content-Type: application/json
+
+# Note: Linear primarily uses GraphQL, but these REST-like actions
+# work via their API. For full functionality, GraphQL is recommended.
+
+actions:
+  # ==========================================================================
+  # ISSUES (via GraphQL-style POST)
+  # ==========================================================================
+  create_issue:
+    description: "Create a new issue"
+    method: POST
+    path: /graphql
+    body_params:
+      - query
+      - variables
+    required: [query]
+
+  # For Linear, you'll typically use GraphQL queries like:
+  # {
+  #   "query": "mutation CreateIssue($input: IssueCreateInput!) { issueCreate(input: $input) { success issue { id title } } }",
+  #   "variables": { "input": { "title": "...", "teamId": "..." } }
+  # }
+
+  query:
+    description: "Execute a GraphQL query"
+    method: POST
+    path: /graphql
+    body_params:
+      - query
+      - variables
+      - operationName
+    required: [query]

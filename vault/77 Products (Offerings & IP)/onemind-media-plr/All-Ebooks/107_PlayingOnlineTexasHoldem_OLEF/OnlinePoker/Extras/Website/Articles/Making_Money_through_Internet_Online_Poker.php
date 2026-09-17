@@ -1,0 +1,102 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Internet Online Poker | Making Money through Internet Online Poker</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="Despite the many websites designed to grab your attention with moneymaking schemes, there are those who seem solid enough Websites who provide the basic buy and sell principle have flourished Look at Ebay Another crazy website that has made lots of money i...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">
+		<meta name="Robots"				content="index,follow">
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2">
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="tdContent" rowspan="2">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+Making Money through Internet Online Poker
+</b>
+<br>
+ <small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>Despite the many websites designed to grab your attention with moneymaking schemes, there are those who seem solid enough. Websites who provide the basic “buy and sell” principle have flourished. Look at Ebay. Another crazy website that has made lots of money is the free, community reliant Wikipedia.<br><br>The one true thing that makes money on the World Wide Web is Internet online poker. It is our love affair with gambling that continues to rake in the money for us (some of the time) and the online casino house (most of the time).<br><br>What is Internet online poker? Well, it’s basically poker without having to travel all the way to Vegas. There are no walls, no bouncers and no visible distractions in this world. Internet online poker is poker played right in your homes, with real money.<br><br>You see, Internet online poker is not a new concept. It is just another vehicle for the sport of poker to attract new players into the game. That’s the appeal of Internet online poker to the younger generation: easy access to the game and they can learn the game by themselves through free tutorials for online poker sites.<br><br>Since online poker is like the real-life poker, the old patrons of casino houses can play alongside the computer techies. Who says you can’t teach an old dog new trick? The game of Internet online poker is as hip and popular today as it was years ago.<br><br>Now the next question is how will Internet online poker make me enough money? The answer is simple, by playing Ionline poker. Don’t worry. This is not a scam. You can really double your earnings by playing Internet online poker rather than heading off the “brick and mortar casino” houses.<br><br>Here’s the trick. Internet online poker is played the same way as any regular poker except now you are allowed to play multiple tables. The key to increase your winning is but betting on a low limit. While the usual casino poker can only allow you to play in one table, the Internet online poker takes away the physical barrier and gives you the option to view three to ten games simultaneous in one screen.<br><br>There are no secrets to it. Just play smart and you will be sure to double your winnings by the online poker tournament is over. That is, unless lady Luck decides to pass you by.<br><br>Another advantage of playing Internet online poker is the increase in number of hands you can play. The usual casino house had a dealer and could only play 30 hands per hour. When you remove the human weakness from the equation and add in technology in Internet online poker, there is a dramatic increase in the number of hands played by the dealer. An Internet online poker game can deal 60 to 80 hands per hour! <br><br>This is basically the gambler’s dream come true. Internet online poker user-friendly, it’s also a professional’s recruitment arena. How did that happen? Well, every year online poker rooms hold their annual tournaments called satellites. And instead of just winning money, the winners can get an entry to real-life poker tournaments and play in the World Series of Poker Tournament. <br><br>So far there have been two recorded winners of the World Series of Poker Tournament who gained entry by playing Internet online poker. Chris Moneymaker (2003) won the main event and caused a sensation within the poker world. Then another Internet online poker player, Greg "Fossilman" Raymer, followed Chris’ footsteps when he won the next year’s World Series of Poker.<br><br>It’s great that by playing Internet online poker, you can earn money and have a chance at making it to the real-life poker tournaments. But all of this is not without a sacrifice. You will be asked to make an investment, especially for the Internet online poker tournaments where an entry fee and built-in fee is required. You can also get hooked on so much Internet online poker that real things in your life are beings to suffer like relationships and career.<br><br>Remember, Internet online poker is fun but don’t let it run your life. <br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdLeft">
+					<?php include("../Includes/J_Box.php"); ?> <?php 
+					include("../Includes/Navigation.php"); ?> <?php 
+					include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php if($ShowNewsFeed) { ?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					<?=$Category;?> News and Events
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<?php include("../Includes/Google_Search.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<br>
+					<?php include("../Includes/NewsFeed.php"); ?> <?php if ($DisplayAmazon) { echo 
+					"<hr>"; echo "<br><center>"; include("../Includes/Amazon_728x90.php"); echo 
+					"</center><br>"; } ?>
+				</td>
+			</tr>
+			<?php } ?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All 
+					Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal 
+						Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?> <?php 
+		include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

@@ -1,0 +1,23 @@
+<?php include("../Includes/Configure.php");?>
+<html>
+	<head>
+		<title>Pinging Google - Please wait...</title>
+	</head>
+	<body>
+		<center>
+			<img src="http://www.google.com/intl/en/images/logo.gif">
+			<br>
+			<font face="Verdana" size="2">Pinging Google - Please wait...</font>
+			<br>
+			<br>
+			<img src="https://adwords.google.com/select/images/googleballs.gif">			
+		</center>
+	</body>
+</html>
+<?php
+	$strFile = "http://www.google.com/webmasters/sitemaps/ping?sitemap=".urlencode($Domain)."Sitemap.xml";
+	file_get_contents($strFile);
+?>
+<script language="javascript">
+	self.setTimeout("self.close()", 5000)
+</script>

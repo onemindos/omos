@@ -1,0 +1,47 @@
+# Ipod CaseThe iPod and the Cool Cases That Go With it
+
+Apple iPod users have always been satisfied with the music experience. Based from a survey online, Apple iPod users love the following features of their iPod: 
+
+1. The original iPod have a hard drive space of forty gigabytes. This amount of space made it possible for Apple iPod users to store up to five thousand songs.
+
+2. The original iPod has a "Click Wheel," an ergonomic design for button controls on the iPod. Instead of the usual play, stop, pause, fast forward, and reverse, you can also access the menu with convenience.
+
+3. The original iPod has a battery life that extends up to 12 hours. This time line is from a non-stop usage of the Apple iPod. 
+
+4. The original iPod was also built with a design that would make it more convenience for users to set up a playlist of songs. Apple iPod users can also activate the shuffle function and would introduce randomness in listening to music.
+
+The Sexy Apple iPod Mini   
+
+The latest collection on the Apple iPods is the Apple iPod mini. This iPod mini is usually compared to a US$ 1, 200 Chanel bag. This is very true because the Apple iPod mini exudes worldwide class and posh with its variety of iPod case. An iPod case has a variety of five colors.
+
+iPod Case
+
+An iPod case has an anodized frame made of aluminum. Apple iPod mini usually weighs 3.6 ounces. The frame measures 2 inches by 3.6 inches, with only half an inch in thickness. Though it does not look like it because an iPod case is meant to camouflage the real weight. At first glance, it would seem that an iPod case is made of heavy metals, but iPod skins such as that of the Apple iPod mini can be weighed almost as light as a featherweight. 
+
+An iPod case is also also silky and smooth to the touch. The frame of an Apple iPod mini fits perfectly inside your palm and an iPod case is meant to give you more comfort while holding your Apple iPod mini.  
+
+To give it a sleek design, an iPod case has no breaks in them, meaning Apple iPod minis have no externally moving parts. Underneath the iPod case, however, is a sensitive circuitry that provides the Apple iPod user convenience in using the Apple iPods.
+
+This sleek design of an iPod case was supported by a highly ergonomic design of the control buttons. A "Click Wheel" is available for the user if he wants to play music, pause, stop, fast forward or reverse. The Click Wheel also provides access to the users for the menu. 
+
+The Click Wheel control buttons are located on the pad and matches whatever the color of iPod case is. The Click Wheel buttons is a revolutionary design as compared to the original four function buttons of the previous Apple iPods.
+
+An iPod case is available in various warm minimalist choices of possible colors. Apple iPod users can choose from pink, green, silver, blue and gold. 
+
+Other Features of the Apple iPod Mini
+
+The Apple iPod mini was also incorporated with a tiny Hitachi hard drive. This hard drive can hold various music files such as Audible, MP3, WAV, AIFF and AAC. 
+
+It is also possible for the iPod to integrate with iTunes. There is a software that enables this integration. After the seamless integration, you would be able to cruise with the tunes.
+
+Battery life is always important for Apple iPod users. The battery life of an iPod mini extends up to 8 hours which is enough to listen to about 5,000 songs.
+
+In addition to the options available when choosing an iPod case, the iPod mini have an array of accessories that includes a USB 2.0 cable, a Firewire dock connector, an AC adaptor, a belt clip, earbuds and the Apple iPod mini installation software. Another accessory available in the market is the armband.
+
+iPod Hacking
+
+Over the years, due to technological advances, techies started to experiment with the iPod vis a vis the cellphones. They started introducing modifications to the iPod case, themes and even use.
+
+These modification were made to provide more power to the user for the customization of their iPods.
+
+To define briefly, iPod hacking is done to introduce changes to the Apple iPod not only in terms of software or hardware but also in appearance. There are many softwares and firmwares available to the Apple iPod user to introduce modifications to their iPod case etc. such as the iPodWizard.

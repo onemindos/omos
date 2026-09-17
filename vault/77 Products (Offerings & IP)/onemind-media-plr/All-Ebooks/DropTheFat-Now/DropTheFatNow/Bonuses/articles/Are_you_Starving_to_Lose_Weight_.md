@@ -1,0 +1,28 @@
+# Title:
+
+Are you Starving to Lose Weight?
+
+Word Count:
+503
+
+Summary:
+An article discussing about how to lose weight by following healthy eating habits.
+
+Keywords:
+lose weight
+
+Article Body:
+It�s never too late to rethink on your diet plan and make fresh and realistic health resolutions. It is the right time to take stock of the situation. Ask yourself: Are we being fair to ourselves when we make these strict guidelines of diet and exercise? Most people recoil at the thought of dieting and exercising, especially on a cold winter morning. And for all those people who are fed up of diet dictums, the good news is that the best way to lose weight is not to diet or deprive yourself of all the good things in life. If this sounds too good to be true, wait till you try this:
+
+Wellness - the latest buzzword to hit the health industry - is actually the best way forward. Most people who plan strict diets do it in the hope that after losing the extra kilos, they will look ravishing. But the truth is that lusterless sagging skin or loose abdominal muscles are not the result that people want. What we want is a happy, healthy, svelte figure munching an apple. But alas, that is not what we end up with very often. Therefore, after trying to lose weight for the nth time, it is now time to stop dieting forever and yet look slim.
+
+Wellness is not only about losing weight, it is also about a positive mindset and transforming oneself into a holistically healthy person. This kind of a change in focus will not only result in weight loss but also give you great skin, good hair, a glowing persona and best of all, freedom from diets. Here is what the wellness and diet schedule entails:
+
+o	Understanding your food weaknesses and indulging in them two times a week.
+o	Maintaining a diet log book.
+o	Pick up a routine that you enjoy which is like an exercise: dancing, or walking the pet, floor exercises with music etc.
+o	Never deprive yourself. Always add new healthy habits to the current schedule, like having a yummy soup in the evening instead of tea and a scrumptious salad during lunch with olives, balsamic dressing and some greens and cheese cubes.
+o	Enjoy your meal. Many people who eat hurriedly always miss out on the flavors, do not feel satiated and end up compensating by overeating.
+o	And if all this does not convince you, count the number of times you have struggled through a diet program only to regain the weight with a few extra kilos.
+o	Looking at unhealthy habits and finding alternatives. For example, if you are prone to drinking too much of tea/coffee, substitute some for herbal teas which smell and taste good. If you eat too much of fried food, learn to make toasted snacks or baked snacks, and experiment with new roasted snacks.
+o	Do not starve or eat less. When we cut down on quantities, our emotional system retaliates, so the best option is to add healthy foods to the diet before cutting out on food suddenly.

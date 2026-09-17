@@ -1,0 +1,21 @@
+# LDS Genealogy: The Family History Library and International Genealogical Index
+
+The Family History Library of the Church of Jesus Christ of Latter-day Saints (LDS) holds more than two million rolls of records in microfilms, 300 thousand books, and 400 thousand microfiche. It also contains a complete collection of manuscripts written to help people in their genealogical research, such as family histories, indexes, local histories, and others. 
+
+These vast collections of genealogical materials cover most countries all over the world including China, Chile, Hungary, and Netherlands although more emphasis are given to America, Europe, Canada, and Great Britain. Researchers are allowed to search for their ancestor's original records in their archives. 
+
+The library holdings for the United States contain records from numerous courthouses all over the country as well as regional and state archives. Moreover, the records of the 1790 to 1920 U.S. census are also included.  
+
+The Family History Library is popular for their excellent assistance and extensive knowledge. The staff of the library helps people by answering their question and guiding them through their library search. Other main sources include the FamilySearch computerized system, likewise the inter-library loan programs maintained by over two thousand branches of the Family History Center all over the world. 
+
+The IGI (International Genealogical Index)
+
+This index document births as well as marriages of deceased members of their organization all over the world. It starts with the submission of initial records from both non-members and members of the church. The IGI was launched by the LDS church in 1969. Moreover, the temple records from pre-1970 were extracted. The development of the Extraction Program was made to limit getting records from church archives only. This program has more than 100 volunteers. Some are traveling all over the world to film records. These records are then transcribed by other volunteers on films. 
+
+The vital and parish records list published by the Family History Library provide records which are extracted and then listed in the International Genealogical Index from every geographical area as well as the time period, the latest extracted records are also shown. The volunteers copy information of births, christenings, and marriages of deceased individuals recorded in various civil and church vital records, extraction of records does not only focus on the members of LDS church or their ancestral lines. 
+
+There are more than 250 million names listed on the IGI. Many names are extracted from records dated from the early 16th centuries to late 19th centuries. The IGI however doesn't include every individual from any listed country and the names of all individuals from index records. 
+
+But the names aren't limited to the persons related to the LDS members. The accessibility of the IGI is open from the Family History Library and Family History Center all over the country. It is also available at some main libraries and genealogical societies. It is also accessible on a CD-ROM and microfiche. 
+
+Never expect that all extracted records listed on the IGI taken from original ones are always accurate. The reliability may always vary. Moreover, the possibility of finding incomplete records may be at stake. Sometimes you may get records containing the dates and names only. The records that are complete are those recorded prior to 1992. But still, the International Genealogical Index is a great source of information.

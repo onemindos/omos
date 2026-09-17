@@ -1,0 +1,44 @@
+{
+  "name": "resend-1.0.0",
+  "version": "1.0.0",
+  "description": "Email delivery via Resend API — for digests, non-urgent notifications, and HTML-formatted reports",
+  "main": "index.js",
+  "skills": ["SKILL.md"],
+  "tools": [
+    {
+      "name": "email_send",
+      "description": "Send an HTML email to Zeus (or a custom address) via Resend. Use for digests, non-urgent summaries, reports, and any content better suited to email than chat.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "Email subject line. Priority prefix ([CRITICAL], [HIGH]) is added automatically based on the priority field."
+          },
+          "body": {
+            "type": "string",
+            "description": "Email body text. Rendered as a paragraph in the HTML template."
+          },
+          "to": {
+            "type": "string",
+            "description": "Recipient email address. Defaults to ZEUS_EMAIL env var."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "normal", "low"],
+            "description": "Priority level — affects subject prefix. Default: normal."
+          },
+          "action_url": {
+            "type": "string",
+            "description": "Optional URL for a CTA button rendered in the email body."
+          }
+        },
+        "required": ["subject", "body"]
+      }
+    }
+  ],
+  "env": {
+    "required": ["RESEND_API_KEY", "ZEUS_EMAIL"],
+    "optional": ["RESEND_FROM_EMAIL"]
+  }
+}

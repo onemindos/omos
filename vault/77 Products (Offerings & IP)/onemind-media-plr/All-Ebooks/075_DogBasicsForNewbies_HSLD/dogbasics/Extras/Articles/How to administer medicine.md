@@ -1,0 +1,9 @@
+# How to administer medicine
+
+Most of the times, the dogs are so intelligent to find out the drug mixed water or food materials offered to them by the dog owners. Hence, often it becomes a headache for the dog owners to give medicines to their dogs.  To the possible extent, the animal need not be forced for taking of the drug. If the medicine is to be given by mouth, first decide whether it is better to give it along with water or food.  Many times, the medicines are mixed with food materials and are kept in concealed position by proper mixing of the medicine with the food materials. 
+
+	Before administering the medicine, just delay the feeding time in the particular dog. Hence, the dog may be hungry to some extent. At that time, give little quantity of normal food without medicine and the dog may eat it well without any suspicion and now provide the medicine mixed food and the dog may voluntarily eat it most of the times.  If the dog resists, first restraint the dog well and open the mouth. Place the tablet behind the fang teeth and almost behind the bulb of the tongue. However, take care that the medicine what you are administering in the dog should not enter directly into the respiratory organ like lungs. 
+
+	If so, the dog will experience many bouts like activities and may end up in aspiration pneumonia with severe nasal discharge and panting like activities. In puppies, just swab the medicine around the upper lip. The puppy will lick automatically the drug by tongue. Hence, the administration becomes perfect in such cases. 
+
+	If the medicine is in liquid form, don�t raise the head of dog too much and place medicine by a syringe. Just by using a dropper, fill the medicine in the lip pocket. The continuous rubbing at the throat side may stimulate the swallowing. Making the animal thirsty and then offering of medicine mixed water may many times help the intake of the medicine.

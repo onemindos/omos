@@ -1,0 +1,12 @@
+# title:Accepting Change
+
+author:Rondell Demmings
+source_url:http://www.articlecity.com/articles/self_improvement_and_motivation/article_382.shtml
+date_saved:2007-07-25 12:30:17
+category:self_improvement_and_motivation
+article:
+
+Well I've finally done it...I turned my heat on. After shouting at the kids that it's not cold and making them dress like they are outside, I turned on the heat in the house. I finally gave in when I couldn't feel my fingers anymore while typing and the cat, Bogey, was sitting next to the desk sneezing continuously. I started thinking, hmmm he has fur and he's cold. Maybe it is cold. (One of those duh moments) I then looked at the temperature on my computer and saw it was 43 degrees. Well I guess it is time.
+Just like the seasons change, our life changes. We have to be open to the change that is coming and willing to learn the lesson that this change has for us.  For instance I know that we are in the season of autumn and if you live in Cleveland Ohio it is going to get cold. Instead of accepting that summer is over, I was trying to hang on to living the way we were living during the summer months with no heat on. Because I didn't adjust to the change my cat now has a cold. This is the same with our lives. Some people know that they need changes in their lives but continue to live a life that they are no longer satisfied with. People stay in relationships that aren't good for them. People keep jobs that they are not happy with. There is nothing wrong with change. If you stay in the same place you may never know if something better is out there. I am not saying to leave your relationship or your job today. I am saying open yourself up to that there is something better out there for you. At least do some research to see what it is you may want. 
+There is no need to fear change. Change is good! As I look back at my life I have made the greatest accomplishments when a change has occured in my life. Although at the time I may have felt that it was the end of the world, I realized later that the change was for a reason and if I hadn't accepted the change I may not be where I am today. If you are going through some sort of change right now take some time to think what is the lesson here and how can I make this a change for the better.
+ZZZZZZ

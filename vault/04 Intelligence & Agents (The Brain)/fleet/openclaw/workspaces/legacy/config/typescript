@@ -1,0 +1,490 @@
+Script started on Mon Mar 16 23:08:56 2026
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 'cat > /tmp/health-p [Kuub.sh << '\''SCRIPT'\''[?2004l
+[0m[27m[24m[Jquote> [K[?2004h##!/bin/bash[?2004l
+[0m[27m[24m[Jquote> [K[?2004hCCPU=$(top -bn1 | grep "Cpu(s)" | awk "{print \$2}")[?2004l
+[0m[27m[24m[Jquote> [K[?2004hMMEM=$(free -m | awk "NR==2{printf \"%.1f\", \$3*100/\$2}")[?2004l
+[0m[27m[24m[Jquote> [K[?2004hDDISK=$(df -h / | awk "NR==2{print \$5}" | tr -d "%")[?2004l
+[0m[27m[24m[Jquote> [K[?2004hDDOCKER=$(docker ps --format "{{.Names}}" 2>/dev/null | tr "\n" "," | sed  [K""s/,$//" )[?2004l
+[0m[27m[24m[Jquote> [K[?2004hUUPTIME=$(uptime -p | sed "s/up //")[?2004l
+[0m[27m[24m[Jquote> [K[?2004hLLOAD=$(cat /proc/loadavg | awk "{print \$1}")[?2004l
+[0m[27m[24m[Jquote> [K[?2004hnnats pub system.health.vps "{\"cpu_pct\": $CPU, \"mem_pct\": $MEM, \"disk [K__pct\": $DISK, \"load_avg\": $LOAD, \"uptime\": \"$UPTIME\", \"docker\": \"$DOCK [KEER\", \"ts\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" 2>/dev/null[?2004l
+[0m[27m[24m[Jquote> [K[?2004hSSCRIPT[?2004l
+[0m[27m[24m[Jquote> [K[?2004hmmv /tmp/health-pub.sh /home/onemind/nats-health-pub.sh && chmod +x /home/ [Koonemind/nats-health-pub.sh && chown onemind:onemind /home/onemind/nats-health-pu [Kbb.sh && echo "Created nats-health-pub.sh"'[?2004l
+Created nats-health-pub.sh
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 "bash /home/onemind/ [Knnats-health-pub.sh && sleep 1 && journalctl -u legacy-pulse --no-pager -n 3 -o c [Kaat"[?2004l
+[legacy-pulse] Subscribed: location.update
+[legacy-pulse] Listening for events...
+[legacy-pulse] system.alerts.test -> ALERT: Test alert from deployment
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 "[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Add system.health.> subscription to legacy-pulse[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hssed -i '/\"system.alerts.>\",/a\\    \"system.health.>\",       # VPS he [Kaalth metrics' /home/onemind/onemind-os/openclaw/workspaces/legacy/skills/legacy- [Kppulse/legacy-pulse.py[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Add health summarizer to legacy-pulse[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hssed -i '/\"Droplet:.*cpu_pct/a\\    if subject.startswith(\"system.healt [Khh\"):\\n        return f\"VPS: CPU={data.get(\"cpu_pct\",\"?\")}% MEM={data.get( [K\\"mem_pct\",\"?\")}% DISK={data.get(\"disk_pct\",\"?\")}%\"' /home/onemind/onemi [Knnd-os/openclaw/workspaces/legacy/skills/legacy-pulse/legacy-pulse.py[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Set up cron job for health publisher (every 5 min)[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h((crontab -u onemind -l 2>/dev/null | grep -v nats-health-pub; echo '*/5  [K** * * * /home/onemind/nats-health-pub.sh') | crontab -u onemind -[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Restart legacy-pulse[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hssystemctl restart legacy-pulse && sleep 2 && journalctl -u legacy-pulse  [K---no-pager -n 5 -o cat[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h"[?2004l
+[legacy-pulse] Subscribed: omcs.it.>
+[legacy-pulse] Subscribed: omcs.le.>
+[legacy-pulse] Subscribed: it.droplet.>
+[legacy-pulse] Subscribed: location.update
+[legacy-pulse] Listening for events...
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 "journalctl -u legac [Kyy-pulse --no-pager -n 15 -o cat"[?2004l
+legacy-pulse.service: Deactivated successfully.
+Stopped legacy-pulse.service - Legacy Pulse — NATS Event Bridge → AMBIENT_STATE.md.
+Started legacy-pulse.service - Legacy Pulse — NATS Event Bridge → AMBIENT_STATE.md.
+[legacy-pulse] Connecting to NATS at nats://localhost:4222...
+[legacy-pulse] Connected.
+[legacy-pulse] Subscribed: system.alerts.>
+[legacy-pulse] Subscribed: system.health.>
+[legacy-pulse] Subscribed: legacy.session.>
+[legacy-pulse] Subscribed: omcs.hp.>
+[legacy-pulse] Subscribed: omcs.ge.>
+[legacy-pulse] Subscribed: omcs.it.>
+[legacy-pulse] Subscribed: omcs.le.>
+[legacy-pulse] Subscribed: it.droplet.>
+[legacy-pulse] Subscribed: location.update
+[legacy-pulse] Listening for events...
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 "bash /home/onemind/ [Knnats-health-pub.sh && sleep 2 && journalctl -u legacy-pulse --no-pager -n 3 -o c [Kaat && echo '---CRON---' && crontab -u onemind -l && echo '---AMBIENT---' && grep [K  -A3 'Recent NATS' /home/onemind/.openclaw/workspace/AMBIENT_STATE.md | head -10 [K"[?2004l
+[legacy-pulse] Subscribed: location.update
+[legacy-pulse] Listening for events...
+[legacy-pulse] system.health.vps -> VPS: CPU=26.1% MEM=13.6% DISK=17%
+---CRON---
+*/15 * * * * /home/onemind/workspace-backup.sh
+0 */6 * * * /home/onemind/backups/backup-swarmclaw.sh
+*/5 * * * * /home/onemind/nats-health-pub.sh
+---AMBIENT---
+## Recent NATS Events (last 20)
+- `system.alerts.test` — ALERT: Test alert from deployment @ 03:08:29
+- `system.health.vps` — VPS: CPU=26.1% MEM=13.6% DISK=17% @ 03:09:56
+
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 "journalctl -u legac [Kyy-pulse --no-pager -n 5 -o cat"[?2004l
+[legacy-pulse] Subscribed: it.droplet.>
+[legacy-pulse] Subscribed: location.update
+[legacy-pulse] Listening for events...
+[legacy-pulse] system.health.vps -> VPS: CPU=26.1% MEM=13.6% DISK=17%
+[legacy-pulse] system.health.vps -> VPS: CPU=26.7% MEM=13.6% DISK=17%
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsssh root@104.248.4.212 "crontab -u onemind  [K--l 2>/dev/null && echo '---AMBIENT---' && cat /home/onemind/.openclaw/workspace/ [KAAMBIENT_STATE.md"[?2004l
+*/15 * * * * /home/onemind/workspace-backup.sh
+0 */6 * * * /home/onemind/backups/backup-swarmclaw.sh
+*/5 * * * * /home/onemind/nats-health-pub.sh
+---AMBIENT---
+# Ambient State — Legacy Pulse
+*Updated: 2026-03-17 03:10:01*
+
+## Vision Digest
+No vision data yet.
+
+## Active Session
+- Session ID: `None`
+- Location: `unknown`
+- Scene unchanged for: 0 consecutive ticks
+
+## Recent NATS Events (last 20)
+- `system.alerts.test` — ALERT: Test alert from deployment @ 03:08:29
+- `system.health.vps` — VPS: CPU=26.1% MEM=13.6% DISK=17% @ 03:09:56
+- `system.health.vps` — VPS: CPU=26.7% MEM=13.6% DISK=17% @ 03:10:01
+
+---
+```json
+{
+  "last_updated": "2026-03-17 03:10:01",
+  "vision_digest": "No vision data yet.",
+  "scene_unchanged_count": 0,
+  "nats_events": [
+    {
+      "subject": "system.alerts.test",
+      "summary": "ALERT: Test alert from deployment",
+      "ts": "03:08:29",
+      "raw": {
+        "message": "Test alert from deployment",
+        "severity": "info"
+      }
+    },
+    {
+      "subject": "system.health.vps",
+      "summary": "VPS: CPU=26.1% MEM=13.6% DISK=17%",
+      "ts": "03:09:56",
+      "raw": {
+        "cpu_pct": 26.1,
+        "mem_pct": 13.6,
+        "disk_pct": 17,
+        "load_avg": 1.06,
+        "uptime": "3 days, 17 minutes",
+        "docker": "nats-dashboard,onemind-nats-ingester,onemind-legacy-bridge,onemind-omnidb,onemind-nats",
+        "ts": "2026-03-17T03:09:56Z"
+      }
+    },
+    {
+      "subject": "system.health.vps",
+      "summary": "VPS: CPU=26.7% MEM=13.6% DISK=17%",
+      "ts": "03:10:01",
+      "raw": {
+        "cpu_pct": 26.7,
+        "mem_pct": 13.6,
+        "disk_pct": 17,
+        "load_avg": 1.06,
+        "uptime": "3 days, 18 minutes",
+        "docker": "nats-dashboard,onemind-nats-ingester,onemind-legacy-bridge,onemind-omnidb,onemind-nats",
+        "ts": "2026-03-17T03:10:01Z"
+      }
+    }
+  ],
+  "session_id": null,
+  "location": "unknown"
+}
+```
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hsscp /Users/zeuslegacy/Documents/onemindos-v [K00.4/openclaw/workspaces/legacy/HEARTBEAT.md root@104.248.4.212:/home/onemind/one [Kmmind-os/openclaw/workspaces/legacy/HEARTBEAT.md && ssh root@104.248.4.212 "chown [K  onemind:onemind /home/onemind/onemind-os/openclaw/workspaces/legacy/HEARTBEAT.m [Kdd && echo 'HEARTBEAT.md synced to VPS'"[?2004l
+HEARTBEAT.md                                    0%    0     0.0KB/s   --:-- ETAHEARTBEAT.md                                  100% 1893   225.8KB/s   00:00    
+HEARTBEAT.md synced to VPS
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP legacy % [K[?2004hccd /Users/zeuslegacy/Documents/onemindos-v0 [K..4 && echo "=== SwarmClaw in monorepo ===" && ls -la command-center/swarmclaw/pa [Kcckage.json 2>&1 | head -1 && echo "=== ios-app in monorepo ===" && ls -la comman [Kdd-center/ios-app/Sources/ 2>&1 | head -1 && echo "=== flutter-archive ===" && ls [K  -la command-center/flutter-archive/ 2>&1 | head -3 && echo "=== Git status (tra [Kccked in monorepo) ===" && git ls-files command-center/swarmclaw/ | wc -l && git  [Klls-files command-center/ios-app/ | wc -l && git ls-files command-center/flutter- [Kaarchive/ | wc -l[?2004l
+=== SwarmClaw in monorepo ===
+ls: command-center/swarmclaw/package.json: No such file or directory
+=== ios-app in monorepo ===
+ls: command-center/ios-app/Sources/: No such file or directory
+=== flutter-archive ===
+ls: command-center/flutter-archive/: No such file or directory
+=== Git status (tracked in monorepo) ===
+       0
+       0
+       0
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hccd /Users/zeuslegacy/Documents/onem [Kiindos-v0.4 && ls command-center/[?2004l
+README.md
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "echo '=== S [KwwarmClaw ===' && systemctl is-active swarmclaw && cat /home/onemind/swarmclaw/pa [Kcckage.json 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin) [K..get(\"version\",\"?\"))' 2>/dev/null || echo 'not found'; echo '=== Office ===' [K  && systemctl is-active openclaw-office 2>/dev/null || echo 'service not found'; [K  which openclaw-office 2>/dev/null || echo 'binary not found'; ls /home/onemind/ [Koopenclaw-office/ 2>/dev/null | head -5 || echo 'directory not found'"[?2004l
+=== SwarmClaw ===
+active
+not found
+=== Office ===
+active
+/usr/bin/openclaw-office
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "echo '=== S [KwwarmClaw location ===' && systemctl cat swarmclaw | grep -E 'WorkingDirectory|Ex [KeecStart' && echo '=== SwarmClaw version ===' && ls /home/onemind/swarmclaw/ 2>/d [Keev/null && find /home/onemind -name 'package.json' -path '*/swarmclaw/*' -exec p [Kyython3 -c 'import sys,json; print(json.load(open(sys.argv[1])).get(\"version\",\ [K""?\"))' {} \; 2>/dev/null"[?2004l
+=== SwarmClaw location ===
+WorkingDirectory=/home/onemind/onemind-os/command-center/swarmclaw
+ExecStart=/usr/bin/npx next start -p 3456 -H 0.0.0.0
+=== SwarmClaw version ===
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "ls /home/on [Keemind/onemind-os/command-center/swarmclaw/package.json 2>/dev/null && python3 -c [K  'import json; print(json.load(open(\"/home/onemind/onemind-os/command-center/sw [Kaarmclaw/package.json\")).get(\"version\"))' 2>/dev/null || echo 'package.json no [Ktt found'; echo '---'; ls /home/onemind/onemind-os/command-center/ 2>/dev/null"[?2004l
+package.json not found
+---
+README.md
+openclaw-studio
+swarmclaw
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "ls /home/on [Keemind/onemind-os/command-center/swarmclaw/ | head -10 && echo '---' && cat /home [K//onemind/onemind-os/command-center/swarmclaw/package.json 2>/dev/null | head -5  [K||| echo 'no package.json - checking if it is a symlink or empty dir'; file /home [K//onemind/onemind-os/command-center/swarmclaw"[?2004l
+data
+next-env.d.ts
+node_modules
+---
+/home/onemind/onemind-os/command-center/swarmclaw: directory
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "ls -la /hom [Kee/onemind/onemind-os/command-center/swarmclaw/ && find /home/onemind/onemind-os/ [Kccommand-center/swarmclaw -name 'package.json' -maxdepth 2 2>/dev/null"[?2004l
+total 64
+drwxr-xr-x    5 onemind onemind  4096 Mar 16 23:38 .
+drwxr-xr-x    4 onemind onemind  4096 Mar 16 23:38 ..
+-rw-rw-r--    1 onemind onemind   127 Mar 14 16:04 .env.local
+drwxrwxr-x   10 onemind onemind  4096 Mar 16 08:45 .next
+drwxr-xr-x    4 onemind onemind  4096 Mar 16 23:38 data
+-rw-rw-r--    1 onemind onemind   247 Mar 14 10:35 next-env.d.ts
+drwxr-xr-x 1099 onemind onemind 36864 Mar 16 08:43 node_modules
+/home/onemind/onemind-os/command-center/swarmclaw/.next/package.json
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "curl -s -o  [K//dev/null -w '%{http_code}' http://localhost:3456/ && echo '' && echo '=== Offic [Kee ===' && curl -s -o /dev/null -w '%{http_code}' http://localhost:5180/"[?2004l
+200
+=== Office ===
+200[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "su - onemin [Kdd -c 'cd /home/onemind && git clone https://\${GITHUB_TOKEN}@github.com/One-Mind [K--OS/swarmclaw.git swarmclaw-fork 2>&1 | tail -5'"[?2004l
+Cloning into 'swarmclaw-fork'...
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "ls /home/on [Keemind/swarmclaw-fork/package.json 2>/dev/null && python3 -c 'import json; d=json [K..load(open(\"/home/onemind/swarmclaw-fork/package.json\")); print(f\"version: {d [K..get(\\\"version\\\")}\"); print(f\"name: {d.get(\\\"name\\\")}\")' || echo 'Clo [Knne may have failed - checking...'; ls /home/onemind/swarmclaw-fork/ 2>/dev/null  [K|| head -10"[?2004l
+/home/onemind/swarmclaw-fork/package.json
+  File "<string>", line 1
+    import json; d=json.load(open("/home/onemind/swarmclaw-fork/package.json")); print(f"version: {d.get(\"version\")}"); print(f"name: {d.get(\"name\")}")
+                                                                                                          ^
+SyntaxError: unexpected character after line continuation character
+Clone may have failed - checking...
+CLAUDE.md
+Dockerfile
+Dockerfile.sandbox-browser
+LICENSE
+README.md
+bin
+bundled-skills
+components.json
+data
+doc
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "ls -la /hom [Kee/onemind/swarmclaw-fork/ 2>/dev/null | head -5; wc -l /home/onemind/swarmclaw-f [Koork/package.json 2>/dev/null || echo 'empty or missing'"[?2004l
+total 1204
+drwxrwxr-x 13 onemind onemind    4096 Mar 17 04:11 .
+drwxr-x--- 13 onemind onemind    4096 Mar 17 04:12 ..
+-rw-rw-r--  1 onemind onemind      35 Mar 17 04:11 .dockerignore
+-rw-rw-r--  1 onemind onemind   43275 Mar 17 04:11 .eslint-baseline.json
+153 /home/onemind/swarmclaw-fork/package.json
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "python3 -c  [K''import json; d=json.load(open(\"/home/onemind/swarmclaw-fork/package.json\"));  [Kpprint(\"SwarmClaw version:\", d.get(\"version\",\"?\"))'"[?2004l
+SwarmClaw version: 1.1.6
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "cd /home/on [Keemind/swarmclaw-fork && su - onemind -c 'cd /home/onemind/swarmclaw-fork && npm  [Kiinstall 2>&1 | tail -5'"[?2004l
+^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "ls /home/on [Keemind/swarmclaw-fork/node_modules/.package-lock.json 2>/dev/null && echo 'npm in [Ksstall done' || echo 'npm install may still be running'; ls /home/onemind/swarmcl [Kaaw-fork/node_modules/ 2>/dev/null | wc -l"[?2004l
+npm install may still be running
+1118
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "su - onemin [Kdd -c 'cd /home/onemind/swarmclaw-fork && npm install --no-optional 2>&1 | tail - [K110'"[?2004l
+^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "pgrep -f 'n [Kppm install' && echo 'npm running' || echo 'npm done'; ls /home/onemind/swarmclaw [K--fork/node_modules/ 2>/dev/null | wc -l"[?2004l
+2028166
+2028167
+2028169
+2028347
+2028348
+2028350
+2028485
+npm running
+1118
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "while pgrep [K  -f 'npm install' > /dev/null 2>&1; do sleep 5; done; echo 'npm install complete [Kdd'; ls /home/onemind/swarmclaw-fork/node_modules/ | wc -l"[?2004l
+^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "pgrep -f 'n [Kppm install' >/dev/null && echo 'still running' || echo 'done'; ls /home/onemind/ [Ksswarmclaw-fork/node_modules/ | wc -l; ls /home/onemind/swarmclaw-fork/node_modul [Kees/.package-lock.json 2>/dev/null && echo 'lock exists'"[?2004l
+still running
+1118
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl r [Keestart openclaw && sleep 5 && journalctl -u openclaw --no-pager -n 30 -o cat | g [Krrep -E 'started|error|Error|loaded|ready|command|lcm|heartbeat|model|provider' | [K  head -20"[?2004l
+│  - models.providers.bedrock.region           │
+│  - models.providers.bedrock.accessKeyId      │
+│  - models.providers.bedrock.secretAccessKey  │
+  - models.providers.anthropic.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.openai.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.gradient.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.groq.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.google.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.bedrock.baseUrl: Invalid input: expected string, received undefined
+  - models.providers.bedrock.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.bedrock: Unrecognized keys: "region", "accessKeyId", "secretAccessKey"
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "journalctl  [K--u openclaw --no-pager -n 40 -o cat"[?2004l
+│  - models.providers.google.apiKey: Missing env var "GOOGLE_AI_API_KEY"  │
+│    — feature using this value will be unavailable                       │
+│  - models.providers.bedrock.region: Missing env var                     │
+│    "AWS_DEFAULT_REGION" — feature using this value will be unavailable  │
+│  - models.providers.bedrock.accessKeyId: Missing env var                │
+│    "AWS_ACCESS_KEY_ID" — feature using this value will be unavailable   │
+│  - models.providers.bedrock.secretAccessKey: Missing env var            │
+│    "AWS_SECRET_ACCESS_KEY" — feature using this value will be           │
+│    unavailable                                                          │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────╯
+│
+◇  Unknown config keys ────────────────────────╮
+│                                              │
+│  - models.providers.bedrock.region           │
+│  - models.providers.bedrock.accessKeyId      │
+│  - models.providers.bedrock.secretAccessKey  │
+│                                              │
+├──────────────────────────────────────────────╯
+│
+◇  Doctor ────────────────────────────────────────────╮
+│                                                     │
+│  Run "openclaw doctor --fix" to remove these keys.  │
+│                                                     │
+├─────────────────────────────────────────────────────╯
+Config invalid
+File: ~/.openclaw/openclaw.json
+Problem:
+  - models.providers.anthropic.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.openai.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.gradient.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.groq.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.google.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.bedrock.baseUrl: Invalid input: expected string, received undefined
+  - models.providers.bedrock.api: Invalid option: expected one of "openai-completions"|"openai-responses"|"openai-codex-responses"|"anthropic-messages"|"google-generative-ai"|"github-copilot"|"bedrock-converse-stream"|"ollama"
+  - models.providers.bedrock: Unrecognized keys: "region", "accessKeyId", "secretAccessKey"
+Run: openclaw doctor --fix
+openclaw.service: Main process exited, code=exited, status=1/FAILURE
+openclaw.service: Failed with result 'exit-code'.
+openclaw.service: Consumed 4.067s CPU time.
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "python3 <<  [K''PYEOF'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hiimport json[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hwwith open('/home/onemind/.openclaw/openclaw.json') as f:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     cfg = json.load(f)[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders = cfg['models']['providers'][?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Fix Anthropic: api must be 'anthropic-messages'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['anthropic']['api'] = 'anthropic-messages'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Fix OpenAI direct: api must be 'openai-completions' [?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['openai']['api'] = 'openai-completions'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Fix Gradient: api must be 'openai-completions'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['gradient']['api'] = 'openai-completions'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Fix Groq: api must be 'openai-completions'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['groq']['api'] = 'openai-completions'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Fix Google: api must be 'google-generative-ai'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['google']['api'] = 'google-generative-ai'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['google']['baseUrl'] = 'https://generativelanguage.googleapis. [Kccom/v1beta'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Fix Bedrock: api must be 'bedrock-converse-stream', needs baseUrl, rem [Koove unrecognized keys[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpproviders['bedrock'] = {[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     'baseUrl': 'https://bedrock-runtime.us-east-1.amazonaws.com',[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     'apiKey': 'aws-sigv4',[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     'api': 'bedrock-converse-stream',[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     'models': providers['bedrock']['models'][?2004l
+[0m[27m[24m[Jdquote> [K[?2004h}[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hwwith open('/home/onemind/.openclaw/openclaw.json', 'w') as f:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     json.dump(cfg, f, indent=2)[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpprint('Fixed all API types:')[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hffor k, v in providers.items():[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     print(f'  {k}: api={v[\"api\"]}')[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hPPYEOF"[?2004l
+Fixed all API types:
+  azure-openai: api=openai-responses
+  anthropic: api=anthropic-messages
+  openai: api=openai-completions
+  gradient: api=openai-completions
+  groq: api=openai-completions
+  google: api=google-generative-ai
+  bedrock: api=bedrock-converse-stream
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl r [Keestart openclaw && sleep 8 && journalctl -u openclaw --since '30 sec ago' --no-p [Kaager -o cat | head -40"[?2004l
+^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "journalctl  [K--u openclaw --no-pager -n 50 -o cat 2>&1 | tail -40"[?2004l
+Run: openclaw doctor --fix
+openclaw.service: Main process exited, code=exited, status=1/FAILURE
+openclaw.service: Failed with result 'exit-code'.
+openclaw.service: Consumed 4.061s CPU time.
+openclaw.service: Scheduled restart job, restart counter is at 3.
+Started openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime).
+Stopping openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime)...
+Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GROQ_API_KEY" at models.providers.groq.apiKey — feature using this value will be unavailable
+Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GOOGLE_AI_API_KEY" at models.providers.google.apiKey — feature using this value will be unavailable
+│
+◇  Config warnings ───────────────────────────────────────────────────────╮
+│                                                                         │
+│  - models.providers.groq.apiKey: Missing env var "GROQ_API_KEY" —       │
+│    feature using this value will be unavailable                         │
+│  - models.providers.google.apiKey: Missing env var "GOOGLE_AI_API_KEY"  │
+│    — feature using this value will be unavailable                       │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────╯
+2026-03-17T04:14:24.071+00:00 Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GROQ_API_KEY" at models.providers.groq.apiKey — feature using this value will be unavailable
+2026-03-17T04:14:24.103+00:00 Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GOOGLE_AI_API_KEY" at models.providers.google.apiKey — feature using this value will be unavailable
+openclaw.service: Main process exited, code=exited, status=255/EXCEPTION
+openclaw.service: Failed with result 'exit-code'.
+Stopped openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime).
+openclaw.service: Consumed 3.971s CPU time.
+Started openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime).
+Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GROQ_API_KEY" at models.providers.groq.apiKey — feature using this value will be unavailable
+Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GOOGLE_AI_API_KEY" at models.providers.google.apiKey — feature using this value will be unavailable
+│
+◇  Config warnings ───────────────────────────────────────────────────────╮
+│                                                                         │
+│  - models.providers.groq.apiKey: Missing env var "GROQ_API_KEY" —       │
+│    feature using this value will be unavailable                         │
+│  - models.providers.google.apiKey: Missing env var "GOOGLE_AI_API_KEY"  │
+│    — feature using this value will be unavailable                       │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────╯
+2026-03-17T04:14:28.186+00:00 Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GROQ_API_KEY" at models.providers.groq.apiKey — feature using this value will be unavailable
+2026-03-17T04:14:28.253+00:00 Config (/home/<concealed by 1Password>/.openclaw/openclaw.json): missing env var "GOOGLE_AI_API_KEY" at models.providers.google.apiKey — feature using this value will be unavailable
+2026-03-17T04:14:28.452+00:00 [secrets] [SECRETS_RELOADER_DEGRADED] SecretRefResolutionError: Environment variable "GROQ_API_KEY" is missing or empty.
+2026-03-17T04:14:28.473+00:00 [plugins] plugins.allow is empty; discovered non-bundled plugins may auto-load: lossless-claw (/home/<concealed by 1Password>/.openclaw/extensions/lossless-claw/index.ts). Set plugins.allow to explicit trusted ids.
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "python3 <<  [K''PYEOF'[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hiimport json[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hwwith open('/home/onemind/.openclaw/openclaw.json') as f:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     cfg = json.load(f)[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Remove providers without active API keys[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hffor p in ['groq', 'google', 'bedrock']:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     if p in cfg['models']['providers']:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h         del cfg['models']['providers'][p][?2004l
+[0m[27m[24m[Jdquote> [K[?2004h         print(f'Removed provider: {p} (no API key)')[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h## Remove aliases for removed providers[?2004l
+[0m[27m[24m[Jdquote> [K[?2004haaliases = cfg['agents']['defaults']['models'][?2004l
+[0m[27m[24m[Jdquote> [K[?2004htto_remove = [k for k in aliases if k.startswith(('groq/', 'google/', 'be [Kddrock/'))][?2004l
+[0m[27m[24m[Jdquote> [K[?2004hffor k in to_remove:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     del aliases[k][?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     print(f'Removed alias: {k}')[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hwwith open('/home/onemind/.openclaw/openclaw.json', 'w') as f:[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h     json.dump(cfg, f, indent=2)[?2004l
+[0m[27m[24m[Jdquote> [K[?2004h[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpprint(f'Remaining providers: {list(cfg[\"models\"][\"providers\"].keys() [K))}')[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hpprint(f'Remaining aliases: {len(aliases)}')[?2004l
+[0m[27m[24m[Jdquote> [K[?2004hPPYEOF"[?2004l
+Removed provider: groq (no API key)
+Removed provider: google (no API key)
+Removed provider: bedrock (no API key)
+Removed alias: groq/llama-3.3-70b-versatile
+Removed alias: groq/llama-3.1-8b-instant
+Removed alias: google/gemini-2.0-flash
+Removed alias: google/gemini-1.5-pro
+Removed alias: bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+Removed alias: bedrock/anthropic.claude-3-5-haiku-20241022-v1:0
+Remaining providers: ['azure-openai', 'anthropic', 'openai', 'gradient']
+Remaining aliases: 14
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl r [Keestart openclaw && sleep 10 && systemctl is-active openclaw && echo 'SERVICE OK' [K  || echo 'SERVICE FAILED'"[?2004l
+^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl i [Kss-active openclaw; journalctl -u openclaw --no-pager -n 25 -o cat 2>&1 | tail -2 [K55"[?2004l
+active
+2026-03-17T04:15:01.362+00:00 [discord] startup [default] fetch-bot-identity:done 3382ms botUserId=1453426935442047191 botUserName=OneMind OS gatewayConnected=false reconnectAttempts=0
+2026-03-17T04:15:01.427+00:00 [discord] logged in to discord as 1453426935442047191 (OneMind OS)
+Stopping openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime)...
+2026-03-17T04:15:03.671+00:00 [gateway] signal SIGTERM received
+2026-03-17T04:15:03.678+00:00 [gateway] received SIGTERM; shutting down
+2026-03-17T04:15:03.764+00:00 [gmail-watcher] gmail watcher stopped
+openclaw.service: Deactivated successfully.
+Stopped openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime).
+openclaw.service: Consumed 14.749s CPU time.
+Started openclaw.service - OneMind OS — OpenClaw Gateway (Legacy's Runtime).
+2026-03-17T04:15:07.740+00:00 [plugins] plugins.allow is empty; discovered non-bundled plugins may auto-load: lossless-claw (/home/<concealed by 1Password>/.openclaw/extensions/lossless-claw/index.ts). Set plugins.allow to explicit trusted ids.
+2026-03-17T04:15:13.618+00:00 [plugins] [lcm] Plugin loaded (enabled=true, db=/home/<concealed by 1Password>/.openclaw/lcm.db, threshold=0.75)
+2026-03-17T04:15:13.814+00:00 [gateway] [plugins] plugins.allow is empty; discovered non-bundled plugins may auto-load: lossless-claw (/home/<concealed by 1Password>/.openclaw/extensions/lossless-claw/index.ts). Set plugins.allow to explicit trusted ids.
+2026-03-17T04:15:13.828+00:00 [gateway] [lcm] Plugin loaded (enabled=true, db=/home/<concealed by 1Password>/.openclaw/lcm.db, threshold=0.75)
+2026-03-17T04:15:13.854+00:00 [canvas] host mounted at http://127.0.0.1:18789/__openclaw__/canvas/ (root /home/<concealed by 1Password>/.openclaw/canvas)
+2026-03-17T04:15:13.973+00:00 [heartbeat] started
+2026-03-17T04:15:13.988+00:00 [health-monitor] started (interval: 300s, startup-grace: 60s, channel-connect-grace: 120s)
+2026-03-17T04:15:13.997+00:00 [gateway] agent model: azure-openai/gpt-4o
+2026-03-17T04:15:14.004+00:00 [gateway] listening on ws://127.0.0.1:18789, ws://[::1]:18789 (PID 2037197)
+2026-03-17T04:15:14.014+00:00 [gateway] log file: /tmp/openclaw-1000/openclaw-2026-03-17.log
+2026-03-17T04:15:14.020+00:00 [gateway] security warning: dangerous config flags enabled: gateway.controlUi.allowInsecureAuth=true, gateway.controlUi.dangerouslyDisableDeviceAuth=true. Run `openclaw security audit`.
+2026-03-17T04:15:14.105+00:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)
+2026-03-17T04:15:14.119+00:00 [bluebubbles] [default] starting provider (webhook=/bluebubbles-webhook)
+2026-03-17T04:15:14.131+00:00 [plugins] acpx runtime backend registered (command: /usr/lib/node_modules/openclaw/extensions/acpx/node_modules/.bin/acpx, expectedVersion: 0.1.16, pluginLocalInstall: enabled)
+2026-03-17T04:15:14.272+00:00 [bluebubbles] [default] BlueBubbles webhook listening on /bluebubbles-webhook
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "journalctl  [K--u openclaw --no-pager -n 60 -o cat 2>&1 | grep -E 'commandCount|skill|error|Err [Koor|discord.*logged|acpx|cron'"[?2004l
+2026-03-17T04:14:57.616+00:00 [plugins] acpx runtime backend registered (command: /usr/lib/node_modules/openclaw/extensions/acpx/node_modules/.bin/acpx, expectedVersion: 0.1.16, pluginLocalInstall: enabled)
+2026-03-17T04:14:58.308+00:00 [plugins] acpx runtime backend ready
+2026-03-17T04:15:00.989+00:00 [discord] startup [default] deploy-commands:start 3014ms native=on commandCount=70 gatewayConnected=false reconnectAttempts=0
+2026-03-17T04:15:01.427+00:00 [discord] logged in to discord as 1453426935442047191 (OneMind OS)
+2026-03-17T04:15:14.131+00:00 [plugins] acpx runtime backend registered (command: /usr/lib/node_modules/openclaw/extensions/acpx/node_modules/.bin/acpx, expectedVersion: 0.1.16, pluginLocalInstall: enabled)
+2026-03-17T04:15:14.930+00:00 [plugins] acpx runtime backend ready
+2026-03-17T04:15:17.641+00:00 [discord] startup [default] deploy-commands:start 3107ms native=on commandCount=70 gatewayConnected=false reconnectAttempts=0
+2026-03-17T04:15:18.379+00:00 [discord] logged in to discord as 1453426935442047191 (OneMind OS)
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "pgrep -f 'n [Kppm install' >/dev/null && echo 'still running' || echo 'npm install done'; ls /h [Koome/onemind/swarmclaw-fork/node_modules/.package-lock.json 2>/dev/null && echo ' [Kllock file present'"[?2004l
+still running
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h

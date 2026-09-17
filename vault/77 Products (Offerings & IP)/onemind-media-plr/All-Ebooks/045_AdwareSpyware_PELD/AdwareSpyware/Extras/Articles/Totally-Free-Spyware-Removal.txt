@@ -1,0 +1,27 @@
+Totally Free Spyware Removal
+
+Totally Free Spyware Removal: Tips that you can follow
+
+The spyware is oftentimes integrated into the freewares. Freewares refer to the series of softwares that can be downloaded anytime and free of charge. They come as a package. It is like a buy one take one promo. It will be beneficial for you to start off with reading the user agreement of the program so that you will be unable to install those unwanted programs that tend to be malicious. Another mode wherein the spyware software can get into the mainstream of your computer network system is through the access of the sites whereas your browser contains security holes. Meaning, your browser can be prone to these unsafe ventures. It is important that before you click on a link, you first evaluate the website which you are to visit. By this, you may avoid the entry of spyware into your computer network system. 
+
+Here are effective ways that will help you detect whether your computer system is infected by a spyware software. Just look for these signs or symptoms and you can easily detect that a spyware is living inside your computer operating system.
+
+The computer hangs, freezes, or slows down. It is because the spyware software eat up a lot of the memory resources that causes the computer to lock up and be sluggish.
+
+You experience several annoying pop up ads which tend to be very uncontrollable. They just become too persistent that they keep flashing on the screen. These pop up ads continue to appear even if you do not pay attention to clicking the websites or links. There are even those that automatically come up whenever the windows are turned on.  
+
+You get to encounter a commandeered default homepage. It gets to mean that an unknown website or something which you haven’t visited before comes out as a default homepage as soon as you start with your browser. It is not naturally the one that your settings have set up. As soon as you start typing another search engine, you get directed to another link.
+
+As soon as you detect that a spyware software is present in your computer, delete it at once. Here are significant steps on the spyware removal. 
+
+Look into your task lists. The computer task list will let you see the programs which are presently running in your computer system. To do it, press CTRL+ALT+DEL. It is best that you familiarize yourself with the files which you keep on your computer because you will easily determine if there is a suspicious thing on the list. If there appears to be one, it can be a spyware software.
+
+Clear your computer start up list. There are spyware that automatically start up. Run the msconfig. Do this by typing ‘msconfig’ in the Windows Run Command.
+
+Check out the unfamiliar programs included in your program list. Do this by checking out the Programs Menu or the Add/Remove Programs which is under the Control Panel. Choose that which is unfamiliar to you and then uninstall them at once.
+
+Get to install at least one or more than one anti spyware programs. The best spyware removal tool is that which totally blocks the entry of more spyware.
+
+Manually remove the spyware that cannot be deleted by the spyware removal tool. There are really those hard-headed spyware programs and they can only be deleted manually. 
+
+Remember all these tips and you are on your way to saving yourself from the dangers posed by the spyware programs. You need not be a computer technician to eliminate the spyware!

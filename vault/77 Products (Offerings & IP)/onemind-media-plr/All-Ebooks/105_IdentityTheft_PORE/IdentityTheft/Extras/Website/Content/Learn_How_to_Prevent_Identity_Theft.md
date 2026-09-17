@@ -1,0 +1,62 @@
+# Identity Theft ProtectionLearn How to Prevent Identity Theft
+
+No one wants to be a victim of identity theft, as it is so difficult to clear all the transaction made by these thieves. If you do not have enough knowledge about it, you will not be prevented from being a victim of it. 
+
+All you need to do is to prevent yourself from being the victim. 
+However, how are you going to do that? 
+
+Read this article and find out how you can prevent being victimized by these thieves. 
+
+The best way to protect you from being a victim of identity theft is to protect your information. You should know all the possibilities that your information can be obtained. You must be of good control over your information to avoid it from being stolen. 
+
+You should be aware of the means to obtain your information. There are in fact many ways to get it. These are the following means:
+
+�  Purchasing goods and services over the net
+
+�  Online banking
+
+�  Throwing away your previous credit cards without destroying it
+
+�  Storing personal data and information in your computer
+
+�  Cellular phone use
+
+�  Wireless phone use
+
+�  Using your passwords and numbers for identification
+
+You need to safeguard your personal information using the following techniques. You should be conscious about it, as it will give you proper education on what to do and what to learn in terms of handling your account. Follow these simple guidelines to protect yourself from the harm of identity theft:
+
+�  It is safer to memorize your security codes and numbers other than writing it down. Never print these numbers on your checks.
+
+�  Give your files protection from making passwords. These can only be opened if your personal security code or password is entered. 
+Never use your birth date or your name as a password; it can be an easy guess to the people.
+
+�  Require your credit bureaus to give you regular reports on the review of your credit accounts. 
+
+�  Install software in your computer to avoid malicious software to enter your computer. Software such as firewall will minimize the chances of downloading bad software such as spyware, adware, and keyloggers. 
+
+This software will unnoticeably enter your computer to spy on all the operation made in your computer. With the use of firewalls, you are sure to get rid of this malicious software in real time. 
+
+�  Do not include your personal information on the email inquiry. You should also avoid sending information over email. 
+
+If you are sure that the reputable website sent you a business transaction, go to the particular official website of the sender to reply. Never use the link indicated on the email sent. 
+
+�  Never open mail attachments if you are not sure about who sent it to you. These attachments may contain software that can enter your computer system unnoticeably. This problem can be solved by using software that gets rid of them. Choose software that updated continuously. 
+�  Do not provide personal information when you are filling up forms online. Do not provide your personal data and most special your financial information online. 
+
+�  During a telephone call, never give your personal data and information on the one you are talking to. 
+
+You can give your financial information and other data if you are the one to initiate the conversation. 
+
+�  Never mind the mails that tell you to complete your application on credit cards especially online. 
+
+�  Never discard any previously used credit card before destroying it. Shred it tears it and torn it into pieces to secure that these credit cards will not be used again.
+
+�  If you lose your credit cards of other important cards report about it immediately to authorized personnel. You should temporarily close your account until the card has been captured. 
+
+�  Destroy all the documents that contain your personal data and information. Burning them can be more preferable.
+
+�  Never discard bank receipts, credit card receipts and transaction receipt in public areas. Some people may obtain this information and use it against you.
+
+These are the guidelines to protect you from experiencing the wrath of identity theft. Make sure to follow these guidelines well for the protection of you accounts.

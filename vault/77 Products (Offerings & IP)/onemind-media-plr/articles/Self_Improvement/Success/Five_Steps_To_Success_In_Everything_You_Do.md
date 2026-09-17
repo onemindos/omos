@@ -1,0 +1,28 @@
+# Title:
+
+Five Steps To Success In Everything You Do
+
+Word Count:
+676
+
+Summary:
+To realize any dream you want, follow these five steps or conditions : you need a strong desire, a clear positive goal (written down), a strong belief in yourself, a positive thinking pattern and consistency. With these five ingredients you manifest any of your dreams!
+
+Keywords:
+goal, desire, consistency, dream, belief, positive attitude, realize, manifesting, success, mastery
+
+Article Body:
+If you follow these 5 steps, no doubt you will get everything you want!
+
+1.	What you need first is to have a strong desire. A desire like a fire! Not like a little flame you  have to stir to get some heat going. No, you need a strong desire, you must really want to have what you long for! If you want something badly, but you didn�t get it until now, it is your desire was not strong enough! You must really feel the desire to have it in your bones, in your flesh, in your heart. The desire is the starting point, because without passion nothing can happen.
+
+2.	Now you need to set goals. Why? To know where to go! Without goals your desire will get you nowhere and you will turn around in circles like a dog who runs after his own tail. A goal gives you a reason, a purpose. The word goal means to GO ALl the way to get there!  Your goal is your direction where your desire will take you. If you�re able to see with your mind�s eye what you want, you will have it. So the more details you see, the more concrete is your mental image, the more likely you will get exactly what you long for! Goals get your energy running. Goals generate the necessary activity to bring you towards the realization of your dream. A good goal is a statement of what you want, in a positive, clear, concrete way and with emotion (remember the fire! Without emotion, without fire, no outcome!). A goal should be written down, to give it more energy, and should be stated in the present time. You write your goal down as if you got it already. And start to act as if you were
+already there!
+
+3.	You must believe in yourself. You must really be conscious of the fact that you are worth to have what you desire and that you are able to get it, that you got everything you need to realize your dream. Yes you can! Maybe you do not know for now how to get there, but believe in the fact that you will learn step by step how to do it and that you will be guided on your way by co�ncidences and syncronicity.
+
+4.	A strong desire, a clear positive goal, a strong believe in yourself, what else does it need to make your dreams come true? Positive thinking! The most beautiful dream, the strongest desire and the clearest goal will bring you nowhere if you destroy yourself with a negative belief system. If you have this lousy habit of seeing everything rather black than white, of fearing the worst, of expecting bad things to happen, this mindset will bring you what you ask for : black, fear, bad. A positive mindset lifts you up to the level of universal creation and the universe will conspire with you to give you what you long for.
+
+5.	Consistency. Yes, it is easy to start things. It is easy to quit. But it takes consistency to stay on your road. Did you ever taste the freedom which lies in the fact that, after years and years of practicing the same thing, you became an expert in something? With your eyes closed you can answer any question on the subject and produce almost any result you want? You are an expert now because you did the same thing hundreds of times, over and over again. And now you know! What a freedom! Consistency, not giving up, always going on in the same direction, this brings you freedom at last. Why? Because you don�t need to think and to search anymore on your subject. It became a habit and you have space free in your mind to learn new more demanding stuff. Stay on your road, go on and on, every step will take you to more freedom, happiness and mastery of your life!
+
+These are the five crucial steps to succeed in whatever you want.

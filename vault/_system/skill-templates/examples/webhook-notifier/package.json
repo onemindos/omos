@@ -1,0 +1,7 @@
+{
+  "name": "webhook-notifier",
+  "version": "1.0.0",
+  "description": "Generic webhook notification skill — Discord, Slack, and any HTTP endpoint",
+  "main": "index.js",
+  "dependencies": {}
+}

@@ -1,0 +1,23 @@
+# House Energy LLC: Your Great Defense Against Over Consumption
+
+The summer days, ice storms and winter days are just around lurking at the corners. As a matter of fact, every one of us consume an approximate amount of fifty percent of our house energy just so as we can cool or heat ourselves during these seasons. We are unable to survive comfortably without getting enough heat during the coldest days and getting enough coolness whenever it is the peak of the summer season. As a result of this human craving, the cost of energy consumption is affected. Through all the time, the amount paid for the house energy consumption is continuously rising. This is one thing which cannot be altered even by the advantages in technology itself. Luckily, there are simple tips which need to be practiced in each of the households and they do guarantee one thing�and that is with regards to cutting down your escalating energy consumptions. You will hence profit a lot from these house energy saving tips and you can also be turned into an environment-friendly individual. 
+
+In most of the households in the country, the cooling and heating procedures are the biggest factors that trigger the energy costs to rise. Like for example, a home which is poorly insulated prompts a great dose of cool and warm air to escape towards the exterior portion of the home. As the heat rises up, a great deal of it escapes all towards the poorly insulated ceilings and attics. In the same case, the cool air tends to fall therefore a less insulated flooring will also allow its escape. Without telling things straightforward, so much home energy gets wasted with this kind of setup. The poorly set fittings of the windows and doors are also contributory factors to the wasting of house energy.
+
+As a great defense, what you need to do is to have the walls, floors, and ceilings thoroughly insulated. Such improvement plans may cost you a good deal of amount especially with old houses in possession but then you can always seek the help of the federal government with regards to this matter. The federal government usually proportionate subsidies for these kinds of renovation undertakings. Take note also that the savings that you will be working on will increase as the months pass by and you will just realize how good it has been for you to get on with the endeavor. 
+
+So have you made up your mind? Do you now intend to put in enough money into your pocket? You can save as much as 10% from your monthly electrical bills by trying to eliminate as much air leaks that exist in your home. Logically seeing things, the summer days allow the warm air to leak inside your home while the winter days let the air leak out of the home. Hence, this continuing practice promotes a great deal of house energy waste. The best thing that you can do to cut down your monthly electrical bill expenses is to do some caulking, sealing, and weather-stripping the cracks, seams, and openings all around your house.
+
+For a few tips, read on!
+
+Check out the air tightness your home has. During one windy day, get a lighted incense stick and then place it near the most potential air paths directing you to the outside path such as the doors, windows, plumbing fixtures, electrical boxes, ceiling fixtures, and electrical outlets. Once you see the smoke blowing in a horizontal direction, there you�ve found an air leak and which must be sealed, caulked, or weather-stripped at once.
+
+Seal and caulk those gaps wherein ducting, plumbing, or electrical wirings infiltrate into and then out of the home. 
+
+Look for gaps or holes under the insulation and seal them using the stapled plastic over those holes and then caulk them at once at the edges with plastics.
+
+Set up rubber gaskets at the back of the outside switch plates and wall outlets.
+
+When the fireplace is not at all used, always keep close the flue dumper. 
+
+Storm windows or double-pane windows must be installed as replacements for the single-pane windows. The set of windows used in your homes can comprise as much as 10-25% of the heating bill. Securing them will likewise help you save up.

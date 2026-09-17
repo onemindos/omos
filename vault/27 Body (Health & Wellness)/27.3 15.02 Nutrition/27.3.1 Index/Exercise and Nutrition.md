@@ -1,0 +1,26 @@
+---
+id: hp-27-20260113225955
+title: "Exercise and Nutrition"
+type: reference
+path: HP
+domain: 25-49
+folder: "27"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/hp, path/hp/27, type/reference, status/active]
+ai_summary: "Exercise and Nutrition"
+---
+# Exercise and Nutrition
+
+Exercise and Nutrition
+No matter what your reasons are for starting a new exercise program you really need to pay attention to your nutritional needs. If you exercise like crazy but eat a high fat diet you will not reap the full benefits from your workouts. 
+In regards to nutrition you want to take one week and write down everything you eat, and don’t cheat! This will give you a good overview of what you eat and when. By keeping a food journal for at least a week you can see if you skip breakfast, you can see how often you eat out and what your food choices are. From here you will see if you are eating a diet that is high in fat, sugar and fast foods. 
+Once you have this information you can start to make changes. So for example if your problem is that you drink too many soft drinks you want to start swapping a soft drink for water or herbal tea. You don’t have to quit cold turkey but start making small changes. 
+If you go for a coffee and a doughnut every day then switch the doughnut for a lower fat choice. Or ideally take your own low fat granola bar or some other breakfast snack. If you are eating out because of time then you can quickly whip up a fruit smoothie or eat a piece of fruit along with some yogurt. 
+By eating correctly not only will you start to feel better, you will see the benefits from your exercise as well. By fuelling your body with high quality food choices you will have more energy to workout longer and at higher intensity levels. 
+Supplements can be a useful thing to help improve your nutrition and exercise routines. If you workout straight after work you can easily use a supplement or nutrition bar while travelling to the gym. This way you are supplying your body with energy before beginning your exercise class. You will feel more energized and won’t suffer from burn out before the class is over. 
+You don’t have to make drastic changes in regards to both nutrition and exercise. Small changes are going to make an impact. By eating more fresh fruit and vegetables you will probably start to feel better and more energized. When you start to add exercise into the mix you could see that you sleep better and feel more alert during the day. You actually feel as though you have enough energy to get through your busy day.
+So start by making sure you eat breakfast and try to add a short walk into your day. Once you have this achieved then increase your activity level and begin to add more healthy food choices into your diet. 
+Words 463

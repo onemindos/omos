@@ -1,0 +1,17 @@
+# Subject: DID YOU GET THIS?
+
+Hey [[firstname]],
+
+Yesterday, I sent an email regarding my latest launch - Eliminating Anger:
+
+>> LINK TO YOUR SALES PAGE
+
+Remember, with this useful anger management handbook, it��ll save you a lot of heartache and conflict if you know how to manage your life properly.
+
+So far, there has been raving reviews about it already, and I don��t want you to miss out on this great opportunity. So grab it now before it��s sold out:
+
+>> LINK TO YOUR SALES PAGE
+
+Warm regards,
+
+[[YOURNAME]]

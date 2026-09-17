@@ -1,0 +1,111 @@
+<?php include("../Includes/Start.php"); ?>
+<html>
+	<head>
+		<title> Bed Bugs | All About Bed Bugs</title>
+		<meta http-equiv="Content-Type"	content="text/html; charset=windows-1252">
+		<meta name="Category"			content="">
+		<meta name="Creator"			content="Niche Mania - http://www.niche-maniacs.com">
+		<meta name="Copyright"			content="<?=$CopyRight;?>">
+		<meta name="Description"		content="Bed bugs are rarely seen these days because of the widespread use of DDT during the 1940 s and 50 s to exterminate all sorts of pests in the United States However, bed bugs are making a comeback Hotels and motels are among the places that suffer from bed b...">
+		<meta name="Keywords"			content="<?=$Keywords;?>">
+		<meta name="Distribution"		content="global">
+		<meta name="Publisher"			content="<?=$Domain;?>">
+		<meta name="Rating"				content="General">
+		<meta name="Revisit-after"		content="5 days">				
+		<meta name="Robots"				content="index,follow">				
+		<link href="../Includes/Styles.css" rel="stylesheet" type="text/css">
+		<script src="../Includes/JavaScript.js"></script>		
+	</head>
+	<body>
+		<table align="center" cellpadding="0" cellspacing="0" class="tblMain">
+			<tr>
+				<td class="tdHeader" colspan="2">
+					<h1>
+						<?=$MainTitle;?>
+					</h1>
+					<h3>
+						<?=$SubTitle;?>
+					</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdRow" colspan="2" >
+					<?php $Menu = "Articles"; include("../Includes/Menu.php"); ?>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdContent">
+					<br>
+					<div style="float: right;"> 
+						<a href="../RssFeed.xml" target="_new" style="border: 0; padding-right: 5;">
+							<img align="absmiddle" border="0" src="http://www.niche-mania.com/Images/Rss_32x32.jpg">
+						</a>					
+					</div>
+					<p>
+						<b>
+All About Bed Bugs
+</b>
+<br>
+
+						<small>
+
+</small>
+<br>
+<br>
+
+					</p>
+					<?php include("../Includes/Google_336x280.php"); ?>
+					<p>
+						<br>Bed bugs are rarely seen these days because of the widespread use of DDT during the 1940's and 50's to exterminate all sorts of pests in the United States. However, bed bugs are making a comeback. Hotels and motels are among the places that suffer from bed bugs infestation.<br><br>According to studies, bed bugs' comeback may be attributed to international travelling of Americans to countries with bed bugs infestation on hotels and motels and the immigration to the States by people from countries with bed bugs infestation.<br><br>You will not be even sure if your own household is bed bugs free. If you haven't seen one but suspects that a bed bug hitched on your clothes and has started a colony on your home, try to know the basic things about bed bugs so that you would know if you need to treat your home from infestation.<br><br>-- Genera and species of bed bugs<br><br>Bed bugs are small, brownish in color, flat, nocturnal insects. Bed bugs belong to the family Cimicidae that live by feeding on human and animal blood.<br><br>Bed bugs with scientific name Cimex lectularius are the common household bed bugs. They are the species of bed bugs that feed on humans and have adapted to human environments. These type of bed bugs are found in temperate climates. Believe it our not, they are the same bed bugs that torment people from the ancient times.<br><br>There are other bed bugs species such as Cimex hemipterus which are found in tropical regions like Florida. These type of bed bugs also infests poultry and bats. Another bed bugs species, the Leptocimex boueti which are found in the tropics of South America and West Africa infest not just humans but bats as well. Bed bugs species with scientific namen Cimex pilosellus and C. pipistrella primarily infest bats. A bed bug species of North America, the Haematosiphon inodora, primarily infests poultry.<br><br>-- Physical characteristics of bed bugs<br><br>Adult bed bugs are small, oval, flattened, reddish brown, and wingless. Many people think that bed bugs are so small and move so quick that they are not anymore visible to the naked eye. Adult bed bugs grow to 4 to 5 mm in length and although they move fast, they are not as fast as other perceive them to be. People do not see bed bugs because bed bugs stay still on bed, sofa or matress crevices and bite people only when they are still (such as when we are sleeping). <br><br>Newly hatched bed bugs nymphs are translucent. Their color become become browner as they reach maturity. Their size are often compared to appleseeds.<br><br>-- Feeding habits of bed bugs<br><br>Bed bugs can live more than a year without feeding. But when a host is present, they feed regularly every five to ten days.<br><br>Although bed bugs may attempt to feed on human blood anytime of the day, they are generally active and feed only at night. An hour before dawn is bed bugs peak attack.<br><br>Bed bugs, like any other insect that feed on human blood such as leeches, inject  anesthetics on the skin of their hosts so that piercing and blood sucking won't be felt by the human host.<br><br>This is made possible with the two hollow tube of bed bugs. One of their hollow tube releases saliva that contains an anticoagulant and anesthetics while the other tube withdraws the blood.  <br><br>Bed bugs feed for about five minutes and immediately return to their hiding place such as the bed matresses and pillows.<br><br>-- Health effects of bed bugs bite on humans<br><br>Unlike other blood sucking insects such as mosquitoes that carries Malaria and Dengue Fever (Yellow Fever), bed bugs are not known to have to cause transmission of any diseases that are transmitted through blood, such as Hepatitis B, HIV, and other diseases.<br><br>They are not regarded by scientists as a medical threat, although they may cause severe itching and skin marks on the bitten part of the skin. Skin infections and scars may precipitate due to scratching a bitten part and this may require medical attention by a dermatologist.<br><br>A calamine lotion may subside redness and itch of the bitten part. Wash with warm water and germicidal soap first before you apply a calamine lotion.
+						<br><hr style='border-style: solid; width: 90%;'><br><p><i></i></p>
+					</p>
+					<br>
+				</td>
+				<td class="tdRight">
+					<?php include("../Includes/J_Box.php"); ?>
+					<?php include("../Includes/Navigation.php"); ?>
+					<?php include("../Includes/Google_160x600.php"); ?>
+				</td>
+			</tr>
+			<?php					
+				if($ShowNewsFeed)
+					{
+			?>
+						<tr>
+							<td class="tdRow" colspan="2">
+								<?=$Category;?> News and Events
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<?php include("../Includes/Google_Search.php"); ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br>
+								<?php include("../Includes/NewsFeed.php"); ?>
+								<?php	
+									if ($DisplayAmazon)
+										{
+											echo "<hr>";
+											echo "<br><center>";
+											include("../Includes/Amazon_728x90.php");
+											echo "</center><br>";
+										}
+								?>
+							</td>
+						</tr>
+			<?php
+					}
+			?>
+			<tr>
+				<td class="tdRow" colspan="2">
+					&copy; <?=date("Y");?>, <a href="<?=$Domain;?>"><?=$SiteName;?></a> - All Rights Reserved Worldwide | <a href="../Legal/index.php"><?=$Category;?> Legal Information</a>
+				</td>
+			</tr>
+		</table>
+		<?php include("../Includes/Footer.php"); ?>
+		<?php include("../Includes/AdTracker.php"); ?>
+	</body>
+</html>

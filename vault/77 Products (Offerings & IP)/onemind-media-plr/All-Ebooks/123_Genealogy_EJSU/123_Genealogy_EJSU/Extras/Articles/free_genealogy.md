@@ -1,0 +1,17 @@
+# Free and accessible sources in your research for your genealogy
+
+Isn't it interesting to know more about your ancestral timeline several generations ago? If you are on the search for reliable sources that will serve as your reference documents, the internet is a good resource material. It has always contained the vast data that can help in your research. The great advantage when using the internet is that the genealogist can save both money and effort. 
+
+Aside from the ancestral timeline, some people also would want to know the details about their recent generations. In the quest of finding this out, genealogy becomes a serious study that takes an investment. 
+
+There are some helpful pointers that can give ease to your research. Whether you are new or a professional genealogist, you must know that there could be other researchers that work on your genealogy. One way to find out is to check on the published works of the surnames involved in your family tree. Some of these researchers publish their works on their website for other people to visit. Other helpful tools that can also be found in the internet are the searchable indexes that contain references needed in your study. 
+
+The genealogical or historical society is an institution that you can ask help from. They are found in the towns where your ancestors once lived. This is an excellent source of information on how life was during the time of your great, great grandparents. The genealogical or historical society keeps the records of local directories, the list of buried people even in inactive burial spots, and newspaper archives. The advantage of seeking help from this institution is that this is run by volunteers who have been oriented with some genealogical facts. This also contains addresses of other societies which have links to their webs. 
+
+Way back in 1800's, the US and Europe has the long tradition of funeral cards or mourning cards. These are also great sources for genealogists. There are also web sites that deal on the indexing of these cards. You can visit these sites and search for the surnames that you need.
+
+Newspapers are also good sources of local information. They usually contain valuable information about people who have lived a few years ago. The online newspaper archive is a searchable site that takes the place of microfilm reels. However, it would be advantageous if you have some information about your ancestors such as the event where they have been involved. When you search in online newspaper archives, you type the surname and the keyword, which is resembled by the event. The newspaper online is updated regularly that makes their information reliable.
+
+Another research tool that is helpful in genealogy is the indexed census. Aside from this, there are other transcribed records which are also available online. Such records of birth, marriage and death information are available in some databases. 
+
+There are various research tools that help in the search of your ancestry. There are free and accessible sources that only proper organization provide.

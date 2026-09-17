@@ -1,0 +1,39 @@
+# The daily routine of a successfull person
+
+Here's a checklist of behaviours common to successful people to support you in accomplishing your own Success mentality.
+
+1. Make the 'Decision' to be Successful - Success is a 'Decision'! ...
+
+Success starts with a Decision - to BE Successful! Success isn't a journey or an end result - when you decide you want something, and mean it with your heart, the journey is what happens as a result of that decision. And, what a journey it is! ...
+
+2. Recognize that Success is an 'Inside' Job -
+
+You must choose to make the changes and agitates on the 'inside' before you can make real changes and accomplish the success you hope. Our minds are like a big filing cabinet - you need to insert new positive files to authorise yourself to get what you want. Be attached to your ongoing personal developing.
+
+3. Set Goals -
+
+No matter how implausible, work on your higher Goals. Achievers do!
+
+Write down your Goals and hopes and review them daily. Write your goals into particular action plans. break your action plans into action lists and chunk them into small steps (at least 3 next steps). Get rid of the time wasters.
+
+4. Take Action!
+
+Successful people know what they need to do to get what they want and they waste no time taking action and doing it ... Effectual animated Action. Success likes accelerate ...
+
+Just take action.You'll feel fabulous when you do. Make it simple, take the angst out of it, and just do it. It'll catch up with for a handful of imperfectnesses. Aim for progress, not perfection.
+
+When you take that step, it will agitate and move everything advancing - you'll see charming things start to line up and bechance in your Life.
+
+5. Make Smart Choices to Support Your Success -
+
+Ask yourself - will this alternative authorise me or disempower me? Successful people make alternatives that support accomplishing the life of their dreams. The more choices you have and create for yourself the more success you'll have. By the shere fact that the more you do and try, the more expected you are to achieve the results you're after. Again, it's a numbers. Complicate and find-tune as you go and learn from your errors.
+
+6. Overcome Procrastination -
+
+Be absolved on what it would mean if you did it! Don't put your life on accommodate - build a life that's meaningful ... Successful people know how to overcome cunctation.
+
+7. See Opportunity -
+
+Be apprehend about recognizing chances around you. Be aware that an obstruction is often an unrecognised opportunity.
+
+Successful people know how to make their failings work for them. Embrace your failings or shortcomings and turn them into commandment others how you defeated them and triumphed - tell your story ...

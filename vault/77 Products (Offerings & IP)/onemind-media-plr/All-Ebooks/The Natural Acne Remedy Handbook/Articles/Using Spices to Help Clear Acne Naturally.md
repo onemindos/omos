@@ -1,0 +1,16 @@
+# Using Spices to Help Clear Acne Naturally
+
+You can literally spend hundreds of dollars on face-care products if you suffer from acne breakouts.  Often, however, a few things you have in your spice rack might do the trick.
+Here are a few of them:
+
+• Alum—This should be in the spice aisle in your local grocery store. Just look for Potassium alum.  It’s a natural antiseptic and astringent that shrinks skin tissue.   If you can find block form, it works better in block form than power.  Either way, just wipe it over your acne gently to avoid irritating pimples.
+
+• Garlic—Scientifically, this hasn’t been proven, but it has been known to work.  You’ll need two garlic cloves.  Peel them and smash them into a pulp.  Use the juice to apply to your face.  Leave it on for around 10 minutes.  Frequent use is OK, but don’t leave it on too long at a time.
+
+• Cinnamon mixed with honey—Take one teaspoon of cinnamon and mix it with one teaspoon of honey.  Put it on your face for about 15 minutes.  Rinse your face thoroughly with warm water and pat, don’t rub, dry.  Cinnamon is good for the skin.  It has properties such as antiviral, antifungal, and antibacterial.  Honey can be healing and soothing. It is a natural antiseptic and a hygroscopic, so it can absorb moisture.
+
+• Mint—Mint is known to soothe your skin.  It has menthol, which is an anti-inflammatory.  It can help take away that red your skin shows when you have acne.  You can either use the juice of mint tea leaves or mint oil.  Put it on your face for 10-15 minutes.  Rinse your face and pat dry.  You can use it as many times as you want, and since it’s an anti-inflammatory, it won’t hurt your skin.
+
+• Turmeric—This is found in most Indian food.  At home, you can spice up your food by adding it to things like eggs or stir-fry.  It has several properties such as: anti-inflammatory, antiseptic, and antimicrobial properties.  It helps to reduce the inflammation and redness of your acne.
+
+The next time you see an advertisement for a new “cure” for acne, before you rush out and buy it, turn to your spice rack, and give one of the above spices a try.

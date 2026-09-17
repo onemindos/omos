@@ -1,0 +1,24 @@
+---
+id: hp-25-20260113225955
+title: "Personal Development Skills"
+type: reference
+path: HP
+domain: 25-49
+folder: "25"
+status: active
+created: 2026-01-13
+modified: 2026-01-13
+owner: zeus
+tags: [path/hp, path/hp/25, type/reference, status/active]
+ai_summary: "Personal Development Skills"
+---
+# Personal Development & Skills
+
+Owner: Zeus
+Tags: Intelligence
+
+---
+
+## Related
+
+- [[25-49 HP (Holistic Performance)/27 Mind (Education & Learning)/27 Mind|27 Mind]]

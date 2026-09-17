@@ -1,0 +1,47 @@
+# Title:
+
+Managing Loneliness
+
+Word Count:
+740
+
+Summary:
+My experience from 37 years of counseling individuals and couples is that most of the problems from which people suffer stem from how they handle the events of life, rather than the events themselves.
+
+Keywords:
+loneliness, being alone, companionship
+
+Article Body:
+My experience from 37 years of counseling individuals and couples is that most of the problems from which people suffer stem from how they handle the events of life, rather than the events themselves.
+
+Certainly traumatic and tragic events such as loss of loved ones, financial loss, and health issues are extremely challenging. However, some people manage to move through these events with equanimity, while others remain stuck in fear, anxiety, and depression. The difference is in how people handle deeply painful feelings.
+
+I have discovered that there are two core feelings that most people will do almost anything to avoid feeling: loneliness and helplessness.
+
+Loneliness is an intense empty, sad, sinking or burning feeling within. This feeling can be triggered by four different situations:
+
+1) Loss of a loved one.
+
+2) Not having a partner, family or friends with whom to share time and love.
+
+3) Being around others but being closed off to them.
+
+4) Being around others when they are closed off to you.
+
+Other than a traumatic loss, the latter is often the most challenging in everyday life, and this can occur throughout the day. For example, you walk into work happy and open. You greet your friend, and he or she barely responds to you. If you are truly open to your own feelings, you will feel a stab of loneliness. Yet most people are so closed off to this feeling that they immediately attempt to avoid the feeling with some kind of addictive behavior. They might grab a donut while shaming or blaming - telling themselves that they must have done something wrong or that their friend is a jerk. These addictive behaviors are geared to protect against feeling the pain of the loneliness. And they work for the moment to appease the feeling, but the feeling doesn�t actually go away. It just goes deeper within and may eventually cause physical symptoms, such as back pain or some form of illness.
+
+Helplessness is a similar feeling to loneliness � intense inner turmoil. In the example above, not only do you have the stab of loneliness, but you also feel the pain of helplessness over your friend�s behavior. You cannot make him or her connect with you. However, because this is such a difficult feeling, you don�t want to know that you cannot have control over another or over the outcome of things. To avoid knowing about your lack of control, you may shame yourself: �It�s my fault. If I�m different, I can get others to be different.� Or you might blame your friend, attempting to get him or her to change. Both shame and blame are attempts to avoid accepting helplessness over others.
+
+Once you turn to addictive behaviors such as food, alcohol, drugs, activities, shame and blame, you have abandoned yourself. In attempting to avoid feeling the loneliness and helplessness, you have created inner aloneness � self-abandonment. Self-abandonment occurs when your intent is to avoid pain rather than lovingly attend to your authentic feelings. The combination of avoiding loneliness, helplessness and the aloneness that comes from inner abandonment can lead to anxiety, depression and despair. People then often turn to prescription drugs to further avoid their feelings.
+
+Managing the feelings of loneliness and helplessness is not as hard as you may think it is. If you practice the following process, you will find that you do not need to use your various addictions to avoid pain.
+
+1) Stay tuned into your body/feelings so that you know when you are feeling lonely or helpless. It�s very important to be able to name the feeling, and it may take some time to recognize these feelings since you may have been avoiding them for so long.
+
+2) Welcome and embrace the feelings, opening with deep compassion for these feelings. If you are connected with a spiritual Source of love and compassion, open to this Source and ask for help in being in compassion for the feelings.
+
+3) Hold the feelings as you would a child who is hurting, with deep love and understanding. Just be with the feelings with deep acceptance of them for a few minutes.
+
+4) Consciously be willing to release the feelings. Imagine the feelings of loneliness and helplessness moving through you and being released into the Universe � into Divine Love.
+
+You will find that these painful feelings will quickly release if you practice these steps rather than abandon yourself in the face of painful events and experiences.

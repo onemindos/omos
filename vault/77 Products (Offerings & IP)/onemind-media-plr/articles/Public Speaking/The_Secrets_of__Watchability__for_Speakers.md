@@ -1,0 +1,33 @@
+# Title:
+
+The Secrets of �Watchability� for Speakers
+
+Word Count:
+554
+
+Summary:
+The most important trait a speaker can have is "watchability." Unfortunately, it is also the most elusive and indefinable. This article will help you understand what watchability is and how you can develop it.
+
+Keywords:
+Public speaking, fear of speaking, presentation skills, speaking, speeches, speaches, train-the-trainer, Toastmasters, training,
+
+Article Body:
+"Watchability." Both my spell checker and an online dictionary tell me that "watchability" is not a real word. However, I will continue to use it because, in my opinion, the ability to be watchable may be the single most important trait a speaker can have.
+
+This summer, I attended the annual convention of the National Speakers Association. I thought that the kickoff speaker was amazing. However, if you break down his style in purely technical terms, he was awful. He kept moving around the stage, he stepped out of the light and into the audience, he checked his watch while speaking, etc. Despite all that, he had watchability. Something about his delivery and style kept me grossly engaged. Others must have thought so as well - you don't get to open a national speakers convention if people think you're no good.
+
+So what is watchability? It is, to be a bit redundant, the characteristic of being watchable. People enjoy watching and listening to you speak. The amazing thing is that if you are watchable, then even if you mess up or if your content or delivery isn't up to snuff, the audience will enjoy it. 
+
+The ultimate goal, of course, is to have great content and delivery while being amazingly watchable.  The challenge is that while content and delivery are easily viewable traits, watchability is abstract. It's easy to watch a speaker and critique how they move, or how they use their facials. You can listen and critique stutters, inflection, pace, and vocal variety. The value of their content is easy to immediately judge.
+
+Watchability, however, is like charisma. You can't define a set criteria, but you know it when you see it. 
+
+I have however, observed a few things that all eminently watchable speakers do:
+
+They are themselves. These speakers speak from the heart, and speak in a style that is true to themselves. They don't use other people's words, and they don't use unnatural body movements that a coach taught them. They give you the impression that if the two of you were hanging out for dinner, they would say the same thing in the same way.
+
+They are comfortable. Watchable speakers look right at home on stage. This comes from two things: 1) they are experienced and know the material inside and out, and 2) they are not afraid of failure. While they want to communicate their message and please they audience, they are not wrapped up in all that. They are content to just get on stage and do their best. If the audience likes it great; if not, it's not the end of the world.
+
+They are having fun. You have probably seen a speaker (even a "professional") who looks like they don't want to be on stage. Watchable speakers have fun. Even if their topic is serious, they clearly act as if they want to be on that stage. They view it as an honor and a privilege. Whether it stems from fear, arrogance, burn-out, or some mysterious other factor, when a speaker would rather be somewhere else, an audience can feel it.
+
+Practice implementing these three ideas: be yourself, get comfortable, and have fun. You can instantly and drastically increase the value of your speech without changing a single word if you do this. You will, in word, become "watchable."

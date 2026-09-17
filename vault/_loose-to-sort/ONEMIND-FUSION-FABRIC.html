@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneMind — The Single Fusion Fabric</title>
+<style>
+  :root{--bg:#0a0e14;--panel:#111823;--panel2:#0d141d;--line:#1e2a3a;--txt:#e6edf3;--dim:#8b9bb0;
+    --nats:#d29922;--orp:#2dd4bf;--src:#58a6ff;--con:#a371f7;--cut:#f85149;--ok:#3fb950;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:30px 38px 80px}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.5px}
+  .lead{color:var(--dim);max-width:1050px;margin:6px 0 4px}
+  .stamp{color:var(--dim);font-size:12px;margin-bottom:22px}
+  h2{font-size:19px;margin:32px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .principle{background:linear-gradient(135deg,#161f2e,#0d141d);border:1px solid var(--orp);border-radius:12px;padding:18px 24px;margin:8px 0}
+  .principle b{color:var(--orp)}
+  /* fabric diagram */
+  .fab{display:flex;flex-direction:column;gap:0;margin-top:8px}
+  .row{border-radius:10px;padding:14px 18px;border:1px solid var(--line);position:relative}
+  .row .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:8px;font-weight:700}
+  .pubs{background:linear-gradient(90deg,#0f1e2e,#0d141d);border-color:var(--src)}
+  .fabric{background:linear-gradient(90deg,#221a0c,#0d141d);border-color:var(--nats);text-align:center}
+  .brain{background:linear-gradient(90deg,#0f2320,#0d141d);border-color:var(--orp);text-align:center}
+  .cons{background:linear-gradient(90deg,#1a1330,#0d141d);border-color:var(--con)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11.5px;padding:3px 9px;border-radius:6px;background:#0d141d;border:1px solid var(--line);color:var(--dim)}
+  .chip.hot{border-color:var(--src);color:var(--txt)}
+  .chip.con{border-color:var(--con);color:var(--txt)}
+  .arrow{text-align:center;color:var(--nats);font-size:20px;line-height:1;margin:3px 0}
+  .fabric .big{font-size:20px;font-weight:800;color:var(--nats)}
+  .brain .big{font-size:20px;font-weight:800;color:var(--orp)}
+  .sub{color:var(--dim);font-size:12.5px;margin-top:4px}
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--orp);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  tr:hover{background:var(--panel2)}
+  code{background:#0d141d;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--nats);font-size:12.5px}
+  .moves{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+  .move{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .move .num{font-size:12px;font-weight:800;color:var(--orp)}
+  .move h3{font-size:15px;margin:4px 0 8px}
+  .move p{color:var(--dim);font-size:12.5px}
+  .wwv{background:var(--panel);border-left:3px solid var(--con);border-radius:0 8px 8px 0;padding:14px 18px;margin:10px 0}
+  .wwv b{color:var(--con)}
+  .foot{margin-top:32px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+  .before-after{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  .ba{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+  .ba h3{font-size:14px;margin-bottom:8px}
+  .ba.b4{border-color:var(--cut)} .ba.b4 h3{color:var(--cut)}
+  .ba.af{border-color:var(--ok)} .ba.af h3{color:var(--ok)}
+  .ba p{color:var(--dim);font-size:12.5px;line-height:1.5}
+</style>
+</head>
+<body>
+  <h1>OneMind — The Single Fusion Fabric</h1>
+  <p class="lead">How ORP, Crucix, WorldMonitor, Osiris, Constellation, and WorldWideView's own sources all collapse into one picture: <b>one bus, one brain, one contract.</b></p>
+  <p class="stamp">Generated 2026-07-06 by Legacy</p>
+
+  <div class="principle">
+    <b>The whole idea in one move: flip vertical silos into one horizontal fabric.</b><br>
+    Today every app is a silo — it <i>fetches its own sources</i> AND <i>renders them</i> (Crucix fetches+shows, WM fetches+shows, WWV fetches+shows). Same OpenSky pulled 4 times, same FIRMS pulled twice. The fabric flips it: <b>every source publishes to NATS once → ORP fuses once → every app renders the same truth.</b> Sources stop being owned by apps. The picture becomes shared.
+  </div>
+
+  <h2>The fabric — 4 layers, top to bottom</h2>
+  <div class="fab">
+    <div class="row pubs">
+      <div class="lbl">① Publishers — every source, once</div>
+      <div class="chips">
+        <span class="chip hot">ORP 40 protocol adapters (ais·adsb·mavlink·modbus·opcua·klv·cot…)</span>
+        <span class="chip hot">Crucix 29 (acled·gdelt·firms·fred·shodan·ofac…)</span>
+        <span class="chip hot">WM ~24 geo-intel (usgs·gdacs·windy·satellites·cables…)</span>
+        <span class="chip hot">WM 568 news RSS</span>
+        <span class="chip hot">Osiris (shodan·abuseipdb·cctv·liveuamap)</span>
+        <span class="chip hot">WWV's own (firms·nasa·usgs·opensky) → demoted to publishers</span>
+        <span class="chip hot">Edge hardware (mavlink·home-assistant·vision)</span>
+      </div>
+    </div>
+    <div class="arrow">▼ &nbsp; publish</div>
+    <div class="row fabric">
+      <div class="lbl" style="text-align:center">② The Fabric — the one bus</div>
+      <div class="big">NATS (JetStream)</div>
+      <div class="sub">The single contract. Subject taxonomy below. Cluster on DOKS + Mac leaf + edge leaves. Nothing talks app-to-app — everything talks bus.</div>
+    </div>
+    <div class="arrow">▼ &nbsp; ingest (nats adapter / http_poller)</div>
+    <div class="row brain">
+      <div class="lbl" style="text-align:center">③ The Brain — the one fusion core</div>
+      <div class="big">ORP / om-unity</div>
+      <div class="sub">Ingests all of it → entity resolution + knowledge graph → ORP-QL. Re-publishes fused <code>ent.*</code> / <code>intel.*</code> / <code>world.*</code> back onto the bus.</div>
+    </div>
+    <div class="arrow">▼ &nbsp; subscribe</div>
+    <div class="row cons">
+      <div class="lbl">④ Consumers — every app renders the same picture</div>
+      <div class="chips">
+        <span class="chip con">WorldWideView — 3D globe (DataBus ← bus)</span>
+        <span class="chip con">atoc — 2D COP / C2 console (MapLibre)</span>
+        <span class="chip con">TAK Server → ATAK (tactical slice via cot.*)</span>
+        <span class="chip con">Legacy / Hermes — AI reasons via ORP-QL</span>
+        <span class="chip con">AMOS — mission tasking</span>
+        <span class="chip con">om-control-plane — ui.* KV projection</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>The contract — one subject taxonomy binds it all</h2>
+  <table>
+    <tr><th>Subject pattern</th><th>Carries</th><th>Published by</th><th>Consumed by</th></tr>
+    <tr><td><code>sensor.&lt;domain&gt;.&lt;proto&gt;</code></td><td>raw ingest (sensor.air.adsb, sensor.sea.ais)</td><td>protocol adapters + edge</td><td>ORP</td></tr>
+    <tr><td><code>ent.&lt;type&gt;</code></td><td>fused entities (ent.air, ent.sea, ent.ground, ent.robot)</td><td><b>ORP</b></td><td>WWV, atoc, TAK, Legacy</td></tr>
+    <tr><td><code>intel.&lt;domain&gt;</code></td><td>curated intelligence (intel.conflict, intel.cyber, intel.finance)</td><td>Crucix/Osiris publishers → ORP</td><td>WWV, atoc, Legacy</td></tr>
+    <tr><td><code>world.&lt;layer&gt;</code></td><td>geo/env layers (world.weather, world.fire, world.seismic)</td><td>WM/WWV publishers → ORP</td><td>WWV, atoc</td></tr>
+    <tr><td><code>cot.inject</code> / <code>cot.out</code></td><td>TAK CoT bridge</td><td>NatsBridge / cot-tap</td><td>TAK ↔ bus</td></tr>
+    <tr><td><code>ui.*</code></td><td>retained projections / KV of record</td><td>om-control-plane</td><td>UIs (fast load)</td></tr>
+    <tr><td><code>mission.*</code> / <code>cmd.*</code></td><td>tasking, orders, acks</td><td>AMOS, Legacy</td><td>edge assets, robots</td></tr>
+  </table>
+
+  <h2>Two ways a source gets onto the bus</h2>
+  <div class="before-after">
+    <div class="ba af"><h3>A · ORP-native (no new code)</h3><p>If ORP already speaks the protocol (AIS, ADS-B, MAVLink, Modbus, CoT…) OR it's a plain HTTP/JSON feed → configure ORP's <code>http_poller</code>/<code>generic_api</code>/<code>websocket_client</code> in <code>config.yaml</code>. ORP pulls, fuses, publishes <code>ent.*</code>. Most WM/simple Crucix sources land here.</p></div>
+    <div class="ba af"><h3>B · Publisher microservice (ported recipe)</h3><p>If the source needs auth, heavy parsing, or logic (Crucix's LLM delta engine, Osiris OSINT enrichment) → a small NATS publisher carries that recipe, publishes <code>intel.*</code>/<code>world.*</code>. ORP's <code>nats</code> adapter ingests it. One publisher per source, GitOps-managed, deployed on DOKS/NEX.</p></div>
+  </div>
+
+  <h2>What happens to WorldWideView's own sources</h2>
+  <div class="wwv">
+    <b>WWV stops fetching. Its plugins re-point to the bus.</b> WWV already has the perfect machinery — a <code>PluginManager</code>/<code>PluginRegistry</code> + manifests, plus <code>DataBus.ts</code> and an <b>Agent Bus</b>. Today each plugin = "fetch external API → render on globe." We convert each to <b>"subscribe to a NATS subject → render on globe."</b> The in-browser DataBus stays; its <i>input</i> becomes the NATS→WebSocket bridge instead of direct <code>fetch()</code>. FIRMS/NASA/USGS/OpenSky now arrive from ORP (fused, deduped) instead of WWV pulling them raw. <b>⚠ Kill Cesium Ion</b> (cloud token = non-sovereign) → self-hosted terrain/3D tiles. Result: WWV becomes a pure <i>lens</i> on the shared picture, not another silo.
+  </div>
+
+  <h2>3 moves to combine everything</h2>
+  <div class="moves">
+    <div class="move"><div class="num">MOVE 1</div><h3>Lock the contract</h3><p>Freeze the subject taxonomy above as the one interface. Every publisher and consumer codes to it. This is what actually "combines" them — a shared language, not shared code.</p></div>
+    <div class="move"><div class="num">MOVE 2</div><h3>Port sources → publishers, one at a time</h3><p>Process of elimination: take a Crucix/WM/Osiris/WWV source, wire it to the bus (pattern A or B), confirm ORP fuses it, delete the silo. Repeat. Same sweep discipline as the repos.</p></div>
+    <div class="move"><div class="num">MOVE 3</div><h3>Re-point consumers to the bus</h3><p>WWV plugins, atoc, ATAK, Legacy all subscribe to <code>ent.*</code>/<code>intel.*</code>/<code>world.*</code>. No app fetches its own data anymore. One picture, many lenses.</p></div>
+  </div>
+
+  <p class="foot">The fabric isn't a new thing to build — it's NATS (have it) + ORP (have it) + a locked contract (define it) + porting sources one at a time (the work). When done: one bus, one brain, one picture; WWV/atoc/ATAK/Legacy are just windows onto it.</p>
+</body>
+</html>

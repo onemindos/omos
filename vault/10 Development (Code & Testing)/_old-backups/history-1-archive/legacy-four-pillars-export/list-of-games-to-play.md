@@ -1,0 +1,43 @@
+# List of Games to Play
+
+# List of Games to Play
+
+- GHOSTS OF TABOR -
+https://ghostsoftabor.com/?v=7516fd43adaa
+
+- PLAN 8
+
+- GTA 5 - LSPDFR
+
+- GHOST RECON
+
+- RACHET AND CLANK
+
+- READY OR NOT VIDEO GAME
+
+- RED DEAD REDEMPATION 2
+
+- METAL GEAR SOLID 5
+
+- STREAM VR - BONE WORKS
+
+- SPLINTER CELL
+
+- ASSASSINS CREED
+
+- SPIDERMAN
+
+- MATRIX
+
+- GOTHAM KNIGHTS
+
+- JAX & DEXTER
+
+- GHOST OF TSUSHIMA
+
+- TENANTS (STEAM) -
+https://store.steampowered.com/app/1009560/The_Tenants/
+
+- HITMAN 3
+
+- WARHAMMER 40K SPACE MARINES 2

@@ -1,0 +1,63 @@
+# Title:
+
+You�re Desire Power And The 3 Keys of All Great People
+
+Word Count:
+706
+
+Summary:
+Learn how Desire is the motive-power behind all action, processes and events.
+
+Keywords:
+self help, desire, happy, mindpower
+
+Article Body:
+Desire is a very strong Key towards your mind power.
+
+You must not only know �what you want�, but you must also �want it hard enough� and be willing to make an effort towards attaining it�
+
+And in order to do this you simply need to create a strong and intense desire towards whatever it is you want to accomplish or attain.
+
+You need to develop a desire so strong it will cause you to use every ounce of your power and energy, toward the accomplishment of your object or goal.
+
+Desire is said to be like a goal-striving energy, a sort of built-in magnet which has the means to pull whatever is needed to you� now this can work two ways for you, both as a �success magnet� or a �failure magnet,� it all depends on how you, the controller, controls it and also the goals you set for it.
+
+Very few people know how to create and hold a strong dedicated desire, they satisfy themselves with simply �wishing� or even a mild �wanting�, and fail to put into action a strong, intense and continuing desire.
+
+If you take a look at the progress of any person, who has accomplished both famous and wonderful things you will find there was, and is a strong and continuing desire for success, within them all�
+
+You see most of the time, people who are successful - only become successful at what they do after trying many, many times and after never giving up!
+
+All great people have the 3 Keys�
+
+1. Know just what they want = (Belief, Enthusiasm )
+
+2. Want it hard enough = ( Desire )
+
+3. Are determined to get it = ( Will )
+
+It is these 3 things only, which separate the men and women who have a strong sense of purpose, determination and desire, from the rest of us who merely �wish for things�
+
+A strong desire can have a tremendous influence on all of your mental faculties, causing them to put all of their power and energies to work for you.
+
+In fact, without desire you would not do much thinking at all, because there would be very little motive to do so... you would also perform no actions, as there would be no reason for such. Desire is the �mover of action� - both mental as well as physical action.
+
+The strength of your work, whether it is mental or physical, will be determined by the amount of desire that you have for the goal, object or end result of such work.
+
+The more you desire a thing� the more you want something, the harder you will work for it, and the easier this work will seem to you.
+
+You see any task you perform under the influence or incentive of a strong desire will seem much easier - than the very same task performed without such influence, incentive or encouragement. Desire and affection are the two main reasons we are influenced or compelled to �do things�
+
+If our desire or affection was somehow absent or missing, then there would be no action - because there would be no motive, reason or cause for such action or to do anything�
+
+So most of the time we act solely because we �want� or �like� to.
+
+Without desire or affection we would be unable to make any choices or decisions - this means we would perform no actions. Now we see that desire is the motive-power behind action.
+
+Take away this motive-power and there will be no activity or movement. Without this �want� and �want to� there would be no �will to do� and this would lead to �not doing� anything.
+
+Everything we do is prompted by desire in some shape or form. It would be impossible for us to remain without desire, and still act in one way or another - or in any way at all.
+
+Desire is the motive-power behind all action; it is the breathing force behind all natural activities, processes and events. We can easily learn how to become masters of our own desire, instead of being mastered by it...
+
+But before we do so, we must first desire to do so � we must desire to start, desire to achieve, and desire to finish what ever it is we want to accomplish in our life

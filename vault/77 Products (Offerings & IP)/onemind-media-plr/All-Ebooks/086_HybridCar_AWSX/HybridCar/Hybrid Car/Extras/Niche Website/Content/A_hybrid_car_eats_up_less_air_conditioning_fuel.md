@@ -1,0 +1,21 @@
+# Buy Hybrid CarsA hybrid car eats up less air conditioning fuel
+
+Looks like to buy hybrid cars means also to more efficient on air condition. Latest results from valuations of hybrid cars signify a drastically less consumption of fuel while car air condition is open.  Hybrids got 15 to 27 percent lower fuel economy with the air conditioning on, according to Jim Francfort, main investigator at the Idaho National Laboratory in Idaho Falls, under the U.S. Department of Energy. 
+
+For five years now, Francfort has been evaluating hybrids. When he first came across with hybrid cars in 2001, he was astounded.   While testing the Honda Insight and the first generation Toyota Prius (Two hybrids first introduced in the U.S.) Francfort realized immediately the future of these cars. He reportedly said, �It was a new technology and we were trying to learn. We thought we needed to do more tests to understand the impacts on fuel economy, based on how hybrid owners actually drive their cars.�
+
+Low emission level
+
+And of course, to buy hybrid cars means to help the environment. Hybrid vehicles are low emission and fuel efficient. These are some of the characteristics that top the list, actually. Why this is so? A hybrid car recharges its battery while running. This removes the need for regularly plugging the car for an electricity outlet. 
+
+Super Ultra Low-Emission Vehicles emit 90 percent of cleaner emission than average new 2002 model car.  Ultra Low-Emission Vehicles however, are cars that emit 50 percent cleaner emission, much lower than a new 2001 model car. Zero-emission cars however, belong only to the family of pure electric vehicles. But they are much expensive to produce, and proved to be impractical as drivers needed to plug these cars regularly. 
+
+Also at present, people who would buy hybrid cars will benefit from the Federal State tax deductions. Buying hybrid cars is encouraged because of the long term benefits of minimized fuel usage. Other tax deductions for hybrid car are also available. Some cities several free parking areas for low-emissions vehicles owners.
+
+These efforts seem to be not lost to Americans.  According to an online survey conducted by a research center, ninety percent of the respondents surveyed indicated a willingness to buy hybrid cars the next time they need one. Provided, however, that these cars are comparable in look with they currently own. 
+
+In this marketing study, about 46 percent of male respondents and 36 percent of female respondents strongly believed that these hybrid vehicles will perform comparably to all-gasoline vehicles. For these respondents, this is the most important factor. The concern for model, style, and features in these hybrid version is important for female respondents (49 percent), and 35 percent important for male respondents.
+
+Only a handful of respondents, about 10 percent of those surveyed said they would buy hybrid cars with different style, while only 16 percent are willing to compromise on performance features, like horsepower and acceleration.
+
+For price, however, the respondents are willing to compromise. When they�re asked what they would be most willing to sacrifice for more efficient fuel usage for the environment, a common characteristics of hybrids, 45 percent of the respondents indicated the willingness to pay $1,000 to $2,000 or higher for their new hybrid vehicles.

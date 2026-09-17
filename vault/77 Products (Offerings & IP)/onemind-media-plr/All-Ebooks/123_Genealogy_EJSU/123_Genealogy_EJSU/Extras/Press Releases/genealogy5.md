@@ -1,0 +1,25 @@
+# FOR IMMEDIATE RELEASE:
+
+Why the Key to Your Past Lies Inside Genealogy: Uncovering Your Ancestry
+
+There are many reasons and occasions that requires us to take a definitive look at the past and search for our ancestors. If you�re facing the same need now, all the problems you have can be satisfactorily answered by reading Genealogy: Uncovering Your Ancestry.
+
+Marion, Iowa, USA � Genealogy: Uncovering Your Ancestry is the ultimate manual for researching about your roots. This book combines presents a concise and detailed explanation of genealogy and reading it from start to finish will lay out a clear-cut path for you. With Genealogy: Uncovering Your Ancestry, the steps you need to take are identified and defined and all you have to do is follow the road towards your past.
+
+Researching about one�s family tree and being able to make a beautiful presentation of it is a wonderful gift you can make for your parents, grandparents, or even for an orphaned friend wishing to have tangible proof of his or her family. And though good intentions are always helpful, they are rarely sufficient in achieving goals.
+
+Genealogy: Uncovering Your Ancestry is the only thing you�ll need if you wish to learn something of the past. A product of prodigious research, this book will allow you to learn everything there is to studying your lineage such as the following:
+
+Tools and Resources � Naturally, it would be great if you had all the tools and equipment that a CSI team has to help you discover your lineage. But the fact is that you don�t have any of those so you�ll have to make do with whatever you have. Genealogy: Uncovering Your Ancestry, however, will help you make efficient and effective use of the tools and resources that are available to you.
+
+The DNA Link � If you recall your science lessons, you should know that DNA is the blueprint of your blood and that each person has his own unique DNA. Blood-related individuals however will have distinctly similar DNA. This book will help you proceed from what you already know and teach you what else you need to know to facilitate your search.
+
+Hiring a Genealogist � The book also provides situations in which it will be more advantageous for you to hire a genealogist and what steps you need to take to ensure that you�re hiring the right one.
+
+IGI and the Church of Jesus Christ of Latter Day Saints � At first glance, the two doesn�t seem to have anything in common, does it? But indeed they do and that they�re both factors which can help you uncover the secrets of your lineage. You�ll learn more than that when you read Genealogy: Uncovering Your Ancestry.
+
+There are definitely a lot more than that which you can learn once you download Genealogy: Uncovering Your Ancestry.
+
+Genealogy: Uncovering Your Ancestry is sold only at http://www.brandonbranon.com/pr/genealogy for an introductory price of $27.77, letting lucky readers enjoy a $20 rebate from its original value of $47.77. Readers are also invited to subscribe to a brand new 5-part e-course that will give readers a brief but detailed guide to the world of genealogy. Interested parties may simply submit their first name and email address in the form provided in the website. Email addresses will be kept strictly confidential.
+
+All purchases are backed with a 90-day 100% money back guarantee. Genealogy: Uncovering Your Ancestry is currently published in its soft version only.

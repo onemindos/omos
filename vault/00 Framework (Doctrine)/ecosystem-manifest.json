@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "onemind-ecosystem-manifest",
+  "version": "1.0.0",
+  "updated": "2026-03-28",
+  "owner": "zeus",
+
+  "repos": [
+    {
+      "id": "onemind-codex",
+      "name": "OneMind Codex",
+      "role": "brain",
+      "description": "The single source of truth. Private Obsidian vault containing all personal knowledge, AI agent context, infrastructure code, and life data.",
+      "local_path": "~/Documents/onemind-codex",
+      "vps_path": "/home/onemind/onemind-os/codex",
+      "github": "github.com/OneMind-OS/onemind-codex",
+      "privacy": "private",
+      "type": "git+obsidian",
+      "entry_points": {
+        "human": "Open folder in Obsidian",
+        "ai_agent": "AGENTS.md → _codex/INTERFACE.md → _codex/system/",
+        "machine": "ecosystem-manifest.json (this file)"
+      }
+    },
+    {
+      "id": "onemind-media",
+      "name": "OneMind Media",
+      "role": "asset_vault_media",
+      "description": "Domain-organized media vault. 278 GB of images, videos, documents, design files, and reference materials across the 4 life domains.",
+      "local_path": "~/Documents/onemind-media",
+      "vps_path": null,
+      "github": null,
+      "privacy": "private",
+      "type": "local_folder",
+      "size_gb": 278,
+      "entry_points": {
+        "human": "Finder / VS Code",
+        "ai_agent": "AGENTS.md at vault root",
+        "machine": "Direct filesystem (Mac-local only)"
+      },
+      "note": "Folder names use legacy 'UI' label for 00-24 domain (actual name is SO). Do not rename folders."
+    },
+    {
+      "id": "onemind-library",
+      "name": "OneMind Library",
+      "role": "asset_vault_library",
+      "description": "Document and image library. 66 GB of reference documents, PDFs, course materials, and images.",
+      "local_path": "~/Documents/onemind-library",
+      "vps_path": null,
+      "github": null,
+      "privacy": "private",
+      "type": "local_folder",
+      "size_gb": 66,
+      "entry_points": {
+        "human": "Finder / VS Code",
+        "ai_agent": "AGENTS.md at library root",
+        "machine": "Direct filesystem (Mac-local only)"
+      }
+    },
+    {
+      "id": "onemind-web",
+      "name": "OneMind Web",
+      "role": "consumer_app_web",
+      "description": "Consumer-facing Next.js web application.",
+      "local_path": "~/Documents/onemind-web",
+      "github": "github.com/OneMind-OS/onemind-web",
+      "privacy": "private",
+      "type": "git+nextjs",
+      "entry_points": {
+        "human": "Browser",
+        "ai_agent": "AGENTS.md or README.md",
+        "machine": "REST API (when deployed)"
+      }
+    },
+    {
+      "id": "onemind-mobile",
+      "name": "OneMind Mobile",
+      "role": "consumer_app_mobile",
+      "description": "Mobile application for on-the-go access and quick capture.",
+      "local_path": "~/Documents/onemind-mobile",
+      "github": "github.com/OneMind-OS/onemind-mobile",
+      "privacy": "private",
+      "type": "git+mobile",
+      "entry_points": {
+        "human": "Mobile device",
+        "ai_agent": "AGENTS.md or README.md",
+        "machine": "Mobile API"
+      }
+    },
+    {
+      "id": "onemind-codex-live",
+      "name": "OneMind Codex Live",
+      "role": "public_site",
+      "description": "Quartz-based static site deployed on Cloudflare Workers. Published view of selected codex content.",
+      "local_path": "~/Documents/onemind-codex-live",
+      "github": "github.com/OneMind-OS/onemind-codex-live",
+      "url": "https://codex.onemind.os",
+      "privacy": "public",
+      "type": "git+quartz+cloudflare",
+      "entry_points": {
+        "human": "Browser → public URL",
+        "ai_agent": "GitHub API",
+        "machine": "Cloudflare Pages API"
+      }
+    },
+    {
+      "id": "onemind-codex-template",
+      "name": "OneMind Codex Template",
+      "role": "community_template",
+      "description": "Public fork template. The codex structure with all personal data stripped. Community members fork this to create their own codex.",
+      "local_path": "~/Documents/onemind-codex-template",
+      "github": "github.com/OneMind-OS/onemind-codex-template",
+      "privacy": "public",
+      "type": "git+obsidian",
+      "entry_points": {
+        "human": "GitHub → Fork → Open in Obsidian",
+        "ai_agent": "AGENTS.md",
+        "machine": "GitHub API"
+      }
+    },
+    {
+      "id": "personal-ai-infrastructure",
+      "name": "Personal AI Infrastructure (PAI)",
+      "role": "upstream_skill_framework",
+      "description": "Daniel Miessler's open-source AI skill infrastructure. Provides 13 general-purpose skill packs that Zeus's _codex/skills layer personalizes.",
+      "local_path": "~/Documents/Personal_AI_Infrastructure",
+      "github": "github.com/danielmiessler/Personal_AI_Infrastructure",
+      "privacy": "public",
+      "type": "git",
+      "relationship": "upstream",
+      "entry_points": {
+        "human": "README.md",
+        "ai_agent": "Packs/README.md → individual Pack INSTALL.md",
+        "machine": "GitHub releases API"
+      }
+    }
+  ],
+
+  "skill_hierarchy": {
+    "description": "Three layers compose from general to personal to runtime.",
+    "layers": [
+      {
+        "layer": 1,
+        "name": "Upstream Community Skills",
+        "location": "Personal_AI_Infrastructure/Packs/",
+        "scope": "General purpose — any user",
+        "count": 13
+      },
+      {
+        "layer": 2,
+        "name": "Personal Vault Skills",
+        "location": "onemind-codex/_codex/skills/",
+        "scope": "Zeus-specific — vault operations",
+        "count": 8
+      },
+      {
+        "layer": 3,
+        "name": "Claude Code Runtime Skills",
+        "location": "onemind-codex/.claude/skills/",
+        "scope": "Session-level — Claude Code",
+        "count": "varies"
+      }
+    ],
+    "rule": "Never duplicate a PAI skill into _codex/skills unless personalizing it. PAI is upstream."
+  },
+
+  "agents": [
+    {
+      "id": "legacy",
+      "name": "Legacy",
+      "runtime": "OpenClaw",
+      "deployment": "VPS",
+      "domain": "all",
+      "role": "Central orchestrator and consciousness",
+      "codex_read_path": "/home/onemind/onemind-os/codex/",
+      "heartbeat_minutes": 60
+    },
+    {
+      "id": "spartan",
+      "name": "Spartan",
+      "runtime": "OpenClaw",
+      "deployment": "VPS",
+      "domain": "HP 27-28",
+      "role": "Body, fitness, physical mastery",
+      "heartbeat_minutes": 120
+    },
+    {
+      "id": "oracle",
+      "name": "Oracle",
+      "runtime": "OpenClaw",
+      "deployment": "VPS",
+      "domain": "HP 25-26, 29-34",
+      "role": "Mind, money, meaning, personal growth",
+      "heartbeat_minutes": 180
+    },
+    {
+      "id": "eden",
+      "name": "Eden",
+      "runtime": "OpenClaw",
+      "deployment": "VPS",
+      "domain": "LE",
+      "role": "Family, home, sustainability",
+      "heartbeat_minutes": 180
+    },
+    {
+      "id": "empire",
+      "name": "Empire",
+      "runtime": "OpenClaw",
+      "deployment": "VPS",
+      "domain": "GE",
+      "role": "Business, ventures, wealth",
+      "heartbeat_minutes": null
+    },
+    {
+      "id": "claude-code",
+      "name": "Claude Code / GitHub Copilot",
+      "runtime": "Local (Mac)",
+      "deployment": "IDE",
+      "domain": "any",
+      "role": "Coding, file editing, research",
+      "codex_read_path": "~/Documents/onemind-codex/"
+    }
+  ],
+
+  "access_patterns": {
+    "human_desktop": {
+      "knowledge": "Obsidian → onemind-codex",
+      "media": "Finder / VS Code → onemind-media, onemind-library",
+      "code": "VS Code / GitHub Copilot → any git repo",
+      "tasks": "Todoist (synced to codex via N8N)",
+      "entry_point": "Open onemind-codex in Obsidian"
+    },
+    "human_mobile": {
+      "capture": "onemind-mobile → pushes to 24 Inbox",
+      "reading": "onemind-codex-live OR mobile app",
+      "entry_point": "onemind-mobile app"
+    },
+    "ai_coding_agent": {
+      "start": "Read AGENTS.md → _codex/INTERFACE.md",
+      "context": "Load _codex/system/ (pinned context)",
+      "skills": "_codex/skills/ + PAI/Packs/",
+      "write": "Direct file edit → git commit",
+      "entry_point": "AGENTS.md"
+    },
+    "openclaw_agent": {
+      "runtime_path": "/home/onemind/onemind-os/codex/",
+      "read": "Direct filesystem (VPS)",
+      "write": "git push → GitHub → auto-pull everywhere",
+      "workspaces": "_system/openclaw/",
+      "entry_point": "AGENTS.md + _codex/system/ pinned context"
+    },
+    "automation_n8n": {
+      "read_codex": "GitHub API → read file by path",
+      "write_codex": "GitHub API → create/update file",
+      "read_media": "Direct filesystem (Mac-local only)",
+      "events": "NATS JetStream",
+      "entry_point": "ecosystem-manifest.json (this file)"
+    },
+    "physical_robot_iot": {
+      "query": "POST to OpenClaw API → Legacy agent",
+      "data_in": "NATS topic: onemind.physical.{device}.{event}",
+      "data_out": "NATS topic: onemind.physical.{device}.{command}",
+      "entry_point": "OpenClaw API endpoint (_system/infrastructure/openclaw/)"
+    },
+    "community_public": {
+      "framework": "onemind-codex-template (fork)",
+      "knowledge": "onemind-codex-live (published site)",
+      "ai_skills": "Personal_AI_Infrastructure (PAI packs)",
+      "entry_point": "GitHub repos"
+    }
+  },
+
+  "asset_vaults": {
+    "onemind-media": {
+      "path": "~/Documents/onemind-media",
+      "size_gb": 278,
+      "files": 59696,
+      "structure": "4-domain (UI/HP/LE/GE) + Archive + Manual-Review",
+      "tracked_by_git": false,
+      "agent_docs": "onemind-media/AGENTS.md",
+      "move_log": "onemind-media/_move-log.json",
+      "mirror": "/Volumes/VAULT/OneMind-Media"
+    },
+    "onemind-library": {
+      "path": "~/Documents/onemind-library",
+      "size_gb": 66,
+      "structure": "documents/ + images/ (partially domain-organized)",
+      "tracked_by_git": false,
+      "agent_docs": "onemind-library/AGENTS.md"
+    },
+    "onemind-media-other": {
+      "path": "~/Documents/onemind-media-other",
+      "size_gb": 0.325,
+      "status": "legacy",
+      "description": "Old misc files, cache data, legacy configs. Not organized. Review and archive/delete when time permits.",
+      "action": "manual_review_needed"
+    }
+  },
+
+  "sync_flow": {
+    "mac_to_github": "git commit + push (manual or on save hook)",
+    "github_to_vps": "auto-pull every 1 minute (cron on VPS)",
+    "vps_to_github": "agents commit + push → GitHub",
+    "github_to_mac": "manual pull or auto-pull hook",
+    "media_sync": "Manual — too large for git. Mirror: /Volumes/VAULT/OneMind-Media"
+  },
+
+  "naming_conventions": {
+    "correct": {
+      "domain_group": "domain",
+      "00_24": "SO (Sovereign Operations)",
+      "25_49": "HP (Holistic Performance)",
+      "50_74": "LE (Legacy Evolution)",
+      "75_99": "GE (Generational Endeavor)",
+      "method_last_step": "× Multiply (not eXamine)"
+    },
+    "deprecated": {
+      "quadrant": "use domain",
+      "UI": "use SO",
+      "four quadrants": "use '3 domains + 1 operating layer'",
+      "enterprise": "use endeavor",
+      "onemind-os": "use onemind-codex"
+    }
+  }
+}

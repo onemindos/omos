@@ -1,0 +1,15 @@
+# What to Look for In a Stationary Bike
+
+Stationary and Spinning bikes are very popular. Current trends actually indicate that spinning bikes are set to become an extremely hot item over the next year. This includes people attending spinning classes and people using spin bikes at home. 
+Using any type of stationary bike is very good for your joints as it allows you to move your knee and hip joints without putting undue pressure on them.  In addition exercising on a bike provides you with a fantastic cardiovascular workout.  Many physiotherapists use stationary bikes as a rehabilitation method for their patients.  
+The best thing about using an exercise bike is that there is no learning curve. You simply jump on the bike and start pedaling. You can adjust the resistance level on your bike to match your ability. For example if you have a knee injury you can lower the resistance so you are really just doing the movements. If you are an experienced cyclists then you can ramp up the resistance level to suit your needs. 
+Styles of Exercise Bikes
+There are two main styles of exercise bikes available. The most common type is the upright bike followed by a recumbent bike. The upright exercise bike is very similar in look to a regular bike. The recumbent bike can however look a little different and this sometimes throws people off. 
+With the recumbent exercise bike the pedals are located at the front of the bike. When seated the cyclist is in more of a laid back position which can actually be more comfortable.  Recumbent bikes are often recommended for patients who have lower back issues. 
+Shopping for Your New Exercise Bike
+You want to look for an exercise bike that is adjustable. This way you will be more comfortable and allows for more than one family member to use the same bike. Next look for a comfortable seat, this is often the one area that most people complain about. The seat starts to hurt their bottoms after 10 or 15 minutes making it uncomfortable to ride for too long. 
+Larger seats are usually more comfortable. Take the time to test the bike out before making your purchase. While riding the bike make note of the pedals, are they comfortable on your feet and do they move smoothly?
+All stationary bikes come with a weight rating. So make sure that the bike is capable of holding your current weight. It is definitely worth the money to pay for a higher weight rated bike otherwise you run the risk of damaging your bike quickly. 
+Purchasing a bike with an adjustable tension system is very important. You want to have the ability to challenge your body as your fitness level increases.  Some stationary bikes will come with computerized programs that allow you to set up a personalized training program with inclines which can add variety to your workout program.
+Last of all don�t forget to discuss the manufacturer�s warranty. A good exercise bike can cost you anywhere from $500 and up. You want to know that you are covered if you have any type of problem with your bike in the first few months. 
+Words 528

@@ -1,0 +1,48 @@
+# Title:
+
+The 3 P�s:  Perfectionism, Procrastination, and Paralysis
+
+Word Count:
+749
+
+Summary:
+Do you set your standards high, but always feel like you've failed?  Learn about the 3 "P's" and end the vicious cycle that keeps you stuck and ineffective.  Perfectionism, procrastination, and paralysis � one often leads to the next, in a vicious cycle, especially on large, long-term projects with no clear deadlines.  Let�s look at each part of this cycle, and explore some concrete steps that you can take to disrupt the cycle.
+
+Keywords:
+time management, dissertation help, procrastination, writing, creative thinking, career decisions, choosing research topics, teaching, Perfectionism, Paralysis, disseration, tenure, expectations 
+
+Article Body:
+Do you set your standards high, but always feel like you've failed?  Learn about the 3 "P's" and end the vicious cycle that keeps you stuck and ineffective.
+
+The Vicious Cycle
+Perfectionism, procrastination, and paralysis � one often leads to the next, in a vicious cycle, especially on large, long-term projects with no clear deadlines.  Let�s look at each part of this cycle, and explore some concrete steps that you can take to disrupt the cycle.
+
+Perfectionism
+Perfectionism can be defined as striving towards impossibly high goals.  Perfectionists are caught in a trap � they can never be good enough. They engage in rigid, black or white thinking about their own performance � if it isn�t perfect, it�s horrible.
+
+Ironically, perfectionists often achieve a product that is far less than perfect.  At times, their performance is mediocre.  In contrast, those who aim at more realistic goals can outperform the perfectionists.  How can this be?  The procrastination and paralysis that results from overly high standards causes the perfectionist to wait until it�s too late, then rush to do something; anything.  The more relaxed realist, in the meantime, is able to put an effort in earlier, over a more prolonged period of time, with more chance to let time and subsequent changes or editing improve the final product.
+
+Procrastination
+When you believe that your next project should set the world on fire, you are setting yourself up for failure.  At some level you know that this level of achievement is unlikely.  You lose your energy and excitement for your project.  
+
+On a football field, when the coach yells at the team that they are a bunch of @$#% for playing so poorly, the players may play better.  That is because they are enraged at being humiliated and they can use the rage to batter their opponents.  This doesn�t not work in other spheres!  Criticism, whether from your boss or your own inner critical audience slows you down, and interferes with your thinking process.
+
+It is so easy to put off the next step of your project when thinking about it makes you experience unpleasant feelings.  So you procrastinate.  �I�ll get started tomorrow, and work twice as hard.�  But it�s hard for you to ignore the fact that you are not living up to your own high expectations for yourself.  �I�m lazy.�  � I have no will power.�
+
+As time goes on, you start to grind to a halt.  That leads to the third �P.�
+
+Paralysis
+You do absolutely nothing on the very project that is most important to you.  This is devastating for your self-esteem, and very discouraging.  It�s hard to plan your next project when you failed to complete your last one.
+
+How to Avoid the 3 �P�s�
+There are steps that you can take to avoid falling into the vicious cycle of the 3 �P�s.
+�	Become aware of the perfectionistic audience voices in your head (no, you�re not crazy.)  You can�t learn to ignore them if you don�t know that they�re talking to you.
+�	Learn how to answer them back (don�t do it out loud or people will think you�re crazy.)  An example would be, �OK it�s not my best work but at least I�m finishing it.�
+�	Look for role models who are satisfied with �good enough.�  Note how they get things done and are not looked down on by others.
+�	Set up realistic goals.  One way to tell if a goal is realistic is if you can actually do it.  For example, �Read two articles and write for 15 minutes before 5:00 tonight� is a realistic goal.  �Read two articles and write for 6 hours and write 10 pages before 5:00 tonight� is not a realistic goal.
+�	If you have reached the third �P,� drastic steps are needed.  Talk to a trusted friend, find a �project buddy,� or seek coaching. Do Not Give Up � it is very possible to get yourself out of the paralyzed state and back to productivity with just a little help.
+
+A Final �P.�  Or Maybe Two.
+
+Productivity
+Start with baby steps.  Do a little every day.  As you observe your own productivity, however small it may be, you will start to feel better about yourself.  You were capable all along � it�s just that your unrealistic expectations stopped you from functioning optimally.  Eventually your productivity will start to look like Progress.  And that�s the last �P� for today.

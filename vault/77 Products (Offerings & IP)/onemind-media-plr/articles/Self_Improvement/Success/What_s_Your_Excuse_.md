@@ -1,0 +1,66 @@
+# Title:
+
+What's Your Excuse?
+
+Word Count:
+889
+
+Summary:
+Let's say there is something you really want to do.  It can be something big or something small.  The key point is it is something you've been saying you want to do for a period of time but haven't gotten around to doing it. It's a pattern.  To the point that you flow right into your list of excuses without even thinking about it.  Don't let excuses stop you from living your best life.  Learn how to bust out of them by reading more...
+
+Keywords:
+Paula Gregorowicz Success Coach, Philadelphia, burnout,success,personal growth,achievement,feel free,avoid burnout,effectiveness,productivity,freedom,authentic,courage,results,women business owners
+
+Article Body:
+Let's say there is something you really want to do.  It can be something big like moving to another part of the country or something small like taking an hour of time several times a week to pursue a hobby.  The key point is it is something you've been saying you want to do for a period of time but haven't gotten around to doing it. It's a pattern.  To the point that every time you start the sentence "I'd really love to play the piano again" you flow right into your list of excuses on autopilot "but I can't take time away from my family" or "it's a silly idea because I'm too old", etc.    
+
+Now, you may be saying that you don't use excuses and you only have valid reasons for why you "can't" do what you say you want to do.   After all, excuses are for more irresponsible type people and that is certainly not you.  
+
+Well, if there's something you say you want to do, but continually have a reason why you don't do it; there are only 2 possible explanations for that:
+
+1)	You do not really want to do what you say you do but you either continue to say you do out of habit or because you think you "should" want to do it. 
+2)	You really do want to do what you say you do.  But, it is risky, forces you to step outside your comfort zone, or might upset someone you care about.
+
+If the answer to your scenario is #1, then by all means stop saying that it is something you want to do.  Let it go. Bring some closure to the darn thing and it'll free your mental and emotional space so you can pursue something you truly do want to do.
+
+If the answer for you is #2 then most likely you are using an excuse that allows you to hang onto your desire and provide a logical reason why you can't do it thereby keeping you safe and still yearning.  
+
+What do excuses sound like?  Just in case you haven't heard the crate full you probably carry around in your head everyday, here's a list of some of the most common ones:
+- I'm too dumb/too smart
+- No one will like/love me
+- I'm not good enough
+- It's too far from home
+- I don't have enough money for that
+- No time
+- No one can have it all
+
+Do any of these sound familiar?
+
+We wouldn't use excuses if they didn't serve us in some way.  It's hard to dig a little deep and admit that, but otherwise why would we use them?  Simply to torture ourselves?
+
+Some of the benefits I have found from using excuses are:
+- It allows me to be right about myself (example: "See, I told you I wasn't good enough!")
+- Keeps me safe
+- Keeps me stuck (so I can complain & commiserate with others)
+- It's familiar
+
+After all, it is easier to go with the flow, maintain the status quo, and turn down the volume on the things we truly desire especially when they might be a hair different than the majority of people we come in contact with and the "societal norm".  At least it seems easier, but it comes at a cost and that cost can be anything from lack of fulfillment and spark in our lives all the way to depression or disease.
+
+Excuse Buster
+The first key to busting your excuses is to identify them and then understand the payoff you're getting from using them.  
+
+1) List 3 things you regularly say you want to have or do.
+2) List the reason(s) you tell yourself and others as to why you cannot have nor do those things.
+3) Apply the test earlier in this article to determine if you do indeed really want what you say you want or not.
+     a. If the answer is no - then by all means let it go.
+     b. If the answer is yes�.keep reading.
+
+Once you've established your list of what you really do want and the excuses you use for not having or doing it, it's time to delve into and identify your payoff for not getting what you want.
+
+1) Make a list of all the "bad" things you fear might happen if you were to take the risk to get what you want.  Be totally honest and cover all the bases including the absolute worst case scenario you can imagine. (for example: if I move across the country, my family will no longer love me or come to see me)
+
+2) Look at your list from the last step and rate each one in terms of how likely your fear would really happen using  a scale of 1 (not likely) to 5 (absolutely certain).  
+
+What you'll find is that it is pretty unlikely that something horrible is going to happen if you do what you want to do.  And, if something unexpected or unwanted does occur, trust that you'll find a way to handle it.
+
+So, make that list of things you really want to do and create a plan, including lining up any support or resources you may need, for making it happen not "someday" but today.

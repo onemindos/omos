@@ -1,0 +1,13 @@
+# READ_THIS_FIRST
+
+*** IMPORTANT ***
+     
+To ensure that you have the latest
+version of the ebook or software 
+that you've just purchased, please 
+go to;
+http://www.netactivated.com/updates
+immediately.
+
+This file MUST remain with this file
+to benefit your customers.

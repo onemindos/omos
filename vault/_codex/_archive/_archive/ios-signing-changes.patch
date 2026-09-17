@@ -1,0 +1,66 @@
+diff --git a/apps/ios/Config/Signing.xcconfig b/apps/ios/Config/Signing.xcconfig
+index 4fef287..ba37e73 100644
+--- a/apps/ios/Config/Signing.xcconfig
++++ b/apps/ios/Config/Signing.xcconfig
+@@ -1,12 +1,12 @@
+ // Shared iOS signing defaults for local development + CI.
+ #include "Version.xcconfig"
+ 
+-OPENCLAW_IOS_DEFAULT_TEAM = Y5PE65HELJ
++OPENCLAW_IOS_DEFAULT_TEAM = Q8J6PP8YTF
+ OPENCLAW_IOS_SELECTED_TEAM = $(OPENCLAW_IOS_DEFAULT_TEAM)
+-OPENCLAW_APP_BUNDLE_ID = ai.openclaw.client
+-OPENCLAW_WATCH_APP_BUNDLE_ID = ai.openclaw.client.watchkitapp
+-OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = ai.openclaw.client.watchkitapp.extension
+-OPENCLAW_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclaw.client.activitywidget
++OPENCLAW_APP_BUNDLE_ID = com.zeuslegacy.openclaw
++OPENCLAW_WATCH_APP_BUNDLE_ID = com.zeuslegacy.openclaw.watchkitapp
++OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = com.zeuslegacy.openclaw.watchkitapp.extension
++OPENCLAW_ACTIVITY_WIDGET_BUNDLE_ID = com.zeuslegacy.openclaw.activitywidget
+ 
+ // Local contributors can override this by running scripts/ios-configure-signing.sh.
+ // Keep include after defaults: xcconfig is evaluated top-to-bottom.
+diff --git a/apps/ios/Signing.xcconfig b/apps/ios/Signing.xcconfig
+index d6acc35..fdefc9f 100644
+--- a/apps/ios/Signing.xcconfig
++++ b/apps/ios/Signing.xcconfig
+@@ -4,17 +4,17 @@
+ 
+ #include "Config/Version.xcconfig"
+ 
+-OPENCLAW_CODE_SIGN_STYLE = Manual
+-OPENCLAW_DEVELOPMENT_TEAM = Y5PE65HELJ
++OPENCLAW_CODE_SIGN_STYLE = Automatic
++OPENCLAW_DEVELOPMENT_TEAM = Q8J6PP8YTF
+ 
+-OPENCLAW_APP_BUNDLE_ID = ai.openclaw.client
+-OPENCLAW_SHARE_BUNDLE_ID = ai.openclaw.client.share
+-OPENCLAW_WATCH_APP_BUNDLE_ID = ai.openclaw.client.watchkitapp
+-OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = ai.openclaw.client.watchkitapp.extension
+-OPENCLAW_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclaw.client.activitywidget
++OPENCLAW_APP_BUNDLE_ID = com.zeuslegacy.openclaw
++OPENCLAW_SHARE_BUNDLE_ID = com.zeuslegacy.openclaw.share
++OPENCLAW_WATCH_APP_BUNDLE_ID = com.zeuslegacy.openclaw.watchkitapp
++OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = com.zeuslegacy.openclaw.watchkitapp.extension
++OPENCLAW_ACTIVITY_WIDGET_BUNDLE_ID = com.zeuslegacy.openclaw.activitywidget
+ 
+-OPENCLAW_APP_PROFILE = ai.openclaw.client Development
+-OPENCLAW_SHARE_PROFILE = ai.openclaw.client.share Development
++OPENCLAW_APP_PROFILE =
++OPENCLAW_SHARE_PROFILE =
+ 
+ // Keep local includes after defaults: xcconfig is evaluated top-to-bottom,
+ // so later assignments in local files override the defaults above.
+diff --git a/apps/ios/Sources/OpenClaw.entitlements b/apps/ios/Sources/OpenClaw.entitlements
+index a2663ce..254d18f 100644
+--- a/apps/ios/Sources/OpenClaw.entitlements
++++ b/apps/ios/Sources/OpenClaw.entitlements
+@@ -2,8 +2,4 @@
+ <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ <plist version="1.0">
+ <dict>
+-	<key>aps-environment</key>
+-	<string>development</string>
+-</dict>
+-</plist>
+ 
