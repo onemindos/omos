@@ -29,7 +29,7 @@ spec:
         - name: ghcr
       initContainers:
         # ---- Install gateway-only deps missing from the public Nous image ----
-        # nousresearch/hermes-agent:latest ships without nats-py, nkeys,
+        # nousresearch/hermes-agent:v2026.9.14 ships without nats-py, nkeys,
         # synadia-ai-agents, and synadia-ai-agent-service — all required for
         # the NATS and TAK gateway platforms. This initContainer installs them
         # into a shared emptyDir (/gateway-deps) using the system uv that ships
@@ -37,7 +37,7 @@ spec:
         # sets PYTHONPATH to include it, so the packages are available at runtime
         # on every pod restart without any custom image build.
         - name: install-gateway-deps
-          image: nousresearch/hermes-agent:latest
+          image: nousresearch/hermes-agent:v2026.9.14
           imagePullPolicy: Always
           command:
             - sh
@@ -61,7 +61,7 @@ spec:
         # The NATS agent-host (hermes_nats_host.py, baked into hermes-legacy) is
         # what registers agents.prompt.hermes.zeus.legacy — see omos-core/services/agents.
         - name: hermes
-          image: nousresearch/hermes-agent:latest   # Official Nous image — pinned to v2026.8.3
+          image: nousresearch/hermes-agent:v2026.9.14   # Official Nous image — pinned to v2026.9.14
           imagePullPolicy: Always
           # No custom args — s6 supervisor runs the gateway. The nats-platform
           # plugin (enabled in config.yaml, seeded by cont-init) registers
