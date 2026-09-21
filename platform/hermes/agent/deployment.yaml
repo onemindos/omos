@@ -49,9 +49,19 @@ spec:
                 --target /gateway-deps \
                 nats-py nkeys synadia-ai-agents synadia-ai-agent-service
               echo "Done: $(ls /gateway-deps | wc -l) packages installed"
+              echo "Patching nats-platform plugin approval imports..."
+              ADAPTER=/opt/data/plugins/nats-platform/adapter.py
+              if [ -f "$ADAPTER" ] && grep -q "set_current_session_key," "$ADAPTER"; then
+                python3 /tmp/patch_nats_platform.py && echo "nats-platform patched" || echo "patch failed"
+              else
+                echo "nats-platform: skipped (not found or already patched)"
+              fi
           volumeMounts:
             - name: gateway-deps
               mountPath: /gateway-deps
+            - name: nats-platform-patch
+              mountPath: /tmp/patch_nats_platform.py
+              subPath: patch.py
       containers:
         # ---- Legacy (Hermes) ----
         # Talks PLAINTEXT to the in-pod leaf on localhost:4222 — identical to the
@@ -124,3 +134,6 @@ spec:
             secretName: hermes-nats-ca      # cluster NATS CA (ca.crt)
         - name: gateway-deps
           emptyDir: {}
+        - name: nats-platform-patch
+          configMap:
+            name: nats-platform-patch
