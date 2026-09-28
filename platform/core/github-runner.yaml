@@ -45,7 +45,7 @@ spec:
               memory: 512Mi
             limits:
               cpu: "2"
-              memory: 4Gi
+              memory: 1Gi
           volumeMounts:
             - name: work
               mountPath: /tmp/runner/work
@@ -62,7 +62,7 @@ spec:
               memory: 512Mi
             limits:
               cpu: "2"
-              memory: 4Gi
+              memory: 1Gi
           volumeMounts:
             - name: docker-storage
               mountPath: /var/lib/docker

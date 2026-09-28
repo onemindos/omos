@@ -277,10 +277,10 @@ spec:
           resources:
             requests:
               cpu: 1500m
-              memory: 1536Mi
+              memory: 768Mi
             limits:
               cpu: "2"
-              memory: 2Gi
+              memory: 1Gi
           volumeMounts:
             - name: deps
               mountPath: /deps
