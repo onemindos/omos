@@ -1,0 +1,137 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: health-keeper
+  namespace: ops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: health-keeper
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "persistentvolumeclaims", "persistentvolumes", "nodes", "events"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: health-keeper
+subjects:
+  - kind: ServiceAccount
+    name: health-keeper
+    namespace: ops
+roleRef:
+  kind: ClusterRole
+  name: health-keeper
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: health-keeper-script
+  namespace: ops
+data:
+  run.py: |
+    import json, os, ssl, urllib.request
+
+    TOKEN = open('/var/run/secrets/kubernetes.io/serviceaccount/token').read().strip()
+    URL   = os.environ['KUBERNETES_URL']
+    CTX   = ssl.create_default_context()
+    CTX.load_verify_locations('/var/run/secrets/kubernetes.io/serviceaccount/ca.crt')
+
+    def api(path, method='GET'):
+        req = urllib.request.Request(URL+path, method=method)
+        req.add_header('Authorization', 'Bearer '+TOKEN)
+        with urllib.request.urlopen(req, context=CTX) as f:
+            return json.load(f)
+
+    report = {"kind": "health-report", "findings": []}
+    def emit(subject, payload):
+        report['findings'].append({"subject": subject, **payload})
+
+    # 1. non-running pods -> delete + log
+    try:
+        pods = api('/api/v1/pods')['items']
+        for p in pods:
+            st = p['status'].get('phase')
+            why = p['status'].get('reason','')
+            if st not in ('Running','Succeeded') or why in ('CrashLoopBackOff','OOMKilled'):
+                emit('ops.health.repair', {"pod": p['metadata']['name'], "ns": p['metadata']['namespace'], "why": why})
+                try:
+                    api('/api/v1/namespaces/'+p['metadata']['namespace']+'/pods/'+p['metadata']['name'], method='DELETE')
+                    emit('ops.health.repair', {"action":"deleted", "pod":p['metadata']['name']})
+                except Exception as e:
+                    emit('ops.health.escalate', {"action":"delete-failed","pod":p['metadata']['name'],"err":str(e)})
+    except Exception as e:
+        emit('ops.health.escalate', {"action":"pod-scan-failed","err":str(e)})
+
+    # 2. Released PVs -> audit + escalate (Zeus rule: never delete without go-ahead)
+    try:
+        pvs = api('/api/v1/persistentvolumes')['items']
+        released = [(p['metadata']['name'], p['spec'].get('claimRef',{}).get('namespace','')+'/'+p['spec'].get('claimRef',{}).get('name',''))
+                    for p in pvs if p['status']['phase']=='Released']
+        if released:
+            emit('ops.health.escalate', {"action":"released-pv-detected", "count":len(released), "list":released})
+    except Exception as e:
+        emit('ops.health.escalate', {"action":"pv-scan-failed","err":str(e)})
+
+    # 3. node summary
+    try:
+        nodes = api('/api/v1/nodes')['items']
+        for n in nodes:
+            emit('ops.health.cluster', {"node":n['metadata']['name'], "unschedulable":n['spec'].get('unschedulable',False)})
+    except:
+        pass
+
+    print(json.dumps(report, indent=2))
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: health-keeper
+  namespace: ops
+spec:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: health-keeper
+        spec:
+          serviceAccountName: health-keeper
+          restartPolicy: OnFailure
+          containers:
+            - name: health-keeper
+              image: python:3.12-alpine
+              imagePullPolicy: IfNotPresent
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+              env:
+                - name: KUBERNETES_URL
+                  value: "https://kubernetes.default.svc"
+              command: ["python", "/app/run.py"]
+              volumeMounts:
+                - name: script
+                  mountPath: /app
+          volumes:
+            - name: script
+              configMap:
+                name: health-keeper-script
+                items:
+                  - key: run.py
+                    path: run.py
