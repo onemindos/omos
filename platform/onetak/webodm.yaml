@@ -163,13 +163,15 @@ spec:
           volumeMounts:
             - name: webodm-media
               mountPath: /webodm/app/media
+          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
+          # Measured usage (webapp+worker, total 1789Mi; webapp share ~894Mi).
           resources:
             requests:
               cpu: 300m
-              memory: 512Mi
+              memory: 536Mi        # ~60% of measured usage (894Mi)
             limits:
               cpu: "2"
-              memory: 2Gi
+              memory: 1024Mi       # ~usage + ~14% headroom
           livenessProbe:
             httpGet:
               path: /
@@ -197,13 +199,15 @@ spec:
           volumeMounts:
             - name: webodm-media
               mountPath: /webodm/app/media
+          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
+          # Measured usage (webapp+worker, total 1789Mi; worker share ~895Mi).
           resources:
             requests:
               cpu: 300m
-              memory: 512Mi
+              memory: 537Mi        # ~60% of measured usage (895Mi)
             limits:
               cpu: "4"
-              memory: 4Gi
+              memory: 1024Mi       # ~usage + ~14% headroom
       volumes:
         - name: webodm-media
           persistentVolumeClaim:

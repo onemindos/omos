@@ -101,9 +101,11 @@ spec:
               mountPath: /opt/data
             - name: gateway-deps
               mountPath: /gateway-deps
+          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
+          # Measured usage: 2803Mi. Request set to upper 60-90% band; limit = hard cap at 3200Mi.
           resources:
-            requests: { cpu: "500m", memory: "1Gi" }
-            limits:   { memory: "3Gi" }
+            requests: { cpu: "500m", memory: "2523Mi" }
+            limits:   { cpu: "4", memory: "3200Mi" }
         # ---- NATS leaf sidecar ----
         # nats-server running as a leaf into the cluster ONEMIND account over TLS.
         # Exposes a local plaintext client listener on :4222 for Hermes only.

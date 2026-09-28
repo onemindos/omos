@@ -135,13 +135,15 @@ spec:
           ports:
             - name: http
               containerPort: 8234
+          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
+          # Measured usage: 508Mi.
           resources:
             requests:
               cpu: 500m
-              memory: 1Gi
+              memory: 305Mi        # ~60% of measured usage
             limits:
               cpu: "2"
-              memory: 2Gi
+              memory: 640Mi        # ~usage + ~26% headroom
           startupProbe:
             tcpSocket:
               port: 8234
