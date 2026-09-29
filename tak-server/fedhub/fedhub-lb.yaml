@@ -1,34 +1,4 @@
-# External LoadBalancer for TAK federation TCP ports.
-#
-# DOKS provisions a DigitalOcean TCP load balancer for ports 9101 and 9102.
-# Edge TAK servers (forward operating bases, partner orgs) connect here to federate.
-# These are raw TCP — they carry mTLS themselves; do NOT put Cloudflare in front.
-#
-# AFTER DEPLOYING — get the external IP and update edge TAK CoreConfig.xml:
-#   kubectl -n takserver get svc fedhub-fed-external
-#   # Add to edge TAK server CoreConfig.xml:
-#   # <federation>
-#   #   <federation_server v2Port="9102" host="<LB-EXTERNAL-IP>" />
-#   # </federation>
-#
-# FIREWALL: ports 9101 (v1, deprecated) and 9102 (v2) must be open inbound
-# at the DO firewall / network policy level.
-apiVersion: v1
-kind: Service
-metadata:
-  name: fedhub-fed-external
-  namespace: takserver
-  labels: { app: fedhub, component: federation-lb }
-  annotations:
-    service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
-    service.beta.kubernetes.io/do-loadbalancer-name: "fedhub-federation"
-    service.beta.kubernetes.io/do-loadbalancer-healthcheck-protocol: "tcp"
-    service.beta.kubernetes.io/do-loadbalancer-size-slug: "lb-small"
-    # Disable proxy protocol — federation services speak raw TLS/TCP
-    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "false"
-spec:
-  type: LoadBalancer
-  selector: { app: fedhub }
-  ports:
-    - { name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP }
-    - { name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP }
+# REMOVED 2026-09-29: fedhub-fed-external LB merged into tak-external (tak-lb-proxy.yaml).
+# Federation ports 9101/9102 now served by the shared DO LB at 152.42.155.95 via nginx
+# stream passthrough → fedhub-fed:9101/9102. Edge servers should point their
+# CoreConfig.xml federation_server host at 152.42.155.95.
