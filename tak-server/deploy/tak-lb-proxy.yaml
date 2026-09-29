@@ -18,10 +18,18 @@ data:
       upstream tak_webtak  { server takserver-api-service:8443; }
       # 8089 — CoT streaming, mutual-TLS (messaging)
       upstream tak_cot     { server takserver-messaging-service:8089; }
+      # 9101/9102 — federation v1/v2 (fedhub) — merged from fedhub-fed-external LB
+      upstream fed_v1      { server fedhub-fed:9101; }
+      upstream fed_v2      { server fedhub-fed:9102; }
+      # 64738 — Mumble voice (murmur) — merged from murmur-lb
+      upstream murmur_v    { server murmur:64738; }
 
       server { listen 8446; proxy_pass tak_enroll; proxy_timeout 600s; }
       server { listen 8443; proxy_pass tak_webtak; proxy_timeout 600s; }
       server { listen 8089; proxy_pass tak_cot;    proxy_timeout 600s; }
+      server { listen 9101; proxy_pass fed_v1;     proxy_timeout 600s; }
+      server { listen 9102; proxy_pass fed_v2;     proxy_timeout 600s; }
+      server { listen 64738; proxy_pass murmur_v;  proxy_timeout 600s; }
     }
 ---
 apiVersion: apps/v1
@@ -44,6 +52,9 @@ spec:
             - { containerPort: 8089 }
             - { containerPort: 8443 }
             - { containerPort: 8446 }
+            - { containerPort: 9101 }
+            - { containerPort: 9102 }
+            - { containerPort: 64738 }
           volumeMounts:
             - { name: conf, mountPath: /etc/nginx/nginx.conf, subPath: nginx.conf }
           resources:
@@ -69,3 +80,7 @@ spec:
     - { name: cot,    port: 8089, targetPort: 8089, protocol: TCP }
     - { name: webtak, port: 8443, targetPort: 8443, protocol: TCP }
     - { name: enroll, port: 8446, targetPort: 8446, protocol: TCP }
+    # merged from fedhub-fed-external + murmur-lb LBs (2026-09-29)
+    - { name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP }
+    - { name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP }
+    - { name: mumble, port: 64738, targetPort: 64738, protocol: TCP }
