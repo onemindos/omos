@@ -185,7 +185,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/namespace.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/pvc.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/tak-agent.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/hermes/bridge/onemind-ai-bridge.yaml"
 
 # -----------------------------------------------------------------------------
 # 10. CLOUDTAK — API + Events + Media + Tiles + MinIO + PostGIS
