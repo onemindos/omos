@@ -87,8 +87,8 @@ spec:
             - { containerPort: 4000, name: api }
           volumeMounts:
             - name: config
-              mountPath: /mediamtx.yml
-              subPath: mediamtx.yml
+              mountPath: /config
+          args: ["/config/mediamtx.yml"]
           resources:
             requests: { cpu: 100m, memory: 128Mi }
             limits:   { cpu: "1",  memory: 512Mi }
