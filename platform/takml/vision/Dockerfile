@@ -14,9 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ffmpeg libgl1 libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# pinned deps — torch CPU build is smaller + enough for YOLOv5s inference
+# pinned deps — torch CPU build from pytorch index, rest from PyPI
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu \
+      "torch==2.2.2"
 RUN pip install --no-cache-dir \
-      "torch==2.2.2" --index-url https://download.pytorch.org/whl/cpu \
       opencv-python-headless==4.10.0.84 \
       nats-py==2.7.0 \
       numpy==1.26.4
