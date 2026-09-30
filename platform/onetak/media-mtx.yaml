@@ -23,9 +23,8 @@ data:
     readTimeout: 30s
     writeTimeout: 30s
 
-    # no external auth — cluster-internal; ingress/LB controls outside reach
-    authMethod: none
-    authInternalUsers: []
+    # no auth — cluster-internal; ingress/LB controls outside reach
+    # (default authMethod 'internal' with zero users = open)
 
     api: yes
     apiAddress: :4000
