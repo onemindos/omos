@@ -273,7 +273,8 @@ spec:
             - name: SAMPLE_INTERVAL
               value: "2.0"
             - name: FEEDS
-              value: '{"takcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/takcam","helmcam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/helmcam","maccam":"rtsp://mediamtx.takserver.svc.cluster.local:8554/maccam"}'
+              # feeds served by onetak-media (MediaMTX). Streams auto-register on publish.
+              value: '{"drone1":"rtsp://onetak-media.onetak.svc.cluster.local:8554/drone1","takcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/takcam","helmcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/helmcam","maccam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/maccam"}'
           resources:
             requests:
               cpu: 1500m
