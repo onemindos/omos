@@ -25,7 +25,9 @@ spec:
               protocol: UDP
           env:
             - name: API_URL
-              value: "http://onetak-api:5000"
+              # CloudTAK api removed 2026-09-29 — media runs standalone; API_URL kept
+              # only because media-infra refuses to boot without it. Unused.
+              value: "http://onetak-media:8883"
             - name: SigningSecret
               valueFrom:
                 secretKeyRef:
