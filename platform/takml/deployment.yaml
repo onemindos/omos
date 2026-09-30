@@ -231,6 +231,8 @@ spec:
       labels:
         app: takml-vision-worker
     spec:
+      imagePullSecrets:
+        - name: ghcr
       containers:
         - name: vision-worker
           image: ghcr.io/onemindos/takml-vision:latest
