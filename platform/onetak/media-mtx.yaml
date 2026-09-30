@@ -57,6 +57,10 @@ data:
 
     pathDefaults:
       rtspDemuxMpegts: yes
+
+    # accept any stream on any path (cluster-internal; LB/ingress gates outside)
+    paths:
+      all_others:
 ---
 apiVersion: apps/v1
 kind: Deployment
