@@ -206,9 +206,12 @@ spec:
       targetPort: 8234
 ---
 # ─── takml-vision-worker ─────────────────────────────────────────────────────
-# Pulls RTSP streams from mediamtx.takserver (raw ingress tier — no auth overhead),
-# runs YOLOv5s (VisDrone model), publishes detections to NATS: fabric.vision.{feed_id}.detect
-# mediamtx.takserver relays all streams to cloudtak-media for user-facing display.
+# Pulls RTSP streams from onetak-media (MediaMTX), runs YOLOv5s (VisDrone model),
+# publishes detections to NATS: fabric.vision.{feed_id}.detect
+# 2026-09-30: containerized — image ghcr.io/onemindos/takml-vision:1 (code baked in,
+# no pip-at-boot). Source: platform/takml/vision/ (Dockerfile + worker.py),
+# built by .github/workflows/build-takml-vision.yml. Strategy Recreate —
+# single-replica RWO PVCs (models) deadlock under RollingUpdate.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -218,6 +221,8 @@ metadata:
     app: takml-vision-worker
 spec:
   replicas: 1
+  strategy:
+    type: Recreate          # RWO PVC — old pod must die before new pod attaches
   selector:
     matchLabels:
       app: takml-vision-worker
@@ -226,34 +231,10 @@ spec:
       labels:
         app: takml-vision-worker
     spec:
-      initContainers:
-        - name: install-deps
-          image: python:3.11-slim
-          command:
-            - /bin/bash
-            - -c
-            - |
-              if [ ! -f /deps/torch/__init__.py ]; then
-                apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0
-                pip install --no-cache-dir --target=/deps \
-                  torch==2.3.1+cpu torchvision==0.18.1+cpu \
-                  --extra-index-url https://download.pytorch.org/whl/cpu
-                pip install --no-cache-dir --target=/deps \
-                  opencv-python-headless==4.10.0.84 nats-py==2.9.0 numpy==1.26.4
-              fi
-          volumeMounts:
-            - name: deps
-              mountPath: /deps
       containers:
         - name: vision-worker
-          image: python:3.11-slim
-          command:
-            - /bin/bash
-            - -c
-            - |
-              apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 > /dev/null 2>&1
-              export PYTHONPATH=/deps:$PYTHONPATH
-              python /app/worker.py
+          image: ghcr.io/onemindos/takml-vision:latest
+          imagePullPolicy: Always
           env:
             - name: NATS_URL
               value: tls://nats.nats.svc.cluster.local:4222
@@ -283,22 +264,12 @@ spec:
               cpu: "2"
               memory: 1Gi
           volumeMounts:
-            - name: deps
-              mountPath: /deps
-            - name: code
-              mountPath: /app
             - name: models
               mountPath: /models
             - name: nats-ca
               mountPath: /etc/nats-ca
               readOnly: true
       volumes:
-        - name: deps
-          persistentVolumeClaim:
-            claimName: takml-deps
-        - name: code
-          configMap:
-            name: vision-worker-code
         - name: models
           persistentVolumeClaim:
             claimName: takml-models
