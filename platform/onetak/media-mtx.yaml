@@ -1,0 +1,116 @@
+# onetak-media — clean upstream MediaMTX (bluenviron/mediamtx:1-ffmpeg)
+#
+# Replaces dfpc-coe media-infra wrapper (2026-09-29): that image bundled a CloudTAK
+# auth shim pointing at the removed CloudTAK api (port 8883, dead). This is pure
+# upstream MediaMTX with our config: no dead auth, WebRTC ON for browser viewing,
+# ffmpeg variant for republish/transcode.
+#
+# AI path: takml-vision-worker pulls RTSP feeds from here (FEEDS env, see
+# platform/takml/configmap-vision-worker.yaml) and publishes detections to NATS
+# → omos-tak-projector → TAK Server CoT markers. Legacy AI sees everything via bus.
+#
+# Ports: 8554 RTSP · 1935 RTMP · 8888 HLS · 8889 WebRTC · 8890/udp SRT · 4000 API
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: onetak-media-config
+  namespace: onetak
+data:
+  mediamtx.yml: |
+    logLevel: info
+    logDestinations: [stdout]
+    readTimeout: 30s
+    writeTimeout: 30s
+
+    # no external auth — cluster-internal; ingress/LB controls outside reach
+    authMethod: none
+    authInternalUsers: []
+
+    api: yes
+    apiAddress: :4000
+    apiEncryption: no
+    apiAllowOrigins: ['*']
+
+    playback: yes
+
+    rtsp: yes
+    rtspTransports: [tcp]
+    rtspAddress: :8554
+    rtspEncryption: "no"
+
+    rtmp: yes
+    rtmpAddress: :1935
+    rtmpEncryption: "no"
+
+    hls: yes
+    hlsAddress: :8888
+    hlsEncryption: no
+    hlsAllowOrigin: '*'
+
+    webrtc: yes
+    webrtcAddress: :8889
+    webrtcEncryption: no
+    webrtcAllowOrigin: '*'
+
+    srt: yes
+    srtAddress: :8890
+
+    pathDefaults:
+      rtspDemuxMpegts: yes
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onetak-media
+  namespace: onetak
+  labels:
+    app: onetak-media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onetak-media
+  template:
+    metadata:
+      labels:
+        app: onetak-media
+    spec:
+      containers:
+        - name: mediamtx
+          image: bluenviron/mediamtx:1-ffmpeg
+          ports:
+            - { containerPort: 8554, name: rtsp }
+            - { containerPort: 1935, name: rtmp }
+            - { containerPort: 8888, name: hls }
+            - { containerPort: 8889, name: webrtc }
+            - { containerPort: 8890, name: srt, protocol: UDP }
+            - { containerPort: 4000, name: api }
+          volumeMounts:
+            - name: config
+              mountPath: /mediamtx.yml
+              subPath: mediamtx.yml
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits:   { cpu: "1",  memory: 512Mi }
+      volumes:
+        - name: config
+          configMap:
+            name: onetak-media-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onetak-media
+  namespace: onetak
+  labels:
+    app: onetak-media
+spec:
+  selector: { app: onetak-media }
+  ports:
+    - { name: rtsp,   port: 8554, targetPort: 8554 }
+    - { name: rtmp,   port: 1935, targetPort: 1935 }
+    - { name: hls,    port: 8888, targetPort: 8888 }
+    - { name: webrtc, port: 8889, targetPort: 8889 }
+    - { name: srt,    port: 8890, targetPort: 8890, protocol: UDP }
+    - { name: api,    port: 4000, targetPort: 4000 }
