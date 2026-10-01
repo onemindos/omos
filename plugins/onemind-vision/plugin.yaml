@@ -1,0 +1,4 @@
+name: onemind-vision
+version: "1.0.0"
+description: "OneMind Vision — sovereign AI intelligence fusion. Vision query, anomaly detection, SITREP generation, and course-of-action recommendation across the OneMind fabric."
+requires_env: []

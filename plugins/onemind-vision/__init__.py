@@ -1,5 +1,5 @@
 """
-OneMind Maven — sovereign AI intelligence fusion layer for the OneMind fabric.
+OneMind Vision — sovereign AI intelligence fusion layer for the OneMind fabric.
 """
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ def handle_analyze_feed(args: Dict[str, Any]) -> str:
 
 
 def handle_sitrep(args: Dict[str, Any]) -> str:
-    """Generate a Maven-style Situation Report."""
+    """Generate a Vision-style Situation Report."""
     hours = args.get("timeframe_hours", 1)
 
     events_q = f"""
@@ -205,10 +205,10 @@ def handle_recommend(args: Dict[str, Any]) -> str:
 
 def register(ctx):
     ctx.register_tool(
-        toolset="onemind-maven",
-        name="maven_vision_query",
+        toolset="onemind-vision",
+        name="vision_vision_query",
         schema={
-            "name": "maven_vision_query",
+            "name": "vision_vision_query",
             "description": (
                 "Query real-time object detections from all OneMind "
                 "video feeds (takcam, helmcam, etc). Returns objects detected, "
@@ -243,10 +243,10 @@ def register(ctx):
     )
 
     ctx.register_tool(
-        toolset="onemind-maven",
-        name="maven_analyze_feed",
+        toolset="onemind-vision",
+        name="vision_analyze_feed",
         schema={
-            "name": "maven_analyze_feed",
+            "name": "vision_analyze_feed",
             "description": (
                 "Deep analysis of a specific camera feed with LLM reasoning. "
                 "Pulls recent detections, optionally grabs a frame, and reasons "
@@ -271,12 +271,12 @@ def register(ctx):
     )
 
     ctx.register_tool(
-        toolset="onemind-maven",
-        name="maven_sitrep",
+        toolset="onemind-vision",
+        name="vision_sitrep",
         schema={
-            "name": "maven_sitrep",
+            "name": "vision_sitrep",
             "description": (
-                "Generate a Maven-style Situation Report (SITREP) fusing all "
+                "Generate a Vision-style Situation Report (SITREP) fusing all "
                 "OneMind intelligence: OSINT feeds, vision detections, TAK CoT, "
                 "and historical patterns."
             ),
@@ -299,10 +299,10 @@ def register(ctx):
     )
 
     ctx.register_tool(
-        toolset="onemind-maven",
-        name="maven_anomaly_check",
+        toolset="onemind-vision",
+        name="vision_anomaly_check",
         schema={
-            "name": "maven_anomaly_check",
+            "name": "vision_anomaly_check",
             "description": (
                 "Check for anomalies by comparing current detections against "
                 "historical baselines in ClickHouse. Flags unusual activity."
@@ -328,10 +328,10 @@ def register(ctx):
     )
 
     ctx.register_tool(
-        toolset="onemind-maven",
-        name="maven_recommend",
+        toolset="onemind-vision",
+        name="vision_recommend",
         schema={
-            "name": "maven_recommend",
+            "name": "vision_recommend",
             "description": (
                 "Recommend courses of action using available OneMind assets "
                 "(cameras, robots, operators, alerts) given a situation."
