@@ -1,0 +1,335 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-matrix-bridge
+  namespace: matrix
+  labels:
+    onemind.os/component: nats-matrix-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-matrix-bridge
+  template:
+    metadata:
+      labels:
+        app: nats-matrix-bridge
+        onemind.os/component: nats-matrix-bridge
+    spec:
+      containers:
+        - name: nats-matrix-bridge
+          image: python:3.11-slim
+          command:
+            - python
+            - /app/nats_matrix_bridge.py
+          env:
+            - name: MATRIX_BOT_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: matrix-bot-access-token
+            - name: MATRIX_BOT_DEVICE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: matrix-bot-device-id
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+            - name: code
+              mountPath: /app/nats_matrix_bridge.py
+              subPath: nats_matrix_bridge.py
+            - name: nats-creds
+              mountPath: /secrets
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command: ["pgrep", "-f", "nats_matrix_bridge.py"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["pgrep", "-f", "nats_matrix_bridge.py"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: nats-matrix-bridge-config
+        - name: code
+          configMap:
+            name: nats-matrix-bridge-code
+        - name: nats-creds
+          secret:
+            secretName: nats-creds
+            optional: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-matrix-bridge-code
+  namespace: matrix
+  labels:
+    onemind.os/component: nats-matrix-bridge
+data:
+  nats_matrix_bridge.py: |
+    #!/usr/bin/env python3
+    """
+    NATS → Matrix Bridge for OneMind OS
+    Subscribes to NATS subjects, publishes to Matrix rooms.
+    """
+    import asyncio
+    import json
+    import logging
+    import os
+    import signal
+    import sys
+    import yaml
+    from datetime import datetime
+    from typing import Dict, List, Optional
+    
+    import nats
+    from nats.js import JetStreamContext
+    from matrix_client.client import MatrixClient
+    from matrix_client.room import Room
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    logger = logging.getLogger(__name__)
+    
+    
+    class NatsMatrixBridge:
+        def __init__(self, config_path: str = "/app/config.yaml"):
+            with open(config_path) as f:
+                self.config = yaml.safe_load(f)
+            
+            self.nats_config = self.config["nats"]
+            self.matrix_config = self.config["matrix"]
+            self.rooms = self.config["rooms"]
+            self.subscriptions = self.config["subscriptions"]
+            self.commands_config = self.config.get("commands", {})
+            self.formatting = self.config.get("formatting", {})
+            
+            self.nc = None
+            self.js = None
+            self.matrix_client = None
+            self.matrix_rooms: Dict[str, Room] = {}
+            self.running = False
+        
+        async def connect_nats(self):
+            """Connect to NATS server."""
+            try:
+                creds_file = self.nats_config.get("creds_file")
+                if creds_file and os.path.exists(creds_file):
+                    self.nc = await nats.connect(
+                        self.nats_config["url"],
+                        credentials=creds_file
+                    )
+                else:
+                    self.nc = await nats.connect(self.nats_config["url"])
+                
+                self.js = self.nc.jetstream()
+                logger.info(f"Connected to NATS at {self.nats_config['url']}")
+            except Exception as e:
+                logger.error(f"Failed to connect to NATS: {e}")
+                raise
+        
+        async def connect_matrix(self):
+            """Connect to Matrix homeserver."""
+            try:
+                self.matrix_client = MatrixClient(self.matrix_config["homeserver"])
+                self.matrix_client.login_with_token(
+                    self.matrix_config["user_id"],
+                    self.matrix_config["access_token"]
+                )
+                
+                # Join configured rooms
+                for room_alias, room_id in self.rooms.items():
+                    try:
+                        room = self.matrix_client.join_room(room_id)
+                        self.matrix_rooms[room_alias] = room
+                        logger.info(f"Joined room {room_alias}: {room_id}")
+                    except Exception as e:
+                        logger.warning(f"Failed to join room {room_alias}: {e}")
+                
+                logger.info(f"Connected to Matrix as {self.matrix_config['user_id']}")
+            except Exception as e:
+                logger.error(f"Failed to connect to Matrix: {e}")
+                raise
+        
+        def format_message(self, subject: str, data: dict, sub_config: dict) -> str:
+            """Format NATS message for Matrix."""
+            fmt = sub_config.get("format", "default")
+            timestamp = datetime.utcnow().strftime(
+                self.formatting.get("timestamp_format", "%Y-%m-%d %H:%M:%S UTC")
+            )
+            
+            if fmt == "alert":
+                level = data.get("level", "UNKNOWN")
+                title = data.get("title", "Alert")
+                message = data.get("message", "")
+                source = data.get("source", "unknown")
+                return f"🚨 **ALERT [{level}]** ({timestamp})\n**{title}**\n{message}\n\n*Source: {source}* | *Subject: {subject}*"
+            
+            elif fmt == "cot":
+                cot_type = data.get("type", "Unknown")
+                callsign = data.get("callsign", "Unknown")
+                lat = data.get("lat", 0)
+                lon = data.get("lon", 0)
+                remarks = data.get("remarks", "")
+                return f"📍 **TAK CoT** ({timestamp})\n**Type:** {cot_type}\n**Callsign:** {callsign}\n**Location:** {lat}, {lon}\n**Remarks:** {remarks}\n\n*Subject: {subject}*"
+            
+            elif fmt == "health":
+                component = data.get("component", "unknown")
+                status = data.get("status", "unknown")
+                details = data.get("details", {})
+                return f"🏥 **INFRA HEALTH** ({timestamp})\n**Component:** {component}\n**Status:** {status}\n**Details:** {json.dumps(details, indent=2)}\n\n*Subject: {subject}*"
+            
+            elif fmt == "transcript":
+                speaker = data.get("speaker", "Unknown")
+                text = data.get("text", "")
+                confidence = data.get("confidence", 0)
+                return f"🎤 **VOICE TRANSCRIPT** ({timestamp})\n**Speaker:** {speaker}\n**Confidence:** {confidence:.1%}\n**Text:** {text}\n\n*Subject: {subject}*"
+            
+            elif fmt == "decision":
+                decision = data.get("decision", "")
+                rationale = data.get("rationale", "")
+                impact = data.get("impact", "")
+                return f"🧠 **LEGACY DECISION** ({timestamp})\n**Decision:** {decision}\n**Rationale:** {rationale}\n**Impact:** {impact}\n\n*Subject: {subject}*"
+            
+            elif fmt == "sensor":
+                sensor_id = data.get("sensor_id", "unknown")
+                sensor_type = data.get("type", "unknown")
+                value = data.get("value")
+                unit = data.get("unit", "")
+                return f"📊 **SENSOR** ({timestamp})\n**Sensor:** {sensor_id} ({sensor_type})\n**Value:** {value} {unit}\n\n*Subject: {subject}*"
+            
+            elif fmt == "agent":
+                agent = data.get("agent", "unknown")
+                event = data.get("event", "unknown")
+                payload = data.get("payload", {})
+                return f"🤖 **AGENT EVENT** ({timestamp})\n**Agent:** {agent}\n**Event:** {event}\n**Payload:** {json.dumps(payload, indent=2)}\n\n*Subject: {subject}*"
+            
+            else:
+                msg = f"**NATS Message** ({timestamp})\n**Subject:** {subject}\n**Data:** {json.dumps(data, indent=2)}"
+                if self.formatting.get("max_message_length") and len(msg) > self.formatting["max_message_length"]:
+                    msg = msg[:self.formatting["max_message_length"]] + "\n... (truncated)"
+                return msg
+        
+        async def handle_nats_message(self, msg):
+            """Handle incoming NATS message."""
+            try:
+                subject = msg.subject
+                data = json.loads(msg.data.decode())
+                
+                # Find matching subscription
+                sub_config = None
+                for sub in self.subscriptions:
+                    if self._subject_matches(subject, sub["subject"]):
+                        sub_config = sub
+                        break
+                
+                if not sub_config:
+                    logger.debug(f"No subscription for subject: {subject}")
+                    return
+                
+                room_alias = sub_config["room"]
+                if room_alias not in self.matrix_rooms:
+                    logger.warning(f"Room {room_alias} not joined")
+                    return
+                
+                room = self.matrix_rooms[room_alias]
+                formatted = self.format_message(subject, data, sub_config)
+                
+                # Send to Matrix
+                await asyncio.get_event_loop().run_in_executor(
+                    None, room.send_text, formatted
+                )
+                
+                # Ping users if configured
+                ping_users = sub_config.get("ping_users", [])
+                for user_id in ping_users:
+                    try:
+                        await asyncio.get_event_loop().run_in_executor(
+                            None, room.send_text, f"🔔 {user_id}"
+                        )
+                    except Exception as e:
+                        logger.warning(f"Failed to ping {user_id}: {e}")
+                
+                logger.info(f"Forwarded {subject} to {room_alias}")
+            
+            except Exception as e:
+                logger.error(f"Error handling NATS message: {e}")
+        
+        def _subject_matches(self, subject: str, pattern: str) -> bool:
+            """Check if subject matches pattern (supports wildcards)."""
+            if pattern == "*":
+                return True
+            if pattern.endswith(".*"):
+                prefix = pattern[:-2]
+                return subject.startswith(prefix)
+            if pattern.endswith(".>"):
+                prefix = pattern[:-2]
+                return subject == prefix or subject.startswith(prefix + ".")
+            return subject == pattern
+        
+        async def setup_subscriptions(self):
+            """Set up NATS subscriptions."""
+            for sub in self.subscriptions:
+                subject = sub["subject"]
+                try:
+                    await self.nc.subscribe(subject, cb=self.handle_nats_message)
+                    logger.info(f"Subscribed to {subject}")
+                except Exception as e:
+                    logger.error(f"Failed to subscribe to {subject}: {e}")
+        
+        async def run(self):
+            """Main run loop."""
+            self.running = True
+            await self.connect_nats()
+            await self.connect_matrix()
+            await self.setup_subscriptions()
+            
+            logger.info("Bridge running. Press Ctrl+C to stop.")
+            
+            # Keep running
+            while self.running:
+                await asyncio.sleep(1)
+        
+        async def stop(self):
+            """Stop the bridge."""
+            self.running = False
+            if self.nc:
+                await self.nc.close()
+            logger.info("Bridge stopped")
+    
+    
+    async def main():
+        bridge = NatsMatrixBridge()
+        
+        def signal_handler(sig, frame):
+            logger.info("Shutdown signal received")
+            asyncio.create_task(bridge.stop())
+        
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+        
+        try:
+            await bridge.run()
+        except Exception as e:
+            logger.error(f"Bridge error: {e}")
+            sys.exit(1)
+    
+    
+    if __name__ == "__main__":
+        asyncio.run(main())

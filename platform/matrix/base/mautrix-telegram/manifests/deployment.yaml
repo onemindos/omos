@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mautrix-telegram
+  namespace: matrix
+  labels:
+    onemind.os/component: mautrix-telegram
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mautrix-telegram
+  template:
+    metadata:
+      labels:
+        app: mautrix-telegram
+        onemind.os/component: mautrix-telegram
+    spec:
+      containers:
+        - name: mautrix-telegram
+          image: dock.mau.dev/mautrix/telegram:v0.8.0
+          ports:
+            - containerPort: 29328
+              name: http
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: postgres-password
+            - name: AS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: mautrix-telegram-as-token
+            - name: HS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: mautrix-telegram-hs-token
+            - name: LOGIN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: mautrix-telegram-login-secret
+            - name: TELEGRAM_API_ID
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: telegram-api-id
+            - name: TELEGRAM_API_HASH
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: telegram-api-hash
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: telegram-bot-token
+          volumeMounts:
+            - name: config
+              mountPath: /data/config.yaml
+              subPath: config.yaml
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 29328
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 29328
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: mautrix-telegram-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mautrix-telegram
+  namespace: matrix
+  labels:
+    onemind.os/component: mautrix-telegram
+spec:
+  selector:
+    app: mautrix-telegram
+  ports:
+    - port: 29328
+      targetPort: 29328
+      name: http

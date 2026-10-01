@@ -1,0 +1,307 @@
+# Element Server Suite Community - OneMind OS Configuration
+# Domain: onemindos.com
+# Server Name: matrix.onemindos.com (embedded in user IDs: @user:onemindos.com)
+
+global:
+  # Disable telemetry
+  telemetry:
+    enabled: false
+
+# Server name - CRITICAL: Cannot be changed after deployment
+serverName: onemindos.com
+
+# Ingress configuration (using existing nginx ingress controller)
+ingress:
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+
+# TLS Configuration - cert-manager will handle Let's Encrypt
+tls:
+  enabled: true
+  # cert-manager will create these secrets automatically
+  # synapseTlsSecret: synapse-tls
+  # elementWebTlsSecret: element-web-tls
+  # matrixAuthenticationServiceTlsSecret: mas-tls
+  # matrixRtcBackendTlsSecret: mrtc-tls
+
+# =============================================================================
+# SYNAPSE (Matrix Homeserver)
+# =============================================================================
+synapse:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: matrixdotorg/synapse
+    tag: "v1.106.0"
+    pullPolicy: IfNotPresent
+  
+  ingress:
+    enabled: true
+    host: matrix.onemindos.com
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  
+  # Resource limits - adjusted for cluster capacity
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "2000m"
+      memory: "4Gi"
+  
+  # PostgreSQL - using external (already deployed)
+  postgresql:
+    enabled: false
+  
+  externalPostgresql:
+    enabled: true
+    host: postgres.matrix.svc.cluster.local
+    port: 5432
+    database: synapse
+    username: synapse
+    # Password from matrix-secrets
+    password:
+      secret: matrix-secrets
+      key: postgres-password
+  
+  # Redis - using external (already deployed)
+  redis:
+    enabled: false
+  
+  externalRedis:
+    enabled: true
+    host: redis.matrix.svc.cluster.local
+    port: 6379
+    password:
+      secret: matrix-secrets
+      key: redis-password
+  
+  # Persistence for media
+  persistence:
+    enabled: true
+    existingClaim: synapse-data
+    mountPath: /data
+  
+  # Additional Synapse configuration
+  additionalConfig: |
+    # OneMind OS Synapse Configuration
+    server_name: "onemindos.com"
+    pid_file: /data/homeserver.pid
+    
+    listeners:
+      - port: 8008
+        tls: false
+        type: http
+        x_forwarded: true
+        bind_addresses: ['::']
+        resources:
+          - names: [client, federation]
+            compress: true
+    
+    database:
+      name: psycopg2
+      txn_limit: 10000
+      args:
+        user: synapse
+        password: "${POSTGRES_PASSWORD}"
+        database: synapse
+        host: postgres.matrix.svc.cluster.local
+        port: 5432
+        cp_min: 5
+        cp_max: 20
+    
+    redis:
+      enabled: true
+      host: redis.matrix.svc.cluster.local
+      port: 6379
+      password: "${REDIS_PASSWORD}"
+    
+    media_store_path: /data/media
+    max_upload_size: 200M
+    
+    enable_registration: false
+    enable_registration_without_verification: false
+    
+    report_stats: false
+    
+    signing_key_path: "/data/signing.key"
+    
+    trusted_key_servers:
+      - server_name: "matrix.org"
+    
+    client_well_known:
+      "m.homeserver":
+        base_url: "https://matrix.onemindos.com"
+      "m.identity_server":
+        base_url: "https://vector.im"
+    
+    log_config: "/data/log.config"
+    
+    use_presence: true
+    presence:
+      enabled: true
+  
+  # Security context - run as synapse user (UID 991)
+  podSecurityContext:
+    fsGroup: 991
+    runAsUser: 991
+    runAsGroup: 991
+  
+  securityContext:
+    capabilities:
+      drop: ["ALL"]
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 991
+
+# =============================================================================
+# ELEMENT WEB (Matrix Client)
+# =============================================================================
+elementWeb:
+  enabled: true
+  replicaCount: 3
+  
+  image:
+    repository: elementhq/element-web
+    tag: "v1.11.70"
+    pullPolicy: IfNotPresent
+  
+  ingress:
+    enabled: true
+    host: element.onemindos.com
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  
+  # Element Web configuration
+  config:
+    default_server_config:
+      "m.homeserver":
+        base_url: "https://matrix.onemindos.com"
+        server_name: "onemindos.com"
+      "m.identity_server":
+        base_url: "https://vector.im"
+    disable_custom_urls: false
+    disable_guests: true
+    disable_3pid_login: true
+    brand: "OneMind OS"
+    branding:
+      welcome_background_url: "https://onemindos.com/welcome.jpg"
+      auth_header_logo_url: "https://onemindos.com/logo.png"
+      auth_footer_links:
+        - "https://onemindos.com"
+        - "https://community.onemindos.com"
+    integrations_ui_url: "https://scalar.vector.im/"
+    integrations_rest_url: "https://scalar.vector.im/api"
+    integrations_widgets_urls:
+      - "https://scalar.vector.im/_matrix/integrations/v1"
+      - "https://scalar.vector.im/appswidgets"
+    bug_report_endpoint_url: "https://github.com/onemindos/matrix/issues"
+    default_country_code: "US"
+    show_labs_settings: true
+    features:
+      feature_new_spaces: "labs"
+      feature_threaded_conversations: "labs"
+      feature_relation_aggregation: "labs"
+    default_theme: "dark"
+    themes: ["light", "dark"]
+
+# =============================================================================
+# MATRIX AUTHENTICATION SERVICE (MAS) - Optional but recommended
+# =============================================================================
+matrixAuthenticationService:
+  enabled: true
+  replicaCount: 1
+  
+  image:
+    repository: elementhq/matrix-authentication-service
+    tag: "v0.6.0"
+    pullPolicy: IfNotPresent
+  
+  ingress:
+    enabled: true
+    host: account.onemindos.com
+  
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  
+  # Use same PostgreSQL
+  postgresql:
+    enabled: false
+  
+  externalPostgresql:
+    enabled: true
+    host: postgres.matrix.svc.cluster.local
+    port: 5432
+    database: mas
+    username: mas
+    password:
+      secret: matrix-secrets
+      key: mas-postgres-password
+  
+  # Create MAS database if needed
+  database:
+    create: true
+  
+  # OAuth2 configuration
+  oauth2:
+    enabled: true
+  
+  # Session configuration
+  session:
+    same_site: "lax"
+    secure: true
+
+# =============================================================================
+# MATRIX RTC BACKEND (Element Call) - Optional
+# =============================================================================
+matrixRtcBackend:
+  enabled: false  # Disable for now to save resources
+  # replicaCount: 1
+  # ingress:
+  #   enabled: true
+  #   host: mrtc.onemindos.com
+
+# =============================================================================
+# HOOKSHOT (Bridges) - Optional
+# =============================================================================
+hookshot:
+  enabled: false  # Enable later for GitHub/GitLab/Jira bridges
+
+# =============================================================================
+# WELL KNOWN DELEGATION
+# =============================================================================
+wellKnown:
+  enabled: true
+  # Serves /.well-known/matrix/client and /.well-known/matrix/server
+  # Points to matrix.onemindos.com and element.onemindos.com
+
+# =============================================================================
+# POSTGRESQL (if using internal) - DISABLED, using external
+# =============================================================================
+postgresql:
+  enabled: false
+
+# =============================================================================
+# REDIS (if using internal) - DISABLED, using external
+# =============================================================================
+redis:
+  enabled: false

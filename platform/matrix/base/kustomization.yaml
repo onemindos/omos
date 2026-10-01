@@ -5,6 +5,7 @@ namespace: matrix
 
 resources:
   - namespace.yaml
+  - manifests/secret.yaml
   - synapse/
   - element-web/
   - mautrix-telegram/

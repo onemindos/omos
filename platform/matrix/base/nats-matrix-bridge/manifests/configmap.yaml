@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-matrix-bridge-config
+  namespace: matrix
+  labels:
+    onemind.os/component: nats-matrix-bridge
+data:
+  config.yaml: |
+    nats:
+      url: "nats://nats.core.svc.cluster.local:4222"
+      account: "CORE"
+      creds_file: "/secrets/nats.creds"
+    
+    matrix:
+      homeserver: "https://matrix.onemindos.com"
+      user_id: "@legacy:onemindos.com"
+      access_token: "${MATRIX_BOT_ACCESS_TOKEN}"
+      device_id: "${MATRIX_BOT_DEVICE_ID}"
+      verify_tls: true
+    
+    rooms:
+      alerts: "!alerts:onemindos.com"
+      missions: "!missions:onemindos.com"
+      infra: "!infra:onemindos.com"
+      legacy: "!legacy:onemindos.com"
+      voice: "!voice:onemindos.com"
+      sensors: "!sensors:onemindos.com"
+      agents: "!agents:onemindos.com"
+    
+    subscriptions:
+      - subject: "alerts.critical"
+        room: "alerts"
+        priority: "high"
+        format: "alert"
+      - subject: "alerts.warning"
+        room: "alerts"
+        priority: "medium"
+        format: "alert"
+      - subject: "tak.cot.mission"
+        room: "missions"
+        priority: "high"
+        format: "cot"
+      - subject: "tak.cot.emergency"
+        room: "alerts"
+        priority: "critical"
+        format: "cot"
+        ping_users: ["@zeus:onemindos.com"]
+      - subject: "infra.health.degraded"
+        room: "infra"
+        priority: "medium"
+        format: "health"
+      - subject: "infra.health.down"
+        room: "alerts"
+        priority: "high"
+        format: "health"
+      - subject: "legacy.voice.transcript"
+        room: "voice"
+        priority: "low"
+        format: "transcript"
+      - subject: "legacy.decision"
+        room: "legacy"
+        priority: "medium"
+        format: "decision"
+      - subject: "geo.sensor.*"
+        room: "sensors"
+        priority: "low"
+        format: "sensor"
+      - subject: "fabric.agent.*"
+        room: "agents"
+        priority: "low"
+        format: "agent"
+    
+    commands:
+      enabled: true
+      command_prefix: "!"
+      rooms:
+        - "!infra:onemindos.com"
+        - "!legacy:onemindos.com"
+      authorization:
+        "@zeus:onemindos.com": ["*"]
+        "@legacy:onemindos.com": ["*"]
+        "@so:onemindos.com": ["infra.*", "tak.*"]
+        "@hp:onemindos.com": ["health.*"]
+        "@le:onemindos.com": ["home.*", "family.*"]
+        "@ge:onemindos.com": ["business.*", "revenue.*"]
+    
+    formatting:
+      timestamp_format: "%Y-%m-%d %H:%M:%S UTC"
+      include_subject: true
+      include_nats_metadata: false
+      max_message_length: 65536
+    
+    logging:
+      level: "INFO"
+      format: "json"

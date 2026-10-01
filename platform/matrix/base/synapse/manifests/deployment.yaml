@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-synapse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synapse
+  template:
+    metadata:
+      labels:
+        app: synapse
+        onemind.os/component: matrix-synapse
+    spec:
+      containers:
+        - name: synapse
+          image: matrixdotorg/synapse:v1.106.0
+          ports:
+            - containerPort: 8008
+              name: http
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: postgres-password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: redis-password
+            - name: REGISTRATION_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: synapse-registration-secret
+            - name: SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: synapse-signing-key
+            - name: SYNAPSE_CONFIG_PATH
+              value: /data/homeserver.yaml
+            - name: SYNAPSE_SIGNING_KEY_PATH
+              value: /data/signing.key
+            - name: SYNAPSE_MEDIA_STORE_PATH
+              value: /data/media
+            - name: PYTHONPATH
+              value: /data/python_packages
+          volumeMounts:
+            - name: config
+              mountPath: /data/homeserver.yaml
+              subPath: homeserver.yaml
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8008
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8008
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: synapse-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: synapse-data
+      initContainers:
+        - name: fix-permissions
+          image: busybox:latest
+          command: ['sh', '-c', 'chown -R 991:991 /data && chmod -R 755 /data']
+          volumeMounts:
+            - name: data
+              mountPath: /data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: synapse
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-synapse
+spec:
+  selector:
+    app: synapse
+  ports:
+    - port: 8008
+      targetPort: 8008
+      name: http
+  clusterIP: None

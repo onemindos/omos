@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-telegram-config
+  namespace: matrix
+  labels:
+    onemind.os/component: mautrix-telegram
+data:
+  config.yaml: |
+    homeserver:
+      address: http://synapse.matrix.svc.cluster.local:8008
+      domain: onemindos.com
+      verify_tls: false
+    
+    appservice:
+      address: http://mautrix-telegram.matrix.svc.cluster.local:29328
+      hostname: 0.0.0.0
+      port: 29328
+      database:
+        type: postgres
+        host: postgres.matrix.svc.cluster.local
+        port: 5432
+        name: mautrix_telegram
+        user: mautrix_telegram
+        password: ${POSTGRES_PASSWORD}
+      registration:
+        id: mautrix-telegram
+        as_token: ${AS_TOKEN}
+        hs_token: ${HS_TOKEN}
+        namespaces:
+          users:
+            - exclusive: true
+              regex: "@telegrambot:onemindos.com"
+          aliases:
+            - exclusive: true
+              regex: "#telegram_.*:onemindos.com"
+          rooms: []
+      rate_limiting:
+        enabled: true
+        max_requests: 100
+        window_size: 1000
+    
+    bridge:
+      username_template: "telegram_{{user_id}}"
+      displayname_template: "{{displayname}} (Telegram)"
+      users:
+        - "@zeus:onemindos.com"
+      admin_users:
+        - "@zeus:onemindos.com"
+        - "@legacy:onemindos.com"
+      login_secret: "${LOGIN_SECRET}"
+      permissions:
+        "*": "admin"
+        "@zeus:onemindos.com": "admin"
+        "@legacy:onemindos.com": "admin"
+    
+    telegram:
+      api_id: ${TELEGRAM_API_ID}
+      api_hash: "${TELEGRAM_API_HASH}"
+      bot_token: "${TELEGRAM_BOT_TOKEN}"
+      bot_username: "onemindos_telegram_bot"
+      webhook:
+        enabled: false
+      mtproto:
+        enabled: true
+    
+    encryption:
+      allow_unencrypted: true
+      default_algorithm: "megolm"
+    
+    logging:
+      level: INFO
+      format: json

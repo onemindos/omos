@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: matrix-ingress
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/websocket-services: "synapse,element-web"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - matrix.onemindos.com
+        - element.onemindos.com
+      secretName: matrix-tls
+  rules:
+    - host: matrix.onemindos.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: synapse
+                port:
+                  number: 8008
+    - host: element.onemindos.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: element-web
+                port:
+                  number: 80

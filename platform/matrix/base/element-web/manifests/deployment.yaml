@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: element-web
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-element-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: element-web
+  template:
+    metadata:
+      labels:
+        app: element-web
+        onemind.os/component: matrix-element-web
+    spec:
+      containers:
+        - name: element-web
+          image: vectorim/element-web:v1.11.70
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.json
+              subPath: config.json
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: element-web-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: element-web
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-element-web
+spec:
+  selector:
+    app: element-web
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http

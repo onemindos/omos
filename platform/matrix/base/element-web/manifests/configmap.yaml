@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: element-web-config
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-element-web
+data:
+  config.json: |
+    {
+      "default_server_config": {
+        "m.homeserver": {
+          "base_url": "https://matrix.onemindos.com",
+          "server_name": "onemindos.com"
+        },
+        "m.identity_server": {
+          "base_url": "https://matrix.onemindos.com"
+        }
+      },
+      "brand": "OneMind OS",
+      "branding": {
+        "welcome_background_url": "https://onemindos.com/welcome.jpg",
+        "auth_header_logo_url": "https://onemindos.com/logo.png",
+        "auth_footer_links": [
+          "https://onemindos.com/privacy",
+          "https://onemindos.com/terms"
+        ]
+      },
+      "features": {
+        "feature_spaces": "labs",
+        "feature_threads": "labs",
+        "feature_voip": true,
+        "feature_video": true,
+        "feature_e2e_encryption": true,
+        "feature_registration": false,
+        "feature_password_login": true,
+        "feature_sso": false
+      },
+      "default_theme": "dark",
+      "themes": ["light", "dark"],
+      "show_labs_settings": true,
+      "enable_presence_by_hs_url": {
+        "https://matrix.onemindos.com": true
+      },
+      "integrations_ui_url": "https://scalar.vector.im/",
+      "integrations_rest_url": "https://scalar.vector.im/api",
+      "integrations_widgets_urls": [
+        "https://scalar.vector.im/_matrix/integrations/v1",
+        "https://scalar.vector.im/apps",
+        "https://scalar.vector.im/widgets"
+      ],
+      "bug_report_endpoint_url": "https://github.com/onemindos/element-web/issues",
+      "default_country_code": "US",
+      "room_directory": {
+        "servers": ["onemindos.com"]
+      },
+      "piwik": false,
+      "ga_tracking_id": "",
+      "map_style_url": "https://tiles.vector.im/style.json"
+    }

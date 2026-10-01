@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: synapse-config
+  namespace: matrix
+  labels:
+    onemind.os/component: matrix-synapse
+data:
+  homeserver.yaml: |
+    server_name: "matrix.onemindos.com"
+    pid_file: /data/homeserver.pid
+    
+    listeners:
+      - port: 8008
+        tls: false
+        type: http
+        x_forwarded: true
+        bind_addresses: ['::']
+        resources:
+          - names: [client, federation]
+            compress: true
+    
+    database:
+      name: psycopg2
+      txn_limit: 10000
+      args:
+        user: synapse
+        password: ${POSTGRES_PASSWORD}
+        database: synapse
+        host: postgres.matrix.svc.cluster.local
+        port: 5432
+        cp_min: 5
+        cp_max: 20
+    
+    redis:
+      enabled: true
+      host: redis.matrix.svc.cluster.local
+      port: 6379
+      password: ${REDIS_PASSWORD}
+    
+    # Registration
+    enable_registration: false
+    enable_registration_without_verification: false
+    registration_shared_secret: "${REGISTRATION_SHARED_SECRET}"
+    
+    # Signing key
+    signing_key_path: "/data/signing.key"
+    old_signing_keys:
+      "ed25519": "${SIGNING_KEY}"
+    
+    # Media
+    media_store_path: "/data/media"
+    max_upload_size: 100M
+    dynamic_thumbnails: true
+    thumbnail_sizes:
+      - width: 320
+        height: 240
+        method: crop
+      - width: 640
+        height: 480
+        method: crop
+      - width: 1280
+        height: 960
+        method: crop
+    
+    # Federation
+    federation_domain_whitelist: []
+    
+    # Logging
+    log_config: "/data/log.config"
+    
+    # Metrics
+    enable_metrics: true
+    report_stats: false
+    
+    # TURN
+    turn_uris: []
+    turn_shared_secret: ""
+    turn_user_lifetime: 86400000
+    turn_allow_guests: true
+    
+    # Push
+    push:
+      enabled: false
+    
+    # Email
+    email:
+      enabled: false
+    
+    # Phone
+    sms:
+      enabled: false
+    
+    # ReCAPTCHA
+    recaptcha_enabled: false
+    
+    # URL preview
+    url_preview_enabled: true
+    url_preview_ip_range_blacklist:
+      - "127.0.0.0/8"
+      - "10.0.0.0/8"
+      - "172.16.0.0/12"
+      - "192.168.0.0/16"
+      - "100.64.0.0/10"
+      - "169.254.0.0/16"
+      - "::1/128"
+      - "fe80::/10"
+      - "fc00::/7"
+    
+    # CAPTCHA
+    captcha:
+      enabled: false
