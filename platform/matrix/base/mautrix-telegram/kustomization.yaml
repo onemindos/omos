@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mautrix-telegram-config
+  namespace: matrix
+  labels:
+    onemind.os/component: mautrix-telegram
+data:
+  config.yaml: |
+    homeserver:
+      address: https://synapse.matrix.svc.cluster.local:8008
+      domain: onemindos.com
+      verify_tls: false
+    
+    appservice:
+      address: http://mautrix-telegram.matrix.svc.cluster.local:29328
+      hostname: 0.0.0.0
+      port: 29328
+      database: postgres://mautrix_telegram:${POSTGRES_PASSWORD}@postgres.matrix.svc.cluster.local:5432/mautrix_telegram?sslmode=disable
+    
+    bridge:
+      username_template: "telegram_{{user.id}}"
+      displayname_template: "{{user.first_name}} {{user.last_name}}"
+      state_store_type: "postgres"
+      command_prefix: "!"
+      login_shared_secret: "${LOGIN_SHARED_SECRET}"
+      login_shared_secret_expire: 300
+      permissions:
+        "*": "user"
+        "@zeus:onemindos.com": "admin"
+    
+    telegram:
+      api_id: ${TELEGRAM_API_ID}
+      api_hash: ${TELEGRAM_API_HASH}
+      bot_token: ${TELEGRAM_BOT_TOKEN}
+      message_limit: 4096
+      allow_private_message_forwarding: true
+    
+    encryption:
+      allow: true
+      default: true
+    
+    logging:
+      level: info
+      format: json
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mautrix-telegram-data
+  namespace: matrix
+  labels:
+    onemind.os/component: mautrix-telegram
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: do-block-storage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mautrix-telegram
+  namespace: matrix
+  labels:
+    app: mautrix-telegram
+    onemind.os/component: mautrix-telegram
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mautrix-telegram
+  template:
+    metadata:
+      labels:
+        app: mautrix-telegram
+        onemind.os/component: mautrix-telegram
+    spec:
+      containers:
+        - name: mautrix-telegram
+          image: docker.io/mautrix/telegram:v0.8.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 29328
+              name: http
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: postgres-password
+            - name: LOGIN_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: mautrix-telegram-login-secret
+            - name: TELEGRAM_API_ID
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: telegram-api-id
+            - name: TELEGRAM_API_HASH
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: telegram-api-hash
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: telegram-bot-token
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 29328
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 29328
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mautrix-telegram-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mautrix-telegram
+  namespace: matrix
+  labels:
+    app: mautrix-telegram
+    onemind.os/component: mautrix-telegram
+spec:
+  type: ClusterIP
+  ports:
+    - port: 29328
+      targetPort: 29328
+      name: http
+  selector:
+    app: mautrix-telegram

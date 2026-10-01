@@ -1,0 +1,42 @@
+# Matrix Platform Configuration for Hermes
+# Add this to your ~/.hermes/config.yaml under the 'platforms:' section
+
+platforms:
+  # ... existing platforms (nats, tak, telegram) ...
+  
+  matrix:
+    enabled: true
+    homeserver: "https://matrix.onemindos.com"
+    user_id: "@hermes:onemindos.com"
+    # access_token: Set via MATRIX_ACCESS_TOKEN env var or hermes config set
+    # device_id: Optional, auto-generated if not set
+    
+    # Authorization (REQUIRED)
+    allowed_users:
+      - "@zeus:onemindos.com"
+      - "@legacy:onemindos.com"
+    # allowed_rooms: []  # Optional: restrict to specific room IDs
+    
+    # Behavior
+    require_mention: true
+    free_response_rooms: []  # Room IDs where mention not required
+    auto_thread: true
+    dm_auto_thread: false
+    dm_mention_threads: true
+    
+    # Encryption
+    encryption_mode: "opportunistic"  # disabled, opportunistic, required
+    # e2ee_backup_passphrase: ""  # For key backup recovery
+    
+    # Limits
+    max_media_bytes: 104857600  # 100MB
+    
+    # Timeouts
+    sync_timeout: 30000
+    request_timeout: 30000
+    connection_pool_size: 10
+
+# Platform toolsets (already configured in platform_toolsets)
+# platform_toolsets:
+#   matrix:
+#     - hermes-matrix  # Full toolset: terminal, file, web, vision, image, tts, browser, skills, todo, cronjob, messaging
