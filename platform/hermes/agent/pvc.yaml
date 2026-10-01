@@ -12,6 +12,6 @@ spec:
     requests:
       # Hermes writable state under /opt/data (sessions, skills cache, logs).
       # Bump if the working set grows; DO block storage is resizable.
-      storage: 10Gi
+      storage: 25Gi
   # DOKS default block-storage class.
   storageClassName: do-block-storage
