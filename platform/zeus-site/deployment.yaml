@@ -28,7 +28,7 @@ spec:
               value: production
             - name: PORT
               value: "3000"
-            - name: PAYLOAD_FORCE_DRIZZLE_PUSH
+            - name: PAYLOAD_PUSH_SCHEMA
               value: "true"
             - name: DATABASE_URI
               valueFrom:
