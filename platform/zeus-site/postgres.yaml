@@ -43,6 +43,7 @@ spec:
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
+              subPath: pgdata
           resources:
             requests:
               cpu: 100m
