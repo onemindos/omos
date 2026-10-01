@@ -28,6 +28,8 @@ spec:
               value: production
             - name: PORT
               value: "3000"
+            - name: PAYLOAD_FORCE_DRIZZLE_PUSH
+              value: "true"
             - name: DATABASE_URI
               valueFrom:
                 secretKeyRef:
