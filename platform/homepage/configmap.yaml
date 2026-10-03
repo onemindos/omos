@@ -134,7 +134,6 @@ data:
             widget:
               type: argocd
               url: https://argocd.tail717ba0.ts.net
-              key: ""
         - Kubernetes Dashboard:
             icon: kubernetes.png
             href: https://k8s-dashboard.tail717ba0.ts.net
@@ -188,6 +187,7 @@ data:
             icon: mdi-chat-processing-FFFFFF
             href: https://heynats-1.tail717ba0.ts.net
             description: NATS pub/sub debugger
+            siteMonitor: https://heynats-1.tail717ba0.ts.net
 
     # ════════════════════════════════════════════════════════
     # TACTICAL
@@ -202,15 +202,17 @@ data:
             icon: mdi-server-security-FFFFFF
             href: https://tak.onemindos.dev:8446
             description: TAK 5.8 hardened
-            siteMonitor: https://152.42.155.95:8446
+            siteMonitor: https://tak.onemindos.dev:8446
         - OneTAK:
             icon: mdi-crosshairs-gps-FFFFFF
             href: https://onetak.onemindos.dev
             description: OneMind TAK platform
+            siteMonitor: https://onetak.onemindos.dev
         - FedHub:
             icon: mdi-hub-FFFFFF
             href: https://fedhub.onemindos.dev
             description: TAK federation hub
+            siteMonitor: https://fedhub.onemindos.dev
 
     # ════════════════════════════════════════════════════════
     # INTELLIGENCE
@@ -221,11 +223,6 @@ data:
             href: https://grafana.tail717ba0.ts.net
             description: Dashboards & alerts
             siteMonitor: https://grafana.tail717ba0.ts.net
-            widget:
-              type: grafana
-              url: https://grafana.tail717ba0.ts.net
-              username: admin
-              password: ""
         - NATS UI:
             icon: mdi-console-FFFFFF
             href: https://nats-ui-1.tail717ba0.ts.net
@@ -235,10 +232,12 @@ data:
             icon: mdi-pulse-FFFFFF
             href: https://agenttap-1.tail717ba0.ts.net
             description: Real-time agent TUI
+            siteMonitor: https://agenttap-1.tail717ba0.ts.net
         - ClickHouse:
             icon: clickhouse.png
             href: https://clickhouse.tail717ba0.ts.net
             description: 10-year event DB
+            siteMonitor: https://clickhouse.tail717ba0.ts.net
 
     # ════════════════════════════════════════════════════════
     # DATA & STORAGE
@@ -253,6 +252,7 @@ data:
             icon: postgresql.png
             href: https://pgadmin.tail717ba0.ts.net
             description: Spatial database
+            siteMonitor: https://pgadmin.tail717ba0.ts.net
         - Longhorn:
             icon: longhorn.png
             href: https://longhorn.tail717ba0.ts.net
@@ -268,15 +268,16 @@ data:
             href: https://hubble.tail717ba0.ts.net
             description: Cilium network flows
             siteMonitor: https://hubble.tail717ba0.ts.net
-        - NATS Surveyor:
-            icon: mdi-chart-scatter-plot-FFFFFF
-            href: https://nats-surveyor-1.tail717ba0.ts.net
-            description: NATS metrics
         - Prometheus:
             icon: prometheus.png
             href: https://prometheus.tail717ba0.ts.net
             description: Metrics scraper
             siteMonitor: https://prometheus.tail717ba0.ts.net
+        - NATS Surveyor:
+            icon: mdi-chart-scatter-plot-FFFFFF
+            href: https://nats-surveyor-1.tail717ba0.ts.net
+            description: NATS metrics
+            siteMonitor: https://nats-surveyor-1.tail717ba0.ts.net
 
     # ════════════════════════════════════════════════════════
     # GEOSPATIAL
@@ -291,14 +292,17 @@ data:
             icon: mdi-road-variant-FFFFFF
             href: https://valhalla.onemindos.dev
             description: Routing engine
+            siteMonitor: https://valhalla.onemindos.dev
         - Maputnik:
             icon: mdi-palette-swatch-FFFFFF
             href: https://maputnik.onemindos.dev
             description: Map style editor
+            siteMonitor: https://maputnik.onemindos.dev
         - WebODM:
             icon: mdi-drone-FFFFFF
             href: https://webodm.onemindos.dev
             description: Drone imagery
+            siteMonitor: https://webodm.onemindos.dev
 
     # ════════════════════════════════════════════════════════
     # EXTERNAL
@@ -314,7 +318,28 @@ data:
             href: https://onemindos.dev
             description: Main platform
             siteMonitor: https://onemindos.dev
+        - ArgoCD:
+            icon: argocd.png
+            href: https://argocd.tail717ba0.ts.net
+            description: GitOps CD
+            siteMonitor: https://argocd.tail717ba0.ts.net
+            widget:
+              type: argocd
+              url: https://argocd.tail717ba0.ts.net
+              key: ""
+        - Kubernetes Dashboard:
+            icon: kubernetes.png
+            href: https://k8s-dashboard.tail717ba0.ts.net
+            description: Cluster UI
+            siteMonitor: https://k8s-dashboard.tail717ba0.ts.net
+        - Tailscale:
+            icon: tailscale.png
+            href: https://login.tailscale.com/admin/machines
+            description: Mesh VPN
 
+    # ════════════════════════════════════════════════════════
+    # AI & AGENTS
+    # ════════════════════════════════════════════════════════
   # ─── Custom CSS ────────────────────────────────────────────────────────────
   custom.css: |
     /*
