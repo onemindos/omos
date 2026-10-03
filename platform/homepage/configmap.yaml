@@ -10,7 +10,7 @@ data:
     title: OneMind OS
     description: Sovereign intelligence fabric
     theme: dark
-    color: red
+    color: slate
     headerStyle: clean
     cardBlur: sm
     statusStyle: dot
@@ -343,139 +343,128 @@ data:
   # ─── Custom CSS ────────────────────────────────────────────────────────────
   custom.css: |
     /*
-     * OneMind OS — Black / White / Red
-     * Homepage uses Tailwind JIT — target element selectors, not utility classes
+     * OneMind OS — Black base, White text, Red accents only
      */
 
-    /* ── Background ── */
-    body {
+    /* ── Pure black background ── */
+    body, #__next {
       background-color: #000 !important;
     }
 
-    /* ── Header ── */
+    /* ── Header bar ── */
     #page-header {
-      background: linear-gradient(180deg, #0d0d0d 0%, #000 100%) !important;
-      border-bottom: 1px solid rgba(220,38,38,0.35) !important;
+      background: #050505 !important;
+      border-bottom: 1px solid rgba(220,38,38,0.4) !important;
+      padding-bottom: 8px !important;
     }
 
-    /* ── Title ── */
+    /* ── Title — white with red underline ── */
     #page-header h1 {
-      background: linear-gradient(90deg, #fff 0%, #dc2626 100%) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
+      color: #fff !important;
       font-weight: 900 !important;
-      letter-spacing: 0.06em !important;
+      letter-spacing: 0.05em !important;
     }
 
-    /* ── Page description ── */
+    /* ── Description subtitle ── */
     #page-header p {
-      color: rgba(255,255,255,0.45) !important;
+      color: rgba(255,255,255,0.4) !important;
       font-size: 0.75rem !important;
-      letter-spacing: 0.12em !important;
+      letter-spacing: 0.1em !important;
       text-transform: uppercase !important;
     }
 
     /* ── Service cards ── */
     #services li > a,
     #services li > div {
-      background: rgba(10,10,10,0.95) !important;
-      border: 1px solid rgba(255,255,255,0.06) !important;
-      border-radius: 12px !important;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+      background: #0b0b0b !important;
+      border: 1px solid rgba(255,255,255,0.07) !important;
+      border-radius: 10px !important;
+      transition: border-color 0.2s, box-shadow 0.2s !important;
     }
     #services li > a:hover,
     #services li > div:hover {
-      border-color: rgba(220,38,38,0.45) !important;
-      box-shadow: 0 0 18px rgba(220,38,38,0.1), 0 4px 20px rgba(0,0,0,0.6) !important;
+      border-color: rgba(220,38,38,0.6) !important;
+      box-shadow: 0 0 12px rgba(220,38,38,0.15) !important;
     }
 
-    /* ── Group headers ── */
+    /* ── Group headers — RED, uppercase ── */
     #services h2,
     #bookmarks h2 {
+      color: #dc2626 !important;
       font-size: 0.65rem !important;
       font-weight: 800 !important;
       letter-spacing: 0.15em !important;
       text-transform: uppercase !important;
-      color: #dc2626 !important;
-      border-bottom: 1px solid rgba(220,38,38,0.2) !important;
+      border-bottom: 1px solid rgba(220,38,38,0.25) !important;
       padding-bottom: 4px !important;
     }
 
-    /* ── Service name ── */
-    #services .service-title,
-    #services li span.text-sm {
+    /* ── Service names — white ── */
+    #services li a span,
+    #services li a h3,
+    #services li a .truncate {
       color: #fff !important;
-      font-weight: 600 !important;
     }
 
-    /* ── Service description ── */
-    #services li span.text-xs {
+    /* ── Service descriptions — gray ── */
+    #services li a span.text-xs,
+    #services li a .text-sm {
+      color: rgba(255,255,255,0.42) !important;
+    }
+
+    /* ── Widget values — white ── */
+    #services .widget-value,
+    #services [class*="value"] {
+      color: #fff !important;
+    }
+
+    /* ── Widget labels — dim white ── */
+    #services .widget-label,
+    #services [class*="label"] {
       color: rgba(255,255,255,0.4) !important;
     }
 
-    /* ── Widget stat values ── */
-    #services .stat-value,
-    #services [class*="stat"] {
-      color: #fff !important;
-    }
-
-    /* ── Widget stat labels ── */
-    #services .stat-label {
-      color: rgba(255,255,255,0.45) !important;
-      font-size: 0.65rem !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.08em !important;
-    }
-
-    /* ── Info widgets bar ── */
+    /* ── Info widgets bar (top strip) ── */
     #information-widgets {
-      background: rgba(8,8,8,0.9) !important;
-      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+      background: #060606 !important;
+      border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+    }
+    #information-widgets span,
+    #information-widgets a {
+      color: rgba(255,255,255,0.65) !important;
     }
 
     /* ── Bookmarks ── */
     #bookmarks a {
-      background: rgba(10,10,10,0.95) !important;
-      border: 1px solid rgba(255,255,255,0.06) !important;
-      border-radius: 10px !important;
-      color: rgba(255,255,255,0.8) !important;
-      transition: all 0.2s ease !important;
+      background: #0b0b0b !important;
+      border: 1px solid rgba(255,255,255,0.07) !important;
+      border-radius: 8px !important;
+      color: rgba(255,255,255,0.75) !important;
+      transition: all 0.2s !important;
     }
     #bookmarks a:hover {
-      border-color: rgba(220,38,38,0.4) !important;
+      border-color: rgba(220,38,38,0.5) !important;
       color: #fff !important;
     }
 
-    /* ── Quick launch ── */
+    /* ── Search input ── */
     #quicklaunch input {
-      background: rgba(15,15,15,0.9) !important;
+      background: #0b0b0b !important;
       border: 1px solid rgba(255,255,255,0.1) !important;
-      border-radius: 10px !important;
+      border-radius: 8px !important;
       color: #fff !important;
     }
     #quicklaunch input:focus {
       border-color: #dc2626 !important;
-      box-shadow: 0 0 0 2px rgba(220,38,38,0.15) !important;
+      box-shadow: 0 0 0 2px rgba(220,38,38,0.12) !important;
+      outline: none !important;
     }
 
-    /* ── Status dot — make green dots slightly red-tinted on success ── */
-    .status-dot-green {
-      box-shadow: 0 0 4px rgba(34,197,94,0.5) !important;
-    }
-    .status-dot-red {
-      box-shadow: 0 0 6px rgba(220,38,38,0.7) !important;
-    }
-
-    /* ── Scrollbar ── */
+    /* ── Scrollbar — thin red ── */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: #dc2626; }
     ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
-
-    /* ── Icons white fill for mdi theme icons ── */
-    img[src*="mdi-"] {
-      filter: brightness(0) invert(1) !important;
-    }
 
   custom.js: |
     // OneMind OS — Legacy
