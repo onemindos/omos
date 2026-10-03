@@ -10,7 +10,7 @@ data:
     title: OneMind OS
     description: The nervous system of the homestead — sovereign, local-first intelligence fabric
     theme: dark
-    color: slate
+    color: red
     headerStyle: boxed
     cardBlur: md
     statusStyle: dot
@@ -268,98 +268,113 @@ data:
 
   # ─── Custom CSS ────────────────────────────────────────────────────
   custom.css: |
-    :root {
-      --accent: #dc2626;
-      --accent-rgb: 220, 38, 38;
-      --color-bg: #050505;
-      --color-card: rgba(15, 15, 15, 0.7);
-      --color-card-hover: rgba(30, 30, 30, 0.85);
-      --color-border: rgba(220, 38, 38, 0.12);
-      --border-radius: 16px;
+    /* ═══════════════════════════════════════════════
+       OneMind OS — Black / White / Red theme
+       Targets Homepage v1.x Tailwind theme-* classes
+    ═══════════════════════════════════════════════ */
+
+    /* ── Pure black background ── */
+    body, #__next, main {
+      background-color: #000000 !important;
     }
 
-    /* ── Animated gradient border on header ── */
-    header {
-      border-bottom: 2px solid transparent;
-      border-image: linear-gradient(90deg, #dc2626, #991b1b, #dc2626) 1;
+    /* ── Cards: near-black with red border glow ── */
+    .bg-theme-800,
+    .dark\:bg-theme-800 {
+      background-color: #0a0a0a !important;
+      border: 1px solid rgba(220, 38, 38, 0.18) !important;
+      border-radius: 12px !important;
+      transition: box-shadow 0.25s ease, border-color 0.25s ease !important;
+    }
+    .bg-theme-800:hover,
+    .dark\:bg-theme-800:hover {
+      border-color: rgba(220, 38, 38, 0.5) !important;
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.12) !important;
     }
 
-    /* ── Service card glassmorphism ── */
-    .service-card {
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--color-border);
-      transition: all 0.3s ease;
+    /* ── Section group headers: red + uppercase ── */
+    .text-theme-800,
+    .dark\:text-theme-200 {
+      color: #ffffff !important;
     }
-    .service-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(220, 38, 38, 0.12);
-      border-color: rgba(220, 38, 38, 0.35);
+    .text-theme-700,
+    .dark\:text-theme-300 {
+      color: #e5e5e5 !important;
     }
 
-    /* ── Section titles with accent underline ── */
-    .service-group-title {
-      position: relative;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #dc2626;
-      margin-bottom: 1rem;
-    }
-    .service-group-title::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 28px;
-      height: 2px;
-      background: #dc2626;
-      border-radius: 1px;
+    /* ── Group title row ── */
+    h2, h3 {
+      color: #dc2626 !important;
+      letter-spacing: 0.08em !important;
+      text-transform: uppercase !important;
+      font-size: 0.7rem !important;
+      font-weight: 800 !important;
+      border-bottom: 1px solid rgba(220, 38, 38, 0.25) !important;
+      padding-bottom: 6px !important;
+      margin-bottom: 10px !important;
     }
 
-    /* ── Icon glow on hover ── */
-    .service-card:hover .service-icon {
-      filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.3));
+    /* ── Header bar ── */
+    header, #page-header {
+      background-color: #050505 !important;
+      border-bottom: 1px solid rgba(220, 38, 38, 0.3) !important;
     }
 
-    /* ── Quick launch search bar ── */
-    .quick-launch-wrapper input {
-      background: rgba(15, 15, 15, 0.9);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      color: #ffffff;
+    /* ── Header title ── */
+    header h1, #page-header h1 {
+      color: #ffffff !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.04em !important;
     }
-    .quick-launch-wrapper input:focus {
-      border-color: #dc2626;
-      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+
+    /* ── Borders ── */
+    .border-theme-800,
+    .dark\:border-theme-200\/50 {
+      border-color: rgba(220, 38, 38, 0.2) !important;
+    }
+    .border-slate-700 {
+      border-color: rgba(220, 38, 38, 0.2) !important;
+    }
+
+    /* ── Service name text ── */
+    .service-title, [class*="service"] span, a span {
+      color: #ffffff !important;
+    }
+
+    /* ── Description text ── */
+    .text-sm, .text-xs {
+      color: #a3a3a3 !important;
+    }
+
+    /* ── Pill / badge ── */
+    .bg-theme-50, .dark\:bg-theme-60 {
+      background-color: rgba(220, 38, 38, 0.12) !important;
+      color: #ff6666 !important;
+    }
+
+    /* ── Icons: red tint on hover ── */
+    li:hover img, li:hover svg {
+      filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.45)) !important;
+    }
+
+    /* ── Search / quicklaunch ── */
+    input[type="text"], input[type="search"] {
+      background-color: #111111 !important;
+      border: 1px solid rgba(220, 38, 38, 0.3) !important;
+      color: #ffffff !important;
+      border-radius: 10px !important;
+    }
+    input[type="text"]:focus, input[type="search"]:focus {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+      outline: none !important;
     }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(220, 38, 38, 0.25);
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(220, 38, 38, 0.45);
-    }
-
-    /* ── Widget cards ── */
-    .widget-card {
-      backdrop-filter: blur(8px);
-      background: rgba(15, 15, 15, 0.6);
-      border: 1px solid var(--color-border);
-    }
-
-    /* ── Status dot — red pulse ── */
-    .status-dot {
-      box-shadow: 0 0 6px rgba(220, 38, 38, 0.4);
-    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
 
   custom.js: |
     // OneMind OS — Legacy Control Panel
