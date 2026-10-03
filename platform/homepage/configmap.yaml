@@ -10,7 +10,7 @@ data:
     title: OneMind OS
     description: Sovereign intelligence fabric
     theme: dark
-    color: slate
+    color: red
     headerStyle: clean
     cardBlur: sm
     statusStyle: dot
@@ -342,125 +342,8 @@ data:
     # ════════════════════════════════════════════════════════
   # ─── Custom CSS ────────────────────────────────────────────────────────────
   custom.css: |
-    /*
-     * OneMind OS — Black base, White text, Red accents only
-     */
-
-    /* ── Pure black background ── */
-    body, #__next {
-      background-color: #000 !important;
-    }
-
-    /* ── Header bar ── */
-    #page-header {
-      background: #050505 !important;
-      border-bottom: 1px solid rgba(220,38,38,0.4) !important;
-      padding-bottom: 8px !important;
-    }
-
-    /* ── Title — white with red underline ── */
-    #page-header h1 {
-      color: #fff !important;
-      font-weight: 900 !important;
-      letter-spacing: 0.05em !important;
-    }
-
-    /* ── Description subtitle ── */
-    #page-header p {
-      color: rgba(255,255,255,0.4) !important;
-      font-size: 0.75rem !important;
-      letter-spacing: 0.1em !important;
-      text-transform: uppercase !important;
-    }
-
-    /* ── Service cards ── */
-    #services li > a,
-    #services li > div {
-      background: #0b0b0b !important;
-      border: 1px solid rgba(255,255,255,0.07) !important;
-      border-radius: 10px !important;
-      transition: border-color 0.2s, box-shadow 0.2s !important;
-    }
-    #services li > a:hover,
-    #services li > div:hover {
-      border-color: rgba(220,38,38,0.6) !important;
-      box-shadow: 0 0 12px rgba(220,38,38,0.15) !important;
-    }
-
-    /* ── Group headers — RED, uppercase ── */
-    #services h2,
-    #bookmarks h2 {
-      color: #dc2626 !important;
-      font-size: 0.65rem !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.15em !important;
-      text-transform: uppercase !important;
-      border-bottom: 1px solid rgba(220,38,38,0.25) !important;
-      padding-bottom: 4px !important;
-    }
-
-    /* ── Service names — white ── */
-    #services li a span,
-    #services li a h3,
-    #services li a .truncate {
-      color: #fff !important;
-    }
-
-    /* ── Service descriptions — gray ── */
-    #services li a span.text-xs,
-    #services li a .text-sm {
-      color: rgba(255,255,255,0.42) !important;
-    }
-
-    /* ── Widget values — white ── */
-    #services .widget-value,
-    #services [class*="value"] {
-      color: #fff !important;
-    }
-
-    /* ── Widget labels — dim white ── */
-    #services .widget-label,
-    #services [class*="label"] {
-      color: rgba(255,255,255,0.4) !important;
-    }
-
-    /* ── Info widgets bar (top strip) ── */
-    #information-widgets {
-      background: #060606 !important;
-      border-bottom: 1px solid rgba(255,255,255,0.04) !important;
-    }
-    #information-widgets span,
-    #information-widgets a {
-      color: rgba(255,255,255,0.65) !important;
-    }
-
-    /* ── Bookmarks ── */
-    #bookmarks a {
-      background: #0b0b0b !important;
-      border: 1px solid rgba(255,255,255,0.07) !important;
-      border-radius: 8px !important;
-      color: rgba(255,255,255,0.75) !important;
-      transition: all 0.2s !important;
-    }
-    #bookmarks a:hover {
-      border-color: rgba(220,38,38,0.5) !important;
-      color: #fff !important;
-    }
-
-    /* ── Search input ── */
-    #quicklaunch input {
-      background: #0b0b0b !important;
-      border: 1px solid rgba(255,255,255,0.1) !important;
-      border-radius: 8px !important;
-      color: #fff !important;
-    }
-    #quicklaunch input:focus {
-      border-color: #dc2626 !important;
-      box-shadow: 0 0 0 2px rgba(220,38,38,0.12) !important;
-      outline: none !important;
-    }
-
-    /* ── Scrollbar — thin red ── */
+    /* OneMind OS — native theme:red, just fix black backgrounds */
+    .dark\:bg-theme-800 { background-color: #000 !important; }
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: #000; }
     ::-webkit-scrollbar-thumb { background: #dc2626; }
