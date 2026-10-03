@@ -1,0 +1,366 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+data:
+  # ─── Global Settings ───────────────────────────────────────────────
+  settings.yaml: |
+    ---
+    title: OneMind OS
+    description: The nervous system of the homestead — sovereign, local-first intelligence fabric
+    theme: dark
+    color: slate
+    headerStyle: boxed
+    cardBlur: md
+    statusStyle: dot
+    target: _blank
+    hideVersion: true
+    useEqualHeights: true
+    fiveColumns: true
+    fullWidth: true
+    showStats: true
+    language: en
+    background:
+      image: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560
+      blur: sm
+      opacity: 20
+      brightness: 60
+    layout:
+      Infrastructure:
+        style: row
+        columns: 4
+      AI & Agents:
+        style: row
+        columns: 4
+      Communication:
+        style: row
+        columns: 3
+      Tactical:
+        style: row
+        columns: 4
+      Intelligence:
+        style: row
+        columns: 4
+      Data & Storage:
+        style: row
+        columns: 3
+      Observability:
+        style: row
+        columns: 3
+      Geospatial:
+        style: row
+        columns: 4
+      External:
+        style: row
+        columns: 2
+    quicklaunch:
+      searchDescriptions: true
+      hideInternetSearch: false
+    providers:
+      openweathermap: openweathermapapi
+      weatherapi: weatherapiapi
+
+  # ─── Kubernetes — disabled
+  kubernetes.yaml: ""
+
+  # ─── Docker — disabled
+  docker.yaml: ""
+
+  # ─── Bookmarks — disabled
+  bookmarks.yaml: ""
+
+  # ─── Widgets ────────────────────────────────────────────────────────
+  widgets.yaml: ""
+  
+  # ─── Service Groups ─────────────────────────────────────────────────
+  services.yaml: |
+    ---
+    # ════════════════════════════════════════════════════════════════
+    # INFRASTRUCTURE
+    # ════════════════════════════════════════════════════════════════
+    - Infrastructure:
+        - ArgoCD:
+            icon: si-argo
+            href: https://argocd.tail717ba0.ts.net
+            description: GitOps continuous deployment
+            widget:
+              type: argocd
+              url: https://argocd.tail717ba0.ts.net
+        - Kubernetes Dashboard:
+            icon: si-kubernetes
+            href: https://k8s-dashboard.tail717ba0.ts.net
+            description: Cluster management UI
+        - Headlamp:
+            icon: si-kubernetes
+            href: https://headlamp.tail717ba0.ts.net
+            description: Modern K8s dashboard
+        - Tailscale:
+            icon: si-tailscale
+            href: https://login.tailscale.com/admin/machines
+            description: Mesh VPN — all devices
+
+    # ════════════════════════════════════════════════════════════════
+    # AI & AGENTS
+    # ════════════════════════════════════════════════════════════════
+    - AI & Agents:
+        - Hermes Web UI:
+            icon: mdi-brain
+            href: https://hermes-agent.tail717ba0.ts.net
+            description: Legacy chat interface
+        - Agent Web UI:
+            icon: mdi-robot
+            href: https://agent-web-ui-1.tail717ba0.ts.net
+            description: NATS agent browser
+        - Agent Monitor:
+            icon: mdi-pulse
+            href: https://agenttap-1.tail717ba0.ts.net
+            description: Real-time agent TUI
+        - OpenClaw:
+            icon: mdi-paw
+            href: https://openclaw.tail717ba0.ts.net
+            description: Agent orchestration
+
+    # ════════════════════════════════════════════════════════════════
+    # COMMUNICATION
+    # ════════════════════════════════════════════════════════════════
+    - Communication:
+        - Element Chat:
+            icon: si-element
+            href: https://element.onemindos.com
+            description: Matrix chat client
+        - HeyNATS:
+            icon: mdi-chat-processing
+            href: https://heynats-1.tail717ba0.ts.net
+            description: NATS pub/sub debugger
+
+    # ════════════════════════════════════════════════════════════════
+    # TACTICAL
+    # ════════════════════════════════════════════════════════════════
+    - Tactical:
+        - OneTAK:
+            icon: mdi-target
+            href: https://onetak.onemindos.dev
+            description: Cloud TAK — common operational picture
+        - TAK Server:
+            icon: mdi-server-security
+            href: https://tak.onemindos.dev:8446
+            description: TAK 5.8 hardened server
+        - TAK Portal:
+            icon: mdi-account-key
+            href: https://enroll.onemindos.dev
+            description: Device enrollment
+        - FedHub:
+            icon: mdi-hubspot
+            href: https://fedhub.onemindos.dev
+            description: Federation hub
+        - TAK-ML:
+            icon: mdi-image-filter-vintage
+            description: Vision pipeline — TAK ML
+
+    # ════════════════════════════════════════════════════════════════
+    # INTELLIGENCE
+    # ════════════════════════════════════════════════════════════════
+    - Intelligence:
+        - NATS Dashboard:
+            icon: mdi-chart-bell-curve
+            href: https://nats-dashboard-1.tail717ba0.ts.net
+            description: NATS stream monitor
+        - NATS UI:
+            icon: mdi-console
+            href: https://nats-ui-1.tail717ba0.ts.net
+            description: JetStream browser
+        - NATS Surveyor:
+            icon: mdi-chart-scatter-plot
+            description: Metrics endpoint
+        - Redpanda Connect:
+            icon: mdi-pipe
+            description: Data pipelines
+
+    # ════════════════════════════════════════════════════════════════
+    # DATA & STORAGE
+    # ════════════════════════════════════════════════════════════════
+    - Data & Storage:
+        - ClickHouse:
+            icon: si-clickhouse
+            description: 10-year event time machine
+            widget:
+              type: clickhouse
+              url: http://clickhouse-onemind.clickhouse.svc.cluster.local:8123
+              database: onemind
+        - MinIO:
+            icon: si-minio
+            description: Object storage
+        - PostGIS:
+            icon: si-postgresql
+            description: Spatial database
+
+    # ════════════════════════════════════════════════════════════════
+    # OBSERVABILITY
+    # ════════════════════════════════════════════════════════════════
+    - Observability:
+        - Grafana:
+            icon: si-grafana
+            href: https://grafana.tail717ba0.ts.net
+            description: Dashboards & alerts
+            widget:
+              type: grafana
+              url: https://grafana.tail717ba0.ts.net
+        - Hubble:
+            icon: mdi-magnify-scan
+            href: https://hubble.tail717ba0.ts.net
+            description: Network observability
+
+    # ════════════════════════════════════════════════════════════════
+    # GEOSPATIAL
+    # ════════════════════════════════════════════════════════════════
+    - Geospatial:
+        - TileServer GL:
+            icon: mdi-map
+            href: https://tileserver.onemindos.dev
+            description: Vector tile server
+        - Valhalla:
+            icon: si-valhalla
+            href: https://valhalla.onemindos.dev
+            description: Routing engine
+        - Overpass:
+            icon: mdi-database-search
+            href: https://overpass.onemindos.dev
+            description: OSM query API
+        - Maputnik:
+            icon: mdi-palette-swatch
+            href: https://maputnik.onemindos.dev
+            description: Map style editor
+        - Martin:
+            icon: mdi-server-plus
+            description: PG tile server
+        - pg_featureserv:
+            icon: mdi-feature-search
+            description: OGC Features API
+        - STAC API:
+            icon: mdi-image-multiple
+            description: SpatioTemporal Asset Catalog
+        - STAC Browser:
+            icon: mdi-image-search
+            description: STAC catalog browser
+        - Nominatim:
+            icon: mdi-map-marker
+            description: Geocoding
+        - Tile38:
+            icon: mdi-fencing
+            description: Real-time geofencing
+        - WebODM:
+            icon: mdi-drone
+            description: Drone imagery processing
+
+    # ════════════════════════════════════════════════════════════════
+    # EXTERNAL
+    # ════════════════════════════════════════════════════════════════
+    - External:
+        - Zeus Delacruz:
+            icon: mdi-web
+            href: https://zeusdelacruz.com
+            description: Personal brand site
+        - OneMind OS:
+            icon: mdi-infinity
+            href: https://onemindos.dev
+            description: Main platform
+
+  # ─── Custom CSS ────────────────────────────────────────────────────
+  custom.css: |
+    :root {
+      --accent: #dc2626;
+      --accent-rgb: 220, 38, 38;
+      --color-bg: #050505;
+      --color-card: rgba(15, 15, 15, 0.7);
+      --color-card-hover: rgba(30, 30, 30, 0.85);
+      --color-border: rgba(220, 38, 38, 0.12);
+      --border-radius: 16px;
+    }
+
+    /* ── Animated gradient border on header ── */
+    header {
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(90deg, #dc2626, #991b1b, #dc2626) 1;
+    }
+
+    /* ── Service card glassmorphism ── */
+    .service-card {
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(220, 38, 38, 0.12);
+      border-color: rgba(220, 38, 38, 0.35);
+    }
+
+    /* ── Section titles with accent underline ── */
+    .service-group-title {
+      position: relative;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #dc2626;
+      margin-bottom: 1rem;
+    }
+    .service-group-title::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 28px;
+      height: 2px;
+      background: #dc2626;
+      border-radius: 1px;
+    }
+
+    /* ── Icon glow on hover ── */
+    .service-card:hover .service-icon {
+      filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.3));
+    }
+
+    /* ── Quick launch search bar ── */
+    .quick-launch-wrapper input {
+      background: rgba(15, 15, 15, 0.9);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      color: #ffffff;
+    }
+    .quick-launch-wrapper input:focus {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(220, 38, 38, 0.25);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(220, 38, 38, 0.45);
+    }
+
+    /* ── Widget cards ── */
+    .widget-card {
+      backdrop-filter: blur(8px);
+      background: rgba(15, 15, 15, 0.6);
+      border: 1px solid var(--color-border);
+    }
+
+    /* ── Status dot — red pulse ── */
+    .status-dot {
+      box-shadow: 0 0 6px rgba(220, 38, 38, 0.4);
+    }
+
+  custom.js: |
+    // OneMind OS — Legacy Control Panel
+    console.log("%c🔴 OneMind Control Panel • Legacy is watching","color:#dc2626;font-size:16px;");
