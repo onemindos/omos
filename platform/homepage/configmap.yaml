@@ -4,378 +4,454 @@ metadata:
   name: homepage-config
   namespace: homepage
 data:
-  # ─── Global Settings ───────────────────────────────────────────────
+  # ─── Global Settings ───────────────────────────────────────────────────────
   settings.yaml: |
     ---
     title: OneMind OS
-    description: The nervous system of the homestead — sovereign, local-first intelligence fabric
+    description: Sovereign intelligence fabric
     theme: dark
     color: red
-    headerStyle: boxed
-    cardBlur: md
+    headerStyle: clean
+    cardBlur: sm
     statusStyle: dot
     target: _blank
     hideVersion: true
     useEqualHeights: true
-    fiveColumns: true
     fullWidth: true
-    showStats: true
+    iconStyle: theme
     language: en
-    background:
-      image: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560
-      blur: sm
-      opacity: 20
-      brightness: 60
     layout:
       Infrastructure:
         style: row
         columns: 4
+        icon: mdi-server-network
       AI & Agents:
         style: row
         columns: 4
+        icon: mdi-brain
       Communication:
         style: row
         columns: 3
+        icon: mdi-chat
       Tactical:
         style: row
         columns: 4
+        icon: mdi-crosshairs-gps
       Intelligence:
         style: row
         columns: 4
+        icon: mdi-chart-line
       Data & Storage:
         style: row
         columns: 3
+        icon: mdi-database
       Observability:
         style: row
         columns: 3
+        icon: mdi-eye
       Geospatial:
         style: row
         columns: 4
+        icon: mdi-map
       External:
         style: row
         columns: 2
+        icon: mdi-web
     quicklaunch:
       searchDescriptions: true
       hideInternetSearch: false
-    providers:
-      openweathermap: openweathermapapi
-      weatherapi: weatherapiapi
+      provider: google
 
-  # ─── Kubernetes — disabled
-  kubernetes.yaml: ""
+  # ─── Kubernetes — cluster mode for auto-discovery ──────────────────────────
+  kubernetes.yaml: |
+    mode: cluster
 
-  # ─── Docker — disabled
-  docker.yaml: ""
+  # ─── Docker — disabled ─────────────────────────────────────────────────────
+  docker.yaml: |
+    ---
 
-  # ─── Bookmarks — disabled
-  bookmarks.yaml: ""
+  # ─── Bookmarks ─────────────────────────────────────────────────────────────
+  bookmarks.yaml: |
+    ---
+    - Quick Links:
+        - GitHub:
+            icon: si-github
+            href: https://github.com/onemindos
+            description: OneMind repos
+        - DigitalOcean:
+            icon: si-digitalocean
+            href: https://cloud.digitalocean.com
+            description: DOKS cluster
+        - Cloudflare:
+            icon: si-cloudflare
+            href: https://dash.cloudflare.com
+            description: DNS & edge
+        - Tailscale Admin:
+            icon: si-tailscale
+            href: https://login.tailscale.com/admin
+            description: Mesh VPN admin
 
-  # ─── Widgets ────────────────────────────────────────────────────────
-  widgets.yaml: ""
-  
-  # ─── Service Groups ─────────────────────────────────────────────────
+  # ─── Info Widgets ──────────────────────────────────────────────────────────
+  widgets.yaml: |
+    ---
+    - logo:
+        icon: https://onemindos.dev/favicon.ico
+    - greeting:
+        text_size: xl
+        text: "OneMind OS"
+    - datetime:
+        text_size: l
+        format:
+          dateStyle: long
+          timeStyle: short
+          hour12: false
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "DOKS"
+        nodes:
+          show: false
+    - search:
+        provider: google
+        target: _blank
+        placeholder: Search...
+
+  # ─── Services ──────────────────────────────────────────────────────────────
   services.yaml: |
     ---
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     # INFRASTRUCTURE
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - Infrastructure:
         - ArgoCD:
-            icon: si-argo
+            icon: argocd.png
             href: https://argocd.tail717ba0.ts.net
-            description: GitOps continuous deployment
+            description: GitOps CD
+            siteMonitor: https://argocd.tail717ba0.ts.net
             widget:
               type: argocd
               url: https://argocd.tail717ba0.ts.net
+              key: ""
         - Kubernetes Dashboard:
-            icon: si-kubernetes
+            icon: kubernetes.png
             href: https://k8s-dashboard.tail717ba0.ts.net
-            description: Cluster management UI
-        - Headlamp:
-            icon: si-kubernetes
-            href: https://headlamp.tail717ba0.ts.net
-            description: Modern K8s dashboard
+            description: Cluster UI
+            siteMonitor: https://k8s-dashboard.tail717ba0.ts.net
         - Tailscale:
-            icon: si-tailscale
+            icon: tailscale.png
             href: https://login.tailscale.com/admin/machines
-            description: Mesh VPN — all devices
+            description: Mesh VPN
 
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     # AI & AGENTS
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - AI & Agents:
-        - Hermes Web UI:
-            icon: mdi-brain
+        - Hermes (Legacy):
+            icon: mdi-brain-FFFFFF
             href: https://hermes-agent.tail717ba0.ts.net
-            description: Legacy chat interface
+            description: Legacy AI — cloud
+            siteMonitor: https://hermes-agent.tail717ba0.ts.net
         - Agent Web UI:
-            icon: mdi-robot
+            icon: mdi-robot-FFFFFF
             href: https://agent-web-ui-1.tail717ba0.ts.net
             description: NATS agent browser
-        - Agent Monitor:
-            icon: mdi-pulse
-            href: https://agenttap-1.tail717ba0.ts.net
-            description: Real-time agent TUI
+            siteMonitor: https://agent-web-ui-1.tail717ba0.ts.net
         - OpenClaw:
-            icon: mdi-paw
+            icon: mdi-paw-FFFFFF
             href: https://openclaw.tail717ba0.ts.net
             description: Agent orchestration
+            siteMonitor: https://openclaw.tail717ba0.ts.net
+        - NATS Dashboard:
+            icon: mdi-chart-bell-curve-FFFFFF
+            href: https://nats-dashboard-1.tail717ba0.ts.net
+            description: NATS stream monitor
+            siteMonitor: https://nats-dashboard-1.tail717ba0.ts.net
 
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     # COMMUNICATION
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - Communication:
         - Element Chat:
-            icon: si-element
+            icon: element.png
             href: https://element.onemindos.com
-            description: Matrix chat client
+            description: Matrix E2EE chat
+            siteMonitor: https://element.onemindos.com
+        - Matrix Synapse:
+            icon: matrix-light.png
+            href: https://matrix.onemindos.com
+            description: Homeserver
+            siteMonitor: https://matrix.onemindos.com
         - HeyNATS:
-            icon: mdi-chat-processing
+            icon: mdi-chat-processing-FFFFFF
             href: https://heynats-1.tail717ba0.ts.net
             description: NATS pub/sub debugger
 
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     # TACTICAL
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - Tactical:
-        - OneTAK:
-            icon: mdi-target
-            href: https://onetak.onemindos.dev
-            description: Cloud TAK — common operational picture
+        - CloudTAK:
+            icon: mdi-target-account-FFFFFF
+            href: https://atoc.onemindos.dev
+            description: Cloud TAK — COP
+            siteMonitor: https://atoc.onemindos.dev
         - TAK Server:
-            icon: mdi-server-security
+            icon: mdi-server-security-FFFFFF
             href: https://tak.onemindos.dev:8446
-            description: TAK 5.8 hardened server
-        - TAK Portal:
-            icon: mdi-account-key
-            href: https://enroll.onemindos.dev
-            description: Device enrollment
+            description: TAK 5.8 hardened
+            siteMonitor: https://152.42.155.95:8446
+        - OneTAK:
+            icon: mdi-crosshairs-gps-FFFFFF
+            href: https://onetak.onemindos.dev
+            description: OneMind TAK platform
         - FedHub:
-            icon: mdi-hubspot
+            icon: mdi-hub-FFFFFF
             href: https://fedhub.onemindos.dev
-            description: Federation hub
-        - TAK-ML:
-            icon: mdi-image-filter-vintage
-            description: Vision pipeline — TAK ML
+            description: TAK federation hub
 
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     # INTELLIGENCE
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - Intelligence:
-        - NATS Dashboard:
-            icon: mdi-chart-bell-curve
-            href: https://nats-dashboard-1.tail717ba0.ts.net
-            description: NATS stream monitor
-        - NATS UI:
-            icon: mdi-console
-            href: https://nats-ui-1.tail717ba0.ts.net
-            description: JetStream browser
-        - NATS Surveyor:
-            icon: mdi-chart-scatter-plot
-            description: Metrics endpoint
-        - Redpanda Connect:
-            icon: mdi-pipe
-            description: Data pipelines
-
-    # ════════════════════════════════════════════════════════════════
-    # DATA & STORAGE
-    # ════════════════════════════════════════════════════════════════
-    - Data & Storage:
-        - ClickHouse:
-            icon: si-clickhouse
-            description: 10-year event time machine
-            widget:
-              type: clickhouse
-              url: http://clickhouse-onemind.clickhouse.svc.cluster.local:8123
-              database: onemind
-        - MinIO:
-            icon: si-minio
-            description: Object storage
-        - PostGIS:
-            icon: si-postgresql
-            description: Spatial database
-
-    # ════════════════════════════════════════════════════════════════
-    # OBSERVABILITY
-    # ════════════════════════════════════════════════════════════════
-    - Observability:
         - Grafana:
-            icon: si-grafana
+            icon: grafana.png
             href: https://grafana.tail717ba0.ts.net
             description: Dashboards & alerts
+            siteMonitor: https://grafana.tail717ba0.ts.net
             widget:
               type: grafana
               url: https://grafana.tail717ba0.ts.net
-        - Hubble:
-            icon: mdi-magnify-scan
-            href: https://hubble.tail717ba0.ts.net
-            description: Network observability
+              username: admin
+              password: ""
+        - NATS UI:
+            icon: mdi-console-FFFFFF
+            href: https://nats-ui-1.tail717ba0.ts.net
+            description: JetStream browser
+            siteMonitor: https://nats-ui-1.tail717ba0.ts.net
+        - Agent Monitor:
+            icon: mdi-pulse-FFFFFF
+            href: https://agenttap-1.tail717ba0.ts.net
+            description: Real-time agent TUI
+        - ClickHouse:
+            icon: clickhouse.png
+            href: https://clickhouse.tail717ba0.ts.net
+            description: 10-year event DB
 
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
+    # DATA & STORAGE
+    # ════════════════════════════════════════════════════════
+    - Data & Storage:
+        - MinIO:
+            icon: minio.png
+            href: https://minio.tail717ba0.ts.net
+            description: Object storage
+            siteMonitor: https://minio.tail717ba0.ts.net
+        - PostGIS:
+            icon: postgresql.png
+            href: https://pgadmin.tail717ba0.ts.net
+            description: Spatial database
+        - Longhorn:
+            icon: longhorn.png
+            href: https://longhorn.tail717ba0.ts.net
+            description: Distributed block storage
+            siteMonitor: https://longhorn.tail717ba0.ts.net
+
+    # ════════════════════════════════════════════════════════
+    # OBSERVABILITY
+    # ════════════════════════════════════════════════════════
+    - Observability:
+        - Hubble UI:
+            icon: mdi-eye-network-FFFFFF
+            href: https://hubble.tail717ba0.ts.net
+            description: Cilium network flows
+            siteMonitor: https://hubble.tail717ba0.ts.net
+        - NATS Surveyor:
+            icon: mdi-chart-scatter-plot-FFFFFF
+            href: https://nats-surveyor-1.tail717ba0.ts.net
+            description: NATS metrics
+        - Prometheus:
+            icon: prometheus.png
+            href: https://prometheus.tail717ba0.ts.net
+            description: Metrics scraper
+            siteMonitor: https://prometheus.tail717ba0.ts.net
+
+    # ════════════════════════════════════════════════════════
     # GEOSPATIAL
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - Geospatial:
         - TileServer GL:
-            icon: mdi-map
+            icon: mdi-map-FFFFFF
             href: https://tileserver.onemindos.dev
-            description: Vector tile server
+            description: Vector tiles
+            siteMonitor: https://tileserver.onemindos.dev
         - Valhalla:
-            icon: si-valhalla
+            icon: mdi-road-variant-FFFFFF
             href: https://valhalla.onemindos.dev
             description: Routing engine
-        - Overpass:
-            icon: mdi-database-search
-            href: https://overpass.onemindos.dev
-            description: OSM query API
         - Maputnik:
-            icon: mdi-palette-swatch
+            icon: mdi-palette-swatch-FFFFFF
             href: https://maputnik.onemindos.dev
             description: Map style editor
-        - Martin:
-            icon: mdi-server-plus
-            description: PG tile server
-        - pg_featureserv:
-            icon: mdi-feature-search
-            description: OGC Features API
-        - STAC API:
-            icon: mdi-image-multiple
-            description: SpatioTemporal Asset Catalog
-        - STAC Browser:
-            icon: mdi-image-search
-            description: STAC catalog browser
-        - Nominatim:
-            icon: mdi-map-marker
-            description: Geocoding
-        - Tile38:
-            icon: mdi-fencing
-            description: Real-time geofencing
         - WebODM:
-            icon: mdi-drone
-            description: Drone imagery processing
+            icon: mdi-drone-FFFFFF
+            href: https://webodm.onemindos.dev
+            description: Drone imagery
 
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     # EXTERNAL
-    # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════
     - External:
         - Zeus Delacruz:
-            icon: mdi-web
+            icon: mdi-account-circle-FFFFFF
             href: https://zeusdelacruz.com
-            description: Personal brand site
+            description: Personal brand
+            siteMonitor: https://zeusdelacruz.com
         - OneMind OS:
-            icon: mdi-infinity
+            icon: mdi-infinity-FFFFFF
             href: https://onemindos.dev
             description: Main platform
+            siteMonitor: https://onemindos.dev
 
-  # ─── Custom CSS ────────────────────────────────────────────────────
+  # ─── Custom CSS ────────────────────────────────────────────────────────────
   custom.css: |
-    /* ═══════════════════════════════════════════════
-       OneMind OS — Black / White / Red theme
-       Targets Homepage v1.x Tailwind theme-* classes
-    ═══════════════════════════════════════════════ */
+    /*
+     * OneMind OS — Black / White / Red
+     * Homepage uses Tailwind JIT — target element selectors, not utility classes
+     */
 
-    /* ── Pure black background ── */
-    body, #__next, main {
-      background-color: #000000 !important;
-    }
-
-    /* ── Cards: near-black with red border glow ── */
-    .bg-theme-800,
-    .dark\:bg-theme-800 {
-      background-color: #0a0a0a !important;
-      border: 1px solid rgba(220, 38, 38, 0.18) !important;
-      border-radius: 12px !important;
-      transition: box-shadow 0.25s ease, border-color 0.25s ease !important;
-    }
-    .bg-theme-800:hover,
-    .dark\:bg-theme-800:hover {
-      border-color: rgba(220, 38, 38, 0.5) !important;
-      box-shadow: 0 0 20px rgba(220, 38, 38, 0.12) !important;
+    /* ── Background ── */
+    body {
+      background-color: #000 !important;
     }
 
-    /* ── Section group headers: red + uppercase ── */
-    .text-theme-800,
-    .dark\:text-theme-200 {
-      color: #ffffff !important;
-    }
-    .text-theme-700,
-    .dark\:text-theme-300 {
-      color: #e5e5e5 !important;
+    /* ── Header ── */
+    #page-header {
+      background: linear-gradient(180deg, #0d0d0d 0%, #000 100%) !important;
+      border-bottom: 1px solid rgba(220,38,38,0.35) !important;
     }
 
-    /* ── Group title row ── */
-    h2, h3 {
-      color: #dc2626 !important;
-      letter-spacing: 0.08em !important;
-      text-transform: uppercase !important;
-      font-size: 0.7rem !important;
-      font-weight: 800 !important;
-      border-bottom: 1px solid rgba(220, 38, 38, 0.25) !important;
-      padding-bottom: 6px !important;
-      margin-bottom: 10px !important;
-    }
-
-    /* ── Header bar ── */
-    header, #page-header {
-      background-color: #050505 !important;
-      border-bottom: 1px solid rgba(220, 38, 38, 0.3) !important;
-    }
-
-    /* ── Header title ── */
-    header h1, #page-header h1 {
-      color: #ffffff !important;
+    /* ── Title ── */
+    #page-header h1 {
+      background: linear-gradient(90deg, #fff 0%, #dc2626 100%) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
       font-weight: 900 !important;
-      letter-spacing: 0.04em !important;
+      letter-spacing: 0.06em !important;
     }
 
-    /* ── Borders ── */
-    .border-theme-800,
-    .dark\:border-theme-200\/50 {
-      border-color: rgba(220, 38, 38, 0.2) !important;
-    }
-    .border-slate-700 {
-      border-color: rgba(220, 38, 38, 0.2) !important;
-    }
-
-    /* ── Service name text ── */
-    .service-title, [class*="service"] span, a span {
-      color: #ffffff !important;
+    /* ── Page description ── */
+    #page-header p {
+      color: rgba(255,255,255,0.45) !important;
+      font-size: 0.75rem !important;
+      letter-spacing: 0.12em !important;
+      text-transform: uppercase !important;
     }
 
-    /* ── Description text ── */
-    .text-sm, .text-xs {
-      color: #a3a3a3 !important;
+    /* ── Service cards ── */
+    #services li > a,
+    #services li > div {
+      background: rgba(10,10,10,0.95) !important;
+      border: 1px solid rgba(255,255,255,0.06) !important;
+      border-radius: 12px !important;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    #services li > a:hover,
+    #services li > div:hover {
+      border-color: rgba(220,38,38,0.45) !important;
+      box-shadow: 0 0 18px rgba(220,38,38,0.1), 0 4px 20px rgba(0,0,0,0.6) !important;
     }
 
-    /* ── Pill / badge ── */
-    .bg-theme-50, .dark\:bg-theme-60 {
-      background-color: rgba(220, 38, 38, 0.12) !important;
-      color: #ff6666 !important;
+    /* ── Group headers ── */
+    #services h2,
+    #bookmarks h2 {
+      font-size: 0.65rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.15em !important;
+      text-transform: uppercase !important;
+      color: #dc2626 !important;
+      border-bottom: 1px solid rgba(220,38,38,0.2) !important;
+      padding-bottom: 4px !important;
     }
 
-    /* ── Icons: red tint on hover ── */
-    li:hover img, li:hover svg {
-      filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.45)) !important;
+    /* ── Service name ── */
+    #services .service-title,
+    #services li span.text-sm {
+      color: #fff !important;
+      font-weight: 600 !important;
     }
 
-    /* ── Search / quicklaunch ── */
-    input[type="text"], input[type="search"] {
-      background-color: #111111 !important;
-      border: 1px solid rgba(220, 38, 38, 0.3) !important;
-      color: #ffffff !important;
+    /* ── Service description ── */
+    #services li span.text-xs {
+      color: rgba(255,255,255,0.4) !important;
+    }
+
+    /* ── Widget stat values ── */
+    #services .stat-value,
+    #services [class*="stat"] {
+      color: #fff !important;
+    }
+
+    /* ── Widget stat labels ── */
+    #services .stat-label {
+      color: rgba(255,255,255,0.45) !important;
+      font-size: 0.65rem !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.08em !important;
+    }
+
+    /* ── Info widgets bar ── */
+    #information-widgets {
+      background: rgba(8,8,8,0.9) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    }
+
+    /* ── Bookmarks ── */
+    #bookmarks a {
+      background: rgba(10,10,10,0.95) !important;
+      border: 1px solid rgba(255,255,255,0.06) !important;
       border-radius: 10px !important;
+      color: rgba(255,255,255,0.8) !important;
+      transition: all 0.2s ease !important;
     }
-    input[type="text"]:focus, input[type="search"]:focus {
+    #bookmarks a:hover {
+      border-color: rgba(220,38,38,0.4) !important;
+      color: #fff !important;
+    }
+
+    /* ── Quick launch ── */
+    #quicklaunch input {
+      background: rgba(15,15,15,0.9) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 10px !important;
+      color: #fff !important;
+    }
+    #quicklaunch input:focus {
       border-color: #dc2626 !important;
-      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
-      outline: none !important;
+      box-shadow: 0 0 0 2px rgba(220,38,38,0.15) !important;
+    }
+
+    /* ── Status dot — make green dots slightly red-tinted on success ── */
+    .status-dot-green {
+      box-shadow: 0 0 4px rgba(34,197,94,0.5) !important;
+    }
+    .status-dot-red {
+      box-shadow: 0 0 6px rgba(220,38,38,0.7) !important;
     }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 2px; }
     ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
 
+    /* ── Icons white fill for mdi theme icons ── */
+    img[src*="mdi-"] {
+      filter: brightness(0) invert(1) !important;
+    }
+
   custom.js: |
-    // OneMind OS — Legacy Control Panel
-    console.log("%c🔴 OneMind Control Panel • Legacy is watching","color:#dc2626;font-size:16px;");
+    // OneMind OS — Legacy
+    console.log("%c🔴 OneMind OS | Legacy is watching", "color:#dc2626;font-weight:bold;font-size:14px;");
