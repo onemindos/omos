@@ -1,4 +1,5 @@
 #!/command/with-contenv sh
+# shellcheck shell=sh
 # Seed Legacy's persona + config + nats-platform plugin into the PVC on first
 # boot, then launch the gateway headless. The gateway's nats-platform adapter
 # registers AgentService at agents.prompt.hermes.zeus.legacy and routes prompts
