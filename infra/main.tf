@@ -18,12 +18,12 @@ resource "digitalocean_vpc" "hub" {
 # The always-on hub. HA control plane for production. Auto-upgrade of patch
 # releases on; surge upgrades on for zero-downtime node rollouts.
 resource "digitalocean_kubernetes_cluster" "hub" {
-  name         = var.project_name
-  region       = var.region
-  version      = var.k8s_version
-  vpc_uuid     = digitalocean_vpc.hub.id
-  ha           = var.ha_control_plane
-  auto_upgrade = true
+  name          = var.project_name
+  region        = var.region
+  version       = var.k8s_version
+  vpc_uuid      = digitalocean_vpc.hub.id
+  ha            = var.ha_control_plane
+  auto_upgrade  = true
   surge_upgrade = true
 
   node_pool {
