@@ -24,10 +24,10 @@ output "cluster_version" {
 output "node_pool" {
   description = "Core node pool shape."
   value = {
-    size       = var.node_size
-    min        = var.node_min
-    max        = var.node_max
-    baseline   = var.node_count
+    size     = var.node_size
+    min      = var.node_min
+    max      = var.node_max
+    baseline = var.node_count
   }
 }
 

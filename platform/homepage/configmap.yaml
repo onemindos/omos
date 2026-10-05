@@ -75,21 +75,33 @@ data:
     ---
     - Quick Links:
         - GitHub:
-            icon: si-github
-            href: https://github.com/onemindos
-            description: OneMind repos
+            - icon: si-github
+              href: https://github.com/onemindos
+              description: OneMind repos
         - DigitalOcean:
-            icon: si-digitalocean
-            href: https://cloud.digitalocean.com
-            description: DOKS cluster
+            - icon: si-digitalocean
+              href: https://cloud.digitalocean.com
+              description: DOKS cluster
         - Cloudflare:
-            icon: si-cloudflare
-            href: https://dash.cloudflare.com
-            description: DNS & edge
+            - icon: si-cloudflare
+              href: https://dash.cloudflare.com
+              description: DNS & edge
         - Tailscale Admin:
-            icon: si-tailscale
-            href: https://login.tailscale.com/admin
-            description: Mesh VPN admin
+            - icon: si-tailscale
+              href: https://login.tailscale.com/admin
+              description: Mesh VPN admin
+        - ArgoCD:
+            - icon: argocd.png
+              href: https://argocd.tail717ba0.ts.net
+              description: GitOps deployments
+        - Kubernetes Dashboard:
+            - icon: kubernetes.png
+              href: https://k8s-dashboard.tail717ba0.ts.net
+              description: Cluster workloads
+        - Grafana:
+            - icon: grafana.png
+              href: https://grafana.tail717ba0.ts.net
+              description: Monitoring and alerts
 
   # ─── Info Widgets ──────────────────────────────────────────────────────────
   widgets.yaml: |
