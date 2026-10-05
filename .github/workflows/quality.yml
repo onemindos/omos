@@ -24,7 +24,7 @@ jobs:
         with:
           scandir: '.'
           ignore_paths: 'vault' # historical/archive scripts are not maintained runtime code
-          severity: warning
+          severity: error
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
