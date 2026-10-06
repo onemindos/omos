@@ -1,0 +1,2868 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: do-nyc3-omos-cloud
+  title: OneMind Cloud — NYC3
+spec:
+  type: kubernetes-cluster
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-argocd
+  title: Cluster / argocd
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-auth
+  title: Cluster / auth
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-backstage
+  title: Cluster / backstage
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-cert-manager
+  title: Cluster / cert-manager
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-cloudflare
+  title: Cluster / cloudflare
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-github-runner
+  title: Cluster / github-runner
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-hermes
+  title: Cluster / hermes
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-homepage
+  title: Cluster / homepage
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-ingress-nginx
+  title: Cluster / ingress-nginx
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-kube-system
+  title: Cluster / kube-system
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-kube
+  title: Cluster / kube
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-matrix
+  title: Cluster / matrix
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-monitoring
+  title: Cluster / monitoring
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-nats
+  title: Cluster / nats
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-omos
+  title: Cluster / omos
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-onetak
+  title: Cluster / onetak
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-openclaw
+  title: Cluster / openclaw
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-tailscale
+  title: Cluster / tailscale
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-takml
+  title: Cluster / takml
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-takserver
+  title: Cluster / takserver
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-zeus-site
+  title: Cluster / zeus-site
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cluster-clickhouse
+  title: Cluster / clickhouse
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-applicationset-controller-7524aa8d
+  title: argocd / argocd-applicationset-controller
+  description: Deployment in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-applicationset-controller
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.631Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-dex-server-bb499535
+  title: argocd / argocd-dex-server
+  description: Deployment in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-dex-server
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-notifications-controller-3c0b8ec8
+  title: argocd / argocd-notifications-controller
+  description: Deployment in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-notifications-controller
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-redis-84014533
+  title: argocd / argocd-redis
+  description: Deployment in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=argocd-redis
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-repo-server-a3f03ebe
+  title: argocd / argocd-repo-server
+  description: Deployment in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-repo-server
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-server-4414022f
+  title: argocd / argocd-server
+  description: Deployment in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-server
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-auth-authentik-redis-b6b3c366
+  title: auth / authentik-redis
+  description: Deployment in auth
+  annotations:
+    backstage.io/kubernetes-label-selector: app=authentik-redis
+    backstage.io/kubernetes-namespace: auth
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - auth
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-auth
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-auth-platform-auth-helm-authentik-server-78f74c27
+  title: auth / platform-auth-helm-authentik-server
+  description: Deployment in auth
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/instance=platform-auth-helm,app.kubernetes.io/name=authentik
+    backstage.io/kubernetes-namespace: auth
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - auth
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-auth
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-auth-platform-auth-helm-authentik-worker-c7d43180
+  title: auth / platform-auth-helm-authentik-worker
+  description: Deployment in auth
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=worker,app.kubernetes.io/instance=platform-auth-helm,app.kubernetes.io/name=authentik
+    backstage.io/kubernetes-namespace: auth
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - auth
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-auth
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-backstage-backstage-21b99354
+  title: backstage / backstage
+  description: Deployment in backstage
+  annotations:
+    backstage.io/kubernetes-label-selector: app=backstage
+    backstage.io/kubernetes-namespace: backstage
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - backstage
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-backstage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cert-manager-cert-manager-47192c08
+  title: cert-manager / cert-manager
+  description: Deployment in cert-manager
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=controller,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cert-manager
+    backstage.io/kubernetes-namespace: cert-manager
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - cert-manager
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-cert-manager
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cert-manager-cert-manager-cainjector-509a4a79
+  title: cert-manager / cert-manager-cainjector
+  description: Deployment in cert-manager
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=cainjector,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cainjector
+    backstage.io/kubernetes-namespace: cert-manager
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - cert-manager
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-cert-manager
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cert-manager-cert-manager-webhook-943e7fca
+  title: cert-manager / cert-manager-webhook
+  description: Deployment in cert-manager
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=webhook,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=webhook
+    backstage.io/kubernetes-namespace: cert-manager
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - cert-manager
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-cert-manager
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-cloudflare-cloudflared-a824aad1
+  title: cloudflare / cloudflared
+  description: Deployment in cloudflare
+  annotations:
+    backstage.io/kubernetes-label-selector: app=cloudflared
+    backstage.io/kubernetes-namespace: cloudflare
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - cloudflare
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-cloudflare
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-github-runner-github-runner-acdf15f2
+  title: github-runner / github-runner
+  description: Deployment in github-runner
+  annotations:
+    backstage.io/kubernetes-label-selector: app=github-runner
+    backstage.io/kubernetes-namespace: github-runner
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - github-runner
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-github-runner
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-hermes-hermes-legacy-1e93d498
+  title: hermes / hermes-legacy
+  description: Deployment in hermes
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
+    backstage.io/kubernetes-namespace: hermes
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - hermes
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-hermes
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-homepage-homepage-1758f237
+  title: homepage / homepage
+  description: Deployment in homepage
+  annotations:
+    backstage.io/kubernetes-label-selector: app=homepage
+    backstage.io/kubernetes-namespace: homepage
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - homepage
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-homepage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-ingress-nginx-ingress-nginx-controller-65f99d2d
+  title: ingress-nginx / ingress-nginx-controller
+  description: Deployment in ingress-nginx
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+    backstage.io/kubernetes-namespace: ingress-nginx
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - ingress-nginx
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-ingress-nginx
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-clickhouse-operator-a41fe06e
+  title: kube-system / clickhouse-operator
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: app=clickhouse-operator
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-coredns-1444b064
+  title: kube-system / coredns
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: k8s-app=kube-dns
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-hubble-relay-eaaafbcd
+  title: kube-system / hubble-relay
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: k8s-app=hubble-relay
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-hubble-ui-7f8dcbd1
+  title: kube-system / hubble-ui
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: k8s-app=hubble-ui
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-konnectivity-agent-4074522f
+  title: kube-system / konnectivity-agent
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: k8s-app=konnectivity-agent
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-metrics-server-875c01c7
+  title: kube-system / metrics-server
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: k8s-app=metrics-server
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-system-sealed-secrets-controller-9b0c5a4f
+  title: kube-system / sealed-secrets-controller
+  description: Deployment in kube-system
+  annotations:
+    backstage.io/kubernetes-label-selector: name=sealed-secrets-controller
+    backstage.io/kubernetes-namespace: kube-system
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube-system
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube-system
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-headlamp-c14c4d45
+  title: kube / headlamp
+  description: Deployment in kube
+  annotations:
+    backstage.io/kubernetes-label-selector: app=headlamp
+    backstage.io/kubernetes-namespace: kube
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-kube-kubernetes-dashboard-226fa5ac
+  title: kube / kubernetes-dashboard
+  description: Deployment in kube
+  annotations:
+    backstage.io/kubernetes-label-selector: app=kubernetes-dashboard
+    backstage.io/kubernetes-namespace: kube
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - kube
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-kube
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-matrix-element-web-2e9639d4
+  title: matrix / element-web
+  description: Deployment in matrix
+  annotations:
+    backstage.io/kubernetes-label-selector: app=element-web
+    backstage.io/kubernetes-namespace: matrix
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - matrix
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-matrix
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-matrix-synapse-c02538fc
+  title: matrix / synapse
+  description: Deployment in matrix
+  annotations:
+    backstage.io/kubernetes-label-selector: app=synapse
+    backstage.io/kubernetes-namespace: matrix
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - matrix
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-matrix
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-loki-gateway-9aecf212
+  title: monitoring / loki-gateway
+  description: Deployment in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=gateway,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-monitoring-grafana-8ed6cac6
+  title: monitoring / monitoring-grafana
+  description: Deployment in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring,app.kubernetes.io/name=grafana
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-monitoring-kube-prometheus-operator-a1fd90c0
+  title: monitoring / monitoring-kube-prometheus-operator
+  description: Deployment in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app=kube-prometheus-stack-operator,release=monitoring
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-monitoring-kube-state-metrics-54b7d5b9
+  title: monitoring / monitoring-kube-state-metrics
+  description: Deployment in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring,app.kubernetes.io/name=kube-state-metrics
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-agent-web-ui-be5be217
+  title: nats / agent-web-ui
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-web-ui
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-agenttap-3e09fc8c
+  title: nats / agenttap
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agenttap
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-heynats-9ae724e5
+  title: nats / heynats
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=heynats
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nack-bd056161
+  title: nats / nack
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app=nack
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nats-dashboard-3d1c0f96
+  title: nats / nats-dashboard
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-dashboard
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nats-metrics-scrape-479f0db7
+  title: nats / nats-metrics-scrape
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app=nats-metrics-scrape
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nats-surveyor-d19787d9
+  title: nats / nats-surveyor
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=metrics,app.kubernetes.io/name=nats-surveyor
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nats-ui-609d1098
+  title: nats / nats-ui
+  description: Deployment in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-ui
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-omos-feed-intel-4488fd05
+  title: omos / feed-intel
+  description: Deployment in omos
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=feed-intel
+    backstage.io/kubernetes-namespace: omos
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - omos
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-omos
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-omos-feed-satellites-e3372fac
+  title: omos / feed-satellites
+  description: Deployment in omos
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=feed-satellites
+    backstage.io/kubernetes-namespace: omos
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - omos
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-omos
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-omos-omos-mission-engine-23fd014f
+  title: omos / omos-mission-engine
+  description: Deployment in omos
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-mission-engine
+    backstage.io/kubernetes-namespace: omos
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - omos
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-omos
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-omos-omos-tak-projector-ac850041
+  title: omos / omos-tak-projector
+  description: Deployment in omos
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-tak-projector
+    backstage.io/kubernetes-namespace: omos
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - omos
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-omos
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-omos-redpanda-connect-0c0b667d
+  title: omos / redpanda-connect
+  description: Deployment in omos
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect
+    backstage.io/kubernetes-namespace: omos
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - omos
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-omos
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-omos-sink-clickhouse-29b3c0a3
+  title: omos / sink-clickhouse
+  description: Deployment in omos
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=sink-clickhouse
+    backstage.io/kubernetes-namespace: omos
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - omos
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-omos
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-maputnik-31db18cf
+  title: onetak / maputnik
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=maputnik
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-martin-c119168d
+  title: onetak / martin
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=martin
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-nodeodm-8a68cc40
+  title: onetak / nodeodm
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=nodeodm
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-nominatim-081a4289
+  title: onetak / nominatim
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=nominatim
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-onetak-geo-db-a22783b9
+  title: onetak / onetak-geo-db
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=onetak-geo-db
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-onetak-media-31c9ce7b
+  title: onetak / onetak-media
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=onetak-media
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-onetak-minio-98a87ea3
+  title: onetak / onetak-minio
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=onetak-minio
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-onetak-postgis-adc924ce
+  title: onetak / onetak-postgis
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=onetak-postgis
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-overpass-4e197497
+  title: onetak / overpass
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=overpass
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-pg-featureserv-ca3dd68e
+  title: onetak / pg-featureserv
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=pg-featureserv
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-stac-api-746ca5f2
+  title: onetak / stac-api
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=stac-api
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-stac-browser-2881a2ef
+  title: onetak / stac-browser
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=stac-browser
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-tak-portal-034c1ce9
+  title: onetak / tak-portal
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=tak-portal
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-tile38-bfdfb57a
+  title: onetak / tile38
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=tile38
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-tileserver-gl-90bbef41
+  title: onetak / tileserver-gl
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=tileserver-gl
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-valhalla-3fc86e61
+  title: onetak / valhalla
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=valhalla
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-webodm-c4998b47
+  title: onetak / webodm
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=webodm
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-webodm-broker-1661802c
+  title: onetak / webodm-broker
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=webodm-broker
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-onetak-webodm-db-869973ca
+  title: onetak / webodm-db
+  description: Deployment in onetak
+  annotations:
+    backstage.io/kubernetes-label-selector: app=webodm-db
+    backstage.io/kubernetes-namespace: onetak
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - onetak
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-onetak
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-openclaw-openclaw-5dcd5a46
+  title: openclaw / openclaw
+  description: Deployment in openclaw
+  annotations:
+    backstage.io/kubernetes-label-selector: app=openclaw,onemind.os/component=openclaw-gateway,onemind.os/managed-by=kustomize
+    backstage.io/kubernetes-namespace: openclaw
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - openclaw
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-openclaw
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-operator-7120ef72
+  title: tailscale / operator
+  description: Deployment in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=operator
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takml-takml-db-804578bf
+  title: takml / takml-db
+  description: Deployment in takml
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takml-db
+    backstage.io/kubernetes-namespace: takml
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takml
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takml
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takml-takml-server-e6ccadc1
+  title: takml / takml-server
+  description: Deployment in takml
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takml-server
+    backstage.io/kubernetes-namespace: takml
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takml
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takml
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takml-takml-vision-worker-06b90f44
+  title: takml / takml-vision-worker
+  description: Deployment in takml
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takml-vision-worker
+    backstage.io/kubernetes-namespace: takml
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takml
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takml
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-fedhub-8c653952
+  title: takserver / fedhub
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=fedhub
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-mumble-bridge-327c692e
+  title: takserver / mumble-bridge
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=mumble-bridge
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-murmur-29fe28aa
+  title: takserver / murmur
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=murmur
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-tak-lb-proxy-934c8e0e
+  title: takserver / tak-lb-proxy
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=tak-lb-proxy
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-tak-nats-leaf-366f7455
+  title: takserver / tak-nats-leaf
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=tak-nats-leaf
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-api-ad045e42
+  title: takserver / takserver-api
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takserver-api
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-config-8bb39ef4
+  title: takserver / takserver-config
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takserver-config
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-messaging-3a9b130f
+  title: takserver / takserver-messaging
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takserver-messaging
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-nats-box-9caf94fa
+  title: takserver / takserver-nats-box
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=nats-box,app.kubernetes.io/instance=takserver,app.kubernetes.io/name=nats
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-plugins-c35ef4eb
+  title: takserver / takserver-plugins
+  description: Deployment in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takserver-plugins
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-zeus-site-zeus-site-97ff2164
+  title: zeus-site / zeus-site
+  description: Deployment in zeus-site
+  annotations:
+    backstage.io/kubernetes-label-selector: app=zeus-site
+    backstage.io/kubernetes-namespace: zeus-site
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - zeus-site
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-zeus-site
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-zeus-site-zeus-site-postgres-b4d8c285
+  title: zeus-site / zeus-site-postgres
+  description: Deployment in zeus-site
+  annotations:
+    backstage.io/kubernetes-label-selector: app=zeus-site-postgres
+    backstage.io/kubernetes-namespace: zeus-site
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - zeus-site
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-zeus-site
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-argocd-argocd-application-controller-abcd9767
+  title: argocd / argocd-application-controller
+  description: StatefulSet in argocd
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-application-controller
+    backstage.io/kubernetes-namespace: argocd
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-argocd
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-auth-authentik-postgres-81b5d47a
+  title: auth / authentik-postgres
+  description: StatefulSet in auth
+  annotations:
+    backstage.io/kubernetes-label-selector: app=authentik-postgres
+    backstage.io/kubernetes-namespace: auth
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - auth
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-auth
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-backstage-backstage-postgres-17d2f351
+  title: backstage / backstage-postgres
+  description: StatefulSet in backstage
+  annotations:
+    backstage.io/kubernetes-label-selector: app=backstage-postgres
+    backstage.io/kubernetes-namespace: backstage
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - backstage
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-backstage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-clickhouse-chi-onemind-onemind-0-0-92949b93
+  title: clickhouse / chi-onemind-onemind-0-0
+  description: StatefulSet in clickhouse
+  annotations:
+    backstage.io/kubernetes-label-selector: clickhouse.altinity.com/app=chop,clickhouse.altinity.com/chi=onemind,clickhouse.altinity.com/cluster=onemind,clickhouse.altinity.com/namespace=clickhouse,clickhouse.altinity.com/replica=0,clickhouse.altinity.com/shard=0
+    backstage.io/kubernetes-namespace: clickhouse
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - clickhouse
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-clickhouse
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-matrix-postgres-58f3c3b7
+  title: matrix / postgres
+  description: StatefulSet in matrix
+  annotations:
+    backstage.io/kubernetes-label-selector: app=postgres
+    backstage.io/kubernetes-namespace: matrix
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - matrix
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-matrix
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-matrix-redis-b0dd89be
+  title: matrix / redis
+  description: StatefulSet in matrix
+  annotations:
+    backstage.io/kubernetes-label-selector: app=redis
+    backstage.io/kubernetes-namespace: matrix
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - matrix
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-matrix
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-alertmanager-monitoring-kube-prometheus-eace0ed4
+  title: monitoring / alertmanager-monitoring-kube-prometheus-alertmanager
+  description: StatefulSet in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: alertmanager=monitoring-kube-prometheus-alertmanager,app.kubernetes.io/instance=monitoring-kube-prometheus-alertmanager,app.kubernetes.io/managed-by=prometheus-operator,app.kubernetes.io/name=alertmanager
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-loki-632e6b0f
+  title: monitoring / loki
+  description: StatefulSet in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=single-binary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-prometheus-monitoring-kube-prometheus-p-d0699964
+  title: monitoring / prometheus-monitoring-kube-prometheus-prometheus
+  description: StatefulSet in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring-kube-prometheus-prometheus,app.kubernetes.io/managed-by=prometheus-operator,app.kubernetes.io/name=prometheus,operator.prometheus.io/name=monitoring-kube-prometheus-prometheus,operator.prometheus.io/shard=0,prometheus=monitoring-kube-prometheus-prometheus
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-monitoring-tempo-2fe8b2d8
+  title: monitoring / tempo
+  description: StatefulSet in monitoring
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
+    backstage.io/kubernetes-namespace: monitoring
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nats-nats-0dee54ac
+  title: nats / nats
+  description: StatefulSet in nats
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=nats,app.kubernetes.io/instance=nats,app.kubernetes.io/name=nats
+    backstage.io/kubernetes-namespace: nats
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - nats
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-egress-a22cb3a3
+  title: tailscale / egress
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: tailscale.com/managed=true,tailscale.com/parent-resource=egress,tailscale.com/parent-resource-type=proxygroup
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-agent-web-ui-l74d4-3f9cba27
+  title: tailscale / ts-agent-web-ui-l74d4
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=558c1899-1b5d-44b1-9d1a-8bf0033286a6
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-agenttap-8ddc6-c08d03f9
+  title: tailscale / ts-agenttap-8ddc6
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=8730c2e0-28ca-4dc2-898c-3cf4edf6084d
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-argocd-slkzh-6837f757
+  title: tailscale / ts-argocd-slkzh
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=9de9b0f1-b1f7-457b-a409-93f3a7b7d30c
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-grafana-ksprn-801e6bed
+  title: tailscale / ts-grafana-ksprn
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=3af5035b-576a-43a7-a2fd-99d6b7f8ed62
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-headlamp-4qwkc-9c5642f8
+  title: tailscale / ts-headlamp-4qwkc
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=d403c67b-b347-41db-bd05-92c26dfb4db5
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-hermes-dashboard-6thbx-86bc7138
+  title: tailscale / ts-hermes-dashboard-6thbx
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=7cb75f21-e0cc-4c50-ae63-cdb9dbf16c04
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-heynats-p5dmf-bab39167
+  title: tailscale / ts-heynats-p5dmf
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=45324aa8-6e12-4fb9-a93e-bfff8834369b
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-homepage-cw4rv-95f2e58e
+  title: tailscale / ts-homepage-cw4rv
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=05474b4b-4c74-4d7c-b330-87b82d8536a8
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-hubble-tw85d-feff3487
+  title: tailscale / ts-hubble-tw85d
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=75bd5f05-7ab1-4c02-9720-08a46d10a76a
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-kubernetes-dashboard-9r9fp-bc6601cd
+  title: tailscale / ts-kubernetes-dashboard-9r9fp
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=c5dd0973-444a-4f0c-a535-3d6d8aa6c997
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-nats-dashboard-242wv-6989deee
+  title: tailscale / ts-nats-dashboard-242wv
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=3ae70c7a-97dc-43bc-b65f-7b639971c2a0
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-nats-ui-d6rrg-52fb9dd6
+  title: tailscale / ts-nats-ui-d6rrg
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=de8fe1dc-c7fb-4c42-9a5d-aacdcf8b61b0
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-dell-edge-qfrh9-dc605fd4
+  title: tailscale / ts-omos-dell-edge-qfrh9
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=ef4a4284-c2ff-445b-a833-5c1dd1d70263
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-dell-zeus-wsv6m-3f4d22b4
+  title: tailscale / ts-omos-dell-zeus-wsv6m
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=f89631ec-d3c1-4a05-a653-baf65eb228f3
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-ha-edge-rlv6k-0df24632
+  title: tailscale / ts-omos-ha-edge-rlv6k
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=08e1542d-c5c3-43c5-bb65-f23c742fd1e5
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-intel-zzn2k-23daf484
+  title: tailscale / ts-omos-intel-zzn2k
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=969dc35f-b2ab-4dd6-9775-8aa806bf6284
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-mbp-hgq9w-fc4a7964
+  title: tailscale / ts-omos-mbp-hgq9w
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=f7a6fea3-8716-4b68-8493-bbb6ed20d30f
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-nats-fs6r4-ed1718b3
+  title: tailscale / ts-omos-nats-fs6r4
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=535e811f-8aa7-46ee-ad89-b6df256ee8e3
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-omos-s24-44l4v-1dd47160
+  title: tailscale / ts-omos-s24-44l4v
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=51e249ff-00db-47ad-96cc-1c5be53fd6a7
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-onemind-auth-4w5hk-dc77cbbd
+  title: tailscale / ts-onemind-auth-4w5hk
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=8cdf28b9-9517-47e1-8727-6e33ac4c9b8f
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-onemind-preview-shtd7-22bef4b3
+  title: tailscale / ts-onemind-preview-shtd7
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=bf582a24-1bac-4ae0-a170-b79d7dd626f3
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-tailscale-ts-openclaw-gateway-s7hcm-487f0bd3
+  title: tailscale / ts-openclaw-gateway-s7hcm
+  description: StatefulSet in tailscale
+  annotations:
+    backstage.io/kubernetes-label-selector: app=dfa22f2a-91cc-4d4a-ab89-b9327819ae9c
+    backstage.io/kubernetes-namespace: tailscale
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - tailscale
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-tailscale
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-fedhub-mongodb-0ad0b33f
+  title: takserver / fedhub-mongodb
+  description: StatefulSet in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=fedhub-mongodb
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-tak-ldap-cc1743b5
+  title: takserver / tak-ldap
+  description: StatefulSet in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=tak-ldap
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-ignite-068e799f
+  title: takserver / takserver-ignite
+  description: StatefulSet in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app=takserver-ignite
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-nats-f62d1d04
+  title: takserver / takserver-nats
+  description: StatefulSet in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=nats,app.kubernetes.io/instance=takserver,app.kubernetes.io/name=nats
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-takserver-takserver-postgresql-882a664d
+  title: takserver / takserver-postgresql
+  description: StatefulSet in takserver
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=primary,app.kubernetes.io/instance=takserver,app.kubernetes.io/name=postgresql
+    backstage.io/kubernetes-namespace: takserver
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+  tags:
+    - kubernetes
+    - takserver
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: cluster-takserver
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud

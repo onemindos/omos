@@ -1,0 +1,14 @@
+kubernetes:
+  objectTypes:
+    - pods
+    - services
+    - deployments
+    - replicasets
+    - statefulsets
+    - daemonsets
+    - jobs
+    - cronjobs
+    - ingresses
+    - horizontalpodautoscalers
+    - limitranges
+    - resourcequotas

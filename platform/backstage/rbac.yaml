@@ -10,7 +10,7 @@ metadata:
   name: backstage-observer
 rules:
   - apiGroups: ['']
-    resources: [pods, pods/log, services, namespaces, nodes, events, persistentvolumeclaims, limitranges]
+    resources: [pods, pods/log, services, namespaces, nodes, events, persistentvolumeclaims, limitranges, resourcequotas]
     verbs: [get, list, watch]
   - apiGroups: [apps]
     resources: [deployments, replicasets, statefulsets, daemonsets]

@@ -23,8 +23,7 @@ need a refreshed inventory until a periodic discovery provider is installed.
 ## Authentication and permissions
 
 OIDC is the only configured sign-in provider. The initial catalog identity matches the
-existing Authentik `akadmin` record; its existing profile email is preserved, not assumed
-to be the owner's personal address. The Authentik application is bound to that user.
+existing Authentik `akadmin` record through its verified signed OIDC subject. Email verification is not bypassed; email is not used as the identity resolver. The Authentik application is bound to that user.
 Add named users to both Authentik application bindings and the catalog deliberately.
 `onemind-admins` can use configured actions. Other authenticated catalog users have read
 permissions. Guest auth and the default allow-all policy have been removed.

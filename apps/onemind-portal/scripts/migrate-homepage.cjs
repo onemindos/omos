@@ -1,5 +1,5 @@
 // Repeatable link migration. Run from the application root.
-const fs=require('fs');
+const path=require('path');process.chdir(path.resolve(__dirname,'..'));const fs=require('fs');
 const YAML=require('yaml');
 const source=YAML.parse(fs.readFileSync('../../platform/homepage/configmap.yaml','utf8'));
 const groups=YAML.parse(source.data['services.yaml']);
@@ -20,3 +20,5 @@ fs.mkdirSync('catalog',{recursive:true});
 fs.writeFileSync('catalog/apps.yaml',entities.map(x=>YAML.stringify(x)).join('---\n'));
 fs.writeFileSync('packages/app/src/modules/home/directory.json',JSON.stringify(directory,null,2)+'\n');
 console.log(`Migrated ${directory.length} app links across ${groups.length} groups`);
+
+fs.mkdirSync('../../platform/backstage/catalog',{recursive:true});fs.copyFileSync('catalog/apps.yaml','../../platform/backstage/catalog/apps.yaml');
