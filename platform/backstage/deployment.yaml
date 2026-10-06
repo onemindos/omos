@@ -51,6 +51,8 @@ spec:
         ports:
         - name: http
           containerPort: 7007
+        envFrom:
+        - secretRef: {name: backstage-zoho, optional: true}
         env:
         - name: PORTAL_URL
           value: https://onemind-preview.tail717ba0.ts.net

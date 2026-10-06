@@ -25,6 +25,11 @@ app:
               row: 2
               width: 4
               height: 12
+            - component: OneMindCloud
+              column: 8
+              row: 14
+              width: 4
+              height: 6
             - component: HomePageStarredEntities
               column: 8
               row: 14

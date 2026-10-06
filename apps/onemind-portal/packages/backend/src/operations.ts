@@ -1,6 +1,7 @@
 import { createBackendPlugin, coreServices } from '@backstage/backend-plugin-api';
 import express from 'express';
 import { health } from './health';
+import { cloudSummary } from './cloud';
 import https from 'node:https';
 import { readFileSync } from 'node:fs';
 
@@ -40,6 +41,7 @@ export default createBackendPlugin({
         res.json({serviceHealth,observedAt:new Date().toISOString(),source:'do-nyc3-omos-cloud',partial:results.some(x=>x.status==='rejected'),unavailableSources:results.flatMap((x,i)=>x.status==='rejected'?[['Deployments','StatefulSets','Argo CD','Backup schedules'][i]]:[]),unavailable,deployments,backups,totalWorkloads:workloads.length});
       }catch(e){next(e);}
     });
+    routes.get('/cloud', async(req,res,next)=>{try{await httpAuth.credentials(req,{allow:['user']});res.json(await cloudSummary());}catch(e){next(e);}});
     router.use(routes);
   }});},
 });
