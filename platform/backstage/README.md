@@ -3,7 +3,7 @@
 Private preview: https://onemind-preview.tail717ba0.ts.net
 Identity provider: https://onemind-auth.tail717ba0.ts.net
 
-This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `apps/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. Homepage remains available during the preview rollout.
+This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `apps/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its inactive source remains in platform/homepage for recovery.
 
 ## Identity and access
 
@@ -25,7 +25,7 @@ For a recovery exercise, create a Job from the CronJob and inspect its `restoreV
 
 ## Catalog and live state
 
-App links come from Homepage via `scripts/migrate-homepage.cjs`. Cluster catalog identities are an explicit reviewed snapshot from `scripts/snapshot-cluster.cjs`, not automatic discovery. Stable hash suffixes prevent link/workload identity collisions. Rerun and review the snapshot when adding or removing workloads. The snapshot script updates both development and production copies. The migration script mirrors app links; user enrollment must update both org.yaml copies. The operations panel queries the live cluster every minute and marks unavailable sources and stale results. Existing unrelated unhealthy workloads are shown, not hidden.
+Initial app links were imported from the now-archived Homepage via `scripts/migrate-homepage.cjs`. Maintain new links in the Backstage directory JSON and both apps.yaml catalog copies; rerunning the legacy migration can overwrite later additions. Cluster catalog identities are an explicit reviewed snapshot from `scripts/snapshot-cluster.cjs`, not automatic discovery. Stable hash suffixes prevent link/workload identity collisions. Rerun and review the snapshot when adding or removing workloads. The snapshot script updates both development and production copies. The migration script mirrors app links; user enrollment must update both org.yaml copies. The operations panel queries the live cluster every minute and marks unavailable sources and stale results. Existing unrelated unhealthy workloads are shown, not hidden.
 
 ## Release checks
 
