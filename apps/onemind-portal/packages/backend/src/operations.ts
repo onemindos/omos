@@ -1,6 +1,7 @@
 import { createBackendPlugin, coreServices } from '@backstage/backend-plugin-api';
 import express from 'express';
 import { health } from './health';
+import { cloudSummary } from './cloud';
 import https from 'node:https';
 import { readFileSync } from 'node:fs';
 
@@ -25,7 +26,7 @@ function list(path: string): Promise<KubeItem[]> {
 }
 export default createBackendPlugin({
   pluginId:'onemind',
-  register(reg){reg.registerInit({deps:{router:coreServices.httpRouter,httpAuth:coreServices.httpAuth},async init({router,httpAuth}){
+  register(reg){reg.registerInit({deps:{router:coreServices.httpRouter,httpAuth:coreServices.httpAuth,userInfo:coreServices.userInfo},async init({router,httpAuth,userInfo}){
     const routes=express.Router();
     routes.get('/status',async(req,res,next)=>{
       try{
@@ -40,6 +41,7 @@ export default createBackendPlugin({
         res.json({serviceHealth,observedAt:new Date().toISOString(),source:'do-nyc3-omos-cloud',partial:results.some(x=>x.status==='rejected'),unavailableSources:results.flatMap((x,i)=>x.status==='rejected'?[['Deployments','StatefulSets','Argo CD','Backup schedules'][i]]:[]),unavailable,deployments,backups,totalWorkloads:workloads.length});
       }catch(e){next(e);}
     });
+    routes.get('/cloud', async(req,res,next)=>{try{const credentials=await httpAuth.credentials(req,{allow:['user']});const info=await userInfo.getUserInfo(credentials);if(!info.ownershipEntityRefs.includes('group:default/onemind-admins')){res.status(403).json({error:'Cloud summaries require OneMind administrator membership'});return;}res.json(await cloudSummary());}catch(e){next(e);}});
     router.use(routes);
   }});},
 });

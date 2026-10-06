@@ -75,7 +75,24 @@ function StatusPanel(){
     </>}
   </Box>;
 }
+type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;link:string};
+function CloudPanel(){
+  const discovery=useApi(discoveryApiRef), api=useApi(fetchApiRef);
+  const [data,setData]=useState<CloudSummary>(); const [error,setError]=useState(false);
+  useEffect(()=>{let active=true;const controller=new AbortController();const refresh=async()=>{try{const base=await discovery.getBaseUrl('onemind');const r=await api.fetch(`${base}/cloud`,{signal:controller.signal});if(!r.ok)throw new Error();const result=await r.json();if(active){setData(result);setError(false);}}catch{if(active)setError(true);}};refresh();const timer=setInterval(refresh,60000);return()=>{active=false;controller.abort();clearInterval(timer);};},[discovery,api]);
+  const expired=!!data?.expiresAt&&Date.parse(data.expiresAt)<Date.now();
+  return <Box p={2}><Typography variant="h5">Cloud work</Typography><Typography variant="h6">Zoho Projects</Typography>
+    {error&&<Typography color="error">Summary unavailable; previous observations may be stale.</Typography>}
+    {!data&&!error&&<Typography>Loading…</Typography>}
+    {data&&<><Typography>{data.state==='configuration-required'?'Connect read-only Zoho access to enable this summary':data.state==='unavailable'?'Provider unavailable':`${data.open} open · ${data.overdue} overdue in ${data.sampled} sampled tasks`}</Typography>
+    {(expired||data.state==='stale')&&<Typography color="error">Stale observation</Typography>}
+    {data.partial&&<Typography variant="caption">Limited to the first 100 tasks; these are sample counts, not portal totals.</Typography>}
+    {data.observedAt&&<Typography variant="caption" display="block">Observed {new Date(data.observedAt).toLocaleString()} · cached for five minutes</Typography>}
+    <Link href={data.link} target="_blank" rel="noopener noreferrer">Open Zoho Projects</Link></>}
+  </Box>;
+}
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageWidgetBlueprint.make({name:'onemind-cloud',params:{name:'OneMindCloud',title:'Cloud work',description:'Authorized provider summaries with observation times',components:async()=>({Content:CloudPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-directory',params:{name:'OneMindDirectory',title:'Your apps',description:'Search the OneMind application directory',components:async()=>({Content:Directory})}}),
   HomePageWidgetBlueprint.make({name:'onemind-status',params:{name:'OneMindStatus',title:'Needs attention',description:'Live workload readiness, deployments and backup activity',components:async()=>({Content:StatusPanel})}}),
 ]});
