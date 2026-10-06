@@ -93,6 +93,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
       title: "Archived registry: Headlamp"
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
+      title: Operations runbook
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -232,6 +234,8 @@ metadata:
     - url: https://hermes-agent.tail717ba0.ts.net/login?next=%2F
       title: Open application
       icon: dashboard
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
+      title: Operations runbook
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -319,6 +323,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md
       title: "Archived registry: NATS Dashboard"
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
+      title: Operations runbook
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -499,6 +505,8 @@ metadata:
     - url: https://tak.onemindos.dev:8446
       title: Open application
       icon: dashboard
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
+      title: Operations runbook
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -525,6 +533,8 @@ metadata:
       title: "Archived registry: OneTAK"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
       title: "Archived registry: OneTAK"
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
+      title: Operations runbook
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -684,6 +694,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md
       title: "Archived registry: Grafana"
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
+      title: Operations runbook
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -1950,6 +1962,24 @@ metadata:
     onemind.io/hosting: external-provider-unverified
 spec:
   type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: onemind-runbooks
+  title: OneMind Operations Runbooks
+  description: Git-owned access, investigation and recovery guidance for critical
+    OneMind services
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/apps/onemind-portal/runbooks
+  tags:
+    - runbooks
+    - documentation
+spec:
+  type: documentation
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
