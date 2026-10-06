@@ -54,7 +54,7 @@ data:
         icon: mdi-map
       Zoho Apps:
         style: row
-        columns: 3
+        columns: 4
         icon: mdi-apps
       Personal Tools:
         style: row
@@ -111,11 +111,15 @@ data:
               description: GitOps deployments
         - Kubernetes Dashboard:
             - icon: kubernetes.png
-              href: https://k8s-dashboard.tail717ba0.ts.net
+              href: https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default
               description: Cluster workloads
+        - Headlamp:
+            - icon: mdi-monitor-dashboard
+              href: https://headlamp.tail717ba0.ts.net/c/main/token
+              description: Kubernetes cluster dashboard
         - Grafana:
             - icon: grafana.png
-              href: https://grafana.tail717ba0.ts.net
+              href: https://grafana.tail717ba0.ts.net/login
               description: Monitoring and alerts
 
   # ─── Info Widgets ──────────────────────────────────────────────────────────
@@ -159,8 +163,12 @@ data:
             description: GitOps CD
         - Kubernetes Dashboard:
             icon: kubernetes.png
-            href: https://k8s-dashboard.tail717ba0.ts.net
+            href: https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default
             description: Cluster UI
+        - Headlamp:
+            icon: mdi-monitor-dashboard
+            href: https://headlamp.tail717ba0.ts.net/c/main/token
+            description: Kubernetes cluster dashboard
         - Tailscale:
             icon: tailscale.png
             href: https://login.tailscale.com/admin/machines
@@ -176,11 +184,11 @@ data:
     - AI & Agents:
         - Hermes (Legacy):
             icon: mdi-brain-FFFFFF
-            href: https://hermes-agent.tail717ba0.ts.net
+            href: https://hermes-agent.tail717ba0.ts.net/login?next=%2F
             description: Legacy AI — cloud
         - Agent Web UI:
             icon: mdi-robot-FFFFFF
-            href: https://agent-web-ui-1.tail717ba0.ts.net
+            href: https://agent-web-ui-1.tail717ba0.ts.net/
             description: NATS agent browser
         - OpenClaw:
             icon: mdi-paw-FFFFFF
@@ -188,7 +196,7 @@ data:
             description: Agent orchestration
         - NATS Dashboard:
             icon: mdi-chart-bell-curve-FFFFFF
-            href: https://nats-dashboard-1.tail717ba0.ts.net
+            href: https://nats-dashboard-1.tail717ba0.ts.net/
             description: NATS stream monitor
 
     # ════════════════════════════════════════════════════════
@@ -207,7 +215,7 @@ data:
             siteMonitor: https://matrix.onemindos.com
         - HeyNATS:
             icon: mdi-chat-processing-FFFFFF
-            href: https://heynats-1.tail717ba0.ts.net
+            href: https://heynats-1.tail717ba0.ts.net/
             description: NATS pub/sub debugger
 
     # ════════════════════════════════════════════════════════
@@ -242,6 +250,10 @@ data:
             icon: mdi-virtual-reality
             href: https://www.eolianvr.com/
             description: Eolian virtual reality
+        - PyTAK:
+            icon: mdi-language-python
+            href: https://pytak.readthedocs.io/en/latest/
+            description: Python TAK SDK documentation
 
     # ════════════════════════════════════════════════════════
     # INTELLIGENCE
@@ -249,11 +261,11 @@ data:
     - Intelligence:
         - Grafana:
             icon: grafana.png
-            href: https://grafana.tail717ba0.ts.net
+            href: https://grafana.tail717ba0.ts.net/login
             description: Dashboards & alerts
         - NATS UI:
             icon: mdi-console-FFFFFF
-            href: https://nats-ui-1.tail717ba0.ts.net
+            href: https://nats-ui-1.tail717ba0.ts.net/
             description: JetStream browser
         - Agent Monitor:
             icon: mdi-pulse-FFFFFF
@@ -287,7 +299,7 @@ data:
     - Observability:
         - Hubble UI:
             icon: mdi-eye-network-FFFFFF
-            href: https://hubble.tail717ba0.ts.net
+            href: https://hubble.tail717ba0.ts.net/?namespace=hermes
             description: Cilium network flows
         - Prometheus:
             icon: prometheus.png
@@ -347,6 +359,26 @@ data:
             icon: si-zoho
             href: https://api-console.zoho.com/
             description: Zoho API applications and credentials
+        - Zoho Social:
+            icon: si-zoho
+            href: https://social.zoho.com/social/zeusdelacruz/1698072000000023009/Home.do?isAccessRequested=true#home
+            description: Social media management
+        - Zoho Workplace:
+            icon: si-zoho
+            href: https://workplace.zoho.com/#dashboard/
+            description: Workplace dashboard
+        - Zoho Projects:
+            icon: si-zoho
+            href: https://projects.zoho.com/portal/zeusdelacruz#zp/dashboard/2727104000000135028
+            description: Project management
+        - Zoho Flow:
+            icon: si-zoho
+            href: https://flow.zoho.com/#/dashboard
+            description: Workflow automation
+        - Zoho IoT:
+            icon: si-zoho
+            href: https://iot.zoho.com/platform/p/OM99URW/home
+            description: IoT platform
 
     # ════════════════════════════════════════════════════════
     # PERSONAL TOOLS
