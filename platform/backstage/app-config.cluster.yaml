@@ -30,6 +30,4 @@ backend:
         accessRestrictions:
           - plugin: mcp-actions
           - plugin: catalog
-            permissionAttribute: {action: read}
           - plugin: onemind
-            permissionAttribute: {action: read}
