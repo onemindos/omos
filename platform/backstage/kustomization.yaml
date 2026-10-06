@@ -6,6 +6,7 @@ resources:
   - rbac.yaml
   - postgres.yaml
   - deployment.yaml
+  - availability.yaml
   - backstage-secrets.sealedsecret.yaml
   - ghcr.sealedsecret.yaml
   - backup.sealedsecret.yaml

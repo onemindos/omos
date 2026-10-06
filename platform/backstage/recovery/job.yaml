@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backstage-recovery-verify
+  namespace: backstage
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  template:
+    metadata:
+      labels:
+        app: backstage-backup
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: ghcr
+      securityContext:
+        runAsUser: 70
+        runAsGroup: 70
+        runAsNonRoot: true
+        fsGroup: 70
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: backup
+        image: ghcr.io/onemindos/backstage-backup@sha256:5c1c98afc74674acbec405c211b1421d48ebc4522d36f15e133c83b076fae644
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        envFrom:
+        - secretRef:
+            name: backstage-backup
+        env:
+        - name: PGHOST
+          value: backstage-recovery
+        - name: PGUSER
+          value: backstage
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backstage-secrets
+              key: POSTGRES_PASSWORD
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: '1'
+            memory: 1Gi
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: script
+          mountPath: /recovery
+          readOnly: true
+        command:
+        - python3
+        - /recovery/verify.py
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: script
+        configMap:
+          name: backstage-recovery-script
+  ttlSecondsAfterFinished: 3600

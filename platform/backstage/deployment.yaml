@@ -4,72 +4,137 @@ metadata:
   name: backstage
   namespace: backstage
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 3
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
-    matchLabels: {app: backstage}
+    matchLabels:
+      app: backstage
   template:
     metadata:
-      labels: {app: backstage}
+      labels:
+        app: backstage
     spec:
       serviceAccountName: backstage
-      imagePullSecrets: [{name: ghcr}]
+      imagePullSecrets:
+      - name: ghcr
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
         runAsNonRoot: true
         fsGroup: 1000
-        seccompProfile: {type: RuntimeDefault}
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-        - name: backstage
-          image: ghcr.io/onemindos/onemind-portal@sha256:ba44f077c38d6c74d00e02face5f6f4f941b49ca9b30074b935ffe659f09eafc
-          command: [node]
-          args: [packages/backend, --config, app-config.yaml, --config, app-config.production.yaml, --config, /app/app-config.cluster.yaml]
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities: {drop: [ALL]}
-          ports: [{name: http, containerPort: 7007}]
-          env:
-            - {name: PORTAL_URL, value: 'https://onemind-preview.tail717ba0.ts.net'}
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef: {name: backstage-secrets, key: POSTGRES_PASSWORD}
-            - name: AUTH_SESSION_SECRET
-              valueFrom:
-                secretKeyRef: {name: backstage-secrets, key: AUTH_SESSION_SECRET}
-            - name: AUTH_OIDC_CLIENT_ID
-              valueFrom:
-                secretKeyRef: {name: backstage-secrets, key: AUTH_OIDC_CLIENT_ID}
-            - name: AUTH_OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef: {name: backstage-secrets, key: AUTH_OIDC_CLIENT_SECRET}
-          resources:
-            requests: {cpu: 250m, memory: 1Gi}
-            limits: {cpu: '2', memory: 2Gi}
-          startupProbe:
-            httpGet: {path: /.backstage/health/v1/readiness, port: http}
-            failureThreshold: 60
-            periodSeconds: 5
-          readinessProbe:
-            httpGet: {path: /.backstage/health/v1/readiness, port: http}
-            periodSeconds: 10
-          livenessProbe:
-            httpGet: {path: /.backstage/health/v1/liveness, port: http}
-            periodSeconds: 15
-          volumeMounts:
-            - {name: tmp, mountPath: /tmp}
-            - {name: catalog, mountPath: /app/catalog, readOnly: true}
-            - {name: cluster-config, mountPath: /app/app-config.cluster.yaml, subPath: app-config.cluster.yaml, readOnly: true}
-      volumes:
-        - name: catalog
-          configMap: {name: backstage-catalog}
-        - name: cluster-config
-          configMap: {name: backstage-cluster-config}
+      - name: backstage
+        image: ghcr.io/onemindos/onemind-portal@sha256:40a4a704693bbb26e2f3ec6a88ff85dce2a1709c8de87ea63ba0f5c800072002
+        command:
+        - node
+        args:
+        - packages/backend
+        - --config
+        - app-config.yaml
+        - --config
+        - app-config.production.yaml
+        - --config
+        - /app/app-config.cluster.yaml
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - name: http
+          containerPort: 7007
+        env:
+        - name: PORTAL_URL
+          value: https://onemind-preview.tail717ba0.ts.net
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backstage-secrets
+              key: POSTGRES_PASSWORD
+        - name: AUTH_SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: backstage-secrets
+              key: AUTH_SESSION_SECRET
+        - name: AUTH_OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: backstage-secrets
+              key: AUTH_OIDC_CLIENT_ID
+        - name: AUTH_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: backstage-secrets
+              key: AUTH_OIDC_CLIENT_SECRET
+        resources:
+          requests:
+            cpu: 250m
+            memory: 1Gi
+          limits:
+            cpu: '2'
+            memory: 2Gi
+        startupProbe:
+          httpGet:
+            path: /.backstage/health/v1/readiness
+            port: http
+          failureThreshold: 60
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /.backstage/health/v1/readiness
+            port: http
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /.backstage/health/v1/liveness
+            port: http
+          periodSeconds: 15
+        volumeMounts:
         - name: tmp
-          emptyDir: {sizeLimit: 1Gi}
+          mountPath: /tmp
+        - name: catalog
+          mountPath: /app/catalog
+          readOnly: true
+        - name: cluster-config
+          mountPath: /app/app-config.cluster.yaml
+          subPath: app-config.cluster.yaml
+          readOnly: true
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - node
+              - -e
+              - setTimeout(() => {}, 5000)
+      volumes:
+      - name: catalog
+        configMap:
+          name: backstage-catalog
+      - name: cluster-config
+        configMap:
+          name: backstage-cluster-config
+      - name: tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      terminationGracePeriodSeconds: 45
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: backstage
+              topologyKey: kubernetes.io/hostname
+  minReadySeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -77,8 +142,12 @@ metadata:
   name: backstage
   namespace: backstage
 spec:
-  selector: {app: backstage}
-  ports: [{name: http, port: 7007, targetPort: http}]
+  selector:
+    app: backstage
+  ports:
+  - name: http
+    port: 7007
+    targetPort: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -92,6 +161,8 @@ spec:
   defaultBackend:
     service:
       name: backstage
-      port: {number: 7007}
+      port:
+        number: 7007
   tls:
-    - hosts: [onemind-preview]
+  - hosts:
+    - onemind-preview
