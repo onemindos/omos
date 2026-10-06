@@ -9,7 +9,7 @@ Verified on `do-nyc3-omos-cloud` at the private preview endpoint.
 - Complete OIDC authorization-code login and refresh succeeded. The resolved identity was `user:default/akadmin`, with `group:default/onemind-admins` membership.
 - Catalog API returned 230 entities (including three source locations), with zero processing errors. Inventory contained 67 app links and 122 workload components.
 - Authenticated operations API returned 122 workloads, four backup schedules, and `partial: false`.
-- The Kubernetes plugin queried Homepage and returned 12 resource groups with no errors, including workload metrics.
+- The Kubernetes plugin queried Homepage and returned 12 resource groups with no errors.
 - Anonymous catalog and operations API requests returned 401.
 - The service account could observe pods and Argo applications; Secrets and workload deletion were denied. ConfigMaps are excluded from Kubernetes fetches.
 - The release backup uploaded 14 encrypted plugin databases to Spaces, downloaded and authenticated the archive, restored the catalog into a temporary database, verified 18 tables, and completed successfully. The first recovery exercise also succeeded.
