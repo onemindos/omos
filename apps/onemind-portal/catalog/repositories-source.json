@@ -1,0 +1,440 @@
+[
+  {
+    "description": "OneMind sovereign infrastructure \u2014 DOKS cloud hub, NATS HA, TAK 5.7 cluster (IaC/GitOps)",
+    "isArchived": false,
+    "name": "omos",
+    "url": "https://github.com/onemindos/omos"
+  },
+  {
+    "description": "An MCP adapter that bridges the Abilities API to the Model Context Protocol, enabling MCP clients to discover and invoke WordPress plugin, theme, and core abilities programmatically.",
+    "isArchived": false,
+    "name": "mcp-adapter",
+    "url": "https://github.com/onemindos/mcp-adapter"
+  },
+  {
+    "description": "zeusdelacruz.com \u2014 personal brand, blog, and consulting. SEO-first, Cloudflare Pages.",
+    "isArchived": false,
+    "name": "zeus-site",
+    "url": "https://github.com/onemindos/zeus-site"
+  },
+  {
+    "description": "Model Context Protocol Servers",
+    "isArchived": false,
+    "name": "servers",
+    "url": "https://github.com/onemindos/servers"
+  },
+  {
+    "description": "Specification and\u00a0documentation for the Model Context Protocol",
+    "isArchived": false,
+    "name": "modelcontextprotocol",
+    "url": "https://github.com/onemindos/modelcontextprotocol"
+  },
+  {
+    "description": "Run agents like Hermes, LangChain Deep Agents, and OpenClaw more securely inside NVIDIA OpenShell with managed inference",
+    "isArchived": false,
+    "name": "NemoClaw",
+    "url": "https://github.com/onemindos/NemoClaw"
+  },
+  {
+    "description": "OneMind OS sovereign operations center \u2014 NATS-native ops UI (agents, bus, fleet, intel, missions, timemachine)",
+    "isArchived": false,
+    "name": "omos-ui",
+    "url": "https://github.com/onemindos/omos-ui"
+  },
+  {
+    "description": "Browser based Team Awareness Kit Infrastructure Management Platform. One-click deployment of TAK Server, Authentik identity provider, and TAK Portal with automated LDAP, SSL, and QR enrollment. Includes CloudTAK, MediaMTX and NodeRED.",
+    "isArchived": false,
+    "name": "infra-TAK",
+    "url": "https://github.com/onemindos/infra-TAK"
+  },
+  {
+    "description": "ATAK Plugins by takwerx \u2014 development workspace. Each plugin is published from its own repo (see README).",
+    "isArchived": false,
+    "name": "atak-plugins",
+    "url": "https://github.com/onemindos/atak-plugins"
+  },
+  {
+    "description": "A collection of awesome things that use or support MapLibre!",
+    "isArchived": false,
+    "name": "awesome-maplibre",
+    "url": "https://github.com/onemindos/awesome-maplibre"
+  },
+  {
+    "description": "NVIDIA Isaac Sim\u2122 is an open-source application on NVIDIA Omniverse for developing, simulating, and testing AI-driven robots in realistic virtual environments.",
+    "isArchived": false,
+    "name": "IsaacSim",
+    "url": "https://github.com/onemindos/IsaacSim"
+  },
+  {
+    "description": "Cloud Infrastrcture for Hosting & Managing TAK Authentication Infrastructure (LDAP)",
+    "isArchived": false,
+    "name": "auth-infra",
+    "url": "https://github.com/onemindos/auth-infra"
+  },
+  {
+    "description": "Hermes TAK plugin \u2014 20-tool agent plugin + desktop UI for full TAK/TAKML/VRTAK context",
+    "isArchived": false,
+    "name": "hermes-plugin-tak",
+    "url": "https://github.com/onemindos/hermes-plugin-tak"
+  },
+  {
+    "description": "Helper library for building NodeJS based ETL Lambdas",
+    "isArchived": false,
+    "name": "etl-base",
+    "url": "https://github.com/onemindos/etl-base"
+  },
+  {
+    "description": "MapLibre GL JS - Interactive vector tile maps in the browser",
+    "isArchived": false,
+    "name": "maplibre-gl-js",
+    "url": "https://github.com/onemindos/maplibre-gl-js"
+  },
+  {
+    "description": "",
+    "isArchived": false,
+    "name": "VR",
+    "url": "https://github.com/onemindos/VR"
+  },
+  {
+    "description": "TAK Compatible, browser based Common Operation Picture & Situational Awareness tool",
+    "isArchived": false,
+    "name": "OneTAK",
+    "url": "https://github.com/onemindos/OneTAK"
+  },
+  {
+    "description": "ATAK Plugin: TAKwerx Market \u2014 install and update takwerx plugins from inside ATAK. Downloads, guide and issues here.",
+    "isArchived": false,
+    "name": "takwerx-market",
+    "url": "https://github.com/onemindos/takwerx-market"
+  },
+  {
+    "description": "Download Slippy Map Tiles into an MBTiles file for offline use",
+    "isArchived": false,
+    "name": "mbtiles-offline",
+    "url": "https://github.com/onemindos/mbtiles-offline"
+  },
+  {
+    "description": "TAK Server NodeJS SDK",
+    "isArchived": false,
+    "name": "node-tak",
+    "url": "https://github.com/onemindos/node-tak"
+  },
+  {
+    "description": "Open-source ThreeUI Community catalog with live interactive components and complete Community source.",
+    "isArchived": false,
+    "name": "threeui",
+    "url": "https://github.com/onemindos/threeui"
+  },
+  {
+    "description": "Payload is the open-source, fullstack Next.js framework, giving you instant backend superpowers. Get a full TypeScript backend and admin panel instantly. Use Payload as a headless CMS or for building powerful applications.",
+    "isArchived": false,
+    "name": "payload",
+    "url": "https://github.com/onemindos/payload"
+  },
+  {
+    "description": "CloudFormation managed infrastructure for TAK Server",
+    "isArchived": false,
+    "name": "tak-infra",
+    "url": "https://github.com/onemindos/tak-infra"
+  },
+  {
+    "description": "onemindos.com \u2014 the OneMind OS platform site. Sovereign operations: OSS platform, plugins, education, enterprise. ThreeUI-based, deployed on Cloudflare Pages.",
+    "isArchived": false,
+    "name": "onemind-site",
+    "url": "https://github.com/onemindos/onemind-site"
+  },
+  {
+    "description": "",
+    "isArchived": false,
+    "name": "cesium-native",
+    "url": "https://github.com/onemindos/cesium-native"
+  },
+  {
+    "description": "OpenLayers",
+    "isArchived": false,
+    "name": "openlayers",
+    "url": "https://github.com/onemindos/openlayers"
+  },
+  {
+    "description": "Javascript Cursor-On-Target Library",
+    "isArchived": false,
+    "name": "node-CoT",
+    "url": "https://github.com/onemindos/node-CoT"
+  },
+  {
+    "description": "A spy satellite simulator in your browser, except the data is real. Live open source spatial intelligence on a photorealistic 3D globe.",
+    "isArchived": false,
+    "name": "gods-eye-view",
+    "url": "https://github.com/onemindos/gods-eye-view"
+  },
+  {
+    "description": "Specification for streaming massive heterogeneous 3D geospatial datasets :earth_americas:",
+    "isArchived": false,
+    "name": "3d-tiles",
+    "url": "https://github.com/onemindos/3d-tiles"
+  },
+  {
+    "description": "CloudTAK Plugin Sample Template",
+    "isArchived": false,
+    "name": "OneTAK-Plugin-Sample",
+    "url": "https://github.com/onemindos/OneTAK-Plugin-Sample"
+  },
+  {
+    "description": "OneMind ATAK shared SDK \u2014 NATS client, CoT utils, TAK API, HUD theme",
+    "isArchived": false,
+    "name": "atak-sdk",
+    "url": "https://github.com/onemindos/atak-sdk"
+  },
+  {
+    "description": "OneMind HUD (OMHud) \u2014 tactical AR overlay plugin for ATAK",
+    "isArchived": false,
+    "name": "atak-plugin-omhud",
+    "url": "https://github.com/onemindos/atak-plugin-omhud"
+  },
+  {
+    "description": "OneMind OS NATS leaf node SDK for Android \u2014 background service, AIDL IPC, reconnect handling",
+    "isArchived": false,
+    "name": "nats-android",
+    "url": "https://github.com/onemindos/nats-android"
+  },
+  {
+    "description": "OneMind OS omnipresence plugin for Hermes \u2014 injects live NATS operational picture into every LLM call",
+    "isArchived": false,
+    "name": "hermes-plugin-nats-context",
+    "url": "https://github.com/onemindos/hermes-plugin-nats-context"
+  },
+  {
+    "description": "TAK-focused video restreaming capability",
+    "isArchived": false,
+    "name": "tak-video-restreamer",
+    "url": "https://github.com/onemindos/tak-video-restreamer"
+  },
+  {
+    "description": "TAK Server MCP \u2014 11-tool Model Context Protocol bridge for AI\u2194TAK Server geospatial ops",
+    "isArchived": false,
+    "name": "tak-server-mcp",
+    "url": "https://github.com/onemindos/tak-server-mcp"
+  },
+  {
+    "description": "heynats \u2014 Go NATS HTTP/WebSocket gateway for browser access",
+    "isArchived": false,
+    "name": "heynats",
+    "url": "https://github.com/onemindos/heynats"
+  },
+  {
+    "description": "agenttap \u2014 live read-only Synadia agent-protocol visualizer on NATS",
+    "isArchived": false,
+    "name": "agenttap",
+    "url": "https://github.com/onemindos/agenttap"
+  },
+  {
+    "description": "",
+    "isArchived": false,
+    "name": "media-infra",
+    "url": "https://github.com/onemindos/media-infra"
+  },
+  {
+    "description": "Pull GeoJSON from an HTTP(s) API",
+    "isArchived": false,
+    "name": "etl-geojson",
+    "url": "https://github.com/onemindos/etl-geojson"
+  },
+  {
+    "description": "",
+    "isArchived": false,
+    "name": "etl-drone-sense",
+    "url": "https://github.com/onemindos/etl-drone-sense"
+  },
+  {
+    "description": "One local API call gives your agent the entire live state of the planet \u2014 every major world event at once, plus forecasts. 40+ free keyless feeds, runs entirely on Ollama. No cloud, no cost.  Keyless live feeds into one global view and forecasts what\u2019s likely next. No cloud, no keys, no cost.  1d,1w,1m,1y predictions by Mirofish.",
+    "isArchived": false,
+    "name": "Pythia",
+    "url": "https://github.com/onemindos/Pythia"
+  },
+  {
+    "description": "Open Source C4 Data Fabric for the Industrial Edge - Drones, Robots, Sensors and Video Feeds",
+    "isArchived": false,
+    "name": "constellation-overwatch",
+    "url": "https://github.com/onemindos/constellation-overwatch"
+  },
+  {
+    "description": "NeuroLinked \u2014 neuromorphic brain, 3D visualization, sleep consolidation, MCP server",
+    "isArchived": false,
+    "name": "omos-cortex",
+    "url": "https://github.com/onemindos/omos-cortex"
+  },
+  {
+    "description": "Converter utility between XML text and Javascript object / JSON text.",
+    "isArchived": false,
+    "name": "xml-js",
+    "url": "https://github.com/onemindos/xml-js"
+  },
+  {
+    "description": "Military Symbols in JavaScript",
+    "isArchived": false,
+    "name": "milsymbol",
+    "url": "https://github.com/onemindos/milsymbol"
+  },
+  {
+    "description": "A TAK client replica that allows users to connect any TAK server to any number of other TAK servers to federate data at will",
+    "isArchived": false,
+    "name": "omni-TAK",
+    "url": "https://github.com/onemindos/omni-TAK"
+  },
+  {
+    "description": "Basic GL Style using OpenMapTiles",
+    "isArchived": false,
+    "name": "maptiler-basic-gl-style",
+    "url": "https://github.com/onemindos/maptiler-basic-gl-style"
+  },
+  {
+    "description": "A powerful Vue library for MapLibre with an intuitive API, and a collection of highly customizable components.",
+    "isArchived": false,
+    "name": "libregl",
+    "url": "https://github.com/onemindos/libregl"
+  },
+  {
+    "description": "Ready-to-use SRT / WebRTC / RTSP / RTMP / LL-HLS / MPEG-TS / RTP media server and media proxy that allows to read, publish, proxy, record and playback video and audio streams.",
+    "isArchived": false,
+    "name": "mediamtx",
+    "url": "https://github.com/onemindos/mediamtx"
+  },
+  {
+    "description": "ORP \u2014 Open Reality Protocol. Single-binary Palantir-grade data fusion engine in Rust. DuckDB + Kuzu + RocksDB.",
+    "isArchived": false,
+    "name": "orp",
+    "url": "https://github.com/onemindos/orp"
+  },
+  {
+    "description": "CloudTAK API Extension to allow DJI Drones to use the Open Cloud Functioanlity",
+    "isArchived": false,
+    "name": "CloudTAK-DJI",
+    "url": "https://github.com/onemindos/CloudTAK-DJI"
+  },
+  {
+    "description": "TAKWatch-IQ is a Garmin ConnectIQ application that integrates ATAK with Garmin devices ",
+    "isArchived": false,
+    "name": "TAKWatch-IQ",
+    "url": "https://github.com/onemindos/TAKWatch-IQ"
+  },
+  {
+    "description": "CloudFormation managed infrastructure for cotak.gov frontend",
+    "isArchived": false,
+    "name": "frontend-infra",
+    "url": "https://github.com/onemindos/frontend-infra"
+  },
+  {
+    "description": "Geofence support in CloudTAK",
+    "isArchived": false,
+    "name": "CloudTAK-Geofence",
+    "url": "https://github.com/onemindos/CloudTAK-Geofence"
+  },
+  {
+    "description": "",
+    "isArchived": false,
+    "name": "DTED-LVL2-4-TAK",
+    "url": "https://github.com/onemindos/DTED-LVL2-4-TAK"
+  },
+  {
+    "description": "Desktop Support for CloudTAK",
+    "isArchived": false,
+    "name": "CloudTAK-Native",
+    "url": "https://github.com/onemindos/CloudTAK-Native"
+  },
+  {
+    "description": "Desktop Support for CloudTAK",
+    "isArchived": false,
+    "name": "OneTAK-Native",
+    "url": "https://github.com/onemindos/OneTAK-Native"
+  },
+  {
+    "description": "An TAK Server plugin for exposing LLM bots and agents to TAK clients",
+    "isArchived": false,
+    "name": "tak-gpt",
+    "url": "https://github.com/onemindos/tak-gpt"
+  },
+  {
+    "description": "The motion model software development kit for the LandSAR search and rescue software platform",
+    "isArchived": false,
+    "name": "landsar-sdk",
+    "url": "https://github.com/onemindos/landsar-sdk"
+  },
+  {
+    "description": "This module adds a control which can integrate with valhalla api.",
+    "isArchived": false,
+    "name": "mapbox-gl-valhalla",
+    "url": "https://github.com/onemindos/mapbox-gl-valhalla"
+  },
+  {
+    "description": "TAK-ML - A machine learning framework for use with the TAK ecosystem (specifically ATAK and TAK Server at the moment)",
+    "isArchived": false,
+    "name": "tak-ml",
+    "url": "https://github.com/onemindos/tak-ml"
+  },
+  {
+    "description": "The LandSAR search and rescue platform",
+    "isArchived": false,
+    "name": "landsar-base",
+    "url": "https://github.com/onemindos/landsar-base"
+  },
+  {
+    "description": "TAKWatch is an ATAK plugin that communicates with Garmin devices",
+    "isArchived": false,
+    "name": "TAKWatch",
+    "url": "https://github.com/onemindos/TAKWatch"
+  },
+  {
+    "description": "The NASA WorldWind Javascript SDK (WebWW) includes the library and examples for creating geo-browser web applications and for embedding a 3D globe in HTML5 web pages.",
+    "isArchived": false,
+    "name": "WebWorldWind",
+    "url": "https://github.com/onemindos/WebWorldWind"
+  },
+  {
+    "description": "ATAK Plugin to display and log incoming and outgoing CotEvents",
+    "isArchived": false,
+    "name": "cotexplorer",
+    "url": "https://github.com/onemindos/cotexplorer"
+  },
+  {
+    "description": "CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.",
+    "isArchived": false,
+    "name": "CasaOS",
+    "url": "https://github.com/onemindos/CasaOS"
+  },
+  {
+    "description": "Repository for the Incident Data API from NENA EIDO Conveyance Standard",
+    "isArchived": false,
+    "name": "EIDO-Conveyance-Incident-Data-API",
+    "url": "https://github.com/onemindos/EIDO-Conveyance-Incident-Data-API"
+  },
+  {
+    "description": "A comprehensive list of tools that can be used for finding information related to a specific vehicle. ",
+    "isArchived": false,
+    "name": "Vehicle-OSINT-Collection",
+    "url": "https://github.com/onemindos/Vehicle-OSINT-Collection"
+  },
+  {
+    "description": "Situational Awareness Server compatible with TAK clients",
+    "isArchived": false,
+    "name": "FreeTakServer",
+    "url": "https://github.com/onemindos/FreeTakServer"
+  },
+  {
+    "description": "TAK server feeder for data from deepstatemap.live",
+    "isArchived": false,
+    "name": "tak-feeder-deepstate",
+    "url": "https://github.com/onemindos/tak-feeder-deepstate"
+  },
+  {
+    "description": "Public library of space documents and tutorials",
+    "isArchived": false,
+    "name": "hack-a-sat-library",
+    "url": "https://github.com/onemindos/hack-a-sat-library"
+  },
+  {
+    "description": "TAK-CAD is an Android Team Awareness Kit (ATAK) plugin that provides Computer Aided Dispatch capabilities to security force and public safety personnel executing dispatch operations.",
+    "isArchived": false,
+    "name": "tak-cad",
+    "url": "https://github.com/onemindos/tak-cad"
+  }
+]

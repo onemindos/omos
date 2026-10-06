@@ -42,3 +42,9 @@ Hosting annotations distinguish verified cluster routing from unverified mesh en
 ## Curated Fabric registry
 
 The reviewed Notion snapshot (`catalog/fabric-source.json`, 174 records, reviewed 2026-10-06) enriches existing app and mesh entries and adds documented capabilities, planned items and references. `scripts/reconcile-fabric.cjs` merges duplicate titles and Google Calendar/Drive/Photos aliases while retaining every source page link. Recorded status and hosting are provenance annotations, not live health or verified deployment. Original protocol addresses and old IPs remain in source documentation rather than becoming launch buttons. A source snapshot update requires review. The complete enrichment command reapplies this reconciliation so cluster refresh cannot erase curated records.
+
+## P2 completed inventory scope
+
+The complete inventory refresh also records accessible OneMind repositories and exact runtime identifiers, then verifies reviewed aliases. Tags `deployment-verified`, `repository-verified`, `documented-unverified`, `planned`, and `reference` are available through Catalog's Tags filter. A repository match is not evidence of deployment; a deployment match is not live health. Device roles remain documented unless independently inspected. Unknown SaaS account state stays unknown.
+
+All 174 Fabric source pages were fetched. 165 had no body content; nine contained historical notes. Git-owned Markdown is in `docs/inventory/fabric/` and the completeness manifest is `docs/inventory/migration-manifest.json`. Catalog source links now point to these archives rather than Notion. This removes the catalog's Notion content dependency; it is not a full export of the rest of the Notion workspace, attachments, comments or unrelated pages. Notes retain historical dates and are not validated deployment recipes.

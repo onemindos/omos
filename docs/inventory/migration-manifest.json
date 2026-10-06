@@ -1,0 +1,1050 @@
+{
+  "reviewedAt": "2026-10-06",
+  "total": 174,
+  "pages": [
+    {
+      "title": "Martin",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8102946eff79f4125152.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OneTAK PostgreSQL",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e810aac3af58ff183e974.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Instagram",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e810e84d5d447966b9242.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "YouTube",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8110a570ee43052b619f.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Calendar",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8110aacfeff6d5acf18c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "STAC API",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8112af60e8ea79c23728.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Dell Laptop (COP)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8115890ac30ff3edc56a.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Hubble",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81168a55dff646285f2a.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Cloudflare Tunnel",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e811fb22ff0467ff07122.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "STAC Browser",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "cert-manager",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e812899b8c2b1670b04e6.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Home Assistant",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "s24-pipeline-guardian",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e812fa332d7b0a3263d04.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "cot-retention",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81399300ce8ae5c69770.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Drive",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81429ddeeedb63f202e5.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "QGIS Server",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8143a116e3464a69dadf.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Tailscale Mesh (15 proxies)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e814781a8e3955ee46860.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "WebTAK (Admin)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e814aa336d1ac4efc7303.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NATS WebSocket",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8154a3b3e5435bb33606.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "ClickHouse Time Machine",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81569955eb41a19a3c12.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "ArgoCD",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "MacBook Pro (Zeus)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e815cba8ac2ec524c03d3.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OneTAK",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e815eb011df18773e15dc.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "X.com",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e815f84a4ef6b62156a7b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "WorldWideView",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8168813dcf78f5c99f1d.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "Loki + Tempo",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8168882ae5c102714e8c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "WebODM",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NATS JetStream Cluster",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81709d3cec611961a687.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "sink-tak",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8173becdd056e98686a2.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "ShadowBroker",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8178acbaf60087482229.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Dell AIO (GCS)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8179a78efb433d487eeb.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "WorldMonitor",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e817c9538c8feb1e5ce3e.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "Photos",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e817e8bd1fbf841481943.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK PostgreSQL",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81809e0ecbcba85a7eaf.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Cloudflare",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8188a304d6e8212ce8a0.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Facebook",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e818caa21cde074079ac2.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "omos-tak-projector",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e818eb6d2ddea4ff77c23.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Nominatim",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81979373c249a2d37537.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "sink-clickhouse",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8197af14e4631a656d65.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "ingress-nginx",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e8198b4a5e3b0fc75ddf3.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Osiris",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e819cbdf7fbc0c195dbd7.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "Cesium 3D Globe",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e819d83a8dc908bf57b6c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Prometheus + Alertmanager",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81a49c23cb2059eede57.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "GitHub",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81a59a22e9df6ad509db.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Maputnik",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "GoDaddy",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81b586f5f846351e4b5f.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Raindrop.io",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81b69fcce49a37fc8a7c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TileServer GL",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Crucix",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81b8abe9c60ec490ba21.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "LinkedIn",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81bb9632ca833cd5fa87.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "S24 Ultra (Field Phone)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81c8953ffa1fcce32239.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Gmail",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81d2be23eda5893be74a.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "pg_featureserv",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81d783cae864daeb7c29.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Overpass",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81e29fb4e3eb7c083985.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Grafana",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Tile38",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81e6bc30fcf1af4eebb6.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OneTAK MinIO",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81e886beca1809524d17.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Valhalla",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK Server (Core)",
+      "file": "docs/inventory/fabric/3b9d0cf70a7e81f99689dd357eba770d.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Contacts",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e800a854cee91d59f7ad1.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK OS",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8101aa17dcd0d82cd1d4.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Mercury",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81038e5cff998afacc9e.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Geo Database",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e810487ecddf0af4380dc.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Kikoff",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8104990bd8feb428ab9f.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Azure",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8108bb3cc3de14622942.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Unity",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e810b82b3fa2448f0d099.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TikTok",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e810e8615c2f594744dca.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "cobra-nats",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8110b6c6f43ce67d5e73.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "WeChat",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8113bfb3c54fa5d44247.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "onetak-plugin-nats",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8114ad63e5233b3c83ac.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OneMind AI Bridge",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81169f70ea90560d5b8d.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Hermes — Legacy Hive System",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e811c914ce4f231123b3a.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "UseOrigin",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8122a508e26f616d976b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "atak-plugin-omhud",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8122b8d4ff5568252112.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NATS Dashboard",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Claude Code (Bedrock)",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8125a316ef1df9160933.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "ATAK",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81279781d378995c1e88.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "GHL (GoHighLevel)",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e812bb980d5ed40416328.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "onetak-plugin-hermes",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e812c9d55c8e407db4045.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NodeODM",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81338840ec1c874371c6.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "gastbob-nats-ui",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81379661cd62a0279c31.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Synadia Protect",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8138979dee67a5486f63.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NATS Surveyor",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NVIDIA",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8141bd03db771bbe2cbd.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OpenTopography",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e814a9d5ad52241438757.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "AT&T Prepaid",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e814ca638d7301b53411b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OpenStreetMap",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e814fabc2e25bbd0e4aa8.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Google Calendar",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81518da2ee7c70e8d25c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Gods Eye View",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e815192a3e2716188e0ef.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAKServer Ignite",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8152ba0cc06d52978b62.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Agent of Empires",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e815491a3e7b8cb7538f0.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "AWS",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81569873d6a20f239849.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "omos-feed-pipeline",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8156b543e41459836cf0.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Innovis",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8162b34dea7818b74301.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NACK",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8164b995c1a9de84bc5c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "1Password",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8165a3a2fb59b639a15b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "hermes-plugin-nats-context",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8166b382ec5bbb6bde2c.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Mission Control",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81678448e2762ada52f4.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "onetak-plugin-ops",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8167a2edf29f6c5b84f3.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Agent Web UI",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Wallet",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816aafedd09892f47e82.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Reddit",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816ab330c7b21cab93c8.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "NATS UI",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK GOV",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816ab80dc586e6c4cf42.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OpenTelemetry Collector",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816ea737d1a5eac43a8a.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OpenSky",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e816f8042cbf5b699b5ec.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Legacy-Edge (Daughter)",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8173810bcea30d73988f.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "Alibaba Cloud",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e817684bbdedb73711864.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "onetak-plugin-clickhouse",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81769277f29c9db0b6fe.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "tak-server-mcp",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e817cba65c66d49fdac38.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Composio",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e817eb25cc0716ec0cacd.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK-ML Server",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e817fae91f5285488795a.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OneTAK-Plugin-Sample",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8180a19eff849ab17b5d.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Hushed",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8180aefee4cf10297c32.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TransUnion",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8181ad96c13f18a45db7.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK LB Proxy",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8186b758f7bffd78ce48.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK-ML Database",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8187a663d1ee921f543b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Raycast",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e8188bfd2d16ba672fbce.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Multica",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81899637c2f6427416c6.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Headlamp",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "AionUI",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e818b9388df7e71776626.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "atak-sdk",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81918ff4ee7fedaa8c28.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Ollama",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "DigitalOcean",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e819b853bed35001c206b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "takserver-nats-plugin",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e819d818fff592b12f8b5.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "iTAK",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e819dacfcc8e3d800ba2b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "GitHub Runner",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81a097aed595f98237e5.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Termux",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81a3bacac3a0ee53c2ec.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "GitLab",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81a68680e0b433702183.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "feed-intel",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81a7b836e7cf6518f1e7.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "OneTAK",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "heynats",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "nats-android",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81aa96c9c94ec8575773.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Paperclip",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Miro",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81ae96ade7dffe2f1f3d.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Redpanda Connect (Wombat)",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81b2a408e1eb8d640e22.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "atak-plugin-omhud",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81b78b08e2caba493b87.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Twitch",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81b9bc7bc879c11f5906.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK-ML Vision Worker",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81bba30bea937c250d79.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "agenttap",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81bbaf34ea74b549d017.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "FarmBot",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81c4959fc2edea1a7f3a.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Monarch Money",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81c6aa3dd71c14097649.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Apify",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81c8b47df736eaf55bad.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "TAK Aware",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81cbb55ad6909474e599.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Circle Community",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81cf96f3cf76fea93e99.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "onetak-plugin-mumble",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81d28e35f9ed02f3ca48.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Workspace",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81d5987dcdf1ef081d87.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Synadia Insights",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81d687d7f745725890e2.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OneTAK-Native",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81d8b583f6e334300e28.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "WearTAK",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81dabaece05924086d39.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "VR-TAK",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81db958be68a366d112e.md",
+      "blank": false,
+      "complete": true
+    },
+    {
+      "title": "Pinterest",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81db9a6fdcf35a5ff7b7.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Tavily",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81df9777eac9aa15b750.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "nui",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81dfb106d5c7afb68acd.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "tak-nats-leaf",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81dfba46d3863663e0ba.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "natscope",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e0be41fb11080c071e.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Kubernetes Dashboard",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e1b21dcc86988a49ba.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Cesium Ion",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e38096f4acec966d27.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Synadia Platform",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e3b05ff2ea3a0776d5.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Google Photos",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e49fcedcf0041324b4.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Equifax",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e5b4b0e7460dc5e132.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "mumble-bridge",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81e8ba62f5143a9fc0b6.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Murmur (Voice)",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81ec8825efde12e75493.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "onetak-plugin-legacy-ai",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81ed9a06d17832222870.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "SwarmClaw",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81ee8eacfe99be9e4085.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "OpenRouter (OneMindOS)",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81eebb6adc26a94c0e88.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "omos-infra",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81efae8ef2a9f52f10dd.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "omos-legacy",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81f1904bcf8fb71fdde7.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "omos-core",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81f2ae36f7f0b5532841.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Google Drive",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81faa9f5e8b0e4c2137e.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "MediaMTX",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81fbba79e1a3d07472a8.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "feed-satellites",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81fca08cfaf9f04514a1.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Experian",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81fd8220d62858309f05.md",
+      "blank": true,
+      "complete": true
+    },
+    {
+      "title": "Proton Mail",
+      "file": "docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md",
+      "blank": true,
+      "complete": true
+    }
+  ]
+}

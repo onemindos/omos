@@ -1,0 +1,14 @@
+# nui
+
+Archived from the Fabric registry on 2026-10-06. Source edited: 2026-09-03 07:33:16Z.
+
+These are historical documentation claims, not current deployment instructions or live health.
+
+- Category: 🚌 NATS
+- Documented host: 🐳 Docker Local
+- Recorded status: 📚 Reference
+- Recorded address: https://github.com/nats-nui/nui
+
+Third-party NATS UI — removed, redundant
+
+The source page had no body content.
