@@ -106,7 +106,7 @@ data:
   widgets.yaml: |
     ---
     - logo:
-        icon: https://onemindos.dev/favicon.ico
+        icon: /images/onemind-logo-dark.png
     - greeting:
         text_size: xl
         text: "OneMind OS"
@@ -354,6 +354,7 @@ data:
   # ─── Custom CSS ────────────────────────────────────────────────────────────
   custom.css: |
     /* The built-in Homepage theme toggle adds .light or .dark to #page_wrapper. */
+    /* Swap the matching OneMind brain/circuit mark with Homepage's theme. */
     :root {
       color-scheme: light dark;
       --legacy-accent: #ff4d49;
@@ -361,6 +362,15 @@ data:
 
     body {
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    #page_wrapper.dark .information-widget-logo img {
+      content: url("/images/onemind-logo-dark.png");
+    }
+
+    #page_wrapper.light .information-widget-logo img {
+      content: url("/images/onemind-logo-light.jpg");
+      mix-blend-mode: multiply;
     }
 
     #page_wrapper.dark {

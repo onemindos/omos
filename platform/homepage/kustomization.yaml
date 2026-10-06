@@ -12,3 +12,5 @@ configMapGenerator:
     files:
       - assets/legacy-background-dark.jpg
       - assets/legacy-background-light.jpg
+      - assets/onemind-logo-dark.png
+      - assets/onemind-logo-light.jpg
