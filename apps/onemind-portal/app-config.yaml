@@ -57,9 +57,6 @@ auth:
         clientSecret: ${AUTH_OIDC_CLIENT_SECRET}
         prompt: auto
         additionalScopes: [offline_access]
-        signIn:
-          resolvers:
-            - resolver: emailMatchingUserEntityProfileEmail
   clientIdMetadataDocuments:
     enabled: false
 permission:
