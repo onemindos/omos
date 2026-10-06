@@ -1,0 +1,57 @@
+name: Build OneMind Portal
+on:
+  push:
+    branches: [main, 'feat/onemind-backstage']
+    paths:
+      - apps/onemind-portal/**
+      - .github/workflows/build-onemind-portal.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: onemind-portal-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: apps/onemind-portal
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+      AUTH_SESSION_SECRET: build-only-not-a-runtime-secret
+      AUTH_OIDC_CLIENT_ID: build-only
+      AUTH_OIDC_CLIENT_SECRET: build-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.3'
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn tsc
+      - run: yarn build:backend
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        id: image
+        with:
+          context: apps/onemind-portal
+          file: apps/onemind-portal/packages/backend/Dockerfile
+          push: true
+          tags: ghcr.io/onemindos/onemind-portal:sha-${{ github.sha }}
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Record image digest
+        run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onemind-portal-image
+          path: apps/onemind-portal/image-digest.txt
