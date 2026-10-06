@@ -18,10 +18,18 @@ metadata:
     - url: https://argocd.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e8158815be14e14b0f162
+      title: "Notion source: ArgoCD"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: GitOps deployment — all K8s manifests synced from repos
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📊 Observability
+    onemind.io/documented-at: 2026-09-03 07:01:08Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -42,10 +50,19 @@ metadata:
     - url: https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81e1b21dcc86988a49ba
+      title: "Notion source: Kubernetes Dashboard"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Official Kubernetes Dashboard — cluster resource
+      management, workloads, services, config.
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📊 Observability
+    onemind.io/documented-at: 2026-09-03 21:19:40Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -66,10 +83,19 @@ metadata:
     - url: https://headlamp.tail717ba0.ts.net/c/main/token
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81899931d63301bfe25d
+      title: "Notion source: Headlamp"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Kubernetes UI — RBAC-aware, official K8s
+      sub-project, web + desktop. Cluster visibility across all namespaces.
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📊 Observability
+    onemind.io/documented-at: 2026-09-03 21:19:39Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -90,9 +116,17 @@ metadata:
     - url: https://login.tailscale.com/admin/machines
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e814781a8e3955ee46860
+      title: "Notion source: Tailscale Mesh (15 proxies)"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: All services + edge devices on private tailnet — zero-trust
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🏗️ Infrastructure
+    onemind.io/documented-at: 2026-09-03 07:00:55Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -111,9 +145,17 @@ metadata:
     - url: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e8188a304d6e8212ce8a0
+      title: "Notion source: Cloudflare"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: DNS, domains, tunnel, WAF, CDN
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🏗️ Infrastructure
+    onemind.io/documented-at: 2026-09-03 07:11:31Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -132,9 +174,18 @@ metadata:
     - url: https://cloud.digitalocean.com/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e819b853bed35001c206b
+      title: "Notion source: DigitalOcean"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Primary cloud provider — DOKS cluster, droplets,
+      block storage, container registry
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🏗️ Infrastructure
+    onemind.io/documented-at: 2026-09-03 09:27:44Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -185,10 +236,18 @@ metadata:
     - url: https://agent-web-ui-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e816a83c1dbdc285b898d
+      title: "Notion source: Agent Web UI"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: OneMind agent web interface — manage and interact with fabric agents
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🚌 NATS
+    onemind.io/documented-at: 2026-09-03 07:33:16Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -233,10 +292,19 @@ metadata:
     - url: https://nats-dashboard-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e8123b817ccdf71662d03
+      title: "Notion source: NATS Dashboard"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Primary NATS observability UI — cluster health,
+      streams, consumers, subjects
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🚌 NATS
+    onemind.io/documented-at: 2026-09-03 07:33:16Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -315,10 +383,18 @@ metadata:
     - url: https://heynats-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81a9b338c9d2b2f65479
+      title: "Notion source: heynats"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: NATS HTTP/WebSocket gateway — browser access to the NATS bus
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🚌 NATS
+    onemind.io/documented-at: 2026-09-03 08:14:18Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -410,9 +486,19 @@ metadata:
     - url: https://onetak.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e815eb011df18773e15dc
+      title: "Notion source: OneTAK"
+    - url: https://app.notion.com/3d0d0cf70a7e81a98fb4e78fdda75950
+      title: "Notion source: OneTAK"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: OneMind fork of CloudTAK — AI-native, NATS-fabric TAK COP platform
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ⚠️ Degraded
+    onemind.io/documented-category: 🎯 TAK
+    onemind.io/documented-at: 2026-09-14 00:44:22Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -476,9 +562,17 @@ metadata:
     - url: https://tak.gov/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e816ab80dc586e6c4cf42
+      title: "Notion source: TAK GOV"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Official TAK government portal
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🎯 TAK
+    onemind.io/documented-at: 2026-09-03 08:46:24Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -547,10 +641,18 @@ metadata:
     - url: https://grafana.tail717ba0.ts.net/login
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e81e39fd6f5e8cda2cb01
+      title: "Notion source: Grafana"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Dashboards — Prometheus metrics, Loki logs, Tempo traces
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📊 Observability
+    onemind.io/documented-at: 2026-09-03 07:01:11Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -571,10 +673,18 @@ metadata:
     - url: https://nats-ui-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e816ab4f1cb4d8a159823
+      title: "Notion source: NATS UI"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: NATS UI — browse streams, KV buckets, subjects and messages
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🚌 NATS
+    onemind.io/documented-at: 2026-09-03 07:33:16Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -764,9 +874,18 @@ metadata:
     - url: https://nats-surveyor-1.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e8141870fea96e2732cf7
+      title: "Notion source: NATS Surveyor"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/documented-purpose: NATS cluster health monitor — scrapes JetStream
+      stats and exports Prometheus metrics
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📊 Observability
+    onemind.io/documented-at: 2026-09-03 08:14:19Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -793,10 +912,18 @@ metadata:
     - url: https://tileserver.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e81b8aa3ddd0a1f032dac
+      title: "Notion source: TileServer GL"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Vector & raster tile serving (MBTiles)
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:37Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -821,10 +948,18 @@ metadata:
     - url: https://valhalla.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e81f99634de87ffa4e749
+      title: "Notion source: Valhalla"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Open-source routing engine (full planet)
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:38Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -849,10 +984,18 @@ metadata:
     - url: https://maputnik.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e81a8a942d9af85058ca8
+      title: "Notion source: Maputnik"
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Visual map style editor
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:40Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -877,9 +1020,17 @@ metadata:
     - url: https://webodm.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e816c97dfc37ab88251bc
+      title: "Notion source: WebODM"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Drone image processing & photogrammetry
+    onemind.io/documented-host: ☁️ DOKS Cluster
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🌍 Geo
+    onemind.io/documented-at: 2026-09-03 07:00:34Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1166,9 +1317,18 @@ metadata:
     - url: https://my.1password.com/home
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e8165a3a2fb59b639a15b
+      title: "Notion source: 1Password"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Secrets management — all credentials, API keys,
+      service accounts across 5 vaults (SO, HP, LE, GE, Review)
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🏗️ Infrastructure
+    onemind.io/documented-at: 2026-09-03 08:47:22Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1208,9 +1368,17 @@ metadata:
     - url: https://app.raindrop.io/my/0
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e81b69fcce49a37fc8a7c
+      title: "Notion source: Raindrop.io"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Bookmark manager — collection 73734456
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🛠️ Productivity
+    onemind.io/documented-at: 2026-09-03 07:14:46Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1229,9 +1397,17 @@ metadata:
     - url: https://www.att.com/prepaid/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e814ca638d7301b53411b
+      title: "Notion source: AT&T Prepaid"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Field device cellular — S24 Ultra
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📡 Comms
+    onemind.io/documented-at: 2026-09-03 08:46:22Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1258,9 +1434,17 @@ metadata:
     - url: https://github.com/onemindos
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3b9d0cf70a7e81a59a22e9df6ad509db
+      title: "Notion source: GitHub"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Code repos, CI/CD, GitHub Container Registry
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: ⚙️ DevOps
+    onemind.io/documented-at: 2026-09-03 07:11:32Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1279,9 +1463,17 @@ metadata:
     - url: https://dashboard.composio.dev/OneMind/~/connect
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e817eb25cc0716ec0cacd
+      title: "Notion source: Composio"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: MCP connector — Gmail, GCal, GDrive, GitHub, ClickUp active
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 💼 Business Ops
+    onemind.io/documented-at: 2026-09-03 07:11:30Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1300,9 +1492,17 @@ metadata:
     - url: https://miro.com/app/dashboard/org/3458764575937063233/team/3458764575937063234/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81ae96ade7dffe2f1f3d
+      title: "Notion source: Miro"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Collaborative whiteboarding
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🛠️ Productivity
+    onemind.io/documented-at: 2026-09-03 08:46:35Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1350,9 +1550,17 @@ metadata:
     - url: https://app.mercury.com/home
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81038e5cff998afacc9e
+      title: "Notion source: Mercury"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Business banking — OneMind LLC
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 💰 Finance
+    onemind.io/documented-at: 2026-09-03 09:08:24Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1392,9 +1600,17 @@ metadata:
     - url: https://usa.experian.com/login/
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81fd8220d62858309f05
+      title: "Notion source: Experian"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Credit bureau
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 💰 Finance
+    onemind.io/documented-at: 2026-09-03 09:08:27Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1413,9 +1629,17 @@ metadata:
     - url: https://ciam.tui.transunion.com/realms/TransUnion/protocol/openid-connect/auth?response_type=code&redirect_uri=https://service.transunion.com/dss/ssoRedirect.page&client_id=Phoenix&scope=openid
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e8181ad96c13f18a45db7
+      title: "Notion source: TransUnion"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Credit bureau
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 💰 Finance
+    onemind.io/documented-at: 2026-09-03 09:08:29Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1434,9 +1658,17 @@ metadata:
     - url: https://secure.equifax.com/auth/login?lang=en-US
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e81e5b4b0e7460dc5e132
+      title: "Notion source: Equifax"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Credit bureau
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 💰 Finance
+    onemind.io/documented-at: 2026-09-03 09:08:30Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
@@ -1455,9 +1687,17 @@ metadata:
     - url: https://www.innovis.com/login/index
       title: Open application
       icon: dashboard
+    - url: https://app.notion.com/3d0d0cf70a7e8162b34dea7818b74301
+      title: "Notion source: Innovis"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-purpose: Credit bureau — 4th bureau
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 💰 Finance
+    onemind.io/documented-at: 2026-09-03 09:08:30Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
 spec:
   type: website
   lifecycle: production
