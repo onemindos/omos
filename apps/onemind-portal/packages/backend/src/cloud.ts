@@ -16,7 +16,7 @@ async function load(): Promise<Summary> {
     if (!auth.ok) throw new Error('Provider unavailable');
     const token = await auth.json();
     if (typeof token.access_token !== 'string') throw new Error('Provider authentication unavailable');
-    const response = await fetch(`https://projectsapi.zoho.com/api/v3/portal/${portal}/tasks?page=1&per_page=100`, { redirect: 'error', signal: AbortSignal.timeout(8000), headers: { Authorization: `Zoho-oauthtoken ${token.access_token}` } });
+    const response = await fetch(`https://projectsapi.zoho.com/api/v3/portal/${portal}/tasks?page=1&per_page=100`, { redirect: 'error', signal: AbortSignal.timeout(8000), headers: { Authorization: `Bearer ${token.access_token}` } });
     if (!response.ok) throw new Error('Provider unavailable');
     const data = await response.json();
     if (!Array.isArray(data.tasks)) throw new Error('Unexpected provider schema');
@@ -25,7 +25,7 @@ async function load(): Promise<Summary> {
       if (typeof task.status?.is_closed_type !== 'boolean') throw new Error('Unknown task status');
       if (!task.status.is_closed_type) {
         open++;
-        if (task.due_date && Number.isFinite(Date.parse(task.due_date)) && task.due_date.slice(0,10) < new Date().toISOString().slice(0,10)) overdue++;
+        if (task.end_date && Number.isFinite(Date.parse(task.end_date)) && task.end_date.slice(0,10) < new Date().toISOString().slice(0,10)) overdue++;
       }
     }
     const now = Date.now();
