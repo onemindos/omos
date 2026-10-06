@@ -24,7 +24,7 @@ spec:
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: backstage
-          image: ghcr.io/onemindos/onemind-portal@sha256:ba44f077c38d6c74d00e02face5f6f4f941b49ca9b30074b935ffe659f09eafc
+          image: ghcr.io/onemindos/onemind-portal@sha256:584cc78b2e763d48780a944b20aaaea4f1d390af7860d6f55ec7edd71d3dfc67
           command: [node]
           args: [packages/backend, --config, app-config.yaml, --config, app-config.production.yaml, --config, /app/app-config.cluster.yaml]
           securityContext:
