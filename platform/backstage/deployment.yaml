@@ -52,6 +52,9 @@ spec:
         - name: http
           containerPort: 7007
         env:
+        - name: MCP_TOKEN
+          valueFrom:
+            secretKeyRef: {name: backstage-mcp, key: MCP_TOKEN}
         - name: PORTAL_URL
           value: https://onemind-preview.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD
