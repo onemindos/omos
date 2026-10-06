@@ -66,6 +66,10 @@ catalog:
     - allow: [Component, System, API, Resource, Location]
   locations:
     - type: file
+      target: ../../templates/service/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: ../../catalog/apps.yaml
     - type: file
       target: ../../catalog/cluster.yaml
@@ -82,3 +86,7 @@ techdocs:
 mcpActions:
   name: OneMind
   description: Search and inspect the OneMind catalog. Operational changes use separately authorized workflows.
+
+integrations:
+  github:
+    - host: github.com

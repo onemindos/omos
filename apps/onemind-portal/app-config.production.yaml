@@ -21,6 +21,10 @@ backend:
 catalog:
   locations:
     - type: file
+      target: /app/templates/service/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: /app/catalog/apps.yaml
     - type: file
       target: /app/catalog/cluster.yaml
