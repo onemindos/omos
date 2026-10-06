@@ -1,0 +1,30 @@
+name: Build Backstage Backup
+on:
+  push:
+    branches: [main, 'feat/onemind-backstage']
+    paths: ['platform/backstage/backup-image/**', '.github/workflows/build-backstage-backup.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        id: image
+        with:
+          context: platform/backstage/backup-image
+          push: true
+          tags: ghcr.io/onemindos/backstage-backup:sha-${{ github.sha }}
+      - run: printf '%s\n' '${{ steps.image.outputs.digest }}' > backup-image-digest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backstage-backup-image
+          path: backup-image-digest.txt

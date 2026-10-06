@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - network.yaml
+  - dns.yaml
+  - rbac.yaml
+  - postgres.yaml
+  - deployment.yaml
+  - backstage-secrets.sealedsecret.yaml
+  - ghcr.sealedsecret.yaml
+  - backup.sealedsecret.yaml
+  - backup.yaml
+configMapGenerator:
+  - name: backstage-cluster-config
+    namespace: backstage
+    files: [app-config.cluster.yaml]
+  - name: backstage-catalog
+    namespace: backstage
+    files: [catalog/apps.yaml, catalog/cluster.yaml, catalog/org.yaml]

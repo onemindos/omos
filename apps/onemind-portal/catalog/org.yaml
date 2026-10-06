@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: onemind-admins
+spec:
+  type: team
+  profile:
+    displayName: OneMind Administrators
+  children: []
+  members: [akadmin]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: akadmin
+  annotations:
+    onemind.io/oidc-sub: f73e10d872325ed63330a138782f12d3e8252e00a05466e2f0180bcc885a42c4
+spec:
+  profile:
+    displayName: OneMind Administrator
+    email: root@example.com
+  memberOf: [onemind-admins]

@@ -1,0 +1,1309 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: infrastructure
+  title: Infrastructure
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argocd
+  title: ArgoCD
+  description: GitOps CD
+  tags:
+    - infrastructure
+  links:
+    - url: https://argocd.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: kubernetes-dashboard
+  title: Kubernetes Dashboard
+  description: Cluster UI
+  tags:
+    - infrastructure
+  links:
+    - url: https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: headlamp
+  title: Headlamp
+  description: Kubernetes cluster dashboard
+  tags:
+    - infrastructure
+  links:
+    - url: https://headlamp.tail717ba0.ts.net/c/main/token
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tailscale
+  title: Tailscale
+  description: Mesh VPN
+  tags:
+    - infrastructure
+  links:
+    - url: https://login.tailscale.com/admin/machines
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cloudflare
+  title: Cloudflare
+  description: DNS & edge
+  tags:
+    - infrastructure
+  links:
+    - url: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: digitalocean
+  title: DigitalOcean
+  description: Cloud infrastructure and DOKS
+  tags:
+    - infrastructure
+  links:
+    - url: https://cloud.digitalocean.com/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: ai-agents
+  title: AI & Agents
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hermes-legacy
+  title: Hermes (Legacy)
+  description: Legacy AI — cloud
+  tags:
+    - ai-agents
+  links:
+    - url: https://hermes-agent.tail717ba0.ts.net/login?next=%2F
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: agent-web-ui
+  title: Agent Web UI
+  description: NATS agent browser
+  tags:
+    - ai-agents
+  links:
+    - url: https://agent-web-ui-1.tail717ba0.ts.net/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: openclaw
+  title: OpenClaw
+  description: Agent orchestration
+  tags:
+    - ai-agents
+  links:
+    - url: https://openclaw.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nats-dashboard
+  title: NATS Dashboard
+  description: NATS stream monitor
+  tags:
+    - ai-agents
+  links:
+    - url: https://nats-dashboard-1.tail717ba0.ts.net/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: communication
+  title: Communication
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: element-chat
+  title: Element Chat
+  description: Matrix E2EE chat
+  tags:
+    - communication
+  links:
+    - url: https://element.onemindos.com
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: communication
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: matrix-synapse
+  title: Matrix Synapse
+  description: Homeserver
+  tags:
+    - communication
+  links:
+    - url: https://matrix.onemindos.com
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: communication
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: heynats
+  title: HeyNATS
+  description: NATS pub/sub debugger
+  tags:
+    - communication
+  links:
+    - url: https://heynats-1.tail717ba0.ts.net/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: communication
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: google-messages
+  title: Google Messages
+  description: Phone messages in your browser
+  tags:
+    - communication
+  links:
+    - url: https://messages.google.com/web/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: communication
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: tak-ecosystem
+  title: TAK Ecosystem
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cloudtak
+  title: CloudTAK
+  description: Cloud TAK — COP
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://atoc.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tak-server
+  title: TAK Server
+  description: TAK 5.8 hardened
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://tak.onemindos.dev:8446
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: onetak
+  title: OneTAK
+  description: OneMind TAK platform
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://onetak.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fedhub
+  title: FedHub
+  description: TAK federation hub
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://fedhub.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tak-product-center
+  title: TAK Product Center
+  description: TAK ecosystem repositories
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://github.com/orgs/TAK-Product-Center/repositories
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tak-gov
+  title: TAK.gov
+  description: Official TAK program
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://tak.gov/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eolianvr
+  title: EolianVR
+  description: Eolian virtual reality
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://www.eolianvr.com/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pytak
+  title: PyTAK
+  description: Python TAK SDK documentation
+  tags:
+    - tak-ecosystem
+  links:
+    - url: https://pytak.readthedocs.io/en/latest/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: intelligence
+  title: Intelligence
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: grafana
+  title: Grafana
+  description: Dashboards & alerts
+  tags:
+    - intelligence
+  links:
+    - url: https://grafana.tail717ba0.ts.net/login
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nats-ui
+  title: NATS UI
+  description: JetStream browser
+  tags:
+    - intelligence
+  links:
+    - url: https://nats-ui-1.tail717ba0.ts.net/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: agent-monitor
+  title: Agent Monitor
+  description: Real-time agent TUI
+  tags:
+    - intelligence
+  links:
+    - url: https://agenttap-1.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: clickhouse
+  title: ClickHouse
+  description: 10-year event DB
+  tags:
+    - intelligence
+  links:
+    - url: https://clickhouse.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: data-storage
+  title: Data & Storage
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: minio
+  title: MinIO
+  description: Object storage
+  tags:
+    - data-storage
+  links:
+    - url: https://minio.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: postgis
+  title: PostGIS
+  description: Spatial database
+  tags:
+    - data-storage
+  links:
+    - url: https://pgadmin.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: longhorn
+  title: Longhorn
+  description: Distributed block storage
+  tags:
+    - data-storage
+  links:
+    - url: https://longhorn.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: observability
+  title: Observability
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hubble-ui
+  title: Hubble UI
+  description: Cilium network flows
+  tags:
+    - observability
+  links:
+    - url: https://hubble.tail717ba0.ts.net/?namespace=hermes
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: prometheus
+  title: Prometheus
+  description: Metrics scraper
+  tags:
+    - observability
+  links:
+    - url: https://prometheus.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nats-surveyor
+  title: NATS Surveyor
+  description: NATS metrics
+  tags:
+    - observability
+  links:
+    - url: https://nats-surveyor-1.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: geospatial
+  title: Geospatial
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tileserver-gl
+  title: TileServer GL
+  description: Vector tiles
+  tags:
+    - geospatial
+  links:
+    - url: https://tileserver.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: valhalla
+  title: Valhalla
+  description: Routing engine
+  tags:
+    - geospatial
+  links:
+    - url: https://valhalla.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: maputnik
+  title: Maputnik
+  description: Map style editor
+  tags:
+    - geospatial
+  links:
+    - url: https://maputnik.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: webodm
+  title: WebODM
+  description: Drone imagery
+  tags:
+    - geospatial
+  links:
+    - url: https://webodm.onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: zoho-apps
+  title: Zoho Apps
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-one
+  title: Zoho One
+  description: Zoho One workspace
+  tags:
+    - zoho-apps
+  links:
+    - url: https://one.zoho.com/zohoone/zeusdelacruz/home/cxapp-boards/home/CDB-1299481000000002042
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-mail
+  title: Zoho Mail
+  description: Inbox and mail
+  tags:
+    - zoho-apps
+  links:
+    - url: https://mail.zoho.com/zm/#mail
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-store
+  title: Zoho Store
+  description: Zoho apps and subscriptions
+  tags:
+    - zoho-apps
+  links:
+    - url: https://store.zoho.com/html/store/home.html
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-account
+  title: Zoho Account
+  description: Profile and account settings
+  tags:
+    - zoho-apps
+  links:
+    - url: https://accounts.zoho.com/home#profile/personal
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-mcp-client
+  title: Zoho MCP Client
+  description: MCP server connections
+  tags:
+    - zoho-apps
+  links:
+    - url: https://mcp.zoho.com/mcp-client/931949197#/server
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-api-console
+  title: Zoho API Console
+  description: Zoho API applications and credentials
+  tags:
+    - zoho-apps
+  links:
+    - url: https://api-console.zoho.com/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-social
+  title: Zoho Social
+  description: Social media management
+  tags:
+    - zoho-apps
+  links:
+    - url: https://social.zoho.com/social/zeusdelacruz/1698072000000023009/Home.do?isAccessRequested=true#home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-workplace
+  title: Zoho Workplace
+  description: Workplace dashboard
+  tags:
+    - zoho-apps
+  links:
+    - url: https://workplace.zoho.com/#dashboard/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-projects
+  title: Zoho Projects
+  description: Project management
+  tags:
+    - zoho-apps
+  links:
+    - url: https://projects.zoho.com/portal/zeusdelacruz#zp/dashboard/2727104000000135028
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-flow
+  title: Zoho Flow
+  description: Workflow automation
+  tags:
+    - zoho-apps
+  links:
+    - url: https://flow.zoho.com/#/dashboard
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-iot
+  title: Zoho IoT
+  description: IoT platform
+  tags:
+    - zoho-apps
+  links:
+    - url: https://iot.zoho.com/platform/p/OM99URW/home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zoho-zia-agents
+  title: Zoho Zia Agents
+  description: Zia AI agents workspace
+  tags:
+    - zoho-apps
+  links:
+    - url: https://ziaagents.zoho.com/941902808/home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: zoho-apps
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: personal-tools
+  title: Personal Tools
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: 1password
+  title: 1Password
+  description: Password manager
+  tags:
+    - personal-tools
+  links:
+    - url: https://my.1password.com/home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dropbox
+  title: Dropbox
+  description: Files and cloud storage
+  tags:
+    - personal-tools
+  links:
+    - url: https://www.dropbox.com/home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: raindrop-io
+  title: Raindrop.io
+  description: Bookmarks and reading
+  tags:
+    - personal-tools
+  links:
+    - url: https://app.raindrop.io/my/0
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: at-t-prepaid
+  title: AT&T Prepaid
+  description: Wireless account
+  tags:
+    - personal-tools
+  links:
+    - url: https://www.att.com/prepaid/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workspaces
+  title: Workspaces
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: github
+  title: GitHub
+  description: OneMind repositories
+  tags:
+    - workspaces
+  links:
+    - url: https://github.com/onemindos
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: workspaces
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: composio
+  title: Composio
+  description: App connections and integrations
+  tags:
+    - workspaces
+  links:
+    - url: https://dashboard.composio.dev/OneMind/~/connect
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: workspaces
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: miro
+  title: Miro
+  description: Team boards and collaboration
+  tags:
+    - workspaces
+  links:
+    - url: https://miro.com/app/dashboard/org/3458764575937063233/team/3458764575937063234/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: workspaces
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: circle
+  title: Circle
+  description: Community workspace
+  tags:
+    - workspaces
+  links:
+    - url: https://login.circle.so/sign_in
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: workspaces
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: personal-finance
+  title: Personal Finance
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mercury
+  title: Mercury
+  description: Banking and finances
+  tags:
+    - personal-finance
+  links:
+    - url: https://app.mercury.com/home
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-finance
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: credit-karma
+  title: Credit Karma
+  description: Credit monitoring
+  tags:
+    - personal-finance
+  links:
+    - url: https://www.creditkarma.com/auth/logon
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-finance
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: experian
+  title: Experian
+  description: Credit report and score
+  tags:
+    - personal-finance
+  links:
+    - url: https://usa.experian.com/login/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-finance
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: transunion
+  title: TransUnion
+  description: Credit report and score
+  tags:
+    - personal-finance
+  links:
+    - url: https://ciam.tui.transunion.com/realms/TransUnion/protocol/openid-connect/auth?response_type=code&redirect_uri=https://service.transunion.com/dss/ssoRedirect.page&client_id=Phoenix&scope=openid
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-finance
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: equifax
+  title: Equifax
+  description: Credit report and score
+  tags:
+    - personal-finance
+  links:
+    - url: https://secure.equifax.com/auth/login?lang=en-US
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-finance
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: innovis
+  title: Innovis
+  description: Credit report
+  tags:
+    - personal-finance
+  links:
+    - url: https://www.innovis.com/login/index
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-finance
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: external
+  title: External
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: zeus-delacruz
+  title: Zeus Delacruz
+  description: Personal brand
+  tags:
+    - external
+  links:
+    - url: https://zeusdelacruz.com
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: external
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: onemind-os
+  title: OneMind OS
+  description: Main platform
+  tags:
+    - external
+  links:
+    - url: https://onemindos.dev
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: external
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: external-argocd
+  title: ArgoCD
+  description: GitOps CD
+  tags:
+    - external
+  links:
+    - url: https://argocd.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: external
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: external-kubernetes-dashboard
+  title: Kubernetes Dashboard
+  description: Cluster UI
+  tags:
+    - external
+  links:
+    - url: https://k8s-dashboard.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: external
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: external-tailscale
+  title: Tailscale
+  description: Mesh VPN
+  tags:
+    - external
+  links:
+    - url: https://login.tailscale.com/admin/machines
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: external
