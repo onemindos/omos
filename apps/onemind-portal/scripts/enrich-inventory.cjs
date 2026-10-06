@@ -33,3 +33,5 @@ for(const peer of [mesh.Self,...Object.values(mesh.Peer||{})].filter(Boolean)){
 }
 for(const [file,docs]of [['cluster.yaml',cluster],['apps.yaml',apps]])for(const base of ['catalog','../../platform/backstage/catalog'])fs.writeFileSync(`${base}/${file}`,docs.map(x=>YAML.stringify(x)).join('---\n'));
 console.log('Inventory:',cluster.filter(x=>x.kind==='Component').length,'workloads;',cluster.filter(x=>x.spec.type==='mesh-endpoint').length,'mesh endpoints;',apps.filter(x=>x.spec?.dependsOn?.length).length,'linked application entries');
+
+cp.execFileSync(process.execPath,['scripts/reconcile-fabric.cjs'],{stdio:'inherit'});
