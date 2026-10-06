@@ -2,7 +2,7 @@ import http from 'node:http';
 
 // Fixed cluster targets only. Never accept a URL or query from the client.
 const targets=[
-  {name:'Identity',entity:'resource:default/do-nyc3-omos-cloud',url:'http://platform-auth-helm-authentik-server.auth.svc/-/health/ready/',link:'https://onemind-auth.tail717ba0.ts.net',scope:'Readiness endpoint'},
+  {name:'Identity',entity:'component:default/k8s-auth-platform-auth-helm-authentik-server-78f74c27',url:'http://platform-auth-helm-authentik-server.auth.svc/-/health/ready/',link:'https://onemind-auth.tail717ba0.ts.net',scope:'Readiness endpoint'},
   {name:'Grafana',entity:'component:default/grafana',url:'http://monitoring-grafana.monitoring.svc/api/health',link:'https://grafana.tail717ba0.ts.net',scope:'Application health endpoint'},
   {name:'Headlamp',entity:'component:default/headlamp',url:'http://headlamp.kube.svc:4466/',link:'https://headlamp.tail717ba0.ts.net',scope:'Web page response'},
   {name:'NATS dashboard',entity:'component:default/nats-dashboard',url:'http://nats-dashboard.nats.svc:3000/',link:'https://nats-dashboard-1.tail717ba0.ts.net',scope:'Web page response'},

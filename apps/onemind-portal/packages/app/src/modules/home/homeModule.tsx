@@ -61,7 +61,7 @@ function StatusPanel(){
       {data.serviceHealth&&<Box mt={3}>
         <Typography variant="h6">Critical service health</Typography>
         <Typography variant="caption">{data.serviceHealth.scope} Checked {new Date(data.serviceHealth.observedAt).toLocaleString()}</Typography>
-        {data.serviceHealth.checks.map(x=><Box key={x.name} mt={1}><Link href={x.link} target="_blank" rel="noopener noreferrer">{x.name}</Link> · {x.state}{x.httpStatus?` · HTTP ${x.httpStatus}`:''}{x.latencyMs!==undefined?` · ${x.latencyMs} ms`:''} · <Link href={`/catalog/${x.entity.replace(':','/')}`}>Catalog</Link><Typography variant="caption" display="block">{x.scope}</Typography></Box>)}
+        {data.serviceHealth.checks.map(x=><Box key={x.name} mt={1}><Link href={x.link} target="_blank" rel="noopener noreferrer">{x.name}</Link> · {x.state}{x.httpStatus?` · HTTP ${x.httpStatus}`:''}{x.latencyMs!==undefined?` · ${x.latencyMs} ms`:''} · <Link href={`/catalog/${x.entity.split(':')[1].split('/')[0]}/${x.entity.split(':')[0]}/${x.entity.split('/')[1]}`}>Catalog</Link><Typography variant="caption" display="block">{x.scope}</Typography></Box>)}
         <Typography variant="h6">Namespace resource use</Typography>
         <Typography variant="caption">Prometheus: CPU cores averaged over 5 minutes; memory working set. Missing values mean unknown.</Typography>
         {data.serviceHealth.metricsUnavailable&&<Typography color="error">A metrics query failed; values may be incomplete.</Typography>}
