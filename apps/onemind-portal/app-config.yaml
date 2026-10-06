@@ -1,3 +1,4 @@
+enableExperimentalRedirectFlow: true
 app:
   title: OneMind
   baseUrl: http://localhost:3000

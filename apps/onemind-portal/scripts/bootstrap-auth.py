@@ -47,6 +47,7 @@ if existing:
     values={k:base64.b64decode(v).decode() for k,v in existing['data'].items()}
 else:
     values={'POSTGRES_PASSWORD':secrets.token_urlsafe(48),'AUTH_SESSION_SECRET':secrets.token_urlsafe(48)}
+values.setdefault('POSTGRES_ADMIN_PASSWORD',secrets.token_urlsafe(48))
 values.update({'AUTH_OIDC_CLIENT_ID':provider['client_id'],'AUTH_OIDC_CLIENT_SECRET':provider['client_secret']})
 def seal(name,values,stype='Opaque'):
     obj={'apiVersion':'v1','kind':'Secret','metadata':{'name':name,'namespace':'backstage'},'type':stype,'stringData':values}
