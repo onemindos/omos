@@ -66,6 +66,10 @@ catalog:
     - allow: [Component, System, API, Resource, Location]
   locations:
     - type: file
+      target: ../../templates/service/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: ../../catalog/apps.yaml
     - type: file
       target: ../../catalog/cluster.yaml

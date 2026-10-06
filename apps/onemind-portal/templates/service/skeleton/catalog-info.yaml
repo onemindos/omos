@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  annotations:
+    backstage.io/kubernetes-id: ${{ values.name }}
+  tags: [proposed, gitops]
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins

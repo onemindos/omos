@@ -52,6 +52,7 @@ RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid
     yarn workspaces focus --all --production && yarn cache clean
 
 # This will include the examples, if you don't need these simply remove this line
+COPY --chown=node:node templates ./templates
 COPY --chown=node:node catalog ./catalog
 COPY --chown=node:node techdocs ./techdocs
 
