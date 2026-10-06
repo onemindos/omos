@@ -3,6 +3,9 @@ kind: Resource
 metadata:
   name: do-nyc3-omos-cloud
   title: OneMind Cloud — NYC3
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   type: kubernetes-cluster
   owner: group:default/onemind-admins
@@ -12,6 +15,9 @@ kind: System
 metadata:
   name: cluster-argocd
   title: Cluster / argocd
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -20,6 +26,9 @@ kind: System
 metadata:
   name: cluster-auth
   title: Cluster / auth
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -28,6 +37,9 @@ kind: System
 metadata:
   name: cluster-backstage
   title: Cluster / backstage
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -36,6 +48,9 @@ kind: System
 metadata:
   name: cluster-cert-manager
   title: Cluster / cert-manager
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -44,6 +59,9 @@ kind: System
 metadata:
   name: cluster-cloudflare
   title: Cluster / cloudflare
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -52,6 +70,9 @@ kind: System
 metadata:
   name: cluster-github-runner
   title: Cluster / github-runner
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -60,6 +81,9 @@ kind: System
 metadata:
   name: cluster-hermes
   title: Cluster / hermes
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -68,6 +92,9 @@ kind: System
 metadata:
   name: cluster-ingress-nginx
   title: Cluster / ingress-nginx
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -76,6 +103,9 @@ kind: System
 metadata:
   name: cluster-kube-system
   title: Cluster / kube-system
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -84,6 +114,9 @@ kind: System
 metadata:
   name: cluster-kube
   title: Cluster / kube
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -92,6 +125,9 @@ kind: System
 metadata:
   name: cluster-matrix
   title: Cluster / matrix
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -100,6 +136,9 @@ kind: System
 metadata:
   name: cluster-monitoring
   title: Cluster / monitoring
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -108,6 +147,9 @@ kind: System
 metadata:
   name: cluster-nats
   title: Cluster / nats
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -116,6 +158,9 @@ kind: System
 metadata:
   name: cluster-omos
   title: Cluster / omos
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -124,6 +169,9 @@ kind: System
 metadata:
   name: cluster-onetak
   title: Cluster / onetak
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -132,6 +180,9 @@ kind: System
 metadata:
   name: cluster-openclaw
   title: Cluster / openclaw
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -140,6 +191,9 @@ kind: System
 metadata:
   name: cluster-tailscale
   title: Cluster / tailscale
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -148,6 +202,9 @@ kind: System
 metadata:
   name: cluster-takml
   title: Cluster / takml
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -156,6 +213,9 @@ kind: System
 metadata:
   name: cluster-takserver
   title: Cluster / takserver
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -164,6 +224,9 @@ kind: System
 metadata:
   name: cluster-zeus-site
   title: Cluster / zeus-site
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -172,6 +235,9 @@ kind: System
 metadata:
   name: cluster-clickhouse
   title: Cluster / clickhouse
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
 spec:
   owner: group:default/onemind-admins
 ---
@@ -185,7 +251,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-applicationset-controller
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.631Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.596Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -207,7 +275,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-dex-server
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -229,7 +299,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-notifications-controller
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -251,7 +323,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=argocd-redis
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -273,7 +347,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-repo-server
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -295,7 +371,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-server
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -317,7 +395,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=authentik-redis
     backstage.io/kubernetes-namespace: auth
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - auth
@@ -339,7 +419,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/instance=platform-auth-helm,app.kubernetes.io/name=authentik
     backstage.io/kubernetes-namespace: auth
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - auth
@@ -361,7 +443,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=worker,app.kubernetes.io/instance=platform-auth-helm,app.kubernetes.io/name=authentik
     backstage.io/kubernetes-namespace: auth
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - auth
@@ -383,7 +467,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=backstage
     backstage.io/kubernetes-namespace: backstage
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - backstage
@@ -405,7 +491,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=controller,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cert-manager
     backstage.io/kubernetes-namespace: cert-manager
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - cert-manager
@@ -427,7 +515,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=cainjector,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cainjector
     backstage.io/kubernetes-namespace: cert-manager
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - cert-manager
@@ -449,7 +539,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=webhook,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=webhook
     backstage.io/kubernetes-namespace: cert-manager
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - cert-manager
@@ -471,7 +563,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=cloudflared
     backstage.io/kubernetes-namespace: cloudflare
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - cloudflare
@@ -493,7 +587,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=github-runner
     backstage.io/kubernetes-namespace: github-runner
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - github-runner
@@ -515,7 +611,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
     backstage.io/kubernetes-namespace: hermes
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - hermes
@@ -537,7 +635,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
     backstage.io/kubernetes-namespace: ingress-nginx
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - ingress-nginx
@@ -559,7 +659,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=clickhouse-operator
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -581,7 +683,9 @@ metadata:
     backstage.io/kubernetes-label-selector: k8s-app=kube-dns
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -603,7 +707,9 @@ metadata:
     backstage.io/kubernetes-label-selector: k8s-app=hubble-relay
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -625,7 +731,9 @@ metadata:
     backstage.io/kubernetes-label-selector: k8s-app=hubble-ui
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -647,7 +755,9 @@ metadata:
     backstage.io/kubernetes-label-selector: k8s-app=konnectivity-agent
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -669,7 +779,9 @@ metadata:
     backstage.io/kubernetes-label-selector: k8s-app=metrics-server
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -691,7 +803,9 @@ metadata:
     backstage.io/kubernetes-label-selector: name=sealed-secrets-controller
     backstage.io/kubernetes-namespace: kube-system
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube-system
@@ -713,7 +827,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=headlamp
     backstage.io/kubernetes-namespace: kube
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube
@@ -735,7 +851,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=kubernetes-dashboard
     backstage.io/kubernetes-namespace: kube
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - kube
@@ -757,7 +875,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=element-web
     backstage.io/kubernetes-namespace: matrix
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - matrix
@@ -779,7 +899,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=synapse
     backstage.io/kubernetes-namespace: matrix
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - matrix
@@ -801,7 +923,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=gateway,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -823,7 +947,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring,app.kubernetes.io/name=grafana
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -845,7 +971,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=kube-prometheus-stack-operator,release=monitoring
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -867,7 +995,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring,app.kubernetes.io/name=kube-state-metrics
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -889,7 +1019,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-web-ui
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -911,7 +1043,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agenttap
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -933,7 +1067,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=heynats
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -955,7 +1091,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=nack
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -977,7 +1115,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-dashboard
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -999,7 +1139,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=nats-metrics-scrape
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -1021,7 +1163,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=metrics,app.kubernetes.io/name=nats-surveyor
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -1043,7 +1187,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-ui
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -1065,7 +1211,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=feed-intel
     backstage.io/kubernetes-namespace: omos
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - omos
@@ -1087,7 +1235,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=feed-satellites
     backstage.io/kubernetes-namespace: omos
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - omos
@@ -1109,7 +1259,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-mission-engine
     backstage.io/kubernetes-namespace: omos
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - omos
@@ -1131,7 +1283,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-tak-projector
     backstage.io/kubernetes-namespace: omos
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - omos
@@ -1153,7 +1307,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect
     backstage.io/kubernetes-namespace: omos
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - omos
@@ -1175,7 +1331,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=sink-clickhouse
     backstage.io/kubernetes-namespace: omos
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - omos
@@ -1197,7 +1355,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=maputnik
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1219,7 +1379,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=martin
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1241,7 +1403,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=nodeodm
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1263,7 +1427,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=nominatim
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1285,7 +1451,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=onetak-geo-db
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1307,7 +1475,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=onetak-media
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1329,7 +1499,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=onetak-minio
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1351,7 +1523,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=onetak-postgis
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1373,7 +1547,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=overpass
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1395,7 +1571,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=pg-featureserv
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1417,7 +1595,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=stac-api
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1439,7 +1619,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=stac-browser
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1461,7 +1643,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=tak-portal
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1483,7 +1667,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=tile38
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1505,7 +1691,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=tileserver-gl
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1527,7 +1715,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=valhalla
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1549,7 +1739,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=webodm
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1571,7 +1763,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=webodm-broker
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1593,7 +1787,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=webodm-db
     backstage.io/kubernetes-namespace: onetak
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - onetak
@@ -1615,7 +1811,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=openclaw,onemind.os/component=openclaw-gateway,onemind.os/managed-by=kustomize
     backstage.io/kubernetes-namespace: openclaw
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - openclaw
@@ -1637,7 +1835,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=operator
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -1659,7 +1859,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takml-db
     backstage.io/kubernetes-namespace: takml
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takml
@@ -1681,7 +1883,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takml-server
     backstage.io/kubernetes-namespace: takml
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takml
@@ -1703,7 +1907,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takml-vision-worker
     backstage.io/kubernetes-namespace: takml
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takml
@@ -1725,7 +1931,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=fedhub
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1747,7 +1955,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=mumble-bridge
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1769,7 +1979,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=murmur
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1791,7 +2003,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=tak-lb-proxy
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1813,7 +2027,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=tak-nats-leaf
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1835,7 +2051,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takserver-api
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1857,7 +2075,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takserver-config
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1879,7 +2099,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takserver-messaging
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1901,7 +2123,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=nats-box,app.kubernetes.io/instance=takserver,app.kubernetes.io/name=nats
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1923,7 +2147,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takserver-plugins
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -1945,7 +2171,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=zeus-site
     backstage.io/kubernetes-namespace: zeus-site
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - zeus-site
@@ -1967,7 +2195,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=zeus-site-postgres
     backstage.io/kubernetes-namespace: zeus-site
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - zeus-site
@@ -1989,7 +2219,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=argocd,app.kubernetes.io/name=argocd-application-controller
     backstage.io/kubernetes-namespace: argocd
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - argocd
@@ -2011,7 +2243,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=authentik-postgres
     backstage.io/kubernetes-namespace: auth
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - auth
@@ -2033,7 +2267,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=backstage-postgres
     backstage.io/kubernetes-namespace: backstage
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - backstage
@@ -2055,7 +2291,9 @@ metadata:
     backstage.io/kubernetes-label-selector: clickhouse.altinity.com/app=chop,clickhouse.altinity.com/chi=onemind,clickhouse.altinity.com/cluster=onemind,clickhouse.altinity.com/namespace=clickhouse,clickhouse.altinity.com/replica=0,clickhouse.altinity.com/shard=0
     backstage.io/kubernetes-namespace: clickhouse
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - clickhouse
@@ -2077,7 +2315,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=postgres
     backstage.io/kubernetes-namespace: matrix
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - matrix
@@ -2099,7 +2339,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=redis
     backstage.io/kubernetes-namespace: matrix
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - matrix
@@ -2121,7 +2363,9 @@ metadata:
     backstage.io/kubernetes-label-selector: alertmanager=monitoring-kube-prometheus-alertmanager,app.kubernetes.io/instance=monitoring-kube-prometheus-alertmanager,app.kubernetes.io/managed-by=prometheus-operator,app.kubernetes.io/name=alertmanager
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -2143,7 +2387,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=single-binary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -2165,7 +2411,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring-kube-prometheus-prometheus,app.kubernetes.io/managed-by=prometheus-operator,app.kubernetes.io/name=prometheus,operator.prometheus.io/name=monitoring-kube-prometheus-prometheus,operator.prometheus.io/shard=0,prometheus=monitoring-kube-prometheus-prometheus
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -2187,7 +2435,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
     backstage.io/kubernetes-namespace: monitoring
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - monitoring
@@ -2209,7 +2459,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=nats,app.kubernetes.io/instance=nats,app.kubernetes.io/name=nats
     backstage.io/kubernetes-namespace: nats
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - nats
@@ -2231,7 +2483,9 @@ metadata:
     backstage.io/kubernetes-label-selector: tailscale.com/managed=true,tailscale.com/parent-resource=egress,tailscale.com/parent-resource-type=proxygroup
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2253,7 +2507,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=558c1899-1b5d-44b1-9d1a-8bf0033286a6
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2275,7 +2531,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=8730c2e0-28ca-4dc2-898c-3cf4edf6084d
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2297,7 +2555,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=9de9b0f1-b1f7-457b-a409-93f3a7b7d30c
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2319,7 +2579,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=3af5035b-576a-43a7-a2fd-99d6b7f8ed62
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2341,7 +2603,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=d403c67b-b347-41db-bd05-92c26dfb4db5
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2363,7 +2627,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=7cb75f21-e0cc-4c50-ae63-cdb9dbf16c04
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2385,29 +2651,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=45324aa8-6e12-4fb9-a93e-bfff8834369b
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
-  tags:
-    - kubernetes
-    - tailscale
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: cluster-tailscale
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-tailscale-ts-homepage-cw4rv-95f2e58e
-  title: tailscale / ts-homepage-cw4rv
-  description: StatefulSet in tailscale
-  annotations:
-    backstage.io/kubernetes-label-selector: app=05474b4b-4c74-4d7c-b330-87b82d8536a8
-    backstage.io/kubernetes-namespace: tailscale
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2429,7 +2675,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=75bd5f05-7ab1-4c02-9720-08a46d10a76a
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2451,7 +2699,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=c5dd0973-444a-4f0c-a535-3d6d8aa6c997
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2473,7 +2723,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=3ae70c7a-97dc-43bc-b65f-7b639971c2a0
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2495,7 +2747,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=de8fe1dc-c7fb-4c42-9a5d-aacdcf8b61b0
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2517,7 +2771,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=ef4a4284-c2ff-445b-a833-5c1dd1d70263
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2539,7 +2795,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=f89631ec-d3c1-4a05-a653-baf65eb228f3
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2561,7 +2819,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=08e1542d-c5c3-43c5-bb65-f23c742fd1e5
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2583,7 +2843,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=969dc35f-b2ab-4dd6-9775-8aa806bf6284
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2605,7 +2867,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=f7a6fea3-8716-4b68-8493-bbb6ed20d30f
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2627,7 +2891,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=535e811f-8aa7-46ee-ad89-b6df256ee8e3
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2649,7 +2915,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=51e249ff-00db-47ad-96cc-1c5be53fd6a7
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2671,7 +2939,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=8cdf28b9-9517-47e1-8727-6e33ac4c9b8f
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2693,7 +2963,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=bf582a24-1bac-4ae0-a170-b79d7dd626f3
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2715,7 +2987,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=dfa22f2a-91cc-4d4a-ab89-b9327819ae9c
     backstage.io/kubernetes-namespace: tailscale
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - tailscale
@@ -2737,7 +3011,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=fedhub-mongodb
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.602Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -2759,7 +3035,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=tak-ldap
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.602Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -2781,7 +3059,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app=takserver-ignite
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.602Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -2803,7 +3083,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=nats,app.kubernetes.io/instance=takserver,app.kubernetes.io/name=nats
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.602Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -2825,7 +3107,9 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=primary,app.kubernetes.io/instance=takserver,app.kubernetes.io/name=postgresql
     backstage.io/kubernetes-namespace: takserver
     onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T16:38:23.632Z
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.602Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
   tags:
     - kubernetes
     - takserver
@@ -2836,3 +3120,790 @@ spec:
   system: cluster-takserver
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: onemind-mesh
+  title: OneMind mesh
+  description: Discovered Tailscale endpoints; these include devices and service
+    proxies, not only physical machines.
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-30d149ba2901
+  title: zeus’s MacBook Pro
+  description: macOS mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-mbp.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-34517c81dc7e
+  title: nats-ui
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: nats-ui-1.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-df2d24a50655
+  title: omos-nats
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-nats.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-d7c628bfbdf4
+  title: intel-crucix-ingress
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: intel-crucix-ingress.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-8939b2699e11
+  title: DESKTOP-2SCSSQD
+  description: windows mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-dell-edge.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-1d2bab1434fb
+  title: tailscale-operator
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: tailscale-operator.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-b9e0c5b67de1
+  title: omos-intel
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-intel.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-45ce98af4994
+  title: hermes-omos-ha-edge
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-omos-ha-edge.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-97e495361c00
+  title: agent-web-ui
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: agent-web-ui-1.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-b052cf149808
+  title: hermes-omos-dell-edge
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-omos-dell-edge.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-5d32cc12c624
+  title: argocd
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: argocd.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-29e728660888
+  title: openclaw
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: openclaw.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-8c830a9729f5
+  title: hermes-omos-intel
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-omos-intel.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-c8494c949f0b
+  title: omos-ipad
+  description: iOS mesh endpoint. Availability is a discovery snapshot, not a live
+    health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-ipad.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-e2e1e8582d97
+  title: hermes-omos-dell-zeus
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-omos-dell-zeus.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-eb4bcd2d04aa
+  title: hermes-legacy
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-legacy.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-e0b87b391e90
+  title: intel-worldmonitor-ingress
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: intel-worldmonitor-ingress.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-1651915b8163
+  title: omos-ha
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-ha-edge.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-f4cd08891ff2
+  title: grafana
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: grafana.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-0bacd65739b3
+  title: hermes-omos-mbp
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-omos-mbp.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-cdf4b0be239e
+  title: wp-zeus
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: wp-zeus.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-00536ad2aff6
+  title: mediamtx-tak
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: mediamtx-tak.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-258c5e264ff4
+  title: omos-s24u-zeus
+  description: android mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-s24u-zeus.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-3f6b2c2528f8
+  title: agenttap
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: agenttap-1.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-0107a61ac658
+  title: headlamp
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: headlamp.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-471608ee9b35
+  title: onemind-auth
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: onemind-auth.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-d2b3a2d137c0
+  title: hubble
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hubble.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-ba87ad8cd961
+  title: hermes-agent
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-agent.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-5b1db5c25ca6
+  title: onemind-preview
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: onemind-preview.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-e70c1174e607
+  title: Omos-tablet
+  description: android mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-tablet.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-e33305b085a1
+  title: heynats
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: heynats-1.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-36998904bb67
+  title: omos-dell-zeus
+  description: windows mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-dell-zeus.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-56d8138d265f
+  title: hermes-omos-s24
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: hermes-omos-s24.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-3053acb34078
+  title: OMOS TV
+  description: android mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: omos-tv.tail717ba0.ts.net.
+    onemind.io/observed-online: "false"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-8b843fd0b634
+  title: onemind-egress-0
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: onemind-egress-0.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-b872d052c175
+  title: nats-dashboard
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: nats-dashboard-1.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: mesh-d498d31f1c2a
+  title: k8s-dashboard
+  description: linux mesh endpoint. Availability is a discovery snapshot, not a
+    live health check.
+  annotations:
+    onemind.io/inventory-source: tailscale
+    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
+    onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-dns: k8s-dashboard.tail717ba0.ts.net.
+    onemind.io/observed-online: "true"
+  tags:
+    - mesh
+    - unreviewed
+spec:
+  type: mesh-endpoint
+  owner: group:default/onemind-admins
+  system: onemind-mesh

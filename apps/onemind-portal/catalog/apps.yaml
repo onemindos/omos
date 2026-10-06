@@ -18,11 +18,17 @@ metadata:
     - url: https://argocd.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+  dependsOn:
+    - component:default/k8s-argocd-argocd-server-4414022f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -36,11 +42,17 @@ metadata:
     - url: https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+  dependsOn:
+    - component:default/k8s-kube-kubernetes-dashboard-226fa5ac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -54,11 +66,17 @@ metadata:
     - url: https://headlamp.tail717ba0.ts.net/c/main/token
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+  dependsOn:
+    - component:default/k8s-kube-headlamp-c14c4d45
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -72,6 +90,9 @@ metadata:
     - url: https://login.tailscale.com/admin/machines
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -90,6 +111,9 @@ metadata:
     - url: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -108,6 +132,9 @@ metadata:
     - url: https://cloud.digitalocean.com/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -134,11 +161,17 @@ metadata:
     - url: https://hermes-agent.tail717ba0.ts.net/login?next=%2F
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+  dependsOn:
+    - component:default/k8s-hermes-hermes-legacy-1e93d498
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -152,11 +185,17 @@ metadata:
     - url: https://agent-web-ui-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+  dependsOn:
+    - component:default/k8s-nats-agent-web-ui-be5be217
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -170,11 +209,17 @@ metadata:
     - url: https://openclaw.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+  dependsOn:
+    - component:default/k8s-openclaw-openclaw-5dcd5a46
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -188,11 +233,17 @@ metadata:
     - url: https://nats-dashboard-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+  dependsOn:
+    - component:default/k8s-nats-nats-dashboard-3d1c0f96
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -214,11 +265,18 @@ metadata:
     - url: https://element.onemindos.com
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: communication
+  dependsOn:
+    - component:default/k8s-matrix-synapse-c02538fc
+    - component:default/k8s-matrix-element-web-2e9639d4
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -232,11 +290,18 @@ metadata:
     - url: https://matrix.onemindos.com
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: communication
+  dependsOn:
+    - component:default/k8s-matrix-synapse-c02538fc
+    - component:default/k8s-matrix-element-web-2e9639d4
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -250,11 +315,17 @@ metadata:
     - url: https://heynats-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: communication
+  dependsOn:
+    - component:default/k8s-nats-heynats-9ae724e5
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -268,6 +339,9 @@ metadata:
     - url: https://messages.google.com/web/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -294,6 +368,9 @@ metadata:
     - url: https://atoc.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -312,6 +389,9 @@ metadata:
     - url: https://tak.onemindos.dev:8446
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -330,6 +410,9 @@ metadata:
     - url: https://onetak.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -348,11 +431,17 @@ metadata:
     - url: https://fedhub.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: tak-ecosystem
+  dependsOn:
+    - component:default/k8s-takserver-fedhub-8c653952
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -366,6 +455,9 @@ metadata:
     - url: https://github.com/orgs/TAK-Product-Center/repositories
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -384,6 +476,9 @@ metadata:
     - url: https://tak.gov/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -402,6 +497,9 @@ metadata:
     - url: https://www.eolianvr.com/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -420,6 +518,9 @@ metadata:
     - url: https://pytak.readthedocs.io/en/latest/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -446,11 +547,17 @@ metadata:
     - url: https://grafana.tail717ba0.ts.net/login
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: intelligence
+  dependsOn:
+    - component:default/k8s-monitoring-monitoring-grafana-8ed6cac6
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -464,11 +571,17 @@ metadata:
     - url: https://nats-ui-1.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: intelligence
+  dependsOn:
+    - component:default/k8s-nats-nats-ui-609d1098
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -482,11 +595,17 @@ metadata:
     - url: https://agenttap-1.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: intelligence
+  dependsOn:
+    - component:default/k8s-nats-agenttap-3e09fc8c
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -500,6 +619,9 @@ metadata:
     - url: https://clickhouse.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: mesh-endpoint-unverified
 spec:
   type: website
   lifecycle: production
@@ -526,6 +648,9 @@ metadata:
     - url: https://minio.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: mesh-endpoint-unverified
 spec:
   type: website
   lifecycle: production
@@ -544,6 +669,9 @@ metadata:
     - url: https://pgadmin.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: mesh-endpoint-unverified
 spec:
   type: website
   lifecycle: production
@@ -562,6 +690,9 @@ metadata:
     - url: https://longhorn.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: mesh-endpoint-unverified
 spec:
   type: website
   lifecycle: production
@@ -588,11 +719,17 @@ metadata:
     - url: https://hubble.tail717ba0.ts.net/?namespace=hermes
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: observability
+  dependsOn:
+    - component:default/k8s-kube-system-hubble-ui-7f8dcbd1
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -606,6 +743,9 @@ metadata:
     - url: https://prometheus.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: mesh-endpoint-unverified
 spec:
   type: website
   lifecycle: production
@@ -624,6 +764,9 @@ metadata:
     - url: https://nats-surveyor-1.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: mesh-endpoint-unverified
 spec:
   type: website
   lifecycle: production
@@ -650,11 +793,21 @@ metadata:
     - url: https://tileserver.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: geospatial
+  dependsOn:
+    - component:default/k8s-onetak-valhalla-3fc86e61
+    - component:default/k8s-onetak-nominatim-081a4289
+    - component:default/k8s-onetak-overpass-4e197497
+    - component:default/k8s-onetak-tileserver-gl-90bbef41
+    - component:default/k8s-onetak-maputnik-31db18cf
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -668,11 +821,21 @@ metadata:
     - url: https://valhalla.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: geospatial
+  dependsOn:
+    - component:default/k8s-onetak-valhalla-3fc86e61
+    - component:default/k8s-onetak-nominatim-081a4289
+    - component:default/k8s-onetak-overpass-4e197497
+    - component:default/k8s-onetak-tileserver-gl-90bbef41
+    - component:default/k8s-onetak-maputnik-31db18cf
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -686,11 +849,21 @@ metadata:
     - url: https://maputnik.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: geospatial
+  dependsOn:
+    - component:default/k8s-onetak-valhalla-3fc86e61
+    - component:default/k8s-onetak-nominatim-081a4289
+    - component:default/k8s-onetak-overpass-4e197497
+    - component:default/k8s-onetak-tileserver-gl-90bbef41
+    - component:default/k8s-onetak-maputnik-31db18cf
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -704,6 +877,9 @@ metadata:
     - url: https://webodm.onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -730,6 +906,9 @@ metadata:
     - url: https://one.zoho.com/zohoone/zeusdelacruz/home/cxapp-boards/home/CDB-1299481000000002042
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -748,6 +927,9 @@ metadata:
     - url: https://mail.zoho.com/zm/#mail
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -766,6 +948,9 @@ metadata:
     - url: https://store.zoho.com/html/store/home.html
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -784,6 +969,9 @@ metadata:
     - url: https://accounts.zoho.com/home#profile/personal
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -802,6 +990,9 @@ metadata:
     - url: https://mcp.zoho.com/mcp-client/931949197#/server
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -820,6 +1011,9 @@ metadata:
     - url: https://api-console.zoho.com/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -838,6 +1032,9 @@ metadata:
     - url: https://social.zoho.com/social/zeusdelacruz/1698072000000023009/Home.do?isAccessRequested=true#home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -856,6 +1053,9 @@ metadata:
     - url: https://workplace.zoho.com/#dashboard/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -874,6 +1074,9 @@ metadata:
     - url: https://projects.zoho.com/portal/zeusdelacruz#zp/dashboard/2727104000000135028
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -892,6 +1095,9 @@ metadata:
     - url: https://flow.zoho.com/#/dashboard
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -910,6 +1116,9 @@ metadata:
     - url: https://iot.zoho.com/platform/p/OM99URW/home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -928,6 +1137,9 @@ metadata:
     - url: https://ziaagents.zoho.com/941902808/home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -954,6 +1166,9 @@ metadata:
     - url: https://my.1password.com/home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -972,6 +1187,9 @@ metadata:
     - url: https://www.dropbox.com/home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -990,6 +1208,9 @@ metadata:
     - url: https://app.raindrop.io/my/0
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1008,6 +1229,9 @@ metadata:
     - url: https://www.att.com/prepaid/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1034,6 +1258,9 @@ metadata:
     - url: https://github.com/onemindos
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1052,6 +1279,9 @@ metadata:
     - url: https://dashboard.composio.dev/OneMind/~/connect
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1070,6 +1300,9 @@ metadata:
     - url: https://miro.com/app/dashboard/org/3458764575937063233/team/3458764575937063234/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1088,6 +1321,9 @@ metadata:
     - url: https://login.circle.so/sign_in
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1114,6 +1350,9 @@ metadata:
     - url: https://app.mercury.com/home
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1132,6 +1371,9 @@ metadata:
     - url: https://www.creditkarma.com/auth/logon
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1150,6 +1392,9 @@ metadata:
     - url: https://usa.experian.com/login/
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1168,6 +1413,9 @@ metadata:
     - url: https://ciam.tui.transunion.com/realms/TransUnion/protocol/openid-connect/auth?response_type=code&redirect_uri=https://service.transunion.com/dss/ssoRedirect.page&client_id=Phoenix&scope=openid
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1186,6 +1434,9 @@ metadata:
     - url: https://secure.equifax.com/auth/login?lang=en-US
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1204,6 +1455,9 @@ metadata:
     - url: https://www.innovis.com/login/index
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1230,11 +1484,17 @@ metadata:
     - url: https://zeusdelacruz.com
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: external
+  dependsOn:
+    - component:default/k8s-zeus-site-zeus-site-97ff2164
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1248,11 +1508,18 @@ metadata:
     - url: https://onemindos.dev
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: external
+  dependsOn:
+    - component:default/k8s-onetak-tak-portal-034c1ce9
+    - component:default/k8s-onetak-martin-c119168d
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1266,11 +1533,17 @@ metadata:
     - url: https://argocd.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: external
+  dependsOn:
+    - component:default/k8s-argocd-argocd-server-4414022f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1284,11 +1557,17 @@ metadata:
     - url: https://k8s-dashboard.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: external
+  dependsOn:
+    - component:default/k8s-kube-kubernetes-dashboard-226fa5ac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1302,6 +1581,9 @@ metadata:
     - url: https://login.tailscale.com/admin/machines
       title: Open application
       icon: dashboard
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
@@ -1319,6 +1601,9 @@ metadata:
   links:
     - url: https://login.tailscale.com/admin
       title: Tailscale Admin
+  annotations:
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
 spec:
   type: website
   lifecycle: production
