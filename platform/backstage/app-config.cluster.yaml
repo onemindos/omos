@@ -19,3 +19,17 @@ search:
         frequency: {minutes: 1}
         timeout: {seconds: 50}
         initialDelay: {seconds: 30}
+
+backend:
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          token: ${MCP_TOKEN}
+          subject: onemind-readonly-ai
+        accessRestrictions:
+          - plugin: mcp-actions
+          - plugin: catalog
+            permissionAttribute: {action: read}
+          - plugin: onemind
+            permissionAttribute: {action: read}
