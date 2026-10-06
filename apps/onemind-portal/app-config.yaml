@@ -86,3 +86,7 @@ techdocs:
 mcpActions:
   name: OneMind
   description: Search and inspect the OneMind catalog. Operational changes use separately authorized workflows.
+
+integrations:
+  github:
+    - host: github.com
