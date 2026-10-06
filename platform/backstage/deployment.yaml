@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: backstage}
+  template:
+    metadata:
+      labels: {app: backstage}
+    spec:
+      serviceAccountName: backstage
+      imagePullSecrets: [{name: ghcr}]
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: backstage
+          image: ghcr.io/onemindos/onemind-portal@sha256:fbc1146d6fa14fda9e68e87dc896dcada93cdd08590a82966ed048a71e0c4f4d
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          ports: [{name: http, containerPort: 7007}]
+          env:
+            - {name: PORTAL_URL, value: 'https://onemind-preview.tail717ba0.ts.net'}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: backstage-secrets, key: POSTGRES_PASSWORD}
+            - name: AUTH_SESSION_SECRET
+              valueFrom:
+                secretKeyRef: {name: backstage-secrets, key: AUTH_SESSION_SECRET}
+            - name: AUTH_OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef: {name: backstage-secrets, key: AUTH_OIDC_CLIENT_ID}
+            - name: AUTH_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef: {name: backstage-secrets, key: AUTH_OIDC_CLIENT_SECRET}
+          resources:
+            requests: {cpu: 250m, memory: 1Gi}
+            limits: {cpu: '2', memory: 2Gi}
+          startupProbe:
+            httpGet: {path: /.backstage/health/v1/readiness, port: http}
+            failureThreshold: 60
+            periodSeconds: 5
+          readinessProbe:
+            httpGet: {path: /.backstage/health/v1/readiness, port: http}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /.backstage/health/v1/liveness, port: http}
+            periodSeconds: 15
+          volumeMounts:
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: tmp
+          emptyDir: {sizeLimit: 1Gi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  selector: {app: backstage}
+  ports: [{name: http, port: 7007, targetPort: http}]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onemind-preview
+  namespace: backstage
+  annotations:
+    tailscale.com/hostname: onemind-preview
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: backstage
+      port: {number: 7007}
+  tls:
+    - hosts: [onemind-preview]
