@@ -15,5 +15,8 @@ configMapGenerator:
     namespace: backstage
     files: [app-config.cluster.yaml]
   - name: backstage-catalog
+    options:
+      annotations:
+        argocd.argoproj.io/sync-options: ServerSideApply=true
     namespace: backstage
     files: [catalog/apps.yaml, catalog/cluster.yaml, catalog/org.yaml]
