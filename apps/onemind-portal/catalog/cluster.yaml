@@ -3150,12 +3150,15 @@ metadata:
     onemind.io/documented-category: 📱 Edge
     onemind.io/documented-at: 2026-09-03 07:00:56Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e815cba8ac2ec524c03d3
-      title: "Notion source: MacBook Pro (Zeus)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815cba8ac2ec524c03d3.md
+      title: "Archived registry: MacBook Pro (Zeus)"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3243,12 +3246,15 @@ metadata:
     onemind.io/documented-category: 📱 Edge
     onemind.io/documented-at: 2026-09-03 07:00:55Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8179a78efb433d487eeb
-      title: "Notion source: Dell AIO (GCS)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8179a78efb433d487eeb.md
+      title: "Archived registry: Dell AIO (GCS)"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3525,12 +3531,15 @@ metadata:
     onemind.io/documented-category: 🤖 IoT / Automation
     onemind.io/documented-at: 2026-09-03 07:00:56Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e812c9700faea244ec699
-      title: "Notion source: Home Assistant"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
+      title: "Archived registry: Home Assistant"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3555,14 +3564,17 @@ metadata:
     onemind.io/documented-category: 📊 Observability
     onemind.io/documented-at: 2026-09-03 07:01:10Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8168882ae5c102714e8c
-      title: "Notion source: Loki + Tempo"
-    - url: https://app.notion.com/3b9d0cf70a7e81a49c23cb2059eede57
-      title: "Notion source: Prometheus + Alertmanager"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8168882ae5c102714e8c.md
+      title: "Archived registry: Loki + Tempo"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a49c23cb2059eede57.md
+      title: "Archived registry: Prometheus + Alertmanager"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3650,12 +3662,15 @@ metadata:
     onemind.io/documented-category: 📱 Edge
     onemind.io/documented-at: 2026-09-03 07:00:54Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81c8953ffa1fcce32239
-      title: "Notion source: S24 Ultra (Field Phone)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81c8953ffa1fcce32239.md
+      title: "Archived registry: S24 Ultra (Field Phone)"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3743,12 +3758,15 @@ metadata:
     onemind.io/documented-category: 📊 Observability
     onemind.io/documented-at: 2026-09-03 07:01:10Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81168a55dff646285f2a
-      title: "Notion source: Hubble"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81168a55dff646285f2a.md
+      title: "Archived registry: Hubble"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3857,12 +3875,15 @@ metadata:
     onemind.io/documented-category: 📱 Edge
     onemind.io/documented-at: 2026-09-03 07:00:53Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   tags:
     - mesh
     - unreviewed
+    - documented-unverified
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8115890ac30ff3edc56a
-      title: "Notion source: Dell Laptop (COP)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8115890ac30ff3edc56a.md
+      title: "Archived registry: Dell Laptop (COP)"
 spec:
   type: mesh-endpoint
   owner: group:default/onemind-admins
@@ -3990,7 +4011,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Blazing fast PostGIS tile server (Rust)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -3998,13 +4019,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:39Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/martin; Service onetak/martin
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8102946eff79f4125152
-      title: "Notion source: Martin"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8102946eff79f4125152.md
+      title: "Archived registry: Martin"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-martin-c119168d
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -4023,7 +4049,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: PostGIS — CloudTAK separate DB (10Gi)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4031,13 +4057,18 @@ metadata:
     onemind.io/documented-category: 💾 Data
     onemind.io/documented-at: 2026-09-03 08:07:12Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/onetak-postgis; Service onetak/onetak-postgis
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e810aac3af58ff183e974
-      title: "Notion source: OneTAK PostgreSQL"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810aac3af58ff183e974.md
+      title: "Archived registry: OneTAK PostgreSQL"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-data
+  dependsOn:
+    - component:default/k8s-onetak-onetak-postgis-adc924ce
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -4056,7 +4087,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Visual social media
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4064,9 +4095,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 07:11:27Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e810e84d5d447966b9242
-      title: "Notion source: Instagram"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810e84d5d447966b9242.md
+      title: "Archived registry: Instagram"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4081,7 +4114,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Video content and publishing
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4089,9 +4122,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 07:11:29Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8110a570ee43052b619f
-      title: "Notion source: YouTube"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8110a570ee43052b619f.md
+      title: "Archived registry: YouTube"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4114,7 +4149,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Calendar and scheduling
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4122,11 +4157,13 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 09:08:22Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81518da2ee7c70e8d25c
-      title: "Notion source: Google Calendar"
-    - url: https://app.notion.com/3b9d0cf70a7e8110aacfeff6d5acf18c
-      title: "Notion source: Calendar"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81518da2ee7c70e8d25c.md
+      title: "Archived registry: Google Calendar"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8110aacfeff6d5acf18c.md
+      title: "Archived registry: Calendar"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4141,7 +4178,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: SpatioTemporal Asset Catalog API
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4149,13 +4186,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:35Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/stac-api; Service onetak/stac-api
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8112af60e8ea79c23728
-      title: "Notion source: STAC API"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8112af60e8ea79c23728.md
+      title: "Archived registry: STAC API"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-stac-api-746ca5f2
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -4174,7 +4216,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Zero-trust external ingress via cloudflared
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4182,13 +4224,18 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 07:00:52Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment cloudflare/cloudflared
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e811fb22ff0467ff07122
-      title: "Notion source: Cloudflare Tunnel"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e811fb22ff0467ff07122.md
+      title: "Archived registry: Cloudflare Tunnel"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-infrastructure
+  dependsOn:
+    - component:default/k8s-cloudflare-cloudflared-a824aad1
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4199,7 +4246,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Browse STAC catalogs visually
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4207,13 +4254,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:34Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/stac-browser; Service onetak/stac-browser
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8124a3eed9d89f3a0a5c
-      title: "Notion source: STAC Browser"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md
+      title: "Archived registry: STAC Browser"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-stac-browser-2881a2ef
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4224,7 +4276,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Automated TLS via Let's Encrypt
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4232,13 +4284,18 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 07:00:52Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment cert-manager/cert-manager; Service cert-manager/cert-manager
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e812899b8c2b1670b04e6
-      title: "Notion source: cert-manager"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812899b8c2b1670b04e6.md
+      title: "Archived registry: cert-manager"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-infrastructure
+  dependsOn:
+    - component:default/k8s-cert-manager-cert-manager-47192c08
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4249,7 +4306,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: S24 ADB tunnel health check + self-healing — every 3min
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4257,9 +4314,11 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 07:00:49Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e812fa332d7b0a3263d04
-      title: "Notion source: s24-pipeline-guardian"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812fa332d7b0a3263d04.md
+      title: "Archived registry: s24-pipeline-guardian"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4282,7 +4341,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Periodic CoT data cleanup in TAK PostgreSQL — every 6h
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4290,9 +4349,12 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 07:00:50Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: CronJob takserver/cot-retention
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81399300ce8ae5c69770
-      title: "Notion source: cot-retention"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81399300ce8ae5c69770.md
+      title: "Archived registry: cot-retention"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4307,7 +4369,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Cloud storage and file management
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4315,11 +4377,13 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 09:08:19Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81faa9f5e8b0e4c2137e
-      title: "Notion source: Google Drive"
-    - url: https://app.notion.com/3b9d0cf70a7e81429ddeeedb63f202e5
-      title: "Notion source: Drive"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81faa9f5e8b0e4c2137e.md
+      title: "Archived registry: Google Drive"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81429ddeeedb63f202e5.md
+      title: "Archived registry: Drive"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4334,7 +4398,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: QGIS map server for WMS/WFS
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4342,9 +4406,11 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:40Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8143a116e3464a69dadf
-      title: "Notion source: QGIS Server"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8143a116e3464a69dadf.md
+      title: "Archived registry: QGIS Server"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4359,7 +4425,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Cert management, missions, user admin, live COP browser
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4367,9 +4433,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:49:12Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e814aa336d1ac4efc7303
-      title: "Notion source: WebTAK (Admin)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814aa336d1ac4efc7303.md
+      title: "Archived registry: WebTAK (Admin)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4392,7 +4460,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Browser pub/sub endpoint — wss on port 8080
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4400,9 +4468,11 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8154a3b3e5435bb33606
-      title: "Notion source: NATS WebSocket"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8154a3b3e5435bb33606.md
+      title: "Archived registry: NATS WebSocket"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4417,7 +4487,7 @@ metadata:
     — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Columnar time-series DB — 10-year TTL, onemind database, port 9001
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4425,13 +4495,19 @@ metadata:
     onemind.io/documented-category: 💾 Data
     onemind.io/documented-at: 2026-09-03 07:01:03Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: StatefulSet clickhouse/chi-onemind-onemind-0-0;
+      Service clickhouse/chi-onemind-onemind-0-0
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81569955eb41a19a3c12
-      title: "Notion source: ClickHouse Time Machine"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81569955eb41a19a3c12.md
+      title: "Archived registry: ClickHouse Time Machine"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-data
+  dependsOn:
+    - component:default/k8s-clickhouse-chi-onemind-onemind-0-0-92949b93
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4442,7 +4518,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Social presence — @crucixmonitor
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4450,9 +4526,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 07:11:28Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e815f84a4ef6b62156a7b
-      title: "Notion source: X.com"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815f84a4ef6b62156a7b.md
+      title: "Archived registry: X.com"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4485,9 +4563,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:01:04Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8168813dcf78f5c99f1d
-      title: "Notion source: WorldWideView"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8168813dcf78f5c99f1d.md
+      title: "Archived registry: WorldWideView"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -4502,7 +4582,7 @@ metadata:
     — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: 3-node cluster (nats-0/1/2) — 150Gi JetStream, pub/sub, KV, streams
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4510,13 +4590,18 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: StatefulSet nats/nats; Service nats/nats
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81709d3cec611961a687
-      title: "Notion source: NATS JetStream Cluster"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81709d3cec611961a687.md
+      title: "Archived registry: NATS JetStream Cluster"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-nats
+  dependsOn:
+    - component:default/k8s-nats-nats-0dee54ac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -4535,7 +4620,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Routes NATS events → TAK as CoT messages
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4543,9 +4628,11 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 07:21:49Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8173becdd056e98686a2
-      title: "Notion source: sink-tak"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8173becdd056e98686a2.md
+      title: "Archived registry: sink-tak"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4568,9 +4655,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:01:06Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8178acbaf60087482229
-      title: "Notion source: ShadowBroker"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8178acbaf60087482229.md
+      title: "Archived registry: ShadowBroker"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -4595,9 +4684,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:01:05Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e817c9538c8feb1e5ce3e
-      title: "Notion source: WorldMonitor"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817c9538c8feb1e5ce3e.md
+      title: "Archived registry: WorldMonitor"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -4612,7 +4703,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Photo and video backup
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4620,11 +4711,13 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 09:08:21Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81e49fcedcf0041324b4
-      title: "Notion source: Google Photos"
-    - url: https://app.notion.com/3b9d0cf70a7e817e8bd1fbf841481943
-      title: "Notion source: Photos"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e49fcedcf0041324b4.md
+      title: "Archived registry: Google Photos"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817e8bd1fbf841481943.md
+      title: "Archived registry: Photos"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4639,7 +4732,7 @@ metadata:
     — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: PostGIS spatial DB — CoT events, missions (20Gi, recently expanded)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4647,13 +4740,19 @@ metadata:
     onemind.io/documented-category: 💾 Data
     onemind.io/documented-at: 2026-09-03 07:01:00Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: StatefulSet takserver/takserver-postgresql; Service
+      takserver/takserver-postgresql
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81809e0ecbcba85a7eaf
-      title: "Notion source: TAK PostgreSQL"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81809e0ecbcba85a7eaf.md
+      title: "Archived registry: TAK PostgreSQL"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-data
+  dependsOn:
+    - component:default/k8s-takserver-takserver-postgresql-882a664d
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4664,7 +4763,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Social network
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4672,9 +4771,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 07:11:27Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e818caa21cde074079ac2
-      title: "Notion source: Facebook"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818caa21cde074079ac2.md
+      title: "Archived registry: Facebook"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4689,7 +4790,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Projects NATS feed data onto TAK as CoT markers
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4697,13 +4798,18 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 07:21:48Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment omos/omos-tak-projector
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e818eb6d2ddea4ff77c23
-      title: "Notion source: omos-tak-projector"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818eb6d2ddea4ff77c23.md
+      title: "Archived registry: omos-tak-projector"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - component:default/k8s-omos-omos-tak-projector-ac850041
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4714,7 +4820,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Geocoding & reverse geocoding (full planet)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4722,13 +4828,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:38Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/nominatim; Service onetak/nominatim
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81979373c249a2d37537
-      title: "Notion source: Nominatim"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81979373c249a2d37537.md
+      title: "Archived registry: Nominatim"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-nominatim-081a4289
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4739,7 +4850,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Routes NATS → ClickHouse for long-term storage
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4747,13 +4858,18 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 07:21:50Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment omos/sink-clickhouse
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8197af14e4631a656d65
-      title: "Notion source: sink-clickhouse"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8197af14e4631a656d65.md
+      title: "Archived registry: sink-clickhouse"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - component:default/k8s-omos-sink-clickhouse-29b3c0a3
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4764,7 +4880,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: HTTP/HTTPS ingress controller
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4772,9 +4888,11 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 07:00:50Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e8198b4a5e3b0fc75ddf3
-      title: "Notion source: ingress-nginx"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8198b4a5e3b0fc75ddf3.md
+      title: "Archived registry: ingress-nginx"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4798,9 +4916,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:01:04Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e819cbdf7fbc0c195dbd7
-      title: "Notion source: Osiris"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819cbdf7fbc0c195dbd7.md
+      title: "Archived registry: Osiris"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -4824,9 +4944,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:57:51Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e819d83a8dc908bf57b6c
-      title: "Notion source: Cesium 3D Globe"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819d83a8dc908bf57b6c.md
+      title: "Archived registry: Cesium 3D Globe"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -4841,7 +4963,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Domain registrar — onemindos.dev + others
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4849,9 +4971,11 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 07:11:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81b586f5f846351e4b5f
-      title: "Notion source: GoDaddy"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b586f5f846351e4b5f.md
+      title: "Archived registry: GoDaddy"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4875,9 +4999,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:01:00Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81b8abe9c60ec490ba21
-      title: "Notion source: Crucix"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8abe9c60ec490ba21.md
+      title: "Archived registry: Crucix"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -4892,7 +5018,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Professional network
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4900,9 +5026,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 07:11:28Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81bb9632ca833cd5fa87
-      title: "Notion source: LinkedIn"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81bb9632ca833cd5fa87.md
+      title: "Archived registry: LinkedIn"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4917,7 +5045,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Email — zeus@zeusdelacruz.com
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4925,9 +5053,11 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 07:07:03Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81d2be23eda5893be74a
-      title: "Notion source: Gmail"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d2be23eda5893be74a.md
+      title: "Archived registry: Gmail"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -4942,7 +5072,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: PostGIS features as OGC API Features
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4950,13 +5080,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:33Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/pg-featureserv; Service onetak/pg-featureserv
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81d783cae864daeb7c29
-      title: "Notion source: pg_featureserv"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d783cae864daeb7c29.md
+      title: "Archived registry: pg_featureserv"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-pg-featureserv-ca3dd68e
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4967,7 +5102,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: OSM query API (full planet)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4975,13 +5110,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/overpass; Service onetak/overpass
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81e29fb4e3eb7c083985
-      title: "Notion source: Overpass"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e29fb4e3eb7c083985.md
+      title: "Archived registry: Overpass"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-overpass-4e197497
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -4992,7 +5132,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Real-time geospatial database & geofencing
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5000,13 +5140,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:00:35Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/tile38; Service onetak/tile38
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81e6bc30fcf1af4eebb6
-      title: "Notion source: Tile38"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e6bc30fcf1af4eebb6.md
+      title: "Archived registry: Tile38"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-tile38-bfdfb57a
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5017,7 +5162,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: S3-compatible object storage — CloudTAK attachments (20Gi)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5025,13 +5170,18 @@ metadata:
     onemind.io/documented-category: 💾 Data
     onemind.io/documented-at: 2026-09-03 08:07:10Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/onetak-minio; Service onetak/onetak-minio
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81e886beca1809524d17
-      title: "Notion source: OneTAK MinIO"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e886beca1809524d17.md
+      title: "Archived registry: OneTAK MinIO"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-data
+  dependsOn:
+    - component:default/k8s-onetak-onetak-minio-98a87ea3
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5042,7 +5192,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: CoT message broker — port 8089 TLS, all EUDs connect here
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5050,13 +5200,20 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:49:11Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takserver/takserver-api; Deployment
+      takserver/takserver-messaging
   links:
-    - url: https://app.notion.com/3b9d0cf70a7e81f99689dd357eba770d
-      title: "Notion source: TAK Server (Core)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99689dd357eba770d.md
+      title: "Archived registry: TAK Server (Core)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takserver-takserver-api-ad045e42
+    - component:default/k8s-takserver-takserver-messaging-3a9b130f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5067,7 +5224,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Not supplied
     onemind.io/documented-host: Not supplied
@@ -5075,9 +5232,11 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 07:42:49Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e800a854cee91d59f7ad1
-      title: "Notion source: Contacts"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e800a854cee91d59f7ad1.md
+      title: "Archived registry: Contacts"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5092,7 +5251,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: TAK OS developer portal
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5100,9 +5259,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:46:25Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8101aa17dcd0d82cd1d4
-      title: "Notion source: TAK OS"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8101aa17dcd0d82cd1d4.md
+      title: "Archived registry: TAK OS"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5118,7 +5279,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: TimescaleDB instance for the geo namespace —
       stores spatial time-series data for Martin, pg_featureserv, and STAC
@@ -5127,13 +5288,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:31:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/onetak-geo-db; Service onetak/onetak-geo-db
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e810487ecddf0af4380dc
-      title: "Notion source: Geo Database"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810487ecddf0af4380dc.md
+      title: "Archived registry: Geo Database"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-onetak-geo-db-a22783b9
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -5152,7 +5318,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Credit building
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5160,9 +5326,11 @@ metadata:
     onemind.io/documented-category: 💰 Finance
     onemind.io/documented-at: 2026-09-03 09:08:25Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8104990bd8feb428ab9f
-      title: "Notion source: Kikoff"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8104990bd8feb428ab9f.md
+      title: "Archived registry: Kikoff"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5186,9 +5354,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:29:59Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8108bb3cc3de14622942
-      title: "Notion source: Azure"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8108bb3cc3de14622942.md
+      title: "Archived registry: Azure"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5211,9 +5381,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:46:25Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e810b82b3fa2448f0d099
-      title: "Notion source: Unity"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810b82b3fa2448f0d099.md
+      title: "Archived registry: Unity"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -5228,7 +5400,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Short-form video — brand/content distribution
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5236,9 +5408,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 08:46:32Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e810e8615c2f594744dca
-      title: "Notion source: TikTok"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810e8615c2f594744dca.md
+      title: "Archived registry: TikTok"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5261,9 +5435,11 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8110b6c6f43ce67d5e73
-      title: "Notion source: cobra-nats"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8110b6c6f43ce67d5e73.md
+      title: "Archived registry: cobra-nats"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5286,7 +5462,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: International messaging — China/Asia comms
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5294,9 +5470,11 @@ metadata:
     onemind.io/documented-category: 📡 Comms
     onemind.io/documented-at: 2026-09-03 09:22:00Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8113bfb3c54fa5d44247
-      title: "Notion source: WeChat"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8113bfb3c54fa5d44247.md
+      title: "Archived registry: WeChat"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5320,7 +5498,7 @@ metadata:
     availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "[CloudTAK] NATS operator console for CloudTAK —
       live bus monitor, subject browser, pub/sub control"
@@ -5329,9 +5507,11 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:07:12Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8114ad63e5233b3c83ac
-      title: "Notion source: onetak-plugin-nats"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8114ad63e5233b3c83ac.md
+      title: "Archived registry: onetak-plugin-nats"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5346,7 +5526,7 @@ metadata:
     agents — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: NATS ↔ AI agent backends — routes prompts from the bus to Hermes agents
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5354,13 +5534,18 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 09:11:28Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81169f70ea90560d5b8d
-      title: "Notion source: OneMind AI Bridge"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81169f70ea90560d5b8d.md
+      title: "Archived registry: OneMind AI Bridge"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -5381,7 +5566,7 @@ metadata:
     documentation; deployment and availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: "OneMind multi-agent hive — Legacy (Mother)
       sovereign cloud agent + 10 specialist agents. All on DOKS pod
@@ -5392,13 +5577,18 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 07:27:39Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment hermes/hermes-legacy
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e811c914ce4f231123b3a
-      title: "Notion source: Hermes — Legacy Hive System"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e811c914ce4f231123b3a.md
+      title: "Archived registry: Hermes — Legacy Hive System"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-agents
+  dependsOn:
+    - component:default/k8s-hermes-hermes-legacy-1e93d498
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5409,7 +5599,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Financial management platform
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5417,9 +5607,11 @@ metadata:
     onemind.io/documented-category: 💰 Finance
     onemind.io/documented-at: 2026-09-03 09:08:32Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8122a508e26f616d976b
-      title: "Notion source: UseOrigin"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8122a508e26f616d976b.md
+      title: "Archived registry: UseOrigin"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5434,7 +5626,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: OneMind HUD — tactical AR overlay plugin for ATAK
     onemind.io/documented-host: 📱 Edge Device
@@ -5442,15 +5634,20 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:13:39Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/atak-plugin-omhud
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81b78b08e2caba493b87
-      title: "Notion source: atak-plugin-omhud"
-    - url: https://app.notion.com/3d0d0cf70a7e8122b8d4ff5568252112
-      title: "Notion source: atak-plugin-omhud"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b78b08e2caba493b87.md
+      title: "Archived registry: atak-plugin-omhud"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8122b8d4ff5568252112.md
+      title: "Archived registry: atak-plugin-omhud"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-plugins
+  dependsOn:
+    - resource:default/repo-atakpluginomhud-90d7a032
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5462,7 +5659,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Claude Code CLI running on Zeus's MacBook Pro via
       AWS Bedrock — autonomous coding agent for local development
@@ -5471,9 +5668,11 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 07:33:32Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8125a316ef1df9160933
-      title: "Notion source: Claude Code (Bedrock)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8125a316ef1df9160933.md
+      title: "Archived registry: Claude Code (Bedrock)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5489,7 +5688,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Android Team Awareness Kit — connects to tak
       server tcp://152.42.155.95:8089 ssl://152.42.155.95:8089
@@ -5498,9 +5697,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:49:01Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81279781d378995c1e88
-      title: "Notion source: ATAK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81279781d378995c1e88.md
+      title: "Archived registry: ATAK"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5523,7 +5724,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: CRM, funnels, workflows, email/SMS — Onemind Holdings LLC
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5531,9 +5732,11 @@ metadata:
     onemind.io/documented-category: 💼 Business Ops
     onemind.io/documented-at: 2026-09-03 07:11:29Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e812bb980d5ed40416328
-      title: "Notion source: GHL (GoHighLevel)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e812bb980d5ed40416328.md
+      title: "Archived registry: GHL (GoHighLevel)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5549,7 +5752,7 @@ metadata:
     availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "[CloudTAK] Hermes AI assistant floating pane for
       CloudTAK — NATS pub/sub, agent chat inside the map"
@@ -5558,9 +5761,11 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:07:13Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e812c9d55c8e407db4045
-      title: "Notion source: onetak-plugin-hermes"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e812c9d55c8e407db4045.md
+      title: "Archived registry: onetak-plugin-hermes"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5576,7 +5781,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: OpenDroneMap processing node — handles drone
       imagery photogrammetry jobs for WebODM
@@ -5585,13 +5790,18 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 07:31:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/nodeodm; Service onetak/nodeodm
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81338840ec1c874371c6
-      title: "Notion source: NodeODM"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81338840ec1c874371c6.md
+      title: "Archived registry: NodeODM"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-geo
+  dependsOn:
+    - component:default/k8s-onetak-nodeodm-8a68cc40
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5610,9 +5820,11 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81379661cd62a0279c31
-      title: "Notion source: gastbob-nats-ui"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81379661cd62a0279c31.md
+      title: "Archived registry: gastbob-nats-ui"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5638,9 +5850,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:29:38Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8138979dee67a5486f63
-      title: "Notion source: Synadia Protect"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8138979dee67a5486f63.md
+      title: "Archived registry: Synadia Protect"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5663,7 +5877,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: GPU cloud / developer platform
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5671,9 +5885,11 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 08:46:23Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8141bd03db771bbe2cbd
-      title: "Notion source: NVIDIA"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141bd03db771bbe2cbd.md
+      title: "Archived registry: NVIDIA"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5688,7 +5904,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: High-res terrain elevation data
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5696,9 +5912,11 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 08:46:28Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e814a9d5ad52241438757
-      title: "Notion source: OpenTopography"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814a9d5ad52241438757.md
+      title: "Archived registry: OpenTopography"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5713,7 +5931,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Open geo data — base maps, POIs, routing
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5721,9 +5939,11 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 08:46:27Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e814fabc2e25bbd0e4aa8
-      title: "Notion source: OpenStreetMap"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814fabc2e25bbd0e4aa8.md
+      title: "Archived registry: OpenStreetMap"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5750,9 +5970,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:00:15Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e815192a3e2716188e0ef
-      title: "Notion source: Gods Eye View"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815192a3e2716188e0ef.md
+      title: "Archived registry: Gods Eye View"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5768,7 +5990,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Apache Ignite cache cluster for TAK Server (2
       nodes) — distributed in-memory data grid for CoT state
@@ -5777,13 +5999,18 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 07:31:24Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: StatefulSet takserver/takserver-ignite; Service takserver/takserver-ignite
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8152ba0cc06d52978b62
-      title: "Notion source: TAKServer Ignite"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8152ba0cc06d52978b62.md
+      title: "Archived registry: TAKServer Ignite"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takserver-takserver-ignite-068e799f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5806,9 +6033,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:27:34Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e815491a3e7b8cb7538f0
-      title: "Notion source: Agent of Empires"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815491a3e7b8cb7538f0.md
+      title: "Archived registry: Agent of Empires"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5823,7 +6052,7 @@ metadata:
     Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Amazon Web Services — Bedrock (Claude), S3, IAM, Activate credits
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5831,9 +6060,11 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 09:27:43Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81569873d6a20f239849
-      title: "Notion source: AWS"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81569873d6a20f239849.md
+      title: "Archived registry: AWS"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5849,7 +6080,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: OMOS feed pipeline — ingests external intel
       feeds, normalizes and publishes to NATS fabric
@@ -5858,13 +6089,18 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 09:11:17Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8156b543e41459836cf0
-      title: "Notion source: omos-feed-pipeline"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8156b543e41459836cf0.md
+      title: "Archived registry: omos-feed-pipeline"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5876,7 +6112,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: NATS JetStream acknowledgement controller —
       manages consumer ack/nack lifecycle on the bus
@@ -5885,13 +6121,18 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 08:14:20Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment nats/nack
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8164b995c1a9de84bc5c
-      title: "Notion source: NACK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8164b995c1a9de84bc5c.md
+      title: "Archived registry: NACK"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-nats
+  dependsOn:
+    - component:default/k8s-nats-nack-bd056161
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5903,7 +6144,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: OneMind omnipresence plugin for Hermes — injects
       live NATS operational picture into every LLM call
@@ -5912,13 +6153,18 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:13:43Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/hermes-plugin-nats-context
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8166b382ec5bbb6bde2c
-      title: "Notion source: hermes-plugin-nats-context"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8166b382ec5bbb6bde2c.md
+      title: "Archived registry: hermes-plugin-nats-context"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-plugins
+  dependsOn:
+    - resource:default/repo-hermespluginnatscontext-85b66a25
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -5942,9 +6188,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:27:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81678448e2762ada52f4
-      title: "Notion source: Mission Control"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81678448e2762ada52f4.md
+      title: "Archived registry: Mission Control"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -5960,7 +6208,7 @@ metadata:
     documentation; deployment and availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "[CloudTAK] Operations command plugin for
       CloudTAK — inbox, scheduling, activity log, feed systems, projects, task
@@ -5970,9 +6218,11 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:07:14Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8167a2edf29f6c5b84f3
-      title: "Notion source: onetak-plugin-ops"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8167a2edf29f6c5b84f3.md
+      title: "Archived registry: onetak-plugin-ops"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -5987,7 +6237,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Google Wallet — payments and passes
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5995,9 +6245,11 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 07:42:41Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e816aafedd09892f47e82
-      title: "Notion source: Wallet"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816aafedd09892f47e82.md
+      title: "Archived registry: Wallet"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6012,7 +6264,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Community presence and distribution
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6020,9 +6272,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 08:46:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e816ab330c7b21cab93c8
-      title: "Notion source: Reddit"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab330c7b21cab93c8.md
+      title: "Archived registry: Reddit"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6046,7 +6300,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: OTel collector agents on all 3 nodes — ships
       metrics, traces, and logs to Loki, Tempo, and Prometheus
@@ -6055,9 +6309,11 @@ metadata:
     onemind.io/documented-category: 📊 Observability
     onemind.io/documented-at: 2026-09-03 07:31:21Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e816ea737d1a5eac43a8a
-      title: "Notion source: OpenTelemetry Collector"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ea737d1a5eac43a8a.md
+      title: "Archived registry: OpenTelemetry Collector"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6072,7 +6328,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Global ADS-B flight tracking API
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6080,9 +6336,11 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 08:46:34Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e816f8042cbf5b699b5ec
-      title: "Notion source: OpenSky"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816f8042cbf5b699b5ec.md
+      title: "Archived registry: OpenSky"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6099,7 +6357,7 @@ metadata:
     availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "Edge extension of Legacy running on Zeus's
       MacBook Pro. Local terminal, files, sensors, TAK, LAN devices. NATS
@@ -6109,9 +6367,11 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 07:27:38Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8173810bcea30d73988f
-      title: "Notion source: Legacy-Edge (Daughter)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8173810bcea30d73988f.md
+      title: "Archived registry: Legacy-Edge (Daughter)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6134,9 +6394,11 @@ metadata:
     onemind.io/documented-category: 🏗️ Infrastructure
     onemind.io/documented-at: 2026-09-03 09:27:45Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e817684bbdedb73711864
-      title: "Notion source: Alibaba Cloud"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817684bbdedb73711864.md
+      title: "Archived registry: Alibaba Cloud"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -6152,7 +6414,7 @@ metadata:
     deployment and availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "[CloudTAK] ClickHouse time machine plugin for
       CloudTAK — historical CoT queries, track replay, intel"
@@ -6161,9 +6423,11 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:07:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81769277f29c9db0b6fe
-      title: "Notion source: onetak-plugin-clickhouse"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81769277f29c9db0b6fe.md
+      title: "Archived registry: onetak-plugin-clickhouse"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6178,7 +6442,7 @@ metadata:
     ops — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: TAK Server MCP — 11-tool MCP bridge for AI↔TAK Server geospatial ops
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -6186,13 +6450,18 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 08:13:41Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/tak-server-mcp
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e817cba65c66d49fdac38
-      title: "Notion source: tak-server-mcp"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817cba65c66d49fdac38.md
+      title: "Archived registry: tak-server-mcp"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - resource:default/repo-takservermcp-64c8795d
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6203,7 +6472,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Vision ML pipeline — object detection on TAK feeds
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -6211,13 +6480,20 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:50:13Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takml/takml-server; Service takml/takml-server
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e817fae91f5285488795a
-      title: "Notion source: TAK-ML Server"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817fae91f5285488795a.md
+      title: "Archived registry: TAK-ML Server"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takml-takml-server-e6ccadc1
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6228,7 +6504,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: OneTAK plugin starter template
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -6236,13 +6512,18 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:12:59Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/OneTAK-Plugin-Sample
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8180a19eff849ab17b5d
-      title: "Notion source: OneTAK-Plugin-Sample"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180a19eff849ab17b5d.md
+      title: "Archived registry: OneTAK-Plugin-Sample"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-plugins
+  dependsOn:
+    - resource:default/repo-onetakpluginsample-9cda9d42
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6253,7 +6534,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Secondary phone numbers — private comms
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6261,9 +6542,11 @@ metadata:
     onemind.io/documented-category: 📡 Comms
     onemind.io/documented-at: 2026-09-03 08:46:21Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8180aefee4cf10297c32
-      title: "Notion source: Hushed"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180aefee4cf10297c32.md
+      title: "Archived registry: Hushed"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6279,7 +6562,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: TAK Server load balancer proxy — routes external
       TAK client connections into the cluster
@@ -6288,13 +6571,18 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 07:31:23Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takserver/tak-lb-proxy
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8186b758f7bffd78ce48
-      title: "Notion source: TAK LB Proxy"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8186b758f7bffd78ce48.md
+      title: "Archived registry: TAK LB Proxy"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takserver-tak-lb-proxy-934c8e0e
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6306,7 +6594,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: TAK-ML database — stores model metadata,
       inference results, and tracking history
@@ -6315,13 +6603,20 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:50:14Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takml/takml-db; Service takml/takml-db
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8187a663d1ee921f543b
-      title: "Notion source: TAK-ML Database"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8187a663d1ee921f543b.md
+      title: "Archived registry: TAK-ML Database"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takml-takml-db-804578bf
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -6340,7 +6635,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Mac productivity launcher
     onemind.io/documented-host: 💻 Mac
@@ -6348,9 +6643,11 @@ metadata:
     onemind.io/documented-category: 🛠️ Productivity
     onemind.io/documented-at: 2026-09-03 08:46:35Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e8188bfd2d16ba672fbce
-      title: "Notion source: Raycast"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8188bfd2d16ba672fbce.md
+      title: "Archived registry: Raycast"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6378,9 +6675,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:27:32Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81899637c2f6427416c6
-      title: "Notion source: Multica"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899637c2f6427416c6.md
+      title: "Archived registry: Multica"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -6407,9 +6706,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:27:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e818b9388df7e71776626
-      title: "Notion source: AionUI"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e818b9388df7e71776626.md
+      title: "Archived registry: AionUI"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -6424,7 +6725,7 @@ metadata:
     theme — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: OneMind ATAK shared SDK — NATS client, CoT utils, TAK API, HUD theme
     onemind.io/documented-host: 📱 Edge Device
@@ -6432,13 +6733,18 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 08:13:40Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/atak-sdk
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81918ff4ee7fedaa8c28
-      title: "Notion source: atak-sdk"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81918ff4ee7fedaa8c28.md
+      title: "Archived registry: atak-sdk"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-devops
+  dependsOn:
+    - resource:default/repo-ataksdk-fba35dc2
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6449,7 +6755,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Local LLM runtime — Mac edge inference
     onemind.io/documented-host: 💻 Mac
@@ -6457,9 +6763,11 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 08:46:29Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e819a92b8de74c33144cd
-      title: "Notion source: Ollama"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md
+      title: "Archived registry: Ollama"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6475,7 +6783,7 @@ metadata:
     and availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: "[TAK Server] TAK Server NATS bridge plugin (JAR)
       — connects TAK Server internals directly to the NATS bus"
@@ -6484,13 +6792,18 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:14:19Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e819d818fff592b12f8b5
-      title: "Notion source: takserver-nats-plugin"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819d818fff592b12f8b5.md
+      title: "Archived registry: takserver-nats-plugin"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-plugins
+  dependsOn:
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6501,7 +6814,7 @@ metadata:
     Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: iOS TAK client — connects to tak server ssl://152.42.155.95:8089
     onemind.io/documented-host: 📱 Edge Device
@@ -6509,9 +6822,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:49:01Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e819dacfcc8e3d800ba2b
-      title: "Notion source: iTAK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819dacfcc8e3d800ba2b.md
+      title: "Archived registry: iTAK"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6526,7 +6841,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Self-hosted GitHub Actions runner on DOKS
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -6534,13 +6849,18 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 07:11:32Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment github-runner/github-runner
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81a097aed595f98237e5
-      title: "Notion source: GitHub Runner"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a097aed595f98237e5.md
+      title: "Archived registry: GitHub Runner"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-devops
+  dependsOn:
+    - component:default/k8s-github-runner-github-runner-acdf15f2
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6552,7 +6872,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Termux terminal environment on Samsung S24 Ultra
       — SSH access, field CLI, edge scripting on the fabric
@@ -6561,9 +6881,11 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 07:32:43Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81a3bacac3a0ee53c2ec
-      title: "Notion source: Termux"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a3bacac3a0ee53c2ec.md
+      title: "Archived registry: Termux"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6588,9 +6910,11 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 07:32:43Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81a68680e0b433702183
-      title: "Notion source: GitLab"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a68680e0b433702183.md
+      title: "Archived registry: GitLab"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -6607,7 +6931,7 @@ metadata:
     documentation; deployment and availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: "Single pod running 4 active intel feeds:
       feed-intel-emsc (seismic EU), feed-intel-eonet (NASA events),
@@ -6618,13 +6942,18 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:00:17Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment omos/feed-intel
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81a7b836e7cf6518f1e7
-      title: "Notion source: feed-intel"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a7b836e7cf6518f1e7.md
+      title: "Archived registry: feed-intel"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-intel
+  dependsOn:
+    - component:default/k8s-omos-feed-intel-4488fd05
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6635,7 +6964,7 @@ metadata:
     AIDL IPC — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: OneMind OS NATS leaf node SDK for Android — background service, AIDL IPC
     onemind.io/documented-host: 📱 Edge Device
@@ -6643,13 +6972,18 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 08:13:41Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/nats-android
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81aa96c9c94ec8575773
-      title: "Notion source: nats-android"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81aa96c9c94ec8575773.md
+      title: "Archived registry: nats-android"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-nats
+  dependsOn:
+    - resource:default/repo-natsandroid-6a4df74b
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6672,9 +7006,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:27:33Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81ada22bc5a0b2164e0b
-      title: "Notion source: Paperclip"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md
+      title: "Archived registry: Paperclip"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -6690,7 +7026,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Data pipeline — Wombat/Redpanda Connect, bridges
       NATS → TAK, ClickHouse, and other sinks
@@ -6699,13 +7035,20 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 08:50:17Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment omos/redpanda-connect; Service omos/redpanda-connect
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81b2a408e1eb8d640e22
-      title: "Notion source: Redpanda Connect (Wombat)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b2a408e1eb8d640e22.md
+      title: "Archived registry: Redpanda Connect (Wombat)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - component:default/k8s-omos-redpanda-connect-0c0b667d
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6716,7 +7059,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Live streaming platform
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6724,9 +7067,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 08:46:33Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81b9bc7bc879c11f5906
-      title: "Notion source: Twitch"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b9bc7bc879c11f5906.md
+      title: "Archived registry: Twitch"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6742,7 +7087,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: TAK-ML vision inference worker — runs ML models
       against video/image streams for TAK targeting
@@ -6751,13 +7096,20 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:50:15Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takml/takml-vision-worker
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81bba30bea937c250d79
-      title: "Notion source: TAK-ML Vision Worker"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81bba30bea937c250d79.md
+      title: "Archived registry: TAK-ML Vision Worker"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takml-takml-vision-worker-06b90f44
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -6769,7 +7121,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Live read-only agent protocol visualizer — see
       all agents on the NATS bus in real time
@@ -6778,13 +7130,20 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 08:14:17Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment nats/agenttap; Service nats/agenttap
+    onemind.io/repository-url: https://github.com/onemindos/agenttap
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81bbaf34ea74b549d017
-      title: "Notion source: agenttap"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81bbaf34ea74b549d017.md
+      title: "Archived registry: agenttap"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-nats
+  dependsOn:
+    - component:default/k8s-nats-agenttap-3e09fc8c
+    - resource:default/repo-agenttap-726c66ba
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -6813,9 +7172,11 @@ metadata:
     onemind.io/documented-category: 🤖 IoT / Automation
     onemind.io/documented-at: 2026-09-03 07:23:02Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81c4959fc2edea1a7f3a
-      title: "Notion source: FarmBot"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c4959fc2edea1a7f3a.md
+      title: "Archived registry: FarmBot"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -6830,7 +7191,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Personal finance tracking
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6838,9 +7199,11 @@ metadata:
     onemind.io/documented-category: 💰 Finance
     onemind.io/documented-at: 2026-09-03 09:08:33Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81c6aa3dd71c14097649
-      title: "Notion source: Monarch Money"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c6aa3dd71c14097649.md
+      title: "Archived registry: Monarch Money"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6855,7 +7218,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Web scraping and automation platform
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6863,9 +7226,11 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 08:46:23Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81c8b47df736eaf55bad
-      title: "Notion source: Apify"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c8b47df736eaf55bad.md
+      title: "Archived registry: Apify"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6880,7 +7245,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Lightweight TAK client — ssl://152.42.155.95:8089
     onemind.io/documented-host: 📱 Edge Device
@@ -6888,9 +7253,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:49:02Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81cbb55ad6909474e599
-      title: "Notion source: TAK Aware"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81cbb55ad6909474e599.md
+      title: "Archived registry: TAK Aware"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6913,9 +7280,11 @@ metadata:
     onemind.io/documented-category: 💼 Business Ops
     onemind.io/documented-at: 2026-09-03 07:38:40Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81cf96f3cf76fea93e99
-      title: "Notion source: Circle Community"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81cf96f3cf76fea93e99.md
+      title: "Archived registry: Circle Community"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -6931,7 +7300,7 @@ metadata:
     availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "[CloudTAK] Mumble voice plugin for CloudTAK —
       channel tree, talking indicators, push-to-talk"
@@ -6940,9 +7309,11 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:07:15Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81d28e35f9ed02f3ca48
-      title: "Notion source: onetak-plugin-mumble"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d28e35f9ed02f3ca48.md
+      title: "Archived registry: onetak-plugin-mumble"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6957,7 +7328,7 @@ metadata:
     Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Google Workspace — admin console, user management, org settings
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -6965,9 +7336,11 @@ metadata:
     onemind.io/documented-category: 🔵 Google Workspace
     onemind.io/documented-at: 2026-09-03 07:42:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81d5987dcdf1ef081d87
-      title: "Notion source: Workspace"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d5987dcdf1ef081d87.md
+      title: "Archived registry: Workspace"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -6994,9 +7367,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:29:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81d687d7f745725890e2
-      title: "Notion source: Synadia Insights"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d687d7f745725890e2.md
+      title: "Archived registry: Synadia Insights"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7011,7 +7386,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: Desktop app for OneTAK — macOS/Windows/Linux
     onemind.io/documented-host: 💻 Mac
@@ -7019,13 +7394,18 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:12:59Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/OneTAK-Native
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81d8b583f6e334300e28
-      title: "Notion source: OneTAK-Native"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d8b583f6e334300e28.md
+      title: "Archived registry: OneTAK-Native"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - resource:default/repo-onetaknative-04473be8
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7046,9 +7426,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 09:05:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81dabaece05924086d39
-      title: "Notion source: WearTAK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dabaece05924086d39.md
+      title: "Archived registry: WearTAK"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -7073,9 +7455,11 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 10:25:13Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: planned
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81db958be68a366d112e
-      title: "Notion source: VR-TAK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db958be68a366d112e.md
+      title: "Archived registry: VR-TAK"
 spec:
   type: planned-capability
   owner: group:default/onemind-admins
@@ -7090,7 +7474,7 @@ metadata:
     and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Visual discovery — brand content
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -7098,9 +7482,11 @@ metadata:
     onemind.io/documented-category: 🎯 Brand & Marketing
     onemind.io/documented-at: 2026-09-03 08:46:33Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81db9a6fdcf35a5ff7b7
-      title: "Notion source: Pinterest"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db9a6fdcf35a5ff7b7.md
+      title: "Archived registry: Pinterest"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7115,7 +7501,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: AI-optimized web search API
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -7123,9 +7509,11 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 08:46:28Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81df9777eac9aa15b750
-      title: "Notion source: Tavily"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81df9777eac9aa15b750.md
+      title: "Archived registry: Tavily"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7148,9 +7536,11 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81dfb106d5c7afb68acd
-      title: "Notion source: nui"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfb106d5c7afb68acd.md
+      title: "Archived registry: nui"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7166,7 +7556,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: TAK Server ↔ NATS bus leaf node — bridges CoT
       events from TAK into the NATS fabric
@@ -7175,13 +7565,20 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 08:14:21Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takserver/tak-nats-leaf; Service takserver/tak-nats-leaf
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81dfba46d3863663e0ba
-      title: "Notion source: tak-nats-leaf"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfba46d3863663e0ba.md
+      title: "Archived registry: tak-nats-leaf"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - component:default/k8s-takserver-tak-nats-leaf-366f7455
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7200,9 +7597,11 @@ metadata:
     onemind.io/documented-category: 🚌 NATS
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81e0be41fb11080c071e
-      title: "Notion source: natscope"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e0be41fb11080c071e.md
+      title: "Archived registry: natscope"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7217,7 +7616,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: 3D globe streaming platform — Cesium tiles and terrain
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -7225,9 +7624,11 @@ metadata:
     onemind.io/documented-category: 🌍 Geo
     onemind.io/documented-at: 2026-09-03 08:49:13Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81e38096f4acec966d27
-      title: "Notion source: Cesium Ion"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e38096f4acec966d27.md
+      title: "Archived registry: Cesium Ion"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7254,9 +7655,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:29:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81e3b05ff2ea3a0776d5
-      title: "Notion source: Synadia Platform"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e3b05ff2ea3a0776d5.md
+      title: "Archived registry: Synadia Platform"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7272,7 +7675,7 @@ metadata:
     unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Murmur (Mumble) ↔ TAK voice bridge — connects TAK
       voice comms to Murmur server
@@ -7281,13 +7684,18 @@ metadata:
     onemind.io/documented-category: 🌉 Bridge
     onemind.io/documented-at: 2026-09-03 07:21:53Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takserver/mumble-bridge
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81e8ba62f5143a9fc0b6
-      title: "Notion source: mumble-bridge"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e8ba62f5143a9fc0b6.md
+      title: "Archived registry: mumble-bridge"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-bridge
+  dependsOn:
+    - component:default/k8s-takserver-mumble-bridge-327c692e
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7298,7 +7706,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Mumble voice server for TAK operators
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7306,13 +7714,18 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 08:50:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment takserver/murmur; Service takserver/murmur
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81ec8825efde12e75493
-      title: "Notion source: Murmur (Voice)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ec8825efde12e75493.md
+      title: "Archived registry: Murmur (Voice)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-takserver-murmur-29fe28aa
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7323,7 +7736,7 @@ metadata:
     bar — Notion documentation; deployment and availability unverified."
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: "[CloudTAK] Legacy AI plugin for CloudTAK — chat panel and bottom bar"
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7331,9 +7744,11 @@ metadata:
     onemind.io/documented-category: 🔌 Plugins
     onemind.io/documented-at: 2026-09-03 08:07:18Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81ed9a06d17832222870
-      title: "Notion source: onetak-plugin-legacy-ai"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ed9a06d17832222870.md
+      title: "Archived registry: onetak-plugin-legacy-ai"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7361,9 +7776,11 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:27:33Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
+    onemind.io/verification: reference
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81ee8eacfe99be9e4085
-      title: "Notion source: SwarmClaw"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ee8eacfe99be9e4085.md
+      title: "Archived registry: SwarmClaw"
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7378,7 +7795,7 @@ metadata:
     deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: LLM routing — unified API across providers
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -7386,9 +7803,11 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 08:46:30Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81eebb6adc26a94c0e88
-      title: "Notion source: OpenRouter (OneMindOS)"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81eebb6adc26a94c0e88.md
+      title: "Archived registry: OpenRouter (OneMindOS)"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7403,7 +7822,7 @@ metadata:
     (IaC/GitOps) — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - repository-verified
   annotations:
     onemind.io/documented-purpose: Sovereign infrastructure — DOKS, NATS HA, TAK 5.7 cluster (IaC/GitOps)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7411,13 +7830,18 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 08:12:56Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: repository-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/repository-url: https://github.com/onemindos/omos
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81efae8ef2a9f52f10dd
-      title: "Notion source: omos-infra"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81efae8ef2a9f52f10dd.md
+      title: "Archived registry: omos-infra"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-devops
+  dependsOn:
+    - resource:default/repo-omos-6c757bac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7428,7 +7852,7 @@ metadata:
     architecture — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Legacy AI System — 8 specialist agents, NATS-native cognitive architecture
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7436,9 +7860,11 @@ metadata:
     onemind.io/documented-category: 🧠 Agents
     onemind.io/documented-at: 2026-09-03 08:12:56Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81f1904bcf8fb71fdde7
-      title: "Notion source: omos-legacy"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81f1904bcf8fb71fdde7.md
+      title: "Archived registry: omos-legacy"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7453,7 +7879,7 @@ metadata:
     Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: OneMind OS — core ideas, planning, blueprints, and research
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7461,9 +7887,11 @@ metadata:
     onemind.io/documented-category: ⚙️ DevOps
     onemind.io/documented-at: 2026-09-03 08:12:57Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81f2ae36f7f0b5532841
-      title: "Notion source: omos-core"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81f2ae36f7f0b5532841.md
+      title: "Archived registry: omos-core"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7478,7 +7906,7 @@ metadata:
     documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Video streaming relay for TAK feeds (RTSP/RTMP)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7486,13 +7914,18 @@ metadata:
     onemind.io/documented-category: 🎯 TAK
     onemind.io/documented-at: 2026-09-03 07:00:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment onetak/onetak-media; Service onetak/onetak-media
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81fbba79e1a3d07472a8
-      title: "Notion source: MediaMTX"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fbba79e1a3d07472a8.md
+      title: "Archived registry: MediaMTX"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-tak
+  dependsOn:
+    - component:default/k8s-onetak-onetak-media-31c9ce7b
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7503,7 +7936,7 @@ metadata:
     Running 38d. — Notion documentation; deployment and availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - deployment-verified
   annotations:
     onemind.io/documented-purpose: Dedicated pod — satellite tracking feed
       publishing to NATS fabric. Running 38d.
@@ -7512,13 +7945,18 @@ metadata:
     onemind.io/documented-category: 📡 Intel
     onemind.io/documented-at: 2026-09-03 07:00:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: deployment-verified
+    onemind.io/verified-at: 2026-10-06
+    onemind.io/runtime-evidence: Deployment omos/feed-satellites
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81fca08cfaf9f04514a1
-      title: "Notion source: feed-satellites"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fca08cfaf9f04514a1.md
+      title: "Archived registry: feed-satellites"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-intel
+  dependsOn:
+    - component:default/k8s-omos-feed-satellites-e3372fac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
@@ -7529,7 +7967,7 @@ metadata:
     availability unverified.
   tags:
     - fabric-registry
-    - documented
+    - documented-unverified
   annotations:
     onemind.io/documented-purpose: Encrypted private email
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -7537,10 +7975,1527 @@ metadata:
     onemind.io/documented-category: 📡 Comms
     onemind.io/documented-at: 2026-09-03 09:08:23Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/verification: documented-unverified
+    onemind.io/verified-at: 2026-10-06
   links:
-    - url: https://app.notion.com/3d0d0cf70a7e81ff9adee34d630631f3
-      title: "Notion source: Proton Mail"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
+      title: "Archived registry: Proton Mail"
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: fabric-comms
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: repo-onemind
+  title: OneMind repositories
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-omos-6c757bac
+  title: omos
+  description: OneMind sovereign infrastructure — DOKS cloud hub, NATS HA, TAK 5.7
+    cluster (IaC/GitOps)
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/omos
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-mcpadapter-8418c436
+  title: mcp-adapter
+  description: An MCP adapter that bridges the Abilities API to the Model Context
+    Protocol, enabling MCP clients to discover and invoke WordPress plugin,
+    theme, and core abilities programmatically.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/mcp-adapter
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-zeussite-1b632369
+  title: zeus-site
+  description: zeusdelacruz.com — personal brand, blog, and consulting. SEO-first,
+    Cloudflare Pages.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/zeus-site
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-servers-61276b38
+  title: servers
+  description: Model Context Protocol Servers
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/servers
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-modelcontextprotocol-9db97b68
+  title: modelcontextprotocol
+  description: Specification and documentation for the Model Context Protocol
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/modelcontextprotocol
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-nemoclaw-c1564fdc
+  title: NemoClaw
+  description: Run agents like Hermes, LangChain Deep Agents, and OpenClaw more
+    securely inside NVIDIA OpenShell with managed inference
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/NemoClaw
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-omosui-ee2c5098
+  title: omos-ui
+  description: OneMind OS sovereign operations center — NATS-native ops UI
+    (agents, bus, fleet, intel, missions, timemachine)
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/omos-ui
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-infratak-e0212787
+  title: infra-TAK
+  description: Browser based Team Awareness Kit Infrastructure Management
+    Platform. One-click deployment of TAK Server, Authentik identity provider,
+    and TAK Portal with automated LDAP, SSL, and QR enrollment. Includes
+    CloudTAK, MediaMTX and NodeRED.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/infra-TAK
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-atakplugins-b42ee0d5
+  title: atak-plugins
+  description: ATAK Plugins by takwerx — development workspace. Each plugin is
+    published from its own repo (see README).
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/atak-plugins
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-awesomemaplibre-c8d61e4d
+  title: awesome-maplibre
+  description: A collection of awesome things that use or support MapLibre!
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/awesome-maplibre
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-isaacsim-42af1f98
+  title: IsaacSim
+  description: NVIDIA Isaac Sim™ is an open-source application on NVIDIA Omniverse
+    for developing, simulating, and testing AI-driven robots in realistic
+    virtual environments.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/IsaacSim
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-authinfra-c78059ee
+  title: auth-infra
+  description: Cloud Infrastrcture for Hosting & Managing TAK Authentication
+    Infrastructure (LDAP)
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/auth-infra
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-hermesplugintak-01317352
+  title: hermes-plugin-tak
+  description: Hermes TAK plugin — 20-tool agent plugin + desktop UI for full
+    TAK/TAKML/VRTAK context
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/hermes-plugin-tak
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-etlbase-9516a8fc
+  title: etl-base
+  description: Helper library for building NodeJS based ETL Lambdas
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/etl-base
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-maplibregljs-58d95f76
+  title: maplibre-gl-js
+  description: MapLibre GL JS - Interactive vector tile maps in the browser
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/maplibre-gl-js
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-vr-a5ae2af7
+  title: VR
+  description: OneMind source repository
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/VR
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-onetak-169db101
+  title: OneTAK
+  description: TAK Compatible, browser based Common Operation Picture &
+    Situational Awareness tool
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/OneTAK
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takwerxmarket-7322a669
+  title: takwerx-market
+  description: "ATAK Plugin: TAKwerx Market — install and update takwerx plugins
+    from inside ATAK. Downloads, guide and issues here."
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/takwerx-market
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-mbtilesoffline-1cba6a13
+  title: mbtiles-offline
+  description: Download Slippy Map Tiles into an MBTiles file for offline use
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/mbtiles-offline
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-nodetak-6af1c550
+  title: node-tak
+  description: TAK Server NodeJS SDK
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/node-tak
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-threeui-4d3623f5
+  title: threeui
+  description: Open-source ThreeUI Community catalog with live interactive
+    components and complete Community source.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/threeui
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-payload-0acc43f7
+  title: payload
+  description: Payload is the open-source, fullstack Next.js framework, giving you
+    instant backend superpowers. Get a full TypeScript backend and admin panel
+    instantly. Use Payload as a headless CMS or for building powerful
+    applications.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/payload
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takinfra-cfdb31cf
+  title: tak-infra
+  description: CloudFormation managed infrastructure for TAK Server
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-infra
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-onemindsite-ba0917fe
+  title: onemind-site
+  description: "onemindos.com — the OneMind OS platform site. Sovereign
+    operations: OSS platform, plugins, education, enterprise. ThreeUI-based,
+    deployed on Cloudflare Pages."
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/onemind-site
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-cesiumnative-767cec2c
+  title: cesium-native
+  description: OneMind source repository
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/cesium-native
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-openlayers-4f6d22a3
+  title: openlayers
+  description: OpenLayers
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/openlayers
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-nodecot-0c87d1d6
+  title: node-CoT
+  description: Javascript Cursor-On-Target Library
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/node-CoT
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-godseyeview-795c601d
+  title: gods-eye-view
+  description: A spy satellite simulator in your browser, except the data is real.
+    Live open source spatial intelligence on a photorealistic 3D globe.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/gods-eye-view
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-3dtiles-5d91d3b3
+  title: 3d-tiles
+  description: "Specification for streaming massive heterogeneous 3D geospatial
+    datasets :earth_americas:"
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/3d-tiles
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-onetakpluginsample-9cda9d42
+  title: OneTAK-Plugin-Sample
+  description: CloudTAK Plugin Sample Template
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/OneTAK-Plugin-Sample
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-ataksdk-fba35dc2
+  title: atak-sdk
+  description: OneMind ATAK shared SDK — NATS client, CoT utils, TAK API, HUD theme
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/atak-sdk
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-atakpluginomhud-90d7a032
+  title: atak-plugin-omhud
+  description: OneMind HUD (OMHud) — tactical AR overlay plugin for ATAK
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/atak-plugin-omhud
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-natsandroid-6a4df74b
+  title: nats-android
+  description: OneMind OS NATS leaf node SDK for Android — background service,
+    AIDL IPC, reconnect handling
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/nats-android
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-hermespluginnatscontext-85b66a25
+  title: hermes-plugin-nats-context
+  description: OneMind OS omnipresence plugin for Hermes — injects live NATS
+    operational picture into every LLM call
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/hermes-plugin-nats-context
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takvideorestreamer-1902433c
+  title: tak-video-restreamer
+  description: TAK-focused video restreaming capability
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-video-restreamer
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takservermcp-64c8795d
+  title: tak-server-mcp
+  description: TAK Server MCP — 11-tool Model Context Protocol bridge for AI↔TAK
+    Server geospatial ops
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-server-mcp
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-heynats-5e829a67
+  title: heynats
+  description: heynats — Go NATS HTTP/WebSocket gateway for browser access
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/heynats
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-agenttap-726c66ba
+  title: agenttap
+  description: agenttap — live read-only Synadia agent-protocol visualizer on NATS
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/agenttap
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-mediainfra-3f163c82
+  title: media-infra
+  description: OneMind source repository
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/media-infra
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-etlgeojson-f1df2027
+  title: etl-geojson
+  description: Pull GeoJSON from an HTTP(s) API
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/etl-geojson
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-etldronesense-a9eb93fd
+  title: etl-drone-sense
+  description: OneMind source repository
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/etl-drone-sense
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-pythia-bc826ea6
+  title: Pythia
+  description: One local API call gives your agent the entire live state of the
+    planet — every major world event at once, plus forecasts. 40+ free keyless
+    feeds, runs entirely on Ollama. No cloud, no cost.  Keyless live feeds into
+    one global view and forecasts what’s likely next. No cloud, no keys, no
+    cost.  1d,1w,1m,1y predictions by Mirofish.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/Pythia
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-constellationoverwatch-a197f051
+  title: constellation-overwatch
+  description: Open Source C4 Data Fabric for the Industrial Edge - Drones,
+    Robots, Sensors and Video Feeds
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/constellation-overwatch
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-omoscortex-a1f071c9
+  title: omos-cortex
+  description: NeuroLinked — neuromorphic brain, 3D visualization, sleep
+    consolidation, MCP server
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/omos-cortex
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-xmljs-15f9b661
+  title: xml-js
+  description: Converter utility between XML text and Javascript object / JSON text.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/xml-js
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-milsymbol-0b354b5e
+  title: milsymbol
+  description: Military Symbols in JavaScript
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/milsymbol
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-omnitak-b494059b
+  title: omni-TAK
+  description: A TAK client replica that allows users to connect any TAK server to
+    any number of other TAK servers to federate data at will
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/omni-TAK
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-maptilerbasicglstyle-93df2356
+  title: maptiler-basic-gl-style
+  description: Basic GL Style using OpenMapTiles
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/maptiler-basic-gl-style
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-libregl-c401c4bd
+  title: libregl
+  description: A powerful Vue library for MapLibre with an intuitive API, and a
+    collection of highly customizable components.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/libregl
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-mediamtx-c985381c
+  title: mediamtx
+  description: Ready-to-use SRT / WebRTC / RTSP / RTMP / LL-HLS / MPEG-TS / RTP
+    media server and media proxy that allows to read, publish, proxy, record and
+    playback video and audio streams.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/mediamtx
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-orp-6eded3a1
+  title: orp
+  description: ORP — Open Reality Protocol. Single-binary Palantir-grade data
+    fusion engine in Rust. DuckDB + Kuzu + RocksDB.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/orp
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-cloudtakdji-f46f05c6
+  title: CloudTAK-DJI
+  description: CloudTAK API Extension to allow DJI Drones to use the Open Cloud
+    Functioanlity
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/CloudTAK-DJI
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takwatchiq-e59672d5
+  title: TAKWatch-IQ
+  description: "TAKWatch-IQ is a Garmin ConnectIQ application that integrates ATAK
+    with Garmin devices "
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/TAKWatch-IQ
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-frontendinfra-6293d928
+  title: frontend-infra
+  description: CloudFormation managed infrastructure for cotak.gov frontend
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/frontend-infra
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-cloudtakgeofence-b450972b
+  title: CloudTAK-Geofence
+  description: Geofence support in CloudTAK
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/CloudTAK-Geofence
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-dtedlvl24tak-3d4e45e1
+  title: DTED-LVL2-4-TAK
+  description: OneMind source repository
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/DTED-LVL2-4-TAK
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-cloudtaknative-f9292ef4
+  title: CloudTAK-Native
+  description: Desktop Support for CloudTAK
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/CloudTAK-Native
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-onetaknative-04473be8
+  title: OneTAK-Native
+  description: Desktop Support for CloudTAK
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/OneTAK-Native
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takgpt-13d44cb0
+  title: tak-gpt
+  description: An TAK Server plugin for exposing LLM bots and agents to TAK clients
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-gpt
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-landsarsdk-22493ec0
+  title: landsar-sdk
+  description: The motion model software development kit for the LandSAR search
+    and rescue software platform
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/landsar-sdk
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-mapboxglvalhalla-61d21305
+  title: mapbox-gl-valhalla
+  description: This module adds a control which can integrate with valhalla api.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/mapbox-gl-valhalla
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takml-2982e28c
+  title: tak-ml
+  description: TAK-ML - A machine learning framework for use with the TAK
+    ecosystem (specifically ATAK and TAK Server at the moment)
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-ml
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-landsarbase-2e83ee79
+  title: landsar-base
+  description: The LandSAR search and rescue platform
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/landsar-base
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takwatch-bf8dd1e7
+  title: TAKWatch
+  description: TAKWatch is an ATAK plugin that communicates with Garmin devices
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/TAKWatch
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-webworldwind-1cef71f6
+  title: WebWorldWind
+  description: The NASA WorldWind Javascript SDK (WebWW) includes the library and
+    examples for creating geo-browser web applications and for embedding a 3D
+    globe in HTML5 web pages.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/WebWorldWind
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-cotexplorer-f44b51d1
+  title: cotexplorer
+  description: ATAK Plugin to display and log incoming and outgoing CotEvents
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/cotexplorer
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-casaos-b010becd
+  title: CasaOS
+  description: CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/CasaOS
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-eidoconveyanceincidentdataapi-a61ee261
+  title: EIDO-Conveyance-Incident-Data-API
+  description: Repository for the Incident Data API from NENA EIDO Conveyance Standard
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/EIDO-Conveyance-Incident-Data-API
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-vehicleosintcollection-bc37c276
+  title: Vehicle-OSINT-Collection
+  description: "A comprehensive list of tools that can be used for finding
+    information related to a specific vehicle. "
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/Vehicle-OSINT-Collection
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-freetakserver-b9796e3d
+  title: FreeTakServer
+  description: Situational Awareness Server compatible with TAK clients
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/FreeTakServer
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takfeederdeepstate-ca0be1bd
+  title: tak-feeder-deepstate
+  description: TAK server feeder for data from deepstatemap.live
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-feeder-deepstate
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-hackasatlibrary-cd842ac1
+  title: hack-a-sat-library
+  description: Public library of space documents and tutorials
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/hack-a-sat-library
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: repo-takcad-31a5cc0e
+  title: tak-cad
+  description: TAK-CAD is an Android Team Awareness Kit (ATAK) plugin that
+    provides Computer Aided Dispatch capabilities to security force and public
+    safety personnel executing dispatch operations.
+  tags:
+    - repository
+    - repository-verified
+  links:
+    - url: https://github.com/onemindos/tak-cad
+      title: Source repository
+  annotations:
+    onemind.io/verification: repository-verified
+    onemind.io/observed-at: 2026-10-06
+spec:
+  type: code-repository
+  owner: group:default/onemind-admins
+  system: repo-onemind
