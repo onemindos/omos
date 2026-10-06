@@ -12,3 +12,10 @@ kubernetes:
     - horizontalpodautoscalers
     - limitranges
     - resourcequotas
+search:
+  collators:
+    techdocs:
+      schedule:
+        frequency: {minutes: 1}
+        timeout: {seconds: 50}
+        initialDelay: {seconds: 30}
