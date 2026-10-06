@@ -11,6 +11,7 @@ resources:
   - ghcr.sealedsecret.yaml
   - backup.sealedsecret.yaml
   - backup.yaml
+  - mcp.sealedsecret.yaml
 configMapGenerator:
   - name: backstage-cluster-config
     namespace: backstage
