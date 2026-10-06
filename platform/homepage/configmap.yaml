@@ -54,12 +54,16 @@ data:
         icon: mdi-map
       Zoho Apps:
         style: row
-        columns: 2
+        columns: 3
         icon: mdi-apps
       Personal Tools:
         style: row
         columns: 3
         icon: mdi-account-cog
+      Workspaces:
+        style: row
+        columns: 3
+        icon: mdi-briefcase
       Personal Finance:
         style: row
         columns: 3
@@ -315,6 +319,18 @@ data:
             icon: si-zoho
             href: https://mail.zoho.com/zm/#mail
             description: Inbox and mail
+        - Zoho Store:
+            icon: si-zoho
+            href: https://store.zoho.com/html/store/home.html
+            description: Zoho apps and subscriptions
+        - Zoho Account:
+            icon: si-zoho
+            href: https://accounts.zoho.com/home#profile/personal
+            description: Profile and account settings
+        - Zoho MCP Client:
+            icon: si-zoho
+            href: https://mcp.zoho.com/mcp-client/931949197#/server
+            description: MCP server connections
 
     # ════════════════════════════════════════════════════════
     # PERSONAL TOOLS
@@ -324,6 +340,10 @@ data:
             icon: mdi-lock
             href: https://my.1password.com/home
             description: Password manager
+        - Dropbox:
+            icon: si-dropbox
+            href: https://www.dropbox.com/home
+            description: Files and cloud storage
         - Raindrop.io:
             icon: mdi-bookmark-multiple
             href: https://app.raindrop.io/my/0
@@ -332,6 +352,23 @@ data:
             icon: mdi-cellphone
             href: https://www.att.com/prepaid/
             description: Wireless account
+
+    # ════════════════════════════════════════════════════════
+    # WORKSPACES
+    # ════════════════════════════════════════════════════════
+    - Workspaces:
+        - Composio:
+            icon: mdi-puzzle
+            href: https://dashboard.composio.dev/OneMind/~/connect
+            description: App connections and integrations
+        - Miro:
+            icon: si-miro
+            href: https://miro.com/app/dashboard/org/3458764575937063233/team/3458764575937063234/
+            description: Team boards and collaboration
+        - Circle:
+            icon: mdi-account-group
+            href: https://login.circle.so/sign_in
+            description: Community workspace
 
     # ════════════════════════════════════════════════════════
     # PERSONAL FINANCE
