@@ -52,6 +52,10 @@ data:
         style: row
         columns: 4
         icon: mdi-map
+      Zoho Apps:
+        style: row
+        columns: 3
+        icon: mdi-apps
       External:
         style: row
         columns: 2
@@ -314,6 +318,15 @@ data:
             href: https://webodm.onemindos.dev
             description: Drone imagery
             siteMonitor: https://webodm.onemindos.dev
+
+    # ════════════════════════════════════════════════════════
+    # ZOHO APPS
+    # ════════════════════════════════════════════════════════
+    - Zoho Apps:
+        - Zoho One:
+            icon: si-zoho
+            href: https://one.zoho.com/zohoone/zeusdelacruz/home/cxapp-boards/home/CDB-1299481000000002042
+            description: Zoho One workspace
 
     # ════════════════════════════════════════════════════════
     # EXTERNAL
