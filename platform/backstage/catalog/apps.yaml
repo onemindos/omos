@@ -1307,3 +1307,20 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: external
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tailscale-admin
+  title: Tailscale Admin
+  description: Mesh VPN administration
+  tags:
+    - infrastructure
+  links:
+    - url: https://login.tailscale.com/admin
+      title: Tailscale Admin
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
