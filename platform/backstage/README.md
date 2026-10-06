@@ -3,7 +3,7 @@
 Private preview: https://onemind-preview.tail717ba0.ts.net
 Identity provider: https://onemind-auth.tail717ba0.ts.net
 
-This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `apps/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its inactive source remains in platform/homepage for recovery.
+This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `apps/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its source was removed; Git history retains the pre-retirement configuration for recovery.
 
 ## Identity and access
 
