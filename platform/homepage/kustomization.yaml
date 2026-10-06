@@ -14,3 +14,6 @@ configMapGenerator:
       - assets/legacy-background-light.jpg
       - assets/onemind-logo-dark.png
       - assets/onemind-logo-light.jpg
+generatorOptions:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
