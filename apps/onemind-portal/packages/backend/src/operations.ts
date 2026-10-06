@@ -36,7 +36,7 @@ export default createBackendPlugin({
         const unavailable=workloads.filter(x=>(x.spec?.replicas??1)>(x.status?.readyReplicas??0)).map(x=>`${x.metadata.namespace}/${x.metadata.name}`);
         const deployments=items(2).filter(x=>x.status?.health?.status!=='Healthy'||x.status?.sync?.status!=='Synced').map(x=>({name:x.metadata.name,health:x.status?.health?.status??'Unknown',sync:x.status?.sync?.status??'Unknown'}));
         const backups=items(3).filter(x=>x.metadata.name.includes('backup')).map(x=>({name:`${x.metadata.namespace}/${x.metadata.name}`,lastSuccess:x.status?.lastSuccessfulTime??null,suspended:x.spec?.suspend??false}));
-        res.json({observedAt:new Date().toISOString(),source:'do-nyc3-omos-cloud',partial:results.some(x=>x.status==='rejected'),unavailable,deployments,backups,totalWorkloads:workloads.length});
+        res.json({observedAt:new Date().toISOString(),source:'do-nyc3-omos-cloud',partial:results.some(x=>x.status==='rejected'),unavailableSources:results.flatMap((x,i)=>x.status==='rejected'?[['Deployments','StatefulSets','Argo CD','Backup schedules'][i]]:[]),unavailable,deployments,backups,totalWorkloads:workloads.length});
       }catch(e){next(e);}
     });
     router.use(routes);

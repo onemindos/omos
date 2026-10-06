@@ -25,7 +25,7 @@ For a recovery exercise, create a Job from the CronJob and inspect its `restoreV
 
 ## Catalog and live state
 
-Initial app links were imported from the now-archived Homepage via `scripts/migrate-homepage.cjs`. Maintain new links in the Backstage directory JSON and both apps.yaml catalog copies; rerunning the legacy migration can overwrite later additions. Cluster catalog identities are an explicit reviewed snapshot from `scripts/snapshot-cluster.cjs`, not automatic discovery. Stable hash suffixes prevent link/workload identity collisions. Rerun and review the snapshot when adding or removing workloads. The snapshot script updates both development and production copies. The migration script mirrors app links; user enrollment must update both org.yaml copies. The operations panel queries the live cluster every minute and marks unavailable sources and stale results. Existing unrelated unhealthy workloads are shown, not hidden.
+Maintain app links in the Backstage directory JSON and both apps.yaml catalog copies. Cluster catalog identities are an explicit reviewed snapshot from `scripts/snapshot-cluster.cjs`, not automatic discovery. Stable hash suffixes prevent link/workload identity collisions. Rerun and review the snapshot when adding or removing workloads. The snapshot script updates both development and production copies. user enrollment must update both org.yaml copies. The operations panel queries the live cluster every minute and marks unavailable sources and stale results. Existing unrelated unhealthy workloads are shown, not hidden.
 
 ## Release checks
 

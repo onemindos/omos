@@ -27,7 +27,7 @@ function Directory(){
     {matches.length===0&&<Typography>No matching apps.</Typography>}
   </Box>;
 }
-type Status={observedAt:string;partial:boolean;totalWorkloads:number;unavailable:string[];deployments:{name:string;health:string;sync:string}[];backups:{name:string;lastSuccess:string|null;suspended:boolean}[]};
+type Status={observedAt:string;partial:boolean;unavailableSources?:string[];totalWorkloads:number;unavailable:string[];deployments:{name:string;health:string;sync:string}[];backups:{name:string;lastSuccess:string|null;suspended:boolean}[]};
 function StatusPanel(){
   const discovery=useApi(discoveryApiRef);const fetchApi=useApi(fetchApiRef);
   const [data,setData]=useState<Status>();const [error,setError]=useState(false);
@@ -35,24 +35,37 @@ function StatusPanel(){
     const refresh=async()=>{try{const base=await discovery.getBaseUrl('onemind');const r=await fetchApi.fetch(`${base}/status`,{signal:controller.signal});if(!r.ok)throw new Error();const value=await r.json();if(active){setData(value);setError(false);}}catch{if(active)setError(true);}};
     refresh();const timer=setInterval(refresh,60000);return()=>{active=false;controller.abort();clearInterval(timer);};
   },[discovery,fetchApi]);
+  const theme=useTheme();
+  const stale=!!data&&(error||Date.now()-Date.parse(data.observedAt)>180000);
+  const backupProblems=data?.backups.filter(x=>x.suspended||!x.lastSuccess||(x.name==='backstage/backstage-backup'&&Date.now()-Date.parse(x.lastSuccess)>36*3600000))??[];
+  const issues=data?[...data.unavailable.map(name=>({key:`workload:${name}`,title:`Workload not fully ready: ${name}`,detail:'Inspect pod readiness and events in Headlamp.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'})),
+    ...data.deployments.map(x=>({key:`deployment:${x.name}`,title:`${x.name}: ${x.health} / ${x.sync}`,detail:'Inspect the deployment health, sync difference, and last operation.',url:`https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(x.name)}`})),
+    ...backupProblems.map(x=>({key:`backup:${x.name}`,title:`Backup ${x.name}: ${x.suspended?'suspended':!x.lastSuccess?'no successful run recorded':'overdue'}`,detail:x.lastSuccess?`Last successful job: ${new Date(x.lastSuccess).toLocaleString()}`:'Inspect the backup schedule and job logs.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))]:[];
   return <Box p={2}>
-    {error&&<Typography color="error">Live update unavailable. Any previous results below may be stale.</Typography>}
+    <Typography variant="h5">Needs attention</Typography>
+    <Typography variant="body2" color="textSecondary">Workload readiness, deployment health, and backup activity. Website availability is not monitored here yet.</Typography>
+    {error&&<Typography color="error">Live update unavailable. Previous results may be stale.</Typography>}
     {!data&&!error&&<Typography>Loading cluster state…</Typography>}
     {data&&<>
-      <Typography variant="caption">Checked {new Date(data.observedAt).toLocaleTimeString()} · {data.totalWorkloads} workloads</Typography>
-      {data.partial&&<Typography color="error">Some sources are unavailable; this is an incomplete view.</Typography>}
-      <Typography variant="h6">Needs attention</Typography>
-      {!data.partial&&!data.unavailable.length&&!data.deployments.length&&<Typography>No workload readiness or deployment-sync issues reported.</Typography>}
-      {data.unavailable.map(x=><Typography key={x} variant="body2">• Workload not fully ready: {x}</Typography>)}
-      {data.deployments.map(x=><Typography key={x.name} variant="body2">• {x.name}: {x.health} / {x.sync}</Typography>)}
-      <Box mt={2}><Link href="https://argocd.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">Open deployments</Link> · <Link href="https://grafana.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">Open Grafana</Link></Box>
+      <Typography variant="caption">{stale?'Stale observation':'Checked'} {new Date(data.observedAt).toLocaleString()} · {data.totalWorkloads} workloads · refreshes every minute</Typography>
+      {data.partial&&<Typography color="error">Incomplete view: {data.unavailableSources?.join(', ')||'some sources'} unavailable. Missing results do not mean healthy.</Typography>}
+      <Box my={2}><Typography variant="h6">{issues.length} attention items{stale?' in previous results':''}</Typography></Box>
+      {!stale&&!data.partial&&!issues.length&&<Typography>No readiness, deployment-sync, or configured backup-freshness issues reported.</Typography>}
+      {issues.map(x=><Box key={x.key} p={2} mb={1} style={{border:`1px solid ${theme.palette.divider}`,borderRadius:8}}>
+        <Typography style={{fontWeight:600}}>{x.title}</Typography>
+        <Typography variant="body2" color="textSecondary">{x.detail}</Typography>
+        <Link href={x.url} target="_blank" rel="noopener noreferrer">Investigate</Link>
+      </Box>)}
+      <Box mt={2}><Link href="https://argocd.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">All deployments</Link> · <Link href="https://grafana.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">Metrics in Grafana</Link></Box>
       <Box mt={3}><Typography variant="h6">Backup activity</Typography>
+        <Typography variant="caption">OneMind portal daily backup is overdue after 36 hours. Other schedules show activity without an assumed deadline. Job success alone does not prove restoration for every service.</Typography>
         {data.backups.map(x=><Typography key={x.name} variant="body2">{x.name}: {x.suspended?'suspended':x.lastSuccess?`last success ${new Date(x.lastSuccess).toLocaleString()}`:'no successful run recorded'}</Typography>)}
+        {!data.backups.length&&!data.partial&&<Typography>No backup schedules found.</Typography>}
       </Box>
     </>}
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
   HomePageWidgetBlueprint.make({name:'onemind-directory',params:{name:'OneMindDirectory',title:'Your apps',description:'Search the OneMind application directory',components:async()=>({Content:Directory})}}),
-  HomePageWidgetBlueprint.make({name:'onemind-status',params:{name:'OneMindStatus',title:'Operations',description:'Live workload readiness, deployments and backup activity',components:async()=>({Content:StatusPanel})}}),
+  HomePageWidgetBlueprint.make({name:'onemind-status',params:{name:'OneMindStatus',title:'Needs attention',description:'Live workload readiness, deployments and backup activity',components:async()=>({Content:StatusPanel})}}),
 ]});
