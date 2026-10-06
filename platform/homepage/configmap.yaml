@@ -54,8 +54,16 @@ data:
         icon: mdi-map
       Zoho Apps:
         style: row
-        columns: 3
+        columns: 2
         icon: mdi-apps
+      Personal Tools:
+        style: row
+        columns: 3
+        icon: mdi-account-cog
+      Personal Finance:
+        style: row
+        columns: 3
+        icon: mdi-bank
       External:
         style: row
         columns: 2
@@ -87,7 +95,7 @@ data:
               description: DOKS cluster
         - Cloudflare:
             - icon: si-cloudflare
-              href: https://dash.cloudflare.com
+              href: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
               description: DNS & edge
         - Tailscale Admin:
             - icon: si-tailscale
@@ -153,6 +161,10 @@ data:
             icon: tailscale.png
             href: https://login.tailscale.com/admin/machines
             description: Mesh VPN
+        - Cloudflare:
+            icon: si-cloudflare
+            href: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
+            description: DNS & edge
 
     # ════════════════════════════════════════════════════════
     # AI & AGENTS
@@ -299,6 +311,56 @@ data:
             icon: si-zoho
             href: https://one.zoho.com/zohoone/zeusdelacruz/home/cxapp-boards/home/CDB-1299481000000002042
             description: Zoho One workspace
+        - Zoho Mail:
+            icon: si-zoho
+            href: https://mail.zoho.com/zm/#mail
+            description: Inbox and mail
+
+    # ════════════════════════════════════════════════════════
+    # PERSONAL TOOLS
+    # ════════════════════════════════════════════════════════
+    - Personal Tools:
+        - 1Password:
+            icon: mdi-lock
+            href: https://my.1password.com/home
+            description: Password manager
+        - Raindrop.io:
+            icon: mdi-bookmark-multiple
+            href: https://app.raindrop.io/my/0
+            description: Bookmarks and reading
+        - AT&T Prepaid:
+            icon: mdi-cellphone
+            href: https://www.att.com/prepaid/
+            description: Wireless account
+
+    # ════════════════════════════════════════════════════════
+    # PERSONAL FINANCE
+    # ════════════════════════════════════════════════════════
+    - Personal Finance:
+        - Mercury:
+            icon: mdi-bank
+            href: https://app.mercury.com/home
+            description: Banking and finances
+        - Credit Karma:
+            icon: mdi-credit-card
+            href: https://www.creditkarma.com/auth/logon
+            description: Credit monitoring
+        - Experian:
+            icon: mdi-chart-line
+            href: https://usa.experian.com/login/
+            description: Credit report and score
+        - TransUnion:
+            icon: mdi-account
+            href: "https://ciam.tui.transunion.com/realms/TransUnion/protocol/openid-connect/auth?response_type=code&redirect_uri=https://service.transunion.com/dss/ssoRedirect.page&client_id=Phoenix&scope=openid"
+            description: Credit report and score
+        - Equifax:
+            icon: mdi-shield
+            href: "https://secure.equifax.com/auth/login?lang=en-US"
+            description: Credit report and score
+        - Innovis:
+            icon: mdi-file-document
+            href: https://www.innovis.com/login/index
+            description: Credit report
 
     # ════════════════════════════════════════════════════════
     # EXTERNAL
