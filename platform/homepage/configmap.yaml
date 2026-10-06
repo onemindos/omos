@@ -379,6 +379,10 @@ data:
             icon: si-zoho
             href: https://iot.zoho.com/platform/p/OM99URW/home
             description: IoT platform
+        - Zoho Zia Agents:
+            icon: si-zoho
+            href: https://ziaagents.zoho.com/941902808/home
+            description: Zia AI agents workspace
 
     # ════════════════════════════════════════════════════════
     # PERSONAL TOOLS
