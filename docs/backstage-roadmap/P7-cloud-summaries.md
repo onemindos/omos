@@ -1,6 +1,6 @@
 # P7 — Selected cloud application summaries
 
-Status: planned; this draft PR contains the implementation plan, not a deployed feature.
+Status: adapter implemented; authorized Zoho credentials and live account verification remain pending.
 
 ## Outcome
 
@@ -28,3 +28,5 @@ Independent of P5. Integrate with P2 identities; coordinate permissions with P6.
 ## Release evidence
 
 Before marking ready: summarize actual changes, relevant verification, image digest when needed, rollout health, limitations, and recovery path. Keep this PR draft until implementation is reviewable.
+
+Selected Zoho Projects V3 tasks as the first decision summary. The card explicitly distinguishes configuration required, unavailable, stale and current. Scope ZohoProjects.tasks.READ; US endpoints; first 100 tasks only, labeled partial. Provider entitlement and live account results require the missing credentials.
