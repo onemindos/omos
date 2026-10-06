@@ -30,7 +30,7 @@ data:
         icon: mdi-brain
       Communication:
         style: row
-        columns: 3
+        columns: 4
         icon: mdi-chat
       TAK Ecosystem:
         style: row
@@ -177,6 +177,10 @@ data:
             icon: si-cloudflare
             href: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
             description: DNS & edge
+        - DigitalOcean:
+            icon: si-digitalocean
+            href: https://cloud.digitalocean.com/
+            description: Cloud infrastructure and DOKS
 
     # ════════════════════════════════════════════════════════
     # AI & AGENTS
@@ -217,6 +221,10 @@ data:
             icon: mdi-chat-processing-FFFFFF
             href: https://heynats-1.tail717ba0.ts.net/
             description: NATS pub/sub debugger
+        - Google Messages:
+            icon: mdi-message-text
+            href: https://messages.google.com/web/
+            description: Phone messages in your browser
 
     # ════════════════════════════════════════════════════════
     # TAK ECOSYSTEM
