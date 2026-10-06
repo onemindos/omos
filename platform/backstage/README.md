@@ -32,3 +32,9 @@ Maintain app links in the Backstage directory JSON and both apps.yaml catalog co
 Use the official Backstage Kubernetes, Docker, OIDC, permissions and Kubernetes integration documentation. Require: immutable dependency install, TypeScript check, backend/container build, server-side manifest validation, healthy rollout, verified OIDC callback and identity, authenticated catalog and live status, denied anonymous APIs, read-only cluster permissions, and an encrypted backup with successful restore verification. Verify actual browser rendering before replacing Homepage.
 
 Do not claim offline operation: self-hosted pages still require reachability to the host. Existing cloud app links require their providers. Home hosting can use the same containers, Git catalog and restored PostgreSQL with a suitable storage class and mesh routing.
+
+## Inventory maintenance
+
+Run `node scripts/enrich-inventory.cjs` from `apps/onemind-portal` on the authorized Mac to refresh both catalog copies. It checks the cluster context, captures workload identities and Tailscale endpoint names/OS/DNS, and connects app links to workloads only through matching ingress hosts and service selectors. It does not collect credentials, user profiles or IP addresses. Review the Git diff before merging; the script is not scheduled automatically. Plain `snapshot-cluster.cjs` replaces cluster.yaml and omits mesh enrichment, so use the enrichment command for the complete inventory.
+
+Hosting annotations distinguish verified cluster routing from unverified mesh endpoints and external providers. Device location and purpose are explicitly unreviewed; an offline discovery snapshot is not a service incident. The catalog graph exposes verified application-to-workload and workload-to-cluster relationships. Cloud API integrations, repository discovery beyond the infrastructure repository, and physical device classification still require reviewed sources.
