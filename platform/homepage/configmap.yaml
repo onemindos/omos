@@ -9,11 +9,7 @@ data:
     ---
     title: OneMind OS
     description: Sovereign intelligence fabric
-    theme: dark
-    color: red
-    background:
-      image: /images/legacy-background.jpg
-      opacity: 24
+    color: neutral
     headerStyle: clean
     cardBlur: sm
     statusStyle: dot
@@ -357,49 +353,93 @@ data:
     # ════════════════════════════════════════════════════════
   # ─── Custom CSS ────────────────────────────────────────────────────────────
   custom.css: |
-    /* Legacy brand treatment for the OneMind OS service dashboard. */
+    /* The built-in Homepage theme toggle adds .light or .dark to #page_wrapper. */
     :root {
-      color-scheme: dark;
-      --legacy-red: #ef3340;
+      color-scheme: light dark;
+      --legacy-accent: #ff4d49;
     }
 
     body {
-      background-color: #050505;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
+    #page_wrapper.dark {
+      --legacy-surface: rgba(5, 5, 5, 0.82);
+      --legacy-surface-hover: rgba(12, 12, 12, 0.92);
+      --legacy-outline: rgba(255, 255, 255, 0.16);
+      --legacy-text: #fff;
+      --legacy-muted: rgba(255, 255, 255, 0.72);
+    }
+
+    #page_wrapper.light {
+      --legacy-surface: rgba(255, 255, 255, 0.88);
+      --legacy-surface-hover: rgba(255, 255, 255, 0.96);
+      --legacy-outline: rgba(0, 0, 0, 0.14);
+      --legacy-text: #161616;
+      --legacy-muted: rgba(22, 22, 22, 0.68);
+    }
+
+    #page_wrapper.dark #page_container {
+      background-color: #000;
+      background-image: url("/images/legacy-background-dark.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    #page_wrapper.light #page_container {
+      background-color: #fff;
+      background-image: url("/images/legacy-background-light.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
     header {
-      background: rgba(5, 5, 5, 0.76);
-      border-bottom: 1px solid rgba(239, 51, 64, 0.22);
+      background: var(--legacy-surface);
+      border-bottom: 1px solid var(--legacy-outline);
       backdrop-filter: blur(12px);
     }
 
     #services .service-card,
-    #bookmarks .bookmark {
-      border: 1px solid rgba(239, 51, 64, 0.2);
-      background: rgba(10, 10, 12, 0.78);
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+    #bookmarks .bookmark > a {
+      border: 1px solid var(--legacy-outline);
+      background-color: var(--legacy-surface) !important;
+      color: var(--legacy-text);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
       transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
     }
 
     #services .service-card:hover,
-    #bookmarks .bookmark:hover {
-      border-color: rgba(239, 51, 64, 0.72);
-      background: rgba(18, 10, 12, 0.9);
+    #bookmarks .bookmark > a:hover {
+      border-color: var(--legacy-accent);
+      background-color: var(--legacy-surface-hover) !important;
       transform: translateY(-2px);
     }
 
     #services h2,
     #bookmarks h2 {
-      letter-spacing: 0.045em;
+      color: var(--legacy-text);
+      letter-spacing: 0.035em;
       text-transform: uppercase;
     }
 
+    #services .service-description,
+    #bookmarks .bookmark-description {
+      color: var(--legacy-muted);
+    }
+
+    #page_wrapper input:focus,
+    #page_wrapper select:focus {
+      border-color: var(--legacy-accent);
+      box-shadow: 0 0 0 2px rgba(255, 77, 73, 0.2);
+    }
+
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #050505; }
-    ::-webkit-scrollbar-thumb { background: #b91c2b; border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--legacy-red); }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--legacy-outline); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--legacy-accent); }
 
   custom.js: |
     // OneMind OS — Legacy
-    console.log("%c🔴 OneMind OS | Legacy is watching", "color:#dc2626;font-weight:bold;font-size:14px;");
+    console.log("%c🔴 OneMind OS | Legacy is watching", "color:#ff4d49;font-weight:bold;font-size:14px;");

@@ -10,4 +10,5 @@ configMapGenerator:
   - name: homepage-assets
     namespace: homepage
     files:
-      - assets/legacy-background.jpg
+      - assets/legacy-background-dark.jpg
+      - assets/legacy-background-light.jpg
