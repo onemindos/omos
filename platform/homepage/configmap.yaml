@@ -32,7 +32,7 @@ data:
         style: row
         columns: 3
         icon: mdi-chat
-      Tactical:
+      TAK Ecosystem:
         style: row
         columns: 4
         icon: mdi-crosshairs-gps
@@ -62,7 +62,7 @@ data:
         icon: mdi-account-cog
       Workspaces:
         style: row
-        columns: 3
+        columns: 4
         icon: mdi-briefcase
       Personal Finance:
         style: row
@@ -211,9 +211,9 @@ data:
             description: NATS pub/sub debugger
 
     # ════════════════════════════════════════════════════════
-    # TACTICAL
+    # TAK ECOSYSTEM
     # ════════════════════════════════════════════════════════
-    - Tactical:
+    - TAK Ecosystem:
         - CloudTAK:
             icon: mdi-target-account-FFFFFF
             href: https://atoc.onemindos.dev
@@ -230,6 +230,18 @@ data:
             icon: mdi-hub-FFFFFF
             href: https://fedhub.onemindos.dev
             description: TAK federation hub
+        - TAK Product Center:
+            icon: si-github
+            href: https://github.com/orgs/TAK-Product-Center/repositories
+            description: TAK ecosystem repositories
+        - TAK.gov:
+            icon: mdi-domain
+            href: https://tak.gov/
+            description: Official TAK program
+        - EolianVR:
+            icon: mdi-virtual-reality
+            href: https://www.eolianvr.com/
+            description: Eolian virtual reality
 
     # ════════════════════════════════════════════════════════
     # INTELLIGENCE
@@ -331,6 +343,10 @@ data:
             icon: si-zoho
             href: https://mcp.zoho.com/mcp-client/931949197#/server
             description: MCP server connections
+        - Zoho API Console:
+            icon: si-zoho
+            href: https://api-console.zoho.com/
+            description: Zoho API applications and credentials
 
     # ════════════════════════════════════════════════════════
     # PERSONAL TOOLS
@@ -357,6 +373,10 @@ data:
     # WORKSPACES
     # ════════════════════════════════════════════════════════
     - Workspaces:
+        - GitHub:
+            icon: si-github
+            href: https://github.com/onemindos
+            description: OneMind repositories
         - Composio:
             icon: mdi-puzzle
             href: https://dashboard.composio.dev/OneMind/~/connect
