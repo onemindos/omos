@@ -54,8 +54,9 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /app/config
-            - name: images
+            - name: homepage-assets
               mountPath: /app/public/images
+              readOnly: true
           resources:
             requests:
               cpu: 50m
@@ -87,8 +88,9 @@ spec:
             name: homepage-config
         - name: config
           emptyDir: {}
-        - name: images
-          emptyDir: {}
+        - name: homepage-assets
+          configMap:
+            name: homepage-assets
         - name: logs
           emptyDir: {}
 ---
