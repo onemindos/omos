@@ -534,5 +534,13 @@
     "description": "Mesh VPN",
     "group": "external",
     "groupTitle": "External"
+  },
+  {
+    "name": "tailscale-admin",
+    "title": "Tailscale Admin",
+    "url": "https://login.tailscale.com/admin",
+    "description": "Mesh VPN administration",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
   }
 ]
