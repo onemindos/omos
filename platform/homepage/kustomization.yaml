@@ -10,8 +10,8 @@ configMapGenerator:
   - name: homepage-assets
     namespace: homepage
     files:
-      - assets/legacy-background-dark.jpg
-      - assets/legacy-background-light.jpg
+      - assets/legacy-background-dark.webp
+      - assets/legacy-background-light.webp
       - assets/onemind-logo-dark.png
       - assets/onemind-logo-light.jpg
 generatorOptions:
