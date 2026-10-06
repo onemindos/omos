@@ -29,6 +29,9 @@ spec:
         deployment:
           strategy:
             type: Recreate
+        crdHook:
+          annotations:
+            argocd.argoproj.io/sync-options: ServerSideApply=true
         operator:
           # 2026-09-09: ran requestless (~74Mi). Give the scheduler real numbers.
           resources:
