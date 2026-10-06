@@ -1,6 +1,6 @@
 # P8 — Resilience and home-hosting portability
 
-Status: implemented; isolated recovery passed. Rollout verification follows merge.
+Status: deployed and verified. Two replicas on separate nodes; 180 HTTPS checks over six minutes had zero failures. Isolated recovery restored all 14 databases.
 
 ## Outcome
 

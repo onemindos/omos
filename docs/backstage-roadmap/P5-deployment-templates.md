@@ -1,6 +1,6 @@
 # P5 — Guided GitOps deployment templates
 
-Status: template implemented; authenticated end-to-end publication requires a user-supplied repository-restricted token.
+Status: implemented and deployed. The official publication action created and updated disposable verification PR #51 locally; browser form and secret masking verified. Users supply their own repository-restricted token at execution.
 
 ## Outcome
 
@@ -16,10 +16,10 @@ Create consistent new services through reviewed GitOps pull requests.
 
 ## Completion criteria
 
-- [ ] A template produces a reviewable PR in an authorized repository.
+- [x] A template produces a reviewable PR in an authorized repository.
 - [x] Generated manifests and catalog entries pass repository validation.
-- [ ] Credentials and secret values never appear in generated source or logs.
-- [ ] Failure and retry behavior avoid duplicate deployments.
+- [x] Credentials and secret values never appear in generated source or logs.
+- [x] Failure and retry behavior avoid duplicate deployments.
 
 ## Dependencies and sequencing
 
