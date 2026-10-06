@@ -1,6 +1,6 @@
 # P4 — Runbooks and Git-owned documentation
 
-Status: planned; this draft PR contains the implementation plan, not a deployed feature.
+Status: implementation built; browser and search verification pending.
 
 ## Outcome
 
@@ -8,17 +8,17 @@ Publish useful service access, investigation, recovery and backup procedures thr
 
 ## Implementation
 
-- [ ] Review the Git archive of all 174 Fabric records; historical notes are not verified deployment recipes.
-- [ ] Start with Backstage, identity, NATS, TAK and monitoring runbooks.
-- [ ] Build TechDocs in CI and publish to a self-hosted supported storage backend.
-- [ ] Connect catalog entities to their documentation and search.
-- [ ] Document prerequisites, evidence, recovery steps and verification without embedding secrets.
+- [x] Review the Git archive of all 174 Fabric records; historical notes are not verified deployment recipes.
+- [x] Start with Backstage, identity, NATS, TAK and monitoring runbooks.
+- [x] Build TechDocs in CI and publish to a self-hosted supported storage backend.
+- [x] Connect catalog entities to their documentation and search.
+- [x] Document prerequisites, evidence, recovery steps and verification without embedding secrets.
 
 ## Completion criteria
 
 - [ ] Selected critical services have usable access and recovery runbooks.
 - [ ] Documentation renders in Backstage and is searchable.
-- [ ] Build and publishing failures are visible.
+- [x] Build and publishing failures are visible.
 - [ ] Published documentation does not depend on Notion.
 
 ## Dependencies and sequencing
