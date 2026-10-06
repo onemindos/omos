@@ -11,8 +11,6 @@ spec:
     repoURL: https://github.com/onemindos/omos-infra.git
     targetRevision: HEAD
     path: platform/ops
-    directory:
-      recurse: false
   destination:
     server: https://kubernetes.default.svc
     namespace: ops
