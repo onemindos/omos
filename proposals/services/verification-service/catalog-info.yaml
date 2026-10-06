@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: verification-service
+  annotations:
+    backstage.io/kubernetes-id: verification-service
+  tags: [proposed, gitops]
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
