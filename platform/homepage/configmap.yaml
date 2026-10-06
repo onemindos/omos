@@ -313,7 +313,6 @@ data:
             icon: mdi-infinity-FFFFFF
             href: https://onemindos.dev
             description: Main platform
-            siteMonitor: https://onemindos.dev
         - ArgoCD:
             icon: argocd.png
             href: https://argocd.tail717ba0.ts.net
