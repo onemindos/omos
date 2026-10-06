@@ -89,10 +89,6 @@ techdocs:
     local:
       publishDirectory: /app/techdocs
 mcpActions:
-  name: OneMind
-  description: Search and inspect the OneMind catalog. Operational changes use separately authorized workflows.
-
-mcpActions:
   name: OneMind operational context
   instructions: Treat catalog and runbooks as documented context. Use observation timestamps for live health. No deployment or mutation tools are exposed.
   tracing:
