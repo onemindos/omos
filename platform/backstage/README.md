@@ -15,13 +15,13 @@ Cluster OIDC requests use the existing Tailscale egress ProxyGroup. CoreDNS rewr
 
 ## Database and recovery
 
-PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. The single application replica uses Recreate updates to prevent concurrent initial migrations; updates have a brief availability gap. PostgreSQL and the portal are not highly available.
+PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. Two application replicas use rolling updates with zero unavailable replicas and one surge replica. Preferred node separation and a disruption budget preserve application availability during routine updates and voluntary eviction. Review schema migration compatibility before each upgrade. PostgreSQL and identity remain single-instance dependencies; this is not full high availability.
 
 `backstage-backup` runs daily at 07:15 UTC. It dumps all databases owned by the application role, encrypts the compressed archive with AES-256-GCM, and uploads to the existing private Spaces bucket under `backups/backstage/`. Each run downloads the object, checks authenticated decryption, restores the catalog to a uniquely named temporary database, verifies tables, and removes only that temporary database. Job failure means backup or recovery verification failed. Objects are retained; no automatic deletion policy is configured.
 
 Recovery requires the backup Secret's encryption key, Spaces access, database credentials, and access to the SealedSecrets controller's sealing key when rebuilding the cluster. Keep an independent secure copy of recovery keys; Git alone cannot decrypt a SealedSecret on a new controller. Do not rotate or remove the encryption key without preserving access to prior archives.
 
-For a recovery exercise, create a Job from the CronJob and inspect its `restoreVerified` output. For full recovery, stop Backstage, restore the selected archive into a separate PostgreSQL instance using the same application role and each original database name, verify all databases and catalog entities, then point the application at that instance. Do not restore over a running database. The backup includes database state; application code, catalog source and deployment manifests live in Git. No TechDocs content is published yet.
+For a recovery exercise, create a Job from the CronJob and inspect its `restoreVerified` output. For full recovery, stop Backstage, restore the selected archive into a separate PostgreSQL instance using the same application role and each original database name, verify all databases and catalog entities, then point the application at that instance. Do not restore over a running database. The backup includes database state; application code, catalog source and deployment manifests live in Git. TechDocs is packaged in the pinned application image. See the resilience runbook and recovery exercise for destination prerequisites.
 
 ## Catalog and live state
 

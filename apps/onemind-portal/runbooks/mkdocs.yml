@@ -14,3 +14,4 @@ nav:
   - NATS fabric: nats.md
   - TAK services: tak.md
   - Monitoring and health: monitoring.md
+  - Resilience: resilience.md
