@@ -15,7 +15,7 @@ Backstage dependencies are aligned to its official 1.55.3 release manifest.
 
 ## Catalog
 
-`node scripts/migrate-homepage.cjs` imports existing services and generates the directory.
+The Homepage migration is complete. Maintain the directory directly and update both application catalog copies alongside it.
 `node scripts/snapshot-cluster.cjs` imports workload identities from the verified context.
 These are explicit inventory snapshots. Live readiness is queried separately; new workloads
 need a refreshed inventory until a periodic discovery provider is installed.
