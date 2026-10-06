@@ -21,6 +21,7 @@ Runbooks and setup guides for the live infrastructure:
 
 | File | Purpose |
 |------|---------|
+| `CLUSTER-SERVICE-INVENTORY.md` | Dated live inventory of Argo CD ownership, Kubernetes Services, zero-replica Deployments, PVCs, and investigation candidates |
 | `CLICKHOUSE-TIMEMACHINE.md` | ClickHouse Time Machine setup, schema, and query patterns |
 | `NATS-SETUP.md` | NATS server install, account config, JetStream setup on macOS |
 | `TAK-INTEGRATION-REFERENCE.md` | TAK Server + NATS integration reference (ADS-B, AIS, CoT bridging) |
