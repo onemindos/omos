@@ -9,8 +9,7 @@ spec:
     repoURL: https://github.com/onemindos/omos-infra.git
     targetRevision: HEAD
     path: platform/homepage
-    directory:
-      recurse: true
+    kustomize: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: homepage
