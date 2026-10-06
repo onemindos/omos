@@ -25,7 +25,7 @@ async function load(): Promise<Summary> {
       if (typeof task.status?.is_closed_type !== 'boolean') throw new Error('Unknown task status');
       if (!task.status.is_closed_type) {
         open++;
-        if (task.due_date && Number.isFinite(Date.parse(task.due_date)) && Date.parse(task.due_date) < Date.now()) overdue++;
+        if (task.due_date && Number.isFinite(Date.parse(task.due_date)) && task.due_date.slice(0,10) < new Date().toISOString().slice(0,10)) overdue++;
       }
     }
     const now = Date.now();
