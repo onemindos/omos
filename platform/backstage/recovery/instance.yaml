@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backstage-recovery
+  namespace: backstage
+  labels:
+    app: backstage-recovery
+spec:
+  automountServiceAccountToken: false
+  restartPolicy: Never
+  securityContext:
+    runAsUser: 70
+    runAsGroup: 70
+    runAsNonRoot: true
+    fsGroup: 70
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+  - name: postgres
+    image: postgres:17-alpine@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193
+    env:
+    - name: POSTGRES_USER
+      value: backstage
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: backstage-secrets
+          key: POSTGRES_PASSWORD
+    - name: PGDATA
+      value: /var/lib/postgresql/data/pgdata
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 768Mi
+    volumeMounts:
+    - name: data
+      mountPath: /var/lib/postgresql/data
+    readinessProbe:
+      exec:
+        command:
+        - pg_isready
+        - -U
+        - backstage
+      periodSeconds: 5
+  volumes:
+  - name: data
+    emptyDir:
+      sizeLimit: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backstage-recovery
+  namespace: backstage
+spec:
+  selector:
+    app: backstage-recovery
+  ports:
+  - port: 5432
+    targetPort: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backstage-recovery
+  namespace: backstage
+spec:
+  podSelector:
+    matchLabels:
+      app: backstage-recovery
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backstage-backup
+    ports:
+    - protocol: TCP
+      port: 5432

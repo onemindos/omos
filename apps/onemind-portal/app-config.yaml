@@ -44,7 +44,12 @@ backend:
     client: better-sqlite3
     connection: ':memory:'
   actions:
-    pluginSources: [catalog]
+    pluginSources: [catalog, onemind]
+    filter:
+      include:
+        - attributes: {readOnly: true}
+      exclude:
+        - attributes: {destructive: true}
 auth:
   environment: production
   session:
@@ -58,13 +63,17 @@ auth:
         prompt: auto
         additionalScopes: [offline_access]
   clientIdMetadataDocuments:
-    enabled: false
+    enabled: true
 permission:
   enabled: true
 catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
   locations:
+    - type: file
+      target: ../../templates/service/template.yaml
+      rules:
+        - allow: [Template]
     - type: file
       target: ../../catalog/apps.yaml
     - type: file
@@ -82,3 +91,13 @@ techdocs:
 mcpActions:
   name: OneMind
   description: Search and inspect the OneMind catalog. Operational changes use separately authorized workflows.
+
+mcpActions:
+  name: OneMind operational context
+  instructions: Treat catalog and runbooks as documented context. Use observation timestamps for live health. No deployment or mutation tools are exposed.
+  tracing:
+    capture:
+      toolPayload: false
+integrations:
+  github:
+    - host: github.com
