@@ -19,6 +19,8 @@ onemindAssistant:
   ollama:
     baseUrl: http://ollama.YOUR_NAMESPACE.svc:11434
     model: YOUR_INSTALLED_MODEL
+    # Optional server-only bearer credential for a protected gateway:
+    # token: ${ONEMIND_MODEL_TOKEN}
 ```
 
 These are illustrative placeholders, not an installed model service. No endpoint or
@@ -28,7 +30,8 @@ internal service protected by network policy, or an authenticated private gatewa
 Do not expose an unauthenticated model service to the internet.
 
 The implementation follows [Ollama's chat API](https://docs.ollama.com/api/chat), uses
-non-streamed JSON responses, a generation limit and a 30-second deadline. Source text
+non-streamed JSON responses, a generation limit, a 30-second model deadline and a
+40-second overall request deadline. Disconnecting the client cancels in-flight fetches. Source text
 is treated as untrusted context. Only supplied citation IDs are accepted. Answers are
 displayed as plain text and cannot execute tools or inject HTML. No prompt, provider
 response body or conversation is logged or persisted by this plugin.
@@ -40,7 +43,8 @@ response body or conversation is logged or persisted by this plugin.
 - Catalog matching considers at most 200 entities and returns eight matches; incomplete
   coverage is disclosed. This is not semantic search or exhaustive dependency analysis.
 - Health probes have their existing observation cache and limited scope; an HTTP result
-  does not prove application correctness. Catalog metadata is not live health.
+  does not prove application correctness. Selected inventory source/state/observation
+  annotations are preserved; arbitrary annotations are excluded from model context.
 - Generative answers can still be wrong despite valid citation IDs. Check source content
   before acting. No changes are executed and no approval bypass is introduced.
 - Build and release through the normal portal image PR/Argo process. Add model egress to
