@@ -8,6 +8,24 @@ Each capability needs a defined authority, stable AI-accessible interface, separ
 
 A site should boot, authenticate locally, collect data, and execute essential rules without the cloud. Its hub synchronizes selected state and distributes reviewed configuration. An AI should receive contextual data with provenance and timestamps and invoke commands with identifiers, expiry, validation, deduplication and acknowledgments. Critical deterministic controls remain local. Human approval requirements apply to defined actions rather than every API call.
 
+## Required personal workspace capabilities
+
+User requirements recorded 2026-10-07. Treat these as selection gates for the proposed Notion/ClickUp/Todoist replacement, not optional future enhancements. A complementary set of tools may satisfy them; no single product has yet been verified against the complete list.
+
+| Requirement | Evidence needed before selecting or migrating |
+|---|---|
+| Calendar | Real events and scheduling; distinguish task calendar views, calendar subscriptions and two-way external calendar synchronization |
+| Habit tracking | Repeated check-ins and durable history; verify streaks, missed days and reports rather than equating recurring tasks with habit tracking |
+| Attachments | Upload/download, ownership, access controls, backup/export, and availability in the chosen mobile/offline workflow |
+| AI access | Authenticated API or MCP for permitted reads and writes, including tasks, context and attachment handling; a built-in chatbot alone does not satisfy this |
+| Webhooks | Required events, signed/authenticated delivery, retries, and an explicit private-network path to n8n |
+| Mobile app | Confirm iOS/Android client support for the exact self-hosted edition; distinguish native app, third-party app and installable PWA |
+| Offline access | Verify cached reading, offline creation/editing, attachments, and reconnect/conflict behavior separately; document which operations actually work |
+
+Self-hosting, recoverable data and scoped identities remain required. Do not migrate existing data or deploy additional workspace products based only on a feature claim. Evaluate a representative calendar event, habit check-in, attachment, AI operation and webhook from the chosen mobile client while connected and disconnected.
+
+New evidence changes the previous Plane Community recommendation: the current official mobile page says its mobile app does not support Community Edition. Plane remains a project-management candidate, but cannot presently be called a verified complete replacement meeting the mobile requirement. [Plane mobile edition limitation](https://plane.so/mobile). Vikunja documents attachments/API/webhooks, but complete calendar, dedicated habit tracking and the selected mobile client's offline behavior remain to be established. [Vikunja API](https://try.vikunja.io/api/v2/docs), [webhooks](https://vikunja.io/docs/webhooks/).
+
 ## Recommended capability owners
 
 | Capability | Candidate owner | Placement | Decision |
