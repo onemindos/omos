@@ -59,3 +59,14 @@ No custom replacement is being built for these deferred capabilities. Revisit ex
 - Yarn reports pre-existing React/Material UI and test-library peer warnings, the app now explicitly supplies React 18 types for the Argo peer requirement; legacy Material UI still reports its non-overlapping React/type ranges.
 
 Maintainer sources and selection criteria are in [PLUGIN-FIRST-PLAN.md](PLUGIN-FIRST-PLAN.md).
+
+## Provider activation on 2026-10-07
+
+- Organization-owned `OneMind Portal Readonly` GitHub App installed only on `onemindos/omos`. Repository Actions, Contents, Metadata and Pull Requests are read-only; user email read supports authorization. Webhooks disabled. Backend reader uses automatically refreshed installation tokens. A private-content read through Backstage's installed credentials provider returned 200. Authentik remains portal login.
+- Grafana service account `onemind-backstage`, Viewer, has a 90-day token; 31 dashboards were readable at provisioning. Backend proxy requires portal authentication and allows GET/HEAD only.
+- Default Argo project role `onemind-portal` has only `p, proj:default:onemind-portal, applications, get, default/*, allow`. Its 90-day project token was generated using official CLI core mode. Permission probes returned get=yes, sync=no, delete=no. This role is bootstrap state on the existing default AppProject: preserve/recreate this exact policy during recovery without replacing the project's other rules.
+- Provider values are sealed in `backstage-plugin-integrations`. Owner-only local copies are under `~/.config/onemind/plugin-activation`; no plaintext appears in source. Argo/Grafana tokens require rotation before expiration. No recurring automation was created.
+- Argo's existing HTTPS mesh endpoint uses the established egress ProxyGroup and exact CoreDNS rewrite. TLS validation stays enabled; Argo ignores operator-owned Service ExternalName.
+- A Git-owned ADR records the administrator's plugin-first decision. Runbooks catalog points to that private directory. NATS Dashboard uses the verified Grafana `nats` tag.
+
+The personal OAuth App and temporary fine-grained reader token created during setup should be retired after the GitHub App's live acceptance. Release PR records the pinned image and runtime acceptance.

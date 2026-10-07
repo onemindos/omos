@@ -25,3 +25,8 @@ spec:
       namespace: backstage
       name: authentik-mesh
       jsonPointers: [/spec/externalName]
+    - group: ''
+      kind: Service
+      namespace: backstage
+      name: argocd-mesh
+      jsonPointers: [/spec/externalName]
