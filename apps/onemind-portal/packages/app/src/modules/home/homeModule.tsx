@@ -2,29 +2,56 @@ import { useEffect, useState } from 'react';
 import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import { HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
-import { Box, TextField, Typography, Link, useTheme } from '@material-ui/core';
+import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import directory from './directory.json';
+import { ActivityInbox } from './ActivityInbox';
 
-function Directory(){
-  const [query,setQuery]=useState(''); const theme=useTheme();
-  const dark=theme.palette.type==='dark';
-  const matches=directory.filter(x=>`${x.title} ${x.description} ${x.groupTitle}`.toLowerCase().includes(query.toLowerCase()));
-  return <Box p={2}>
-    <Box p={3} mb={2} style={{borderRadius:12,backgroundImage:`linear-gradient(${dark?'#111a':'#fffc'},${dark?'#111a':'#fffc'}),url(/brand/legacy-background-${dark?'dark':'light'}.webp)`,backgroundSize:'cover'}}>
-      <Typography variant="h4">OneMind</Typography><Typography>Your systems. Your work. One home.</Typography>
+function Directory() {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('All');
+  const theme = useTheme();
+  const dark = theme.palette.type === 'dark';
+  const groups = [...new Set(directory.map(app => app.groupTitle))];
+  const matches = directory.filter(app => (category === 'All' || app.groupTitle === category) &&
+    `${app.title} ${app.description} ${app.groupTitle}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const destinations = [
+    { title: 'Systems', detail: 'Explore dependencies', url: '/systems' },
+    { title: 'Workflows', detail: 'Prepare a reviewed change', url: '/create' },
+    { title: 'Knowledge', detail: 'Find a runbook', url: '/docs' },
+    { title: 'Assistant', detail: 'Ask with source evidence', url: '/assistant' },
+    { title: 'Offline', detail: 'Carry your knowledge', url: '/offline' },
+  ];
+  return <Box p={2} className="onemind-workspace">
+    <Box p={3} mb={3} style={{ borderRadius: 20, border: `1px solid ${theme.palette.divider}`,
+      backgroundImage: `linear-gradient(${dark ? '#111215df' : '#fffffff0'},${dark ? '#111215df' : '#fffffff0'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <Typography variant="overline" style={{ letterSpacing: 3 }}>ONE MIND · YOUR WORKSPACE</Typography>
+      <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Everything connected.<br />A clearer next move.</Typography>
+      <Typography color="textSecondary">Your apps, infrastructure, agents, and knowledge in one place.</Typography>
+      <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Availability appears in the live status panel.</Typography></Box>
     </Box>
-    <TextField label="Find an app or capability" value={query} onChange={e=>setQuery(e.target.value)} fullWidth variant="outlined" size="small" />
-    {[...new Set(matches.map(x=>x.groupTitle))].map(group=><Box key={group} mt={3}>
-      <Typography variant="h6">{group}</Typography>
-      <Box display="flex" flexWrap="wrap" style={{gap:12}}>
-        {matches.filter(x=>x.groupTitle===group).map(x=><Box key={x.name} p={2} style={{border:'1px solid',borderColor:theme.palette.divider,borderRadius:8,flex:'1 1 180px'}}>
-          <Link href={x.url} target="_blank" rel="noopener noreferrer" style={{fontWeight:600}}>{x.title}</Link>
-          <Typography variant="body2" color="textSecondary">{x.description}</Typography>
-          <Link href={`/catalog/default/component/${x.name}`} variant="caption">Service details</Link>
+    <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+      {destinations.map(item => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 12 }}>
+        <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
+      </Button>)}
+    </Box>
+    <Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Your application fabric</Typography>
+    <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
+    <TextField label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
+    <Box my={2} display="flex" flexWrap="wrap" style={{ gap: 8 }} aria-label="Application categories">
+      {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)}>{group}</Button>)}
+    </Box>
+    <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
+    {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
+      <Typography variant="h6" component="h3" style={{ marginBottom: 12 }}>{group}</Typography>
+      <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 210px), 1fr))', gap: 12 }}>
+        {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.name} p={2} className="onemind-app-card" style={{ border: `1px solid ${theme.palette.divider}`, borderRadius: 14, background: theme.palette.background.paper, display: 'flex', flexDirection: 'column', minHeight: 138 }}>
+          <Link href={app.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700 }}>{app.title} ↗</Link>
+          <Typography variant="body2" color="textSecondary" style={{ marginTop: 8, marginBottom: 16, flex: 1 }}>{app.description}</Typography>
+          <Link href={`/catalog/default/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link>
         </Box>)}
       </Box>
     </Box>)}
-    {matches.length===0&&<Typography>No matching apps.</Typography>}
+    {!matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); }}>Reset filters</Button></Box>}
   </Box>;
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};
@@ -75,7 +102,7 @@ function StatusPanel(){
     </>}
   </Box>;
 }
-type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;link:string};
+type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;pages?:number;source?:string;coverage?:string;attemptedAt?:string;tasks?:{id:string;title:string;dueDate:string|null;overdue:boolean}[];link:string};
 function CloudPanel(){
   const discovery=useApi(discoveryApiRef), api=useApi(fetchApiRef);
   const [data,setData]=useState<CloudSummary>(); const [error,setError]=useState(false);
@@ -86,12 +113,16 @@ function CloudPanel(){
     {!data&&!error&&<Typography>Loading…</Typography>}
     {data&&<><Typography>{data.state==='configuration-required'?'Connect read-only Zoho access to enable this summary':data.state==='unavailable'?'Provider unavailable':`${data.open} open · ${data.overdue} overdue in ${data.sampled} sampled tasks`}</Typography>
     {(expired||data.state==='stale')&&<Typography color="error">Stale observation</Typography>}
-    {data.partial&&<Typography variant="caption">Limited to the first 100 tasks; these are sample counts, not portal totals.</Typography>}
+    {data.partial&&<Typography variant="caption">Bounded sample across {data.pages || 1} pages; these counts may not represent the whole portal.</Typography>}
     {data.observedAt&&<Typography variant="caption" display="block">Observed {new Date(data.observedAt).toLocaleString()} · cached for five minutes</Typography>}
+    {data.coverage&&<Typography variant="caption" display="block">{data.coverage}</Typography>}
+    {!!data.tasks?.length&&<Box mt={1}><Typography variant="subtitle2">Observed open work · up to 20 tasks, overdue first</Typography>{data.tasks.map(task=><Box key={task.id} mb={1}><Typography>{task.title}</Typography><Typography variant="caption" color={task.overdue?'error':'textSecondary'}>{task.overdue?'Overdue · ':''}{task.dueDate || 'No due date recorded'}</Typography></Box>)}</Box>}
+    {data.source&&<Typography variant="caption" display="block">Source: {data.source}</Typography>}
     <Link href={data.link} target="_blank" rel="noopener noreferrer">Open Zoho Projects</Link></>}
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageWidgetBlueprint.make({name:'onemind-activity',params:{name:'OneMindActivity',title:'Activity inbox',description:'Unread, actionable source notifications',components:async()=>({Content:ActivityInbox})}}),
   HomePageWidgetBlueprint.make({name:'onemind-cloud',params:{name:'OneMindCloud',title:'Cloud work',description:'Authorized provider summaries with observation times',components:async()=>({Content:CloudPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-directory',params:{name:'OneMindDirectory',title:'Your apps',description:'Search the OneMind application directory',components:async()=>({Content:Directory})}}),
   HomePageWidgetBlueprint.make({name:'onemind-status',params:{name:'OneMindStatus',title:'Needs attention',description:'Live workload readiness, deployments and backup activity',components:async()=>({Content:StatusPanel})}}),

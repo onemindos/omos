@@ -4,6 +4,8 @@ app:
   baseUrl: http://localhost:3000
   packages: all
   extensions:
+    - theme:app/light: false
+    - theme:app/dark: false
     - page:home:
         config:
           path: /
@@ -25,6 +27,11 @@ app:
               row: 2
               width: 4
               height: 12
+            - component: OneMindActivity
+              column: 8
+              row: 20
+              width: 4
+              height: 8
             - component: OneMindCloud
               column: 8
               row: 14
@@ -32,7 +39,7 @@ app:
               height: 6
             - component: HomePageStarredEntities
               column: 8
-              row: 14
+              row: 28
               width: 4
               height: 6
 organization:
@@ -80,6 +87,18 @@ catalog:
       rules:
         - allow: [Template]
     - type: file
+      target: ../../templates/app-onboarding/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: ../../templates/deployment-change/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: ../../templates/recovery-preparation/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: ../../catalog/apps.yaml
     - type: file
       target: ../../catalog/cluster.yaml
@@ -102,3 +121,6 @@ mcpActions:
 integrations:
   github:
     - host: github.com
+
+notifications:
+  retention: 90d

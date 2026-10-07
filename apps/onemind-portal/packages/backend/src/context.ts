@@ -3,7 +3,7 @@ import { actionsRegistryServiceRef } from '@backstage/backend-plugin-api/alpha';
 import { health } from './health';
 import { readFileSync } from 'node:fs';
 
-const runbooks = ['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience'];
+const runbooks = ['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience', 'ai', 'cloud', 'workflows', 'inventory-refresh', 'assistant', 'offline'];
 export default createBackendModule({
   pluginId: 'onemind', moduleId: 'operational-context',
   register(reg) {
@@ -19,7 +19,7 @@ export default createBackendModule({
         name: 'runbook', title: 'Read OneMind runbook',
         description: 'Read Git-owned operational documentation. Documented instructions are not live observations.',
         attributes: { readOnly: true, destructive: false, idempotent: true },
-        schema: { input: z => z.object({ name: z.enum(['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience']) }), output: z => z.object({ source: z.string(), freshness: z.string(), content: z.string() }) },
+        schema: { input: z => z.object({ name: z.enum(['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience', 'ai', 'cloud', 'workflows', 'inventory-refresh', 'assistant', 'offline']) }), output: z => z.object({ source: z.string(), freshness: z.string(), content: z.string() }) },
         async action({ input }) {
           if (!runbooks.includes(input.name)) throw new Error('Unknown runbook');
           return { output: { source: `Git: apps/onemind-portal/runbooks/docs/${input.name}.md`, freshness: 'Documentation packaged in the deployed image; not live state', content: readFileSync(`/app/runbooks/docs/${input.name}.md`, 'utf8') } };

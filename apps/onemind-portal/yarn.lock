@@ -4203,7 +4203,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/theme@npm:^0.7.3":
+"@backstage/theme@npm:0.7.3, @backstage/theme@npm:^0.7.3":
   version: 0.7.3
   resolution: "@backstage/theme@npm:0.7.3"
   dependencies:
@@ -13397,6 +13397,7 @@ __metadata:
     "@backstage/plugin-catalog": "npm:2.0.9"
     "@backstage/plugin-catalog-graph": "npm:0.6.8"
     "@backstage/plugin-catalog-import": "npm:0.13.18"
+    "@backstage/plugin-catalog-react": "npm:^3.2.3"
     "@backstage/plugin-home": "npm:0.9.10"
     "@backstage/plugin-home-react": "npm:0.1.42"
     "@backstage/plugin-kubernetes": "npm:0.12.23"
@@ -13408,6 +13409,7 @@ __metadata:
     "@backstage/plugin-techdocs": "npm:1.18.2"
     "@backstage/plugin-techdocs-module-addons-contrib": "npm:1.1.40"
     "@backstage/plugin-user-settings": "npm:0.9.7"
+    "@backstage/theme": "npm:0.7.3"
     "@backstage/ui": "npm:0.18.0"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
@@ -14029,6 +14031,7 @@ __metadata:
     "@backstage/plugin-kubernetes-backend": "npm:0.21.11"
     "@backstage/plugin-mcp-actions-backend": "npm:0.2.2"
     "@backstage/plugin-notifications-backend": "npm:0.6.9"
+    "@backstage/plugin-notifications-node": "npm:^0.2.30"
     "@backstage/plugin-permission-backend": "npm:0.7.16"
     "@backstage/plugin-permission-common": "npm:0.9.11"
     "@backstage/plugin-permission-node": "npm:0.11.4"

@@ -470,9 +470,15 @@ metadata:
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+    onemind.io/relationship-source: apps/onemind-portal/app-config.production.yaml
+      backend.database.connection.host; platform/backstage/postgres.yaml
   tags:
     - kubernetes
     - backstage
+  links:
+    - title: Portal recovery runbook
+      type: runbook
+      url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
 spec:
   type: service
   lifecycle: production
@@ -480,6 +486,7 @@ spec:
   system: cluster-backstage
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+    - component:default/k8s-backstage-backstage-postgres-17d2f351
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2273,6 +2280,10 @@ metadata:
   tags:
     - kubernetes
     - backstage
+  links:
+    - title: Database recovery runbook
+      type: runbook
+      url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
 spec:
   type: service
   lifecycle: production

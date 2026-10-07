@@ -17,3 +17,7 @@ nav:
   - Resilience: resilience.md
   - AI context: ai.md
   - Cloud summaries: cloud.md
+  - Guided workflows: workflows.md
+  - Inventory refresh: inventory-refresh.md
+  - Dashboard assistant: assistant.md
+  - Offline knowledge: offline.md

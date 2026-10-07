@@ -68,7 +68,11 @@ backend.add(import('@backstage/plugin-signals-backend'));
 backend.add(import('@backstage/plugin-mcp-actions-backend'));
 
 backend.add(import('./operations'));
+backend.add(import('./activity'));
+backend.add(import('./serviceOperations'));
 backend.add(import('./context'));
 backend.add(import('./machineReadOnly'));
+backend.add(import('./assistant'));
+backend.add(import('./offline'));
 
 backend.start();
