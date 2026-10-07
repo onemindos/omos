@@ -11,8 +11,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/onemindos/omos-infra.git
-    targetRevision: HEAD
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
     path: platform/data/clickhouse
     directory:
       recurse: false
