@@ -13,18 +13,6 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: takml-deps
-  namespace: takml
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: do-block-storage
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   name: takml-models
   namespace: takml
 spec:
