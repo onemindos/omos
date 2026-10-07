@@ -4,6 +4,8 @@ app:
   baseUrl: http://localhost:3000
   packages: all
   extensions:
+    - theme:app/light: false
+    - theme:app/dark: false
     - page:home:
         config:
           path: /
