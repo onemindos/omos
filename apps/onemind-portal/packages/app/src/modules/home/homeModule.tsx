@@ -4,6 +4,7 @@ import { HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import directory from './directory.json';
+import { ActivityInbox } from './ActivityInbox';
 
 function Directory(){
   const [query,setQuery]=useState(''); const theme=useTheme();
@@ -92,6 +93,7 @@ function CloudPanel(){
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageWidgetBlueprint.make({name:'onemind-activity',params:{name:'OneMindActivity',title:'Activity inbox',description:'Unread, actionable source notifications',components:async()=>({Content:ActivityInbox})}}),
   HomePageWidgetBlueprint.make({name:'onemind-cloud',params:{name:'OneMindCloud',title:'Cloud work',description:'Authorized provider summaries with observation times',components:async()=>({Content:CloudPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-directory',params:{name:'OneMindDirectory',title:'Your apps',description:'Search the OneMind application directory',components:async()=>({Content:Directory})}}),
   HomePageWidgetBlueprint.make({name:'onemind-status',params:{name:'OneMindStatus',title:'Needs attention',description:'Live workload readiness, deployments and backup activity',components:async()=>({Content:StatusPanel})}}),
