@@ -12,8 +12,8 @@ concurrency:
 jobs:
   discover:
     # Explicit opt-in: runner must have observational kubectl, tailnet and GitHub access.
-    if: vars.ONEMIND_INVENTORY_REFRESH_ENABLED == 'true'
-    runs-on: self-hosted
+    if: vars.ONEMIND_INVENTORY_REFRESH_ENABLED == 'true' && vars.ONEMIND_INVENTORY_ORG_VISIBILITY_VERIFIED == 'true'
+    runs-on: [self-hosted, onemind-inventory-readonly]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -27,8 +27,13 @@ jobs:
         run: git fetch origin automation/onemind-inventory-review || true
       - name: Discover complete inventory
         env:
-          GH_TOKEN: ${{ github.token }}
-        run: node apps/onemind-portal/scripts/refresh-inventory.cjs
+          GH_TOKEN: ${{ secrets.ONEMIND_INVENTORY_DISCOVERY_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo 'Configure the dedicated read-only repository discovery credential first.'
+            exit 1
+          fi
+          node apps/onemind-portal/scripts/refresh-inventory.cjs
       - name: Open or update review proposal
         uses: peter-evans/create-pull-request@v7
         with:
