@@ -25,6 +25,18 @@ catalog:
       rules:
         - allow: [Template]
     - type: file
+      target: /app/templates/app-onboarding/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: /app/templates/deployment-change/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: /app/templates/recovery-preparation/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: /app/catalog/apps.yaml
     - type: file
       target: /app/catalog/cluster.yaml
