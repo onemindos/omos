@@ -2,7 +2,7 @@ import { createBackendPlugin, coreServices } from '@backstage/backend-plugin-api
 import express from 'express';
 import { readFileSync } from 'node:fs';
 import directory from '../../app/src/modules/home/directory.json';
-const { makePack, names }: { makePack: (apps: typeof directory, docs: { name: string; content: string }[], generatedAt: string) => string; names: string[] } = require('../../../scripts/offline-pack.cjs');
+import { makePack, names } from './offlinePack';
 
 export default createBackendPlugin({ pluginId: 'onemind-offline', register(reg) {
   reg.registerInit({ deps: { router: coreServices.httpRouter, httpAuth: coreServices.httpAuth,

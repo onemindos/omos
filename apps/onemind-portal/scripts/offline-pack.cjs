@@ -19,7 +19,9 @@ if (require.main === module) {
   const documents = names.map(name => ({ name, content: fs.readFileSync(path.join(root, 'runbooks/docs', `${name}.md`), 'utf8') }));
   // Explicit output only; never overwrite another pack or export into a public app asset folder.
   const output = path.resolve(process.argv[outputIndex + 1]);
-  if (output.startsWith(path.join(root, 'packages/app/public') + path.sep)) throw new Error('Choose a private output folder, not public app assets');
+  const realOutput = path.join(fs.realpathSync(path.dirname(output)), path.basename(output));
+  const publicRoot = fs.realpathSync(path.join(root, 'packages/app/public'));
+  if (realOutput === publicRoot || realOutput.startsWith(publicRoot + path.sep)) throw new Error('Choose a private output folder, not public app assets');
   fs.writeFileSync(output, makePack(directory, documents, new Date().toISOString()), { flag: 'wx', mode: 0o600 });
   console.log(`Private offline pack saved: ${output}`);
 }
