@@ -15,6 +15,10 @@
 - Backstage had two available application replicas and one ready PostgreSQL instance.
   Service, storage and node-utilization counts below have not been recaptured and must
   not be treated as current measurements.
+- On 2026-10-07, a read-only inspection found about 1.1 GiB of Python ML packages on
+  `takml/takml-deps`. No current pod mounts it; the TAK-ML vision image now installs its
+  dependencies in the image. The volume looks like legacy staging, but its owner has not
+  confirmed it is safe to retire.
 
 ## Summary
 
