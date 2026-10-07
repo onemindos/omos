@@ -70,5 +70,6 @@ backend.add(import('@backstage/plugin-mcp-actions-backend'));
 backend.add(import('./operations'));
 backend.add(import('./context'));
 backend.add(import('./machineReadOnly'));
+backend.add(import('./offline'));
 
 backend.start();
