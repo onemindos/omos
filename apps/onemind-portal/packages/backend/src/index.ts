@@ -75,4 +75,15 @@ backend.add(import('./machineReadOnly'));
 backend.add(import('./assistant'));
 backend.add(import('./offline'));
 
+// Community plugins; their provider credentials are configured separately.
+backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
+backend.add(import('@backstage-community/plugin-argocd-backend'));
+backend.add(import('./communityReadOnly'));
+backend.add(import('@backstage-community/plugin-tech-insights-backend'));
+backend.add(import('@backstage-community/plugin-tech-insights-backend-module-jsonfc'));
+backend.add(import('@backstage-community/plugin-adr-backend'));
+backend.add(import('@backstage-community/search-backend-module-adr'));
+backend.add(import('@backstage-community/plugin-announcements-backend'));
+backend.add(import('@backstage-community/plugin-search-backend-module-announcements'));
+
 backend.start();

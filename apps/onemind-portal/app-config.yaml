@@ -6,6 +6,12 @@ app:
   extensions:
     - theme:app/light: false
     - theme:app/dark: false
+    - app-root-element:announcements/banner: false
+    - nav-item:announcements
+    - page:tech-radar:
+        config:
+          pageTitle: OneMind Technology Radar
+          subtitle: Git-owned technology choices; this is not a live health report
     - page:home:
         config:
           path: /
@@ -124,3 +130,38 @@ integrations:
 
 notifications:
   retention: 90d
+
+# Empty until a dedicated read-only Argo token is provided. No fallback login.
+argocd:
+  appLocatorMethods: []
+
+grafana:
+  domain: https://grafana.tail717ba0.ts.net
+  unifiedAlerting: true
+  grafanaDashboardMaxPages: 1
+  grafanaDashboardSearchLimit: 100
+
+techInsights:
+  factRetrievers:
+    entityMetadataFactRetriever:
+      cadence: '0 */6 * * *'
+      lifecycle: { timeToLive: { weeks: 2 } }
+    entityOwnershipFactRetriever:
+      cadence: '0 */6 * * *'
+      lifecycle: { timeToLive: { weeks: 2 } }
+    techdocsFactRetriever:
+      cadence: '0 */6 * * *'
+      lifecycle: { timeToLive: { weeks: 2 } }
+  factChecker:
+    checks:
+      groupOwnerCheck:
+        type: json-rules-engine
+        name: Group ownership recorded
+        description: Catalog metadata names a group owner; this does not certify recovery readiness.
+        factIds: [entityOwnershipFactRetriever]
+        rule:
+          conditions:
+            all:
+              - fact: hasGroupOwner
+                operator: equal
+                value: true

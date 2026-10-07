@@ -5,6 +5,7 @@ const portal = docs.find(e => e.kind === 'Component' && e.metadata.title === 'ba
 const database = docs.find(e => e.kind === 'Component' && e.metadata.title === 'backstage / backstage-postgres');
 if (!portal || !database) throw new Error('Reviewed Backstage workloads missing; inspect inventory before changing dependencies');
 portal.spec.dependsOn = [...new Set([...(portal.spec.dependsOn || []), `component:default/${database.metadata.name}`])];
+portal.metadata.annotations['github.com/project-slug'] = 'onemindos/omos';
 portal.metadata.annotations['onemind.io/relationship-source'] = 'apps/onemind-portal/app-config.production.yaml backend.database.connection.host; platform/backstage/postgres.yaml';
 portal.metadata.links = [...(portal.metadata.links || []).filter(l => l.type !== 'runbook'), {title:'Portal recovery runbook',type:'runbook',url:'https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/'}];
 database.metadata.links = [...(database.metadata.links || []).filter(l => l.type !== 'runbook'), {title:'Database recovery runbook',type:'runbook',url:'https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/'}];

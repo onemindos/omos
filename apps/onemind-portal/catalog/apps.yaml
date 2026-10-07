@@ -1974,6 +1974,7 @@ metadata:
   description: Git-owned access, investigation and recovery guidance for critical
     OneMind services
   annotations:
+    github.com/project-slug: onemindos/omos
     backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/apps/onemind-portal/runbooks
   tags:
     - runbooks
