@@ -61,7 +61,8 @@ export default createBackendPlugin({
             const terms = question.toLowerCase().match(/[a-z0-9-]{3,}/g) ?? [];
             // Never send arbitrary annotations (URLs/tokens/provider metadata) to a model.
             const freshnessKeys = ['onemind.io/inventory-source', 'onemind.io/inventory-observed-at',
-              'onemind.io/inventory-state', 'onemind.io/inventory-last-checked-at'];
+              'onemind.io/inventory-state', 'onemind.io/inventory-last-checked-at', 'onemind.io/observed-at',
+              'onemind.io/verified-at', 'onemind.io/verification', 'onemind.io/repository-inventory-state'];
             const entities = Array.isArray(payload.items) ? payload.items.slice(0, 200).map((entity: any) => ({ ...entity,
               metadata: { ...entity.metadata, annotations: Object.fromEntries(freshnessKeys.flatMap(key =>
                 typeof entity.metadata?.annotations?.[key] === 'string' ? [[key, entity.metadata.annotations[key].slice(0, 160)]] : [])) } })) : [];
@@ -73,7 +74,7 @@ export default createBackendPlugin({
               const name = String(entity.metadata.name);
               sources.push({ id: `catalog-${sources.length}`, title: entity.metadata.title ?? name,
                 url: `/catalog/${encodeURIComponent(namespace)}/${encodeURIComponent(kind)}/${encodeURIComponent(name)}`,
-                freshness: `Catalog metadata: ${entity.metadata.annotations['onemind.io/inventory-state'] ?? 'documented; observation state unknown'}; source observed ${entity.metadata.annotations['onemind.io/inventory-observed-at'] ?? 'unknown'}. Fetched now is not live health.`,
+                freshness: `Catalog metadata: ${entity.metadata.annotations['onemind.io/inventory-state'] ?? entity.metadata.annotations['onemind.io/repository-inventory-state'] ?? 'documented; observation state unknown'}; source observed ${entity.metadata.annotations['onemind.io/inventory-observed-at'] ?? entity.metadata.annotations['onemind.io/observed-at'] ?? entity.metadata.annotations['onemind.io/verified-at'] ?? 'unknown'}. Fetched now is not live health.`,
                 content: JSON.stringify(entity).slice(0, 2500) });
             }
             if (payload.pageInfo?.nextCursor) unavailable.push('Catalog search limited to its first 200 entities');
