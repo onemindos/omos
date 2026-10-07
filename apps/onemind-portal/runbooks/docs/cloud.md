@@ -21,3 +21,5 @@ The five-minute per-process cache shares concurrent requests and retains the las
 `cloudTypes.ts` defines `CloudProvider` and the sanitized `CloudSummary` contract for future adapters. Each adapter must independently enforce read-only scopes, bounded pagination, source/observation times, credential-required and unavailable states, caching and safe launch links. Adding a provider requires an explicit server-side route/registry integration and administrator authorization; the interface alone does not activate any account.
 
 Activation still requires US-region Zoho Projects OAuth credentials with `ZohoProjects.tasks.READ`, the numeric portal ID and provider API entitlement. No account observation has been made as part of this PR. Official schema: https://projects.zoho.com/api-docs . Do not put tokens in chat or Git.
+
+Provider responses are bounded before JSON parsing: OAuth responses at 32 KiB and task pages at 2 MiB. Larger bodies fail closed and preserve stale successful observations. Due dates must be exact valid YYYY-MM-DD calendar dates; normalized invalid dates are omitted.

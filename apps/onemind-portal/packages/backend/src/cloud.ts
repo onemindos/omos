@@ -4,6 +4,27 @@ const link = 'https://projects.zoho.com/portal/zeusdelacruz#zp/dashboard/2727104
 let cache: Summary | undefined;
 let nextAttempt = 0;
 let pending: Promise<Summary> | undefined;
+async function boundedJson(response: Response, limit: number): Promise<any> {
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error('Empty provider response');
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (true) {
+      const part = await reader.read();
+      if (part.done) break;
+      size += part.value.byteLength;
+      if (size > limit) throw new Error('Provider response exceeds limit');
+      chunks.push(part.value);
+    }
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  } finally { await reader.cancel().catch(() => {}); }
+}
+function calendarDate(value: unknown): string | null {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const parsed = Date.parse(`${value}T00:00:00.000Z`);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === value ? value : null;
+}
 async function load(): Promise<Summary> {
   const portal = process.env.ZOHO_PROJECTS_PORTAL_ID;
   const client = process.env.ZOHO_CLIENT_ID;
@@ -14,7 +35,7 @@ async function load(): Promise<Summary> {
   try {
     const auth = await fetch('https://accounts.zoho.com/oauth/v2/token', { method: 'POST', redirect: 'error', signal: AbortSignal.timeout(8000), body: new URLSearchParams({ grant_type: 'refresh_token', client_id: client, client_secret: secret, refresh_token: refresh }) });
     if (!auth.ok) throw new Error('Provider unavailable');
-    const token = await auth.json();
+    const token = await boundedJson(auth, 32768);
     if (typeof token.access_token !== 'string') throw new Error('Provider authentication unavailable');
     const signal = AbortSignal.timeout(20000);
     const tasks: CloudTask[] = [];
@@ -24,7 +45,7 @@ async function load(): Promise<Summary> {
     for (let page = 1; page <= 5; page++) {
       const response = await fetch(`https://projectsapi.zoho.com/api/v3/portal/${portal}/tasks?page=${page}&per_page=100`, { redirect: 'error', signal, headers: { Authorization: `Bearer ${token.access_token}` } });
       if (!response.ok) throw new Error('Provider unavailable');
-      const data = await response.json();
+      const data = await boundedJson(response, 2 * 1024 * 1024);
       if (!Array.isArray(data.tasks) || data.tasks.length > 100) throw new Error('Unexpected provider schema');
       pages++;
       for (const task of data.tasks) {
@@ -34,7 +55,7 @@ async function load(): Promise<Summary> {
         seen.add(id); sampled++;
         if (!task.status.is_closed_type) {
           open++;
-          const dueDate = typeof task.end_date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(task.end_date) && Number.isFinite(Date.parse(task.end_date)) ? task.end_date.slice(0, 10) : null;
+          const dueDate = calendarDate(task.end_date);
           const late = !!dueDate && dueDate < today;
           if (late) overdue++;
           tasks.push({ id, title: typeof task.name === 'string' ? task.name.replace(/[\u0000-\u001f]/g, ' ').slice(0, 200) : 'Untitled task', dueDate, overdue: late });
