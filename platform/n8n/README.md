@@ -12,17 +12,13 @@ Self-hosted workflow capability, managed by Argo application platform-n8n.
 - Public HTTP/HTTPS egress allowed; private APIs need explicitly reviewed NetworkPolicy additions. No cluster-wide AI credentials are installed.
 - Seven-day execution history and five concurrent production executions initially.
 
-## Initial owner enrollment
+## Access and owner enrollment
 
-No ingress is enabled while the owner account is unclaimed. Use an authenticated local Kubernetes port-forward:
+Private editor URL: https://n8n.tail717ba0.ts.net/. Requires access to the existing tailnet; the ingress is not public and does not use Funnel.
 
-```sh
-kubectl -n n8n port-forward service/n8n 5678:5678
-```
+Owner enrollment completed for zeus@zeusdelacruz.com through a localhost-only port-forward before ingress was enabled. The generated initial password is stored outside Git in /Users/zeus/.config/omos/n8n-owner-20261007.json with permissions 0600. Move it to the operator's password manager, change it after first login and enable MFA. Do not place it in Git or logs. Native n8n login is used; enterprise SSO is not assumed available in the free edition.
 
-The intended final editor/webhook URL is https://n8n.tail717ba0.ts.net/. Browser setup should use HTTPS; complete owner enrollment through a local API call with the owner's chosen email and a generated secret before adding the Tailscale ingress. Do not turn off authentication or secure cookies to work around enrollment.
-
-Owner email is pending user input. Credentials must not be placed in Git, logs, or tool output. Native n8n login is initially used; do not assume enterprise SSO is included in the free edition.
+The URL is initially tied to the existing tailnet. A future mesh migration needs a new private DNS/TLS plan and editor/webhook URL changes. Webhooks are private; external SaaS callbacks need a separately reviewed ingress design.
 
 ## Recovery and scaling
 

@@ -1,4 +1,4 @@
-# Initial owner enrollment is kept local: no Ingress until owner setup completes.
+# Private ingress through the existing Tailscale operator; no public ingress.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
