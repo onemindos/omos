@@ -14,6 +14,13 @@ function Directory(){
     <Box p={3} mb={2} style={{borderRadius:12,backgroundImage:`linear-gradient(${dark?'#111a':'#fffc'},${dark?'#111a':'#fffc'}),url(/brand/legacy-background-${dark?'dark':'light'}.webp)`,backgroundSize:'cover'}}>
       <Typography variant="h4">OneMind</Typography><Typography>Your systems. Your work. One home.</Typography>
     </Box>
+    <Box display="flex" flexWrap="wrap" mb={2} style={{gap:16}} aria-label="OneMind workspace">
+      <Link href="/systems">Systems and dependencies</Link>
+      <Link href="/create">Guided workflows</Link>
+      <Link href="/docs">Knowledge</Link>
+      <Link href="/assistant">Assistant</Link>
+      <Link href="/offline">Offline knowledge</Link>
+    </Box>
     <TextField label="Find an app or capability" value={query} onChange={e=>setQuery(e.target.value)} fullWidth variant="outlined" size="small" />
     {[...new Set(matches.map(x=>x.groupTitle))].map(group=><Box key={group} mt={3}>
       <Typography variant="h6">{group}</Typography>

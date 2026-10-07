@@ -2,7 +2,7 @@
 
 `/offline` provides an explicit private download of a single self-contained HTML file.
 The backend requires an administrator user; anonymous users and machine credentials
-cannot export it. Only the committed application directory and seven fixed packaged
+cannot export it. Only the committed application directory and fixed packaged
 runbooks are included. No live API results, access tokens, provider tasks, credentials
 or conversation history are cached. There is no service worker or background cache.
 

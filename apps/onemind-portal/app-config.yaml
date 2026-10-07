@@ -37,7 +37,7 @@ app:
               height: 6
             - component: HomePageStarredEntities
               column: 8
-              row: 14
+              row: 28
               width: 4
               height: 6
 organization:

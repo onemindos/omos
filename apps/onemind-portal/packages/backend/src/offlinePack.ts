@@ -1,5 +1,5 @@
 const escape = (value: unknown) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'} as Record<string, string>)[c]);
-export const names = ['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience'];
+export const names = ['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience', 'ai', 'cloud', 'workflows', 'inventory-refresh', 'assistant', 'offline'];
 export function makePack(directory: {url: string; title: string; groupTitle: string; description: string}[], documents: {name: string; content: string}[], generatedAt: string) {
   const cards = directory.filter(x => /^https?:\/\//.test(x.url)).map(x =>
     `<li><a href="${escape(x.url)}" rel="noreferrer">${escape(x.title)}</a> <span>${escape(x.groupTitle)}</span><p>${escape(x.description)}</p></li>`).join('');

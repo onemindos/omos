@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const names = ['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience'];
+const names = ['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience', 'ai', 'cloud', 'workflows', 'inventory-refresh', 'assistant', 'offline'];
 function makePack(directory, documents, generatedAt) {
   const cards = directory.filter(x => /^https?:\/\//.test(x.url)).map(x =>
     `<li><a href="${escape(x.url)}" rel="noreferrer">${escape(x.title)}</a> <span>${escape(x.groupTitle)}</span><p>${escape(x.description)}</p></li>`).join('');
