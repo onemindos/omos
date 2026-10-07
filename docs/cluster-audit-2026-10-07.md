@@ -7,13 +7,14 @@ Observed 2026-10-07 against `do-nyc3-omos-cloud`. This is an initial controller 
 - Three Ready nodes; 130 Deployment/StatefulSet/DaemonSet controllers; 19 Argo applications; 11 Helm releases.
 - All Argo applications Synced; platform-takserver Degraded. Its owned workload health requires investigation; do not infer an outage solely from the application summary.
 - Node memory snapshot: 14350 MiB (105%), 10387 MiB (76%), 11384 MiB (83%) of allocatable memory. CPU 15%, 21%, 12%. These are point-in-time measurements, not a sizing forecast. All nodes report MemoryPressure=False.
-- Summed container working sets are materially lower than node working sets. Investigate host/system consumption, accounting, and time alignment before attributing all memory to application pods.
+- Summed container working sets are materially lower than node working sets. Kubelet stats/summary reports kubelet system-category working sets of approximately 4.10, 3.67 and 2.83 GiB across the three nodes. Validate cgroup/process accounting and history before diagnosing a leak or restarting provider-managed services.
 - Largest pod working sets: Hermes 2426 MiB, OpenClaw 1678 MiB, WebODM 1653 MiB, FedHub 1324 MiB. Size alone is not justification to remove them.
 - Ten controllers have at least one container without a memory request, primarily system components and reloaders. Assess each owner before changing requests.
 - Warning events: DigitalOcean telemetry config reloader cannot retrieve imagePullSecret onemind-hub. Check provider-managed ownership before repairing.
 - Terraform default node size is s-4vcpu-8gb; observed node allocatable CPU is 7880m and memory approximately 13.3 GiB. Defaults are not evidence of applied configuration. Locate effective inputs/state and confirm DO resource identities before any Terraform apply.
 - Terraform remote state backend is not declared in checked-in configuration. Establish actual state location and backup/locking before infrastructure changes.
 - Argo sources used the old omos-infra repository name and HEAD. Both URLs resolved to main commit 86e4fa72 during preflight. Updated Git sources to canonical omos URL and explicit main; chart versions preserved.
+- Live canonical-URL validation initially failed because repository credentials matched only the old URL. Updated the existing argocd-repo-omos-infra Secret URL field to canonical omos; credentials were neither printed nor copied into Git. This repository registration is currently a bootstrap dependency whose reproducible secret-management path still needs tracing.
 - Several Applications ignore first-container resource differences and template annotations. Synced therefore does not establish full configuration equality. Narrow ignores only after reviewing the live differences.
 
 ## Controller ownership inventory
