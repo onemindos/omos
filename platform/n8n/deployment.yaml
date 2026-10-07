@@ -97,6 +97,7 @@ spec:
           volumeMounts:
             - {name: data, mountPath: /home/node/.n8n}
             - {name: tmp, mountPath: /tmp}
+            - {name: cache, mountPath: /home/node/.cache}
         - name: task-runners
           image: n8nio/runners:2.42.4-distroless@sha256:d56b2207970449567fe594f542642574f560a7c0a247877abceb1fb2721daaca
           securityContext:
@@ -120,5 +121,7 @@ spec:
           persistentVolumeClaim: {claimName: n8n-data}
         - name: tmp
           emptyDir: {sizeLimit: 256Mi}
+        - name: cache
+          emptyDir: {sizeLimit: 128Mi}
         - name: runner-tmp
           emptyDir: {sizeLimit: 128Mi}
