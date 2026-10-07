@@ -77,3 +77,8 @@ integrations:
           clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
           privateKey: ${GITHUB_APP_PRIVATE_KEY}
           allowedInstallationOwners: [onemindos]
+
+# Internal read-only observation; no public webhook or extra producer token.
+onemind:
+  operationalEvents:
+    enabled: true

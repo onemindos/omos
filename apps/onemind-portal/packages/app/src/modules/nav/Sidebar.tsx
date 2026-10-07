@@ -9,6 +9,7 @@ import {
 import { NavContentBlueprint } from '@backstage/plugin-app-react';
 import { SidebarLogo } from './SidebarLogo';
 import MenuIcon from '@material-ui/icons/Menu';
+import TodayIcon from '@material-ui/icons/Today';
 import SearchIcon from '@material-ui/icons/Search';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { UserSettingsSignInAvatar } from '@backstage/plugin-user-settings';
@@ -23,6 +24,7 @@ export const SidebarContent = NavContentBlueprint.make({
 
       // Skipped items
       nav.take('page:search'); // Using search modal instead
+      nav.take('page:onemind-today');
       nav.take('page:notifications'); // Using NotificationsSidebarItem manually instead
 
       return (
@@ -34,6 +36,7 @@ export const SidebarContent = NavContentBlueprint.make({
           <SidebarDivider />
           <SidebarGroup label="Menu" icon={<MenuIcon />}>
             {nav.take('page:home')}
+            <SidebarItem icon={TodayIcon} to="/today" text="Today" />
             {nav.take('page:catalog')}
             {nav.take('page:scaffolder')}
             <SidebarDivider />
