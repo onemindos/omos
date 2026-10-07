@@ -23,6 +23,8 @@ jobs:
       - name: Install locked portal dependencies
         working-directory: apps/onemind-portal
         run: corepack yarn install --immutable
+      - name: Load previous review counters
+        run: git fetch origin automation/onemind-inventory-review || true
       - name: Discover complete inventory
         env:
           GH_TOKEN: ${{ github.token }}

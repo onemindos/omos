@@ -12,6 +12,9 @@ try {
   // enrich-inventory enforces the exact cloud context and requires all three sources.
   cp.execFileSync(process.execPath, ['scripts/enrich-inventory.cjs'], { stdio: 'inherit', timeout: 180000 });
   const previous = documents(original.get('catalog/cluster.yaml'));
+  let priorProposal = [];
+  try { priorProposal = documents(cp.execFileSync('git', ['show', 'origin/automation/onemind-inventory-review:apps/onemind-portal/catalog/cluster.yaml'], { maxBuffer: 20 * 1024 * 1024 })); } catch {}
+  const priorByIdentity = new Map(priorProposal.map(entity => [identity(entity), entity]));
   const current = documents(fs.readFileSync('catalog/cluster.yaml'));
   const observedAt = new Date().toISOString();
   const present = new Set(current.map(identity));
@@ -27,7 +30,8 @@ try {
       // Retain relationship targets and reviewed documentation even when discovery changes.
       current.push(entity); continue;
     }
-    const misses = Math.max(0, Number(annotations['onemind.io/inventory-missing-observations']) || 0) + 1;
+    const prior = priorByIdentity.get(identity(entity))?.metadata.annotations || annotations;
+    const misses = Math.max(0, Number(prior['onemind.io/inventory-missing-observations']) || 0) + 1;
     entity.metadata.annotations = { ...annotations, 'onemind.io/inventory-state': misses >= 3 ? 'retirement-review-required' : 'missing-review-required', 'onemind.io/inventory-missing-observations': String(misses), 'onemind.io/inventory-last-checked-at': observedAt };
     // Keep last successful observed-at: disappearance is not evidence of deletion.
     current.push(entity);
