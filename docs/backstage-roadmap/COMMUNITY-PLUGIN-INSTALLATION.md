@@ -70,3 +70,9 @@ Maintainer sources and selection criteria are in [PLUGIN-FIRST-PLAN.md](PLUGIN-F
 - A Git-owned ADR records the administrator's plugin-first decision. Runbooks catalog points to that private directory. NATS Dashboard uses the verified Grafana `nats` tag.
 
 The personal OAuth App and temporary fine-grained reader token created during setup should be retired after the GitHub App's live acceptance. Release PR records the pinned image and runtime acceptance.
+
+### Argo ingress correction
+
+The existing unmanaged Argo Tailscale ingress forwarded to port 80 while the server enforced HTTPS, causing a redirect loop. The release adopts that existing ingress into GitOps and changes the upstream port to 443. Tailscale's operator uses its built-in `https+insecure` upstream mode for port 443: traffic to the self-signed Argo backend is encrypted, but that proxy hop does not validate the self-signed backend certificate. The portal validates the Tailscale HTTPS certificate, and Argo server TLS remains enabled. No global Node TLS bypass or Argo `localDevelopment` setting is enabled.
+
+Sources: https://tailscale.com/docs/kubernetes-operator/egress/access-tailnet-service and https://github.com/tailscale/tailscale/blob/main/cmd/k8s-operator/ingress.go.
