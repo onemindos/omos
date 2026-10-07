@@ -4,6 +4,18 @@
 > This describes live cluster state at capture time. Argo CD manifests in Git are the
 > intended owners; service and pod state can change between snapshots.
 
+## Changes after this snapshot
+
+- Homepage was retired later on 2026-10-06 and replaced by `platform-backstage`
+  (`platform/backstage`, namespace `backstage`). The historical Homepage entries below
+  describe the earlier capture, not an active service or a recommendation to restore it.
+- On 2026-10-07, all 19 current Argo CD Applications were checked: 16 were
+  Synced/Healthy, `platform-takserver` was Synced/Degraded, and `app-of-apps` plus
+  `platform-clickhouse-operator` were OutOfSync/Healthy before PRs #34 and #35.
+- Backstage had two available application replicas and one ready PostgreSQL instance.
+  Service, storage and node-utilization counts below have not been recaptured and must
+  not be treated as current measurements.
+
 ## Summary
 
 - 19 Argo CD Applications are present: 16 `Synced/Healthy`, one `Synced/Degraded`,
