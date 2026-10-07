@@ -21,6 +21,9 @@ search:
         initialDelay: {seconds: 30}
 
 backend:
+  csp:
+    connect-src: ["'self'", 'https://api.github.com']
+    img-src: ["'self'", 'data:', 'https://avatars.githubusercontent.com']
   database:
     knexConfig:
       pool:

@@ -62,7 +62,7 @@ Maintainer sources and selection criteria are in [PLUGIN-FIRST-PLAN.md](PLUGIN-F
 
 ## Provider activation on 2026-10-07
 
-- Organization-owned `OneMind Portal Readonly` GitHub App installed only on `onemindos/omos`. Repository Actions, Contents, Metadata and Pull Requests are read-only; user email read supports authorization. Webhooks disabled. Backend reader uses automatically refreshed installation tokens. A private-content read through Backstage's installed credentials provider returned 200. Authentik remains portal login.
+- Organization-owned `OneMind Portal Readonly` GitHub App installed only on `onemindos/omos`. Repository Actions, Contents, Commit statuses, Metadata and Pull Requests are read-only; user email read supports authorization. Webhooks disabled. Backend reader uses automatically refreshed installation tokens. A private-content read through Backstage's installed credentials provider returned 200. Authentik remains portal login.
 - Grafana service account `onemind-backstage`, Viewer, has a 90-day token; 31 dashboards were readable at provisioning. Backend proxy requires portal authentication and allows GET/HEAD only.
 - Default Argo project role `onemind-portal` has only `p, proj:default:onemind-portal, applications, get, default/*, allow`. Its 90-day project token was generated using official CLI core mode. Permission probes returned get=yes, sync=no, delete=no. This role is bootstrap state on the existing default AppProject: preserve/recreate this exact policy during recovery without replacing the project's other rules.
 - Provider values are sealed in `backstage-plugin-integrations`. Owner-only local copies are under `~/.config/onemind/plugin-activation`; no plaintext appears in source. Argo/Grafana tokens require rotation before expiration. No recurring automation was created.
@@ -82,3 +82,7 @@ Sources: https://tailscale.com/docs/kubernetes-operator/egress/access-tailnet-se
 During the production rolling update, the second new replica exhausted PostgreSQL's 100-connection limit while two serving replicas remained available. Set `backend.database.knexConfig.pool` to min 0, max 3, idle timeout 10 seconds, with a 30-second acquisition timeout. The installed Backstage PostgreSQL connector reads this exact `knexConfig` path. Idle pools can drain and catalog concurrency is bounded during surge. PostgreSQL's limit/storage and the two-replica availability policy stay intact; review this budget as traffic and plugin count grow.
 
 Sources: https://backstage.io/docs/tutorials/configuring-plugin-databases/ and https://knexjs.org/guide/#pool.
+
+### Browser API allowlist
+
+The GitHub plugins use their documented direct-browser GitHub APIs with user authorization. Permit `https://api.github.com` in `backend.csp.connect-src` alongside self, and GitHub's avatar host in `img-src` alongside self/data. Do not permit arbitrary external connections or relax script policy. Grafana and Argo data continue through authenticated backend integration routes.
