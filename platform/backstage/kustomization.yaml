@@ -13,6 +13,7 @@ resources:
   - backup.yaml
   - mcp.sealedsecret.yaml
   - plugin-integrations.sealedsecret.yaml
+  - argocd-ingress.yaml
 configMapGenerator:
   - name: backstage-cluster-config
     namespace: backstage
