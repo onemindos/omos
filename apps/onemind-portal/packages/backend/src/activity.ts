@@ -53,7 +53,8 @@ export default createBackendPlugin({
               scope: `${body.kind}:${body.id}`, link,
               description: `Source reported ${body.kind} at ${new Date(body.occurredAt).toISOString()}. This event is not a live health check.`,
             } });
-            res.status(202).json({ accepted: true });
+            // notificationService acknowledges processing, not resolved recipient count or delivery.
+            res.status(202).json({ accepted: true, deliveryConfirmed: false, recipientReadiness: 'not-verified', recipientGroup: 'group:default/onemind-admins' });
           } catch (error) { next(error); }
         });
         router.use(routes);

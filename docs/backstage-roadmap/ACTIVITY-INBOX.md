@@ -14,6 +14,12 @@ Payload fields (additional fields rejected):
 
 Supported kinds: deployment.failed, deployment.succeeded, backup.failed, backup.succeeded, agent.completed. The ID must be stable for a source occurrence. Backstage notification scope collapses subsequent reports for the same kind/ID; concurrent producer delivery is not guaranteed exactly once. Recipients are fixed to onemind-admins. Links/severity/text are generated server-side; arbitrary provider payloads, secrets, and arbitrary recipients are not accepted. Timestamp must be within 24 hours; body limit 8 KiB, rate limit 30 requests/minute per authenticated actor per replica. The reverse proxy should add a global limit before exposing a high-volume producer. Events are historical reports, not live health.
 
+## Acceptance and recipient readiness
+
+HTTP 202 means notificationService accepted the event for processing; it is **not** delivery confirmation. The response includes `deliveryConfirmed:false` and `recipientReadiness:"not-verified"`. The installed service does not report resolved recipient count. A missing/empty group or non-resolving ownership may produce zero user deliveries without an ingestion error. The home inbox counts actual unread notifications for the signed-in user, not accepted producer events.
+
+Before installing any producer credential, verify catalog Group `group:default/onemind-admins` exists, deliberate intended User membership resolves, and an administrator can receive a staging event in their own inbox. Do not auto-enroll users or broaden recipients to broadcast to work around an empty group. Retry after an unconfirmed response uses the same stable event scope; concurrent exactly-once delivery is not claimed.
+
 ## Connecting producers deliberately
 
 1. Create a short-lived dedicated secret through the approved local secret workflow and install as a SealedSecret. Do not reuse MCP or organization-wide credentials.
