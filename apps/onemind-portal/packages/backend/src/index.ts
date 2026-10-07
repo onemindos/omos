@@ -72,5 +72,6 @@ backend.add(import('./activity'));
 backend.add(import('./serviceOperations'));
 backend.add(import('./context'));
 backend.add(import('./machineReadOnly'));
+backend.add(import('./assistant'));
 
 backend.start();

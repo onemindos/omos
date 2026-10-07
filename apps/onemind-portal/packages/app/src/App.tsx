@@ -5,7 +5,8 @@ import { homeModule } from './modules/home';
 import { systemsPlugin } from './modules/systems';
 import { authModule } from './modules/auth';
 import { servicesModule } from './modules/services';
+import { assistantPlugin } from './modules/assistant';
 
 export default createApp({
-  features: [catalogPlugin, navModule, homeModule, authModule, systemsPlugin, servicesModule],
+  features: [catalogPlugin, navModule, homeModule, authModule, systemsPlugin, servicesModule, assistantPlugin],
 });
