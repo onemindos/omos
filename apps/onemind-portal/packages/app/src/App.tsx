@@ -4,7 +4,8 @@ import { navModule } from './modules/nav';
 import { homeModule } from './modules/home';
 import { systemsPlugin } from './modules/systems';
 import { authModule } from './modules/auth';
+import { servicesModule } from './modules/services';
 
 export default createApp({
-  features: [catalogPlugin, navModule, homeModule, authModule, systemsPlugin],
+  features: [catalogPlugin, navModule, homeModule, authModule, systemsPlugin, servicesModule],
 });
