@@ -85,6 +85,18 @@ catalog:
       rules:
         - allow: [Template]
     - type: file
+      target: ../../templates/app-onboarding/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: ../../templates/deployment-change/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: ../../templates/recovery-preparation/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: ../../catalog/apps.yaml
     - type: file
       target: ../../catalog/cluster.yaml

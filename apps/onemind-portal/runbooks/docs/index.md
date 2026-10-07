@@ -25,3 +25,8 @@ Historical Fabric notes are preserved under `docs/inventory/fabric/` in Git. Tho
 ## Recovery rule
 
 Capture the symptom, timestamp, recent changes and relevant events first. Prefer a reviewed GitOps fix or known-good release over manually fighting Argo reconciliation. Recovery is complete only after verifying both infrastructure health and the affected user workflow.
+
+## Prepare reviewed work
+
+[Guided workflows](workflows.md) create draft proposals for app onboarding,
+deployment changes and recovery preparation, with explicit human promotion gates.
