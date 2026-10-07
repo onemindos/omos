@@ -73,5 +73,6 @@ backend.add(import('./serviceOperations'));
 backend.add(import('./context'));
 backend.add(import('./machineReadOnly'));
 backend.add(import('./assistant'));
+backend.add(import('./offline'));
 
 backend.start();
