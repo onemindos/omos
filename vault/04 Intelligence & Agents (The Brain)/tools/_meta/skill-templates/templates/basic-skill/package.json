@@ -1,7 +1,0 @@
-{
-  "name": "basic-skill",
-  "version": "1.0.0",
-  "description": "Basic OpenClaw skill template",
-  "main": "index.js",
-  "dependencies": {}
-}

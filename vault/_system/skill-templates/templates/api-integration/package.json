@@ -1,7 +1,0 @@
-{
-  "name": "api-integration",
-  "version": "1.0.0",
-  "description": "REST API integration skill template",
-  "main": "index.js",
-  "dependencies": {}
-}

@@ -1,4 +1,0 @@
----
-Task Name: "Hacksaw ridge"
----
-

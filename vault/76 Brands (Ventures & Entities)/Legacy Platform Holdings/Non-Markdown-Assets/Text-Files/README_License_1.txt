@@ -1,2 +1,0 @@
-Copyright (c) 2022 Wpbingo.
-All other parts of the theme including, but not limited to the CSS code, images, and design are licensed according to the license purchased. Read about licensing details here: http://themeforest.net/licenses/regular_extended

@@ -1,7 +1,0 @@
-{
-  "name": "onepassword-1.0.0",
-  "version": "1.0.0",
-  "description": "1Password vault management for OneMind — read, write, and update items via Service Accounts API",
-  "main": "index.js",
-  "engines": { "node": ">=18" }
-}

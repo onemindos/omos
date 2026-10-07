@@ -1,7 +1,0 @@
-{
-  "name": "todoist-api",
-  "version": "1.0.0",
-  "description": "Todoist API integration via Maton gateway — manage tasks, projects, sections, labels, comments",
-  "main": "index.js",
-  "dependencies": {}
-}

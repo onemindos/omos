@@ -1,9 +1,0 @@
-# [YES] Can be sold
-
-[YES] Can be edited
-[YES] Can be offered as a bonus
-[YES] Can be turned into a membership site
-[YES] Can be broken up individually
-
-[NO] Can be given away free
-[NO] Can not be sold on the warrior forum

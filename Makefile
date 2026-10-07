@@ -1,10 +1,11 @@
-# OneMind Infra — Developer Commands
+# OneMind OS — Developer Commands
 # Usage: make <target>
 
-.PHONY: lint lint-yaml lint-tf lint-shell validate plan fmt help
+.PHONY: lint lint-yaml lint-tf lint-shell validate init plan apply fmt install streams help
 
 SHELL := /bin/bash
-TF_DIR := terraform
+TF_DIR := infra
+YAML_DIRS := platform docs tak-server
 
 ## ─── Quality Gates ───────────────────────────────────────────────────────────
 
@@ -13,40 +14,46 @@ lint: lint-yaml lint-tf lint-shell ## Run all linters
 
 lint-yaml: ## Lint all YAML files
 	@echo "→ yamllint..."
-	@yamllint -c .yamllint.yml platform/ docs/ tak-cluster/ uptime-kuma/ 2>/dev/null || true
+	@yamllint -c .yamllint.yml $(YAML_DIRS)
 
 lint-tf: ## Lint + validate Terraform
 	@echo "→ terraform fmt check..."
-	@cd $(TF_DIR) && terraform fmt -check -recursive
+	@terraform -chdir=$(TF_DIR) fmt -check -recursive
+	@terraform -chdir=$(TF_DIR) init -backend=false -input=false
 	@echo "→ terraform validate..."
-	@cd $(TF_DIR) && terraform validate
+	@terraform -chdir=$(TF_DIR) validate
 
 lint-shell: ## ShellCheck all .sh scripts
 	@echo "→ shellcheck..."
-	@find . -name '*.sh' -not -path './.git/*' -exec shellcheck -x -s bash {} +
+	@find . -path './.git' -prune -o -path './vault' -prune -o -type f -name '*.sh' -exec shellcheck -x -s bash {} +
 
-fmt: ## Auto-format Terraform + trailing whitespace
-	@cd $(TF_DIR) && terraform fmt -recursive
+fmt: ## Format Terraform files
+	@terraform -chdir=$(TF_DIR) fmt -recursive
 	@echo "✓ Terraform formatted"
 
-validate: lint ## Full validation (same as CI)
+validate: lint ## Run local lint and validation checks
 	@echo "✓ Validation complete"
 
 ## ─── Infrastructure ──────────────────────────────────────────────────────────
 
+init: ## Initialize Terraform providers in infra/
+	@terraform -chdir=$(TF_DIR) init -input=false
+
 plan: ## Terraform plan (requires DIGITALOCEAN_TOKEN)
-	@cd $(TF_DIR) && terraform plan
+	@terraform -chdir=$(TF_DIR) init -input=false
+	@terraform -chdir=$(TF_DIR) plan
 
 apply: ## Terraform apply (requires DIGITALOCEAN_TOKEN)
-	@cd $(TF_DIR) && terraform apply
+	@terraform -chdir=$(TF_DIR) init -input=false
+	@terraform -chdir=$(TF_DIR) apply
 
 install: ## Deploy full platform to DOKS (runs install.sh)
 	@bash platform/install.sh
 
 ## ─── Utilities ───────────────────────────────────────────────────────────────
 
-streams: ## Provision all NATS streams + KV buckets
-	@bash nats-migration/provision.sh
+streams: ## Show the GitOps source for NATS streams and KV buckets
+	@echo "NATS streams and KV buckets are declared under platform/nats/streams/ and reconciled by Argo CD."
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'

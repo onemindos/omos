@@ -1,1 +1,0 @@
-# You Have A Personal Use License
