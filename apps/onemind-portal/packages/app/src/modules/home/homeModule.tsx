@@ -76,7 +76,7 @@ function StatusPanel(){
     </>}
   </Box>;
 }
-type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;link:string};
+type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;pages?:number;source?:string;coverage?:string;attemptedAt?:string;tasks?:{id:string;title:string;dueDate:string|null;overdue:boolean}[];link:string};
 function CloudPanel(){
   const discovery=useApi(discoveryApiRef), api=useApi(fetchApiRef);
   const [data,setData]=useState<CloudSummary>(); const [error,setError]=useState(false);
@@ -87,8 +87,11 @@ function CloudPanel(){
     {!data&&!error&&<Typography>Loading…</Typography>}
     {data&&<><Typography>{data.state==='configuration-required'?'Connect read-only Zoho access to enable this summary':data.state==='unavailable'?'Provider unavailable':`${data.open} open · ${data.overdue} overdue in ${data.sampled} sampled tasks`}</Typography>
     {(expired||data.state==='stale')&&<Typography color="error">Stale observation</Typography>}
-    {data.partial&&<Typography variant="caption">Limited to the first 100 tasks; these are sample counts, not portal totals.</Typography>}
+    {data.partial&&<Typography variant="caption">Bounded sample across {data.pages || 1} pages; these counts may not represent the whole portal.</Typography>}
     {data.observedAt&&<Typography variant="caption" display="block">Observed {new Date(data.observedAt).toLocaleString()} · cached for five minutes</Typography>}
+    {data.coverage&&<Typography variant="caption" display="block">{data.coverage}</Typography>}
+    {!!data.tasks?.length&&<Box mt={1}><Typography variant="subtitle2">Observed open work · up to 20 tasks, overdue first</Typography>{data.tasks.map(task=><Box key={task.id} mb={1}><Typography>{task.title}</Typography><Typography variant="caption" color={task.overdue?'error':'textSecondary'}>{task.overdue?'Overdue · ':''}{task.dueDate || 'No due date recorded'}</Typography></Box>)}</Box>}
+    {data.source&&<Typography variant="caption" display="block">Source: {data.source}</Typography>}
     <Link href={data.link} target="_blank" rel="noopener noreferrer">Open Zoho Projects</Link></>}
   </Box>;
 }
