@@ -30,6 +30,7 @@ spec:
       labels: {app: n8n}
     spec:
       automountServiceAccountToken: false
+      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
         fsGroup: 1000
