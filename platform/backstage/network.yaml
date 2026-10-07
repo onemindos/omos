@@ -35,3 +35,19 @@ spec:
     - name: https
       port: 443
       protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-mesh
+  namespace: backstage
+  annotations:
+    tailscale.com/tailnet-fqdn: argocd.tail717ba0.ts.net
+    tailscale.com/proxy-group: egress
+spec:
+  type: ExternalName
+  externalName: placeholder
+  ports:
+    - name: https
+      port: 443
+      protocol: TCP

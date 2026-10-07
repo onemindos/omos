@@ -5,6 +5,7 @@ import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import directory from './directory.json';
 import { ActivityInbox } from './ActivityInbox';
+import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 function Directory() {
   const [query, setQuery] = useState('');
@@ -122,6 +123,8 @@ function CloudPanel(){
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageWidgetBlueprint.make({name:'github-reviews',params:{name:'OneMindGitHubReviews',title:'GitHub reviews',description:'Requested reviews in onemindos; connect GitHub authorization',components:async()=>({Content:()=> <HomePageRequestedReviewsCard query="org:onemindos is:pr is:open review-requested:@me" />})}}),
+  HomePageWidgetBlueprint.make({name:'github-open-prs',params:{name:'OneMindGitHubPullRequests',title:'GitHub pull requests',description:'Your open pull requests in onemindos',components:async()=>({Content:()=> <HomePageYourOpenPullRequestsCard query="org:onemindos is:pr is:open author:@me" />})}}),
   HomePageWidgetBlueprint.make({name:'onemind-activity',params:{name:'OneMindActivity',title:'Activity inbox',description:'Unread, actionable source notifications',components:async()=>({Content:ActivityInbox})}}),
   HomePageWidgetBlueprint.make({name:'onemind-cloud',params:{name:'OneMindCloud',title:'Cloud work',description:'Authorized provider summaries with observation times',components:async()=>({Content:CloudPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-directory',params:{name:'OneMindDirectory',title:'Your apps',description:'Search the OneMind application directory',components:async()=>({Content:Directory})}}),

@@ -464,6 +464,9 @@ metadata:
   title: backstage / backstage
   description: Deployment in backstage
   annotations:
+    argocd/app-name: platform-backstage
+    argocd/instance-name: onemind-cloud
+    github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: app=backstage
     backstage.io/kubernetes-namespace: backstage
     onemind.io/inventory-source: kubernetes

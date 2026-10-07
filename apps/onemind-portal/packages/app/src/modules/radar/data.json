@@ -1,0 +1,168 @@
+{
+  "quadrants": [
+    {
+      "id": "infrastructure",
+      "name": "Infrastructure"
+    },
+    {
+      "id": "frameworks",
+      "name": "Frameworks"
+    },
+    {
+      "id": "languages",
+      "name": "Languages"
+    },
+    {
+      "id": "process",
+      "name": "Process"
+    }
+  ],
+  "rings": [
+    {
+      "id": "adopt",
+      "name": "Adopt",
+      "color": "#54856b",
+      "description": "In use in OneMind."
+    },
+    {
+      "id": "trial",
+      "name": "Trial",
+      "color": "#6584a0",
+      "description": "Limited evaluation."
+    },
+    {
+      "id": "assess",
+      "name": "Assess",
+      "color": "#a18454",
+      "description": "Under consideration; not active."
+    },
+    {
+      "id": "hold",
+      "name": "Hold",
+      "color": "#8b7378",
+      "description": "Retired or avoid expanding."
+    }
+  ],
+  "entries": [
+    {
+      "id": "backstage",
+      "key": "backstage",
+      "title": "Backstage",
+      "quadrant": "frameworks",
+      "description": "Current OneMind portal.",
+      "timeline": [
+        {
+          "ringId": "adopt",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Current OneMind portal."
+        }
+      ]
+    },
+    {
+      "id": "kubernetes",
+      "key": "kubernetes",
+      "title": "Kubernetes",
+      "quadrant": "infrastructure",
+      "description": "Current cluster orchestration.",
+      "timeline": [
+        {
+          "ringId": "adopt",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Current cluster orchestration."
+        }
+      ]
+    },
+    {
+      "id": "tailscale",
+      "key": "tailscale",
+      "title": "Tailscale",
+      "quadrant": "infrastructure",
+      "description": "Current private mesh access.",
+      "timeline": [
+        {
+          "ringId": "adopt",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Current private mesh access."
+        }
+      ]
+    },
+    {
+      "id": "argocd",
+      "key": "argocd",
+      "title": "Argo CD",
+      "quadrant": "process",
+      "description": "Current GitOps reconciliation.",
+      "timeline": [
+        {
+          "ringId": "adopt",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Current GitOps reconciliation."
+        }
+      ]
+    },
+    {
+      "id": "typescript",
+      "key": "typescript",
+      "title": "TypeScript",
+      "quadrant": "languages",
+      "description": "Current portal implementation.",
+      "timeline": [
+        {
+          "ringId": "adopt",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Current portal implementation."
+        }
+      ]
+    },
+    {
+      "id": "grafana",
+      "key": "grafana",
+      "title": "Grafana",
+      "quadrant": "frameworks",
+      "description": "Current observability platform.",
+      "timeline": [
+        {
+          "ringId": "adopt",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Current observability platform."
+        }
+      ]
+    },
+    {
+      "id": "home-compute",
+      "key": "home-compute",
+      "title": "Home compute migration",
+      "quadrant": "infrastructure",
+      "description": "Planned sovereign hosting; not deployed.",
+      "timeline": [
+        {
+          "ringId": "assess",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Planned sovereign hosting; not deployed."
+        }
+      ]
+    },
+    {
+      "id": "homepage",
+      "key": "homepage",
+      "title": "Homepage",
+      "quadrant": "frameworks",
+      "description": "Retired in favor of Backstage.",
+      "timeline": [
+        {
+          "ringId": "hold",
+          "date": "2026-10-07",
+          "moved": 0,
+          "description": "Retired in favor of Backstage."
+        }
+      ]
+    }
+  ]
+}

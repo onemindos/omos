@@ -326,6 +326,7 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
   annotations:
+    grafana/dashboard-selector: nats
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -1974,6 +1975,8 @@ metadata:
   description: Git-owned access, investigation and recovery guidance for critical
     OneMind services
   annotations:
+    backstage.io/adr-location: https://github.com/onemindos/omos/tree/main/docs/architecture/decisions
+    github.com/project-slug: onemindos/omos
     backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/apps/onemind-portal/runbooks
   tags:
     - runbooks

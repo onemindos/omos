@@ -31,3 +31,39 @@ backend:
           - plugin: mcp-actions
           - plugin: catalog
           - plugin: onemind
+
+argocd:
+  baseUrl: https://argocd.tail717ba0.ts.net
+  appLocatorMethods:
+    - type: config
+      instances:
+        - name: onemind-cloud
+          url: https://argocd.tail717ba0.ts.net
+          token: ${ARGOCD_READONLY_TOKEN}
+
+proxy:
+  endpoints:
+    '/grafana/api':
+      target: http://monitoring-grafana.monitoring.svc.cluster.local
+      credentials: require
+      allowedMethods: [GET, HEAD]
+      headers:
+        Authorization: Bearer ${GRAFANA_TOKEN}
+
+auth:
+  providers:
+    github:
+      production:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        # Authorization for integrations only; Authentik remains the sign-in provider.
+
+integrations:
+  github:
+    - host: github.com
+      apps:
+        - appId: ${GITHUB_APP_ID}
+          clientId: ${AUTH_GITHUB_CLIENT_ID}
+          clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+          privateKey: ${GITHUB_APP_PRIVATE_KEY}
+          allowedInstallationOwners: [onemindos]
