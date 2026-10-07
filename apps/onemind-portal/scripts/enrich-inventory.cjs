@@ -41,4 +41,5 @@ if(repos.length===200)throw new Error('Repository inventory may be truncated; in
 fs.writeFileSync('catalog/repositories-source.json',JSON.stringify(repos,null,2)+'\n');
 const runtime=JSON.parse(cp.execFileSync('kubectl',['get','deployments,statefulsets,daemonsets,cronjobs,services','-A','-o','json'],{encoding:'utf8',maxBuffer:20*1024*1024}));
 fs.writeFileSync('catalog/runtime-source.json',JSON.stringify({observedAt:new Date().toISOString(),items:runtime.items.map(x=>({kind:x.kind,namespace:x.metadata.namespace,name:x.metadata.name}))},null,2)+'\n');
+cp.execFileSync(process.execPath,['scripts/curate-dependencies.cjs'],{stdio:'inherit'});
 cp.execFileSync(process.execPath,['scripts/verify-inventory.cjs'],{stdio:'inherit'});
