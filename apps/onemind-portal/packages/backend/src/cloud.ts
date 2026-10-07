@@ -1,5 +1,5 @@
 // Server-only provider access. No tokens or provider response bodies reach logs/UI.
-type Summary = { state: string; source: string; observedAt: string | null; expiresAt: string | null; open?: number; overdue?: number; sampled?: number; partial?: boolean; link: string };
+import { CloudSummary as Summary, CloudTask, CloudProvider } from './cloudTypes';
 const link = 'https://projects.zoho.com/portal/zeusdelacruz#zp/dashboard/2727104000000135028';
 let cache: Summary | undefined;
 let nextAttempt = 0;
@@ -9,30 +9,47 @@ async function load(): Promise<Summary> {
   const client = process.env.ZOHO_CLIENT_ID;
   const secret = process.env.ZOHO_CLIENT_SECRET;
   const refresh = process.env.ZOHO_REFRESH_TOKEN;
-  const empty = { state: 'configuration-required', source: 'Zoho Projects V3 (US account)', observedAt: null, expiresAt: null, link };
+  const empty: Summary = { providerId: 'zoho-projects', state: 'configuration-required', source: 'Zoho Projects V3 (US account)', observedAt: null, expiresAt: null, attemptedAt: new Date().toISOString(), coverage: 'No provider observation', tasks: [], link };
   if (!portal || !/^\d+$/.test(portal) || !client || !secret || !refresh) return empty;
   try {
     const auth = await fetch('https://accounts.zoho.com/oauth/v2/token', { method: 'POST', redirect: 'error', signal: AbortSignal.timeout(8000), body: new URLSearchParams({ grant_type: 'refresh_token', client_id: client, client_secret: secret, refresh_token: refresh }) });
     if (!auth.ok) throw new Error('Provider unavailable');
     const token = await auth.json();
     if (typeof token.access_token !== 'string') throw new Error('Provider authentication unavailable');
-    const response = await fetch(`https://projectsapi.zoho.com/api/v3/portal/${portal}/tasks?page=1&per_page=100`, { redirect: 'error', signal: AbortSignal.timeout(8000), headers: { Authorization: `Bearer ${token.access_token}` } });
-    if (!response.ok) throw new Error('Provider unavailable');
-    const data = await response.json();
-    if (!Array.isArray(data.tasks)) throw new Error('Unexpected provider schema');
-    let open = 0, overdue = 0;
-    for (const task of data.tasks) {
-      if (typeof task.status?.is_closed_type !== 'boolean') throw new Error('Unknown task status');
-      if (!task.status.is_closed_type) {
-        open++;
-        if (task.end_date && Number.isFinite(Date.parse(task.end_date)) && task.end_date.slice(0,10) < new Date().toISOString().slice(0,10)) overdue++;
+    const signal = AbortSignal.timeout(20000);
+    const tasks: CloudTask[] = [];
+    const seen = new Set<string>();
+    let open = 0, overdue = 0, sampled = 0, pages = 0, partial = true;
+    const today = new Date().toISOString().slice(0, 10);
+    for (let page = 1; page <= 5; page++) {
+      const response = await fetch(`https://projectsapi.zoho.com/api/v3/portal/${portal}/tasks?page=${page}&per_page=100`, { redirect: 'error', signal, headers: { Authorization: `Bearer ${token.access_token}` } });
+      if (!response.ok) throw new Error('Provider unavailable');
+      const data = await response.json();
+      if (!Array.isArray(data.tasks) || data.tasks.length > 100) throw new Error('Unexpected provider schema');
+      pages++;
+      for (const task of data.tasks) {
+        if (typeof task.status?.is_closed_type !== 'boolean' || !['string', 'number'].includes(typeof task.id)) throw new Error('Unknown task schema');
+        const id = String(task.id);
+        if (seen.has(id)) continue;
+        seen.add(id); sampled++;
+        if (!task.status.is_closed_type) {
+          open++;
+          const dueDate = typeof task.end_date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(task.end_date) && Number.isFinite(Date.parse(task.end_date)) ? task.end_date.slice(0, 10) : null;
+          const late = !!dueDate && dueDate < today;
+          if (late) overdue++;
+          tasks.push({ id, title: typeof task.name === 'string' ? task.name.replace(/[\u0000-\u001f]/g, ' ').slice(0, 200) : 'Untitled task', dueDate, overdue: late });
+        }
       }
+      if (data.page_info?.has_next_page === false) { partial = false; break; }
+      // Unknown pagination stops conservatively instead of guessing completeness.
+      if (data.page_info?.has_next_page !== true || data.tasks.length === 0) break;
     }
+    tasks.sort((a, b) => Number(b.overdue) - Number(a.overdue) || (a.dueDate || '9999').localeCompare(b.dueDate || '9999') || a.id.localeCompare(b.id));
     const now = Date.now();
-    cache = { state: 'current', source: empty.source, observedAt: new Date(now).toISOString(), expiresAt: new Date(now + 300000).toISOString(), open, overdue, sampled: data.tasks.length, partial: data.page_info?.has_next_page !== false, link };
+    cache = { ...empty, state: 'current', observedAt: new Date(now).toISOString(), expiresAt: new Date(now + 300000).toISOString(), open, overdue, sampled, pages, partial, coverage: partial ? 'Bounded sample, not portal totals' : 'Complete pagination observed; provider visibility applies', tasks: tasks.slice(0, 20), link };
     return cache;
   } catch {
-    return cache ? { ...cache, state: 'stale' } : { ...empty, state: 'unavailable' };
+    return cache ? { ...cache, state: 'stale', attemptedAt: empty.attemptedAt } : { ...empty, state: 'unavailable' };
   }
 }
 let lastResult: Summary | undefined;
@@ -43,3 +60,5 @@ export async function cloudSummary(): Promise<Summary> {
   pending = load().then(result => { lastResult = result; return result; }).finally(() => { pending = undefined; });
   return pending;
 }
+
+export const zohoProjectsProvider: CloudProvider = { id: 'zoho-projects', summary: cloudSummary };
