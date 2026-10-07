@@ -25,6 +25,11 @@ app:
               row: 2
               width: 4
               height: 12
+            - component: OneMindActivity
+              column: 8
+              row: 20
+              width: 4
+              height: 8
             - component: OneMindCloud
               column: 8
               row: 14
@@ -102,3 +107,6 @@ mcpActions:
 integrations:
   github:
     - host: github.com
+
+notifications:
+  retention: 90d
