@@ -76,3 +76,9 @@ The personal OAuth App and temporary fine-grained reader token created during se
 The existing unmanaged Argo Tailscale ingress forwarded to port 80 while the server enforced HTTPS, causing a redirect loop. The release adopts that existing ingress into GitOps and changes the upstream port to 443. Tailscale's operator uses its built-in `https+insecure` upstream mode for port 443: traffic to the self-signed Argo backend is encrypted, but that proxy hop does not validate the self-signed backend certificate. The portal validates the Tailscale HTTPS certificate, and Argo server TLS remains enabled. No global Node TLS bypass or Argo `localDevelopment` setting is enabled.
 
 Sources: https://tailscale.com/docs/kubernetes-operator/egress/access-tailnet-service and https://github.com/tailscale/tailscale/blob/main/cmd/k8s-operator/ingress.go.
+
+### Database pool budget
+
+During the production rolling update, the second new replica exhausted PostgreSQL's 100-connection limit while two serving replicas remained available. Set `backend.database.knexConfig.pool` to min 0, max 3, idle timeout 10 seconds, with a 30-second acquisition timeout. The installed Backstage PostgreSQL connector reads this exact `knexConfig` path. Idle pools can drain and catalog concurrency is bounded during surge. PostgreSQL's limit/storage and the two-replica availability policy stay intact; review this budget as traffic and plugin count grow.
+
+Sources: https://backstage.io/docs/tutorials/configuring-plugin-databases/ and https://knexjs.org/guide/#pool.

@@ -21,6 +21,13 @@ search:
         initialDelay: {seconds: 30}
 
 backend:
+  database:
+    knexConfig:
+      pool:
+        min: 0
+        max: 3
+        idleTimeoutMillis: 10000
+      acquireConnectionTimeout: 30000
   auth:
     externalAccess:
       - type: static
