@@ -4,7 +4,7 @@ import https from 'node:https';
 import { readFileSync } from 'node:fs';
 import { health } from './health';
 
-type Application = { metadata: { name: string }; spec?: { destination?: { namespace?: string } }; status?: { health?: { status?: string }; sync?: { status?: string; revision?: string }; operationState?: { phase?: string; finishedAt?: string }; resources?: { health?: { status?: string } }[] } };
+type Application = { metadata: { name: string }; spec?: { destination?: { namespace?: string } }; status?: { reconciledAt?: string; health?: { status?: string }; sync?: { status?: string; revision?: string }; operationState?: { phase?: string; finishedAt?: string }; resources?: { health?: { status?: string } }[] } };
 let cache: { observedAt: string; apps: Application[] } | undefined;
 let pending: Promise<NonNullable<typeof cache>> | undefined;
 async function applications() {
@@ -36,13 +36,14 @@ export default createBackendPlugin({ pluginId: 'onemind-services', register(reg)
       const [argo, observations] = await Promise.allSettled([applications(), health()]);
       const apps = argo.status === 'fulfilled' ? argo.value.apps.filter(app => app.spec?.destination?.namespace === namespace).map(app => ({
         name: app.metadata.name, health: app.status?.health?.status ?? 'Unknown', sync: app.status?.sync?.status ?? 'Unknown',
+        reconciledAt: typeof app.status?.reconciledAt === 'string' && Number.isFinite(Date.parse(app.status.reconciledAt)) ? app.status.reconciledAt : null,
         revision: app.status?.sync?.revision?.slice(0, 120), operation: app.status?.operationState?.phase ?? 'Unknown', finishedAt: app.status?.operationState?.finishedAt ?? null,
         observedResources: app.status?.resources?.length ?? 0,
         link: `https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(app.metadata.name)}`,
       })) : [];
       const metric = observations.status === 'fulfilled' ? observations.value.metrics.find(value => value.namespace === namespace) : undefined;
       res.json({ namespace, scope: 'Namespace-level associations, not exclusive service ownership', argo: { state: argo.status === 'fulfilled' ? 'observed' : 'unavailable', observedAt: argo.status === 'fulfilled' ? argo.value.observedAt : null, applications: apps }, metrics: metric ?? null,
-        metricsState: observations.status === 'rejected' || observations.value.metricsUnavailable ? 'unavailable' : metric ? 'observed' : 'not-configured',
+        metricsState: observations.status === 'rejected' ? 'unavailable' : !metric ? 'not-configured' : metric.cpuCores === null && metric.memoryBytes === null ? 'no-data' : observations.value.metricsUnavailable || metric.cpuCores === null || metric.memoryBytes === null ? 'partial' : 'observed',
         grafana: { state: namespace === 'nats' ? 'linked' : 'dashboard-mapping-required', link: namespace === 'nats' ? 'https://grafana.tail717ba0.ts.net/d/omos-nats-observ' : 'https://grafana.tail717ba0.ts.net/dashboards' } });
     } catch (error) { next(error); } });
     router.use(routes);
