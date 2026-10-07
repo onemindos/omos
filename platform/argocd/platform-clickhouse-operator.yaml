@@ -26,6 +26,8 @@ spec:
     targetRevision: "0.27.3"
     helm:
       values: |
+        # Leave room for the chart CRD hook suffix within Kubernetes label limits.
+        fullnameOverride: platform-clickhouse-operator
         deployment:
           strategy:
             type: Recreate
