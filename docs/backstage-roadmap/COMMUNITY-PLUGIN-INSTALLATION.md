@@ -1,5 +1,16 @@
 # Community plugin installation
 
+## Current release
+
+Deployed on 2026-10-07 through merged PRs #67–#70. Image:
+`ghcr.io/onemindos/onemind-portal@sha256:e9018971af050bd0f99ce6221abe40b04c9a64231c7114b30cf45975bcc0196c`.
+
+Two replicas ready with zero restarts; Argo Healthy/Synced at `a4c6d659711c7bf36b502e40702cdc1df267bc19` during acceptance. Signed-in checks confirmed real GitHub workflow runs and three open PRs, Argo deployment summary, the Grafana NATS dashboard, the private ADR, the 490-entity ownership scorecard overview, and the empty Announcements page. Light and dark rendering checked; user's Auto preference restored. No announcement was published.
+
+The pool correction reduced observed PostgreSQL connections from near its 100 limit to 38–46. New API anonymous requests returned 401. Backend initialized the new plugin databases in preflight, with the temporary pod gated out of portal Service traffic. Preflight pod removed. Encrypted pre-release backup passed restore verification.
+
+The unused personal OAuth App and temporary fine-grained reader token were deleted; their local credential copies were removed. Active GitHub App is organization-owned, restricted to omos and read-only. Argo/Grafana tokens have 90-day lifetimes and require rotation. Real event producers, Zoho credentials and a model endpoint remain separate activation work from the previous feature batch.
+
 ## Included
 
 Eight frontend plugins are pinned in the application: GitHub Actions, Roadie GitHub Pull Requests, Grafana, community Argo CD, Tech Insights, ADR, Tech Radar and Announcements. Their required backend packages, GitHub OAuth provider and ADR/announcement search collators are registered.
@@ -10,7 +21,7 @@ The Argo backend's direct mutation routes are blocked by a module. Its action re
 
 ## Activation requirements
 
-These packages are installed in source. They are not yet deployed, and installation does not establish external connections. Existing backstage namespace Secrets contain no new plugin integration credentials.
+The following setup requirements explain the deployed configuration and its recovery. Credentials are sealed in the backstage namespace; installation alone is insufficient for external connections.
 
 ### GitHub
 
@@ -37,7 +48,7 @@ The repository is private. ADR readers and search collators need a server-side G
 
 ### Secrets and rollout
 
-Keep credential values out of chat and Git. Seal credentials using the existing cluster controller and namespace-specific name. Add only the required secret keys/configuration to the deployment, build through the existing GitHub workflow, and pin the resulting image digest through a release PR. Verify PostgreSQL plugin migrations and signed-in behavior before promoting. This PR does not change the running image or create provider grants.
+Keep credential values out of chat and Git. Seal credentials using the existing cluster controller and namespace-specific name. Add only the required secret keys/configuration to the deployment, build through the existing GitHub workflow, and pin the resulting image digest through a release PR. Verify PostgreSQL plugin migrations and signed-in behavior before promoting. PR #67 prepared grants and configuration; PR #68 pinned the running image, with corrections in #69 and #70.
 
 ## Deferred because prerequisites are absent
 
@@ -55,7 +66,7 @@ No custom replacement is being built for these deferred capabilities. Revisit ex
 - TypeScript compilation passed after registration and radar API override correction.
 - Frontend production build passed.
 - Backend production bundle passed with `--skip-build-dependencies` after the separately built frontend. The initial automatic dependency build could not find a `yarn` executable in the shell PATH.
-- No tests were added or run. No live provider calls, browser acceptance, migrations or rollout have been verified for this batch.
+- No tests were added or run. Runtime verification was subsequently completed as summarized above.
 - Yarn reports pre-existing React/Material UI and test-library peer warnings, the app now explicitly supplies React 18 types for the Argo peer requirement; legacy Material UI still reports its non-overlapping React/type ranges.
 
 Maintainer sources and selection criteria are in [PLUGIN-FIRST-PLAN.md](PLUGIN-FIRST-PLAN.md).
@@ -69,7 +80,7 @@ Maintainer sources and selection criteria are in [PLUGIN-FIRST-PLAN.md](PLUGIN-F
 - Argo's existing HTTPS mesh endpoint uses the established egress ProxyGroup and exact CoreDNS rewrite. TLS validation stays enabled; Argo ignores operator-owned Service ExternalName.
 - A Git-owned ADR records the administrator's plugin-first decision. Runbooks catalog points to that private directory. NATS Dashboard uses the verified Grafana `nats` tag.
 
-The personal OAuth App and temporary fine-grained reader token created during setup should be retired after the GitHub App's live acceptance. Release PR records the pinned image and runtime acceptance.
+The intermediate personal OAuth App and fine-grained reader token were retired after live acceptance. Release PR records the pinned image and runtime acceptance.
 
 ### Argo ingress correction
 
