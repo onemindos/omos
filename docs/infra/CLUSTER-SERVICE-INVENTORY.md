@@ -124,16 +124,18 @@ by a future workload. The requested sizes below are not filesystem usage measure
 |---|---:|---|---|---|
 | `onetak/nominatim-data` | 100 GiB | Retain | `platform-onetak`; declared and mounted by the zero-replica Nominatim Deployment in `platform/onetak/nominatim.yaml` | Idle while Nominatim is stopped. Data and geocoding need are unverified. Retained PV means claim deletion alone would not release the volume. |
 | `onetak/overpass-data` | 100 GiB | Retain | `platform-onetak`; declared and mounted by the zero-replica Overpass Deployment in `platform/onetak/overpass.yaml` | Idle while Overpass is stopped. Data and mission-planning need are unverified. Retained PV means claim deletion alone would not release the volume. |
-| `takml/takml-deps` | 5 GiB | Delete | `platform-takml`; only declared in `platform/takml/pvcs.yaml`; no workload reference found in the repo or current pod volume mounts | Strongest manifest cleanup candidate, but claim deletion may delete the DigitalOcean volume. Confirm it is not populated or needed before removal. |
+| `takml/takml-deps` | 5 GiB | Delete | `platform-takml`; only declared in `platform/takml/pvcs.yaml`; no current workload reference or pod mount found | Read-only inspection found 1.1 GiB of Python packages (PyTorch, torchvision, NumPy, OpenCV, NATS client). The current vision image bakes its dependencies into the image and no current pod mounts this claim, so the contents look like legacy dependency staging. The volume is populated; preserve or back it up until the owner confirms it is reproducible and unused. Deleting the claim may delete the DigitalOcean volume. |
 
 ## Review queue
 
 These are investigation items, not approved deletions. Start with one at a time and update
 this inventory when an owner confirms the intended state.
 
-1. **Check the 5 GiB `takml-deps` claim.** Ask whether it is still used for a TAK-ML
-   dependency/build workflow; inspect its data or backup/rebuild path. If abandoned,
-   remove the Git declaration and then intentionally release its `Delete`-policy volume.
+1. **Confirm whether the 5 GiB `takml-deps` claim is obsolete.** A read-only inspection
+   found 1.1 GiB of Python packages, while the current vision image bakes its dependencies
+   into the image and no current pod mounts this claim. Ask the TAK-ML owner whether any
+   workflow still needs these staged packages and confirm the image/rebuild path before
+   removing the Git declaration or its `Delete`-policy volume.
 2. **Decide whether the Nominatim service is needed.** Check route traffic and geocoding
    consumers, then decide whether to keep the 100 GiB data, rebuild it later, or retire it.
 3. **Decide whether Overpass is still part of mission planning.** Check consumer usage and
