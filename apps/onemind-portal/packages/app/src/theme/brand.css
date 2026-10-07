@@ -1,0 +1,6 @@
+body[data-theme-mode="light"] { --bui-bg-app: #f4f3f1; --bui-bg-neutral-1: #ffffff; --bui-fg-primary: #202226; --bui-fg-secondary: #59616c; }
+body[data-theme-mode="dark"] { --bui-bg-app: #111215; --bui-bg-neutral-1: #1c1e23; --bui-fg-primary: #f4f4f5; --bui-fg-secondary: #b7bdc7; }
+.onemind-workspace a:focus-visible, .onemind-workspace button:focus-visible { outline: 3px solid #888fa0; outline-offset: 4px; }
+.onemind-app-card { transition: transform 120ms ease, box-shadow 120ms ease; }
+.onemind-app-card:hover, .onemind-app-card:focus-within { transform: translateY(-2px); box-shadow: 0 8px 24px #00000014; }
+@media (prefers-reduced-motion: reduce) { .onemind-app-card { transition: none; } .onemind-app-card:hover, .onemind-app-card:focus-within { transform: none; } }

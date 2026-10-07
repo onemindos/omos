@@ -1,3 +1,5 @@
+import { designModule } from './theme/designModule';
+import './theme/brand.css';
 import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { navModule } from './modules/nav';
@@ -9,5 +11,5 @@ import { assistantPlugin } from './modules/assistant';
 import { offlinePlugin } from './modules/offline';
 
 export default createApp({
-  features: [catalogPlugin, navModule, homeModule, authModule, systemsPlugin, servicesModule, assistantPlugin, offlinePlugin],
+  features: [designModule, catalogPlugin, navModule, homeModule, authModule, systemsPlugin, servicesModule, assistantPlugin, offlinePlugin],
 });
