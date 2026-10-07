@@ -22,30 +22,21 @@ app:
               width: 12
               height: 2
               deletable: false
-            - component: OneMindDirectory
+            - component: OneMindToday
               column: 0
               row: 2
+              width: 12
+              height: 24
+              deletable: false
+            - component: OneMindDirectory
+              column: 0
+              row: 26
               width: 8
               height: 18
               deletable: false
-            - component: OneMindStatus
-              column: 8
-              row: 2
-              width: 4
-              height: 12
-            - component: OneMindActivity
-              column: 8
-              row: 20
-              width: 4
-              height: 8
-            - component: OneMindCloud
-              column: 8
-              row: 14
-              width: 4
-              height: 6
             - component: HomePageStarredEntities
               column: 8
-              row: 28
+              row: 26
               width: 4
               height: 6
 organization:

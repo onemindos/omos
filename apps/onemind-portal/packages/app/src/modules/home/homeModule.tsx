@@ -16,6 +16,7 @@ function Directory() {
   const matches = directory.filter(app => (category === 'All' || app.groupTitle === category) &&
     `${app.title} ${app.description} ${app.groupTitle}`.toLowerCase().includes(query.trim().toLowerCase()));
   const destinations = [
+    { title: 'Today', detail: 'Decide what needs you', url: '/today' },
     { title: 'Systems', detail: 'Explore dependencies', url: '/systems' },
     { title: 'Workflows', detail: 'Prepare a reviewed change', url: '/create' },
     { title: 'Knowledge', detail: 'Find a runbook', url: '/docs' },
@@ -57,7 +58,7 @@ function Directory() {
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};
 type Status={serviceHealth?:ServiceHealth;observedAt:string;partial:boolean;unavailableSources?:string[];totalWorkloads:number;unavailable:string[];deployments:{name:string;health:string;sync:string}[];backups:{name:string;lastSuccess:string|null;suspended:boolean}[]};
-function StatusPanel(){
+export function StatusPanel({ compact = false }: { compact?: boolean }){
   const discovery=useApi(discoveryApiRef);const fetchApi=useApi(fetchApiRef);
   const [data,setData]=useState<Status>();const [error,setError]=useState(false);
   useEffect(()=>{let active=true;const controller=new AbortController();
@@ -65,6 +66,8 @@ function StatusPanel(){
     refresh();const timer=setInterval(refresh,60000);return()=>{active=false;controller.abort();clearInterval(timer);};
   },[discovery,fetchApi]);
   const theme=useTheme();
+  const [expanded,setExpanded]=useState(false);
+  const abbreviated=compact&&!expanded;
   const stale=!!data&&(error||Date.now()-Date.parse(data.observedAt)>180000);
   const backupProblems=data?.backups.filter(x=>x.suspended||!x.lastSuccess||(x.name==='backstage/backstage-backup'&&Date.now()-Date.parse(x.lastSuccess)>36*3600000))??[];
   const issues=data?[...(data.serviceHealth?.checks.filter(x=>x.state!=='up').map(x=>({key:`health:${x.name}`,title:`${x.name}: ${x.state}`,detail:`${x.scope}. Inspect service health and connectivity; unknown is not healthy.`,url:x.link}))??[]),...data.unavailable.map(name=>({key:`workload:${name}`,title:`Workload not fully ready: ${name}`,detail:'Inspect pod readiness and events in Headlamp.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'})),
@@ -80,13 +83,15 @@ function StatusPanel(){
       {data.partial&&<Typography color="error">Incomplete view: {data.unavailableSources?.join(', ')||'some sources'} unavailable. Missing results do not mean healthy.</Typography>}
       <Box my={2}><Typography variant="h6">{issues.length} attention items{stale?' in previous results':''}</Typography></Box>
       {!stale&&!data.partial&&!issues.length&&<Typography>No issues reported by the configured checks.</Typography>}
-      {issues.map(x=><Box key={x.key} p={2} mb={1} style={{border:`1px solid ${theme.palette.divider}`,borderRadius:8}}>
+      {(abbreviated?issues.slice(0,5):issues).map(x=><Box key={x.key} p={2} mb={1} style={{border:`1px solid ${theme.palette.divider}`,borderRadius:8}}>
         <Typography style={{fontWeight:600}}>{x.title}</Typography>
         <Typography variant="body2" color="textSecondary">{x.detail}</Typography>
         <Link href={x.url} target="_blank" rel="noopener noreferrer">Investigate</Link>
       </Box>)}
+      {compact && <Button size="small" onClick={()=>setExpanded(value=>!value)}>{expanded?'Show summary':'Show all observations'}</Button>}
       <Box mt={2}><Link href="https://argocd.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">All deployments</Link> · <Link href="https://grafana.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">Metrics in Grafana</Link></Box>
-      {data.serviceHealth&&<Box mt={3}>
+      {abbreviated && issues.length > 5 && <Typography variant="caption">Showing 5 of {issues.length} attention items. Open the full status view for the remaining observations.</Typography>}
+      {!abbreviated && data.serviceHealth&&<Box mt={3}>
         <Typography variant="h6">Critical service health</Typography>
         <Typography variant="caption">{data.serviceHealth.scope} Checked {new Date(data.serviceHealth.observedAt).toLocaleString()}</Typography>
         {data.serviceHealth.checks.map(x=><Box key={x.name} mt={1}><Link href={x.link} target="_blank" rel="noopener noreferrer">{x.name}</Link> · {x.state}{x.httpStatus?` · HTTP ${x.httpStatus}`:''}{x.latencyMs!==undefined?` · ${x.latencyMs} ms`:''} · <Link href={`/catalog/${x.entity.split(':')[1].split('/')[0]}/${x.entity.split(':')[0]}/${x.entity.split('/')[1]}`}>Catalog</Link><Typography variant="caption" display="block">{x.scope}</Typography></Box>)}
@@ -95,16 +100,16 @@ function StatusPanel(){
         {data.serviceHealth.metricsUnavailable&&<Typography color="error">A metrics query failed; values may be incomplete.</Typography>}
         {data.serviceHealth.metrics.map(x=><Typography key={x.namespace} variant="body2">{x.namespace}: CPU {x.cpuCores===null?'unknown':`${x.cpuCores.toFixed(2)} cores`} · memory {x.memoryBytes===null?'unknown':`${(x.memoryBytes/1048576).toFixed(0)} MiB`}</Typography>)}
       </Box>}
-      <Box mt={3}><Typography variant="h6">Backup activity</Typography>
+      {!abbreviated && <Box mt={3}><Typography variant="h6">Backup activity</Typography>
         <Typography variant="caption">OneMind portal daily backup is overdue after 36 hours. Other schedules show activity without an assumed deadline. Job success alone does not prove restoration for every service.</Typography>
         {data.backups.map(x=><Typography key={x.name} variant="body2">{x.name}: {x.suspended?'suspended':x.lastSuccess?`last success ${new Date(x.lastSuccess).toLocaleString()}`:'no successful run recorded'}</Typography>)}
         {!data.backups.length&&!data.partial&&<Typography>No backup schedules found.</Typography>}
-      </Box>
+      </Box>}
     </>}
   </Box>;
 }
 type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;pages?:number;source?:string;coverage?:string;attemptedAt?:string;tasks?:{id:string;title:string;dueDate:string|null;overdue:boolean}[];link:string};
-function CloudPanel(){
+export function CloudPanel(){
   const discovery=useApi(discoveryApiRef), api=useApi(fetchApiRef);
   const [data,setData]=useState<CloudSummary>(); const [error,setError]=useState(false);
   useEffect(()=>{let active=true;const controller=new AbortController();const refresh=async()=>{try{const base=await discovery.getBaseUrl('onemind');const r=await api.fetch(`${base}/cloud`,{signal:controller.signal});if(!r.ok)throw new Error();const result=await r.json();if(active){setData(result);setError(false);}}catch{if(active)setError(true);}};refresh();const timer=setInterval(refresh,60000);return()=>{active=false;controller.abort();clearInterval(timer);};},[discovery,api]);
@@ -123,6 +128,7 @@ function CloudPanel(){
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageWidgetBlueprint.make({name:'onemind-today',params:{name:'OneMindToday',title:'Today',description:'Live attention, work and inbox in one operational workspace',components:async()=>({Content:(await import('./Today')).Today})}}),
   HomePageWidgetBlueprint.make({name:'github-reviews',params:{name:'OneMindGitHubReviews',title:'GitHub reviews',description:'Requested reviews in onemindos; connect GitHub authorization',components:async()=>({Content:()=> <HomePageRequestedReviewsCard query="org:onemindos is:pr is:open review-requested:@me" />})}}),
   HomePageWidgetBlueprint.make({name:'github-open-prs',params:{name:'OneMindGitHubPullRequests',title:'GitHub pull requests',description:'Your open pull requests in onemindos',components:async()=>({Content:()=> <HomePageYourOpenPullRequestsCard query="org:onemindos is:pr is:open author:@me" />})}}),
   HomePageWidgetBlueprint.make({name:'onemind-activity',params:{name:'OneMindActivity',title:'Activity inbox',description:'Unread, actionable source notifications',components:async()=>({Content:ActivityInbox})}}),

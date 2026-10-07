@@ -31,3 +31,11 @@ Before installing any producer credential, verify catalog Group `group:default/o
 Producers remain configuration-required until those connections are made. An empty inbox does not mean systems are healthy.
 
 References: https://backstage.io/docs/notifications/ and https://backstage.io/docs/notifications/usage/ . Implementation follows installed notificationService 0.2.30 types and installed Notifications API 0.6.0.
+
+## Internal production observer
+
+The Today workspace adds an internal read-only scheduled observer for terminal Argo
+operations and scheduled Backstage backup jobs. It uses the intended group and durable
+Notifications plugin without an external producer credential. See TODAY-WORKSPACE.md
+for baselines, source coverage and delivery limitations. The external event bridge remains
+protected and receives no new machine token.
