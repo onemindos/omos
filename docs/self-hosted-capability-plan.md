@@ -86,7 +86,7 @@ Karakeep is the preferred candidate: API/CLI access, archives, text/search, high
 
 ## Implementation order
 
-1. n8n infrastructure deployed and owner enrolled for zeus@zeusdelacruz.com; Argo Synced/Healthy and local readiness HTTP 200 verified. Private ingress provisioned. Finish HTTPS verification, scoped integrations and external encrypted recovery backups.
+1. n8n infrastructure deployed and owner enrolled for zeus@zeusdelacruz.com; Argo Synced/Healthy and local readiness HTTP 200 verified. Private HTTPS editor and readiness both returned HTTP 200. Finish scoped integrations and external encrypted recovery backups.
 2. Select knowledge/task/bookmark authorities using real imports and AI read/write operations. Start Outline + Plane + Karakeep evaluation; add Vikunja only for a distinct personal task role.
 3. Map one physical site's hardware, protocols, power/network failure modes and essential rules. Pilot OpenRemote and the necessary EdgeX device services.
 4. Build a first RDFM artifact/canary/rollback pipeline on supported hardware.
