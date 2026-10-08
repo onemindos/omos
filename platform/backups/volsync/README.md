@@ -18,10 +18,12 @@ archives themselves can restore onto another provider's filesystem. Raw database
 and NATS volume copies remain crash-consistent; use verified logical archives for
 coordinated database recovery. A completed file backup is not an application restore.
 
-Begin with the Hermes volume and verify an isolated restore before enabling the
-remaining sources. Do not claim coverage for paused sources. Stagger schedules and
-monitor CPU, memory, temporary volumes, cache storage and provider snapshot cleanup.
-Source PVCs must never be deleted during backup cleanup.
+All 35 source checks completed on October 8: 32 encrypted repositories and three
+confirmed empty volumes. Sources run daily, staggered 20 minutes from 00:00 to
+11:20 UTC. Monitor CPU, memory, temporary volumes, cache storage and provider
+snapshot cleanup. This creates 35 persistent 1 GiB caches. Source PVCs must never
+be deleted during backup cleanup. Observe actual scheduled recurrence and retention
+cycles before treating the initial checks as sustained reliability.
 
 References:
 - https://volsync.readthedocs.io/en/latest/usage/restic/
@@ -35,8 +37,9 @@ n8n retains its restricted namespace policy and uses the original application UI
 ownership and data-directory modes before starting databases.
 
 Authentik's filesystem export was restored to a new PVC and PostgreSQL booted with
-230 application tables. It now has a daily schedule. The next five-volume batch
-uses manual initial triggers; other sources stay paused. TAK's original five-PVC
+230 application tables. Hermes restored 319,496 files with a matching reference
+binary checksum; ClickHouse booted with nine tables and 74,916,246 rows. All disposable
+restore resources were removed. TAK's original five-PVC
 quota blocked backup caches and clones. The backup application now manages its
 quota at 18 PVCs / 100 GiB, allowing the original 37 GiB, five caches, concurrent
 clone space and a restore drill. This is an admission ceiling, not provisioned
