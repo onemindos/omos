@@ -1,10 +1,12 @@
 name: Build OneMind Core
 on:
   push:
-    branches: [main, 'codex/onemind-cpu-services']
+    branches: [main, 'codex/onemind-cpu-services', 'codex/onemind-cpu-applications']
     paths:
       - services/onemind-core/**
       - services/onemind-postgres/**
+      - schemas/missions/**
+      - schemas/envelope/**
       - .github/workflows/build-onemind-core.yml
   workflow_dispatch:
 permissions:
@@ -16,12 +18,24 @@ concurrency:
 jobs:
   boundaries:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16.15
+        env:
+          POSTGRES_PASSWORD: test-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 12
+    env:
+      INTEGRATION_DATABASE_URL: postgresql://postgres:test-only@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -r services/onemind-core/requirements.txt pytest==9.0.2
+      - run: pip install -r services/onemind-core/requirements.txt pytest==9.0.2 jsonschema==4.25.1
       - run: PYTHONPATH=services/onemind-core pytest services/onemind-core/tests
   images:
     needs: boundaries
