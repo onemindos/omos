@@ -15,6 +15,7 @@ spec:
       labels:
         app: github-runner
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: runner
           image: docker.io/myoung34/github-runner@sha256:dcacf6645a732142f5eb817df7f87bde7cc5df2238595b78f5e1e5f6731e25f3

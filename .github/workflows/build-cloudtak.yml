@@ -115,38 +115,6 @@ jobs:
           cache-to: type=registry,ref=ghcr.io/onemindos/cloudtak-events:cache,mode=max
           platforms: linux/amd64
 
-      - name: Rollout restart CloudTAK in K8s
+      - name: Record GitOps deployment boundary
         run: |
-          # Use in-cluster service account token — no kubectl binary needed.
-          # Requires github-runner-rbac.yaml ClusterRoleBinding in platform/core/.
-          TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-          API=https://kubernetes.default.svc.cluster.local
-          RESTART_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          PATCH='{"spec":{"template":{"metadata":{"annotations":{"kubectl.kubernetes.io/restartedAt":"'"$RESTART_TIME"'"}}}}}'
-
-          for DEPLOY in cloudtak-api cloudtak-events; do
-            echo "Restarting $DEPLOY at $RESTART_TIME..."
-            HTTP=$(curl -s -o /dev/null -w "%{http_code}" -k -X PATCH \
-              -H "Authorization: Bearer $TOKEN" \
-              -H "Content-Type: application/strategic-merge-patch+json" \
-              "$API/apis/apps/v1/namespaces/cloudtak/deployments/$DEPLOY" \
-              -d "$PATCH")
-            if [ "$HTTP" = "200" ]; then
-              echo "✓ $DEPLOY restart triggered (HTTP $HTTP)"
-            else
-              echo "✗ $DEPLOY restart failed (HTTP $HTTP)" && exit 1
-            fi
-          done
-
-          # Poll cloudtak-api until all replicas are updated (max 3 min)
-          echo "Waiting for cloudtak-api rollout..."
-          for i in $(seq 1 18); do
-            READY=$(curl -sk \
-              -H "Authorization: Bearer $TOKEN" \
-              "$API/apis/apps/v1/namespaces/cloudtak/deployments/cloudtak-api" \
-              | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const s=JSON.parse(d).status;process.stdout.write(String(s.readyReplicas||0)+'/'+String(s.replicas||0))})")
-            echo "  cloudtak-api ready: $READY"
-            [ "$READY" = "1/1" ] && echo "✓ CloudTAK deployed at $(date -u)" && exit 0
-            sleep 10
-          done
-          echo "Timeout waiting for rollout" && exit 1
+          echo 'Images published. Deploy only through a reviewed manifest digest PR and Argo sync.'
