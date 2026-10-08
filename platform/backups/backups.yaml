@@ -249,7 +249,7 @@ spec:
             - name: NATS_CA
               value: /nats-ca/ca.crt
             - name: NATS_TIMEOUT
-              value: 30s
+              value: 10m
             resources:
               requests:
                 cpu: 100m
