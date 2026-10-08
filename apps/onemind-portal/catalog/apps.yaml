@@ -2825,3 +2825,133 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: autoware
+  title: Autoware
+  description: Open-source autonomous driving software built on ROS
+  tags:
+    - autonomous-driving
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://autoware.org/
+    onemind.io/launcher-category: Robotics & Autonomy
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+  links:
+    - url: https://autoware.org/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/autowarefoundation/autoware
+      title: GitHub repository
+      icon: docs
+spec:
+  type: software-platform
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ros-2
+  title: ROS 2
+  description: Open-source libraries and tools for building robot applications
+  tags:
+    - robotics
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://docs.ros.org/
+    onemind.io/launcher-category: Robotics & Autonomy
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+  links:
+    - url: https://docs.ros.org/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/ros2/ros2
+      title: GitHub repository
+      icon: docs
+spec:
+  type: software-platform
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eclipse-zenoh
+  title: Eclipse Zenoh
+  description: Distributed pub/sub, queries, storage, and computation middleware
+  tags:
+    - middleware
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://zenoh.io/
+    onemind.io/launcher-category: Robotics & Autonomy
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+  links:
+    - url: https://zenoh.io/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/eclipse-zenoh/zenoh
+      title: GitHub repository
+      icon: docs
+spec:
+  type: software-platform
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eclipse-ditto
+  title: Eclipse Ditto
+  description: Open-source IoT digital twin state management and APIs
+  tags:
+    - digital-twins
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://eclipse.dev/ditto/
+    onemind.io/launcher-category: Digital Twins
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+  links:
+    - url: https://eclipse.dev/ditto/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/eclipse-ditto/ditto
+      title: GitHub repository
+      icon: docs
+spec:
+  type: software-platform
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nvidia-omniverse
+  title: NVIDIA Omniverse
+  description: Libraries and microservices for physical AI and digital twin simulation
+  tags:
+    - simulation
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://www.nvidia.com/en-us/omniverse/
+    onemind.io/launcher-category: Digital Twins
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+  links:
+    - url: https://www.nvidia.com/en-us/omniverse/
+      title: Open application
+      icon: dashboard
+    - url: https://docs.nvidia.com/omniverse/index.html
+      title: Documentation
+      icon: docs
+spec:
+  type: software-platform
+  lifecycle: experimental
+  owner: group:default/onemind-admins

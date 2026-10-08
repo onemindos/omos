@@ -6,6 +6,7 @@ import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@mater
 import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
 import { useDirectory } from './useDirectory';
 import { ActiveStack } from './ActiveStack';
+import { hostingInfo } from './hosting';
 import { CalendarPanel } from './CalendarPanel';
 import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
@@ -22,11 +23,12 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [favoritesOnly,setFavoritesOnly]=useState(false);
+  const [hostingFilter, setHostingFilter] = useState('All hosting');
   const controls=useAppFavorites();
   const theme = useTheme();
   const dark = theme.palette.type === 'dark';
   const groups = [...new Set(directory.map(app => app.groupTitle))];
-  const matches = directory.filter(app => (!favoritesOnly || controls.isFavorite(app)) && (category === 'All' || app.groupTitle === category) &&
+  const matches = directory.filter(app => (hostingFilter === 'All hosting' || hostingInfo(app.hosting, app.status).group === hostingFilter) && (!favoritesOnly || controls.isFavorite(app)) && (category === 'All' || app.groupTitle === category) &&
     `${app.title} ${app.description} ${app.groupTitle}`.toLowerCase().includes(query.trim().toLowerCase()));
   const destinations = [
     { title: 'Today', detail: 'Decide what needs you', url: '/today' },
@@ -52,6 +54,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
       <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
       {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)} style={{borderColor: `${groupColors[group]?.base??'#237f91'}88`, background:category===group?`${groupColors[group]?.base??'#237f91'}${dark?'44':'22'}`:undefined,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary)}}>{group}</Button>)}
     </Box>
+    <Box mb={2} display="flex" flexWrap="wrap" style={{gap:8}} aria-label="Hosting filters">{['All hosting', 'Self-hosted', 'Cloud service', 'Local / native', 'Reference', 'Planned', 'Unknown'].map(value => <Button key={value} size="small" variant={hostingFilter===value?'contained':'outlined'} aria-pressed={hostingFilter===value} onClick={()=>setHostingFilter(value)}>{value}</Button>)}</Box>
     {!query.trim() && category==='All' && !favoritesOnly && <><ActiveStack /><QuickAccess /></>}
     {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
       {destinations.map((item,index) => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
@@ -72,7 +75,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
         </Box>)}
       </Box>
     </Box>)}
-    {loaded && !error && !matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); }}>Reset filters</Button></Box>}
+    {loaded && !error && !matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); setHostingFilter('All hosting'); }}>Reset filters</Button></Box>}
   </Box>;
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};

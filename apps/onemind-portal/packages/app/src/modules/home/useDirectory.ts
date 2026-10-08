@@ -13,6 +13,8 @@ export type AppEntry = {
   ref: string;
   personal?: boolean;
   favorite?: boolean;
+  hosting?: string;
+  status?: string;
 };
 export function safeUrl(value: string) {
   try {
@@ -99,6 +101,8 @@ export function useDirectory() {
                 known?.groupTitle ??
                 'Services';
               entries.push({
+                hosting: entity.metadata.annotations?.['onemind.io/hosting'],
+                status: entity.metadata.annotations?.['onemind.io/documented-status'],
                 name: entity.metadata.name,
                 ref: `component:${entity.metadata.namespace ?? 'default'}/${
                   entity.metadata.name
