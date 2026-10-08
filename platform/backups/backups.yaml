@@ -250,6 +250,8 @@ spec:
               value: /nats-ca/ca.crt
             - name: NATS_TIMEOUT
               value: 10m
+            - name: GOMEMLIMIT
+              value: 768MiB
             resources:
               requests:
                 cpu: 100m
