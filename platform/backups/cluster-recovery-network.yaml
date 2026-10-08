@@ -42,11 +42,20 @@ spec:
     ports:
     - protocol: TCP
       port: 443
-  - to:
-    - ipBlock:
-        cidr: 10.108.32.1/32
-    - ipBlock:
-        cidr: 100.65.14.185/32
-    ports:
-    - protocol: TCP
-      port: 443
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cluster-recovery-api
+  namespace: ops
+spec:
+  endpointSelector:
+    matchLabels:
+      app: platform-backup
+  egress:
+  - toEntities:
+    - kube-apiserver
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
