@@ -1,0 +1,4198 @@
+{
+  "observedAt": "2026-10-08T13:18:55.373416+00:00",
+  "context": "do-nyc3-omos-cloud",
+  "nodes": [
+    {
+      "name": "onemind-hub-core-v2-37phka",
+      "version": "v1.36.0",
+      "ready": true
+    },
+    {
+      "name": "onemind-hub-core-v2-37phke",
+      "version": "v1.36.0",
+      "ready": true
+    },
+    {
+      "name": "onemind-hub-core-v2-37phkg",
+      "version": "v1.36.0",
+      "ready": true
+    }
+  ],
+  "argo": [
+    {
+      "name": "app-of-apps",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-auth-helm",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-auth-infra",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-backstage",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-backups",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-clickhouse-operator",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-core",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-fedhub",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-kube",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-legacy",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-monitoring",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-n8n",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-nats",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-observability",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-omos",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-onetak",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-ops",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-redpanda-connect",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-takml",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-takserver",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-volsync",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-volume-backups",
+      "sync": "Synced",
+      "health": "Healthy"
+    },
+    {
+      "name": "platform-zeus-site",
+      "sync": "Synced",
+      "health": "Healthy"
+    }
+  ],
+  "originalVolumes": [
+    {
+      "namespace": "auth",
+      "pvc": "pgdata-authentik-postgres-0",
+      "source": "volume-86c342dd8d39",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-3cb53438-a2b2-4b46-8d2a-8fabb605535a",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "11917339-acca-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "backstage",
+      "pvc": "data-backstage-postgres-0",
+      "source": "volume-eb04d2fe651f",
+      "size": "10Gi",
+      "phase": "Bound",
+      "pv": "pvc-a5d2116b-0462-4998-949d-84011b1753d7",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "ea070ddf-c165-11f1-955c-3aab7d106f30",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "clickhouse",
+      "pvc": "data-storage-chi-onemind-onemind-0-0-0",
+      "source": "volume-ab4fbd87295d",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-3e10d1de-02bc-48f3-bb9f-6922f3a23851",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "8c56405b-78e3-11f1-b267-0a58ac128adf",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "hermes",
+      "pvc": "hermes-data",
+      "source": "volume-c96e219d2314",
+      "size": "25Gi",
+      "phase": "Bound",
+      "pv": "pvc-993e5ef7-9942-460b-801c-615eab02ae60",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "61aa7782-78b9-11f1-9870-0a58ac1463ec",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "matrix",
+      "pvc": "data-postgres-0",
+      "source": "volume-0af77b22c7a2",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-da722723-dc6a-45b2-88b8-41e92211e06d",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "5f491d12-bdc1-11f1-be1c-2a32b01d5747",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "matrix",
+      "pvc": "data-redis-0",
+      "source": "volume-d946eeb02a16",
+      "size": "10Gi",
+      "phase": "Bound",
+      "pv": "pvc-66c94a56-6a97-41d5-8697-68d3099e93d0",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "5eee6af0-bdc1-11f1-b0d9-9a56f5d022db",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "matrix",
+      "pvc": "synapse-data",
+      "source": "volume-197d8a9e297d",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-69d8e9ca-cd95-4bcc-91ac-13f7b85c55b5",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "5ec2f46e-bdc1-11f1-be1c-2a32b01d5747",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "monitoring",
+      "pvc": "storage-loki-0",
+      "source": "volume-0a77d3a320c8",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-9b479c28-7a8c-4947-99b4-e66a146420a4",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "d0163d18-77dc-11f1-85f7-0a58ac146b76",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "monitoring",
+      "pvc": "storage-tempo-0",
+      "source": "volume-bec6172775e6",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-4236680c-a00f-4d28-bdae-02a6391a033b",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "24036dde-81a4-11f1-a26e-8e429d629fff",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "n8n",
+      "pvc": "data-postgres-0",
+      "source": "volume-e0d2f2fea651",
+      "size": "10Gi",
+      "phase": "Bound",
+      "pv": "pvc-8f390b59-c2d6-44d6-8cc5-67060bffffb1",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "d0124ce1-c2a7-11f1-955c-3aab7d106f30",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "n8n",
+      "pvc": "n8n-data",
+      "source": "volume-b98c04b6228d",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-12359f51-22dc-488b-9f23-d422ca76bddc",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "cffb64d1-c2a7-11f1-8127-ce1b0970e6d7",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "nats",
+      "pvc": "nats-js-nats-0",
+      "source": "volume-cedf723508b6",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-8fd0f545-e8e9-4146-9401-a68b5c9fdcdd",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "bb397b78-77de-11f1-85f7-0a58ac146b76",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "nats",
+      "pvc": "nats-js-nats-1",
+      "source": "volume-f49adedad17d",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-bdbf0a53-0b08-40a4-95ea-98c23f7911ed",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "bbbf89f4-77de-11f1-b267-0a58ac128adf",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "nats",
+      "pvc": "nats-js-nats-2",
+      "source": "volume-bf2e7be6c2ff",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-79559c14-e5b1-4562-8ec5-2e579830cb54",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "bbc160c7-77de-11f1-b267-0a58ac128adf",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "nodeodm-data",
+      "source": "volume-5503f74cbdce",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-7b274959-3276-4660-a453-67ebe5cc9fc6",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "46d748ca-ac46-11f1-8108-3a4e8ce01f4c",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "nominatim-data",
+      "source": "volume-93cec0eff115",
+      "size": "100Gi",
+      "phase": "Bound",
+      "pv": "pvc-e7e5ba03-60a5-4314-97ba-09a6f3616ed9",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "cc44b926-ac44-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "onetak-geo-db-data",
+      "source": "volume-50fb74ff16c6",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-c6dc595f-2cdf-4fac-b1d1-444a9215704f",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "46818921-ac46-11f1-b57c-dac2302f7e2a",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "onetak-minio-data",
+      "source": "volume-b455a3425ad0",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-0f562455-9865-4148-a85b-3d253055b166",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "6dd82ab0-ac40-11f1-9df9-de39b00b0517",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "onetak-pgdata",
+      "source": "volume-76694cc119e9",
+      "size": "10Gi",
+      "phase": "Bound",
+      "pv": "pvc-8455b555-bb5b-4e7f-8329-bd49b3adbeba",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "6dc9a54c-ac40-11f1-8680-be969771ec3a",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "overpass-data",
+      "source": "volume-76d69bd17963",
+      "size": "100Gi",
+      "phase": "Bound",
+      "pv": "pvc-892f040e-c331-4d9f-b707-3b75126387dc",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "46efc634-ac46-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "tile38-data",
+      "source": "volume-adf3fcd472a7",
+      "size": "10Gi",
+      "phase": "Bound",
+      "pv": "pvc-a58cf389-ad4d-430e-a764-3d726092edca",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "cc480fd8-ac44-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "tileserver-tiles",
+      "source": "volume-e39c1f238e64",
+      "size": "80Gi",
+      "phase": "Bound",
+      "pv": "pvc-19a97240-8f31-47a9-a49f-a64fd2aa3c80",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "4640f986-ac46-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "valhalla-data",
+      "source": "volume-edfbac6aab24",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-a5164127-2fd7-4be7-8785-49ab6f51bc62",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "cc63f9c5-ac44-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "webodm-db-data",
+      "source": "volume-e0dfcd35f5a7",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-f9799980-c519-499c-b1c5-92a20b9e29e4",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "464cda6f-ac46-11f1-8680-be969771ec3a",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "onetak",
+      "pvc": "webodm-media",
+      "source": "volume-cafdaa0bfb4a",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-4d6fc786-b302-4700-973a-c482f0d081fa",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "4669379b-ac46-11f1-b57c-dac2302f7e2a",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "openclaw",
+      "pvc": "openclaw-home-pvc",
+      "source": "volume-708da2be53bb",
+      "size": "50Gi",
+      "phase": "Bound",
+      "pv": "pvc-73800437-0a89-499c-8916-5acf48d59ec4",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "4b7a51b8-ba22-11f1-a686-0a1bf3b2b938",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takml",
+      "pvc": "takml-db-data",
+      "source": "volume-a9d9abb1777a",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-51e65cf5-7168-44af-81ff-492042f3d525",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "fd763502-96a8-11f1-8ac3-5a82d57d1373",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takml",
+      "pvc": "takml-models",
+      "source": "volume-45a600854340",
+      "size": "2Gi",
+      "phase": "Bound",
+      "pv": "pvc-362a3ed4-c5d7-4572-b98b-c22c6837af73",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "f829aafc-96a8-11f1-a771-e66fff52f8cd",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takml",
+      "pvc": "takml-server-jar",
+      "source": "volume-0800db843c3a",
+      "size": "1Gi",
+      "phase": "Bound",
+      "pv": "pvc-cc752a8e-1d96-45b0-b9e2-0817df61c510",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "6d1f65b9-96cd-11f1-8ac3-5a82d57d1373",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takserver",
+      "pvc": "data-takserver-postgresql-0",
+      "source": "volume-cccc1afaa021",
+      "size": "20Gi",
+      "phase": "Bound",
+      "pv": "pvc-29cc27b2-dd5e-4fed-ad1f-94d6fd6674f1",
+      "storageClass": "do-block-storage-retain",
+      "volumeHandle": "7b054f1f-7841-11f1-af81-0a58ac128d11",
+      "reclaimPolicy": "Retain"
+    },
+    {
+      "namespace": "takserver",
+      "pvc": "ldap-config-tak-ldap-0",
+      "source": "volume-31bf7f4ddcf1",
+      "size": "1Gi",
+      "phase": "Bound",
+      "pv": "pvc-d14388eb-7680-483d-8198-447151aa3d14",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "a94d1040-aed8-11f1-9df9-de39b00b0517",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takserver",
+      "pvc": "ldap-data-tak-ldap-0",
+      "source": "volume-ca153ea90369",
+      "size": "1Gi",
+      "phase": "Bound",
+      "pv": "pvc-de870419-f658-4b80-8f46-5c13991cf6c0",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "a89b5de4-aed8-11f1-8108-3a4e8ce01f4c",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takserver",
+      "pvc": "mongo-data-fedhub-mongodb-0",
+      "source": "volume-b5898fcc79f1",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-14f3be3b-f2e9-4228-96ef-edd973abb70f",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "063ac1c3-ae7b-11f1-93d8-2a61c817cb77",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "takserver",
+      "pvc": "takserver-nats-js-takserver-nats-0",
+      "source": "volume-2b88c0eca294",
+      "size": "10Gi",
+      "phase": "Bound",
+      "pv": "pvc-649550e9-edc5-4ee4-a8aa-ccae5407de1b",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "7ba092ee-7841-11f1-9043-0a58ac146db4",
+      "reclaimPolicy": "Delete"
+    },
+    {
+      "namespace": "zeus-site",
+      "pvc": "zeus-site-postgres-pvc",
+      "source": "volume-5cc6336f5206",
+      "size": "5Gi",
+      "phase": "Bound",
+      "pv": "pvc-9f9d62d9-5dd8-41bc-b98c-b11fd297335e",
+      "storageClass": "do-block-storage",
+      "volumeHandle": "96fe4b59-bdc3-11f1-83db-c284a1a8e782",
+      "reclaimPolicy": "Delete"
+    }
+  ],
+  "pvcCount": 70,
+  "retainedSnapshots": [
+    {
+      "namespace": "auth",
+      "name": "readiness-20261008-86c342dd8d39",
+      "pvc": "pgdata-authentik-postgres-0",
+      "ready": true,
+      "content": "snapcontent-f8c24d82-ef2a-4289-a62d-d34eb740c7eb"
+    },
+    {
+      "namespace": "backstage",
+      "name": "readiness-20261008-eb04d2fe651f",
+      "pvc": "data-backstage-postgres-0",
+      "ready": true,
+      "content": "snapcontent-0334d584-93bd-487d-9f4a-2e702d4169e5"
+    },
+    {
+      "namespace": "clickhouse",
+      "name": "readiness-20261008-ab4fbd87295d",
+      "pvc": "data-storage-chi-onemind-onemind-0-0-0",
+      "ready": true,
+      "content": "snapcontent-023a7dc7-fb3c-4a06-9fb9-5048c1a07480"
+    },
+    {
+      "namespace": "hermes",
+      "name": "readiness-20261008-c96e219d2314",
+      "pvc": "hermes-data",
+      "ready": true,
+      "content": "snapcontent-e883681b-f7d1-4a21-967a-c5256f45d112"
+    },
+    {
+      "namespace": "matrix",
+      "name": "readiness-20261008-0af77b22c7a2",
+      "pvc": "data-postgres-0",
+      "ready": true,
+      "content": "snapcontent-186a7cfb-3a3c-4cbb-a7db-4d5abc7feaa9"
+    },
+    {
+      "namespace": "matrix",
+      "name": "readiness-20261008-197d8a9e297d",
+      "pvc": "synapse-data",
+      "ready": true,
+      "content": "snapcontent-1d7aa330-4e60-4114-9c49-bb4777fbb84c"
+    },
+    {
+      "namespace": "matrix",
+      "name": "readiness-20261008-d946eeb02a16",
+      "pvc": "data-redis-0",
+      "ready": true,
+      "content": "snapcontent-8d54e8b3-7d9a-4cac-a936-e5961c8a0729"
+    },
+    {
+      "namespace": "monitoring",
+      "name": "readiness-20261008-0a77d3a320c8",
+      "pvc": "storage-loki-0",
+      "ready": true,
+      "content": "snapcontent-c8b2c569-a7bb-4e51-903a-28f7fcd07038"
+    },
+    {
+      "namespace": "monitoring",
+      "name": "readiness-20261008-bec6172775e6",
+      "pvc": "storage-tempo-0",
+      "ready": true,
+      "content": "snapcontent-4f71e166-f2aa-40ca-ba95-8434f1521b20"
+    },
+    {
+      "namespace": "n8n",
+      "name": "readiness-20261008-b98c04b6228d",
+      "pvc": "n8n-data",
+      "ready": true,
+      "content": "snapcontent-46a65bf1-28e7-41b8-a671-ee3e24c925e4"
+    },
+    {
+      "namespace": "n8n",
+      "name": "readiness-20261008-e0d2f2fea651",
+      "pvc": "data-postgres-0",
+      "ready": true,
+      "content": "snapcontent-e53eb69e-92c2-4790-82af-81d4d930c626"
+    },
+    {
+      "namespace": "nats",
+      "name": "readiness-20261008-bf2e7be6c2ff",
+      "pvc": "nats-js-nats-2",
+      "ready": true,
+      "content": "snapcontent-0a6f3d8f-a1aa-499b-9ee7-dc19b4be6e5d"
+    },
+    {
+      "namespace": "nats",
+      "name": "readiness-20261008-cedf723508b6",
+      "pvc": "nats-js-nats-0",
+      "ready": true,
+      "content": "snapcontent-69a1ef06-644c-4245-9f76-dbd298e34bc7"
+    },
+    {
+      "namespace": "nats",
+      "name": "readiness-20261008-f49adedad17d",
+      "pvc": "nats-js-nats-1",
+      "ready": true,
+      "content": "snapcontent-5193ba25-f2bc-451a-9564-fd98bb4ae82f"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-50fb74ff16c6",
+      "pvc": "onetak-geo-db-data",
+      "ready": true,
+      "content": "snapcontent-6eff96d2-8c80-4fa8-be71-0bb38ea78f87"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-5503f74cbdce",
+      "pvc": "nodeodm-data",
+      "ready": true,
+      "content": "snapcontent-47c497b1-0fc3-47ae-ae28-b15049fff52c"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-76694cc119e9",
+      "pvc": "onetak-pgdata",
+      "ready": true,
+      "content": "snapcontent-0feaaf87-f2e5-4481-a512-bc92ef66218b"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-76d69bd17963",
+      "pvc": "overpass-data",
+      "ready": true,
+      "content": "snapcontent-0466b086-9e0a-480a-b09b-bca0c86a2876"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-93cec0eff115",
+      "pvc": "nominatim-data",
+      "ready": true,
+      "content": "snapcontent-a979b9fe-b018-43ff-9cb1-4d402462a344"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-adf3fcd472a7",
+      "pvc": "tile38-data",
+      "ready": true,
+      "content": "snapcontent-14d5331e-ed40-4ebf-9a5e-7d0de5312a74"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-b455a3425ad0",
+      "pvc": "onetak-minio-data",
+      "ready": true,
+      "content": "snapcontent-ca21bde9-e792-4934-ba8a-175578238fec"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-cafdaa0bfb4a",
+      "pvc": "webodm-media",
+      "ready": true,
+      "content": "snapcontent-9bbbfcfc-a430-43d0-9fcf-651eb2bb905a"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-e0dfcd35f5a7",
+      "pvc": "webodm-db-data",
+      "ready": true,
+      "content": "snapcontent-bee40bcf-e407-4eae-9c2b-2e9d0654b6ec"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-e39c1f238e64",
+      "pvc": "tileserver-tiles",
+      "ready": true,
+      "content": "snapcontent-469c8610-0ba8-49d6-bf4d-5c9845f9725c"
+    },
+    {
+      "namespace": "onetak",
+      "name": "readiness-20261008-edfbac6aab24",
+      "pvc": "valhalla-data",
+      "ready": true,
+      "content": "snapcontent-718fc22d-ce2d-48ce-9838-dcf8920c2156"
+    },
+    {
+      "namespace": "openclaw",
+      "name": "readiness-20261008-708da2be53bb",
+      "pvc": "openclaw-home-pvc",
+      "ready": true,
+      "content": "snapcontent-3defa617-4d41-4a18-95c4-a8cda60d9618"
+    },
+    {
+      "namespace": "takml",
+      "name": "readiness-20261008-0800db843c3a",
+      "pvc": "takml-server-jar",
+      "ready": true,
+      "content": "snapcontent-a3eadf18-8622-47f7-9bd3-03dae07958a4"
+    },
+    {
+      "namespace": "takml",
+      "name": "readiness-20261008-45a600854340",
+      "pvc": "takml-models",
+      "ready": true,
+      "content": "snapcontent-295e0bec-0b9c-4f86-9a08-285ce083aa15"
+    },
+    {
+      "namespace": "takml",
+      "name": "readiness-20261008-a9d9abb1777a",
+      "pvc": "takml-db-data",
+      "ready": true,
+      "content": "snapcontent-dbadeab3-fe13-4cd9-9f9f-156f5c9cc8f3"
+    },
+    {
+      "namespace": "takserver",
+      "name": "readiness-20261008-2b88c0eca294",
+      "pvc": "takserver-nats-js-takserver-nats-0",
+      "ready": true,
+      "content": "snapcontent-5eea72c9-b313-4d25-a25c-e9852ea9fb99"
+    },
+    {
+      "namespace": "takserver",
+      "name": "readiness-20261008-31bf7f4ddcf1",
+      "pvc": "ldap-config-tak-ldap-0",
+      "ready": true,
+      "content": "snapcontent-5addad57-9a7e-4e27-a88c-82f18911515e"
+    },
+    {
+      "namespace": "takserver",
+      "name": "readiness-20261008-b5898fcc79f1",
+      "pvc": "mongo-data-fedhub-mongodb-0",
+      "ready": true,
+      "content": "snapcontent-270d20d2-7ab7-4ad6-845f-48fb5b5d3355"
+    },
+    {
+      "namespace": "takserver",
+      "name": "readiness-20261008-ca153ea90369",
+      "pvc": "ldap-data-tak-ldap-0",
+      "ready": true,
+      "content": "snapcontent-668d5bb1-ad26-460f-b783-a3e984fc05b5"
+    },
+    {
+      "namespace": "takserver",
+      "name": "readiness-20261008-cccc1afaa021",
+      "pvc": "data-takserver-postgresql-0",
+      "ready": true,
+      "content": "snapcontent-4148a3b2-8ab5-42d7-89e1-a7dd31e3183b"
+    },
+    {
+      "namespace": "zeus-site",
+      "name": "readiness-20261008-5cc6336f5206",
+      "pvc": "zeus-site-postgres-pvc",
+      "ready": true,
+      "content": "snapcontent-e6ce20b5-2921-48a5-bdcd-cf82e46a8026"
+    }
+  ],
+  "volumeBackups": [
+    {
+      "namespace": "auth",
+      "name": "volume-86c342dd8d39",
+      "pvc": "pgdata-authentik-postgres-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T11:54:48Z",
+      "schedule": "0 0 * * *",
+      "nextSync": "2026-10-09T00:00:00Z"
+    },
+    {
+      "namespace": "backstage",
+      "name": "volume-eb04d2fe651f",
+      "pvc": "data-backstage-postgres-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:04:42Z",
+      "schedule": "20 0 * * *",
+      "nextSync": "2026-10-09T00:20:00Z"
+    },
+    {
+      "namespace": "clickhouse",
+      "name": "volume-ab4fbd87295d",
+      "pvc": "data-storage-chi-onemind-onemind-0-0-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:15:08Z",
+      "schedule": "40 0 * * *",
+      "nextSync": "2026-10-09T00:40:00Z"
+    },
+    {
+      "namespace": "hermes",
+      "name": "volume-c96e219d2314",
+      "pvc": "hermes-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:04:12Z",
+      "schedule": "0 1 * * *",
+      "nextSync": "2026-10-09T01:00:00Z"
+    },
+    {
+      "namespace": "matrix",
+      "name": "volume-0af77b22c7a2",
+      "pvc": "data-postgres-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:08:30Z",
+      "schedule": "20 1 * * *",
+      "nextSync": "2026-10-09T01:20:00Z"
+    },
+    {
+      "namespace": "matrix",
+      "name": "volume-197d8a9e297d",
+      "pvc": "synapse-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:08:25Z",
+      "schedule": "0 2 * * *",
+      "nextSync": "2026-10-09T02:00:00Z"
+    },
+    {
+      "namespace": "matrix",
+      "name": "volume-d946eeb02a16",
+      "pvc": "data-redis-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:08:44Z",
+      "schedule": "40 1 * * *",
+      "nextSync": "2026-10-09T01:40:00Z"
+    },
+    {
+      "namespace": "monitoring",
+      "name": "volume-0a77d3a320c8",
+      "pvc": "storage-loki-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:44:53Z",
+      "schedule": "20 2 * * *",
+      "nextSync": "2026-10-09T02:20:00Z"
+    },
+    {
+      "namespace": "monitoring",
+      "name": "volume-bec6172775e6",
+      "pvc": "storage-tempo-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:29:46Z",
+      "schedule": "40 2 * * *",
+      "nextSync": "2026-10-09T02:40:00Z"
+    },
+    {
+      "namespace": "n8n",
+      "name": "volume-b98c04b6228d",
+      "pvc": "n8n-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:04:14Z",
+      "schedule": "20 3 * * *",
+      "nextSync": "2026-10-09T03:20:00Z"
+    },
+    {
+      "namespace": "n8n",
+      "name": "volume-e0d2f2fea651",
+      "pvc": "data-postgres-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:04:14Z",
+      "schedule": "0 3 * * *",
+      "nextSync": "2026-10-09T03:00:00Z"
+    },
+    {
+      "namespace": "nats",
+      "name": "volume-bf2e7be6c2ff",
+      "pvc": "nats-js-nats-2",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:10:44Z",
+      "schedule": "20 4 * * *",
+      "nextSync": "2026-10-09T04:20:00Z"
+    },
+    {
+      "namespace": "nats",
+      "name": "volume-cedf723508b6",
+      "pvc": "nats-js-nats-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:10:32Z",
+      "schedule": "40 3 * * *",
+      "nextSync": "2026-10-09T03:40:00Z"
+    },
+    {
+      "namespace": "nats",
+      "name": "volume-f49adedad17d",
+      "pvc": "nats-js-nats-1",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:11:26Z",
+      "schedule": "0 4 * * *",
+      "nextSync": "2026-10-09T04:00:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-50fb74ff16c6",
+      "pvc": "onetak-geo-db-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:21:48Z",
+      "schedule": "20 5 * * *",
+      "nextSync": "2026-10-09T05:20:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-5503f74cbdce",
+      "pvc": "nodeodm-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:21:40Z",
+      "schedule": "40 4 * * *",
+      "nextSync": "2026-10-09T04:40:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-76694cc119e9",
+      "pvc": "onetak-pgdata",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:21:48Z",
+      "schedule": "0 6 * * *",
+      "nextSync": "2026-10-09T06:00:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-76d69bd17963",
+      "pvc": "overpass-data",
+      "result": "Successful",
+      "empty": true,
+      "lastSync": "2026-10-08T12:22:12Z",
+      "schedule": "20 6 * * *",
+      "nextSync": "2026-10-09T06:20:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-93cec0eff115",
+      "pvc": "nominatim-data",
+      "result": "Successful",
+      "empty": true,
+      "lastSync": "2026-10-08T12:22:03Z",
+      "schedule": "0 5 * * *",
+      "nextSync": "2026-10-09T05:00:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-adf3fcd472a7",
+      "pvc": "tile38-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:22:11Z",
+      "schedule": "40 6 * * *",
+      "nextSync": "2026-10-09T06:40:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-b455a3425ad0",
+      "pvc": "onetak-minio-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:22:26Z",
+      "schedule": "40 5 * * *",
+      "nextSync": "2026-10-09T05:40:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-cafdaa0bfb4a",
+      "pvc": "webodm-media",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:29:40Z",
+      "schedule": "0 8 * * *",
+      "nextSync": "2026-10-09T08:00:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-e0dfcd35f5a7",
+      "pvc": "webodm-db-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:30:05Z",
+      "schedule": "40 7 * * *",
+      "nextSync": "2026-10-09T07:40:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-e39c1f238e64",
+      "pvc": "tileserver-tiles",
+      "result": "Successful",
+      "empty": true,
+      "lastSync": "2026-10-08T12:30:03Z",
+      "schedule": "0 7 * * *",
+      "nextSync": "2026-10-09T07:00:00Z"
+    },
+    {
+      "namespace": "onetak",
+      "name": "volume-edfbac6aab24",
+      "pvc": "valhalla-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:57:37Z",
+      "schedule": "20 7 * * *",
+      "nextSync": "2026-10-09T07:20:00Z"
+    },
+    {
+      "namespace": "openclaw",
+      "name": "volume-708da2be53bb",
+      "pvc": "openclaw-home-pvc",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:30:06Z",
+      "schedule": "20 8 * * *",
+      "nextSync": "2026-10-09T08:20:00Z"
+    },
+    {
+      "namespace": "takml",
+      "name": "volume-0800db843c3a",
+      "pvc": "takml-server-jar",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:28:07Z",
+      "schedule": "20 9 * * *",
+      "nextSync": "2026-10-09T09:20:00Z"
+    },
+    {
+      "namespace": "takml",
+      "name": "volume-45a600854340",
+      "pvc": "takml-models",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:28:06Z",
+      "schedule": "0 9 * * *",
+      "nextSync": "2026-10-09T09:00:00Z"
+    },
+    {
+      "namespace": "takml",
+      "name": "volume-a9d9abb1777a",
+      "pvc": "takml-db-data",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:04:04Z",
+      "schedule": "40 8 * * *",
+      "nextSync": "2026-10-09T08:40:00Z"
+    },
+    {
+      "namespace": "takserver",
+      "name": "volume-2b88c0eca294",
+      "pvc": "takserver-nats-js-takserver-nats-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:28:00Z",
+      "schedule": "0 11 * * *",
+      "nextSync": "2026-10-09T11:00:00Z"
+    },
+    {
+      "namespace": "takserver",
+      "name": "volume-31bf7f4ddcf1",
+      "pvc": "ldap-config-tak-ldap-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:28:01Z",
+      "schedule": "0 10 * * *",
+      "nextSync": "2026-10-09T10:00:00Z"
+    },
+    {
+      "namespace": "takserver",
+      "name": "volume-b5898fcc79f1",
+      "pvc": "mongo-data-fedhub-mongodb-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:28:11Z",
+      "schedule": "40 10 * * *",
+      "nextSync": "2026-10-09T10:40:00Z"
+    },
+    {
+      "namespace": "takserver",
+      "name": "volume-ca153ea90369",
+      "pvc": "ldap-data-tak-ldap-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:28:22Z",
+      "schedule": "20 10 * * *",
+      "nextSync": "2026-10-09T10:20:00Z"
+    },
+    {
+      "namespace": "takserver",
+      "name": "volume-cccc1afaa021",
+      "pvc": "data-takserver-postgresql-0",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:32:44Z",
+      "schedule": "40 9 * * *",
+      "nextSync": "2026-10-09T09:40:00Z"
+    },
+    {
+      "namespace": "zeus-site",
+      "name": "volume-5cc6336f5206",
+      "pvc": "zeus-site-postgres-pvc",
+      "result": "Successful",
+      "empty": false,
+      "lastSync": "2026-10-08T12:03:57Z",
+      "schedule": "20 11 * * *",
+      "nextSync": "2026-10-09T11:20:00Z"
+    }
+  ],
+  "runningPodExceptions": [],
+  "controllers": [
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-applicationset-controller",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-dex-server",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-notifications-controller",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-redis",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-repo-server",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-server",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "auth",
+      "kind": "Deployment",
+      "name": "authentik-redis",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "auth",
+      "kind": "Deployment",
+      "name": "platform-auth-helm-authentik-server",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "auth",
+      "kind": "Deployment",
+      "name": "platform-auth-helm-authentik-worker",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "backstage",
+      "kind": "Deployment",
+      "name": "backstage",
+      "desired": 2,
+      "ready": 2
+    },
+    {
+      "namespace": "cert-manager",
+      "kind": "Deployment",
+      "name": "cert-manager",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "cert-manager",
+      "kind": "Deployment",
+      "name": "cert-manager-cainjector",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "cert-manager",
+      "kind": "Deployment",
+      "name": "cert-manager-webhook",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "cloudflare",
+      "kind": "Deployment",
+      "name": "cloudflared",
+      "desired": 0,
+      "ready": 0
+    },
+    {
+      "namespace": "github-runner",
+      "kind": "Deployment",
+      "name": "github-runner",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "hermes",
+      "kind": "Deployment",
+      "name": "hermes-legacy",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "ingress-nginx",
+      "kind": "Deployment",
+      "name": "ingress-nginx-controller",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "clickhouse-operator",
+      "desired": 0,
+      "ready": 0
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "coredns",
+      "desired": 2,
+      "ready": 2
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "hubble-relay",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "hubble-ui",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "konnectivity-agent",
+      "desired": 2,
+      "ready": 2
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "metrics-server",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "platform-clickhouse-operator",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "sealed-secrets-controller",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube",
+      "kind": "Deployment",
+      "name": "headlamp",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "kube",
+      "kind": "Deployment",
+      "name": "kubernetes-dashboard",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "matrix",
+      "kind": "Deployment",
+      "name": "element-web",
+      "desired": 3,
+      "ready": 3
+    },
+    {
+      "namespace": "matrix",
+      "kind": "Deployment",
+      "name": "synapse",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "loki-gateway",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "monitoring-grafana",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "monitoring-kube-prometheus-operator",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "monitoring-kube-state-metrics",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "n8n",
+      "kind": "Deployment",
+      "name": "n8n",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "agent-web-ui",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "agenttap",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "heynats",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nack",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-dashboard",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-metrics-scrape",
+      "desired": 0,
+      "ready": 0
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-surveyor",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-ui",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "feed-intel",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "feed-satellites",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "omos-mission-engine",
+      "desired": 0,
+      "ready": 0
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "omos-tak-projector",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "redpanda-connect",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "sink-clickhouse",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "maputnik",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "martin",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "nodeodm",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "nominatim",
+      "desired": 0,
+      "ready": 0
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-geo-db",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-media",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-minio",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-postgis",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "overpass",
+      "desired": 0,
+      "ready": 0
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "pg-featureserv",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "stac-api",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "stac-browser",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "tak-portal",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "tile38",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "tileserver-gl",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "valhalla",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "webodm",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "webodm-broker",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "webodm-db",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "openclaw",
+      "kind": "Deployment",
+      "name": "openclaw",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "ops",
+      "kind": "Deployment",
+      "name": "platform-volsync",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "Deployment",
+      "name": "operator",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takml",
+      "kind": "Deployment",
+      "name": "takml-db",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takml",
+      "kind": "Deployment",
+      "name": "takml-server",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takml",
+      "kind": "Deployment",
+      "name": "takml-vision-worker",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "fedhub",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "mumble-bridge",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "murmur",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "tak-lb-proxy",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "tak-nats-leaf",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-api",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-config",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-messaging",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-nats-box",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-plugins",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "zeus-site",
+      "kind": "Deployment",
+      "name": "zeus-site",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "zeus-site",
+      "kind": "Deployment",
+      "name": "zeus-site-postgres",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "argocd",
+      "kind": "StatefulSet",
+      "name": "argocd-application-controller",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "auth",
+      "kind": "StatefulSet",
+      "name": "authentik-postgres",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "backstage",
+      "kind": "StatefulSet",
+      "name": "backstage-postgres",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "clickhouse",
+      "kind": "StatefulSet",
+      "name": "chi-onemind-onemind-0-0",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "matrix",
+      "kind": "StatefulSet",
+      "name": "postgres",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "matrix",
+      "kind": "StatefulSet",
+      "name": "redis",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "alertmanager-monitoring-kube-prometheus-alertmanager",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "loki",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "prometheus-monitoring-kube-prometheus-prometheus",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "tempo",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "n8n",
+      "kind": "StatefulSet",
+      "name": "postgres",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "nats",
+      "kind": "StatefulSet",
+      "name": "nats",
+      "desired": 3,
+      "ready": 3
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "egress",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-agent-web-ui-l74d4",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-agenttap-8ddc6",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-argocd-slkzh",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-grafana-ksprn",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-headlamp-4qwkc",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-hermes-dashboard-6thbx",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-heynats-p5dmf",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-hubble-tw85d",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-kubernetes-dashboard-9r9fp",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-n8n-pmtds",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-nats-dashboard-242wv",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-nats-ui-d6rrg",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-dell-edge-qfrh9",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-dell-zeus-wsv6m",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-ha-edge-rlv6k",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-intel-zzn2k",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-mbp-hgq9w",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-nats-fs6r4",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-s24-44l4v",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-onemind-auth-4w5hk",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-onemind-preview-shtd7",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-openclaw-gateway-s7hcm",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "fedhub-mongodb",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "tak-ldap",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "takserver-ignite",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "takserver-nats",
+      "desired": 1,
+      "ready": 1
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "takserver-postgresql",
+      "desired": 1,
+      "ready": 1
+    }
+  ],
+  "natsPods": [
+    {
+      "name": "nats-0",
+      "node": "onemind-hub-core-v2-37phkg",
+      "restartCount": 0
+    },
+    {
+      "name": "nats-1",
+      "node": "onemind-hub-core-v2-37phke",
+      "restartCount": 0
+    },
+    {
+      "name": "nats-2",
+      "node": "onemind-hub-core-v2-37phka",
+      "restartCount": 0
+    }
+  ],
+  "volsyncMetricsTargets": [
+    {
+      "health": "up",
+      "job": "volsync"
+    }
+  ],
+  "backupAlertRules": [
+    {
+      "name": "ScheduledBackupOverdue",
+      "health": "ok",
+      "state": "inactive"
+    },
+    {
+      "name": "PortableVolumeBackupOutOfSync",
+      "health": "ok",
+      "state": "inactive"
+    },
+    {
+      "name": "VolSyncMetricsUnavailable",
+      "health": "ok",
+      "state": "inactive"
+    },
+    {
+      "name": "KubeletResidentMemoryHigh",
+      "health": "ok",
+      "state": "inactive"
+    }
+  ],
+  "metrics": {
+    "process_resident_memory_bytes{job=\"kubelet\"}": [
+      {
+        "metric": {
+          "__name__": "process_resident_memory_bytes",
+          "endpoint": "https-metrics",
+          "instance": "10.10.0.2:10250",
+          "job": "kubelet",
+          "metrics_path": "/metrics",
+          "namespace": "kube-system",
+          "node": "onemind-hub-core-v2-37phke",
+          "service": "monitoring-kube-prometheus-kubelet"
+        },
+        "value": [
+          1791465537.668,
+          "157786112"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "process_resident_memory_bytes",
+          "endpoint": "https-metrics",
+          "instance": "10.10.0.3:10250",
+          "job": "kubelet",
+          "metrics_path": "/metrics",
+          "namespace": "kube-system",
+          "node": "onemind-hub-core-v2-37phkg",
+          "service": "monitoring-kube-prometheus-kubelet"
+        },
+        "value": [
+          1791465537.668,
+          "166469632"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "process_resident_memory_bytes",
+          "endpoint": "https-metrics",
+          "instance": "10.10.0.4:10250",
+          "job": "kubelet",
+          "metrics_path": "/metrics",
+          "namespace": "kube-system",
+          "node": "onemind-hub-core-v2-37phka",
+          "service": "monitoring-kube-prometheus-kubelet"
+        },
+        "value": [
+          1791465537.668,
+          "195268608"
+        ]
+      }
+    ],
+    "count(volsync_volume_out_of_sync{role=\"source\"} == 1)": []
+  },
+  "resources": [
+    {
+      "node": "onemind-hub-core-v2-37phka",
+      "requestedCPUPercent": 65.8,
+      "requestedMemoryPercent": 94.0,
+      "workingSetMemoryPercent": 91.6,
+      "cpuUsagePercent": 16.5
+    },
+    {
+      "node": "onemind-hub-core-v2-37phke",
+      "requestedCPUPercent": 84.2,
+      "requestedMemoryPercent": 86.2,
+      "workingSetMemoryPercent": 45.8,
+      "cpuUsagePercent": 12.4
+    },
+    {
+      "node": "onemind-hub-core-v2-37phkg",
+      "requestedCPUPercent": 84.4,
+      "requestedMemoryPercent": 84.8,
+      "workingSetMemoryPercent": 76.6,
+      "cpuUsagePercent": 16.8
+    }
+  ],
+  "takLogicalRestore": {
+    "backup": "backups/takserver-postgres/20261008T103139Z-b33d58dd64fc4f249398bbd6f976894d/archive.tar.gz.aesgcm",
+    "kind": "postgres",
+    "restoreVerified": true,
+    "tables": 64
+  },
+  "authentikFilesystemRestore": {
+    "resticDatabaseBootVerified": true,
+    "tables": 230
+  },
+  "hermesFilesystemRestore": {
+    "resticFileRestoreVerified": true,
+    "referenceBinaryEquality": true,
+    "files": 319496
+  },
+  "clickhouseFilesystemRestore": {
+    "clickhouseResticBootVerified": true,
+    "tables": 9,
+    "rows": 74916246
+  },
+  "kubernetesArchive": {
+    "backup": "backups/cluster-recovery/20261008T115756Z-dc1e96dedeb54da599a3bb611fc6062c/archive.tar.gz.aesgcm",
+    "kind": "kubernetes",
+    "restoreVerified": false,
+    "secrets": 241,
+    "configmaps": 154,
+    "sealingKeys": 2,
+    "downloadDecryptEqualityVerified": true
+  },
+  "backstageMachineAccess": {
+    "unauthenticatedCatalog": 401,
+    "authenticatedBackupCatalog": 200,
+    "machineWriteDenied": 403
+  },
+  "natsStreams": [
+    {
+      "stream": "AGENTS",
+      "replicas": 3,
+      "messages": 4933,
+      "bytes": 951545,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "CMD",
+      "replicas": 3,
+      "messages": 9,
+      "bytes": 830,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "COT",
+      "replicas": 3,
+      "messages": 9244787,
+      "bytes": 4816981633,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "ENV",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "EVT",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "GEO",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "INTEL",
+      "replicas": 3,
+      "messages": 84902,
+      "bytes": 99915906,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_OVERWATCH_INTERCEPT",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_OVERWATCH_STATE",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_OVERWATCH_VIDEO",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_agent-caps",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_agent-config",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_agent-registry",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_device-registry",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_feed-config",
+      "replicas": 1,
+      "messages": 1,
+      "bytes": 68,
+      "leader": "nats-2",
+      "peers": []
+    },
+    {
+      "stream": "KV_fleet-state",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_geofences",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_mission-state",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_node-registry",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_om-config",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_om-meta-dedup",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_om-schema",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_om_ui_projections",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_projects",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_sys-health",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_task-index",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_task-notify",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_webhook-registry",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_world-state",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_zeus-context",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_zeus-focus",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "KV_zeus-presence",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "MISSION",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "SAAS",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "SYS",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "TEL",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-1",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-2",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "VOICE",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "WORLD",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    },
+    {
+      "stream": "ZEUS",
+      "replicas": 3,
+      "messages": 0,
+      "bytes": 0,
+      "leader": "nats-2",
+      "peers": [
+        {
+          "name": "nats-0",
+          "current": true,
+          "offline": null,
+          "lag": null
+        },
+        {
+          "name": "nats-1",
+          "current": true,
+          "offline": null,
+          "lag": null
+        }
+      ]
+    }
+  ],
+  "mirror": {
+    "context": "do-nyc3-omos-cloud",
+    "createdAt": "2026-10-08T13:15:37.822312+00:00",
+    "objects": 3103,
+    "encryptedGiB": 49.03,
+    "archiveChecksumsVerified": 10,
+    "repositories": [
+      "backups/restic/auth/pgdata-authentik-postgres-0",
+      "backups/restic/backstage/data-backstage-postgres-0",
+      "backups/restic/clickhouse/data-storage-chi-onemind-onemind-0-0-0",
+      "backups/restic/hermes/hermes-data",
+      "backups/restic/matrix/data-postgres-0",
+      "backups/restic/matrix/data-redis-0",
+      "backups/restic/matrix/synapse-data",
+      "backups/restic/monitoring/storage-loki-0",
+      "backups/restic/monitoring/storage-tempo-0",
+      "backups/restic/n8n/data-postgres-0",
+      "backups/restic/n8n/n8n-data",
+      "backups/restic/nats/nats-js-nats-0",
+      "backups/restic/nats/nats-js-nats-1",
+      "backups/restic/nats/nats-js-nats-2",
+      "backups/restic/onetak/nodeodm-data",
+      "backups/restic/onetak/onetak-geo-db-data",
+      "backups/restic/onetak/onetak-minio-data",
+      "backups/restic/onetak/onetak-pgdata",
+      "backups/restic/onetak/tile38-data",
+      "backups/restic/onetak/valhalla-data",
+      "backups/restic/onetak/webodm-db-data",
+      "backups/restic/onetak/webodm-media",
+      "backups/restic/openclaw/openclaw-home-pvc",
+      "backups/restic/takml/takml-db-data",
+      "backups/restic/takml/takml-models",
+      "backups/restic/takml/takml-server-jar",
+      "backups/restic/takserver/data-takserver-postgresql-0",
+      "backups/restic/takserver/ldap-config-tak-ldap-0",
+      "backups/restic/takserver/ldap-data-tak-ldap-0",
+      "backups/restic/takserver/mongo-data-fedhub-mongodb-0",
+      "backups/restic/takserver/takserver-nats-js-takserver-nats-0",
+      "backups/restic/zeus-site/zeus-site-postgres-pvc"
+    ],
+    "filesystemIntegrityVerified": true,
+    "confirmedEmptyVolumes": [
+      {
+        "namespace": "onetak",
+        "pvc": "overpass-data"
+      },
+      {
+        "namespace": "onetak",
+        "pvc": "nominatim-data"
+      },
+      {
+        "namespace": "onetak",
+        "pvc": "tileserver-tiles"
+      }
+    ],
+    "note": "Run restic check --read-data on each local repository; mirror equality alone is not an application restore."
+  },
+  "offlineIntegrity": {
+    "verifiedAt": "2026-10-08T13:17:22.967426+00:00",
+    "results": [
+      {
+        "repository": "backups/restic/auth/pgdata-authentik-postgres-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/backstage/data-backstage-postgres-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/clickhouse/data-storage-chi-onemind-onemind-0-0-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/hermes/hermes-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/matrix/data-postgres-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/matrix/data-redis-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/matrix/synapse-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/monitoring/storage-loki-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/monitoring/storage-tempo-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/n8n/data-postgres-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/n8n/n8n-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/nats/nats-js-nats-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/nats/nats-js-nats-1",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/nats/nats-js-nats-2",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/nodeodm-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/onetak-geo-db-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/onetak-minio-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/onetak-pgdata",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/tile38-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/valhalla-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/webodm-db-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/onetak/webodm-media",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/openclaw/openclaw-home-pvc",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takml/takml-db-data",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takml/takml-models",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takml/takml-server-jar",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takserver/data-takserver-postgresql-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takserver/ldap-config-tak-ldap-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takserver/ldap-data-tak-ldap-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takserver/mongo-data-fedhub-mongodb-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/takserver/takserver-nats-js-takserver-nats-0",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      },
+      {
+        "repository": "backups/restic/zeus-site/zeus-site-postgres-pvc",
+        "fullEncryptedDataIntegrityVerified": true,
+        "exitCode": 0
+      }
+    ]
+  },
+  "repositoryRecovery": {
+    "commit": "fd82787fed08c98aa0e50d42d998c4225b43ebb0",
+    "archive": "repository-main-fd82787fed08c98aa0e50d42d998c4225b43ebb0.tar.gz.aesgcm",
+    "sha256": "6313723e97c5cb16810a4f7944e3730f51bb8f128ec3b7c83db3217a5d9f1abb",
+    "authenticatedDecryptionVerified": true,
+    "entries": 1689,
+    "includesHistory": false
+  },
+  "ownership": [
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-applicationset-controller",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-dex-server",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-notifications-controller",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-redis",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-repo-server",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "argocd",
+      "kind": "Deployment",
+      "name": "argocd-server",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "auth",
+      "kind": "Deployment",
+      "name": "authentik-redis",
+      "argoTracking": "platform-auth-infra:apps/Deployment:auth/authentik-redis",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "auth",
+      "kind": "Deployment",
+      "name": "platform-auth-helm-authentik-server",
+      "argoTracking": "platform-auth-helm:apps/Deployment:auth/platform-auth-helm-authentik-server",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "auth",
+      "kind": "Deployment",
+      "name": "platform-auth-helm-authentik-worker",
+      "argoTracking": "platform-auth-helm:apps/Deployment:auth/platform-auth-helm-authentik-worker",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "backstage",
+      "kind": "Deployment",
+      "name": "backstage",
+      "argoTracking": "platform-backstage:apps/Deployment:backstage/backstage",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "cert-manager",
+      "kind": "Deployment",
+      "name": "cert-manager",
+      "argoTracking": null,
+      "helmRelease": "cert-manager",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "cert-manager",
+      "kind": "Deployment",
+      "name": "cert-manager-cainjector",
+      "argoTracking": null,
+      "helmRelease": "cert-manager",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "cert-manager",
+      "kind": "Deployment",
+      "name": "cert-manager-webhook",
+      "argoTracking": null,
+      "helmRelease": "cert-manager",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "cloudflare",
+      "kind": "Deployment",
+      "name": "cloudflared",
+      "argoTracking": "platform-core:apps/Deployment:cloudflare/cloudflared",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "github-runner",
+      "kind": "Deployment",
+      "name": "github-runner",
+      "argoTracking": "platform-core:apps/Deployment:github-runner/github-runner",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "hermes",
+      "kind": "Deployment",
+      "name": "hermes-legacy",
+      "argoTracking": "platform-legacy:apps/Deployment:hermes/hermes-legacy",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "ingress-nginx",
+      "kind": "Deployment",
+      "name": "ingress-nginx-controller",
+      "argoTracking": null,
+      "helmRelease": "ingress-nginx",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "clickhouse-operator",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "coredns",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "hubble-relay",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "hubble-ui",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "konnectivity-agent",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "metrics-server",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "platform-clickhouse-operator",
+      "argoTracking": "platform-clickhouse-operator:apps/Deployment:kube-system/platform-clickhouse-operator",
+      "helmRelease": "platform-clickhouse-operator",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube-system",
+      "kind": "Deployment",
+      "name": "sealed-secrets-controller",
+      "argoTracking": "platform-core:apps/Deployment:kube-system/sealed-secrets-controller",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube",
+      "kind": "Deployment",
+      "name": "headlamp",
+      "argoTracking": "platform-kube:apps/Deployment:kube/headlamp",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "kube",
+      "kind": "Deployment",
+      "name": "kubernetes-dashboard",
+      "argoTracking": "platform-kube:apps/Deployment:kube/kubernetes-dashboard",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "matrix",
+      "kind": "Deployment",
+      "name": "element-web",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "matrix",
+      "kind": "Deployment",
+      "name": "synapse",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "loki-gateway",
+      "argoTracking": null,
+      "helmRelease": "loki",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "monitoring-grafana",
+      "argoTracking": null,
+      "helmRelease": "monitoring",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "monitoring-kube-prometheus-operator",
+      "argoTracking": null,
+      "helmRelease": "monitoring",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "Deployment",
+      "name": "monitoring-kube-state-metrics",
+      "argoTracking": null,
+      "helmRelease": "monitoring",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "n8n",
+      "kind": "Deployment",
+      "name": "n8n",
+      "argoTracking": "platform-n8n:apps/Deployment:n8n/n8n",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "agent-web-ui",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "agenttap",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "heynats",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nack",
+      "argoTracking": null,
+      "helmRelease": "nack",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-dashboard",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-metrics-scrape",
+      "argoTracking": "platform-monitoring:apps/Deployment:nats/nats-metrics-scrape",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-surveyor",
+      "argoTracking": "platform-monitoring:apps/Deployment:nats/nats-surveyor",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "Deployment",
+      "name": "nats-ui",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "feed-intel",
+      "argoTracking": "platform-omos:apps/Deployment:omos/feed-intel",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "feed-satellites",
+      "argoTracking": "platform-omos:apps/Deployment:omos/feed-satellites",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "omos-mission-engine",
+      "argoTracking": "platform-omos:apps/Deployment:omos/omos-mission-engine",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "omos-tak-projector",
+      "argoTracking": "platform-omos:apps/Deployment:omos/omos-tak-projector",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "redpanda-connect",
+      "argoTracking": "platform-redpanda-connect:apps/Deployment:omos/redpanda-connect",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "omos",
+      "kind": "Deployment",
+      "name": "sink-clickhouse",
+      "argoTracking": "platform-omos:apps/Deployment:omos/sink-clickhouse",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "maputnik",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/maputnik",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "martin",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/martin",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "nodeodm",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/nodeodm",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "nominatim",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/nominatim",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-geo-db",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/onetak-geo-db",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-media",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/onetak-media",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-minio",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/onetak-minio",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "onetak-postgis",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/onetak-postgis",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "overpass",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/overpass",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "pg-featureserv",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/pg-featureserv",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "stac-api",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/stac-api",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "stac-browser",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/stac-browser",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "tak-portal",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/tak-portal",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "tile38",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/tile38",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "tileserver-gl",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/tileserver-gl",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "valhalla",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/valhalla",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "webodm",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/webodm",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "webodm-broker",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/webodm-broker",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "onetak",
+      "kind": "Deployment",
+      "name": "webodm-db",
+      "argoTracking": "platform-onetak:apps/Deployment:onetak/webodm-db",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "openclaw",
+      "kind": "Deployment",
+      "name": "openclaw",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "ops",
+      "kind": "Deployment",
+      "name": "platform-volsync",
+      "argoTracking": "platform-volsync:apps/Deployment:ops/platform-volsync",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "Deployment",
+      "name": "operator",
+      "argoTracking": null,
+      "helmRelease": "tailscale-operator",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takml",
+      "kind": "Deployment",
+      "name": "takml-db",
+      "argoTracking": "platform-takml:apps/Deployment:takml/takml-db",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takml",
+      "kind": "Deployment",
+      "name": "takml-server",
+      "argoTracking": "platform-takml:apps/Deployment:takml/takml-server",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takml",
+      "kind": "Deployment",
+      "name": "takml-vision-worker",
+      "argoTracking": "platform-takml:apps/Deployment:takml/takml-vision-worker",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "fedhub",
+      "argoTracking": "platform-fedhub:apps/Deployment:takserver/fedhub",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "mumble-bridge",
+      "argoTracking": "platform-takserver:apps/Deployment:takserver/mumble-bridge",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "murmur",
+      "argoTracking": "platform-takserver:apps/Deployment:takserver/murmur",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "tak-lb-proxy",
+      "argoTracking": "platform-takserver:apps/Deployment:takserver/tak-lb-proxy",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "tak-nats-leaf",
+      "argoTracking": "platform-takserver:apps/Deployment:takserver/tak-nats-leaf",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-api",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-config",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-messaging",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-nats-box",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "Deployment",
+      "name": "takserver-plugins",
+      "argoTracking": "platform-takserver:apps/Deployment:takserver/takserver-plugins",
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "zeus-site",
+      "kind": "Deployment",
+      "name": "zeus-site",
+      "argoTracking": "platform-zeus-site:apps/Deployment:zeus-site/zeus-site",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "zeus-site",
+      "kind": "Deployment",
+      "name": "zeus-site-postgres",
+      "argoTracking": "platform-zeus-site:apps/Deployment:zeus-site/zeus-site-postgres",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "argocd",
+      "kind": "StatefulSet",
+      "name": "argocd-application-controller",
+      "argoTracking": null,
+      "helmRelease": "argocd",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "auth",
+      "kind": "StatefulSet",
+      "name": "authentik-postgres",
+      "argoTracking": "platform-auth-infra:apps/StatefulSet:auth/authentik-postgres",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "backstage",
+      "kind": "StatefulSet",
+      "name": "backstage-postgres",
+      "argoTracking": "platform-backstage:apps/StatefulSet:backstage/backstage-postgres",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "clickhouse",
+      "kind": "StatefulSet",
+      "name": "chi-onemind-onemind-0-0",
+      "argoTracking": "platform-observability:clickhouse.altinity.com/ClickHouseInstallation:clickhouse/onemind",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "matrix",
+      "kind": "StatefulSet",
+      "name": "postgres",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "matrix",
+      "kind": "StatefulSet",
+      "name": "redis",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "alertmanager-monitoring-kube-prometheus-alertmanager",
+      "argoTracking": null,
+      "helmRelease": "monitoring",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "loki",
+      "argoTracking": null,
+      "helmRelease": "loki",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "prometheus-monitoring-kube-prometheus-prometheus",
+      "argoTracking": null,
+      "helmRelease": "monitoring",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "monitoring",
+      "kind": "StatefulSet",
+      "name": "tempo",
+      "argoTracking": null,
+      "helmRelease": "tempo",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "n8n",
+      "kind": "StatefulSet",
+      "name": "postgres",
+      "argoTracking": "platform-n8n:apps/StatefulSet:n8n/postgres",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "nats",
+      "kind": "StatefulSet",
+      "name": "nats",
+      "argoTracking": "platform-nats:apps/StatefulSet:nats/nats",
+      "helmRelease": "nats",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "egress",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-agent-web-ui-l74d4",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-agenttap-8ddc6",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-argocd-slkzh",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-grafana-ksprn",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-headlamp-4qwkc",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-hermes-dashboard-6thbx",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-heynats-p5dmf",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-hubble-tw85d",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-kubernetes-dashboard-9r9fp",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-n8n-pmtds",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-nats-dashboard-242wv",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-nats-ui-d6rrg",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-dell-edge-qfrh9",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-dell-zeus-wsv6m",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-ha-edge-rlv6k",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-intel-zzn2k",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-mbp-hgq9w",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-nats-fs6r4",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-omos-s24-44l4v",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-onemind-auth-4w5hk",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-onemind-preview-shtd7",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "tailscale",
+      "kind": "StatefulSet",
+      "name": "ts-openclaw-gateway-s7hcm",
+      "argoTracking": null,
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "fedhub-mongodb",
+      "argoTracking": "platform-fedhub:apps/StatefulSet:takserver/fedhub-mongodb",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "tak-ldap",
+      "argoTracking": "platform-takserver:apps/StatefulSet:takserver/tak-ldap",
+      "helmRelease": null,
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "takserver-ignite",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "takserver-nats",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    },
+    {
+      "namespace": "takserver",
+      "kind": "StatefulSet",
+      "name": "takserver-postgresql",
+      "argoTracking": null,
+      "helmRelease": "takserver",
+      "fieldManagers": []
+    }
+  ]
+}

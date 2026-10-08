@@ -52,3 +52,34 @@ restore templates; `docs/operations` owns observed evidence and recovery procedu
 Keep these stable paths while reorganizing service internals. Update Argo and
 Kustomize references in the same PR as any move. Protected local inventories and
 cleartext recovery keys must not enter Git.
+
+## Independent recovery inputs
+
+The protected recovery copy is at `~/OneMindRecovery/2026-10-08`; encryption keys
+remain separately under `~/.config/onemind/recovery`. Consult mirror-manifest.json
+and offline-integrity.json for the copied repository set and actual full-data
+integrity checks. This laptop copy is independent of DigitalOcean, but loss of the
+laptop still requires another physical/offsite copy of data AND keys.
+
+`platform/backups/tools/mirror.py` downloads verified encrypted archives and Restic
+repositories without deleting source data; capacity and free-space guards are
+mandatory. `tools/decrypt.py` handles the current archive and two older formats
+without a running cluster. `tools/export_helm.py` extracts deployed Helm release
+inputs from the authenticated Kubernetes archive. Eleven release inputs were
+recovered locally. Extracted values/manifests can contain credentials: keep them
+private and out of Git. Existing Helm manifests can predate later GitOps overrides;
+review NATS sizing, TAK quotas, provider storage and ingress before applying them.
+
+No new home storage overlay can be verified before the disks and CSI driver are
+chosen. Recovery instructions and portable backups are preparation; they are not
+evidence of a successfully migrated or WAN-independent production system.
+
+A private AES-GCM archive of the tracked main-branch repository was also created
+and authenticated locally, including mission memory, Argo paths and recovery tools.
+repository-recovery.json records its exact commit and checksum; it contains no
+Git history. Keep a copy of the archive decryption tool available independently
+to avoid needing GitHub merely to open the recovery bundle.
+
+A disconnected-WAN drill also needs required container images and Helm charts
+available locally, plus usable DNS, PKI and identity. No air-gapped registry/chart
+cache or disconnected application exercise was established by this review.

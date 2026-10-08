@@ -3,8 +3,10 @@
 The backup service is Git-owned under `platform/backups`; portable filesystem
 exports are under `platform/backups/volsync`. A successful job is not sufficient:
 logical archives write a verified marker only after downloading, authenticating
-and restoring into an isolated process. Paused filesystem sources have no completed
-backup coverage until an actual export succeeds.
+and restoring into an isolated process. All 35 original volume checks completed
+on October 8 (32 repositories and three empty volumes); their daily schedules
+are staggered. Kubernetes-secret recovery verifies decryption/equality, not an
+application restore. Monitor the next actual scheduled runs.
 
 Review `docs/operations/cluster-readiness-2026-10-08.md` for observed evidence and
 remaining gaps, and `docs/operations/home-migration.md` for migration acceptance.
