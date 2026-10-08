@@ -7,6 +7,9 @@ import os
 from pathlib import Path
 import re
 import socket
+import ssl
+import urllib.parse
+import urllib.request
 import subprocess
 import tarfile
 import tempfile
@@ -174,9 +177,66 @@ def nats_restore(directory, metadata):
                 server.wait()
 
 
+def kubernetes_backup(directory):
+    """Read-only recovery export. Never copy server metadata or emit secret data."""
+    token_root = Path(os.environ.get("KUBE_TOKEN_DIR", "/var/run/secrets/kubernetes.io/serviceaccount"))
+    token = (token_root / "token").read_text().strip()
+    context = ssl.create_default_context(cafile=str(token_root / "ca.crt"))
+    host = os.environ["KUBERNETES_SERVICE_HOST"]
+    port = os.environ.get("KUBERNETES_SERVICE_PORT_HTTPS", "443")
+    records = []
+    counts = {}
+    for resource, kind in (("secrets", "Secret"), ("configmaps", "ConfigMap")):
+        continuation = ""
+        count = 0
+        while True:
+            query = urllib.parse.urlencode({"limit": 500, "continue": continuation})
+            request = urllib.request.Request(f"https://{host}:{port}/api/v1/{resource}?{query}",
+                                             headers={"Authorization": "Bearer " + token})
+            with urllib.request.urlopen(request, context=context, timeout=60) as response:
+                page = json.load(response)
+            for item in page["items"]:
+                metadata = item["metadata"]
+                record = {"apiVersion": "v1", "kind": kind,
+                          "metadata": {"name": metadata["name"], "namespace": metadata["namespace"]}}
+                if metadata.get("labels"):
+                    record["metadata"]["labels"] = metadata["labels"]
+                for field in ("type", "data", "binaryData", "immutable"):
+                    if field in item:
+                        record[field] = item[field]
+                records.append(record)
+                count += 1
+            continuation = page.get("metadata", {}).get("continue", "")
+            if not continuation:
+                break
+        counts[resource] = count
+    sealing_keys = sum(item["kind"] == "Secret" and item["metadata"].get("labels", {}).get(
+        "sealedsecrets.bitnami.com/sealed-secrets-key") == "active" for item in records)
+    if not counts["secrets"] or not sealing_keys:
+        raise RuntimeError("Recovery export lacks secrets or active sealing keys")
+    payload = json.dumps({"format": "OneMindClusterRecoveryV2", "items": records}, sort_keys=True).encode()
+    (directory / "recovery.json").write_bytes(payload)
+    return {"kind": "kubernetes", **counts, "sealingKeys": sealing_keys,
+            "payloadSha256": hashlib.sha256(payload).hexdigest()}
+
+
+def kubernetes_verify(directory, metadata):
+    payload = (directory / "recovery.json").read_bytes()
+    if hashlib.sha256(payload).hexdigest() != metadata["payloadSha256"]:
+        raise RuntimeError("Recovery export equality mismatch")
+    record = json.loads(payload)
+    if record["format"] != "OneMindClusterRecoveryV2":
+        raise RuntimeError("Unknown recovery export")
+    counts = {"secrets": sum(item["kind"] == "Secret" for item in record["items"]),
+              "configmaps": sum(item["kind"] == "ConfigMap" for item in record["items"])}
+    if any(counts[key] != metadata[key] for key in counts):
+        raise RuntimeError("Recovery resource count mismatch")
+    return {**counts, "sealingKeys": metadata["sealingKeys"], "downloadDecryptEqualityVerified": True}
+
+
 def run():
     kind = os.environ["BACKUP_KIND"]
-    if kind not in ("postgres", "postgres-owned", "nats"):
+    if kind not in ("postgres", "postgres-owned", "nats", "kubernetes"):
         raise ValueError("Unknown backup kind")
     key = base64.b64decode(os.environ["BACKUP_ENCRYPTION_KEY"], validate=True)
     if len(key) != 32:
@@ -190,7 +250,10 @@ def run():
         root = Path(temporary)
         data = root / "data"
         data.mkdir()
-        metadata = nats_backup(data) if kind == "nats" else postgres_backup(data, owned=kind == "postgres-owned")
+        if kind == "kubernetes":
+            metadata = kubernetes_backup(data)
+        else:
+            metadata = nats_backup(data) if kind == "nats" else postgres_backup(data, owned=kind == "postgres-owned")
         (data / "manifest.json").write_text(json.dumps(metadata))
         archive = root / "archive.tar.gz"
         with tarfile.open(archive, "w:gz") as tar:
@@ -214,11 +277,14 @@ def run():
         with tarfile.open(verified, "r:gz") as tar:
             tar.extractall(restored, filter="data")
         metadata = json.loads((restored / "data" / "manifest.json").read_text())
-        result = nats_restore(restored / "data", metadata) if kind == "nats" else postgres_restore(restored / "data", metadata)
+        if kind == "kubernetes":
+            result = kubernetes_verify(restored / "data", metadata)
+        else:
+            result = nats_restore(restored / "data", metadata) if kind == "nats" else postgres_restore(restored / "data", metadata)
         # This marker is written only after download, authentication and real restore.
         client.put_object(Bucket=bucket, Key=object_key + ".verified.json",
                           Body=json.dumps({"kind": kind, "sha256": digest(remote), "restore": result}).encode())
-        print(json.dumps({"backup": object_key, "kind": kind, "restoreVerified": True, **result}))
+        print(json.dumps({"backup": object_key, "kind": kind, "restoreVerified": kind != "kubernetes", **result}))
 
 
 if __name__ == "__main__":
