@@ -2519,3 +2519,35 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: lingbot-map
+  title: LingBot-Map
+  description: Planned streaming 3D reconstruction from video and images
+  tags:
+    - geospatial
+    - 3d-reconstruction
+    - computer-vision
+    - drones
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://github.com/Robbyant/lingbot-map
+    onemind.io/launcher-category: Geospatial
+    onemind.io/documented-status: Planned
+    onemind.io/hosting: planned
+    onemind.io/documented-purpose: Streaming 3D reconstruction with a browser viewer
+    onemind.io/source-repository: https://github.com/Robbyant/lingbot-map
+  links:
+    - url: https://github.com/Robbyant/lingbot-map
+      title: Open application
+      icon: github
+    - url: https://github.com/Robbyant/lingbot-map#installation
+      title: Installation guide
+      icon: docs
+spec:
+  type: machine-learning-model
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: geospatial
