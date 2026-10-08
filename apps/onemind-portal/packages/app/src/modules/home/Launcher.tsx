@@ -51,7 +51,7 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
   return <Box className="onemind-app-card" style={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${accent.base}${dark?'66':'44'}`, borderTop:`3px solid ${accent.base}`, borderRadius: 16, background: `linear-gradient(135deg,${accent.base}${dark?'25':'0f'},${theme.palette.background.paper})`, minWidth: 0 }}>
     <Link href={app.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${app.title}`} style={{ display: 'flex', gap: compact ? 8 : 12, padding: compact ? 12 : 16, flex: 1, minWidth: 0, textDecoration: 'none', color: theme.palette.text.primary }}>
       <Avatar variant="rounded" style={{ background: `linear-gradient(135deg,${accent.base},${accent.base}cc)`, color: '#fff', flexShrink: 0, fontSize: compact ? 13 : 15, width: compact ? 32 : 40, height: compact ? 32 : 40, fontWeight: 700 }}>{abbreviation(app)}</Avatar>
-      <Box style={{ minWidth: 0 }}><Typography variant="subtitle2" style={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{app.title} ↗</Typography>
+      <Box style={{ minWidth: 0 }}><Typography variant="subtitle2" style={{ fontWeight: 700, overflowWrap: 'break-word' }}>{app.title} ↗</Typography>
         <Typography variant="caption" color="textSecondary" display="block">{compact ? app.groupTitle : app.description}</Typography>
         {!compact && <Typography variant="caption" color="textSecondary" display="block">{app.groupTitle}</Typography>}
       </Box>
@@ -59,7 +59,7 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
     <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:starred?(dark?'#ffcf68':'#926400'):dark?'#afbdcf':'#64748b' }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
   </Box>;
 }
-export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 };
+export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 12 };
 
 export function QuickAccess() {
   const searchId=useId();
