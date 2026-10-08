@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name | dump }}
+  title: ${{ values.title | dump }}
+  description: ${{ values.reason | dump }}
+  annotations:
+    onemind.io/launcher-category: ${{ values.category | dump }}
+    onemind.io/hosting: ${{ values.hosting | dump }}
+  links:
+    - title: Open application
+      url: ${{ values.url | dump }}
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: ${{ values.owner | dump }}

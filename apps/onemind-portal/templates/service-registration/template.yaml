@@ -1,0 +1,124 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: onemind-service-registration
+  title: Add shared OneMind service
+  description: Create a Git-owned service descriptor in a draft PR. After merge,
+    register its main-branch URL with Catalog Import. Home discovers registered
+    services automatically.
+spec:
+  owner: group:default/onemind-admins
+  type: website
+  parameters:
+    - title: OneMind app onboarding proposal
+      required:
+        - name
+        - url
+        - hosting
+        - title
+        - category
+        - owner
+      properties:
+        name:
+          title: Proposal name
+          type: string
+          pattern: ^[a-z][a-z0-9-]{2,39}$
+        url:
+          title: Canonical HTTPS app URL
+          type: string
+          pattern: ^https://[^\s"'<>`\\]+$
+          maxLength: 2000
+          description: Use the stable application URL, without tracking or temporary
+            session credentials.
+        hosting:
+          title: Hosting model
+          type: string
+          enum:
+            - external-provider
+            - private-mesh
+            - self-hosted
+          default: external-provider
+        title:
+          title: Display name
+          type: string
+          minLength: 1
+          maxLength: 100
+        category:
+          title: Home category
+          type: string
+          minLength: 1
+          maxLength: 60
+          default: Services
+        owner:
+          title: Accountable group
+          type: string
+          default: group:default/onemind-admins
+          pattern: ^group:[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$
+    - title: Review information
+      required:
+        - reason
+        - reviewer
+      properties:
+        reason:
+          title: Purpose and expected outcome
+          type: string
+          minLength: 10
+          maxLength: 1500
+          ui:widget: textarea
+        reviewer:
+          title: Reviewer / accountable owner
+          type: string
+          minLength: 3
+          maxLength: 100
+          description: Human review remains mandatory; this field does not assign or
+            notify anyone.
+    - title: GitHub access
+      required:
+        - githubToken
+      properties:
+        githubToken:
+          title: Fine-grained GitHub token
+          description: Restrict to onemindos/omos, Contents and Pull requests write, with
+            a short expiry. Never put credentials in proposal fields.
+          type: string
+          ui:field: Secret
+  steps:
+    - id: render
+      name: Prepare review package
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          url: ${{ parameters.url }}
+          hosting: ${{ parameters.hosting }}
+          reason: ${{ parameters.reason }}
+          reviewer: ${{ parameters.reviewer }}
+          title: ${{ parameters.title }}
+          category: ${{ parameters.category }}
+          owner: ${{ parameters.owner }}
+    - id: publish
+      name: Create or update draft PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?owner=onemindos&repo=omos
+        branchName: codex/service-${{ parameters.name }}
+        targetBranchName: main
+        title: "Add OneMind service: ${{ parameters.title }}"
+        description: Review the descriptor. After merging, register its main-branch URL
+          through Catalog Import. No account provisioning or workload
+          deployment.
+        sourcePath: .
+        targetPath: catalog/services/${{ parameters.name }}
+        draft: true
+        update: true
+        token: ${{ secrets.githubToken }}
+  output:
+    links:
+      - title: Review draft pull request
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Register descriptor after merge
+        url: https://onemind-preview.tail717ba0.ts.net/catalog-import
+      - title: Descriptor (after merge)
+        url: https://github.com/onemindos/omos/blob/main/catalog/services/${{
+          parameters.name }}/catalog-info.yaml

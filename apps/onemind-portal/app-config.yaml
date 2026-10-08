@@ -106,6 +106,10 @@ catalog:
     - allow: [Component, System, API, Resource, Location]
   locations:
     - type: file
+      target: ../../templates/service-registration/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
       target: ../../templates/service/template.yaml
       rules:
         - allow: [Template]
