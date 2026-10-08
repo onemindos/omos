@@ -38,3 +38,11 @@ backups against a local S3 emulator before publishing. Kubernetes adoption and
 actual production restore checks are separate deployment steps. Keep backups of
 all other databases, files, identity and sealing keys in the recovery inventory;
 this image alone does not provide complete cluster backup coverage.
+
+`BACKUP_KIND=postgres-owned` discovers all non-template databases owned by the
+connected application role and restores each into the isolated sidecar. Backstage
+uses this mode because its plugins own separate databases; an individual plugin
+may legitimately have no tables. The complete set must contain application tables
+before verification succeeds. Owned-database archives record a manifest mapping
+names to hashed dump filenames. Roles and grants still come from deployment secrets
+and bootstrap configuration. Dumps use compression level 1 to reduce backup CPU.

@@ -12,6 +12,19 @@ spec.loader.exec_module(backup)
 
 
 class IntegrityTests(unittest.TestCase):
+    def test_owned_database_discovery_refuses_empty_backup(self):
+        with patch.object(backup, "command", return_value=b""):
+            with self.assertRaisesRegex(RuntimeError, "empty owned-database"):
+                backup.postgres_backup(Path("/tmp/fake"), owned=True)
+
+    def test_owned_restore_accepts_empty_plugins_but_not_empty_platform(self):
+        metadata = {"databases": [{"file": "catalog.dump"}, {"file": "unused-plugin.dump"}]}
+        with patch.object(backup, "postgres_restore_one", side_effect=[{"tables": 12}, {"tables": 0}]):
+            self.assertEqual(backup.postgres_restore(Path("/tmp/fake"), metadata), {"databases": 2, "tables": 12})
+        with patch.object(backup, "postgres_restore_one", return_value={"tables": 0}):
+            with self.assertRaisesRegex(RuntimeError, "no application tables"):
+                backup.postgres_restore(Path("/tmp/fake"), metadata)
+
     def test_large_archive_round_trip(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
