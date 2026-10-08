@@ -1,0 +1,92 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: onemind-data
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  instances: 3
+  imagePullSecrets:
+  - name: ghcr
+  storage:
+    size: 40Gi
+    storageClass: do-block-storage-retain
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      cpu: '2'
+      memory: 4Gi
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: preferred
+    nodeSelector:
+      onemind.io/compute-role: ecosystem
+  bootstrap:
+    initdb:
+      database: onemind
+      owner: onemind
+      secret:
+        name: db-onemind
+  managed:
+    roles:
+    - name: onemind
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-onemind
+    - name: dapr_workflows
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-dapr-workflows
+    - name: litellm
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-litellm
+    - name: openfga
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-openfga
+    - name: langfuse
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-langfuse
+    - name: kagent
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-kagent
+  postgresql:
+    shared_preload_libraries:
+    - age
+    parameters:
+      max_connections: '150'
+      shared_buffers: 256MB
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: onemind-backups
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ImageCatalog
+    name: onemind-postgres
+    major: 16

@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ImageCatalog
+metadata:
+  name: onemind-postgres
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+spec:
+  images:
+  - major: 16
+    image: ghcr.io/onemindos/onemind-postgres:sha-0065f1991b58f009e49176630f1b45837d0451ae@sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d
