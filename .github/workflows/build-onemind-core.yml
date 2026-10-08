@@ -1,7 +1,7 @@
 name: Build OneMind Core
 on:
   push:
-    branches: [main, 'codex/onemind-cpu-services', 'codex/onemind-cpu-applications']
+    branches: [main, 'codex/onemind-cpu-services', 'codex/onemind-cpu-applications', 'codex/onemind-cpu-release']
     paths:
       - services/onemind-core/**
       - services/onemind-postgres/**

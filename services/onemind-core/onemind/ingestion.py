@@ -3,9 +3,26 @@ import asyncio
 import json
 import os
 import hashlib
+import time
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import nats
 from . import store
 from .capabilities import cluster_observations
+
+state = {"database": False, "bus": False, "cluster": 0.0}
+
+
+class Health(BaseHTTPRequestHandler):
+    def do_GET(self):
+        ready = state["database"] and state["bus"] and time.monotonic() - state["cluster"] < 120
+        self.send_response(200 if ready else 503)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps({"ready": ready}).encode())
+
+    def log_message(self, *args):
+        pass
 
 
 def project_cluster():
@@ -17,13 +34,18 @@ def project_cluster():
                                  "kind": "kubernetes-" + group.rstrip("s"),
                                  "name": row["name"], "source": "kubernetes/" + group,
                                  "properties": row})
+    if not data["unavailable"]:
+        state["cluster"] = time.monotonic()
 
 
 async def run():
+    server = HTTPServer(("0.0.0.0", 8081), Health)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
     await asyncio.to_thread(store.pool.open, wait=True)
     while True:
         try:
             await asyncio.to_thread(store.objects, 1)
+            state["database"] = True
             break
         except Exception:
             await asyncio.sleep(5)
@@ -65,11 +87,13 @@ async def run():
                 for subject in ["tel.fleet.>", "evt.world.>", "evt.tak.cot.>"]:
                     await nc.subscribe(subject, cb=receive, pending_msgs_limit=1000,
                                        pending_bytes_limit=16 * 1024 * 1024)
+                state["bus"] = True
                 while nc.is_connected:
                     await asyncio.sleep(5)
             except Exception:
                 await asyncio.sleep(5)
             finally:
+                state["bus"] = False
                 if nc:
                     await nc.close()
 
