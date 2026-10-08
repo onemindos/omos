@@ -71,7 +71,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
         </Box>)}
       </Box>
     </Box>)}
-    {!matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); }}>Reset filters</Button></Box>}
+    {loaded && !error && !matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); }}>Reset filters</Button></Box>}
   </Box>;
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};

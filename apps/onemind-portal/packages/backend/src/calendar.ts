@@ -131,7 +131,11 @@ export async function calendarSummary(): Promise<Summary> {
       const events = value.events
         .map((event: any, index: number) => ({
           id: createHash('sha256')
-            .update(String(event.uid ?? index))
+            .update(
+              String(event.uid ?? index) +
+                ':' +
+                String(event.dateandtime?.start ?? event.start ?? 'unknown'),
+            )
             .digest('hex')
             .slice(0, 20),
           title:
