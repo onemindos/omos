@@ -1,6 +1,7 @@
 """App-owned operational state; external records retain their source authority."""
 import json
 import os
+import uuid
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
@@ -31,6 +32,12 @@ CREATE TABLE IF NOT EXISTS action_audit (
   actor text NOT NULL, action text NOT NULL, target text,
   mission_id text, recorded_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE TABLE IF NOT EXISTS event_outbox (
+  id text PRIMARY KEY, subject text NOT NULL, payload jsonb NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(), published_at timestamptz
+);
+CREATE UNIQUE INDEX IF NOT EXISTS single_agent_dispatch
+  ON action_audit(mission_id) WHERE action='agent-dispatch';
 """
 
 
@@ -78,6 +85,7 @@ def create_mission(mid, actor, key, request_hash, spec):
           VALUES(%s,%s,%s,%s,%s) ON CONFLICT(actor,idempotency_key) DO NOTHING RETURNING *""",
                            (mid, actor, key, request_hash, Jsonb(spec))).fetchone()
         if row:
+            enqueue_event(conn, mid, actor, "requested")
             return row, True
         return conn.execute("SELECT * FROM missions WHERE actor=%s AND idempotency_key=%s",
                             (actor, key)).fetchone(), False
@@ -96,10 +104,39 @@ def mark_scheduled(mid):
 
 def set_state(mid, state, result=None, error=None):
     with pool.connection() as conn:
-        conn.execute("UPDATE missions SET state=%s,result=%s,error=%s,updated_at=now() WHERE id=%s "
-                     "AND (state!='cancelled' OR %s='cancelled')",
+        row = conn.execute("UPDATE missions SET state=%s,result=%s,error=%s,updated_at=now() WHERE id=%s "
+                     "AND (state!='cancelled' OR %s='cancelled') AND state!=%s RETURNING actor",
                      (state, Jsonb(result, dumps=lambda value: json.dumps(value, default=str))
-                      if result is not None else None, error, mid, state))
+                      if result is not None else None, error, mid, state, state)).fetchone()
+        if row:
+            enqueue_event(conn, mid, row["actor"], state)
+
+
+def enqueue_event(conn, mid, actor, state):
+    event_id = str(uuid.uuid4())
+    conn.execute("INSERT INTO event_outbox(id,subject,payload) VALUES(%s,%s,%s)",
+                 (event_id, "evt.so.mission." + ("started" if state == "running" else state),
+                  Jsonb({"schema_version": 1, "event_id": event_id,
+                         "source_id": "onemind-core", "mission_id": mid,
+                         "actor": actor, "state": state})))
+
+
+def pending_events():
+    with pool.connection() as conn:
+        return conn.execute("SELECT * FROM event_outbox WHERE published_at IS NULL "
+                            "ORDER BY created_at LIMIT 20").fetchall()
+
+
+def event_sent(event_id):
+    with pool.connection() as conn:
+        conn.execute("UPDATE event_outbox SET published_at=now() WHERE id=%s", (event_id,))
+
+
+def claim_dispatch(actor, target, mid):
+    with pool.connection() as conn:
+        return conn.execute("INSERT INTO action_audit(actor,action,target,mission_id) "
+                            "VALUES(%s,'agent-dispatch',%s,%s) ON CONFLICT DO NOTHING RETURNING id",
+                            (actor, target, mid)).fetchone() is not None
 
 
 def dispatched(mid):

@@ -28,6 +28,13 @@ def test_read_credential_cannot_mutate_world(client):
     assert response.status_code == 403
 
 
+def test_operator_cannot_relabel_an_external_projection(client, monkeypatch):
+    monkeypatch.setattr(store, "upsert_object", lambda *args: pytest.fail("Projection must not be overwritten"))
+    response = client.post("/objects", headers=UI,
+                           json={"id": "source:kubernetes/nodes/cluster/test", "kind": "asset", "name": "Forged status"})
+    assert response.status_code == 403
+
+
 def test_gateway_requires_asserted_user_identity(client):
     assert client.get("/capabilities", headers={"Authorization": "Bearer test-ui-gateway"}).status_code == 403
 

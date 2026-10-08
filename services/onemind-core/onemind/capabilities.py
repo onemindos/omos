@@ -113,7 +113,8 @@ def execute(spec, mission_id, actor):
         return {"answer": model_summary(spec["prompt"], data), "evidence": data}
     if kind == "delegate-agent":
         # Once dispatched, an ambiguous outcome must not prompt the agent again automatically.
-        store.audit(actor, "agent-dispatch", spec["target"], mission_id)
+        if not store.claim_dispatch(actor, spec["target"], mission_id):
+            raise RuntimeError("This mission has already dispatched external agent work")
         return asyncio.run(agents_and_call(spec["target"], spec["prompt"]))
     namespace, name = spec["target"].split("/", 1)
     if (namespace, name) not in ALLOWED_RESTARTS:

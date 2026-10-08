@@ -91,14 +91,19 @@ async def lifespan(app):
     from .workflows import runtime
     await asyncio.to_thread(runtime.start)
     task = asyncio.create_task(dispatch_pending())
+    from .events import publish_outbox
+    events = asyncio.create_task(publish_outbox())
     app.state.ready = True
     try:
         yield
     finally:
         app.state.ready = False
         task.cancel()
+        events.cancel()
         with contextlib.suppress(asyncio.CancelledError):
             await task
+        with contextlib.suppress(asyncio.CancelledError):
+            await events
         await asyncio.to_thread(runtime.shutdown)
         store.pool.close()
 
@@ -128,6 +133,8 @@ def objects(limit: int = Query(default=200, ge=1, le=500), kind: str | None = No
 
 @app.post("/objects")
 def upsert_object(inp: ObjectInput, p=Depends(operator)):
+    if inp.source != "onemind" or inp.id.startswith("source:"):
+        raise HTTPException(403, "External source projections are maintained by their ingestion adapter")
     row = store.upsert_object(inp.model_dump())
     store.audit(p["actor"], "object-upsert", inp.id)
     return row
