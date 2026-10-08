@@ -72,6 +72,9 @@ class IntegrityTests(unittest.TestCase):
 
         def command(args, env=None):
             calls.append(args)
+            self.assertEqual(env["PGHOST"], "127.0.0.1")
+            self.assertNotIn("PGPASSWORD", env)
+            self.assertNotIn("PGDATABASE", env)
             if args[0] == "pg_restore":
                 raise RuntimeError("restore failed")
             return b""

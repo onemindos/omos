@@ -82,20 +82,24 @@ def postgres_backup(directory):
 
 
 def postgres_restore(directory, metadata):
-    # Restore only into a unique temporary database; never into the source DB.
+    # A separate loopback-only sidecar supplies restore storage and extensions.
+    # Never consume production PGHOST, PGHOSTADDR, PGPASSWORD or PGDATABASE here.
+    env = {k: v for k, v in os.environ.items() if not k.startswith("PG")}
+    env.update(PGHOST="127.0.0.1", PGPORT=os.environ.get("PG_RESTORE_PORT", "15432"),
+               PGUSER="postgres", PGCONNECT_TIMEOUT="15")
     name = "onemind_restore_" + uuid.uuid4().hex
-    command(["createdb", "--maintenance-db=postgres", name])
+    command(["createdb", "--maintenance-db=postgres", name], env=env)
     try:
         command(["pg_restore", "--exit-on-error", "--no-owner", "--no-privileges",
-                 "--dbname", name, str(directory / "database.dump")])
+                 "--dbname", name, str(directory / "database.dump")], env=env)
         tables = int(command(["psql", "--dbname", name, "-At", "-v", "ON_ERROR_STOP=1",
                               "-c", "SELECT count(*) FROM information_schema.tables "
-                              "WHERE table_schema NOT IN ('pg_catalog','information_schema')"]))
+                              "WHERE table_schema NOT IN ('pg_catalog','information_schema')"], env=env))
         if tables < 1:
             raise RuntimeError("Restored database has no application tables")
         return {"tables": tables}
     finally:
-        command(["dropdb", "--maintenance-db=postgres", "--if-exists", name])
+        command(["dropdb", "--maintenance-db=postgres", "--if-exists", name], env=env)
 
 
 def nats_backup(directory):

@@ -4,7 +4,7 @@ set -euo pipefail
 backup_image="${1:-platform-backup:test}"
 test_dir="$(mktemp -d)"
 cleanup() {
-  docker rm -f onemind-backup-test-pg onemind-backup-test-nats >/dev/null 2>&1 || true
+  docker rm -f onemind-backup-test-pg onemind-backup-test-restore onemind-backup-test-nats >/dev/null 2>&1 || true
   if [[ -n "${moto_pid:-}" ]]; then kill "$moto_pid" || true; fi
   rm -rf "$test_dir"
 }
@@ -37,10 +37,17 @@ for ((attempt=1; attempt<=60; attempt++)); do
 done
 docker exec onemind-backup-test-pg psql -U postgres -d fixture -v ON_ERROR_STOP=1 \
   -c 'CREATE TABLE fixture(id integer primary key); INSERT INTO fixture VALUES (1),(2);' >/dev/null
+docker run -d --name onemind-backup-test-restore -p 127.0.0.1:15433:5432 \
+  -e POSTGRES_HOST_AUTH_METHOD=trust \
+  postgres:15-alpine@sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81 >/dev/null
+for ((attempt=1; attempt<=60; attempt++)); do
+  if docker exec onemind-backup-test-restore pg_isready -U postgres >/dev/null; then break; fi
+  sleep 1
+done
 docker run --rm --network host --env-file "$test_dir/common.env" \
   -e BACKUP_KIND=postgres -e BACKUP_PREFIX=tests/postgres \
   -e PGHOST=127.0.0.1 -e PGPORT=15432 -e PGUSER=postgres -e PGPASSWORD=synthetic \
-  -e PGDATABASE=fixture "$backup_image"
+  -e PGDATABASE=fixture -e PG_RESTORE_PORT=15433 "$backup_image"
 docker run -d --name onemind-backup-test-nats -p 127.0.0.1:15222:4222 \
   nats:2.14.2-alpine@sha256:952d157e28d5394a211229bd57a7b37ff9f184e58e2c8486a08fa909fd254e32 \
   -js --user fixture --pass synthetic >/dev/null

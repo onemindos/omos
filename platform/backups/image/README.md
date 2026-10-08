@@ -13,7 +13,9 @@ archives retain their separate format and associated-data value.
 
 Every run downloads the uploaded object, compares SHA-256, authenticates/decrypts
 it, and performs a real restore. PostgreSQL uses a unique temporary database on
-the configured server and drops it afterward; source data is never overwritten.
+a separate loopback-only sidecar and drops it afterward. Source data and source
+database disk capacity are never consumed by the restore check. The sidecar must
+listen on port 15432 (or `PG_RESTORE_PORT`) with the required extensions installed.
 NATS starts a loopback-only disposable JetStream server without production
 credentials and restores each stream with one replica. A `.verified.json` marker
 is uploaded only after all checks pass. Jobs need enough temporary disk for the
