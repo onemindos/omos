@@ -64,7 +64,8 @@ spec:
 # NOTE: JAR is loaded from the takml-server-jar PVC.
 # On first deploy after a cluster wipe, copy the JAR into the PVC:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \
-#     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],"containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'  # yamllint disable-line rule:line-length
+#     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],
+#       "containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
 #   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
 #   kubectl delete pod jar-loader -n takml
 apiVersion: apps/v1
