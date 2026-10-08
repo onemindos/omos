@@ -487,8 +487,9 @@ spec:
     moverPodLabels:
       app: platform-volume-backup
     moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
+      runAsUser: 70
+      runAsGroup: 70
+      runAsNonRoot: true
       seccompProfile:
         type: RuntimeDefault
     moverResources:
@@ -528,8 +529,9 @@ spec:
     moverPodLabels:
       app: platform-volume-backup
     moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
       seccompProfile:
         type: RuntimeDefault
     moverResources:
