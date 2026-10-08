@@ -1,0 +1,31 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: onemind-backups
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+spec:
+  retentionPolicy: 30d
+  configuration:
+    destinationPath: s3://onemind-backups/cnpg/onemind-data
+    endpointURL: https://nyc3.digitaloceanspaces.com
+    s3Credentials:
+      accessKeyId:
+        name: cnpg-backups
+        key: access-key
+      secretAccessKey:
+        name: cnpg-backups
+        key: secret-key
+    wal:
+      compression: gzip
+    data:
+      compression: gzip
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: '1'
+        memory: 512Mi

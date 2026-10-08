@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: onemind-data
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: onemind-data
+  podMetricsEndpoints:
+  - port: metrics

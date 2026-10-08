@@ -78,5 +78,15 @@
     "url": "https://github.com/spiffe/helm-charts-hardened/releases/download/spire-0.30.3/spire-0.30.3.tgz",
     "namespace": "spire-system",
     "sha256": "9e52f523dfb755b0d64b245be04d4085b0cff893aa939270a89b78e56ac62f6f"
+  },
+  {
+    "name": "barman",
+    "repo": "https://cloudnative-pg.github.io/charts",
+    "chart": "plugin-barman-cloud",
+    "version": "0.8.1",
+    "appVersion": "v0.15.1",
+    "url": "https://github.com/cloudnative-pg/charts/releases/download/plugin-barman-cloud-v0.8.1/plugin-barman-cloud-0.8.1.tgz",
+    "namespace": "cnpg-system",
+    "sha256": "9ad0b9e56da2777a1a0269feaf7215e18297e9c8b5730e04acb27b5d462e9456"
   }
 ]
