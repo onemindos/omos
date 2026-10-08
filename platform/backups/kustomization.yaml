@@ -17,3 +17,4 @@ resources:
 - sealed/zeus-site-ghcr.yaml
 - sealed/backstage-platform-backup-credentials.yaml
 - network.yaml
+- snapshots-20261008.yaml
