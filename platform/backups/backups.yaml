@@ -277,3 +277,4 @@ spec:
                 path: ca.crt
   timeZone: Etc/UTC
   startingDeadlineSeconds: 3600
+  suspend: true
