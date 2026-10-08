@@ -387,7 +387,7 @@ spec:
   sourcePVC: storage-loki-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 2 * * *
   restic:
     repository: volume-0a77d3a320c8-restic
     copyMethod: Snapshot
@@ -428,7 +428,7 @@ spec:
   sourcePVC: storage-tempo-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 2 * * *
   restic:
     repository: volume-bec6172775e6-restic
     copyMethod: Snapshot
@@ -963,7 +963,7 @@ spec:
   sourcePVC: tileserver-tiles
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 7 * * *
   restic:
     repository: volume-e39c1f238e64-restic
     copyMethod: Snapshot
@@ -1004,7 +1004,7 @@ spec:
   sourcePVC: valhalla-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 7 * * *
   restic:
     repository: volume-edfbac6aab24-restic
     copyMethod: Snapshot
@@ -1045,7 +1045,7 @@ spec:
   sourcePVC: webodm-db-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 7 * * *
   restic:
     repository: volume-e0dfcd35f5a7-restic
     copyMethod: Snapshot
@@ -1086,7 +1086,7 @@ spec:
   sourcePVC: webodm-media
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 8 * * *
   restic:
     repository: volume-cafdaa0bfb4a-restic
     copyMethod: Snapshot
@@ -1127,7 +1127,7 @@ spec:
   sourcePVC: openclaw-home-pvc
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 8 * * *
   restic:
     repository: volume-708da2be53bb-restic
     copyMethod: Snapshot
@@ -1209,7 +1209,7 @@ spec:
   sourcePVC: takml-models
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 9 * * *
   restic:
     repository: volume-45a600854340-restic
     copyMethod: Snapshot
@@ -1250,7 +1250,7 @@ spec:
   sourcePVC: takml-server-jar
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 9 * * *
   restic:
     repository: volume-0800db843c3a-restic
     copyMethod: Snapshot
@@ -1291,7 +1291,7 @@ spec:
   sourcePVC: data-takserver-postgresql-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 9 * * *
   restic:
     repository: volume-cccc1afaa021-restic
     copyMethod: Snapshot
@@ -1332,7 +1332,7 @@ spec:
   sourcePVC: ldap-config-tak-ldap-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 10 * * *
   restic:
     repository: volume-31bf7f4ddcf1-restic
     copyMethod: Snapshot
@@ -1373,7 +1373,7 @@ spec:
   sourcePVC: ldap-data-tak-ldap-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 10 * * *
   restic:
     repository: volume-ca153ea90369-restic
     copyMethod: Snapshot
@@ -1414,7 +1414,7 @@ spec:
   sourcePVC: mongo-data-fedhub-mongodb-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 10 * * *
   restic:
     repository: volume-b5898fcc79f1-restic
     copyMethod: Snapshot
@@ -1455,7 +1455,7 @@ spec:
   sourcePVC: takserver-nats-js-takserver-nats-0
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 11 * * *
   restic:
     repository: volume-2b88c0eca294-restic
     copyMethod: Snapshot
