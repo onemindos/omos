@@ -11,7 +11,7 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
   const [customize,setCustomize]=useState(false);
   const gridConfig=useMemo(()=>defaultConfig?.map(item=>({component:item.component,x:item.column,y:item.row,width:item.width,height:item.height,movable:item.movable,deletable:item.deletable,resizable:item.resizable})),[defaultConfig]);
   const widget=(name:string)=>widgets.find(item=>item.name===name)?.component;
-  const utilities=['HomePageWorldClock','HomePageRecentlyVisited','HomePageStarredEntities'];
+  const utilities=['HomePageWorldClock','HomePageRecentlyVisited','HomePageMostVisited'];
   return <Content className="onemind-home-content"><Box className="onemind-home-layout">
     <Box className="onemind-home-toolbar">
       <Typography variant="overline">ONE MIND · HOME</Typography>
