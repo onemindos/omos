@@ -33,7 +33,7 @@ docker run -d --name onemind-backup-test-pg -p 127.0.0.1:15432:5432 \
   -e POSTGRES_PASSWORD=synthetic -e POSTGRES_DB=fixture \
   "$postgres_test_image" >/dev/null
 for ((attempt=1; attempt<=60; attempt++)); do
-  if docker exec onemind-backup-test-pg pg_isready -U postgres >/dev/null; then break; fi
+  if docker exec onemind-backup-test-pg pg_isready -h 127.0.0.1 -U postgres >/dev/null; then break; fi
   sleep 1
 done
 docker exec onemind-backup-test-pg psql -U postgres -d fixture -v ON_ERROR_STOP=1 \
@@ -42,7 +42,7 @@ docker run -d --name onemind-backup-test-restore -p 127.0.0.1:15433:5432 \
   -e POSTGRES_HOST_AUTH_METHOD=trust \
   "$postgres_test_image" >/dev/null
 for ((attempt=1; attempt<=60; attempt++)); do
-  if docker exec onemind-backup-test-restore pg_isready -U postgres >/dev/null; then break; fi
+  if docker exec onemind-backup-test-restore pg_isready -h 127.0.0.1 -U postgres >/dev/null; then break; fi
   sleep 1
 done
 docker run --rm --network host --env-file "$test_dir/common.env" \
