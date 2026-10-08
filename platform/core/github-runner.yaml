@@ -33,10 +33,6 @@ spec:
               value: self-hosted,linux,amd64,zeus-v2
             - name: RUNNER_WORKDIR
               value: /tmp/runner/work
-            - name: EPHEMERAL
-              value: "false"
-            - name: DISABLE_AUTO_UPDATE
-              value: "false"
             - name: DOCKER_HOST
               value: tcp://localhost:2375
           resources:
