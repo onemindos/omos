@@ -22,6 +22,7 @@ search:
 
 backend:
   csp:
+    frame-src: ["'self'", "https://grafana.tail717ba0.ts.net"]
     connect-src: ["'self'", 'https://api.github.com']
     img-src: ["'self'", 'data:', 'https://avatars.githubusercontent.com']
   database:
