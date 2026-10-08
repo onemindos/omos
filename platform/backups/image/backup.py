@@ -75,13 +75,39 @@ def decrypt(source, target, key):
         raise
 
 
-def postgres_backup(directory):
+def postgres_backup(directory, owned=False):
+    if owned:
+        databases = command([
+            "psql", "--dbname", "postgres", "-At", "-v", "ON_ERROR_STOP=1", "-c",
+            "SELECT datname FROM pg_database WHERE datdba=(SELECT oid FROM pg_roles "
+            "WHERE rolname=current_user) AND NOT datistemplate ORDER BY datname",
+        ]).decode().splitlines()
+        if not databases:
+            raise RuntimeError("Refusing an empty owned-database backup")
+        entries = []
+        for database in databases:
+            filename = hashlib.sha256(database.encode()).hexdigest() + ".dump"
+            command(["pg_dump", "--format=custom", "--compress=1", "--file",
+                     str(directory / filename), "--dbname", database])
+            entries.append({"database": database, "file": filename})
+        return {"kind": "postgres", "databases": entries}
     database = os.environ["PGDATABASE"]
-    command(["pg_dump", "--format=custom", "--file", str(directory / "database.dump"), database])
+    command(["pg_dump", "--format=custom", "--compress=1", "--file", str(directory / "database.dump"), database])
     return {"kind": "postgres", "database": database}
 
 
 def postgres_restore(directory, metadata):
+    if "databases" in metadata:
+        results = [postgres_restore_one(directory / entry["file"], require_tables=False)
+                   for entry in metadata["databases"]]
+        tables = sum(result["tables"] for result in results)
+        if not results or tables < 1:
+            raise RuntimeError("Owned-database restore has no application tables")
+        return {"databases": len(results), "tables": tables}
+    return postgres_restore_one(directory / "database.dump")
+
+
+def postgres_restore_one(dump, require_tables=True):
     # A separate loopback-only sidecar supplies restore storage and extensions.
     # Never consume production PGHOST, PGHOSTADDR, PGPASSWORD or PGDATABASE here.
     env = {k: v for k, v in os.environ.items() if not k.startswith("PG")}
@@ -91,11 +117,11 @@ def postgres_restore(directory, metadata):
     command(["createdb", "--maintenance-db=postgres", name], env=env)
     try:
         command(["pg_restore", "--exit-on-error", "--no-owner", "--no-privileges",
-                 "--dbname", name, str(directory / "database.dump")], env=env)
+                 "--dbname", name, str(dump)], env=env)
         tables = int(command(["psql", "--dbname", name, "-At", "-v", "ON_ERROR_STOP=1",
                               "-c", "SELECT count(*) FROM information_schema.tables "
                               "WHERE table_schema NOT IN ('pg_catalog','information_schema')"], env=env))
-        if tables < 1:
+        if require_tables and tables < 1:
             raise RuntimeError("Restored database has no application tables")
         return {"tables": tables}
     finally:
@@ -150,7 +176,7 @@ def nats_restore(directory, metadata):
 
 def run():
     kind = os.environ["BACKUP_KIND"]
-    if kind not in ("postgres", "nats"):
+    if kind not in ("postgres", "postgres-owned", "nats"):
         raise ValueError("Unknown backup kind")
     key = base64.b64decode(os.environ["BACKUP_ENCRYPTION_KEY"], validate=True)
     if len(key) != 32:
@@ -164,7 +190,7 @@ def run():
         root = Path(temporary)
         data = root / "data"
         data.mkdir()
-        metadata = postgres_backup(data) if kind == "postgres" else nats_backup(data)
+        metadata = nats_backup(data) if kind == "nats" else postgres_backup(data, owned=kind == "postgres-owned")
         (data / "manifest.json").write_text(json.dumps(metadata))
         archive = root / "archive.tar.gz"
         with tarfile.open(archive, "w:gz") as tar:
@@ -188,7 +214,7 @@ def run():
         with tarfile.open(verified, "r:gz") as tar:
             tar.extractall(restored, filter="data")
         metadata = json.loads((restored / "data" / "manifest.json").read_text())
-        result = postgres_restore(restored / "data", metadata) if kind == "postgres" else nats_restore(restored / "data", metadata)
+        result = nats_restore(restored / "data", metadata) if kind == "nats" else postgres_restore(restored / "data", metadata)
         # This marker is written only after download, authentication and real restore.
         client.put_object(Bucket=bucket, Key=object_key + ".verified.json",
                           Body=json.dumps({"kind": kind, "sha256": digest(remote), "restore": result}).encode())

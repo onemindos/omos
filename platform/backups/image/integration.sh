@@ -49,6 +49,19 @@ docker run --rm --network host --env-file "$test_dir/common.env" \
   -e BACKUP_KIND=postgres -e BACKUP_PREFIX=tests/postgres \
   -e PGHOST=127.0.0.1 -e PGPORT=15432 -e PGUSER=postgres -e PGPASSWORD=synthetic \
   -e PGDATABASE=fixture -e PG_RESTORE_PORT=15433 "$backup_image"
+docker exec onemind-backup-test-pg psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
+  -c "CREATE ROLE fixture_app LOGIN PASSWORD 'synthetic';" >/dev/null
+for database in fixture_catalog fixture_auth fixture_unused; do
+  docker exec onemind-backup-test-pg createdb -U postgres -O fixture_app "$database"
+done
+for database in fixture_catalog fixture_auth; do
+  docker exec onemind-backup-test-pg psql -U fixture_app -d "$database" -v ON_ERROR_STOP=1 \
+    -c 'CREATE TABLE fixture(id integer primary key); INSERT INTO fixture VALUES (1),(2);' >/dev/null
+done
+docker run --rm --network host --env-file "$test_dir/common.env" \
+  -e BACKUP_KIND=postgres-owned -e BACKUP_PREFIX=tests/postgres-owned \
+  -e PGHOST=127.0.0.1 -e PGPORT=15432 -e PGUSER=fixture_app -e PGPASSWORD=synthetic \
+  -e PG_RESTORE_PORT=15433 "$backup_image"
 docker run -d --name onemind-backup-test-nats -p 127.0.0.1:15222:4222 \
   nats:2.14.2-alpine@sha256:952d157e28d5394a211229bd57a7b37ff9f184e58e2c8486a08fa909fd254e32 \
   -js --user fixture --pass synthetic >/dev/null
@@ -68,6 +81,11 @@ import boto3
 s3 = boto3.client('s3', endpoint_url='http://127.0.0.1:15000',
                  aws_access_key_id='synthetic', aws_secret_access_key='synthetic')
 objects = s3.list_objects_v2(Bucket='backup-tests')['Contents']
-assert sum(x['Key'].endswith('.verified.json') for x in objects) == 2
+markers = [x['Key'] for x in objects if x['Key'].endswith('.verified.json')]
+assert len(markers) == 3
+owned = next(key for key in markers if key.startswith('tests/postgres-owned/'))
+import json
+result = json.loads(s3.get_object(Bucket='backup-tests', Key=owned)['Body'].read())
+assert result['restore']['databases'] == 3 and result['restore']['tables'] == 2
 print('PostgreSQL and NATS encrypted remote restore checks passed')
 PY
