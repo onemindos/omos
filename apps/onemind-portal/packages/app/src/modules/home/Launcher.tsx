@@ -6,16 +6,14 @@ import Close from '@material-ui/icons/Close';
 import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { starredEntitiesApiRef, useStarredEntities } from '@backstage/plugin-catalog-react';
 import { appColors } from './colors';
-import directory from './directory.json';
+import { AppEntry, useDirectory } from './useDirectory';
 
-type AppEntry = typeof directory[number];
-// Keep the registry's real destinations; fold duplicate launch URLs only in the UI.
-export const launcherApps = directory.filter((app, index) => directory.findIndex(other => other.url === app.url) === index);
-const entityRef = (app: AppEntry) => `component:default/${app.name}`;
-const aliases = (app: AppEntry) => directory.filter(other => other.url === app.url).map(entityRef);
 const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map((word, index, words) => words.length === 1 ? word.slice(0, 2) : index < 2 ? word[0] : '').join('').toUpperCase());
 
 export function useAppFavorites() {
+  const {directory,all,personal}=useDirectory();
+  const entityRef=(app:AppEntry)=>app.ref;
+  const aliases=(app:AppEntry)=>all.filter(other=>other.url===app.url&&!other.personal).map(entityRef);
   const api = useApi(starredEntitiesApiRef);
   const { starredEntities } = useStarredEntities();
   const settings=useApi(storageApiRef).forBucket('starredEntities');
@@ -23,11 +21,12 @@ export function useAppFavorites() {
   useEffect(()=>{const subscription=settings.observe$('entityRefs').subscribe({next:value=>setLoaded(value.presence!=='unknown')});return()=>subscription.unsubscribe();},[settings]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const isFavorite = (app: AppEntry) => aliases(app).some(ref => starredEntities.has(ref));
+  const isFavorite = (app: AppEntry) => app.personal?!!app.favorite:aliases(app).some(ref => starredEntities.has(ref));
   const toggle = async (app: AppEntry) => {
     if (busy || error || !loaded) return;
     setBusy(true);
     try {
+      if(app.personal){await personal.save(personal.shortcuts.map(item=>item.name===app.name?{...item,favorite:!item.favorite}:item));return;}
       const refs = aliases(app).filter(ref => starredEntities.has(ref));
       if (refs.length) { for (const ref of refs) await api.toggleStarred(ref); }
       else await api.toggleStarred(entityRef(app));
@@ -38,9 +37,9 @@ export function useAppFavorites() {
   // directory remain untouched and are available in the native Starred Entities widget.
   const favorites = [...starredEntities].flatMap(ref => {
     const match = directory.find(app => entityRef(app) === ref);
-    return match ? [launcherApps.find(app => app.url === match.url)!] : [];
+    return match ? [directory.find(app => app.url === match.url)!] : [];
   }).filter((app, index, apps) => apps.findIndex(other => other.url === app.url) === index);
-  return { favorites, isFavorite, toggle, busy, error, loaded };
+  return { favorites:[...favorites,...personal.shortcuts.filter(app=>app.favorite)], isFavorite, toggle, busy, error, loaded:loaded&&personal.loaded };
 }
 type FavoriteControls = ReturnType<typeof useAppFavorites>;
 export function AppTile({ app, controls, compact = false }: { app: AppEntry; controls: FavoriteControls; compact?: boolean }) {
@@ -64,6 +63,7 @@ export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto
 export function QuickAccess() {
   const searchId=useId();
   const titleId=useId();
+  const {directory:launcherApps}=useDirectory();
   const controls = useAppFavorites();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
