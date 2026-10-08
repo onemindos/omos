@@ -1,4 +1,8 @@
 global:
+  installAndUpgradeHooks:
+    enabled: false
+  deleteHooks:
+    enabled: false
   spire:
     clusterName: onemind-cloud
     trustDomain: onemind.local

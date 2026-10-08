@@ -1,0 +1,63 @@
+name: Build OneMind Core
+on:
+  push:
+    branches: [main, 'codex/onemind-cpu-services']
+    paths:
+      - services/onemind-core/**
+      - services/onemind-postgres/**
+      - .github/workflows/build-onemind-core.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+concurrency:
+  group: onemind-core-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  boundaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r services/onemind-core/requirements.txt pytest==9.0.2
+      - run: PYTHONPATH=services/onemind-core pytest services/onemind-core/tests
+  images:
+    needs: boundaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [onemind-core, onemind-postgres]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        id: image
+        with:
+          context: services/${{ matrix.service }}
+          push: true
+          load: true
+          tags: ghcr.io/onemindos/${{ matrix.service }}:sha-${{ github.sha }}
+          platforms: linux/amd64
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+      - name: Verify PostgreSQL extensions
+        if: matrix.service == 'onemind-postgres'
+        run: >-
+          docker run --rm --entrypoint bash
+          ghcr.io/onemindos/onemind-postgres:sha-${{ github.sha }}
+          -ec 'initdb -D /tmp/test-db;
+          pg_ctl -D /tmp/test-db -o "-k /tmp" -w start;
+          psql -h /tmp -d postgres -v ON_ERROR_STOP=1 -f /extension-check.sql'
+      - name: Record image digest
+        run: printf '%s\n' '${{ steps.image.outputs.digest }}' > image-digest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.service }}-image
+          path: image-digest.txt
