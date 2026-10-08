@@ -246,8 +246,7 @@ export function ActiveStack() {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2">
-            Choose a primary app, supporting tools, and alternatives. Add a
-            personal shortcut first if an app is missing from the directory.
+            Choose a primary app, supporting tools, and alternatives. Choose a directory app or enter a native app by name.
           </Typography>
           {draft.apps.map((item, index) => (
             <Box
