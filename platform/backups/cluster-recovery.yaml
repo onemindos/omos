@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cluster-recovery-backup
+  namespace: ops
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-recovery-backup
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-recovery-backup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-recovery-backup
+subjects:
+- kind: ServiceAccount
+  name: cluster-recovery-backup
+  namespace: ops
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-cluster-recovery
+  namespace: ops
+spec:
+  schedule: 0 4 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 1200
+      template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: backup
+            image: REPLACE_WITH_VERIFIED_IMAGE
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: kubernetes
+            - name: BACKUP_PREFIX
+              value: backups/cluster-recovery
+            - name: S3_REGION
+              value: nyc3
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+                ephemeral-storage: 256Mi
+              limits:
+                cpu: '1'
+                memory: 512Mi
+                ephemeral-storage: 1Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: api-token
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              readOnly: true
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 1Gi
+          - name: api-token
+            projected:
+              defaultMode: 420
+              sources:
+              - serviceAccountToken:
+                  path: token
+                  expirationSeconds: 1800
+              - configMap:
+                  name: kube-root-ca.crt
+                  items:
+                  - key: ca.crt
+                    path: ca.crt
+              - downwardAPI:
+                  items:
+                  - path: namespace
+                    fieldRef:
+                      fieldPath: metadata.namespace
+          serviceAccountName: cluster-recovery-backup
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
