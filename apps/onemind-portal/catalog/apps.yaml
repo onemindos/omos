@@ -2705,3 +2705,98 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cncf-landscape
+  title: CNCF Landscape
+  description: Cloud native project and product discovery
+  tags:
+    - cloud-native
+    - reference
+  annotations:
+    onemind.io/launcher-url: https://landscape.cncf.io/
+    onemind.io/launcher-category: Open Source & Foundations
+    onemind.io/hosting: external-website
+    onemind.io/documented-status: Reference
+  links:
+    - url: https://landscape.cncf.io/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: lf-edge
+  title: LF Edge
+  description: Open edge computing, IoT, and distributed device projects
+  tags:
+    - edge-computing
+    - iot
+    - reference
+  annotations:
+    onemind.io/launcher-url: https://lfedge.org/
+    onemind.io/launcher-category: Open Source & Foundations
+    onemind.io/hosting: external-website
+    onemind.io/documented-status: Reference
+  links:
+    - url: https://lfedge.org/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: openssf
+  title: OpenSSF
+  description: Open source security projects, guides, and training
+  tags:
+    - security
+    - open-source
+    - reference
+  annotations:
+    onemind.io/launcher-url: https://openssf.org/
+    onemind.io/launcher-category: Open Source & Foundations
+    onemind.io/hosting: external-website
+    onemind.io/documented-status: Reference
+  links:
+    - url: https://openssf.org/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: open-robotics
+  title: Open Robotics
+  description: Open robotics platforms including ROS, Gazebo, and Open-RMF
+  tags:
+    - robotics
+    - simulation
+    - reference
+  annotations:
+    onemind.io/launcher-url: https://www.openrobotics.org/
+    onemind.io/launcher-category: Robotics & Autonomy
+    onemind.io/hosting: external-website
+    onemind.io/documented-status: Reference
+  links:
+    - url: https://www.openrobotics.org/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
