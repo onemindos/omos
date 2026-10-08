@@ -43,6 +43,12 @@ spec:
     ports:
     - protocol: TCP
       port: 443
+  - to:
+    - ipBlock:
+        cidr: 10.10.255.254/32
+    ports:
+    - protocol: TCP
+      port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -106,6 +112,12 @@ spec:
         - 100.64.0.0/10
         - 169.254.0.0/16
         - 127.0.0.0/8
+    ports:
+    - protocol: TCP
+      port: 443
+  - to:
+    - ipBlock:
+        cidr: 10.10.255.254/32
     ports:
     - protocol: TCP
       port: 443
