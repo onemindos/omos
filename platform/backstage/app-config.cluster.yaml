@@ -83,3 +83,9 @@ integrations:
 onemind:
   operationalEvents:
     enabled: true
+
+# Required shared bus: retry startup races instead of falling back to local-only delivery.
+events:
+  useEventBus: always
+  http:
+    topics: []

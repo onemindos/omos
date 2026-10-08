@@ -84,3 +84,5 @@ external agent completion producers or provider OAuth grants.
 References: [Events backend installation](https://backstage.io/api/stable/modules/_backstage_plugin-events-backend.html),
 [1.55.3 release manifest](https://versions.backstage.io/v1/releases/1.55.3/manifest.json),
 [versioned PostgreSQL event-store selection](https://github.com/backstage/backstage/blob/v1.55.3/plugins/events-backend/src/service/hub/createEventBusRouter.ts).
+
+Production sets `events.useEventBus: always`: the installed Events service retries temporary startup 404s instead of permanently choosing local-only delivery before the bus router is ready. Verify subscriptions on both replicas after startup settles.
