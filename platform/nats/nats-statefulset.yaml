@@ -1,0 +1,224 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+  namespace: nats
+  labels:
+    app.kubernetes.io/component: nats
+    app.kubernetes.io/instance: nats
+    app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/name: nats
+    app.kubernetes.io/version: 2.14.2
+    helm.sh/chart: nats-2.14.2
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: Parallel
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: nats
+      app.kubernetes.io/instance: nats
+      app.kubernetes.io/name: nats
+  serviceName: nats-headless
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2026-08-04T01:31:39-04:00'
+      labels:
+        app.kubernetes.io/component: nats
+        app.kubernetes.io/instance: nats
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: nats
+        app.kubernetes.io/version: 2.14.2
+        helm.sh/chart: nats-2.14.2
+    spec:
+      containers:
+      - args:
+        - --config
+        - /etc/nats-config/nats.conf
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: SERVER_NAME
+          value: $(POD_NAME)
+        - name: GOMEMLIMIT
+          value: 1536MiB
+        image: nats:2.14.2-alpine@sha256:952d157e28d5394a211229bd57a7b37ff9f184e58e2c8486a08fa909fd254e32
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - nats-server
+              - -sl=ldm=/var/run/nats/nats.pid
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz?js-enabled-only=true
+            port: monitor
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: nats
+        ports:
+        - containerPort: 4222
+          name: nats
+          protocol: TCP
+        - containerPort: 7422
+          name: leafnodes
+          protocol: TCP
+        - containerPort: 8080
+          name: websocket
+          protocol: TCP
+        - containerPort: 6222
+          name: cluster
+          protocol: TCP
+        - containerPort: 8222
+          name: monitor
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz?js-server-only=true
+            port: monitor
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: 250m
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        startupProbe:
+          failureThreshold: 90
+          httpGet:
+            path: /healthz
+            port: monitor
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/nats-config
+          name: config
+        - mountPath: /var/run/nats
+          name: pid
+        - mountPath: /data
+          name: nats-js
+        - mountPath: /etc/nats-ca-cert
+          name: tls-ca
+        - mountPath: /etc/nats-certs/nats
+          name: nats-tls
+        - mountPath: /etc/nats-certs/leafnodes
+          name: leafnodes-tls
+        - mountPath: /etc/nats-certs/cluster
+          name: cluster-tls
+      - args:
+        - -pid
+        - /var/run/nats/nats.pid
+        - -config
+        - /etc/nats-config/nats.conf
+        - -config
+        - /etc/nats-ca-cert/ca.crt
+        - -config
+        - /etc/nats-certs/cluster/tls.crt
+        - -config
+        - /etc/nats-certs/cluster/tls.key
+        - -config
+        - /etc/nats-ca-cert/ca.crt
+        - -config
+        - /etc/nats-certs/leafnodes/tls.crt
+        - -config
+        - /etc/nats-certs/leafnodes/tls.key
+        - -config
+        - /etc/nats-ca-cert/ca.crt
+        - -config
+        - /etc/nats-certs/nats/tls.crt
+        - -config
+        - /etc/nats-certs/nats/tls.key
+        image: natsio/nats-server-config-reloader:0.23.0
+        imagePullPolicy: IfNotPresent
+        name: reloader
+        resources:
+          limits:
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/run/nats
+          name: pid
+        - mountPath: /etc/nats-config
+          name: config
+        - mountPath: /etc/nats-ca-cert
+          name: tls-ca
+        - mountPath: /etc/nats-certs/nats
+          name: nats-tls
+        - mountPath: /etc/nats-certs/leafnodes
+          name: leafnodes-tls
+        - mountPath: /etc/nats-certs/cluster
+          name: cluster-tls
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      shareProcessNamespace: true
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: nats-config
+        name: config
+      - emptyDir: {}
+        name: pid
+      - name: tls-ca
+        secret:
+          defaultMode: 420
+          secretName: nats-server-tls
+      - name: nats-tls
+        secret:
+          defaultMode: 420
+          secretName: nats-server-tls
+      - name: leafnodes-tls
+        secret:
+          defaultMode: 420
+          secretName: nats-server-tls
+      - name: cluster-tls
+        secret:
+          defaultMode: 420
+          secretName: nats-server-tls
+  updateStrategy:
+    rollingUpdate:
+      partition: 2
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: nats-js
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+      volumeMode: Filesystem
+    status:
+      phase: Pending
