@@ -5,3 +5,15 @@ resources:
 - sealed/takserver-platform-backup-credentials.yaml
 - sealed/nats-platform-backup-credentials.yaml
 - sealed/clickhouse-backup-s3-creds.yaml
+- postgres.yaml
+- sealed/auth-platform-backup-credentials.yaml
+- sealed/auth-ghcr.yaml
+- sealed/n8n-platform-backup-credentials.yaml
+- sealed/n8n-ghcr.yaml
+- sealed/matrix-platform-backup-credentials.yaml
+- sealed/matrix-ghcr.yaml
+- sealed/takml-platform-backup-credentials.yaml
+- sealed/zeus-site-platform-backup-credentials.yaml
+- sealed/zeus-site-ghcr.yaml
+- sealed/backstage-platform-backup-credentials.yaml
+- network.yaml
