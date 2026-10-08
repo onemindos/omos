@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import shutil
 
 ROOT = Path(__file__).resolve().parents[1] / "infra" / "ecosystem-workers"
 EXPECTED_CLUSTER = "051f1134-ff05-451c-a52a-aab459feec6e"
@@ -13,6 +14,22 @@ EXPECTED_CLUSTER = "051f1134-ff05-451c-a52a-aab459feec6e"
 
 def capture(argv):
     return subprocess.check_output(argv, text=True).strip()
+
+
+def access_token():
+    # Older doctl builds print auth help with exit code zero for `auth token`.
+    # macOS can have both an older local binary and a current Homebrew binary.
+    candidates = [shutil.which("doctl"), "/opt/homebrew/bin/doctl", "/usr/local/bin/doctl"]
+    for binary in dict.fromkeys(candidates):
+        if not binary or not Path(binary).is_file():
+            continue
+        result = subprocess.run([binary, "auth", "token"], text=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        token = result.stdout.strip()
+        if (result.returncode == 0 and len(token) >= 40 and
+                token.isascii() and all(33 <= ord(c) <= 126 for c in token)):
+            return token
+    raise RuntimeError("A doctl version supporting 'auth token' and a valid login are required; update doctl")
 
 
 def environment():
@@ -23,7 +40,7 @@ def environment():
                                  "-n", "ops", "-o", "json"]))["data"]
     decode = lambda key: base64.b64decode(secret[key]).decode()
     env = os.environ.copy()
-    env.update(DIGITALOCEAN_TOKEN=capture(["doctl", "auth", "token"]),
+    env.update(DIGITALOCEAN_TOKEN=access_token(),
                AWS_ACCESS_KEY_ID=decode("S3_ACCESS_KEY"),
                AWS_SECRET_ACCESS_KEY=decode("S3_SECRET_KEY"),
                AWS_EC2_METADATA_DISABLED="true")
