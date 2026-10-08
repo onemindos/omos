@@ -27,7 +27,7 @@ export function LiveOverview(){
   <Box mt={2} style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,190px),1fr))',gap:12}}>
    {cards.map(card=><Box key={card.title} p={2} style={{borderTop:`3px solid ${card.color}`,borderRadius:12,background:`${card.color}18`}}><Typography variant="subtitle2">{card.title}</Typography><Typography variant="h4">{card.value??'—'}</Typography><Typography variant="caption">{card.detail}</Typography></Box>)}
   </Box>
-  <Box mt={2} display="flex" flexWrap="wrap" style={{gap:8}}><Button variant="outlined" href="/notifications">Notifications</Button><Button variant="outlined" href="/catalog/default/component/onemind-portal">Builds and deployments</Button><Button onClick={()=>setInbox(value=>!value)}>{inbox?'Hide inbox':'Show inbox'}</Button></Box>
+  <Box mt={2} display="flex" flexWrap="wrap" style={{gap:8}}><Button variant="outlined" href="/notifications">Notifications</Button><Button variant="outlined" href="https://github.com/onemindos/omos/actions" target="_blank" rel="noopener noreferrer">Builds and deployments</Button><Button onClick={()=>setInbox(value=>!value)}>{inbox?'Hide inbox':'Show inbox'}</Button></Box>
   {inbox&&<ActivityInbox />}
  </Box>;
 }

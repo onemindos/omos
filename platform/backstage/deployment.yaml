@@ -53,6 +53,7 @@ spec:
           containerPort: 7007
         envFrom:
         - secretRef: {name: backstage-zoho, optional: true}
+        - secretRef: {name: backstage-billing, optional: true}
         - secretRef: {name: backstage-plugin-integrations}
         env:
         - name: MCP_TOKEN

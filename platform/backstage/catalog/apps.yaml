@@ -1986,3 +1986,415 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: onemind-observations
+  title: OneMind Observational API
+  description: Source-verified read-only portal observations; provider setup and data freshness are explicit.
+  tags: [onemind, openapi, observational]
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  definition: |
+    {
+      "openapi": "3.0.3",
+      "info": {
+        "title": "OneMind observational API",
+        "version": "1.0.0",
+        "description": "Source-verified portal endpoints. User authentication required; billing and cloud require OneMind administrator membership. Unknown/configuration-required are not healthy or zero."
+      },
+      "servers": [
+        {
+          "url": "https://onemind-preview.tail717ba0.ts.net/api/onemind"
+        }
+      ],
+      "security": [
+        {
+          "portalBearer": []
+        }
+      ],
+      "paths": {
+        "/status": {
+          "get": {
+            "operationId": "getStatus",
+            "summary": "Cluster workloads, Argo exceptions, backup schedules and fixed service health",
+            "responses": {
+              "200": {
+                "description": "Observation or explicit unavailable/configuration-required state",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Status"
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Portal user authentication required"
+              }
+            }
+          }
+        },
+        "/fabric": {
+          "get": {
+            "operationId": "getFabric",
+            "summary": "Single-server NATS monitoring aggregates; no agent completion history",
+            "responses": {
+              "200": {
+                "description": "Observation or explicit unavailable/configuration-required state",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Fabric"
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Portal user authentication required"
+              }
+            }
+          }
+        },
+        "/cloud": {
+          "get": {
+            "operationId": "getCloud",
+            "summary": "Bounded Zoho Projects task observations",
+            "responses": {
+              "200": {
+                "description": "Observation or explicit unavailable/configuration-required state",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Cloud"
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Portal user authentication required"
+              },
+              "403": {
+                "description": "OneMind administrator membership required"
+              }
+            }
+          }
+        },
+        "/costs": {
+          "get": {
+            "operationId": "getCosts",
+            "summary": "Whole-account DigitalOcean billing balances in USD",
+            "responses": {
+              "200": {
+                "description": "Observation or explicit unavailable/configuration-required state",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Costs"
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Portal user authentication required"
+              },
+              "403": {
+                "description": "OneMind administrator membership required"
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "securitySchemes": {
+          "portalBearer": {
+            "type": "http",
+            "scheme": "bearer"
+          }
+        },
+        "schemas": {
+          "Status": {
+            "type": "object",
+            "required": [
+              "observedAt",
+              "partial",
+              "totalWorkloads",
+              "unavailable",
+              "deployments",
+              "backups"
+            ],
+            "properties": {
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "partial": {
+                "type": "boolean"
+              },
+              "totalWorkloads": {
+                "type": "integer"
+              },
+              "unavailable": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "unavailableSources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "deployments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "health": {
+                      "type": "string"
+                    },
+                    "sync": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "backups": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "suspended": {
+                      "type": "boolean"
+                    },
+                    "lastSuccess": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                }
+              },
+              "serviceHealth": {
+                "type": "object",
+                "description": "Point-in-time fixed-target checks and selected namespace metrics; no uptime history."
+              }
+            }
+          },
+          "Fabric": {
+            "type": "object",
+            "required": [
+              "state",
+              "scope",
+              "observedAt",
+              "attemptedAt",
+              "agentEvents"
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "observed",
+                  "unavailable"
+                ]
+              },
+              "scope": {
+                "type": "string"
+              },
+              "observedAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "attemptedAt": {
+                "type": "string"
+              },
+              "agentEvents": {
+                "type": "string",
+                "enum": [
+                  "not-connected"
+                ]
+              },
+              "connections": {
+                "type": "number",
+                "nullable": true
+              },
+              "slowConsumers": {
+                "type": "number",
+                "nullable": true
+              },
+              "messagesIn": {
+                "type": "number",
+                "nullable": true
+              },
+              "messagesOut": {
+                "type": "number",
+                "nullable": true
+              },
+              "memoryBytes": {
+                "type": "number",
+                "nullable": true
+              },
+              "jetstream": {
+                "type": "object"
+              }
+            }
+          },
+          "Costs": {
+            "type": "object",
+            "required": [
+              "state",
+              "scope",
+              "currency",
+              "allocation",
+              "observedAt",
+              "generatedAt",
+              "attemptedAt",
+              "expiresAt"
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "configuration-required",
+                  "current",
+                  "stale",
+                  "unavailable"
+                ]
+              },
+              "scope": {
+                "type": "string"
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "USD"
+                ]
+              },
+              "allocation": {
+                "type": "string",
+                "enum": [
+                  "not-configured"
+                ]
+              },
+              "observedAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "generatedAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "expiresAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "attemptedAt": {
+                "type": "string"
+              },
+              "monthToDateUsage": {
+                "type": "string",
+                "description": "Decimal monetary amount, not a floating-point estimate."
+              },
+              "monthToDateBalance": {
+                "type": "string",
+                "description": "Decimal monetary amount, not a floating-point estimate."
+              },
+              "accountBalance": {
+                "type": "string",
+                "description": "Decimal monetary amount, not a floating-point estimate."
+              }
+            }
+          },
+          "Cloud": {
+            "type": "object",
+            "required": [
+              "providerId",
+              "state",
+              "observedAt",
+              "expiresAt",
+              "attemptedAt",
+              "coverage",
+              "tasks",
+              "link"
+            ],
+            "properties": {
+              "providerId": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "configuration-required",
+                  "current",
+                  "stale",
+                  "unavailable"
+                ]
+              },
+              "observedAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "expiresAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "attemptedAt": {
+                "type": "string"
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "dueDate": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "overdue": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "open": {
+                "type": "integer"
+              },
+              "overdue": {
+                "type": "integer"
+              },
+              "sampled": {
+                "type": "integer"
+              },
+              "pages": {
+                "type": "integer"
+              },
+              "partial": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }

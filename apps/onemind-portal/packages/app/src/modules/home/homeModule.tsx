@@ -6,6 +6,7 @@ import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@mater
 import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
 import { useDirectory } from './useDirectory';
 import { CalendarPanel } from './CalendarPanel';
+import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
 import { GrafanaHome } from './GrafanaHome';
 import { LiveOverview } from './LiveOverview';
@@ -147,6 +148,7 @@ export function CloudPanel(){
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
   HomePageLayoutBlueprint.make({name:'onemind-flow',params:{loader:async()=>(await import('./HomeLayout')).HomeLayout}}),
   HomePageWidgetBlueprint.make({name:'onemind-calendar',params:{name:'OneMindCalendar',title:'Upcoming calendar events',description:'Selected Zoho calendar with read-only access',components:async()=>({Content:CalendarPanel})}}),
+  HomePageWidgetBlueprint.make({name:'onemind-costs',params:{name:'OneMindCosts',title:'DigitalOcean account costs',description:'Read-only account billing totals; administrator access required',components:async()=>({Content:CostPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-fabric',params:{name:'OneMindFabric',title:'Agent fabric · NATS',description:'Read-only NATS monitoring; agent completion source readiness',components:async()=>({Content:FabricPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-grafana',params:{name:'OneMindGrafana',title:'Live Grafana dashboards',description:'Your account-selected dashboards, loaded on demand',components:async()=>({Content:GrafanaHome})}}),
   HomePageWidgetBlueprint.make({name:'onemind-live-overview',params:{name:'OneMindLiveOverview',title:'Live overview',description:'Timestamped workloads, deployments, backup activity and service checks',components:async()=>({Content:LiveOverview})}}),
