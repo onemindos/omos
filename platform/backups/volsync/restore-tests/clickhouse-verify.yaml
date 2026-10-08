@@ -1,0 +1,86 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolated-restic-restore-test
+  namespace: clickhouse
+spec:
+  podSelector:
+    matchLabels:
+      onemind.io/restore-test: readiness-20261008
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clickhouse-restic-boot-verify-20261008
+  namespace: clickhouse
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      labels:
+        onemind.io/restore-test: readiness-20261008
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: verify
+        image: clickhouse/clickhouse-server@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b1
+        command:
+        - sh
+        - -ec
+        args:
+        - "clickhouse-server --config-file=/etc/clickhouse-server/config.xml -- --listen_host=127.0.0.1\
+          \ --http_port=18123 --tcp_port=19000 > /tmp/server.log 2>&1 &\nserver_pid=$!\n\
+          trap 'kill \"$server_pid\" 2>/dev/null || true' EXIT\nfor attempt in $(seq\
+          \ 1 120); do\n  if ! kill -0 \"$server_pid\" 2>/dev/null; then exit 1; fi\n\
+          \  if clickhouse-client --host 127.0.0.1 --port 19000 --query 'SELECT 1'\
+          \ >/dev/null 2>&1; then break; fi\n  sleep 2\ndone\ntables=$(clickhouse-client\
+          \ --host 127.0.0.1 --port 19000 --query \"SELECT count(*) FROM system.tables\
+          \ WHERE database='onemind'\")\nrows=$(clickhouse-client --host 127.0.0.1\
+          \ --port 19000 --query \"SELECT sum(total_rows) FROM system.tables WHERE\
+          \ database='onemind'\")\ntest \"$tables\" -gt 0\ntest \"$rows\" -gt 0\n\
+          printf '{\"clickhouseResticBootVerified\":true,\"tables\":%s,\"rows\":%s}\\\
+          n' \"$tables\" \"$rows\"\nkill \"$server_pid\"\nwait \"$server_pid\"\ntrap\
+          \ - EXIT\n"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: '2'
+            memory: 2Gi
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/clickhouse
+        - name: logs
+          mountPath: /var/log/clickhouse-server
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: clickhouse-restic-verify-20261008
+      - name: logs
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: tmp
+        emptyDir:
+          sizeLimit: 256Mi
