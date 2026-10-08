@@ -60,3 +60,27 @@ The same server reads fixed Prometheus queries for five namespaces: backstage, a
 Operations documentation lives in `apps/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.
 
 TechDocs search uses the existing PostgreSQL search engine and collates every minute. The catalog documentation entity appears in Docs; selected critical-service entries have runbook links. Documentation is versioned with the portal, does not require Notion, and requires host reachability rather than promising offline browser access. These runbooks distinguish verified configuration from untested data recovery and historical Fabric notes.
+
+## Native Events bus across replicas
+
+`@backstage/plugin-events-backend` is registered at the exact `0.6.6` version
+from the Backstage `1.55.3` release manifest. It provides the native event bus
+used by Notifications, Signals and catalog subscribers. Production inherits
+`backend.database.client: pg`; the maintained backend selects its PostgreSQL
+store, migrates `backstage_plugin_events`, and uses PostgreSQL LISTEN/NOTIFY
+for delivery across the two portal replicas. The existing bounded database
+pool remains in effect. Observe connection headroom during rollout; this
+adds a plugin database and event listeners.
+
+`events.http.topics: []` deliberately enables no external webhook ingresses.
+The authenticated internal event bus routes remain available to native
+plugins. Existing machine identity restrictions do not grant Events access.
+Before promotion, verify the normal encrypted backup and restore evidence.
+After rollout, confirm `events` initialization and PostgreSQL store selection
+on both replicas, no Events subscription 404s, and unchanged anonymous and
+machine access denials. This supplies internal delivery; it does not activate
+external agent completion producers or provider OAuth grants.
+
+References: [Events backend installation](https://backstage.io/api/stable/modules/_backstage_plugin-events-backend.html),
+[1.55.3 release manifest](https://versions.backstage.io/v1/releases/1.55.3/manifest.json),
+[versioned PostgreSQL event-store selection](https://github.com/backstage/backstage/blob/v1.55.3/plugins/events-backend/src/service/hub/createEventBusRouter.ts).
