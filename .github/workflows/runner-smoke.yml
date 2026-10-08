@@ -1,0 +1,16 @@
+name: Verify Self-hosted Runner
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  runner:
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    timeout-minutes: 5
+    steps:
+      - name: Verify listener and Docker service
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = x86_64
+          docker info --format '{{.ServerVersion}}'
+          echo 'Runner and Docker service responded'
