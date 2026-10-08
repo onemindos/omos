@@ -5,6 +5,7 @@ import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
 import { useDirectory } from './useDirectory';
+import { ActiveStack } from './ActiveStack';
 import { CalendarPanel } from './CalendarPanel';
 import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
@@ -51,7 +52,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
       <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
       {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)} style={{borderColor: `${groupColors[group]?.base??'#237f91'}88`, background:category===group?`${groupColors[group]?.base??'#237f91'}${dark?'44':'22'}`:undefined,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary)}}>{group}</Button>)}
     </Box>
-    {!query.trim() && category==='All' && !favoritesOnly && <QuickAccess />}
+    {!query.trim() && category==='All' && !favoritesOnly && <><ActiveStack /><QuickAccess /></>}
     {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
       {destinations.map((item,index) => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
         <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>

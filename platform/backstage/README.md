@@ -86,3 +86,9 @@ References: [Events backend installation](https://backstage.io/api/stable/module
 [versioned PostgreSQL event-store selection](https://github.com/backstage/backstage/blob/v1.55.3/plugins/events-backend/src/service/hub/createEventBusRouter.ts).
 
 Production sets `events.useEventBus: always`: the installed Events service retries temporary startup 404s instead of permanently choosing local-only delivery before the bus router is ready. Verify subscriptions on both replicas after startup settles.
+
+## My Active Stack
+
+The home page places purpose cards above Favorites for Notes, Email, Passwords, Files, Maps, Photos, Voice memos, Wallet, Contacts, Calendar, and SMS. Each signed-in account saves its own assignments through native User Settings. Choices begin unassigned; catalog lifecycle and favorites do not automatically select tools. Assign one primary app, multiple supporting apps, and alternatives from catalog entries or personal shortcuts, or record a native app by name without a launch link.
+
+Each decision records roles, use, data/export location, migration follow-up, timestamp and reason; the latest 50 decisions per purpose are retained. Directory references remain stable and removed entries retain their saved names. Availability remains in Today. Changing an assignment does not move data or uninstall software. No shared defaults are preselected.
