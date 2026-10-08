@@ -2,8 +2,8 @@
 import asyncio
 import json
 import os
-import nats
 from . import store
+from . import bus
 
 
 def envelope(row):
@@ -16,9 +16,7 @@ async def publish_outbox():
     while True:
         nc = None
         try:
-            nc = await nats.connect(servers=os.environ["NATS_URL"],
-                                    user=os.environ["NATS_USER"], password=os.environ["NATS_PASSWORD"],
-                                    connect_timeout=5, max_reconnect_attempts=3)
+            nc = await bus.connect()
             js = nc.jetstream()
             while True:
                 for row in await asyncio.to_thread(store.pending_events):

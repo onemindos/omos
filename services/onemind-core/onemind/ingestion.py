@@ -6,8 +6,8 @@ import hashlib
 import time
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import nats
 from . import store
+from . import bus
 from .capabilities import cluster_observations
 
 state = {"database": False, "bus": False, "cluster": 0.0}
@@ -62,9 +62,7 @@ async def run():
         while True:
             nc = None
             try:
-                nc = await nats.connect(servers=os.environ["NATS_URL"],
-                                        user=os.environ["NATS_USER"], password=os.environ["NATS_PASSWORD"],
-                                        connect_timeout=5, max_reconnect_attempts=3)
+                nc = await bus.connect()
 
                 async def receive(msg):
                     if len(msg.data) > 32000:

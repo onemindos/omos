@@ -2,6 +2,7 @@
 from dapr.ext.workflow import WorkflowRuntime, DaprWorkflowContext, WorkflowActivityContext
 from . import store
 from .capabilities import execute
+import json
 
 runtime = WorkflowRuntime()
 
@@ -18,7 +19,7 @@ def execute_capability(ctx: WorkflowActivityContext, inp):
         raise RuntimeError("Agent outcome is ambiguous; inspect evidence before issuing a new mission")
     store.set_state(inp["id"], "running")
     try:
-        result = execute(inp["spec"], inp["id"], inp["actor"])
+        result = json.loads(json.dumps(execute(inp["spec"], inp["id"], inp["actor"]), default=str))
         store.set_state(inp["id"], "completed", result=result)
         return result
     except Exception as exc:
