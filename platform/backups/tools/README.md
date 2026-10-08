@@ -37,3 +37,9 @@ Helm release records. Restore sealing-key Secrets into kube-system before expect
 existing ciphertext to decrypt. Verify identity, registry access and actual app
 workflows before cutover. Native ClickHouse S3 backups use a separate format; these
 archive tools do not decrypt or validate them.
+
+VolSync reports an empty filesystem as successful without initializing a Restic
+repository. The mirror records those volumes separately as confirmedEmptyVolumes;
+it does not claim an encrypted archive or run Restic checks against a nonexistent
+repository. Their Git-owned PVC declarations and initial retained snapshots remain.
+Do not delete dormant application volumes simply because an export found no files.
