@@ -2654,3 +2654,54 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: linux-foundation
+  title: Linux Foundation
+  description: Open technology projects, communities, training, and certifications
+  tags:
+    - open-source
+    - foundation
+    - training
+    - reference
+  annotations:
+    onemind.io/launcher-url: https://www.linuxfoundation.org/
+    onemind.io/launcher-category: Open Source & Foundations
+    onemind.io/hosting: external-website
+    onemind.io/documented-status: Reference
+  links:
+    - url: https://www.linuxfoundation.org/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cncf
+  title: Cloud Native Computing Foundation (CNCF)
+  description: Cloud native projects, communities, training, and ecosystem resources
+  tags:
+    - open-source
+    - foundation
+    - cloud-native
+    - kubernetes
+    - reference
+  annotations:
+    onemind.io/launcher-url: https://www.cncf.io/
+    onemind.io/launcher-category: Open Source & Foundations
+    onemind.io/hosting: external-website
+    onemind.io/documented-status: Reference
+  links:
+    - url: https://www.cncf.io/
+      title: Open application
+      icon: dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
