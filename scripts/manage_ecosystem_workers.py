@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Plan/apply the isolated CPU pool with private remote state and local credentials."""
+import argparse
+import base64
+import json
+import os
+from pathlib import Path
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[1] / "infra" / "ecosystem-workers"
+EXPECTED_CLUSTER = "051f1134-ff05-451c-a52a-aab459feec6e"
+
+
+def capture(argv):
+    return subprocess.check_output(argv, text=True).strip()
+
+
+def environment():
+    context = capture(["kubectl", "config", "current-context"])
+    if context != "do-nyc3-omos-cloud":
+        raise RuntimeError("Select the verified do-nyc3-omos-cloud context first")
+    secret = json.loads(capture(["kubectl", "get", "secret", "platform-backup-credentials",
+                                 "-n", "ops", "-o", "json"]))["data"]
+    decode = lambda key: base64.b64decode(secret[key]).decode()
+    env = os.environ.copy()
+    env.update(DIGITALOCEAN_TOKEN=capture(["doctl", "auth", "token"]),
+               AWS_ACCESS_KEY_ID=decode("S3_ACCESS_KEY"),
+               AWS_SECRET_ACCESS_KEY=decode("S3_SECRET_KEY"),
+               AWS_EC2_METADATA_DISABLED="true")
+    endpoint = decode("S3_ENDPOINT")
+    if not endpoint.startswith("https://"):
+        endpoint = "https://" + endpoint
+    return env, decode("S3_BUCKET"), endpoint
+
+
+def validate_scope(plan, env):
+    data = json.loads(subprocess.check_output(["terraform", "show", "-json", str(plan)], cwd=ROOT, env=env))
+    changed = [r for r in data.get("resource_changes", []) if r["change"]["actions"] != ["no-op"]]
+    if len(changed) != 1:
+        raise RuntimeError("Expected exactly one new node-pool resource")
+    r = changed[0]
+    if (r["type"] != "digitalocean_kubernetes_node_pool" or
+            r["change"]["actions"] != ["create"] or
+            r["change"]["after"]["cluster_id"] != EXPECTED_CLUSTER):
+        raise RuntimeError("Plan changes resources outside the authorized CPU pool")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("action", choices=["plan", "apply"])
+    parser.add_argument("--plan", type=Path, default=Path("/tmp/onemind-ecosystem-workers.tfplan"))
+    args = parser.parse_args()
+    env, bucket, endpoint = environment()
+    if args.action == "plan":
+        subprocess.run(["terraform", "init", "-input=false", "-backend-config=bucket=" + bucket,
+                        "-backend-config=key=terraform/ecosystem-workers.tfstate",
+                        "-backend-config=region=us-east-1", '-backend-config=endpoints={s3="' + endpoint + '"}',
+                        "-backend-config=skip_credentials_validation=true",
+                        "-backend-config=skip_region_validation=true",
+                        "-backend-config=skip_requesting_account_id=true",
+                        "-backend-config=skip_metadata_api_check=true", "-backend-config=use_path_style=true"],
+                       cwd=ROOT, env=env, check=True)
+        subprocess.run(["terraform", "validate"], cwd=ROOT, env=env, check=True)
+        subprocess.run(["terraform", "plan", "-input=false", "-out=" + str(args.plan)], cwd=ROOT, env=env, check=True)
+        validate_scope(args.plan, env)
+        print("Verified: one new CPU pool; no existing resource changes.")
+    else:
+        validate_scope(args.plan, env)
+        subprocess.run(["terraform", "apply", "-input=false", str(args.plan)], cwd=ROOT, env=env, check=True)
+
+
+if __name__ == "__main__":
+    main()
