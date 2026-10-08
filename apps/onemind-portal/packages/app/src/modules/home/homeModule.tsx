@@ -3,12 +3,15 @@ import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import { HomePageLayoutBlueprint, HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
-import { AppTile, appGridStyle, launcherApps as directory, QuickAccess, useAppFavorites } from './Launcher';
+import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
+import { useDirectory } from './useDirectory';
+import { ServiceManager } from './ServiceManager';
 import { groupColors } from './colors';
 import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:ReactNode}) {
+  const {directory,loaded,error}=useDirectory();
   const searchId=useId();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
@@ -35,6 +38,9 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
       <Typography color="textSecondary">Your apps, infrastructure, agents, and knowledge in one place.</Typography>
       <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Live status and alerts are in Today.</Typography></Box>
     </Box>
+    <ServiceManager />
+    {error&&<Typography color="error" role="alert">Catalog refresh failed. Previously loaded services may be stale; your personal shortcuts remain available.</Typography>}
+    {!loaded&&<Typography role="status">Loading your catalog and shortcuts…</Typography>}
     <TextField id={searchId} label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
     <Box my={2} display="flex" flexWrap="wrap" style={{ gap: 8 }} aria-label="Application categories">
       <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
@@ -54,9 +60,9 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
       <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
       <Box style={{...appGridStyle,gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))'}}>
-        {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.name}>
+        {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.ref}>
           <AppTile app={app} controls={controls} />
-          <Box mt={1} ml={2}><Link href={`/catalog/default/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link></Box>
+          {!app.personal&&<Box mt={1} ml={2}><Link href={app.personal?undefined:`/catalog/${app.ref.split(':')[1].split('/')[0]}/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link></Box>}
         </Box>)}
       </Box>
     </Box>)}
