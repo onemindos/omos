@@ -1,13 +1,14 @@
-import { useEffect, useId, useState } from 'react';
+import { ReactNode, useEffect, useId, useState } from 'react';
 import { createFrontendModule } from '@backstage/frontend-plugin-api';
-import { HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
+import { HomePageLayoutBlueprint, HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import { AppTile, appGridStyle, launcherApps as directory, QuickAccess, useAppFavorites } from './Launcher';
+import { groupColors } from './colors';
 import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 
-function Directory() {
+export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:ReactNode}) {
   const searchId=useId();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
@@ -26,32 +27,33 @@ function Directory() {
     { title: 'Assistant', detail: 'Ask with source evidence', url: '/assistant' },
     { title: 'Offline', detail: 'Carry your knowledge', url: '/offline' },
   ];
-  return <Box p={2} className="onemind-workspace">
-    <Box p={3} mb={3} style={{ borderRadius: 20, border: `1px solid ${theme.palette.divider}`,
-      backgroundImage: `linear-gradient(${dark ? '#111215df' : '#fffffff0'},${dark ? '#111215df' : '#fffffff0'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+  return <Box p={fluid?0:2} className="onemind-workspace">
+    <Box p={3} mb={3} style={{ borderRadius: 24, border: `1px solid ${theme.palette.divider}`,
+      backgroundImage: `linear-gradient(115deg,${dark ? '#123951df,#35294add,#153c3ddb' : '#dceff8e8,#ece3f6df,#dff4ecdf'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <Typography variant="overline" style={{ letterSpacing: 3 }}>ONE MIND · YOUR WORKSPACE</Typography>
       <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Your OneMind home.</Typography>
       <Typography color="textSecondary">Your apps, infrastructure, agents, and knowledge in one place.</Typography>
-      <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Availability appears in the live status panel.</Typography></Box>
+      <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Live status and alerts are in Today.</Typography></Box>
     </Box>
-    <QuickAccess />
-    <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-      {destinations.map(item => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 12 }}>
-        <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
-      </Button>)}
-    </Box>
-    <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
-    <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
     <TextField id={searchId} label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
     <Box my={2} display="flex" flexWrap="wrap" style={{ gap: 8 }} aria-label="Application categories">
       <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
-      {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)}>{group}</Button>)}
+      {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)} style={{borderColor: `${groupColors[group]?.base??'#237f91'}88`, background:category===group?`${groupColors[group]?.base??'#237f91'}${dark?'44':'22'}`:undefined,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary)}}>{group}</Button>)}
     </Box>
+    {!query.trim() && category==='All' && !favoritesOnly && <QuickAccess />}
+    {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+      {destinations.map((item,index) => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
+        <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
+      </Button>)}
+    </Box>}
+    {!query.trim() && category==='All' && !favoritesOnly && utilities}
+    <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
+    <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
     {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
-      <Typography variant="h6" component="h3" style={{ marginBottom: 12 }}>{group}</Typography>
-      <Box style={appGridStyle}>
+      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
+      <Box style={{...appGridStyle,gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))'}}>
         {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.name}>
           <AppTile app={app} controls={controls} />
           <Box mt={1} ml={2}><Link href={`/catalog/default/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link></Box>
@@ -133,6 +135,7 @@ export function CloudPanel(){
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageLayoutBlueprint.make({name:'onemind-flow',params:{loader:async()=>(await import('./HomeLayout')).HomeLayout}}),
   HomePageWidgetBlueprint.make({name:'onemind-favorites',params:{name:'OneMindFavorites',title:'Favorite apps',description:'Direct app launch tiles using your existing catalog stars',components:async()=>({Content:QuickAccess})}}),
   HomePageWidgetBlueprint.make({name:'onemind-today',params:{name:'OneMindToday',title:'Today',description:'Live attention, work and inbox in one operational workspace',components:async()=>({Content:(await import('./Today')).Today})}}),
   HomePageWidgetBlueprint.make({name:'github-reviews',params:{name:'OneMindGitHubReviews',title:'GitHub reviews',description:'Requested reviews in onemindos; connect GitHub authorization',components:async()=>({Content:()=> <HomePageRequestedReviewsCard query="org:onemindos is:pr is:open review-requested:@me" />})}}),

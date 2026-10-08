@@ -8,11 +8,11 @@ const extensions = (['light', 'dark'] as const).map(mode => {
   const theme = createUnifiedTheme({
     ...createBaseThemeOptions({ palette: {
       ...palettes[mode],
-      primary: { main: dark ? '#e5e7eb' : '#25282e' },
-      secondary: { main: dark ? '#b7bdc7' : '#535b67' },
-      background: { default: dark ? '#111215' : '#f4f3f1', paper: dark ? '#1c1e23' : '#ffffff' },
+      primary: { main: dark ? '#73d9e4' : '#087e8b' },
+      secondary: { main: dark ? '#bea8ff' : '#6e49ae' },
+      background: { default: dark ? '#101822' : '#f1f5fa', paper: dark ? '#192432' : '#ffffff' },
       text: { primary: dark ? '#f4f4f5' : '#202226', secondary: dark ? '#b7bdc7' : '#59616c' },
-      navigation: { background: '#15161a', indicator: '#ff303b', color: '#c6c8ce', selectedColor: '#ffffff' },
+      navigation: { background: '#121b29', indicator: '#73d9e4', color: '#c6c8ce', selectedColor: '#ffffff' },
     } }),
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     defaultPageTheme: 'home',
@@ -20,7 +20,7 @@ const extensions = (['light', 'dark'] as const).map(mode => {
       MuiPaper: { styleOverrides: { rounded: { borderRadius: 16 } } },
       MuiButton: { styleOverrides: { root: { borderRadius: 10, textTransform: 'none', fontWeight: 600 } } },
       MuiCssBaseline: { styleOverrides: {
-        'a:focus-visible, button:focus-visible': { outline: '3px solid #888fa0', outlineOffset: 4 },
+        'a:focus-visible, button:focus-visible': { outline: '3px solid #3899d1', outlineOffset: 4 },
       } },
       BackstageHeader: { styleOverrides: { header: {
         backgroundImage: `linear-gradient(${dark ? '#111215e8' : '#ffffffe8'},${dark ? '#111215e8' : '#ffffffe8'}),url(/brand/legacy-background-${mode}.webp)`,
