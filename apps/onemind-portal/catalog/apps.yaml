@@ -2489,3 +2489,33 @@ spec:
         }
       }
     }
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: qgroundcontrol
+  title: QGroundControl
+  description: Native drone setup, flight control, telemetry, and mission planning
+  tags:
+    - drones
+    - mavlink
+    - px4
+    - ardupilot
+    - desktop
+  annotations:
+    onemind.io/launcher-url: https://qgroundcontrol.com/
+    onemind.io/launcher-category: Drones
+    onemind.io/hosting: native-application
+    onemind.io/documented-purpose: Ground control station for MAVLink vehicles
+  links:
+    - url: https://qgroundcontrol.com/
+      title: Open application
+      icon: dashboard
+    - url: https://docs.qgroundcontrol.com/Stable_V5.0/en/qgc-user-guide/
+      title: User guide
+      icon: docs
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
