@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hermes-restic-files-verify-20261008
+  namespace: hermes
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      labels:
+        onemind.io/restore-test: readiness-20261008
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsUser: 10000
+        runAsGroup: 10000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: verify
+        image: busybox@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e
+        command:
+        - sh
+        - -ec
+        args:
+        - 'actual=$(sha256sum /data/.local/lib/python3.13/site-packages/ctranslate2/_ext.cpython-313-x86_64-linux-gnu.so
+          | cut -d '' '' -f 1)
+
+          test "$actual" = "$EXPECTED_HASH"
+
+          files=$(find /data -type f | wc -l)
+
+          test "$files" -gt 100000
+
+          printf ''{"resticFileRestoreVerified":true,"referenceBinaryEquality":true,"files":%s}\n''
+          "$files"
+
+          '
+        env:
+        - name: EXPECTED_HASH
+          value: 9cf1dce7b1367b8315d1feb475fdc28a906c27e5c3b6c279fd3a08825423c828
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        volumeMounts:
+        - name: data
+          mountPath: /data
+          readOnly: true
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: hermes-restic-verify-20261008
