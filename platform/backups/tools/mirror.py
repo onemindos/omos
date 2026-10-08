@@ -47,8 +47,11 @@ def run():
                           aws_secret_access_key=env['S3_SECRET_KEY'], region_name='nyc3')
     bucket = env['S3_BUCKET']
     sources = json.loads(subprocess.check_output(k + ['get', 'replicationsources', '-A', '-o', 'json']))['items']
+    completed = [d for d in sources if d.get('status', {}).get('latestMoverStatus', {}).get('result') == 'Successful']
+    empty_volumes = [{'namespace': d['metadata']['namespace'], 'pvc': d['spec']['sourcePVC']}
+                     for d in completed if 'Directory is empty' in d.get('status', {}).get('latestMoverStatus', {}).get('logs', '')]
     repositories = sorted('backups/restic/' + d['metadata']['namespace'] + '/' + d['spec']['sourcePVC']
-                          for d in sources if d.get('status', {}).get('latestMoverStatus', {}).get('result') == 'Successful')
+                          for d in completed if {'namespace': d['metadata']['namespace'], 'pvc': d['spec']['sourcePVC']} not in empty_volumes)
     objects = []
     for page in client.get_paginator('list_objects_v2').paginate(Bucket=bucket, Prefix='backups/'):
         objects.extend(page.get('Contents', []))
@@ -90,7 +93,7 @@ def run():
     result = {'context': args.context, 'createdAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'objects': len(selected), 'encryptedGiB': round(total / GIB, 2),
               'archiveChecksumsVerified': len(expected), 'repositories': repositories,
-              'filesystemIntegrityVerified': False,
+              'filesystemIntegrityVerified': False, 'confirmedEmptyVolumes': empty_volumes,
               'note': 'Run restic check --read-data on each local repository; mirror equality alone is not an application restore.'}
     (args.output / 'mirror-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({key: value for key, value in result.items() if key != 'repositories'}))

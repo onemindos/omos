@@ -676,7 +676,7 @@ spec:
   sourcePVC: nodeodm-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 4 * * *
   restic:
     repository: volume-5503f74cbdce-restic
     copyMethod: Snapshot
@@ -717,7 +717,7 @@ spec:
   sourcePVC: nominatim-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 5 * * *
   restic:
     repository: volume-93cec0eff115-restic
     copyMethod: Snapshot
@@ -758,7 +758,7 @@ spec:
   sourcePVC: onetak-geo-db-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 5 * * *
   restic:
     repository: volume-50fb74ff16c6-restic
     copyMethod: Snapshot
@@ -799,7 +799,7 @@ spec:
   sourcePVC: onetak-minio-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 5 * * *
   restic:
     repository: volume-b455a3425ad0-restic
     copyMethod: Snapshot
@@ -840,7 +840,7 @@ spec:
   sourcePVC: onetak-pgdata
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 0 6 * * *
   restic:
     repository: volume-76694cc119e9-restic
     copyMethod: Snapshot
@@ -881,7 +881,7 @@ spec:
   sourcePVC: overpass-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 20 6 * * *
   restic:
     repository: volume-76d69bd17963-restic
     copyMethod: Snapshot
@@ -922,7 +922,7 @@ spec:
   sourcePVC: tile38-data
   paused: false
   trigger:
-    manual: readiness-20261008
+    schedule: 40 6 * * *
   restic:
     repository: volume-adf3fcd472a7-restic
     copyMethod: Snapshot
@@ -1207,9 +1207,9 @@ metadata:
     onemind.dev/source-pvc: takml-models
 spec:
   sourcePVC: takml-models
-  paused: true
+  paused: false
   trigger:
-    schedule: 0 9 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-45a600854340-restic
     copyMethod: Snapshot
@@ -1248,9 +1248,9 @@ metadata:
     onemind.dev/source-pvc: takml-server-jar
 spec:
   sourcePVC: takml-server-jar
-  paused: true
+  paused: false
   trigger:
-    schedule: 20 9 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-0800db843c3a-restic
     copyMethod: Snapshot
@@ -1289,9 +1289,9 @@ metadata:
     onemind.dev/source-pvc: data-takserver-postgresql-0
 spec:
   sourcePVC: data-takserver-postgresql-0
-  paused: true
+  paused: false
   trigger:
-    schedule: 40 9 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-cccc1afaa021-restic
     copyMethod: Snapshot
@@ -1330,9 +1330,9 @@ metadata:
     onemind.dev/source-pvc: ldap-config-tak-ldap-0
 spec:
   sourcePVC: ldap-config-tak-ldap-0
-  paused: true
+  paused: false
   trigger:
-    schedule: 0 10 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-31bf7f4ddcf1-restic
     copyMethod: Snapshot
@@ -1371,9 +1371,9 @@ metadata:
     onemind.dev/source-pvc: ldap-data-tak-ldap-0
 spec:
   sourcePVC: ldap-data-tak-ldap-0
-  paused: true
+  paused: false
   trigger:
-    schedule: 20 10 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-ca153ea90369-restic
     copyMethod: Snapshot
@@ -1412,9 +1412,9 @@ metadata:
     onemind.dev/source-pvc: mongo-data-fedhub-mongodb-0
 spec:
   sourcePVC: mongo-data-fedhub-mongodb-0
-  paused: true
+  paused: false
   trigger:
-    schedule: 40 10 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-b5898fcc79f1-restic
     copyMethod: Snapshot
@@ -1453,9 +1453,9 @@ metadata:
     onemind.dev/source-pvc: takserver-nats-js-takserver-nats-0
 spec:
   sourcePVC: takserver-nats-js-takserver-nats-0
-  paused: true
+  paused: false
   trigger:
-    schedule: 0 11 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-2b88c0eca294-restic
     copyMethod: Snapshot
