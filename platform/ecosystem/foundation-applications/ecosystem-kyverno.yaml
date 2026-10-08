@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '1'
+    onemind.io/application-namespace: kyverno
 spec:
   project: default
   sources:
@@ -15,12 +16,12 @@ spec:
       releaseName: kyverno
       valueFiles:
       - $values/platform/ecosystem/values/kyverno.yaml
+      namespace: kyverno
   - repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: kyverno
   syncPolicy:
     automated:
       prune: false

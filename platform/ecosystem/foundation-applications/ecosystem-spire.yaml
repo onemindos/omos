@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '3'
+    onemind.io/application-namespace: spire-system
 spec:
   project: default
   sources:
@@ -15,12 +16,12 @@ spec:
       releaseName: spire
       valueFiles:
       - $values/platform/ecosystem/values/spire.yaml
+      namespace: spire-system
   - repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: spire-system
   syncPolicy:
     automated:
       prune: false

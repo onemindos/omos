@@ -1,0 +1,6 @@
+apiVersion: v2
+name: onemind-core
+description: OneMind authenticated operational records and durable mission execution
+version: 0.1.0
+appVersion: 0.1.0
+type: application

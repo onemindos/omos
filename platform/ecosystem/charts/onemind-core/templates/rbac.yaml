@@ -1,0 +1,106 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: onemind-core-observer
+rules:
+  - apiGroups: [""]
+    resources: [nodes]
+    verbs: [get, list]
+  - apiGroups: [apps]
+    resources: [deployments]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: onemind-core-observer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: onemind-core-observer
+subjects:
+  - kind: ServiceAccount
+    name: onemind-core
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: onemind-ingestion
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: onemind-core-argo-reader
+  namespace: argocd
+rules:
+  - apiGroups: [argoproj.io]
+    resources: [applications]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: onemind-core-argo-reader
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: onemind-core-argo-reader
+subjects:
+  - kind: ServiceAccount
+    name: onemind-core
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: onemind-ingestion
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: onemind-core-component-secrets
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups: [""]
+    resources: [secrets]
+    resourceNames: [dapr-workflows-db]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: onemind-core-component-secrets
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: onemind-core-component-secrets
+subjects:
+  - kind: ServiceAccount
+    name: onemind-core
+    namespace: {{ .Release.Namespace }}
+{{- range $worker := list (dict "namespace" "onemind-core" "name" "onemind-ingestion") (dict "namespace" "onemind-ai" "name" "docling") }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: onemind-core-worker-restart
+  namespace: {{ $worker.namespace }}
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    resourceNames: [{{ $worker.name }}]
+    verbs: [get, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: onemind-core-worker-restart
+  namespace: {{ $worker.namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: onemind-core-worker-restart
+subjects:
+  - kind: ServiceAccount
+    name: onemind-core
+    namespace: {{ $.Release.Namespace }}
+{{- end }}

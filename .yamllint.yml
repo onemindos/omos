@@ -3,6 +3,7 @@ extends: default
 ignore: |
   tak-server/chart/templates/**
   tak-server/chart/third-party/**/templates/**
+  platform/ecosystem/charts/**/templates/**
 
 rules:
   line-length:

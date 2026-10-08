@@ -1,0 +1,72 @@
+expose:
+  type: clusterIP
+  tls:
+    enabled: false
+externalURL: https://onemind-registry.tail717ba0.ts.net
+existingSecretAdminPassword: harbor-admin
+existingSecretAdminPasswordKey: password
+persistence:
+  persistentVolumeClaim:
+    registry:
+      storageClass: do-block-storage-retain
+      size: 40Gi
+    jobservice:
+      storageClass: do-block-storage-retain
+      size: 5Gi
+    database:
+      storageClass: do-block-storage-retain
+      size: 5Gi
+    redis:
+      storageClass: do-block-storage-retain
+      size: 5Gi
+    trivy:
+      storageClass: do-block-storage-retain
+      size: 10Gi
+core:
+  nodeSelector: &id001
+    onemind.io/compute-role: ecosystem
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+portal:
+  nodeSelector: *id001
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+jobservice:
+  nodeSelector: *id001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+registry:
+  nodeSelector: *id001
+database:
+  type: internal
+  internal:
+    nodeSelector: *id001
+redis:
+  type: internal
+  internal:
+    nodeSelector: *id001
+trivy:
+  enabled: true
+  nodeSelector: *id001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: '2'
+      memory: 2Gi

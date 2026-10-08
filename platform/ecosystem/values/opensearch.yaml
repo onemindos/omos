@@ -1,0 +1,28 @@
+clusterName: onemind-search
+nodeGroup: master
+replicas: 1
+singleNode: true
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+opensearchJavaOpts: -Xms1g -Xmx1g
+resources:
+  requests:
+    cpu: 500m
+    memory: 2Gi
+  limits:
+    cpu: '2'
+    memory: 4Gi
+persistence:
+  enabled: true
+  storageClass: do-block-storage-retain
+  size: 20Gi
+extraEnvs:
+- name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: opensearch-admin
+      key: password
+sysctlInit:
+  enabled: false
+securityConfig:
+  enabled: false
