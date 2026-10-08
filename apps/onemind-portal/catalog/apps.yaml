@@ -2005,7 +2005,7 @@ spec:
       "info": {
         "title": "OneMind observational API",
         "version": "1.0.0",
-        "description": "Source-verified portal endpoints. User authentication required; billing and cloud require OneMind administrator membership. Unknown/configuration-required are not healthy or zero."
+        "description": "Portal endpoints. User authentication required; billing and cloud require OneMind administrator membership. Unknown/configuration-required are not healthy or zero."
       },
       "servers": [
         {
@@ -2619,3 +2619,38 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: geospatial
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: platform-backup-recovery
+  title: Platform Backup and Recovery
+  description: Encrypted logical backups, retained CSI snapshots and staged portable filesystem recovery.
+  tags:
+    - infrastructure
+    - backup
+    - recovery
+  annotations:
+    argocd/app-name: platform-backups
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backups
+    onemind.io/verified-at: '2026-10-08'
+    onemind.io/verification: partial-restore-verified
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-backups
+      title: Logical backups and retained snapshots
+      icon: dashboard
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-volume-backups
+      title: Portable volume backup sources
+      icon: dashboard
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/backups/
+      title: Recovery runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/operations/cluster-readiness-2026-10-08.md
+      title: Restore evidence and remaining gaps
+    - url: https://github.com/onemindos/omos/blob/main/docs/operations/home-migration.md
+      title: Home migration acceptance
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure

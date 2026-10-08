@@ -4,6 +4,8 @@ metadata:
   name: backstage-backup
   namespace: backstage
 spec:
+  # Superseded by verified all-plugin-db backup-postgres-backstage.
+  suspend: true
   schedule: '15 7 * * *'
   timeZone: Etc/UTC
   concurrencyPolicy: Forbid
