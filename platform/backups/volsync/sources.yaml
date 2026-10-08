@@ -98,9 +98,9 @@ metadata:
     onemind.dev/source-pvc: pgdata-authentik-postgres-0
 spec:
   sourcePVC: pgdata-authentik-postgres-0
-  paused: true
+  paused: false
   trigger:
-    schedule: 0 0 * * *
+    manual: readiness-20261008
   restic:
     repository: volume-86c342dd8d39-restic
     copyMethod: Snapshot
