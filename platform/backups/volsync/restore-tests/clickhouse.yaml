@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clickhouse-restic-verify-20261008
+  namespace: clickhouse
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: do-block-storage
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: clickhouse-restic-verify-20261008
+  namespace: clickhouse
+spec:
+  trigger:
+    manual: verify-20261008
+  restic:
+    repository: volume-ab4fbd87295d-restic
+    copyMethod: Direct
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+    destinationPVC: clickhouse-restic-verify-20261008
+    cleanupCachePVC: true
