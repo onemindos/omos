@@ -41,3 +41,8 @@ tak-server/build-root/
 # macOS noise
 .DS_Store
 **/.DS_Store
+
+# Local Python bytecode and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/

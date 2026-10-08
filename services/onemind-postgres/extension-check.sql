@@ -1,0 +1,10 @@
+CREATE EXTENSION postgis;
+CREATE EXTENSION vector;
+CREATE EXTENSION age;
+LOAD 'age';
+SET search_path = ag_catalog, public;
+SELECT ST_Distance(ST_Point(0,0), ST_Point(3,4)) = 5 AS spatial_check;
+SELECT '[1,2,3]'::vector <-> '[1,2,3]'::vector = 0 AS vector_check;
+SELECT create_graph('extension_check');
+SELECT * FROM cypher('extension_check', $$CREATE (:Site {name: 'OneMind'})$$) AS (v agtype);
+SELECT * FROM cypher('extension_check', $$MATCH (s:Site) RETURN s.name$$) AS (name agtype);
