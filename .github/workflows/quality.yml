@@ -9,15 +9,23 @@ on:
 jobs:
   lint:
     name: Lint & Validate
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install yamllint
         run: pip install yamllint
 
-      - name: Lint YAML
-        run: yamllint -c .yamllint.yml platform/ docs/ tak-server/ || true
+      - name: Lint changed YAML (required)
+        env:
+          YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python scripts/validate_changed_yaml.py
+
+      - name: Report existing repository YAML debt
+        continue-on-error: true
+        run: yamllint -c .yamllint.yml platform/ docs/ tak-server/
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
@@ -46,10 +54,10 @@ jobs:
           echo "Scanning for potential secrets..."
           key_begin="BEGIN"
           key_kind="PRIVATE KEY"
-          if grep -rn "${key_begin}.*${key_kind}" --include="*.yaml" --include="*.yml" --include="*.tf" .; then
+          if grep -rl "${key_begin}.*${key_kind}" --include="*.yaml" --include="*.yml" --include="*.tf" .; then
             echo "::error::Private key found in tracked files!"
             exit 1
           fi
-          if grep -rn "password:" --include="*.yaml" --include="*.yml" platform/ | grep -v "secretKeyRef" | grep -v "external-secret" | grep -v "valueFrom" | grep -v "#"; then
+          if python scripts/check_secret_patterns.py; then
             echo "::warning::Possible hardcoded password found (review manually)"
           fi
