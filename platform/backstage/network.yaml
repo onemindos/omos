@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: backstage
+  annotations:
+    volsync.backube/privileged-movers: "true"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

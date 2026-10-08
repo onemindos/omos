@@ -26,3 +26,10 @@ Source PVCs must never be deleted during backup cleanup.
 References:
 - https://volsync.readthedocs.io/en/latest/usage/restic/
 - https://github.com/backube/volsync/releases/tag/v0.16.0
+
+VolSync namespace opt-in grants movers only DAC_OVERRIDE, CHOWN and FOWNER
+capabilities, with privileged=false, no host mounts and read-only source snapshot
+clones. These allow preserving arbitrary application ownership and permissions.
+n8n retains its restricted namespace policy and uses the original application UID
+(1000) or PostgreSQL UID (70), without added capabilities. A restore must verify
+ownership and data-directory modes before starting databases.
