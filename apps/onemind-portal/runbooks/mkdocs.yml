@@ -15,6 +15,7 @@ nav:
   - TAK services: tak.md
   - Monitoring and health: monitoring.md
   - Resilience: resilience.md
+  - Backup and recovery: backups.md
   - AI context: ai.md
   - Cloud summaries: cloud.md
   - Guided workflows: workflows.md
