@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-backups
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/backups
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ops
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
