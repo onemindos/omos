@@ -207,3 +207,8 @@ techInsights:
             any:
               - {fact: hasAnnotationBackstageIoTechdocsRef, operator: equal, value: true}
               - {fact: hasAnnotationBackstageIoTechdocsEntity, operator: equal, value: true}
+
+# Internal Events bus only; do not create public webhook topic endpoints.
+events:
+  http:
+    topics: []

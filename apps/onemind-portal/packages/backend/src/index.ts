@@ -60,6 +60,9 @@ backend.add(import('@backstage/plugin-kubernetes-backend'));
 // user settings plugin
 backend.add(import('@backstage/plugin-user-settings-backend'));
 
+// Shared database-backed event delivery across backend replicas. No HTTP ingress topics.
+backend.add(import('@backstage/plugin-events-backend'));
+
 // notifications and signals plugins
 backend.add(import('@backstage/plugin-notifications-backend'));
 backend.add(import('@backstage/plugin-signals-backend'));
