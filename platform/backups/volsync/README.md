@@ -33,3 +33,11 @@ clones. These allow preserving arbitrary application ownership and permissions.
 n8n retains its restricted namespace policy and uses the original application UID
 (1000) or PostgreSQL UID (70), without added capabilities. A restore must verify
 ownership and data-directory modes before starting databases.
+
+Authentik's filesystem export was restored to a new PVC and PostgreSQL booted with
+230 application tables. It now has a daily schedule. The next five-volume batch
+uses manual initial triggers; other sources stay paused. TAK's original five-PVC
+quota blocked backup caches and clones. The backup application now manages its
+quota at 18 PVCs / 100 GiB, allowing the original 37 GiB, five caches, concurrent
+clone space and a restore drill. This is an admission ceiling, not provisioned
+storage. Preserve this override during any legacy TAK Helm upgrade.

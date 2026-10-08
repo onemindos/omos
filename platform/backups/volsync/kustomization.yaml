@@ -39,3 +39,4 @@ resources:
 - sealed/takserver-volume-2b88c0eca294.yaml
 - sealed/zeus-site-volume-5cc6336f5206.yaml
 - namespaces.yaml
+- takserver-quota.yaml
