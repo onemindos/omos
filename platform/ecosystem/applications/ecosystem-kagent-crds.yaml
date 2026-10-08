@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecosystem-kagent-crds
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/kagent-dev/kagent/helm
+    chart: kagent-crds
+    targetRevision: 0.10.3
+    helm:
+      releaseName: kagent-crds
+      valueFiles:
+      - $values/platform/ecosystem/values/kagent-crds.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kagent
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true

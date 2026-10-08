@@ -1,0 +1,45 @@
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: '1'
+    memory: 1Gi
+credentials:
+  useSecret: true
+  existingSecret: velero-credentials
+initContainers:
+- name: velero-plugin-for-aws
+  image: velero/velero-plugin-for-aws:v1.14.4
+  volumeMounts:
+  - mountPath: /target
+    name: plugins
+snapshotsEnabled: false
+deployNodeAgent: true
+configuration:
+  backupStorageLocation:
+  - name: default
+    provider: aws
+    bucket: onemind-backups
+    prefix: velero/cloud
+    default: true
+    config:
+      region: nyc3
+      s3ForcePathStyle: 'true'
+      s3Url: https://nyc3.digitaloceanspaces.com
+  volumeSnapshotLocation: []
+  defaultVolumesToFsBackup: false
+  features: EnableCSI
+schedules:
+  onemind-platform:
+    schedule: 0 6 * * *
+    template:
+      ttl: 720h
+      includedNamespaces:
+      - onemind-core
+      - onemind-data
+      - onemind-ai
+      - onemind-jobs
+      snapshotVolumes: false

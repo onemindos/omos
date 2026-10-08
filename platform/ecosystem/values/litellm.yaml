@@ -1,0 +1,65 @@
+replicaCount: 1
+fullnameOverride: litellm
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+image:
+  tag: v1.104.2@sha256:3d88bd757134a00e8c00237b85a021ab1f6d54abb9c1df750f411dbe7256a500
+  pullPolicy: IfNotPresent
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: '2'
+    memory: 2Gi
+masterkeySecretName: litellm-auth
+masterkeySecretKey: master-key
+db:
+  useExisting: true
+  deployStandalone: false
+  endpoint: onemind-data-rw.onemind-data.svc.cluster.local
+  database: litellm
+  secret:
+    name: litellm-db
+    usernameKey: username
+    passwordKey: password
+  url: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=require
+redis:
+  enabled: false
+environmentSecrets:
+- litellm-providers
+proxy_config:
+  model_list:
+  - model_name: onemind-chat
+    litellm_params:
+      model: openrouter/anthropic/claude-sonnet-4.5
+      api_key: os.environ/OPENROUTER_API_KEY
+  - model_name: onemind-fast
+    litellm_params:
+      model: openrouter/openai/gpt-4.1-mini
+      api_key: os.environ/OPENROUTER_API_KEY
+  general_settings:
+    master_key: os.environ/LITELLM_MASTER_KEY
+    store_model_in_db: true
+  litellm_settings:
+    drop_params: true
+    set_verbose: false
+serviceMonitor:
+  enabled: true
+  labels:
+    release: monitoring
+envVars:
+  DATABASE_CONNECTION_POOL_LIMIT: '10'
+migrationJob:
+  hooks:
+    helm:
+      enabled: false
+    argocd:
+      enabled: false
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: '2'
+      memory: 2Gi

@@ -1,0 +1,23 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: onemind-workflow-state
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: state.postgresql
+  version: v2
+  metadata:
+    - name: connectionString
+      secretKeyRef:
+        name: dapr-workflows-db
+        key: uri
+    - name: actorStateStore
+      value: "true"
+    - name: maxConns
+      value: "8"
+    - name: tablePrefix
+      value: onemind_workflows
+auth:
+  secretStore: kubernetes
+scopes:
+  - onemind-core
