@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-volume-backups
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '6'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/backups/volsync
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ops
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
