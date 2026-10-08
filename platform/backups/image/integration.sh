@@ -2,6 +2,7 @@
 # Synthetic local services only. Never inherits production connection variables.
 set -euo pipefail
 backup_image="${1:-platform-backup:test}"
+postgres_test_image="${POSTGRES_TEST_IMAGE:-postgres:15-alpine@sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81}"
 test_dir="$(mktemp -d)"
 cleanup() {
   docker rm -f onemind-backup-test-pg onemind-backup-test-restore onemind-backup-test-nats >/dev/null 2>&1 || true
@@ -30,18 +31,18 @@ BACKUP_ENCRYPTION_KEY=a2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2s=
 ENV
 docker run -d --name onemind-backup-test-pg -p 127.0.0.1:15432:5432 \
   -e POSTGRES_PASSWORD=synthetic -e POSTGRES_DB=fixture \
-  postgres:15-alpine@sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81 >/dev/null
+  "$postgres_test_image" >/dev/null
 for ((attempt=1; attempt<=60; attempt++)); do
-  if docker exec onemind-backup-test-pg pg_isready -U postgres >/dev/null; then break; fi
+  if docker exec onemind-backup-test-pg pg_isready -h 127.0.0.1 -U postgres >/dev/null; then break; fi
   sleep 1
 done
 docker exec onemind-backup-test-pg psql -U postgres -d fixture -v ON_ERROR_STOP=1 \
   -c 'CREATE TABLE fixture(id integer primary key); INSERT INTO fixture VALUES (1),(2);' >/dev/null
 docker run -d --name onemind-backup-test-restore -p 127.0.0.1:15433:5432 \
   -e POSTGRES_HOST_AUTH_METHOD=trust \
-  postgres:15-alpine@sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81 >/dev/null
+  "$postgres_test_image" >/dev/null
 for ((attempt=1; attempt<=60; attempt++)); do
-  if docker exec onemind-backup-test-restore pg_isready -U postgres >/dev/null; then break; fi
+  if docker exec onemind-backup-test-restore pg_isready -h 127.0.0.1 -U postgres >/dev/null; then break; fi
   sleep 1
 done
 docker run --rm --network host --env-file "$test_dir/common.env" \
