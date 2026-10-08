@@ -146,9 +146,8 @@ export function GrafanaHome() {
               aria-pressed={embeddingEnabled && active === url}
             >
               {items.find(item => item.url === url)?.title ??
-                decodeURIComponent(
-                  new URL(url).pathname.split('/').pop() ?? 'Dashboard',
-                )}
+                new URL(url).pathname.split('/').pop() ??
+                'Dashboard'}
             </Button>
             <Link
               href={url}

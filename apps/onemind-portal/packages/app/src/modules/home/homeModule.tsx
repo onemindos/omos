@@ -63,7 +63,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
     {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
-      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
+      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base??'#237f91'}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
       <Box style={{...appGridStyle,gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))'}}>
         {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.ref}>
           <AppTile app={app} controls={controls} />
