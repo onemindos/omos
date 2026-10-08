@@ -3,17 +3,19 @@ import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import { HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
-import directory from './directory.json';
+import { AppTile, appGridStyle, launcherApps as directory, QuickAccess, useAppFavorites } from './Launcher';
 import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 function Directory() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
+  const [favoritesOnly,setFavoritesOnly]=useState(false);
+  const controls=useAppFavorites();
   const theme = useTheme();
   const dark = theme.palette.type === 'dark';
   const groups = [...new Set(directory.map(app => app.groupTitle))];
-  const matches = directory.filter(app => (category === 'All' || app.groupTitle === category) &&
+  const matches = directory.filter(app => (!favoritesOnly || controls.isFavorite(app)) && (category === 'All' || app.groupTitle === category) &&
     `${app.title} ${app.description} ${app.groupTitle}`.toLowerCase().includes(query.trim().toLowerCase()));
   const destinations = [
     { title: 'Today', detail: 'Decide what needs you', url: '/today' },
@@ -27,33 +29,35 @@ function Directory() {
     <Box p={3} mb={3} style={{ borderRadius: 20, border: `1px solid ${theme.palette.divider}`,
       backgroundImage: `linear-gradient(${dark ? '#111215df' : '#fffffff0'},${dark ? '#111215df' : '#fffffff0'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <Typography variant="overline" style={{ letterSpacing: 3 }}>ONE MIND · YOUR WORKSPACE</Typography>
-      <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Everything connected.<br />A clearer next move.</Typography>
+      <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Your OneMind home.</Typography>
       <Typography color="textSecondary">Your apps, infrastructure, agents, and knowledge in one place.</Typography>
       <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Availability appears in the live status panel.</Typography></Box>
     </Box>
+    <QuickAccess />
     <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
       {destinations.map(item => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 12 }}>
         <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
       </Button>)}
     </Box>
-    <Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Your application fabric</Typography>
+    <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
     <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
     <TextField label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
     <Box my={2} display="flex" flexWrap="wrap" style={{ gap: 8 }} aria-label="Application categories">
+      <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
       {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)}>{group}</Button>)}
     </Box>
+    {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
     {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
       <Typography variant="h6" component="h3" style={{ marginBottom: 12 }}>{group}</Typography>
-      <Box style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 210px), 1fr))', gap: 12 }}>
-        {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.name} p={2} className="onemind-app-card" style={{ border: `1px solid ${theme.palette.divider}`, borderRadius: 14, background: theme.palette.background.paper, display: 'flex', flexDirection: 'column', minHeight: 138 }}>
-          <Link href={app.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700 }}>{app.title} ↗</Link>
-          <Typography variant="body2" color="textSecondary" style={{ marginTop: 8, marginBottom: 16, flex: 1 }}>{app.description}</Typography>
-          <Link href={`/catalog/default/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link>
+      <Box style={appGridStyle}>
+        {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.name}>
+          <AppTile app={app} controls={controls} />
+          <Box mt={1} ml={2}><Link href={`/catalog/default/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link></Box>
         </Box>)}
       </Box>
     </Box>)}
-    {!matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); }}>Reset filters</Button></Box>}
+    {!matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); }}>Reset filters</Button></Box>}
   </Box>;
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};
@@ -128,6 +132,7 @@ export function CloudPanel(){
   </Box>;
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
+  HomePageWidgetBlueprint.make({name:'onemind-favorites',params:{name:'OneMindFavorites',title:'Favorite apps',description:'Direct app launch tiles using your existing catalog stars',components:async()=>({Content:QuickAccess})}}),
   HomePageWidgetBlueprint.make({name:'onemind-today',params:{name:'OneMindToday',title:'Today',description:'Live attention, work and inbox in one operational workspace',components:async()=>({Content:(await import('./Today')).Today})}}),
   HomePageWidgetBlueprint.make({name:'github-reviews',params:{name:'OneMindGitHubReviews',title:'GitHub reviews',description:'Requested reviews in onemindos; connect GitHub authorization',components:async()=>({Content:()=> <HomePageRequestedReviewsCard query="org:onemindos is:pr is:open review-requested:@me" />})}}),
   HomePageWidgetBlueprint.make({name:'github-open-prs',params:{name:'OneMindGitHubPullRequests',title:'GitHub pull requests',description:'Your open pull requests in onemindos',components:async()=>({Content:()=> <HomePageYourOpenPullRequestsCard query="org:onemindos is:pr is:open author:@me" />})}}),
