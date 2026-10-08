@@ -18,3 +18,7 @@ resources:
 - sealed/backstage-platform-backup-credentials.yaml
 - network.yaml
 - snapshots-20261008.yaml
+- cluster-recovery.yaml
+- cluster-recovery-network.yaml
+- sealed/ops-platform-backup-credentials.yaml
+- sealed/ops-ghcr.yaml
