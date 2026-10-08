@@ -5,6 +5,7 @@ import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
 import { useDirectory } from './useDirectory';
+import { LiveOverview } from './LiveOverview';
 import { ServiceManager } from './ServiceManager';
 import { groupColors } from './colors';
 import { ActivityInbox } from './ActivityInbox';
@@ -52,7 +53,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
         <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
       </Button>)}
     </Box>}
-    {!query.trim() && category==='All' && !favoritesOnly && utilities}
+    {!query.trim() && category==='All' && !favoritesOnly && <><LiveOverview />{utilities}</>}
     <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
     <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
@@ -142,6 +143,7 @@ export function CloudPanel(){
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
   HomePageLayoutBlueprint.make({name:'onemind-flow',params:{loader:async()=>(await import('./HomeLayout')).HomeLayout}}),
+  HomePageWidgetBlueprint.make({name:'onemind-live-overview',params:{name:'OneMindLiveOverview',title:'Live overview',description:'Timestamped workloads, deployments, backup activity and service checks',components:async()=>({Content:LiveOverview})}}),
   HomePageWidgetBlueprint.make({name:'onemind-favorites',params:{name:'OneMindFavorites',title:'Favorite apps',description:'Direct app launch tiles using your existing catalog stars',components:async()=>({Content:QuickAccess})}}),
   HomePageWidgetBlueprint.make({name:'onemind-today',params:{name:'OneMindToday',title:'Today',description:'Live attention, work and inbox in one operational workspace',components:async()=>({Content:(await import('./Today')).Today})}}),
   HomePageWidgetBlueprint.make({name:'github-reviews',params:{name:'OneMindGitHubReviews',title:'GitHub reviews',description:'Requested reviews in onemindos; connect GitHub authorization',components:async()=>({Content:()=> <HomePageRequestedReviewsCard query="org:onemindos is:pr is:open review-requested:@me" />})}}),

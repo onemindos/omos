@@ -14,3 +14,7 @@ Use official Backstage documentation and installed package types. Keep private T
 - Appropriate authenticated runtime behavior and source freshness.
 - Light/dark and responsive layout.
 - No fabricated health, contracts, events or costs.
+
+## Implementation
+
+Default Home now shows timestamped, minute-refresh workload, Argo, backup schedule and critical-service summaries. Failed source lists are unknown rather than zero. Previous observations are explicitly stale after refresh failure. Inbox loads only when expanded; full Signals-backed Notifications remains available. Native Most Visited joins clocks and recent visits in the fluid layout. No chart iframes load by default.
