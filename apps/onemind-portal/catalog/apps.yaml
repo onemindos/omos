@@ -2800,3 +2800,28 @@ spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: proton-mail
+  title: Proton Mail
+  description: Proton email web application
+  tags:
+    - email
+    - communication
+  annotations:
+    onemind.io/launcher-url: https://mail.proton.me/
+    onemind.io/launcher-category: Communication
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://mail.proton.me/
+      title: Open application
+      icon: dashboard
+    - url: https://proton.me/mail
+      title: Product website
+      icon: docs
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
