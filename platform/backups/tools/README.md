@@ -43,3 +43,20 @@ repository. The mirror records those volumes separately as confirmedEmptyVolumes
 it does not claim an encrypted archive or run Restic checks against a nonexistent
 repository. Their Git-owned PVC declarations and initial retained snapshots remain.
 Do not delete dormant application volumes simply because an export found no files.
+
+`export_helm.py` recovers the deployed revisions' chart versions, values and rendered
+manifests from Helm release Secrets inside the verified recovery archive. It needs
+only the local archive and key, not DigitalOcean or a live Kubernetes API. Outputs
+may contain plaintext app credentials: directories are mode 0700, files 0600, and
+an existing output directory is never overwritten. Store these outside Git.
+
+```sh
+python3 export_helm.py /path/to/recovery/archive.tar.gz.aesgcm --output /private/helm-bootstrap
+```
+
+Review inventory.json and obtain matching charts before recreating manual releases.
+Rendered manifests preserve the archived Helm revision, which can predate Argo
+adoption and later live repairs. NATS's archived StatefulSet is superseded by the
+current Git-owned workload. Do not blindly replay old manifests, provider storage
+classes, exposure annotations or overlapping Argo resources. Review namespace,
+storage/ingress overlays, selected secrets and chart inputs before a home drill.
