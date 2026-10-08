@@ -686,7 +686,7 @@ spec:
               type: RuntimeDefault
           containers:
           - name: backup
-            image: ghcr.io/onemindos/platform-backup@sha256:de795f12b6295d0db5cbe803c11cc4db38678670f4ec8cf7951484a090a7f863
+            image: ghcr.io/onemindos/platform-backup@sha256:5b151e520bcdb086bbcf40dcc92a10bcfea810aa4cc4fe44f3f63598350b6e07
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -698,7 +698,7 @@ spec:
                 name: platform-backup-credentials
             env:
             - name: BACKUP_KIND
-              value: postgres
+              value: postgres-owned
             - name: BACKUP_PREFIX
               value: backups/postgres-backstage
             - name: S3_REGION
@@ -706,8 +706,6 @@ spec:
             - name: PGHOST
               value: backstage-postgres
             - name: PGUSER
-              value: backstage
-            - name: PGDATABASE
               value: backstage
             - name: PGCONNECT_TIMEOUT
               value: '15'
