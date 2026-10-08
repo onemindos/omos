@@ -206,7 +206,7 @@ spec:
           secretName: nats-server-tls
   updateStrategy:
     rollingUpdate:
-      partition: 2
+      partition: 1
     type: RollingUpdate
   volumeClaimTemplates:
   - apiVersion: v1
