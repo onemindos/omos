@@ -1,3 +1,8 @@
+# No legacy policies exist to migrate on this initial Argo-managed installation.
+# The Helm migration hook rewrites CRDs and removes Argo tracking annotations.
+crds:
+  migration:
+    enabled: false
 admissionController:
   replicas: 1
   nodeSelector: &id001
