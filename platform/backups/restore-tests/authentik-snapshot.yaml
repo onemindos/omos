@@ -37,6 +37,7 @@ spec:
         runAsGroup: 70
         runAsNonRoot: true
         fsGroup: 70
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -45,10 +46,12 @@ spec:
         command: [sh, -ec]
         args:
         - |
-          postgres -D /data/pgdata -h 127.0.0.1 -p 15432 > /tmp/postgres.log 2>&1 &
+          chmod 700 /data/pgdata
+          postgres -D /data/pgdata -h 127.0.0.1 -p 15432 -k /tmp > /tmp/postgres.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 90); do
+            if ! kill -0 "$server_pid" 2>/dev/null; then exit 1; fi
             if pg_isready -h 127.0.0.1 -p 15432 -U authentik >/dev/null; then break; fi
             sleep 2
           done
