@@ -30,3 +30,9 @@ User authorized preparation of the read-only connection. Run python3 apps/onemin
 Seal the local JSON as backstage-zoho in namespace backstage through the existing cluster-context/SealedSecrets procedure. Existing deployment references this optional Secret. No OAuth authorization or token exchange has been run by this PR. The user must generate the grant in Zoho; do not request plaintext credentials in chat.
 
 Sources: https://projects.zoho.com/api-docs and https://www.zoho.com/calendar/help/api/get-events-list.html .
+
+## Calendar implementation prepared
+
+A selected-calendar read-only adapter follows the official events-list endpoint with an explicit seven-day UTC range and byinstance=true. It uses event.READ, exposes at most 20 sanitized event titles/start times, redacts private or unspecified-privacy titles, omits attendees/descriptions/identities and never invents a timezone. It labels bounded coverage and unknown times. Access requires an administrator user. Five-minute caching and bounded response/deadline limits apply. The optional selected ZOHO_CALENDAR_UID and shared read-only refresh grant are stored locally by the preparation helper and sealed through the existing workflow.
+
+The adapter and native Home/Today cards are implemented, but no real Calendar account response has been accepted yet. Activation remains pending the user's OAuth grant and selected UID. Projects V3's documented ISO end_date is now interpreted as its explicitly recorded calendar date.
