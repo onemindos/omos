@@ -46,3 +46,14 @@ may legitimately have no tables. The complete set must contain application table
 before verification succeeds. Owned-database archives record a manifest mapping
 names to hashed dump filenames. Roles and grants still come from deployment secrets
 and bootstrap configuration. Dumps use compression level 1 to reduce backup CPU.
+
+`BACKUP_KIND=kubernetes` is a read-only recovery export of Secrets and ConfigMaps,
+including active SealedSecrets keys. It follows API pagination, strips server IDs,
+ownership and annotations, then encrypts the archive using the existing archive key.
+The downloaded export must have an identical payload hash and resource counts.
+Its result reports `restoreVerified=false` and `downloadDecryptEqualityVerified=true`:
+no resources are applied and a new-cluster recovery drill remains required. Only
+the dedicated recovery job receives list access to Secrets and ConfigMaps. Existing
+portal/agent service accounts receive no additional rights. Recover selected app
+secrets and sealing keys; do not blindly replay old service-account tokens, Helm
+release records, provider credentials or all ConfigMaps onto a different cluster.
