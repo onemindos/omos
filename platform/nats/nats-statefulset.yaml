@@ -18,7 +18,7 @@ spec:
   replicas: 3
   revisionHistoryLimit: 10
   selector:
-    matchLabels:
+    matchLabels: &id001
       app.kubernetes.io/component: nats
       app.kubernetes.io/instance: nats
       app.kubernetes.io/name: nats
@@ -96,8 +96,8 @@ spec:
           timeoutSeconds: 5
         resources:
           requests:
-            cpu: 250m
-            memory: 1Gi
+            cpu: 100m
+            memory: 512Mi
           limits:
             memory: 2Gi
         startupProbe:
@@ -204,9 +204,15 @@ spec:
         secret:
           defaultMode: 420
           secretName: nats-server-tls
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels: *id001
+            topologyKey: kubernetes.io/hostname
   updateStrategy:
     rollingUpdate:
-      partition: 0
+      partition: 2
     type: RollingUpdate
   volumeClaimTemplates:
   - apiVersion: v1
