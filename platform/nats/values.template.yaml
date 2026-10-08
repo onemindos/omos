@@ -37,7 +37,7 @@ config:
     merge:
       no_advertise: true
       authorization:
-***        users:
+        users:
           - user: leaf_tak
             password: "__LEAF_TAK_PW__"
             account: ONEMIND

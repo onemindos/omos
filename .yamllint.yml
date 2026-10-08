@@ -1,5 +1,8 @@
 ---
 extends: default
+ignore: |
+  tak-server/chart/templates/**
+  tak-server/chart/third-party/**/templates/**
 
 rules:
   line-length:

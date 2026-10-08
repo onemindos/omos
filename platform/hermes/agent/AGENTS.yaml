@@ -77,4 +77,4 @@ agents:
   #   serves: legacy
   #   description: "Watches <feed>; reports findings to Legacy."
   #   persona: agents/scout/SOUL.md
-  servants: []
+servants: []
