@@ -24,3 +24,5 @@ User selected DigitalOcean whole-account totals first. The billing adapter queri
 Activation requires a dedicated token with only billing:read, sealed as backstage-billing with key DO_BILLING_READ_TOKEN. The existing full doctl credential was not copied into the portal. A local doctl read confirmed the balance endpoint shape; portal activation remains separate. Cost Insights allocation views are deferred until an actual allocation source exists rather than populating its demo client.
 
 Sources: https://docs.digitalocean.com/reference/api/scopes/billing/read/ and https://docs.digitalocean.com/platform/billing/reference/api/ .
+
+The API descriptor also includes the prepared selected-calendar endpoint. The local prepare-billing.py helper privately validates and saves a user-created billing:read token with mode 600 and exclusive creation; it does not reuse a general administration credential or install a Secret automatically.

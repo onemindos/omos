@@ -2107,6 +2107,30 @@ spec:
               }
             }
           }
+        },
+        "/calendar": {
+          "get": {
+            "operationId": "getCalendar",
+            "summary": "Selected US Zoho calendar; bounded seven-day upcoming window",
+            "responses": {
+              "200": {
+                "description": "Observation or source readiness state",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Calendar"
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "User authentication required"
+              },
+              "403": {
+                "description": "OneMind administrator membership required"
+              }
+            }
+          }
         }
       },
       "components": {
@@ -2392,6 +2416,73 @@ spec:
               },
               "partial": {
                 "type": "boolean"
+              }
+            }
+          },
+          "Calendar": {
+            "type": "object",
+            "required": [
+              "state",
+              "coverage",
+              "observedAt",
+              "expiresAt",
+              "attemptedAt",
+              "events",
+              "partial",
+              "link"
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "configuration-required",
+                  "current",
+                  "stale",
+                  "unavailable"
+                ]
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "observedAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "expiresAt": {
+                "type": "string",
+                "nullable": true
+              },
+              "attemptedAt": {
+                "type": "string"
+              },
+              "partial": {
+                "type": "boolean"
+              },
+              "link": {
+                "type": "string"
+              },
+              "events": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "ISO instant, all-day date or unknown; no inferred timezone"
+                    },
+                    "allDay": {
+                      "type": "boolean"
+                    }
+                  }
+                }
               }
             }
           }
