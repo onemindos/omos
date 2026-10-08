@@ -34,3 +34,24 @@ References:
 - https://backstage.io/docs/getting-started/homepage/
 - https://gethomepage.dev/configs/bookmarks/
 - https://homarr.dev/docs/widgets/bookmarks/
+
+## Flow layout and color repair
+
+Browser inspection found the full app directory in a fixed-size native grid card: its
+MuiCardContent was 1,461 px tall with 11,485 px of content. This caused nested scrolling
+and a cramped launcher. The default view now uses the supported HomePageLayoutBlueprint
+with a direct, full-width Directory and naturally sized native utility widgets. App search
+and category filters sit above Favorites; active filtering goes straight to matching apps.
+
+Customize widgets retains Backstage's existing CustomHomepageGrid, saved user layouts and
+all widget choices, with duplicate widget instances prevented. The launcher view does not
+write or reset those saved layouts. Favorites continue to use the same catalog star API.
+
+The palette now has teal/blue primary accents, purple secondary accents, category colors,
+colored local app initials, warm gold active stars and gradient panels over the original
+background assets. The OneMind logo remains unchanged. Star controls have 44 px hit targets.
+No external image or favicon source, new package, backend permission or credential was added.
+
+Verification requires actual natural scrolling and search/pinning in the default flow view,
+readable light/dark rendering, access to the native widget view, healthy pinned rollout and
+preserved preferences. Compilation is not visual acceptance evidence.
