@@ -1,0 +1,26 @@
+# Future home target only. No active parent references this Application.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: home-forgejo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: code.forgejo.org/forgejo-helm
+    chart: forgejo
+    targetRevision: 17.2.0
+    helm:
+      releaseName: home-forgejo
+      valuesObject:
+        replicaCount: 1
+        persistence:
+          enabled: true
+          size: 20Gi
+  destination:
+    name: onemind-home
+    namespace: forgejo
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true

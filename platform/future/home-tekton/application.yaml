@@ -1,0 +1,21 @@
+# Future home target only; no active Argo parent and no automated sync.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: home-tekton
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://cdfoundation.github.io/tekton-helm-chart
+    chart: tekton-pipeline
+    targetRevision: 1.15.3
+    helm:
+      releaseName: home-tekton
+  destination:
+    name: onemind-home
+    namespace: tekton-pipelines
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true

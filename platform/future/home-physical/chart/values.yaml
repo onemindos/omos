@@ -1,0 +1,49 @@
+components:
+  homeAssistant:
+    enabled: false
+    name: home-assistant
+    image: ghcr.io/home-assistant/home-assistant:2026.10.0
+    port: 8123
+    hostNetwork: true
+    configPath: /config
+    storage: 20Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: "2"
+        memory: 2Gi
+  frigate:
+    enabled: false
+    name: frigate
+    image: ghcr.io/blakeblackshear/frigate:0.18.0
+    port: 8971
+    hostNetwork: false
+    configPath: /config
+    storage: 20Gi
+    resources:
+      requests:
+        cpu: "1"
+        memory: 1Gi
+      limits:
+        cpu: "4"
+        memory: 4Gi
+  robotics:
+    enabled: false
+    name: robotics-adapter
+    image: "" # Required immutable site adapter image when enabled.
+    port: 8080
+    hostNetwork: false
+    configPath: /config
+    storage: 5Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "2"
+        memory: 2Gi
+storageClass: "" # Set explicitly in the home site overlay.
+nodeSelector:
+  onemind.io/site: home

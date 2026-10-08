@@ -1,0 +1,31 @@
+# Future home target only. No active parent references this Application.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: home-rook
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.rook.io/release
+    chart: rook-ceph
+    targetRevision: 1.21.0
+    helm:
+      releaseName: home-rook
+      valuesObject:
+        crds:
+          enabled: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: '1'
+            memory: 1Gi
+  destination:
+    name: onemind-home
+    namespace: rook-ceph
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true

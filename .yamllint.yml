@@ -1,6 +1,7 @@
 ---
 extends: default
 ignore: |
+  platform/future/home-physical/chart/templates/**
   tak-server/chart/templates/**
   tak-server/chart/third-party/**/templates/**
 

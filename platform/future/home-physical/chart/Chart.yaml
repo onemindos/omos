@@ -1,0 +1,6 @@
+apiVersion: v2
+name: onemind-home-physical
+description: Opt-in OneMind home device and physical adapter workloads
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
