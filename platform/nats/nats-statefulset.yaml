@@ -212,7 +212,7 @@ spec:
             topologyKey: kubernetes.io/hostname
   updateStrategy:
     rollingUpdate:
-      partition: 1
+      partition: 0
     type: RollingUpdate
   volumeClaimTemplates:
   - apiVersion: v1
