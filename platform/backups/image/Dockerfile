@@ -4,7 +4,7 @@ FROM nats:2.14.2-alpine@sha256:952d157e28d5394a211229bd57a7b37ff9f184e58e2c8486a
 FROM ${POSTGRES_IMAGE}
 RUN apk add --no-cache python3 py3-boto3 py3-cryptography
 COPY --from=cli /usr/local/bin/nats /usr/local/bin/nats
-COPY --from=server /nats-server /usr/local/bin/nats-server
+COPY --from=server /usr/local/bin/nats-server /usr/local/bin/nats-server
 COPY backup.py /backup.py
 ENV HOME=/tmp
 USER 70:70
