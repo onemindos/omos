@@ -64,7 +64,7 @@ spec:
               type: RuntimeDefault
           containers:
           - name: backup
-            image: REPLACE_WITH_VERIFIED_IMAGE
+            image: ghcr.io/onemindos/platform-backup@sha256:e9ed87d72dbf81e091f9487c6af9a3285e5a05d5f91900a5f0a766ba646ec716
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
