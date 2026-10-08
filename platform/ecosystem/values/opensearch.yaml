@@ -20,7 +20,7 @@ extraEnvs:
 - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: opensearch-admin
+      name: opensearch-auth
       key: password
 sysctlInit:
   enabled: false

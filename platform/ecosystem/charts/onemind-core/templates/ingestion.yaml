@@ -47,6 +47,13 @@ spec:
           envFrom:
             - secretRef:
                 name: ingestion-runtime
+          env:
+            - name: NATS_CA_FILE
+              value: /etc/nats-trust/ca.crt
+          volumeMounts:
+            - name: nats-trust
+              mountPath: /etc/nats-trust
+              readOnly: true
           resources:
             requests:
               cpu: 100m
@@ -65,6 +72,10 @@ spec:
               path: /health
               port: health
             periodSeconds: 10
+      volumes:
+        - name: nats-trust
+          configMap:
+            name: onemind-nats-trust
 ---
 apiVersion: batch/v1
 kind: Job

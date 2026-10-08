@@ -39,7 +39,7 @@ proxy_config:
       model: openrouter/openai/gpt-4.1-mini
       api_key: os.environ/OPENROUTER_API_KEY
   general_settings:
-    master_key: os.environ/LITELLM_MASTER_KEY
+    master_key: os.environ/PROXY_MASTER_KEY
     store_model_in_db: true
   litellm_settings:
     drop_params: true

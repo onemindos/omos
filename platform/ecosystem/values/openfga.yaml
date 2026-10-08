@@ -14,6 +14,7 @@ postgresql:
 datastore:
   engine: postgres
   uriSecret: openfga-db
+  migrationType: initContainer
 authn:
   method: preshared
   preshared:

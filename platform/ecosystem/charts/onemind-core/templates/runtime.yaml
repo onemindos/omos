@@ -66,6 +66,9 @@ spec:
           envFrom:
             - secretRef:
                 name: core-runtime
+          env:
+            - name: NATS_CA_FILE
+              value: /etc/nats-trust/ca.crt
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           startupProbe:
@@ -84,9 +87,15 @@ spec:
               port: http
             periodSeconds: 20
           volumeMounts:
+            - name: nats-trust
+              mountPath: /etc/nats-trust
+              readOnly: true
             - name: temporary
               mountPath: /tmp
       volumes:
+        - name: nats-trust
+          configMap:
+            name: onemind-nats-trust
         - name: temporary
           emptyDir:
             sizeLimit: 256Mi
