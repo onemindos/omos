@@ -2551,3 +2551,71 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: px4
+  title: PX4 Autopilot
+  description: Open-source flight-control firmware for drones and unmanned vehicles
+  tags:
+    - drones
+    - autopilot
+    - firmware
+    - mavlink
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://px4.io/
+    onemind.io/launcher-category: Drones
+    onemind.io/documented-status: Planned
+    onemind.io/hosting: vehicle-firmware
+    onemind.io/source-repository: https://github.com/PX4/PX4-Autopilot
+  links:
+    - url: https://px4.io/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/PX4/PX4-Autopilot
+      title: GitHub repository
+      icon: github
+    - url: https://docs.px4.io/
+      title: Documentation
+      icon: docs
+spec:
+  type: firmware
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ardupilot
+  title: ArduPilot
+  description: Open-source autopilot firmware for aircraft, rovers, boats, and submarines
+  tags:
+    - drones
+    - autopilot
+    - firmware
+    - mavlink
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://ardupilot.org/
+    onemind.io/launcher-category: Drones
+    onemind.io/documented-status: Planned
+    onemind.io/hosting: vehicle-firmware
+    onemind.io/source-repository: https://github.com/ArduPilot/ardupilot
+  links:
+    - url: https://ardupilot.org/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/ArduPilot/ardupilot
+      title: GitHub repository
+      icon: github
+    - url: https://ardupilot.org/dev/
+      title: Documentation
+      icon: docs
+spec:
+  type: firmware
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: geospatial
