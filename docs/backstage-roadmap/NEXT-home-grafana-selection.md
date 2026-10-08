@@ -14,3 +14,9 @@ Use official Backstage documentation and installed package types. Keep private T
 - Appropriate authenticated runtime behavior and source freshness.
 - Light/dark and responsive layout.
 - No fabricated health, contracts, events or costs.
+
+## Implementation
+
+Reuses the installed grafanaApiRef and DashboardViewer. The Viewer-backed list is bounded to 100 dashboards. Up to eight selected exact Grafana dashboard URLs persist through UserSettings, with removal for deleted/inaccessible selections. HTTPS origin and /d/ path are allowlisted. No charts or dashboard-list requests load on the default Home until explicitly requested. Portal frame-src allows only self and the existing Grafana mesh hostname.
+
+Grafana currently sends its default frame denial. Embedded viewing requires a deliberate Grafana setting with a restrictive frame-ancestors policy and a working Grafana session; the UI provides direct authenticated Grafana links. This PR does not disable Grafana authentication or claim embedding acceptance until those prerequisites are addressed. Dashboard selection and direct access work independently.
