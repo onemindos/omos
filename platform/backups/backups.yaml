@@ -31,7 +31,7 @@ spec:
               type: RuntimeDefault
           containers:
           - name: backup
-            image: ghcr.io/onemindos/platform-backup@sha256:91221cf12f279116f222a3054dddab8417281f750dace252d87fbdeb6f3e4865
+            image: ghcr.io/onemindos/platform-backup@sha256:236250e0cb4165cb94ec7b22ab926ad4307ad435a430e5ef867acce93b6d8d30
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -217,7 +217,7 @@ spec:
               type: RuntimeDefault
           containers:
           - name: backup
-            image: ghcr.io/onemindos/platform-backup@sha256:91221cf12f279116f222a3054dddab8417281f750dace252d87fbdeb6f3e4865
+            image: ghcr.io/onemindos/platform-backup@sha256:236250e0cb4165cb94ec7b22ab926ad4307ad435a430e5ef867acce93b6d8d30
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -279,4 +279,4 @@ spec:
                 path: ca.crt
   timeZone: Etc/UTC
   startingDeadlineSeconds: 3600
-  suspend: true
+  suspend: false
