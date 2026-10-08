@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: backstage
-        image: ghcr.io/onemindos/onemind-portal@sha256:7b090aad76984307457a5f38515b05742685d0256dece9467b664f3fe964fb26
+        image: ghcr.io/onemindos/onemind-portal@sha256:f4675e7d82f6e9d7d528f518e7bdb574df98945f46b9b182a4a6907a899a4181
         command:
         - node
         args:
@@ -53,6 +53,7 @@ spec:
           containerPort: 7007
         envFrom:
         - secretRef: {name: backstage-zoho, optional: true}
+        - secretRef: {name: backstage-billing, optional: true}
         - secretRef: {name: backstage-plugin-integrations}
         env:
         - name: MCP_TOKEN

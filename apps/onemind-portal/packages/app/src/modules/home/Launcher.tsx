@@ -36,7 +36,7 @@ export function useAppFavorites() {
   // The existing star set supplies personal order; catalog stars outside the app
   // directory remain untouched and are available in the native Starred Entities widget.
   const favorites = [...starredEntities].flatMap(ref => {
-    const match = directory.find(app => entityRef(app) === ref);
+    const match = all.find(app => entityRef(app) === ref);
     return match ? [directory.find(app => app.url === match.url)!] : [];
   }).filter((app, index, apps) => apps.findIndex(other => other.url === app.url) === index);
   return { favorites:[...favorites,...personal.shortcuts.filter(app=>app.favorite)], isFavorite, toggle, busy, error, loaded:loaded&&personal.loaded };

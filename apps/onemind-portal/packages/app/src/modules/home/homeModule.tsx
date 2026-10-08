@@ -6,6 +6,7 @@ import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@mater
 import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
 import { useDirectory } from './useDirectory';
 import { CalendarPanel } from './CalendarPanel';
+import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
 import { GrafanaHome } from './GrafanaHome';
 import { LiveOverview } from './LiveOverview';
@@ -62,7 +63,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
     {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
-      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
+      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base??'#237f91'}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
       <Box style={{...appGridStyle,gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))'}}>
         {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.ref}>
           <AppTile app={app} controls={controls} />
@@ -70,7 +71,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
         </Box>)}
       </Box>
     </Box>)}
-    {!matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); }}>Reset filters</Button></Box>}
+    {loaded && !error && !matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); }}>Reset filters</Button></Box>}
   </Box>;
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};
@@ -147,6 +148,7 @@ export function CloudPanel(){
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
   HomePageLayoutBlueprint.make({name:'onemind-flow',params:{loader:async()=>(await import('./HomeLayout')).HomeLayout}}),
   HomePageWidgetBlueprint.make({name:'onemind-calendar',params:{name:'OneMindCalendar',title:'Upcoming calendar events',description:'Selected Zoho calendar with read-only access',components:async()=>({Content:CalendarPanel})}}),
+  HomePageWidgetBlueprint.make({name:'onemind-costs',params:{name:'OneMindCosts',title:'DigitalOcean account costs',description:'Read-only account billing totals; administrator access required',components:async()=>({Content:CostPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-fabric',params:{name:'OneMindFabric',title:'Agent fabric · NATS',description:'Read-only NATS monitoring; agent completion source readiness',components:async()=>({Content:FabricPanel})}}),
   HomePageWidgetBlueprint.make({name:'onemind-grafana',params:{name:'OneMindGrafana',title:'Live Grafana dashboards',description:'Your account-selected dashboards, loaded on demand',components:async()=>({Content:GrafanaHome})}}),
   HomePageWidgetBlueprint.make({name:'onemind-live-overview',params:{name:'OneMindLiveOverview',title:'Live overview',description:'Timestamped workloads, deployments, backup activity and service checks',components:async()=>({Content:LiveOverview})}}),

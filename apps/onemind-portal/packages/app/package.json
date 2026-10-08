@@ -82,6 +82,8 @@
     ]
   },
   "files": [
-    "dist"
-  ]
+    "dist",
+    "configSchema.json"
+  ],
+  "configSchema": "configSchema.json"
 }
