@@ -1,3 +1,5 @@
+import { CalendarPanel } from './CalendarPanel';
+import { FabricPanel } from './FabricPanel';
 import { EventSources } from './EventSources';
 import { Box, Button, Typography, useTheme } from '@material-ui/core';
 import TodayIcon from '@material-ui/icons/Today';
@@ -27,6 +29,8 @@ export function Today() {
       <Box style={panel}><StatusPanel compact /></Box>
       <Box style={panel}><ActivityInbox /><EventSources /></Box>
       <Box style={panel}><CloudPanel /></Box>
+      <Box style={panel}><CalendarPanel /></Box>
+      <Box style={panel}><FabricPanel /></Box>
       <Box style={panel}><Typography variant="caption" component="p" style={{ padding: 16 }}>GitHub authorization required · repository access is restricted to the installed GitHub App.</Typography><HomePageRequestedReviewsCard query="repo:onemindos/omos is:pr is:open review-requested:@me" /></Box>
       <Box style={panel}><HomePageYourOpenPullRequestsCard query="repo:onemindos/omos is:pr is:open author:@me" /></Box>
     </Box>

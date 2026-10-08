@@ -1,5 +1,7 @@
 import { createBackendPlugin, coreServices } from '@backstage/backend-plugin-api';
 import express from 'express';
+import { calendarSummary } from './calendar';
+import { natsSummary } from './natsSummary';
 import { health } from './health';
 import { cloudSummary } from './cloud';
 import { list, KubeItem } from './clusterRead';
@@ -21,6 +23,8 @@ export default createBackendPlugin({
         res.json({serviceHealth,observedAt:new Date().toISOString(),source:'do-nyc3-omos-cloud',partial:results.some(x=>x.status==='rejected'),unavailableSources:results.flatMap((x,i)=>x.status==='rejected'?[['Deployments','StatefulSets','Argo CD','Backup schedules'][i]]:[]),unavailable,deployments,backups,totalWorkloads:workloads.length});
       }catch(e){next(e);}
     });
+    routes.get('/fabric',async(req,res,next)=>{try{await httpAuth.credentials(req,{allow:['user']});res.json(await natsSummary());}catch(e){next(e);}});
+    routes.get('/calendar',async(req,res,next)=>{try{const credentials=await httpAuth.credentials(req,{allow:['user']});const info=await userInfo.getUserInfo(credentials);if(!info.ownershipEntityRefs.includes('group:default/onemind-admins')){res.status(403).json({error:'Calendar summaries require administrator membership'});return;}res.json(await calendarSummary());}catch(e){next(e);}});
     routes.get('/cloud', async(req,res,next)=>{try{const credentials=await httpAuth.credentials(req,{allow:['user']});const info=await userInfo.getUserInfo(credentials);if(!info.ownershipEntityRefs.includes('group:default/onemind-admins')){res.status(403).json({error:'Cloud summaries require OneMind administrator membership'});return;}res.json(await cloudSummary());}catch(e){next(e);}});
     router.use(routes);
   }});},

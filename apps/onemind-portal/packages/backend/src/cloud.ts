@@ -21,9 +21,12 @@ async function boundedJson(response: Response, limit: number): Promise<any> {
   } finally { await reader.cancel().catch(() => {}); }
 }
 function calendarDate(value: unknown): string | null {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-  const parsed = Date.parse(`${value}T00:00:00.000Z`);
-  return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === value ? value : null;
+  if (typeof value !== 'string') return null;
+  // V3 dates can include an ISO timestamp; compare the explicitly recorded calendar date.
+  const date = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(value) ? value.slice(0,10) : value;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const parsed = Date.parse(`${date}T00:00:00.000Z`);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === date ? date : null;
 }
 async function load(): Promise<Summary> {
   const portal = process.env.ZOHO_PROJECTS_PORTAL_ID;
