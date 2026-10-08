@@ -1,201 +1,133 @@
-# OneMind Cluster Backups — added 2026-09-09
-# Nightly CronJobs for all stateful services with no previous backup coverage.
-# Target: DO Spaces bucket onemind-backups (nyc3)
-# Credentials: backup-s3-creds Secret (per-namespace) + SealedSecrets for GitOps
-#
-# Services covered:
-#   1. takserver-postgresql (TAK CoT database)        02:00 UTC
-#   2. geo-db PostGIS (geo/routing data)              02:30 UTC
-#   3. ClickHouse onemind (events/time-series)        03:00 UTC
-#   4. NATS JetStream snapshot                        03:30 UTC
-# ─────────────────────────────────────────────────────────────────────────────
-# NOTE: backup-s3-creds Secrets below contain plaintext credentials.
-# These should be converted to SealedSecrets before committing to git.
-# Credentials stored in 1P: "DO Spaces Backup Key (onemind-backups)"
-# ─────────────────────────────────────────────────────────────────────────────
-
-# ─── S3 credentials (per namespace) ─────────────────────────────────────────
-apiVersion: v1
-kind: Secret
-metadata:
-  name: backup-s3-creds
-  namespace: takserver
-type: Opaque
-stringData:
-  ACCESS_KEY: "DO0089EFMC68D6WLCHUN"
-  SECRET_KEY: "UgpumpDt3zxcrZwxUyyBcqO5wbqEkBdSdUwSEHYIVk8"
-  ENDPOINT: "https://nyc3.digitaloceanspaces.com"
-  BUCKET: "onemind-backups"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: backup-s3-creds
-  namespace: geo
-type: Opaque
-stringData:
-  ACCESS_KEY: "DO0089EFMC68D6WLCHUN"
-  SECRET_KEY: "UgpumpDt3zxcrZwxUyyBcqO5wbqEkBdSdUwSEHYIVk8"
-  ENDPOINT: "https://nyc3.digitaloceanspaces.com"
-  BUCKET: "onemind-backups"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: backup-s3-creds
-  namespace: clickhouse
-type: Opaque
-stringData:
-  ACCESS_KEY: "DO0089EFMC68D6WLCHUN"
-  SECRET_KEY: "UgpumpDt3zxcrZwxUyyBcqO5wbqEkBdSdUwSEHYIVk8"
-  ENDPOINT: "https://nyc3.digitaloceanspaces.com"
-  BUCKET: "onemind-backups"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: backup-s3-creds
-  namespace: nats
-type: Opaque
-stringData:
-  ACCESS_KEY: "DO0089EFMC68D6WLCHUN"
-  SECRET_KEY: "UgpumpDt3zxcrZwxUyyBcqO5wbqEkBdSdUwSEHYIVk8"
-  ENDPOINT: "https://nyc3.digitaloceanspaces.com"
-  BUCKET: "onemind-backups"
-
-# ─── 1. TAK PostgreSQL ────────────────────────────────────────────────────────
----
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: backup-takserver-postgres
   namespace: takserver
 spec:
-  schedule: "0 2 * * *"
+  schedule: 0 2 * * *
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
       template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
         spec:
-          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
           containers:
-            - name: pg-backup
-              image: docker.io/library/postgres:15
-              resources:
-                requests: {cpu: 100m, memory: 256Mi}
-                limits: {memory: 512Mi}
-              env:
-                - name: PGPASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: takserver-postgresql
-                      key: postgres-password
-                - name: S3_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: ACCESS_KEY
-                - name: S3_SECRET_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: SECRET_KEY
-              command:
-                - /bin/bash
-                - -c
-                - |
-                  set -e
-                  DATE=$(date +%Y-%m-%d)
-                  DUMP_FILE="/tmp/tak-cot-${DATE}.sql.gz"
-                  echo "[$(date)] Dumping takserver postgres..."
-                  pg_dump -h takserver-postgresql -U postgres cot | gzip > "$DUMP_FILE"
-                  SIZE=$(du -h "$DUMP_FILE" | cut -f1)
-                  echo "[$(date)] Dump complete: $SIZE — uploading..."
-                  S3_KEY="backups/takserver-postgres/${DATE}/cot.sql.gz"
-                  DATE_HDR=$(date -R)
-                  CT="application/gzip"
-                  SIG_STR="PUT\n\n${CT}\n${DATE_HDR}\n/onemind-backups/${S3_KEY}"
-                  SIG=$(printf "$SIG_STR" | openssl sha1 -hmac "$S3_SECRET_KEY" -binary | base64)
-                  HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
-                    -H "Date: ${DATE_HDR}" -H "Content-Type: ${CT}" \
-                    -H "Authorization: AWS ${S3_ACCESS_KEY}:${SIG}" \
-                    --data-binary "@${DUMP_FILE}" \
-                    "https://onemind-backups.nyc3.digitaloceanspaces.com/${S3_KEY}")
-                  if [ "$HTTP" = "200" ]; then
-                    echo "[$(date)] SUCCESS: s3://onemind-backups/${S3_KEY} ($SIZE)"
-                  else
-                    echo "[$(date)] FAILED: HTTP $HTTP" && exit 1
-                  fi
-
-# ─── 2. Geo PostGIS ───────────────────────────────────────────────────────────
----
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: backup-geo-postgres
-  namespace: geo
-spec:
-  schedule: "30 2 * * *"
-  concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          restartPolicy: OnFailure
-          containers:
-            - name: pg-backup
-              image: docker.io/postgis/postgis:15-3.4
-              resources:
-                requests: {cpu: 100m, memory: 256Mi}
-                limits: {memory: 512Mi}
-              env:
-                - name: PGPASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: geo-db-secret
-                      key: POSTGRES_PASSWORD
-                - name: PGUSER
-                  valueFrom:
-                    secretKeyRef:
-                      name: geo-db-secret
-                      key: POSTGRES_USER
-                - name: S3_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: ACCESS_KEY
-                - name: S3_SECRET_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: SECRET_KEY
-              command:
-                - /bin/bash
-                - -c
-                - |
-                  set -e
-                  DATE=$(date +%Y-%m-%d)
-                  DUMP_FILE="/tmp/geo-db-${DATE}.sql.gz"
-                  echo "[$(date)] Dumping geo-db postgres..."
-                  pg_dump -h geo-db -U "$PGUSER" | gzip > "$DUMP_FILE"
-                  SIZE=$(du -h "$DUMP_FILE" | cut -f1)
-                  S3_KEY="backups/geo-postgres/${DATE}/geo-db.sql.gz"
-                  DATE_HDR=$(date -R)
-                  CT="application/gzip"
-                  SIG_STR="PUT\n\n${CT}\n${DATE_HDR}\n/onemind-backups/${S3_KEY}"
-                  SIG=$(printf "$SIG_STR" | openssl sha1 -hmac "$S3_SECRET_KEY" -binary | base64)
-                  HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
-                    -H "Date: ${DATE_HDR}" -H "Content-Type: ${CT}" \
-                    -H "Authorization: AWS ${S3_ACCESS_KEY}:${SIG}" \
-                    --data-binary "@${DUMP_FILE}" \
-                    "https://onemind-backups.nyc3.digitaloceanspaces.com/${S3_KEY}")
-                  [ "$HTTP" = "200" ] && echo "SUCCESS: $S3_KEY ($SIZE)" || { echo "FAILED: HTTP $HTTP"; exit 1; }
-
-# ─── 3. ClickHouse ────────────────────────────────────────────────────────────
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:91221cf12f279116f222a3054dddab8417281f750dace252d87fbdeb6f3e4865
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: postgres
+            - name: BACKUP_PREFIX
+              value: backups/takserver-postgres
+            - name: S3_REGION
+              value: nyc3
+            - name: PGHOST
+              value: takserver-postgresql
+            - name: PGUSER
+              value: postgres
+            - name: PGDATABASE
+              value: cot
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: takserver-postgresql
+                  key: postgres-password
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 8Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 40Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 40Gi
+          - name: restore-data
+            emptyDir:
+              sizeLimit: 20Gi
+          initContainers:
+          - name: restore-postgis
+            image: postgis/postgis:15-3.4@sha256:3f4a5d48e0be9580ed70ed618cd039ce57bbb2dd113053d3836e28513f1f87cd
+            restartPolicy: Always
+            args:
+            - postgres
+            - -c
+            - listen_addresses=127.0.0.1
+            - -p
+            - '15432'
+            env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: PGDATA
+              value: /restore/data
+            securityContext:
+              runAsUser: 999
+              runAsGroup: 999
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            startupProbe:
+              exec:
+                command:
+                - pg_isready
+                - -h
+                - 127.0.0.1
+                - -p
+                - '15432'
+                - -U
+                - postgres
+              periodSeconds: 5
+              failureThreshold: 60
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 12Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 20Gi
+            volumeMounts:
+            - name: restore-data
+              mountPath: /restore
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -203,7 +135,7 @@ metadata:
   name: backup-clickhouse
   namespace: clickhouse
 spec:
-  schedule: "0 3 * * *"
+  schedule: 0 3 * * *
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -213,48 +145,44 @@ spec:
         spec:
           restartPolicy: OnFailure
           containers:
-            - name: ch-backup
-              image: docker.io/clickhouse/clickhouse-server:24.8
-              resources:
-                requests: {cpu: 200m, memory: 512Mi}
-                limits: {memory: 1Gi}
-              env:
-                - name: S3_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: ACCESS_KEY
-                - name: S3_SECRET_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: SECRET_KEY
-                - name: CH_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: clickhouse-backup-creds
-                      key: CH_USER
-                - name: CH_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: clickhouse-backup-creds
-                      key: CH_PASSWORD
-              command:
-                - /bin/bash
-                - -c
-                - |
-                  set -e
-                  DATE=$(date +%Y-%m-%d)
-                  echo "[$(date)] Running ClickHouse backup to S3..."
-                  clickhouse-client \
-                    --host chi-onemind-onemind-0-0.clickhouse \
-                    --port 9000 \
-                    --user "${CH_USER}" \
-                    --password "${CH_PASSWORD}" \
-                    --query "BACKUP DATABASE onemind TO S3('https://nyc3.digitaloceanspaces.com/onemind-backups/backups/clickhouse/${DATE}/', '${S3_ACCESS_KEY}', '${S3_SECRET_KEY}')"
-                  echo "[$(date)] ClickHouse backup complete: backups/clickhouse/${DATE}/"
-
-# ─── 4. NATS JetStream snapshot ───────────────────────────────────────────────
+          - name: ch-backup
+            image: docker.io/clickhouse/clickhouse-server:24.8
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
+            env:
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backup-s3-creds
+                  key: ACCESS_KEY
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backup-s3-creds
+                  key: SECRET_KEY
+            - name: CH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: clickhouse-backup-creds
+                  key: CH_USER
+            - name: CH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: clickhouse-backup-creds
+                  key: CH_PASSWORD
+            command:
+            - /bin/bash
+            - -c
+            - "set -e\nDATE=$(date +%Y-%m-%d)\necho \"[$(date)] Running ClickHouse\
+              \ backup to S3...\"\nclickhouse-client \\\n  --host chi-onemind-onemind-0-0.clickhouse\
+              \ \\\n  --port 9000 \\\n  --user \"${CH_USER}\" \\\n  --password \"\
+              ${CH_PASSWORD}\" \\\n  --query \"BACKUP DATABASE onemind TO S3('https://nyc3.digitaloceanspaces.com/onemind-backups/backups/clickhouse/${DATE}/',\
+              \ '${S3_ACCESS_KEY}', '${S3_SECRET_KEY}')\"\necho \"[$(date)] ClickHouse\
+              \ backup complete: backups/clickhouse/${DATE}/\"\n"
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -262,59 +190,90 @@ metadata:
   name: backup-nats-streams
   namespace: nats
 spec:
-  schedule: "30 3 * * *"
+  schedule: 30 3 * * *
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
       template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: nats
         spec:
-          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
           containers:
-            - name: nats-backup
-              image: docker.io/natsio/nats-box:0.14.5
-              resources:
-                requests: {cpu: 50m, memory: 128Mi}
-                limits: {memory: 256Mi}
-              env:
-                - name: S3_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: ACCESS_KEY
-                - name: S3_SECRET_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: backup-s3-creds
-                      key: SECRET_KEY
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  set -e
-                  DATE=$(date +%Y-%m-%d)
-                  BACKUP_DIR="/tmp/nats-backup-${DATE}"
-                  mkdir -p "$BACKUP_DIR"
-                  echo "[$(date)] Snapshotting NATS JetStream streams..."
-                  # List and backup each stream
-                  nats --server nats://nats:4222 stream ls --names 2>/dev/null | while read STREAM; do
-                    [ -z "$STREAM" ] && continue
-                    echo "  Backing up stream: $STREAM"
-                    nats --server nats://nats:4222 stream backup "$STREAM" "${BACKUP_DIR}/${STREAM}" 2>/dev/null || \
-                      echo "  WARNING: backup failed for $STREAM"
-                  done
-                  # Tar + upload
-                  tar -czf "/tmp/nats-streams-${DATE}.tar.gz" -C /tmp "nats-backup-${DATE}/"
-                  SIZE=$(du -h "/tmp/nats-streams-${DATE}.tar.gz" | cut -f1)
-                  S3_KEY="backups/nats-streams/${DATE}/streams.tar.gz"
-                  DATE_HDR=$(date -R)
-                  CT="application/gzip"
-                  SIG_STR="PUT\n\n${CT}\n${DATE_HDR}\n/onemind-backups/${S3_KEY}"
-                  SIG=$(printf "$SIG_STR" | openssl sha1 -hmac "$S3_SECRET_KEY" -binary | base64)
-                  HTTP=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
-                    -H "Date: ${DATE_HDR}" -H "Content-Type: ${CT}" \
-                    -H "Authorization: AWS ${S3_ACCESS_KEY}:${SIG}" \
-                    --data-binary "@/tmp/nats-streams-${DATE}.tar.gz" \
-                    "https://onemind-backups.nyc3.digitaloceanspaces.com/${S3_KEY}")
-                  [ "$HTTP" = "200" ] && echo "SUCCESS: $S3_KEY ($SIZE)" || { echo "FAILED: HTTP $HTTP"; exit 1; }
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:91221cf12f279116f222a3054dddab8417281f750dace252d87fbdeb6f3e4865
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: nats
+            - name: BACKUP_PREFIX
+              value: backups/nats-onemind
+            - name: S3_REGION
+              value: nyc3
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: nats-creds
+                  key: onemind-user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nats-creds
+                  key: onemind-password
+            - name: NATS_CA
+              value: /nats-ca/ca.crt
+            - name: NATS_TIMEOUT
+              value: 30s
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 8Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 40Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: nats-ca
+              mountPath: /nats-ca
+              readOnly: true
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 40Gi
+          - name: nats-ca
+            secret:
+              secretName: nats-server-tls
+              items:
+              - key: ca.crt
+                path: ca.crt
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
