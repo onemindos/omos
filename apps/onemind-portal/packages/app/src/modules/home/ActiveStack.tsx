@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useDirectory } from './useDirectory';
+import { HostingBadge } from './HostingBadge';
 
 const purposes = [
   'Notes',
@@ -184,7 +185,8 @@ export function ActiveStack() {
                 const app = apps.find(candidate => candidate.ref === item.ref);
                 return (
                   <Box key={item.ref} mt={1}>
-                    <Chip size="small" label={item.role} />{' '}
+                    <Chip size="small" label={item.role} />
+                    <HostingBadge hosting={app?.hosting} status={app?.status} />{' '}
                     <Typography component="span">
                       {app?.title ?? item.title ?? 'App no longer in directory'}
                     </Typography>

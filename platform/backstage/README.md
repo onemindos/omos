@@ -92,3 +92,7 @@ Production sets `events.useEventBus: always`: the installed Events service retri
 The home page places purpose cards above Favorites for Notes, Email, Passwords, Files, Maps, Photos, Voice memos, Wallet, Contacts, Calendar, and SMS. Each signed-in account saves its own assignments through native User Settings. Choices begin unassigned; catalog lifecycle and favorites do not automatically select tools. Assign one primary app, multiple supporting apps, and alternatives from catalog entries or personal shortcuts, or record a native app by name without a launch link.
 
 Each decision records roles, use, data/export location, migration follow-up, timestamp and reason; the latest 50 decisions per purpose are retained. Directory references remain stable and removed entries retain their saved names. Availability remains in Today. Changing an assignment does not move data or uninstall software. No shared defaults are preselected.
+
+## Hosting labels
+
+Directory cards, Favorites and My Active Stack show catalog hosting labels. Hosting filters apply to the application directory. DigitalOcean NYC3 inventory is labelled Self-hosted · cloud, distinguishing OneMind-managed cloud infrastructure from provider-operated Cloud service entries. External resources show Website reference; planned entries show Planned; native and firmware entries retain their type; mesh endpoints and absent metadata remain unverified or unknown. These labels are recorded inventory, not current health or proof of active use. Today retains availability checks.

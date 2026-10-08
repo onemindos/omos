@@ -6,6 +6,7 @@ import Close from '@material-ui/icons/Close';
 import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { starredEntitiesApiRef, useStarredEntities } from '@backstage/plugin-catalog-react';
 import { appColors } from './colors';
+import { HostingBadge } from './HostingBadge';
 import { AppEntry, useDirectory } from './useDirectory';
 
 const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map((word, index, words) => words.length === 1 ? word.slice(0, 2) : index < 2 ? word[0] : '').join('').toUpperCase());
@@ -53,6 +54,7 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
       <Box style={{ minWidth: 0 }}><Typography variant="subtitle2" style={{ fontWeight: 700, overflowWrap: 'break-word' }}>{app.title} ↗</Typography>
         <Typography variant="caption" color="textSecondary" display="block">{compact ? app.groupTitle : app.description}</Typography>
         {!compact && <Typography variant="caption" color="textSecondary" display="block">{app.groupTitle}</Typography>}
+        <HostingBadge hosting={app.hosting} status={app.status} />
       </Box>
     </Link>
     <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:starred?(dark?'#ffcf68':'#926400'):dark?'#afbdcf':'#64748b' }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
