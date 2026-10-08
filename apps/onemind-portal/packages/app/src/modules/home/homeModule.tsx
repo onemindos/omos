@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import { HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
@@ -8,6 +8,7 @@ import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 function Directory() {
+  const searchId=useId();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [favoritesOnly,setFavoritesOnly]=useState(false);
@@ -41,7 +42,7 @@ function Directory() {
     </Box>
     <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
     <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
-    <TextField label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
+    <TextField id={searchId} label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
     <Box my={2} display="flex" flexWrap="wrap" style={{ gap: 8 }} aria-label="Application categories">
       <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
       {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)}>{group}</Button>)}

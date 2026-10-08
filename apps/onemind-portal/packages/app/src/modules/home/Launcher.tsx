@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Link, TextField, Tooltip, Typography, useTheme } from '@material-ui/core';
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
@@ -12,7 +12,7 @@ type AppEntry = typeof directory[number];
 export const launcherApps = directory.filter((app, index) => directory.findIndex(other => other.url === app.url) === index);
 const entityRef = (app: AppEntry) => `component:default/${app.name}`;
 const aliases = (app: AppEntry) => directory.filter(other => other.url === app.url).map(entityRef);
-const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? app.title.split(/[\s.-]+/).map(word => word[0]).join('').slice(0, 2).toUpperCase());
+const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map((word, index, words) => words.length === 1 ? word.slice(0, 2) : index < 2 ? word[0] : '').join('').toUpperCase());
 
 export function useAppFavorites() {
   const api = useApi(starredEntitiesApiRef);
@@ -59,6 +59,8 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
 export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 190px), 1fr))', gap: 12 };
 
 export function QuickAccess() {
+  const searchId=useId();
+  const titleId=useId();
   const controls = useAppFavorites();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -72,9 +74,9 @@ export function QuickAccess() {
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     {!controls.loaded && <Typography role="status">Loading saved favorites…</Typography>}
     {controls.loaded && (controls.favorites.length ? <Box mt={2} style={appGridStyle}>{controls.favorites.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box> : <Box mt={2}><Typography>No favorite apps yet. Use a star below or choose apps in Manage favorites.</Typography><Typography variant="overline" component="p" style={{ marginTop: 16 }}>Suggested starting points</Typography><Box style={appGridStyle}>{starters.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box></Box>)}
-    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md" aria-labelledby="onemind-favorites-title">
-      <DialogTitle id="onemind-favorites-title"><Box display="flex" justifyContent="space-between" alignItems="center"><span>Choose your quick-access apps</span><IconButton aria-label="Close favorites picker" onClick={() => setOpen(false)}><Close /></IconButton></Box></DialogTitle>
-      <DialogContent><TextField autoFocus fullWidth label="Find an app to favorite" value={query} onChange={event => setQuery(event.target.value)} variant="outlined" size="small" />
+    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md" aria-labelledby={titleId}>
+      <DialogTitle><Box display="flex" justifyContent="space-between" alignItems="center"><span id={titleId}>Choose your quick-access apps</span><IconButton aria-label="Close favorites picker" onClick={() => setOpen(false)}><Close /></IconButton></Box></DialogTitle>
+      <DialogContent><TextField id={searchId} autoFocus fullWidth label="Find an app to favorite" value={query} onChange={event => setQuery(event.target.value)} variant="outlined" size="small" />
         <Typography variant="caption" component="p" role="status" style={{ margin: '12px 0' }}>{matches.length} apps · {controls.favorites.length} favorites</Typography>
         {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
         <Box mb={3} style={appGridStyle}>{matches.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box>
