@@ -58,8 +58,14 @@ state for this five-node cluster. Manual/Helm/Argo ownership reconciliation,
 per-application user acceptance, and a disconnected home-hardware restore remain
 open. No namespace was confirmed disposable, so none was removed.
 
-The original offline recovery copy passed all 32 repository full-data checks on
-October 8. Refreshing it for the new ecosystem is ongoing and constrained by local
-free-space safeguards; do not infer that all new data has been verified offline.
-A separate physical/offsite recovery destination is still needed for failure of
-this computer. Retain sealing keys, encryption keys and credentials independently.
+The refreshed independent local recovery copy contains 54.43 GiB of encrypted
+objects. All 42 nonempty filesystem repositories passed `restic check --read-data`;
+four sources were confirmed empty. Eleven encrypted archives passed checksum
+verification. The fresh Kubernetes export included 336 Secrets, 213 ConfigMaps
+and two sealing keys; authenticated download/decrypt equality passed. These
+exports have not been replayed into a new cluster. A separate physical/offsite
+recovery destination remains needed for failure of this computer.
+
+PR 163 repairs the identity bootstrap's missing required OAuth invalidation flow
+and enables server-side diff for OpenChoreo CRD defaults. Live login/user workflow
+acceptance remains separate from applying these fixes.

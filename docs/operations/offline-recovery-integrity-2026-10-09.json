@@ -1,0 +1,215 @@
+{
+  "verifiedAt": "2026-10-09T11:00:09.903612+00:00",
+  "results": [
+    {
+      "repository": "backups/restic/auth/pgdata-authentik-postgres-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/backstage/data-backstage-postgres-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/clickhouse/data-storage-chi-onemind-onemind-0-0-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/dapr-system/dapr-scheduler-data-dir-dapr-scheduler-server-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/dapr-system/dapr-scheduler-data-dir-dapr-scheduler-server-1",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/dapr-system/dapr-scheduler-data-dir-dapr-scheduler-server-2",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/hermes/hermes-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/matrix/data-postgres-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/matrix/data-redis-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/matrix/synapse-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/monitoring/storage-loki-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/monitoring/storage-tempo-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/n8n/data-postgres-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/n8n/n8n-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/nats/nats-js-nats-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/nats/nats-js-nats-1",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/nats/nats-js-nats-2",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onemind-ai/onemind-cpu-model",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onemind-registry/data-harbor-redis-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onemind-registry/data-harbor-trivy-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onemind-registry/database-data-harbor-database-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onemind-registry/harbor-jobservice",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onemind-search/onemind-search-master-onemind-search-master-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/nodeodm-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/onetak-geo-db-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/onetak-minio-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/onetak-pgdata",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/tile38-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/valhalla-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/webodm-db-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/onetak/webodm-media",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/openclaw/openclaw-home-pvc",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/spire-system/spire-data-spire-server-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takml/takml-db-data",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takml/takml-models",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takml/takml-server-jar",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takserver/data-takserver-postgresql-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takserver/ldap-config-tak-ldap-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takserver/ldap-data-tak-ldap-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takserver/mongo-data-fedhub-mongodb-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/takserver/takserver-nats-js-takserver-nats-0",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    },
+    {
+      "repository": "backups/restic/zeus-site/zeus-site-postgres-pvc",
+      "fullEncryptedDataIntegrityVerified": true,
+      "exitCode": 0
+    }
+  ]
+}
