@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { useDirectory } from './useDirectory';
 import { HostingBadge } from './HostingBadge';
+import { AccessButton, useAppAccess, AccessDeployments } from './AccessDeployments';
 
 const purposes = [
   'Notes',
@@ -193,17 +194,8 @@ export function ActiveStack() {
                     <Typography variant="body2" color="textSecondary">
                       {item.use}
                     </Typography>
-                    {app && (
-                      <Button
-                        size="small"
-                        color="primary"
-                        href={app.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Open {app.title}
-                      </Button>
-                    )}
+                    {app && <PreferredAccess app={app} />}
+
                   </Box>
                 );
               })}
@@ -471,4 +463,10 @@ export function ActiveStack() {
       </Dialog>
     </Box>
   );
+}
+
+function PreferredAccess({app}: {app: import('./useDirectory').AppEntry}) {
+  const access = useAppAccess(app);
+  const [open,setOpen] = useState(false);
+  return <Box>{access.preferred.url ? <Button size="small" color="primary" href={access.preferred.url} target="_blank" rel="noopener noreferrer">Open {app.title} · {access.preferred.platform}</Button> : <Button size="small" onClick={()=>setOpen(true)}>Open instructions · {access.preferred.platform}</Button>}<AccessButton app={app} />{open && <AccessDeployments app={app} open={open} onClose={()=>setOpen(false)} />}</Box>;
 }

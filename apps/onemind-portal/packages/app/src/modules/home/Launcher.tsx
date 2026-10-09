@@ -7,6 +7,7 @@ import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { starredEntitiesApiRef, useStarredEntities } from '@backstage/plugin-catalog-react';
 import { appColors } from './colors';
 import { HostingBadge } from './HostingBadge';
+import { AccessButton, AccessDeployments, useAppAccess } from './AccessDeployments';
 import { AppEntry, useDirectory } from './useDirectory';
 
 const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map((word, index, words) => words.length === 1 ? word.slice(0, 2) : index < 2 ? word[0] : '').join('').toUpperCase());
@@ -46,10 +47,12 @@ type FavoriteControls = ReturnType<typeof useAppFavorites>;
 export function AppTile({ app, controls, compact = false }: { app: AppEntry; controls: FavoriteControls; compact?: boolean }) {
   const theme = useTheme();
   const starred = controls.isFavorite(app);
+  const access = useAppAccess(app);
+  const [accessOpen, setAccessOpen] = useState(false);
   const dark=theme.palette.type==='dark';
   const accent=appColors(app.name,app.groupTitle);
-  return <Box className="onemind-app-card" style={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${accent.base}${dark?'66':'44'}`, borderTop:`3px solid ${accent.base}`, borderRadius: 16, background: `linear-gradient(135deg,${accent.base}${dark?'25':'0f'},${theme.palette.background.paper})`, minWidth: 0 }}>
-    <Link href={app.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${app.title}`} style={{ display: 'flex', gap: compact ? 8 : 12, padding: compact ? 12 : 16, flex: 1, minWidth: 0, textDecoration: 'none', color: theme.palette.text.primary }}>
+  return <Box><Box className="onemind-app-card" style={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${accent.base}${dark?'66':'44'}`, borderTop:`3px solid ${accent.base}`, borderRadius: 16, background: `linear-gradient(135deg,${accent.base}${dark?'25':'0f'},${theme.palette.background.paper})`, minWidth: 0 }}>
+    <Link href={access.preferred.url ?? app.url} onClick={event => { if (!access.preferred.url) { event.preventDefault(); setAccessOpen(true); } }} target="_blank" rel="noopener noreferrer" aria-label={`Open ${app.title}`} style={{ display: 'flex', gap: compact ? 8 : 12, padding: compact ? 12 : 16, flex: 1, minWidth: 0, textDecoration: 'none', color: theme.palette.text.primary }}>
       <Avatar variant="rounded" style={{ background: `linear-gradient(135deg,${accent.base},${accent.base}cc)`, color: '#fff', flexShrink: 0, fontSize: compact ? 13 : 15, width: compact ? 32 : 40, height: compact ? 32 : 40, fontWeight: 700 }}>{abbreviation(app)}</Avatar>
       <Box style={{ minWidth: 0 }}><Typography variant="subtitle2" style={{ fontWeight: 700, overflowWrap: 'break-word' }}>{app.title} ↗</Typography>
         <Typography variant="caption" color="textSecondary" display="block">{compact ? app.groupTitle : app.description}</Typography>
@@ -58,7 +61,7 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
       </Box>
     </Link>
     <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:starred?(dark?'#ffcf68':'#926400'):dark?'#afbdcf':'#64748b' }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
-  </Box>;
+  </Box><Box display="flex" flexWrap="wrap" alignItems="center" style={{gap:6}}><Typography variant="caption">{[...new Set(access.points.map(point => point.platform))].join(' · ')}</Typography><AccessButton app={app} /></Box>{accessOpen && <AccessDeployments app={app} open={accessOpen} onClose={()=>setAccessOpen(false)} />}</Box>;
 }
 export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 12 };
 

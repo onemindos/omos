@@ -22,6 +22,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
       title: "Archived registry: ArgoCD"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://argocd.tail717ba0.ts.net",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -57,6 +71,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e1b21dcc86988a49ba.md
       title: "Archived registry: Kubernetes Dashboard"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -96,6 +124,20 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
       title: Operations runbook
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://headlamp.tail717ba0.ts.net/c/main/token",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -264,6 +306,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
       title: "Archived registry: Agent Web UI"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://agent-web-ui-1.tail717ba0.ts.net/",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -326,6 +382,20 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://nats-dashboard-1.tail717ba0.ts.net/",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     grafana/dashboard-selector: nats
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -422,6 +492,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md
       title: "Archived registry: heynats"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://heynats-1.tail717ba0.ts.net/",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -698,6 +782,20 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
       title: Operations runbook
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://grafana.tail717ba0.ts.net/login",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -733,6 +831,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md
       title: "Archived registry: NATS UI"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://nats-ui-1.tail717ba0.ts.net/",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -938,6 +1050,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
       title: "Archived registry: NATS Surveyor"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://nats-surveyor-1.tail717ba0.ts.net",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/documented-purpose: NATS cluster health monitor — scrapes JetStream
@@ -982,6 +1108,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
       title: "Archived registry: TileServer GL"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://tileserver.onemindos.dev",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -1022,6 +1162,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md
       title: "Archived registry: Valhalla"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://valhalla.onemindos.dev",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -1062,6 +1216,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md
       title: "Archived registry: Maputnik"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://maputnik.onemindos.dev",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -1102,6 +1270,20 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
       title: "Archived registry: WebODM"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "cluster-web",
+          "label": "OneMind Kubernetes web deployment",
+          "platform": "Web",
+          "method": "Kubernetes",
+          "location": "OneMind Cloud — NYC3",
+          "targetRef": "resource:default/do-nyc3-omos-cloud",
+          "url": "https://webodm.onemindos.dev",
+          "evidence": "Catalog snapshot",
+          "observedAt": "2026-10-06"
+        }
+      ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-purpose: Drone image processing & photogrammetry
@@ -1405,6 +1587,21 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8165a3a2fb59b639a15b.md
       title: "Archived registry: 1Password"
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "mac-native",
+          "label": "1Password on MacBook Pro",
+          "platform": "macOS",
+          "method": "Native app",
+          "location": "zeus’s MacBook Pro",
+          "targetRef": "resource:default/mesh-30d149ba2901",
+          "instructions": "Open 1Password.app from Applications on this Mac.",
+          "evidence": "Installation inspected",
+          "observedAt": "2026-10-09T04:37:51.488488+00:00",
+          "version": "8.12.40"
+        }
+      ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-purpose: Secrets management — all credentials, API keys,
@@ -1435,6 +1632,21 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "mac-native",
+          "label": "Dropbox on MacBook Pro",
+          "platform": "macOS",
+          "method": "Native app",
+          "location": "zeus’s MacBook Pro",
+          "targetRef": "resource:default/mesh-30d149ba2901",
+          "instructions": "Open Dropbox.app from Applications on this Mac.",
+          "evidence": "Installation inspected",
+          "observedAt": "2026-10-09T04:37:51.488488+00:00",
+          "version": "274.4.4841"
+        }
+      ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
 spec:
@@ -2811,6 +3023,21 @@ metadata:
     - email
     - communication
   annotations:
+    onemind.io/access-points: |-
+      [
+        {
+          "id": "mac-native",
+          "label": "Proton Mail on MacBook Pro",
+          "platform": "macOS",
+          "method": "Native app",
+          "location": "zeus’s MacBook Pro",
+          "targetRef": "resource:default/mesh-30d149ba2901",
+          "instructions": "Open Proton Mail.app from Applications on this Mac.",
+          "evidence": "Installation inspected",
+          "observedAt": "2026-10-09T04:37:51.488488+00:00",
+          "version": "1.14.0"
+        }
+      ]
     onemind.io/launcher-url: https://mail.proton.me/
     onemind.io/launcher-category: Communication
     onemind.io/hosting: external-provider-unverified

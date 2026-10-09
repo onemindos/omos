@@ -96,3 +96,11 @@ Each decision records roles, use, data/export location, migration follow-up, tim
 ## Hosting labels
 
 Directory cards, Favorites and My Active Stack show catalog hosting labels. Hosting filters apply to the application directory. DigitalOcean NYC3 inventory is labelled Self-hosted · cloud, distinguishing OneMind-managed cloud infrastructure from provider-operated Cloud service entries. External resources show Website reference; planned entries show Planned; native and firmware entries retain their type; mesh endpoints and absent metadata remain unverified or unknown. These labels are recorded inventory, not current health or proof of active use. Today retains availability checks.
+
+## Access & Deployments
+
+App cards and My Active Stack expose an Access & Deployments editor, also available as a catalog entity tab. Supported platforms are separate from actual access points. Points record platform, installation method, location, device/cluster entity reference, safe HTTPS link or native instructions, evidence and observation date. No native or remote execution is performed.
+
+Shared catalog points are versioned in the `onemind.io/access-points` JSON annotation. Initial points use existing verified Kubernetes route relationships and read-only inspection of Proton Mail, Dropbox and 1Password on the MacBook identified by its Tailscale DNS identity. These are dated observations, not continuous installation or health checks. `onemind.io/supported-platforms` optionally records a comma-separated platform list without implying installation.
+
+Account-backed User Settings store additional points and a preferred access point per app; preferences apply in Favorites, directory cards and My Active Stack. Manual points are explicitly User recorded. Device selection reads existing mesh/cluster catalog resources, exposes their OS, DNS identity and discovery date, and does not discover installed apps on remote devices. Unavailable catalog inventory does not erase saved points. Existing workload dependencies link to catalog records for inspection. The enrichment script retains mesh OS on future inventory refreshes.

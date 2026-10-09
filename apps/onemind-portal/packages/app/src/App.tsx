@@ -33,11 +33,11 @@ import { homeModule } from './modules/home';
 import { todayPlugin } from './modules/home/Today';
 import { systemsPlugin } from './modules/systems';
 import { authModule } from './modules/auth';
-import { servicesModule } from './modules/services';
+import { servicesModule, accessModule } from './modules/services';
 import { assistantPlugin } from './modules/assistant';
 import { offlinePlugin } from './modules/offline';
 import { missionsPlugin } from './modules/missions';
 
 export default createApp({
-  features: [githubActionsPlugin, githubPullRequestsPlugin, grafanaPlugin, argocdPlugin, argocdTranslationsModule, techInsightsPlugin, adrPlugin, oneMindRadar, announcementsPlugin, designModule, catalogPlugin, navModule, homeModule, todayPlugin, authModule, systemsPlugin, servicesModule, assistantPlugin, offlinePlugin, missionsPlugin],
+  features: [githubActionsPlugin, githubPullRequestsPlugin, grafanaPlugin, argocdPlugin, argocdTranslationsModule, techInsightsPlugin, adrPlugin, oneMindRadar, announcementsPlugin, designModule, catalogPlugin, navModule, homeModule, todayPlugin, authModule, systemsPlugin, servicesModule, accessModule, assistantPlugin, offlinePlugin, missionsPlugin],
 });
