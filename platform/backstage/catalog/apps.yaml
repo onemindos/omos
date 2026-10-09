@@ -3182,3 +3182,150 @@ spec:
   type: software-platform
   lifecycle: experimental
   owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vllm
+  title: vLLM
+  description: "High-throughput local and self-hosted model serving, with Docker and Kubernetes deployment guides."
+  tags:
+    - local-ai
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://docs.vllm.ai/en/stable/deployment/k8s/
+    onemind.io/launcher-category: Local AI
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/supported-platforms: Linux
+  links:
+    - url: https://docs.vllm.ai/en/stable/deployment/k8s/
+      title: Open application
+      icon: dashboard
+    - url: https://docs.vllm.ai/en/stable/deployment/docker/
+      title: Docker deployment
+      icon: docs
+    - url: https://github.com/vllm-project/vllm
+      title: GitHub repository
+      icon: docs
+spec:
+  type: model-serving
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: lm-studio
+  title: LM Studio
+  description: "Desktop local AI model runtime and chat application for macOS, Windows, and Linux."
+  tags:
+    - local-ai
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://lmstudio.ai/
+    onemind.io/launcher-category: Local AI
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/supported-platforms: macOS,Windows,Linux
+  links:
+    - url: https://lmstudio.ai/
+      title: Open application
+      icon: dashboard
+    - url: https://lmstudio.ai/docs/app/system-requirements
+      title: System requirements
+      icon: docs
+    - url: https://lmstudio.ai/docs/app
+      title: Documentation
+      icon: docs
+spec:
+  type: desktop-application
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: omlx
+  title: oMLX
+  description: "Apple Silicon MLX inference server with a native macOS menu bar app and local web dashboard; requires macOS 15 or newer."
+  tags:
+    - local-ai
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://omlx.ai/
+    onemind.io/launcher-category: Local AI
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/supported-platforms: macOS
+  links:
+    - url: https://omlx.ai/
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/jundot/omlx
+      title: GitHub repository
+      icon: docs
+spec:
+  type: model-serving
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: jan
+  title: Jan
+  description: "Open-source local AI desktop application and local API server; can also connect to external model providers."
+  tags:
+    - local-ai
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://www.jan.ai/
+    onemind.io/launcher-category: Local AI
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/supported-platforms: macOS,Windows,Linux
+  links:
+    - url: https://www.jan.ai/
+      title: Open application
+      icon: dashboard
+    - url: https://www.jan.ai/docs/desktop
+      title: Documentation
+      icon: docs
+spec:
+  type: desktop-application
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ollama
+  title: Ollama
+  description: "Local model runtime and API for macOS, Linux, and Windows; optional cloud models run on provider infrastructure."
+  tags:
+    - local-ai
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://ollama.com/
+    onemind.io/launcher-category: Local AI
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/supported-platforms: macOS,Linux,Windows
+  links:
+    - url: https://ollama.com/
+      title: Open application
+      icon: dashboard
+    - url: https://ollama.com/download
+      title: Downloads and platforms
+      icon: docs
+    - url: https://docs.ollama.com/
+      title: Documentation
+      icon: docs
+    - url: https://github.com/ollama/ollama
+      title: GitHub repository
+      icon: docs
+spec:
+  type: model-serving
+  lifecycle: experimental
+  owner: group:default/onemind-admins
