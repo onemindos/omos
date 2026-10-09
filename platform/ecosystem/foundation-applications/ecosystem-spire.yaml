@@ -37,3 +37,6 @@ spec:
     - CreateNamespace=true
     - ServerSideApply=true
     - SkipDryRunOnMissingResource=true
+    managedNamespaceMetadata:
+      annotations:
+        volsync.backube/privileged-movers: 'true'
