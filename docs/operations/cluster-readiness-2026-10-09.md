@@ -67,5 +67,5 @@ exports have not been replayed into a new cluster. A separate physical/offsite
 recovery destination remains needed for failure of this computer.
 
 PR 163 repairs the identity bootstrap's missing required OAuth invalidation flow
-and enables server-side diff for OpenChoreo CRD defaults. Live login/user workflow
-acceptance remains separate from applying these fixes.
+and enables server-side diff for OpenChoreo CRD defaults. The corrected identity hook completed successfully and OpenChoreo was verified
+Healthy and Synced. Live login/user workflow acceptance remains separate.
