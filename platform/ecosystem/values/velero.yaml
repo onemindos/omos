@@ -1,3 +1,5 @@
+podAnnotations:
+  onemind.dev/backup-credential-revision: '20261009'
 nodeSelector:
   onemind.io/compute-role: ecosystem
 resources:
