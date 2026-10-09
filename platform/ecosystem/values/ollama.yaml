@@ -1,0 +1,29 @@
+fullnameOverride: onemind-cpu-model
+image:
+  tag: 0.40.1
+ollama:
+  gpu:
+    enabled: false
+  models:
+    pull:
+    - qwen3:8b
+persistentVolume:
+  enabled: true
+  storageClass: do-block-storage-retain
+  size: 20Gi
+resources:
+  requests:
+    cpu: '1'
+    memory: 8Gi
+  limits:
+    cpu: '6'
+    memory: 16Gi
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+extraEnv:
+- name: OLLAMA_NUM_PARALLEL
+  value: '1'
+- name: OLLAMA_CONTEXT_LENGTH
+  value: '8192'
+- name: OLLAMA_KEEP_ALIVE
+  value: 30m

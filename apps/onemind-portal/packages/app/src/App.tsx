@@ -36,7 +36,8 @@ import { authModule } from './modules/auth';
 import { servicesModule } from './modules/services';
 import { assistantPlugin } from './modules/assistant';
 import { offlinePlugin } from './modules/offline';
+import { missionsPlugin } from './modules/missions';
 
 export default createApp({
-  features: [githubActionsPlugin, githubPullRequestsPlugin, grafanaPlugin, argocdPlugin, argocdTranslationsModule, techInsightsPlugin, adrPlugin, oneMindRadar, announcementsPlugin, designModule, catalogPlugin, navModule, homeModule, todayPlugin, authModule, systemsPlugin, servicesModule, assistantPlugin, offlinePlugin],
+  features: [githubActionsPlugin, githubPullRequestsPlugin, grafanaPlugin, argocdPlugin, argocdTranslationsModule, techInsightsPlugin, adrPlugin, oneMindRadar, announcementsPlugin, designModule, catalogPlugin, navModule, homeModule, todayPlugin, authModule, systemsPlugin, servicesModule, assistantPlugin, offlinePlugin, missionsPlugin],
 });

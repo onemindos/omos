@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: onemind-fga-context
+  namespace: backstage
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+data:
+  store-id: ""
+  model-id: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: onemind-authorization-bootstrap
+  namespace: onemind-core
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: onemind-authorization-context
+  namespace: backstage
+rules:
+  - apiGroups: [""]
+    resources: [configmaps]
+    resourceNames: [onemind-fga-context]
+    verbs: [get, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: onemind-authorization-context
+  namespace: backstage
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: onemind-authorization-context
+subjects:
+  - kind: ServiceAccount
+    name: onemind-authorization-bootstrap
+    namespace: onemind-core
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onemind-authorization-bootstrap-v1
+  namespace: onemind-core
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 4
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      labels:
+        app: onemind-authorization-bootstrap
+    spec:
+      serviceAccountName: onemind-authorization-bootstrap
+      restartPolicy: OnFailure
+      imagePullSecrets:
+        - name: ghcr
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      containers:
+        - name: authorization
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, json, time, pathlib, httpx
+              url = "http://openfga.onemind-core.svc.cluster.local:8080"
+              header = {"Authorization": "Bearer " + os.environ["FGA_TOKEN"]}
+              definitions = [
+                  {"type": "user"},
+                  {"type": "group", "relations": {"member": {"this": {}}},
+                   "metadata": {"relations": {"member": {"directly_related_user_types": [{"type": "user"}]}}}},
+                  {"type": "capability", "relations": {"runner": {"this": {}}},
+                   "metadata": {"relations": {"runner": {"directly_related_user_types": [{"type": "group", "relation": "member"}]}}}},
+              ]
+              capabilities = ["inspect-system", "summarize-site", "delegate-agent", "restart-worker", "edit-world", "cancel-mission"]
+              with httpx.Client(timeout=20, headers=header) as client:
+                  for attempt in range(120):
+                      try:
+                          response = client.get(url + "/stores")
+                          response.raise_for_status()
+                          stores = [s for s in response.json()["stores"] if s["name"] == "OneMind Operations"]
+                          if len(stores) > 1:
+                              raise RuntimeError("Ambiguous authorization store")
+                          if stores:
+                              store = stores[0]["id"]
+                          else:
+                              response = client.post(url + "/stores", json={"name": "OneMind Operations"})
+                              response.raise_for_status()
+                              store = response.json()["id"]
+                          base = url + "/stores/" + store
+                          response = client.get(base + "/authorization-models")
+                          response.raise_for_status()
+                          models = [m for m in response.json().get("authorization_models", []) if m["type_definitions"] == definitions]
+                          if models:
+                              model = models[0]["id"]
+                          else:
+                              response = client.post(base + "/authorization-models", json={"schema_version": "1.1", "type_definitions": definitions})
+                              response.raise_for_status()
+                              model = response.json()["authorization_model_id"]
+                          for capability in capabilities:
+                              key = {"user": "group:default/onemind-admins#member", "relation": "runner", "object": "capability:" + capability}
+                              response = client.post(base + "/read", json={"tuple_key": key})
+                              response.raise_for_status()
+                              if not response.json().get("tuples"):
+                                  response = client.post(base + "/write", json={"authorization_model_id": model, "writes": {"tuple_keys": [key]}})
+                                  response.raise_for_status()
+                          root = pathlib.Path("/var/run/secrets/kubernetes.io/serviceaccount")
+                          with httpx.Client(verify=str(root / "ca.crt"), timeout=20) as kube:
+                              response = kube.patch("https://kubernetes.default.svc/api/v1/namespaces/backstage/configmaps/onemind-fga-context",
+                                  headers={"Authorization": "Bearer " + (root / "token").read_text().strip(), "Content-Type": "application/merge-patch+json"},
+                                  json={"data": {"store-id": store, "model-id": model}})
+                              response.raise_for_status()
+                          print("Authorization model and capability relationships ready")
+                          break
+                      except Exception:
+                          time.sleep(5)
+                  else:
+                      raise RuntimeError("Authorization model did not initialize")
+          env:
+            - name: FGA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: openfga-auth
+                  key: keys
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

@@ -32,6 +32,9 @@ core:
     limits:
       cpu: '1'
       memory: 1Gi
+  existingSecret: harbor-internal
+  secretName: harbor-internal
+  existingXsrfSecret: harbor-internal
 portal:
   nodeSelector: *id001
   resources:
@@ -50,8 +53,13 @@ jobservice:
     limits:
       cpu: '1'
       memory: 1Gi
+  existingSecret: harbor-internal
 registry:
   nodeSelector: *id001
+  existingSecret: harbor-internal
+  credentials:
+    username: harbor_registry_user
+    existingSecret: harbor-internal
 database:
   type: internal
   internal:
@@ -70,3 +78,6 @@ trivy:
     limits:
       cpu: '2'
       memory: 2Gi
+existingSecretSecretKey: harbor-internal
+updateStrategy:
+  type: Recreate
