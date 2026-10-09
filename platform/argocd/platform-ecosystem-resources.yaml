@@ -25,9 +25,18 @@ spec:
     - CreateNamespace=true
     - ServerSideApply=true
     - SkipDryRunOnMissingResource=true
+    - RespectIgnoreDifferences=true
     retry:
       limit: 10
       backoff:
         duration: 15s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+  - group: ''
+    kind: ConfigMap
+    name: onemind-fga-context
+    namespace: backstage
+    jsonPointers:
+    - /data/store-id
+    - /data/model-id

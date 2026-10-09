@@ -52,13 +52,24 @@ spec:
         - name: http
           containerPort: 7007
         envFrom:
-        - secretRef: {name: backstage-zoho, optional: true}
-        - secretRef: {name: backstage-billing, optional: true}
-        - secretRef: {name: backstage-plugin-integrations}
+        - secretRef:
+            name: backstage-zoho
+            optional: true
+        - secretRef:
+            name: backstage-billing
+            optional: true
+        - secretRef:
+            name: backstage-plugin-integrations
+        - secretRef:
+            name: onemind-core-gateway
+        - secretRef:
+            name: onemind-fga-client
         env:
         - name: MCP_TOKEN
           valueFrom:
-            secretKeyRef: {name: backstage-mcp, key: MCP_TOKEN}
+            secretKeyRef:
+              name: backstage-mcp
+              key: MCP_TOKEN
         - name: PORTAL_URL
           value: https://onemind-preview.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD
@@ -114,6 +125,9 @@ spec:
           mountPath: /app/app-config.cluster.yaml
           subPath: app-config.cluster.yaml
           readOnly: true
+        - name: onemind-fga-context
+          mountPath: /etc/onemind-fga
+          readOnly: true
         lifecycle:
           preStop:
             exec:
@@ -131,6 +145,9 @@ spec:
       - name: tmp
         emptyDir:
           sizeLimit: 1Gi
+      - name: onemind-fga-context
+        configMap:
+          name: onemind-fga-context
       terminationGracePeriodSeconds: 45
       affinity:
         podAntiAffinity:

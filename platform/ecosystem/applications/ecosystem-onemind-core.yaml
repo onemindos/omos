@@ -24,9 +24,17 @@ spec:
     - CreateNamespace=true
     - ServerSideApply=true
     - SkipDryRunOnMissingResource=true
+    - RespectIgnoreDifferences=true
   source:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     path: platform/ecosystem/charts/onemind-core
     helm:
       releaseName: onemind-core
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: onemind-ingestion
+    namespace: onemind-core
+    jqPathExpressions:
+    - .spec.template.metadata.annotations."onemind.io/restart-mission"
