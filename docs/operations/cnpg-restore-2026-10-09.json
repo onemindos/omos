@@ -1,0 +1,26 @@
+{
+  "production": {
+    "dapr_workflows": 2,
+    "kagent": 15,
+    "langfuse": 0,
+    "litellm": 83,
+    "onemind": 8,
+    "openfga": 6,
+    "postgres": 0
+  },
+  "restore": {
+    "app": 0,
+    "dapr_workflows": 2,
+    "kagent": 15,
+    "langfuse": 0,
+    "litellm": 83,
+    "onemind": 8,
+    "openfga": 6,
+    "postgres": 0
+  },
+  "databaseTableCountsEqual": false,
+  "allProductionDatabaseTableCountsEqual": true,
+  "restoreOnlyDatabase": {
+    "app": 0
+  }
+}
