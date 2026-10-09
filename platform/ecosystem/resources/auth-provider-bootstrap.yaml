@@ -45,7 +45,7 @@ spec:
                   }
                   for name, redirects in callbacks.items():
                       client_id = "onemind-" + name
-                      body = {k: original[k] for k in ["authorization_flow", "signing_key", "property_mappings", "sub_mode", "issuer_mode", "access_token_validity"]}
+                      body = {k: original[k] for k in ["authorization_flow", "invalidation_flow", "signing_key", "property_mappings", "sub_mode", "issuer_mode", "access_token_validity"]}
                       body.update(name="OneMind " + name, client_type="confidential", client_id=client_id,
                           client_secret=os.environ[name.upper() + "_CLIENT_SECRET"], include_claims_in_id_token=True,
                           redirect_uris=[{"matching_mode": "strict", "url": u, "redirect_uri_type": "authorization"} for u in redirects])
