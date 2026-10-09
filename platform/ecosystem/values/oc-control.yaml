@@ -63,6 +63,7 @@ clusterGateway:
 gateway:
   gatewayClassName: onemind-private
   tls:
+    enabled: false
     hostname: onemind-openchoreo-api.tail717ba0.ts.net
 eventForwarder:
   nodeSelector: *id001
@@ -72,6 +73,8 @@ eventForwarder:
       - url: http://backstage.backstage.svc.cluster.local:7007/api/events/http/openchoreo
 portalAssistant:
   enabled: true
+  http:
+    enabled: false
   nodeSelector: *id001
   llm:
     secretName: openchoreo-assistant
