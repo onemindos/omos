@@ -4,9 +4,9 @@ import os
 import pathlib
 from datetime import datetime, timezone
 import httpx
-import nats
 from synadia_ai.agents import Agents, ResponseChunk
 from . import store
+from . import bus
 
 CAPABILITIES = {
     "inspect-system": {"description": "Read current Kubernetes and agent observations", "mutates": False},
@@ -54,9 +54,7 @@ def cluster_observations():
 
 
 async def agents_and_call(agent_ref=None, prompt=None):
-    nc = await nats.connect(servers=os.environ["NATS_URL"],
-                            user=os.environ["NATS_USER"], password=os.environ["NATS_PASSWORD"],
-                            connect_timeout=5, max_reconnect_attempts=3)
+    nc = await bus.connect()
     agents = Agents(nc=nc)
     try:
         found = await asyncio.wait_for(agents.discover(), timeout=10)
