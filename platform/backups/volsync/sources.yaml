@@ -1572,7 +1572,7 @@ spec:
   sourcePVC: dapr-scheduler-data-dir-dapr-scheduler-server-0
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 40 11 * * *
   restic:
     repository: volume-e18340617b8d-restic
     copyMethod: Snapshot
@@ -1613,7 +1613,7 @@ spec:
   sourcePVC: dapr-scheduler-data-dir-dapr-scheduler-server-1
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 0 12 * * *
   restic:
     repository: volume-cc7912733ca4-restic
     copyMethod: Snapshot
@@ -1654,7 +1654,7 @@ spec:
   sourcePVC: dapr-scheduler-data-dir-dapr-scheduler-server-2
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 20 12 * * *
   restic:
     repository: volume-5b6b57939ee3-restic
     copyMethod: Snapshot
@@ -1695,7 +1695,7 @@ spec:
   sourcePVC: onemind-cpu-model
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 40 12 * * *
   restic:
     repository: volume-aeb2c9c4e472-restic
     copyMethod: Snapshot
@@ -1736,7 +1736,7 @@ spec:
   sourcePVC: data-harbor-redis-0
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 0 13 * * *
   restic:
     repository: volume-baee1f2a0bd3-restic
     copyMethod: Snapshot
@@ -1777,7 +1777,7 @@ spec:
   sourcePVC: data-harbor-trivy-0
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 20 13 * * *
   restic:
     repository: volume-2bf1a9962441-restic
     copyMethod: Snapshot
@@ -1818,7 +1818,7 @@ spec:
   sourcePVC: database-data-harbor-database-0
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 40 13 * * *
   restic:
     repository: volume-7db10f24603b-restic
     copyMethod: Snapshot
@@ -1859,7 +1859,7 @@ spec:
   sourcePVC: harbor-jobservice
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 0 14 * * *
   restic:
     repository: volume-01764533bacc-restic
     copyMethod: Snapshot
@@ -1900,7 +1900,7 @@ spec:
   sourcePVC: harbor-registry
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 20 14 * * *
   restic:
     repository: volume-f0b56ae255e2-restic
     copyMethod: Snapshot
@@ -1941,7 +1941,7 @@ spec:
   sourcePVC: onemind-search-master-onemind-search-master-0
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 40 14 * * *
   restic:
     repository: volume-bf5e2b142d4b-restic
     copyMethod: Snapshot
@@ -1982,7 +1982,7 @@ spec:
   sourcePVC: spire-data-spire-server-0
   paused: false
   trigger:
-    manual: ecosystem-initial-20261009
+    schedule: 0 15 * * *
   restic:
     repository: volume-cdf02d607f9c-restic
     copyMethod: Snapshot
