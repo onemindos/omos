@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import curated from './directory.json';
+import { AccessPoint, parseAccessPoints } from './access';
 
 export type AppEntry = {
   name: string;
@@ -15,6 +16,9 @@ export type AppEntry = {
   favorite?: boolean;
   hosting?: string;
   status?: string;
+  accessPoints?: AccessPoint[];
+  supportedPlatforms?: string[];
+  dependencies?: string[];
 };
 export function safeUrl(value: string) {
   try {
@@ -101,6 +105,9 @@ export function useDirectory() {
                 known?.groupTitle ??
                 'Services';
               entries.push({
+                supportedPlatforms: (entity.metadata.annotations?.['onemind.io/supported-platforms'] ?? '').split(',').map(x => x.trim()).filter(Boolean),
+                accessPoints: parseAccessPoints(entity.metadata.annotations?.['onemind.io/access-points']),
+                dependencies: entity.relations?.filter(r => r.type === 'dependsOn').map(r => r.targetRef) ?? [],
                 hosting: entity.metadata.annotations?.['onemind.io/hosting'],
                 status: entity.metadata.annotations?.['onemind.io/documented-status'],
                 name: entity.metadata.name,

@@ -3156,6 +3156,7 @@ metadata:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
     onemind.io/inventory-review: unreviewed
+    onemind.io/mesh-os: macOS
     onemind.io/mesh-dns: omos-mbp.tail717ba0.ts.net.
     onemind.io/observed-online: "true"
     onemind.io/documented-purpose: Legacy-Edge host, TAK, terminal, files — macOS
