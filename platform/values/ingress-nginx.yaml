@@ -1,3 +1,23 @@
 controller:
   publishService:
     enabled: true
+  # Two replicas: with externalTrafficPolicy Local the DO load balancer only sends
+  # traffic to nodes running a controller pod, so one replica would be a single
+  # point of failure (the chart adds a PDB with minAvailable 1 when replicas > 1).
+  replicaCount: 2
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+          app.kubernetes.io/component: controller
+  service:
+    # Keep the client source IP. The DO REGIONAL_NETWORK LB passes it through, but
+    # with Cluster policy the node SNATs it to its own IP (seen as 10.10.0.x), so
+    # every Cloudflare-only whitelist-source-range ingress answered 403.
+    externalTrafficPolicy: Local
+    annotations:
+      # Already set on the live Service; codified here.
+      service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL_NETWORK
