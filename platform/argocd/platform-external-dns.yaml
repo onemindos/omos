@@ -72,7 +72,6 @@ spec:
         domainFilters:
           - onemindos.dev
           - onemindos.com
-          - zeusdelacruz.com
 
         policy: upsert-only
         registry: txt

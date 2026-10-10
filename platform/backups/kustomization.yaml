@@ -15,8 +15,6 @@ resources:
 - sealed/matrix-platform-backup-credentials.yaml
 - sealed/matrix-ghcr.yaml
 - sealed/takml-platform-backup-credentials.yaml
-- sealed/zeus-site-platform-backup-credentials.yaml
-- sealed/zeus-site-ghcr.yaml
 - sealed/backstage-platform-backup-credentials.yaml
 - network.yaml
 - snapshots-20261008.yaml

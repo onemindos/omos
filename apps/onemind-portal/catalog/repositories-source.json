@@ -1,6 +1,6 @@
 [
   {
-    "description": "OneMind sovereign infrastructure \u2014 DOKS cloud hub, NATS HA, TAK 5.7 cluster (IaC/GitOps)",
+    "description": "OneMind sovereign infrastructure — DOKS cloud hub, NATS HA, TAK 5.7 cluster (IaC/GitOps)",
     "isArchived": false,
     "name": "omos",
     "url": "https://github.com/onemindos/omos"
@@ -12,19 +12,13 @@
     "url": "https://github.com/onemindos/mcp-adapter"
   },
   {
-    "description": "zeusdelacruz.com \u2014 personal brand, blog, and consulting. SEO-first, Cloudflare Pages.",
-    "isArchived": false,
-    "name": "zeus-site",
-    "url": "https://github.com/onemindos/zeus-site"
-  },
-  {
     "description": "Model Context Protocol Servers",
     "isArchived": false,
     "name": "servers",
     "url": "https://github.com/onemindos/servers"
   },
   {
-    "description": "Specification and\u00a0documentation for the Model Context Protocol",
+    "description": "Specification and documentation for the Model Context Protocol",
     "isArchived": false,
     "name": "modelcontextprotocol",
     "url": "https://github.com/onemindos/modelcontextprotocol"
@@ -36,7 +30,7 @@
     "url": "https://github.com/onemindos/NemoClaw"
   },
   {
-    "description": "OneMind OS sovereign operations center \u2014 NATS-native ops UI (agents, bus, fleet, intel, missions, timemachine)",
+    "description": "OneMind OS sovereign operations center — NATS-native ops UI (agents, bus, fleet, intel, missions, timemachine)",
     "isArchived": false,
     "name": "omos-ui",
     "url": "https://github.com/onemindos/omos-ui"
@@ -48,7 +42,7 @@
     "url": "https://github.com/onemindos/infra-TAK"
   },
   {
-    "description": "ATAK Plugins by takwerx \u2014 development workspace. Each plugin is published from its own repo (see README).",
+    "description": "ATAK Plugins by takwerx — development workspace. Each plugin is published from its own repo (see README).",
     "isArchived": false,
     "name": "atak-plugins",
     "url": "https://github.com/onemindos/atak-plugins"
@@ -60,7 +54,7 @@
     "url": "https://github.com/onemindos/awesome-maplibre"
   },
   {
-    "description": "NVIDIA Isaac Sim\u2122 is an open-source application on NVIDIA Omniverse for developing, simulating, and testing AI-driven robots in realistic virtual environments.",
+    "description": "NVIDIA Isaac Sim™ is an open-source application on NVIDIA Omniverse for developing, simulating, and testing AI-driven robots in realistic virtual environments.",
     "isArchived": false,
     "name": "IsaacSim",
     "url": "https://github.com/onemindos/IsaacSim"
@@ -72,7 +66,7 @@
     "url": "https://github.com/onemindos/auth-infra"
   },
   {
-    "description": "Hermes TAK plugin \u2014 20-tool agent plugin + desktop UI for full TAK/TAKML/VRTAK context",
+    "description": "Hermes TAK plugin — 20-tool agent plugin + desktop UI for full TAK/TAKML/VRTAK context",
     "isArchived": false,
     "name": "hermes-plugin-tak",
     "url": "https://github.com/onemindos/hermes-plugin-tak"
@@ -102,7 +96,7 @@
     "url": "https://github.com/onemindos/OneTAK"
   },
   {
-    "description": "ATAK Plugin: TAKwerx Market \u2014 install and update takwerx plugins from inside ATAK. Downloads, guide and issues here.",
+    "description": "ATAK Plugin: TAKwerx Market — install and update takwerx plugins from inside ATAK. Downloads, guide and issues here.",
     "isArchived": false,
     "name": "takwerx-market",
     "url": "https://github.com/onemindos/takwerx-market"
@@ -138,7 +132,7 @@
     "url": "https://github.com/onemindos/tak-infra"
   },
   {
-    "description": "onemindos.com \u2014 the OneMind OS platform site. Sovereign operations: OSS platform, plugins, education, enterprise. ThreeUI-based, deployed on Cloudflare Pages.",
+    "description": "onemindos.com — the OneMind OS platform site. Sovereign operations: OSS platform, plugins, education, enterprise. ThreeUI-based, deployed on Cloudflare Pages.",
     "isArchived": false,
     "name": "onemind-site",
     "url": "https://github.com/onemindos/onemind-site"
@@ -180,25 +174,25 @@
     "url": "https://github.com/onemindos/OneTAK-Plugin-Sample"
   },
   {
-    "description": "OneMind ATAK shared SDK \u2014 NATS client, CoT utils, TAK API, HUD theme",
+    "description": "OneMind ATAK shared SDK — NATS client, CoT utils, TAK API, HUD theme",
     "isArchived": false,
     "name": "atak-sdk",
     "url": "https://github.com/onemindos/atak-sdk"
   },
   {
-    "description": "OneMind HUD (OMHud) \u2014 tactical AR overlay plugin for ATAK",
+    "description": "OneMind HUD (OMHud) — tactical AR overlay plugin for ATAK",
     "isArchived": false,
     "name": "atak-plugin-omhud",
     "url": "https://github.com/onemindos/atak-plugin-omhud"
   },
   {
-    "description": "OneMind OS NATS leaf node SDK for Android \u2014 background service, AIDL IPC, reconnect handling",
+    "description": "OneMind OS NATS leaf node SDK for Android — background service, AIDL IPC, reconnect handling",
     "isArchived": false,
     "name": "nats-android",
     "url": "https://github.com/onemindos/nats-android"
   },
   {
-    "description": "OneMind OS omnipresence plugin for Hermes \u2014 injects live NATS operational picture into every LLM call",
+    "description": "OneMind OS omnipresence plugin for Hermes — injects live NATS operational picture into every LLM call",
     "isArchived": false,
     "name": "hermes-plugin-nats-context",
     "url": "https://github.com/onemindos/hermes-plugin-nats-context"
@@ -210,19 +204,19 @@
     "url": "https://github.com/onemindos/tak-video-restreamer"
   },
   {
-    "description": "TAK Server MCP \u2014 11-tool Model Context Protocol bridge for AI\u2194TAK Server geospatial ops",
+    "description": "TAK Server MCP — 11-tool Model Context Protocol bridge for AI↔TAK Server geospatial ops",
     "isArchived": false,
     "name": "tak-server-mcp",
     "url": "https://github.com/onemindos/tak-server-mcp"
   },
   {
-    "description": "heynats \u2014 Go NATS HTTP/WebSocket gateway for browser access",
+    "description": "heynats — Go NATS HTTP/WebSocket gateway for browser access",
     "isArchived": false,
     "name": "heynats",
     "url": "https://github.com/onemindos/heynats"
   },
   {
-    "description": "agenttap \u2014 live read-only Synadia agent-protocol visualizer on NATS",
+    "description": "agenttap — live read-only Synadia agent-protocol visualizer on NATS",
     "isArchived": false,
     "name": "agenttap",
     "url": "https://github.com/onemindos/agenttap"
@@ -246,7 +240,7 @@
     "url": "https://github.com/onemindos/etl-drone-sense"
   },
   {
-    "description": "One local API call gives your agent the entire live state of the planet \u2014 every major world event at once, plus forecasts. 40+ free keyless feeds, runs entirely on Ollama. No cloud, no cost.  Keyless live feeds into one global view and forecasts what\u2019s likely next. No cloud, no keys, no cost.  1d,1w,1m,1y predictions by Mirofish.",
+    "description": "One local API call gives your agent the entire live state of the planet — every major world event at once, plus forecasts. 40+ free keyless feeds, runs entirely on Ollama. No cloud, no cost.  Keyless live feeds into one global view and forecasts what’s likely next. No cloud, no keys, no cost.  1d,1w,1m,1y predictions by Mirofish.",
     "isArchived": false,
     "name": "Pythia",
     "url": "https://github.com/onemindos/Pythia"
@@ -258,7 +252,7 @@
     "url": "https://github.com/onemindos/constellation-overwatch"
   },
   {
-    "description": "NeuroLinked \u2014 neuromorphic brain, 3D visualization, sleep consolidation, MCP server",
+    "description": "NeuroLinked — neuromorphic brain, 3D visualization, sleep consolidation, MCP server",
     "isArchived": false,
     "name": "omos-cortex",
     "url": "https://github.com/onemindos/omos-cortex"
@@ -300,7 +294,7 @@
     "url": "https://github.com/onemindos/mediamtx"
   },
   {
-    "description": "ORP \u2014 Open Reality Protocol. Single-binary Palantir-grade data fusion engine in Rust. DuckDB + Kuzu + RocksDB.",
+    "description": "ORP — Open Reality Protocol. Single-binary Palantir-grade data fusion engine in Rust. DuckDB + Kuzu + RocksDB.",
     "isArchived": false,
     "name": "orp",
     "url": "https://github.com/onemindos/orp"

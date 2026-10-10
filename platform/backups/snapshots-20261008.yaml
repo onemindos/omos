@@ -516,18 +516,3 @@ spec:
   volumeSnapshotClassName: onemind-backup-retain
   source:
     persistentVolumeClaimName: takserver-nats-js-takserver-nats-0
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261008-5cc6336f5206
-  namespace: zeus-site
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: zeus-site-postgres-pvc
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: zeus-site-postgres-pvc
