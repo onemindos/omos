@@ -50,6 +50,9 @@ proxy_config:
   litellm_settings:
     drop_params: true
     set_verbose: false
+    # /metrics is only reachable in-cluster (ClusterIP); Prometheus scrapes it
+    # without a key. With auth on, every scrape 401'd (TargetDown + log noise).
+    require_auth_for_metrics_endpoint: false
 serviceMonitor:
   enabled: true
   labels:
@@ -60,8 +63,10 @@ migrationJob:
   hooks:
     helm:
       enabled: false
+    # Run migrations as an Argo CD PreSync hook so the completed Job is not
+    # tracked as live state (it kept the app OutOfSync and was re-created).
     argocd:
-      enabled: false
+      enabled: true
   resources:
     requests:
       cpu: 250m

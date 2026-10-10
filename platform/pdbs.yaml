@@ -62,17 +62,6 @@ spec:
     matchLabels:
       onemind.io/agent: legacy
 ---
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: copilot-runtime
-  namespace: hermes
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app: copilot-runtime
----
 # ─── MONITORING ──────────────────────────────────────────────────────────────
 apiVersion: policy/v1
 kind: PodDisruptionBudget
