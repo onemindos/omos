@@ -52,6 +52,17 @@ spec:
       annotations:
         summary: "Scheduled backup {{ $labels.namespace }}/{{ $labels.cronjob }} is overdue"
         description: "No successful scheduled job within 30 hours. Inspect its verified archive marker and restore result; manual jobs do not prove the recurring schedule."
+    - alert: OffsiteBackupCopyFailed
+      # Job-level failure (all retries exhausted), not per-pod attempts; filtered to
+      # kube-state-metrics because OpenCost re-exports the same series.
+      expr: kube_job_failed{job="kube-state-metrics",namespace="ops",job_name=~"backup-offsite-copy-.*",condition="true"} == 1
+      for: 5m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Offsite backup copy job {{ $labels.job_name }} failed"
+        description: "Second-region copy or verification failed; no current offsite copy. Check job logs in ops; see platform/backups/OFFSITE-COPY.md."
     - alert: PortableVolumeBackupOutOfSync
       expr: volsync_volume_out_of_sync{role="source"} == 1
       for: 30m

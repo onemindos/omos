@@ -18,6 +18,8 @@ encryption key. Preserve that encryption key and the Sealed Secrets controller
 private keys independently of the cluster. Sealing is not credential rotation:
 the previously committed Spaces credentials still require provider-side rotation.
 
+A second-region copy of the whole bucket is described in [OFFSITE-COPY.md](OFFSITE-COPY.md).
+
 ## Verification and limits
 
 After deployment, create a one-off Job from each CronJob, inspect its completion
