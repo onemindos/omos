@@ -166,13 +166,13 @@ techInsights:
   factRetrievers:
     entityMetadataFactRetriever:
       cadence: '0 */6 * * *'
-      lifecycle: { timeToLive: { weeks: 2 } }
+      lifecycle: {timeToLive: {weeks: 2}}
     entityOwnershipFactRetriever:
       cadence: '0 */6 * * *'
-      lifecycle: { timeToLive: { weeks: 2 } }
+      lifecycle: {timeToLive: {weeks: 2}}
     techdocsFactRetriever:
       cadence: '0 */6 * * *'
-      lifecycle: { timeToLive: { weeks: 2 } }
+      lifecycle: {timeToLive: {weeks: 2}}
   factChecker:
     checks:
       groupOwnerCheck:
