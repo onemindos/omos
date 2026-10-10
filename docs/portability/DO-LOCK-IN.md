@@ -108,7 +108,7 @@ Endpoint `nyc3.digitaloceanspaces.com`, bucket `onemind-backups`:
 |---|---|---|
 | `velero/cloud/` | Velero | `platform/ecosystem/values/velero.yaml` |
 | `cnpg/onemind-data/` | CNPG Barman plugin | `platform/ecosystem/resources/postgres-object-store.yaml` |
-| `backups/<name>/` | platform-backup CronJobs (TAK Postgres, NATS, Authentik, n8n, matrix, takml, zeus-site, backstage, cluster-recovery) | `platform/backups/*.yaml` (`S3_REGION: nyc3`) + sealed `platform-backup-credentials` per namespace |
+| `backups/<name>/` | platform-backup CronJobs (TAK Postgres, NATS, Authentik, n8n, matrix, takml, backstage, cluster-recovery) | `platform/backups/*.yaml` (`S3_REGION: nyc3`) + sealed `platform-backup-credentials` per namespace |
 | `backups/restic/<ns>/<pvc>/` | VolSync, 46 sources | `platform/backups/volsync/sources.yaml` + sealed secrets |
 | `backups/clickhouse/` | legacy ClickHouse native job (suspended) | `platform/backups/backups.yaml` |
 | `mirror/` in `onemind-backups-sfo3` | `backup-offsite-copy` | `platform/backups/offsite-copy.yaml`. **Live: `suspend: true`, never run** |

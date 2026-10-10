@@ -48,7 +48,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 150 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
 | `platform-auth-helm` | auth | Authentik IdP (chart 2026.8.2) | PostgreSQL 17, Redis, 5 GiB | `PG dump` (05:00 UTC), `VolSync` | `auth.onemindos.dev` public (CF); `onemind-auth` tailnet | Argo |
 | `platform-auth-infra` | auth | Authentik Postgres, Redis, secrets, ingress | see above | see above | see above | Argo |
-| `platform-backups` | ops, plus Jobs in auth, backstage, matrix, n8n, nats, takml, takserver, zeus-site | Logical PostgreSQL/NATS backup CronJobs and encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
+| `platform-backups` | ops, plus Jobs in auth, backstage, matrix, n8n, nats, takml, takserver | Logical PostgreSQL/NATS backup CronJobs and encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
 | `platform-volume-backups` | ops | 46 VolSync `ReplicationSource` objects, all `Successful` at last check | restic repositories in Spaces | n/a | internal | Argo |
 | `platform-volsync` | ops | VolSync operator (chart 0.16.0) | none | n/a | internal | Argo |
 | `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
@@ -84,7 +84,6 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp and Kubernetes Dashboard | none | Git | tailnet | Argo |
-| `platform-zeus-site` | zeus-site | zeusdelacruz.com | PostgreSQL, 5 GiB | `PG dump` (06:20 UTC), `VolSync` | `zeusdelacruz.com`, `www` **public (open)** | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
 | `platform-ecosystem-foundation` | argocd | Generates the foundation `ecosystem-*` Applications (10) | none | Git | internal | Argo |
 | `platform-ecosystem-resources` | argocd | Ecosystem SealedSecrets, namespaces and shared resources | sealed credentials | Git | internal | Argo. **OutOfSync** (`SharedResourceWarning`: `SealedSecret auth/ghcr` is also owned by `platform-backups`) |
@@ -168,7 +167,7 @@ Gaps beyond the eleven releases:
 | Path | What is behind it |
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal), `tiles.onemindos.dev`, `valhalla.`, `nominatim.`, `overpass.onemindos.dev` |
-| Public, **no source restriction** (nginx) | `enroll.onemindos.dev` (tak-portal), `fedhub.onemindos.dev`, `matrix.onemindos.com`, `element.onemindos.com`, `zeusdelacruz.com`, `www.zeusdelacruz.com` |
+| Public, **no source restriction** (nginx) | `enroll.onemindos.dev` (tak-portal), `fedhub.onemindos.dev`, `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, direct (L4 LB) | TAK `152.42.155.95`: 8089, 8443, 8446, 9101, 9102, 64738. No source ranges |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
 | Tailnet only | Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, OpenClaw, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
@@ -186,7 +185,6 @@ Gaps beyond the eleven releases:
 | kagent | `kagent-grafana-mcp:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |
-| zeus-site | `zeus-site:latest` |
 | matrix, onemind-search | init containers using bare `busybox` / `busybox:latest` |
 
 Good patterns to copy: NATS server, ingress-nginx, `takserver-plugins` and `redpanda-connect` are digest-pinned; `github-runner` is digest-pinned.

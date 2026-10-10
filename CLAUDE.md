@@ -34,7 +34,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
   backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)
   hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
-  onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ zeus-site/ ops/ ...
+  onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
   values/      Helm values for the hand-installed add-ons (argocd, cert-manager, ingress-nginx, loki, ...)
 tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
@@ -54,7 +54,7 @@ Not active or not deployed: `legacy/`, `rads/`, `references/`, `OneMind-Platform
 
 ### Public ingress
 
-Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`, `zeusdelacruz.com`. `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only. `cloudflared` is scaled to 0 (cold standby).
+Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`. (`zeusdelacruz.com` retired 2026-10-10.) `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only. `cloudflared` is scaled to 0 (cold standby).
 
 ## NATS Subject Grammar (LOCKED — do not invent new patterns)
 

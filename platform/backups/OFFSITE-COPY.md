@@ -14,7 +14,7 @@ One bucket-to-bucket `rclone copy` of the whole source bucket:
 |---|---|
 | `velero/cloud/` | Velero `default` BSL, schedule `velero-onemind-platform` 06:00 UTC, TTL 30d |
 | `cnpg/onemind-data/` | CloudNativePG Barman base backups and WAL (retention 30d) |
-| `backups/<name>/` | Encrypted logical archives and `.verified.json` markers (takserver-postgres, nats-onemind, postgres-{auth,n8n,matrix,takml,zeus-site,backstage}, cluster-recovery, legacy clickhouse) |
+| `backups/<name>/` | Encrypted logical archives and `.verified.json` markers (takserver-postgres, nats-onemind, postgres-{auth,n8n,matrix,takml,backstage}; `zeus-site` retired 2026-10-10, existing objects kept until cleanup, cluster-recovery, legacy clickhouse) |
 | `backups/restic/<ns>/<pvc>/` | 46 VolSync ReplicationSources (Restic; 42 non-empty repositories) |
 
 The mirror is written to `onemind-backups-sfo3/mirror/` with the same key layout.

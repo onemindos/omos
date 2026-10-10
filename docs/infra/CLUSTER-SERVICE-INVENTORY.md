@@ -54,7 +54,7 @@ objects. `HEAD` means the Git-tracked branch revision shown by Argo CD at captur
 | `platform-redpanda-connect` | `platform/data/redpanda-connect` | `omos` | Synced / Healthy |
 | `platform-takml` | `platform/takml` | `takml` | Synced / Healthy |
 | `platform-takserver` | `tak-server/deploy` | `takserver` | Synced / Degraded |
-| `platform-zeus-site` | `platform/zeus-site` | `zeus-site` | Synced / Healthy |
+| `platform-zeus-site` | retired 2026-10-10 (Application and `platform/zeus-site` removed; cleanup tracked in `docs/operations/RETIRE-ZEUS-SITE.md`) | `zeus-site` | Retired |
 
 ### Current Argo CD exceptions
 
@@ -93,7 +93,7 @@ a route is used by a human or application.
 | `tailscale` | 20 | 20 | 0 | 0 |
 | `takml` | 2 | 2 | 0 | 0 |
 | `takserver` | 15 | 14 | 0 | 1 |
-| `zeus-site` | 2 | 2 | 0 | 0 |
+| `zeus-site` (retired 2026-10-10, pending namespace deletion) | 2 | 2 | 0 | 0 |
 | **Total** | **129** | **115** | **7** | **7** |
 
 The 7 Services without endpoint addresses are four kube-system control-plane metrics

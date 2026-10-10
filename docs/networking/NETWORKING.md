@@ -48,7 +48,7 @@ Verified against live Ingress objects on 2026-10-09.
 
 | Hostname | Ingress / Service | Backend | Recommendation | Note |
 |----------|-------------------|---------|----------------|------|
-| `zeusdelacruz.com`, `www.zeusdelacruz.com` | zeus-site/zeus-site-ingress | zeus-site | **Keep public via tunnel** | Public website. Cut over first (lowest risk). |
+| `zeusdelacruz.com`, `www.zeusdelacruz.com` | (none) | (none) | **Retired 2026-10-10** | zeus-site service removed; DNS cleanup is a manual owner step (`docs/operations/RETIRE-ZEUS-SITE.md`). |
 | `auth.onemindos.dev` | auth/authentik-ingress | Authentik | **Keep public via tunnel** | IdP / OIDC callbacks for users off the tailnet. Private mirror already exists: `onemind-auth.tail717ba0.ts.net`. |
 | `matrix.onemindos.com`, `element.onemindos.com` | matrix/matrix-ingress | Synapse, Element | **Keep public via tunnel** | Needed for federation and non-tailnet users. Confirm federation uses `.well-known` delegation to 443 (a tunnel cannot carry raw 8448). |
 | `onemindos.dev`, `tiles.onemindos.dev` | onetak/onetak-ingress | onetak-api (CloudTAK), onetak-tiles | **Tailnet only** (tunnel + Cloudflare Access as interim) | Operational C2 UI. Move once every user has Tailscale. Needs a `tailscale` Ingress (future PR). |
@@ -68,7 +68,7 @@ moves to the tailnet; about $12/mo if the TAK LB stays only for 9101/9102.
 | Secret | Namespace | Key | Used by | Scope / source |
 |--------|-----------|-----|---------|----------------|
 | `cloudflared-tunnel-token` | `cloudflare` | `token` | cloudflared | Token of a new remotely-managed tunnel (section 4, step 2) |
-| `external-dns-cloudflare` | `external-dns` | `api-token` | external-dns | **New dedicated** Cloudflare API token: Zone:DNS:Edit + Zone:Zone:Read, restricted to zones `onemindos.dev`, `onemindos.com`, `zeusdelacruz.com` |
+| `external-dns-cloudflare` | `external-dns` | `api-token` | external-dns | **New dedicated** Cloudflare API token: Zone:DNS:Edit + Zone:Zone:Read, restricted to zones `onemindos.dev`, `onemindos.com` |
 
 Do not reuse `cert-manager/cloudflare-api-token`: it is in another namespace (copying it
 spreads one credential across blast radii) and it has different rotation needs. The
@@ -114,9 +114,9 @@ Verify: two Ready pods on different nodes, tunnel shows HEALTHY with 2 connector
 Rollback: replicas back to 0 (nothing was routed yet, so no traffic impact).
 
 **4. Test without touching production DNS.** Add one throwaway public hostname on the
-tunnel, e.g. `tunnel-check.zeusdelacruz.com` -> service
+tunnel, e.g. `tunnel-check.onemindos.dev` -> service
 `https://ingress-nginx-controller.ingress-nginx.svc.cluster.local:443`, with No TLS Verify,
-Origin Server Name `www.zeusdelacruz.com` and HTTP Host Header `www.zeusdelacruz.com`.
+Origin Server Name `auth.onemindos.dev` and HTTP Host Header `auth.onemindos.dev`.
 Open it: you should get the real site. (A hostname with no existing DNS record is
 required: the dashboard creates a proxied CNAME and refuses to overwrite.)
 Rollback: delete the hostname and its CNAME.
@@ -134,8 +134,7 @@ release: needs `helm upgrade`) so logs and rate limits see real client IPs. Re-c
 CIDR first: `doctl kubernetes cluster get omos-cloud -o json | grep cluster_subnet`.
 Rollback: revert the annotation; `helm upgrade` the previous values.
 
-**6. Switch hostnames one at a time, lowest risk first:** `zeusdelacruz.com` + `www`, then
-`auth`, `matrix`/`element`, then whatever else stays public. For each hostname:
+**6. Switch hostnames one at a time, lowest risk first:** `auth`, `matrix`/`element`, then whatever else stays public. For each hostname:
 
 1. Add the route in the tunnel: origin `https://ingress-nginx-controller.ingress-nginx.svc.cluster.local:443`,
    No TLS Verify, Origin Server Name = hostname.
@@ -157,7 +156,7 @@ Rollback: revert the annotation; `helm upgrade` the previous values.
 
 Rollback per hostname: set the record back to `A 143.244.220.155` proxied (values from step
 0). The LB is still up, so rollback is a DNS edit; propagation is seconds on the proxied
-path. TLS certs for matrix/zeus-site come from cert-manager DNS-01 and are unaffected.
+path. TLS certs for matrix come from cert-manager DNS-01 and are unaffected.
 
 **7. Move private hosts to the tailnet.** For each "tailnet only" row in section 2: add a
 `tailscale` Ingress (pattern in `platform/monitoring`, `platform/n8n`), verify it from a

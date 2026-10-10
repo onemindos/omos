@@ -402,16 +402,6 @@
       "name": "takserver-plugins"
     },
     {
-      "kind": "Deployment",
-      "namespace": "zeus-site",
-      "name": "zeus-site"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "zeus-site",
-      "name": "zeus-site-postgres"
-    },
-    {
       "kind": "StatefulSet",
       "namespace": "argocd",
       "name": "argocd-application-controller"
@@ -1330,16 +1320,6 @@
       "kind": "Service",
       "namespace": "takserver",
       "name": "takserver-postgresql-hl"
-    },
-    {
-      "kind": "Service",
-      "namespace": "zeus-site",
-      "name": "zeus-site"
-    },
-    {
-      "kind": "Service",
-      "namespace": "zeus-site",
-      "name": "zeus-site-postgres"
     }
   ]
 }

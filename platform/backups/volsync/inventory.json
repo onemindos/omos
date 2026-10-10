@@ -204,12 +204,6 @@
     "size": "10Gi"
   },
   {
-    "namespace": "zeus-site",
-    "pvc": "zeus-site-postgres-pvc",
-    "source": "volume-5cc6336f5206",
-    "size": "5Gi"
-  },
-  {
     "namespace": "dapr-system",
     "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-0",
     "source": "volume-e18340617b8d",

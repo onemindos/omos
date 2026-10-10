@@ -82,13 +82,6 @@ metadata:
   namespace: takserver
 automountServiceAccountToken: false
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: platform-volume-backup
-  namespace: zeus-site
-automountServiceAccountToken: false
----
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -1458,47 +1451,6 @@ spec:
     schedule: 0 11 * * *
   restic:
     repository: volume-2b88c0eca294-restic
-    copyMethod: Snapshot
-    volumeSnapshotClassName: do-block-storage
-    storageClassName: do-block-storage
-    cacheStorageClassName: do-block-storage
-    cacheCapacity: 1Gi
-    pruneIntervalDays: 14
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
-      yearly: 1
-    moverServiceAccount: platform-volume-backup
-    moverPodLabels:
-      app: platform-volume-backup
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      seccompProfile:
-        type: RuntimeDefault
-    moverResources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: '1'
-        memory: 1Gi
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: volume-5cc6336f5206
-  namespace: zeus-site
-  annotations:
-    onemind.dev/source-pvc: zeus-site-postgres-pvc
-spec:
-  sourcePVC: zeus-site-postgres-pvc
-  paused: false
-  trigger:
-    schedule: 20 11 * * *
-  restic:
-    repository: volume-5cc6336f5206-restic
     copyMethod: Snapshot
     volumeSnapshotClassName: do-block-storage
     storageClassName: do-block-storage

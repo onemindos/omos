@@ -158,7 +158,7 @@ Order: Postgres first, then the apps that use them.
   `backups/postgres-auth/...` dump into Authentik Postgres 17 before starting the server;
   signing keys and issuer identity are in that DB and in Secrets (step 2) so existing
   OIDC clients keep working. Check login after restore.
-- **n8n, matrix, takml, zeus-site, backstage**: same pattern with their logical
+- **n8n, matrix, takml, backstage**: same pattern with their logical
   archives (`postgres-<name>`). Backstage needs ALL plugin databases (owned-database archive).
 - **CloudNativePG `onemind-data`** (3 instances, 120 GiB: core, openfga, litellm DBs):
   Git contains only `bootstrap.initdb` (no recovery stanza; gap G4). Create a restore

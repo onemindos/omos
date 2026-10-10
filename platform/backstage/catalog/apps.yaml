@@ -2044,30 +2044,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: zeus-delacruz
-  title: Zeus Delacruz
-  description: Personal brand
-  tags:
-    - external
-  links:
-    - url: https://zeusdelacruz.com
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: external
-  dependsOn:
-    - component:default/k8s-zeus-site-zeus-site-97ff2164
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: onemind-os
   title: OneMind OS
   description: Main platform
