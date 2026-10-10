@@ -104,8 +104,8 @@ spec:
           # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
           # Measured usage: 2803Mi. Request set to upper 60-90% band; limit = hard cap at 3200Mi.
           resources:
-            requests: { cpu: "500m", memory: "2523Mi" }
-            limits:   { cpu: "4", memory: "4608Mi" }  # OOM-killed at 3200Mi on 2026-10-09
+            requests: {cpu: "500m", memory: "2523Mi"}
+            limits: {cpu: "4", memory: "4608Mi"}  # OOM-killed at 3200Mi on 2026-10-09
         # ---- NATS leaf sidecar ----
         # nats-server running as a leaf into the cluster ONEMIND account over TLS.
         # Exposes a local plaintext client listener on :4222 for Hermes only.
@@ -113,7 +113,7 @@ spec:
           image: nats:2.10-alpine
           args: ["-c", "/etc/nats/leaf.conf"]
           ports:
-            - { name: monitor, containerPort: 8222 }
+            - {name: monitor, containerPort: 8222}
           volumeMounts:
             - name: leaf-conf
               mountPath: /etc/nats
@@ -122,8 +122,8 @@ spec:
               mountPath: /etc/nats-ca
               readOnly: true
           resources:
-            requests: { cpu: "50m", memory: "64Mi" }
-            limits:   { memory: "128Mi" }
+            requests: {cpu: "50m", memory: "64Mi"}
+            limits: {memory: "128Mi"}
       volumes:
         - name: data
           persistentVolumeClaim:
