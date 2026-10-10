@@ -1,3 +1,8 @@
+# SUPERSEDED: Alertmanager routing (Telegram + Matrix) is now defined in
+# platform/values/kube-prometheus-stack.yaml (alertmanager.config). See
+# platform/monitoring/ALERTING-SETUP.md. The old AlertmanagerConfig draft below
+# is kept only for reference and is not applied.
+#
 # AlertmanagerConfig for Telegram notifications.
 # DISABLED: chatID was 0 (placeholder) — webhook rejects invalid chatID.
 # To enable:

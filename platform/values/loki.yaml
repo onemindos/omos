@@ -20,14 +20,23 @@ loki:
   limits_config:
     allow_structured_metadata: true
     volume_enabled: true
-    retention_period: 744h   # 31d
+    # 14d (was 744h / 31d). NOTE: retention_period alone deletes nothing; the
+    # compactor block below must have retention_enabled: true (the live release
+    # had no compactor block, so no data was ever expired). The PVC is not
+    # resized here; the first sweeps free space after retention_delete_delay.
+    retention_period: 336h
+  compactor:
+    working_directory: /var/loki/compactor
+    retention_enabled: true
+    delete_request_store: filesystem
+    retention_delete_delay: 2h
+    compaction_interval: 10m
 
 singleBinary:
   replicas: 1
   persistence:
     enabled: true
     size: 20Gi
-    storageClassName: do-block-storage-retain
   resources:
     requests:
       cpu: 100m

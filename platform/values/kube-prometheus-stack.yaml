@@ -1,5 +1,7 @@
-# kube-prometheus-stack — resource requests/limits for DO upgrade compliance
-# Pass via: helm upgrade -f ./values/kube-prometheus-stack.yaml
+# kube-prometheus-stack 87.16.1 (release "monitoring", namespace monitoring).
+# Managed by Argo CD app monitoring-kube-prometheus-stack
+# (platform/argocd/monitoring-kube-prometheus-stack.yaml).
+# Alert delivery setup: platform/monitoring/ALERTING-SETUP.md
 prometheus:
   prometheusSpec:
     resources:
@@ -8,9 +10,19 @@ prometheus:
         memory: 512Mi
       limits:
         memory: 2Gi
-    # Pick up PrometheusRule CRs from all namespaces
-    ruleSelector: {}
-    ruleNamespaceSelector: {}
+
+# DOKS runs the control plane (scheduler, controller-manager, etcd) outside the
+# cluster and Cilium replaces kube-proxy, so these targets can never be scraped
+# and only produce permanent false-positive *Down alerts. Disabling a component
+# also removes its ServiceMonitor, default PrometheusRule and dashboard.
+kubeScheduler:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeEtcd:
+  enabled: false
 
 alertmanager:
   alertmanagerSpec:
@@ -20,11 +32,89 @@ alertmanager:
         memory: 128Mi
       limits:
         memory: 512Mi
-    # Pick up AlertmanagerConfig CRs from the monitoring namespace
-    alertmanagerConfigSelector: {}
-    alertmanagerConfigNamespaceSelector:
-      matchNames:
-        - monitoring
+    # Telegram bot token, mounted from an OPTIONAL Secret so Alertmanager starts
+    # (and the notifier just logs send errors) before the Secret exists. The
+    # token is read from the file at send time, so a Secret created later is
+    # picked up without restarting Alertmanager.
+    volumes:
+      - name: telegram-credentials
+        secret:
+          secretName: telegram-alertmanager-creds
+          optional: true
+    volumeMounts:
+      - name: telegram-credentials
+        mountPath: /etc/alertmanager/telegram
+        readOnly: true
+  # Replaces the chart's default config (lists are not merged, so the default
+  # inhibit rules and Watchdog route are restated here).
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      receiver: "null"
+      group_by:
+        - alertname
+        - namespace
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      routes:
+        # Heartbeat alerts: swallowed until a dead-man's-switch receiver exists.
+        - receiver: "null"
+          matchers:
+            - alertname =~ "Watchdog|InfoInhibitor"
+        - receiver: "null"
+          matchers:
+            - severity = "info"
+        - receiver: onemind-notify
+          matchers:
+            - severity = "critical"
+          repeat_interval: 1h
+        - receiver: onemind-notify
+          matchers:
+            - severity = "warning"
+          repeat_interval: 6h
+    inhibit_rules:
+      # A critical alert suppresses warning/info with the same alertname+namespace.
+      - source_matchers:
+          - severity = "critical"
+        target_matchers:
+          - severity =~ "warning|info"
+        equal:
+          - alertname
+          - namespace
+      - source_matchers:
+          - severity = "warning"
+        target_matchers:
+          - severity = "info"
+        equal:
+          - alertname
+          - namespace
+      - source_matchers:
+          - alertname = "InfoInhibitor"
+        target_matchers:
+          - severity = "info"
+        equal:
+          - namespace
+      - target_matchers:
+          - alertname = "InfoInhibitor"
+    receivers:
+      - name: "null"
+      - name: onemind-notify
+        telegram_configs:
+          - send_resolved: true
+            bot_token_file: /etc/alertmanager/telegram/bot_token
+            # TODO(user): REPLACE this placeholder with your Telegram chat ID
+            # (a negative number for groups/supergroups). Not a secret. See
+            # platform/monitoring/ALERTING-SETUP.md. Alertmanager rejects 0.
+            chat_id: -1
+        webhook_configs:
+          - send_resolved: true
+            # Matrix relay (platform/monitoring/matrix-alertmanager-receiver.yaml);
+            # the last path segment is the room-mapping key "onemind".
+            url: http://matrix-alertmanager-receiver.monitoring.svc.cluster.local:12345/alerts/onemind
+    templates:
+      - /etc/alertmanager/config/*.tmpl
 
 kubeStateMetrics:
   enabled: true
@@ -49,6 +139,15 @@ nodeExporter:
   enabled: true
 
 grafana:
+  # Reuse the live admin Secret (keys admin-user / admin-password) instead of
+  # letting the chart render a random one: Argo CD renders without cluster
+  # access (no `lookup`), so a chart-managed Secret would be regenerated on
+  # every sync and rotate the Grafana admin password. The Secret already exists
+  # in the cluster (created by the original Helm install) and is not pruned.
+  admin:
+    existingSecret: monitoring-grafana
+    userKey: admin-user
+    passwordKey: admin-password
   resources:
     requests:
       cpu: 100m

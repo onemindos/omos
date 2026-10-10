@@ -1,0 +1,153 @@
+# Matrix relay for Alertmanager (Alertmanager has no native Matrix receiver).
+#
+# Alertmanager POSTs its webhook payload to
+#   http://matrix-alertmanager-receiver.monitoring.svc.cluster.local:12345/alerts/onemind
+# and this service renders it and posts it into one Matrix room on the in-cluster
+# Synapse (namespace matrix, service synapse:8008). Wired from
+# platform/values/kube-prometheus-stack.yaml (receiver "onemind-notify").
+#
+# Project: https://github.com/metio/matrix-alertmanager-receiver (GPL-3.0).
+# Image is pinned to the multi-arch index digest of tag 2026.9.23, verified with
+# `docker buildx imagetools inspect` and the registry API (amd64 + arm64).
+#
+# Credentials come from the Secret matrix-alert-relay-creds (keys: user-id,
+# access-token, room-id), created per platform/monitoring/ALERTING-SETUP.md.
+# Until it exists the pod stays in CreateContainerConfigError; nothing else is
+# affected (Alertmanager only logs failed webhook notifications).
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: matrix-alertmanager-receiver
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: matrix-alertmanager-receiver
+data:
+  # ${VAR} placeholders are expanded by the relay from the container env.
+  config.yaml: |
+    http:
+      port: 12345
+      alerts-path-prefix: /alerts
+    matrix:
+      homeserver-url: http://synapse.matrix.svc.cluster.local:8008
+      user-id: "${MATRIX_USER_ID}"
+      access-token: "${MATRIX_ACCESS_TOKEN}"
+      room-mapping:
+        onemind: "${MATRIX_ROOM_ID}"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrix-alertmanager-receiver
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: matrix-alertmanager-receiver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-alertmanager-receiver
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: matrix-alertmanager-receiver
+    spec:
+      # Env is read at container start: `kubectl -n monitoring rollout restart
+      # deploy/matrix-alertmanager-receiver` after rotating the Secret.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: receiver
+          image: docker.io/metio/matrix-alertmanager-receiver:2026.9.23@sha256:854b615e109ccbbd0fb7e7a65028d876115d36d522ed65cb564154495e35bc03
+          args:
+            - --config-path=/etc/matrix-alertmanager-receiver/config.yaml
+          ports:
+            - name: http
+              containerPort: 12345
+          env:
+            - name: MATRIX_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-alert-relay-creds
+                  key: user-id
+            - name: MATRIX_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-alert-relay-creds
+                  key: access-token
+            - name: MATRIX_ROOM_ID
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-alert-relay-creds
+                  key: room-id
+          volumeMounts:
+            - name: config
+              mountPath: /etc/matrix-alertmanager-receiver
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: config
+          configMap:
+            name: matrix-alertmanager-receiver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matrix-alertmanager-receiver
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: matrix-alertmanager-receiver
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: matrix-alertmanager-receiver
+  ports:
+    - name: http
+      port: 12345
+      targetPort: http
+---
+# The webhook endpoint is unauthenticated: only Alertmanager may reach it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: matrix-alertmanager-receiver-ingress
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: matrix-alertmanager-receiver
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: alertmanager
+      ports:
+        - protocol: TCP
+          port: 12345
