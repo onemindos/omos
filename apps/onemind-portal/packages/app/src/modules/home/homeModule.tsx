@@ -41,8 +41,8 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
   return <Box p={fluid?0:2} className="onemind-workspace">
     <Box p={3} mb={3} style={{ borderRadius: 24, border: `1px solid ${theme.palette.divider}`,
       backgroundImage: `linear-gradient(115deg,${dark ? '#123951df,#35294add,#153c3ddb' : '#dceff8e8,#ece3f6df,#dff4ecdf'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <Typography variant="overline" style={{ letterSpacing: 3 }}>ONE MIND · YOUR WORKSPACE</Typography>
-      <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Your OneMind home.</Typography>
+      <Typography variant="overline" style={{ letterSpacing: 3 }}>ONEMIND OS · YOUR WORKSPACE</Typography>
+      <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Your OneMind OS home.</Typography>
       <Typography color="textSecondary">Your apps, infrastructure, agents, and knowledge in one place.</Typography>
       <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Live status and alerts are in Today.</Typography></Box>
     </Box>
@@ -56,7 +56,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     </Box>
     <Box mb={2} display="flex" flexWrap="wrap" style={{gap:8}} aria-label="Hosting filters">{['All hosting', 'Self-hosted', 'Cloud service', 'Local / native', 'Reference', 'Planned', 'Unknown'].map(value => <Button key={value} size="small" variant={hostingFilter===value?'contained':'outlined'} aria-pressed={hostingFilter===value} onClick={()=>setHostingFilter(value)}>{value}</Button>)}</Box>
     {!query.trim() && category==='All' && !favoritesOnly && <><ActiveStack /><QuickAccess /></>}
-    {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+    {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind OS workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
       {destinations.map((item,index) => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
         <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
       </Button>)}

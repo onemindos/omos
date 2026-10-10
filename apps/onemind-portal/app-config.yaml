@@ -1,6 +1,6 @@
 enableExperimentalRedirectFlow: true
 app:
-  title: OneMind
+  title: OneMind OS
   baseUrl: http://localhost:3000
   packages: all
   extensions:
