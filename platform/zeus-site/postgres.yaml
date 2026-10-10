@@ -17,9 +17,6 @@ metadata:
   namespace: zeus-site
 spec:
   replicas: 1
-  # RWO volume: a rolling update across nodes deadlocks on Multi-Attach (seen 2026-10-10).
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: zeus-site-postgres
