@@ -14,7 +14,7 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
   const utilities=['HomePageWorldClock','HomePageRecentlyVisited','HomePageMostVisited'];
   return <Content className="onemind-home-content"><Box className="onemind-home-layout">
     <Box className="onemind-home-toolbar">
-      <Typography variant="overline">ONE MIND · HOME</Typography>
+      <Typography variant="overline">ONEMIND OS · HOME</Typography>
       <Button variant="outlined" color="primary" onClick={()=>setCustomize(value=>!value)}>{customize?'Back to app launcher':'Customize widgets'}</Button>
     </Box>
     {customize ? <Box><Typography variant="body2" color="textSecondary">Your saved widget layout. Use Edit to add, resize or rearrange widgets.</Typography><CustomHomepageGrid config={gridConfig} preventDuplicateWidgets>{widgets.map((item,index)=><Fragment key={item.name??index}>{item.component}</Fragment>)}</CustomHomepageGrid></Box> : <>
