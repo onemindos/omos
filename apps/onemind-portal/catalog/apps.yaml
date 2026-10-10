@@ -3529,7 +3529,8 @@ metadata:
     - installation-unverified
   annotations:
     onemind.io/launcher-category: Personal Tools
-    onemind.io/hosting: local-desktop
+    onemind.io/hosting: native-application
+    onemind.io/supported-platforms: macOS,Windows,Linux
     onemind.io/verification: installation-unverified
   links:
     - url: https://github.com/deskflow/deskflow
