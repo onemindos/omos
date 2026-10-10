@@ -7995,27 +7995,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: repo-zeussite-1b632369
-  title: zeus-site
-  description: zeusdelacruz.com — personal brand, blog, and consulting. SEO-first,
-    Cloudflare Pages.
-  tags:
-    - repository
-    - repository-verified
-  links:
-    - url: https://github.com/onemindos/zeus-site
-      title: Source repository
-  annotations:
-    onemind.io/verification: repository-verified
-    onemind.io/observed-at: 2026-10-06
-spec:
-  type: code-repository
-  owner: group:default/onemind-admins
-  system: repo-onemind
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: repo-servers-61276b38
   title: servers
   description: Model Context Protocol Servers
