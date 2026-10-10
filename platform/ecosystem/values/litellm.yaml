@@ -53,6 +53,10 @@ proxy_config:
     # /metrics is only reachable in-cluster (ClusterIP); Prometheus scrapes it
     # without a key. With auth on, every scrape 401'd (TargetDown + log noise).
     require_auth_for_metrics_endpoint: false
+    # /metrics is only mounted when the prometheus callback is enabled
+    # (proxy_server.py: "prometheus" in success_callback -> _mount_metrics_endpoint).
+    success_callback:
+    - prometheus
 serviceMonitor:
   enabled: true
   labels:
