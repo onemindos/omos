@@ -1,0 +1,102 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 1 — NETWORKING / EXTERNAL-DNS                            sync-wave: "1"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-external-dns: keeps Cloudflare DNS in step with opted-in Ingress/Service
+# objects, so a hostname moves to the tunnel by annotating its Ingress in Git
+# instead of editing DNS by hand (and survives a move to a home cluster).
+#
+# Chart: kubernetes-sigs/external-dns 1.23.0 (app v0.23.0, image pinned by digest)
+#
+# SAFE BY CONSTRUCTION (merging changes no DNS):
+#   - replicaCount 0 : INERT until Secret external-dns-cloudflare (key api-token) exists
+#                      in namespace external-dns. Flip to 1 afterwards (one-line PR).
+#                      external-dns has no leader election: never exceed 1.
+#   - annotationFilter : only Ingress/Service carrying the annotation
+#                      dns.onemindos.dev/managed=true are considered. NOTHING
+#                      carries it today, so even when running it has zero effect.
+#   - policy upsert-only : never deletes records.
+#   - TXT registry (txtOwnerId): it only ever updates records it created itself,
+#                      so existing hand-made A records are never overwritten.
+#   - domainFilters   : confined to the three zones we own.
+#
+# Opt-in example (on an Ingress), see docs/networking/NETWORKING.md:
+#   dns.onemindos.dev/managed: "true"
+#   external-dns.alpha.kubernetes.io/target: "<TUNNEL_ID>.cfargotunnel.com"
+#   external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+#
+# Secret: dedicated Cloudflare API token, scope Zone:DNS:Edit (+ Zone:Zone:Read)
+# limited to the three zones. Do NOT reuse cert-manager/cloudflare-api-token
+# (cross-namespace, different blast radius, different rotation).
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-external-dns
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    targetRevision: "1.23.0"
+    helm:
+      values: |
+        fullnameOverride: external-dns
+
+        image:
+          # v0.23.0 multi-arch index (amd64/arm64/arm); digest verified against registry.k8s.io 2026-10-09.
+          tag: "v0.23.0@sha256:1854499e2b08cee47c40a08e356bff20dcb192dbcfde8378fc3f900f12cad5a3"
+
+        # INERT until the Secret exists. Raise to 1 (never more) in the cut-over PR.
+        replicaCount: 0
+
+        provider:
+          name: cloudflare
+        env:
+          - name: CF_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: external-dns-cloudflare
+                key: api-token
+
+        sources:
+          - ingress
+          - service
+        # Opt-in only: objects without this annotation are ignored entirely.
+        annotationFilter: "dns.onemindos.dev/managed=true"
+
+        domainFilters:
+          - onemindos.dev
+          - onemindos.com
+          - zeusdelacruz.com
+
+        policy: upsert-only
+        registry: txt
+        txtOwnerId: omos-cloud
+        # Per-record-type prefix so the ownership TXT never collides with a CNAME at the same name.
+        txtPrefix: "extdns-%{record_type}."
+
+        interval: 1m
+        triggerLoopOnEvent: true
+        logLevel: info
+
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
