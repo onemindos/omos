@@ -1,5 +1,7 @@
 # Secrets — External Secrets Operator + 1Password
 
+> **Historical (checked 2026-10-09).** External Secrets Operator is not installed in the cluster (no `external-secrets` namespace). Secrets are committed as Bitnami SealedSecrets; the current procedure is in the repo-root `CLAUDE.md`, section "Secrets". Keep this page only as design history.
+
 All K8s secrets in this cluster are managed declaratively via **External Secrets Operator (ESO) v2.7.0** + **1Password Connect Server**. No `kubectl create secret` for service secrets — everything syncs automatically from 1Password.
 
 ## How It Works

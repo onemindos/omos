@@ -46,7 +46,7 @@ Follow the subject grammar and compatibility rules in [`docs/NATS-DOCTRINE.md`](
 
 ## Secrets
 
-Never commit plaintext credentials, private keys, certificates, or local secret overrides. Follow [`docs/secrets-eso.md`](docs/secrets-eso.md) and the current pattern used by the owning platform application. Do not create or rotate live cluster secrets as part of a code change unless the task explicitly includes that operation.
+Never commit plaintext credentials, private keys, certificates, or local secret overrides. Use Bitnami SealedSecrets as described in the root `CLAUDE.md` ("Secrets") and follow the pattern used by the owning platform application. [`docs/secrets-eso.md`](docs/secrets-eso.md) is historical. Do not create or rotate live cluster secrets as part of a code change unless the task explicitly includes that operation.
 
 ## Local validation
 

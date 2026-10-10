@@ -1,0 +1,15 @@
+# Gitleaks configuration for the OneMind GitOps repo.
+# Extends the upstream default ruleset and only allowlists encrypted material.
+title = "omos gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Bitnami SealedSecret ciphertext (RSA-OAEP + AES-GCM, base64) is safe to commit"
+regexTarget = "match"
+regexes = [
+  # Sealed Secrets blobs are base64 and start with "Ag" (first bytes of the RSA-wrapped session key).
+  # Require 200+ chars so short plaintext values that happen to start with "Ag" are NOT allowlisted.
+  '''["']?Ag[A-Za-z0-9+/]{200,}={0,2}["']?''',
+]

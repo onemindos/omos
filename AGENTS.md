@@ -15,3 +15,10 @@ deployment, and inventory from live state. The platform assessment in
 `docs/research/2026-10-08-workspace-platform-review.md` is a recommendation with
 unexecuted acceptance tests, not authorization to deploy or replace services.
 Preserve unrelated local changes. Later explicit user instructions take precedence.
+
+Current cluster state, tiers, exposure and GitOps gaps are in `docs/STACK.md`; the
+purpose of each top-level directory is in `docs/REPO-LAYOUT.md`. The root `CLAUDE.md`
+holds the operating rules (deployment pattern, secrets, NATS grammar). CI is
+`.github/workflows/quality.yml`; run `make validate` before opening a pull request.
+Never commit plaintext credentials, and do not add Helm releases or `kubectl apply`
+workloads that Argo CD does not own.

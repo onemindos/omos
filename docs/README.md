@@ -11,6 +11,8 @@ The canonical architecture and doctrine documents for OneMind OS. **Read these b
 | `ARCHITECTURE.md` | The 5-layer system design — substrate, memory, compute, task engine, interface. Actor model. Design principles. |
 | `NATS-DOCTRINE.md` | Binding NATS rules — subject grammar, account topology, JetStream stream definitions, security model. |
 | `MASTER-PLAN.md` | Build program — phased roadmap, current state, known issues, delegation packets for worker agents. |
+| `STACK.md` | Tiered inventory of the live cluster: every Argo app and Helm release with state, backup, exposure and GitOps status; GitOps gaps. |
+| `REPO-LAYOUT.md` | What each top-level directory is, active versus legacy, proposed consolidation. |
 | `PLATFORM-EXTRACTION.md` | Platform extraction notes — how OneMind OS maps to the Synadia commercial suite (Control Plane, Insights, Protect, Connect, Workloads, Agents). |
 
 ---

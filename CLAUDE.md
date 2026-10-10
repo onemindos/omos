@@ -1,129 +1,60 @@
 # OneMind Infra — Claude Context
 
-This repo is the infrastructure-as-code for the OneMind platform. It manages the DOKS (DigitalOcean Kubernetes) cloud hub, platform service manifests, NATS stream definitions, TAK cluster config, and Terraform for the DO foundation.
+This repo is the infrastructure-as-code and GitOps source of truth for the OneMind platform: the DOKS (DigitalOcean Kubernetes) cloud hub, platform manifests, NATS stream definitions, TAK Server chart and images, and Terraform for the DigitalOcean foundation.
+
+Read `docs/MISSION.md` before architecture, product, AI or infrastructure decisions. Live state is in `docs/STACK.md` (tiered inventory, generated from the cluster); directory purposes are in `docs/REPO-LAYOUT.md`. Distinguish verified live state from intent: verify against the cluster (read-only) before writing "live" in docs.
 
 ## What This Repo Is
 
-`omos-infra` is the **GitOps source of truth** for everything deployed to the cloud hub. If a service runs in K8s, its manifest lives here. If infrastructure exists, Terraform declares it here. Nothing is deployed imperatively without a matching file in this repo.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 47 Argo Applications reconcile from `main`, but **11 Helm releases are installed by hand** (argocd, cert-manager, ingress-nginx, loki, monitoring, nack, nats, otel-collector, tailscale-operator, takserver, tempo) and a few namespaces (`matrix`, `openclaw`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
 
-The platform is a NATS-native C2/ISR system — think Palantir AIP or Lattice OS built on open protocols. NATS is the nervous system. ORP is the fusion/ontology engine. TAK (iTAK/ATAK/WebTAK/CloudTAK) is the tactical display. Legacy (Hermes AI) is the commander.
+The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
-## Bus Authority (critical — read this first)
+## Bus Authority (read first)
 
-**The K8s NATS cluster is the main bus. It is the authority. Everything publishes to it.**
+**The in-cluster NATS (3-node JetStream, namespace `nats`) is the authority bus. Everything publishes to it.**
 
-- All workloads, connectors, and services deploy to K8s and talk directly to the in-cluster NATS at `nats.nats.svc.cluster.local:4222`
-- The Mac is the **cockpit** — it runs hardware-bound bridges (MAVLink, Home Assistant, local cameras) that have no choice but to be local. Those bridges use the Mac NATS leaf node to forward everything they receive up to the K8s bus.
-- The Mac leaf node is a **forwarding pipe**, not a peer bus. The Mac holds no state, runs no logic. It just ensures that what happens at the hardware edge reaches the cloud brain.
-- If the Mac is offline, the cloud bus keeps running. Missions continue. ORP keeps fusing. Legacy keeps watching. Only the hardware-bound feeds go dark.
-- Never design a service that treats the Mac NATS as the source of truth. The K8s cluster is the source of truth.
-
-```
-MAC (cockpit / hardware edge)
-  MAVLink bridge    ─┐
-  HA bridge         ─┤── NATS leaf ──► K8s NATS HA (3-node) ◄── all cloud services
-  Vision/cameras    ─┘   (forwarding      THE BUS              ORP, Legacy, projectors,
-                          pipe only)                            connectors, ClickHouse
-```
-
-## Repo Layout
+- Cloud workloads connect directly to `nats://nats.nats.svc.cluster.local:4222` (a few use `tls://` on the same host:port) with credentials from a Secret (`NATS_USER` / `NATS_PASSWORD`). No sidecar.
+- **Hermes is the exception**: its pod runs a `nats-leaf` sidecar and the container uses `NATS_URL=nats://localhost:4222`, so the agent has its own bus identity. Do not copy that pattern into new services.
+- **Edge and Mac bridges** (MAVLink, Home Assistant, cameras) run a local leaf node that forwards to the cluster through the `omos-nats` Tailscale load balancer (leaf port 7422). The leaf is a forwarding pipe, not a peer bus. If the Mac is offline the cloud bus keeps running.
+- When the home server arrives, it becomes another leaf (and eventually the authority). Do not design anything that treats a single laptop's NATS as the source of truth.
 
 ```
-infra/              DO VPC + DOKS cluster + container registry (Terraform)
-edge/               Non-K8s hardware-bound nodes
-  mac-leaf/         Mac NATS leaf node config + launchd
-services/           Standalone NATS microservices (presence, tasks, bridges)
-tak-server/         TAK Server 5.8 (self-contained)
-  chart/            Helm chart (upstream + OneMind values)
-  docker/           Dockerfiles (base, api, messaging, config, plugins, db-setup)
-  deploy/           K8s overlay manifests (LB, NATS leaf, secrets)
-  plugin-src/       NatsBridgePlugin Java source
-  plugin/           Built plugin JAR + config
-  edge/             EUD management, device registry, simulators
-  build/            Staging + CI helpers
-platform/           K8s manifests — organized by operational layer
-  argocd/           App-of-apps + Application CRDs
-  core/             Wave 0: ingress, cloudflare, tailscale, sealed-secrets, cert-manager, github-runner
-  nats/             Wave 1: NATS HA helm values + TLS + streams
-  onetak/           Wave 2: OneTAK (API/Events/Media/Tiles) — renamed from cloudtak/
-  hermes/           Wave 3: Hermes/Legacy AI agent
-  omos/             Wave 3: tak-projector, feeds, mission-engine
-  intel/            Wave 3: OSINT services
-  geo/              Wave 3: geospatial services
-  data/             Wave 3: clickhouse/, redpanda-connect/
-  monitoring/       Wave 4: grafana, alertmanager, nats-surveyor
-  nats-tools/       Wave 4: NATS debug UIs
-  values/           Shared Helm values (cert-manager, ingress-nginx, loki, tempo)
-docs/               Architecture + runbooks
+Edge (Mac / home server)   MAVLink, HA, cameras ── NATS leaf ──►  K8s NATS (3-node)  ◄── all cloud services
+                                                  (forward only)       THE BUS            incl. Hermes via its own leaf
 ```
 
-## The Deployment Pattern (how every service lands)
-
-All services follow this exact pattern — no exceptions:
+## Repo Layout (short; full table in `docs/REPO-LAYOUT.md`)
 
 ```
-1. Image: ghcr.io/onemindos/{service}:latest  (GHCR, not DOCR — migrated 2026-07-05)
-2. Directory: platform/{service}/
-   - namespace.yaml
-   - deployment.yaml  (Deployment + Service; stateful adds PVC)
-   - ingress.yaml     (if public-facing — nginx class, Cloudflare IP whitelist)
-3. Secrets: out-of-band via 1Password → kubectl create secret (never committed)
+platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the rest is grouped by layer
+  argocd/      App-of-apps + 25 platform-* Applications
+  core/        sealed-secrets controller, cert issuers, cloudflared (cold standby), GitHub runner, Tailscale policy
+  nats/        NATS manifests, TLS, 39 Stream/KeyValue CRs in streams/, Helm values templates
+  auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
+  backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)
+  hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
+  onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ zeus-site/ ops/ ...
+  ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
+  values/      Helm values for the hand-installed add-ons (argocd, cert-manager, ingress-nginx, loki, ...)
+tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
+infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root)
+services/ apps/ schemas/ edge/ docs/ scripts/ reports/    code, contracts, edge config, docs, CI helpers
 ```
 
-### NATS access pattern
+Not active or not deployed: `legacy/`, `rads/`, `references/`, `OneMind-Platform/`, `blueprints/`, `plugins/`, and the dangling `omos-infra` submodule pointer. Do not edit them unless asked.
 
-**K8s pods** connect directly to the in-cluster NATS service — no sidecar needed:
-```yaml
-env:
-  - name: NATS_URL
-    value: "nats://nats.nats.svc.cluster.local:4222"
-  - name: NATS_USER
-    valueFrom:
-      secretKeyRef:
-        name: nats-creds
-        key: user
-  - name: NATS_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: nats-creds
-        key: password
-```
+## The Deployment Pattern
 
-**External services** (Mac bridges, edge boxes, anything outside K8s) use a `nats-leaf` sidecar or local leaf node to forward to the cluster. The sidecar pattern is shown in `platform/hermes/deployment.yaml` — Legacy uses it because its pod needs to talk to both the cluster bus AND behave as an isolated agent identity. Most new K8s services do NOT need the sidecar.
+1. Application manifests live under `platform/<layer>/` (or `tak-server/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
+2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
+3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is an in-cluster Harbor. DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
+4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
+5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (report H1); do not add requests casually.
 
-```
-K8s pod  ──────────────────────► nats.nats.svc.cluster.local:4222  (direct, fast)
-Mac/edge ── leaf node ──────────► DOKS NATS :7422  (TLS, forwarding only)
-```
+### Public ingress
 
-### Public ingress pattern
-
-Public hostnames are handled by `ingress-nginx` (LB `143.244.220.155`). All public DNS records are Cloudflare-proxied A records pointing at the LB. The ingress object lives in the same namespace as the service and uses the Cloudflare IP whitelist so only Cloudflare-edge IPs can reach the LB.
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {service}-ingress
-  namespace: {namespace}
-  annotations:
-    nginx.ingress.kubernetes.io/whitelist-source-range: "173.245.48.0/20,..."
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: {service}.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {service}
-                port:
-                  number: {port}
-```
-
-The Cloudflare tunnel (`cloudflared`) is **scaled to 0** and kept only as a cold standby. All routing is via ingress-nginx.
+Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`, `zeusdelacruz.com`. `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only. `cloudflared` is scaled to 0 (cold standby).
 
 ## NATS Subject Grammar (LOCKED — do not invent new patterns)
 
@@ -140,176 +71,68 @@ tak.cot.inject                       CoT → TAK inject   (NatsBridgePlugin inpu
 tak.cot.>                            CoT from TAK       (cot-tap output)
 ```
 
-## Services — Live State
+Full doctrine: `docs/NATS-DOCTRINE.md`.
 
-| Service | Namespace | Image | Status |
-|---------|-----------|-------|--------|
-| NATS 3-node HA | nats | nats (helm) | ✅ live |
-| Legacy (Hermes AI) | hermes | ghcr.io/onemindos/hermes-legacy:latest | ✅ live |
-| copilot-runtime | hermes | ghcr.io/onemindos/copilot-runtime:latest | ✅ live |
-| OneTAK API | onetak | ghcr.io/onemindos/onetak-api:latest | ✅ live |
-| OneTAK Events | onetak | ghcr.io/onemindos/onetak-events:latest | ✅ live |
-| OneTAK Tiles | onetak | ghcr.io/onemindos/onetak-tiles:latest | ✅ live |
-| OneTAK Media | onetak | ghcr.io/onemindos/onetak-media:latest | ✅ live |
-| TAK Server 5.8 | takserver | ghcr.io/onemindos/takserver-base:* | ✅ live |
-| ClickHouse | clickhouse | altinity/clickhouse-server (operator) | ✅ live |
-| Grafana/Loki/Tempo | monitoring | (helm) | ✅ live |
-| Cloudflared | cloudflare | cloudflare/cloudflared | 🔴 scaled to 0 (standby) |
-| nats-dashboard | nats | ghcr.io/onemindos/nats-dashboard:latest | ✅ live |
-| agent-web-ui | nats | ghcr.io/onemindos/agent-web-ui:latest | ✅ live |
-| agenttap | nats | ghcr.io/onemindos/agenttap:latest | ✅ live |
-| heynats | nats | ghcr.io/onemindos/heynats:latest | ✅ live |
-| nats-ui | nats | ghcr.io/gastbob40/nats-ui:latest | ✅ live |
-| omos-tak-projector | omos | python:3.12-alpine (inline script) | ✅ live |
-| feed-intel | omos | ghcr.io/onemindos/feed-intel:latest | ✅ live |
-| feed-satellites | omos | ghcr.io/onemindos/feed-satellites:latest | ✅ live |
-| sink-clickhouse | omos | ghcr.io/onemindos/sink-clickhouse:latest | ✅ live |
-| redpanda-connect | omos | ghcr.io/redpandadata/connect:latest | ✅ live |
-| omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | 🔴 scaled to 0 |
-| valhalla | onetak | valhalla/valhalla:run-latest | 🔴 scaled to 0 (awaiting tile build) |
-| nominatim | onetak | mediagis/nominatim:4.4 | 🔴 scaled to 0 (geofabrik rate-limited) |
-| fedhub | takserver | ghcr.io/onemindos/fedhub:5.8 | ⏳ manifests deployed; awaiting image build + certs |
-| tak-ldap | takserver | ghcr.io/onemindos/tak-ldap:5.8 | ⏳ manifest deployed; awaiting image build + SealedSecret |
-| vrtak-releases | vrtak | nginx:1.27-alpine | ⏳ file server live; awaiting Unreal build upload |
+## NATS Streams
 
-## Namespaces
+The 39 Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats` Application and reconciled into JetStream by the NACK controller, which is a Helm-CLI release (`nack`), not an Argo app. Do not use the older Python provisioning scripts as the source of truth.
 
-| Namespace | Purpose |
-|-----------|---------|
-| nats | NATS 3-node HA cluster + tools |
-| hermes | Legacy AI agent + copilot-runtime |
-| onetak | OneTAK — API/Events/Media/Tiles + geo services |
-| takserver | TAK Server 5.8 |
-| clickhouse | ClickHouse (Altinity operator) |
-| monitoring | Prometheus + Grafana + Loki + Tempo |
-| cloudflare | cloudflared (scaled to 0 — cold standby only) |
-| omos | omos-* services (tak-projector, feeds, sinks) |
-| geo | Geospatial stack (Tile38, STAC, farmOS, etc.) |
-| takml | TAK-ML vision pipeline |
-| vrtak | VRTAK distribution server (nginx file server + Pixel Streaming future) |
-| argocd | ArgoCD GitOps controller |
-| cert-manager | TLS cert automation |
-| tailscale | Tailscale proxy sidecars |
-| github-runner | Self-hosted GH Actions runner |
-| ingress-nginx | Ingress controller |
-| kube-system | sealed-secrets controller (secret decryption) |
+## Secrets
 
-## Secrets Convention
+All committed secrets are **Bitnami SealedSecrets**; the controller runs in `kube-system` (managed by `platform-core`). Cluster private keys must be backed up independently of the cluster (they are in the encrypted `backup-cluster-recovery` export).
 
-**All secrets are managed by Sealed Secrets.** Source of truth is encrypted SealedSecret YAMLs committed to this repo. The sealed-secrets controller (kube-system) decrypts them using the cluster private key. ArgoCD applies SealedSecrets automatically on sync.
-
-**To add or rotate a secret:**
 ```bash
-# Fetch cluster public key
 kubeseal --fetch-cert --controller-name=sealed-secrets-controller \
   --controller-namespace=kube-system > /tmp/pub-cert.pem
-
-# Create and seal
-kubectl create secret generic <name> -n <namespace> \
-  --from-literal=KEY=value \
+kubectl create secret generic <name> -n <namespace> --from-literal=KEY=value \
   --dry-run=client -o json \
   | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
-  > platform/<namespace>/<name>.sealedsecret.yaml
-
-# Commit and push — ArgoCD applies it automatically
+  > platform/<layer>/<name>.sealedsecret.yaml
 ```
 
-**SealedSecret location:** `platform/{namespace}/{secret-name}.sealedsecret.yaml`
+Place the file beside the workload that uses it (existing examples: `platform/hermes/bridge/`, `platform/backups/sealed/`, `platform/ecosystem/resources/secrets/`). Argo applies it. Exceptions that are still out of band: the NATS Helm `values.secret.yaml` (gitignored) and the CloudTAK/agent API tokens generated in a UI.
 
-| Secret name | Namespace | What it holds |
-|-------------|-----------|---------------|
-| hermes-env | hermes | AWS Bedrock + NATS creds (23 fields) |
-| hermes-leaf-conf | hermes | NATS leaf.conf + ca.crt |
-| hermes-nats-ca | hermes | NATS cluster CA cert |
-| hermes-webui-auth | hermes | Hermes web UI password |
-| hermes-dashboard-auth | hermes | Hermes dashboard auth |
-| cloudtak-agent-token | hermes | CloudTAK API token (out-of-band — generate in CloudTAK UI) |
-| onetak-secrets | onetak | signing secret, MinIO keys, postgres DSN |
-| omos-nats-creds | omos | NATS user+password for omos namespace |
-| tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge |
-| cloudflare-api-credentials | cloudflare | Cloudflare API key + email |
-| cloudflare-api-token | cert-manager | Cloudflare DNS API token for cert-manager |
-| tunnel-creds-json | cloudflare | Tunnel credentials.json (derived from TUNNEL_TOKEN — one-time) |
-| nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm — out-of-band) |
-| ghcr / ghcr-pull-secret | hermes/omos | GHCR pull secret (out-of-band) |
-
-## Public Hostnames
-
-All public DNS records are **Cloudflare-proxied A records → `143.244.220.155`** (ingress-nginx LB), except `tak.onemindos.dev` which is an unproxied A record direct to the TAK LB.
-
-| Hostname | Ingress object | Backend | DNS status |
-|----------|---------------|---------|------------|
-| onemindos.dev | onetak/onetak-ingress | onetak-api:5000 | ⚠️ update DNS |
-| tiles.onemindos.dev | onetak/onetak-ingress | onetak-tiles:5002 | ⚠️ update DNS |
-| media.onemindos.dev | onetak/onetak-ingress | onetak-media:9997 | ⚠️ update DNS |
-| ws.onemindos.dev | nats/nats-ws-ingress | nats:8080 (WebSocket) | ⚠️ update DNS |
-| tak.onemindos.dev | — | tak-external LB 152.42.155.95 | A record, unproxied |
-
-**Tailscale-only (never public):**
-
-| Hostname | Service |
-|----------|---------|
-| argocd.tail717ba0.ts.net | ArgoCD |
-| grafana.tail717ba0.ts.net | Grafana |
-| hermes-agent.tail717ba0.ts.net | Hermes web UI |
-| agent-web-ui-1.tail717ba0.ts.net | Agent Web UI |
-| nats-dashboard-1.tail717ba0.ts.net | NATS Dashboard |
+- Never commit plaintext credentials, even test values or "example" commands. CI runs gitleaks and fails on new findings; `.gitleaks-baseline.json` records the nine pre-existing hits (see `docs/STACK.md`), which need rotation, not suppression.
+- Hermes: `hermes-env` holds `DIGITALOCEAN_AI_KEY` (the default model provider per the cluster review) and legacy `AWS_*` Bedrock keys. The provider is chosen in the agent's runtime config, not in Git. Do not describe Hermes as "on Bedrock"; remove the AWS keys if confirmed unused.
 
 ## Cluster Access
 
 ```bash
-# Via Tailscale (primary — no public API endpoint)
-export KUBECONFIG=~/.kube/onemind-hub
-kubectl --context tailscale-operator.tail717ba0.ts.net get nodes
-
-# Via doctl
-doctl kubernetes cluster kubeconfig save onemind-hub
+doctl kubernetes cluster kubeconfig save omos-cloud     # context: do-nyc3-omos-cloud
+kubectl --context do-nyc3-omos-cloud get nodes
 ```
+
+- The Kubernetes API endpoint is **public** (no control-plane firewall; review H3). Tailscale gives access to admin UIs, not a private API.
+- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (2 x 8 vCPU / 32 GiB, autoscale 2 to 4). `infra/main.tf` defaults do not match; do not `terraform apply` without a clean plan.
+- Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
+
+## TAK Server
+
+TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `tak-server/chart` with `tak-server/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `tak-server/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `tak-server/fedhub`. Both fedhub and tak-ldap are running. The LB `tak-external` exposes 8089, 8443, 8446, 9101, 9102 and 64738 to the internet.
+
+The NatsBridgePlugin (`tak-server/plugin-src/`, JAR in `tak-server/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
+
+## CI (`.github/workflows/quality.yml`)
+
+On every PR to `main`: changed-YAML lint, ShellCheck, Terraform fmt/validate, kubeconform on changed plain manifests (strict, CRD schemas from datreeio), `helm template` of changed Argo Helm Applications and local charts, and gitleaks (working tree against the baseline, and the commits in the PR). A weekly run re-checks the whole tree. Actions are pinned by commit SHA; Renovate (`renovate.json`) proposes weekly updates. Run the same checks locally with `make validate` plus `python scripts/validate_manifests.py --all` and `python scripts/validate_helm_renders.py --all`.
 
 ## Adding a New Service (checklist)
 
-- [ ] Image built and pushed to `ghcr.io/onemindos/{service}:latest`
-- [ ] Manifests added to the appropriate platform layer directory (e.g. `platform/omos/`, `platform/data/`)
-- [ ] Cloudflare route ConfigMap added if public-facing (namespace: cloudflare)
-- [ ] SealedSecret created and committed (see Secrets Convention above)
-- [ ] ArgoCD Application updated or created in `platform/argocd/` with correct path
-- [ ] Service added to Services table above with status
+- [ ] Image built and pushed to GHCR with a pinned tag (not `:latest`)
+- [ ] Manifests under the right `platform/<layer>/` directory, with requests and limits
+- [ ] Argo Application created or extended in `platform/argocd/` (sync wave set); not applied by hand
+- [ ] SealedSecret committed beside it; no plaintext
+- [ ] Ingress: `nginx` class with the Cloudflare allowlist for public, or `tailscale` class for admin
+- [ ] Backup decided: PVCs get a VolSync source (`platform/backups/volsync/`), databases a dump job or CNPG
+- [ ] Row added to `docs/STACK.md` with a tier
+- [ ] NATS subjects follow the grammar above
 
 ## What NOT to Do
 
 - Never commit secrets or credentials (even test values) to this repo
-- Never deploy imperatively without a matching manifest here
-- Never create a new NATS subject pattern without following the grammar in §NATS Subject Grammar
-- Never use DOCR (DigitalOcean registry) — all images are on GHCR now (`ghcr.io/onemindos/`)
-- Never hardcode NATS server addresses in containers — always `nats://localhost:4222` via the leaf sidecar
-- Never add services that duplicate an existing layer — check the Services table first
-
-## NATS Stream Provisioning
-
-Streams are defined as YAML CRDs in `platform/nats/streams/` (39 files — Stream + KeyValue).
-The NACK JetStream controller (installed via Helm in the `nats` namespace) reconciles them
-continuously. To provision into a fresh cluster:
-
-```bash
-helm upgrade --install nack nats/nack -n nats
-kubectl apply -f platform/nats/streams/
-```
-
-## TAK Server
-
-TAK Server 5.8 (hardened) runs via Helm chart in `tak-server/chart/`.
-OneMind values override: `tak-server/values-onemind.yaml`.
-Dockerfiles: `tak-server/docker/` (base, api, messaging, config, plugins, db-setup).
-NATS bridge plugin source: `tak-server/plugin-src/` → built JAR in `tak-server/plugin/`.
-The NatsBridgePlugin is the live CoT→NATS wire (`tak.cot.inject` in, `tak.cot.>` out).
-CI builds all images via `.github/workflows/build-takserver.yml` (self-hosted runner).
-
-Full deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
-
-## Service Roadmap
-
-| Wave | Service | Purpose |
-|------|---------|---------|
-| 2 | omos-mission-engine | NATS mission orchestrator — workflow graphs dispatching cmd.* |
-| 3 | omos-feed-world / omos-feed-intel | Automated data feeds (OSINT, world events, AIS, ADS-B) |
-| 4 | Domain bridges | New bridges: ROS (robotics), wellness, scheduler, etc. |
+- Never deploy imperatively without a matching manifest here; never add a new Helm-CLI release
+- Never create a new NATS subject pattern outside the grammar above
+- Never use DOCR; images are on GHCR (and the in-cluster Harbor)
+- Never point a cloud workload at a Mac or edge NATS; cloud services use the in-cluster address (Hermes' sidecar is the one documented exception)
+- Never delete PVCs, namespaces or backup data without a fresh snapshot and explicit approval
+- Never add services that duplicate an existing layer; check `docs/STACK.md` first
