@@ -31,7 +31,8 @@ spec:
           command: ['sh', '-c', 'until pg_isready -h onetak-geo-db -U geo; do sleep 2; done']
       containers:
         - name: stac-api
-          image: ghcr.io/stac-utils/stac-fastapi-pgstac:latest
+          # Pinned to the digest of the working pod; a newer :latest fails at startup (pgdatabase required).
+          image: ghcr.io/stac-utils/stac-fastapi-pgstac@sha256:fa35b9519abb99fa83a38a296baa48a2630a7ca3109b3c2153c3c5c7c8baacd3
           ports:
             - containerPort: 8080
           env:

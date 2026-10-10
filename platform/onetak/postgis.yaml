@@ -40,6 +40,9 @@ spec:
                 secretKeyRef:
                   name: onetak-postgres-creds
                   key: POSTGRES_PASSWORD
+                  # The Secret no longer has this key (only POSTGRES_DSN). PGDATA on PVC
+                  # onetak-pgdata is already initialised, so the entrypoint does not need it.
+                  optional: true
             - name: PGDATA
               value: "/var/lib/postgresql/data/pgdata"
             - name: POSTGRES_HOST_AUTH_METHOD
