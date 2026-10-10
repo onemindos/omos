@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nats-dashboard
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: nats-dashboard
 spec:
@@ -73,7 +73,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nats-dashboard
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: nats-dashboard
 spec:
@@ -84,4 +84,3 @@ spec:
     - name: http
       port: 3000
       targetPort: http
-

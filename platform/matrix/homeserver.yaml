@@ -16,7 +16,7 @@ database:
   txn_limit: 10000
   args:
     user: synapse
-    password: "synapse_secure_password_2024"
+    password: "REDACTED_SEE_SECRETS-TODO.md"
     database: synapse
     host: postgres.matrix.svc.cluster.local
     port: 5432
@@ -27,12 +27,12 @@ redis:
   enabled: true
   host: redis.matrix.svc.cluster.local
   port: 6379
-  password: "redis_secure_password_2024"
+  password: "REDACTED_SEE_SECRETS-TODO.md"
 
 # Registration
 enable_registration: false
 enable_registration_without_verification: true
-registration_shared_secret: "matrix_secret_xyz123"
+registration_shared_secret: "REDACTED_SEE_SECRETS-TODO.md"
 
 # Signing key
 signing_key_path: "/data/signing.key"

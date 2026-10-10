@@ -1,0 +1,30 @@
+# platform-nats-tools: NATS web UIs (agent-web-ui, agenttap, heynats, nats-dashboard, nats-ui) in namespace nats.
+#
+# Adopted from the live cluster with no functional change; manifests mirror live (see docs/STACK.md).
+# - The `nats` Namespace is not managed here. The nats-tools Namespace and the two *.sealedsecret.yaml files in this
+#   directory target a namespace that does not exist and are excluded; live Secrets nats-creds and ghcr in `nats`
+#   are managed out of band.
+# - prune is off: adoption must never delete anything.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-nats-tools
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/nats-tools
+    directory:
+      recurse: true
+      exclude: "{namespace.yaml,*.sealedsecret.yaml,*.secret*,*.env}"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nats
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

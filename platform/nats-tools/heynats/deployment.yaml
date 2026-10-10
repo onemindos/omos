@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: heynats
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: heynats
 spec:
@@ -48,7 +48,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: heynats
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: heynats
 spec:

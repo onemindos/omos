@@ -1,0 +1,131 @@
+# Synapse, mirrored from the live matrix/synapse objects (2026-10-10).
+# Differences from the old kustomize base (platform/matrix/base/synapse) are intentional: live wins.
+# homeserver.yaml carries the DB, Redis and registration secrets, so it is NOT in Git. It is mounted from
+# Secret/synapse-homeserver (see ../SECRETS-TODO.md); the non-secret log config is in ConfigMap/synapse-log-config.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: synapse-data
+  namespace: matrix
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: do-block-storage
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: synapse-log-config
+  namespace: matrix
+data:
+  log.config: |
+    version: 1
+    formatters:
+      precise:
+        format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: precise
+        stream: ext://sys.stderr
+    root:
+      level: INFO
+      handlers: [console]
+    disable_existing_loggers: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: synapse
+  namespace: matrix
+spec:
+  type: ClusterIP
+  selector:
+    app: synapse
+  ports:
+    - port: 8008
+      protocol: TCP
+      targetPort: 8008
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+  namespace: matrix
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: synapse
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: synapse
+    spec:
+      securityContext:
+        fsGroup: 991
+        runAsGroup: 991
+        runAsUser: 991
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          imagePullPolicy: Always
+          command:
+            - sh
+            - -c
+            - chown -R 991:991 /data
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      containers:
+        - name: synapse
+          image: matrixdotorg/synapse:v1.106.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SYNAPSE_CONFIG_PATH
+              value: /config/homeserver.yaml
+          ports:
+            - containerPort: 8008
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+      volumes:
+        # Same file layout the live pod has today: /config/homeserver.yaml and /config/log.config.
+        - name: config
+          projected:
+            defaultMode: 420
+            sources:
+              - secret:
+                  name: synapse-homeserver
+                  items:
+                    - key: homeserver.yaml
+                      path: homeserver.yaml
+              - configMap:
+                  name: synapse-log-config
+                  items:
+                    - key: log.config
+                      path: log.config
+        - name: data
+          persistentVolumeClaim:
+            claimName: synapse-data
