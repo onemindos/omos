@@ -3329,3 +3329,213 @@ spec:
   type: model-serving
   lifecycle: experimental
   owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: digitalocean-inference
+  title: DigitalOcean Inference
+  description: "Hosted inference model catalog and API; account access and OneMind integration are unverified."
+  tags:
+    - ai-inference
+    - evaluation-candidate
+  annotations:
+    onemind.io/launcher-url: https://docs.digitalocean.com/products/inference/details/models/
+    onemind.io/launcher-category: AI Model Providers
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluation candidate
+    onemind.io/supported-platforms: Web
+  links:
+    - url: https://docs.digitalocean.com/products/inference/details/models/
+      title: Open application
+      icon: dashboard
+spec:
+  type: inference-provider
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nvidia-build
+  title: NVIDIA Build / NIM
+  description: "NVIDIA model discovery and hosted API trials, with NIM deployment options; no OneMind endpoint is configured."
+  tags:
+    - ai-inference
+    - evaluation-candidate
+  annotations:
+    onemind.io/launcher-url: https://build.nvidia.com/explore
+    onemind.io/launcher-category: AI Model Providers
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluation candidate
+    onemind.io/supported-platforms: Web
+  links:
+    - url: https://build.nvidia.com/explore
+      title: Open application
+      icon: dashboard
+spec:
+  type: inference-provider
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: together-ai
+  title: Together AI
+  description: "Cloud inference provider; evaluate hosted NVIDIA Nemotron 3 Super for reasoning and agent workloads."
+  tags:
+    - ai-inference
+    - evaluation-candidate
+  annotations:
+    onemind.io/launcher-url: https://www.together.ai/models/nvidia-nemotron-3-super
+    onemind.io/launcher-category: AI Model Providers
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluation candidate
+    onemind.io/supported-platforms: Web
+  links:
+    - url: https://www.together.ai/models/nvidia-nemotron-3-super
+      title: Open application
+      icon: dashboard
+spec:
+  type: inference-provider
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fireworks-ai
+  title: Fireworks AI
+  description: "Cloud inference provider with NVIDIA Nemotron models and NIM integration; account access is unverified."
+  tags:
+    - ai-inference
+    - evaluation-candidate
+  annotations:
+    onemind.io/launcher-url: https://fireworks.ai/partners/nvidia
+    onemind.io/launcher-category: AI Model Providers
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluation candidate
+    onemind.io/supported-platforms: Web
+  links:
+    - url: https://fireworks.ai/partners/nvidia
+      title: Open application
+      icon: dashboard
+spec:
+  type: inference-provider
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: qwen-models
+  title: Alibaba / Qwen
+  description: "Qwen3.8-27B is the first evaluation candidate for local coding, reasoning, and agent work; this release uses Apache 2.0."
+  tags:
+    - open-models
+    - evaluation-candidate
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://huggingface.co/Qwen/Qwen3.8-27B
+    onemind.io/launcher-category: Open Model Families
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/model-candidates: "Qwen3.8-27B"
+    onemind.io/model-license: "Apache-2.0"
+    onemind.io/evaluation-role: "Local coding, reasoning, and agent work"
+  links:
+    - url: https://huggingface.co/Qwen/Qwen3.8-27B
+      title: Open application
+      icon: docs
+spec:
+  type: model-family
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gemma-models
+  title: Google / Gemma
+  description: "Evaluate Gemma 4 12B Unified and smaller E2B/E4B variants for everyday assistance and edge devices; multimodal family under Apache 2.0."
+  tags:
+    - open-models
+    - evaluation-candidate
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://ai.google.dev/gemma/docs/core/model_card_4
+    onemind.io/launcher-category: Open Model Families
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/model-candidates: "Gemma 4 12B Unified; Gemma 4 E2B; Gemma 4 E4B"
+    onemind.io/model-license: "Apache-2.0"
+    onemind.io/evaluation-role: "Everyday assistance and smaller edge devices"
+  links:
+    - url: https://ai.google.dev/gemma/docs/core/model_card_4
+      title: Open application
+      icon: docs
+spec:
+  type: model-family
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ministral-models
+  title: Mistral / Ministral
+  description: "Evaluate Ministral 3 3B, 8B, and 14B for local assistants, extraction, and bounded workflows; model cards document vision and tool use."
+  tags:
+    - open-models
+    - evaluation-candidate
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
+    onemind.io/launcher-category: Open Model Families
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/model-candidates: "Ministral 3 3B; Ministral 3 8B; Ministral 3 14B"
+    onemind.io/model-license: "Apache-2.0 (linked 14B Instruct release)"
+    onemind.io/evaluation-role: "Local assistants, extraction, and bounded workflows"
+  links:
+    - url: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
+      title: Open application
+      icon: docs
+spec:
+  type: model-family
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nemotron-models
+  title: NVIDIA / Nemotron
+  description: "Evaluate Nemotron 3 Super 120B A12B for reasoning, tool use, and multi-agent work via hosted inference or suitable self-hosted hardware."
+  tags:
+    - open-models
+    - evaluation-candidate
+    - planned
+  annotations:
+    onemind.io/launcher-url: https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b/modelcard
+    onemind.io/launcher-category: Open Model Families
+    onemind.io/hosting: planned
+    onemind.io/documented-status: Planned
+    onemind.io/model-candidates: "Nemotron 3 Super 120B A12B"
+    onemind.io/model-license: "NVIDIA Nemotron Open Model License"
+    onemind.io/evaluation-role: "Reasoning, tool use, and multi-agent workloads"
+  links:
+    - url: https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b/modelcard
+      title: Open application
+      icon: docs
+    - url: https://www.together.ai/models/nvidia-nemotron-3-super
+      title: Together AI hosted option
+      icon: docs
+    - url: https://fireworks.ai/partners/nvidia
+      title: Fireworks AI hosted option
+      icon: docs
+spec:
+  type: model-family
+  lifecycle: experimental
+  owner: group:default/onemind-admins
