@@ -5,6 +5,8 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 ## Start here
 
 - Read [`docs/README.md`](docs/README.md) for the architecture documents and infrastructure runbooks.
+- Read [`docs/STACK.md`](docs/STACK.md) for what is running in the cluster, by tier, with backup, exposure and GitOps status.
+- Read [`docs/REPO-LAYOUT.md`](docs/REPO-LAYOUT.md) for what each top-level directory is and which are legacy.
 - Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before changing code or deployment configuration.
 - Use `make help` to see the repository's local commands.
 
@@ -12,7 +14,7 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 
 | Path | Purpose |
 |------|---------|
-| `.github/` | CI and service image build workflows |
+| `.github/` | CI quality gate (`quality.yml`) and service image build workflows |
 | `infra/` | Terraform for the DigitalOcean foundation, including the VPC and DOKS cluster |
 | `platform/` | Kubernetes resources, Helm values, and Argo CD applications for cluster workloads |
 | `tak-server/` | TAK Server chart, image build files, plugins, deployment overlays, and edge tools |
@@ -27,6 +29,8 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | `blueprints/` | Product, interface, and capability blueprints |
 | `OneMind-Platform/` | Platform capability and integration notes |
 | `references/` | External project and ecosystem research |
+| `reports/` | Dated cluster review reports |
+| `scripts/` | CI validation helpers and ecosystem tooling |
 The two `*-PICTURE.md` files at the repository root are dated architecture snapshots. For current architecture and deployment guidance, use `docs/` and the manifests under `platform/`.
 
 ## Local quality checks
@@ -35,6 +39,14 @@ The two `*-PICTURE.md` files at the repository root are dated architecture snaps
 make help
 make lint           # YAML, Terraform, and shell lint
 make validate       # Full local validation target
+```
+
+CI (`.github/workflows/quality.yml`) additionally runs kubeconform on plain manifests, `helm template` on Helm-based Argo Applications and local charts, and gitleaks. To reproduce locally, install `kubeconform`, `helm` and `gitleaks`, then run:
+
+```bash
+python scripts/validate_manifests.py --all        # schema-check every plain manifest
+python scripts/validate_helm_renders.py --all     # render every Helm chart (needs network, PyYAML)
+gitleaks dir . --config .gitleaks.toml --baseline-path .gitleaks-baseline.json --redact
 ```
 
 Terraform commands use `infra/` and require DigitalOcean credentials for `plan` or `apply`:
@@ -51,8 +63,9 @@ NATS JetStream stream and KV resources are declared under `platform/nats/streams
 ## Deployment model
 
 - Terraform declares the DigitalOcean VPC and DOKS foundation in `infra/`.
-- Argo CD applications in `platform/argocd/` reconcile Kubernetes resources from `platform/` and related directories.
-- Keep credentials out of Git. Follow [`docs/secrets-eso.md`](docs/secrets-eso.md) and the established secret pattern for the service being changed.
+- Argo CD applications in `platform/argocd/` (47 Applications live) reconcile Kubernetes resources from `platform/` and related directories. Eleven Helm releases, including the TAK Server core and NATS, are still installed by hand; see "GitOps gaps" in [`docs/STACK.md`](docs/STACK.md).
+- Keep credentials out of Git. Secrets are committed as Bitnami SealedSecrets (see `CLAUDE.md`, "Secrets"). [`docs/secrets-eso.md`](docs/secrets-eso.md) describes the earlier External Secrets design and is historical.
+- Dependency updates are proposed weekly by Renovate (`renovate.json`) and GitHub Actions are pinned by commit SHA.
 - The NATS subject grammar and bus rules are documented in [`docs/NATS-DOCTRINE.md`](docs/NATS-DOCTRINE.md).
 
 ## Related repositories
