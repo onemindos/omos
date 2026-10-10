@@ -32,6 +32,41 @@ spec:
             summary: "NATS cluster is completely down"
             description: "NATS has 0 available replicas. The entire OneMind bus is dark."
 
+        # Bus-flow alerts (surveyor metrics). Baseline 2026-10-10: COT ≈ 12.8k msgs/h,
+        # no non-KV consumer has exceeded 0 pending in 7 days.
+        - alert: TAKCoTFlowStopped
+          expr: max(increase(nats_stream_last_seq{job="nats-surveyor",stream="COT"}[15m])) == 0
+          for: 5m
+          labels:
+            severity: critical
+            service: nats
+          annotations:
+            summary: "No CoT messages reached the COT stream for 20 minutes"
+            description: "TAK → NatsBridgePlugin → NATS flow is broken or TAK has no traffic. Check takserver-messaging, tak-nats-leaf and the plugin."
+
+        - alert: NATSConsumerBacklogGrowing
+          expr: |
+            max by (stream, consumer_name) (nats_consumer_num_pending{job="nats-surveyor", stream!~"KV_.*|OBJ_.*"}) > 1000
+            and
+            max by (stream, consumer_name) (delta(nats_consumer_num_pending{job="nats-surveyor", stream!~"KV_.*|OBJ_.*"}[30m])) > 0
+          for: 30m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "Consumer {{ $labels.consumer_name }} on {{ $labels.stream }} is falling behind"
+            description: "{{ $value }} messages pending and still growing for 30m. The service reading this stream is slow or stuck."
+
+        - alert: NATSSurveyorDown
+          expr: absent(up{job="nats-surveyor"} == 1)
+          for: 10m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "NATS metrics are not being collected"
+            description: "nats-surveyor is not scraped, so every bus-flow alert above is blind."
+
     # ─── AI Brain ────────────────────────────────────────────────────────────
     - name: onemind.hermes
       interval: 30s

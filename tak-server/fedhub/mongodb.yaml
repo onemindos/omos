@@ -79,7 +79,7 @@ spec:
             timeoutSeconds: 10
           resources:
             requests: { cpu: 100m, memory: 256Mi }
-            limits:   { cpu: 500m, memory: 512Mi }
+            limits:   { cpu: "1", memory: 512Mi }  # was 500m; throttled ~34%
           volumeMounts:
             - { name: mongo-data, mountPath: /data/db }
             - name: mongo-init

@@ -105,7 +105,7 @@ spec:
           # Measured usage: 2803Mi. Request set to upper 60-90% band; limit = hard cap at 3200Mi.
           resources:
             requests: { cpu: "500m", memory: "2523Mi" }
-            limits:   { cpu: "4", memory: "3200Mi" }
+            limits:   { cpu: "4", memory: "4608Mi" }  # OOM-killed at 3200Mi on 2026-10-09
         # ---- NATS leaf sidecar ----
         # nats-server running as a leaf into the cluster ONEMIND account over TLS.
         # Exposes a local plaintext client listener on :4222 for Hermes only.
