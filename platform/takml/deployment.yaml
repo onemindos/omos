@@ -35,8 +35,8 @@ spec:
             - containerPort: 5432
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 10m
+              memory: 128Mi
             limits:
               cpu: 500m
               memory: 512Mi
@@ -261,8 +261,8 @@ spec:
               value: '{"drone1":"rtsp://onetak-media.onetak.svc.cluster.local:8554/drone1","takcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/takcam","helmcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/helmcam","maccam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/maccam"}'  # yamllint disable-line rule:line-length
           resources:
             requests:
-              cpu: 500m
-              memory: 768Mi
+              cpu: 50m
+              memory: 512Mi
             limits:
               cpu: "2"
               memory: 1Gi

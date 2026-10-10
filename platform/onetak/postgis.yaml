@@ -15,6 +15,16 @@ spec:
       labels:
         app: onetak-postgis
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: postgis
           image: postgis/postgis:17-3.4-alpine
@@ -39,8 +49,8 @@ spec:
               mountPath: /var/lib/postgresql/data
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 25m
+              memory: 128Mi
             limits:
               cpu: "1"
               memory: 512Mi

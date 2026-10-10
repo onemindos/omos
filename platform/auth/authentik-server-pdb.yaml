@@ -1,0 +1,17 @@
+# Keeps at least one Authentik server pod serving during node drains and
+# autoscaler scale-downs. The server Deployment itself comes from the
+# platform-auth-helm Application (server.replicas: 2 in
+# platform/argocd/platform-auth-helm.yaml); this PDB is applied by
+# platform-auth-infra so it does not depend on the chart's PDB values.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: authentik-server
+  namespace: auth
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: authentik
+      app.kubernetes.io/instance: platform-auth-helm
+      app.kubernetes.io/component: server

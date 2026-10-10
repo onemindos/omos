@@ -12,8 +12,8 @@ controller:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -31,8 +31,8 @@ ui:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 768Mi
@@ -78,8 +78,8 @@ kagent-tools:
       url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
       cpu: '1'
       memory: 512Mi

@@ -10,8 +10,8 @@ admissionController:
   container:
     resources:
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 25m
+        memory: 128Mi
       limits:
         cpu: '1'
         memory: 1Gi
@@ -20,8 +20,8 @@ backgroundController:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -30,8 +30,8 @@ cleanupController:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -40,8 +40,8 @@ reportsController:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi

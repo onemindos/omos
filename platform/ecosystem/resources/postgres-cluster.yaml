@@ -14,8 +14,8 @@ spec:
     storageClass: do-block-storage-retain
   resources:
     requests:
-      cpu: 250m
-      memory: 1Gi
+      cpu: 50m
+      memory: 384Mi
     limits:
       cpu: '2'
       memory: 4Gi

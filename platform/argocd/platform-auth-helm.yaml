@@ -57,7 +57,7 @@ spec:
             port: 6379
 
         server:
-          replicas: 1
+          replicas: 2
           ingress:
             enabled: false  # managed by platform/auth/ingress.yaml
           resources:

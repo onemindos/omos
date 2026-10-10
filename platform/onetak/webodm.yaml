@@ -10,6 +10,8 @@ metadata:
     app: webodm-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: webodm-db
@@ -18,6 +20,16 @@ spec:
       labels:
         app: webodm-db
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       initContainers:
         - name: fix-perms
           image: busybox
@@ -38,8 +50,8 @@ spec:
               value: /var/lib/postgresql/data/pgdata
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 10m
+              memory: 128Mi
             limits:
               cpu: "1"
               memory: 512Mi
@@ -89,6 +101,16 @@ spec:
       labels:
         app: webodm-broker
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: broker
           image: redis:7.0.10
@@ -134,6 +156,16 @@ spec:
       labels:
         app: webodm
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: webapp
           image: webodm/webodm_webapp:latest
@@ -167,7 +199,7 @@ spec:
           # Measured usage (webapp+worker, total 1789Mi; webapp share ~894Mi). Final OOM was perkouting at 1024Mi.
           resources:
             requests:
-              cpu: 300m
+              cpu: 50m
               memory: 768Mi        # ~90% of measured usage (894Mi)
             limits:
               cpu: "3"
@@ -203,7 +235,7 @@ spec:
           # Measured usage (webapp+worker, total 1789Mi; worker share ~895Mi).
           resources:
             requests:
-              cpu: 300m
+              cpu: 50m
               memory: 537Mi        # ~60% of measured usage (895Mi)
             limits:
               cpu: "4"
@@ -247,6 +279,8 @@ metadata:
     app: nodeodm
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: nodeodm
@@ -255,6 +289,16 @@ spec:
       labels:
         app: nodeodm
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: nodeodm
           image: opendronemap/nodeodm:latest
@@ -265,8 +309,8 @@ spec:
               mountPath: /var/www/data
           resources:
             requests:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 250m
+              memory: 512Mi
             limits:
               cpu: "4"
               memory: 8Gi

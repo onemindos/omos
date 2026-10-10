@@ -27,8 +27,8 @@ core:
     onemind.io/compute-role: ecosystem
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -39,8 +39,8 @@ portal:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
       cpu: 500m
       memory: 512Mi
@@ -48,8 +48,8 @@ jobservice:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -73,8 +73,8 @@ trivy:
   nodeSelector: *id001
   resources:
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 10m
+      memory: 256Mi
     limits:
       cpu: '2'
       memory: 2Gi
