@@ -1,0 +1,21 @@
+# Mirrors the live openclaw/openclaw Service.
+apiVersion: v1
+kind: Service
+metadata:
+  name: openclaw
+  namespace: openclaw
+  labels:
+    app: openclaw
+    onemind.os/component: openclaw-gateway
+    onemind.os/managed-by: kustomize
+spec:
+  type: ClusterIP
+  selector:
+    app: openclaw
+    onemind.os/component: openclaw-gateway
+    onemind.os/managed-by: kustomize
+  ports:
+  - name: gateway
+    port: 18789
+    protocol: TCP
+    targetPort: 18789
