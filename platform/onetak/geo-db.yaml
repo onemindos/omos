@@ -7,6 +7,8 @@ metadata:
     app: onetak-geo-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: onetak-geo-db
@@ -15,6 +17,16 @@ spec:
       labels:
         app: onetak-geo-db
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -44,8 +56,8 @@ spec:
               mountPath: /var/lib/postgresql/data
           resources:
             requests:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 50m
+              memory: 256Mi
             limits:
               cpu: "2"
               memory: 4Gi

@@ -10,6 +10,8 @@ metadata:
     app: tileserver-gl
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: tileserver-gl
@@ -18,6 +20,16 @@ spec:
       labels:
         app: tileserver-gl
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: tileserver-gl
           image: maptiler/tileserver-gl:latest
@@ -33,8 +45,8 @@ spec:
               mountPath: /tiles
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 10m
+              memory: 192Mi
             limits:
               cpu: "1"
               memory: 1Gi

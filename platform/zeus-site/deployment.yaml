@@ -15,6 +15,16 @@ spec:
       labels:
         app: zeus-site
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       imagePullSecrets:
         - name: ghcr-pull-secret
       containers:
@@ -42,8 +52,8 @@ spec:
                   key: PAYLOAD_SECRET
           resources:
             requests:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 25m
+              memory: 192Mi
             limits:
               cpu: 1000m
               memory: 1Gi

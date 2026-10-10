@@ -25,9 +25,9 @@ spec:
         dapr.io/app-protocol: http
         dapr.io/enable-app-health-check: "true"
         dapr.io/app-health-check-path: /health
-        dapr.io/sidecar-cpu-request: 100m
+        dapr.io/sidecar-cpu-request: 25m
         dapr.io/sidecar-cpu-limit: "1"
-        dapr.io/sidecar-memory-request: 256Mi
+        dapr.io/sidecar-memory-request: 128Mi
         dapr.io/sidecar-memory-limit: 1Gi
     spec:
       serviceAccountName: onemind-core

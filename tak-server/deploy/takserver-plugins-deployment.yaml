@@ -13,6 +13,16 @@ spec:
       labels:
         app: takserver-plugins
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-hub-core-v2
       serviceAccountName: takserver-ignite
       containers:
       - name: takserver-plugins

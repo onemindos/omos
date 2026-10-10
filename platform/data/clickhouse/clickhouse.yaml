@@ -33,6 +33,16 @@ spec:
     podTemplates:
       - name: default
         spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: doks.digitalocean.com/node-pool
+                        operator: In
+                        values:
+                          - onemind-ecosystem-cpu
           containers:
             - name: clickhouse
               image: clickhouse/clickhouse-server:24.8

@@ -17,7 +17,7 @@ dapr_placement:
   resources:
     requests:
       cpu: 50m
-      memory: 128Mi
+      memory: 64Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -25,8 +25,8 @@ dapr_placement:
 dapr_scheduler:
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 50m
+      memory: 128Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -36,8 +36,8 @@ dapr_scheduler:
 dapr_sentry:
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
       cpu: '1'
       memory: 1Gi
@@ -45,8 +45,8 @@ dapr_sentry:
 dapr_sidecar_injector:
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
       cpu: '1'
       memory: 1Gi

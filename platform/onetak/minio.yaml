@@ -5,6 +5,8 @@ metadata:
   namespace: onetak
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: onetak-minio
@@ -13,6 +15,16 @@ spec:
       labels:
         app: onetak-minio
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: minio
           image: minio/minio:RELEASE.2024-08-17T01-24-54Z
@@ -38,7 +50,7 @@ spec:
               mountPath: /data
           resources:
             requests:
-              cpu: 100m
+              cpu: 10m
               memory: 256Mi
             limits:
               cpu: 500m

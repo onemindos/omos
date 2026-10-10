@@ -57,7 +57,7 @@ spec:
               valueFrom:
                 secretKeyRef: {name: n8n-secrets, key: DB_POSTGRESDB_PASSWORD}
           resources:
-            requests: {cpu: 100m, memory: 256Mi}
+            requests: {cpu: 50m, memory: 128Mi}
             limits: {cpu: '1', memory: 768Mi}
           startupProbe:
             exec: {command: [pg_isready, -U, postgres]}

@@ -4,8 +4,8 @@ nodeSelector:
   onemind.io/compute-role: ecosystem
 resources:
   requests:
-    cpu: 250m
-    memory: 512Mi
+    cpu: 50m
+    memory: 128Mi
   limits:
     cpu: '2'
     memory: 2Gi
