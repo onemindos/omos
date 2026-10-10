@@ -1,0 +1,50 @@
+# Adopts the hand-installed Helm release "tailscale-operator" (namespace tailscale)
+# into Argo CD. Chart version and releaseName match the live release exactly;
+# values: platform/values/tailscale-operator.yaml.
+# Adoption safety: prune is OFF (Argo will never delete anything it did not
+# render) and there is deliberately no resources-finalizer, so deleting this
+# Application can never cascade to the workloads. Never `helm upgrade` this
+# release again: see docs/gitops/HELM-ADOPTION.md.
+# OAuth credential: the operator mounts the existing Secret "operator-oauth"
+# (owned by the SealedSecret of the same name). The values file leaves
+# oauth.clientId unset so the chart does not render that Secret and Argo can
+# never overwrite it. No secret value is referenced anywhere in Git.
+# CRDs: installCRDs=true renders the seven tailscale.com CRDs from templates;
+# they are identical to the live ones, applied server-side, never pruned.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: edge-tailscale-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  sources:
+  - repoURL: https://pkgs.tailscale.com/helmcharts
+    chart: tailscale-operator
+    targetRevision: 1.98.4
+    helm:
+      releaseName: tailscale-operator
+      valueFiles:
+      - $values/platform/values/tailscale-operator.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tailscale
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true

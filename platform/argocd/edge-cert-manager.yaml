@@ -1,0 +1,61 @@
+# Adopts the hand-installed Helm release "cert-manager" (namespace cert-manager)
+# into Argo CD. Chart version and releaseName match the live release exactly;
+# values: platform/values/cert-manager.yaml.
+# Adoption safety: prune is OFF (Argo will never delete anything it did not
+# render) and there is deliberately no resources-finalizer, so deleting this
+# Application can never cascade to the workloads. Never `helm upgrade` this
+# release again: see docs/gitops/HELM-ADOPTION.md.
+# CRDs: crds.enabled=true renders the six cert-manager CRDs from chart templates
+# (so skipCrds would NOT exclude them). They stay chart-managed because the
+# render is identical to the live CRDs (all carry helm.sh/resource-policy=keep).
+# They are applied server-side (never replaced) and prune is off, so this
+# Application can never delete them, even if the Application itself is removed.
+# Webhook caBundle is injected at runtime by cainjector, not rendered, hence the
+# ignoreDifferences. The chart uses no genCA/randAlphaNum: nothing regenerates.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: edge-cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  sources:
+  - repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.20.3
+    helm:
+      releaseName: cert-manager
+      valueFiles:
+      - $values/platform/values/cert-manager.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  ignoreDifferences:
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[]?.clientConfig.caBundle
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[]?.clientConfig.caBundle
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true
+    - RespectIgnoreDifferences=true
