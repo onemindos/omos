@@ -20,9 +20,9 @@ same `alertname` + `namespace`.
   volume, and the token file is only read when a notification is sent. Until the
   Secret exists (and `chat_id` is set), Telegram sends fail and are logged and
   counted in `alertmanager_notifications_failed_total`; nothing else breaks.
-* The Matrix relay Deployment stays in `CreateContainerConfigError` until its
-  Secret exists, so Argo CD will report `platform-monitoring` as Degraded.
-  Alertmanager just logs failed webhook notifications.
+* The Matrix relay Deployment ships with `replicas: 0`, so nothing fails before
+  its Secret exists; Alertmanager just logs failed webhook notifications. After
+  sealing the Secret, set `replicas: 1` in `matrix-alertmanager-receiver.yaml`.
 * Recommended order: do steps 1-3 (seal and commit both SealedSecrets, set
   `chat_id`) in the same PR/branch **before merging**, so delivery works from
   the first sync.
@@ -119,7 +119,8 @@ kubectl create secret generic matrix-alert-relay-creds -n monitoring \
 unset MX_TOKEN
 ```
 
-Commit the two `*.sealedsecret.yaml` files plus the `chat_id` edit. Argo CD app
+Commit the two `*.sealedsecret.yaml` files, the `chat_id` edit, and `replicas: 1`
+in `platform/monitoring/matrix-alertmanager-receiver.yaml`. Argo CD app
 `platform-monitoring` applies the SealedSecrets (its directory exclude `*.secret*`
 only matches plain `*.secret.yaml` files, not `*.sealedsecret.yaml`).
 

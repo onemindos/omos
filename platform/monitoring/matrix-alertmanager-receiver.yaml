@@ -43,7 +43,9 @@ metadata:
   labels:
     app.kubernetes.io/name: matrix-alertmanager-receiver
 spec:
-  replicas: 1
+  # 0 until Secret matrix-alert-relay-creds exists (ALERTING-SETUP.md); a missing
+  # Secret would leave the pod in CreateContainerConfigError and platform-monitoring Degraded.
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: matrix-alertmanager-receiver
