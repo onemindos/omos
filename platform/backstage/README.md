@@ -104,3 +104,16 @@ App cards and My Active Stack expose an Access & Deployments editor, also availa
 Shared catalog points are versioned in the `onemind.io/access-points` JSON annotation. Initial points use existing verified Kubernetes route relationships and read-only inspection of Proton Mail, Dropbox and 1Password on the MacBook identified by its Tailscale DNS identity. These are dated observations, not continuous installation or health checks. `onemind.io/supported-platforms` optionally records a comma-separated platform list without implying installation.
 
 Account-backed User Settings store additional points and a preferred access point per app; preferences apply in Favorites, directory cards and My Active Stack. Manual points are explicitly User recorded. Device selection reads existing mesh/cluster catalog resources, exposes their OS, DNS identity and discovery date, and does not discover installed apps on remote devices. Unavailable catalog inventory does not erase saved points. Existing workload dependencies link to catalog records for inspection. The enrichment script retains mesh OS on future inventory refreshes.
+
+## AI directory organization
+
+Local AI contains model runtimes and desktop tools. AI Model Providers contains
+external hosted inference catalogs and APIs, with Cloud service labels and
+unverified account/integration status. Open Model Families contains evaluation
+candidates and official model cards. Family entries record candidate releases,
+release-specific licenses, and proposed OneMind roles; these are not benchmark
+results, active model assignments, or verified deployments. Open weights can be
+served locally or by a cloud provider; license and hosting are separate facts.
+Runtime compatibility and hardware capacity must be checked before installing a
+particular release. No account credentials or inference endpoints are configured
+by adding a directory entry.
