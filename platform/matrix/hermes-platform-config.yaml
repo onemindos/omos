@@ -6,15 +6,15 @@ platforms:
   
   matrix:
     enabled: true
-    homeserver: "https://matrix.onemindos.com"
-    user_id: "@hermes:onemindos.com"
+    homeserver: "https://matrix.onemindos.dev"
+    user_id: "@hermes:onemindos.dev"
     # access_token: Set via MATRIX_ACCESS_TOKEN env var or hermes config set
     # device_id: Optional, auto-generated if not set
     
     # Authorization (REQUIRED)
     allowed_users:
-      - "@zeus:onemindos.com"
-      - "@legacy:onemindos.com"
+      - "@zeus:onemindos.dev"
+      - "@legacy:onemindos.dev"
     # allowed_rooms: []  # Optional: restrict to specific room IDs
     
     # Behavior

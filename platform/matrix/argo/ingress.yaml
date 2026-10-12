@@ -1,54 +1,60 @@
+# Matrix ingress, mirrored from the live matrix/matrix-ingress object (2026-10-12).
 # Adopt the existing .dev routes without changing their live behavior.
+# Moved from onemindos.com to onemindos.dev. server_name is "onemindos.dev" (user IDs look like @zeus:onemindos.dev);
+# the homeserver itself lives at matrix.onemindos.dev. Both hosts are Cloudflare-proxied A records to the ingress LB.
+# No origin cert, same as every other onemindos.dev ingress: Cloudflare terminates TLS (zone SSL mode "full").
+# cert-manager's Cloudflare token (letsencrypt-dns) has no access to the onemindos.dev zone, so it cannot issue here.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: matrix-ingress
   namespace: matrix
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
-    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
 spec:
   ingressClassName: nginx
   rules:
-  - host: matrix.onemindos.dev
-    http:
-      paths:
-      - backend:
-          service:
-            name: synapse
-            port:
-              number: 8008
-        path: /
-        pathType: Prefix
-  - host: element.onemindos.dev
-    http:
-      paths:
-      - backend:
-          service:
-            name: element-web
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
+    - host: matrix.onemindos.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: synapse
+                port:
+                  number: 8008
+    - host: element.onemindos.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: element-web
+                port:
+                  number: 80
 ---
+# Delegation for server_name "onemindos.dev": Synapse answers /.well-known/matrix/{client,server} itself
+# (public_baseurl + serve_server_wellknown in homeserver.yaml). The rest of onemindos.dev is onetak-ingress.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: matrix-wellknown
   namespace: matrix
-  annotations: {}
 spec:
   ingressClassName: nginx
   rules:
-  - host: onemindos.dev
-    http:
-      paths:
-      - backend:
-          service:
-            name: synapse
-            port:
-              number: 8008
-        path: /.well-known/matrix
-        pathType: Prefix
+    - host: onemindos.dev
+      http:
+        paths:
+          - path: /.well-known/matrix
+            pathType: Prefix
+            backend:
+              service:
+                name: synapse
+                port:
+                  number: 8008
