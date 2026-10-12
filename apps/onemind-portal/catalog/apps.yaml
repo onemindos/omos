@@ -3541,3 +3541,243 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: personal-tools
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: social-media
+  title: Social Media
+spec:
+  owner: group:default/onemind-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: facebook-zeus
+  title: Facebook — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.facebook.com/zeuslegacydelacruz
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: facebook-legacy
+  title: Facebook — Legacy Platform
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.facebook.com/LegacyPlatformOfficial
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: x-zeus
+  title: X — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://x.com/zeusDelacruz_
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: linkedin-zeus
+  title: LinkedIn — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.linkedin.com/in/zeuslegacydelacruz/
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: tiktok-zeus
+  title: TikTok — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.tiktok.com/@zeusdelacruz_
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: instagram-zeus
+  title: Instagram — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.instagram.com/zeusdelacruz_/
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: twitch-zeus
+  title: Twitch — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.twitch.tv/zeusdelacruz_
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: reddit-zeus
+  title: Reddit — callsign_zero0
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.reddit.com/user/callsign_zero0/
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pinterest-zeus
+  title: Pinterest — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.pinterest.com/ZeusDelacruz_/
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: threads-zeus
+  title: Threads — Zeus
+  description: "Social media profile provided by Zeus."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.threads.com/@zeusdelacruz_
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: youtube-zeus
+  title: YouTube — profile pending
+  description: "Placeholder: channel URL pending; opens YouTube main site."
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.youtube.com/
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
