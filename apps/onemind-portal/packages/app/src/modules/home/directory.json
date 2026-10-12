@@ -534,5 +534,93 @@
     "description": "Mesh VPN administration",
     "group": "infrastructure",
     "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "facebook-zeus",
+    "title": "Facebook — Zeus",
+    "url": "https://www.facebook.com/zeuslegacydelacruz",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "facebook-legacy",
+    "title": "Facebook — Legacy Platform",
+    "url": "https://www.facebook.com/LegacyPlatformOfficial",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "x-zeus",
+    "title": "X — Zeus",
+    "url": "https://x.com/zeusDelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "linkedin-zeus",
+    "title": "LinkedIn — Zeus",
+    "url": "https://www.linkedin.com/in/zeuslegacydelacruz/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "tiktok-zeus",
+    "title": "TikTok — Zeus",
+    "url": "https://www.tiktok.com/@zeusdelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "instagram-zeus",
+    "title": "Instagram — Zeus",
+    "url": "https://www.instagram.com/zeusdelacruz_/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "twitch-zeus",
+    "title": "Twitch — Zeus",
+    "url": "https://www.twitch.tv/zeusdelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "reddit-zeus",
+    "title": "Reddit — callsign_zero0",
+    "url": "https://www.reddit.com/user/callsign_zero0/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "pinterest-zeus",
+    "title": "Pinterest — Zeus",
+    "url": "https://www.pinterest.com/ZeusDelacruz_/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "threads-zeus",
+    "title": "Threads — Zeus",
+    "url": "https://www.threads.com/@zeusdelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "youtube-zeus",
+    "title": "YouTube — profile pending",
+    "url": "https://www.youtube.com/",
+    "description": "Channel URL pending",
+    "group": "social-media",
+    "groupTitle": "Social Media"
   }
 ]
