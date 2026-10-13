@@ -622,5 +622,13 @@
     "description": "Channel URL pending",
     "group": "social-media",
     "groupTitle": "Social Media"
+  },
+  {
+    "name": "linkedin-company-admin",
+    "title": "LinkedIn — Company Admin",
+    "url": "https://www.linkedin.com/company/74305203/admin/dashboard/",
+    "description": "Company administration dashboard",
+    "group": "social-media",
+    "groupTitle": "Social Media"
   }
 ]
