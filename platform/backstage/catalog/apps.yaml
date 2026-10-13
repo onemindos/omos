@@ -3781,3 +3781,24 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: linkedin-company-admin
+  title: LinkedIn — Company Admin
+  description: LinkedIn company administration dashboard; requires authorized LinkedIn account.
+  tags:
+    - social-media
+  annotations:
+    onemind.io/launcher-category: Social Media
+    onemind.io/hosting: external-provider-unverified
+  links:
+    - url: https://www.linkedin.com/company/74305203/admin/dashboard/
+      title: Open application
+      icon: web
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: social-media
