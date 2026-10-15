@@ -3802,3 +3802,762 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: social-media
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bambu-studio
+  title: Bambu Studio
+  description: Bambu Lab slicing software for 3D printing. Converts STL/OBJ models
+    to G-code for Bambu printers (X1, A1, P1 series). Direct Wi-Fi print
+    sending, multi-material support. v02.07.01.57 (arm64/x86_64 universal).
+  tags:
+    - hardware
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://bambulab.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Hardware
+    onemind.io/license: Free
+    onemind.io/supported-platforms: macOS,Windows
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-22
+    onemind.io/inventory-source: notion-tech-stack/3c4d0cf70a7e81128cbafd7d6a3e4957
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bambu-lab
+  title: Bambu Lab
+  description: High-speed FDM 3D printer + Bambu Studio slicer. Used for rapid
+    prototyping of enclosures and hardware components.
+  tags:
+    - hardware
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://bambulab.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Hardware
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: macOS,Windows
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81fa8da9ddcd368bcacd
+    onemind.io/verification: documented-unverified
+spec:
+  type: software-platform
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: foxglove-studio
+  title: Foxglove Studio
+  description: Robotics visualization and debugging tool for ROS 1/2. Visualizes
+    point clouds, camera feeds, telemetry. Supports .mcap/.bag recording and
+    playback. AGPL v3. v2.53.1 installed (arm64).
+  tags:
+    - uas-drone
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://foxglove.dev
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Robotics & Autonomy
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: UAS / Drone
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: macOS,Windows,Linux,Web
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-22
+    onemind.io/inventory-source: notion-tech-stack/3c4d0cf70a7e816292c5d736b48fe71e
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: obs-studio
+  title: OBS Studio
+  description: Open Broadcaster Software. Used for live streaming, recording, and
+    screen capture for OneMind demos and content.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://obsproject.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: macOS,Windows,Linux
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8107a8bfedbdaca522e6
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: blender
+  title: Blender
+  description: 3D modeling, animation, and rendering. Used for asset creation,
+    drone/hardware visualizations, and scene building.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://blender.org
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: macOS,Windows,Linux
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81fbb074c80989712ef4
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: madmapper
+  title: MadMapper
+  description: Video mapping and projection software. Used for spatial augmented
+    reality and live event installations.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://madmapper.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: macOS,Windows
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-22
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8155bd8cec47b974eb09
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: touchdesigner
+  title: TouchDesigner
+  description: Real-time visual programming for interactive media and
+    installations. Used for live data-driven visual displays.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://derivative.ca
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: macOS,Windows
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81b8af60f682a17316c0
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: termius
+  title: Termius
+  description: Cross-platform SSH/SFTP client. Primary tool for managing cluster
+    nodes and TAK server from any device.
+  tags:
+    - devops-infra
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://termius.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: DevOps / Infra
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: macOS,Windows,Android,iOS
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81ea87d7efbe9d4510be
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: brave-browser
+  title: Brave Browser
+  description: Secondary browser for private/sensitive browsing. Chrome is primary.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://brave.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: macOS,Windows,Android,iOS
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e813ebf6df9a7bcd81453
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: google-chrome
+  title: Google Chrome
+  description: Default browser. Signed into zeus@zeusdelacruz.com. Google Keep
+    installed as PWA.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://www.google.com/chrome
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: native-application
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Free
+    onemind.io/supported-platforms: macOS,Windows,Android,iOS
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81e5ab51d19463c34afc
+    onemind.io/verification: documented-unverified
+spec:
+  type: desktop-application
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: google-cloud
+  title: Google Cloud
+  description: GCS storage, Firebase, Maps API, and Vertex AI. Secondary cloud for
+    specific OneMind data and mapping services.
+  tags:
+    - devops-infra
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://cloud.google.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: DevOps / Infra
+    onemind.io/license: Commercial
+    onemind.io/supported-platforms: Linux,K8s,Web
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e813e935dcb0d1038486d
+    onemind.io/verification: documented-unverified
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: riverside-fm
+  title: Riverside.fm
+  description: High-quality remote podcast and video recording. Local recording
+    per participant - no compression. Good for OneMind content, interviews, TAK
+    YouTube strategy.
+  tags:
+    - business
+    - tech-stack
+    - evaluating
+    - documented-unverified
+  links:
+    - url: https://riverside.fm
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluating
+    onemind.io/documented-category: Business
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: Web,iOS,Android
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81c08d9edda9345684de
+    onemind.io/verification: documented-unverified
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: workspaces
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: notion-backups
+  title: Notion Backups
+  description: Automated Notion workspace backups. Evaluating for OneMind Notion
+    data protection.
+  tags:
+    - devops-infra
+    - tech-stack
+    - evaluating
+    - documented-unverified
+  links:
+    - url: https://notionbackups.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluating
+    onemind.io/documented-category: DevOps / Infra
+    onemind.io/license: Commercial
+    onemind.io/supported-platforms: Web
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81f58995f0e7bc6d05ea
+    onemind.io/verification: documented-unverified
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: probackup-io
+  title: ProBackup.io
+  description: Backup service. Evaluating for OneMind stack data protection.
+  tags:
+    - devops-infra
+    - tech-stack
+    - evaluating
+    - documented-unverified
+  links:
+    - url: https://probackup.io
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluating
+    onemind.io/documented-category: DevOps / Infra
+    onemind.io/license: Commercial
+    onemind.io/supported-platforms: Web
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81db8259e26601d9f680
+    onemind.io/verification: documented-unverified
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: strava
+  title: Strava
+  description: Fitness and activity tracking. Logs runs, rides, and workouts.
+    Evaluating for Exist.io integration and HP performance stack.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://strava.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: Android,iOS,Web
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81a28e06df070cab8725
+    onemind.io/verification: documented-unverified
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: apple-music
+  title: Apple Music
+  description: Music streaming. Available on Samsung via Android app.
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://music.apple.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Commercial
+    onemind.io/supported-platforms: macOS,Android,iOS,Web
+    onemind.io/onemind-integration: "false"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e818f840bd88909d0f6a1
+    onemind.io/verification: documented-unverified
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: langfuse
+  title: Langfuse
+  description: LLM observability & tracing. Tracks prompts, completions, latency,
+    cost, and evals for AI agents. Self-hostable.
+  tags:
+    - ai-ml
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://langfuse.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: AI / ML
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: Linux,K8s,Web
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8106bd1dd6bce183659a
+    onemind.io/verification: documented-unverified
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: uptime-kuma
+  title: Uptime Kuma
+  description: Self-hosted uptime monitoring. Monitors HTTP, TCP, DNS, and more.
+    Push/pull status pages. Alerts via Slack, Discord, etc.
+  tags:
+    - devops-infra
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://github.com/louislam/uptime-kuma
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: DevOps / Infra
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: Linux,K8s,Web
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8151bafaeb0323ca7438
+    onemind.io/verification: documented-unverified
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mta
+  title: MTA
+  description: Message Transfer Agent — handles email/message routing within
+    OneMind OS infrastructure. Linked to Hermes agent pipeline.
+  tags:
+    - messaging
+    - tech-stack
+    - documented-unverified
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Messaging
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: Linux,K8s
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8130b6c3eb9c22a142c1
+    onemind.io/verification: documented-unverified
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: communication
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: agent-mail
+  title: Agent Mail
+  description: AI-powered email agent. Evaluating for autonomous inbox triage,
+    drafting, and response workflows.
+  tags:
+    - ai-ml
+    - tech-stack
+    - evaluating
+    - documented-unverified
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluating
+    onemind.io/documented-category: AI / ML
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: Web,Linux
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8195bea2de947b3bffed
+    onemind.io/verification: documented-unverified
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: turbovec
+  title: turbovec
+  description: Rust vector index with Python bindings for local RAG. Planned as
+    One Mind RAG engine — faster than FAISS, 8x more memory efficient. Built on
+    TurboQuant. Pairs with Ollama + nomic-embed-text for fully local embedding
+    pipeline.
+  tags:
+    - ai-ml
+    - tech-stack
+    - evaluating
+    - documented-unverified
+  links:
+    - url: https://github.com/RyanCodrai/turbovec
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Local AI
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Evaluating
+    onemind.io/documented-category: AI / ML
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: macOS,Linux
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-22
+    onemind.io/inventory-source: notion-tech-stack/3c4d0cf70a7e819f8760da42f3dadd13
+    onemind.io/verification: documented-unverified
+spec:
+  type: software-platform
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: samsung-knox
+  title: Samsung KNOX
+  description: Hardware-backed security platform on Samsung devices. Provides
+    secure container, MDM/EMM integration, and defense-grade device management
+    for field ops.
+  tags:
+    - security
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://www.samsungknox.com
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Security
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: Android
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8118a652c84455fb2a9b
+    onemind.io/verification: documented-unverified
+spec:
+  type: software-platform
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: samsung-one-ui
+  title: Samsung One UI
+  description: Samsung's Android skin. Core mobile OS layer on field devices.
+    Manages KNOX integration, DeX mode, and device policies.
+  tags:
+    - hardware
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://www.samsung.com/us/smartphones/one-ui
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Hardware
+    onemind.io/license: Free
+    onemind.io/supported-platforms: Android
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e810880b0e5134dff2558
+    onemind.io/verification: documented-unverified
+spec:
+  type: software-platform
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: samsung-dex
+  title: Samsung DeX
+  description: Desktop mode for Samsung devices. Turns phone/tablet into a full
+    desktop experience. Used for field ops command station without a laptop.
+  tags:
+    - hardware
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://www.samsung.com/us/smartphones/dex
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/launcher-category: Personal Tools
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Hardware
+    onemind.io/license: Free
+    onemind.io/supported-platforms: Android,Windows,macOS
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e817ea374f0efe714c835
+    onemind.io/verification: documented-unverified
+spec:
+  type: software-platform
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools
