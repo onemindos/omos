@@ -8,6 +8,7 @@ These are historical documentation claims, not current deployment instructions o
 - Documented host: 🌐 SaaS / Cloud
 - Recorded status: ✅ Live
 - Recorded address: https://calendar.google.com
+- Tags: External
 
 Time-blocked calendar, color-coded by Area
 

@@ -8,6 +8,7 @@ These are historical documentation claims, not current deployment instructions o
 - Documented host: 🐳 Docker Local
 - Recorded status: 📚 Reference
 - Recorded address: https://github.com/nats-nui/nui
+- Tags: NATS
 
 Third-party NATS UI — removed, redundant
 
