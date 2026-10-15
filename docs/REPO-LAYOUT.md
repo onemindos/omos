@@ -26,7 +26,7 @@ What each top-level path in `onemindos/omos` is for, whether it is live, and wha
 | `plugins/` | `onemind-vision` plugin stub (2 files) | **Reference / Future** | Not built or deployed |
 | `blueprints/` | Product, interface and capability blueprints (28 files, one commit, 2026-09-09) | **Future** | Planning material; contains `index.html` and shell tooling for model management |
 | `legacy/` | Source, config, personas and runbooks for the Hermes "Legacy" agent (146 files, 2 commits) | **Legacy (duplicate)** | Its README describes itself as the separate `omos-legacy` repo, and still says Bedrock. The live agent runs the upstream `nousresearch/hermes-agent` image with manifests under `platform/hermes/agent/`. `platform/hermes/agent/` also contains `AGENTS.yaml`, `CREED.md` and `LEGACY-ARCHITECTURE.md`, so the agent definition exists in three places |
-| `omos-infra` | Git **submodule pointer** (mode 160000, commit `81dc734e`) with no `.gitmodules` | **Broken** | A dangling gitlink: it cannot be cloned or updated and the directory is empty. It is an old name of this repo (workflow comments still say "omos-infra main") |
+| `omos-infra` | Removed. Was a dangling submodule pointer (mode 160000, commit `81dc734e`) with no `.gitmodules` | **Removed** | Old name of this repo; workflow comments may still say "omos-infra main" |
 | `OneMind-Platform/` | Five capability notes (ArcCortex TAK VR, Defender AI, Leica BLK, Octave, platform) | **Reference** | 2 commits, last 2026-09-11 |
 | `rads/` | Remote Autonomous Deployment System: Python agent, Docker Compose, DimOS bridge, docs (36 files, one commit) | **Future / experiment** | Not built by CI, not deployed |
 | `references/` | Research notes on external projects (37 files, one commit) | **Reference** | Not code. Contains one false-positive secret hit (`references/ai/orp.md`) |
@@ -50,7 +50,7 @@ There is no `platform/future/` directory in this tree. Planned work lives in `bl
 
 Each step is independent and reversible. Do them one PR at a time; none changes cluster behavior.
 
-1. **Remove the dangling `omos-infra` gitlink.** `git rm --cached omos-infra` then delete the empty directory. It carries no content and breaks tools that walk submodules.
+1. ~~**Remove the dangling `omos-infra` gitlink.**~~ Done.
 2. **Give every live workload an owner in Git.** Add Applications (or fold into an existing one) for `platform/nats-tools`, `platform/matrix` and `platform/openclaw`, with `prune: false` at first. Then adopt the Helm-CLI releases in the order listed in `docs/STACK.md`.
 3. **Pick one home for the Legacy agent.** Either keep `legacy/` as a read-only mirror of `omos-legacy` (README banner, no edits here), or move edits to `omos-legacy` and delete `legacy/`. Make `platform/hermes/agent/` reference it. Fix the Bedrock statements at the same time.
 4. **Retire dead directories.** After confirming nothing reads them: `platform/geo/` (namespace gone), `scripts/check_secret_patterns.py` (superseded by gitleaks), the two root `*-PICTURE.md` snapshots (move to `docs/archive/`).
