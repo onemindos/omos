@@ -21,7 +21,6 @@
     "legacy/**",
     "references/**",
     "OneMind-Platform/**",
-    "omos-infra/**",
     "rads/**",
     "platform/future/**",
     ".obsidian/**",
