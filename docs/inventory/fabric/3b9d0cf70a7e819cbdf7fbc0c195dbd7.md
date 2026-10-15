@@ -8,6 +8,7 @@ These are historical documentation claims, not current deployment instructions o
 - Documented host: 🐳 Docker Local
 - Recorded status: 📚 Reference
 - Recorded address: https://github.com/simplifaisoul/osiris
+- Tags: OMOS-Intel
 
 Lives in omos-infra/platform/intel/osiris — pending standalone repo extraction
 

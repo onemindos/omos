@@ -7,7 +7,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://martin.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8102946eff79f4125152",
-    "Last edited time": "2026-09-03 07:00:39Z"
+    "Last edited time": "2026-09-03 07:00:39Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "OneTAK PostgreSQL",
@@ -17,7 +20,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "postgresql://cloudtak-postgis.cloudtak.svc.cluster.local:5432",
     "url": "https://app.notion.com/3b9d0cf70a7e810aac3af58ff183e974",
-    "Last edited time": "2026-09-03 08:07:12Z"
+    "Last edited time": "2026-09-03 08:07:12Z",
+    "Tags": [
+      "Data",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Instagram",
@@ -27,7 +34,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://instagram.com",
     "url": "https://app.notion.com/3b9d0cf70a7e810e84d5d447966b9242",
-    "Last edited time": "2026-09-03 07:11:27Z"
+    "Last edited time": "2026-09-03 07:11:27Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "YouTube",
@@ -37,7 +47,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://youtube.com",
     "url": "https://app.notion.com/3b9d0cf70a7e8110a570ee43052b619f",
-    "Last edited time": "2026-09-03 07:11:29Z"
+    "Last edited time": "2026-09-03 07:11:29Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "Calendar",
@@ -47,7 +60,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://calendar.google.com",
     "url": "https://app.notion.com/3b9d0cf70a7e8110aacfeff6d5acf18c",
-    "Last edited time": "2026-09-03 07:42:32Z"
+    "Last edited time": "2026-09-03 07:42:32Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "STAC API",
@@ -57,7 +73,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://stac.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8112af60e8ea79c23728",
-    "Last edited time": "2026-09-03 07:00:35Z"
+    "Last edited time": "2026-09-03 07:00:35Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "Dell Laptop (COP)",
@@ -67,7 +86,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://omos-dell-zeus.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8115890ac30ff3edc56a",
-    "Last edited time": "2026-09-03 07:00:53Z"
+    "Last edited time": "2026-09-03 07:00:53Z",
+    "Tags": [
+      "Edge Device",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Hubble",
@@ -77,7 +100,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://hubble.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81168a55dff646285f2a",
-    "Last edited time": "2026-09-03 07:01:10Z"
+    "Last edited time": "2026-09-03 07:01:10Z",
+    "Tags": [
+      "Monitoring",
+      "Networking"
+    ]
   },
   {
     "Page": "Cloudflare Tunnel",
@@ -87,7 +114,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://one.dash.cloudflare.com",
     "url": "https://app.notion.com/3b9d0cf70a7e811fb22ff0467ff07122",
-    "Last edited time": "2026-09-03 07:00:52Z"
+    "Last edited time": "2026-09-03 07:00:52Z",
+    "Tags": [
+      "Networking"
+    ]
   },
   {
     "Page": "STAC Browser",
@@ -97,7 +127,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://stac-browser.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8124a3eed9d89f3a0a5c",
-    "Last edited time": "2026-09-03 07:00:34Z"
+    "Last edited time": "2026-09-03 07:00:34Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "cert-manager",
@@ -107,7 +140,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3b9d0cf70a7e812899b8c2b1670b04e6",
-    "Last edited time": "2026-09-03 07:00:52Z"
+    "Last edited time": "2026-09-03 07:00:52Z",
+    "Tags": [
+      "Networking"
+    ]
   },
   {
     "Page": "Home Assistant",
@@ -117,7 +153,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://omos-ha-edge.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e812c9700faea244ec699",
-    "Last edited time": "2026-09-03 07:00:56Z"
+    "Last edited time": "2026-09-03 07:00:56Z",
+    "Tags": [
+      "Edge Device"
+    ]
   },
   {
     "Page": "s24-pipeline-guardian",
@@ -127,7 +166,11 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3b9d0cf70a7e812fa332d7b0a3263d04",
-    "Last edited time": "2026-09-03 07:00:49Z"
+    "Last edited time": "2026-09-03 07:00:49Z",
+    "Tags": [
+      "Cron",
+      "Edge Device"
+    ]
   },
   {
     "Page": "cot-retention",
@@ -137,7 +180,11 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3b9d0cf70a7e81399300ce8ae5c69770",
-    "Last edited time": "2026-09-03 07:00:50Z"
+    "Last edited time": "2026-09-03 07:00:50Z",
+    "Tags": [
+      "Cron",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Drive",
@@ -147,7 +194,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://drive.google.com",
     "url": "https://app.notion.com/3b9d0cf70a7e81429ddeeedb63f202e5",
-    "Last edited time": "2026-09-03 07:42:53Z"
+    "Last edited time": "2026-09-03 07:42:53Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "QGIS Server",
@@ -157,7 +207,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://qgis.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8143a116e3464a69dadf",
-    "Last edited time": "2026-09-03 07:00:40Z"
+    "Last edited time": "2026-09-03 07:00:40Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "Tailscale Mesh (15 proxies)",
@@ -167,7 +220,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://login.tailscale.com/admin/machines",
     "url": "https://app.notion.com/3b9d0cf70a7e814781a8e3955ee46860",
-    "Last edited time": "2026-09-03 07:00:55Z"
+    "Last edited time": "2026-09-03 07:00:55Z",
+    "Tags": [
+      "Networking"
+    ]
   },
   {
     "Page": "WebTAK (Admin)",
@@ -177,7 +233,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://152.42.155.95:8446/webtak",
     "url": "https://app.notion.com/3b9d0cf70a7e814aa336d1ac4efc7303",
-    "Last edited time": "2026-09-03 08:49:12Z"
+    "Last edited time": "2026-09-03 08:49:12Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "NATS WebSocket",
@@ -187,7 +246,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "ws://nats.hermes.svc.cluster.local:8080",
     "url": "https://app.notion.com/3b9d0cf70a7e8154a3b3e5435bb33606",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "ClickHouse Time Machine",
@@ -197,7 +259,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "http://clickhouse.hermes.svc.cluster.local:8123",
     "url": "https://app.notion.com/3b9d0cf70a7e81569955eb41a19a3c12",
-    "Last edited time": "2026-09-03 07:01:03Z"
+    "Last edited time": "2026-09-03 07:01:03Z",
+    "Tags": [
+      "Data"
+    ]
   },
   {
     "Page": "ArgoCD",
@@ -207,7 +272,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://argocd.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8158815be14e14b0f162",
-    "Last edited time": "2026-09-03 07:01:08Z"
+    "Last edited time": "2026-09-03 07:01:08Z",
+    "Tags": [
+      "Monitoring"
+    ]
   },
   {
     "Page": "MacBook Pro (Zeus)",
@@ -217,7 +285,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://omos-mbp.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e815cba8ac2ec524c03d3",
-    "Last edited time": "2026-09-03 07:00:56Z"
+    "Last edited time": "2026-09-03 07:00:56Z",
+    "Tags": [
+      "Edge Device"
+    ]
   },
   {
     "Page": "OneTAK",
@@ -227,7 +298,10 @@
     "Status": "⚠️ Degraded",
     "userDefined:URL": "https://atoc.onemindos.dev",
     "url": "https://app.notion.com/3b9d0cf70a7e815eb011df18773e15dc",
-    "Last edited time": "2026-09-14 00:44:22Z"
+    "Last edited time": "2026-09-14 00:44:22Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "X.com",
@@ -237,7 +311,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://x.com",
     "url": "https://app.notion.com/3b9d0cf70a7e815f84a4ef6b62156a7b",
-    "Last edited time": "2026-09-03 07:11:28Z"
+    "Last edited time": "2026-09-03 07:11:28Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "WorldWideView",
@@ -247,7 +324,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/silvertakana/worldwideview",
     "url": "https://app.notion.com/3b9d0cf70a7e8168813dcf78f5c99f1d",
-    "Last edited time": "2026-09-03 07:01:04Z"
+    "Last edited time": "2026-09-03 07:01:04Z",
+    "Tags": [
+      "OMOS-Intel"
+    ]
   },
   {
     "Page": "Loki + Tempo",
@@ -257,7 +337,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://grafana.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8168882ae5c102714e8c",
-    "Last edited time": "2026-09-03 07:01:07Z"
+    "Last edited time": "2026-09-03 07:01:07Z",
+    "Tags": [
+      "Monitoring"
+    ]
   },
   {
     "Page": "WebODM",
@@ -267,7 +350,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://webodm.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e816c97dfc37ab88251bc",
-    "Last edited time": "2026-09-03 07:00:34Z"
+    "Last edited time": "2026-09-03 07:00:34Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "NATS JetStream Cluster",
@@ -277,7 +363,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "nats://nats.hermes.svc.cluster.local:4222",
     "url": "https://app.notion.com/3b9d0cf70a7e81709d3cec611961a687",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "sink-tak",
@@ -287,7 +376,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "nats://omos.sink.tak",
     "url": "https://app.notion.com/3b9d0cf70a7e8173becdd056e98686a2",
-    "Last edited time": "2026-09-03 07:21:49Z"
+    "Last edited time": "2026-09-03 07:21:49Z",
+    "Tags": [
+      "OMOS Feed",
+      "TAK Server"
+    ]
   },
   {
     "Page": "ShadowBroker",
@@ -297,7 +390,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/bigbodycobain/shadowbroker",
     "url": "https://app.notion.com/3b9d0cf70a7e8178acbaf60087482229",
-    "Last edited time": "2026-09-03 07:01:06Z"
+    "Last edited time": "2026-09-03 07:01:06Z",
+    "Tags": [
+      "OMOS-Intel"
+    ]
   },
   {
     "Page": "Dell AIO (GCS)",
@@ -307,7 +403,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://omos-dell-edge.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e8179a78efb433d487eeb",
-    "Last edited time": "2026-09-03 07:00:55Z"
+    "Last edited time": "2026-09-03 07:00:55Z",
+    "Tags": [
+      "Edge Device"
+    ]
   },
   {
     "Page": "WorldMonitor",
@@ -317,7 +416,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/koala73/worldmonitor",
     "url": "https://app.notion.com/3b9d0cf70a7e817c9538c8feb1e5ce3e",
-    "Last edited time": "2026-09-03 07:01:05Z"
+    "Last edited time": "2026-09-03 07:01:05Z",
+    "Tags": [
+      "OMOS-Intel"
+    ]
   },
   {
     "Page": "Photos",
@@ -327,7 +429,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://photos.google.com",
     "url": "https://app.notion.com/3b9d0cf70a7e817e8bd1fbf841481943",
-    "Last edited time": "2026-09-03 07:42:45Z"
+    "Last edited time": "2026-09-03 07:42:45Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "TAK PostgreSQL",
@@ -337,7 +442,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "postgresql://takserver-postgresql.takserver.svc.cluster.local:5432",
     "url": "https://app.notion.com/3b9d0cf70a7e81809e0ecbcba85a7eaf",
-    "Last edited time": "2026-09-03 07:01:00Z"
+    "Last edited time": "2026-09-03 07:01:00Z",
+    "Tags": [
+      "Data",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Cloudflare",
@@ -347,7 +456,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://dash.cloudflare.com",
     "url": "https://app.notion.com/3b9d0cf70a7e8188a304d6e8212ce8a0",
-    "Last edited time": "2026-09-03 07:11:31Z"
+    "Last edited time": "2026-09-03 07:11:31Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "Facebook",
@@ -357,7 +469,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://facebook.com",
     "url": "https://app.notion.com/3b9d0cf70a7e818caa21cde074079ac2",
-    "Last edited time": "2026-09-03 07:11:27Z"
+    "Last edited time": "2026-09-03 07:11:27Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "omos-tak-projector",
@@ -367,7 +482,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "nats://omos.tak.projector",
     "url": "https://app.notion.com/3b9d0cf70a7e818eb6d2ddea4ff77c23",
-    "Last edited time": "2026-09-03 07:21:48Z"
+    "Last edited time": "2026-09-03 07:21:48Z",
+    "Tags": [
+      "OMOS Feed",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Nominatim",
@@ -377,7 +496,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://nominatim.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81979373c249a2d37537",
-    "Last edited time": "2026-09-03 07:00:38Z"
+    "Last edited time": "2026-09-03 07:00:38Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "sink-clickhouse",
@@ -387,7 +509,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "nats://omos.sink.clickhouse",
     "url": "https://app.notion.com/3b9d0cf70a7e8197af14e4631a656d65",
-    "Last edited time": "2026-09-03 07:21:50Z"
+    "Last edited time": "2026-09-03 07:21:50Z",
+    "Tags": [
+      "OMOS Feed",
+      "Data"
+    ]
   },
   {
     "Page": "ingress-nginx",
@@ -397,7 +523,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3b9d0cf70a7e8198b4a5e3b0fc75ddf3",
-    "Last edited time": "2026-09-03 07:00:50Z"
+    "Last edited time": "2026-09-03 07:00:50Z",
+    "Tags": [
+      "Networking"
+    ]
   },
   {
     "Page": "Osiris",
@@ -407,7 +536,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/simplifaisoul/osiris",
     "url": "https://app.notion.com/3b9d0cf70a7e819cbdf7fbc0c195dbd7",
-    "Last edited time": "2026-09-03 07:01:04Z"
+    "Last edited time": "2026-09-03 07:01:04Z",
+    "Tags": [
+      "OMOS-Intel"
+    ]
   },
   {
     "Page": "Cesium 3D Globe",
@@ -417,7 +549,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/onemindos/tak-webview-cesium",
     "url": "https://app.notion.com/3b9d0cf70a7e819d83a8dc908bf57b6c",
-    "Last edited time": "2026-09-03 08:57:51Z"
+    "Last edited time": "2026-09-03 08:57:51Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "Prometheus + Alertmanager",
@@ -427,7 +562,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://grafana.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81a49c23cb2059eede57",
-    "Last edited time": "2026-09-03 07:01:10Z"
+    "Last edited time": "2026-09-03 07:01:10Z",
+    "Tags": [
+      "Monitoring"
+    ]
   },
   {
     "Page": "GitHub",
@@ -437,7 +575,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/Zeus-Delacruz",
     "url": "https://app.notion.com/3b9d0cf70a7e81a59a22e9df6ad509db",
-    "Last edited time": "2026-09-03 07:11:32Z"
+    "Last edited time": "2026-09-03 07:11:32Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "Maputnik",
@@ -447,7 +588,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://maputnik.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81a8a942d9af85058ca8",
-    "Last edited time": "2026-09-03 07:00:40Z"
+    "Last edited time": "2026-09-03 07:00:40Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "GoDaddy",
@@ -457,7 +601,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://godaddy.com",
     "url": "https://app.notion.com/3b9d0cf70a7e81b586f5f846351e4b5f",
-    "Last edited time": "2026-09-03 07:11:31Z"
+    "Last edited time": "2026-09-03 07:11:31Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "Raindrop.io",
@@ -467,7 +614,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://raindrop.io",
     "url": "https://app.notion.com/3b9d0cf70a7e81b69fcce49a37fc8a7c",
-    "Last edited time": "2026-09-03 07:14:46Z"
+    "Last edited time": "2026-09-03 07:14:46Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "TileServer GL",
@@ -477,7 +627,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tileserver.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81b8aa3ddd0a1f032dac",
-    "Last edited time": "2026-09-03 07:00:37Z"
+    "Last edited time": "2026-09-03 07:00:37Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "Crucix",
@@ -487,7 +640,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/calesthio/Crucix",
     "url": "https://app.notion.com/3b9d0cf70a7e81b8abe9c60ec490ba21",
-    "Last edited time": "2026-09-03 07:01:00Z"
+    "Last edited time": "2026-09-03 07:01:00Z",
+    "Tags": [
+      "OMOS-Intel"
+    ]
   },
   {
     "Page": "LinkedIn",
@@ -497,7 +653,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://linkedin.com",
     "url": "https://app.notion.com/3b9d0cf70a7e81bb9632ca833cd5fa87",
-    "Last edited time": "2026-09-03 07:11:28Z"
+    "Last edited time": "2026-09-03 07:11:28Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "S24 Ultra (Field Phone)",
@@ -507,7 +666,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://omos-s24u-zeus.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81c8953ffa1fcce32239",
-    "Last edited time": "2026-09-03 07:00:54Z"
+    "Last edited time": "2026-09-03 07:00:54Z",
+    "Tags": [
+      "Edge Device",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Gmail",
@@ -517,7 +680,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://mail.google.com",
     "url": "https://app.notion.com/3b9d0cf70a7e81d2be23eda5893be74a",
-    "Last edited time": "2026-09-03 07:07:03Z"
+    "Last edited time": "2026-09-03 07:07:03Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "pg_featureserv",
@@ -527,7 +693,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://pg-featureserv.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81d783cae864daeb7c29",
-    "Last edited time": "2026-09-03 07:00:33Z"
+    "Last edited time": "2026-09-03 07:00:33Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "Overpass",
@@ -537,7 +706,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://overpass.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81e29fb4e3eb7c083985",
-    "Last edited time": "2026-09-03 07:00:36Z"
+    "Last edited time": "2026-09-03 07:00:36Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "Grafana",
@@ -547,7 +719,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://grafana.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81e39fd6f5e8cda2cb01",
-    "Last edited time": "2026-09-03 07:01:11Z"
+    "Last edited time": "2026-09-03 07:01:11Z",
+    "Tags": [
+      "Monitoring"
+    ]
   },
   {
     "Page": "Tile38",
@@ -557,7 +732,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tile38.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81e6bc30fcf1af4eebb6",
-    "Last edited time": "2026-09-03 07:00:35Z"
+    "Last edited time": "2026-09-03 07:00:35Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "OneTAK MinIO",
@@ -567,7 +745,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://cloudtak-minio.cloudtak.svc.cluster.local:9000",
     "url": "https://app.notion.com/3b9d0cf70a7e81e886beca1809524d17",
-    "Last edited time": "2026-09-03 08:07:10Z"
+    "Last edited time": "2026-09-03 08:07:10Z",
+    "Tags": [
+      "Data",
+      "TAK Server"
+    ]
   },
   {
     "Page": "Valhalla",
@@ -577,7 +759,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://valhalla.tail717ba0.ts.net",
     "url": "https://app.notion.com/3b9d0cf70a7e81f99634de87ffa4e749",
-    "Last edited time": "2026-09-03 07:00:38Z"
+    "Last edited time": "2026-09-03 07:00:38Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "TAK Server (Core)",
@@ -587,7 +772,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://152.42.155.95:8446",
     "url": "https://app.notion.com/3b9d0cf70a7e81f99689dd357eba770d",
-    "Last edited time": "2026-09-03 08:49:11Z"
+    "Last edited time": "2026-09-03 08:49:11Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "Contacts",
@@ -597,7 +785,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e800a854cee91d59f7ad1",
-    "Last edited time": "2026-09-03 07:42:49Z"
+    "Last edited time": "2026-09-03 07:42:49Z",
+    "Tags": []
   },
   {
     "Page": "TAK OS",
@@ -607,7 +796,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tacos.tak.gov",
     "url": "https://app.notion.com/3d0d0cf70a7e8101aa17dcd0d82cd1d4",
-    "Last edited time": "2026-09-03 08:46:25Z"
+    "Last edited time": "2026-09-03 08:46:25Z",
+    "Tags": []
   },
   {
     "Page": "Mercury",
@@ -617,7 +807,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://mercury.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81038e5cff998afacc9e",
-    "Last edited time": "2026-09-03 09:08:24Z"
+    "Last edited time": "2026-09-03 09:08:24Z",
+    "Tags": []
   },
   {
     "Page": "Geo Database",
@@ -627,7 +818,11 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e810487ecddf0af4380dc",
-    "Last edited time": "2026-09-03 07:31:31Z"
+    "Last edited time": "2026-09-03 07:31:31Z",
+    "Tags": [
+      "Geo",
+      "Data"
+    ]
   },
   {
     "Page": "Kikoff",
@@ -637,7 +832,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://kikoff.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8104990bd8feb428ab9f",
-    "Last edited time": "2026-09-03 09:08:25Z"
+    "Last edited time": "2026-09-03 09:08:25Z",
+    "Tags": []
   },
   {
     "Page": "Azure",
@@ -647,7 +843,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://azure.microsoft.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8108bb3cc3de14622942",
-    "Last edited time": "2026-09-03 09:29:59Z"
+    "Last edited time": "2026-09-03 09:29:59Z",
+    "Tags": []
   },
   {
     "Page": "Unity",
@@ -657,7 +854,8 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://unity.com",
     "url": "https://app.notion.com/3d0d0cf70a7e810b82b3fa2448f0d099",
-    "Last edited time": "2026-09-03 08:46:25Z"
+    "Last edited time": "2026-09-03 08:46:25Z",
+    "Tags": []
   },
   {
     "Page": "TikTok",
@@ -667,7 +865,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tiktok.com",
     "url": "https://app.notion.com/3d0d0cf70a7e810e8615c2f594744dca",
-    "Last edited time": "2026-09-03 08:46:32Z"
+    "Last edited time": "2026-09-03 08:46:32Z",
+    "Tags": []
   },
   {
     "Page": "cobra-nats",
@@ -677,7 +876,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/onemindos/cobra-nats",
     "url": "https://app.notion.com/3d0d0cf70a7e8110b6c6f43ce67d5e73",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "WeChat",
@@ -687,7 +889,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://weixin.qq.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8113bfb3c54fa5d44247",
-    "Last edited time": "2026-09-03 09:22:00Z"
+    "Last edited time": "2026-09-03 09:22:00Z",
+    "Tags": []
   },
   {
     "Page": "onetak-plugin-nats",
@@ -697,7 +900,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/onetak-plugin-nats",
     "url": "https://app.notion.com/3d0d0cf70a7e8114ad63e5233b3c83ac",
-    "Last edited time": "2026-09-03 08:07:12Z"
+    "Last edited time": "2026-09-03 08:07:12Z",
+    "Tags": []
   },
   {
     "Page": "OneMind AI Bridge",
@@ -707,7 +911,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e81169f70ea90560d5b8d",
-    "Last edited time": "2026-09-03 09:11:28Z"
+    "Last edited time": "2026-09-03 09:11:28Z",
+    "Tags": []
   },
   {
     "Page": "Hermes — Legacy Hive System",
@@ -717,7 +922,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e811c914ce4f231123b3a",
-    "Last edited time": "2026-09-03 07:27:39Z"
+    "Last edited time": "2026-09-03 07:27:39Z",
+    "Tags": []
   },
   {
     "Page": "UseOrigin",
@@ -727,7 +933,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://useorigin.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8122a508e26f616d976b",
-    "Last edited time": "2026-09-03 09:08:32Z"
+    "Last edited time": "2026-09-03 09:08:32Z",
+    "Tags": []
   },
   {
     "Page": "atak-plugin-omhud",
@@ -737,7 +944,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/atak-plugin-omhud",
     "url": "https://app.notion.com/3d0d0cf70a7e8122b8d4ff5568252112",
-    "Last edited time": "2026-09-03 07:38:01Z"
+    "Last edited time": "2026-09-03 07:38:01Z",
+    "Tags": []
   },
   {
     "Page": "NATS Dashboard",
@@ -747,7 +955,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://nats-dashboard.tail717ba0.ts.net",
     "url": "https://app.notion.com/3d0d0cf70a7e8123b817ccdf71662d03",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": []
   },
   {
     "Page": "Claude Code (Bedrock)",
@@ -757,7 +966,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e8125a316ef1df9160933",
-    "Last edited time": "2026-09-03 07:33:32Z"
+    "Last edited time": "2026-09-03 07:33:32Z",
+    "Tags": []
   },
   {
     "Page": "ATAK",
@@ -767,7 +977,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tak.gov/products/atak",
     "url": "https://app.notion.com/3d0d0cf70a7e81279781d378995c1e88",
-    "Last edited time": "2026-09-03 08:49:01Z"
+    "Last edited time": "2026-09-03 08:49:01Z",
+    "Tags": []
   },
   {
     "Page": "GHL (GoHighLevel)",
@@ -777,7 +988,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://app.gohighlevel.com/v2/location/olKx9nCrXNIiXZWoJobP/dashboard",
     "url": "https://app.notion.com/3d0d0cf70a7e812bb980d5ed40416328",
-    "Last edited time": "2026-09-03 07:11:29Z"
+    "Last edited time": "2026-09-03 07:11:29Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "onetak-plugin-hermes",
@@ -787,7 +1001,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/onetak-plugin-hermes",
     "url": "https://app.notion.com/3d0d0cf70a7e812c9d55c8e407db4045",
-    "Last edited time": "2026-09-03 08:07:13Z"
+    "Last edited time": "2026-09-03 08:07:13Z",
+    "Tags": []
   },
   {
     "Page": "NodeODM",
@@ -797,7 +1012,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81338840ec1c874371c6",
-    "Last edited time": "2026-09-03 07:31:31Z"
+    "Last edited time": "2026-09-03 07:31:31Z",
+    "Tags": [
+      "Geo"
+    ]
   },
   {
     "Page": "gastbob-nats-ui",
@@ -807,7 +1025,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/gastbob40/nats-ui",
     "url": "https://app.notion.com/3d0d0cf70a7e81379661cd62a0279c31",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "Synadia Protect",
@@ -817,7 +1038,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://www.synadia.com/protect",
     "url": "https://app.notion.com/3d0d0cf70a7e8138979dee67a5486f63",
-    "Last edited time": "2026-09-03 21:29:38Z"
+    "Last edited time": "2026-09-03 21:29:38Z",
+    "Tags": []
   },
   {
     "Page": "NATS Surveyor",
@@ -827,7 +1049,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/nats-io/nats-surveyor",
     "url": "https://app.notion.com/3d0d0cf70a7e8141870fea96e2732cf7",
-    "Last edited time": "2026-09-03 08:14:19Z"
+    "Last edited time": "2026-09-03 08:14:19Z",
+    "Tags": [
+      "NATS",
+      "Monitoring"
+    ]
   },
   {
     "Page": "NVIDIA",
@@ -837,7 +1063,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://developer.nvidia.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8141bd03db771bbe2cbd",
-    "Last edited time": "2026-09-03 08:46:23Z"
+    "Last edited time": "2026-09-03 08:46:23Z",
+    "Tags": []
   },
   {
     "Page": "OpenTopography",
@@ -847,7 +1074,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://opentopography.org",
     "url": "https://app.notion.com/3d0d0cf70a7e814a9d5ad52241438757",
-    "Last edited time": "2026-09-03 08:46:28Z"
+    "Last edited time": "2026-09-03 08:46:28Z",
+    "Tags": []
   },
   {
     "Page": "AT&T Prepaid",
@@ -857,7 +1085,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://att.com",
     "url": "https://app.notion.com/3d0d0cf70a7e814ca638d7301b53411b",
-    "Last edited time": "2026-09-03 08:46:22Z"
+    "Last edited time": "2026-09-03 08:46:22Z",
+    "Tags": []
   },
   {
     "Page": "OpenStreetMap",
@@ -867,7 +1096,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://openstreetmap.org",
     "url": "https://app.notion.com/3d0d0cf70a7e814fabc2e25bbd0e4aa8",
-    "Last edited time": "2026-09-03 08:46:27Z"
+    "Last edited time": "2026-09-03 08:46:27Z",
+    "Tags": []
   },
   {
     "Page": "Google Calendar",
@@ -877,7 +1107,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://calendar.google.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81518da2ee7c70e8d25c",
-    "Last edited time": "2026-09-03 09:08:22Z"
+    "Last edited time": "2026-09-03 09:08:22Z",
+    "Tags": []
   },
   {
     "Page": "Gods Eye View",
@@ -887,7 +1118,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/bilawalsidhu/gods-eye-view",
     "url": "https://app.notion.com/3d0d0cf70a7e815192a3e2716188e0ef",
-    "Last edited time": "2026-09-03 07:00:15Z"
+    "Last edited time": "2026-09-03 07:00:15Z",
+    "Tags": [
+      "OMOS-Intel"
+    ]
   },
   {
     "Page": "TAKServer Ignite",
@@ -897,7 +1131,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e8152ba0cc06d52978b62",
-    "Last edited time": "2026-09-03 07:31:24Z"
+    "Last edited time": "2026-09-03 07:31:24Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "Agent of Empires",
@@ -907,7 +1144,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/agent-of-empires/agent-of-empires",
     "url": "https://app.notion.com/3d0d0cf70a7e815491a3e7b8cb7538f0",
-    "Last edited time": "2026-09-03 21:27:34Z"
+    "Last edited time": "2026-09-03 21:27:34Z",
+    "Tags": []
   },
   {
     "Page": "AWS",
@@ -917,7 +1155,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://aws.amazon.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81569873d6a20f239849",
-    "Last edited time": "2026-09-03 09:27:43Z"
+    "Last edited time": "2026-09-03 09:27:43Z",
+    "Tags": []
   },
   {
     "Page": "omos-feed-pipeline",
@@ -927,7 +1166,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e8156b543e41459836cf0",
-    "Last edited time": "2026-09-03 09:11:17Z"
+    "Last edited time": "2026-09-03 09:11:17Z",
+    "Tags": []
   },
   {
     "Page": "Innovis",
@@ -937,7 +1177,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://innovis.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8162b34dea7818b74301",
-    "Last edited time": "2026-09-03 09:08:30Z"
+    "Last edited time": "2026-09-03 09:08:30Z",
+    "Tags": []
   },
   {
     "Page": "NACK",
@@ -947,7 +1188,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/nats-io/nack",
     "url": "https://app.notion.com/3d0d0cf70a7e8164b995c1a9de84bc5c",
-    "Last edited time": "2026-09-03 08:14:20Z"
+    "Last edited time": "2026-09-03 08:14:20Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "1Password",
@@ -957,7 +1201,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://1password.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8165a3a2fb59b639a15b",
-    "Last edited time": "2026-09-03 08:47:22Z"
+    "Last edited time": "2026-09-03 08:47:22Z",
+    "Tags": []
   },
   {
     "Page": "hermes-plugin-nats-context",
@@ -967,7 +1212,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/hermes-plugin-nats-context",
     "url": "https://app.notion.com/3d0d0cf70a7e8166b382ec5bbb6bde2c",
-    "Last edited time": "2026-09-03 08:13:43Z"
+    "Last edited time": "2026-09-03 08:13:43Z",
+    "Tags": []
   },
   {
     "Page": "Mission Control",
@@ -977,7 +1223,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/builderz-labs/mission-control",
     "url": "https://app.notion.com/3d0d0cf70a7e81678448e2762ada52f4",
-    "Last edited time": "2026-09-03 21:27:31Z"
+    "Last edited time": "2026-09-03 21:27:31Z",
+    "Tags": []
   },
   {
     "Page": "onetak-plugin-ops",
@@ -987,7 +1234,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/onetak-plugin-ops",
     "url": "https://app.notion.com/3d0d0cf70a7e8167a2edf29f6c5b84f3",
-    "Last edited time": "2026-09-03 08:07:14Z"
+    "Last edited time": "2026-09-03 08:07:14Z",
+    "Tags": []
   },
   {
     "Page": "Agent Web UI",
@@ -997,7 +1245,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://agent-web-ui.tail717ba0.ts.net",
     "url": "https://app.notion.com/3d0d0cf70a7e816a83c1dbdc285b898d",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": []
   },
   {
     "Page": "Wallet",
@@ -1007,7 +1256,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e816aafedd09892f47e82",
-    "Last edited time": "2026-09-03 07:42:41Z"
+    "Last edited time": "2026-09-03 07:42:41Z",
+    "Tags": []
   },
   {
     "Page": "Reddit",
@@ -1017,7 +1267,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://reddit.com",
     "url": "https://app.notion.com/3d0d0cf70a7e816ab330c7b21cab93c8",
-    "Last edited time": "2026-09-03 08:46:31Z"
+    "Last edited time": "2026-09-03 08:46:31Z",
+    "Tags": []
   },
   {
     "Page": "NATS UI",
@@ -1027,7 +1278,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://nats-ui.tail717ba0.ts.net",
     "url": "https://app.notion.com/3d0d0cf70a7e816ab4f1cb4d8a159823",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": []
   },
   {
     "Page": "TAK GOV",
@@ -1037,7 +1289,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tak.gov",
     "url": "https://app.notion.com/3d0d0cf70a7e816ab80dc586e6c4cf42",
-    "Last edited time": "2026-09-03 08:46:24Z"
+    "Last edited time": "2026-09-03 08:46:24Z",
+    "Tags": []
   },
   {
     "Page": "OpenTelemetry Collector",
@@ -1047,7 +1300,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e816ea737d1a5eac43a8a",
-    "Last edited time": "2026-09-03 07:31:21Z"
+    "Last edited time": "2026-09-03 07:31:21Z",
+    "Tags": [
+      "Monitoring"
+    ]
   },
   {
     "Page": "OpenSky",
@@ -1057,7 +1313,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://opensky-network.org",
     "url": "https://app.notion.com/3d0d0cf70a7e816f8042cbf5b699b5ec",
-    "Last edited time": "2026-09-03 08:46:34Z"
+    "Last edited time": "2026-09-03 08:46:34Z",
+    "Tags": []
   },
   {
     "Page": "Legacy-Edge (Daughter)",
@@ -1067,7 +1324,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e8173810bcea30d73988f",
-    "Last edited time": "2026-09-03 07:27:38Z"
+    "Last edited time": "2026-09-03 07:27:38Z",
+    "Tags": []
   },
   {
     "Page": "Alibaba Cloud",
@@ -1077,7 +1335,8 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://alibabacloud.com",
     "url": "https://app.notion.com/3d0d0cf70a7e817684bbdedb73711864",
-    "Last edited time": "2026-09-03 09:27:45Z"
+    "Last edited time": "2026-09-03 09:27:45Z",
+    "Tags": []
   },
   {
     "Page": "onetak-plugin-clickhouse",
@@ -1087,7 +1346,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/onetak-plugin-clickhouse",
     "url": "https://app.notion.com/3d0d0cf70a7e81769277f29c9db0b6fe",
-    "Last edited time": "2026-09-03 08:07:16Z"
+    "Last edited time": "2026-09-03 08:07:16Z",
+    "Tags": []
   },
   {
     "Page": "tak-server-mcp",
@@ -1097,7 +1357,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/tak-server-mcp",
     "url": "https://app.notion.com/3d0d0cf70a7e817cba65c66d49fdac38",
-    "Last edited time": "2026-09-03 08:13:41Z"
+    "Last edited time": "2026-09-03 08:13:41Z",
+    "Tags": []
   },
   {
     "Page": "Composio",
@@ -1107,7 +1368,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://dashboard.composio.dev/omos_saas/~/connect",
     "url": "https://app.notion.com/3d0d0cf70a7e817eb25cc0716ec0cacd",
-    "Last edited time": "2026-09-03 07:11:30Z"
+    "Last edited time": "2026-09-03 07:11:30Z",
+    "Tags": [
+      "External",
+      "AI / Agent"
+    ]
   },
   {
     "Page": "TAK-ML Server",
@@ -1117,7 +1382,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e817fae91f5285488795a",
-    "Last edited time": "2026-09-03 08:50:13Z"
+    "Last edited time": "2026-09-03 08:50:13Z",
+    "Tags": [
+      "AI / Agent",
+      "TAK Server"
+    ]
   },
   {
     "Page": "OneTAK-Plugin-Sample",
@@ -1127,7 +1396,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/OneTAK-Plugin-Sample",
     "url": "https://app.notion.com/3d0d0cf70a7e8180a19eff849ab17b5d",
-    "Last edited time": "2026-09-03 08:12:59Z"
+    "Last edited time": "2026-09-03 08:12:59Z",
+    "Tags": []
   },
   {
     "Page": "Hushed",
@@ -1137,7 +1407,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://hushed.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8180aefee4cf10297c32",
-    "Last edited time": "2026-09-03 08:46:21Z"
+    "Last edited time": "2026-09-03 08:46:21Z",
+    "Tags": []
   },
   {
     "Page": "TransUnion",
@@ -1147,7 +1418,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://transunion.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8181ad96c13f18a45db7",
-    "Last edited time": "2026-09-03 09:08:29Z"
+    "Last edited time": "2026-09-03 09:08:29Z",
+    "Tags": []
   },
   {
     "Page": "TAK LB Proxy",
@@ -1157,7 +1429,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e8186b758f7bffd78ce48",
-    "Last edited time": "2026-09-03 07:31:23Z"
+    "Last edited time": "2026-09-03 07:31:23Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "TAK-ML Database",
@@ -1167,7 +1442,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e8187a663d1ee921f543b",
-    "Last edited time": "2026-09-03 08:50:14Z"
+    "Last edited time": "2026-09-03 08:50:14Z",
+    "Tags": [
+      "TAK Server",
+      "Data"
+    ]
   },
   {
     "Page": "Raycast",
@@ -1177,7 +1456,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://raycast.com",
     "url": "https://app.notion.com/3d0d0cf70a7e8188bfd2d16ba672fbce",
-    "Last edited time": "2026-09-03 08:46:35Z"
+    "Last edited time": "2026-09-03 08:46:35Z",
+    "Tags": []
   },
   {
     "Page": "Multica",
@@ -1187,7 +1467,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/multica-ai/multica",
     "url": "https://app.notion.com/3d0d0cf70a7e81899637c2f6427416c6",
-    "Last edited time": "2026-09-03 21:27:32Z"
+    "Last edited time": "2026-09-03 21:27:32Z",
+    "Tags": []
   },
   {
     "Page": "Headlamp",
@@ -1197,7 +1478,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://headlamp.tail717ba0.ts.net",
     "url": "https://app.notion.com/3d0d0cf70a7e81899931d63301bfe25d",
-    "Last edited time": "2026-09-03 21:19:39Z"
+    "Last edited time": "2026-09-03 21:19:39Z",
+    "Tags": []
   },
   {
     "Page": "AionUI",
@@ -1207,7 +1489,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/iofficeai/aionui",
     "url": "https://app.notion.com/3d0d0cf70a7e818b9388df7e71776626",
-    "Last edited time": "2026-09-03 21:27:36Z"
+    "Last edited time": "2026-09-03 21:27:36Z",
+    "Tags": []
   },
   {
     "Page": "atak-sdk",
@@ -1217,7 +1500,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/atak-sdk",
     "url": "https://app.notion.com/3d0d0cf70a7e81918ff4ee7fedaa8c28",
-    "Last edited time": "2026-09-03 08:13:40Z"
+    "Last edited time": "2026-09-03 08:13:40Z",
+    "Tags": []
   },
   {
     "Page": "Ollama",
@@ -1227,7 +1511,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://ollama.com",
     "url": "https://app.notion.com/3d0d0cf70a7e819a92b8de74c33144cd",
-    "Last edited time": "2026-09-03 08:46:29Z"
+    "Last edited time": "2026-09-03 08:46:29Z",
+    "Tags": []
   },
   {
     "Page": "DigitalOcean",
@@ -1237,7 +1522,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://digitalocean.com",
     "url": "https://app.notion.com/3d0d0cf70a7e819b853bed35001c206b",
-    "Last edited time": "2026-09-03 09:27:44Z"
+    "Last edited time": "2026-09-03 09:27:44Z",
+    "Tags": []
   },
   {
     "Page": "takserver-nats-plugin",
@@ -1247,7 +1533,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e819d818fff592b12f8b5",
-    "Last edited time": "2026-09-03 08:14:19Z"
+    "Last edited time": "2026-09-03 08:14:19Z",
+    "Tags": []
   },
   {
     "Page": "iTAK",
@@ -1257,7 +1544,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tak.gov/products/itak",
     "url": "https://app.notion.com/3d0d0cf70a7e819dacfcc8e3d800ba2b",
-    "Last edited time": "2026-09-03 08:49:01Z"
+    "Last edited time": "2026-09-03 08:49:01Z",
+    "Tags": []
   },
   {
     "Page": "GitHub Runner",
@@ -1267,7 +1555,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81a097aed595f98237e5",
-    "Last edited time": "2026-09-03 07:11:32Z"
+    "Last edited time": "2026-09-03 07:11:32Z",
+    "Tags": []
   },
   {
     "Page": "Termux",
@@ -1277,7 +1566,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81a3bacac3a0ee53c2ec",
-    "Last edited time": "2026-09-03 07:32:43Z"
+    "Last edited time": "2026-09-03 07:32:43Z",
+    "Tags": []
   },
   {
     "Page": "GitLab",
@@ -1287,7 +1577,8 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://gitlab.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81a68680e0b433702183",
-    "Last edited time": "2026-09-03 07:32:43Z"
+    "Last edited time": "2026-09-03 07:32:43Z",
+    "Tags": []
   },
   {
     "Page": "feed-intel",
@@ -1297,7 +1588,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81a7b836e7cf6518f1e7",
-    "Last edited time": "2026-09-03 07:00:17Z"
+    "Last edited time": "2026-09-03 07:00:17Z",
+    "Tags": [
+      "OMOS Feed"
+    ]
   },
   {
     "Page": "OneTAK",
@@ -1307,7 +1601,8 @@
     "Status": "⚠️ Degraded",
     "userDefined:URL": "https://atoc.onemindos.dev",
     "url": "https://app.notion.com/3d0d0cf70a7e81a98fb4e78fdda75950",
-    "Last edited time": "2026-09-03 09:13:48Z"
+    "Last edited time": "2026-09-03 09:13:48Z",
+    "Tags": []
   },
   {
     "Page": "heynats",
@@ -1317,7 +1612,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/heynats",
     "url": "https://app.notion.com/3d0d0cf70a7e81a9b338c9d2b2f65479",
-    "Last edited time": "2026-09-03 08:14:18Z"
+    "Last edited time": "2026-09-03 08:14:18Z",
+    "Tags": []
   },
   {
     "Page": "nats-android",
@@ -1327,7 +1623,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/nats-android",
     "url": "https://app.notion.com/3d0d0cf70a7e81aa96c9c94ec8575773",
-    "Last edited time": "2026-09-03 08:13:41Z"
+    "Last edited time": "2026-09-03 08:13:41Z",
+    "Tags": []
   },
   {
     "Page": "Paperclip",
@@ -1337,7 +1634,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/paperclipai/paperclip",
     "url": "https://app.notion.com/3d0d0cf70a7e81ada22bc5a0b2164e0b",
-    "Last edited time": "2026-09-03 21:27:33Z"
+    "Last edited time": "2026-09-03 21:27:33Z",
+    "Tags": []
   },
   {
     "Page": "Miro",
@@ -1347,7 +1645,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://miro.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81ae96ade7dffe2f1f3d",
-    "Last edited time": "2026-09-03 08:46:35Z"
+    "Last edited time": "2026-09-03 08:46:35Z",
+    "Tags": []
   },
   {
     "Page": "Redpanda Connect (Wombat)",
@@ -1357,7 +1656,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e81b2a408e1eb8d640e22",
-    "Last edited time": "2026-09-03 08:50:17Z"
+    "Last edited time": "2026-09-03 08:50:17Z",
+    "Tags": []
   },
   {
     "Page": "atak-plugin-omhud",
@@ -1367,7 +1667,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/atak-plugin-omhud",
     "url": "https://app.notion.com/3d0d0cf70a7e81b78b08e2caba493b87",
-    "Last edited time": "2026-09-03 08:13:39Z"
+    "Last edited time": "2026-09-03 08:13:39Z",
+    "Tags": []
   },
   {
     "Page": "Twitch",
@@ -1377,7 +1678,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://twitch.tv",
     "url": "https://app.notion.com/3d0d0cf70a7e81b9bc7bc879c11f5906",
-    "Last edited time": "2026-09-03 08:46:33Z"
+    "Last edited time": "2026-09-03 08:46:33Z",
+    "Tags": []
   },
   {
     "Page": "TAK-ML Vision Worker",
@@ -1387,7 +1689,11 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e81bba30bea937c250d79",
-    "Last edited time": "2026-09-03 08:50:15Z"
+    "Last edited time": "2026-09-03 08:50:15Z",
+    "Tags": [
+      "TAK Server",
+      "AI / Agent"
+    ]
   },
   {
     "Page": "agenttap",
@@ -1397,7 +1703,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/agenttap",
     "url": "https://app.notion.com/3d0d0cf70a7e81bbaf34ea74b549d017",
-    "Last edited time": "2026-09-03 08:14:17Z"
+    "Last edited time": "2026-09-03 08:14:17Z",
+    "Tags": []
   },
   {
     "Page": "FarmBot",
@@ -1407,7 +1714,8 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://farm.bot",
     "url": "https://app.notion.com/3d0d0cf70a7e81c4959fc2edea1a7f3a",
-    "Last edited time": "2026-09-03 07:23:02Z"
+    "Last edited time": "2026-09-03 07:23:02Z",
+    "Tags": []
   },
   {
     "Page": "Monarch Money",
@@ -1417,7 +1725,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://monarchmoney.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81c6aa3dd71c14097649",
-    "Last edited time": "2026-09-03 09:08:33Z"
+    "Last edited time": "2026-09-03 09:08:33Z",
+    "Tags": []
   },
   {
     "Page": "Apify",
@@ -1427,7 +1736,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://apify.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81c8b47df736eaf55bad",
-    "Last edited time": "2026-09-03 08:46:23Z"
+    "Last edited time": "2026-09-03 08:46:23Z",
+    "Tags": []
   },
   {
     "Page": "TAK Aware",
@@ -1437,7 +1747,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://takaware.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81cbb55ad6909474e599",
-    "Last edited time": "2026-09-03 08:49:02Z"
+    "Last edited time": "2026-09-03 08:49:02Z",
+    "Tags": []
   },
   {
     "Page": "Circle Community",
@@ -1447,7 +1758,10 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://login.circle.so/sign_up?coupon_code=heycreator&request_host=app.circle.so",
     "url": "https://app.notion.com/3d0d0cf70a7e81cf96f3cf76fea93e99",
-    "Last edited time": "2026-09-03 07:38:40Z"
+    "Last edited time": "2026-09-03 07:38:40Z",
+    "Tags": [
+      "External"
+    ]
   },
   {
     "Page": "onetak-plugin-mumble",
@@ -1457,7 +1771,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/onetak-plugin-mumble",
     "url": "https://app.notion.com/3d0d0cf70a7e81d28e35f9ed02f3ca48",
-    "Last edited time": "2026-09-03 08:07:15Z"
+    "Last edited time": "2026-09-03 08:07:15Z",
+    "Tags": []
   },
   {
     "Page": "Workspace",
@@ -1467,7 +1782,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81d5987dcdf1ef081d87",
-    "Last edited time": "2026-09-03 07:42:36Z"
+    "Last edited time": "2026-09-03 07:42:36Z",
+    "Tags": []
   },
   {
     "Page": "Synadia Insights",
@@ -1477,7 +1793,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://www.synadia.com/insights",
     "url": "https://app.notion.com/3d0d0cf70a7e81d687d7f745725890e2",
-    "Last edited time": "2026-09-03 21:29:36Z"
+    "Last edited time": "2026-09-03 21:29:36Z",
+    "Tags": []
   },
   {
     "Page": "OneTAK-Native",
@@ -1487,7 +1804,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/OneTAK-Native",
     "url": "https://app.notion.com/3d0d0cf70a7e81d8b583f6e334300e28",
-    "Last edited time": "2026-09-03 08:12:59Z"
+    "Last edited time": "2026-09-03 08:12:59Z",
+    "Tags": []
   },
   {
     "Page": "WearTAK",
@@ -1497,7 +1815,8 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://github.com/TAKWatch/WearTAK",
     "url": "https://app.notion.com/3d0d0cf70a7e81dabaece05924086d39",
-    "Last edited time": "2026-09-03 09:05:16Z"
+    "Last edited time": "2026-09-03 09:05:16Z",
+    "Tags": []
   },
   {
     "Page": "VR-TAK",
@@ -1507,7 +1826,8 @@
     "Status": "🏗️ Planned",
     "userDefined:URL": "https://tak.gov/products/vr-tak",
     "url": "https://app.notion.com/3d0d0cf70a7e81db958be68a366d112e",
-    "Last edited time": "2026-09-03 10:25:13Z"
+    "Last edited time": "2026-09-03 10:25:13Z",
+    "Tags": []
   },
   {
     "Page": "Pinterest",
@@ -1517,7 +1837,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://pinterest.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81db9a6fdcf35a5ff7b7",
-    "Last edited time": "2026-09-03 08:46:33Z"
+    "Last edited time": "2026-09-03 08:46:33Z",
+    "Tags": []
   },
   {
     "Page": "Tavily",
@@ -1527,7 +1848,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tavily.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81df9777eac9aa15b750",
-    "Last edited time": "2026-09-03 08:46:28Z"
+    "Last edited time": "2026-09-03 08:46:28Z",
+    "Tags": []
   },
   {
     "Page": "nui",
@@ -1537,7 +1859,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/nats-nui/nui",
     "url": "https://app.notion.com/3d0d0cf70a7e81dfb106d5c7afb68acd",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "tak-nats-leaf",
@@ -1547,7 +1872,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e81dfba46d3863663e0ba",
-    "Last edited time": "2026-09-03 08:14:21Z"
+    "Last edited time": "2026-09-03 08:14:21Z",
+    "Tags": []
   },
   {
     "Page": "natscope",
@@ -1557,7 +1883,10 @@
     "Status": "📚 Reference",
     "userDefined:URL": "https://github.com/onemindos/natscope",
     "url": "https://app.notion.com/3d0d0cf70a7e81e0be41fb11080c071e",
-    "Last edited time": "2026-09-03 07:33:16Z"
+    "Last edited time": "2026-09-03 07:33:16Z",
+    "Tags": [
+      "NATS"
+    ]
   },
   {
     "Page": "Kubernetes Dashboard",
@@ -1567,7 +1896,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://k8s-dashboard.tail717ba0.ts.net",
     "url": "https://app.notion.com/3d0d0cf70a7e81e1b21dcc86988a49ba",
-    "Last edited time": "2026-09-03 21:19:40Z"
+    "Last edited time": "2026-09-03 21:19:40Z",
+    "Tags": []
   },
   {
     "Page": "Cesium Ion",
@@ -1577,7 +1907,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://tak3d.tail717ba0.ts.net",
     "url": "https://app.notion.com/3d0d0cf70a7e81e38096f4acec966d27",
-    "Last edited time": "2026-09-03 08:49:13Z"
+    "Last edited time": "2026-09-03 08:49:13Z",
+    "Tags": []
   },
   {
     "Page": "Synadia Platform",
@@ -1587,7 +1918,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://www.synadia.com/platform",
     "url": "https://app.notion.com/3d0d0cf70a7e81e3b05ff2ea3a0776d5",
-    "Last edited time": "2026-09-03 21:29:36Z"
+    "Last edited time": "2026-09-03 21:29:36Z",
+    "Tags": []
   },
   {
     "Page": "Google Photos",
@@ -1597,7 +1929,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://photos.google.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81e49fcedcf0041324b4",
-    "Last edited time": "2026-09-03 09:08:21Z"
+    "Last edited time": "2026-09-03 09:08:21Z",
+    "Tags": []
   },
   {
     "Page": "Equifax",
@@ -1607,7 +1940,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://equifax.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81e5b4b0e7460dc5e132",
-    "Last edited time": "2026-09-03 09:08:30Z"
+    "Last edited time": "2026-09-03 09:08:30Z",
+    "Tags": []
   },
   {
     "Page": "mumble-bridge",
@@ -1617,7 +1951,8 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81e8ba62f5143a9fc0b6",
-    "Last edited time": "2026-09-03 07:21:53Z"
+    "Last edited time": "2026-09-03 07:21:53Z",
+    "Tags": []
   },
   {
     "Page": "Murmur (Voice)",
@@ -1627,7 +1962,10 @@
     "Status": "✅ Live",
     "userDefined:URL": "mumble://murmur.takserver.svc:64738",
     "url": "https://app.notion.com/3d0d0cf70a7e81ec8825efde12e75493",
-    "Last edited time": "2026-09-03 08:50:16Z"
+    "Last edited time": "2026-09-03 08:50:16Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "onetak-plugin-legacy-ai",
@@ -1637,7 +1975,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/onetak-plugin-legacy-ai",
     "url": "https://app.notion.com/3d0d0cf70a7e81ed9a06d17832222870",
-    "Last edited time": "2026-09-03 08:07:18Z"
+    "Last edited time": "2026-09-03 08:07:18Z",
+    "Tags": []
   },
   {
     "Page": "SwarmClaw",
@@ -1647,7 +1986,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/swarmclawai/swarmclaw",
     "url": "https://app.notion.com/3d0d0cf70a7e81ee8eacfe99be9e4085",
-    "Last edited time": "2026-09-03 21:27:33Z"
+    "Last edited time": "2026-09-03 21:27:33Z",
+    "Tags": []
   },
   {
     "Page": "OpenRouter (OneMindOS)",
@@ -1657,7 +1997,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://openrouter.ai",
     "url": "https://app.notion.com/3d0d0cf70a7e81eebb6adc26a94c0e88",
-    "Last edited time": "2026-09-03 08:46:30Z"
+    "Last edited time": "2026-09-03 08:46:30Z",
+    "Tags": []
   },
   {
     "Page": "omos-infra",
@@ -1667,7 +2008,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-infra",
     "url": "https://app.notion.com/3d0d0cf70a7e81efae8ef2a9f52f10dd",
-    "Last edited time": "2026-09-03 08:12:56Z"
+    "Last edited time": "2026-09-03 08:12:56Z",
+    "Tags": []
   },
   {
     "Page": "omos-legacy",
@@ -1677,7 +2019,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-legacy",
     "url": "https://app.notion.com/3d0d0cf70a7e81f1904bcf8fb71fdde7",
-    "Last edited time": "2026-09-03 08:12:56Z"
+    "Last edited time": "2026-09-03 08:12:56Z",
+    "Tags": []
   },
   {
     "Page": "omos-core",
@@ -1687,7 +2030,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://github.com/onemindos/omos-core",
     "url": "https://app.notion.com/3d0d0cf70a7e81f2ae36f7f0b5532841",
-    "Last edited time": "2026-09-03 08:12:57Z"
+    "Last edited time": "2026-09-03 08:12:57Z",
+    "Tags": []
   },
   {
     "Page": "Google Drive",
@@ -1697,7 +2041,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://drive.google.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81faa9f5e8b0e4c2137e",
-    "Last edited time": "2026-09-03 09:08:19Z"
+    "Last edited time": "2026-09-03 09:08:19Z",
+    "Tags": []
   },
   {
     "Page": "MediaMTX",
@@ -1707,7 +2052,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81fbba79e1a3d07472a8",
-    "Last edited time": "2026-09-03 07:00:31Z"
+    "Last edited time": "2026-09-03 07:00:31Z",
+    "Tags": [
+      "TAK Server"
+    ]
   },
   {
     "Page": "feed-satellites",
@@ -1717,7 +2065,10 @@
     "Status": "✅ Live",
     "userDefined:URL": null,
     "url": "https://app.notion.com/3d0d0cf70a7e81fca08cfaf9f04514a1",
-    "Last edited time": "2026-09-03 07:00:16Z"
+    "Last edited time": "2026-09-03 07:00:16Z",
+    "Tags": [
+      "OMOS Feed"
+    ]
   },
   {
     "Page": "Experian",
@@ -1727,7 +2078,8 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://experian.com",
     "url": "https://app.notion.com/3d0d0cf70a7e81fd8220d62858309f05",
-    "Last edited time": "2026-09-03 09:08:27Z"
+    "Last edited time": "2026-09-03 09:08:27Z",
+    "Tags": []
   },
   {
     "Page": "Proton Mail",
@@ -1737,6 +2089,7 @@
     "Status": "✅ Live",
     "userDefined:URL": "https://proton.me",
     "url": "https://app.notion.com/3d0d0cf70a7e81ff9adee34d630631f3",
-    "Last edited time": "2026-09-03 09:08:23Z"
+    "Last edited time": "2026-09-03 09:08:23Z",
+    "Tags": []
   }
 ]
