@@ -26,8 +26,6 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | `rads/` | Remote Autonomous Deployment System simulation and robotics work |
 | `legacy/` | Legacy agent source, configuration, and operating material |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
-| `blueprints/` | Product, interface, and capability blueprints |
-| `OneMind-Platform/` | Platform capability and integration notes |
 | `references/` | External project and ecosystem research |
 | `reports/` | Dated cluster review reports |
 | `scripts/` | CI validation helpers and ecosystem tooling |
