@@ -42,7 +42,7 @@ infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separat
 services/ apps/ schemas/ edge/ docs/ scripts/ reports/    code, contracts, edge config, docs, CI helpers
 ```
 
-Not active or not deployed: `legacy/`, `rads/`, `references/`, `OneMind-Platform/`, `blueprints/`, and `plugins/`. Do not edit them unless asked.
+Not active or not deployed: `legacy/`, `rads/`, `references/`, and `plugins/`. Do not edit them unless asked.
 
 ## The Deployment Pattern
 
