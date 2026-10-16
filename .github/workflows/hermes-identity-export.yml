@@ -3,8 +3,8 @@ name: Hermes identity export
 # Rules: docs/operations/hermes-export-rules.md. Plan: docs/operations/hermes-recoverability-plan.md (Step 2a).
 #
 # OFF BY DEFAULT. It needs all of the following before it will run:
-#   1. a self-hosted runner labelled onemind-hermes-readonly that has kubectl and uses the ServiceAccount
-#      github-runner/hermes-identity-export (platform/core/hermes-identity-export-rbac.yaml);
+#   1. the dedicated runner labelled onemind-hermes-readonly (platform/core/github-runner-hermes.yaml), which uses the
+#      ServiceAccount github-runner/hermes-identity-export (platform/core/hermes-identity-export-rbac.yaml);
 #   2. the repository variable HERMES_IDENTITY_EXPORT_ENABLED set to 'true';
 #   3. the credentials found in the live config and skills rotated and replaced by env or op:// references,
 #      otherwise the export refuses to produce a PR (this is intended: it fails closed).
@@ -22,6 +22,8 @@ concurrency:
 env:
   GITLEAKS_VERSION: 8.30.1
   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+  KUBECTL_VERSION: v1.36.0
+  KUBECTL_SHA256: 123d8c8844f46b1244c547fffb3c17180c0c26dac9890589fe7e67763298748e
   AGENT_DIR: platform/hermes/agent
 jobs:
   export:
@@ -30,6 +32,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install kubectl ${{ env.KUBECTL_VERSION }} (pinned)
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/kubectl" "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+          echo "${KUBECTL_SHA256}  $RUNNER_TEMP/kubectl" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/kubectl"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
       - name: Export from the Hermes pod (read-only)
         run: |
           set -u
