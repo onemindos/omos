@@ -39,7 +39,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   values/      Helm values for the hand-installed add-ons (argocd, cert-manager, ingress-nginx, loki, ...)
 tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
 infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root)
-services/ apps/ schemas/ edge/ docs/ scripts/ reports/    code, contracts, edge config, docs, CI helpers
+services/ apps/ schemas/ edge/ docs/ scripts/            code, contracts, edge config, docs, CI helpers
 ```
 
 Not active or not deployed: `legacy/`, `rads/`, `references/`, and `plugins/`. Do not edit them unless asked.
@@ -50,7 +50,7 @@ Not active or not deployed: `legacy/`, `rads/`, `references/`, and `plugins/`. D
 2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
 3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is an in-cluster Harbor. DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
-5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (report H1); do not add requests casually.
+5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (`docs/operations/cluster-review-2026-10-09.md`, H1); do not add requests casually.
 
 ### Public ingress
 
@@ -102,7 +102,7 @@ doctl kubernetes cluster kubeconfig save omos-cloud     # context: do-nyc3-omos-
 kubectl --context do-nyc3-omos-cloud get nodes
 ```
 
-- The Kubernetes API endpoint is **public** (no control-plane firewall; review H3). Tailscale gives access to admin UIs, not a private API.
+- The Kubernetes API endpoint is **public** (no control-plane firewall; `docs/operations/cluster-review-2026-10-09.md`, H3). Tailscale gives access to admin UIs, not a private API.
 - Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (2 x 8 vCPU / 32 GiB, autoscale 2 to 4). `infra/main.tf` defaults do not match; do not `terraform apply` without a clean plan.
 - Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
 

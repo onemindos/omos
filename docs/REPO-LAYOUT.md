@@ -21,7 +21,7 @@ What each top-level path in `onemindos/omos` is for, whether it is live, and wha
 | `schemas/` | Versioned event/command contracts and code generators; `envelope/` and `missions/` trigger `build-onemind-core.yml` | **Active** | Source of truth for bus contracts alongside `docs/NATS-DOCTRINE.md` |
 | `edge/` | `mac-leaf/`: NATS leaf-node config and launchd plist for the Mac | **Active (edge)** | Only hardware-bound bridges belong here. Will be replaced or joined by a home-server equivalent |
 | `docs/` | Doctrine, architecture, runbooks, operations evidence, research | **Active** | Start at `docs/README.md`. Dated files (`cluster-audit-2026-10-07.md`, `docs/operations/*2026-10-0x*`, `infra/CLUSTER-SERVICE-INVENTORY.md`) are snapshots; `docs/STACK.md` supersedes the inventory for current state |
-| `reports/` | Point-in-time cluster review reports | **Reference** | One file today (`cluster-review-2026-10-09.md`) |
+| `reports/` | Removed. Its one file moved to `docs/operations/cluster-review-2026-10-09.md` | **Moved** | Dated reports now live in `docs/operations/` |
 | `scripts/` | CI helpers (`validate_changed_yaml.py`, `validate_manifests.py`, `validate_helm_renders.py`, `validate_ecosystem_charts.py`) and ecosystem helpers | **Active** | `check_secret_patterns.py` is no longer called by CI (replaced by gitleaks); safe to remove in a cleanup PR |
 | `plugins/` | `onemind-vision` plugin stub (2 files) | **Reference / Future** | Not built or deployed |
 | `blueprints/` | Moved out of the repo to the local vault (`~/OneMind/blueprints-html`). History is retained in git | **Moved** | 28 files of HTML planning material plus a model-management script |
@@ -64,5 +64,5 @@ Each step is independent and reversible. Do them one PR at a time; none changes 
 
 - Anything that Argo syncs lives under `platform/<layer>/` and has (or extends) an Application in `platform/argocd/`. If no Application points at it, it is not deployed.
 - Helm values live in `platform/values/` (cluster add-ons) or `platform/ecosystem/values/` (ecosystem charts). Chart versions are pinned in the Application's `targetRevision`.
-- Dated reports go in `reports/` or `docs/operations/`, not the repo root.
+- Dated reports go in `docs/operations/`, not the repo root.
 - Never commit plaintext credentials, even in examples. CI fails on new findings (`.gitleaks.toml`).
