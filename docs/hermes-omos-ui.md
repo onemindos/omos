@@ -1,6 +1,6 @@
 # Hermes ↔ omos-ui Integration Reference
 
-This document describes what omos-ui expects from Hermes (and any agent) on the NATS bus. It is the contract between the agent runtime and the browser UI. Keep this in sync with `platform/legacy/AGENTS.yaml`.
+This document describes what omos-ui expects from Hermes (and any agent) on the NATS bus. It is the contract between the agent runtime and the browser UI. Keep this in sync with `platform/hermes/agent/AGENTS.yaml`.
 
 ---
 

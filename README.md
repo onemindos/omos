@@ -23,7 +23,6 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | `edge/` | Hardware-bound and Mac edge configuration |
 | `schemas/` | Versioned event contracts and code generators |
 | `plugins/` | OneMind platform plugins |
-| `legacy/` | Legacy agent source, configuration, and operating material |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
 | `references/` | External project and ecosystem research |
 | `scripts/` | CI validation helpers and ecosystem tooling |

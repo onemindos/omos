@@ -18,7 +18,6 @@
   "ignorePaths": [
     "**/node_modules/**",
     "**/third-party/**",
-    "legacy/**",
     "references/**",
     "platform/future/**",
     ".obsidian/**",
