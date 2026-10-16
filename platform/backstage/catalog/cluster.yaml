@@ -3108,10 +3108,13 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://omos-mbp.tail717ba0.ts.net
+    onemind.io/documented-tags: Edge Device
   tags:
     - mesh
     - unreviewed
     - documented-unverified
+    - edge-device
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815cba8ac2ec524c03d3.md
       title: "Archived registry: MacBook Pro (Zeus)"
@@ -3204,10 +3207,13 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://omos-dell-edge.tail717ba0.ts.net
+    onemind.io/documented-tags: Edge Device
   tags:
     - mesh
     - unreviewed
     - documented-unverified
+    - edge-device
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8179a78efb433d487eeb.md
       title: "Archived registry: Dell AIO (GCS)"
@@ -3522,10 +3528,13 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://grafana.tail717ba0.ts.net
+    onemind.io/documented-tags: Monitoring
   tags:
     - mesh
     - unreviewed
     - documented-unverified
+    - monitoring
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8168882ae5c102714e8c.md
       title: "Archived registry: Loki + Tempo"
@@ -3620,10 +3629,14 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://omos-s24u-zeus.tail717ba0.ts.net
+    onemind.io/documented-tags: Edge Device, TAK Server
   tags:
     - mesh
     - unreviewed
     - documented-unverified
+    - edge-device
+    - tak-server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81c8953ffa1fcce32239.md
       title: "Archived registry: S24 Ultra (Field Phone)"
@@ -3716,10 +3729,14 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://hubble.tail717ba0.ts.net
+    onemind.io/documented-tags: Monitoring, Networking
   tags:
     - mesh
     - unreviewed
     - documented-unverified
+    - monitoring
+    - networking
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81168a55dff646285f2a.md
       title: "Archived registry: Hubble"
@@ -3833,10 +3850,14 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://omos-dell-zeus.tail717ba0.ts.net
+    onemind.io/documented-tags: Edge Device, TAK Server
   tags:
     - mesh
     - unreviewed
     - documented-unverified
+    - edge-device
+    - tak-server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8115890ac30ff3edc56a.md
       title: "Archived registry: Dell Laptop (COP)"
@@ -3968,6 +3989,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: Blazing fast PostGIS tile server (Rust)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -3978,6 +4000,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/martin; Service onetak/martin
+    onemind.io/documented-address: https://martin.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8102946eff79f4125152.md
       title: "Archived registry: Martin"
@@ -4006,6 +4030,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - data
+    - tak-server
   annotations:
     onemind.io/documented-purpose: PostGIS — CloudTAK separate DB (10Gi)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4016,6 +4042,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/onetak-postgis; Service onetak/onetak-postgis
+    onemind.io/documented-address: postgresql://cloudtak-postgis.cloudtak.svc.cluster.local:5432
+    onemind.io/documented-tags: Data, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810aac3af58ff183e974.md
       title: "Archived registry: OneTAK PostgreSQL"
@@ -4044,6 +4072,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Visual social media
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4053,6 +4082,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://instagram.com
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810e84d5d447966b9242.md
       title: "Archived registry: Instagram"
@@ -4071,6 +4102,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Video content and publishing
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4080,6 +4112,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://youtube.com
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8110a570ee43052b619f.md
       title: "Archived registry: YouTube"
@@ -4106,6 +4140,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Calendar and scheduling
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4115,6 +4150,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://calendar.google.com
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81378090cc64b36bdea7
+    onemind.io/tech-stack-url: https://calendar.google.com
+    onemind.io/tech-stack-notes: Primary calendar. Migrating from iCloud Calendar.
+      Part of Google Workspace Standard.
+    onemind.io/supported-platforms: Web,Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81518da2ee7c70e8d25c.md
       title: "Archived registry: Google Calendar"
@@ -4135,6 +4181,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: SpatioTemporal Asset Catalog API
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4145,6 +4192,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/stac-api; Service onetak/stac-api
+    onemind.io/documented-address: https://stac.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8112af60e8ea79c23728.md
       title: "Archived registry: STAC API"
@@ -4173,6 +4222,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - networking
   annotations:
     onemind.io/documented-purpose: Zero-trust external ingress via cloudflared
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4183,6 +4233,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment cloudflare/cloudflared
+    onemind.io/documented-address: https://one.dash.cloudflare.com
+    onemind.io/documented-tags: Networking
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e811fb22ff0467ff07122.md
       title: "Archived registry: Cloudflare Tunnel"
@@ -4203,6 +4255,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: Browse STAC catalogs visually
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4213,6 +4266,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/stac-browser; Service onetak/stac-browser
+    onemind.io/documented-address: https://stac-browser.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md
       title: "Archived registry: STAC Browser"
@@ -4233,6 +4288,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - networking
   annotations:
     onemind.io/documented-purpose: Automated TLS via Let's Encrypt
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4243,6 +4299,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment cert-manager/cert-manager; Service cert-manager/cert-manager
+    onemind.io/documented-tags: Networking
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812899b8c2b1670b04e6.md
       title: "Archived registry: cert-manager"
@@ -4263,6 +4320,8 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - cron
+    - edge-device
   annotations:
     onemind.io/documented-purpose: S24 ADB tunnel health check + self-healing — every 3min
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4272,6 +4331,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-tags: Cron, Edge Device
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812fa332d7b0a3263d04.md
       title: "Archived registry: s24-pipeline-guardian"
@@ -4298,6 +4358,8 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - cron
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Periodic CoT data cleanup in TAK PostgreSQL — every 6h
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4308,6 +4370,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: CronJob takserver/cot-retention
+    onemind.io/documented-tags: Cron, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81399300ce8ae5c69770.md
       title: "Archived registry: cot-retention"
@@ -4326,6 +4389,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Cloud storage and file management
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4335,6 +4399,16 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://drive.google.com
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e812f8bb3efae1e152c83
+    onemind.io/tech-stack-url: https://drive.google.com
+    onemind.io/tech-stack-notes: Primary file storage. OneMind folder (403GB) syncing to Drive desktop app.
+    onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81faa9f5e8b0e4c2137e.md
       title: "Archived registry: Google Drive"
@@ -4355,6 +4429,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - geo
   annotations:
     onemind.io/documented-purpose: QGIS map server for WMS/WFS
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4364,6 +4439,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://qgis.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8143a116e3464a69dadf.md
       title: "Archived registry: QGIS Server"
@@ -4382,6 +4459,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Cert management, missions, user admin, live COP browser
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4391,6 +4469,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://152.42.155.95:8446/webtak
+    onemind.io/documented-tags: TAK Server
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: TAK Ecosystem
+    onemind.io/license: Free
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e816d822de8202d590004
+    onemind.io/tech-stack-url: https://tak.gov
+    onemind.io/tech-stack-notes: Browser-based TAK client. Connects to TAK Server
+      over WebSocket. Used for quick situational awareness without ATAK.
+    onemind.io/supported-platforms: Web
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814aa336d1ac4efc7303.md
       title: "Archived registry: WebTAK (Admin)"
@@ -4417,6 +4506,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - nats
   annotations:
     onemind.io/documented-purpose: Browser pub/sub endpoint — wss on port 8080
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4426,6 +4516,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: ws://nats.hermes.svc.cluster.local:8080
+    onemind.io/documented-tags: NATS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8154a3b3e5435bb33606.md
       title: "Archived registry: NATS WebSocket"
@@ -4444,6 +4536,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - data
   annotations:
     onemind.io/documented-purpose: Columnar time-series DB — 10-year TTL, onemind database, port 9001
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4455,6 +4548,8 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: StatefulSet clickhouse/chi-onemind-onemind-0-0;
       Service clickhouse/chi-onemind-onemind-0-0
+    onemind.io/documented-address: http://clickhouse.hermes.svc.cluster.local:8123
+    onemind.io/documented-tags: Data
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81569955eb41a19a3c12.md
       title: "Archived registry: ClickHouse Time Machine"
@@ -4475,6 +4570,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Social presence — @crucixmonitor
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4484,6 +4580,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://x.com
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815f84a4ef6b62156a7b.md
       title: "Archived registry: X.com"
@@ -4511,6 +4609,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - omos-intel
   annotations:
     onemind.io/documented-purpose: Lives in omos-infra/platform/intel/worldwideview
       — pending standalone repo extraction
@@ -4521,6 +4620,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/silvertakana/worldwideview
+    onemind.io/documented-tags: OMOS-Intel
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8168813dcf78f5c99f1d.md
       title: "Archived registry: WorldWideView"
@@ -4539,6 +4640,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - nats
   annotations:
     onemind.io/documented-purpose: 3-node cluster (nats-0/1/2) — 150Gi JetStream, pub/sub, KV, streams
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4549,6 +4651,17 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: StatefulSet nats/nats; Service nats/nats
+    onemind.io/documented-address: nats://nats.hermes.svc.cluster.local:4222
+    onemind.io/documented-tags: NATS
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Messaging
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81a287f4e6050ac2dee9
+    onemind.io/tech-stack-url: https://nats.io
+    onemind.io/tech-stack-notes: High-performance cloud-native messaging. Core data
+      plane for OneMind OS — connects agents, TAK, voice, and all services.
+    onemind.io/supported-platforms: Linux,K8s
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81709d3cec611961a687.md
       title: "Archived registry: NATS JetStream Cluster"
@@ -4577,6 +4690,8 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - omos-feed
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Routes NATS events → TAK as CoT messages
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4586,6 +4701,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: nats://omos.sink.tak
+    onemind.io/documented-tags: OMOS Feed, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8173becdd056e98686a2.md
       title: "Archived registry: sink-tak"
@@ -4604,6 +4721,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - omos-intel
   annotations:
     onemind.io/documented-purpose: Not yet built — pending design and repo creation
     onemind.io/documented-host: 🐳 Docker Local
@@ -4613,6 +4731,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/bigbodycobain/shadowbroker
+    onemind.io/documented-tags: OMOS-Intel
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8178acbaf60087482229.md
       title: "Archived registry: ShadowBroker"
@@ -4632,6 +4752,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - omos-intel
   annotations:
     onemind.io/documented-purpose: Lives in omos-infra/platform/intel/worldmonitor —
       pending standalone repo extraction
@@ -4642,6 +4763,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/koala73/worldmonitor
+    onemind.io/documented-tags: OMOS-Intel
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817c9538c8feb1e5ce3e.md
       title: "Archived registry: WorldMonitor"
@@ -4660,6 +4783,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Photo and video backup
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4669,6 +4793,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://photos.google.com
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817eb648c91c340f7e4e
+    onemind.io/tech-stack-url: https://photos.google.com
+    onemind.io/tech-stack-notes: Primary photo backup. Samsung auto-syncs via Google
+      account. Migrating from iCloud.
+    onemind.io/supported-platforms: Web,Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e49fcedcf0041324b4.md
       title: "Archived registry: Google Photos"
@@ -4689,6 +4824,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - data
+    - tak-server
   annotations:
     onemind.io/documented-purpose: PostGIS spatial DB — CoT events, missions (20Gi, recently expanded)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4700,6 +4837,8 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: StatefulSet takserver/takserver-postgresql; Service
       takserver/takserver-postgresql
+    onemind.io/documented-address: postgresql://takserver-postgresql.takserver.svc.cluster.local:5432
+    onemind.io/documented-tags: Data, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81809e0ecbcba85a7eaf.md
       title: "Archived registry: TAK PostgreSQL"
@@ -4720,6 +4859,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Social network
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4729,6 +4869,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://facebook.com
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818caa21cde074079ac2.md
       title: "Archived registry: Facebook"
@@ -4747,6 +4889,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - omos-feed
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Projects NATS feed data onto TAK as CoT markers
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4757,6 +4901,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment omos/omos-tak-projector
+    onemind.io/documented-address: nats://omos.tak.projector
+    onemind.io/documented-tags: OMOS Feed, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818eb6d2ddea4ff77c23.md
       title: "Archived registry: omos-tak-projector"
@@ -4777,6 +4923,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: Geocoding & reverse geocoding (full planet)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4787,6 +4934,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/nominatim; Service onetak/nominatim
+    onemind.io/documented-address: https://nominatim.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81979373c249a2d37537.md
       title: "Archived registry: Nominatim"
@@ -4807,6 +4956,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - omos-feed
+    - data
   annotations:
     onemind.io/documented-purpose: Routes NATS → ClickHouse for long-term storage
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4817,6 +4968,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment omos/sink-clickhouse
+    onemind.io/documented-address: nats://omos.sink.clickhouse
+    onemind.io/documented-tags: OMOS Feed, Data
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8197af14e4631a656d65.md
       title: "Archived registry: sink-clickhouse"
@@ -4837,6 +4990,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - networking
   annotations:
     onemind.io/documented-purpose: HTTP/HTTPS ingress controller
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -4846,6 +5000,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-tags: Networking
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8198b4a5e3b0fc75ddf3.md
       title: "Archived registry: ingress-nginx"
@@ -4864,6 +5019,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - omos-intel
   annotations:
     onemind.io/documented-purpose: Lives in omos-infra/platform/intel/osiris —
       pending standalone repo extraction
@@ -4874,6 +5030,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/simplifaisoul/osiris
+    onemind.io/documented-tags: OMOS-Intel
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819cbdf7fbc0c195dbd7.md
       title: "Archived registry: Osiris"
@@ -4892,6 +5050,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Cesium-based 3D TAK viewer — reference only, run
       locally via Docker when needed
@@ -4902,6 +5061,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/tak-webview-cesium
+    onemind.io/documented-tags: TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819d83a8dc908bf57b6c.md
       title: "Archived registry: Cesium 3D Globe"
@@ -4920,6 +5081,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Domain registrar — onemindos.dev + others
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4929,6 +5091,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://godaddy.com
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b586f5f846351e4b5f.md
       title: "Archived registry: GoDaddy"
@@ -4947,6 +5111,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - omos-intel
   annotations:
     onemind.io/documented-purpose: Lives in omos-infra/platform/intel/crucix —
       pending standalone repo extraction
@@ -4957,6 +5122,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/calesthio/Crucix
+    onemind.io/documented-tags: OMOS-Intel
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8abe9c60ec490ba21.md
       title: "Archived registry: Crucix"
@@ -4975,6 +5142,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Professional network
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -4984,6 +5152,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://linkedin.com
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81bb9632ca833cd5fa87.md
       title: "Archived registry: LinkedIn"
@@ -5002,6 +5172,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: Email — zeus@zeusdelacruz.com
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5011,6 +5182,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://mail.google.com
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b7971cc45a90939972
+    onemind.io/tech-stack-url: https://mail.google.com
+    onemind.io/tech-stack-notes: Primary email. zeus@zeusdelacruz.com,
+      zeus@onemindos.com, zeus@onemindcodex.com. Google Workspace Standard $14/mo.
+    onemind.io/supported-platforms: Web,Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d2be23eda5893be74a.md
       title: "Archived registry: Gmail"
@@ -5029,6 +5211,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: PostGIS features as OGC API Features
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5039,6 +5222,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/pg-featureserv; Service onetak/pg-featureserv
+    onemind.io/documented-address: https://pg-featureserv.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d783cae864daeb7c29.md
       title: "Archived registry: pg_featureserv"
@@ -5059,6 +5244,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: OSM query API (full planet)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5069,6 +5255,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/overpass; Service onetak/overpass
+    onemind.io/documented-address: https://overpass.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e29fb4e3eb7c083985.md
       title: "Archived registry: Overpass"
@@ -5089,6 +5277,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: Real-time geospatial database & geofencing
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5099,6 +5288,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/tile38; Service onetak/tile38
+    onemind.io/documented-address: https://tile38.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e6bc30fcf1af4eebb6.md
       title: "Archived registry: Tile38"
@@ -5119,6 +5310,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - data
+    - tak-server
   annotations:
     onemind.io/documented-purpose: S3-compatible object storage — CloudTAK attachments (20Gi)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5129,6 +5322,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/onetak-minio; Service onetak/onetak-minio
+    onemind.io/documented-address: https://cloudtak-minio.cloudtak.svc.cluster.local:9000
+    onemind.io/documented-tags: Data, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e886beca1809524d17.md
       title: "Archived registry: OneTAK MinIO"
@@ -5149,6 +5344,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
   annotations:
     onemind.io/documented-purpose: CoT message broker — port 8089 TLS, all EUDs connect here
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -5160,6 +5356,8 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takserver/takserver-api; Deployment
       takserver/takserver-messaging
+    onemind.io/documented-address: https://152.42.155.95:8446
+    onemind.io/documented-tags: TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99689dd357eba770d.md
       title: "Archived registry: TAK Server (Core)"
@@ -5190,6 +5388,15 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8144a6a4fc338681ab45
+    onemind.io/tech-stack-url: https://contacts.google.com
+    onemind.io/tech-stack-notes: 175 contacts imported from Mac Contacts. Samsung
+      syncs automatically via Google account.
+    onemind.io/supported-platforms: Web,Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e800a854cee91d59f7ad1.md
       title: "Archived registry: Contacts"
@@ -5217,6 +5424,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tacos.tak.gov
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8101aa17dcd0d82cd1d4.md
       title: "Archived registry: TAK OS"
@@ -5236,6 +5444,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
+    - data
   annotations:
     onemind.io/documented-purpose: TimescaleDB instance for the geo namespace —
       stores spatial time-series data for Martin, pg_featureserv, and STAC
@@ -5247,6 +5457,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/onetak-geo-db; Service onetak/onetak-geo-db
+    onemind.io/documented-tags: Geo, Data
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810487ecddf0af4380dc.md
       title: "Archived registry: Geo Database"
@@ -5284,6 +5495,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://kikoff.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8104990bd8feb428ab9f.md
       title: "Archived registry: Kikoff"
@@ -5312,6 +5524,16 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://azure.microsoft.com
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e815a9d94d4e1da1a9150
+    onemind.io/tech-stack-url: https://azure.microsoft.com
+    onemind.io/tech-stack-notes: Evaluating for government/defense workloads. Azure
+      Government Cloud and integration with DoD services.
+    onemind.io/supported-platforms: Linux,K8s,Web
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8108bb3cc3de14622942.md
       title: "Archived registry: Azure"
@@ -5339,6 +5561,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://unity.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810b82b3fa2448f0d099.md
       title: "Archived registry: Unity"
@@ -5366,6 +5589,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tiktok.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810e8615c2f594744dca.md
       title: "Archived registry: TikTok"
@@ -5384,6 +5608,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - nats
   annotations:
     onemind.io/documented-purpose: NATS CLI web UI — removed, redundant with nats-dashboard
     onemind.io/documented-host: 🐳 Docker Local
@@ -5393,6 +5618,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/cobra-nats
+    onemind.io/documented-tags: NATS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8110b6c6f43ce67d5e73.md
       title: "Archived registry: cobra-nats"
@@ -5428,6 +5655,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://weixin.qq.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8113bfb3c54fa5d44247.md
       title: "Archived registry: WeChat"
@@ -5465,6 +5693,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-nats
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8114ad63e5233b3c83ac.md
       title: "Archived registry: onetak-plugin-nats"
@@ -5493,6 +5722,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81169f70ea90560d5b8d.md
       title: "Archived registry: OneMind AI Bridge"
@@ -5565,6 +5795,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://useorigin.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8122a508e26f616d976b.md
       title: "Archived registry: UseOrigin"
@@ -5593,6 +5824,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/atak-plugin-omhud
+    onemind.io/documented-address: https://github.com/onemindos/atak-plugin-omhud
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b78b08e2caba493b87.md
       title: "Archived registry: atak-plugin-omhud"
@@ -5626,6 +5858,15 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fba54cc7cb648fbec7
+    onemind.io/tech-stack-url: https://claude.ai/code
+    onemind.io/tech-stack-notes: Anthropic's agentic CLI. Primary coding assistant
+      for OneMind OS development. Runs in terminal and IDE extensions.
+    onemind.io/supported-platforms: macOS,Windows,Linux
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8125a316ef1df9160933.md
       title: "Archived registry: Claude Code (Bedrock)"
@@ -5655,6 +5896,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tak.gov/products/atak
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81279781d378995c1e88.md
       title: "Archived registry: ATAK"
@@ -5681,6 +5923,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - external
   annotations:
     onemind.io/documented-purpose: CRM, funnels, workflows, email/SMS — Onemind Holdings LLC
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -5690,6 +5933,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://app.gohighlevel.com/v2/location/olKx9nCrXNIiXZWoJobP/dashboard
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: Business
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8138846fcc9385558f9c
+    onemind.io/tech-stack-url: https://gohighlevel.com
+    onemind.io/tech-stack-notes: CRM, funnels, marketing, SMS, email campaigns.
+      Trial planned. First funnel to be built on start.
+    onemind.io/supported-platforms: Web,Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e812bb980d5ed40416328.md
       title: "Archived registry: GHL (GoHighLevel)"
@@ -5719,6 +5973,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-hermes
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e812c9d55c8e407db4045.md
       title: "Archived registry: onetak-plugin-hermes"
@@ -5738,6 +5993,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - geo
   annotations:
     onemind.io/documented-purpose: OpenDroneMap processing node — handles drone
       imagery photogrammetry jobs for WebODM
@@ -5749,6 +6005,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/nodeodm; Service onetak/nodeodm
+    onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81338840ec1c874371c6.md
       title: "Archived registry: NodeODM"
@@ -5769,6 +6026,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - nats
   annotations:
     onemind.io/documented-purpose: Third-party NATS UI — removed, redundant
     onemind.io/documented-host: 🐳 Docker Local
@@ -5778,6 +6036,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/gastbob40/nats-ui
+    onemind.io/documented-tags: NATS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81379661cd62a0279c31.md
       title: "Archived registry: gastbob-nats-ui"
@@ -5808,6 +6068,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://www.synadia.com/protect
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8138979dee67a5486f63.md
       title: "Archived registry: Synadia Protect"
@@ -5843,6 +6104,16 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://developer.nvidia.com
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Hardware
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e810292e4f54b802c8fe1
+    onemind.io/tech-stack-url: https://nvidia.com
+    onemind.io/tech-stack-notes: GPU compute — CUDA, TensorRT, and NVIDIA Container
+      Toolkit. Powers local LLM inference and ML workloads.
+    onemind.io/supported-platforms: Linux,Windows,K8s
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141bd03db771bbe2cbd.md
       title: "Archived registry: NVIDIA"
@@ -5870,6 +6141,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://opentopography.org
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814a9d5ad52241438757.md
       title: "Archived registry: OpenTopography"
@@ -5897,6 +6169,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://openstreetmap.org
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814fabc2e25bbd0e4aa8.md
       title: "Archived registry: OpenStreetMap"
@@ -5917,6 +6190,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - omos-intel
   annotations:
     onemind.io/documented-purpose: Live spatial intelligence on a photorealistic 3D
       globe — aircraft, ships, satellites, earthquakes, traffic, public cameras.
@@ -5928,6 +6202,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/bilawalsidhu/gods-eye-view
+    onemind.io/documented-tags: OMOS-Intel
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815192a3e2716188e0ef.md
       title: "Archived registry: Gods Eye View"
@@ -5947,6 +6223,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Apache Ignite cache cluster for TAK Server (2
       nodes) — distributed in-memory data grid for CoT state
@@ -5958,6 +6235,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: StatefulSet takserver/takserver-ignite; Service takserver/takserver-ignite
+    onemind.io/documented-tags: TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8152ba0cc06d52978b62.md
       title: "Archived registry: TAKServer Ignite"
@@ -5991,6 +6269,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/agent-of-empires/agent-of-empires
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815491a3e7b8cb7538f0.md
       title: "Archived registry: Agent of Empires"
@@ -6018,6 +6297,16 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://aws.amazon.com
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e815bb24fc8ef98b9c2f7
+    onemind.io/tech-stack-url: https://aws.amazon.com
+    onemind.io/tech-stack-notes: Primary cloud provider. EC2, S3, Bedrock
+      (Claude/Titan), EKS, and IAM. Core runtime for OneMind production workloads.
+    onemind.io/supported-platforms: Linux,K8s,Web
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81569873d6a20f239849.md
       title: "Archived registry: AWS"
@@ -6048,6 +6337,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8156b543e41459836cf0.md
       title: "Archived registry: omos-feed-pipeline"
@@ -6069,6 +6359,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - nats
   annotations:
     onemind.io/documented-purpose: NATS JetStream acknowledgement controller —
       manages consumer ack/nack lifecycle on the bus
@@ -6080,6 +6371,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/nack
+    onemind.io/documented-address: https://github.com/nats-io/nack
+    onemind.io/documented-tags: NATS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8164b995c1a9de84bc5c.md
       title: "Archived registry: NACK"
@@ -6112,6 +6405,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/hermes-plugin-nats-context
+    onemind.io/documented-address: https://github.com/onemindos/hermes-plugin-nats-context
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8166b382ec5bbb6bde2c.md
       title: "Archived registry: hermes-plugin-nats-context"
@@ -6146,6 +6440,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/builderz-labs/mission-control
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81678448e2762ada52f4.md
       title: "Archived registry: Mission Control"
@@ -6176,6 +6471,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-ops
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8167a2edf29f6c5b84f3.md
       title: "Archived registry: onetak-plugin-ops"
@@ -6203,6 +6499,14 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81819663e54cc5c1484c
+    onemind.io/tech-stack-url: https://wallet.google.com
+    onemind.io/tech-stack-notes: Mobile payments on Samsung. Replacing Apple Pay as moving off iPhone.
+    onemind.io/supported-platforms: Android
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816aafedd09892f47e82.md
       title: "Archived registry: Wallet"
@@ -6230,6 +6534,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://reddit.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab330c7b21cab93c8.md
       title: "Archived registry: Reddit"
@@ -6257,6 +6562,7 @@ metadata:
   tags:
     - fabric-registry
     - documented-unverified
+    - monitoring
   annotations:
     onemind.io/documented-purpose: OTel collector agents on all 3 nodes — ships
       metrics, traces, and logs to Loki, Tempo, and Prometheus
@@ -6267,6 +6573,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-tags: Monitoring
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ea737d1a5eac43a8a.md
       title: "Archived registry: OpenTelemetry Collector"
@@ -6294,6 +6601,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://opensky-network.org
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816f8042cbf5b699b5ec.md
       title: "Archived registry: OpenSky"
@@ -6352,6 +6660,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://alibabacloud.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817684bbdedb73711864.md
       title: "Archived registry: Alibaba Cloud"
@@ -6381,6 +6690,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-clickhouse
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81769277f29c9db0b6fe.md
       title: "Archived registry: onetak-plugin-clickhouse"
@@ -6409,6 +6719,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/tak-server-mcp
+    onemind.io/documented-address: https://github.com/onemindos/tak-server-mcp
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817cba65c66d49fdac38.md
       title: "Archived registry: tak-server-mcp"
@@ -6429,6 +6740,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - ai-agent
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Vision ML pipeline — object detection on TAK feeds
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -6440,6 +6753,8 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takml/takml-server; Service takml/takml-server
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
+    onemind.io/documented-tags: AI / Agent, TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817fae91f5285488795a.md
       title: "Archived registry: TAK-ML Server"
@@ -6471,6 +6786,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/OneTAK-Plugin-Sample
+    onemind.io/documented-address: https://github.com/onemindos/OneTAK-Plugin-Sample
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180a19eff849ab17b5d.md
       title: "Archived registry: OneTAK-Plugin-Sample"
@@ -6500,6 +6816,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://hushed.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180aefee4cf10297c32.md
       title: "Archived registry: Hushed"
@@ -6519,6 +6836,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
   annotations:
     onemind.io/documented-purpose: TAK Server load balancer proxy — routes external
       TAK client connections into the cluster
@@ -6530,6 +6848,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takserver/tak-lb-proxy
+    onemind.io/documented-tags: TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8186b758f7bffd78ce48.md
       title: "Archived registry: TAK LB Proxy"
@@ -6551,6 +6870,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
+    - data
   annotations:
     onemind.io/documented-purpose: TAK-ML database — stores model metadata,
       inference results, and tracking history
@@ -6563,6 +6884,8 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takml/takml-db; Service takml/takml-db
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
+    onemind.io/documented-tags: TAK Server, Data
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8187a663d1ee921f543b.md
       title: "Archived registry: TAK-ML Database"
@@ -6601,6 +6924,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://raycast.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8188bfd2d16ba672fbce.md
       title: "Archived registry: Raycast"
@@ -6633,6 +6957,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/multica-ai/multica
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899637c2f6427416c6.md
       title: "Archived registry: Multica"
@@ -6664,6 +6989,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/iofficeai/aionui
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e818b9388df7e71776626.md
       title: "Archived registry: AionUI"
@@ -6692,6 +7018,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/atak-sdk
+    onemind.io/documented-address: https://github.com/onemindos/atak-sdk
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81918ff4ee7fedaa8c28.md
       title: "Archived registry: atak-sdk"
@@ -6721,6 +7048,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://ollama.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md
       title: "Archived registry: Ollama"
@@ -6751,6 +7079,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819d818fff592b12f8b5.md
       title: "Archived registry: takserver-nats-plugin"
@@ -6780,6 +7109,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tak.gov/products/itak
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819dacfcc8e3d800ba2b.md
       title: "Archived registry: iTAK"
@@ -6839,6 +7169,15 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81deae49faac5956b04a
+    onemind.io/tech-stack-url: https://termux.dev
+    onemind.io/tech-stack-notes: Linux terminal emulator for Android. Used for SSH,
+      NATS CLI, and field ops scripting from mobile.
+    onemind.io/supported-platforms: Android
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a3bacac3a0ee53c2ec.md
       title: "Archived registry: Termux"
@@ -6868,6 +7207,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://gitlab.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a68680e0b433702183.md
       title: "Archived registry: GitLab"
@@ -6888,6 +7228,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - omos-feed
   annotations:
     onemind.io/documented-purpose: "Single pod running 4 active intel feeds:
       feed-intel-emsc (seismic EU), feed-intel-eonet (NASA events),
@@ -6901,6 +7242,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment omos/feed-intel
+    onemind.io/documented-tags: OMOS Feed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a7b836e7cf6518f1e7.md
       title: "Archived registry: feed-intel"
@@ -6931,6 +7273,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/nats-android
+    onemind.io/documented-address: https://github.com/onemindos/nats-android
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81aa96c9c94ec8575773.md
       title: "Archived registry: nats-android"
@@ -6964,6 +7307,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/paperclipai/paperclip
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md
       title: "Archived registry: Paperclip"
@@ -6995,6 +7339,7 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment omos/redpanda-connect; Service omos/redpanda-connect
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b2a408e1eb8d640e22.md
       title: "Archived registry: Redpanda Connect (Wombat)"
@@ -7025,6 +7370,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://twitch.tv
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b9bc7bc879c11f5906.md
       title: "Archived registry: Twitch"
@@ -7044,6 +7390,8 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
+    - ai-agent
   annotations:
     onemind.io/documented-purpose: TAK-ML vision inference worker — runs ML models
       against video/image streams for TAK targeting
@@ -7056,6 +7404,8 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takml/takml-vision-worker
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
+    onemind.io/documented-tags: TAK Server, AI / Agent
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81bba30bea937c250d79.md
       title: "Archived registry: TAK-ML Vision Worker"
@@ -7090,6 +7440,7 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/agenttap; Service nats/agenttap
     onemind.io/repository-url: https://github.com/onemindos/agenttap
+    onemind.io/documented-address: https://github.com/onemindos/agenttap
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81bbaf34ea74b549d017.md
       title: "Archived registry: agenttap"
@@ -7130,6 +7481,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://farm.bot
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c4959fc2edea1a7f3a.md
       title: "Archived registry: FarmBot"
@@ -7157,6 +7509,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://monarchmoney.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c6aa3dd71c14097649.md
       title: "Archived registry: Monarch Money"
@@ -7184,6 +7537,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://apify.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c8b47df736eaf55bad.md
       title: "Archived registry: Apify"
@@ -7211,6 +7565,16 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://takaware.com
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: TAK Ecosystem
+    onemind.io/license: Free
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813fb72ec7bb75ba90c1
+    onemind.io/tech-stack-url: https://tak.gov
+    onemind.io/tech-stack-notes: Lightweight TAK client for mobile. Tracks friendly
+      forces and COT events. Pairs with TAK Server and NATS bridge.
+    onemind.io/supported-platforms: Android,iOS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81cbb55ad6909474e599.md
       title: "Archived registry: TAK Aware"
@@ -7229,6 +7593,7 @@ metadata:
   tags:
     - fabric-registry
     - planned
+    - external
   annotations:
     onemind.io/documented-purpose: community.onemindos.com — education community platform
     onemind.io/documented-host: 🌐 SaaS / Cloud
@@ -7238,6 +7603,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://login.circle.so/sign_up?coupon_code=heycreator&request_host=app.circle.so
+    onemind.io/documented-tags: External
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81cf96f3cf76fea93e99.md
       title: "Archived registry: Circle Community"
@@ -7267,6 +7634,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-mumble
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d28e35f9ed02f3ca48.md
       title: "Archived registry: onetak-plugin-mumble"
@@ -7325,6 +7693,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://www.synadia.com/insights
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d687d7f745725890e2.md
       title: "Archived registry: Synadia Insights"
@@ -7353,6 +7722,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/OneTAK-Native
+    onemind.io/documented-address: https://github.com/onemindos/OneTAK-Native
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d8b583f6e334300e28.md
       title: "Archived registry: OneTAK-Native"
@@ -7384,6 +7754,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/TAKWatch/WearTAK
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dabaece05924086d39.md
       title: "Archived registry: WearTAK"
@@ -7413,6 +7784,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: planned
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tak.gov/products/vr-tak
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db958be68a366d112e.md
       title: "Archived registry: VR-TAK"
@@ -7440,6 +7812,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://pinterest.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db9a6fdcf35a5ff7b7.md
       title: "Archived registry: Pinterest"
@@ -7467,6 +7840,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tavily.com
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81df9777eac9aa15b750.md
       title: "Archived registry: Tavily"
@@ -7485,6 +7859,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - nats
   annotations:
     onemind.io/documented-purpose: Third-party NATS UI — removed, redundant
     onemind.io/documented-host: 🐳 Docker Local
@@ -7494,6 +7869,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/nats-nui/nui
+    onemind.io/documented-tags: NATS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfb106d5c7afb68acd.md
       title: "Archived registry: nui"
@@ -7525,6 +7902,7 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takserver/tak-nats-leaf; Service takserver/tak-nats-leaf
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfba46d3863663e0ba.md
       title: "Archived registry: tak-nats-leaf"
@@ -7546,6 +7924,7 @@ metadata:
   tags:
     - fabric-registry
     - reference
+    - nats
   annotations:
     onemind.io/documented-purpose: NATS scope/monitor — removed, redundant
     onemind.io/documented-host: 🐳 Docker Local
@@ -7555,6 +7934,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/natscope
+    onemind.io/documented-tags: NATS
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e0be41fb11080c071e.md
       title: "Archived registry: natscope"
@@ -7582,6 +7963,16 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tak3d.tail717ba0.ts.net
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Mapping / GIS
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8153bcd9cc7e14f30e50
+    onemind.io/tech-stack-url: https://cesium.com/platform/cesium-ion
+    onemind.io/tech-stack-notes: 3D geospatial tiling platform. Hosts terrain,
+      imagery, and 3D tiles. Feeds CesiumJS maps in OneMind UI and TAK viewers.
+    onemind.io/supported-platforms: Web,K8s
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e38096f4acec966d27.md
       title: "Archived registry: Cesium Ion"
@@ -7613,6 +8004,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://www.synadia.com/platform
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e3b05ff2ea3a0776d5.md
       title: "Archived registry: Synadia Platform"
@@ -7663,6 +8055,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Mumble voice server for TAK operators
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7673,6 +8066,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment takserver/murmur; Service takserver/murmur
+    onemind.io/documented-address: mumble://murmur.takserver.svc:64738
+    onemind.io/documented-tags: TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ec8825efde12e75493.md
       title: "Archived registry: Murmur (Voice)"
@@ -7702,6 +8097,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-legacy-ai
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ed9a06d17832222870.md
       title: "Archived registry: onetak-plugin-legacy-ai"
@@ -7734,6 +8130,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/verification: reference
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/swarmclawai/swarmclaw
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ee8eacfe99be9e4085.md
       title: "Archived registry: SwarmClaw"
@@ -7761,6 +8158,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://openrouter.ai
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81eebb6adc26a94c0e88.md
       title: "Archived registry: OpenRouter (OneMindOS)"
@@ -7789,6 +8187,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/documented-address: https://github.com/onemindos/omos-infra
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81efae8ef2a9f52f10dd.md
       title: "Archived registry: omos-infra"
@@ -7818,6 +8217,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/omos-legacy
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81f1904bcf8fb71fdde7.md
       title: "Archived registry: omos-legacy"
@@ -7845,6 +8245,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/onemindos/omos-core
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81f2ae36f7f0b5532841.md
       title: "Archived registry: omos-core"
@@ -7863,6 +8264,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - tak-server
   annotations:
     onemind.io/documented-purpose: Video streaming relay for TAK feeds (RTSP/RTMP)
     onemind.io/documented-host: ☁️ DOKS Cluster
@@ -7873,6 +8275,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/onetak-media; Service onetak/onetak-media
+    onemind.io/documented-tags: TAK Server
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fbba79e1a3d07472a8.md
       title: "Archived registry: MediaMTX"
@@ -7893,6 +8296,7 @@ metadata:
   tags:
     - fabric-registry
     - deployment-verified
+    - omos-feed
   annotations:
     onemind.io/documented-purpose: Dedicated pod — satellite tracking feed
       publishing to NATS fabric. Running 38d.
@@ -7904,6 +8308,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment omos/feed-satellites
+    onemind.io/documented-tags: OMOS Feed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fca08cfaf9f04514a1.md
       title: "Archived registry: feed-satellites"
@@ -7933,6 +8338,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://proton.me
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
       title: "Archived registry: Proton Mail"
