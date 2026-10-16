@@ -130,6 +130,67 @@ core_agents:
       output: Pull requests (code + tests)
       cycle: scan board → assign → dispatch workers → review → PR → notify Zeus
 
+# ── Overseer Agents ─────────────────────────────────────────────────
+# Top-layer section chiefs. Each oversees a life area (SO/HP/LE/GE)
+# and coordinates the servant agents within that domain.
+# They sit between Legacy (sovereign) and the servant agents.
+# They orchestrate; servants execute.
+overseers:
+  - name: SO — Sovereign Operations
+    bus_subject: agents.prompt.hermes.zeus.sovereign-operations
+    role: tech-overseer
+    description: Top-layer tech overseer. Coordinates Forge, Grid, Guardian, Oracle, Trinity, Spartan for all infrastructure, security, TAK, NATS, DevOps.
+    persona: agents/SO/SOUL.md
+    profile: /opt/data/profiles/sovereign-operations/
+    model: us.anthropic.claude-sonnet-4-6
+    domain: Infrastructure, Security, TAK, NATS, DevOps, AI Agents, Drones, Robotics
+    servants_under_command:
+      - forge
+      - grid
+      - guardian
+      - oracle
+      - trinity
+      - spartan
+    cron: []
+
+  - name: HP — Holistic Performance
+    bus_subject: agents.prompt.hermes.zeus.holistic-performance
+    role: personal-overseer
+    description: Top-layer personal overseer. Coordinates Spartan for Zeus's health, fitness, finance, learning, goals, and habits.
+    persona: agents/HP/SOUL.md
+    profile: /opt/data/profiles/holistic-performance/
+    model: us.anthropic.claude-sonnet-4-6
+    domain: Health, Fitness, Finance, Learning, Goals, Habits, Identity
+    servants_under_command:
+      - spartan
+    cron: []
+
+  - name: LE — Legacy Evolution
+    bus_subject: agents.prompt.hermes.zeus.legacy-evolution
+    role: home-overseer
+    description: Top-layer home and estate overseer. Coordinates Eden, Haven, Heritage for homestead, family records, property, and estate.
+    persona: agents/LE/SOUL.md
+    profile: /opt/data/profiles/legacy-evolution/
+    model: us.anthropic.claude-sonnet-4-6
+    domain: Home, Estate, Family, Property, Vehicles, Maintenance, Education
+    servants_under_command:
+      - eden
+      - haven
+      - heritage
+    cron: []
+
+  - name: GE — Generational Empire
+    bus_subject: agents.prompt.hermes.zeus.generational-empire
+    role: business-overseer
+    description: Top-layer business overseer. Coordinates Empire for OneMind revenue, strategy, partnerships, marketing, and empire-building.
+    persona: agents/GE/SOUL.md
+    profile: /opt/data/profiles/generational-empire/
+    model: us.anthropic.claude-opus-4-6-v1
+    domain: Business, Revenue, Strategy, Partnerships, Marketing, Legal, Competitive Intel
+    servants_under_command:
+      - empire
+    cron: []
+
 # ── Servant Agents ─────────────────────────────────────────────────
 # NOTE: All servant cron jobs are currently PAUSED. They are armed and
 # ready but will not fire until explicitly resumed via `hermes cron resume`.
@@ -330,3 +391,23 @@ profiles:
     path: /opt/data/profiles/trinity/
     description: Integration coordinator
     active: false
+
+  - name: sovereign-operations
+    path: /opt/data/profiles/sovereign-operations/
+    description: Sovereign Operations overseer
+    active: true
+
+  - name: holistic-performance
+    path: /opt/data/profiles/holistic-performance/
+    description: Holistic Performance overseer
+    active: true
+
+  - name: legacy-evolution
+    path: /opt/data/profiles/legacy-evolution/
+    description: Legacy Evolution overseer
+    active: true
+
+  - name: generational-empire
+    path: /opt/data/profiles/generational-empire/
+    description: Generational Empire overseer
+    active: true

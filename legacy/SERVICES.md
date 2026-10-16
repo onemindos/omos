@@ -99,7 +99,7 @@
 | WebTAK | :8446 → container:8443 |
 | API | :8443 |
 | Messaging | :8089 |
-| Cert auth | Zeus-S24.p12 (pw=atakatak) — OK |
+| Cert auth | Zeus-S24.p12 (password not recorded here) — OK |
 | Password auth | BROKEN (Ignite bcrypt issue) |
 | Devices | ATAK(S24×2), CloudTAK, WinTAK, iTAK |
 
@@ -137,7 +137,7 @@ All feeds project to TAK via `omos-tak-projector` pod.
 | Property | Value |
 |----------|-------|
 | Device | HA Yellow |
-| LAN | http://192.168.1.180:8123 |
+| LAN | http://<omos-ha LAN IP>:8123 |
 | Tailscale | http://100.64.25.12:8123 |
 
 ## RADS (Homestead Digital Twin)

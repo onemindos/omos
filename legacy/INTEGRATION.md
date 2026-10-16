@@ -64,7 +64,7 @@ nats req agents.prompt.hermes.zeus.forge "<task>"
 | Code implementation | Forge or delegate_task | NATS req |
 | GitHub API operations | Self (Legacy) | Direct (gh CLI, token from 1Password) |
 | NATS operations | Self (Legacy) | Direct (nats CLI) |
-| Notion ops | Self (Legacy) | Direct REST API (token in this doc header) |
+| Notion ops | Self (Legacy) | Direct REST API (token from the pod environment, never in this repo) |
 | 1Password | Self (Legacy) | op CLI (service account) |
 | Genome updates | Self (Legacy) → push via Edge | git over SSH |
 | HA control | Self (Legacy) | NATS bridge |
@@ -81,7 +81,7 @@ nats req agents.prompt.hermes.zeus.forge "<task>"
 
 - **Git push from Mac**: Mac git remotes must be `git@github.com:` (SSH). HTTPS has no creds.
 - **gh CLI on pod**: requires GITHUB_TOKEN env from 1Password; both stored tokens were stale as of 2026-08-12 — needs refresh.
-- **Notion**: use direct REST API from pod (`execute_code` + urllib). Token `ntn_56...a5s9`. NOT the Notion MCP (broken 401). NOT Composio for Notion.
+- **Notion**: use direct REST API from pod (`execute_code` + urllib). Token comes from the pod environment, never from this repo. NOT the Notion MCP (broken 401). NOT Composio for Notion.
 - **File transfer to Mac**: SCP with StrictHostKeyChecking=no works.
 
 ---
