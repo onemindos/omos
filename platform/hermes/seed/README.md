@@ -14,6 +14,7 @@
 - It never overwrites an existing file, so a normal restart changes nothing.
 - `HERMES_RESEED=1` is the deliberate reset: it overwrites the seeded files.
 - A config template that still has `${PLACEHOLDERS}` (credentials were redacted on export) is not installed; the script says so and leaves it for a person to fill in.
+  This is deliberately conservative. Hermes expands `${VAR}` in `config.yaml` from the environment, so once the credentials live in the `hermes-env` Secret (see `docs/operations/hermes-credential-cleanup.md`) the template can be installed as is; relax the check then.
 - It never touches memory, the databases, sessions, or anything else on the volume.
 
 ## Test
