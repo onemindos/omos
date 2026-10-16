@@ -103,5 +103,5 @@ set an expiry decision with the owner.
 ## Out of scope / left in place
 
 - GitHub repo `onemindos/zeus-site` and its Backstage repository entry (repo not archived by this PR).
-- Historical records (`reports/`, `docs/cluster-audit-*`, `docs/operations/*.json`, `docs/inventory/`,
+- Historical records (`docs/cluster-audit-*`, `docs/operations/*.json`, `docs/inventory/`,
   `docs/capacity/`) still mention zeus-site by design.

@@ -27,7 +27,6 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | `legacy/` | Legacy agent source, configuration, and operating material |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
 | `references/` | External project and ecosystem research |
-| `reports/` | Dated cluster review reports |
 | `scripts/` | CI validation helpers and ecosystem tooling |
 The two `*-PICTURE.md` files at the repository root are dated architecture snapshots. For current architecture and deployment guidance, use `docs/` and the manifests under `platform/`.
 
