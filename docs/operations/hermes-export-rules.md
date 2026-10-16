@@ -57,6 +57,7 @@ The workflow recomputes this each night, so a skill the agent creates tomorrow i
 | `mcp_servers.github.headers.Authorization` | A GitHub Copilot MCP bearer token |
 | `mcp_servers.wordpress.headers.Authorization` | A WordPress Basic-auth header (disabled; retired domain) |
 | `mcp_servers.composio.headers.x-consumer-api-key` | A Composio API key |
+| `mcp_servers.ghl.headers.Authorization`, `mcp_servers.ghl-pro.env.GHL_API_KEY` | GoHighLevel credentials (found in the profile configs, for example `generational-empire`) |
 | `platforms.matrix.token` | A Matrix access token (and `platforms.matrix.user_id`, an identifier) |
 | `dashboard.basic_auth.password_hash`, `.secret` | The dashboard login hash and a session secret |
 | `TELEGRAM_ALLOWED_USERS` | A personal numeric Telegram ID (an identifier, not a secret) |
@@ -84,8 +85,12 @@ platform/hermes/agent/
   config/config.template.yaml        redacted, with ${PLACEHOLDERS}
   profiles/<name>/config.template.yaml
   skills/<category>/<skill>/...      exported custom skills only
+  cron/jobs.json                     scheduled jobs
+  live/SOUL.md                       the live soul, as running (not the edited one in agents/legacy/)
   EXPORT-REPORT.md                   what was exported, skipped, sent to review, and why
 ```
+
+`live/SOUL.md` is kept apart from `agents/legacy/SOUL.md` on purpose: the edited soul in Git has not been applied to the running agent yet, so exporting over it would undo the edit every night. Once the edit is applied (plan Step 3), the two files should be identical.
 
 Only these paths are ever written by the workflow. It cannot touch manifests, workflows or anything else in the repo.
 
@@ -106,3 +111,13 @@ The scan found credentials in the export set, so the first run would be refused.
 | D9 | The 18 "review" skills | **Approved:** leave them out of the export; the workflow lists them each week |
 | D10 | IP addresses inside skills (public service addresses, droplet addresses, tailnet and LAN addresses; more than 200 occurrences) | **Approved:** do not redact. The skills need them to work, and the repo is private. The one-off docs scrub in Step 0 was a different case |
 | D11 | Order of work | **Approved:** Zeus rotates and cleans the credentials first (Todoist task), then the workflow is built, so its first run succeeds instead of failing |
+
+## 6. What is built
+
+Built and merged-ready, but **off**:
+
+- `scripts/hermes_identity_export.py`: runs inside the pod, read-only, and streams a tar of the redacted export (or only a failure report, exit code 2). Unit tests in `scripts/tests/test_hermes_identity_export.py` (13 tests).
+- `.github/workflows/hermes-identity-export.yml`: manual trigger only. It needs a runner labelled `onemind-hermes-readonly` with `kubectl`, the variable `HERMES_IDENTITY_EXPORT_ENABLED=true`, and a clean export. It runs gitleaks on the result and opens a PR limited to the exported paths. The nightly schedule is commented out.
+- `platform/core/hermes-identity-export-rbac.yaml`: a dedicated ServiceAccount plus a role that can only read and exec pods in the `hermes` namespace. Inert until a runner uses it.
+
+A dry run of the script against the live pod on 2026-10-16 refused as intended (status FAILED, about 60 findings across the skills and profile configs, no values in the report), which confirms the credential cleanup is the remaining prerequisite. Not built: the dedicated runner itself.
