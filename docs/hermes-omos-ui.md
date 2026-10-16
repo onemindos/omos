@@ -175,8 +175,8 @@ This is provisioned via `nats-migration/` — run `./provision.sh` to create/upd
 
 ## Adding a New Agent (servant)
 
-1. Add an entry to `platform/legacy/AGENTS.yaml` under `servants:`
-2. Create `platform/legacy/agents/{session}/SOUL.md` from `agents/_template/SOUL.md`
+1. Add an entry to `platform/hermes/agent/AGENTS.yaml` under `planned:` (or `agents:` once it runs)
+2. Create `platform/hermes/agent/agents/{session}/SOUL.md` from `platform/hermes/agent/agents/_template/SOUL.md`
 3. Ensure the agent publishes heartbeats to `agents.hb.hermes.zeus.{session}` every ≤30s with `instance_id` set
 4. Ensure the agent listens on `agents.prompt.hermes.zeus.{session}` and speaks Synadia Agent Protocol v0.3
 5. The agent will appear in omos-ui automatically on next heartbeat — no UI changes needed
