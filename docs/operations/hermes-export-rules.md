@@ -1,6 +1,6 @@
 # Hermes export rules: skills and config.yaml
 
-**Status:** proposal for review. Nothing here is built or executed. This is the rulebook for Step 2 of `hermes-recoverability-plan.md` (the nightly export workflow, decision D3), written before the workflow so the rules can be agreed first.
+**Status:** rules and decisions D9 to D11 approved by Zeus on 2026-10-16; the workflow is not built yet. This is the rulebook for Step 2 of `hermes-recoverability-plan.md` (the nightly export workflow, decision D3), written before the workflow so the rules can be agreed first.
 **Written:** 2026-10-16. Everything below was measured on the live `hermes-legacy` pod (read-only). Secret values are deliberately not recorded anywhere in this document.
 
 ## Summary
@@ -99,10 +99,10 @@ The scan found credentials in the export set, so the first run would be refused.
 
 **Prerequisite to Step 2** (tracked in Todoist): rotate each credential at its provider, replace inline values with env or `op://` references, edit the live skills to read from the environment, and only then run the export. These are live changes to the agent and are done with a fresh backup first.
 
-## 5. Decisions needed
+## 5. Decisions (approved 2026-10-16)
 
-| # | Decision | Recommendation |
+| # | Decision | Outcome |
 |---|----------|----------------|
-| D9 | The 18 "review" skills | Leave them out of the export; the workflow lists them each week |
-| D10 | IP addresses inside skills (public service addresses, droplet addresses, tailnet and LAN addresses; more than 200 occurrences) | Do not redact. The skills need them to work, and the repo is private. The one-off docs scrub in Step 0 was a different case. Alternative: map each address to a hostname |
-| D11 | Order of work | Rotate and clean first, then build the workflow, so its first run succeeds instead of failing |
+| D9 | The 18 "review" skills | **Approved:** leave them out of the export; the workflow lists them each week |
+| D10 | IP addresses inside skills (public service addresses, droplet addresses, tailnet and LAN addresses; more than 200 occurrences) | **Approved:** do not redact. The skills need them to work, and the repo is private. The one-off docs scrub in Step 0 was a different case |
+| D11 | Order of work | **Approved:** Zeus rotates and cleans the credentials first (Todoist task), then the workflow is built, so its first run succeeds instead of failing |

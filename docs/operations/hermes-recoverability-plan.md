@@ -167,7 +167,7 @@ Each step is its own PR (or small set of PRs), reviewed before the next begins. 
 
 ### Step 2: Capture and seed
 
-2a. **Export workflow (Layer C), D3.** `hermes-identity-export.yml`, modeled on `onemind-inventory-refresh.yml`. It runs nightly at 02:00 (after the 01:00 backup) on the self-hosted runner, copies the allow-listed paths from the pod with a fixed script, redacts `config.yaml`, runs gitleaks, and opens a PR limited to the identity paths. Needs a read-only role for the runner in the `hermes` namespace.
+2a. **Export workflow (Layer C), D3.** Rules for skills and config.yaml are in `hermes-export-rules.md`. **Prerequisite (D11):** the credentials found in the live config and skills are rotated and moved to env or `op://` references first, or the first run is refused. `hermes-identity-export.yml`, modeled on `onemind-inventory-refresh.yml`. It runs nightly at 02:00 (after the 01:00 backup) on the self-hosted runner, copies the allow-listed paths from the pod with a fixed script, redacts `config.yaml`, runs gitleaks, and opens a PR limited to the identity paths. Needs a read-only role for the runner in the `hermes` namespace.
 
 2b. **Seed (Layer B).** On an empty volume only, an init container copies SOULs, the config template, custom skills, plugins and `cron/jobs.json` into `/opt/data`. CI builds a small image from the repo files so the content is pinned by digest (ConfigMaps would hit the 1 MiB limit). It never overwrites an existing `SOUL.md`; a deliberate `HERMES_RESEED` flag forces a reset. This replaces the dead `01-seed-legacy` path.
 
