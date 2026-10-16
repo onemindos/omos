@@ -15,6 +15,7 @@ metadata:
   tags:
     - infrastructure
     - deployment-verified
+    - monitoring
   links:
     - url: https://argocd.tail717ba0.ts.net
       title: Open application
@@ -47,6 +48,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://argocd.tail717ba0.ts.net
+    onemind.io/documented-tags: Monitoring
 spec:
   type: website
   lifecycle: production
@@ -98,6 +101,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment kube/kubernetes-dashboard; Service kube/kubernetes-dashboard
+    onemind.io/documented-address: https://k8s-dashboard.tail717ba0.ts.net
 spec:
   type: website
   lifecycle: production
@@ -151,6 +155,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment kube/headlamp; Service kube/headlamp
+    onemind.io/documented-address: https://headlamp.tail717ba0.ts.net
 spec:
   type: website
   lifecycle: production
@@ -168,6 +173,7 @@ metadata:
   tags:
     - infrastructure
     - documented-unverified
+    - networking
   links:
     - url: https://login.tailscale.com/admin/machines
       title: Open application
@@ -185,6 +191,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://login.tailscale.com/admin/machines
+    onemind.io/documented-tags: Networking
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Security
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e811d9b32cb8d9a5cce75
+    onemind.io/tech-stack-url: https://tailscale.com
+    onemind.io/tech-stack-notes: Zero-config mesh VPN over WireGuard. Used for
+      secure access to OneMind cluster nodes and remote TAK clients.
+    onemind.io/supported-platforms: macOS,Windows,Linux,Android,iOS,K8s
 spec:
   type: website
   lifecycle: production
@@ -200,6 +217,7 @@ metadata:
   tags:
     - infrastructure
     - documented-unverified
+    - external
   links:
     - url: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
       title: Open application
@@ -217,6 +235,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://dash.cloudflare.com
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8157b0ece88a7a77e0c7
+    onemind.io/tech-stack-url: https://cloudflare.com
+    onemind.io/tech-stack-notes: DNS, CDN, Tunnel (Zero Trust), DDoS protection, and
+      R2 storage. Gateway for OneMind public-facing services.
+    onemind.io/supported-platforms: Web,Linux,K8s
 spec:
   type: website
   lifecycle: production
@@ -250,6 +279,16 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://digitalocean.com
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81a08495e551dad1245d
+    onemind.io/tech-stack-url: https://digitalocean.com
+    onemind.io/tech-stack-notes: DOKS cluster hosting OneMind services. Managed
+      Kubernetes with node pools for NATS, TAK, and agent workloads.
+    onemind.io/supported-platforms: Linux,K8s,Web
 spec:
   type: website
   lifecycle: production
@@ -282,6 +321,14 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f4b144f3e8313ce477
+    onemind.io/tech-stack-notes: OneMind's primary AI agent. Runs on NATS,
+      interfaces with Bedrock/Claude, manages state.db, handles voice + text tasks.
+    onemind.io/supported-platforms: Linux,K8s
 spec:
   type: website
   lifecycle: production
@@ -332,6 +379,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/agent-web-ui; Service nats/agent-web-ui
+    onemind.io/documented-address: https://agent-web-ui.tail717ba0.ts.net
 spec:
   type: website
   lifecycle: production
@@ -410,6 +458,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/nats-dashboard; Service nats/nats-dashboard
+    onemind.io/documented-address: https://nats-dashboard.tail717ba0.ts.net
 spec:
   type: website
   lifecycle: production
@@ -519,6 +568,7 @@ metadata:
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/heynats; Service nats/heynats
     onemind.io/repository-url: https://github.com/onemindos/heynats
+    onemind.io/documented-address: https://github.com/onemindos/heynats
 spec:
   type: website
   lifecycle: production
@@ -543,6 +593,14 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81eaa8a1ef1f956c0903
+    onemind.io/tech-stack-url: https://messages.google.com
+    onemind.io/tech-stack-notes: Primary SMS/RCS messaging on Samsung. Web app for desktop access.
+    onemind.io/supported-platforms: Android,Web
 spec:
   type: website
   lifecycle: production
@@ -572,6 +630,15 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: TAK Ecosystem
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81289a86c81a18d29511
+    onemind.io/tech-stack-url: https://github.com/dfpc-coe/CloudTAK
+    onemind.io/tech-stack-notes: Cloud-native TAK server frontend. Self-hosted at
+      onemindos.dev. Manages COT streams, data packages, and mission data.
+    onemind.io/supported-platforms: Web,K8s
 spec:
   type: website
   lifecycle: production
@@ -610,6 +677,7 @@ metadata:
   tags:
     - tak-ecosystem
     - documented-unverified
+    - tak-server
   links:
     - url: https://onetak.onemindos.dev
       title: Open application
@@ -631,6 +699,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://atoc.onemindos.dev
+    onemind.io/documented-tags: TAK Server
 spec:
   type: website
   lifecycle: production
@@ -708,6 +778,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://tak.gov
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: TAK Ecosystem
+    onemind.io/license: Free
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e812196e3c2a81067057a
+    onemind.io/tech-stack-url: https://tak.gov
+    onemind.io/tech-stack-notes: Core SA platform. ATAK (Android), WinTAK (Windows),
+      WebTAK/CloudTAK (browser), iTAK (iOS). CoT protocol. TAK Server 5.8 hardened
+      in Downloads. SDK 5.7.0.10 at root.
+    onemind.io/supported-platforms: Android,Windows,Web
 spec:
   type: website
   lifecycle: production
@@ -773,6 +854,7 @@ metadata:
   tags:
     - intelligence
     - deployment-verified
+    - monitoring
   links:
     - url: https://grafana.tail717ba0.ts.net/login
       title: Open application
@@ -807,6 +889,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://grafana.tail717ba0.ts.net
+    onemind.io/documented-tags: Monitoring
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8180ac1ff9e5a567aa29
+    onemind.io/tech-stack-url: https://grafana.com
+    onemind.io/tech-stack-notes: Visualization dashboards for Prometheus metrics,
+      Loki logs, and other data sources. Oncall alerting via Grafana Alerting.
+    onemind.io/supported-platforms: Linux,K8s,Web
 spec:
   type: website
   lifecycle: production
@@ -857,6 +950,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/nats-ui; Service nats/nats-ui
+    onemind.io/documented-address: https://nats-ui.tail717ba0.ts.net
 spec:
   type: website
   lifecycle: production
@@ -904,6 +998,15 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Database
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81208dd5ee399da9ae90
+    onemind.io/tech-stack-url: https://clickhouse.com
+    onemind.io/tech-stack-notes: Columnar OLAP database. Used as the time-machine
+      data store for OneMind intel feeds, COT history, and telemetry.
+    onemind.io/supported-platforms: Linux,K8s
 spec:
   type: website
   lifecycle: production
@@ -1028,6 +1131,15 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f7b5c8d0d1e44a6324
+    onemind.io/tech-stack-url: https://prometheus.io
+    onemind.io/tech-stack-notes: Metrics collection & alerting. Scrapes time-series
+      data from services. Core observability layer for OneMind cluster.
+    onemind.io/supported-platforms: Linux,K8s
 spec:
   type: website
   lifecycle: production
@@ -1043,6 +1155,8 @@ metadata:
   tags:
     - observability
     - deployment-verified
+    - nats
+    - monitoring
   links:
     - url: https://nats-surveyor-1.tail717ba0.ts.net
       title: Open application
@@ -1076,6 +1190,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment nats/nats-surveyor; Service nats/nats-surveyor
+    onemind.io/documented-address: https://github.com/nats-io/nats-surveyor
+    onemind.io/documented-tags: NATS, Monitoring
 spec:
   type: website
   lifecycle: production
@@ -1101,6 +1217,7 @@ metadata:
   tags:
     - geospatial
     - deployment-verified
+    - geo
   links:
     - url: https://tileserver.onemindos.dev
       title: Open application
@@ -1134,6 +1251,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/tileserver-gl; Service onetak/tileserver-gl
+    onemind.io/documented-address: https://tileserver.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
 spec:
   type: website
   lifecycle: production
@@ -1155,6 +1274,7 @@ metadata:
   tags:
     - geospatial
     - deployment-verified
+    - geo
   links:
     - url: https://valhalla.onemindos.dev
       title: Open application
@@ -1188,6 +1308,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/valhalla; Service onetak/valhalla
+    onemind.io/documented-address: https://valhalla.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
 spec:
   type: website
   lifecycle: production
@@ -1209,6 +1331,7 @@ metadata:
   tags:
     - geospatial
     - deployment-verified
+    - geo
   links:
     - url: https://maputnik.onemindos.dev
       title: Open application
@@ -1242,6 +1365,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/maputnik; Service onetak/maputnik
+    onemind.io/documented-address: https://maputnik.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
 spec:
   type: website
   lifecycle: production
@@ -1263,6 +1388,7 @@ metadata:
   tags:
     - geospatial
     - deployment-verified
+    - geo
   links:
     - url: https://webodm.onemindos.dev
       title: Open application
@@ -1295,6 +1421,8 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
     onemind.io/runtime-evidence: Deployment onetak/webodm; Service onetak/webodm
+    onemind.io/documented-address: https://webodm.tail717ba0.ts.net
+    onemind.io/documented-tags: Geo
 spec:
   type: website
   lifecycle: production
@@ -1613,6 +1741,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://1password.com
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Security
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81129acfe0e7e9ef5370
+    onemind.io/tech-stack-url: https://1password.com
+    onemind.io/tech-stack-notes: "Primary password manager. Service account token
+      configured. 4 vaults: SO, HP, LE, GE. Claude accesses via
+      OP_SERVICE_ACCOUNT_TOKEN."
+    onemind.io/supported-platforms: macOS,Windows,Android,iOS,Web
 spec:
   type: website
   lifecycle: production
@@ -1664,6 +1803,7 @@ metadata:
   tags:
     - personal-tools
     - documented-unverified
+    - external
   links:
     - url: https://app.raindrop.io/my/0
       title: Open application
@@ -1681,6 +1821,18 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://raindrop.io
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81afb3a2c089ed1a3d57
+    onemind.io/tech-stack-url: https://raindrop.io
+    onemind.io/tech-stack-notes: "Bookmark manager. Works across all
+      browsers/devices. Collection: OneMind Research & Links (ID: 74086454). 12
+      sub-collections. API token configured for Claude."
+    onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
 spec:
   type: website
   lifecycle: production
@@ -1713,6 +1865,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://att.com
 spec:
   type: website
   lifecycle: production
@@ -1736,6 +1889,7 @@ metadata:
   tags:
     - workspaces
     - documented-unverified
+    - external
   links:
     - url: https://github.com/onemindos
       title: Open application
@@ -1753,6 +1907,18 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://github.com/Zeus-Delacruz
+    onemind.io/documented-tags: External
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8112bb34c8ab069fa868
+    onemind.io/tech-stack-url: https://github.com
+    onemind.io/tech-stack-notes: "Primary source control. Repos: omos-core, omos-ui,
+      omos-infra, omos-legacy, omos-nats-plugin, omos-ai-plugin, omos-rads,
+      omos-blueprints. Connected to ClickUp + ArgoCD GitOps."
+    onemind.io/supported-platforms: Web,macOS,Windows,Linux
 spec:
   type: website
   lifecycle: production
@@ -1768,6 +1934,8 @@ metadata:
   tags:
     - workspaces
     - documented-unverified
+    - external
+    - ai-agent
   links:
     - url: https://dashboard.composio.dev/OneMind/~/connect
       title: Open application
@@ -1785,6 +1953,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://dashboard.composio.dev/omos_saas/~/connect
+    onemind.io/documented-tags: External, AI / Agent
 spec:
   type: website
   lifecycle: production
@@ -1817,6 +1987,17 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://miro.com
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e814aa7edcf0b7fe83dae
+    onemind.io/tech-stack-url: https://miro.com
+    onemind.io/tech-stack-notes: Collaborative online whiteboard. Used for system
+      architecture diagrams, planning sessions, and visual brainstorming across the
+      OneMind team.
+    onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
 spec:
   type: website
   lifecycle: production
@@ -1838,6 +2019,15 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: Business
+    onemind.io/license: Commercial
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8171803fc223edfccbb1
+    onemind.io/tech-stack-url: https://circle.so
+    onemind.io/tech-stack-notes: Community platform for OneMind/weareonemind.com.
+      Trial planned. Connected to Google Workspace + ClickUp.
+    onemind.io/supported-platforms: Web,Android,iOS
 spec:
   type: website
   lifecycle: production
@@ -1878,6 +2068,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://mercury.com
 spec:
   type: website
   lifecycle: production
@@ -1931,6 +2122,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://experian.com
 spec:
   type: website
   lifecycle: production
@@ -1963,6 +2155,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://transunion.com
 spec:
   type: website
   lifecycle: production
@@ -1995,6 +2188,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://equifax.com
 spec:
   type: website
   lifecycle: production
@@ -2027,6 +2221,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/verified-at: 2026-10-06
+    onemind.io/documented-address: https://innovis.com
 spec:
   type: website
   lifecycle: production
@@ -2695,6 +2890,15 @@ metadata:
     onemind.io/launcher-category: Drones
     onemind.io/hosting: native-application
     onemind.io/documented-purpose: Ground control station for MAVLink vehicles
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: UAS / Drone
+    onemind.io/license: Open Source
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813b9e20e1db343ddfe3
+    onemind.io/tech-stack-url: https://qgroundcontrol.com/
+    onemind.io/tech-stack-notes: MAVLink GCS for ArduPilot/PX4. MAVLink→CoT bridge
+      for ATAK. Already installed at ~/QGroundControl.
+    onemind.io/supported-platforms: macOS,Windows,Linux,Android,iOS
   links:
     - url: https://qgroundcontrol.com/
       title: Open application
@@ -3017,6 +3221,15 @@ metadata:
     onemind.io/launcher-url: https://mail.proton.me/
     onemind.io/launcher-category: Communication
     onemind.io/hosting: external-provider-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Security
+    onemind.io/license: Free + Paid
+    onemind.io/onemind-integration: "false"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81818f7cfddcce928b88
+    onemind.io/tech-stack-url: https://proton.me
+    onemind.io/tech-stack-notes: Secure vault email for sensitive accounts only —
+      Cloudflare, Apple, banking, infra. AI intentionally cannot access Proton.
+    onemind.io/supported-platforms: Web,Android,iOS
   links:
     - url: https://mail.proton.me/
       title: Open application
@@ -3204,6 +3417,14 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: macOS,Windows,Linux
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/license: Free
+    onemind.io/onemind-integration: "true"
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81cbb0f6f2b5b3a288a6
+    onemind.io/tech-stack-url: https://lmstudio.ai
+    onemind.io/tech-stack-notes: Local LLM runner with OpenAI-compatible API. Used
+      for offline model testing and edge inference without cloud dependency.
   links:
     - url: https://lmstudio.ai/
       title: Open application
@@ -3830,6 +4051,10 @@ metadata:
     onemind.io/documented-at: 2026-08-22
     onemind.io/inventory-source: notion-tech-stack/3c4d0cf70a7e81128cbafd7d6a3e4957
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Hardware
+    onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e81128cbafd7d6a3e4957
+    onemind.io/tech-stack-url: https://bambulab.com
 spec:
   type: desktop-application
   lifecycle: production
@@ -3862,6 +4087,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81fa8da9ddcd368bcacd
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Hardware
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fa8da9ddcd368bcacd
+    onemind.io/tech-stack-url: https://bambulab.com
 spec:
   type: software-platform
   lifecycle: production
@@ -3895,6 +4124,10 @@ metadata:
     onemind.io/documented-at: 2026-08-22
     onemind.io/inventory-source: notion-tech-stack/3c4d0cf70a7e816292c5d736b48fe71e
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: UAS / Drone
+    onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e816292c5d736b48fe71e
+    onemind.io/tech-stack-url: https://foxglove.dev
 spec:
   type: desktop-application
   lifecycle: production
@@ -3927,6 +4160,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8107a8bfedbdaca522e6
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8107a8bfedbdaca522e6
+    onemind.io/tech-stack-url: https://obsproject.com
 spec:
   type: desktop-application
   lifecycle: production
@@ -3959,6 +4196,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81fbb074c80989712ef4
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fbb074c80989712ef4
+    onemind.io/tech-stack-url: https://blender.org
 spec:
   type: desktop-application
   lifecycle: production
@@ -3991,6 +4232,10 @@ metadata:
     onemind.io/documented-at: 2026-08-22
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8155bd8cec47b974eb09
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8155bd8cec47b974eb09
+    onemind.io/tech-stack-url: https://madmapper.com
 spec:
   type: desktop-application
   lifecycle: production
@@ -4023,6 +4268,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81b8af60f682a17316c0
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b8af60f682a17316c0
+    onemind.io/tech-stack-url: https://derivative.ca
 spec:
   type: desktop-application
   lifecycle: production
@@ -4054,6 +4303,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81ea87d7efbe9d4510be
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81ea87d7efbe9d4510be
+    onemind.io/tech-stack-url: https://termius.com
 spec:
   type: desktop-application
   lifecycle: production
@@ -4085,6 +4338,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e813ebf6df9a7bcd81453
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813ebf6df9a7bcd81453
+    onemind.io/tech-stack-url: https://brave.com
 spec:
   type: desktop-application
   lifecycle: production
@@ -4117,6 +4374,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81e5ab51d19463c34afc
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81e5ab51d19463c34afc
+    onemind.io/tech-stack-url: https://www.google.com/chrome
 spec:
   type: desktop-application
   lifecycle: production
@@ -4148,6 +4409,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e813e935dcb0d1038486d
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813e935dcb0d1038486d
+    onemind.io/tech-stack-url: https://cloud.google.com
 spec:
   type: website
   lifecycle: production
@@ -4181,6 +4446,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81c08d9edda9345684de
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: Business
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81c08d9edda9345684de
+    onemind.io/tech-stack-url: https://riverside.fm
 spec:
   type: website
   lifecycle: experimental
@@ -4213,6 +4482,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81f58995f0e7bc6d05ea
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f58995f0e7bc6d05ea
+    onemind.io/tech-stack-url: https://notionbackups.com
 spec:
   type: website
   lifecycle: experimental
@@ -4244,6 +4517,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81db8259e26601d9f680
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81db8259e26601d9f680
+    onemind.io/tech-stack-url: https://probackup.io
 spec:
   type: website
   lifecycle: experimental
@@ -4276,6 +4553,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81a28e06df070cab8725
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81a28e06df070cab8725
+    onemind.io/tech-stack-url: https://strava.com
 spec:
   type: website
   lifecycle: production
@@ -4307,6 +4588,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e818f840bd88909d0f6a1
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e818f840bd88909d0f6a1
+    onemind.io/tech-stack-url: https://music.apple.com
 spec:
   type: website
   lifecycle: production
@@ -4338,6 +4623,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8106bd1dd6bce183659a
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8106bd1dd6bce183659a
+    onemind.io/tech-stack-url: https://langfuse.com
 spec:
   type: service
   lifecycle: production
@@ -4369,6 +4658,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8151bafaeb0323ca7438
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8151bafaeb0323ca7438
+    onemind.io/tech-stack-url: https://github.com/louislam/uptime-kuma
 spec:
   type: service
   lifecycle: production
@@ -4396,6 +4689,9 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8130b6c3eb9c22a142c1
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Messaging
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8130b6c3eb9c22a142c1
 spec:
   type: service
   lifecycle: production
@@ -4424,6 +4720,9 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8195bea2de947b3bffed
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8195bea2de947b3bffed
 spec:
   type: service
   lifecycle: experimental
@@ -4459,6 +4758,10 @@ metadata:
     onemind.io/documented-at: 2026-08-22
     onemind.io/inventory-source: notion-tech-stack/3c4d0cf70a7e819f8760da42f3dadd13
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Evaluating
+    onemind.io/tech-stack-category: AI / ML
+    onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e819f8760da42f3dadd13
+    onemind.io/tech-stack-url: https://github.com/RyanCodrai/turbovec
 spec:
   type: software-platform
   lifecycle: experimental
@@ -4492,6 +4795,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e8118a652c84455fb2a9b
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Security
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8118a652c84455fb2a9b
+    onemind.io/tech-stack-url: https://www.samsungknox.com
 spec:
   type: software-platform
   lifecycle: production
@@ -4524,6 +4831,10 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e810880b0e5134dff2558
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Hardware
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e810880b0e5134dff2558
+    onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/one-ui
 spec:
   type: software-platform
   lifecycle: production
@@ -4556,8 +4867,125 @@ metadata:
     onemind.io/documented-at: 2026-08-20
     onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e817ea374f0efe714c835
     onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Hardware
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817ea374f0efe714c835
+    onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/dex
 spec:
   type: software-platform
   lifecycle: production
   owner: group:default/onemind-admins
   system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: notion
+  title: Notion
+  description: "Primary knowledge base. 4 databases: GE, SO, LE, HP. Integrated
+    via direct API (ntn_ token). Never use Composio for Notion."
+  tags:
+    - productivity
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://notion.so
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: Productivity
+    onemind.io/license: Free + Paid
+    onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e816fa7d6ca5062cdfbf5
+    onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: Productivity
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e816fa7d6ca5062cdfbf5
+    onemind.io/tech-stack-url: https://notion.so
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: workspaces
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: home-assistant
+  title: Home Assistant
+  description: Open-source home automation platform. Manages smart devices,
+    sensors, and automations. Runs on local K8s or dedicated node.
+  tags:
+    - devops-infra
+    - tech-stack
+    - edge-device
+    - documented-unverified
+  links:
+    - url: https://omos-ha-edge.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
+      title: "Archived registry: Home Assistant"
+  annotations:
+    onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 🤖 IoT / Automation
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: Linux,K8s,Web
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-09-03 07:00:56Z
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e817bad15ec3a6490dc6c
+    onemind.io/verification: documented-unverified
+    onemind.io/documented-purpose: IoT/automation bridge — HA↔NATS connector
+    onemind.io/documented-host: 🏠 On-Prem
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://omos-ha-edge.tail717ba0.ts.net
+    onemind.io/documented-tags: Edge Device
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817bad15ec3a6490dc6c
+    onemind.io/tech-stack-url: https://home-assistant.io
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: infrastructure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: loki
+  title: Loki
+  description: Log aggregation system by Grafana Labs. Pairs with Grafana for log
+    querying via LogQL. Lightweight alternative to ELK.
+  tags:
+    - devops-infra
+    - tech-stack
+    - documented-unverified
+  links:
+    - url: https://grafana.com/oss/loki
+      title: Open application
+      icon: dashboard
+  annotations:
+    onemind.io/hosting: external-provider-unverified
+    onemind.io/documented-status: Active
+    onemind.io/documented-category: DevOps / Infra
+    onemind.io/license: Open Source
+    onemind.io/supported-platforms: Linux,K8s
+    onemind.io/onemind-integration: "true"
+    onemind.io/documented-at: 2026-08-20
+    onemind.io/inventory-source: notion-tech-stack/3c2d0cf70a7e81b88b31c856790cfe10
+    onemind.io/verification: documented-unverified
+    onemind.io/tech-stack-status: Active
+    onemind.io/tech-stack-category: DevOps / Infra
+    onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b88b31c856790cfe10
+    onemind.io/tech-stack-url: https://grafana.com/oss/loki
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: observability
