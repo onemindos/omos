@@ -16,7 +16,7 @@ Hermes supports multiple profiles — separate personas with their own skills, m
 On Zeus's Mac (`~/.hermes/`):
 | Profile | Path | Purpose | Active |
 |---------|------|---------|--------|
-| `default` | `~/.hermes/` | Legacy-Edge (Daughter) | ✅ |
+| `default` | `~/.hermes/` | Legacy-Edge | ✅ |
 
 ## Profile Anatomy
 
