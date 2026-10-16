@@ -20,7 +20,6 @@
     "**/third-party/**",
     "legacy/**",
     "references/**",
-    "rads/**",
     "platform/future/**",
     ".obsidian/**",
     "vault/**"
