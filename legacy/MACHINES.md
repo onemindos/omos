@@ -87,7 +87,7 @@ kubectl get pods -A
 | ADB | Via Pod→Tailscale→SSH tunnel (localhost:15555→phone:5555) |
 | Apps | ATAK, HelmCam, Tailscale, TAK-ML, CloudTAK |
 | Video | TAKCam+HelmCam→ATAK→RTSP→MediaMTX (10.108.44.200:8554) |
-| TAK cert | Zeus-S24.p12 (pw=atakatak) |
+| TAK cert | Zeus-S24.p12 (password not recorded here) |
 | Role | Primary tactical edge device, PTT, situational awareness |
 | ADB key | Mac's key |
 
@@ -104,7 +104,7 @@ kubectl get pods -A
 |----------|-------|
 | Hardware | HA Yellow (CM4-based) |
 | OS | HA OS |
-| LAN IP | 192.168.1.180 |
+| LAN IP | <omos-ha LAN IP> |
 | Tailscale | 100.64.25.12 |
 | Zigbee | Built-in coordinator |
 | NATS leaf | /data/nats-leaf.conf → cluster:7422 |
@@ -117,7 +117,7 @@ kubectl get pods -A
 | Region | NYC3 |
 | Size | s-4vcpu-8gb |
 | OS | Debian 13 |
-| Public IP | 159.203.98.158 |
+| Public IP | <omos-intel public IP> |
 | Tailscale | 100.114.216.80 |
 | SSH | ssh -i ~/.ssh/id_ed25519 root@omos-intel |
 | Running | ShadowBroker, WorldMonitor, Osiris, WorldWideView, Crucix (12 containers) |
