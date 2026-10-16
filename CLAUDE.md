@@ -42,7 +42,7 @@ infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separat
 services/ apps/ schemas/ edge/ docs/ scripts/            code, contracts, edge config, docs, CI helpers
 ```
 
-Not active or not deployed: `legacy/`, `references/`, and `plugins/`. Do not edit them unless asked.
+Not active or not deployed: `references/`. Do not edit it unless asked. (`plugins/onemind-vision` is live: it is the source of a plugin installed by hand in the Hermes pod.) The Hermes agent's souls, registry, doctrine and runbook are in `platform/hermes/agent/`.
 
 ## The Deployment Pattern
 

@@ -162,7 +162,7 @@ remove them in the home overlay.
 | `platform/install.sh` | legacy Helm-CLI bootstrap; header lists doctl | replace by REBUILD-FROM-ZERO |
 | `scripts/manage_ecosystem_workers.py` | resizes the DO node pool via Terraform | DO-only; retire after migration |
 | `platform/matrix/deploy-matrix.sh` | DNS check | move to Cloudflare |
-| `tak-server/DEPLOY-RUNBOOK.md`, `legacy/*` | DOCR login (historical) | ignore |
+| `tak-server/DEPLOY-RUNBOOK.md` | DOCR login (historical) | ignore |
 | `platform/backups/OFFSITE-COPY.md` | `doctl spaces keys` | use the new provider's tool |
 | In-cluster Jobs | none | none |
 
