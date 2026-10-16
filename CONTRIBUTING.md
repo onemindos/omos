@@ -13,7 +13,7 @@ This repository contains both application source and production GitOps configura
 
 - `infra/`: Terraform for the DigitalOcean foundation.
 - `platform/`: Kubernetes resources and Argo CD deployment configuration.
-- `services/`, `apps/`, `plugins/`, `tak-server/`: runtime and application source.
+- `services/`, `apps/`, `tak-server/`: runtime and application source.
 - `schemas/`: versioned event contracts and generated code.
 - `docs/`: architecture, operating procedures, and infrastructure guides.
 
