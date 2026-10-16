@@ -1,7 +1,22 @@
 # Hermes recoverability plan
 
-**Status:** decisions made (D1 to D8, section 4). Ready to execute step by step. Nothing in this plan has been executed yet.
+**Status (2026-10-16):** decisions made (D1 to D8, section 4). Step 0, Step 1 and most of Steps 2 and 3 are done; see the progress table below. The export is blocked on rotating the credentials found in the live config and skills.
 **Written:** 2026-10-16. Live state below was read from the cluster (`do-nyc3-omos-cloud`) and from Zeus's Mac on 2026-10-15/16, read-only.
+## Progress
+
+| Step | State |
+|------|-------|
+| 0 Rescue and scrub | Done (#206) |
+| 1 Consolidate into `platform/hermes/agent/`, archive `legacy/` | Done (#207 to #210) |
+| 2a Export: script, tests, manual workflow, read-only role, dedicated runner | Built and merged (#211, #212, #213). The runner is online (repo-scoped, label `onemind-hermes-readonly`). The workflow stays off and the first run would refuse until the credentials are rotated |
+| 2b Seeding | Script and tests merged (#214), deliberately not wired into the Deployment yet (see `platform/hermes/seed/README.md`) |
+| 2c OpenClaw capture | Not started |
+| 2d Mac jobs (weekly memory copy, edge identity) | Not started |
+| 3 Restore drill | Done: application-level restore passed on 2026-10-16 (`hermes-restore-drill-2026-10-16.md`) |
+| 3 Apply the edited soul and the memory correction to the live agent | Done 2026-10-16. `SOUL.md` on the volume now equals `agents/legacy/SOUL.md`; the stale repository entry in `MEMORY.md` was replaced. Safety copies of both old files are on the volume (`*.pre-edit-20261016`) |
+
+Still open: the credential rotation and cleanup (Todoist), removing the WordPress password from memory, the `op` CLI not being on Hermes' PATH, and the dead 929 MiB `state_compact.db` (needs Zeus's go-ahead to remove).
+
 **Goal:** make Hermes' soul, skills, configuration and memory recoverable. If the pod, the volume or the cluster is lost, Hermes (and the agents that run beside it) can be brought back to the state they were in, from Git plus backups, without relying on anyone's memory.
 
 This plan also decides what happens to the `legacy/` directory, which was the first attempt at the same goal.
@@ -31,7 +46,7 @@ Hermes runs as `hermes-legacy` in namespace `hermes` on the stock `nousresearch/
 VolSync `ReplicationSource volume-c96e219d2314` backs up `hermes-data` with restic every night at 01:00 (retain 7 daily, 4 weekly, 3 monthly, 1 yearly; CSI snapshot copy method). This works for disaster recovery. Its limits:
 
 - Restore is all-or-nothing, and about 15 GiB of the volume is clutter.
-- A **file-level restore drill has been done**: `platform/backups/volsync/README.md` records that on 2026-10-08 Hermes was restored to a new PVC (319,496 files, matching reference-binary checksum) and the disposable resources removed. What has not been done is an application-level check: booting Hermes from a restored copy and confirming it loads its soul, skills and databases. (An earlier draft of this plan said no restore test existed; that was wrong.)
+- A **file-level restore drill has been done**: `platform/backups/volsync/README.md` records that on 2026-10-08 Hermes was restored to a new PVC (319,496 files, matching reference-binary checksum) and the disposable resources removed. The application-level check (booting Hermes from a restored copy and confirming it loads its soul, skills and databases) was done on 2026-10-16 and passed: `hermes-restore-drill-2026-10-16.md`. (An earlier draft of this plan said no restore test existed; that was wrong.)
 
 ### 1.3 Why Git cannot rebuild Hermes today
 
