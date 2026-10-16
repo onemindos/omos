@@ -100,7 +100,7 @@ These were operating rules kept in Legacy's memory. They belong with her behavio
 | Situation | What to do |
 |-----------|------------|
 | Pod crashed or restarted | Nothing: `hermes-data` persists. Check section 1; if the leaf sidecar is down, restart the pod |
-| The volume is lost or corrupted | Restore the latest VolSync snapshot of `hermes-data` into a new PVC, verify it, then point the Deployment at it. See `platform/backups/volsync/README.md`. A file-level restore of Hermes was verified on 2026-10-08 (319,496 files, matching checksum). An application-level boot of a restored copy has not been drilled yet |
+| The volume is lost or corrupted | Restore the latest VolSync snapshot of `hermes-data` into a new PVC, verify it, then point the Deployment at it. See `platform/backups/volsync/README.md`. Restores were verified twice: files on 2026-10-08 (319,496 files, matching checksum) and application level on 2026-10-16 (a copy of Hermes booted against the restored volume with the network cut: config loads, soul, cron and skills match live, `state.db` passes `quick_check`). See `docs/operations/hermes-restore-drill-2026-10-16.md` |
 | The cluster is lost | Rebuild the cluster from `infra/`, let Argo CD sync `platform/`, then restore the volume as above |
 | Rebuild identity from Git alone | **Not available yet.** The soul, skills and config are not exported to Git today. This is Step 2 of the recoverability plan |
 | Re-authenticating after a restore | Log `gh` in again with a narrow token, confirm the SSH keys under `/opt/data/home/.ssh/`, and check the leaf connection (section 3) |
