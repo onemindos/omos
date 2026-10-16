@@ -1,0 +1,130 @@
+# Dedicated runner for the Hermes identity export (.github/workflows/hermes-identity-export.yml).
+#
+# Separate from the build runner on purpose. This one can read the Hermes pod (platform/core/hermes-identity-export-rbac.yaml),
+# so it is:
+#   - registered to the omos repository only (RUNNER_SCOPE=repo), so no other repository in the org can target it;
+#   - ephemeral: it takes one job, deregisters and restarts clean;
+#   - given no Docker daemon, and a network policy that allows only DNS, public HTTPS and the Kubernetes API.
+# The label onemind-hermes-readonly is used by no other workflow. kubectl is downloaded by the workflow itself
+# (pinned and checksum-verified), so this pod needs no custom image.
+#
+# The registration credential is the existing out-of-band secret github-runner-secret (key ACCESS_TOKEN),
+# which must be allowed to register runners for the repository. If the pod cannot register, check its logs.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-runner-hermes
+  namespace: github-runner
+  labels:
+    app: github-runner-hermes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-runner-hermes
+  template:
+    metadata:
+      labels:
+        app: github-runner-hermes
+    spec:
+      serviceAccountName: hermes-identity-export
+      automountServiceAccountToken: true
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: runner
+          image: docker.io/myoung34/github-runner@sha256:dcacf6645a732142f5eb817df7f87bde7cc5df2238595b78f5e1e5f6731e25f3
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-runner-secret
+                  key: ACCESS_TOKEN
+            - name: RUNNER_SCOPE
+              value: repo
+            - name: REPO_URL
+              value: https://github.com/onemindos/omos
+            - name: LABELS
+              value: self-hosted,linux,amd64,onemind-hermes-readonly
+            - name: EPHEMERAL
+              value: "true"
+            - name: RUNNER_WORKDIR
+              value: /tmp/runner/work
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 768Mi
+          volumeMounts:
+            - name: work
+              mountPath: /tmp/runner/work
+      volumes:
+        - name: work
+          emptyDir: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hermes-runner-network
+  namespace: github-runner
+spec:
+  podSelector:
+    matchLabels:
+      app: github-runner-hermes
+  policyTypes: [Ingress, Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - {protocol: UDP, port: 53}
+        - {protocol: TCP, port: 53}
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 169.254.0.0/16
+              - 127.0.0.0/8
+      ports:
+        - {protocol: TCP, port: 443}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hermes-runner-api
+  namespace: github-runner
+spec:
+  endpointSelector:
+    matchLabels:
+      app: github-runner-hermes
+  egress:
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
