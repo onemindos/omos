@@ -31,7 +31,7 @@ Hermes runs as `hermes-legacy` in namespace `hermes` on the stock `nousresearch/
 VolSync `ReplicationSource volume-c96e219d2314` backs up `hermes-data` with restic every night at 01:00 (retain 7 daily, 4 weekly, 3 monthly, 1 yearly; CSI snapshot copy method). This works for disaster recovery. Its limits:
 
 - Restore is all-or-nothing, and about 15 GiB of the volume is clutter.
-- No Hermes restore test is recorded in `docs/operations/`.
+- A **file-level restore drill has been done**: `platform/backups/volsync/README.md` records that on 2026-10-08 Hermes was restored to a new PVC (319,496 files, matching reference-binary checksum) and the disposable resources removed. What has not been done is an application-level check: booting Hermes from a restored copy and confirming it loads its soul, skills and databases. (An earlier draft of this plan said no restore test existed; that was wrong.)
 
 ### 1.3 Why Git cannot rebuild Hermes today
 
@@ -79,6 +79,7 @@ The repo is private, has one collaborator and no forks. Gitleaks did not flag th
 - **The default TAK client-certificate password**, in `SERVICES.md` and `MACHINES.md`. It is committed in **21 files across the repo** (TAK portal code, `tak-server/**`, the onetak and takml manifests, and others) and in Hermes' live `MEMORY.md`. Tracked as a separate task (section 5).
 - **A truncated Notion token** in `INTEGRATION.md`. Only the first and last few characters are shown, so it cannot be used to authenticate.
 - A droplet public IP, the home Home Assistant LAN address, the TAK load-balancer IP, SSH usernames and key paths, and the location of the Home Assistant token file.
+- **Hermes' live `memories/MEMORY.md` contains a plaintext WordPress application password** (for the retired `zeusdelacruz.com` WordPress droplet). Memory is loaded into the model prompt every session, so it has been sent to the model provider, and it is on the volume and in the backups. The value is not recorded here. Tracked as a separate task: revoke it, then remove the entry (a live change, done with a fresh backup). The earlier memory scan missed it because the pattern was `app_pass=...`.
 - Separately, **the Hermes pod holds a GitHub OAuth token for `Zeus-Delacruz`** whose scopes include `repo`, `workflow`, `write:packages`, `delete_repo`, `admin:org`, `admin:gpg_key` and `admin:ssh_signing_key`. It is on the backed-up volume. Tracked as a separate task (section 5).
 
 ---
@@ -178,7 +179,7 @@ Each step is its own PR (or small set of PRs), reviewed before the next begins. 
 
 ### Step 3: Prove it, and apply the soul change
 
-1. Restore the latest VolSync snapshot into a **scratch namespace** (never over the live volume). Check `SOUL.md`, `config.yaml`, skills, memory files, and `PRAGMA integrity_check` on both databases.
+1. Restore the latest VolSync snapshot into a **scratch namespace** (never over the live volume). Check `SOUL.md`, `config.yaml`, skills, memory files, and `PRAGMA integrity_check` on both databases. A file-level restore was already verified on 2026-10-08 (see 1.2); this step adds the application-level check.
 2. Boot a second Hermes against the restored volume with the NATS platform disabled, so it cannot collide with the live agent's bus identity. Confirm it loads the soul and skills.
 3. Repeat the seed path from an empty volume and compare with the live agent.
 4. Record the result in `docs/operations/` and in `docs/STACK.md`. Re-run quarterly.
@@ -216,6 +217,7 @@ Open item: a rule to tell custom skills from the bundled upstream ones, so the e
 
 - Replace the default TAK cert password in all 21 files and in the TAK server (Todoist: "Replace default TAK cert passwords across omos repo and TAK server").
 - Replace the over-privileged GitHub token on the Hermes pod with a narrow one (Todoist: "Replace the over-privileged GitHub token on the Hermes pod with a narrow one").
+- Revoke the WordPress application password in Hermes' memory, then remove that memory entry (Todoist: "Revoke the WordPress app password stored in plaintext in Hermes' memory, then remove that memory entry").
 - Forge: decide whether it is a planned agent or is dropped. Its profile is empty today.
 
 ## 6. Not verified
