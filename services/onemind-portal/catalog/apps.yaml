@@ -2360,7 +2360,7 @@ metadata:
   annotations:
     backstage.io/adr-location: https://github.com/onemindos/omos/tree/main/docs/architecture/decisions
     github.com/project-slug: onemindos/omos
-    backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/apps/onemind-portal/runbooks
+    backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/services/onemind-portal/runbooks
   tags:
     - runbooks
     - documentation

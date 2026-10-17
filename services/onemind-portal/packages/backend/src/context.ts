@@ -22,7 +22,7 @@ export default createBackendModule({
         schema: { input: z => z.object({ name: z.enum(['index', 'backstage', 'identity', 'nats', 'tak', 'monitoring', 'resilience', 'ai', 'cloud', 'workflows', 'inventory-refresh', 'assistant', 'offline']) }), output: z => z.object({ source: z.string(), freshness: z.string(), content: z.string() }) },
         async action({ input }) {
           if (!runbooks.includes(input.name)) throw new Error('Unknown runbook');
-          return { output: { source: `Git: apps/onemind-portal/runbooks/docs/${input.name}.md`, freshness: 'Documentation packaged in the deployed image; not live state', content: readFileSync(`/app/runbooks/docs/${input.name}.md`, 'utf8') } };
+          return { output: { source: `Git: services/onemind-portal/runbooks/docs/${input.name}.md`, freshness: 'Documentation packaged in the deployed image; not live state', content: readFileSync(`/app/runbooks/docs/${input.name}.md`, 'utf8') } };
         },
       });
     } });

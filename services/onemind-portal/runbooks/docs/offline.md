@@ -20,7 +20,7 @@ From a trusted local repository checkout, using Node:
 node scripts/offline-pack.cjs --output /YOUR_PRIVATE_FOLDER/onemind-offline.html
 ```
 
-Run from `apps/onemind-portal`. Output is explicitly selected, created with mode 0600
+Run from `services/onemind-portal`. Output is explicitly selected, created with mode 0600
 and never overwritten. The CLI refuses the application's public asset folder. The
 snapshot is from that checkout, which may differ from the deployed image. Keep and
 replace copies deliberately; don't synchronize them to public shared storage.

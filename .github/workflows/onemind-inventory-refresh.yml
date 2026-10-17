@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install locked portal dependencies
-        working-directory: apps/onemind-portal
+        working-directory: services/onemind-portal
         run: corepack yarn install --immutable
       - name: Load previous review counters
         run: git fetch origin automation/onemind-inventory-review || true
@@ -33,7 +33,7 @@ jobs:
             echo 'Configure the dedicated read-only repository discovery credential first.'
             exit 1
           fi
-          node apps/onemind-portal/scripts/refresh-inventory.cjs
+          node services/onemind-portal/scripts/refresh-inventory.cjs
       - name: Open or update review proposal
         uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         with:
@@ -45,5 +45,5 @@ jobs:
             Missing identities remain in the catalog for review; three complete missing observations flag retirement review.
             Observation timestamps describe discovery, not live health. Review before merging; this workflow never auto-merges.
           add-paths: |
-            apps/onemind-portal/catalog/
+            services/onemind-portal/catalog/
             platform/backstage/catalog/

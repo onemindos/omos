@@ -2,7 +2,7 @@
 
 ## Access and dependencies
 
-Open `https://onemind-preview.tail717ba0.ts.net/`. Backstage runs in namespace `backstage`, deployment `backstage`, with PostgreSQL in `backstage-postgres-0`. Private routing comes from Tailscale; login comes from Authentik. Source and image digest are in `apps/onemind-portal/` and `platform/backstage/`.
+Open `https://onemind-preview.tail717ba0.ts.net/`. Backstage runs in namespace `backstage`, deployment `backstage`, with PostgreSQL in `backstage-postgres-0`. Private routing comes from Tailscale; login comes from Authentik. Source and image digest are in `services/onemind-portal/` and `platform/backstage/`.
 
 ## Investigate
 

@@ -4,6 +4,7 @@ ignore: |
   tak-server/chart/templates/**
   tak-server/chart/third-party/**/templates/**
   platform/ecosystem/charts/**/templates/**
+  services/onemind-portal/templates/*/skeleton/**
 
 rules:
   line-length:

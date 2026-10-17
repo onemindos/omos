@@ -22,5 +22,5 @@ private backup contents, or temporary signed URLs to this directory.
 - [ ] Add the matching card to packages/app/src/modules/home/directory.json.
 - [ ] Build and promote the portal image using the release runbook.
 
-Paths above are relative to apps/onemind-portal; production catalog is also
+Paths above are relative to services/onemind-portal; production catalog is also
 platform/backstage/catalog/apps.yaml. This descriptor is not registered automatically.

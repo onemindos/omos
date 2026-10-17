@@ -13,7 +13,7 @@ try {
   cp.execFileSync(process.execPath, ['scripts/enrich-inventory.cjs'], { stdio: 'inherit', timeout: 180000 });
   const previous = documents(original.get('catalog/cluster.yaml'));
   let priorProposal = [];
-  try { priorProposal = documents(cp.execFileSync('git', ['show', 'origin/automation/onemind-inventory-review:apps/onemind-portal/catalog/cluster.yaml'], { maxBuffer: 20 * 1024 * 1024 })); } catch {}
+  try { priorProposal = documents(cp.execFileSync('git', ['show', 'origin/automation/onemind-inventory-review:services/onemind-portal/catalog/cluster.yaml'], { maxBuffer: 20 * 1024 * 1024 })); } catch {}
   const priorByIdentity = new Map(priorProposal.map(entity => [identity(entity), entity]));
   const previousIdentities = new Set(previous.map(identity));
   for (const entity of priorProposal) if (!previousIdentities.has(identity(entity)) && ['kubernetes', 'tailscale'].includes(entity.metadata.annotations?.['onemind.io/inventory-source'])) previous.push(entity);

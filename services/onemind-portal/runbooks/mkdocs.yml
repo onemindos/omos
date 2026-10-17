@@ -1,7 +1,7 @@
 site_name: OneMind Operations Runbooks
 site_description: Access, investigation, backup and recovery procedures for OneMind
 repo_url: https://github.com/onemindos/omos
-edit_uri: edit/main/apps/onemind-portal/runbooks/docs/
+edit_uri: edit/main/services/onemind-portal/runbooks/docs/
 plugins:
   - techdocs-core
 theme:
