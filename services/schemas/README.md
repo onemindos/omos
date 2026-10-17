@@ -43,6 +43,6 @@ Generated output lives in `codegen/out/` — do not hand-edit, regenerate instea
 ## Adding a new event type
 
 1. Add a JSON Schema to `envelope/` (or a new subfolder per domain)
-2. Run codegen: `python3 schemas/codegen/gen_dart.py && python3 schemas/codegen/gen_python.py`
+2. Run codegen: `python3 services/schemas/codegen/gen_dart.py && python3 services/schemas/codegen/gen_python.py`
 3. Commit both the schema and the generated output
 4. Update `docs/NATS-DOCTRINE.md §subject-grammar` if a new subject prefix is introduced

@@ -161,12 +161,12 @@ links back to the task event that triggered this agent session.
 
 ## Schema File
 
-The JSON Schema (draft 2020-12) lives at `schemas/envelope/envelope.schema.json`.
+The JSON Schema (draft 2020-12) lives at `services/schemas/envelope/envelope.schema.json`.
 The live copy is seeded into the NATS KV registry: `nats kv get om-schema envelope.v1`.
 
 ## Codegen
 
-Typed models are generated from the schema. See `schemas/codegen/README.md` for instructions.
+Typed models are generated from the schema. See `services/schemas/codegen/README.md` for instructions.
 
-- **Dart** → `schemas/codegen/out/envelope.dart` (consumed by `onemindos-command/contract/`)
-- **Python** → `schemas/codegen/out/envelope.py` (consumed by core services)
+- **Dart** → `services/schemas/codegen/out/envelope.dart` (consumed by `onemindos-command/contract/`)
+- **Python** → `services/schemas/codegen/out/envelope.py` (consumed by core services)
