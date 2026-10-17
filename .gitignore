@@ -33,7 +33,7 @@ tak-server/certs/files/
 tak-server/b2-enrollment/
 tak-server/.tapvenv/
 tak-server/local-retirement-backup/
-tak-server/build-root/
+services/takserver/build-root/
 *.key
 *.jks
 *.p12

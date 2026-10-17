@@ -110,7 +110,7 @@ kubectl --context do-nyc3-omos-cloud get nodes
 
 TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `tak-server/chart` with `tak-server/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `tak-server/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `tak-server/fedhub`. Both fedhub and tak-ldap are running. The LB `tak-external` exposes 8089, 8443, 8446, 9101, 9102 and 64738 to the internet.
 
-The NatsBridgePlugin (`tak-server/plugin-src/`, JAR in `tak-server/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
+The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
 
 ## CI (`.github/workflows/quality.yml`)
 

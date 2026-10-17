@@ -16,7 +16,7 @@ registry pull). This gives us a self-owned, air-gappable image supply chain for 
 | TAK distro (5.7-RELEASE-43) | `/Users/zeus/ATAK/server/standard/takserver-docker-5.7-RELEASE-43/tak/` |
 | Cluster blueprint (upstream) | `/Users/zeus/omos-infra/tak-server/` |
 | Helm chart | `.../chart/` |
-| Dockerfiles | `.../docker/` |
+| Dockerfiles | `services/takserver/docker/` (moved 2026-10-17) |
 | Build context (staged) | `/Users/zeus/omos-infra/tak-server/<distro-root>/` |
 | Canonical build script (reference) | `.../upstream/scripts/build-generic.py` (lines 715–847) |
 | Generated deploy files | `/Users/zeus/omos-infra/tak-server/deploy/` (CoreConfig.xml, TAKIgniteConfig.xml) |
@@ -46,7 +46,7 @@ cp "$TAK/db-utils/generic-cluster-database-configuration.sh" <distro-root>/takse
 mkdir -p <distro-root>/takserver-core/certs && cp -R "$TAK/certs/." <distro-root>/takserver-core/certs/
 ```
 
-**Build all** (from `/Users/zeus/omos-infra/tak-cluster`):
+**Build all** (from `/Users/zeus/omos/services/takserver`; the CI build is `.github/workflows/build-takserver.yml`):
 ```bash
 docker build -f docker/Dockerfile.takserver-base      -t takserver-base:5.8-onemind          <distro-root>
 docker build -f docker/Dockerfile.takserver-config    -t takserver-config:5.8-onemind        <distro-root>

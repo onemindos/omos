@@ -17,8 +17,8 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-fedhub-ldap.yml"
-      - "tak-server/build/build-fedhub.sh"
-      - "tak-server/build/build-tak-ldap.sh"
+      - "services/takserver/build/build-fedhub.sh"
+      - "services/takserver/build/build-tak-ldap.sh"
   workflow_dispatch:
 
 jobs:
