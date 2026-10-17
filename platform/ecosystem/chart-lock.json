@@ -109,26 +109,6 @@
     "namespace": "onemind-ai"
   },
   {
-    "name": "kagent-crds",
-    "repo": "oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds",
-    "chart": "kagent-crds",
-    "version": "0.10.3",
-    "appVersion": null,
-    "oci": true,
-    "chartLayerDigest": "sha256:a591305cf6788e7e3965c7f697e684fb6564822e0352016db4bee295d881ebf5",
-    "namespace": "kagent"
-  },
-  {
-    "name": "kagent",
-    "repo": "oci://ghcr.io/kagent-dev/kagent/helm/kagent",
-    "chart": "kagent",
-    "version": "0.10.3",
-    "appVersion": null,
-    "oci": true,
-    "chartLayerDigest": "sha256:d8e7f41b27920e92e1929fb7502dae3cda9a2c450abe9db6488f04fe4118e744",
-    "namespace": "kagent"
-  },
-  {
     "name": "livekit",
     "repo": "https://helm.livekit.io",
     "chart": "livekit-server",

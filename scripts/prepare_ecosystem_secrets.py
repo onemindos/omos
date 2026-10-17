@@ -13,7 +13,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "platform/ecosystem/resources/secrets"
 NAMESPACES = ["onemind-data", "onemind-core", "onemind-ai", "onemind-media",
-              "onemind-search", "onemind-registry", "onemind-jobs", "kagent", "velero"]
+              "onemind-search", "onemind-registry", "onemind-jobs", "velero"]
 
 
 def existing(namespace, name):
@@ -49,10 +49,10 @@ def main():
         pending.append((OUTPUT / (ns + "--" + name + ".json"), sealed))
 
     roles = {n: secrets.token_urlsafe(40) for n in
-             ["onemind", "dapr_workflows", "litellm", "openfga", "langfuse", "kagent"]}
+             ["onemind", "dapr_workflows", "litellm", "openfga", "langfuse"]}
     app_namespaces = {"onemind": "onemind-core", "dapr_workflows": "onemind-core",
                       "litellm": "onemind-ai", "openfga": "onemind-core",
-                      "langfuse": "onemind-ai", "kagent": "kagent"}
+                      "langfuse": "onemind-ai"}
     uris = {}
     for role, password in roles.items():
         pair = {"username": role, "password": password}
@@ -63,7 +63,7 @@ def main():
         add(app_namespaces[role], role.replace("_", "-") + "-db", {**pair, "uri": uri})
 
     master = "sk-" + secrets.token_urlsafe(40)
-    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core", "kagent", "openchoreo"]}
+    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core", "openchoreo"]}
     add("onemind-ai", "litellm-auth", {"master-key": master})
     add("onemind-ai", "litellm-client-keys", clients)
     provider = existing("openclaw", "openclaw-secrets")
@@ -82,7 +82,6 @@ def main():
         "NATS_USER": nats["user"], "NATS_PASSWORD": nats["password"],
     })
     add("backstage", "onemind-core-gateway", {"ONEMIND_CORE_GATEWAY_KEY": gateway})
-    add("kagent", "kagent-model", {"api-key": clients["kagent"], "OPENAI_API_KEY": clients["kagent"]})
     add("onemind-core", "openfga-auth", {"keys": secrets.token_urlsafe(48)})
     add("onemind-search", "opensearch-auth", {"password": "Om1!" + secrets.token_urlsafe(40)})
     add("onemind-registry", "harbor-admin", {"password": secrets.token_urlsafe(40)})

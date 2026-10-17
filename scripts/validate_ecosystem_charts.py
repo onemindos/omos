@@ -30,13 +30,6 @@ def main():
         subprocess.run(["helm", "lint", str(core)], check=True)
         subprocess.run(["helm", "template", "onemind-core", str(core), "--namespace", "onemind-core"],
                        check=True, stdout=subprocess.DEVNULL)
-    sandbox = ROOT / "platform/ecosystem/charts/agent-sandbox"
-    if sandbox.exists():
-        values = ROOT / "platform/ecosystem/values/agent-sandbox.yaml"
-        subprocess.run(["helm", "lint", str(sandbox), "-f", str(values)], check=True)
-        subprocess.run(["helm", "template", "agent-sandbox", str(sandbox),
-                        "--namespace", "agent-sandbox-system", "--include-crds", "-f", str(values)],
-                       check=True, stdout=subprocess.DEVNULL)
 
 
 if __name__ == "__main__":
