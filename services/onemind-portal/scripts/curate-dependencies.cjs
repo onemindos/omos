@@ -8,7 +8,7 @@ portal.spec.dependsOn = [...new Set([...(portal.spec.dependsOn || []), `componen
 portal.metadata.annotations['argocd/app-name'] = 'platform-backstage';
 portal.metadata.annotations['argocd/instance-name'] = 'onemind-cloud';
 portal.metadata.annotations['github.com/project-slug'] = 'onemindos/omos';
-portal.metadata.annotations['onemind.io/relationship-source'] = 'apps/onemind-portal/app-config.production.yaml backend.database.connection.host; platform/backstage/postgres.yaml';
+portal.metadata.annotations['onemind.io/relationship-source'] = 'services/onemind-portal/app-config.production.yaml backend.database.connection.host; platform/backstage/postgres.yaml';
 portal.metadata.links = [...(portal.metadata.links || []).filter(l => l.type !== 'runbook'), {title:'Portal recovery runbook',type:'runbook',url:'https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/'}];
 database.metadata.links = [...(database.metadata.links || []).filter(l => l.type !== 'runbook'), {title:'Database recovery runbook',type:'runbook',url:'https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/'}];
 const rendered = docs.map(e => YAML.stringify(e)).join('---\n');

@@ -462,7 +462,7 @@ metadata:
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
-    onemind.io/relationship-source: apps/onemind-portal/app-config.production.yaml
+    onemind.io/relationship-source: services/onemind-portal/app-config.production.yaml
       backend.database.connection.host; platform/backstage/postgres.yaml
   tags:
     - kubernetes

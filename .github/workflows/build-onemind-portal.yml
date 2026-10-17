@@ -3,7 +3,7 @@ on:
   push:
     branches: [main, 'feat/onemind-backstage', 'codex/onemind-portal-missions']
     paths:
-      - apps/onemind-portal/**
+      - services/onemind-portal/**
       - .github/workflows/build-onemind-portal.yml
   workflow_dispatch:
 permissions:
@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 40
     defaults:
       run:
-        working-directory: apps/onemind-portal
+        working-directory: services/onemind-portal
     env:
       NODE_OPTIONS: --max-old-space-size=4096
       AUTH_SESSION_SECRET: build-only-not-a-runtime-secret
@@ -48,8 +48,8 @@ jobs:
       - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         id: image
         with:
-          context: apps/onemind-portal
-          file: apps/onemind-portal/packages/backend/Dockerfile
+          context: services/onemind-portal
+          file: services/onemind-portal/packages/backend/Dockerfile
           push: true
           tags: ghcr.io/onemindos/onemind-portal:sha-${{ github.sha }}
           platforms: linux/amd64
@@ -60,4 +60,4 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: onemind-portal-image
-          path: apps/onemind-portal/image-digest.txt
+          path: services/onemind-portal/image-digest.txt

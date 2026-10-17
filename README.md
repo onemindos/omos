@@ -18,8 +18,7 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | `infra/` | Terraform for the DigitalOcean foundation, including the VPC and DOKS cluster |
 | `platform/` | Kubernetes resources, Helm values, and Argo CD applications for cluster workloads |
 | `tak-server/` | TAK Server chart, image build files, plugins, deployment overlays, and edge tools |
-| `services/` | OneMind runtime services, bridges, and supporting scripts |
-| `apps/` | Application code, including the TAK portal |
+| `services/` | First-party source code built into images (portals, OneMind runtime services, bridges) and supporting scripts |
 | `edge/` | Hardware-bound and Mac edge configuration |
 | `schemas/` | Versioned event contracts and code generators |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
