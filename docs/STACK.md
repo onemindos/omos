@@ -3,7 +3,7 @@
 Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), what owns it, what state it holds, whether it is backed up, who can reach it, and whether Git or a laptop controls it.
 
 - **Captured:** 2026-10-09, read-only, kube context `do-nyc3-omos-cloud`, Argo CD synced to `main` at `4934f532`.
-- **Scope:** all 47 Argo CD Applications, all 11 Helm-CLI releases, and the workloads that nothing in Git or Helm tracks.
+- **Scope:** all 47 Argo CD Applications (52 on 2026-10-17), all 11 Helm releases first installed by hand (4 adopted into Argo since, see GitOps gaps), and the workloads that nothing in Git or Helm tracks.
 - **Status:** a point-in-time snapshot, not a live view. To refresh it, rerun the commands in [How to refresh](#how-to-refresh). Counts in the Summary go stale first.
 - **Development phase:** every app is deliberate (system integration). This file ranks apps; it does not recommend removing any.
 - **Owner:** there is one operator, `zeus`, for everything. The "Owner" column is therefore omitted from the tables; the first thing to change when a second person joins is to add it.
@@ -13,7 +13,7 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
-| Helm-CLI releases (not in Git as Applications) | 11 |
+| Helm-CLI releases (not in Git as Applications) | 7 on 2026-10-17 (11 at capture; `cert-manager`, `ingress-nginx`, `nack` and `tailscale-operator` adopted in PR #176) |
 | Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4), `nats` UIs (5) and `openclaw` (1) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`, `platform-openclaw`) that take ownership once synced; until then they are untracked |
 | Namespaces | 48 |
 | Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
@@ -61,11 +61,11 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 |---------|-----------|-------|---------|-------|--------|----------|--------|
 | `takserver` | takserver | takserver-4.6.0 (rev 34, 2026-09-29), local chart `tak-server/chart` | TAK Server API, messaging, config, plugins, Ignite, PostgreSQL | see `platform-takserver` | see `platform-takserver` | see `platform-takserver` | **Helm CLI** |
 | `nats` | nats | nats-2.14.2 (rev 10) | NATS StatefulSet | see `platform-nats` | see `platform-nats` | see `platform-nats` | **Helm CLI** (and Argo tracks the same StatefulSet) |
-| `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | **Helm CLI** |
+| `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | Argo (`edge-nack`, adopted in PR #176) |
 | `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet | **Helm CLI** (not self-managed) |
-| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | **Helm CLI** (issuers are in `platform-core`) |
-| `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | **Helm CLI** |
-| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | **Helm CLI** |
+| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | Argo (`edge-cert-manager`, adopted in PR #176) (issuers are in `platform-core`) |
+| `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | Argo (`edge-ingress-nginx`, adopted in PR #176) |
+| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | Argo (`edge-tailscale-operator`, adopted in PR #176) |
 
 ## Tier 2: everything else
 
@@ -134,7 +134,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 ## GitOps gaps
 
-Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`) and are not Argo Applications. `helm list -A` shows all of them as `deployed`.
+Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`). **Update 2026-10-17:** four of them (`cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator`) were adopted into Argo in PR #176 and are owned by the `edge-*` Applications. The other seven are still Helm CLI only: `monitoring`, `loki`, `tempo`, `otel-collector`, `nats`, `takserver` and `argocd`. The monitoring adoption (PR #171) was closed without merging. `helm list -A` still shows all eleven, because adoption leaves the release record. Do not run `platform/install.sh`: it would `helm upgrade` the adopted releases too. Current status: `docs/gitops/HELM-ADOPTION.md`.
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
