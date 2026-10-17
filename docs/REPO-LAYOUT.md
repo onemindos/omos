@@ -41,9 +41,9 @@ There is no `platform/future/` directory in this tree. Planned work lives in `do
 
 | Workflow | Why it looks stale | Suggested action |
 |----------|--------------------|------------------|
-| `build-cloudtak.yml` | Builds `cloudtak-api` from a separate fork; no `cloudtak` workload exists in the cluster any more | Confirm CloudTAK is retired, then archive the workflow |
-| `build-onetak.yml` | Builds `onetak-{api,events,tiles}` from `onemindos/OneTAK`; live `onetak` namespace has no such Deployments (tak-portal and the geo stack replaced them) | Same |
-| `build-intel-services.yml` | Triggers on `platform/intel/**`, which does not exist | Same, or fix the path if the intel droplet services are returning |
+| `build-cloudtak.yml` | Built `cloudtak-api` from a separate fork; no `cloudtak` workload exists any more | **Removed 2026-10-17** (history keeps it) |
+| `build-onetak.yml` | Built `onetak-{api,events,tiles}`, replaced by tak-portal and the geo stack | **Removed 2026-10-17** |
+| `build-intel-services.yml` | Triggered on `platform/intel/**`, which does not exist; the intel droplet is gone | **Removed 2026-10-17** |
 | `build-nats-tools.yml`, `build-takml-vision.yml`, `build-platform-backup.yml`, `build-backstage-backup.yml`, `build-fedhub-ldap.yml`, `build-tak-portal.yml`, `build-onemind-*.yml`, `build-takserver.yml` | Match live workloads | Keep |
 
 ## Proposed consolidation (documentation only, for separate PRs)

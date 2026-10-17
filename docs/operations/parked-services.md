@@ -24,7 +24,7 @@ The record of every service removed from the cluster during the 2026 cost and cl
 
 | Service | Decision | Date | Config now at | Data backup (restic repository, last snapshot) | Volumes deleted | Notes |
 |---------|----------|------|---------------|-----------------------------------------------|-----------------|-------|
-| _none yet_ | | | | | | |
+| omos-mission-engine | Parked | 2026-10-17 | `platform/parked/omos-mission-engine/` (was `platform/omos/`) | None: it ran at 0 replicas with no volume | n/a | Image `ghcr.io/onemindos/omos-mission-engine:latest`; its source code exists nowhere, so it cannot be rebuilt. Bringing it back needs the code first |
 
 ## Restoring a parked service
 
