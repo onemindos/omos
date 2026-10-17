@@ -56,10 +56,20 @@ def validate_scope(plan, env):
     if len(changed) != 1:
         raise RuntimeError("Expected exactly one new node-pool resource")
     r = changed[0]
-    if (r["type"] != "digitalocean_kubernetes_node_pool" or
-            r["change"]["actions"] != ["create"] or
-            r["change"]["after"]["cluster_id"] != EXPECTED_CLUSTER):
+    if r["type"] != "digitalocean_kubernetes_node_pool" or r["change"]["after"]["cluster_id"] != EXPECTED_CLUSTER:
         raise RuntimeError("Plan changes resources outside the authorized CPU pool")
+    actions = r["change"]["actions"]
+    if actions == ["create"]:
+        return "one new CPU pool"
+    if actions == ["update"]:
+        # An in-place update of the existing pool is allowed only for its autoscaling range.
+        before, after = r["change"]["before"] or {}, r["change"]["after"] or {}
+        changed_keys = sorted(k for k in set(before) | set(after) if before.get(k) != after.get(k)
+                              and not (after.get(k) is None and k in (r["change"].get("after_unknown") or {})))
+        if not changed_keys or not set(changed_keys) <= {"min_nodes", "max_nodes"}:
+            raise RuntimeError("Pool update touches more than the autoscaling range: %s" % changed_keys)
+        return "in-place change to the pool's %s only" % ", ".join(changed_keys)
+    raise RuntimeError("Unexpected plan action for the CPU pool: %s" % actions)
 
 
 def main():
@@ -79,8 +89,8 @@ def main():
                        cwd=ROOT, env=env, check=True)
         subprocess.run(["terraform", "validate"], cwd=ROOT, env=env, check=True)
         subprocess.run(["terraform", "plan", "-input=false", "-out=" + str(args.plan)], cwd=ROOT, env=env, check=True)
-        validate_scope(args.plan, env)
-        print("Verified: one new CPU pool; no existing resource changes.")
+        scope = validate_scope(args.plan, env)
+        print("Verified: %s; nothing else changes." % scope)
     else:
         validate_scope(args.plan, env)
         subprocess.run(["terraform", "apply", "-input=false", str(args.plan)], cwd=ROOT, env=env, check=True)
