@@ -3,11 +3,12 @@
 prometheus:
   prometheusSpec:
     resources:
+      # Request matches real use (7-day peak 1.73 GiB; it was 512Mi); limit raised so the peak is not 86% of it.
       requests:
         cpu: 200m
-        memory: 512Mi
-      limits:
         memory: 2Gi
+      limits:
+        memory: 3Gi
     # Pick up PrometheusRule CRs from all namespaces
     ruleSelector: {}
     ruleNamespaceSelector: {}
