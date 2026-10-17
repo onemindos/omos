@@ -1,6 +1,6 @@
 # CoreConfig.xml LDAP auth patch for TAK Server.
 #
-# After deploying tak-ldap (tak-server/deploy/tak-ldap.yaml) and building the
+# After deploying tak-ldap (platform/takserver/deploy/tak-ldap.yaml) and building the
 # ghcr.io/onemindos/tak-ldap:5.8 image, add this <auth> block to the
 # core-config ConfigMap (CoreConfig.xml) in the takserver namespace.
 #

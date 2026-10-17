@@ -27,7 +27,7 @@ Status: target design plus the first (additive) PR. Written 2026-10-09 against c
 |-------|------|-------------------|
 | cloudflared connector + PDB | `platform/networking/cloudflared/cloudflared.yaml`, `platform/argocd/platform-cloudflared.yaml` | Deployment at **0 replicas** (inert) |
 | external-dns | `platform/argocd/platform-external-dns.yaml` | Deployment at **0 replicas**; annotation filter matches nothing |
-| TAK on tailnet | `tak-server/deploy/tak-tailscale.yaml` (synced by existing `platform-takserver`) | New tailnet node `tak`; `tak-external` and its DO LB untouched |
+| TAK on tailnet | `platform/takserver/deploy/tak-tailscale.yaml` (synced by existing `platform-takserver`) | New tailnet node `tak`; `tak-external` and its DO LB untouched |
 
 Why inert via replicas 0 rather than a guard: the Deployments need a Secret that does
 not exist yet. An optional `secretKeyRef` would start the pod and crash-loop (Argo

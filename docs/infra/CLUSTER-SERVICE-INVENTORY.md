@@ -41,7 +41,7 @@ objects. `HEAD` means the Git-tracked branch revision shown by Argo CD at captur
 | `platform-auth-infra` | `platform/auth` | `auth` | Synced / Healthy |
 | `platform-clickhouse-operator` | Helm `altinity-clickhouse-operator` `0.27.3` | `kube-system` | OutOfSync / Healthy |
 | `platform-core` | `platform/core` | Multiple namespaces | Synced / Healthy |
-| `platform-fedhub` | `tak-server/fedhub` | `takserver` | Synced / Healthy |
+| `platform-fedhub` | `platform/takserver/fedhub` | `takserver` | Synced / Healthy |
 | `platform-homepage` | `platform/homepage` | `homepage` | Synced / Healthy |
 | `platform-kube` | `platform/kube` | `kube` | Synced / Healthy |
 | `platform-legacy` | `platform/hermes/agent`; `platform/hermes/bridge` | `hermes` | Synced / Healthy |
@@ -53,7 +53,7 @@ objects. `HEAD` means the Git-tracked branch revision shown by Argo CD at captur
 | `platform-ops` | `platform/ops` | `ops` | Synced / Healthy |
 | `platform-redpanda-connect` | `platform/data/redpanda-connect` | `omos` | Synced / Healthy |
 | `platform-takml` | `platform/takml` | `takml` | Synced / Healthy |
-| `platform-takserver` | `tak-server/deploy` | `takserver` | Synced / Degraded |
+| `platform-takserver` | `platform/takserver/deploy` | `takserver` | Synced / Degraded |
 | `platform-zeus-site` | retired 2026-10-10 (Application and `platform/zeus-site` removed; cleanup tracked in `docs/operations/RETIRE-ZEUS-SITE.md`) | `zeus-site` | Retired |
 
 ### Current Argo CD exceptions
