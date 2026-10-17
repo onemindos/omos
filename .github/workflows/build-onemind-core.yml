@@ -10,8 +10,8 @@ on:
     paths:
       - services/onemind-core/**
       - services/onemind-postgres/**
-      - schemas/missions/**
-      - schemas/envelope/**
+      - services/schemas/missions/**
+      - services/schemas/envelope/**
       - .github/workflows/build-onemind-core.yml
   workflow_dispatch:
 permissions:

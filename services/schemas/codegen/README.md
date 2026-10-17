@@ -1,6 +1,6 @@
 # OneMind Schema Codegen
 
-Generates typed models from `schemas/envelope/envelope.schema.json`.
+Generates typed models from `services/schemas/envelope/envelope.schema.json`.
 
 ## Generators
 
@@ -15,10 +15,10 @@ From the repo root:
 
 ```sh
 # Python model (stdlib only — no deps needed)
-python3 schemas/codegen/gen_python.py
+python3 services/schemas/codegen/gen_python.py
 
 # Dart model (stdlib only — no deps needed)
-python3 schemas/codegen/gen_dart.py
+python3 services/schemas/codegen/gen_dart.py
 ```
 
 If `datamodel-code-generator` is installed (`pip install datamodel-code-generator`), `gen_python.py`
@@ -38,7 +38,7 @@ envelope version you depend on in a companion `contract/VERSION` file (e.g. `env
 
 ## Adding new schemas
 
-1. Add `schemas/{domain}/{name}.schema.json`.
-2. Add a `gen_{lang}.py` script in `schemas/codegen/` following the same pattern.
+1. Add `services/schemas/{domain}/{name}.schema.json`.
+2. Add a `gen_{lang}.py` script in `services/schemas/codegen/` following the same pattern.
 3. Add a row to this README's table.
-4. Seed the live registry: `nats kv put om-schema {name}.v1 "@schemas/{domain}/{name}.schema.json"`.
+4. Seed the live registry: `nats kv put om-schema {name}.v1 "@services/schemas/{domain}/{name}.schema.json"`.

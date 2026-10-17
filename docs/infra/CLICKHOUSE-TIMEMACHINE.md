@@ -118,7 +118,7 @@ ORDER BY ts DESC;
 - `events` keeps the 3-column (timestamp, subject, payload) shape unchanged — historical
   continuity, no backfill risk, existing analytics queries unbroken.
 - `events_v2` uses the P0-E target shape: (v, id, ts, type, source, subject, data)
-  as documented in `schemas/README.md`. This is the forward-compatible record.
+  as documented in `services/schemas/README.md`. This is the forward-compatible record.
 - Both tables coexist with 10-year TTL. UNION ALL gives full history.
 - When P0-E envelope (card P0-E) is finalized in om-schema KV, `events_v2` columns can be
   reconciled without touching `events`.
@@ -136,7 +136,7 @@ than `JSONEachRow` with 3 columns. Why:
 ### 2.4 P0-E Envelope Status
 
 `om-schema` KV bucket exists but is empty (P0-E card not yet landed). `events_v2` uses
-the target shape from `schemas/README.md`. JSONExtract fields will silently return defaults
+the target shape from `services/schemas/README.md`. JSONExtract fields will silently return defaults
 for missing keys — no ingestion failures. A TODO comment marks where to reconcile once
 P0-E lands.
 

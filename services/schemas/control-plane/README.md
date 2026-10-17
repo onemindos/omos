@@ -14,7 +14,7 @@ truth for all registry, UI projection, and command envelope definitions.
   schemas. Clients are **never** the source of truth for registry state or
   projection shapes.
 - **Changes** require a schema version bump and a migration note. See the
-  versioning policy in `schemas/envelope/README.md`.
+  versioning policy in `services/schemas/envelope/README.md`.
 
 ## Structure
 
@@ -68,7 +68,7 @@ the doctrine docs. They will be refined as the control-plane services are built
 
 ## TODOs
 
-- [ ] Wire codegen (`schemas/codegen/`) to emit Dart + Python models for these
+- [ ] Wire codegen (`services/schemas/codegen/`) to emit Dart + Python models for these
       schemas once the envelope codegen is extended to multi-schema.
 - [ ] Seed live KV registry entries (`nats kv put om-schema ...`) when the
       control-plane services are deployed.
