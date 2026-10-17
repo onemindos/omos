@@ -1,5 +1,7 @@
 # TAK Server 5.7 — OneMind cluster on DOKS
 
+> **Layout (2026-10-17):** this folder now holds the deployment half only (`chart/`, `values-onemind.yaml`, `deploy/`, `fedhub/`). The image builds, NatsBridgePlugin source and JAR, build scripts and `cot-tap` moved to `services/takserver/`; the edge TAK deployment and device enrollment moved to `infra/edge/takserver/`. Paths below that start with `docker/`, `plugin/` or `build/` are relative to `services/takserver/`.
+
 Horizontally-scalable TAK Server (messaging / api / plugins / config split) on
 DigitalOcean Kubernetes, adapted from the official TAK Product Center cluster
 blueprint, with **Zeus's NATS bridge plugin baked in** so the tactical fabric
@@ -19,9 +21,9 @@ projects onto the OneMind bus.
   fork the logic.
 - `values-onemind.yaml` — our DOKS overlay values (sized down, DOCR images, namespace
   `takserver`, in-cluster PostGIS to start, internal NATS at 1 replica).
-- `docker/Dockerfile.takserver-plugins.onemind` — the plugins image, extended to bake
+- `services/takserver/docker/Dockerfile.takserver-plugins.onemind` — the plugins image, extended to bake
   in `takserver-nats-plugin-1.0.0.jar` + `NatsBridgePlugin.yaml`.
-- `plugin/` — the plugin's config (tracked) + its JAR (copied at build time, gitignored).
+- `services/takserver/plugin/` — the plugin's config (tracked) + its JAR (copied at build time, gitignored).
 
 ## Architecture (what actually gets deployed)
 
@@ -44,7 +46,7 @@ Config is delivered by **three ConfigMaps** the pods mount:
 1. **Internal NATS** (`nats.*` in values) — the cluster's own inter-pod JetStream bus.
    Private plumbing. Never touches OneMind.
 2. **OneMind NATS** — your sovereign bus. Reached **only** by Zeus's bridge plugin in
-   the `plugins` pod, via `plugin/tak.server.plugins.NatsBridgePlugin.yaml`
+   the `plugins` pod, via `services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml`
    (`tak.cot.inject` in, `tak.cot.out` out). This is the seam.
 
 ## Hard constraints (learned from the blueprint + upstream issues)
@@ -84,7 +86,7 @@ which live in the source tree. So:
 Plugins image (all options): FROM the resulting `takserver-base`, then
 `docker/Dockerfile.takserver-plugins.onemind` bakes in the NATS bridge. Copy the JAR first:
 ```
-cp /Users/zeus/ATAK/plugins/nats-bridge/takserver-nats-plugin/build/libs/takserver-nats-plugin-1.0.0.jar plugin/
+cp /Users/zeus/ATAK/plugins/nats-bridge/takserver-nats-plugin/build/libs/takserver-nats-plugin-1.0.0.jar services/takserver/plugin/
 # (or the built jar already in the distro: .../tak/lib/takserver-nats-plugin-1.0.0.jar)
 ```
 
@@ -100,7 +102,7 @@ cp /Users/zeus/ATAK/plugins/nats-bridge/takserver-nats-plugin/build/libs/takserv
    + set `global.postgresql.host` and the `CoreConfig.xml` Repository block.
 5. **CoreConfig / Ignite configmaps:** `kubectl -n takserver create configmap core-config --from-file=CoreConfig.xml` and `tak-ignite-config --from-file=TAKIgniteConfig.xml`.
 6. **Build + push images** (see Image build) → DOCR as `5.7-onemind`; set `<DOCR>` in `values-onemind.yaml`.
-7. **Point the bridge** — edit `plugin/tak.server.plugins.NatsBridgePlugin.yaml` `natsUrl` at the
+7. **Point the bridge** — edit `services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml` `natsUrl` at the
    real OneMind NATS (not `host.docker.internal`). If the OneMind bus needs TLS/creds, the plugin
    must support them — **review `nats-bridge` source before relying on it** (see Risks).
 8. **Deploy:**

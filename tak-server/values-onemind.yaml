@@ -10,7 +10,7 @@
 #     -f values-onemind.yaml
 #
 # Images: built from takserver-docker-hardened-5.8-RELEASE-69 and pushed to GHCR.
-# Build context = extracted distro root (tak/ directory). See build/stage.sh.
+# Build context = extracted distro root (tak/ directory). See services/takserver/build/stage.sh.
 
 imagePullSecret: ghcr
 certConfigMapName: cert-migration

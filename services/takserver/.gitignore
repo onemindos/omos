@@ -1,0 +1,11 @@
+# plugin JAR is copied in at build time from Zeus's nats-bridge project (binary, not tracked)
+plugin/*.jar
+
+# staged image build roots
+build-root/
+*.p12
+certs/files/
+
+# macOS
+.DS_Store
+**/.DS_Store

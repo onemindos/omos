@@ -4,7 +4,7 @@
 #
 # BEFORE FIRST SYNC — complete these manual steps or the Deployment will
 # ImagePullBackOff / CrashLoop:
-#   1. Build image:   bash tak-server/build/build-fedhub.sh
+#   1. Build image:   bash services/takserver/build/build-fedhub.sh
 #   2. Seal certs:    see tak-server/fedhub/fedhub.yaml header (kubeseal)
 #   3. Seal Authentik: kubectl create secret generic fedhub-oidc-secret \
 #                        --from-literal=keycloakSecret=<authentik-client-secret> \

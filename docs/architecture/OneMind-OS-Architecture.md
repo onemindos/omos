@@ -501,7 +501,7 @@ Every capability added here is instantly visible to ATAK, CloudTAK, and any TAK 
 
 | Plugin | Status | What It Does |
 |--------|--------|-------------|
-| **NatsBridgePlugin** | LIVE | TAK ↔ NATS bidirectional CoT wire. `tak.cot.inject` in, `tak.cot.>` out. Source in `tak-server/plugin-src/`. |
+| **NatsBridgePlugin** | LIVE | TAK ↔ NATS bidirectional CoT wire. `tak.cot.inject` in, `tak.cot.>` out. Source in `services/takserver/plugin-src/`. |
 | **TAK-ML Server Plugin** | DEPLOYED (blocked) | ML inference pipeline — IoBT sensors → MX models → detections → CoT injection. Blocked by vision worker init container. |
 | **OneMind Fusion Plugin** | DESIGN | Single Java plugin: subscribes `ent.>`, `det.>`, `tel.cam.>` → injects as CoT markers. Makes cameras, robots, ML detections, and NATS entities all appear as TAK objects. Legacy AI appears as a TAK "contact" for chat. One plugin beats six separate JARs operationally (JAR loading is heavy). |
 

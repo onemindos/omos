@@ -18,7 +18,7 @@ Build scripts for custom Docker images derived from official TAK distributions, 
 ## Build FedHub
 
 ```bash
-bash tak-server/build/build-fedhub.sh
+bash services/takserver/build/build-fedhub.sh
 ```
 
 Produces: `ghcr.io/onemindos/fedhub:5.8`
@@ -57,7 +57,7 @@ kubectl -n takserver apply -f tak-server/fedhub/
 ## Build TAK LDAP
 
 ```bash
-bash tak-server/build/build-tak-ldap.sh
+bash services/takserver/build/build-tak-ldap.sh
 ```
 
 Produces: `ghcr.io/onemindos/tak-ldap:5.8`

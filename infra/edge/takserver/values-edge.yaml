@@ -6,7 +6,7 @@
 # DEPLOY:
 #   helm upgrade --install takserver-edge ./chart \
 #     -n takserver-edge --create-namespace \
-#     -f tak-server/edge/values-edge.yaml
+#     -f infra/edge/takserver/values-edge.yaml
 #
 # AFTER DEPLOY — connect to HQ FedHub:
 #   1. Get the FedHub external LB IP:
@@ -31,49 +31,49 @@ takserver:
     enabled: false    # Edge exposed via direct TCP LB, not Cloudflare
 
   config:
-    image: { repository: ghcr.io/onemindos/takserver-base, tag: "config-5.8-onemind" }
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "config-5.8-onemind"}
     replicas: 1
-    resources: { requests: { cpu: 500m, memory: 512Mi }, limits: { cpu: 1, memory: 1Gi } }
+    resources: {requests: {cpu: 500m, memory: 512Mi}, limits: {cpu: 1, memory: 1Gi}}
 
   messaging:
-    image: { repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind" }
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind"}
     replicas: 1
-    resources: { requests: { cpu: 500m, memory: 2Gi }, limits: { cpu: 1, memory: 2Gi } }
+    resources: {requests: {cpu: 500m, memory: 2Gi}, limits: {cpu: 1, memory: 2Gi}}
 
   api:
-    image: { repository: ghcr.io/onemindos/takserver-base, tag: "api-5.8-onemind" }
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "api-5.8-onemind"}
     replicas: 1
-    resources: { requests: { cpu: 500m, memory: 2Gi }, limits: { cpu: 1, memory: 2Gi } }
+    resources: {requests: {cpu: 500m, memory: 2Gi}, limits: {cpu: 1, memory: 2Gi}}
 
   plugins:
     enabled: true
-    image: { repository: ghcr.io/onemindos/takserver-base, tag: "plugins-upstream-5.8-onemind" }
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "plugins-upstream-5.8-onemind"}
     replicas: 1
-    resources: { requests: { cpu: 250m, memory: 512Mi }, limits: { cpu: 1, memory: 1Gi } }
+    resources: {requests: {cpu: 250m, memory: 512Mi}, limits: {cpu: 1, memory: 1Gi}}
 
   takserverDatabaseSetup:
-    image: { repository: ghcr.io/onemindos/takserver-base, tag: "db-setup-5.8-onemind" }
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "db-setup-5.8-onemind"}
 
   limits:
     persistentVolumeClaims: '3'
-    requests: { storage: 20Gi }
-    storage: { max: 20Gi, min: 1Gi }
+    requests: {storage: 20Gi}
+    storage: {max: 20Gi, min: 1Gi}
 
 postgresql:
   enabled: true
-  image: { registry: docker.io, repository: postgis/postgis, tag: 15-3.4 }
+  image: {registry: docker.io, repository: postgis/postgis, tag: 15-3.4}
   configurationConfigMap: postgres-configuration
 global:
   postgresql:
     host: takserver-edge-postgresql
     port: "5432"
-    auth: { postgresqlUsername: postgres, postgresqlPassword: postgres, postgresqlDatabase: cot }
+    auth: {postgresqlUsername: postgres, postgresqlPassword: postgres, postgresqlDatabase: cot}
 
 ignite:
-  image: { repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind", pullPolicy: Always }
-  serviceAccount: { name: takserver-ignite-edge }
+  image: {repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind", pullPolicy: Always}
+  serviceAccount: {name: takserver-ignite-edge}
   peerClassLoadingEnabled: false
-  resources: { requests: { cpu: 200m, memory: 512Mi }, limits: { cpu: "1", memory: 1Gi } }
+  resources: {requests: {cpu: 200m, memory: 512Mi}, limits: {cpu: "1", memory: 1Gi}}
   env:
     OPTION_LIBS: "ignite-kubernetes,ignite-rest-http,ignite-json,ignite-slf4j,ignite-urideploy,ignite-web,ignite-calcite"
     IGNITE_QUIET: "false"
@@ -93,12 +93,12 @@ ignite:
       --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
 
 nats:
-  image: { tag: 1.0.1 }
+  image: {tag: 1.0.1}
   config:
-    jetstream: { enabled: true }
-    cluster: { enabled: false, replicas: 1 }
+    jetstream: {enabled: true}
+    cluster: {enabled: false, replicas: 1}
   container:
     merge:
       resources:
-        requests: { cpu: 50m, memory: 128Mi }
-        limits: { memory: 256Mi }
+        requests: {cpu: 50m, memory: 128Mi}
+        limits: {memory: 256Mi}
