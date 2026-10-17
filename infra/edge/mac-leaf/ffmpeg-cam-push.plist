@@ -8,7 +8,7 @@
   Also relayed to cloudtak-media for WebTAK users automatically.
 
   Install:
-    cp edge/mac-leaf/ffmpeg-cam-push.plist ~/Library/LaunchAgents/com.onemind.ffmpeg-cam-push.plist
+    cp infra/edge/mac-leaf/ffmpeg-cam-push.plist ~/Library/LaunchAgents/com.onemind.ffmpeg-cam-push.plist
     launchctl load ~/Library/LaunchAgents/com.onemind.ffmpeg-cam-push.plist
 
   Uninstall:

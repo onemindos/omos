@@ -38,8 +38,8 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
   values/      Helm values for the hand-installed add-ons (argocd, cert-manager, ingress-nginx, loki, ...)
 tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
-infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root)
-services/ schemas/ edge/ docs/ scripts/                 code (built into images), contracts, edge config, docs, CI helpers
+infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root); edge/ holds Mac leaf config (not deployed)
+services/ schemas/ docs/ scripts/                       code (built into images), contracts, docs, CI helpers
 ```
 
 Not active or not deployed: `references/`. Do not edit it unless asked. (The `onemind-vision` plugin, installed by hand in the Hermes pod, has its source in `platform/hermes/agent/plugins/`.) The Hermes agent's souls, registry, doctrine and runbook are in `platform/hermes/agent/`.
