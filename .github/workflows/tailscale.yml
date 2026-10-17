@@ -1,12 +1,19 @@
 name: Sync Tailscale ACLs
+# GitOps for the tailnet policy. A PR shows the difference from the live policy and runs the policy's tests;
+# a merge to main applies it. The file moved to platform/core/ on 2026-08-27 and this workflow kept pointing
+# at the old path, so it failed on every run until this fix.
 
 on:
   push:
     branches: ["main"]
-    paths: ["platform/tailscale/policy.hujson", ".github/workflows/tailscale.yml"]
+    paths: ["platform/core/policy.hujson", ".github/workflows/tailscale.yml"]
   pull_request:
     branches: ["main"]
-    paths: ["platform/tailscale/policy.hujson", ".github/workflows/tailscale.yml"]
+    paths: ["platform/core/policy.hujson", ".github/workflows/tailscale.yml"]
+  workflow_dispatch:
+
+env:
+  POLICY_FILE: platform/core/policy.hujson
 
 jobs:
   acls:
@@ -16,6 +23,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Show the difference from the live policy
+        env:
+          TS_OAUTH_ID: ${{ secrets.TS_OAUTH_ID }}
+          TS_OAUTH_SECRET: ${{ secrets.TS_OAUTH_SECRET }}
+          TS_TAILNET: ${{ secrets.TS_TAILNET }}
+        run: |
+          set -euo pipefail
+          token=$(curl -fsS -d "client_id=${TS_OAUTH_ID}" -d "client_secret=${TS_OAUTH_SECRET}" \
+            https://api.tailscale.com/api/v2/oauth/token | jq -r .access_token)
+          echo "::add-mask::${token}"
+          curl -fsS -H "Authorization: Bearer ${token}" -H "Accept: application/hujson" \
+            "https://api.tailscale.com/api/v2/tailnet/${TS_TAILNET}/acl" > "$RUNNER_TEMP/live.hujson"
+          if diff -u "$RUNNER_TEMP/live.hujson" "$POLICY_FILE" > "$RUNNER_TEMP/policy.diff"; then
+            echo "The live policy matches ${POLICY_FILE}." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            { echo "### Live policy (-) versus ${POLICY_FILE} (+)"; echo '```diff'; cat "$RUNNER_TEMP/policy.diff"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            cat "$RUNNER_TEMP/policy.diff"
+          fi
+
       - name: Deploy ACL (apply on push to main)
         if: github.event_name == 'push'
         uses: tailscale/gitops-acl-action@v1
@@ -23,15 +49,15 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tailnet: ${{ secrets.TS_TAILNET }}
-          policy-file: platform/tailscale/policy.hujson
+          policy-file: platform/core/policy.hujson
           action: apply
 
-      - name: Test ACL (dry-run on PR)
-        if: github.event_name == 'pull_request'
+      - name: Test ACL (dry-run on PR or manual run)
+        if: github.event_name != 'push'
         uses: tailscale/gitops-acl-action@v1
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tailnet: ${{ secrets.TS_TAILNET }}
-          policy-file: platform/tailscale/policy.hujson
+          policy-file: platform/core/policy.hujson
           action: test
