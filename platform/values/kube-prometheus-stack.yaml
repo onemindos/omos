@@ -9,6 +9,18 @@ prometheus:
         memory: 2Gi
       limits:
         memory: 3Gi
+    # Keep metrics on a volume: until 2026-10-17 the database was on temporary storage, so every restart
+    # erased the history (retention is 10d). retentionSize keeps the data inside the volume.
+    retention: 10d
+    retentionSize: 17GB
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: do-block-storage
+          resources:
+            requests:
+              storage: 20Gi
     # Pick up PrometheusRule CRs from all namespaces
     ruleSelector: {}
     ruleNamespaceSelector: {}
