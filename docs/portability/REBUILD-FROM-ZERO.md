@@ -147,7 +147,7 @@ PVC is restored. This is a data-loss risk; see "Danger list" below.
 Order: Postgres first, then the apps that use them.
 
 - **TAK Postgres** (PostGIS): install `takserver` (Helm release rev 34, chart
-  `tak-server/chart`, values `tak-server/values-onemind.yaml`) with the database empty,
+  `platform/takserver/chart`, values `platform/takserver/values-onemind.yaml`) with the database empty,
   then restore the newest `backups/takserver-postgres/<ts>/archive.tar.gz.aesgcm`
   (decrypt, `pg_restore --no-owner` into the TAK database with matching major version
   and PostGIS). Last backup took 86 min and the restore check passed (64 tables).

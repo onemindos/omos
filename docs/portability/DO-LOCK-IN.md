@@ -59,7 +59,7 @@ Live (`kubectl get sc`, `kubectl get pv`):
   `platform/hermes/agent/pvc.yaml`, `platform/data/clickhouse/clickhouse.yaml`,
   `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr,opensearch,spire,harbor}.yaml`,
   `platform/ecosystem/resources/postgres-cluster.yaml`, the VolSync sources and
-  restore tests under `platform/backups/`, and `tak-server/DEPLOY-RUNBOOK.md`.
+  restore tests under `platform/backups/`, and `platform/takserver/DEPLOY-RUNBOOK.md`.
 - DO volumes are ReadWriteOnce, single-region. They cannot be moved; data moves
   through backups (VolSync restic repos, logical dumps).
 - 760 GiB is on the `-retain` class: deleting a PVC leaves a billed DO volume behind.
@@ -82,7 +82,7 @@ Live (`kubectl get sc`, `kubectl get pv`):
 | Service | Kind | Notes |
 |---|---|---|
 | `ingress-nginx/ingress-nginx-controller` | **DO LB** `143.244.220.155` | annotation `service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL_NETWORK`, Helm-CLI release |
-| `takserver/tak-external` | **DO LB** `152.42.155.95` | defined in `tak-server/deploy/tak-lb-proxy.yaml` (`do-loadbalancer-name: onemind-tak`); ports 8089, 8443, 8446, 9101, 9102, 64738; no source ranges |
+| `takserver/tak-external` | **DO LB** `152.42.155.95` | defined in `platform/takserver/deploy/tak-lb-proxy.yaml` (`do-loadbalancer-name: onemind-tak`); ports 8089, 8443, 8446, 9101, 9102, 64738; no source ranges |
 | `nats/omos-nats`, `takserver/tak-tailnet`, `openchoreo-control-plane/cilium-gateway-gateway-default` | Tailscale (`loadBalancerClass: tailscale`) | already portable |
 
 The only `service.beta.kubernetes.io/do-` annotation in Git is in `tak-lb-proxy.yaml`.
@@ -162,7 +162,7 @@ remove them in the home overlay.
 | `platform/install.sh` | legacy Helm-CLI bootstrap; header lists doctl | replace by REBUILD-FROM-ZERO |
 | `scripts/manage_ecosystem_workers.py` | resizes the DO node pool via Terraform | DO-only; retire after migration |
 | `platform/matrix/deploy-matrix.sh` | DNS check | move to Cloudflare |
-| `tak-server/DEPLOY-RUNBOOK.md` | DOCR login (historical) | ignore |
+| `platform/takserver/DEPLOY-RUNBOOK.md` | DOCR login (historical) | ignore |
 | `platform/backups/OFFSITE-COPY.md` | `doctl spaces keys` | use the new provider's tool |
 | In-cluster Jobs | none | none |
 

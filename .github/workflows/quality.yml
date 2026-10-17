@@ -50,7 +50,7 @@ jobs:
 
       - name: Report existing repository YAML debt
         continue-on-error: true
-        run: yamllint -c .yamllint.yml platform/ docs/ tak-server/
+        run: yamllint -c .yamllint.yml platform/ docs/ platform/takserver/
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
@@ -93,7 +93,7 @@ jobs:
           sudo install -m 0755 kubeconform /usr/local/bin/kubeconform
           rm -f kubeconform kubeconform.tgz
 
-      # Plain manifests under platform/, tak-server/deploy and tak-server/fedhub. Kubernetes core kinds
+      # Plain manifests under platform/, platform/takserver/deploy and platform/takserver/fedhub. Kubernetes core kinds
       # use the upstream schemas; CRDs use datreeio/CRDs-catalog. Kinds without a published schema
       # (for example Backstage catalog entities) are skipped rather than failing, because the repo uses
       # many CRDs that have no public schema. -strict (unknown fields are errors) is ON: the current tree
@@ -123,7 +123,7 @@ jobs:
         run: pip install pyyaml
 
       # Renders every Argo CD Application that pulls a remote Helm chart when the Application file or one of
-      # its valueFiles changed, plus the local charts (tak-server/chart, platform/ecosystem/charts/*) when
+      # its valueFiles changed, plus the local charts (platform/takserver/chart, platform/ecosystem/charts/*) when
       # their files change. Weekly/manual runs render everything.
       - name: helm template (changed Applications and local charts)
         env:

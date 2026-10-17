@@ -71,7 +71,7 @@ services/           Go + Python NATS microservices
   om_presence.py    Python — Presence/voice bridge
   notify_router.py  Python — Routes evt.notify.> to notification channels
   graphite_bridge.py Python — NATS → Graphite/Carbon
-tak-server/         TAK Server 5.8 (Helm chart + OneMind values)
+platform/takserver/         TAK Server 5.8 (Helm chart + OneMind values)
   chart/            Helm chart + values-onemind.yaml
   docker/           Dockerfiles (base, api, messaging, config, plugins, db-setup)
   deploy/           K8s overlay manifests (LB, NATS leaf, secrets)

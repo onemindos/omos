@@ -24,8 +24,8 @@ import sys
 
 MANIFEST_ROOTS = (
     "platform/",
-    "tak-server/deploy/",
-    "tak-server/fedhub/",
+    "platform/takserver/deploy/",
+    "platform/takserver/fedhub/",
 )
 # Paths under the roots that are not standalone manifests.
 EXCLUDE = (

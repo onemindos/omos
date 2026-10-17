@@ -43,13 +43,13 @@ Seal the generated certs as a K8s Secret:
 kubectl -n takserver create secret generic fedhub-certs \
   --from-file=takserver-fedhub-docker-5.8-RELEASE-79/tak/federation-hub/certs/files/ \
   --dry-run=client -o yaml | kubeseal -o yaml > \
-  tak-server/fedhub/fedhub-certs.sealedsecret.yaml
+  platform/takserver/fedhub/fedhub-certs.sealedsecret.yaml
 ```
 
 Then deploy:
 
 ```bash
-kubectl -n takserver apply -f tak-server/fedhub/
+kubectl -n takserver apply -f platform/takserver/fedhub/
 ```
 
 ---
@@ -71,14 +71,14 @@ by bootstrap.sh on first start.
 kubectl -n takserver create secret generic tak-ldap-creds \
   --from-literal=LDAP_ADMIN_PASSWORD='<strong-password>' \
   --dry-run=client -o yaml | kubeseal -o yaml > \
-  tak-server/deploy/tak-ldap-creds.sealedsecret.yaml
+  platform/takserver/deploy/tak-ldap-creds.sealedsecret.yaml
 ```
 
 Then deploy:
 
 ```bash
-kubectl -n takserver apply -f tak-server/deploy/tak-ldap.yaml
-kubectl -n takserver apply -f tak-server/deploy/tak-ldap-creds.sealedsecret.yaml
+kubectl -n takserver apply -f platform/takserver/deploy/tak-ldap.yaml
+kubectl -n takserver apply -f platform/takserver/deploy/tak-ldap-creds.sealedsecret.yaml
 ```
 
 ### After LDAP is Running: Patch TAK CoreConfig

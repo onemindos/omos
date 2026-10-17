@@ -162,7 +162,7 @@ No `argocd.argoproj.io/tracking-id` on the live object (applied by hand or by He
 - `openclaw` gateway (request 1 Gi, actual 2.1 GiB), `argocd` itself, `cert-manager`, `ingress-nginx`, `tailscale` operator/proxies,
   most `nats` helper deployments (agent-web-ui, agenttap, heynats, nack, nats-dashboard, nats-ui).
 
-Out of scope by instruction: `platform/monitoring/`, `platform/backups/`, `platform/values/*`, `tak-server/chart`,
+Out of scope by instruction: `platform/monitoring/`, `platform/backups/`, `platform/values/*`, `platform/takserver/chart`,
 `platform/nats` Helm values, velero (backups tier-1), cilium and other `kube-system` objects.
 
 Not changed because they are already at or below their request, or too small to matter (under 128 Mi): martin, maputnik,

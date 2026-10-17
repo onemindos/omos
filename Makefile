@@ -5,7 +5,7 @@
 
 SHELL := /bin/bash
 TF_DIR := infra
-YAML_DIRS := platform docs tak-server
+YAML_DIRS := platform docs
 
 ## ─── Quality Gates ───────────────────────────────────────────────────────────
 

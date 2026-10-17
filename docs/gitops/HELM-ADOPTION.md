@@ -78,7 +78,7 @@ Verified against the cluster on 2026-10-17: **4 adopted, 7 remaining.** All 11 s
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Adopted in #176 | `edge-tailscale-operator` | `platform/values/tailscale-operator.yaml` |
 | `nack` | nats | nack-0.34.0 | Adopted in #176 | `edge-nack` | `platform/nats/nack-values.yaml` |
 | `nats` | nats | nats-2.14.2 | Remaining | none | `platform/nats/values.template.yaml` plus gitignored `values.secret.yaml` |
-| `takserver` | takserver | takserver-4.6.0 | Remaining | none | `tak-server/values-onemind.yaml`, chart `tak-server/chart` |
+| `takserver` | takserver | takserver-4.6.0 | Remaining | none | `platform/takserver/values-onemind.yaml`, chart `platform/takserver/chart` |
 | `argocd` | argocd | argo-cd-10.1.2 | Remaining | none | `platform/values/argocd.yaml` |
 
 ### Notes for this PR

@@ -66,7 +66,7 @@ spec:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \
 #     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],
 #       "containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
-#   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
+#   kubectl cp platform/takserver/server/takml_server-2.1.jar takml/jar-loader:/jar/
 #   kubectl delete pod jar-loader -n takml
 apiVersion: apps/v1
 kind: Deployment

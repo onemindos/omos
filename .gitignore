@@ -28,11 +28,11 @@ platform/core/*.secret.env
 platform/core/*.secret
 
 # TAK Server generated private keys, certificates, and local build output — NEVER commit
-tak-server/certs-out/
-tak-server/certs/files/
-tak-server/b2-enrollment/
-tak-server/.tapvenv/
-tak-server/local-retirement-backup/
+platform/takserver/certs-out/
+platform/takserver/certs/files/
+platform/takserver/b2-enrollment/
+platform/takserver/.tapvenv/
+platform/takserver/local-retirement-backup/
 services/takserver/build-root/
 *.key
 *.jks

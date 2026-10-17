@@ -34,10 +34,10 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
   backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)
   hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
+  takserver/   TAK Server: Helm chart (chart/) + values-onemind.yaml (Helm CLI), Argo overlays deploy/ and fedhub/, runbook
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
   values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator; Helm CLI: argocd, kube-prometheus-stack, loki, tempo, otel-collector)
-tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
 infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root); edge/ holds Mac leaf config (not deployed)
 services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
 ```
@@ -46,7 +46,7 @@ Not active or not deployed: `docs/references/` (external project research, moved
 
 ## The Deployment Pattern
 
-1. Application manifests live under `platform/<layer>/` (or `tak-server/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
+1. Application manifests live under `platform/<layer>/` (or `platform/takserver/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
 2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
 3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is an in-cluster Harbor. DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
@@ -108,9 +108,9 @@ kubectl --context do-nyc3-omos-cloud get nodes
 
 ## TAK Server
 
-TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `tak-server/chart` with `tak-server/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `tak-server/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `tak-server/fedhub`. Both fedhub and tak-ldap are running. The LB `tak-external` exposes 8089, 8443, 8446, 9101, 9102 and 64738 to the internet.
+TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `platform/takserver/chart` with `platform/takserver/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `platform/takserver/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `platform/takserver/fedhub`. Both fedhub and tak-ldap are running. The LB `tak-external` exposes 8089, 8443, 8446, 9101, 9102 and 64738 to the internet.
 
-The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
+The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `platform/takserver/DEPLOY-RUNBOOK.md`.
 
 ## CI (`.github/workflows/quality.yml`)
 

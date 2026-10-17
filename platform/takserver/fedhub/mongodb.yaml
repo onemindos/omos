@@ -14,7 +14,7 @@
 #     --from-literal=MONGO_INITDB_ROOT_USERNAME=root \
 #     --from-literal=MONGO_INITDB_ROOT_PASSWORD='<strong-password>' \
 #     --dry-run=client -o yaml | kubeseal -o yaml \
-#     > tak-server/fedhub/fedhub-mongodb-creds.sealedsecret.yaml
+#     > platform/takserver/fedhub/fedhub-mongodb-creds.sealedsecret.yaml
 #   Commit the .sealedsecret.yaml, NOT plaintext.
 apiVersion: v1
 kind: ConfigMap

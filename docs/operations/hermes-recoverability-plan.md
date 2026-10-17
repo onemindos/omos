@@ -91,7 +91,7 @@ Verified on 2026-10-16:
 
 The repo is private, has one collaborator and no forks. Gitleaks did not flag these:
 
-- **The default TAK client-certificate password**, in `SERVICES.md` and `MACHINES.md`. It is committed in **21 files across the repo** (TAK portal code, `tak-server/**`, the onetak and takml manifests, and others) and in Hermes' live `MEMORY.md`. Tracked as a separate task (section 5).
+- **The default TAK client-certificate password**, in `SERVICES.md` and `MACHINES.md`. It is committed in **21 files across the repo** (TAK portal code, `platform/takserver/**`, the onetak and takml manifests, and others) and in Hermes' live `MEMORY.md`. Tracked as a separate task (section 5).
 - **A truncated Notion token** in `INTEGRATION.md`. Only the first and last few characters are shown, so it cannot be used to authenticate.
 - A droplet public IP, the home Home Assistant LAN address, the TAK load-balancer IP, SSH usernames and key paths, and the location of the Home Assistant token file.
 - **Hermes' live `memories/MEMORY.md` contains a plaintext WordPress application password** (for the retired `zeusdelacruz.com` WordPress droplet). Memory is loaded into the model prompt every session, so it has been sent to the model provider, and it is on the volume and in the backups. The value is not recorded here. Tracked as a separate task: revoke it, then remove the entry (a live change, done with a fresh backup). The earlier memory scan missed it because the pattern was `app_pass=...`.
