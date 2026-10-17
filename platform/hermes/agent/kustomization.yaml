@@ -6,5 +6,6 @@ resources:
   - pvc.yaml
   - deployment.yaml
   - dashboard.yaml
+  - egress.yaml
 # Secrets are managed by Sealed Secrets — SealedSecret YAMLs in platform/hermes/bridge/.
 # Apply with:  kubectl apply -k platform/hermes/agent/
