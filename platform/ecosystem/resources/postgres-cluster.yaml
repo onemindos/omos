@@ -77,13 +77,6 @@ spec:
       createdb: false
       passwordSecret:
         name: db-langfuse
-    - name: kagent
-      ensure: present
-      login: true
-      superuser: false
-      createdb: false
-      passwordSecret:
-        name: db-kagent
     - name: onemind_ingestion
       ensure: present
       login: true
