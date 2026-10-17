@@ -23,8 +23,16 @@ persistence:
       storageClass: do-block-storage-retain
       size: 10Gi
 core:
-  nodeSelector: &id001
-    onemind.io/compute-role: ecosystem
+  affinity: &ecoPref
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values:
+            - ecosystem
   resources:
     requests:
       cpu: 10m
@@ -36,7 +44,7 @@ core:
   secretName: harbor-internal
   existingXsrfSecret: harbor-internal
 portal:
-  nodeSelector: *id001
+  affinity: *ecoPref
   resources:
     requests:
       cpu: 10m
@@ -45,7 +53,7 @@ portal:
       cpu: 500m
       memory: 512Mi
 jobservice:
-  nodeSelector: *id001
+  affinity: *ecoPref
   resources:
     requests:
       cpu: 10m
@@ -55,7 +63,7 @@ jobservice:
       memory: 1Gi
   existingSecret: harbor-internal
 registry:
-  nodeSelector: *id001
+  affinity: *ecoPref
   existingSecret: harbor-internal
   credentials:
     username: harbor_registry_user
@@ -63,14 +71,14 @@ registry:
 database:
   type: internal
   internal:
-    nodeSelector: *id001
+    affinity: *ecoPref
 redis:
   type: internal
   internal:
-    nodeSelector: *id001
+    affinity: *ecoPref
 trivy:
   enabled: true
-  nodeSelector: *id001
+  affinity: *ecoPref
   resources:
     requests:
       cpu: 10m
