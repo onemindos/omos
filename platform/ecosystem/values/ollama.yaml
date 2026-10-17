@@ -12,9 +12,10 @@ persistentVolume:
   storageClass: do-block-storage-retain
   size: 20Gi
 resources:
+  # Reservation sized to real use (7-day peak 0.18 GiB, no model calls); the 16Gi limit still lets it load qwen3:8b when used.
   requests:
-    cpu: '1'
-    memory: 8Gi
+    cpu: 250m
+    memory: 2Gi
   limits:
     cpu: '6'
     memory: 16Gi
