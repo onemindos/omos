@@ -4,9 +4,8 @@ kagent 0.10.3 (Kubernetes AI agent runtime) and the agent-sandbox controller (v1
 
 | Folder | What it holds | Moved from |
 |---|---|---|
-| `applications/` | `ecosystem-kagent`, `ecosystem-kagent-crds`, `ecosystem-agent-sandbox` | `platform/ecosystem/applications/` |
-| `values/` | `kagent.yaml`, `kagent-crds.yaml`, `agent-sandbox.yaml` | `platform/ecosystem/values/` |
-| `charts/agent-sandbox/` | Vendored agent-sandbox chart 0.1.2 | `platform/ecosystem/charts/` |
+| `applications/` | `ecosystem-kagent`, `ecosystem-kagent-crds` (`ecosystem-agent-sandbox` was restored to `platform/ecosystem/` by the agent-sandbox restore PR) | `platform/ecosystem/applications/` |
+| `values/` | `kagent.yaml`, `kagent-crds.yaml` (`agent-sandbox.yaml` restored) | `platform/ecosystem/values/` |
 | `resources/helm-oci-kagent.yaml` | Argo CD credential for the kagent OCI chart repository | `platform/ecosystem/resources/` |
 | `secrets/` | `kagent` namespace SealedSecrets (`ghcr`, `kagent-db`, `kagent-model`, `kagent-oidc`) | `platform/ecosystem/resources/secrets/` |
 | `live-export/` | The 7 live objects as they ran (4 Agents, 1 ModelConfig, 2 RemoteMCPServers), cluster fields stripped | Exported from the cluster |
