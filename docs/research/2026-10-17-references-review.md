@@ -1,9 +1,9 @@
-# `references/` review: what to adopt, watch or drop
+# `docs/references/` review: what to adopt, watch or drop
 
-**Status:** open. Planned for Saturday 2026-10-17 (see the Todoist task "Review references/ and decide add/remove").
-**Goal:** go through the 37 research notes in [`references/`](../../references) and decide, for each, whether OneMind should adopt it, keep watching it, or drop the note. Record the answer in the Decision column. Adoption decisions become their own PRs; this file only records the verdicts.
+**Status:** open. Planned for Saturday 2026-10-17 (see the Todoist task "Review docs/references/ and decide add/remove").
+**Goal:** go through the 37 research notes in [`docs/references/`](../../references) and decide, for each, whether OneMind should adopt it, keep watching it, or drop the note. Record the answer in the Decision column. Adoption decisions become their own PRs; this file only records the verdicts.
 
-`references/` stays in the repo for now. Moving it to the local vault was considered and deferred until this review is done.
+`docs/references/` stays in the repo for now. Moving it to the local vault was considered and deferred until this review is done.
 
 ## How to judge each note
 
@@ -69,4 +69,4 @@
 - [ ] Duplicates merged or deleted
 - [ ] `nats-tactical-repos.md` resolved
 - [ ] One issue or PR opened per `Adopt`
-- [ ] `references/` kept, trimmed, or moved to the vault, and `docs/README.md` updated to match
+- [ ] `docs/references/` kept, trimmed, or moved to the vault, and `docs/README.md` updated to match
