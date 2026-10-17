@@ -5,13 +5,13 @@ singleNode: true
 # Prefer the ecosystem pool but do not require it, so the pod can run on a core node if the pool shrinks.
 nodeAffinity:
   preferredDuringSchedulingIgnoredDuringExecution:
-    - weight: 100
-      preference:
-        matchExpressions:
-          - key: onemind.io/compute-role
-            operator: In
-            values:
-              - ecosystem
+  - weight: 100
+    preference:
+      matchExpressions:
+      - key: onemind.io/compute-role
+        operator: In
+        values:
+        - ecosystem
 opensearchJavaOpts: -Xms1g -Xmx1g
 resources:
   requests:
