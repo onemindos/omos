@@ -1,4 +1,7 @@
 # OneMind Master Picture — Full System Synthesis & Cut-the-Fat Plan
+
+> **Review status (2026-10-17):** active OneMind OS design document, moved from the repo root and due for review and update. Until it is updated, where it disagrees with live state, `docs/STACK.md` (generated from the cluster) and `CLAUDE.md` win.
+
 **Date:** 2026-07-04 · **Status:** For Zeus review before migration resumes
 **Sources fused:** 6 Desktop architecture docs (6/30→7/4), omos-core tree, live cluster state, external repo research (AMOS, tak-ml, tak-gpt, TAK_OS, constellation-overwatch, ORP), four-plane infra doctrine, Synadia agent SDK.
 

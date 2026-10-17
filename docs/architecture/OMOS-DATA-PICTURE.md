@@ -1,4 +1,7 @@
 # OMOS DATA PICTURE — What feeds the map, and how it all comes together
+
+> **Review status (2026-10-17):** active OneMind OS design document, moved from the repo root and due for review and update. Until it is updated, where it disagrees with live state, `docs/STACK.md` (generated from the cluster) and `CLAUDE.md` win.
+
 **Date:** 2026-07-04 · For Zeus. Plain terms. One pipeline. Everything is omos.
 
 ---

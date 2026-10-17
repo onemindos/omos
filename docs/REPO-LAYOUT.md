@@ -27,7 +27,7 @@ What each top-level path in `onemindos/omos` is for, whether it is live, and wha
 | `OneMind-Platform/` | Moved out of the repo to the local vault (`~/OneMind/OneMind-Platform`). History is retained in git | **Moved** | Five capability notes (ArcCortex TAK VR, Defender AI, Leica BLK, Octave, platform) |
 | `rads/` | Moved out of the repo to the local vault (`~/OneMind/rads`). History is retained in git | **Moved** | RADS (Regenerative, Autonomous, Decentralized, Self-sustainable): homestead digital-twin prototype (Python agent, Docker Compose, DimOS bridge, docs). Uses its own `rad.*` subjects, which would need porting to the locked grammar |
 | `references/` | Research notes on external projects (37 files, one commit) | **Reference** | Not code. Contains one false-positive secret hit (`references/ai/orp.md`) |
-| `OMOS-DATA-PICTURE.md`, `ONEMIND-MASTER-PICTURE.md` | Dated architecture snapshots at the repo root | **Reference (stale)** | README already says to prefer `docs/` and `platform/` |
+| `docs/architecture/` | Design documents: `OneMind-OS-Architecture.md` (unified architecture), `ONEMIND-MASTER-PICTURE.md` (system synthesis), `OMOS-DATA-PICTURE.md` (data pipeline), and `decisions/`. Moved from the repo root on 2026-10-17 | **Active (under review)** | Being reviewed and updated; until then `docs/STACK.md` and `CLAUDE.md` win on live facts |
 | `CLAUDE.md`, `AGENTS.md` | Instructions for AI coding agents | **Active** | `CLAUDE.md` is the operating context; `AGENTS.md` points agents at `docs/MISSION.md` |
 | `.github/` | `quality.yml` (gates), `ecosystem-charts.yml`, image builds, Tailscale ACL sync, inventory refresh | **Active** | See "CI" in `CONTRIBUTING.md` and `quality.yml` header |
 | `renovate.json`, `.gitleaks.toml`, `.gitleaks-baseline.json`, `.yamllint.yml`, `.pre-commit-config.yaml`, `Makefile`, `.editorconfig` | Repo-level tooling | **Active** | |
@@ -50,7 +50,7 @@ Each step is independent and reversible. Do them one PR at a time; none changes 
 1. ~~**Remove the dangling `omos-infra` gitlink.**~~ Done.
 2. **Give every live workload an owner in Git.** Add Applications (or fold into an existing one) for `platform/nats-tools`, `platform/matrix` and `platform/openclaw`, with `prune: false` at first. Then adopt the Helm-CLI releases in the order listed in `docs/STACK.md`.
 3. ~~**Pick one home for the Legacy agent.**~~ Done: `platform/hermes/agent/` is the home, and `legacy/` was archived to the vault (see `docs/operations/hermes-recoverability-plan.md`).
-4. **Retire dead directories.** After confirming nothing reads them: `platform/geo/` (namespace gone), `scripts/check_secret_patterns.py` (superseded by gitleaks), the two root `*-PICTURE.md` snapshots (move to `docs/archive/`).
+4. **Retire dead directories.** After confirming nothing reads them: `platform/geo/` (namespace gone), `scripts/check_secret_patterns.py` (superseded by gitleaks).
 5. **Separate research from code.** Move `references/` under a single `research/` (or into the Obsidian vault) so the root is: `platform/ tak-server/ infra/ services/ docs/ scripts/ .github/`. Update the links in `README.md`, `CONTRIBUTING.md` and `docs/README.md` in the same PR.
 6. ~~**Decide on `rads/`.**~~ Done: moved to the local vault.
 7. **Clean `services/`.** Keep `onemind-core` and `onemind-postgres` (CI-built). Move the Mac-era scripts (`ctl.py`, `om_*.py`, `subscriber*.py`, `launch*.sh`, `create_*.py`) into `services/legacy-scripts/` or the edge repo, and rotate the committed token in `om_presence.py`.
