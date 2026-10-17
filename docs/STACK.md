@@ -102,8 +102,6 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
 | `ecosystem-opensearch` | onemind-search | opensearch 3.9.0 | Search | 20 GiB | `VolSync` | internal |
 | `ecosystem-harbor` | onemind-registry | harbor 1.19.2 | In-cluster container registry | 61 GiB | `VolSync` x5 | internal |
-| `ecosystem-kagent` / `ecosystem-kagent-crds` | kagent | kagent 0.10.3 | Kubernetes agent framework | none | Git | internal |
-| `ecosystem-agent-sandbox` | agent-sandbox-system | local `platform/ecosystem/charts/agent-sandbox` | Sandboxed agent execution | none | Git | internal |
 | `ecosystem-oc-control` | openchoreo-control-plane | openchoreo-control-plane 1.3.1 (+ overrides) | OpenChoreo developer platform | none | Git | gateway LB on **tailnet** |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
@@ -182,7 +180,6 @@ Gaps beyond the eleven releases:
 | nats | `agent-web-ui`, `agenttap`, `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
 | onetak | `maputnik`, `martin`, `nodeodm`, `overpass`, `pg-featureserv`, `stac-api`, `stac-browser`, `tak-portal`, `tile38`, `tileserver-gl`, `valhalla:run-latest`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
 | omos | `omos-mission-engine:latest` |
-| kagent | `kagent-grafana-mcp:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |
 | matrix, onemind-search | init containers using bare `busybox` / `busybox:latest` |

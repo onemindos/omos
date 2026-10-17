@@ -30,7 +30,6 @@ APP_DIRS = (
 LOCAL_VALUES = {
     "tak-server/chart": ["tak-server/values-onemind.yaml"],
     "platform/ecosystem/charts/onemind-core": [],
-    "platform/ecosystem/charts/agent-sandbox": ["platform/ecosystem/values/agent-sandbox.yaml"],
 }
 KUBE_VERSION = os.environ.get("HELM_KUBE_VERSION", "1.36.0")
 

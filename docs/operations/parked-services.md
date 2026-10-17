@@ -25,6 +25,7 @@ The record of every service removed from the cluster during the 2026 cost and cl
 | Service | Decision | Date | Config now at | Data backup (restic repository, last snapshot) | Volumes deleted | Notes |
 |---------|----------|------|---------------|-----------------------------------------------|-----------------|-------|
 | omos-mission-engine | Parked | 2026-10-17 | `platform/parked/omos-mission-engine/` (was `platform/omos/`) | None: it ran at 0 replicas with no volume | n/a | Image `ghcr.io/onemindos/omos-mission-engine:latest`; its source code exists nowhere, so it cannot be rebuilt. Bringing it back needs the code first |
+| kagent + agent-sandbox | Removed (parked) | 2026-10-17 | `platform/parked/kagent/` (was `platform/ecosystem/`) | No volumes. `kagent` database kept on `onemind-data` until 2026-11-16; `pg_dump` at `~/Backups/omos/kagent/kagent-2026-10-17.dump` (SHA-256 `d1ed3ba3…4221964`) | n/a (database drop pending, needs go-ahead) | 0 use in 7 days. Hermes is the agent harness. Vault profile: `Software/Self-Hosted/AI and Agents/Agent Platforms/kagent - Kubernetes AI Agent Runtime.md`. LiteLLM key and Authentik provider to revoke by hand |
 
 ## Restoring a parked service
 
