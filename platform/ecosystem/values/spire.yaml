@@ -16,8 +16,17 @@ global:
         create: false
 spire-server:
   replicaCount: 1
-  nodeSelector:
-    onemind.io/compute-role: ecosystem
+  # Prefer the ecosystem pool but do not require it, so the pod can run on a core node if the pool shrinks.
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values:
+            - ecosystem
   resources:
     requests:
       cpu: 25m
