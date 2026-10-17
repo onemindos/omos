@@ -6,7 +6,7 @@ Read `docs/MISSION.md` before architecture, product, AI or infrastructure decisi
 
 ## What This Repo Is
 
-If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 47 Argo Applications reconcile from `main`, but **11 Helm releases are installed by hand** (argocd, cert-manager, ingress-nginx, loki, monitoring, nack, nats, otel-collector, tailscale-operator, takserver, tempo) and a few namespaces (`matrix`, `openclaw`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 52 Argo Applications reconcile from `main` (2026-10-17). Of the 11 Helm releases first installed by hand, 4 are adopted into Argo (`edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator`, PR #176) and **7 are still Helm CLI only**: monitoring (kube-prometheus-stack), loki, tempo, otel-collector, nats, takserver and argocd. The monitoring adoption (PR #171) was closed without merging. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, `openclaw`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
 
 The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
@@ -36,7 +36,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
-  values/      Helm values for the hand-installed add-ons (argocd, cert-manager, ingress-nginx, loki, ...)
+  values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator; Helm CLI: argocd, kube-prometheus-stack, loki, tempo, otel-collector)
 tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
 infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root); edge/ holds Mac leaf config (not deployed)
 services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
@@ -75,7 +75,7 @@ Full doctrine: `docs/NATS-DOCTRINE.md`.
 
 ## NATS Streams
 
-The 39 Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats` Application and reconciled into JetStream by the NACK controller, which is a Helm-CLI release (`nack`), not an Argo app. Do not use the older Python provisioning scripts as the source of truth.
+The 39 Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats` Application and reconciled into JetStream by the NACK controller (Helm release `nack`, adopted into Argo as `edge-nack`). Do not use the older Python provisioning scripts as the source of truth.
 
 ## Secrets
 

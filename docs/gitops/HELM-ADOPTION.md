@@ -63,16 +63,20 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
 
 ## Release status
 
+Verified against the cluster on 2026-10-17: **4 adopted, 7 remaining.** All 11 still appear in `helm list -A`, because adoption leaves the Helm release record in place. Argo renders the chart itself and Helm records stop updating.
+
+`platform/install.sh` still runs `helm upgrade --install` for the adopted releases too. Do not run it: it would fight Argo.
+
 | Release | Namespace | Chart | Status | Application | Values |
 |---------|-----------|-------|--------|-------------|--------|
-| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Adopted in #171 | `monitoring-kube-prometheus-stack` | `platform/values/kube-prometheus-stack.yaml` |
-| `loki` | monitoring | loki-7.0.0 | Adopted in #171 | `monitoring-loki` | `platform/values/loki.yaml` |
-| `tempo` | monitoring | tempo-1.24.4 | Adopted in #171 | `monitoring-tempo` | `platform/values/tempo.yaml` |
-| `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Adopted in #171 | `monitoring-otel-collector` | `platform/values/otel-collector.yaml` |
-| `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | Adopted in this PR | `edge-ingress-nginx` | `platform/values/ingress-nginx.yaml` |
-| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Adopted in this PR | `edge-cert-manager` | `platform/values/cert-manager.yaml` |
-| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Adopted in this PR | `edge-tailscale-operator` | `platform/values/tailscale-operator.yaml` |
-| `nack` | nats | nack-0.34.0 | Adopted in this PR | `edge-nack` | `platform/nats/nack-values.yaml` |
+| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | **Remaining.** PR #171 was closed without merging | none (the Application was never created) | `platform/values/kube-prometheus-stack.yaml` |
+| `loki` | monitoring | loki-7.0.0 | **Remaining.** PR #171 was closed without merging | none (the Application was never created) | `platform/values/loki.yaml` |
+| `tempo` | monitoring | tempo-1.24.4 | **Remaining.** PR #171 was closed without merging | none (the Application was never created) | `platform/values/tempo.yaml` |
+| `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | **Remaining.** PR #171 was closed without merging | none (the Application was never created) | `platform/values/otel-collector.yaml` |
+| `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | Adopted in #176 | `edge-ingress-nginx` | `platform/values/ingress-nginx.yaml` |
+| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Adopted in #176 | `edge-cert-manager` | `platform/values/cert-manager.yaml` |
+| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Adopted in #176 | `edge-tailscale-operator` | `platform/values/tailscale-operator.yaml` |
+| `nack` | nats | nack-0.34.0 | Adopted in #176 | `edge-nack` | `platform/nats/nack-values.yaml` |
 | `nats` | nats | nats-2.14.2 | Remaining | none | `platform/nats/values.template.yaml` plus gitignored `values.secret.yaml` |
 | `takserver` | takserver | takserver-4.6.0 | Remaining | none | `tak-server/values-onemind.yaml`, chart `tak-server/chart` |
 | `argocd` | argocd | argo-cd-10.1.2 | Remaining | none | `platform/values/argocd.yaml` |
