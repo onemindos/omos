@@ -50,8 +50,9 @@ spec:
                 - name: data-storage
                   mountPath: /var/lib/clickhouse
               resources:
+                # Request sized to real use: 7-day peak 2.6 GiB against a 512Mi request, which made it an eviction target.
                 requests:
-                  memory: "512Mi"
+                  memory: "2Gi"
                   cpu: "250m"
                 limits:
                   memory: "3Gi"
