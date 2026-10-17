@@ -31,7 +31,7 @@ resource "digitalocean_kubernetes_node_pool" "ecosystem" {
   size       = var.node_size
   node_count = 2
   auto_scale = true
-  min_nodes  = 2
+  min_nodes  = 1 # lowered 2026-10-17 after right-sizing (Ollama 8Gi -> 2Gi); autoscaler can still add up to 4
   max_nodes  = 4
 
   labels = {
