@@ -33,11 +33,9 @@ alertmanager:
         memory: 128Mi
       limits:
         memory: 512Mi
-    # Pick up AlertmanagerConfig CRs from the monitoring namespace
+    # Pick up AlertmanagerConfig CRs; with no namespace selector the operator only
+    # reads Alertmanager's own namespace (monitoring). Matches the live release.
     alertmanagerConfigSelector: {}
-    alertmanagerConfigNamespaceSelector:
-      matchNames:
-        - monitoring
 
 kubeStateMetrics:
   enabled: true
@@ -62,6 +60,12 @@ nodeExporter:
   enabled: true
 
 grafana:
+  # Use the existing admin Secret. Without this the chart generates a random
+  # password on every render, so Argo would change the Grafana password each sync.
+  admin:
+    existingSecret: monitoring-grafana
+    userKey: admin-user
+    passwordKey: admin-password
   resources:
     requests:
       cpu: 100m
