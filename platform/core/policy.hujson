@@ -1,9 +1,14 @@
-// Example/default ACLs for unrestricted connections.
+// Tailnet policy for omos. GitOps: a PR shows the difference from the live policy and runs the tests at the
+// bottom; a merge to main applies it (.github/workflows/tailscale.yml).
+//
+// Rule of thumb: you (every device signed in as you) reach everything. Cluster proxies (tag:k8s) reach only
+// the specific machines and ports they are configured for. Nothing else is open, and Funnel (public exposure)
+// is off.
 {
-	// Declare static groups of users. Use autogroups for all users or users with a specific role.
-	// "groups": {
-	//   "group:example": ["alice@example.com", "bob@example.com"],
-	// },
+	"groups": {
+		// The only human on the tailnet.
+		"group:admins": ["Zeus-Delacruz@github"],
+	},
 
 	// Tags for the Tailscale Kubernetes Operator and the proxies it creates.
 	"tagOwners": {
@@ -19,21 +24,62 @@
 		},
 	},
 
-	// Define grants that govern access for users, groups, autogroups, tags,
-	// Tailscale IP addresses, and subnet ranges.
+	// Names for the machines referred to below (tailnet addresses as of 2026-10-17).
+	"hosts": {
+		// Your devices that Hermes manages through cluster egress proxies (hermes namespace).
+		"omos-mbp":       "100.74.182.117",
+		"omos-s24":       "100.121.191.94",
+		"omos-dell-edge": "100.98.112.88",
+		"omos-dell-zeus": "100.124.33.13",
+		"omos-ha":        "100.64.25.12",
+		"omos-intel":     "100.114.216.80",
+		// Cluster services on the tailnet (operator proxies).
+		"argocd":         "100.121.32.110",
+		"onemind-auth":   "100.98.186.54",
+		"grafana":        "100.80.230.49",
+		"headlamp":       "100.70.204.17",
+		"opencost":       "100.115.174.112",
+		"hermes-agent":   "100.103.22.42",
+		"omos-nats":      "100.117.169.54",
+		"tak":            "100.119.127.43",
+	},
+
 	"grants": [
-		// Allow all connections.
-		// Comment this section out if you want to define specific restrictions.
+		// 1. You: every device signed in as you reaches everything (admin UIs, NATS leaf port, TAK, your machines).
 		{
-			"src": ["*"],
+			"src": ["group:admins"],
 			"dst": ["*"],
 			"ip":  ["*"],
 		},
+
+		// 2. Hermes, through the cluster egress proxies, reaches the machines it manages on the ports it uses:
+		//    SSH to the Mac, the Dells and the intel droplet, the Home Assistant API, and SSH (Termux) on the phone.
+		{
+			"src": ["tag:k8s"],
+			"dst": ["omos-mbp", "omos-dell-edge", "omos-dell-zeus", "omos-intel"],
+			"ip":  ["tcp:22"],
+		},
+		{
+			"src": ["tag:k8s"],
+			"dst": ["omos-ha"],
+			"ip":  ["tcp:8123"],
+		},
+		{
+			"src": ["tag:k8s"],
+			"dst": ["omos-s24"],
+			"ip":  ["tcp:8022"],
+		},
+
+		// 3. Backstage reaches ArgoCD and Authentik through the mesh (backstage/argocd-mesh, backstage/authentik-mesh).
+		{
+			"src": ["tag:k8s"],
+			"dst": ["argocd", "onemind-auth"],
+			"ip":  ["tcp:443"],
+		},
 	],
 
-	// Define users and devices that can use Tailscale SSH.
+	// Tailscale SSH: you can SSH into your own devices.
 	"ssh": [
-		// Allow all users to SSH into their own devices in check mode.
 		{
 			"src":    ["autogroup:member"],
 			"dst":    ["autogroup:self"],
@@ -42,12 +88,20 @@
 		},
 	],
 
-	"nodeAttrs": [
+	// Funnel (public internet exposure) is not granted to anyone. Nothing uses it (checked 2026-10-17).
+
+	// Checked on every PR and before every apply. If a test fails, the policy is not applied.
+	"tests": [
 		{
-			// Funnel policy, which lets tailnet members control Funnel
-			// for their own devices.
-			"target": ["autogroup:member"],
-			"attr":   ["funnel"],
+			// You keep full access.
+			"src":    "Zeus-Delacruz@github",
+			"accept": ["argocd:443", "grafana:443", "headlamp:443", "opencost:443", "hermes-agent:443", "omos-nats:7422", "tak:8089", "omos-mbp:22"],
+		},
+		{
+			// Cluster proxies reach only what they are configured for, and none of the admin tools.
+			"src":    "tag:k8s",
+			"accept": ["omos-mbp:22", "omos-dell-edge:22", "omos-intel:22", "omos-ha:8123", "omos-s24:8022", "argocd:443", "onemind-auth:443"],
+			"deny":   ["headlamp:443", "grafana:443", "opencost:443", "hermes-agent:443", "omos-nats:7422", "omos-mbp:5900", "omos-ha:22", "omos-s24:22"],
 		},
 	],
 }
