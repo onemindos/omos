@@ -29,6 +29,7 @@ APP_DIRS = (
 # Local chart dir -> values file used to render it (relative to repo root).
 LOCAL_VALUES = {
     "platform/takserver/chart": ["platform/takserver/values-onemind.yaml"],
+    "platform/ecosystem/charts/agent-sandbox": ["platform/ecosystem/values/agent-sandbox.yaml"],
     "platform/ecosystem/charts/onemind-core": [],
 }
 KUBE_VERSION = os.environ.get("HELM_KUBE_VERSION", "1.36.0")

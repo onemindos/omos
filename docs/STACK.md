@@ -106,6 +106,7 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
 | `ecosystem-rollouts` | argo-rollouts | argo-rollouts 2.43.6 | Progressive delivery | none | Git | internal |
+| `ecosystem-agent-sandbox` | agent-sandbox-system | local `platform/ecosystem/charts/agent-sandbox` | Sandboxed agent execution (restored from `platform/parked/kagent/`, same chart 0.1.2 and controller v1.0.6) | none | Git | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-spire` / `ecosystem-spire-crds` | spire-system | spire 0.30.3 / spire-crds 0.6.1 | Workload identity | 5 GiB | `VolSync` | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
