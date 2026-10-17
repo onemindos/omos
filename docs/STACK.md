@@ -197,7 +197,7 @@ The new secret scan found nine locations that look like real or example credenti
 | `platform/monitoring/deployment.yaml` | 53 | `--password=` argument on a container |
 | `services/om_presence.py` | 50, 52 | Default token and API key in code |
 | `tak-server/edge/deploy/docs/enrollment.md` | 123, 139 | Line 139 is a `curl -u user:password` example; line 123 is probably a false positive |
-| `references/ai/orp.md` | 28 | False positive (prose about a keystore) |
+| `docs/references/ai/orp.md` | 28 | False positive (prose about a keystore) |
 
 `platform/monitoring/` belongs to another change; flag the `--password` argument there rather than editing it in this one.
 
