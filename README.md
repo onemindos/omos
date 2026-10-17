@@ -20,7 +20,6 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | `tak-server/` | TAK Server chart, image build files, plugins, deployment overlays, and edge tools |
 | `services/` | First-party source code built into images (portals, OneMind runtime services, bridges), the bus contracts in `schemas/`, and supporting scripts |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
-| `references/` | External project and ecosystem research |
 | `scripts/` | CI validation helpers and ecosystem tooling |
 The two `*-PICTURE.md` files at the repository root are dated architecture snapshots. For current architecture and deployment guidance, use `docs/` and the manifests under `platform/`.
 

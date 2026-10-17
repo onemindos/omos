@@ -88,7 +88,7 @@
   "EndColumn": 85,
   "Match": "keystore, REDACTED ",
   "Secret": "REDACTED",
-  "File": "references/ai/orp.md",
+  "File": "docs/references/ai/orp.md",
   "SymlinkFile": "",
   "Commit": "",
   "Entropy": 3.5216405,
@@ -97,7 +97,7 @@
   "Date": "",
   "Message": "",
   "Tags": [],
-  "Fingerprint": "references/ai/orp.md:generic-api-key:28"
+  "Fingerprint": "docs/references/ai/orp.md:generic-api-key:28"
  },
  {
   "RuleID": "generic-api-key",
