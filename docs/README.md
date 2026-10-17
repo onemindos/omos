@@ -4,6 +4,12 @@ The canonical architecture and doctrine documents for OneMind OS. **Read these b
 
 ---
 
+## Design documents (under review)
+
+`architecture/` holds the OneMind OS design documents: `OneMind-OS-Architecture.md` (unified architecture), `ONEMIND-MASTER-PICTURE.md` (system synthesis) and `OMOS-DATA-PICTURE.md` (data pipeline), plus `decisions/`. They are being reviewed and updated; until then, `STACK.md` and `../CLAUDE.md` win on live facts.
+
+---
+
 ## Canon (read in order)
 
 | File | Purpose |

@@ -46,3 +46,6 @@ tak-server/build-root/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Obsidian workspace settings (local only)
+.obsidian/
