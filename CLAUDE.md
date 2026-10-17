@@ -54,7 +54,7 @@ Not active or not deployed: `references/`. Do not edit it unless asked. (The `on
 
 ### Public ingress
 
-Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`. (`zeusdelacruz.com` retired 2026-10-10.) `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only. `cloudflared` is scaled to 0 (cold standby).
+Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`. (`zeusdelacruz.com` retired 2026-10-10.) `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only (OpenCost too, at `opencost.tail717ba0.ts.net`). `cloudflared` is scaled to 0 (cold standby).
 
 ## NATS Subject Grammar (LOCKED — do not invent new patterns)
 
