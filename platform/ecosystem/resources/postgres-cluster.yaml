@@ -7,6 +7,8 @@ metadata:
     argocd.argoproj.io/sync-wave: '1'
 spec:
   instances: 3
+  # Rolling updates move the primary to a replica (switchover) instead of restarting it in place.
+  primaryUpdateMethod: switchover
   imagePullSecrets:
   - name: ghcr
   storage:
@@ -22,8 +24,16 @@ spec:
   affinity:
     enablePodAntiAffinity: true
     podAntiAffinityType: preferred
-    nodeSelector:
-      onemind.io/compute-role: ecosystem
+    # Prefer the ecosystem pool but do not require it, so instances can run on a core node if the pool shrinks.
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values:
+            - ecosystem
   bootstrap:
     initdb:
       database: onemind
