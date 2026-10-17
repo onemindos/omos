@@ -30,7 +30,7 @@ nats pub legacy.health.alive "$(date -u +%s)"    # heartbeat (July practice)
 
 ## 2. Reaching other machines (verified that the services exist)
 
-The `hermes` namespace has `ExternalName` services that point at Tailscale egress proxies: `omos-mbp` (Zeus's Mac), `omos-dell-edge`, `omos-dell-zeus`, `omos-ha-edge` (Home Assistant), `omos-intel`, `omos-s24`. From the pod they resolve as `<name>.hermes.svc.cluster.local`.
+The `hermes` namespace has `ExternalName` services that point at Tailscale egress proxies: `omos-mbp` (Zeus's Mac, SSH), `omos-ha-edge` (Home Assistant API), `omos-s24` (phone, Termux SSH). They are defined in `egress.yaml`, and the tailnet policy must allow each target and port. The Dells and the intel droplet were removed on 2026-10-17 (offline 50 to 74 days; the droplet no longer exists). From the pod they resolve as `<name>.hermes.svc.cluster.local`.
 
 ```bash
 ssh -i <pod ssh key> zeus@omos-mbp.hermes.svc.cluster.local "<command>"

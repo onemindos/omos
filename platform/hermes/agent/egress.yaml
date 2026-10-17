@@ -1,0 +1,57 @@
+# Tailscale egress: how Hermes reaches machines on the tailnet. Each Service makes the Tailscale operator run a
+# proxy (ProxyGroup "egress") to one tailnet address; Hermes connects to <name>.hermes.svc.cluster.local.
+# The operator fills in spec.externalName; platform-legacy ignores differences in that field so the two never fight.
+# Access is also limited by the tailnet policy (platform/core/policy.hujson): each target and port must be allowed there.
+apiVersion: v1
+kind: Service
+metadata:
+  name: omos-mbp
+  namespace: hermes
+  labels:
+    tailscale.com/proxy-group: egress
+  annotations:
+    tailscale.com/tailnet-ip: 100.74.182.117   # Zeus's MacBook Pro: SSH
+spec:
+  type: ExternalName
+  externalName: ts-omos-mbp-hgq9w.tailscale.svc.cluster.local
+  ports:
+    - name: ssh
+      port: 22
+      protocol: TCP
+      targetPort: 22
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omos-s24
+  namespace: hermes
+  labels:
+    tailscale.com/proxy-group: egress
+  annotations:
+    tailscale.com/tailnet-ip: 100.121.191.94   # S24 Ultra: Termux SSH
+spec:
+  type: ExternalName
+  externalName: ts-omos-s24-44l4v.tailscale.svc.cluster.local
+  ports:
+    - name: ssh
+      port: 8022
+      protocol: TCP
+      targetPort: 8022
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omos-ha-edge
+  namespace: hermes
+  labels:
+    tailscale.com/proxy-group: egress
+  annotations:
+    tailscale.com/tailnet-ip: 100.64.25.12     # Home Assistant: REST API (box offline since about 2026-09-19)
+spec:
+  type: ExternalName
+  externalName: ts-omos-ha-edge-rlv6k.tailscale.svc.cluster.local
+  ports:
+    - name: http
+      port: 8123
+      protocol: TCP
+      targetPort: 8123

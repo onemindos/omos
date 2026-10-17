@@ -29,10 +29,7 @@
 		// Your devices that Hermes manages through cluster egress proxies (hermes namespace).
 		"omos-mbp":       "100.74.182.117",
 		"omos-s24":       "100.121.191.94",
-		"omos-dell-edge": "100.98.112.88",
-		"omos-dell-zeus": "100.124.33.13",
 		"omos-ha":        "100.64.25.12",
-		"omos-intel":     "100.114.216.80",
 		// Cluster services on the tailnet (operator proxies).
 		"argocd":         "100.121.32.110",
 		"onemind-auth":   "100.98.186.54",
@@ -53,10 +50,10 @@
 		},
 
 		// 2. Hermes, through the cluster egress proxies, reaches the machines it manages on the ports it uses:
-		//    SSH to the Mac, the Dells and the intel droplet, the Home Assistant API, and SSH (Termux) on the phone.
+		//    SSH to the Mac, the Home Assistant API, and SSH (Termux) on the phone.
 		{
 			"src": ["tag:k8s"],
-			"dst": ["omos-mbp", "omos-dell-edge", "omos-dell-zeus", "omos-intel"],
+			"dst": ["omos-mbp"],
 			"ip":  ["tcp:22"],
 		},
 		{
@@ -100,7 +97,7 @@
 		{
 			// Cluster proxies reach only what they are configured for, and none of the admin tools.
 			"src":    "tag:k8s",
-			"accept": ["omos-mbp:22", "omos-dell-edge:22", "omos-intel:22", "omos-ha:8123", "omos-s24:8022", "argocd:443", "onemind-auth:443"],
+			"accept": ["omos-mbp:22", "omos-ha:8123", "omos-s24:8022", "argocd:443", "onemind-auth:443"],
 			"deny":   ["headlamp:443", "grafana:443", "opencost:443", "hermes-agent:443", "omos-nats:7422", "omos-mbp:5900", "omos-ha:22", "omos-s24:22"],
 		},
 	],
