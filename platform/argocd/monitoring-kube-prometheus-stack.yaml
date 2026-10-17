@@ -1,0 +1,58 @@
+# Adopts the hand-installed Helm release "monitoring" (namespace monitoring) into
+# Argo CD. Chart version and releaseName match the live release exactly;
+# values: kube-prometheus-stack.yaml.
+# Adoption safety: prune is OFF (Argo will never delete anything it did not
+# render) and there is deliberately no resources-finalizer, so deleting this
+# Application can never cascade to the workloads or PVCs.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-kube-prometheus-stack
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '4'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  sources:
+  - repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 87.16.1
+    helm:
+      releaseName: monitoring
+      # CRDs are NOT managed here: the live CRDs (operator 0.92.1) already match
+      # this chart version and must never be pruned or rewritten by this app.
+      skipCrds: true
+      valueFiles:
+      - $values/platform/values/kube-prometheus-stack.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  ignoreDifferences:
+  # caBundle is injected into the webhook configs by the chart's admission
+  # patch hook (and is already populated live); the template renders it empty.
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[]?.clientConfig.caBundle
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[]?.clientConfig.caBundle
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true
+    - RespectIgnoreDifferences=true
