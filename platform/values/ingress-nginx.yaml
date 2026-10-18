@@ -1,6 +1,13 @@
 controller:
   publishService:
     enabled: true
+  # Request metrics for Grafana and for the Argo Rollouts canary analysis (tak-portal).
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: monitoring
   # Two replicas: with externalTrafficPolicy Local the DO load balancer only sends
   # traffic to nodes running a controller pod, so one replica would be a single
   # point of failure (the chart adds a PDB with minAvailable 1 when replicas > 1).
