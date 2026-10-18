@@ -117,7 +117,7 @@ it could lock out both itself and the human who has to recover it.
 | Phase | Goal | Status | PRs | Parallel with |
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
-| 1 | Claude sees every layer (MCP on the Mac) | In progress | [#257](https://github.com/onemindos/omos/pull/257) | 2 |
+| 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Not started | | 1, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
@@ -155,7 +155,8 @@ read-only.
       ([`platform/kube/ai-operator.yaml`](platform/kube/ai-operator.yaml)).
 - [x] Setup script for Claude Code and Codex: [`scripts/ai-operator/setup.sh`](scripts/ai-operator/setup.sh).
 - [x] Document the setup in [`docs/operations/ai-operator-access.md`](docs/operations/ai-operator-access.md).
-- [ ] After merge and Argo sync: run the script and pass the gate below.
+- [x] After merge and Argo sync: run the script and pass the gate below.
+- [x] Follow-up: add `nodes` to `ai-operator-read` (the built-in `view` role does not include them).
 - Moved: OpenChoreo control-plane MCP goes to phase 2. The endpoint works
   (`/mcp` answers 401 and advertises Authentik), but OpenChoreo manages nothing yet, and
   it needs a read-only OpenChoreo role and an Authentik client for the agent.
@@ -166,6 +167,21 @@ read-only.
 
 Gate: from a fresh session, Claude lists unhealthy workloads in each layer with the cause,
 using only the MCP servers, and every server refuses a write.
+
+Evidence (2026-10-18, after #257 synced):
+
+- `claude mcp list`: `onemind-kubernetes` and `onemind-backstage` connected. Codex config
+  has the same two servers.
+- `onemind-kubernetes` exposes 14 tools, all read-only. Calling `resources_delete` fails
+  with "unknown tool"; reading `secret/kube/ai-operator-token` is forbidden for
+  `system:serviceaccount:kube:ai-operator`.
+- `onemind-backstage` `onemind.health` returned live checks.
+- Read-only queries found real problems, with causes from pod events:
+  `nats/nats-2` Pending (bus at 2/3; hub-core nodes lack CPU and memory, autoscaler in
+  backoff), `takserver/tak-ldap-0` and `takml/takml-server` Pending (pinned by hostname to
+  `onemind-hub-core-v2-37phkg`, a node DOKS replaced about 10:30 UTC), plus
+  `falco` and `spire-agent` DaemonSet pods without room on one node.
+- Listing nodes was denied; fixed in this PR.
 
 ### Phase 2: OpenChoreo foundations
 

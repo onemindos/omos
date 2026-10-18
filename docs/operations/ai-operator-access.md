@@ -28,7 +28,7 @@ account is needed for observation.
 - ServiceAccount `kube/ai-operator` and a token Secret `kube/ai-operator-token` that the
   cluster fills in.
 - ClusterRoleBinding to the built-in `view` role (no Secrets).
-- ClusterRole `ai-operator-read`: get, list and watch on PersistentVolumes, storage,
+- ClusterRole `ai-operator-read`: get, list and watch on Nodes, PersistentVolumes, storage,
   CRDs, metrics and the platform CRD groups listed above.
 
 ConfigMaps are readable through `view`. Do not put credentials in ConfigMaps.
