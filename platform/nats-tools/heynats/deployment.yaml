@@ -17,6 +17,13 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr
+      volumes:
+        - name: nats-ca
+          secret:
+            secretName: nats-ca
+            items:
+              - key: ca.crt
+                path: ca.crt
       containers:
         - name: heynats
           image: ghcr.io/onemindos/heynats:latest
@@ -24,6 +31,16 @@ spec:
           ports:
             - name: http
               containerPort: 5000
+          env:
+            # The bus requires TLS with the private NATS CA. Go reads trusted roots from
+            # SSL_CERT_FILE, so point it at the NATS CA; without this HeyNATS fails with
+            # "x509: certificate signed by unknown authority".
+            - name: SSL_CERT_FILE
+              value: /etc/nats-ca/ca.crt
+          volumeMounts:
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
           resources:
             requests:
               cpu: 50m
