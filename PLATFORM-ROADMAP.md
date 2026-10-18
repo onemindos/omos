@@ -116,7 +116,7 @@ it could lock out both itself and the human who has to recover it.
 
 | Phase | Goal | Status | PRs | Parallel with |
 |---|---|---|---|---|
-| 0 | Blueprint: this document | In progress | [#256](https://github.com/onemindos/omos/pull/256) | none |
+| 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Not started | | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Not started | | 1, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
@@ -135,9 +135,11 @@ Goal: one shared map for humans and agents. No cluster changes.
 - [x] Write this roadmap at the repository root.
 - [x] Map every namespace to a layer.
 - [x] Point `CLAUDE.md`, `AGENTS.md` and `docs/REPO-LAYOUT.md` to it.
-- [ ] Merge.
+- [x] Merge.
 
 Gate: the PR is merged and the tracker shows Phase 0 `Done`.
+
+Evidence: PR #256 merged 2026-10-18 with all CI checks passing (lint, kubeconform, Helm render, gitleaks).
 
 ### Phase 1: Claude sees every layer
 
