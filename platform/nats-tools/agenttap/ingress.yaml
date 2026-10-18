@@ -9,7 +9,7 @@ spec:
     service:
       name: agenttap
       port:
-        number: 8080
+        number: 8088
   tls:
     - hosts:
         - agenttap
