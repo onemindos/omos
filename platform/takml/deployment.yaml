@@ -8,6 +8,8 @@ metadata:
     app: takml-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate          # RWO PVC — a rolling update deadlocks waiting for the volume
   selector:
     matchLabels:
       app: takml-db
