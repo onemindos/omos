@@ -1,0 +1,28 @@
+# Agent fabric (Hermes tools): Agent Console and agent-tap in namespace agent-fabric,
+# from platform/hermes/agent-fabric/. A small, self-contained namespace, so prune is on;
+# there is no resources-finalizer, so deleting this Application never cascades.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-agent-fabric
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/hermes/agent-fabric
+    directory:
+      recurse: false
+      exclude: '*.md'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: agent-fabric
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
