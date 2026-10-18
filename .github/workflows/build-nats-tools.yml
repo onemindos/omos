@@ -6,6 +6,7 @@ name: Build NATS Tools → GHCR
 # Images built:
 #   nats-dashboard  — pre-wired to K8s cluster via sys user
 #   nats-ui         — static nginx, manual connect
+#   heynats         — Go + Vue, raw TCP NATS
 #   nui             — Go + React, persistent KV store
 #   natscope        — Go gRPC, full JetStream management
 #   cobra-nats      — Next.js, KV / streams / object store
@@ -47,6 +48,10 @@ jobs:
             # Original work in onemindos org — not an upstream clone
             repo: https://github.com/onemindos/nats-ui.git
             dockerfile: docker/Dockerfile
+            context: .
+          - name: heynats
+            repo: https://github.com/astergaze-solutions/heynats.git
+            dockerfile: Dockerfile
             context: .
           - name: nui
             repo: https://github.com/nats-nui/nui.git
