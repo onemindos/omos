@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265) | 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266) | 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -224,17 +224,23 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       because the registration pins its self-signed CA. Verified 2026-10-18: Synced and
       Healthy; agent running; `gateway-default` programmed at tailnet IP 100.110.185.30
       (`openchoreo-data-plane-cilium-gateway-gateway-default.tail717ba0.ts.net`).
-- [ ] 2d. Register `ClusterDataPlane` `default` (guide step 5, register):
+- [x] 2d. Register `ClusterDataPlane` `default` (guide step 5, register):
       `platform/openchoreo/data-plane/cluster-data-plane.yaml` with the agent CA,
       `secretStoreRef: default`, and the HTTP listener on the guide's nip.io domain built
       from the gateway's tailnet IP: `apps.openchoreo.100-110-185-30.nip.io` (resolves
       only to a tailnet address, so apps are tailnet-only). A real domain such as
-      `*.apps.onemindos.dev` with `letsencrypt-dns` TLS replaces it later.
-- [ ] First `ClusterComponentType` `onemind-service`: resource requests and limits,
-      network policy, Tailscale route, standard labels. Built-in rules from the
-      2026-10-18 incident: never pin to a node name (use the node-pool label or pod
-      affinity), and use the `Recreate` strategy for any workload with a ReadWriteOnce volume.
-- [ ] Turn on the built-in console (`backstage.enabled: true`), tailnet-only, with
+      `*.apps.onemindos.dev` with `letsencrypt-dns` TLS replaces it later. Verified
+      2026-10-18: agent connected (tunnel requests return 200), `ClusterDataPlane`
+      `Created=True`, the three environments `EnvironmentReady`, and the `default`
+      project's bindings `Ready` with namespaces `dp-default-default-{development,staging,production}-*`.
+- [ ] 2e. First `ClusterComponentType` `onemind-service`
+      (`platform/openchoreo/platform/onemind-service.yaml`, Argo Application
+      `platform-openchoreo-platform`): the upstream `service` type without its CORS
+      filter (unsupported by Gateway API v1.2.1 here), pods prefer the ecosystem pool and
+      cannot be pinned to a node, a `strategy` parameter (`Recreate` for ReadWriteOnce
+      volumes), default requests 50m / 128Mi. Apps are reached through the tailnet
+      gateway, so no per-app Tailscale ingress. Network policy: later, as a project type.
+- [ ] 2f. Turn on the built-in console (`backstage.enabled: true`), tailnet-only, with
       our catalog files mounted through `backstage.extraVolumes` and `appConfig`.
 
 Gate: the data plane agent is connected, the plane shows healthy in the OpenChoreo API,
@@ -332,7 +338,10 @@ descheduler (Layer 1) in phase 5 alongside the capacity work.
 - **Maturity:** OpenChoreo is a CNCF Sandbox project with frequent releases and several
   supported lines at once. Pin chart versions and read release notes before upgrades.
 - **Backstage version:** the OpenChoreo plugins pin Backstage 1.51.0; our portal runs 1.55.3.
-- **Gateway:** Cilium Gateway API with the OpenChoreo data plane is untested.
+- **Gateway:** Cilium Gateway API works with the OpenChoreo data plane (phase 2c), but
+  its CRDs are v1.2.1 (DOKS-managed) while OpenChoreo targets v1.5.1. The upstream
+  `service` component type's CORS filter cannot be used; use `onemind-service`.
+  Re-check when DOKS upgrades Cilium or Gateway API.
 - **Local-first mission:** `docs/MISSION.md` requires home operation without the cloud.
   Before Phase 8, verify what a home data plane does when the cloud control plane is
   unreachable (running workloads should continue; changes cannot be applied), and decide
