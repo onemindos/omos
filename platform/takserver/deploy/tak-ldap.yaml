@@ -53,26 +53,28 @@ kind: StatefulSet
 metadata:
   name: tak-ldap
   namespace: takserver
-  labels: { app: tak-ldap }
+  labels: {app: tak-ldap}
 spec:
   serviceName: tak-ldap
   replicas: 1
   selector:
-    matchLabels: { app: tak-ldap }
+    matchLabels: {app: tak-ldap}
   template:
     metadata:
-      labels: { app: tak-ldap }
+      labels: {app: tak-ldap}
     spec:
       imagePullSecrets:
         - name: ghcr
+      # Pin to the hub-core pool, never to a node name: DOKS replaces nodes on upgrade
+      # (2026-10-18 the old hostname pin left this pod Pending).
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: kubernetes.io/hostname
+                  - key: doks.digitalocean.com/node-pool
                     operator: In
-                    values: [onemind-hub-core-v2-37phkg]
+                    values: [onemind-hub-core-v2]
       initContainers:
         - name: seed-slapd-config
           image: ghcr.io/onemindos/tak-ldap:5.8
@@ -132,7 +134,8 @@ spec:
               # filter to Kerberos naming patterns, emit no-op implementations.
               # Known GSSAPI data symbols (global OID pointers) - must be defined as
               # variables, not functions; exclude them from the function stub loop.
-              DATA_SYMS="GSS_C_NT_HOSTBASED_SERVICE GSS_C_NT_HOSTBASED_SERVICE_X GSS_C_NT_USER_NAME GSS_C_NT_MACHINE_UID_NAME GSS_C_NT_STRING_UID_NAME GSS_C_NT_ANONYMOUS GSS_C_NT_EXPORT_NAME gss_mech_krb5 gss_mech_krb5_old gss_mech_krb5_wrong gss_nt_krb5_name gss_nt_krb5_principal krb5_gss_oid_array"
+              DATA_SYMS="GSS_C_NT_HOSTBASED_SERVICE GSS_C_NT_HOSTBASED_SERVICE_X GSS_C_NT_USER_NAME GSS_C_NT_MACHINE_UID_NAME GSS_C_NT_STRING_UID_NAME GSS_C_NT_ANONYMOUS"
+              DATA_SYMS="$DATA_SYMS GSS_C_NT_EXPORT_NAME gss_mech_krb5 gss_mech_krb5_old gss_mech_krb5_wrong gss_nt_krb5_name gss_nt_krb5_principal krb5_gss_oid_array"
               DATA_PAT=$(echo "$DATA_SYMS" | tr ' ' '|')
 
               # Collect ALL symbols from ALL Kerberos libs in one pass, globally dedup.
@@ -462,11 +465,11 @@ spec:
               ulimit -Sn 4096
               exec /usr/local/bin/entrypoint.sh
           ports:
-            - { name: ldap,  containerPort: 389, protocol: TCP }
-            - { name: ldaps, containerPort: 636, protocol: TCP }
+            - {name: ldap, containerPort: 389, protocol: TCP}
+            - {name: ldaps, containerPort: 636, protocol: TCP}
           envFrom:
-            - configMapRef: { name: tak-ldap-config }
-            - secretRef:    { name: tak-ldap-creds  }
+            - configMapRef: {name: tak-ldap-config}
+            - secretRef: {name: tak-ldap-creds}
           readinessProbe:
             exec:
               command: ["ldapsearch", "-x", "-H", "ldap://localhost:389",
@@ -482,15 +485,15 @@ spec:
             periodSeconds: 30
             failureThreshold: 5
           resources:
-            requests: { cpu: 100m, memory: 512Mi }
-            limits:   { cpu: 1000m, memory: 8Gi }
+            requests: {cpu: 100m, memory: 512Mi}
+            limits: {cpu: 1000m, memory: 8Gi}
           volumeMounts:
-            - { name: ldap-data,   mountPath: /var/lib/ldap }
-            - { name: ldap-config, mountPath: /etc/ldap/slapd.d }
+            - {name: ldap-data, mountPath: /var/lib/ldap}
+            - {name: ldap-config, mountPath: /etc/ldap/slapd.d}
             # Full emptyDir mount so startup script can cp patched binaries into place.
             # (K8s subPath bind mounts silently fail on overlayfs container paths;
             #  cp at startup is the reliable alternative.)
-            - { name: krb5-stubs, mountPath: /krb5stubs }
+            - {name: krb5-stubs, mountPath: /krb5stubs}
             # Mount Kerberos stubs over the real .so files.  /lib -> /usr/lib on Debian.
             - name: krb5-stubs
               mountPath: /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2
@@ -513,23 +516,23 @@ spec:
       spec:
         accessModes: [ReadWriteOnce]
         resources:
-          requests: { storage: 1Gi }
+          requests: {storage: 1Gi}
     - metadata:
         name: ldap-config
       spec:
         accessModes: [ReadWriteOnce]
         resources:
-          requests: { storage: 1Gi }
+          requests: {storage: 1Gi}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: tak-ldap
   namespace: takserver
-  labels: { app: tak-ldap }
+  labels: {app: tak-ldap}
 spec:
-  selector: { app: tak-ldap }
+  selector: {app: tak-ldap}
   clusterIP: None   # headless — StatefulSet members address directly
   ports:
-    - { name: ldap,  port: 389, targetPort: 389,  protocol: TCP }
-    - { name: ldaps, port: 636, targetPort: 636,  protocol: TCP }
+    - {name: ldap, port: 389, targetPort: 389, protocol: TCP}
+    - {name: ldaps, port: 636, targetPort: 636, protocol: TCP}
