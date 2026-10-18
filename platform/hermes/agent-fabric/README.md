@@ -15,7 +15,8 @@ Security:
   a dedicated `agent_fabric` user limited to `agents.>` and `_INBOX.>` comes with the NATS
   adoption (the live NATS config is edited outside Helm, so it cannot be changed safely
   with `helm upgrade` first).
-- TLS: **verification is off for the Agent Console (known gap)**. Bun 1.3.14 fails the hostname check against NATS (`ERR_TLS_CERT_ALTNAME_INVALID`) even with the NATS CA trusted. Egress is limited to the NATS pods meanwhile.
+- TLS: the NATS server certificate is verified against the NATS CA (`nats-ca` ConfigMap).
+- Known gap: the agent-console image installs npm packages at startup, so it has outbound HTTPS (443) to the public internet (private ranges excluded) until the image is rebuilt with its dependencies bundled.
 - Images pinned by digest.
 
 The Dockerfiles used by `build-nats-tools.yml` stay in `platform/nats-tools/agent-web-ui/`
