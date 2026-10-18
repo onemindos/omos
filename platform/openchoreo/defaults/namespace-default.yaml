@@ -1,0 +1,11 @@
+# Install guide v1.3.x step 4: mark `default` as an OpenChoreo control-plane namespace.
+#   kubectl label namespace default openchoreo.dev/control-plane=true --overwrite
+# Server-side apply manages only this label. Delete=false: Argo CD never deletes `default`.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default
+  labels:
+    openchoreo.dev/control-plane: "true"
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true,Delete=false
