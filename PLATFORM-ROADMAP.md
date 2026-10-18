@@ -199,7 +199,9 @@ Goal: OpenChoreo can deploy something. All resources in Git, applied by Argo CD.
 - [ ] Register `ClusterDataPlane` `default` (agent CA, secret store, gateway).
 - [ ] Environment `prod` and a `DeploymentPipeline`.
 - [ ] First `ClusterComponentType` `onemind-service`: resource requests and limits,
-      network policy, Tailscale route, standard labels.
+      network policy, Tailscale route, standard labels. Built-in rules from the
+      2026-10-18 incident: never pin to a node name (use the node-pool label or pod
+      affinity), and use the `Recreate` strategy for any workload with a ReadWriteOnce volume.
 - [ ] Turn on the built-in console (`backstage.enabled: true`), tailnet-only, with
       our catalog files mounted through `backstage.extraVolumes` and `appConfig`.
 
@@ -283,6 +285,15 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
+
+## Incidents found while working the roadmap
+
+| Date | What | Fix |
+|---|---|---|
+| 2026-10-18 | DOKS replaced the hub-core nodes (v1.36.5). `tak-ldap-0` and `takml-server` stayed Pending, pinned to the removed node `onemind-hub-core-v2-37phkg` (the `takml-server` pin was set live, not in Git). `nats-2` could not schedule: the only node without a NATS pod was full while a new node sat nearly empty. Found by the phase 1 read-only access. | [#259](https://github.com/onemindos/omos/pull/259): node-pool affinity for `tak-ldap`, pod affinity to `takml-vision-worker` for `takml-server`, stale live pin removed. The Hermes pod was rescheduled to make room for `nats-2` (NATS back to 3/3). [#260](https://github.com/onemindos/omos/pull/260): `Recreate` for `takml-db`, whose rolling update deadlocked on its ReadWriteOnce volume. |
+
+Follow-ups: nothing rebalances pods after DOKS replaces nodes. Consider the Kubernetes
+descheduler (Layer 1) in phase 5 alongside the capacity work.
 
 ## Risks and open questions
 
