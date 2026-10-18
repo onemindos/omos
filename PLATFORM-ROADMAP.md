@@ -233,13 +233,18 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       2026-10-18: agent connected (tunnel requests return 200), `ClusterDataPlane`
       `Created=True`, the three environments `EnvironmentReady`, and the `default`
       project's bindings `Ready` with namespaces `dp-default-default-{development,staging,production}-*`.
-- [ ] 2e. First `ClusterComponentType` `onemind-service`
+- [x] 2e. First `ClusterComponentType` `onemind-service`
       (`platform/openchoreo/platform/onemind-service.yaml`, Argo Application
       `platform-openchoreo-platform`): the upstream `service` type without its CORS
       filter (unsupported by Gateway API v1.2.1 here), pods prefer the ecosystem pool and
       cannot be pinned to a node, a `strategy` parameter (`Recreate` for ReadWriteOnce
       volumes), default requests 50m / 128Mi. Apps are reached through the tailnet
       gateway, so no per-app Tailscale ingress. Network policy: later, as a project type.
+      Verified 2026-10-18: `platform-openchoreo-platform` Synced and Healthy,
+      `clustercomponenttype/onemind-service` present.
+- [ ] 2g. OpenChoreo MCP for Claude (moved from phase 1): make the control-plane API
+      reachable on the tailnet under its HTTPRoute hostname, add a read-only OpenChoreo
+      role and an Authentik client for the agent, register it in `scripts/ai-operator/setup.sh`.
 - [ ] 2f. Turn on the built-in console (`backstage.enabled: true`), tailnet-only, with
       our catalog files mounted through `backstage.extraVolumes` and `appConfig`.
 
