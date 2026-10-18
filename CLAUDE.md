@@ -4,6 +4,8 @@ This repo is the infrastructure-as-code and GitOps source of truth for the OneMi
 
 Read `docs/MISSION.md` before architecture, product, AI or infrastructure decisions. Live state is in `docs/STACK.md` (tiered inventory, generated from the cluster); directory purposes are in `docs/REPO-LAYOUT.md`. Distinguish verified live state from intent: verify against the cluster (read-only) before writing "live" in docs.
 
+The platform plan (four layers, AI trust model, OpenChoreo migration phases and their tracker) is in `PLATFORM-ROADMAP.md` at the repository root. Read it before platform or AI-operations work, and update its tracker in the same PR when you complete roadmap work.
+
 ## What This Repo Is
 
 If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 52 Argo Applications reconcile from `main` (2026-10-17). Of the 11 Helm releases first installed by hand, 8 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-tempo`, `monitoring-otel-collector` (2026-10-17). **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, `openclaw`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
