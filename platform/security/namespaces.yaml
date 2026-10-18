@@ -1,0 +1,24 @@
+# Security-layer namespaces. Each tool keeps its own namespace (a namespace is an
+# isolation boundary); the shared label groups them for queries and policy.
+# OpenFGA still runs in onemind-core until the OneMind Core decision; it gets its own
+# namespace then.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno
+  labels:
+    onemind.io/layer: security
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: falco
+  labels:
+    onemind.io/layer: security
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spire-system
+  labels:
+    onemind.io/layer: security
