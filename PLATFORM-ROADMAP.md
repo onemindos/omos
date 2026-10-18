@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263) | 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c (this PR) | 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -203,22 +203,27 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
 - [ ] New tree `platform/openchoreo/` with its Argo Application(s):
       `planes/` (charts and registration), `platform/` (environments, pipeline,
       component types, traits), `projects/` (one folder per project).
-- [ ] Data plane chart `openchoreo-data-plane` 1.3.1, scheduled on the ecosystem pool.
-- [ ] Gateway: try Cilium Gateway API first; fall back to kgateway if the data plane
-      needs it. Record the result.
 - [x] 2a. Secret store: External Secrets 2.0.1 (`ecosystem-external-secrets`) and the
       `ClusterSecretStore` `default` on the Kubernetes provider
       (`platform/openchoreo/prereqs/`, Argo Application `platform-openchoreo-prereqs`).
       SealedSecrets stays the way secrets enter Git. Verified 2026-10-18: ESO pods
       running, `clustersecretstore/default` `Valid`, `Ready=True`.
-- [ ] 2b. Default resources (guide step 4): label `default` as a control-plane namespace
+- [x] 2b. Default resources (guide step 4): label `default` as a control-plane namespace
       and apply the guide's `samples/getting-started/all.yaml`, pinned to v1.3.1, straight
       from the upstream repository (Argo Application `platform-openchoreo-defaults`).
       Creates the `default` project, environments `development`, `staging`,
       `production`, the `default` pipeline, component types (`service`,
       `web-application`, `worker`, `scheduled-task`), resource types (`postgres`,
-      `valkey`, `nats`), build workflows and traits.
-- [ ] Register `ClusterDataPlane` `default` (agent CA, secret store, gateway).
+      `valkey`, `nats`), build workflows and traits. Verified 2026-10-18: Argo
+      Application Synced and Healthy; project, three environments, pipeline and 16
+      cluster-scoped types present.
+- [ ] 2c. Data plane (guide step 5, install): chart `openchoreo-data-plane` 1.3.1 with
+      `gateway.tls.enabled=false` and the `onemind-private` gateway class, plus the
+      `cluster-gateway-ca` ConfigMap copy (Argo Application `platform-openchoreo-data-plane`,
+      `platform/openchoreo/data-plane/`). Agent certificate lifetime raised to 10 years,
+      because the registration pins its self-signed CA.
+- [ ] 2d. Register `ClusterDataPlane` `default` (guide step 5, register): agent CA,
+      `secretStoreRef: default`, gateway listeners and a domain.
 - [ ] First `ClusterComponentType` `onemind-service`: resource requests and limits,
       network policy, Tailscale route, standard labels. Built-in rules from the
       2026-10-18 incident: never pin to a node name (use the node-pool label or pod
