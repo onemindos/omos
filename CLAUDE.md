@@ -34,6 +34,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
   backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)
   hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
+  security/    Zero-trust layer (platform-security): Kyverno, Falco, SPIRE, OpenFGA apps + labelled namespaces
   takserver/   TAK Server: Helm chart (chart/) + values-onemind.yaml (Helm CLI), Argo overlays deploy/ and fedhub/, runbook
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
