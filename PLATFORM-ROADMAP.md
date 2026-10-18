@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264) | 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d (this PR) | 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -217,13 +217,19 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       `valkey`, `nats`), build workflows and traits. Verified 2026-10-18: Argo
       Application Synced and Healthy; project, three environments, pipeline and 16
       cluster-scoped types present.
-- [ ] 2c. Data plane (guide step 5, install): chart `openchoreo-data-plane` 1.3.1 with
+- [x] 2c. Data plane (guide step 5, install): chart `openchoreo-data-plane` 1.3.1 with
       `gateway.tls.enabled=false` and the `onemind-private` gateway class, plus the
       `cluster-gateway-ca` ConfigMap copy (Argo Application `platform-openchoreo-data-plane`,
       `platform/openchoreo/data-plane/`). Agent certificate lifetime raised to 10 years,
-      because the registration pins its self-signed CA.
-- [ ] 2d. Register `ClusterDataPlane` `default` (guide step 5, register): agent CA,
-      `secretStoreRef: default`, gateway listeners and a domain.
+      because the registration pins its self-signed CA. Verified 2026-10-18: Synced and
+      Healthy; agent running; `gateway-default` programmed at tailnet IP 100.110.185.30
+      (`openchoreo-data-plane-cilium-gateway-gateway-default.tail717ba0.ts.net`).
+- [ ] 2d. Register `ClusterDataPlane` `default` (guide step 5, register):
+      `platform/openchoreo/data-plane/cluster-data-plane.yaml` with the agent CA,
+      `secretStoreRef: default`, and the HTTP listener on the guide's nip.io domain built
+      from the gateway's tailnet IP: `apps.openchoreo.100-110-185-30.nip.io` (resolves
+      only to a tailnet address, so apps are tailnet-only). A real domain such as
+      `*.apps.onemindos.dev` with `letsencrypt-dns` TLS replaces it later.
 - [ ] First `ClusterComponentType` `onemind-service`: resource requests and limits,
       network policy, Tailscale route, standard labels. Built-in rules from the
       2026-10-18 incident: never pin to a node name (use the node-pool label or pod
