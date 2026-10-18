@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Not started | | 1, 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262) | 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -187,15 +187,29 @@ Evidence (2026-10-18, after #257 synced):
 
 Goal: OpenChoreo can deploy something. All resources in Git, applied by Argo CD.
 
+Follows the official guide
+[Run in your environment (v1.3.x)](https://openchoreo.dev/docs/getting-started/try-it-out/on-your-environment/)
+step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
+
+| Guide step | Guide | Here | Reason |
+|---|---|---|---|
+| 1. Gateway API CRDs | v1.5.1 | keep v1.2.1 | Installed and owned by DOKS-managed Cilium; the control plane already runs on them |
+| 1. cert-manager | v1.19.4 | keep v1.20.3 | Already installed, newer |
+| 1. External Secrets | 2.0.1, `installCRDs=true` | same, as `ecosystem-external-secrets` | Only stale v1beta1 CRDs existed, no controller and no objects |
+| 1. kgateway | install | skip; gateways use the Cilium class `onemind-private` (tailnet) | The data-plane chart supports `gateway.gatewayClassName`; the control plane already uses it |
+| 1. OpenBao + `ClusterSecretStore` `default` | dev-mode OpenBao | `default` store on ESO's Kubernetes provider, reading the `openchoreo-secrets` namespace, filled by SealedSecrets | The secret-management guide allows any ESO backend named `default`; the guide marks dev-mode OpenBao as not for production |
+| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS uses the existing `letsencrypt-dns` issuer |
+
 - [ ] New tree `platform/openchoreo/` with its Argo Application(s):
       `planes/` (charts and registration), `platform/` (environments, pipeline,
       component types, traits), `projects/` (one folder per project).
 - [ ] Data plane chart `openchoreo-data-plane` 1.3.1, scheduled on the ecosystem pool.
 - [ ] Gateway: try Cilium Gateway API first; fall back to kgateway if the data plane
       needs it. Record the result.
-- [ ] Secret store: External Secrets controller plus a `ClusterSecretStore` named `default`.
-      Choose the backend (Kubernetes provider or OpenBao) and record it. SealedSecrets
-      stays the way secrets enter Git.
+- [ ] 2a. Secret store: External Secrets 2.0.1 (`ecosystem-external-secrets`) and the
+      `ClusterSecretStore` `default` on the Kubernetes provider
+      (`platform/openchoreo/prereqs/`, Argo Application `platform-openchoreo-prereqs`).
+      SealedSecrets stays the way secrets enter Git.
 - [ ] Register `ClusterDataPlane` `default` (agent CA, secret store, gateway).
 - [ ] Environment `prod` and a `DeploymentPipeline`.
 - [ ] First `ClusterComponentType` `onemind-service`: resource requests and limits,
