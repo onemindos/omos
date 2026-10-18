@@ -117,7 +117,7 @@ it could lock out both itself and the human who has to recover it.
 | Phase | Goal | Status | PRs | Parallel with |
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
-| 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), (this PR) | 2 |
+| 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Not started | | 1, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
