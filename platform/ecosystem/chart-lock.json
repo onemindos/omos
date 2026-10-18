@@ -18,15 +18,6 @@
     "namespace": "dapr-system"
   },
   {
-    "name": "rollouts",
-    "repo": "https://argoproj.github.io/argo-helm",
-    "chart": "argo-rollouts",
-    "version": "2.43.6",
-    "appVersion": "v1.10.0",
-    "url": "https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.43.6/argo-rollouts-2.43.6.tgz",
-    "namespace": "argo-rollouts"
-  },
-  {
     "name": "workflows",
     "repo": "https://argoproj.github.io/argo-helm",
     "chart": "argo-workflows",

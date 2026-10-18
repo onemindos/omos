@@ -1,7 +1,12 @@
+# Argo Rollouts: progressive delivery (canary / blue-green with automatic rollback).
+# Lives with Argo CD (namespace argocd) as part of the GitOps delivery tooling.
+# Nothing uses it yet (no Rollout objects); configuring canaries for tak-portal and
+# Hermes is a separate PR. Moved from platform/ecosystem/foundation-applications/
+# (namespace argo-rollouts) on 2026-10-17; same chart version and values.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ecosystem-rollouts
+  name: argo-rollouts
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '3'
@@ -14,13 +19,13 @@ spec:
     helm:
       releaseName: rollouts
       valueFiles:
-      - $values/platform/ecosystem/values/rollouts.yaml
+      - $values/platform/values/argo-rollouts.yaml
   - repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: argo-rollouts
+    namespace: argocd
   syncPolicy:
     automated:
       prune: false
