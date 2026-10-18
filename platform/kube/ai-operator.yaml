@@ -1,7 +1,7 @@
 # Read-only identity for AI operators (Claude Code, Codex) running on the admin Mac.
 # See docs/operations/ai-operator-access.md and PLATFORM-ROADMAP.md (phase 1).
 #
-# - Built-in `view` covers namespaced workloads, pods/log, events, nodes and the CRDs
+# - Built-in `view` covers namespaced workloads, pods/log, events and the CRDs
 #   that aggregate to it (Argo Rollouts, cert-manager, Kyverno). It excludes Secrets.
 # - `ai-operator-read` adds get/list/watch on the platform CRDs that do not aggregate
 #   to `view`. These API groups hold no Secret kinds. No write, exec or port-forward.
@@ -29,7 +29,7 @@ metadata:
   name: ai-operator-read
 rules:
   - apiGroups: [""]
-    resources: [persistentvolumes]
+    resources: [nodes, persistentvolumes]
     verbs: [get, list, watch]
   - apiGroups: [storage.k8s.io]
     resources: [storageclasses, volumeattachments, csidrivers]
