@@ -85,6 +85,15 @@ spec:
       labels:
         app: takml-server
     spec:
+      # takml-models is ReadWriteOnce and also mounted by takml-vision-worker, so both
+      # pods must share a node. Follow the worker instead of naming a node.
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: takml-vision-worker
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: check-jar
           image: busybox:1.36
