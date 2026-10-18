@@ -117,7 +117,7 @@ it could lock out both itself and the human who has to recover it.
 | Phase | Goal | Status | PRs | Parallel with |
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
-| 1 | Claude sees every layer (MCP on the Mac) | Not started | | 2 |
+| 1 | Claude sees every layer (MCP on the Mac) | In progress | [#257](https://github.com/onemindos/omos/pull/257) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Not started | | 1, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
@@ -147,18 +147,22 @@ Goal: Claude Code can answer "what is broken, where and why" across all four lay
 Runs on the Mac (or Docker Desktop), so it adds nothing to cluster memory. All access is
 read-only.
 
-- [ ] Backstage MCP with the existing machine token (`~/.config/onemind/backstage-mcp.token`).
-- [ ] OpenChoreo control-plane MCP (`onemind-openchoreo-api.tail717ba0.ts.net/mcp`) with
-      an Authentik login and a read-only OpenChoreo role.
-- [ ] Kubernetes MCP server ([containers/kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server))
-      in read-only mode, using a kubeconfig bound to a view-only ClusterRole that cannot
-      read Secrets. The ClusterRole and binding are added to Git and applied by Argo CD.
-- [ ] Argo CD MCP ([argoproj-labs/mcp-for-argocd](https://github.com/argoproj-labs/mcp-for-argocd))
-      with a read-only Argo CD account.
-- [ ] Document the setup in `docs/operations/ai-operator-access.md`, including how Codex
-      can use the same servers.
-- [ ] Decide the tool gateway for later in-cluster agents: LiteLLM's MCP gateway or
-      agentgateway. Record the decision below.
+- [x] Backstage MCP with the existing machine token (`~/.config/onemind/backstage-mcp.token`).
+      Verified 2026-10-18: `tools/list` returns 6 read-only tools.
+- [x] Kubernetes MCP server ([containers/kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server))
+      0.0.67 with `--read-only`, using `kube/ai-operator`: built-in `view` plus
+      `ai-operator-read` for platform CRDs, no Secrets
+      ([`platform/kube/ai-operator.yaml`](platform/kube/ai-operator.yaml)).
+- [x] Setup script for Claude Code and Codex: [`scripts/ai-operator/setup.sh`](scripts/ai-operator/setup.sh).
+- [x] Document the setup in [`docs/operations/ai-operator-access.md`](docs/operations/ai-operator-access.md).
+- [ ] After merge and Argo sync: run the script and pass the gate below.
+- Moved: OpenChoreo control-plane MCP goes to phase 2. The endpoint works
+  (`/mcp` answers 401 and advertises Authentik), but OpenChoreo manages nothing yet, and
+  it needs a read-only OpenChoreo role and an Authentik client for the agent.
+- Dropped: a separate Argo CD MCP. Argo CD is still a Helm CLI release (foundation), and
+  Application sync and health are readable through `onemind-kubernetes`.
+- Deferred: the tool gateway (LiteLLM MCP or agentgateway) is only needed for in-cluster
+  agents, so it moves to phase 8 with Hermes.
 
 Gate: from a fresh session, Claude lists unhealthy workloads in each layer with the cause,
 using only the MCP servers, and every server refuses a write.
@@ -260,7 +264,8 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Argo CD remains the GitOps engine; OpenChoreo resources are applied by Argo CD, not Flux. |
 | 2026-10-18 | Claude Code is the AI operator. Hermes is deferred to Phase 8. |
 | 2026-10-18 | Keep the custom portal as the long-term home; use the built-in console only until Phase 6. |
-| 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in Phase 1. |
+| 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
+| 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
 
 ## Risks and open questions
