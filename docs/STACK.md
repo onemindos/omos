@@ -126,7 +126,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
-| `nats` (UIs) | `agent-web-ui`, `agenttap`, `heynats`, `nats-dashboard`, `nats-ui` (all `:latest`) | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
+| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (`:latest`); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
 | `openclaw` | `openclaw` gateway | `platform/openclaw/`, Application `platform-openclaw` (auto-sync, `prune: false`) | 2 | `VolSync` (50 GiB) | tailnet |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
@@ -177,7 +177,7 @@ Gaps beyond the eleven releases:
 
 | Namespace | Workloads |
 |-----------|-----------|
-| nats | `agent-web-ui`, `agenttap`, `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
+| nats | `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
 | onetak | `maputnik`, `martin`, `nodeodm`, `overpass`, `pg-featureserv`, `stac-api`, `stac-browser`, `tak-portal`, `tile38`, `tileserver-gl`, `valhalla:run-latest`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
 | omos | `omos-mission-engine:latest` |
 | kube | `headlamp:latest` |
