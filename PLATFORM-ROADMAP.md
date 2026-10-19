@@ -416,10 +416,34 @@ Progress (2026-10-18):
   contents, create a fresh PostgreSQL-17-compatible backup, prove an isolated
   restore and test a compatible PgSTAC installation. Live initialization remains
   subject to Zeus's approval; the shared database stays outside OpenChoreo.
-- Evaluation is still open: the pilot's three files total 438 lines, including the
-  generated immutable type/workload snapshot. The old browser occupies 47 lines in
-  one shared manifest. Do not claim fewer files or easier maintenance without the
-  live comparison and a verdict.
+- PR #292 merged with all four CI checks passing. Verified live at 23:06 EDT:
+  `platform-openchoreo-platform` and `platform-openchoreo-projects` are
+  Synced/Healthy at merge `09c0f051`; binding v5 is `Ready=True` with observed
+  generation 5. Its healthy resource tree includes the Deployment, Pod, route,
+  Service, ConfigMaps and both policies. OpenChoreo's existing hash changed to
+  `6469b5cd9` and rolled a new ready Pod, confirming no extra checksum is needed.
+  The HTML, runtime config and all six linked assets return 200; the catalog root
+  returns 200 with its self link rewritten to the tailnet proxy. OPTIONS and PUT
+  on the catalog return 405. Collection listing and limited POST search still
+  return 500 from the existing API. The original browser remains available, and
+  Argo pruned the completed inspection Job. Visual review remains unverified.
+- Next read-only preflight: inspect the existing `geo` and `stac` databases for
+  owners/sizes, role flags, available/installed extensions, user schema/relation
+  counts, table names and PgSTAC function signatures. This checks for an existing
+  installation in another database before selecting any repair. The Argo-owned
+  Job uses the same pinned PostgreSQL client, the existing Secret reference,
+  read-only session defaults and transactions, bounded queries and no retries.
+  The recovery and approval gates are documented in
+  [`docs/operations/stac-database-repair.md`](docs/operations/stac-database-repair.md).
+  No live database initialization or replacement is part of this diagnostic step.
+- Evaluation remains open: the active Component/Workload, binding and v5 snapshot
+  total 492 lines in three files. With five immutable release snapshots, the app
+  directory contains seven files and 1,958 lines; shared platform/bootstrap files
+  are additional. The old browser occupies 47 lines in one shared manifest. The
+  fewer-files gate is not met. Standardized rollout and resource-tree visibility
+  are demonstrated benefits, but they do not establish lower maintenance cost.
+  Record a candid verdict and resolve this gate before declaring the phase done
+  or expanding the migration.
 
 - [x] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
 - [x] Write its Component in `platform/openchoreo/projects/`.
