@@ -6,6 +6,9 @@ agent (Claude Code, Codex or another) can pick up the work where the last one st
 This is a plan, not a record of live state. Live state is in [`docs/STACK.md`](docs/STACK.md);
 the mission it serves is in [`docs/MISSION.md`](docs/MISSION.md).
 
+> Taking over from another agent? Start with [`docs/roadmap/HANDOFF.md`](docs/roadmap/HANDOFF.md)
+> (state, rules, prompt) and the phase briefs in `docs/roadmap/`.
+
 ## How to work on this roadmap (any agent)
 
 1. Read this file, `CLAUDE.md` (operating rules) and `docs/MISSION.md` first.
