@@ -8,7 +8,7 @@ spec:
     componentName: stac-browser
     projectName: onetak
   environment: development
-  releaseName: stac-browser-v1
+  releaseName: stac-browser-v2
   componentTypeEnvironmentConfigs:
     replicas: 1
     resources:

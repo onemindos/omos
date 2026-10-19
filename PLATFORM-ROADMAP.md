@@ -353,6 +353,12 @@ Progress (2026-10-18):
   rewrite the upstream base URL; catalog write methods are refused. The HTTPRoute
   preserves `/stac-browser-http` via the endpoint's `basePath`. These are application
   settings; the shared component type, TAK Server and NATS are untouched.
+- PR #287 merged with all four checks passing. At 21:48 EDT, Argo was
+  Synced/Healthy and OpenChoreo had rendered the Deployment, Service, HTTPRoute,
+  two ConfigMaps and an ingress NetworkPolicy. The runtime pod failed to start:
+  Workload file `mountPath` is a directory; the filename is appended by OpenChoreo.
+  Correct it to `/etc/nginx/conf.d` in a new immutable `stac-browser-v2` release
+  (this PR). The old deployment remains Ready; no cutover has happened.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the
