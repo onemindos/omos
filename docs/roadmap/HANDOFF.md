@@ -1,18 +1,22 @@
 # Handoff: continuing the platform roadmap
 
-Updated 2026-10-19 after live Phase 5 acceptance. The authoritative tracker and
+Updated 2026-10-19 after live Phase 6 acceptance. The authoritative tracker and
 phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
 ## Where we are
 
-Phases 0–5 are done. **Phase 6 (one portal) is the first unfinished phase**; its
-brief is on draft PR [#282](https://github.com/onemindos/omos/pull/282).
+Phases 0–6 are done. **Phase 7 (Layer 3 migrations) is the first unfinished phase**;
+its brief is on draft PR [#283](https://github.com/onemindos/omos/pull/283).
 Do not begin a later phase or treat this handoff as authorization to deploy it.
 
 - STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
 - Phase 5: all nodes below 78% requested CPU/memory; authenticated Observer core and
   modules live, real logs/metrics in console and MCP, isolated backup recovery passed.
-- Zeus signed in to the console; the browser gate passed on 2026-10-19.
+- Phase 6: existing OneMind Backstage 1.55.3 hosts OpenChoreo 1.3.1 core/observability;
+  real Authentik, home/catalog/runbooks, Deploy/Definition/logs/metrics and both
+  replicas passed. Shared DB capability cache fixes cross-replica authorization.
+  The temporary console/candidate are retired; no storage or identity was deleted.
+  See the Phase 6 integration runbook and completed #282 brief.
 - Existing exceptions remain: platform-matrix OutOfSync/Healthy and platform-openclaw
   Synced/Progressing. These are not newly caused Phase 5 failures.
 - GitHub later refused to start CI jobs because of an account payment/spending-limit

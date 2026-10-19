@@ -1,76 +1,66 @@
-# Phase 6 brief: one portal
+# Phase 6: one portal — completed
 
-Status when written (2026-10-18): not started. Depends on phase 4 (plugin packages) and ideally phase 5.
-Tracker: [`PLATFORM-ROADMAP.md`](../../PLATFORM-ROADMAP.md). Read [`HANDOFF.md`](HANDOFF.md) first.
+Completed 2026-10-19 after live gates, not merely compilation.
+Tracker: [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
+Detailed evidence/rollback: [integration runbook](../operations/phase6-portal-integration.md).
 
-## Goal
+## Delivered
 
-Our own portal (`services/onemind-portal`) shows its home screens, its full catalog and the
-OpenChoreo tabs (Deploy, and with phase 5 Logs, Metrics, Traces, Alerts), and the temporary built-in
-console is turned off.
+- Existing OneMind Backstage **1.55.3** remains the host, preserving branding,
+  home/Today, catalog, user settings, runbooks, integrations and PostgreSQL data.
+- Pinned OpenChoreo **1.3.1** core/catalog/scaffolder and observability plugins add
+  real Definition, Deploy, Logs and Metrics views. No workflow plane or assistant
+  pack was silently enabled.
+- Authentik `openchoreo-auth` retains verified signed-subject catalog mapping and
+  existing operator membership, with one intersected host/OpenChoreo policy.
+- Shared capability caching in the managed permission DB fixes cross-replica
+  requests. Keys are SHA-256, values are authorization results, TTL follows the
+  upstream token expiration, DB failures deny closed; raw tokens are not stored.
+- Temporary built-in console, its private ingress/Application and the memory
+  candidate are retired through GitOps. Reused credentials and bindings remain;
+  no PVC, database, backup or identity was deleted.
 
-## Starting state
+## Release and live gate
 
-- Our portal: Backstage 1.55.3, new frontend and backend systems, Authentik sign-in, a custom
-  permission policy (`packages/backend/src/permissions.ts`), MCP actions with a restricted machine token.
-- OpenChoreo plugins 1.3.x are tested against Backstage **1.51.0**
-  (`https://openchoreo.dev/docs/platform-engineer-guide/backstage-plugins/compatibility-matrix/`):
-  Node 22/24, Yarn 4.13.x, `@backstage/cli` 0.36.x, exact pins for `frontend-plugin-api` 0.17.0,
-  `frontend-defaults` 0.5.2, `plugin-app-react` 0.2.3, `plugin-scaffolder` 1.37.0 (we run 0.18.1, 0.5.6,
-  0.2.7, 1.39.0). 1.55 is untested; the doc asks to report results to `openchoreo/backstage-plugins`.
-- Built-in console: `platform/openchoreo/console/`, values in `platform/ecosystem/values/oc-control.yaml`
-  (`backstage.enabled: true`), secrets `openchoreo-control-plane/backstage-secrets`, bindings in
-  `platform/openchoreo/platform/console-bindings.yaml`.
+Source `3dd34900a5b455696387394398b72f80ce3376ba`; verified GHCR digest
+`sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`.
+Main portal: https://onemind-preview.tail717ba0.ts.net/ — **2/2 ready**, Argo
+Synced/Healthy. Control plane, observability, identity and app-of-apps also healthy.
 
-## Steps
+Real Authentik login maps to `user:default/akadmin` and existing administrators.
+Home renders 130 launcher entries; catalog has 606 entities. Today, notifications,
+settings and packaged runbooks remain available. Pilot Deploy shows active
+`stac-browser-v5`; Definition is real; CPU/memory charts and runtime logs work,
+including a fresh HTTP 200 observed at 18:27:08 UTC.
 
-1. **Decide the version path** on a branch: try the plugins on 1.55.3 (resolutions as the doc lists
-   for the NFS path), or pin to 1.51.0 (`yarn backstage-cli versions:bump --release 1.51.0`). Record the
-   outcome in the roadmap decision log.
-2. **Install** following `https://openchoreo.dev/docs/platform-engineer-guide/backstage-plugins/installing-into-existing-backstage/`
-   (reference wiring: `openchoreo/backstage-plugins` `packages/portal-app` and `portal-backend`, tag for 1.3.x):
-   packages `@openchoreo/backstage-plugin`, `...-backend`, `...-catalog-backend-module`,
-   `...-scaffolder-backend-module`, `...-auth-backend-module-openchoreo-auth`,
-   `...-permission-backend-module-openchoreo-policy`, `@openchoreo/openchoreo-auth`; frontend features
-   `openchoreoPluginAlpha`, `openChoreoAppModule`, `openChoreoEntityGroupsModule`; optional observability,
-   CI and workflows packs once their planes exist. Add `@openchoreo/*` to `npmPreapprovedPackages`
-   in `.yarnrc.yml`.
-3. **Auth.** The guide wires an `openchoreo-auth` sign-in provider against the OpenChoreo IdP and forwards
-   the user's token as `x-openchoreo-token`; it does not document non-default IdPs. Our IdP is Authentik
-   (provider `onemind-openchoreo`, which already lists the portal's redirect URI
-   `https://onemind-preview.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame`, and has grant types
-   `authorization_code`, `refresh_token`, `client_credentials` since phase 2). Keep the portal's existing
-   user mapping (`onemind.io/oidc-sub`); the built-in console already proves the Authentik flow.
-4. **Permissions.** Only one permission policy can be active. Merge the OpenChoreo policy with
-   `permissions.ts` (the `onemind-admins` and read-only rules) and re-test the machine token restrictions.
-5. **Config.** `openchoreo.baseUrl` (in-cluster `http://openchoreo-api.openchoreo-control-plane.svc.cluster.local:8080/api/v1`),
-   `openchoreo.auth` (client credentials: the `backstage-catalog` account, reuse the Secret keys from phase 2f),
-   `openchoreo.features.auth.enabled` and `...authz.enabled` mirroring the cluster (both on),
-   `openchoreo.schedule` (integers in seconds), `catalog.rules.allow` including `Template` and `Environment`,
-   `openchoreo.defaultOwner`.
-6. **Events.** The event forwarder already posts to `http://backstage.backstage.svc.cluster.local:7007/api/events/http/openchoreo`.
-7. **Build and release**: PR for code, CI image build, separate PR bumping the image digest in
-   `platform/backstage/deployment.yaml`.
-8. **Switch off the built-in console**: `backstage.enabled: false`, delete `platform/openchoreo/console/`
-   and its Argo app, remove the console redirect URI from `auth-provider-bootstrap.yaml`, retire the
-   `backstage-catalog` flow only if the portal does not reuse it.
-9. **Clean authorization**: remove the inert chart bootstrap bindings (see roadmap phase 2 findings) with a
-   `bootstrap` override (`openchoreoApi.config.security.authorization.bootstrap`; the whole array is replaced,
-   so keep the roles and bindings you need).
+Both new pods passed anonymous 401, guest 404, machine catalog read 200, catalog
+writes/platform/cache/context 403, and six explicitly read-only MCP tools. Actual
+MCP health reads work. Non-admin human policy has regression coverage; no second
+human account was created or represented as live-tested. No live mutation test.
 
-## Gate
+## Verification and deliberate boundaries
 
-One portal: sign-in through Authentik, our home screens and 555-entity catalog, OpenChoreo entities with
-a working Deploy tab, anonymous API requests denied, the AI read-only token unchanged, built-in console gone.
+49 tests, full TypeScript, immutable Linux release, TechDocs/backend bundle, JSON
+exports, native AMD64 SQLite and remote digest verification passed. An isolated
+PostgreSQL 17 exercise verified concurrent initialization/upsert and cross-client
+cache visibility/expiration. Changed YAML/schema/Helm/kustomize and new-secret
+checks passed. Existing encrypted backup restore verification passed today.
 
-## Risks
+The browser/live gates found and corrected request-body reuse, exact-endpoint
+CSP/CORS, owner-name prefixing and the multi-replica cache gap before retirement.
+Upstream's published compatibility matrix still tests 1.51; this is empirical
+OneMind verification on 1.55.3. Keep the frontend cohort and private ABAC-router
+adapter pinned and reverify future updates.
 
-- Dependency pins and `@mui` / React versions (see the compatibility page); a downgrade changes the whole portal.
-- Mixing legacy and new-frontend wiring duplicates tabs; use the new frontend system only.
-- Missing `openChoreoAppModule` gives "No QueryClient set" and 401/"No permissions" errors.
-- Feature flags must match the cluster or tabs show "No permissions".
+Catalog sync is deliberately poll-only until authenticated event ingress is
+reviewed. The unused OpenChoreo webhook forwarder is disabled; native Backstage
+PostgreSQL Events and NATS are unchanged. The control-plane app retains automated
+prune=false; a selected Argo operation pruned exactly the 10 retired UI/forwarder
+resources. The identity hook removed retired exact callbacks and succeeded.
 
-## References
+GitHub Actions cannot start due account payment/spending limits. Whole-tree
+`make validate` still fails unrelated old YAML debt. Neither was reported green
+or bypassed; local and live evidence is recorded separately.
 
-`https://openchoreo.dev/docs/platform-engineer-guide/backstage-plugins/overview/`,
-`.../catalog-sync/`, `.../permission-policy/`, `.../troubleshooting/`, `https://github.com/openchoreo/backstage-plugins`.
+Implementation/rollout: PRs #311–#319. This PR (#282) records final acceptance.
+Phases **7 and 8 remain Not started**; no Layer 3 migration is bundled here.

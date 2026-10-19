@@ -1,10 +1,10 @@
 # Phase 6 integration verification
 
-Status: integration deployed 2/2; multi-replica authorization correction pending.
-Do not retire the console or mark complete until the shared-cache release passes.
+Status: Phase 6 complete; production 2/2, console retired, verified 2026-10-19.
+The chronological implementation notes below record the gates and corrections.
 The existing OneMind Backstage 1.55.3 remains the host. OpenChoreo 1.3.1 adds
 core entity views and observability. Existing branding/home/plugins remain wired.
-Do not retire the temporary console or mark Phase 6 complete from build evidence.
+Completion required the real browser/security/deployment gates below, not build evidence alone.
 
 ## Reference and deviations
 
@@ -46,20 +46,20 @@ frontend API cohort; local compilation/bundling is evidence only for that gate.
 
 - [x] Local immutable dependency resolution, full TypeScript and frontend bundle.
 - [x] Identity, policy intersection, request boundary, pinned router and credential
-      forwarding regression tests (42 tests, including request bodies).
+      forwarding regression tests (49 tests, including bodies and shared cache).
 - [x] Real Linux release image with all gates inside the Dockerfile.
 - [x] Isolated fixture backend ready, network disabled and in-memory database; no production DB contact.
 - [x] Private candidate using real Authentik and OpenChoreo ready.
 - [x] Real Authentik login: same catalog user and intended ownership groups.
-- [ ] Existing home/brand/catalog/TechDocs/settings/operational features preserved.
+- [x] Existing home/brand/catalog/TechDocs/settings/operational features preserved.
 - [x] Synced OpenChoreo catalog and pilot Deploy/Definition views show real data.
 - [x] Pilot runtime logs/metrics visible through the observability pack.
-- [ ] Anonymous denial; non-admin mutation denial (including direct REST/context
+- [x] Anonymous denial; non-admin mutation denial (including direct REST/context
       endpoint); machine read-only MCP works and direct writes remain denied.
-- [ ] Human admin receives only intended OpenChoreo rights, no catalog/FGA bypass.
+- [x] Human admin receives only intended OpenChoreo rights, no catalog/FGA bypass.
 - [x] Backups and plugin database migration/rollback compatibility reviewed.
-- [ ] Separate reviewed GitOps digest/config promotion; Argo synced, 2/2 ready.
-- [ ] Repeat browser/API/security gates live before console retirement.
+- [x] Separate reviewed GitOps digest/config promotion; Argo synced, 2/2 ready.
+- [x] Repeat browser/API/security gates live before console retirement.
 
 Preview needs the existing user-client credential in `backstage/openchoreo-oidc`
 and the restricted `backstage-catalog` service-client credential. Reuse it through
@@ -147,4 +147,40 @@ cross-connection reads, concurrent upsert, shared deletion and expiration. It us
 only a loopback-bound disposable local DB, then stopped it; no production data or
 credentials. Linux build passed all 49 tests, TypeScript, TechDocs, backend and packaged-artifact
 checks. Source `3dd34900a5b455696387394398b72f80ce3376ba`, remotely verified digest
-`sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`. Two-replica live acceptance remains pending.
+`sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`. Two-replica live acceptance passed (see final evidence below).
+
+## Final production acceptance — 2026-10-19, 18:32 UTC
+
+Main pods `backstage-7b6d66ddc7-kszpw` and `backstage-7b6d66ddc7-q5qpt` are ready
+on the final digest above. Argo Backstage, control plane, observability, identity
+resources and app-of-apps are Synced/Healthy. Each pod passed the actual HTTP/MCP
+denial suite. PostgreSQL shows two distinct permission-plugin client addresses
+and unexpired SHA-256 capability entries; repeated signed-in entity views no
+longer produce cache misses after verified login warms the shared cache.
+
+Real main-portal Authentik login, home (130 launcher entries), Today (181 observed
+workloads), existing notifications/settings, packaged operations runbooks, pilot
+Definition/active Deploy, CPU/memory graphs and 10 runtime log records passed. A
+read-only pilot GET returned 200 and appears at 18:27:08 UTC. No synthetic logs or
+metrics, role grant, live application mutation or second human identity was used.
+Non-admin policy decisions are covered by the 49 tests, not a second live login.
+
+PR #319 disabled and removed the temporary console and memory candidate. The
+control-plane Application intentionally has automated prune=false: an explicitly
+selected Argo prune removed exactly 10 retired console/forwarder resources, with
+no Secret/PVC/database. Global prune policy was not changed. The Authentik bootstrap
+hook was explicitly synced to remove only retired callbacks, then succeeded.
+The catalog SealedSecret moved intact to `platform/backstage/openchoreo-catalog.sealedsecret.yaml`;
+existing catalog/operator authorization bindings remain because OneMind reuses
+them. The poll-only provider remains enabled; its unused webhook forwarder is
+off. Internal Backstage Events/PostgreSQL and NATS are unchanged.
+
+Browser proof files on the operator Mac: `phase6-live-home.png`,
+`phase6-live-metrics.png`, `phase6-live-logs.png` under
+`/Users/zeus/.codex/visualizations/2026/10/19/01a152c1-a6d1-7043-87dc-aa6a4147a3b3/`.
+Local release record: `/tmp/phase6-shared-cache-published/release.json`; tests:
+`/tmp/phase6-shared-cache-tests.log`, PostgreSQL exercise:
+`/tmp/phase6-cache-pg-check.log`; both live security runs:
+`/tmp/phase6-final-first-security.log`, `/tmp/phase6-final-second-security.log`.
+These local paths are evidence artifacts, not recovery dependencies. Git/GHCR,
+managed configuration and encrypted backups remain the recovery sources.
