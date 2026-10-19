@@ -35,7 +35,7 @@ import { systemsPlugin } from './modules/systems';
 import { authModule } from './modules/auth';
 import { servicesModule, accessModule } from './modules/services';
 import { assistantPlugin } from './modules/assistant';
-import { offlinePlugin } from './modules/offline';
+import offlinePlugin from '@internal/plugin-onemind-offline';
 import { missionsPlugin } from './modules/missions';
 
 export default createApp({
