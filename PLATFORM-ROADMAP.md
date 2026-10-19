@@ -659,6 +659,13 @@ Preview follow-up: allow only the exact candidate origin at the existing Observe
 CORS boundary for browser logs/metrics checks; no auth/authorization bypass or
 production portal promotion. The two existing allowed portal origins are retained.
 
+Candidate verification found and fixed a real Request-body reuse error in the
+host fetch adapter (catalog bulk lookups and user-settings requests). Added five
+regression cases (42 total security/identity/fetch tests). Real Authentik sign-in
+already succeeded with the existing subject mapping, and the candidate catalog
+contains 606 entities including 38 OpenChoreo-managed entries. Browser acceptance
+and production promotion remain pending the corrected candidate image.
+
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
 - [ ] Install the core OpenChoreo plugins and the observability pack into our portal,
