@@ -13,13 +13,14 @@ Read in this order before doing anything:
 1. `PLATFORM-ROADMAP.md` (repo root): the four layers, the AI trust model, the namespace map, the
    phase tracker, the decision log and the evidence for finished phases.
 2. `docs/roadmap/HANDOFF.md`: current state, access, rules learned the hard way.
-3. The first unfinished phase in the tracker: Phase 6, brief on draft PR #282.
+3. The first unfinished phase in the tracker: Phase 7, brief on draft PR #283.
 4. `CLAUDE.md` and `AGENTS.md` (operating rules), `docs/MISSION.md` (why), `docs/STACK.md` (live inventory).
 
-State: phases 0–5 are complete with live evidence in the roadmap. STAC Browser is
+State: phases 0–6 are complete with live evidence in the roadmap. STAC Browser is
 managed by OpenChoreo; the portal refactor is deployed. Authenticated observability
-reuses existing backends, console/MCP logs and metrics work, and backup recovery
-passed. Phase 6 (one portal) is next; proceed only with the user’s authorization.
+reuses existing backends; logs/metrics now work in OneMind Backstage and MCP, and
+backup recovery passed. Phase 6 added the plugins to our existing portal, verified
+both replicas and retired the console. Phase 7 is next; proceed only with the user’s authorization.
 
 Working rules:
 - Everything reaches the cluster through Git and Argo CD. Open a PR, wait for CI, merge, then verify
@@ -35,10 +36,11 @@ Working rules:
   workloads with ReadWriteOnce volumes. Never put a secret in Git in plaintext.
 - Do not delete, rotate or overwrite credentials, and do not touch TAK Server or NATS without
   asking Zeus. Ask before anything destructive or hard to reverse.
-- Zeus has signed in to the console; Phase 5 logs/metrics browser verification passed.
+- Zeus signed in through Authentik; Phase 6 browser/security gates passed in OneMind.
+  The temporary console is retired; use onemind-preview.tail717ba0.ts.net.
 - GitHub CI later could not start due account billing/spending-limit state. Never
   change billing or bypass required checks. Full make validate still has existing
   unrelated YAML debt; record precisely which local checks pass.
 
-Start by rechecking the live cluster and current tracker. Phase 6 is the next phase,
+Start by rechecking the live cluster and current tracker. Phase 7 is the next phase,
 not phase 3. Report verified changes and remaining work in plain language after each PR.

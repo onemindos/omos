@@ -125,7 +125,7 @@ it could lock out both itself and the human who has to recover it.
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
-| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | [#311](https://github.com/onemindos/omos/pull/311) portable build; #282 retains the final gate | 7 |
+| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Done | [#282](https://github.com/onemindos/omos/pull/282) acceptance; [#318](https://github.com/onemindos/omos/pull/318) shared authz; [#319](https://github.com/onemindos/omos/pull/319) retirement | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
@@ -612,111 +612,61 @@ cleanup requires explicit storage-deletion approval.
   (Synced/Progressing). Existing portal remains 2/2 available, readiness HTTP 200.
   OpenSearch's existing self-signed/demo backend TLS is unchanged; hardening is separate.
 
-Next unfinished phase: **Phase 6**. This does not authorize starting it automatically.
+Next unfinished phase: **Phase 7**. This does not authorize starting it automatically.
 
 ### Phase 6: One portal
 
-Started 2026-10-19. First prerequisite: a portable Linux/amd64 build that runs the
-same TypeScript, TechDocs and backend gates outside GitHub Actions. Existing console
-stays enabled until the replacement portal passes live acceptance. No new paid
-build infrastructure or production-node build workload is authorized by this step.
+**Done — live acceptance 2026-10-19, 18:32 UTC.** Existing OneMind Backstage is
+preserved, not replaced: https://onemind-preview.tail717ba0.ts.net/.
 
-Prerequisite verified 2026-10-19 in #311: Colima Linux build on the operator Mac,
-independent of Actions. Immutable Yarn install, TypeScript, TechDocs, backend
-bundle, both common-package JSON exports and native AMD64 SQLite passed. An
-isolated network-disabled/read-only container also verified non-root execution,
-backend/frontend artifacts and absence of build-only auth variables. Published
-source commit `cd910e4ef2955d0ab5e324daa00f3070ac59cedc`, GHCR image
-`ghcr.io/onemindos/onemind-portal:sha-cd910e4ef2955d0ab5e324daa00f3070ac59cedc`,
-verified digest `sha256:616e9ef61f23da723d7c5571a59d15b4168b46c31ea72f9c9971d0654004219d`.
-This image is not a Phase 6 plugin integration or a production rollout. GitHub
-quality jobs did not start because of account payment/spending limits; local
-contract, changed-YAML, ShellCheck and commit secret checks passed. Full
-`make validate` remains blocked by unrelated existing YAML lint debt. No check
-was overridden or reported as green.
+- [x] Backstage 1.55.3 confirmed with pinned OpenChoreo 1.3.1 core/observability
+      plugins, Node 22.23.3 and one frontend dependency cohort. This is our tested
+      integration, not a claim that upstream's published 1.51 matrix changed.
+- [x] Core/catalog/scaffolder/observability plugins installed in the existing host;
+      OneMind home, Today, 130 launcher entries, 606 catalog entities, runbooks,
+      settings, notifications and operational observations remain available.
+- [x] `openchoreo-auth` Authentik login preserves signed-subject mapping to
+      `user:default/akadmin` and the existing `onemind-admins` group.
+- [x] One intersected permission policy: no admin bypass of upstream authorization;
+      host non-admin mutations and machine platform/write access remain denied.
+- [x] Built-in console disabled; its Deployment/Service/ingress/Application and
+      the memory-only candidate are gone. Reused catalog credential and operator/
+      catalog bindings remain. No PVC, database, backup or identity was removed.
 
-Integration work started 2026-10-19 in [#312](https://github.com/onemindos/omos/pull/312)
-(`codex/phase6-portal-integration`).
-The 1.55.3 host remains in place: the core/observability plugins are additions,
-not a replacement portal. Initial local TypeScript, frontend bundling and 37
-identity/permission/token-forwarding regression tests pass. Runtime preview,
-real login, permission boundaries and live rollout are still pending; these
-checks do not establish production compatibility. The temporary console stays on.
-The host uses the verified OIDC authenticator with explicit catalog-subject mapping,
-a single intersected permission policy and a version-locked upstream ABAC router
-adapter (see the integration runbook). No production image/configuration is changed
-by the source-integration PR. #312 also deploys a separate tailnet-only candidate
-with in-memory SQLite (no production PostgreSQL credential), using the existing
-restricted catalog identity and an additional exact Authentik callback. The original
-two production replicas and temporary console remain unchanged until preview gates
-pass. Linux release `4d99acd971ca5510ba2511ff51631d56f2ed7086` passed all build gates,
-including 37 security tests; isolated HTTP checks passed anonymous/guest denials,
-machine catalog-write and platform-access denials, and six read-only MCP tools.
-Verified published image digest:
-`sha256:a640cf8746f0d3eb40348e0cb4817b65491955b56453b9d67133050047f60efb`.
-
-Preview follow-up: allow only the exact candidate origin at the existing Observer
-CORS boundary for browser logs/metrics checks; no auth/authorization bypass or
-production portal promotion. The two existing allowed portal origins are retained.
-
-Candidate catalog follow-up: override the upstream provider default owner with
-the bare `onemind-admins` group name; 1.3.1 itself prefixes `group:default/`.
-The initial full entity reference caused unresolved double-prefixed ownership.
-This correction changes no user enrollment or membership.
-
-Candidate browser follow-up: explicitly allow the existing HTTPS Observer in the
-candidate CSP connect-src. Default self-only policy correctly blocked direct
-observability requests even after the exact-origin CORS correction. No wildcard
-origins or authentication relaxation; production stays unchanged until gates pass.
-
-Candidate verification found and fixed a real Request-body reuse error in the
-host fetch adapter (catalog bulk lookups and user-settings requests). Added five
-regression cases (42 total security/identity/fetch tests). Real Authentik sign-in
-already succeeded with the existing subject mapping, and the candidate catalog
-contains 606 entities including 38 OpenChoreo-managed entries. Browser acceptance
-and production promotion remain pending the corrected candidate image.
-
-Production repeat verification found a two-replica gap: upstream capability
-caching was process-local, while internal permission requests can reach the other
-replica without an IDP header. Fix by sharing only hashed cache keys/authorization
-results in the existing permission plugin PostgreSQL database, with upstream token
-expiry TTL and fail-closed database errors. No raw access tokens or new service
-credentials are stored. Release `3dd34900a5b455696387394398b72f80ce3376ba`
-passed 49 tests and all Linux gates; verified digest
+**Release:** source `3dd34900a5b455696387394398b72f80ce3376ba`, GHCR digest
 `sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`.
-The temporary console remains enabled until both replicas
-pass the real browser/catalog gates.
+Main Deployment is **2/2 ready**, Argo Synced/Healthy. App-of-apps, control plane,
+observability and identity resources also reconcile Synced/Healthy.
 
-Candidate accepted 2026-10-19: real Authentik subject mapping, full catalog,
-pilot Definition/Deploy (`stac-browser-v5` active), runtime logs including a new
-HTTP 200 request, and CPU/memory graphs verified in the browser. Exact-origin CORS,
-exact-endpoint CSP and the provider owner-name contract are corrected. Anonymous
-API denial, actual machine catalog-write/platform/context denials and six read-only
-MCP tools passed on the final candidate. Non-admin human decisions have regression
-coverage; no second human account was created or claimed live-tested. Production
-promotion pins the same verified image and retains existing PostgreSQL, backup,
-service account, integrations and zero-unavailable two-replica rollout. Console
-retirement and final completion remain gated on the production checks.
+**Live gates:** pilot `stac-browser-v5` Active in Deploy; real Component Definition;
+CPU/memory charts and runtime logs including a fresh HTTP 200 at 18:27:08 UTC.
+Each new replica passed anonymous API 401, guest 404, machine catalog read 200,
+catalog writes/platform/cache/context 403, and six read-only MCP tools. Actual
+MCP health reads work. Non-admin human decisions have regression coverage; no
+second human login was created or claimed live-tested. No live mutation was used
+as a test. Existing PostgreSQL/preferences, integrations, SA/RBAC, PDB and
+zero-unavailable rolling strategy remain intact. Today's encrypted backup reports
+restoreVerified=true (24 databases/148 tables).
 
-- [ ] Align our Backstage with the release line the OpenChoreo plugins support
-      (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
-- [ ] Install the core OpenChoreo plugins and the observability pack into our portal,
-      using `openchoreo/backstage-plugins` `packages/portal-app` as the reference wiring.
-- [ ] Switch sign-in to the `openchoreo-auth` provider against Authentik and keep the
-      `onemind.io/oidc-sub` user mapping working.
-- [ ] Merge the OpenChoreo permission policy with ours (only one policy can be active).
-- [ ] Turn the built-in console off.
+**Pitfalls corrected:** Request-body reuse, exact-origin CORS/CSP, provider owner
+name prefix, and a multi-replica authorization cache gap. Capability results now
+use the permission plugin DB with SHA-256 keys, upstream expiration and fail-closed
+errors; no raw token is stored. Independent PostgreSQL connections and concurrent
+initialization/upsert were tested; both production replicas use the shared DB.
+The upstream ABAC router remains a version-locked private-API adapter to review
+on every upgrade. Catalog sync deliberately polls; the unused webhook forwarder
+is disabled rather than posting to a disabled HTTP receiver. Internal Backstage
+PostgreSQL events and NATS are unchanged.
 
-Retirement step follows production acceptance: disable only the chart console,
-prune its dedicated ingress/Application and the memory-only candidate, retain the
-reused catalog SealedSecret and authorization bindings, and remove retired origins
-and exact callbacks. Disable the unused OpenChoreo webhook forwarder while the
-portal remains deliberately poll-only (its HTTP receiver is not enabled); internal
-Backstage PostgreSQL events and NATS are unchanged. No PVC, database, backup,
-identity or role is deleted. Final
-Phase 6 completion remains pending observed reconciliation of this step.
+**Verification:** 49 tests, immutable Linux build, TypeScript, TechDocs, backend,
+JSON exports, AMD64 SQLite, remote digest verification, changed YAML, strict
+manifest/schema checks, pinned Helm renders, kustomize and new-secret scans pass.
+GitHub Actions still cannot start due account billing; full `make validate` still
+hits unrelated old YAML debt. Neither was represented as green or bypassed.
 
-Gate: one portal shows our home screens, the full catalog and OpenChoreo tabs.
+Implementation/rollout PRs: #311–#319. Detailed evidence and rollback:
+[Phase 6 integration runbook](docs/operations/phase6-portal-integration.md).
+Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
 
 ### Phase 7: Migrate Layer 3
 
@@ -762,7 +712,7 @@ descheduler (Layer 1) in phase 5 alongside the capacity work.
 
 - **Maturity:** OpenChoreo is a CNCF Sandbox project with frequent releases and several
   supported lines at once. Pin chart versions and read release notes before upgrades.
-- **Backstage version:** the OpenChoreo plugins pin Backstage 1.51.0; our portal runs 1.55.3.
+- **Backstage version:** upstream documents 1.51.0; our 1.55.3 integration passed Phase 6 live gates. Keep the dependency cohort and private ABAC-router adapter pinned; reverify upgrades.
 - **Gateway:** Cilium Gateway API works with the OpenChoreo data plane (phase 2c), but
   its CRDs are v1.2.1 (DOKS-managed) while OpenChoreo targets v1.5.1. The upstream
   `service` component type's CORS filter cannot be used; use `onemind-service`.
