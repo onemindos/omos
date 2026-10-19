@@ -645,7 +645,15 @@ checks do not establish production compatibility. The temporary console stays on
 The host uses the verified OIDC authenticator with explicit catalog-subject mapping,
 a single intersected permission policy and a version-locked upstream ABAC router
 adapter (see the integration runbook). No production image/configuration is changed
-by the source-integration PR.
+by the source-integration PR. #312 also deploys a separate tailnet-only candidate
+with in-memory SQLite (no production PostgreSQL credential), using the existing
+restricted catalog identity and an additional exact Authentik callback. The original
+two production replicas and temporary console remain unchanged until preview gates
+pass. Linux release `4d99acd971ca5510ba2511ff51631d56f2ed7086` passed all build gates,
+including 37 security tests; isolated HTTP checks passed anonymous/guest denials,
+machine catalog-write and platform-access denials, and six read-only MCP tools.
+Verified published image digest:
+`sha256:a640cf8746f0d3eb40348e0cb4817b65491955b56453b9d67133050047f60efb`.
 
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.

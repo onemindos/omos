@@ -46,8 +46,9 @@ frontend API cohort; local compilation/bundling is evidence only for that gate.
 - [x] Local immutable dependency resolution, full TypeScript and frontend bundle.
 - [x] Identity, policy intersection, request boundary, pinned router and credential
       forwarding regression tests (37 tests).
-- [ ] Real Linux release image with all gates inside the Dockerfile.
-- [ ] Isolated preview backend ready without contacting or migrating production DB.
+- [x] Real Linux release image with all gates inside the Dockerfile.
+- [x] Isolated fixture backend ready, network disabled and in-memory database; no production DB contact.
+- [ ] Private candidate using real Authentik and OpenChoreo ready.
 - [ ] Real Authentik login: same catalog user and intended ownership groups.
 - [ ] Existing home/brand/catalog/TechDocs/settings/operational features preserved.
 - [ ] Synced OpenChoreo catalog and pilot Cell/Deploy/Definition views show real data.
@@ -68,3 +69,19 @@ remain unchanged until the preview and migration gates pass.
 CI currently cannot start because of account payment/spending limits. Do not mark
 checks green or bypass required checks. `make validate` has existing unrelated YAML
 lint failures; report them separately from changed-file/local test results.
+
+Candidate deployment in #312: `https://onemind-portal-candidate.tail717ba0.ts.net`.
+It uses the existing catalog ConfigMap, in-memory SQLite, no production PostgreSQL
+configuration/password and no mounted Kubernetes service-account token. Its user
+client is the existing `openchoreo-oidc` Secret; the restricted existing catalog
+service credential is resealed as `openchoreo-catalog`, without rotation. One exact
+candidate callback is added through the existing Authentik bootstrap Job. Main
+portal image/configuration and the temporary console are not changed by this step.
+
+Verified source `4d99acd971ca5510ba2511ff51631d56f2ed7086`, published digest
+`sha256:a640cf8746f0d3eb40348e0cb4817b65491955b56453b9d67133050047f60efb`.
+In addition to 37 unit/regression tests, isolated HTTP checks verified readiness
+200; anonymous catalog/platform/permission/cache/context endpoints 401; guest
+refresh 404; machine catalog read 200, catalog mutation and platform/permission
+access 403; MCP tools/list returned six explicitly read-only, non-destructive tools.
+These fixture checks do not prove real Authentik/browser or production behavior.
