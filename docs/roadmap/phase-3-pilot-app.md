@@ -91,6 +91,27 @@ manifests are removed, and the verdict is written. Evidence goes in the roadmap.
   the pilot serves HTTP 200 with all referenced JS/CSS assets at 22:01 EDT.
   The catalog check found a backend URL variant without port 8082, which needs
   an additional exact rewrite before browser catalog access can pass.
+- [#290](https://github.com/onemindos/omos/pull/290): add the observed catalog URL
+  rewrite in v4. Its binding reconciled before the snapshot existed and stayed
+  `ComponentReleaseNotFound`; this was not a missing config-rollout checksum.
+- [#291](https://github.com/onemindos/omos/pull/291): completed a read-only schema
+  inspection. The configured `stac` database lacks PgSTAC and enabled PostGIS;
+  collection listing and search fail with missing-function errors. This does not
+  establish that all user data is absent or explain the missing installation.
+- [#292](https://github.com/onemindos/omos/pull/292): apply snapshots before their
+  binding, normalize the pruned trait field, advance to v5 and remove the completed
+  diagnostic Job after recording its output. Verified live at 23:06 EDT:
+  both OpenChoreo apps Synced/Healthy, v5 Ready, new ready Pod from the built-in
+  `dp-resource-hash`, all six assets and corrected catalog self link returning 200,
+  catalog writes refused with 405. Backend collection/search still return 500.
+- [#293](https://github.com/onemindos/omos/pull/293): merged the next read-only
+  metadata preflight for both `geo` and `stac`, plus the
+  [recovery gates](../operations/stac-database-repair.md). Execution/results remain
+  pending until verified live. No live database initialization is authorized.
+- The active app contract, binding and v5 snapshot total 492 lines in three files;
+  the app directory with history has seven files and 1,958 lines. The old browser
+  takes 47 lines in one shared manifest. The fewer-files gate has not passed;
+  rollout/resource-tree visibility benefits do not prove reduced maintenance.
 - The existing `onetak/stac-browser` Deployment and Service remain in place.
 - In-app browser navigation to the pilot's HTTP nip.io URL returned
   `net::ERR_BLOCKED_BY_CLIENT`; an HTTP check cannot substitute for a visual review.
