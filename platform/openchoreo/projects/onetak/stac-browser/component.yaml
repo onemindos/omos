@@ -76,5 +76,7 @@ spec:
                   sub_filter_once off;
                   sub_filter 'http://stac-api.onetak.svc.cluster.local:8082/'
                       'http://$http_host/stac-browser-http/catalog/';
+                  sub_filter 'http://stac-api.onetak.svc.cluster.local/'
+                      'http://$http_host/stac-browser-http/catalog/';
               }
           }

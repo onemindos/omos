@@ -373,6 +373,12 @@ Progress (2026-10-18):
   and two new ecosystem nodes were Ready on Kubernetes 1.36.5. Many unrelated pods
   were rescheduling; the OpenChoreo API and metrics had transient reachability
   failures. No node, pool or infrastructure changes are part of the pilot PRs.
+- At 22:01 EDT, the Cilium policy was `Valid=True`; the tailnet frontend,
+  runtime config and all referenced JS/CSS assets returned 200 with the correct
+  path prefix. The catalog root returned 200, but its self/collection links used
+  `http://stac-api.onetak.svc.cluster.local/` without port 8082. Add that observed
+  exact base URL to the proxy rewrites in immutable release v4 (this PR). Keep
+  external asset links unchanged; collections/search and visual review are pending.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the
