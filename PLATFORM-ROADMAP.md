@@ -436,6 +436,18 @@ Progress (2026-10-18):
   The recovery and approval gates are documented in
   [`docs/operations/stac-database-repair.md`](docs/operations/stac-database-repair.md).
   No live database initialization or replacement is part of this diagnostic step.
+- PR #293 merged with all four checks passing. At 23:13 EDT,
+  `platform-onetak` was Synced/Healthy at `4adc570a` and the preflight Job completed
+  successfully with both session and transaction read-only flags `on` in each
+  database. `geo` (18 MB) has PostGIS 3.6.4 and public table `spatial_ref_sys`;
+  `stac` (10 MB) has no public relations and no enabled PostGIS. Neither database
+  has a PgSTAC schema/search functions. PostGIS 3.6.4, btree_gist 1.7, pg_trgm 1.6
+  and unaccent 1.1 are available on the server. The existing `geo` role is a
+  superuser with database/role creation privileges; the three standard PgSTAC
+  roles are absent. These are metadata observations, not application-row or
+  historical-data verification. Preserve the detailed evidence in the recovery
+  document and remove the completed Job. No schema, grants, credentials, server
+  image or application database target was changed.
 - Evaluation remains open: the active Component/Workload, binding and v5 snapshot
   total 492 lines in three files. With five immutable release snapshots, the app
   directory contains seven files and 1,958 lines; shared platform/bootstrap files
