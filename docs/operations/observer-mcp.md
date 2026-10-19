@@ -13,6 +13,8 @@ agent's own CA reference, links ClusterDataPlane/default explicitly, and enables
 console observability. It wires OTel component logs/traces to the prepared OpenSearch
 indices and exposes OpenChoreo labels in the existing kube-state-metrics. This is
 ordered after module setup to avoid creating indices with accidental dynamic mappings.
+The Alertmanager Config matcher strategy allows the explicitly labeled OpenChoreo
+route to receive alerts from component namespaces, while retaining other receivers.
 Workflow features stay disabled.
 
 Run from the repository on the operator Mac:

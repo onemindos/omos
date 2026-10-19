@@ -37,6 +37,10 @@ alertmanager:
     # Pick up AlertmanagerConfig CRs; with no namespace selector the operator only
     # reads Alertmanager's own namespace (monitoring). Matches the live release.
     alertmanagerConfigSelector: {}
+    # OpenChoreo metric alerts need not carry the Config CR namespace as a label.
+    # The route itself matches only openchoreo_alert=true; retain all other receivers.
+    alertmanagerConfigMatcherStrategy:
+      type: None
 
 kubeStateMetrics:
   enabled: true
