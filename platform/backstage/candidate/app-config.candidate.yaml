@@ -2,6 +2,8 @@
 app:
   baseUrl: https://onemind-portal-candidate.tail717ba0.ts.net
 backend:
+  csp:
+    connect-src: ["'self'", 'https://onemind-observer.tail717ba0.ts.net']
   baseUrl: https://onemind-portal-candidate.tail717ba0.ts.net
   listen:
     host: 0.0.0.0

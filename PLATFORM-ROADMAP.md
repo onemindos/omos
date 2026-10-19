@@ -659,6 +659,11 @@ Preview follow-up: allow only the exact candidate origin at the existing Observe
 CORS boundary for browser logs/metrics checks; no auth/authorization bypass or
 production portal promotion. The two existing allowed portal origins are retained.
 
+Candidate browser follow-up: explicitly allow the existing HTTPS Observer in the
+candidate CSP connect-src. Default self-only policy correctly blocked direct
+observability requests even after the exact-origin CORS correction. No wildcard
+origins or authentication relaxation; production stays unchanged until gates pass.
+
 Candidate verification found and fixed a real Request-body reuse error in the
 host fetch adapter (catalog bulk lookups and user-settings requests). Added five
 regression cases (42 total security/identity/fetch tests). Real Authentik sign-in
