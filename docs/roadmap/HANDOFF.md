@@ -7,7 +7,7 @@ continue from here. The plan, tracker and decisions live in
 ## Where we are
 
 Phases 0, 1 and 2 are done (PRs #256 to #277). Next is **phase 3** (pilot one app in OpenChoreo).
-Phases 3 to 8 each have a brief in this folder and a draft PR carrying it. Open items:
+Phases 3 to 8 each have a brief in this folder (on the draft PR branch until merged) and a draft PR carrying it. Open items:
 
 - Zeus has not yet signed in to the OpenChoreo console as `akadmin`
   (`https://onemind-console.tail717ba0.ts.net`). If it fails, reopen phase 2.
@@ -16,14 +16,14 @@ Phases 3 to 8 each have a brief in this folder and a draft PR carrying it. Open 
 
 ## Briefs and draft PRs
 
-| Phase | Brief | Goal |
-|---|---|---|
-| 3 | [phase-3-pilot-app.md](phase-3-pilot-app.md) | One small app as an OpenChoreo Component |
-| 4 | [phase-4-portal-refactor.md](phase-4-portal-refactor.md) | Portal features into `plugins/` packages |
-| 5 | [phase-5-capacity-observability.md](phase-5-capacity-observability.md) | Capacity, then the observability plane |
-| 6 | [phase-6-one-portal.md](phase-6-one-portal.md) | OpenChoreo plugins in our portal |
-| 7 | [phase-7-migrate-apps.md](phase-7-migrate-apps.md) | Move Layer 3 apps project by project |
-| 8 | [phase-8-expand.md](phase-8-expand.md) | Home server and Hermes |
+| Phase | Brief | Goal | Draft PR |
+|---|---|---|---|
+| 3 | [phase-3-pilot-app.md](phase-3-pilot-app.md) | One small app as an OpenChoreo Component | [#279](https://github.com/onemindos/omos/pull/279) |
+| 4 | [phase-4-portal-refactor.md](phase-4-portal-refactor.md) | Portal features into `plugins/` packages | [#280](https://github.com/onemindos/omos/pull/280) |
+| 5 | [phase-5-capacity-observability.md](phase-5-capacity-observability.md) | Capacity, then the observability plane | [#281](https://github.com/onemindos/omos/pull/281) |
+| 6 | [phase-6-one-portal.md](phase-6-one-portal.md) | OpenChoreo plugins in our portal | [#282](https://github.com/onemindos/omos/pull/282) |
+| 7 | [phase-7-migrate-apps.md](phase-7-migrate-apps.md) | Move Layer 3 apps project by project | [#283](https://github.com/onemindos/omos/pull/283) |
+| 8 | [phase-8-expand.md](phase-8-expand.md) | Home server and Hermes | [#284](https://github.com/onemindos/omos/pull/284) |
 
 Each draft PR adds only its brief. Work the phase on that PR's branch (or a branch from it),
 keep the PR a draft until the gate passes, then mark it ready and merge. Every PR also updates the
