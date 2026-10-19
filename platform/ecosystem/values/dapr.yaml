@@ -11,8 +11,15 @@ dapr_operator:
     limits:
       cpu: '1'
       memory: 1Gi
-  nodeSelector: &id001
-    onemind.io/compute-role: ecosystem
+  affinity: &id001
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values: [onemind-ecosystem-cpu]
 dapr_placement:
   resources:
     requests:
@@ -21,7 +28,7 @@ dapr_placement:
     limits:
       cpu: '1'
       memory: 1Gi
-  nodeSelector: *id001
+  affinity: *id001
 dapr_scheduler:
   resources:
     requests:
@@ -41,7 +48,7 @@ dapr_sentry:
     limits:
       cpu: '1'
       memory: 1Gi
-  nodeSelector: *id001
+  affinity: *id001
 dapr_sidecar_injector:
   resources:
     requests:
@@ -50,4 +57,4 @@ dapr_sidecar_injector:
     limits:
       cpu: '1'
       memory: 1Gi
-  nodeSelector: *id001
+  affinity: *id001

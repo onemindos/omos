@@ -8,7 +8,7 @@ prometheus:
         cpu: 200m
         memory: 2Gi
       limits:
-        memory: 3Gi
+        memory: 4Gi
     # Keep metrics on a volume: until 2026-10-17 the database was on temporary storage, so every restart
     # erased the history (retention is 10d). retentionSize keeps the data inside the volume.
     retention: 10d
@@ -32,7 +32,7 @@ alertmanager:
         cpu: 50m
         memory: 128Mi
       limits:
-        memory: 512Mi
+        memory: 1Gi
     # Pick up AlertmanagerConfig CRs; with no namespace selector the operator only
     # reads Alertmanager's own namespace (monitoring). Matches the live release.
     alertmanagerConfigSelector: {}

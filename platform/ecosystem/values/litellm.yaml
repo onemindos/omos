@@ -1,7 +1,15 @@
 replicaCount: 1
 fullnameOverride: litellm
-nodeSelector:
-  onemind.io/compute-role: ecosystem
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      preference:
+        matchExpressions:
+        - key: doks.digitalocean.com/node-pool
+          operator: In
+          values:
+          - onemind-ecosystem-cpu
 image:
   tag: v1.104.2@sha256:3d88bd757134a00e8c00237b85a021ab1f6d54abb9c1df750f411dbe7256a500
   pullPolicy: IfNotPresent

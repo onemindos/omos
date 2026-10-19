@@ -23,10 +23,10 @@ spire-server:
       - weight: 100
         preference:
           matchExpressions:
-          - key: onemind.io/compute-role
+          - key: doks.digitalocean.com/node-pool
             operator: In
             values:
-            - ecosystem
+            - onemind-ecosystem-cpu
   resources:
     requests:
       cpu: 25m
