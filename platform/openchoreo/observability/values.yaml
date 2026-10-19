@@ -1,19 +1,79 @@
-# openchoreo-observability-plane 1.3.1 (PLATFORM-ROADMAP.md phase 5).
-# Wire the plane to the existing observability stack; do not install duplicate backends.
-observabilityPlane:
-  metrics:
-    enabled: true
-    prometheus:
-      url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
-  logs:
-    enabled: true
-    opensearch:
-      url: http://opensearch-cluster-master.onemind-search.svc.cluster.local:9200
-  traces:
-    enabled: true
-    tempo:
-      endpoint: tempo.monitoring.svc.cluster.local:4317
-  finops:
-    enabled: true
-    opencost:
-      url: http://opencost.opencost.svc.cluster.local:9003
+# OpenChoreo core 1.3.1; adapters reuse existing shared-service backends.
+gateway:
+  enabled: false
+controllerManager:
+  affinity: &id001
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - onemind-ecosystem-cpu
+clusterAgent:
+  affinity: *id001
+  planeID: default
+  tls:
+    duration: 87600h
+    renewBefore: 720h
+observer:
+  secretName: observer-secret
+  controlPlaneApiUrl: http://openchoreo-api.openchoreo-control-plane.svc.cluster.local:8080
+  oauthClientId: onemind-openchoreo
+  oauthScope: openid profile email
+  affinity: *id001
+  security:
+    subjectTypes:
+    - type: user
+      display_name: Registered operator
+      priority: 1
+      auth_mechanisms:
+      - type: jwt
+        readable_id_claim: sub
+        entitlement:
+          claim: sub
+          display_name: Registered operator
+  http:
+    enabled: false
+  extraEnvs:
+  - name: OBSERVER_BASE_URL
+    value: https://onemind-observer.tail717ba0.ts.net
+  - name: AUTHZ_TIMEOUT
+    value: 30s
+  cors:
+    allowedOrigins:
+    - https://onemind-console.tail717ba0.ts.net
+    - https://onemind-preview.tail717ba0.ts.net
+security:
+  enabled: true
+  jwt:
+    audience: onemind-openchoreo
+  oidc:
+    issuer: https://onemind-auth.tail717ba0.ts.net/application/o/onemind-openchoreo/
+    jwksUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local/application/o/onemind-openchoreo/jwks/
+    tokenUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local/application/o/token/
+    authServerBaseUrl: https://onemind-auth.tail717ba0.ts.net
+    mcpOAuthScopes:
+    - openid
+    - profile
+    - email
+networkPolicy:
+  additionalIngress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tailscale
+    ports:
+    - port: 8080
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openchoreo-control-plane
+    ports:
+    - port: 8080
+      protocol: TCP
+    - port: 8081
+      protocol: TCP
