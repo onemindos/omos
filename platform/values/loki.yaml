@@ -20,15 +20,25 @@ loki:
   limits_config:
     allow_structured_metadata: true
     volume_enabled: true
-    retention_period: 336h   # 14d
+    retention_period: 744h   # 31d
 
 singleBinary:
+  # Rebalance the 1536Mi request without changing the immutable PVC template.
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values: [onemind-ecosystem-cpu]
   replicas: 1
   persistence:
     enabled: true
-    size: 50Gi
+    size: 20Gi
     # No storageClassName: the live PVC uses the cluster default (do-block-storage) and
-    # StatefulSet volumeClaimTemplates are immutable. Expanded to 50Gi on the PVC itself.
+    # StatefulSet volumeClaimTemplates are immutable. Expanded to 30Gi on the PVC itself.
   resources:
     # Request matches real use (7-day peak 1.19 GiB; it was 512Mi).
     requests:
