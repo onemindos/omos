@@ -1,7 +1,7 @@
 name: Build OneMind Portal
 on:
   push:
-    branches: [main, 'feat/onemind-backstage', 'codex/onemind-portal-missions']
+    branches: [main, 'feat/onemind-backstage', 'codex/onemind-portal-missions', 'roadmap/phase-4-portal-refactor']
     paths:
       - services/onemind-portal/**
       - .github/workflows/build-onemind-portal.yml

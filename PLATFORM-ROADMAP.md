@@ -123,7 +123,7 @@ it could lock out both itself and the human who has to recover it.
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
-| 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
+| 4 | Portal refactor: custom features into `plugins/` packages | In progress | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
@@ -493,13 +493,24 @@ If not, stop and record why before Phase 7.
 
 Goal: our portal features become portable Backstage plugin packages. No behaviour change.
 
-- [ ] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
-      into its own package under `services/onemind-portal/plugins/`.
-- [ ] Move each backend feature from `packages/backend/src/` into its own backend plugin
-      or module package.
-- [ ] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; frontend and backend modules extracted into `@internal/plugin-onemind-*` packages, all wired via `packages/backend/src/index.ts` and `packages/app/src/App.tsx`.
 
-Gate: the deployed portal behaves exactly as before.
+- [x] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
+      into its own package under `services/onemind-portal/plugins/`.
+- [x] Move each backend feature from `packages/backend/src/` into its own backend plugin
+      or module package.
+- [x] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+
+Evidence:
+- `yarn tsc`, `yarn lint:all`, `yarn test:all`, `yarn build:all` pass locally (Node 22.23.3, Yarn 4.13.0).
+- CI `Build OneMind Portal` on branch `roadmap/phase-4-portal-refactor` succeeded (run 39205172177); image pushed to `ghcr.io/onemindos/onemind-portal@sha256:3d2c5bdb6cf56c45b051b373c5085d79616af60055420332a452e5b80cc469c3`.
+- `platform/backstage/deployment.yaml` updated to the new digest; Argo CD `backstage` Application is OutOfSync and syncing (live read-only verification in progress).
+- `scripts/validate_changed_yaml.py` against `origin/main` passed (0 changed YAML files in this branch).
+- Full `make validate` still reports pre-existing YAML lint debt in `platform/matrix/*` (unchanged from `origin/main`), so the root Makefile fails at `lint-yaml`; the changed-files gate is clean.
+
+PR: https://github.com/onemindos/omos/pull/280
+
+Gate: the deployed portal behaves exactly as before. Gate evidence will be added after the sync completes.
 
 ### Phase 5: Capacity, then observability
 
