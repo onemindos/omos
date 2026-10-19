@@ -387,6 +387,35 @@ Progress (2026-10-18):
   It references the existing Secret without reading or changing its value.
   Record the result and remove the Job after inspection; do not migrate the
   shared database or remove the old browser based on pod readiness alone.
+- The inspection Job completed with `default_transaction_read_only=on` and
+  `BEGIN READ ONLY` against database `stac` as role `geo`, PostgreSQL 17.11.
+  It found no `pgstac` schema, no PgSTAC tables, and none of `search`,
+  `collection_search` or `get_version` in `pgstac`/`public`. Installed extensions
+  were `plpgsql` 1.0, `timescaledb` 2.29.1 and `timescaledb_toolkit` 1.24.0;
+  PostGIS is not enabled in this database. This does not establish that all user
+  data is absent or why the schema is missing. Remove the completed diagnostic
+  Job manifest after preserving these results; no database changes are included.
+- Follow-up inspection at 22:58 EDT: the v4 binding still reports
+  `ComponentReleaseNotFound`, although its ComponentRelease exists. The official
+  [v1.3.1 controller](https://github.com/openchoreo/openchoreo/blob/v1.3.1/internal/controller/releasebinding/controller.go)
+  returns without a retry on that condition and does not watch ComponentRelease
+  creation. Order Project/Component (wave 0), snapshots (wave 1), then binding
+  (wave 2), and advance to a new v5 snapshot to trigger reconciliation. This is a
+  GitOps ordering workaround, not evidence of a missing config rollout checksum:
+  the existing Deployment already has OpenChoreo's `dp-resource-hash` annotation.
+- The shared and frozen gateway trait used an invalid `creates[].id`; the API
+  prunes it and defaults `targetPlane` to `dataplane`, causing persistent Argo
+  drift. Normalize that field in the shared trait and v3/v4 snapshots to the
+  already stored representation. Existing immutable runtime specs remain the same
+  after API defaulting. v5 carries v4's workload/proxy configuration unchanged.
+  See the official [v1.3.1 ClusterTrait schema](https://github.com/openchoreo/openchoreo/blob/v1.3.1/config/crd/bases/openchoreo.dev_clustertraits.yaml).
+- Backup observation: `onetak/volume-50fb74ff16c6` reports a successful VolSync
+  snapshot of `onetak-geo-db-data` at `2026-10-18T05:20:18Z`. That is volume-backup
+  evidence, not proof of a fresh, application-correct STAC database restore.
+  Before any live schema initialization, confirm the intended database and its
+  contents, create a fresh PostgreSQL-17-compatible backup, prove an isolated
+  restore and test a compatible PgSTAC installation. Live initialization remains
+  subject to Zeus's approval; the shared database stays outside OpenChoreo.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the

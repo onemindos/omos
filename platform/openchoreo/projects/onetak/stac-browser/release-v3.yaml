@@ -4,6 +4,8 @@ kind: ComponentRelease
 metadata:
   name: stac-browser-v3
   namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   owner:
     projectName: onetak
@@ -365,7 +367,7 @@ spec:
               maximum: 65535
               default: 8080
       creates:
-      - id: cilium-gateway-ingress
+      - targetPlane: dataplane
         template:
           apiVersion: cilium.io/v2
           kind: CiliumNetworkPolicy

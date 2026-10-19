@@ -4,6 +4,8 @@ kind: ComponentRelease
 metadata:
   name: stac-browser-v2
   namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   owner:
     projectName: onetak
