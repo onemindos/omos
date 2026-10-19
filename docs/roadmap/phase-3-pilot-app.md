@@ -117,18 +117,24 @@ manifests are removed, and the verdict is written. Evidence goes in the roadmap.
   projects apps are Synced/Healthy at `ebd69aea`. No Pending pods. Existing
   exceptions remain Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing.
 - The active app contract, binding and v5 snapshot total 492 lines in three files;
-  the app directory with history has seven files and 1,958 lines. The old browser
-  takes 47 lines in one shared manifest. The fewer-files gate has not passed;
+  the app directory with history had seven files and 1,958 lines. The old browser
+  occupied 47 lines in one shared manifest. The fewer-files gate has not passed;
   rollout/resource-tree visibility benefits do not prove reduced maintenance.
-- Zeus's direction on that gate is pending: reduce manual release work before
+- Zeus's direction on that gate was pending: reduce manual release work before
   expanding (recommended), accept the extra YAML for standardization, or stop the
-  pilot. Do not silently revise the gate or proceed to later phases. A live
-  persistent database change still requires recovery proof and explicit approval.
-- The existing `onetak/stac-browser` Deployment and Service remain in place.
+  pilot. A live persistent database change still requires recovery proof and
+  explicit approval.
+- Zeus chose option A on 2026-10-19: keep the pilot and reduce manual release YAML
+  before expanding.
+- [#279](https://github.com/onemindos/omos/pull/295): removes old release snapshots and
+  the legacy stac-browser Deployment/Service.
+- No live database initialization was performed; that remains behind the approval gates
+  in [`stac-database-repair.md`](../operations/stac-database-repair.md).
 - In-app browser navigation to the pilot's HTTP nip.io URL returned
   `net::ERR_BLOCKED_BY_CLIENT`; an HTTP check cannot substitute for a visual review.
-- No cutover, phase completion or phase-4 work is claimed. The maintenance comparison
-  must count both authored app contracts and generated immutable snapshots.
+- Live cutover verification, phase completion and phase-4 work are not claimed. The
+  maintenance comparison must count both authored app contracts and generated immutable
+  snapshots.
 
 The STAC image expects `SB_catalogUrl`, `SB_catalogTitle` and `SB_pathPrefix`; the
 old manifest's `CATALOG_URL` and `STAC_BROWSER_TITLE` are ineffective. The pilot

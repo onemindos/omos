@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294), [#279](https://github.com/onemindos/omos/pull/295) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -449,14 +449,18 @@ Progress (2026-10-18):
   document and remove the completed Job in [#294](https://github.com/onemindos/omos/pull/294).
   No schema, grants, credentials, server
   image or application database target was changed.
-- Evaluation remains open: the active Component/Workload, binding and v5 snapshot
-  total 492 lines in three files. With five immutable release snapshots, the app
-  directory contains seven files and 1,958 lines; shared platform/bootstrap files
-  are additional. The old browser occupies 47 lines in one shared manifest. The
-  fewer-files gate is not met. Standardized rollout and resource-tree visibility
-  are demonstrated benefits, but they do not establish lower maintenance cost.
-  Record a candid verdict and resolve this gate before declaring the phase done
-  or expanding the migration.
+- Evaluation and direction: the pre-cutover active Component/Workload, binding
+  and v5 snapshot total 492 lines in three files. With five immutable release
+  snapshots, the app directory contained seven files and 1,958 lines; shared
+  platform/bootstrap files are additional. The old browser occupied 47 lines in
+  one shared manifest. Standardized rollout and resource-tree visibility are
+  demonstrated benefits, but they did not establish lower maintenance cost.
+- On 2026-10-19, Zeus chose option A: keep the pilot and reduce manual release
+  YAML before expanding. [#279](https://github.com/onemindos/omos/pull/295) is
+  the cutover PR removing the old immutable release snapshots and the legacy
+  stac-browser Deployment/Service. No live database initialization was performed.
+  Live verification of that cutover remains required; phase status stays In
+  progress until its gate evidence is recorded.
 
 - [x] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
 - [x] Write its Component in `platform/openchoreo/projects/`.
