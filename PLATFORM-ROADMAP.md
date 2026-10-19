@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268) | 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269) | 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -243,10 +243,14 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       Verified 2026-10-18: `platform-openchoreo-platform` Synced and Healthy,
       `clustercomponenttype/onemind-service` present.
 - [ ] 2g. OpenChoreo MCP for Claude (moved from phase 1), in three PRs:
-  - [ ] 2g-1. Make the control-plane API reachable on the tailnet under its HTTPRoute
+  - [x] 2g-1. Make the control-plane API reachable on the tailnet under its HTTPRoute
         hostname: the gateway Service gets `tailscale.com/hostname: onemind-openchoreo-api`
         and the API advertises `publicUrl` instead of `api.openchoreo.invalid`
-        (`platform/ecosystem/values/oc-control.yaml`).
+        (`platform/ecosystem/values/oc-control.yaml`). Verified 2026-10-18: the device
+        `onemind-openchoreo-api` resolves on the tailnet. The rollout then stuck: the
+        ecosystem node was at 99% CPU requested and the control plane required that node
+        (`nodeSelector`), so the new API pod stayed Pending. Placement changed to a
+        preference (#269); the capacity work stays in phase 5.
   - [ ] 2g-2. Read-only identity: an Authentik service account allowed on the
         `onemind-openchoreo` application, a custom read-only `ClusterAuthzRole`, and a
         binding for the account.

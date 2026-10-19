@@ -20,8 +20,18 @@ security:
   authz:
     enabled: true
 controllerManager:
-  nodeSelector: &id001
-    onemind.io/compute-role: ecosystem
+  # Prefer the ecosystem pool but do not require it: after the 2026-10-18 DOKS node
+  # recycle the ecosystem node was at 99% CPU requested and a required nodeSelector left the
+  # new API pod Pending while the three new hub-core nodes had room.
+  affinity: &id001
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values: [ecosystem]
   resources:
     requests:
       cpu: 10m
@@ -30,7 +40,7 @@ controllerManager:
       cpu: '2'
       memory: 1Gi
 openchoreoApi:
-  nodeSelector: *id001
+  affinity: *id001
   resources:
     requests:
       cpu: 10m
@@ -56,7 +66,7 @@ openchoreoApi:
     hostnames:
     - onemind-openchoreo-api.tail717ba0.ts.net
 clusterGateway:
-  nodeSelector: *id001
+  affinity: *id001
   resources:
     requests:
       cpu: 10m
@@ -76,7 +86,7 @@ gateway:
     enabled: false
     hostname: onemind-openchoreo-api.tail717ba0.ts.net
 eventForwarder:
-  nodeSelector: *id001
+  affinity: *id001
   config:
     webhooks:
       endpoints:
@@ -85,7 +95,7 @@ portalAssistant:
   enabled: true
   http:
     enabled: false
-  nodeSelector: *id001
+  affinity: *id001
   llm:
     secretName: openchoreo-assistant
     modelName: openai:onemind-chat
