@@ -15,6 +15,7 @@ jest.mock('@backstage/core-plugin-api', () => ({
   useApi: () => ({ forBucket: () => bucket }),
 }));
 jest.mock('@internal/plugin-onemind-common', () => ({
+  ...jest.requireActual('@internal/plugin-onemind-common'),
   useDirectory: () => ({
     loaded: true,
     error: false,

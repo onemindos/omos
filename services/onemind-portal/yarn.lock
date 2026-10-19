@@ -6014,6 +6014,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@internal/plugin-onemind-activity-backend@workspace:^, @internal/plugin-onemind-activity-backend@workspace:plugins/plugin-onemind-activity-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-activity-backend@workspace:plugins/plugin-onemind-activity-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/plugin-notifications-node": "npm:^0.2.30"
+    express: "npm:4.22.1"
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-assistant-backend@workspace:^, @internal/plugin-onemind-assistant-backend@workspace:plugins/plugin-onemind-assistant-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-assistant-backend@workspace:plugins/plugin-onemind-assistant-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+    express: "npm:4.22.1"
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-assistant@workspace:^, @internal/plugin-onemind-assistant@workspace:plugins/plugin-onemind-assistant":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-assistant@workspace:plugins/plugin-onemind-assistant"
@@ -6029,6 +6051,17 @@ __metadata:
   peerDependencies:
     react: ^18.0.2
     react-dom: ^18.0.2
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-auth-backend@workspace:^, @internal/plugin-onemind-auth-backend@workspace:plugins/plugin-onemind-auth-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-auth-backend@workspace:plugins/plugin-onemind-auth-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/plugin-auth-backend-module-oidc-provider": "npm:0.4.21"
+    "@backstage/plugin-auth-node": "npm:0.7.6"
   languageName: unknown
   linkType: soft
 
@@ -6051,6 +6084,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-common-backend@workspace:^, @internal/plugin-onemind-common-backend@workspace:plugins/plugin-onemind-common-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-common-backend@workspace:plugins/plugin-onemind-common-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-common@workspace:^, @internal/plugin-onemind-common@workspace:plugins/plugin-onemind-common":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-common@workspace:plugins/plugin-onemind-common"
@@ -6070,6 +6112,38 @@ __metadata:
     react: ^18.0.2
     react-dom: ^18.0.2
     react-router-dom: ^6.30.2
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-community-backend@workspace:^, @internal/plugin-onemind-community-backend@workspace:plugins/plugin-onemind-community-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-community-backend@workspace:plugins/plugin-onemind-community-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    express: "npm:4.22.1"
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-context-backend@workspace:^, @internal/plugin-onemind-context-backend@workspace:plugins/plugin-onemind-context-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-context-backend@workspace:plugins/plugin-onemind-context-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-events-backend@workspace:^, @internal/plugin-onemind-events-backend@workspace:plugins/plugin-onemind-events-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-events-backend@workspace:plugins/plugin-onemind-events-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/plugin-notifications-node": "npm:^0.2.30"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+    express: "npm:4.22.1"
   languageName: unknown
   linkType: soft
 
@@ -6097,6 +6171,25 @@ __metadata:
   peerDependencies:
     react: ^18.0.2
     react-dom: ^18.0.2
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-machine-backend@workspace:^, @internal/plugin-onemind-machine-backend@workspace:plugins/plugin-onemind-machine-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-machine-backend@workspace:plugins/plugin-onemind-machine-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-missions-backend@workspace:^, @internal/plugin-onemind-missions-backend@workspace:plugins/plugin-onemind-missions-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-missions-backend@workspace:plugins/plugin-onemind-missions-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    express: "npm:4.22.1"
   languageName: unknown
   linkType: soft
 
@@ -6140,6 +6233,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-offline-backend@workspace:^, @internal/plugin-onemind-offline-backend@workspace:plugins/plugin-onemind-offline-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-offline-backend@workspace:plugins/plugin-onemind-offline-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+    express: "npm:4.22.1"
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-offline@workspace:^, @internal/plugin-onemind-offline@workspace:plugins/plugin-onemind-offline":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-offline@workspace:plugins/plugin-onemind-offline"
@@ -6160,6 +6264,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-operations-backend@workspace:^, @internal/plugin-onemind-operations-backend@workspace:plugins/plugin-onemind-operations-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-operations-backend@workspace:plugins/plugin-onemind-operations-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+    express: "npm:4.22.1"
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-permissions-backend@workspace:^, @internal/plugin-onemind-permissions-backend@workspace:plugins/plugin-onemind-permissions-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-permissions-backend@workspace:plugins/plugin-onemind-permissions-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/plugin-permission-common": "npm:0.9.11"
+    "@backstage/plugin-permission-node": "npm:0.11.4"
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-radar@workspace:^, @internal/plugin-onemind-radar@workspace:plugins/plugin-onemind-radar":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-radar@workspace:plugins/plugin-onemind-radar"
@@ -6173,6 +6299,17 @@ __metadata:
   peerDependencies:
     react: ^18.0.2
     react-dom: ^18.0.2
+  languageName: unknown
+  linkType: soft
+
+"@internal/plugin-onemind-services-backend@workspace:^, @internal/plugin-onemind-services-backend@workspace:plugins/plugin-onemind-services-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-services-backend@workspace:plugins/plugin-onemind-services-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+    express: "npm:4.22.1"
   languageName: unknown
   linkType: soft
 
@@ -15170,7 +15307,20 @@ __metadata:
     "@backstage/plugin-signals-backend": "npm:0.3.19"
     "@backstage/plugin-techdocs-backend": "npm:2.3.0"
     "@backstage/plugin-user-settings-backend": "npm:0.4.7"
+    "@internal/plugin-onemind-activity-backend": "workspace:^"
+    "@internal/plugin-onemind-assistant-backend": "workspace:^"
+    "@internal/plugin-onemind-auth-backend": "workspace:^"
     "@internal/plugin-onemind-common": "workspace:^"
+    "@internal/plugin-onemind-common-backend": "workspace:^"
+    "@internal/plugin-onemind-community-backend": "workspace:^"
+    "@internal/plugin-onemind-context-backend": "workspace:^"
+    "@internal/plugin-onemind-events-backend": "workspace:^"
+    "@internal/plugin-onemind-machine-backend": "workspace:^"
+    "@internal/plugin-onemind-missions-backend": "workspace:^"
+    "@internal/plugin-onemind-offline-backend": "workspace:^"
+    "@internal/plugin-onemind-operations-backend": "workspace:^"
+    "@internal/plugin-onemind-permissions-backend": "workspace:^"
+    "@internal/plugin-onemind-services-backend": "workspace:^"
     "@types/express": "npm:^4.17.21"
     app: "link:../app"
     better-sqlite3: "npm:^12.0.0"
