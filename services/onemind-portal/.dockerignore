@@ -1,8 +1,16 @@
+# Source is needed by the multi-stage Linux build; generated host artifacts are not.
 .git
+**/node_modules
+**/dist
+**/coverage
+**/*.tsbuildinfo
 .yarn/cache
 .yarn/install-state.gz
-node_modules
-packages/*/src
-packages/*/node_modules
-plugins
+techdocs
+.env
+.env.*
+**/.env
+**/.env.*
 *.local.yaml
+**/*.local.yaml
+image-digest.txt

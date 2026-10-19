@@ -1612,11 +1612,11 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: k8s-onetak-stac-browser-2881a2ef
-  title: onetak / stac-browser
+  title: dp-default-onetak-development-b188bf98 / stac-browser
   description: Deployment in onetak
   annotations:
-    backstage.io/kubernetes-label-selector: app=stac-browser
-    backstage.io/kubernetes-namespace: onetak
+    backstage.io/kubernetes-label-selector: openchoreo.dev/component=stac-browser
+    backstage.io/kubernetes-namespace: dp-default-onetak-development-b188bf98
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
     onemind.io/hosting: digitalocean-nyc3
@@ -4265,8 +4265,8 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-06
-    onemind.io/runtime-evidence: Deployment onetak/stac-browser; Service onetak/stac-browser
-    onemind.io/documented-address: https://stac-browser.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Component stac-browser; HTTPRoute stac-browser-http-02eaf4a9
+    onemind.io/documented-address: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http
     onemind.io/documented-tags: Geo
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md
