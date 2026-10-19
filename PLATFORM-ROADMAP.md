@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -427,7 +427,7 @@ Progress (2026-10-18):
   on the catalog return 405. Collection listing and limited POST search still
   return 500 from the existing API. The original browser remains available, and
   Argo pruned the completed inspection Job. Visual review remains unverified.
-- Next read-only preflight: inspect the existing `geo` and `stac` databases for
+- Next read-only preflight ([#293](https://github.com/onemindos/omos/pull/293)): inspect the existing `geo` and `stac` databases for
   owners/sizes, role flags, available/installed extensions, user schema/relation
   counts, table names and PgSTAC function signatures. This checks for an existing
   installation in another database before selecting any repair. The Argo-owned
