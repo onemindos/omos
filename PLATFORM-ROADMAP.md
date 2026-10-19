@@ -696,6 +696,12 @@ retirement and final completion remain gated on the production checks.
 - [ ] Merge the OpenChoreo permission policy with ours (only one policy can be active).
 - [ ] Turn the built-in console off.
 
+Retirement step follows production acceptance: disable only the chart console,
+prune its dedicated ingress/Application and the memory-only candidate, retain the
+reused catalog SealedSecret and authorization bindings, and remove retired origins
+and exact callbacks. No PVC, database, backup, identity or role is deleted. Final
+Phase 6 completion remains pending observed reconciliation of this step.
+
 Gate: one portal shows our home screens, the full catalog and OpenChoreo tabs.
 
 ### Phase 7: Migrate Layer 3
