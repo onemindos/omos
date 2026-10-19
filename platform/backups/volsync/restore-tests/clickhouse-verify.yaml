@@ -36,7 +36,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: verify
-        image: docker.io/clickhouse/clickhouse-server@sha256:1ffa82edee000a42c09313bd9f1293d94c570aee74babc1b3ca9983a35fa597b
+        image: docker.io/clickhouse/clickhouse-server@sha256:bdb5c911a23d92fd364e246ab20b5a0a485f00112f3663fa626b083fb46c146b
         command:
         - sh
         - -ec
