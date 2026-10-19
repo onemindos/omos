@@ -2,13 +2,23 @@
 # Pass via: helm upgrade -f ./values/kube-prometheus-stack.yaml
 prometheus:
   prometheusSpec:
+    # Rebalance the 2Gi request off hub-core; keep fallback capacity available.
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: doks.digitalocean.com/node-pool
+                  operator: In
+                  values: [onemind-ecosystem-cpu]
     resources:
       # Request matches real use (7-day peak 1.73 GiB; it was 512Mi); limit raised so the peak is not 86% of it.
       requests:
         cpu: 200m
         memory: 2Gi
       limits:
-        memory: 4Gi
+        memory: 3Gi
     # Keep metrics on a volume: until 2026-10-17 the database was on temporary storage, so every restart
     # erased the history (retention is 10d). retentionSize keeps the data inside the volume.
     retention: 10d
@@ -32,7 +42,7 @@ alertmanager:
         cpu: 50m
         memory: 128Mi
       limits:
-        memory: 1Gi
+        memory: 512Mi
     # Pick up AlertmanagerConfig CRs; with no namespace selector the operator only
     # reads Alertmanager's own namespace (monitoring). Matches the live release.
     alertmanagerConfigSelector: {}
@@ -60,6 +70,15 @@ nodeExporter:
   enabled: true
 
 grafana:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values: [onemind-ecosystem-cpu]
   # Use the existing admin Secret. Without this the chart generates a random
   # password on every render, so Argo would change the Grafana password each sync.
   admin:

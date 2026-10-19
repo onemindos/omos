@@ -1,15 +1,7 @@
 podAnnotations:
   onemind.dev/backup-credential-revision: '20261009'
-affinity:
-  nodeAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-    - weight: 100
-      preference:
-        matchExpressions:
-        - key: doks.digitalocean.com/node-pool
-          operator: In
-          values:
-          - onemind-ecosystem-cpu
+nodeSelector:
+  onemind.io/compute-role: ecosystem
 resources:
   requests:
     cpu: 100m

@@ -51,9 +51,9 @@ controllerManager:
       - weight: 100
         preference:
           matchExpressions:
-          - key: doks.digitalocean.com/node-pool
+          - key: onemind.io/compute-role
             operator: In
-            values: [onemind-ecosystem-cpu]
+            values: [ecosystem]
   resources:
     requests:
       cpu: 10m
