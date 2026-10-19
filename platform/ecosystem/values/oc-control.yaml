@@ -88,6 +88,9 @@ gateway:
     enabled: false
     hostname: onemind-openchoreo-api.tail717ba0.ts.net
 eventForwarder:
+  # Portal catalog sync is poll-only until authenticated event ingress is reviewed.
+  # Do not leave a forwarder posting to the deliberately disabled HTTP receiver.
+  enabled: false
   affinity: *id001
   config:
     webhooks:
