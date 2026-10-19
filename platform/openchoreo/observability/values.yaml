@@ -53,7 +53,8 @@ security:
   oidc:
     issuer: https://onemind-auth.tail717ba0.ts.net/application/o/onemind-openchoreo/
     jwksUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local/application/o/onemind-openchoreo/jwks/
-    tokenUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local/application/o/token/
+    # Authentik derives iss from the request host; internal URL produces an invalid issuer.
+    tokenUrl: https://onemind-auth.tail717ba0.ts.net/application/o/token/
     authServerBaseUrl: https://onemind-auth.tail717ba0.ts.net
     mcpOAuthScopes:
     - openid
