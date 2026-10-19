@@ -40,7 +40,7 @@ spec:
         value: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http/catalog/
     files:
       - key: default.conf.template
-        mountPath: /etc/nginx/conf.d/default.conf.template
+        mountPath: /etc/nginx/conf.d
         value: |
           # Search POST is read-only; catalog writes are rejected before proxying.
           map "$request_method:$uri" $stac_read_allowed {
