@@ -1,0 +1,28 @@
+# Tailscale ingress for the built-in OpenChoreo console (PLATFORM-ROADMAP.md, phase 2f).
+# The console itself is part of the ecosystem-oc-control chart release.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-openchoreo-console
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/openchoreo/console
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openchoreo-control-plane
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m

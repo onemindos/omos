@@ -1,0 +1,21 @@
+# Tailnet-only HTTPS for the built-in OpenChoreo console (phase 2f). Same pattern as the
+# OneMind portal ingress in platform/backstage/deployment.yaml: the Tailscale operator
+# terminates TLS and names the device `onemind-console`. The console Service `backstage`
+# is created by the openchoreo-control-plane chart (values: platform/ecosystem/values/oc-control.yaml).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onemind-console
+  namespace: openchoreo-control-plane
+  annotations:
+    tailscale.com/hostname: onemind-console
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: backstage
+      port:
+        number: 7007
+  tls:
+    - hosts:
+        - onemind-console
