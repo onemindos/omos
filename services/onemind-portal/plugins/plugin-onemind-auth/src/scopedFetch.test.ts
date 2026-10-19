@@ -27,8 +27,8 @@ const originalFetch = global.fetch;
 let outgoing: Request;
 beforeEach(() => {
   jest.clearAllMocks();
-  global.fetch = jest.fn(async input => {
-    outgoing = input instanceof Request ? input : new Request(input);
+  global.fetch = jest.fn(async (input, init) => {
+    outgoing = new Request(input, init);
     return new Response('{}', { status: 200 });
   });
 });
@@ -83,4 +83,35 @@ test('untrusted direct request is blocked before reading tokens or fetching', as
   ).rejects.toThrow('outside configured API');
   expect(global.fetch).not.toHaveBeenCalled();
   expect(oauth.getAccessToken).not.toHaveBeenCalled();
+});
+
+test.each(['POST', 'PUT', 'PATCH'])(
+  'body survives a %s request',
+  async method => {
+    const body = JSON.stringify({ setting: 'retained' });
+    await client().fetch(`${backend}/api/user-settings/x`, {
+      method,
+      body,
+      headers: { 'content-type': 'application/json' },
+    });
+    expect(await outgoing.text()).toBe(body);
+    expect(outgoing.headers.get('Authorization')).toBe(
+      'Bearer backstage-fixture',
+    );
+  },
+);
+test('existing authenticated Request with a body is forwarded once', async () => {
+  const request = new Request(`${backend}/api/catalog/entities/by-refs`, {
+    method: 'POST',
+    body: '{"entityRefs":[]}',
+    headers: { Authorization: 'Bearer explicit-fixture' },
+  });
+  await client().fetch(request);
+  expect(await outgoing.text()).toBe('{"entityRefs":[]}');
+  expect(outgoing.headers.get('Authorization')).toBe('Bearer explicit-fixture');
+});
+test('plugin protocol retains its query and scoped credentials', async () => {
+  await client().fetch('plugin://catalog/entities?limit=1');
+  expect(outgoing.url).toBe(`${backend}/api/catalog/entities?limit=1`);
+  expect(outgoing.headers.get('x-openchoreo-token')).toBe('idp-fixture');
 });
