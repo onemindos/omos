@@ -523,6 +523,10 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
 
 ### Phase 5: Capacity, then observability
 
+Recovery gate: a one-shot isolated Restic restore and read-only SQLite verification
+are managed by the existing observability Argo Application. The new restore PVC
+is prune-protected; live recovery evidence is pending.
+
 Rollout verification found an upstream 0.6.0 wrapped Basic-auth setup header and
 event-label mapping collisions. A GitOps compatibility fix uses the same pinned
 setup images/credentials and restricts event enrichment to OpenChoreo labels.

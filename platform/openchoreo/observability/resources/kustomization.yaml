@@ -9,3 +9,4 @@ resources:
 - opensearch-service.yaml
 - alertmanager.yaml
 - opensearch-setup.yaml
+- ../recovery
