@@ -82,7 +82,15 @@ manifests are removed, and the verdict is written. Evidence goes in the roadmap.
   the first pod failed at container creation because file `mountPath` must be the
   parent directory. The generated path included the filename twice.
 - [#288](https://github.com/onemindos/omos/pull/288): correct that directory in release
-  `stac-browser-v2`. All four CI checks passed; live verification is pending.
+  `stac-browser-v2`. All four CI checks passed; verified live at 21:55 EDT:
+  pod Running, ReleaseBinding Ready, HTTPRoute Accepted and ResolvedRefs.
+- [#289](https://github.com/onemindos/omos/pull/289): opt-in Cilium gateway ingress
+  trait and release v3. The v2 tailnet request reached Envoy but timed out connecting
+  to the backend. Its generated policy allowed pod selectors, while Cilium uses
+  the reserved ingress identity. CI passed; the namespaced policy is Valid and
+  the pilot serves HTTP 200 with all referenced JS/CSS assets at 22:01 EDT.
+  The catalog check found a backend URL variant without port 8082, which needs
+  an additional exact rewrite before browser catalog access can pass.
 - The existing `onetak/stac-browser` Deployment and Service remain in place.
 - In-app browser navigation to the pilot's HTTP nip.io URL returned
   `net::ERR_BLOCKED_BY_CLIENT`; an HTTP check cannot substitute for a visual review.
