@@ -288,7 +288,7 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "onetak",
+      "namespace": "dp-default-onetak-development-b188bf98",
       "name": "stac-browser"
     },
     {
@@ -1088,7 +1088,7 @@
     },
     {
       "kind": "Service",
-      "namespace": "onetak",
+      "namespace": "dp-default-onetak-development-b188bf98",
       "name": "stac-browser"
     },
     {
