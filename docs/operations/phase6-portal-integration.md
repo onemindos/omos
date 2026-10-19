@@ -45,7 +45,7 @@ frontend API cohort; local compilation/bundling is evidence only for that gate.
 
 - [x] Local immutable dependency resolution, full TypeScript and frontend bundle.
 - [x] Identity, policy intersection, request boundary, pinned router and credential
-      forwarding regression tests (37 tests).
+      forwarding regression tests (42 tests, including request bodies).
 - [x] Real Linux release image with all gates inside the Dockerfile.
 - [x] Isolated fixture backend ready, network disabled and in-memory database; no production DB contact.
 - [ ] Private candidate using real Authentik and OpenChoreo ready.
@@ -85,3 +85,11 @@ In addition to 37 unit/regression tests, isolated HTTP checks verified readiness
 refresh 404; machine catalog read 200, catalog mutation and platform/permission
 access 403; MCP tools/list returned six explicitly read-only, non-destructive tools.
 These fixture checks do not prove real Authentik/browser or production behavior.
+
+Corrected candidate: source `a72eaf0d77faf390af66137e46f4fbd9ff2b15f5`,
+verified digest `sha256:9dccd17aaabefe53e61c8e99bf8db79b510837db40e009fdfce2237cbfe953a4`.
+The real Authentik preview exposed a body-reuse error in the layered FetchApi
+middleware. The host adapter now constructs each Request only once; five new
+regression cases cover POST/PUT/PATCH, an existing Request body and plugin URL
+resolution. All 42 tests and all Linux release gates passed. Main is unchanged
+until this corrected candidate passes browser acceptance.
