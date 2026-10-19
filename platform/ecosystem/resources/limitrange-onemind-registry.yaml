@@ -1,0 +1,14 @@
+# Memory defaults only; omit CPU limits to avoid admission conflicts and throttling.
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-container-resources
+  namespace: onemind-registry
+spec:
+  limits:
+  - type: Container
+    default:
+      memory: 2Gi
+    defaultRequest:
+      cpu: 25m
+      memory: 64Mi

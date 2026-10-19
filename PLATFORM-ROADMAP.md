@@ -523,6 +523,11 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
 
 ### Phase 5: Capacity, then observability
 
+Rollout verification found an upstream 0.6.0 wrapped Basic-auth setup header and
+event-label mapping collisions. A GitOps compatibility fix uses the same pinned
+setup images/credentials and restricts event enrichment to OpenChoreo labels.
+Live acceptance remains pending.
+
 Implementation PRs prepared on 2026-10-19 (source changes; live Phase 5 gate pending):
 
 - [#300](https://github.com/onemindos/omos/pull/300): Hermes ecosystem placement,
