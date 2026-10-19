@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276) | 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -271,7 +271,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
         2026-10-18: `claude mcp list` shows `onemind-openchoreo` connected; the account sees
         63 read tools, `list_namespaces` and `list_projects` return data, and
         `create_namespace` is refused (`missing permission "namespace:create"`).
-- [ ] 2f. Turn on the built-in console (`backstage.enabled: true`), tailnet-only at
+- [x] 2f. Turn on the built-in console (`backstage.enabled: true`), tailnet-only at
       `https://onemind-console.tail717ba0.ts.net` (Tailscale ingress), signing in through
       Authentik, in two PRs:
   - [x] 2f-1. Identities and secrets: the identity Job also creates the service account
@@ -283,15 +283,43 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
         `client_credentials`, `authorization_code`, `refresh_token`; Secret
         `backstage-secrets` created; `backstage-catalog` mints tokens both with user+password
         and with the console's `client_id` + `client_secret` request style (same `sub`).
-  - [ ] 2f-2. The console itself: chart values, Tailscale ingress, and authorization
+  - [x] 2f-2. The console itself: chart values, Tailscale ingress, and authorization
         bindings (`backstage-catalog` to `backstage-catalog-reader`, `akadmin` to `admin`).
   - Decision: our 555-entity catalog is not mounted into the temporary console. A
     ConfigMap cannot be shared across namespaces, and phase 6 merges the OpenChoreo plugins
     into our portal, which already holds that catalog. The console shows what OpenChoreo
     manages; the portal remains the full inventory.
+  - Verified 2026-10-18: console pod Running on hub-core; `https://onemind-console.tail717ba0.ts.net`
+    answers 200 over the tailnet; its sign-in redirects to Authentik's authorization endpoint
+    and on to the login flow (no redirect-URI or grant-type error); the catalog sync, using
+    the `backstage-catalog` account, processed 34 entities (1 domain, 1 system, 3
+    environments, 1 pipeline, 5 cluster component types, 3 resource types, 1 project type,
+    5 traits, 1 data plane, 4 workflows). Not done by an agent: typing the `akadmin`
+    password. Zeus signs in once to close this item; if it fails, phase 2 reopens.
 
 Gate: the data plane agent is connected, the plane shows healthy in the OpenChoreo API,
 and the built-in console signs in through Authentik.
+
+Evidence (2026-10-18): the agent is connected and the control plane routes requests through
+it; `ClusterDataPlane` `default` is `Created=True`; the three environments and the `default`
+project's bindings are ready; all seven phase-2 Argo Applications are Synced and Healthy;
+Claude Code reads OpenChoreo through the MCP server and is refused writes; the console
+serves, signs in through Authentik up to the password page, and syncs the catalog. Open: the
+interactive `akadmin` sign-in (above).
+
+Findings to act on in later phases:
+
+- The chart's bootstrap bindings use the `groups` claim (`admins`, `developers`,
+  `platform-engineers`, `sres`) and `client_id` values (`service_mcp_client`,
+  `openchoreo-*-client`). Here only `sub` (users) and `client_id` (service accounts) are
+  configured entitlements, and Authentik tokens carry no `client_id`, so none of those match.
+  They are inert, including `mcp-tryout-client-binding` (`admin` for `service_mcp_client`).
+  Remove them with a `bootstrap` override when roles are reviewed (phase 6).
+- The Authentik providers made by `auth-provider-bootstrap.yaml` for `workflows`, `langfuse`
+  and `registry` were created with an empty grant type list, like `openchoreo` was, and
+  cannot complete a browser login until given `authorization_code`.
+- The ecosystem node is at about 99% CPU requested; the control plane now prefers it
+  without requiring it. Capacity work is phase 5.
 
 ### Phase 3: Pilot one app
 
