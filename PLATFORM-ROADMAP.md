@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -387,6 +387,35 @@ Progress (2026-10-18):
   It references the existing Secret without reading or changing its value.
   Record the result and remove the Job after inspection; do not migrate the
   shared database or remove the old browser based on pod readiness alone.
+- The inspection Job completed with `default_transaction_read_only=on` and
+  `BEGIN READ ONLY` against database `stac` as role `geo`, PostgreSQL 17.11.
+  It found no `pgstac` schema, no PgSTAC tables, and none of `search`,
+  `collection_search` or `get_version` in `pgstac`/`public`. Installed extensions
+  were `plpgsql` 1.0, `timescaledb` 2.29.1 and `timescaledb_toolkit` 1.24.0;
+  PostGIS is not enabled in this database. This does not establish that all user
+  data is absent or why the schema is missing. Remove the completed diagnostic
+  Job manifest after preserving these results; no database changes are included.
+- Follow-up ([#292](https://github.com/onemindos/omos/pull/292)) at 22:58 EDT: the v4 binding still reports
+  `ComponentReleaseNotFound`, although its ComponentRelease exists. The official
+  [v1.3.1 controller](https://github.com/openchoreo/openchoreo/blob/v1.3.1/internal/controller/releasebinding/controller.go)
+  returns without a retry on that condition and does not watch ComponentRelease
+  creation. Order Project/Component (wave 0), snapshots (wave 1), then binding
+  (wave 2), and advance to a new v5 snapshot to trigger reconciliation. This is a
+  GitOps ordering workaround, not evidence of a missing config rollout checksum:
+  the existing Deployment already has OpenChoreo's `dp-resource-hash` annotation.
+- The shared and frozen gateway trait used an invalid `creates[].id`; the API
+  prunes it and defaults `targetPlane` to `dataplane`, causing persistent Argo
+  drift. Normalize that field in the shared trait and v3/v4 snapshots to the
+  already stored representation. Existing immutable runtime specs remain the same
+  after API defaulting. v5 carries v4's workload/proxy configuration unchanged.
+  See the official [v1.3.1 ClusterTrait schema](https://github.com/openchoreo/openchoreo/blob/v1.3.1/config/crd/bases/openchoreo.dev_clustertraits.yaml).
+- Backup observation: `onetak/volume-50fb74ff16c6` reports a successful VolSync
+  snapshot of `onetak-geo-db-data` at `2026-10-18T05:20:18Z`. That is volume-backup
+  evidence, not proof of a fresh, application-correct STAC database restore.
+  Before any live schema initialization, confirm the intended database and its
+  contents, create a fresh PostgreSQL-17-compatible backup, prove an isolated
+  restore and test a compatible PgSTAC installation. Live initialization remains
+  subject to Zeus's approval; the shared database stays outside OpenChoreo.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the
