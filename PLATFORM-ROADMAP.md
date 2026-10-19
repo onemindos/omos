@@ -529,6 +529,9 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
       and OTel collector; OpenCost as the FinOps module.
 - [ ] Register `ClusterObservabilityPlane` and link the data plane to it.
 - [ ] Connect Claude to the observer MCP (logs, metrics, traces, alerts, incidents, costs).
+  - [x] Add the observer MCP manifests and tailnet ingress (`platform/ops/observer-mcp/`).
+  - [ ] Verify Claude/Codex runs live metrics and log queries and confirm the OpenChoreo
+        console shows logs and metrics for the selected component.
 
 Gate: an OpenChoreo component shows logs and metrics in the console and through the
 observer MCP.

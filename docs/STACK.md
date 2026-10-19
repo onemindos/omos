@@ -51,7 +51,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-backups` | ops, plus Jobs in auth, backstage, matrix, n8n, nats, takml, takserver | Logical PostgreSQL/NATS backup CronJobs and encrypted cluster recovery exports | backup credentials (SealedSecrets) | self (writes to Spaces); drills in `docs/operations/` | internal | Argo. Shares `SealedSecret auth/ghcr` with `platform-ecosystem-resources` |
 | `platform-volume-backups` | ops | 46 VolSync `ReplicationSource` objects, all `Successful` at last check | restic repositories in Spaces | n/a | internal | Argo |
 | `platform-volsync` | ops | VolSync operator (chart 0.16.0) | none | n/a | internal | Argo |
-| `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
+| `platform-ops` | ops | `health-keeper` read-only cluster observer; `observer-mcp` read-only tailnet MCP for Prometheus, Loki, Tempo, Alertmanager and OpenCost metrics | none | Git | Grafana, Prometheus, Loki, Tempo and Alertmanager APIs | Argo |
 | `ecosystem-velero` | velero | Velero (chart 12.2.1) and the `velero-onemind-platform` schedule | backups in Spaces | n/a | internal | Argo |
 | `platform-legacy` | hermes | Hermes "Legacy" agent (`nousresearch/hermes-agent`, NATS leaf sidecar) and bridge secrets | 25 GiB PVC (agent home, state.db) | `VolSync` | `hermes-agent` dashboard tailnet | Argo |
 

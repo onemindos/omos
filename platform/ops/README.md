@@ -16,3 +16,7 @@ structured report, and confirm `kubectl auth can-i delete pods --as
 system:serviceaccount:ops:health-keeper` returns no. The observer logs are evidence,
 not an alert delivery channel; connect notifications separately through the platform's
 approved event/monitoring path.
+
+Observer MCP is in `observer-mcp/`: a read-only tailnet endpoint for logs, metrics,
+traces, alerts, log-keyword incidents, and OpenCost cost series. See
+`docs/operations/observer-mcp.md`.

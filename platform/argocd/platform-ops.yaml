@@ -11,6 +11,8 @@ spec:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     path: platform/ops
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: ops
