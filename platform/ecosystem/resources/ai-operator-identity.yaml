@@ -1,0 +1,161 @@
+# Read-only identity for AI operators (Claude Code, Codex) to reach the OpenChoreo MCP
+# server (PLATFORM-ROADMAP.md, phase 2g).
+#
+# An Authentik service account `ai-operator` is allowed on the `onemind-openchoreo`
+# application. Its app password is stored in the Secret auth/ai-operator-openchoreo (never
+# in Git) and read once on the admin Mac by scripts/ai-operator/setup.sh. A token is minted
+# from it per session with grant_type=client_credentials against the same provider, so its
+# audience matches the OpenChoreo API (`onemind-openchoreo`).
+# What the identity may do in OpenChoreo is decided by the ClusterAuthzRole
+# `ai-operator-read` (platform/openchoreo/platform) and its binding.
+#
+# Idempotent: re-running keeps the same account, token and Secret.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ai-operator-identity
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ai-operator-identity
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+rules:
+  - apiGroups: [""]
+    resources: [secrets]
+    verbs: [create]
+  - apiGroups: [""]
+    resources: [secrets]
+    resourceNames: [ai-operator-openchoreo]
+    verbs: [get, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ai-operator-identity
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ai-operator-identity
+subjects:
+  - kind: ServiceAccount
+    name: ai-operator-identity
+    namespace: auth
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ai-operator-identity-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 4
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      serviceAccountName: ai-operator-identity
+      restartPolicy: OnFailure
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: identity
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import base64, json, os, httpx
+              USER = "ai-operator"
+              TOKEN_ID = "ai-operator-openchoreo"
+              APP = "onemind-openchoreo"
+              SECRET = "ai-operator-openchoreo"
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local"
+              api = base + "/api/v3/"
+              headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+
+              def ak(client, method, path, body=None, ok=(200, 201, 204)):
+                  r = client.request(method, api + path, json=body)
+                  if r.status_code not in ok:
+                      raise RuntimeError("Identity API " + method + " " + path.split("?")[0] + " failed with status " + str(r.status_code))
+                  return r.json() if r.content else {}
+
+              with httpx.Client(headers=headers, timeout=30) as c:
+                  users = ak(c, "GET", "core/users/?username=" + USER)["results"]
+                  if users:
+                      user = users[0]
+                  else:
+                      user = ak(c, "POST", "core/users/", {"username": USER, "name": "AI operator (read-only)", "type": "service_account",
+                                                           "path": "goauthentik.io/service-accounts", "is_active": True})
+                  apps = ak(c, "GET", "core/applications/?slug=" + APP)["results"]
+                  if not apps:
+                      raise RuntimeError("application " + APP + " not found")
+                  app = apps[0]
+                  bindings = ak(c, "GET", "policies/bindings/?target=" + app["pk"])["results"]
+                  if not any(b.get("user") == user["pk"] for b in bindings):
+                      ak(c, "POST", "policies/bindings/", {"target": app["pk"], "user": user["pk"], "enabled": True, "order": 1})
+                  tokens = ak(c, "GET", "core/tokens/?identifier=" + TOKEN_ID)["results"]
+                  if not tokens:
+                      ak(c, "POST", "core/tokens/", {"identifier": TOKEN_ID, "intent": "app_password", "user": user["pk"],
+                                                     "expiring": False, "description": "AI operator, OpenChoreo MCP (read-only)"})
+                  password = ak(c, "GET", "core/tokens/" + TOKEN_ID + "/view_key/")["key"]
+
+              kube = "https://kubernetes.default.svc/api/v1/namespaces/auth/secrets/"
+              sa = "/var/run/secrets/kubernetes.io/serviceaccount/"
+              kheaders = {"Authorization": "Bearer " + open(sa + "token").read()}
+              with httpx.Client(headers=kheaders, verify=sa + "ca.crt", timeout=30) as k:
+                  body = {"apiVersion": "v1", "kind": "Secret", "metadata": {"name": SECRET, "namespace": "auth",
+                          "labels": {"app.kubernetes.io/part-of": "onemind-ai-operator"}}, "type": "Opaque",
+                          "stringData": {"username": USER, "password": password}}
+                  cur = k.get(kube + SECRET)
+                  if cur.status_code == 404:
+                      k.post(kube[:-len("secrets/")] + "secrets", json=body).raise_for_status()
+                      print("created Secret " + SECRET)
+                  else:
+                      cur.raise_for_status()
+                      have = base64.b64decode(cur.json().get("data", {}).get("password", "")).decode()
+                      if have != password:
+                          k.patch(kube + SECRET, json={"stringData": body["stringData"]},
+                                  headers={"Content-Type": "application/merge-patch+json"}).raise_for_status()
+                          print("updated Secret " + SECRET)
+                      else:
+                          print("Secret " + SECRET + " is current")
+
+              # Check the account can mint a token for the OpenChoreo API, and print the claims the
+              # authorization binding needs. The token itself is never printed.
+              try:
+                  r = httpx.post(base + "/application/o/token/", timeout=30, data={
+                      "grant_type": "client_credentials", "client_id": APP, "username": USER,
+                      "password": password, "scope": "openid profile email"})
+                  if r.status_code != 200:
+                      print("WARN token request failed: status " + str(r.status_code) + " " + r.text[:300])
+                  else:
+                      part = r.json()["access_token"].split(".")[1]
+                      claims = json.loads(base64.urlsafe_b64decode(part + "=" * (-len(part) % 4)))
+                      keep = ["sub", "aud", "client_id", "azp", "preferred_username", "groups", "iss"]
+                      print("TOKEN_CLAIMS " + json.dumps({k: claims.get(k) for k in keep}))
+                      print("TOKEN_LIFETIME_SECONDS " + str(claims["exp"] - claims["iat"]))
+              except Exception as e:
+                  print("WARN token check failed: " + type(e).__name__)
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
