@@ -125,7 +125,7 @@ it could lock out both itself and the human who has to recover it.
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
-| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
+| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | [#311](https://github.com/onemindos/omos/pull/311) portable build; #282 retains the final gate | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
@@ -615,6 +615,25 @@ cleanup requires explicit storage-deletion approval.
 Next unfinished phase: **Phase 6**. This does not authorize starting it automatically.
 
 ### Phase 6: One portal
+
+Started 2026-10-19. First prerequisite: a portable Linux/amd64 build that runs the
+same TypeScript, TechDocs and backend gates outside GitHub Actions. Existing console
+stays enabled until the replacement portal passes live acceptance. No new paid
+build infrastructure or production-node build workload is authorized by this step.
+
+Prerequisite verified 2026-10-19 in #311: Colima Linux build on the operator Mac,
+independent of Actions. Immutable Yarn install, TypeScript, TechDocs, backend
+bundle, both common-package JSON exports and native AMD64 SQLite passed. An
+isolated network-disabled/read-only container also verified non-root execution,
+backend/frontend artifacts and absence of build-only auth variables. Published
+source commit `cd910e4ef2955d0ab5e324daa00f3070ac59cedc`, GHCR image
+`ghcr.io/onemindos/onemind-portal:sha-cd910e4ef2955d0ab5e324daa00f3070ac59cedc`,
+verified digest `sha256:616e9ef61f23da723d7c5571a59d15b4168b46c31ea72f9c9971d0654004219d`.
+This image is not a Phase 6 plugin integration or a production rollout. GitHub
+quality jobs did not start because of account payment/spending limits; local
+contract, changed-YAML, ShellCheck and commit secret checks passed. Full
+`make validate` remains blocked by unrelated existing YAML lint debt. No check
+was overridden or reported as green.
 
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
