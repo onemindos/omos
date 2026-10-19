@@ -681,7 +681,10 @@ caching was process-local, while internal permission requests can reach the othe
 replica without an IDP header. Fix by sharing only hashed cache keys/authorization
 results in the existing permission plugin PostgreSQL database, with upstream token
 expiry TTL and fail-closed database errors. No raw access tokens or new service
-credentials are stored. The temporary console remains enabled until both replicas
+credentials are stored. Release `3dd34900a5b455696387394398b72f80ce3376ba`
+passed 49 tests and all Linux gates; verified digest
+`sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`.
+The temporary console remains enabled until both replicas
 pass the real browser/catalog gates.
 
 Candidate accepted 2026-10-19: real Authentik subject mapping, full catalog,

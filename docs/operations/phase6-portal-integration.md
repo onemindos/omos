@@ -145,4 +145,6 @@ isolation, TTL/deletion, concurrent upsert, DB failure and additive initializati
 An isolated PostgreSQL 17 exercise also passed simultaneous schema initialization,
 cross-connection reads, concurrent upsert, shared deletion and expiration. It used
 only a loopback-bound disposable local DB, then stopped it; no production data or
-credentials. The new release still needs Linux build and two-replica live acceptance.
+credentials. Linux build passed all 49 tests, TypeScript, TechDocs, backend and packaged-artifact
+checks. Source `3dd34900a5b455696387394398b72f80ce3376ba`, remotely verified digest
+`sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`. Two-replica live acceptance remains pending.
