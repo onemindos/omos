@@ -58,7 +58,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
     argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    # Keep the finished Job so its log (token claims, lifetime) stays readable; the next
+    # sync replaces it. The log never contains the password or a token.
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   backoffLimit: 4
   activeDeadlineSeconds: 600
