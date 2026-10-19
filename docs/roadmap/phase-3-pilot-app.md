@@ -106,12 +106,24 @@ manifests are removed, and the verdict is written. Evidence goes in the roadmap.
   catalog writes refused with 405. Backend collection/search still return 500.
 - [#293](https://github.com/onemindos/omos/pull/293): merged the next read-only
   metadata preflight for both `geo` and `stac`, plus the
-  [recovery gates](../operations/stac-database-repair.md). Execution/results remain
-  pending until verified live. No live database initialization is authorized.
+  [recovery gates](../operations/stac-database-repair.md). Verified at 23:13 EDT:
+  Job completed with session/transaction read-only flags on in both databases.
+  Neither has PgSTAC. PostGIS 3.6.4 is available and enabled in `geo`, but not
+  `stac`; the configured `geo` role is a superuser. `stac` has no public relations.
+  No application rows were inspected and no initialization is authorized.
+- [#294](https://github.com/onemindos/omos/pull/294): preserved the detailed
+  preflight evidence and removed its completed Job. All four CI checks passed.
+  Verified at 23:20 EDT: Argo pruned the Job; the OneTAK, OpenChoreo platform and
+  projects apps are Synced/Healthy at `ebd69aea`. No Pending pods. Existing
+  exceptions remain Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing.
 - The active app contract, binding and v5 snapshot total 492 lines in three files;
   the app directory with history has seven files and 1,958 lines. The old browser
   takes 47 lines in one shared manifest. The fewer-files gate has not passed;
   rollout/resource-tree visibility benefits do not prove reduced maintenance.
+- Zeus's direction on that gate is pending: reduce manual release work before
+  expanding (recommended), accept the extra YAML for standardization, or stop the
+  pilot. Do not silently revise the gate or proceed to later phases. A live
+  persistent database change still requires recovery proof and explicit approval.
 - The existing `onetak/stac-browser` Deployment and Service remain in place.
 - In-app browser navigation to the pilot's HTTP nip.io URL returned
   `net::ERR_BLOCKED_BY_CLIENT`; an HTTP check cannot substitute for a visual review.
