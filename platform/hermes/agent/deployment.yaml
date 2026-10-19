@@ -34,7 +34,7 @@ spec:
                   - key: doks.digitalocean.com/node-pool
                     operator: In
                     values:
-                      - onemind-hub-core-v2
+                      - onemind-ecosystem-cpu
       imagePullSecrets:
         - name: ghcr
       initContainers:
@@ -111,7 +111,7 @@ spec:
               mountPath: /opt/data
             - name: gateway-deps
               mountPath: /gateway-deps
-          # 2026-10-19: memory raised to prevent recurrence of the 2026-10-09 OOM kill.
+          # 2026-10-19: 7-day observed working-set maximum ~1.44Gi; 2Gi request with 5Gi headroom.
           resources:
             requests: {cpu: "500m", memory: "2Gi"}
             limits: {cpu: "4", memory: "5Gi"}
