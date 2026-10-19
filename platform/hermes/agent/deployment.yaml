@@ -111,11 +111,10 @@ spec:
               mountPath: /opt/data
             - name: gateway-deps
               mountPath: /gateway-deps
-          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
-          # Measured usage: 2803Mi. Request set to upper 60-90% band; limit = hard cap at 3200Mi.
+          # 2026-10-19: memory raised to prevent recurrence of the 2026-10-09 OOM kill.
           resources:
-            requests: {cpu: "500m", memory: "2523Mi"}
-            limits: {cpu: "4", memory: "4608Mi"}  # OOM-killed at 3200Mi on 2026-10-09
+            requests: {cpu: "500m", memory: "2Gi"}
+            limits: {cpu: "4", memory: "5Gi"}
         # ---- NATS leaf sidecar ----
         # nats-server running as a leaf into the cluster ONEMIND account over TLS.
         # Exposes a local plaintext client listener on :4222 for Hermes only.
