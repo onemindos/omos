@@ -1,0 +1,15 @@
+# Supplies defaults for containers in spire-system that omit requests or limits.
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-container-resources
+  namespace: spire-system
+spec:
+  limits:
+    - type: Container
+      default:
+        cpu: 250m
+        memory: 256Mi
+      defaultRequest:
+        cpu: 25m
+        memory: 64Mi
