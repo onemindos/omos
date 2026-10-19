@@ -15,7 +15,8 @@
     "lint": "backstage-cli package lint",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
-    "test": "backstage-cli package test"
+    "test": "backstage-cli package test",
+    "postbuild": "cp directory.json dist/directory.json"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "1.10.1"
@@ -25,10 +26,10 @@
   },
   "files": [
     "dist",
-    "src/directory.json"
+    "directory.json"
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./directory.json": "./src/directory.json"
+    "./directory.json": "./directory.json"
   }
 }
