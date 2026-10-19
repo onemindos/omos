@@ -3,6 +3,11 @@ nodeSelector:
 opencost:
   exporter:
     defaultClusterId: onemind-cloud
+    extraEnv:
+      - name: EMIT_KSM_V1_METRICS
+        value: 'false'
+      - name: EMIT_KSM_V1_METRICS_ONLY
+        value: 'false'
     resources:
       requests:
         cpu: 25m
