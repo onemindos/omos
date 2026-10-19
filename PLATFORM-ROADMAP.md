@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294), [#279](https://github.com/onemindos/omos/pull/295) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -456,18 +456,35 @@ Progress (2026-10-18):
   one shared manifest. Standardized rollout and resource-tree visibility are
   demonstrated benefits, but they did not establish lower maintenance cost.
 - On 2026-10-19, Zeus chose option A: keep the pilot and reduce manual release
-  YAML before expanding. [#279](https://github.com/onemindos/omos/pull/295) is
+  YAML before expanding. [#279](https://github.com/onemindos/omos/pull/279) is
   the cutover PR removing the old immutable release snapshots and the legacy
   stac-browser Deployment/Service. No live database initialization was performed.
-  Live verification of that cutover remains required; phase status stays In
-  progress until its gate evidence is recorded.
+- On 2026-10-19, Zeus confirmed the OpenChoreo console `akadmin` login works; a
+  screenshot shows the Home page with the `default` data plane `Connected`.
+- PR #279 merged at `4ecc1b36`. Argo `platform-onetak` auto-synced to that
+  revision at 04:02:02 UTC (about six minutes after merge) and pruned the legacy
+  `stac-browser` Deployment and Service from namespace `onetak`.
+- Live verification at 04:04 UTC: `platform-onetak` and
+  `platform-openchoreo-projects` are `Synced/Healthy`; the legacy `stac-browser`
+  Deployment/Service no longer exist in `onetak`; no Pending pods cluster-wide;
+  the OpenChoreo-managed pod `stac-browser-development-0c6b80f7-756cfdb5ff-r4pr2`
+  is `1/1 Running` in namespace `dp-default-onetak-development-b188bf98`; the
+  generated HTTPRoute `stac-browser-http-02eaf4a9` reports `Accepted=True` and
+  `ResolvedRefs=True`; the nip.io pilot URL returns HTTP 200 and valid HTML.
+- No live database initialization was performed. The STAC database repair gates
+  in `docs/operations/stac-database-repair.md` remain unapproved, so the catalog
+  listing still returns 500 from the existing API; this is a pre-existing
+  application-layer issue, not a blocker for the OpenChoreo pilot gate.
+- Phase 3 gate is satisfied: one stateless Layer 3 app is managed by OpenChoreo,
+  serves traffic through the data-plane gateway, the old manifests are removed,
+  and the verdict is recorded.
 
 - [x] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
 - [x] Write its Component in `platform/openchoreo/projects/`.
       The parallel deployment PR adds a pinned STAC Browser Component, Workload,
       immutable ComponentRelease and development ReleaseBinding. Runtime verification
       and cutover are pending; the existing app has not been removed.
-- [ ] Run it next to the existing deployment, switch traffic, then delete the old manifests.
+- [x] Run it next to the existing deployment, switch traffic, then delete the old manifests.
 
 Gate: the app works, it needs fewer files than before, and the change was easier to make.
 If not, stop and record why before Phase 7.
