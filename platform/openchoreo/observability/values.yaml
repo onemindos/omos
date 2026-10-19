@@ -44,6 +44,7 @@ observer:
     value: 30s
   cors:
     allowedOrigins:
+    - https://onemind-portal-candidate.tail717ba0.ts.net
     - https://onemind-console.tail717ba0.ts.net
     - https://onemind-preview.tail717ba0.ts.net
 security:

@@ -655,6 +655,10 @@ machine catalog-write and platform-access denials, and six read-only MCP tools.
 Verified published image digest:
 `sha256:a640cf8746f0d3eb40348e0cb4817b65491955b56453b9d67133050047f60efb`.
 
+Preview follow-up: allow only the exact candidate origin at the existing Observer
+CORS boundary for browser logs/metrics checks; no auth/authorization bypass or
+production portal promotion. The two existing allowed portal origins are retained.
+
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
 - [ ] Install the core OpenChoreo plugins and the observability pack into our portal,
