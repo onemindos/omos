@@ -1,6 +1,7 @@
 # Phase 6 integration verification
 
-Status: implementation in progress, not production compatible/deployed yet.
+Status: integration deployed 2/2; multi-replica authorization correction pending.
+Do not retire the console or mark complete until the shared-cache release passes.
 The existing OneMind Backstage 1.55.3 remains the host. OpenChoreo 1.3.1 adds
 core entity views and observability. Existing branding/home/plugins remain wired.
 Do not retire the temporary console or mark Phase 6 complete from build evidence.
@@ -123,3 +124,25 @@ until this corrected candidate passes browser acceptance.
   Production PostgreSQL, all integrations, SA/RBAC, probes, resources, PDB and
   zero-unavailable two-replica RollingUpdate remain unchanged. Temporary console
   and candidate stay available until main passes the repeated gates.
+
+## Multi-replica authorization correction
+
+The repeated production gate caught an issue invisible to a single-replica preview:
+the upstream in-memory capability cache could be warmed on one replica while an
+internal permission request reached the other without the IDP header, hiding
+OpenChoreo entities. Host features stayed healthy and the console remained on.
+
+`sharedCache.ts` uses the permission plugin's managed database (PostgreSQL in
+production, memory SQLite in the candidate). The additive `onemind_authz_cache`
+table stores SHA-256 cache keys and JSON authorization results, never raw tokens.
+Upstream token-expiration TTL is preserved, expired entries cannot authorize,
+expired rows are reclaimed on writes, and DB errors propagate/deny closed. No
+new credential, cross-service Redis access, role grant or fallback policy.
+Concurrent table creation and upserts are handled; rollback leaves an inert table.
+
+49 regression tests pass, including independent cache clients, user/scope
+isolation, TTL/deletion, concurrent upsert, DB failure and additive initialization.
+An isolated PostgreSQL 17 exercise also passed simultaneous schema initialization,
+cross-connection reads, concurrent upsert, shared deletion and expiration. It used
+only a loopback-bound disposable local DB, then stopped it; no production data or
+credentials. The new release still needs Linux build and two-replica live acceptance.
