@@ -359,12 +359,26 @@ Progress (2026-10-18):
   Workload file `mountPath` is a directory; the filename is appended by OpenChoreo.
   Correct it to `/etc/nginx/conf.d` in a new immutable `stac-browser-v2` release
   ([#288](https://github.com/onemindos/omos/pull/288)). The old deployment remains Ready; no cutover has happened.
+- At 21:55 EDT, v2's pod was Running and its ReleaseBinding had `Ready=True`.
+  HTTPRoute was Accepted with ResolvedRefs, but the tailnet request returned 503
+  after five seconds: upstream connection timeout. The generated NetworkPolicy
+  allows same-namespace pods and `openchoreo.dev/system-component` pods; Cilium
+  Gateway API uses the reserved `ingress` identity instead. Add the opt-in
+  `cilium-gateway-ingress` ClusterTrait (this PR), scoped to the component's full
+  pod selectors and TCP 8080. It renders a CiliumNetworkPolicy in the runtime
+  namespace; the upstream policy remains. See Cilium's official [Gateway API
+  policy reference](https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/gateway-api/#cilium-s-ingress-config-and-ciliumnetworkpolicy).
+  Publish immutable release v3 and advance development; verify traffic after sync.
+- Concurrent live-state change at 21:55 EDT: the old ecosystem node was cordoned
+  and two new ecosystem nodes were Ready on Kubernetes 1.36.5. Many unrelated pods
+  were rescheduling; the OpenChoreo API and metrics had transient reachability
+  failures. No node, pool or infrastructure changes are part of the pilot PRs.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the
   live comparison and a verdict.
 
-- [ ] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
+- [x] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
 - [x] Write its Component in `platform/openchoreo/projects/`.
       The parallel deployment PR adds a pinned STAC Browser Component, Workload,
       immutable ComponentRelease and development ReleaseBinding. Runtime verification
@@ -438,6 +452,7 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Claude Code is the AI operator. Hermes is deferred to Phase 8. |
 | 2026-10-18 | Keep the custom portal as the long-term home; use the built-in console only until Phase 6. |
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
+| 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
 
