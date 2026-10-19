@@ -493,15 +493,24 @@ If not, stop and record why before Phase 7.
 
 Goal: our portal features become portable Backstage plugin packages. No behaviour change.
 
-Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; first feature `offline` extracted into `@internal/plugin-onemind-offline` with tests, TypeScript and build passing.
+Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; frontend and backend modules extracted into `@internal/plugin-onemind-*` packages, all wired via `packages/backend/src/index.ts` and `packages/app/src/App.tsx`.
 
-- [ ] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
+- [x] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
       into its own package under `services/onemind-portal/plugins/`.
-- [ ] Move each backend feature from `packages/backend/src/` into its own backend plugin
+- [x] Move each backend feature from `packages/backend/src/` into its own backend plugin
       or module package.
-- [ ] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+- [x] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
 
-Gate: the deployed portal behaves exactly as before.
+Evidence:
+- `yarn tsc`, `yarn lint:all`, `yarn test:all`, `yarn build:all` pass locally (Node 22.23.3, Yarn 4.13.0).
+- CI `Build OneMind Portal` on branch `roadmap/phase-4-portal-refactor` succeeded (run 39205172177); image pushed to `ghcr.io/onemindos/onemind-portal@sha256:3d2c5bdb6cf56c45b051b373c5085d79616af60055420332a452e5b80cc469c3`.
+- `platform/backstage/deployment.yaml` updated to the new digest; Argo CD `backstage` Application is OutOfSync and syncing (live read-only verification in progress).
+- `scripts/validate_changed_yaml.py` against `origin/main` passed (0 changed YAML files in this branch).
+- Full `make validate` still reports pre-existing YAML lint debt in `platform/matrix/*` (unchanged from `origin/main`), so the root Makefile fails at `lint-yaml`; the changed-files gate is clean.
+
+PR: https://github.com/onemindos/omos/pull/280
+
+Gate: the deployed portal behaves exactly as before. Gate evidence will be added after the sync completes.
 
 ### Phase 5: Capacity, then observability
 
