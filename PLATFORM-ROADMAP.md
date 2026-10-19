@@ -523,6 +523,10 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
 
 ### Phase 5: Capacity, then observability
 
+Console verification found that the frontend calls spec.observerURL directly.
+Register the existing JWT-protected tailnet HTTPS endpoint, not cluster-only DNS.
+MCP samples and the isolated SQLite restore pass; final browser verification follows.
+
 Recovery gate: a one-shot isolated Restic restore and read-only SQLite verification
 are managed by the existing observability Argo Application. The new restore PVC
 is prune-protected; live recovery evidence is pending.
