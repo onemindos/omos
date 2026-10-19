@@ -1,6 +1,6 @@
 # Phase 3 brief: pilot one app in OpenChoreo
 
-Status when written (2026-10-18): not started. Tracker row and rules: [`PLATFORM-ROADMAP.md`](../../PLATFORM-ROADMAP.md).
+Status (2026-10-18): in progress; parallel deployment under verification. Tracker row and rules: [`PLATFORM-ROADMAP.md`](../../PLATFORM-ROADMAP.md).
 Read [`HANDOFF.md`](HANDOFF.md) first.
 
 ## Goal
@@ -72,3 +72,25 @@ manifests are removed, and the verdict is written. Evidence goes in the roadmap.
   (`https://openchoreo.dev/docs/category/concepts/`), GitOps
   (`https://openchoreo.dev/docs/platform-engineer-guide/gitops/overview/`).
 - `platform/openchoreo/` (existing layout), `docs/operations/ai-operator-access.md` (read-only tools).
+
+## Execution record (2026-10-18)
+
+- [#286](https://github.com/onemindos/omos/pull/286): Argo project owner and OneTAK
+  project bindings. Verified live: Synced/Healthy, OneTAK Ready, all three bindings Ready.
+- [#287](https://github.com/onemindos/omos/pull/287): parallel STAC Browser Component,
+  pinned image, explicit release and development binding. Argo reconciled it, but
+  the first pod failed at container creation because file `mountPath` must be the
+  parent directory. The generated path included the filename twice.
+- [#288](https://github.com/onemindos/omos/pull/288): correct that directory in release
+  `stac-browser-v2`. All four CI checks passed; live verification is pending.
+- The existing `onetak/stac-browser` Deployment and Service remain in place.
+- In-app browser navigation to the pilot's HTTP nip.io URL returned
+  `net::ERR_BLOCKED_BY_CLIENT`; an HTTP check cannot substitute for a visual review.
+- No cutover, phase completion or phase-4 work is claimed. The maintenance comparison
+  must count both authored app contracts and generated immutable snapshots.
+
+The STAC image expects `SB_catalogUrl`, `SB_catalogTitle` and `SB_pathPrefix`; the
+old manifest's `CATALOG_URL` and `STAC_BROWSER_TITLE` are ineffective. The pilot
+proxies catalog reads through its own nginx because the SPA runs on the user's
+machine, where Kubernetes DNS names do not resolve. The gateway retains the app's
+path prefix; nginx rewrites only the upstream catalog base URL in JSON responses.
