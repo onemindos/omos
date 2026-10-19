@@ -11,6 +11,10 @@ From a committed, clean portal checkout with a running Docker/BuildKit engine:
 
 This builds linux/amd64 and loads it locally, without publishing or changing Git
 or Kubernetes. Host-native node_modules and generated bundles are never reused.
+JavaScript is compiled on the Linux builder architecture, avoiding AMD64 Go/esbuild
+emulation crashes on ARM Macs. The final stage remains linux/amd64 and installs
+its own native dependencies; an in-memory SQLite query checks the target binary.
+Both common-package JSON exports are required from the final image.
 The source context is an archive of tracked files from the exact commit, not a copy
 of your working directory, so local credentials and untracked files stay out.
 Commit the intended changes before running; dirty portal/workflow changes fail closed.

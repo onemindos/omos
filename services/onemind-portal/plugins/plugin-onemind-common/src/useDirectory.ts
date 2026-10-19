@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
-import curated from './directory.json';
+import curated from '../directory.json';
 import { AccessPoint, parseAccessPoints } from './access';
 
 export type AppEntry = {

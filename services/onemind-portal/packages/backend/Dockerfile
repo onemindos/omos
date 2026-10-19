@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 # One production build definition for GitHub Actions, the operator Mac and Linux builders.
-# Build for linux/amd64; do not copy host-native node_modules or prebuilt bundles.
-FROM node:22.23.3-bookworm-slim AS build
+# Compile JavaScript on the builder architecture; install runtime native modules on the target.
+# Never copy build-stage node_modules into the production image.
+FROM --platform=$BUILDPLATFORM node:22.23.3-bookworm-slim AS build
 USER root
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -71,6 +72,6 @@ COPY --from=build --chown=node:node /app/runbooks ./runbooks
 COPY --from=build --chown=node:node /app/packages/backend/dist/bundle.tar.gz /app/app-config*.yaml ./
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 # Catch the production-only missing-JSON regression and incomplete TechDocs before push.
-RUN node -e "require('@internal/plugin-onemind-common/directory.json'); const fs=require('node:fs'); for (const p of ['techdocs/default/component/onemind-runbooks/techdocs_metadata.json','techdocs/default/component/onemind-runbooks/search/search_index.json']) { if (!fs.statSync(p).size) throw new Error('Empty release artifact: '+p); }"
+RUN node -e "for (const name of ['@internal/plugin-onemind-common','@internal/plugin-onemind-common-backend']) require(name+'/directory.json'); const Database=require('better-sqlite3'); const db=new Database(':memory:'); db.prepare('SELECT 1').get(); db.close(); const fs=require('node:fs'); for (const p of ['techdocs/default/component/onemind-runbooks/techdocs_metadata.json','techdocs/default/component/onemind-runbooks/search/search_index.json']) { if (!fs.statSync(p).size) throw new Error('Empty release artifact: '+p); }"
 
 CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]

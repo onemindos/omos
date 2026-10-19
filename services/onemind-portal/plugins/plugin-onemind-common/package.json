@@ -36,7 +36,7 @@
   },
   "files": [
     "dist",
-    "src/directory.json"
+    "directory.json"
   ],
   "peerDependencies": {
     "react": "^18.0.2",
@@ -45,6 +45,6 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./directory.json": "./src/directory.json"
+    "./directory.json": "./directory.json"
   }
 }
