@@ -223,7 +223,7 @@ events:
 # Existing OneMind host with the pinned OpenChoreo core and observability packs.
 openchoreo:
   baseUrl: http://openchoreo-api.openchoreo-control-plane.svc.cluster.local:8080/api/v1
-  defaultOwner: group:default/onemind-admins
+  defaultOwner: onemind-admins
   auth:
     clientId: onemind-openchoreo
     clientSecret: ${OPENCHOREO_SERVICE_CLIENT_SECRET}

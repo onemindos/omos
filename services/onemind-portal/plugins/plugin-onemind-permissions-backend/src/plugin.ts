@@ -14,6 +14,7 @@ import { openChoreoTokenServiceRef } from '@openchoreo/openchoreo-auth';
 import express from 'express';
 import { createOneMindPolicy, isOneMindAdmin } from './policy';
 import { createUpstreamRouter } from './upstreamRouter';
+import { createSharedAuthzCache } from './sharedCache';
 
 export default createBackendModule({
   pluginId: 'permission',
@@ -24,7 +25,7 @@ export default createBackendModule({
         policy: policyExtensionPoint,
         config: coreServices.rootConfig,
         logger: coreServices.logger,
-        cache: coreServices.cache,
+        database: coreServices.database,
         httpRouter: coreServices.httpRouter,
         auth: coreServices.auth,
         httpAuth: coreServices.httpAuth,
@@ -36,7 +37,7 @@ export default createBackendModule({
         policy,
         config,
         logger,
-        cache,
+        database,
         httpRouter,
         auth,
         httpAuth,
@@ -56,7 +57,9 @@ export default createBackendModule({
         const authzService = new AuthzProfileService({
           baseUrl: config.getString('openchoreo.baseUrl'),
           logger,
-          cache: new AuthzProfileCache(cache),
+          cache: new AuthzProfileCache(
+            await createSharedAuthzCache(await database.getClient()),
+          ),
         });
         policy.setPolicy(
           createOneMindPolicy(
@@ -71,11 +74,9 @@ export default createBackendModule({
                 allow: ['service'],
               });
               if (credentials.principal.subject !== 'plugin:auth') {
-                res
-                  .status(403)
-                  .json({
-                    error: 'Only the sign-in backend may cache capabilities',
-                  });
+                res.status(403).json({
+                  error: 'Only the sign-in backend may cache capabilities',
+                });
                 return;
               }
             }
