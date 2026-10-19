@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -436,6 +436,19 @@ Progress (2026-10-18):
   The recovery and approval gates are documented in
   [`docs/operations/stac-database-repair.md`](docs/operations/stac-database-repair.md).
   No live database initialization or replacement is part of this diagnostic step.
+- PR #293 merged with all four checks passing. At 23:13 EDT,
+  `platform-onetak` was Synced/Healthy at `4adc570a` and the preflight Job completed
+  successfully with both session and transaction read-only flags `on` in each
+  database. `geo` (18 MB) has PostGIS 3.6.4 and public table `spatial_ref_sys`;
+  `stac` (10 MB) has no public relations and no enabled PostGIS. Neither database
+  has a PgSTAC schema/search functions. PostGIS 3.6.4, btree_gist 1.7, pg_trgm 1.6
+  and unaccent 1.1 are available on the server. The existing `geo` role is a
+  superuser with database/role creation privileges; the three standard PgSTAC
+  roles are absent. These are metadata observations, not application-row or
+  historical-data verification. Preserve the detailed evidence in the recovery
+  document and remove the completed Job in [#294](https://github.com/onemindos/omos/pull/294).
+  No schema, grants, credentials, server
+  image or application database target was changed.
 - Evaluation remains open: the active Component/Workload, binding and v5 snapshot
   total 492 lines in three files. With five immutable release snapshots, the app
   directory contains seven files and 1,958 lines; shared platform/bootstrap files

@@ -1,6 +1,7 @@
 # STAC database repair: preflight and recovery gates
 
-Status: investigation in progress. No live schema initialization is authorized.
+Status: read-only preflight complete; recovery proof and live repair remain unexecuted.
+No live schema initialization is authorized.
 This is a dependency repair for the phase-3 frontend pilot; the shared PostgreSQL
 server remains managed by Argo CD outside OpenChoreo.
 
@@ -22,22 +23,51 @@ fresh logical STAC backup or a tested application restore. The repository's defa
 logical-backup image targets PostgreSQL 15; it must not be reused unchanged for
 this PostgreSQL 17 server.
 
-## Read-only preflight
+## Read-only preflight results (2026-10-18, 23:13 EDT)
 
-The Argo-owned Job `platform/onetak/stac-preflight.yaml` is the next diagnostic
-step within the authorized investigation. Merging its PR runs it through Argo.
-It connects separately to `geo` and `stac`, with read-only defaults, explicit
+PR [#293](https://github.com/onemindos/omos/pull/293) merged with all four CI
+checks passing. Argo reconciled merge `4adc570a`; `platform-onetak` is
+Synced/Healthy. Job `stac-preflight-20261018` completed successfully at
+`2026-10-19T03:13:25Z`, with `default_transaction_read_only` and
+`transaction_read_only` both `on` in each connection.
+
+| Observation | `geo` | `stac` |
+|---|---|---|
+| Owner / reported size | `geo` / 18 MB | `geo` / 10 MB |
+| Enabled PostGIS | 3.6.4 | absent |
+| Available PostGIS default | 3.6.4 | 3.6.4 |
+| PgSTAC schema / search functions | absent | absent |
+| Public relations (tables/views/etc.) | 3 | 0 |
+| Public tables | `spatial_ref_sys` | none |
+
+`btree_gist` 1.7, `pg_trgm` 1.6 and `unaccent` 1.1 are available but not enabled
+in either database. Both have the previously observed TimescaleDB extensions.
+The configured `geo` role has superuser, database-creation and role-creation
+privileges; none of `pgstac_admin`, `pgstac_read` or `pgstac_ingest` exists.
+No role, password or grant was changed.
+
+The preflight found no PgSTAC catalog to recover by simply switching the API to
+`geo`. PostGIS availability means the missing extension is not, by itself, a
+reason to replace or upgrade the shared server image. No application rows were
+read; these results do not explain the historical absence of catalog data or
+establish the contents of every database in the instance.
+
+The completed Job is removed after recording this evidence. The queries and
+constraints remain reviewable in PR #293; no initialization Job replaces it.
+
+## Diagnostic method
+
+The Argo-owned Job connected separately to `geo` and `stac`, with read-only defaults, explicit
 read-only transactions, bounded queries, no retries and a 120-second deadline.
 It reads only system-catalog metadata: database owner/size, role flags, installed
 and available extensions, schema/relation counts, table names and function
 signatures. It does not read application rows, expose credential values, create roles,
 change grants or initialize a schema. The password is an existing Secret reference.
 
-Record the output before removing the completed Job. Confirm whether the API
-points at the intended database, whether `geo` already contains PgSTAC, which
-relations already exist and whether PostGIS is available in the existing server
-image. If a usable catalog exists elsewhere, investigate configuration before
-proposing a fresh installation.
+If other evidence suggests a usable catalog exists elsewhere, investigate that
+configuration before proposing a fresh installation. The intended catalog and
+ingestion sources still need to be established; an initialized empty catalog does
+not supply imagery by itself.
 
 ## Prepare recovery and isolated proof
 
