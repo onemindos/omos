@@ -635,6 +635,17 @@ contract, changed-YAML, ShellCheck and commit secret checks passed. Full
 `make validate` remains blocked by unrelated existing YAML lint debt. No check
 was overridden or reported as green.
 
+Integration work started 2026-10-19 on `codex/phase6-portal-integration`.
+The 1.55.3 host remains in place: the core/observability plugins are additions,
+not a replacement portal. Initial local TypeScript, frontend bundling and 37
+identity/permission/token-forwarding regression tests pass. Runtime preview,
+real login, permission boundaries and live rollout are still pending; these
+checks do not establish production compatibility. The temporary console stays on.
+The host uses the verified OIDC authenticator with explicit catalog-subject mapping,
+a single intersected permission policy and a version-locked upstream ABAC router
+adapter (see the integration runbook). No production image/configuration is changed
+by the source-integration PR.
+
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
 - [ ] Install the core OpenChoreo plugins and the observability pack into our portal,

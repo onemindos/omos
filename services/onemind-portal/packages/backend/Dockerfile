@@ -21,6 +21,7 @@ COPY . .
 RUN --mount=type=cache,target=/root/.yarn/berry/cache,sharing=locked \
     yarn install --immutable
 RUN yarn tsc
+RUN yarn test --watch=false --runInBand plugins/plugin-onemind-permissions-backend/src plugins/plugin-onemind-auth/src/scopedFetch.test.ts plugins/plugin-onemind-auth-backend/src/subject.test.ts
 RUN bash scripts/build-techdocs.sh
 RUN yarn build:backend
 
