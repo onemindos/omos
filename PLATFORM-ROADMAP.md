@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), projects bootstrap (this PR) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -337,15 +337,32 @@ Progress (2026-10-18):
 - Add `platform-openchoreo-projects` and the `onetak` Project with development,
   staging and production bindings, following the v1.3.1 getting-started sample.
   This step only provisions project namespaces; the old STAC workloads stay in place.
-  Post-merge reconciliation evidence is pending.
+  PR #286 merged with all four CI checks passing. Verified at 21:45 EDT through
+  read-only MCP: `platform-openchoreo-projects` Synced/Healthy, `onetak` Ready in
+  the OpenChoreo API, all three `onetak-*` ProjectReleaseBindings Ready. The
+  app-of-apps picked up the commit about six minutes after merge.
 - The console's interactive `akadmin` login remains awaiting Zeus's confirmation.
 - Candidate inspection: the old STAC Browser pod is Ready with image digest
   `sha256:e6d92b6ba593201b558219d0591fc83820b7f86a316d3fe565a27ad996fc7f63`.
   Its documented tailnet hostname does not resolve from the Mac; migration must
   verify the real browser entry point, runtime configuration and catalog access.
+- Pilot deviations from the brief: the image expects `SB_catalogUrl`, `SB_catalogTitle`
+  and `SB_pathPrefix`, not the old `CATALOG_URL` / `STAC_BROWSER_TITLE`. A browser
+  cannot use `stac-api.onetak.svc.cluster.local`, so the app's nginx proxies catalog
+  reads at the same tailnet origin (GET/HEAD, plus POST only to `/search`). Responses
+  rewrite the upstream base URL; catalog write methods are refused. The HTTPRoute
+  preserves `/stac-browser-http` via the endpoint's `basePath`. These are application
+  settings; the shared component type, TAK Server and NATS are untouched.
+- Evaluation is still open: the pilot's three files total 438 lines, including the
+  generated immutable type/workload snapshot. The old browser occupies 47 lines in
+  one shared manifest. Do not claim fewer files or easier maintenance without the
+  live comparison and a verdict.
 
 - [ ] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
-- [ ] Write its Component in `platform/openchoreo/projects/`.
+- [x] Write its Component in `platform/openchoreo/projects/`.
+      The parallel deployment PR adds a pinned STAC Browser Component, Workload,
+      immutable ComponentRelease and development ReleaseBinding. Runtime verification
+      and cutover are pending; the existing app has not been removed.
 - [ ] Run it next to the existing deployment, switch traffic, then delete the old manifests.
 
 Gate: the app works, it needs fewer files than before, and the change was easier to make.
