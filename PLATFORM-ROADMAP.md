@@ -659,6 +659,11 @@ Preview follow-up: allow only the exact candidate origin at the existing Observe
 CORS boundary for browser logs/metrics checks; no auth/authorization bypass or
 production portal promotion. The two existing allowed portal origins are retained.
 
+Candidate catalog follow-up: override the upstream provider default owner with
+the bare `onemind-admins` group name; 1.3.1 itself prefixes `group:default/`.
+The initial full entity reference caused unresolved double-prefixed ownership.
+This correction changes no user enrollment or membership.
+
 Candidate browser follow-up: explicitly allow the existing HTTPS Observer in the
 candidate CSP connect-src. Default self-only policy correctly blocked direct
 observability requests even after the exact-origin CORS correction. No wildcard

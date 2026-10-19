@@ -55,3 +55,7 @@ catalog:
       target: /app/catalog/org.yaml
       rules:
         - allow: [User, Group]
+
+# The 1.3.1 provider adds group:default/ itself; use the group name, not a ref.
+openchoreo:
+  defaultOwner: onemind-admins
