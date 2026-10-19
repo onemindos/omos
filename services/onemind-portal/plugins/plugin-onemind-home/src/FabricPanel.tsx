@@ -5,6 +5,7 @@ import {
   useApi,
 } from '@backstage/core-plugin-api';
 import { Box, Button, Typography } from '@material-ui/core';
+
 type Summary = {
   state: string;
   scope: string;
@@ -24,20 +25,20 @@ type Summary = {
   agentEvents: string;
 };
 export function FabricPanel() {
-  const discovery = useApi(discoveryApiRef),
-    api = useApi(fetchApiRef);
-  const [data, setData] = useState<Summary>(),
-    [error, setError] = useState(false);
+  const discovery = useApi(discoveryApiRef);
+    const api = useApi(fetchApiRef);
+  const [data, setData] = useState<Summary>();
+    const [error, setError] = useState(false);
   useEffect(() => {
-    let active = true,
-      pending = false;
+    let active = true;
+      let pending = false;
     const controller = new AbortController();
     const refresh = async () => {
       if (pending) return;
       pending = true;
       try {
         const base = await discovery.getBaseUrl('onemind');
-        const response = await api.fetch(base + '/fabric', {
+        const response = await api.fetch(`${base  }/fabric`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error();

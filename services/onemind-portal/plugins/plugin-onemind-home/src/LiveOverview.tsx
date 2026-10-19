@@ -6,6 +6,7 @@ import {
 } from '@backstage/core-plugin-api';
 import { Box, Button, Typography, useTheme } from '@material-ui/core';
 import { ActivityInbox } from './ActivityInbox';
+
 type Observation = {
   observedAt: string;
   partial: boolean;
@@ -17,22 +18,22 @@ type Observation = {
   serviceHealth?: { checks: { state: string }[] };
 };
 export function LiveOverview() {
-  const discovery = useApi(discoveryApiRef),
-    api = useApi(fetchApiRef),
-    theme = useTheme();
-  const [data, setData] = useState<Observation>(),
-    [error, setError] = useState(false),
-    [inbox, setInbox] = useState(false);
+  const discovery = useApi(discoveryApiRef);
+    const api = useApi(fetchApiRef);
+    const theme = useTheme();
+  const [data, setData] = useState<Observation>();
+    const [error, setError] = useState(false);
+    const [inbox, setInbox] = useState(false);
   useEffect(() => {
-    let active = true,
-      pending = false;
+    let active = true;
+      let pending = false;
     const controller = new AbortController();
     const refresh = async () => {
       if (pending) return;
       pending = true;
       try {
         const base = await discovery.getBaseUrl('onemind');
-        const response = await api.fetch(base + '/status', {
+        const response = await api.fetch(`${base  }/status`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error();

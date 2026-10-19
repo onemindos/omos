@@ -17,6 +17,18 @@ import { groupColors } from '@internal/plugin-onemind-common';
 import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 
+function backupStatus(backup: {suspended:boolean;lastSuccess:string|null}) {
+  if (backup.suspended) return 'suspended';
+  if (!backup.lastSuccess) return 'no successful run recorded';
+  return 'overdue';
+}
+
+function cloudStateLabel(data: {state:string;open?:number;overdue?:number;sampled?:number}) {
+  if (data.state === 'configuration-required') return 'Connect read-only Zoho access to enable this summary';
+  if (data.state === 'unavailable') return 'Provider unavailable';
+  return `${data.open} open · ${data.overdue} overdue in ${data.sampled} sampled tasks`;
+}
+
 export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:ReactNode}) {
   const {directory,loaded,error}=useDirectory();
   const searchId=useId();
@@ -38,7 +50,7 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     { title: 'Assistant', detail: 'Ask with source evidence', url: '/assistant' },
     { title: 'Offline', detail: 'Carry your knowledge', url: '/offline' },
   ];
-  return <Box p={fluid?0:2} className="onemind-workspace">
+  return (<Box p={fluid?0:2} className="onemind-workspace">
     <Box p={3} mb={3} style={{ borderRadius: 24, border: `1px solid ${theme.palette.divider}`,
       backgroundImage: `linear-gradient(115deg,${dark ? '#123951df,#35294add,#153c3ddb' : '#dceff8e8,#ece3f6df,#dff4ecdf'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <Typography variant="overline" style={{ letterSpacing: 3 }}>ONEMIND OS · YOUR WORKSPACE</Typography>
@@ -57,26 +69,26 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     <Box mb={2} display="flex" flexWrap="wrap" style={{gap:8}} aria-label="Hosting filters">{['All hosting', 'Self-hosted', 'Cloud service', 'Local / native', 'Reference', 'Planned', 'Unknown'].map(value => <Button key={value} size="small" variant={hostingFilter===value?'contained':'outlined'} aria-pressed={hostingFilter===value} onClick={()=>setHostingFilter(value)}>{value}</Button>)}</Box>
     {!query.trim() && category==='All' && !favoritesOnly && <><ActiveStack /><QuickAccess /></>}
     {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind OS workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-      {destinations.map((item,index) => <Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
+      {destinations.map((item,index) => (<Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
         <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
-      </Button>)}
+      </Button>))}
     </Box>}
     {!query.trim() && category==='All' && !favoritesOnly && <><LiveOverview /><GrafanaHome />{utilities}</>}
     <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
     <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
-    {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => <Box key={group} mt={3}>
+    {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => (<Box key={group} mt={3}>
       <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base??'#237f91'}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
       <Box style={{...appGridStyle,gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))'}}>
-        {matches.filter(app => app.groupTitle === group).map(app => <Box key={app.ref}>
+        {matches.filter(app => app.groupTitle === group).map(app => (<Box key={app.ref}>
           <AppTile app={app} controls={controls} />
           {!app.personal&&<Box mt={1} ml={2}><Link href={app.personal?undefined:`/catalog/${app.ref.split(':')[1].split('/')[0]}/component/${app.name}`} variant="caption" aria-label={`Inspect ${app.title} in the catalog`}>Inspect service →</Link></Box>}
-        </Box>)}
+        </Box>))}
       </Box>
-    </Box>)}
+    </Box>))}
     {loaded && !error && !matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); setHostingFilter('All hosting'); }}>Reset filters</Button></Box>}
-  </Box>;
+  </Box>);
 }
 type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};
 type Status={serviceHealth?:ServiceHealth;observedAt:string;partial:boolean;unavailableSources?:string[];totalWorkloads:number;unavailable:string[];deployments:{name:string;health:string;sync:string}[];backups:{name:string;lastSuccess:string|null;suspended:boolean}[]};
@@ -94,8 +106,8 @@ export function StatusPanel({ compact = false }: { compact?: boolean }){
   const backupProblems=data?.backups.filter(x=>x.suspended||!x.lastSuccess||(x.name==='backstage/backstage-backup'&&Date.now()-Date.parse(x.lastSuccess)>36*3600000))??[];
   const issues=data?[...(data.serviceHealth?.checks.filter(x=>x.state!=='up').map(x=>({key:`health:${x.name}`,title:`${x.name}: ${x.state}`,detail:`${x.scope}. Inspect service health and connectivity; unknown is not healthy.`,url:x.link}))??[]),...data.unavailable.map(name=>({key:`workload:${name}`,title:`Workload not fully ready: ${name}`,detail:'Inspect pod readiness and events in Headlamp.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'})),
     ...data.deployments.map(x=>({key:`deployment:${x.name}`,title:`${x.name}: ${x.health} / ${x.sync}`,detail:'Inspect the deployment health, sync difference, and last operation.',url:`https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(x.name)}`})),
-    ...backupProblems.map(x=>({key:`backup:${x.name}`,title:`Backup ${x.name}: ${x.suspended?'suspended':!x.lastSuccess?'no successful run recorded':'overdue'}`,detail:x.lastSuccess?`Last successful job: ${new Date(x.lastSuccess).toLocaleString()}`:'Inspect the backup schedule and job logs.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))]:[];
-  return <Box p={2}>
+    ...backupProblems.map(x=>({key:`backup:${x.name}`,title:`Backup ${x.name}: ${backupStatus(x)}`,detail:x.lastSuccess?`Last successful job: ${new Date(x.lastSuccess).toLocaleString()}`:'Inspect the backup schedule and job logs.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))]:[];
+  return (<Box p={2}>
     <Typography variant="h5">Needs attention</Typography>
     <Typography variant="body2" color="textSecondary">Workload readiness, deployment health, and backup activity. Critical service checks and selected Prometheus metrics appear below.</Typography>
     {error&&<Typography color="error">Live update unavailable. Previous results may be stale.</Typography>}
@@ -105,11 +117,11 @@ export function StatusPanel({ compact = false }: { compact?: boolean }){
       {data.partial&&<Typography color="error">Incomplete view: {data.unavailableSources?.join(', ')||'some sources'} unavailable. Missing results do not mean healthy.</Typography>}
       <Box my={2}><Typography variant="h6">{issues.length} attention items{stale?' in previous results':''}</Typography></Box>
       {!stale&&!data.partial&&!issues.length&&<Typography>No issues reported by the configured checks.</Typography>}
-      {(abbreviated?issues.slice(0,5):issues).map(x=><Box key={x.key} p={2} mb={1} style={{border:`1px solid ${theme.palette.divider}`,borderRadius:8}}>
+      {(abbreviated?issues.slice(0,5):issues).map(x=>(<Box key={x.key} p={2} mb={1} style={{border:`1px solid ${theme.palette.divider}`,borderRadius:8}}>
         <Typography style={{fontWeight:600}}>{x.title}</Typography>
         <Typography variant="body2" color="textSecondary">{x.detail}</Typography>
         <Link href={x.url} target="_blank" rel="noopener noreferrer">Investigate</Link>
-      </Box>)}
+      </Box>))}
       {compact && <Button size="small" onClick={()=>setExpanded(value=>!value)}>{expanded?'Show summary':'Show all observations'}</Button>}
       <Box mt={2}><Link href="https://argocd.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">All deployments</Link> · <Link href="https://grafana.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">Metrics in Grafana</Link></Box>
       {abbreviated && issues.length > 5 && <Typography variant="caption">Showing 5 of {issues.length} attention items. Open the full status view for the remaining observations.</Typography>}
@@ -124,22 +136,22 @@ export function StatusPanel({ compact = false }: { compact?: boolean }){
       </Box>}
       {!abbreviated && <Box mt={3}><Typography variant="h6">Backup activity</Typography>
         <Typography variant="caption">OneMind portal daily backup is overdue after 36 hours. Other schedules show activity without an assumed deadline. Job success alone does not prove restoration for every service.</Typography>
-        {data.backups.map(x=><Typography key={x.name} variant="body2">{x.name}: {x.suspended?'suspended':x.lastSuccess?`last success ${new Date(x.lastSuccess).toLocaleString()}`:'no successful run recorded'}</Typography>)}
+        {data.backups.map(x=><Typography key={x.name} variant="body2">{x.name}: {backupStatus(x)}</Typography>)}
         {!data.backups.length&&!data.partial&&<Typography>No backup schedules found.</Typography>}
       </Box>}
     </>}
-  </Box>;
+  </Box>);
 }
 type CloudSummary={state:string;observedAt:string|null;expiresAt:string|null;open?:number;overdue?:number;sampled?:number;partial?:boolean;pages?:number;source?:string;coverage?:string;attemptedAt?:string;tasks?:{id:string;title:string;dueDate:string|null;overdue:boolean}[];link:string};
 export function CloudPanel(){
-  const discovery=useApi(discoveryApiRef), api=useApi(fetchApiRef);
+  const discovery=useApi(discoveryApiRef); const api=useApi(fetchApiRef);
   const [data,setData]=useState<CloudSummary>(); const [error,setError]=useState(false);
   useEffect(()=>{let active=true;const controller=new AbortController();const refresh=async()=>{try{const base=await discovery.getBaseUrl('onemind');const r=await api.fetch(`${base}/cloud`,{signal:controller.signal});if(!r.ok)throw new Error();const result=await r.json();if(active){setData(result);setError(false);}}catch{if(active)setError(true);}};refresh();const timer=setInterval(refresh,60000);return()=>{active=false;controller.abort();clearInterval(timer);};},[discovery,api]);
   const expired=!!data?.expiresAt&&Date.parse(data.expiresAt)<Date.now();
-  return <Box p={2}><Typography variant="h5">Cloud work</Typography><Typography variant="h6">Zoho Projects</Typography>
+  return (<Box p={2}><Typography variant="h5">Cloud work</Typography><Typography variant="h6">Zoho Projects</Typography>
     {error&&<Typography color="error">Summary unavailable; previous observations may be stale.</Typography>}
     {!data&&!error&&<Typography>Loading…</Typography>}
-    {data&&<><Typography>{data.state==='configuration-required'?'Connect read-only Zoho access to enable this summary':data.state==='unavailable'?'Provider unavailable':`${data.open} open · ${data.overdue} overdue in ${data.sampled} sampled tasks`}</Typography>
+    {data&&<><Typography>{cloudStateLabel(data)}</Typography>
     {(expired||data.state==='stale')&&<Typography color="error">Stale observation</Typography>}
     {data.partial&&<Typography variant="caption">Bounded sample across {data.pages || 1} pages; these counts may not represent the whole portal.</Typography>}
     {data.observedAt&&<Typography variant="caption" display="block">Observed {new Date(data.observedAt).toLocaleString()} · cached for five minutes</Typography>}
@@ -147,7 +159,7 @@ export function CloudPanel(){
     {!!data.tasks?.length&&<Box mt={1}><Typography variant="subtitle2">Observed open work · up to 20 tasks, overdue first</Typography>{data.tasks.map(task=><Box key={task.id} mb={1}><Typography>{task.title}</Typography><Typography variant="caption" color={task.overdue?'error':'textSecondary'}>{task.overdue?'Overdue · ':''}{task.dueDate || 'No due date recorded'}</Typography></Box>)}</Box>}
     {data.source&&<Typography variant="caption" display="block">Source: {data.source}</Typography>}
     <Link href={data.link} target="_blank" rel="noopener noreferrer">Open Zoho Projects</Link></>}
-  </Box>;
+  </Box>);
 }
 export const homeModule=createFrontendModule({pluginId:'home',extensions:[
   HomePageLayoutBlueprint.make({name:'onemind-flow',params:{loader:async()=>(await import('./HomeLayout')).HomeLayout}}),

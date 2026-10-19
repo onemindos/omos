@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Link, TextField, Tooltip, Typography, useTheme } from '@material-ui/core';
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
@@ -10,7 +10,18 @@ import { HostingBadge } from './HostingBadge';
 import { AccessButton, AccessDeployments, useAppAccess } from '@internal/plugin-onemind-common';
 import { AppEntry, useDirectory } from '@internal/plugin-onemind-common';
 
-const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map((word, index, words) => words.length === 1 ? word.slice(0, 2) : index < 2 ? word[0] : '').join('').toUpperCase());
+function abbreviationWord(word: string, index: number, words: string[]) {
+  if (words.length === 1) return word.slice(0, 2);
+  if (index < 2) return word[0];
+  return '';
+}
+
+function favoriteIconColor(isFavorite: boolean, dark: boolean) {
+  if (isFavorite) return dark ? '#ffcf68' : '#926400';
+  return dark ? '#afbdcf' : '#64748b';
+}
+
+const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map(abbreviationWord).join('').toUpperCase());
 
 export function useAppFavorites() {
   const {directory,all,personal}=useDirectory();
@@ -51,7 +62,7 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
   const [accessOpen, setAccessOpen] = useState(false);
   const dark=theme.palette.type==='dark';
   const accent=appColors(app.name,app.groupTitle);
-  return <Box><Box className="onemind-app-card" style={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${accent.base}${dark?'66':'44'}`, borderTop:`3px solid ${accent.base}`, borderRadius: 16, background: `linear-gradient(135deg,${accent.base}${dark?'25':'0f'},${theme.palette.background.paper})`, minWidth: 0 }}>
+  return (<Box><Box className="onemind-app-card" style={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${accent.base}${dark?'66':'44'}`, borderTop:`3px solid ${accent.base}`, borderRadius: 16, background: `linear-gradient(135deg,${accent.base}${dark?'25':'0f'},${theme.palette.background.paper})`, minWidth: 0 }}>
     <Link href={access.preferred.url ?? app.url} onClick={event => { if (!access.preferred.url) { event.preventDefault(); setAccessOpen(true); } }} target="_blank" rel="noopener noreferrer" aria-label={`Open ${app.title}`} style={{ display: 'flex', gap: compact ? 8 : 12, padding: compact ? 12 : 16, flex: 1, minWidth: 0, textDecoration: 'none', color: theme.palette.text.primary }}>
       <Avatar variant="rounded" style={{ background: `linear-gradient(135deg,${accent.base},${accent.base}cc)`, color: '#fff', flexShrink: 0, fontSize: compact ? 13 : 15, width: compact ? 32 : 40, height: compact ? 32 : 40, fontWeight: 700 }}>{abbreviation(app)}</Avatar>
       <Box style={{ minWidth: 0 }}><Typography variant="subtitle2" style={{ fontWeight: 700, overflowWrap: 'break-word' }}>{app.title} ↗</Typography>
@@ -60,8 +71,8 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
         <HostingBadge hosting={app.hosting} status={app.status} />
       </Box>
     </Link>
-    <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:starred?(dark?'#ffcf68':'#926400'):dark?'#afbdcf':'#64748b' }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
-  </Box><Box display="flex" flexWrap="wrap" alignItems="center" style={{gap:6}}><Typography variant="caption">{[...new Set(access.points.map(point => point.platform))].join(' · ')}</Typography><AccessButton app={app} /></Box>{accessOpen && <AccessDeployments app={app} open={accessOpen} onClose={()=>setAccessOpen(false)} />}</Box>;
+    <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:favoriteIconColor(starred, dark) }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
+  </Box><Box display="flex" flexWrap="wrap" alignItems="center" style={{gap:6}}><Typography variant="caption">{[...new Set(access.points.map(point => point.platform))].join(' · ')}</Typography><AccessButton app={app} /></Box>{accessOpen && <AccessDeployments app={app} open={accessOpen} onClose={()=>setAccessOpen(false)} />}</Box>);
 }
 export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 12 };
 
@@ -72,9 +83,13 @@ export function QuickAccess() {
   const controls = useAppFavorites();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (open) searchInputRef.current?.focus();
+  }, [open]);
   const matches = launcherApps.filter(app => `${app.title} ${app.description} ${app.groupTitle}`.toLowerCase().includes(query.trim().toLowerCase()));
   const starters = ['zoho-mail', 'github', 'grafana', 'headlamp', '1password', 'mercury'].flatMap(name => launcherApps.find(app => app.name === name) ?? []);
-  return <Box className="onemind-workspace onemind-favorites">
+  return (<Box className="onemind-workspace onemind-favorites">
     <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" style={{ gap: 12 }} mb={1}>
       <Box><Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Favorites</Typography><Typography variant="body2" color="textSecondary">Your apps, one click away. Stars are shared with your catalog favorites.</Typography></Box>
       <Button variant="contained" color="primary" disableElevation onClick={() => { setQuery(''); setOpen(true); }}>Manage favorites</Button>
@@ -84,12 +99,13 @@ export function QuickAccess() {
     {controls.loaded && (controls.favorites.length ? <Box mt={2} style={appGridStyle}>{controls.favorites.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box> : <Box mt={2}><Typography>No favorite apps yet. Use a star below or choose apps in Manage favorites.</Typography><Typography variant="overline" component="p" style={{ marginTop: 16 }}>Suggested starting points</Typography><Box style={appGridStyle}>{starters.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box></Box>)}
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md" aria-labelledby={titleId}>
       <DialogTitle><Box display="flex" justifyContent="space-between" alignItems="center"><span id={titleId}>Choose your quick-access apps</span><IconButton aria-label="Close favorites picker" onClick={() => setOpen(false)}><Close /></IconButton></Box></DialogTitle>
-      <DialogContent><TextField id={searchId} autoFocus fullWidth label="Find an app to favorite" value={query} onChange={event => setQuery(event.target.value)} variant="outlined" size="small" />
+      <DialogContent><TextField id={searchId} inputRef={searchInputRef}
+ fullWidth label="Find an app to favorite" value={query} onChange={event => setQuery(event.target.value)} variant="outlined" size="small" />
         <Typography variant="caption" component="p" role="status" style={{ margin: '12px 0' }}>{matches.length} apps · {controls.favorites.length} favorites</Typography>
         {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
         <Box mb={3} style={appGridStyle}>{matches.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box>
         {!matches.length && <Typography>No matching apps. Try another name or category.</Typography>}
       </DialogContent>
     </Dialog>
-  </Box>;
+  </Box>);
 }

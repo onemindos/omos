@@ -5,6 +5,7 @@ import {
   useApi,
 } from '@backstage/core-plugin-api';
 import { Box, Link, Typography } from '@material-ui/core';
+
 type Costs = {
   state: string;
   scope: string;
@@ -17,20 +18,20 @@ type Costs = {
   accountBalance?: string;
 };
 export function CostPanel() {
-  const discovery = useApi(discoveryApiRef),
-    api = useApi(fetchApiRef),
-    [data, setData] = useState<Costs>(),
-    [error, setError] = useState('');
+  const discovery = useApi(discoveryApiRef);
+    const api = useApi(fetchApiRef);
+    const [data, setData] = useState<Costs>();
+    const [error, setError] = useState('');
   useEffect(() => {
-    let active = true,
-      pending = false;
+    let active = true;
+      let pending = false;
     const controller = new AbortController();
     const refresh = async () => {
       if (pending) return;
       pending = true;
       try {
         const base = await discovery.getBaseUrl('onemind');
-        const response = await api.fetch(base + '/costs', {
+        const response = await api.fetch(`${base  }/costs`, {
           signal: controller.signal,
         });
         if (!response.ok)

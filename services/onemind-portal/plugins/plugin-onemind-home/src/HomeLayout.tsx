@@ -12,7 +12,7 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
   const gridConfig=useMemo(()=>defaultConfig?.map(item=>({component:item.component,x:item.column,y:item.row,width:item.width,height:item.height,movable:item.movable,deletable:item.deletable,resizable:item.resizable})),[defaultConfig]);
   const widget=(name:string)=>widgets.find(item=>item.name===name)?.component;
   const utilities=['HomePageWorldClock','HomePageRecentlyVisited','HomePageMostVisited'];
-  return <Content className="onemind-home-content"><Box className="onemind-home-layout">
+  return (<Content className="onemind-home-content"><Box className="onemind-home-layout">
     <Box className="onemind-home-toolbar">
       <Typography variant="overline">ONEMIND OS · HOME</Typography>
       <Button variant="outlined" color="primary" onClick={()=>setCustomize(value=>!value)}>{customize?'Back to app launcher':'Customize widgets'}</Button>
@@ -20,5 +20,5 @@ export function HomeLayout({ widgets, defaultConfig }: HomePageLayoutProps) {
     {customize ? <Box><Typography variant="body2" color="textSecondary">Your saved widget layout. Use Edit to add, resize or rearrange widgets.</Typography><CustomHomepageGrid config={gridConfig} preventDuplicateWidgets>{widgets.map((item,index)=><Fragment key={item.name??index}>{item.component}</Fragment>)}</CustomHomepageGrid></Box> : <>
       <Directory fluid utilities={<Box className="onemind-home-utilities">{utilities.map(name=><Box key={name} className="onemind-home-utility">{widget(name)}</Box>)}</Box>} />
     </>}
-  </Box></Content>;
+  </Box></Content>);
 }

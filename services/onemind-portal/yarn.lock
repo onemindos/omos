@@ -6073,6 +6073,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-home@workspace:^, @internal/plugin-onemind-home@workspace:plugins/plugin-onemind-home":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-home@workspace:plugins/plugin-onemind-home"
+  dependencies:
+    "@backstage-community/plugin-grafana": "npm:1.1.0"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/core-components": "npm:0.18.14"
+    "@backstage/core-plugin-api": "npm:1.12.10"
+    "@backstage/frontend-plugin-api": "npm:0.18.1"
+    "@backstage/plugin-catalog-react": "npm:^3.2.3"
+    "@backstage/plugin-home": "npm:0.9.10"
+    "@backstage/plugin-home-react": "npm:0.1.42"
+    "@backstage/plugin-notifications": "npm:0.6.0"
+    "@internal/plugin-onemind-common": "workspace:^"
+    "@material-ui/core": "npm:^4.12.2"
+    "@material-ui/icons": "npm:^4.9.1"
+    "@roadiehq/backstage-plugin-github-pull-requests": "npm:3.9.1"
+    "@testing-library/react": "npm:^14.0.0"
+    "@types/react": "npm:18.3.28"
+    jest: "npm:~30.2.0"
+    react-dom: "npm:^18.0.2"
+  peerDependencies:
+    react: ^18.0.2
+    react-dom: ^18.0.2
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-missions@workspace:^, @internal/plugin-onemind-missions@workspace:plugins/plugin-onemind-missions":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-missions@workspace:plugins/plugin-onemind-missions"
@@ -14481,6 +14508,7 @@ __metadata:
     "@internal/plugin-onemind-assistant": "workspace:^"
     "@internal/plugin-onemind-auth": "workspace:^"
     "@internal/plugin-onemind-common": "workspace:^"
+    "@internal/plugin-onemind-home": "workspace:^"
     "@internal/plugin-onemind-missions": "workspace:^"
     "@internal/plugin-onemind-nav": "workspace:^"
     "@internal/plugin-onemind-offline": "workspace:^"

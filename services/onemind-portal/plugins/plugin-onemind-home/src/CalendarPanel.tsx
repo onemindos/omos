@@ -5,6 +5,7 @@ import {
   useApi,
 } from '@backstage/core-plugin-api';
 import { Box, Link, Typography } from '@material-ui/core';
+
 type Summary = {
   state: string;
   coverage: string;
@@ -18,21 +19,27 @@ type Summary = {
   }[];
   link: string;
 };
+function formatEventTime(event: Summary['events'][number]) {
+  if (!event.start) return 'Time unavailable';
+  if (event.allDay) return `${event.start} · all day`;
+  return new Date(event.start).toLocaleString();
+}
+
 export function CalendarPanel() {
-  const discovery = useApi(discoveryApiRef),
-    api = useApi(fetchApiRef),
-    [data, setData] = useState<Summary>(),
-    [error, setError] = useState('');
+  const discovery = useApi(discoveryApiRef);
+    const api = useApi(fetchApiRef);
+    const [data, setData] = useState<Summary>();
+    const [error, setError] = useState('');
   useEffect(() => {
-    let active = true,
-      pending = false;
+    let active = true;
+      let pending = false;
     const controller = new AbortController();
     const refresh = async () => {
       if (pending) return;
       pending = true;
       try {
         const base = await discovery.getBaseUrl('onemind');
-        const response = await api.fetch(base + '/calendar', {
+        const response = await api.fetch(`${base  }/calendar`, {
           signal: controller.signal,
         });
         if (!response.ok)
@@ -103,11 +110,7 @@ export function CalendarPanel() {
                 <Box key={event.id} mt={1}>
                   <Typography>{event.title}</Typography>
                   <Typography variant="caption">
-                    {!event.start
-                      ? 'Time unavailable'
-                      : event.allDay
-                      ? event.start + ' · all day'
-                      : new Date(event.start).toLocaleString()}
+                    {formatEventTime(event)}
                   </Typography>
                 </Box>
               ))}

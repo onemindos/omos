@@ -53,6 +53,7 @@
     "@internal/plugin-onemind-assistant": "workspace:^",
     "@internal/plugin-onemind-auth": "workspace:^",
     "@internal/plugin-onemind-common": "workspace:^",
+    "@internal/plugin-onemind-home": "workspace:^",
     "@internal/plugin-onemind-missions": "workspace:^",
     "@internal/plugin-onemind-nav": "workspace:^",
     "@internal/plugin-onemind-offline": "workspace:^",

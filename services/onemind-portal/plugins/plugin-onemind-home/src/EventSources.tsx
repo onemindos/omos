@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, Typography } from '@material-ui/core';
+
 type SourceState = { enabled: boolean; recipientReadiness: string; lastAttemptAt: string | null; lastSuccessAt: string | null; sources: Record<string, string> };
 export function EventSources() {
-  const discovery = useApi(discoveryApiRef), api = useApi(fetchApiRef);
+  const discovery = useApi(discoveryApiRef); const api = useApi(fetchApiRef);
   const [data, setData] = useState<SourceState>();
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -18,7 +19,7 @@ export function EventSources() {
     return () => { active = false; controller.abort(); clearInterval(timer); };
   }, [discovery, api]);
   const stale = !!data?.lastSuccessAt && Date.now() - Date.parse(data.lastSuccessAt) > 180000;
-  return <Box p={2} borderTop={1} borderColor="divider">
+  return (<Box p={2} borderTop={1} borderColor="divider">
     <Typography variant="subtitle2">Infrastructure event sources</Typography>
     {error && <Typography color="error">Source status unavailable; previous observations may be stale.</Typography>}
     {!data && !error && <Typography variant="body2">Checking source connections…</Typography>}
@@ -29,5 +30,5 @@ export function EventSources() {
       {data.lastSuccessAt && <Typography variant="caption" display="block" color={stale ? 'error' : 'textSecondary'}>{stale ? 'Stale · ' : 'Last checked · '}{new Date(data.lastSuccessAt).toLocaleString()}</Typography>}
       <Typography variant="caption" display="block">Only new terminal Argo operations and scheduled Backstage backup jobs are observed. Historical results are baselined. Agent events are not connected. Recipient membership is checked; accepted processing is not delivery confirmation.</Typography>
     </>}
-  </Box>;
+  </Box>);
 }

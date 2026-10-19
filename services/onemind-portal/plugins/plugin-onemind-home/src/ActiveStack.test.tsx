@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ActiveStack } from './ActiveStack';
+
 jest.mock('@backstage/plugin-catalog-react', () => ({catalogApiRef:{}}));
 
 const set = jest.fn();

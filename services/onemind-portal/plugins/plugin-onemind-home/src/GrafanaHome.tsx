@@ -22,6 +22,7 @@ import {
   DashboardViewer,
   grafanaApiRef,
 } from '@backstage-community/plugin-grafana';
+
 const origin = 'https://grafana.tail717ba0.ts.net';
 function safeDashboard(value: string) {
   try {
@@ -38,19 +39,19 @@ export function GrafanaHome() {
     useApi(configApiRef).getOptionalBoolean(
       'onemind.grafanaEmbedding.enabled',
     ) === true;
-  const api = useApi(grafanaApiRef),
-    storage = useApi(storageApiRef),
-    bucket = useMemo(() => storage.forBucket('onemind-home'), [storage]);
+  const api = useApi(grafanaApiRef);
+    const storage = useApi(storageApiRef);
+    const bucket = useMemo(() => storage.forBucket('onemind-home'), [storage]);
   const [snapshot, setSnapshot] = useState(() =>
     bucket.snapshot<string[]>('dashboards'),
   );
-  const [open, setOpen] = useState(false),
-    [items, setItems] = useState<Dashboard[]>([]),
-    [error, setError] = useState(''),
-    [query, setQuery] = useState(''),
-    [loading, setLoading] = useState(false),
-    [busy, setBusy] = useState(false),
-    [active, setActive] = useState<string>();
+  const [open, setOpen] = useState(false);
+    const [items, setItems] = useState<Dashboard[]>([]);
+    const [error, setError] = useState('');
+    const [query, setQuery] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const [active, setActive] = useState<string>();
   const selected = Array.isArray(snapshot.value)
     ? snapshot.value
         .filter(value => typeof value === 'string' && safeDashboard(value))

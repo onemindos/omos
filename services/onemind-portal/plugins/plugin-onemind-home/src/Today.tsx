@@ -13,7 +13,7 @@ export function Today() {
   const theme = useTheme();
   const dark = theme.palette.type === 'dark';
   const panel = { border: `1px solid ${theme.palette.divider}`, borderRadius: 16, background: theme.palette.background.paper, minWidth: 0, overflow: 'auto' as const };
-  return <Box p={2}>
+  return (<Box p={2}>
     <Box p={3} mb={3} style={{ ...panel, backgroundImage: `linear-gradient(${dark ? '#111215eb' : '#ffffffed'},${dark ? '#111215eb' : '#ffffffed'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover' }}>
       <Typography variant="overline">ONE MIND · OPERATIONS</Typography>
       <Typography variant="h4" component="h1" style={{ fontWeight: 700 }}>Today</Typography>
@@ -37,7 +37,7 @@ export function Today() {
       <Box style={panel}><HomePageYourOpenPullRequestsCard query="repo:onemindos/omos is:pr is:open author:@me" /></Box>
     </Box>
 
-  </Box>;
+  </Box>);
 }
 export const todayPlugin = createFrontendPlugin({ pluginId: 'onemind-today', extensions: [
   PageBlueprint.make({ params: { path: '/today', title: 'Today', icon: <TodayIcon />, loader: async () => <Today /> } }),

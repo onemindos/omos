@@ -13,12 +13,12 @@ import { AppEntry, safeUrl, useShortcuts } from '@internal/plugin-onemind-common
 
 export function ServiceManager() {
   const personal = useShortcuts();
-  const [open, setOpen] = useState(false),
-    [name, setName] = useState(''),
-    [url, setUrl] = useState(''),
-    [editing, setEditing] = useState<string>(),
-    [error, setError] = useState(''),
-    [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+    const [name, setName] = useState('');
+    const [url, setUrl] = useState('');
+    const [editing, setEditing] = useState<string>();
+    const [error, setError] = useState('');
+    const [busy, setBusy] = useState(false);
   const reset = () => {
     setName('');
     setUrl('');
