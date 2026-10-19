@@ -379,6 +379,14 @@ Progress (2026-10-18):
   `http://stac-api.onetak.svc.cluster.local/` without port 8082. Add that observed
   exact base URL to the proxy rewrites in immutable release v4 ([#290](https://github.com/onemindos/omos/pull/290)). Keep
   external asset links unchanged; collections/search and visual review are pending.
+- Catalog `GET /collections` and `POST /search` currently return 500 from the
+  existing STAC API. Its logs show `UndefinedFunctionError` for
+  `collection_search(jsonb)` and `search(jsonb)`. Add a one-off, Argo-owned
+  PostgreSQL client Job (this PR) to inspect only schema/function metadata and
+  search path in `BEGIN READ ONLY`, with `default_transaction_read_only=on`.
+  It references the existing Secret without reading or changing its value.
+  Record the result and remove the Job after inspection; do not migrate the
+  shared database or remove the old browser based on pod readiness alone.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the
