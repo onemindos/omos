@@ -11,6 +11,12 @@ spec:
   componentType:
     kind: ClusterComponentType
     name: deployment/onemind-service
+  traits:
+    - kind: ClusterTrait
+      name: cilium-gateway-ingress
+      instanceName: gateway
+      parameters:
+        port: 8080
 ---
 apiVersion: openchoreo.dev/v1alpha1
 kind: Workload
