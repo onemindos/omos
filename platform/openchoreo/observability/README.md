@@ -1,7 +1,7 @@
 # OpenChoreo observability plane
 
-Stage 5B, following the capacity PRs. These are deployment sources; live acceptance
-is pending until merge, Argo reconciliation and the checks below.
+Stage 5B is deployed. Live Phase 5 acceptance passed on 2026-10-19 after the capacity
+PRs, module setup and activation; see PLATFORM-ROADMAP.md for evidence.
 
 Core: openchoreo-observability-plane 1.3.1. Logs/tracing adapters: 0.6.0.
 Metrics adapter: 0.7.1. Events collector: 0.1.2. OpenCost adapter: 0.2.0.
@@ -48,8 +48,8 @@ this Application after changing a source credential.
 The existing namespace keeps its platform-ecosystem-resources owner; only its
 VolSync annotation changes. The SQLite alert PVC has a daily VolSync snapshot source and a distinct encrypted
 restic repository. The hook reuses the existing backup account/encryption material
-with a different repository path. It never writes to Loki's repository. A successful
-backup and isolated restore remain rollout acceptance checks.
+with a different repository path. It never writes to Loki's repository. The backup and isolated SQLite restore both passed on 2026-10-19;
+the protected recovery PVC is retained as evidence.
 
 ## Order and acceptance
 

@@ -1,8 +1,7 @@
 # Authenticated Observer MCP
 
-Phase 5C connects the official OpenChoreo Observer at
-https://onemind-observer.tail717ba0.ts.net/mcp. Merge this stage only after the plane
-and modules are healthy and capacity is within target.
+Phase 5C connected the official OpenChoreo Observer at
+https://onemind-observer.tail717ba0.ts.net/mcp. The plane/modules are live and healthy; capacity passed the target on 2026-10-19.
 
 The same Authentik ai-operator identity and ai-operator-read OpenChoreo role used
 by the control-plane MCP provide access. Tailnet reachability and JWT authorization
@@ -40,4 +39,10 @@ then confirm recent logs and CPU/memory samples in both console and MCP. Also ch
 the plane's agent connection, Argo health, per-node requested capacity and alert-store
 backup/restore. Record evidence before marking the roadmap Done.
 
-Status: configuration prepared; live rollout, telemetry and console checks pending.
+Status: live gate passed on 2026-10-19. Console and MCP show real STAC Browser logs
+and CPU/memory data; cost query succeeds. Claude reports Connected. Backup and
+isolated SQLite restore passed. See PLATFORM-ROADMAP.md for timestamped evidence.
+
+Use the public HTTPS token URL even inside the cluster: Authentik derives iss from
+the request host. Keep the registered Observer URL browser-reachable on the tailnet.
+After changing it, allow five minutes for console URL caches or reload after expiry.
