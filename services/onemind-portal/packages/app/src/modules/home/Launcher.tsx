@@ -5,10 +5,10 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import Close from '@material-ui/icons/Close';
 import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { starredEntitiesApiRef, useStarredEntities } from '@backstage/plugin-catalog-react';
-import { appColors } from './colors';
+import { appColors } from '@internal/plugin-onemind-common';
 import { HostingBadge } from './HostingBadge';
-import { AccessButton, AccessDeployments, useAppAccess } from './AccessDeployments';
-import { AppEntry, useDirectory } from './useDirectory';
+import { AccessButton, AccessDeployments, useAppAccess } from '@internal/plugin-onemind-common';
+import { AppEntry, useDirectory } from '@internal/plugin-onemind-common';
 
 const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map((word, index, words) => words.length === 1 ? word.slice(0, 2) : index < 2 ? word[0] : '').join('').toUpperCase());
 

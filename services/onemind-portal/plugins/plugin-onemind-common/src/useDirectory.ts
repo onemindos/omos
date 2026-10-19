@@ -73,8 +73,8 @@ export function useDirectory() {
   const api = useApi(catalogApiRef);
   const personal = useShortcuts();
   const [apps, setApps] = useState<AppEntry[]>([]);
-  const [error, setError] = useState(false),
-    [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     let active = true;
     const refresh = async () => {
@@ -105,11 +105,24 @@ export function useDirectory() {
                 known?.groupTitle ??
                 'Services';
               entries.push({
-                supportedPlatforms: (entity.metadata.annotations?.['onemind.io/supported-platforms'] ?? '').split(',').map(x => x.trim()).filter(Boolean),
-                accessPoints: parseAccessPoints(entity.metadata.annotations?.['onemind.io/access-points']),
-                dependencies: entity.relations?.filter(r => r.type === 'dependsOn').map(r => r.targetRef) ?? [],
+                supportedPlatforms: (
+                  entity.metadata.annotations?.[
+                    'onemind.io/supported-platforms'
+                  ] ?? ''
+                )
+                  .split(',')
+                  .map(x => x.trim())
+                  .filter(Boolean),
+                accessPoints: parseAccessPoints(
+                  entity.metadata.annotations?.['onemind.io/access-points'],
+                ),
+                dependencies:
+                  entity.relations
+                    ?.filter(r => r.type === 'dependsOn')
+                    .map(r => r.targetRef) ?? [],
                 hosting: entity.metadata.annotations?.['onemind.io/hosting'],
-                status: entity.metadata.annotations?.['onemind.io/documented-status'],
+                status:
+                  entity.metadata.annotations?.['onemind.io/documented-status'],
                 name: entity.metadata.name,
                 ref: `component:${entity.metadata.namespace ?? 'default'}/${
                   entity.metadata.name

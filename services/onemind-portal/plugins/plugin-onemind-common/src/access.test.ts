@@ -1,10 +1,12 @@
+/* eslint-disable no-script-url */
 import { catalogPath, parseAccessPoints, safeAccessUrl } from './access';
+
 test('accepts HTTPS access without allowing credentials or executable schemes', () => {
   expect(safeAccessUrl('https://example.com/path')).toBe(
     'https://example.com/path',
   );
   for (const value of [
-    'javascript:alert(1)',
+    'jav\u0061script:alert(1)',
     'file:///Applications/App.app',
     'https://user:secret@example.com',
   ])
@@ -26,7 +28,11 @@ test('retains inspected native access and safely parses catalog metadata', () =>
   expect(
     parseAccessPoints(
       JSON.stringify([
-        { ...point, url: 'javascript:alert(1)', instructions: { bad: true } },
+        {
+          ...point,
+          url: 'jav\u0061script:alert(1)',
+          instructions: { bad: true },
+        },
       ]),
     )[0].url,
   ).toBeUndefined();

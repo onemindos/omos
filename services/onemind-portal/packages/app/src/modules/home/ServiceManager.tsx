@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { AppEntry, safeUrl, useShortcuts } from './useDirectory';
+import { AppEntry, safeUrl, useShortcuts } from '@internal/plugin-onemind-common';
 
 export function ServiceManager() {
   const personal = useShortcuts();

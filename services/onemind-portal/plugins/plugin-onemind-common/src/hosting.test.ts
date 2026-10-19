@@ -1,4 +1,5 @@
 import { hostingInfo } from './hosting';
+
 test('distinguishes self-managed cloud deployments from provider services', () => {
   expect(hostingInfo('digitalocean-nyc3').label).toBe('Self-hosted · cloud');
   expect(hostingInfo('external-provider-unverified').group).toBe(

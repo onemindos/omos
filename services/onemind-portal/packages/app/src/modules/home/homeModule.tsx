@@ -4,16 +4,16 @@ import { HomePageLayoutBlueprint, HomePageWidgetBlueprint } from '@backstage/plu
 import { discoveryApiRef, fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, Button, Chip, TextField, Typography, Link, useTheme } from '@material-ui/core';
 import { AppTile, appGridStyle, QuickAccess, useAppFavorites } from './Launcher';
-import { useDirectory } from './useDirectory';
+import { useDirectory } from '@internal/plugin-onemind-common';
 import { ActiveStack } from './ActiveStack';
-import { hostingInfo } from './hosting';
+import { hostingInfo } from '@internal/plugin-onemind-common';
 import { CalendarPanel } from './CalendarPanel';
 import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
 import { GrafanaHome } from './GrafanaHome';
 import { LiveOverview } from './LiveOverview';
 import { ServiceManager } from './ServiceManager';
-import { groupColors } from './colors';
+import { groupColors } from '@internal/plugin-onemind-common';
 import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
 

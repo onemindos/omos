@@ -1,5 +1,5 @@
 import { Chip, Tooltip, useTheme } from '@material-ui/core';
-import { hostingInfo } from './hosting';
+import { hostingInfo } from '@internal/plugin-onemind-common';
 export function HostingBadge({
   hosting,
   status,

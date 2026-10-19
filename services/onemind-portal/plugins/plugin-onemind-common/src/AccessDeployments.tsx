@@ -23,6 +23,7 @@ import {
   platforms,
   safeAccessUrl,
 } from './access';
+
 type Saved = { points: AccessPoint[]; preferred?: string };
 type Choices = Record<string, Saved>;
 type Device = {
@@ -95,6 +96,7 @@ export function AccessDeployments({
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const initialized = useRef(false);
+  const dependenciesKey = JSON.stringify(app.dependencies);
   useEffect(() => {
     if (!open) {
       initialized.current = false;
@@ -113,8 +115,12 @@ export function AccessDeployments({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, access.ready]);
   useEffect(() => {
-    if (!open) return;
-    let active = true;
+    let active = false;
+    const cleanup = () => {
+      active = false;
+    };
+    if (!open) return cleanup;
+    active = true;
     setLoading(true);
     setInventoryError(false);
     (async () => {
@@ -154,18 +160,16 @@ export function AccessDeployments({
         const dependencies = await Promise.all(
           (app.dependencies ?? []).map(ref => catalog.getEntityByRef(ref)),
         );
-        const relations: Device[] = dependencies
-          .filter(Boolean)
-          .map(e => ({
-            ref: `${e!.kind.toLowerCase()}:${
-              e!.metadata.namespace ?? 'default'
-            }/${e!.metadata.name}`,
-            title: e!.metadata.title ?? e!.metadata.name,
-            type: String(e!.spec?.type ?? ''),
-            observedAt:
-              e!.metadata.annotations?.['onemind.io/inventory-observed-at'] ??
-              e!.metadata.annotations?.['onemind.io/verified-at'],
-          }));
+        const relations: Device[] = dependencies.filter(Boolean).map(e => ({
+          ref: `${e!.kind.toLowerCase()}:${
+            e!.metadata.namespace ?? 'default'
+          }/${e!.metadata.name}`,
+          title: e!.metadata.title ?? e!.metadata.name,
+          type: String(e!.spec?.type ?? ''),
+          observedAt:
+            e!.metadata.annotations?.['onemind.io/inventory-observed-at'] ??
+            e!.metadata.annotations?.['onemind.io/verified-at'],
+        }));
         if (active) {
           setDevices(result);
           setRelated(relations);
@@ -176,10 +180,10 @@ export function AccessDeployments({
         if (active) setLoading(false);
       }
     })();
-    return () => {
-      active = false;
-    };
-  }, [open, catalog, app.ref, JSON.stringify(app.dependencies)]);
+    return cleanup;
+    // app.dependencies is captured by dependenciesKey to avoid needless refetches.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, catalog, app.ref, dependenciesKey]);
   const update = (index: number, value: Partial<AccessPoint>) =>
     setDraft(current =>
       current.map((x, i) => (i === index ? { ...x, ...value } : x)),

@@ -13,7 +13,7 @@ jest.mock('@backstage/core-plugin-api', () => ({
   storageApiRef: {},
   useApi: () => ({ forBucket: () => bucket }),
 }));
-jest.mock('./useDirectory', () => ({
+jest.mock('@internal/plugin-onemind-common', () => ({
   useDirectory: () => ({
     loaded: true,
     error: false,

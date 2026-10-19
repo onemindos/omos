@@ -12,9 +12,9 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { useDirectory } from './useDirectory';
+import { useDirectory } from '@internal/plugin-onemind-common';
 import { HostingBadge } from './HostingBadge';
-import { AccessButton, useAppAccess, AccessDeployments } from './AccessDeployments';
+import { AccessButton, useAppAccess, AccessDeployments } from '@internal/plugin-onemind-common';
 
 const purposes = [
   'Notes',
@@ -465,7 +465,7 @@ export function ActiveStack() {
   );
 }
 
-function PreferredAccess({app}: {app: import('./useDirectory').AppEntry}) {
+function PreferredAccess({app}: {app: import('@internal/plugin-onemind-common').AppEntry}) {
   const access = useAppAccess(app);
   const [open,setOpen] = useState(false);
   return <Box>{access.preferred.url ? <Button size="small" color="primary" href={access.preferred.url} target="_blank" rel="noopener noreferrer">Open {app.title} · {access.preferred.platform}</Button> : <Button size="small" onClick={()=>setOpen(true)}>Open instructions · {access.preferred.platform}</Button>}<AccessButton app={app} />{open && <AccessDeployments app={app} open={open} onClose={()=>setOpen(false)} />}</Box>;
