@@ -11,4 +11,5 @@ spec:
         name: cluster-agent-tls
         namespace: openchoreo-observability-plane
         key: ca.crt
-  observerURL: http://observer.openchoreo-observability-plane.svc.cluster.local:8080
+  # Console clients call this URL directly; keep it browser-reachable and authenticated.
+  observerURL: https://onemind-observer.tail717ba0.ts.net
