@@ -1,0 +1,35 @@
+# Cilium Gateway API backends see the reserved ingress identity, not a gateway pod.
+# This complements OpenChoreo's generated Kubernetes NetworkPolicy for one component.
+# https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/gateway-api/#cilium-s-ingress-config-and-ciliumnetworkpolicy
+apiVersion: openchoreo.dev/v1alpha1
+kind: ClusterTrait
+metadata:
+  name: cilium-gateway-ingress
+spec:
+  parameters:
+    openAPIV3Schema:
+      type: object
+      properties:
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+          default: 8080
+  creates:
+    - targetPlane: dataplane
+      template:
+        apiVersion: cilium.io/v2
+        kind: CiliumNetworkPolicy
+        metadata:
+          name: ${oc_generate_name(metadata.componentName, "cilium-gateway")}
+          namespace: ${metadata.namespace}
+        spec:
+          endpointSelector:
+            matchLabels: ${metadata.podSelectors}
+          ingress:
+            - fromEntities:
+                - ingress
+              toPorts:
+                - ports:
+                    - port: ${string(parameters.port)}
+                      protocol: TCP

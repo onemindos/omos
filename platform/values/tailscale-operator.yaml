@@ -7,6 +7,11 @@
 # client_secret. The Deployment is byte-for-byte the same either way (it always references
 # secretName operator-oauth). Never put oauth.clientId/clientSecret in this file.
 # autoApprovers are set in platform/core/policy.hujson (GitOps ACLs).
+proxyConfig:
+  # Apply the cluster ProxyClass defined in platform/core/tailscale-proxyclass.yaml to
+  # service/ingress proxies that do not name a ProxyClass explicitly.
+  defaultProxyClass: tailscale-default
+
 apiServerProxyConfig:
   mode: "true"
 

@@ -1,0 +1,14 @@
+# Merge after the observability plane is healthy; pin its own agent CA, not the data-plane CA.
+apiVersion: openchoreo.dev/v1alpha1
+kind: ClusterObservabilityPlane
+metadata:
+  name: default
+spec:
+  planeID: default
+  clusterAgent:
+    clientCA:
+      secretKeyRef:
+        name: cluster-agent-tls
+        namespace: openchoreo-observability-plane
+        key: ca.crt
+  observerURL: http://observer.openchoreo-observability-plane.svc.cluster.local:8080

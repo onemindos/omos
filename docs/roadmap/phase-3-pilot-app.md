@@ -1,0 +1,143 @@
+# Phase 3 brief: pilot one app in OpenChoreo
+
+Status (2026-10-18): in progress; parallel deployment under verification. Tracker row and rules: [`PLATFORM-ROADMAP.md`](../../PLATFORM-ROADMAP.md).
+Read [`HANDOFF.md`](HANDOFF.md) first.
+
+## Goal
+
+Prove OpenChoreo saves work before anything important moves: run one small, stateless app as an
+OpenChoreo Component next to its existing Argo-managed copy, switch over, and delete the old
+manifests. If it is not clearly easier, stop and record why before phase 7.
+
+## Starting state
+
+- OpenChoreo has a `default` project, environments `development`, `staging`, `production`, a
+  `default` deployment pipeline, the data plane `default`, and the component type
+  `onemind-service` (`platform/openchoreo/platform/onemind-service.yaml`).
+- No Component, Workload or ReleaseBinding exists. Apps will be reachable at
+  `<environment>-<namespace>.apps.openchoreo.100-110-185-30.nip.io`, path prefix
+  `/<component>-<endpoint>`, tailnet only, plain HTTP.
+
+## Candidate
+
+Preferred: `stac-browser` (namespace `onetak`, `platform/onetak/stac.yaml`). Image
+`ghcr.io/radiantearth/stac-browser:latest`, port 8080, env `CATALOG_URL=http://stac-api:8082`.
+Alternative: `agent-console` (namespace `agent-fabric`).
+
+Check first (read-only): what else references `stac-browser` (the Service is `stac-browser:8085`;
+grep `platform/` and the portal catalog), and whether the SPA works under a path prefix. STAC
+Browser has a path-prefix setting; if the app breaks under `/stac-browser-http/`, pick a different
+candidate rather than fighting it.
+
+## Steps (one PR each, update the tracker in each)
+
+1. **Projects Argo app.** New Application `platform-openchoreo-projects` (pattern:
+   `platform/argocd/platform-openchoreo-platform.yaml`) for `platform/openchoreo/projects/`,
+   destination namespace `default` (OpenChoreo's namespace is `default`).
+2. **Project and Component.** Under `platform/openchoreo/projects/onetak/`: a Project `onetak`
+   (`ClusterProjectType` `default`, pipeline `default`), a ProjectReleaseBinding per environment as
+   in `samples/getting-started/all.yaml`, a Component with
+   `componentType: deployment/onemind-service` (check the exact reference form in
+   `openchoreo/samples/from-image/react-starter-web-app/react-starter.yaml` at tag v1.3.1) and a
+   Workload with the image, port, an external HTTP endpoint and the env. The Component runs in
+   another namespace (`dp-onetak-development-*`), so `CATALOG_URL` must be
+   `http://stac-api.onetak.svc.cluster.local:8082`. Pin the image by digest, not `:latest`.
+3. **Release and bind.** Create the ComponentRelease/ReleaseBinding for `development` (GitOps: the
+   binding is a file). Verify the generated Deployment, Service and HTTPRoute with
+   `onemind-kubernetes`, and that `get_resource_tree` / `list_release_bindings` via
+   `onemind-openchoreo` show it.
+4. **Test.** From a tailnet device: `curl -i http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-<endpoint>/`
+   and open it in a browser. Compare with the existing app.
+5. **Cutover.** Point whatever used the old Service at the new one (or keep the old Service name via
+   a thin Service if needed), then delete the old manifests from `platform/onetak/stac.yaml`
+   (only the `stac-browser` Deployment and Service). Argo prunes them.
+6. **Write the verdict** in the roadmap: files before/after, what was awkward, whether to continue.
+
+## Gate
+
+The component is Ready in OpenChoreo, serves traffic through the data-plane gateway, the old
+manifests are removed, and the verdict is written. Evidence goes in the roadmap.
+
+## Risks
+
+- Path-prefix routing breaks single-page apps (see above).
+- The HTTPRoute has no CORS filter (the Gateway API CRDs here are v1.2.1); `onemind-service`
+  already omits it.
+- ResourceTypes (`postgres`, `valkey`, `nats` from the defaults) are not needed for this app.
+- The ecosystem node is at about 99% CPU requested; new pods may land on hub-core (fine).
+
+## References
+
+- OpenChoreo docs: Developer abstractions, Runtime model, Resource relationships
+  (`https://openchoreo.dev/docs/category/concepts/`), GitOps
+  (`https://openchoreo.dev/docs/platform-engineer-guide/gitops/overview/`).
+- `platform/openchoreo/` (existing layout), `docs/operations/ai-operator-access.md` (read-only tools).
+
+## Execution record (2026-10-18)
+
+- [#286](https://github.com/onemindos/omos/pull/286): Argo project owner and OneTAK
+  project bindings. Verified live: Synced/Healthy, OneTAK Ready, all three bindings Ready.
+- [#287](https://github.com/onemindos/omos/pull/287): parallel STAC Browser Component,
+  pinned image, explicit release and development binding. Argo reconciled it, but
+  the first pod failed at container creation because file `mountPath` must be the
+  parent directory. The generated path included the filename twice.
+- [#288](https://github.com/onemindos/omos/pull/288): correct that directory in release
+  `stac-browser-v2`. All four CI checks passed; verified live at 21:55 EDT:
+  pod Running, ReleaseBinding Ready, HTTPRoute Accepted and ResolvedRefs.
+- [#289](https://github.com/onemindos/omos/pull/289): opt-in Cilium gateway ingress
+  trait and release v3. The v2 tailnet request reached Envoy but timed out connecting
+  to the backend. Its generated policy allowed pod selectors, while Cilium uses
+  the reserved ingress identity. CI passed; the namespaced policy is Valid and
+  the pilot serves HTTP 200 with all referenced JS/CSS assets at 22:01 EDT.
+  The catalog check found a backend URL variant without port 8082, which needs
+  an additional exact rewrite before browser catalog access can pass.
+- [#290](https://github.com/onemindos/omos/pull/290): add the observed catalog URL
+  rewrite in v4. Its binding reconciled before the snapshot existed and stayed
+  `ComponentReleaseNotFound`; this was not a missing config-rollout checksum.
+- [#291](https://github.com/onemindos/omos/pull/291): completed a read-only schema
+  inspection. The configured `stac` database lacks PgSTAC and enabled PostGIS;
+  collection listing and search fail with missing-function errors. This does not
+  establish that all user data is absent or explain the missing installation.
+- [#292](https://github.com/onemindos/omos/pull/292): apply snapshots before their
+  binding, normalize the pruned trait field, advance to v5 and remove the completed
+  diagnostic Job after recording its output. Verified live at 23:06 EDT:
+  both OpenChoreo apps Synced/Healthy, v5 Ready, new ready Pod from the built-in
+  `dp-resource-hash`, all six assets and corrected catalog self link returning 200,
+  catalog writes refused with 405. Backend collection/search still return 500.
+- [#293](https://github.com/onemindos/omos/pull/293): merged the next read-only
+  metadata preflight for both `geo` and `stac`, plus the
+  [recovery gates](../operations/stac-database-repair.md). Verified at 23:13 EDT:
+  Job completed with session/transaction read-only flags on in both databases.
+  Neither has PgSTAC. PostGIS 3.6.4 is available and enabled in `geo`, but not
+  `stac`; the configured `geo` role is a superuser. `stac` has no public relations.
+  No application rows were inspected and no initialization is authorized.
+- [#294](https://github.com/onemindos/omos/pull/294): preserved the detailed
+  preflight evidence and removed its completed Job. All four CI checks passed.
+  Verified at 23:20 EDT: Argo pruned the Job; the OneTAK, OpenChoreo platform and
+  projects apps are Synced/Healthy at `ebd69aea`. No Pending pods. Existing
+  exceptions remain Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing.
+- The active app contract, binding and v5 snapshot total 492 lines in three files;
+  the app directory with history had seven files and 1,958 lines. The old browser
+  occupied 47 lines in one shared manifest. The fewer-files gate has not passed;
+  rollout/resource-tree visibility benefits do not prove reduced maintenance.
+- Zeus's direction on that gate was pending: reduce manual release work before
+  expanding (recommended), accept the extra YAML for standardization, or stop the
+  pilot. A live persistent database change still requires recovery proof and
+  explicit approval.
+- Zeus chose option A on 2026-10-19: keep the pilot and reduce manual release YAML
+  before expanding.
+- [#279](https://github.com/onemindos/omos/pull/295): removes old release snapshots and
+  the legacy stac-browser Deployment/Service.
+- No live database initialization was performed; that remains behind the approval gates
+  in [`stac-database-repair.md`](../operations/stac-database-repair.md).
+- In-app browser navigation to the pilot's HTTP nip.io URL returned
+  `net::ERR_BLOCKED_BY_CLIENT`; an HTTP check cannot substitute for a visual review.
+- Live cutover verification, phase completion and phase-4 work are not claimed. The
+  maintenance comparison must count both authored app contracts and generated immutable
+  snapshots.
+
+The STAC image expects `SB_catalogUrl`, `SB_catalogTitle` and `SB_pathPrefix`; the
+old manifest's `CATALOG_URL` and `STAC_BROWSER_TITLE` are ineffective. The pilot
+proxies catalog reads through its own nginx because the SPA runs on the user's
+machine, where Kubernetes DNS names do not resolve. The gateway retains the app's
+path prefix; nginx rewrites only the upstream catalog base URL in JSON responses.

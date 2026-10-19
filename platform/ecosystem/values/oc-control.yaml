@@ -13,11 +13,11 @@ backstage:
     serviceClientId: onemind-openchoreo
     serviceClientSecretKey: service-client-secret
   features:
-    # The workflow and observability planes are not installed yet (phase 5).
+    # Prebuilt images still need no workflow plane; observability uses the registered plane.
     workflows:
       enabled: false
     observability:
-      enabled: false
+      enabled: true
   resources:
     requests:
       cpu: 100m

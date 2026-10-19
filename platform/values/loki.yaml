@@ -23,6 +23,16 @@ loki:
     retention_period: 744h   # 31d
 
 singleBinary:
+  # Rebalance the 1536Mi request without changing the immutable PVC template.
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values: [onemind-ecosystem-cpu]
   replicas: 1
   persistence:
     enabled: true

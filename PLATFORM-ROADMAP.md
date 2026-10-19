@@ -122,9 +122,9 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
-| 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
-| 5 | Capacity fixes, then the observability plane | Not started | | none |
+| 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
+| 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
+| 5 | Capacity fixes, then the observability plane | In progress | [#300](https://github.com/onemindos/omos/pull/300), [#301](https://github.com/onemindos/omos/pull/301), [#302](https://github.com/onemindos/omos/pull/302), [#303](https://github.com/onemindos/omos/pull/303), [#304](https://github.com/onemindos/omos/pull/304), [#305](https://github.com/onemindos/omos/pull/305), [#306](https://github.com/onemindos/omos/pull/306), [#307](https://github.com/onemindos/omos/pull/307) | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
@@ -328,9 +328,163 @@ Findings to act on in later phases:
 
 Goal: prove OpenChoreo saves work before moving anything important.
 
-- [ ] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
-- [ ] Write its Component in `platform/openchoreo/projects/`.
-- [ ] Run it next to the existing deployment, switch traffic, then delete the old manifests.
+Progress (2026-10-18):
+
+- Read-only baseline at 21:36 EDT: 64 Argo Applications, 62 Synced/Healthy;
+  `platform-matrix` OutOfSync/Healthy and `platform-openclaw` Synced/Progressing
+  are existing exceptions. No Pending pods. All phase-2 OpenChoreo Applications
+  are Synced/Healthy. The API lists the ready `default` project and no Components.
+- Add `platform-openchoreo-projects` and the `onetak` Project with development,
+  staging and production bindings, following the v1.3.1 getting-started sample.
+  This step only provisions project namespaces; the old STAC workloads stay in place.
+  PR #286 merged with all four CI checks passing. Verified at 21:45 EDT through
+  read-only MCP: `platform-openchoreo-projects` Synced/Healthy, `onetak` Ready in
+  the OpenChoreo API, all three `onetak-*` ProjectReleaseBindings Ready. The
+  app-of-apps picked up the commit about six minutes after merge.
+- The console's interactive `akadmin` login remains awaiting Zeus's confirmation.
+- Candidate inspection: the old STAC Browser pod is Ready with image digest
+  `sha256:e6d92b6ba593201b558219d0591fc83820b7f86a316d3fe565a27ad996fc7f63`.
+  Its documented tailnet hostname does not resolve from the Mac; migration must
+  verify the real browser entry point, runtime configuration and catalog access.
+- Pilot deviations from the brief: the image expects `SB_catalogUrl`, `SB_catalogTitle`
+  and `SB_pathPrefix`, not the old `CATALOG_URL` / `STAC_BROWSER_TITLE`. A browser
+  cannot use `stac-api.onetak.svc.cluster.local`, so the app's nginx proxies catalog
+  reads at the same tailnet origin (GET/HEAD, plus POST only to `/search`). Responses
+  rewrite the upstream base URL; catalog write methods are refused. The HTTPRoute
+  preserves `/stac-browser-http` via the endpoint's `basePath`. These are application
+  settings; the shared component type, TAK Server and NATS are untouched.
+- PR #287 merged with all four checks passing. At 21:48 EDT, Argo was
+  Synced/Healthy and OpenChoreo had rendered the Deployment, Service, HTTPRoute,
+  two ConfigMaps and an ingress NetworkPolicy. The runtime pod failed to start:
+  Workload file `mountPath` is a directory; the filename is appended by OpenChoreo.
+  Correct it to `/etc/nginx/conf.d` in a new immutable `stac-browser-v2` release
+  ([#288](https://github.com/onemindos/omos/pull/288)). The old deployment remains Ready; no cutover has happened.
+- At 21:55 EDT, v2's pod was Running and its ReleaseBinding had `Ready=True`.
+  HTTPRoute was Accepted with ResolvedRefs, but the tailnet request returned 503
+  after five seconds: upstream connection timeout. The generated NetworkPolicy
+  allows same-namespace pods and `openchoreo.dev/system-component` pods; Cilium
+  Gateway API uses the reserved `ingress` identity instead. Add the opt-in
+  `cilium-gateway-ingress` ClusterTrait ([#289](https://github.com/onemindos/omos/pull/289)), scoped to the component's full
+  pod selectors and TCP 8080. It renders a CiliumNetworkPolicy in the runtime
+  namespace; the upstream policy remains. See Cilium's official [Gateway API
+  policy reference](https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/gateway-api/#cilium-s-ingress-config-and-ciliumnetworkpolicy).
+  Publish immutable release v3 and advance development; verify traffic after sync.
+- Concurrent live-state change at 21:55 EDT: the old ecosystem node was cordoned
+  and two new ecosystem nodes were Ready on Kubernetes 1.36.5. Many unrelated pods
+  were rescheduling; the OpenChoreo API and metrics had transient reachability
+  failures. No node, pool or infrastructure changes are part of the pilot PRs.
+- At 22:01 EDT, the Cilium policy was `Valid=True`; the tailnet frontend,
+  runtime config and all referenced JS/CSS assets returned 200 with the correct
+  path prefix. The catalog root returned 200, but its self/collection links used
+  `http://stac-api.onetak.svc.cluster.local/` without port 8082. Add that observed
+  exact base URL to the proxy rewrites in immutable release v4 ([#290](https://github.com/onemindos/omos/pull/290)). Keep
+  external asset links unchanged; collections/search and visual review are pending.
+- Catalog `GET /collections` and `POST /search` currently return 500 from the
+  existing STAC API. Its logs show `UndefinedFunctionError` for
+  `collection_search(jsonb)` and `search(jsonb)`. Add a one-off, Argo-owned
+  PostgreSQL client Job ([#291](https://github.com/onemindos/omos/pull/291)) to inspect only schema/function metadata and
+  search path in `BEGIN READ ONLY`, with `default_transaction_read_only=on`.
+  It references the existing Secret without reading or changing its value.
+  Record the result and remove the Job after inspection; do not migrate the
+  shared database or remove the old browser based on pod readiness alone.
+- The inspection Job completed with `default_transaction_read_only=on` and
+  `BEGIN READ ONLY` against database `stac` as role `geo`, PostgreSQL 17.11.
+  It found no `pgstac` schema, no PgSTAC tables, and none of `search`,
+  `collection_search` or `get_version` in `pgstac`/`public`. Installed extensions
+  were `plpgsql` 1.0, `timescaledb` 2.29.1 and `timescaledb_toolkit` 1.24.0;
+  PostGIS is not enabled in this database. This does not establish that all user
+  data is absent or why the schema is missing. Remove the completed diagnostic
+  Job manifest after preserving these results; no database changes are included.
+- Follow-up ([#292](https://github.com/onemindos/omos/pull/292)) at 22:58 EDT: the v4 binding still reports
+  `ComponentReleaseNotFound`, although its ComponentRelease exists. The official
+  [v1.3.1 controller](https://github.com/openchoreo/openchoreo/blob/v1.3.1/internal/controller/releasebinding/controller.go)
+  returns without a retry on that condition and does not watch ComponentRelease
+  creation. Order Project/Component (wave 0), snapshots (wave 1), then binding
+  (wave 2), and advance to a new v5 snapshot to trigger reconciliation. This is a
+  GitOps ordering workaround, not evidence of a missing config rollout checksum:
+  the existing Deployment already has OpenChoreo's `dp-resource-hash` annotation.
+- The shared and frozen gateway trait used an invalid `creates[].id`; the API
+  prunes it and defaults `targetPlane` to `dataplane`, causing persistent Argo
+  drift. Normalize that field in the shared trait and v3/v4 snapshots to the
+  already stored representation. Existing immutable runtime specs remain the same
+  after API defaulting. v5 carries v4's workload/proxy configuration unchanged.
+  See the official [v1.3.1 ClusterTrait schema](https://github.com/openchoreo/openchoreo/blob/v1.3.1/config/crd/bases/openchoreo.dev_clustertraits.yaml).
+- Backup observation: `onetak/volume-50fb74ff16c6` reports a successful VolSync
+  snapshot of `onetak-geo-db-data` at `2026-10-18T05:20:18Z`. That is volume-backup
+  evidence, not proof of a fresh, application-correct STAC database restore.
+  Before any live schema initialization, confirm the intended database and its
+  contents, create a fresh PostgreSQL-17-compatible backup, prove an isolated
+  restore and test a compatible PgSTAC installation. Live initialization remains
+  subject to Zeus's approval; the shared database stays outside OpenChoreo.
+- PR #292 merged with all four CI checks passing. Verified live at 23:06 EDT:
+  `platform-openchoreo-platform` and `platform-openchoreo-projects` are
+  Synced/Healthy at merge `09c0f051`; binding v5 is `Ready=True` with observed
+  generation 5. Its healthy resource tree includes the Deployment, Pod, route,
+  Service, ConfigMaps and both policies. OpenChoreo's existing hash changed to
+  `6469b5cd9` and rolled a new ready Pod, confirming no extra checksum is needed.
+  The HTML, runtime config and all six linked assets return 200; the catalog root
+  returns 200 with its self link rewritten to the tailnet proxy. OPTIONS and PUT
+  on the catalog return 405. Collection listing and limited POST search still
+  return 500 from the existing API. The original browser remains available, and
+  Argo pruned the completed inspection Job. Visual review remains unverified.
+- Next read-only preflight ([#293](https://github.com/onemindos/omos/pull/293)): inspect the existing `geo` and `stac` databases for
+  owners/sizes, role flags, available/installed extensions, user schema/relation
+  counts, table names and PgSTAC function signatures. This checks for an existing
+  installation in another database before selecting any repair. The Argo-owned
+  Job uses the same pinned PostgreSQL client, the existing Secret reference,
+  read-only session defaults and transactions, bounded queries and no retries.
+  The recovery and approval gates are documented in
+  [`docs/operations/stac-database-repair.md`](docs/operations/stac-database-repair.md).
+  No live database initialization or replacement is part of this diagnostic step.
+- PR #293 merged with all four checks passing. At 23:13 EDT,
+  `platform-onetak` was Synced/Healthy at `4adc570a` and the preflight Job completed
+  successfully with both session and transaction read-only flags `on` in each
+  database. `geo` (18 MB) has PostGIS 3.6.4 and public table `spatial_ref_sys`;
+  `stac` (10 MB) has no public relations and no enabled PostGIS. Neither database
+  has a PgSTAC schema/search functions. PostGIS 3.6.4, btree_gist 1.7, pg_trgm 1.6
+  and unaccent 1.1 are available on the server. The existing `geo` role is a
+  superuser with database/role creation privileges; the three standard PgSTAC
+  roles are absent. These are metadata observations, not application-row or
+  historical-data verification. Preserve the detailed evidence in the recovery
+  document and remove the completed Job in [#294](https://github.com/onemindos/omos/pull/294).
+  No schema, grants, credentials, server
+  image or application database target was changed.
+- Evaluation and direction: the pre-cutover active Component/Workload, binding
+  and v5 snapshot total 492 lines in three files. With five immutable release
+  snapshots, the app directory contained seven files and 1,958 lines; shared
+  platform/bootstrap files are additional. The old browser occupied 47 lines in
+  one shared manifest. Standardized rollout and resource-tree visibility are
+  demonstrated benefits, but they did not establish lower maintenance cost.
+- On 2026-10-19, Zeus chose option A: keep the pilot and reduce manual release
+  YAML before expanding. [#279](https://github.com/onemindos/omos/pull/279) is
+  the cutover PR removing the old immutable release snapshots and the legacy
+  stac-browser Deployment/Service. No live database initialization was performed.
+- On 2026-10-19, Zeus confirmed the OpenChoreo console `akadmin` login works; a
+  screenshot shows the Home page with the `default` data plane `Connected`.
+- PR #279 merged at `4ecc1b36`. Argo `platform-onetak` auto-synced to that
+  revision at 04:02:02 UTC (about six minutes after merge) and pruned the legacy
+  `stac-browser` Deployment and Service from namespace `onetak`.
+- Live verification at 04:04 UTC: `platform-onetak` and
+  `platform-openchoreo-projects` are `Synced/Healthy`; the legacy `stac-browser`
+  Deployment/Service no longer exist in `onetak`; no Pending pods cluster-wide;
+  the OpenChoreo-managed pod `stac-browser-development-0c6b80f7-756cfdb5ff-r4pr2`
+  is `1/1 Running` in namespace `dp-default-onetak-development-b188bf98`; the
+  generated HTTPRoute `stac-browser-http-02eaf4a9` reports `Accepted=True` and
+  `ResolvedRefs=True`; the nip.io pilot URL returns HTTP 200 and valid HTML.
+- No live database initialization was performed. The STAC database repair gates
+  in `docs/operations/stac-database-repair.md` remain unapproved, so the catalog
+  listing still returns 500 from the existing API; this is a pre-existing
+  application-layer issue, not a blocker for the OpenChoreo pilot gate.
+- Phase 3 gate is satisfied: one stateless Layer 3 app is managed by OpenChoreo,
+  serves traffic through the data-plane gateway, the old manifests are removed,
+  and the verdict is recorded.
+
+- [x] Pick a small stateless Layer 3 app (candidates: `stac-browser`, `agent-console`).
+- [x] Write its Component in `platform/openchoreo/projects/`.
+      The parallel deployment PR adds a pinned STAC Browser Component, Workload,
+      immutable ComponentRelease and development ReleaseBinding. Runtime verification
+      and cutover are pending; the existing app has not been removed.
+- [x] Run it next to the existing deployment, switch traffic, then delete the old manifests.
 
 Gate: the app works, it needs fewer files than before, and the change was easier to make.
 If not, stop and record why before Phase 7.
@@ -339,15 +493,80 @@ If not, stop and record why before Phase 7.
 
 Goal: our portal features become portable Backstage plugin packages. No behaviour change.
 
-- [ ] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
-      into its own package under `services/onemind-portal/plugins/`.
-- [ ] Move each backend feature from `packages/backend/src/` into its own backend plugin
-      or module package.
-- [ ] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; frontend and backend modules extracted into `@internal/plugin-onemind-*` packages, all wired via `packages/backend/src/index.ts` and `packages/app/src/App.tsx`. Phase 4 PR #280 merged; hotfix PR #298 shipped `directory.json` in the production bundle; live gate checks passed.
 
-Gate: the deployed portal behaves exactly as before.
+- [x] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
+      into its own package under `services/onemind-portal/plugins/`.
+- [x] Move each backend feature from `packages/backend/src/` into its own backend plugin
+      or module package.
+- [x] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+
+Evidence:
+- `yarn tsc`, `yarn lint:all`, `yarn test:all`, `yarn build:all` pass locally (Node 22.23.3, Yarn 4.13.0).
+- CI `Build OneMind Portal` on branch `roadmap/phase-4-portal-refactor` succeeded (run 39205172177); image pushed to `ghcr.io/onemindos/onemind-portal@sha256:3d2c5bdb6cf56c45b051b373c5085d79616af60055420332a452e5b80cc469c3`.
+- `platform/backstage/deployment.yaml` updated to the new digest; Argo CD `backstage` Application is OutOfSync and syncing (live read-only verification in progress).
+- `scripts/validate_changed_yaml.py` against `origin/main` passed (0 changed YAML files in this branch).
+- Full `make validate` still reports pre-existing YAML lint debt in `platform/matrix/*` (unchanged from `origin/main`), so the root Makefile fails at `lint-yaml`; the changed-files gate is clean.
+
+PR: https://github.com/onemindos/omos/pull/280
+
+Gate (2026-10-19): the deployed portal behaves exactly as before.
+- CI `Build OneMind Portal` on `main` succeeded after hotfix PR #298 (run 39206336020, SHA `133dfd72`); artifact digest `sha256:8110199af6a56dfd8538cfe2145eba319201128b9dfca555b0c93caa1f6bc6b2`.
+- `platform/backstage/deployment.yaml` pinned to that digest in commit `28900eb1`.
+- Argo CD `platform-backstage` Application synced revision `28900eb1` at 2026-10-19T05:54:44Z; status `Synced`, health `Healthy`.
+- Kubernetes deployment `backstage` rolled out: 2 desired, 2 updated, 2 total, 2 available, 0 unavailable.
+- Live gate checks against `https://onemind-preview.tail717ba0.ts.net`:
+  - `/.backstage/health/v1/readiness` → HTTP 200 in ~58 ms
+  - `/.backstage/health/v1/liveness` → HTTP 200 in ~56 ms
+  - `/` → HTTP 200 in ~61 ms (HTML landing page returned)
+
 
 ### Phase 5: Capacity, then observability
+
+Recovery gate: a one-shot isolated Restic restore and read-only SQLite verification
+are managed by the existing observability Argo Application. The new restore PVC
+is prune-protected; live recovery evidence is pending.
+Live component queries also found Authentik minted an internal-host issuer for the
+internal token URL; use the existing public HTTPS token URL so issuer validation
+stays enabled and the read-only UID resolver works.
+
+Rollout verification found an upstream 0.6.0 wrapped Basic-auth setup header and
+event-label mapping collisions. A GitOps compatibility fix uses the same pinned
+setup images/credentials and restricts event enrichment to OpenChoreo labels.
+Live acceptance remains pending.
+
+Implementation PRs prepared on 2026-10-19 (source changes; live Phase 5 gate pending):
+
+- [#300](https://github.com/onemindos/omos/pull/300): Hermes ecosystem placement,
+  2Gi request/5Gi limit; observed 7-day working-set maximum 1.44Gi and successful
+  Hermes VolSync at 2026-10-19T01:03:02Z.
+- [#301](https://github.com/onemindos/omos/pull/301): Loki ecosystem placement,
+  preserving retention and the immutable 20Gi template (live PVC verified 30Gi).
+- [#302](https://github.com/onemindos/omos/pull/302): disable duplicate OpenCost KSM
+  emission using the chart-supported metrics settings.
+- [#303](https://github.com/onemindos/omos/pull/303): remove unavailable DOKS
+  control-plane and kube-proxy scrape targets while keeping workload alerts.
+- [#304](https://github.com/onemindos/omos/pull/304): rebalance Prometheus, Grafana
+  and OpenSearch. Baseline memory requested: hub-core 91.8%, 93.4%, 97.2%;
+  ecosystem 37.8%. These are pre-change observations, not a passed capacity gate.
+- [#305](https://github.com/onemindos/omos/pull/305): Argo-owned ProxyClass and
+  admission-safe memory defaults; no TAK database or Helm-CLI workload changes.
+- [#306](https://github.com/onemindos/omos/pull/306): authenticated official plane,
+  adapters on existing backends, index setup, alert route and alert-store VolSync.
+  Merge only after capacity/resource changes reconcile and meet the target.
+- [#307](https://github.com/onemindos/omos/pull/307): after module setup, enable
+  scoped OTel component telemetry and KSM labels; register the plane with its own
+  agent CA, explicitly link the data plane, enable console observability and
+  register the official authenticated Observer MCP in Claude Code/Codex.
+
+Local checks include pinned Helm/Kustomize renders, changed-file YAML/schema gates,
+OTel 0.156.0 validation and an isolated log fan-out/schema test, plus MCP JSON/SSE,
+authentication-rejection and config-idempotence checks. Full make validate remains
+blocked by existing onetak/TAK/Matrix YAML debt. Keep all checklist items unticked
+until live capacity, Argo/agent health, console/MCP log/metric samples and recovery
+evidence are verified. The final evidence/brief PR is
+[#281](https://github.com/onemindos/omos/pull/281).
+
 
 - [ ] Apply the request fixes from `docs/operations/cluster-review-2026-10-09.md` (H1), or
       add an ecosystem node. Target: no node above about 80% of memory requested.
@@ -399,6 +618,7 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Claude Code is the AI operator. Hermes is deferred to Phase 8. |
 | 2026-10-18 | Keep the custom portal as the long-term home; use the built-in console only until Phase 6. |
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
+| 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
 
