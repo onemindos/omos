@@ -6,56 +6,24 @@ import argocdPlugin, {
 } from '@backstage-community/plugin-argocd';
 import techInsightsPlugin from '@backstage-community/plugin-tech-insights/alpha';
 import adrPlugin from '@backstage-community/plugin-adr/alpha';
-import techRadarPlugin, {
-  techRadarApi,
-} from '@backstage-community/plugin-tech-radar/alpha';
 import announcementsPlugin from '@backstage-community/plugin-announcements/alpha';
-import {
-  techRadarApiRef,
-  TechRadarApi,
-} from '@backstage-community/plugin-tech-radar';
-import { createApiFactory } from '@backstage/core-plugin-api';
-import radar from './modules/radar/data.json';
-
-// Use the plugin's API extension with Git-owned data; never show its demo fallback.
-const radarApi: TechRadarApi = {
-  async load() {
-    return {
-      ...radar,
-      entries: radar.entries.map(entry => ({
-        ...entry,
-        timeline: entry.timeline.map(snapshot => ({
-          ...snapshot,
-          date: new Date(snapshot.date),
-        })),
-      })),
-    };
-  },
-};
-const oneMindRadar = techRadarPlugin.withOverrides({
-  extensions: [
-    techRadarApi.override({
-      params: define => define(createApiFactory(techRadarApiRef, radarApi)),
-    }),
-  ],
-});
-
-import { designModule } from './theme/designModule';
-import './theme/brand.css';
-import { createApp } from '@backstage/frontend-defaults';
-import catalogPlugin from '@backstage/plugin-catalog/alpha';
-import { navModule } from './modules/nav';
-import { homeModule } from './modules/home';
-import { todayPlugin } from './modules/home/Today';
-import { systemsPlugin } from '@internal/plugin-onemind-systems';
-import { authModule } from './modules/auth';
+import { assistantPlugin } from '@internal/plugin-onemind-assistant';
+import { authModule } from '@internal/plugin-onemind-auth';
+import { missionsPlugin } from '@internal/plugin-onemind-missions';
+import { navModule } from '@internal/plugin-onemind-nav';
+import offlinePlugin from '@internal/plugin-onemind-offline';
+import { oneMindRadar } from '@internal/plugin-onemind-radar';
 import {
   servicesModule,
   accessModule,
 } from '@internal/plugin-onemind-services';
-import { assistantPlugin } from './modules/assistant';
-import offlinePlugin from '@internal/plugin-onemind-offline';
-import { missionsPlugin } from './modules/missions';
+import { systemsPlugin } from '@internal/plugin-onemind-systems';
+import { designModule } from '@internal/plugin-onemind-theme';
+import '@internal/plugin-onemind-theme/brand.css';
+import { createApp } from '@backstage/frontend-defaults';
+import catalogPlugin from '@backstage/plugin-catalog/alpha';
+import { homeModule } from './modules/home';
+import { todayPlugin } from './modules/home/Today';
 
 export default createApp({
   features: [
