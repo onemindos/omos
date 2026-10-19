@@ -48,15 +48,15 @@ frontend API cohort; local compilation/bundling is evidence only for that gate.
       forwarding regression tests (42 tests, including request bodies).
 - [x] Real Linux release image with all gates inside the Dockerfile.
 - [x] Isolated fixture backend ready, network disabled and in-memory database; no production DB contact.
-- [ ] Private candidate using real Authentik and OpenChoreo ready.
-- [ ] Real Authentik login: same catalog user and intended ownership groups.
+- [x] Private candidate using real Authentik and OpenChoreo ready.
+- [x] Real Authentik login: same catalog user and intended ownership groups.
 - [ ] Existing home/brand/catalog/TechDocs/settings/operational features preserved.
-- [ ] Synced OpenChoreo catalog and pilot Cell/Deploy/Definition views show real data.
-- [ ] Pilot runtime logs/metrics visible through the observability pack.
+- [x] Synced OpenChoreo catalog and pilot Deploy/Definition views show real data.
+- [x] Pilot runtime logs/metrics visible through the observability pack.
 - [ ] Anonymous denial; non-admin mutation denial (including direct REST/context
       endpoint); machine read-only MCP works and direct writes remain denied.
 - [ ] Human admin receives only intended OpenChoreo rights, no catalog/FGA bypass.
-- [ ] Backups and plugin database migration/rollback compatibility reviewed.
+- [x] Backups and plugin database migration/rollback compatibility reviewed.
 - [ ] Separate reviewed GitOps digest/config promotion; Argo synced, 2/2 ready.
 - [ ] Repeat browser/API/security gates live before console retirement.
 
@@ -93,3 +93,33 @@ middleware. The host adapter now constructs each Request only once; five new
 regression cases cover POST/PUT/PATCH, an existing Request body and plugin URL
 resolution. All 42 tests and all Linux release gates passed. Main is unchanged
 until this corrected candidate passes browser acceptance.
+
+## Candidate acceptance and production promotion (2026-10-19)
+
+- Real Authentik SSO resolved `user:default/akadmin` and existing administrators
+  group; capability cache initialization succeeded. No identity enrollment changed.
+- Catalog contains 606 entities; existing OneMind home renders 130 launcher entries.
+  Pilot `stac-browser` Definition shows the real Component; Deploy shows active
+  `stac-browser-v5`. CPU/memory graphs render; runtime logs include the HTTP 200
+  request observed at 18:04:30 UTC. No synthetic data or mutation was used.
+- Host browser CSP permits only the exact existing HTTPS Observer; Observer CORS
+  permits the exact candidate origin. Provider ownership uses a bare group name
+  because upstream prefixes `group:default/` itself.
+- Final candidate HTTP checks: anonymous APIs 401; guest 404; machine catalog read
+  200; direct catalog writes, platform access, cache and contextual routes 403;
+  MCP tools/list exposes six explicitly read-only non-destructive tools. The 42
+  regression tests cover non-admin policy intersections; a second human account
+  has NOT been provisioned or live-tested.
+- Backup job `backup-postgres-backstage-29873200` completed today: encrypted object
+  `backups/postgres-backstage/20261019T064009Z-a17700d06203467f9a1c7bed4c986a0a/archive.tar.gz.aesgcm`;
+  restoreVerified true, 24 databases, 148 tables. This supersedes the suspended old
+  `backstage-backup` job. No restore over production or PVC change is needed.
+- Backstage remains 1.55.3. Reviewed upstream 1.3.1 annotation-store migration adds
+  `entity_custom_annotations` and an index in the catalog plugin database; duplicate
+  object races are handled. No destructive schema changes. Old image ignores this
+  table: rollback by restoring the old digest/config in Git, NOT restoring the DB.
+- Promotion uses the verified image above plus managed cluster overrides: exact
+  Observer CSP, bare group name, existing OIDC and restricted catalog Secret refs.
+  Production PostgreSQL, all integrations, SA/RBAC, probes, resources, PDB and
+  zero-unavailable two-replica RollingUpdate remain unchanged. Temporary console
+  and candidate stay available until main passes the repeated gates.

@@ -676,6 +676,17 @@ already succeeded with the existing subject mapping, and the candidate catalog
 contains 606 entities including 38 OpenChoreo-managed entries. Browser acceptance
 and production promotion remain pending the corrected candidate image.
 
+Candidate accepted 2026-10-19: real Authentik subject mapping, full catalog,
+pilot Definition/Deploy (`stac-browser-v5` active), runtime logs including a new
+HTTP 200 request, and CPU/memory graphs verified in the browser. Exact-origin CORS,
+exact-endpoint CSP and the provider owner-name contract are corrected. Anonymous
+API denial, actual machine catalog-write/platform/context denials and six read-only
+MCP tools passed on the final candidate. Non-admin human decisions have regression
+coverage; no second human account was created or claimed live-tested. Production
+promotion pins the same verified image and retains existing PostgreSQL, backup,
+service account, integrations and zero-unavailable two-replica rollout. Console
+retirement and final completion remain gated on the production checks.
+
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
 - [ ] Install the core OpenChoreo plugins and the observability pack into our portal,
