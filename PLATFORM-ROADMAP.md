@@ -635,7 +635,8 @@ contract, changed-YAML, ShellCheck and commit secret checks passed. Full
 `make validate` remains blocked by unrelated existing YAML lint debt. No check
 was overridden or reported as green.
 
-Integration work started 2026-10-19 on `codex/phase6-portal-integration`.
+Integration work started 2026-10-19 in [#312](https://github.com/onemindos/omos/pull/312)
+(`codex/phase6-portal-integration`).
 The 1.55.3 host remains in place: the core/observability plugins are additions,
 not a replacement portal. Initial local TypeScript, frontend bundling and 37
 identity/permission/token-forwarding regression tests pass. Runtime preview,
