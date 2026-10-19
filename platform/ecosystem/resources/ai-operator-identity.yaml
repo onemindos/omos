@@ -98,6 +98,14 @@ spec:
                   else:
                       user = ak(c, "POST", "core/users/", {"username": USER, "name": "AI operator (read-only)", "type": "service_account",
                                                            "path": "goauthentik.io/service-accounts", "is_active": True})
+                  # The token endpoint only accepts grant types the provider lists. Add
+                  # client_credentials and keep whatever is already there.
+                  provider = ak(c, "GET", "providers/oauth2/?client_id=" + APP)["results"][0]
+                  grants = provider.get("grant_types") or []
+                  print("provider grant_types: " + json.dumps(grants))
+                  if "client_credentials" not in grants:
+                      ak(c, "PATCH", "providers/oauth2/" + str(provider["pk"]) + "/", {"grant_types": grants + ["client_credentials"]})
+                      print("added client_credentials to the provider")
                   apps = ak(c, "GET", "core/applications/?slug=" + APP)["results"]
                   if not apps:
                       raise RuntimeError("application " + APP + " not found")
