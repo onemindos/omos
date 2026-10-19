@@ -25,6 +25,7 @@ metadata:
   name: openchoreo-observability-plane
   annotations:
     argocd.argoproj.io/sync-wave: '-2'
+    volsync.backube/privileged-movers: 'true'
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumGatewayClassConfig

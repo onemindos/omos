@@ -1,0 +1,143 @@
+# Adapted from OpenChoreo observability-metrics-prometheus 0.7.1 (Apache-2.0).
+# Changes: existing Prometheus :9090 and ecosystem placement; no second Prometheus.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: metrics-adapter-prometheus
+  namespace: openchoreo-observability-plane
+  labels:
+    app: metrics-adapter-prometheus
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metrics-adapter-prometheus
+  namespace: openchoreo-observability-plane
+  labels:
+    app: metrics-adapter-prometheus
+data:
+  OBSERVABILITY_NAMESPACE: openchoreo-observability-plane
+  OBSERVER_INTERNAL_URL: http://observer-internal.openchoreo-observability-plane:8081
+  PROMETHEUS_ADDRESS: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+  SERVER_PORT: '9099'
+  LOG_LEVEL: INFO
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: metrics-adapter-prometheus
+  namespace: openchoreo-observability-plane
+  labels:
+    app: metrics-adapter-prometheus
+rules:
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - prometheusrules
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: metrics-adapter-prometheus
+  namespace: openchoreo-observability-plane
+  labels:
+    app: metrics-adapter-prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: metrics-adapter-prometheus
+subjects:
+- kind: ServiceAccount
+  name: metrics-adapter-prometheus
+  namespace: openchoreo-observability-plane
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metrics-adapter
+  namespace: openchoreo-observability-plane
+  labels:
+    app: metrics-adapter-prometheus
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9099
+    targetPort: 9099
+    protocol: TCP
+    name: http
+  selector:
+    app: metrics-adapter-prometheus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-adapter-prometheus
+  namespace: openchoreo-observability-plane
+  labels:
+    app: metrics-adapter-prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metrics-adapter-prometheus
+  template:
+    metadata:
+      annotations:
+        checksum/config: c5a5fb6015d6c959e09cec342ed986bd14ee4c756cb98c41fdb67df35aa05240
+      labels:
+        app: metrics-adapter-prometheus
+    spec:
+      serviceAccountName: metrics-adapter-prometheus
+      securityContext:
+        runAsUser: 10500
+        runAsGroup: 10500
+        runAsNonRoot: true
+      containers:
+      - name: metrics-adapter-prometheus
+        image: ghcr.io/openchoreo/observability-metrics-prometheus-adapter:0.7.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9099
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 9099
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 9099
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 2
+          failureThreshold: 3
+        envFrom:
+        - configMapRef:
+            name: metrics-adapter-prometheus
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 20m
+            memory: 64Mi
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-ecosystem-cpu
