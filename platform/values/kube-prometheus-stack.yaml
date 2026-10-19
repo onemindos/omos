@@ -25,6 +25,17 @@ prometheus:
     ruleSelector: {}
     ruleNamespaceSelector: {}
 
+    # DOKS manages the control plane, while Cilium replaces kube-proxy. These
+    # endpoints are not scrapeable in this cluster, so their default
+    # "Down" rules generated false-critical alerts.
+    defaultRules:
+      kubeScheduler:
+        enabled: false
+      kubeControllerManager:
+        enabled: false
+      kubeProxy:
+        enabled: false
+
 alertmanager:
   alertmanagerSpec:
     resources:
