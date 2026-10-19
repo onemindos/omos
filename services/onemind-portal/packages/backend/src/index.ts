@@ -16,11 +16,8 @@ backend.add(immediateCatalogServiceFactory);
 backend.add(annotationStoreFactory);
 backend.add(
   rootHttpRouterServiceFactory({
-    configure: ({ app, applyDefaults, middleware }) => {
-      app.use(middleware.helmet());
-      app.use(middleware.cors());
-      app.use(middleware.compression());
-      app.use(middleware.logging());
+    configure: ({ app, applyDefaults }) => {
+      // 1.55.3 applyDefaults installs the security/logging stack once.
       app.use(createIdpTokenHeaderMiddleware());
       applyDefaults();
     },
