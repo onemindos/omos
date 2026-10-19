@@ -493,7 +493,7 @@ If not, stop and record why before Phase 7.
 
 Goal: our portal features become portable Backstage plugin packages. No behaviour change.
 
-Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; frontend and backend modules extracted into `@internal/plugin-onemind-*` packages, all wired via `packages/backend/src/index.ts` and `packages/app/src/App.tsx`.
+Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; frontend and backend modules extracted into `@internal/plugin-onemind-*` packages, all wired via `packages/backend/src/index.ts` and `packages/app/src/App.tsx`. Phase 4 PR #280 merged; hotfix PR #298 shipped `directory.json` in the production bundle; live gate checks passed.
 
 - [x] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
       into its own package under `services/onemind-portal/plugins/`.
@@ -510,7 +510,16 @@ Evidence:
 
 PR: https://github.com/onemindos/omos/pull/280
 
-Gate: the deployed portal behaves exactly as before. Gate evidence will be added after the sync completes.
+Gate (2026-10-19): the deployed portal behaves exactly as before.
+- CI `Build OneMind Portal` on `main` succeeded after hotfix PR #298 (run 39206336020, SHA `133dfd72`); artifact digest `sha256:8110199af6a56dfd8538cfe2145eba319201128b9dfca555b0c93caa1f6bc6b2`.
+- `platform/backstage/deployment.yaml` pinned to that digest in commit `28900eb1`.
+- Argo CD `platform-backstage` Application synced revision `28900eb1` at 2026-10-19T05:54:44Z; status `Synced`, health `Healthy`.
+- Kubernetes deployment `backstage` rolled out: 2 desired, 2 updated, 2 total, 2 available, 0 unavailable.
+- Live gate checks against `https://onemind-preview.tail717ba0.ts.net`:
+  - `/.backstage/health/v1/readiness` → HTTP 200 in ~58 ms
+  - `/.backstage/health/v1/liveness` → HTTP 200 in ~56 ms
+  - `/` → HTTP 200 in ~61 ms (HTML landing page returned)
+
 
 ### Phase 5: Capacity, then observability
 
