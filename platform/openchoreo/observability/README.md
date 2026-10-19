@@ -45,7 +45,8 @@ namespaces. Target get/patch permissions name the generated Secrets; create is
 limited to the two target namespaces. It does not rotate credentials. Re-sync
 this Application after changing a source credential.
 
-The SQLite alert PVC has a daily VolSync snapshot source and a distinct encrypted
+The existing namespace keeps its platform-ecosystem-resources owner; only its
+VolSync annotation changes. The SQLite alert PVC has a daily VolSync snapshot source and a distinct encrypted
 restic repository. The hook reuses the existing backup account/encryption material
 with a different repository path. It never writes to Loki's repository. A successful
 backup and isolated restore remain rollout acceptance checks.

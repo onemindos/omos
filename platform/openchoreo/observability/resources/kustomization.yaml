@@ -6,6 +6,5 @@ resources:
 - cluster-gateway-ca.yaml
 - ingress.yaml
 - metrics-adapter.yaml
-- namespace.yaml
 - opensearch-service.yaml
 - alertmanager.yaml
