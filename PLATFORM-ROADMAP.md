@@ -118,7 +118,7 @@ it could lock out both itself and the human who has to recover it.
 |---|---|---|---|---|
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
-| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270), [#271](https://github.com/onemindos/omos/pull/271), [#272](https://github.com/onemindos/omos/pull/272), [#273](https://github.com/onemindos/omos/pull/273) | 4 |
+| 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | In progress | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274) | 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Not started | | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
@@ -242,7 +242,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       gateway, so no per-app Tailscale ingress. Network policy: later, as a project type.
       Verified 2026-10-18: `platform-openchoreo-platform` Synced and Healthy,
       `clustercomponenttype/onemind-service` present.
-- [ ] 2g. OpenChoreo MCP for Claude (moved from phase 1), in three PRs:
+- [x] 2g. OpenChoreo MCP for Claude (moved from phase 1), in three PRs:
   - [x] 2g-1. Make the control-plane API reachable on the tailnet under its HTTPRoute
         hostname: the gateway Service gets `tailscale.com/hostname: onemind-openchoreo-api`
         and the API advertises `publicUrl` instead of `api.openchoreo.invalid`
@@ -251,7 +251,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
         ecosystem node was at 99% CPU requested and the control plane required that node
         (`nodeSelector`), so the new API pod stayed Pending. Placement changed to a
         preference (#269); the capacity work stays in phase 5.
-  - [ ] 2g-2. Read-only identity: an Authentik service account `ai-operator` allowed on
+  - [x] 2g-2. Read-only identity: an Authentik service account `ai-operator` allowed on
         the `onemind-openchoreo` application (hook Job in
         `platform/ecosystem/resources/ai-operator-identity.yaml`; its app password lands
         in Secret `auth/ai-operator-openchoreo`, not in Git), a custom read-only
@@ -264,8 +264,13 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
         allowed, so its browser login could not work either; the Job now adds
         `client_credentials` (#272). Console login (2f) must also set `authorization_code`
         and `refresh_token`.
-  - [ ] 2g-3. Mac side: a Claude Code `headersHelper` that mints a fresh token for each
-        session, registered by `scripts/ai-operator/setup.sh`; docs.
+  - [x] 2g-3. Mac side: a Claude Code `headersHelper`
+        (`scripts/ai-operator/openchoreo-token.sh`) that mints a fresh token per connect,
+        registered by `scripts/ai-operator/setup.sh` (also for Codex via
+        `OPENCHOREO_MCP_TOKEN`); docs in `docs/operations/ai-operator-access.md`. Verified
+        2026-10-18: `claude mcp list` shows `onemind-openchoreo` connected; the account sees
+        63 read tools, `list_namespaces` and `list_projects` return data, and
+        `create_namespace` is refused (`missing permission "namespace:create"`).
 - [ ] 2f. Turn on the built-in console (`backstage.enabled: true`), tailnet-only, with
       our catalog files mounted through `backstage.extraVolumes` and `appConfig`.
 
