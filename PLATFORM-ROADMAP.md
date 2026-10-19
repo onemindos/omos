@@ -123,8 +123,8 @@ it could lock out both itself and the human who has to recover it.
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
-| 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280), [#298](https://github.com/onemindos/omos/pull/298), [#299](https://github.com/onemindos/omos/pull/299) | 2, 3 |
-| 5 | Capacity fixes, then the observability plane | In progress | [#304](https://github.com/onemindos/omos/pull/304) | none |
+| 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
+| 5 | Capacity fixes, then the observability plane | In progress | [#300](https://github.com/onemindos/omos/pull/300), [#301](https://github.com/onemindos/omos/pull/301), [#302](https://github.com/onemindos/omos/pull/302), [#303](https://github.com/onemindos/omos/pull/303), [#304](https://github.com/onemindos/omos/pull/304), [#305](https://github.com/onemindos/omos/pull/305), [#306](https://github.com/onemindos/omos/pull/306), [#307](https://github.com/onemindos/omos/pull/307) | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
@@ -523,7 +523,38 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
 
 ### Phase 5: Capacity, then observability
 
-PR [#304](https://github.com/onemindos/omos/pull/304): Rebalance Prometheus and OpenSearch toward the ecosystem pool. Before changes: hub-core memory requests 91.8%, 93.4%, 97.2%; ecosystem 37.8%. Retain current resource reservations and limits. Live Phase 5 gate remains pending.
+Implementation PRs prepared on 2026-10-19 (source changes; live Phase 5 gate pending):
+
+- [#300](https://github.com/onemindos/omos/pull/300): Hermes ecosystem placement,
+  2Gi request/5Gi limit; observed 7-day working-set maximum 1.44Gi and successful
+  Hermes VolSync at 2026-10-19T01:03:02Z.
+- [#301](https://github.com/onemindos/omos/pull/301): Loki ecosystem placement,
+  preserving retention and the immutable 20Gi template (live PVC verified 30Gi).
+- [#302](https://github.com/onemindos/omos/pull/302): disable duplicate OpenCost KSM
+  emission using the chart-supported metrics settings.
+- [#303](https://github.com/onemindos/omos/pull/303): remove unavailable DOKS
+  control-plane and kube-proxy scrape targets while keeping workload alerts.
+- [#304](https://github.com/onemindos/omos/pull/304): rebalance Prometheus, Grafana
+  and OpenSearch. Baseline memory requested: hub-core 91.8%, 93.4%, 97.2%;
+  ecosystem 37.8%. These are pre-change observations, not a passed capacity gate.
+- [#305](https://github.com/onemindos/omos/pull/305): Argo-owned ProxyClass and
+  admission-safe memory defaults; no TAK database or Helm-CLI workload changes.
+- [#306](https://github.com/onemindos/omos/pull/306): authenticated official plane,
+  adapters on existing backends, index setup, alert route and alert-store VolSync.
+  Merge only after capacity/resource changes reconcile and meet the target.
+- [#307](https://github.com/onemindos/omos/pull/307): after module setup, enable
+  scoped OTel component telemetry and KSM labels; register the plane with its own
+  agent CA, explicitly link the data plane, enable console observability and
+  register the official authenticated Observer MCP in Claude Code/Codex.
+
+Local checks include pinned Helm/Kustomize renders, changed-file YAML/schema gates,
+OTel 0.156.0 validation and an isolated log fan-out/schema test, plus MCP JSON/SSE,
+authentication-rejection and config-idempotence checks. Full make validate remains
+blocked by existing onetak/TAK/Matrix YAML debt. Keep all checklist items unticked
+until live capacity, Argo/agent health, console/MCP log/metric samples and recovery
+evidence are verified. The final evidence/brief PR is
+[#281](https://github.com/onemindos/omos/pull/281).
+
 
 - [ ] Apply the request fixes from `docs/operations/cluster-review-2026-10-09.md` (H1), or
       add an ecosystem node. Target: no node above about 80% of memory requested.
