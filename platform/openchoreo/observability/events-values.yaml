@@ -38,3 +38,14 @@ exporters:
         authenticator: basicauth/opensearch
 pipelineExporters:
 - opensearch
+enrichment:
+  labels:
+    enabled: true
+    include:
+    - openchoreo.dev/component
+    - openchoreo.dev/project
+    - openchoreo.dev/environment
+    - openchoreo.dev/namespace
+    - openchoreo.dev/component-uid
+    - openchoreo.dev/project-uid
+    - openchoreo.dev/environment-uid

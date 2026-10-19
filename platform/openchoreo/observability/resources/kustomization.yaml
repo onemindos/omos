@@ -8,3 +8,4 @@ resources:
 - metrics-adapter.yaml
 - opensearch-service.yaml
 - alertmanager.yaml
+- opensearch-setup.yaml

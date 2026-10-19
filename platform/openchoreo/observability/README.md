@@ -56,6 +56,9 @@ backup and isolated restore remain rollout acceptance checks.
 1. Reconcile capacity/resource PRs; require about 80% or less requested memory per node.
 2. Reconcile this stage. Verify core, logs, traces, events and FinOps Argo Applications
    are Synced/Healthy, setup Jobs succeed, and alert-store backup starts succeeding.
+   The pinned upstream setup scripts wrap Base64 credentials; the Git-owned Sync
+   hooks remove that wrapping without modifying secrets. Event enrichment includes
+   only OpenChoreo labels to avoid dotted-label mapping conflicts.
 3. After index-setup Jobs succeed, merge the registration/MCP stage: enable OTel/KSM,
    pin this plane's own agent CA and link the
    default data plane, enables the console and extends operator setup.
