@@ -46,6 +46,8 @@ ENV NODE_OPTIONS="--no-node-snapshot --max-old-space-size=1536"
 COPY --from=build --chown=node:node /app/.yarn ./.yarn
 COPY --from=build --chown=node:node /app/.yarnrc.yml ./
 COPY --from=build --chown=node:node /app/backstage.json ./
+# Production dependencies must be linked from this stage, not the builder state.
+RUN rm -f .yarn/install-state.gz
 
 # This switches many Node.js dependencies to production mode.
 ENV NODE_ENV=production
