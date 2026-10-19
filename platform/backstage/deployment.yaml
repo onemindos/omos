@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: backstage
-        image: ghcr.io/onemindos/onemind-portal@sha256:8110199af6a56dfd8538cfe2145eba319201128b9dfca555b0c93caa1f6bc6b2
+        image: ghcr.io/onemindos/onemind-portal@sha256:9dccd17aaabefe53e61c8e99bf8db79b510837db40e009fdfce2237cbfe953a4
         command:
         - node
         args:
@@ -52,6 +52,10 @@ spec:
         - name: http
           containerPort: 7007
         envFrom:
+        - secretRef:
+            name: openchoreo-oidc
+        - secretRef:
+            name: openchoreo-catalog
         - secretRef:
             name: backstage-zoho
             optional: true
