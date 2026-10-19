@@ -1,3 +1,7 @@
+import openchoreoPlugin, {
+  openChoreoEntityGroupsModule,
+} from '@openchoreo/backstage-plugin/alpha';
+import observabilityPlugin from '@openchoreo/backstage-plugin-openchoreo-observability/alpha';
 import githubActionsPlugin from '@backstage-community/plugin-github-actions/alpha';
 import githubPullRequestsPlugin from '@roadiehq/backstage-plugin-github-pull-requests/alpha';
 import grafanaPlugin from '@backstage-community/plugin-grafana/alpha';
@@ -26,6 +30,9 @@ import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
 
 export default createApp({
   features: [
+    openchoreoPlugin,
+    openChoreoEntityGroupsModule,
+    observabilityPlugin,
     githubActionsPlugin,
     githubPullRequestsPlugin,
     grafanaPlugin,

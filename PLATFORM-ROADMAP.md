@@ -635,6 +635,26 @@ contract, changed-YAML, ShellCheck and commit secret checks passed. Full
 `make validate` remains blocked by unrelated existing YAML lint debt. No check
 was overridden or reported as green.
 
+Integration work started 2026-10-19 in [#312](https://github.com/onemindos/omos/pull/312)
+(`codex/phase6-portal-integration`).
+The 1.55.3 host remains in place: the core/observability plugins are additions,
+not a replacement portal. Initial local TypeScript, frontend bundling and 37
+identity/permission/token-forwarding regression tests pass. Runtime preview,
+real login, permission boundaries and live rollout are still pending; these
+checks do not establish production compatibility. The temporary console stays on.
+The host uses the verified OIDC authenticator with explicit catalog-subject mapping,
+a single intersected permission policy and a version-locked upstream ABAC router
+adapter (see the integration runbook). No production image/configuration is changed
+by the source-integration PR. #312 also deploys a separate tailnet-only candidate
+with in-memory SQLite (no production PostgreSQL credential), using the existing
+restricted catalog identity and an additional exact Authentik callback. The original
+two production replicas and temporary console remain unchanged until preview gates
+pass. Linux release `4d99acd971ca5510ba2511ff51631d56f2ed7086` passed all build gates,
+including 37 security tests; isolated HTTP checks passed anonymous/guest denials,
+machine catalog-write and platform-access denials, and six read-only MCP tools.
+Verified published image digest:
+`sha256:a640cf8746f0d3eb40348e0cb4817b65491955b56453b9d67133050047f60efb`.
+
 - [ ] Align our Backstage with the release line the OpenChoreo plugins support
       (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
 - [ ] Install the core OpenChoreo plugins and the observability pack into our portal,

@@ -36,7 +36,8 @@ spec:
                   users = request("GET", "core/users/?username=akadmin")["results"]
                   owner = next(u["pk"] for u in users if u["username"] == "akadmin")
                   callbacks = {
-                      "openchoreo": ["https://onemind-preview.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
+                      "openchoreo": ["https://onemind-portal-candidate.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
+                                     "https://onemind-preview.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
                                      "https://homepage.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
                                      "https://onemind-console.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame"],
                       "workflows": ["https://onemind-workflows.tail717ba0.ts.net/oauth2/callback"],

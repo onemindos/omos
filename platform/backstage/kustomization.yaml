@@ -14,7 +14,12 @@ resources:
   - mcp.sealedsecret.yaml
   - plugin-integrations.sealedsecret.yaml
   - argocd-ingress.yaml
+  - candidate/deployment.yaml
+  - candidate/catalog.sealedsecret.yaml
 configMapGenerator:
+  - name: backstage-candidate-config
+    namespace: backstage
+    files: [candidate/app-config.candidate.yaml]
   - name: backstage-cluster-config
     namespace: backstage
     files: [app-config.cluster.yaml]

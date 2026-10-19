@@ -61,7 +61,7 @@ if published:
     (out / 'image-digest.txt').write_text(digest + '\n')
 record = {'commit': commit, 'image': image, 'published': published,
           'platform': 'linux/amd64', 'digest': digest,
-          'gates': ['immutable-yarn', 'typescript', 'techdocs', 'backend-build']}
+          'gates': ['immutable-yarn', 'typescript', 'identity-permission-token-tests', 'techdocs', 'backend-build']}
 (out / 'release.json').write_text(json.dumps(record, indent=2) + '\n')
 print('Published and verified' if published else 'Built locally only; no deployment digest emitted')
 print('Release artifacts: ' + str(out))

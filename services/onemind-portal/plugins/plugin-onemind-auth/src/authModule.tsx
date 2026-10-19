@@ -1,45 +1,24 @@
 import {
-  OpenIdConnectApi,
-  ProfileInfoApi,
-  BackstageIdentityApi,
-  SessionApi,
-} from '@backstage/core-plugin-api';
-import { OAuth2 } from '@backstage/core-app-api';
-import { SignInPageBlueprint } from '@backstage/plugin-app-react';
+  SignInPageBlueprint,
+  AppRootWrapperBlueprint,
+} from '@backstage/plugin-app-react';
 import { SignInPage } from '@backstage/core-components';
 import {
-  createApiRef,
   createFrontendModule,
   configApiRef,
   discoveryApiRef,
-  oauthRequestApiRef,
+  identityApiRef,
+  fetchApiRef,
   ApiBlueprint,
 } from '@backstage/frontend-plugin-api';
+import { permissionApiRef } from '@backstage/plugin-permission-react';
+import {
+  openChoreoAuthApiRef,
+  OpenChoreoPermissionApi,
+} from '@openchoreo/backstage-plugin';
+import { OpenChoreoQueryProvider } from '@openchoreo/backstage-plugin-react';
+import { createScopedFetch } from './scopedFetch';
 
-const authApiRef = createApiRef<
-  OpenIdConnectApi & ProfileInfoApi & BackstageIdentityApi & SessionApi
->().with({ id: 'auth.onemind' });
-const authApi = ApiBlueprint.make({
-  name: 'onemind',
-  params: defineParams =>
-    defineParams({
-      api: authApiRef,
-      deps: {
-        discoveryApi: discoveryApiRef,
-        oauthRequestApi: oauthRequestApiRef,
-        configApi: configApiRef,
-      },
-      factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
-        OAuth2.create({
-          configApi,
-          discoveryApi,
-          oauthRequestApi,
-          environment: configApi.getOptionalString('auth.environment'),
-          provider: { id: 'oidc', title: 'OneMind', icon: () => null },
-          defaultScopes: ['openid', 'profile', 'email'],
-        }),
-    }),
-});
 const signIn = SignInPageBlueprint.make({
   params: {
     loader: async () => props =>
@@ -50,13 +29,45 @@ const signIn = SignInPageBlueprint.make({
             id: 'onemind-auth',
             title: 'OneMind',
             message: 'Sign in with your OneMind account',
-            apiRef: authApiRef,
+            apiRef: openChoreoAuthApiRef,
           }}
         />
       ),
   },
 });
+const fetchApi = ApiBlueprint.make({
+  name: fetchApiRef.id,
+  params: define =>
+    define({
+      api: fetchApiRef,
+      deps: {
+        config: configApiRef,
+        identity: identityApiRef,
+        oauth: openChoreoAuthApiRef,
+        discovery: discoveryApiRef,
+      },
+      factory: createScopedFetch,
+    }),
+});
+const permissionApi = ApiBlueprint.make({
+  name: permissionApiRef.id,
+  params: define =>
+    define({
+      api: permissionApiRef,
+      deps: {
+        config: configApiRef,
+        identity: identityApiRef,
+        oauthApi: openChoreoAuthApiRef,
+        discovery: discoveryApiRef,
+      },
+      factory: options => new OpenChoreoPermissionApi(options),
+    }),
+});
+const queries = AppRootWrapperBlueprint.make({
+  name: 'openchoreo-query',
+  params: { component: OpenChoreoQueryProvider },
+});
 export const authModule = createFrontendModule({
   pluginId: 'app',
-  extensions: [authApi, signIn],
+  extensions: [signIn, fetchApi, permissionApi, queries],
 });
