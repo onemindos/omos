@@ -1,0 +1,386 @@
+# Immutable v1.3.1 snapshot: rewrite both observed upstream catalog URL forms.
+apiVersion: openchoreo.dev/v1alpha1
+kind: ComponentRelease
+metadata:
+  name: stac-browser-v4
+  namespace: default
+spec:
+  owner:
+    projectName: onetak
+    componentName: stac-browser
+  componentType:
+    kind: ClusterComponentType
+    name: deployment/onemind-service
+    spec:
+      workloadType: deployment
+      allowedWorkflows:
+      - kind: ClusterWorkflow
+        name: paketo-buildpacks-builder
+      - kind: ClusterWorkflow
+        name: gcp-buildpacks-builder
+      - kind: ClusterWorkflow
+        name: dockerfile-builder
+      - kind: ClusterWorkflow
+        name: ballerina-buildpack-builder
+      allowedTraits:
+      - kind: ClusterTrait
+        name: cilium-gateway-ingress
+      - kind: ClusterTrait
+        name: health-probes
+      - kind: ClusterTrait
+        name: horizontal-pod-autoscaler
+      - kind: ClusterTrait
+        name: observability-alert-rule
+      - kind: ClusterTrait
+        name: persistent-volume-claim
+      - kind: ClusterTrait
+        name: vertical-pod-autoscaler
+      validations:
+      - rule: ${size(workload.endpoints) > 0}
+        message: Service components must have at least one endpoint. Use 'deployment/worker' for components without endpoints.
+      - rule: |-
+          ${workload.endpoints.exists(name, ep, "external" in ep.visibility)
+            ? has(gateway.ingress) && has(gateway.ingress.external)
+            : true}
+        message: Endpoints with 'external' visibility require gateway.ingress.external to be configured on the Environment
+          or DataPlane.
+      - rule: |-
+          ${workload.endpoints.exists(name, ep, "internal" in ep.visibility)
+            ? has(gateway.ingress) && has(gateway.ingress.internal)
+            : true}
+        message: Endpoints with 'internal' visibility require gateway.ingress.internal to be configured on the Environment
+          or DataPlane.
+      environmentConfigs:
+        openAPIV3Schema:
+          type: object
+          $defs:
+            ResourceQuantity:
+              type: object
+              default: {}
+              properties:
+                cpu:
+                  type: string
+                  default: 50m
+                memory:
+                  type: string
+                  default: 128Mi
+            ResourceRequirements:
+              type: object
+              properties:
+                requests:
+                  $ref: '#/$defs/ResourceQuantity'
+                limits:
+                  $ref: '#/$defs/ResourceQuantity'
+              default: {}
+          properties:
+            replicas:
+              type: integer
+              default: 1
+              minimum: 0
+            resources:
+              $ref: '#/$defs/ResourceRequirements'
+            strategy:
+              type: string
+              default: RollingUpdate
+              description: Use Recreate when the component mounts a ReadWriteOnce volume.
+              enum:
+              - RollingUpdate
+              - Recreate
+            imagePullPolicy:
+              type: string
+              default: IfNotPresent
+              enum:
+              - Always
+              - IfNotPresent
+              - Never
+      resources:
+      - id: deployment
+        template:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ${metadata.name}
+            namespace: ${metadata.namespace}
+            labels: ${metadata.labels}
+          spec:
+            replicas: ${environmentConfigs.replicas}
+            strategy:
+              type: ${environmentConfigs.strategy}
+            selector:
+              matchLabels: ${metadata.podSelectors}
+            template:
+              metadata:
+                labels: ${metadata.podSelectors}
+              spec:
+                affinity:
+                  nodeAffinity:
+                    preferredDuringSchedulingIgnoredDuringExecution:
+                    - weight: 100
+                      preference:
+                        matchExpressions:
+                        - key: onemind.io/compute-role
+                          operator: In
+                          values:
+                          - ecosystem
+                containers:
+                - name: main
+                  image: ${workload.container.image}
+                  imagePullPolicy: ${environmentConfigs.imagePullPolicy}
+                  command: |
+                    ${has(workload.container.command) ? workload.container.command : oc_omit()}
+                  args: |
+                    ${has(workload.container.args) ? workload.container.args : oc_omit()}
+                  resources:
+                    requests:
+                      cpu: ${environmentConfigs.resources.requests.cpu}
+                      memory: ${environmentConfigs.resources.requests.memory}
+                    limits:
+                      cpu: ${environmentConfigs.resources.limits.cpu}
+                      memory: ${environmentConfigs.resources.limits.memory}
+                  env: ${dependencies.toContainerEnvs()}
+                  envFrom: ${configurations.toContainerEnvFrom()}
+                  volumeMounts: ${configurations.toContainerVolumeMounts() + dependencies.toContainerVolumeMounts()}
+                volumes: ${configurations.toVolumes() + dependencies.toVolumes()}
+      - id: service
+        includeWhen: ${size(workload.endpoints) > 0}
+        template:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: ${metadata.componentName}
+            namespace: ${metadata.namespace}
+            labels: ${metadata.labels}
+          spec:
+            type: ClusterIP
+            selector: ${metadata.podSelectors}
+            ports: ${workload.toServicePorts()}
+      - id: httproute-external
+        forEach: ${workload.endpoints.transformMap(name, ep, "external" in ep.visibility && ep.type in ["HTTP", "GraphQL",
+          "Websocket"], ep)}
+        var: endpoint
+        template:
+          apiVersion: gateway.networking.k8s.io/v1
+          kind: HTTPRoute
+          metadata:
+            name: ${oc_generate_name(metadata.componentName, endpoint.key)}
+            namespace: ${metadata.namespace}
+            labels: '${oc_merge(metadata.labels, {"openchoreo.dev/endpoint-name": endpoint.key, "openchoreo.dev/endpoint-visibility":
+              "external"})}'
+          spec:
+            parentRefs:
+            - name: ${gateway.ingress.external.name}
+              namespace: ${gateway.ingress.external.namespace}
+            hostnames: |
+              ${[gateway.ingress.external.?http, gateway.ingress.external.?https]
+                .filter(g, g.hasValue()).map(g, g.value().host).distinct()
+                .map(h, metadata.environmentName + "-" + metadata.componentNamespace + "." + h)}
+            rules:
+            - matches:
+              - path:
+                  type: PathPrefix
+                  value: /${metadata.componentName}-${endpoint.key}
+              filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplacePrefixMatch
+                    replacePrefixMatch: ${endpoint.value.?basePath.orValue("/")}
+              backendRefs:
+              - name: ${metadata.componentName}
+                port: ${endpoint.value.port}
+      - id: httproute-internal
+        forEach: ${workload.endpoints.transformMap(name, ep, "internal" in ep.visibility && ep.type in ["HTTP", "GraphQL",
+          "Websocket"], ep)}
+        var: endpoint
+        template:
+          apiVersion: gateway.networking.k8s.io/v1
+          kind: HTTPRoute
+          metadata:
+            name: ${oc_generate_name(metadata.componentName, endpoint.key, "internal")}
+            namespace: ${metadata.namespace}
+            labels: '${oc_merge(metadata.labels, {"openchoreo.dev/endpoint-name": endpoint.key, "openchoreo.dev/endpoint-visibility":
+              "internal"})}'
+          spec:
+            parentRefs:
+            - name: ${gateway.ingress.internal.name}
+              namespace: ${gateway.ingress.internal.namespace}
+            hostnames: |
+              ${[gateway.ingress.internal.?http, gateway.ingress.internal.?https]
+                .filter(g, g.hasValue()).map(g, g.value().host).distinct()
+                .map(h, metadata.environmentName + "-" + metadata.componentNamespace + "." + h)}
+            rules:
+            - matches:
+              - path:
+                  type: PathPrefix
+                  value: /${metadata.componentName}-${endpoint.key}
+              filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplacePrefixMatch
+                    replacePrefixMatch: ${endpoint.value.?basePath.orValue("/")}
+              backendRefs:
+              - name: ${metadata.componentName}
+                port: ${endpoint.value.port}
+      - id: env-config
+        forEach: ${configurations.toConfigEnvsByContainer()}
+        var: envConfig
+        template:
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: ${envConfig.resourceName}
+            namespace: ${metadata.namespace}
+          data: |
+            ${envConfig.envs.transformMapEntry(index, env, {env.name: env.value})}
+      - id: file-config
+        forEach: ${configurations.toConfigFileList()}
+        var: config
+        template:
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: ${config.resourceName}
+            namespace: ${metadata.namespace}
+          data:
+            ${config.name}: |
+              ${config.value}
+      - id: secret-env-external
+        forEach: ${configurations.toSecretEnvsByContainer()}
+        var: secretEnv
+        template:
+          apiVersion: external-secrets.io/v1
+          kind: ExternalSecret
+          metadata:
+            name: ${secretEnv.resourceName}
+            namespace: ${metadata.namespace}
+          spec:
+            refreshInterval: 15s
+            secretStoreRef:
+              name: ${dataplane.secretStore}
+              kind: ClusterSecretStore
+            target:
+              name: ${secretEnv.resourceName}
+              creationPolicy: Owner
+            data: |
+              ${secretEnv.envs.map(secret, {
+                "secretKey": secret.name,
+                "remoteRef": {
+                  "key": secret.remoteRef.key,
+                  ?"property": secret.remoteRef.?property
+                }
+              })}
+      - id: secret-file-external
+        forEach: ${configurations.toSecretFileList()}
+        var: file
+        template:
+          apiVersion: external-secrets.io/v1
+          kind: ExternalSecret
+          metadata:
+            name: ${file.resourceName}
+            namespace: ${metadata.namespace}
+          spec:
+            refreshInterval: 15s
+            secretStoreRef:
+              name: ${dataplane.secretStore}
+              kind: ClusterSecretStore
+            target:
+              name: ${file.resourceName}
+              creationPolicy: Owner
+            data:
+            - secretKey: ${file.name}
+              remoteRef:
+                key: ${file.remoteRef.key}
+                property: |
+                  ${has(file.remoteRef.property) ? file.remoteRef.property : oc_omit()}
+  workload:
+    endpoints:
+      http:
+        type: HTTP
+        port: 8080
+        visibility:
+        - external
+        basePath: /stac-browser-http
+    container:
+      image: ghcr.io/radiantearth/stac-browser@sha256:e6d92b6ba593201b558219d0591fc83820b7f86a316d3fe565a27ad996fc7f63
+      env:
+      - key: SB_pathPrefix
+        value: /stac-browser-http/
+      - key: SB_catalogTitle
+        value: "OneTAK \u2014 Imagery Catalog"
+      - key: SB_catalogUrl
+        value: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http/catalog/
+      files:
+      - key: default.conf.template
+        mountPath: /etc/nginx/conf.d
+        value: |
+          # Search POST is read-only; catalog writes are rejected before proxying.
+          map "$request_method:$uri" $stac_read_allowed {
+              default 0;
+              ~^GET: 1;
+              ~^HEAD: 1;
+              "POST:/stac-browser-http/catalog/search" 1;
+          }
+          server {
+              listen 8080;
+              server_name localhost;
+              absolute_redirect off;
+              ${STAC_PREFIX_REDIRECT}
+              location ${STAC_PATH_PREFIX} {
+                  alias /usr/share/nginx/html/;
+                  index index.html;
+                  try_files $uri $uri/ ${STAC_PATH_PREFIX}index.html;
+              }
+              # Same-origin, read-only catalog access. Rewrite only the upstream
+              # base URL, leaving external asset URLs and other JSON untouched.
+              location /stac-browser-http/catalog/ {
+                  if ($stac_read_allowed = 0) { return 405; }
+                  proxy_pass http://stac-api.onetak.svc.cluster.local:8082/;
+                  proxy_set_header Host stac-api.onetak.svc.cluster.local:8082;
+                  proxy_set_header Accept-Encoding "";
+                  sub_filter_types application/json application/geo+json;
+                  sub_filter_once off;
+                  sub_filter 'http://stac-api.onetak.svc.cluster.local:8082/'
+                      'http://$http_host/stac-browser-http/catalog/';
+                  sub_filter 'http://stac-api.onetak.svc.cluster.local/'
+                      'http://$http_host/stac-browser-http/catalog/';
+              }
+          }
+  componentProfile:
+    traits:
+    - kind: ClusterTrait
+      name: cilium-gateway-ingress
+      instanceName: gateway
+      parameters:
+        port: 8080
+  traits:
+  - kind: ClusterTrait
+    name: cilium-gateway-ingress
+    spec:
+      parameters:
+        openAPIV3Schema:
+          type: object
+          properties:
+            port:
+              type: integer
+              minimum: 1
+              maximum: 65535
+              default: 8080
+      creates:
+      - id: cilium-gateway-ingress
+        template:
+          apiVersion: cilium.io/v2
+          kind: CiliumNetworkPolicy
+          metadata:
+            name: ${oc_generate_name(metadata.componentName, "cilium-gateway")}
+            namespace: ${metadata.namespace}
+          spec:
+            endpointSelector:
+              matchLabels: ${metadata.podSelectors}
+            ingress:
+            - fromEntities:
+              - ingress
+              toPorts:
+              - ports:
+                - port: ${string(parameters.port)}
+                  protocol: TCP

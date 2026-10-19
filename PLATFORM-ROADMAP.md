@@ -122,7 +122,7 @@ it could lock out both itself and the human who has to recover it.
 | 0 | Blueprint: this document | Done | [#256](https://github.com/onemindos/omos/pull/256) | none |
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
-| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289) | 4 |
+| 3 | Pilot one app as an OpenChoreo Component | In progress | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Not started | | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
@@ -373,6 +373,12 @@ Progress (2026-10-18):
   and two new ecosystem nodes were Ready on Kubernetes 1.36.5. Many unrelated pods
   were rescheduling; the OpenChoreo API and metrics had transient reachability
   failures. No node, pool or infrastructure changes are part of the pilot PRs.
+- At 22:01 EDT, the Cilium policy was `Valid=True`; the tailnet frontend,
+  runtime config and all referenced JS/CSS assets returned 200 with the correct
+  path prefix. The catalog root returned 200, but its self/collection links used
+  `http://stac-api.onetak.svc.cluster.local/` without port 8082. Add that observed
+  exact base URL to the proxy rewrites in immutable release v4 ([#290](https://github.com/onemindos/omos/pull/290)). Keep
+  external asset links unchanged; collections/search and visual review are pending.
 - Evaluation is still open: the pilot's three files total 438 lines, including the
   generated immutable type/workload snapshot. The old browser occupies 47 lines in
   one shared manifest. Do not claim fewer files or easier maintenance without the
