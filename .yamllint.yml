@@ -7,7 +7,6 @@ ignore: |
   services/onemind-portal/templates/*/skeleton/**
   platform/parked/**/charts/**/templates/**
   platform/parked/**/live-export/**
-  platform/ops/observer-mcp/**
 
 rules:
   line-length:

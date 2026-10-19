@@ -1,5 +1,5 @@
 # kube-prometheus-stack — resource requests/limits for DO upgrade compliance
-# Pass via: helm upgrade -f ./values/kube-prometheus-stack.yaml
+# Argo-owned release: monitoring-kube-prometheus-stack.
 prometheus:
   prometheusSpec:
     resources:
@@ -24,6 +24,7 @@ prometheus:
     # Pick up PrometheusRule CRs from all namespaces
     ruleSelector: {}
     ruleNamespaceSelector: {}
+    ruleSelectorNilUsesHelmValues: false
 
 alertmanager:
   alertmanagerSpec:
@@ -41,6 +42,8 @@ kubeStateMetrics:
   enabled: true
 
 kube-state-metrics:
+  metricLabelsAllowlist:
+    - "pods=[openchoreo.dev/component-uid,openchoreo.dev/project-uid,openchoreo.dev/environment-uid,openchoreo.dev/namespace,openchoreo.dev/component,openchoreo.dev/project,openchoreo.dev/environment]"
   resources:
     requests:
       cpu: 50m

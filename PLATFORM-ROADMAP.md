@@ -123,8 +123,8 @@ it could lock out both itself and the human who has to recover it.
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
-| 4 | Portal refactor: custom features into `plugins/` packages | In progress | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
-| 5 | Capacity fixes, then the observability plane | Not started | | none |
+| 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280), [#298](https://github.com/onemindos/omos/pull/298), [#299](https://github.com/onemindos/omos/pull/299) | 2, 3 |
+| 5 | Capacity fixes, then the observability plane | In progress | [#307](https://github.com/onemindos/omos/pull/307) | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
@@ -523,15 +523,14 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
 
 ### Phase 5: Capacity, then observability
 
+PR [#307](https://github.com/onemindos/omos/pull/307): After #306 is healthy, register its own agent CA, link the data plane, enable console observability and register the authenticated official Observer MCP for Claude/Codex. Source preparation is not live gate evidence. Live Phase 5 gate remains pending.
+
 - [ ] Apply the request fixes from `docs/operations/cluster-review-2026-10-09.md` (H1), or
       add an ecosystem node. Target: no node above about 80% of memory requested.
 - [ ] Observability plane 1.3.1 with modules wired to the existing Prometheus, OpenSearch
       and OTel collector; OpenCost as the FinOps module.
 - [ ] Register `ClusterObservabilityPlane` and link the data plane to it.
 - [ ] Connect Claude to the observer MCP (logs, metrics, traces, alerts, incidents, costs).
-  - [x] Add the observer MCP manifests and tailnet ingress (`platform/ops/observer-mcp/`).
-  - [ ] Verify Claude/Codex runs live metrics and log queries and confirm the OpenChoreo
-        console shows logs and metrics for the selected component.
 
 Gate: an OpenChoreo component shows logs and metrics in the console and through the
 observer MCP.

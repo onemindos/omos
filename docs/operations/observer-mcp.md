@@ -1,58 +1,41 @@
-# Observer MCP
+# Authenticated Observer MCP
 
-`ops/observer-mcp` provides one tailnet-only Model Context Protocol endpoint for
-read-only observability. It is owned by Argo CD Application `platform-ops`. The
-Tailscale ingress publishes it as:
+Phase 5C connects the official OpenChoreo Observer at
+https://onemind-observer.tail717ba0.ts.net/mcp. Merge this stage only after the plane
+and modules are healthy and capacity is within target.
 
-```text
-https://observer-mcp.tail717ba0.ts.net/mcp
-```
+The same Authentik ai-operator identity and ai-operator-read OpenChoreo role used
+by the control-plane MCP provide access. Tailnet reachability and JWT authorization
+are both required. This does not grant Kubernetes writes or raw Secrets access.
 
-Connect Claude Code or Codex with an MCP streamable-HTTP client configuration at
-that URL. The endpoint itself is anonymous to the monitoring APIs and has no
-Secrets or Kubernetes write privileges; tailnet membership provides the network
-boundary until an application-level MCP credential is added in a later gate.
-Keep the hostname private and review authorized client identities before
-expanding tool access.
+The stage registers ClusterObservabilityPlane/default with the observability
+agent's own CA reference, links ClusterDataPlane/default explicitly, and enables
+console observability. It wires OTel component logs/traces to the prepared OpenSearch
+indices and exposes OpenChoreo labels in the existing kube-state-metrics. This is
+ordered after module setup to avoid creating indices with accidental dynamic mappings.
+Workflow features stay disabled.
 
-The kagent `RemoteMCPServer` export remains parked because kagent was not
-adopted; the new server is the active observer integration.
+Run from the repository on the operator Mac:
 
-## Tools
+    scripts/ai-operator/setup.sh
+    python3 scripts/ai-operator/verify-observer.py --component stac-browser
 
-| Tool | Read path |
-|---|---|
-| `query_metrics` | Prometheus instant query |
-| `query_logs` | Loki query-range API |
-| `query_traces` | Tempo search API |
-| `get_alerts` | Alertmanager active alerts API |
-| `search_incidents` | Loki keyword search (log-based MVP, not an incident database) |
-| `query_costs` | OpenCost series through Prometheus |
+Setup verifies unauthenticated rejection and authenticated initialization/tool
+discovery before registering onemind-openchoreo-obs in Claude Code and Codex.
+Claude uses the existing token helper; Codex uses OPENCHOREO_MCP_TOKEN, like the
+control-plane MCP. No credential is committed or printed.
 
-## Examples
+Read tools include query_component_logs, query_resource_metrics, query_traces,
+query_alerts, query_incidents and query_costs. STAC Browser emits no application
+traces by default; no traces differs from a failed adapter. Optional RCA/AI analysis
+stays disabled. Alerts, incidents and allocations may be empty; no data is fabricated.
 
-```text
-query_metrics: promql=sum by (namespace) (rate(container_cpu_usage_seconds_total{namespace="onetak"}[5m]))
-query_logs: namespace=onetak, text=error, since=1440, limit=100
-query_traces: service=onetak, since=1440, limit=20
-get_alerts: label=KubePodCrashLooping
-search_incidents: text=error, namespace=onetak
-query_costs: namespace=onetak
-```
+## Live Phase 5 gate
 
-A cost query without `promql` uses the OpenCost hourly cost metric. If the
-metric name changes with a future OpenCost upgrade, pass an explicit PromQL
-expression and update the server defaults in the same PR.
+The optional component check verifies transport/tool execution. It does not treat
+an empty response as proof telemetry exists. Make normal requests to the pilot,
+then confirm recent logs and CPU/memory samples in both console and MCP. Also check
+the plane's agent connection, Argo health, per-node requested capacity and alert-store
+backup/restore. Record evidence before marking the roadmap Done.
 
-## Verification
-
-After Argo CD sync, inspect the Deployment and Ingress by Service name, then call
-the endpoint with an authorized AI client and execute at least one metrics and
-one log query. Do not run these manifests manually; let Argo CD own the change.
-
-## Required follow-up
-
-- Confirm the live OpenCost metric name and the `onetak` component's trace
-  service name.
-- Add an authenticated machine subject for MCP access after Claude/Codex
-  connectivity is proven over the tailnet.
+Status: configuration prepared; live rollout, telemetry and console checks pending.
