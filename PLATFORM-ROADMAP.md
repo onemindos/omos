@@ -124,7 +124,7 @@ it could lock out both itself and the human who has to recover it.
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
-| 5 | Capacity fixes, then the observability plane | In progress | [#300](https://github.com/onemindos/omos/pull/300), [#301](https://github.com/onemindos/omos/pull/301), [#302](https://github.com/onemindos/omos/pull/302), [#303](https://github.com/onemindos/omos/pull/303), [#304](https://github.com/onemindos/omos/pull/304), [#305](https://github.com/onemindos/omos/pull/305), [#306](https://github.com/onemindos/omos/pull/306), [#307](https://github.com/onemindos/omos/pull/307) | none |
+| 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
@@ -523,64 +523,96 @@ Gate (2026-10-19): the deployed portal behaves exactly as before.
 
 ### Phase 5: Capacity, then observability
 
-Console verification found that the frontend calls spec.observerURL directly.
-Register the existing JWT-protected tailnet HTTPS endpoint, not cluster-only DNS.
-MCP samples and the isolated SQLite restore pass; final browser verification follows.
-
-Recovery gate: a one-shot isolated Restic restore and read-only SQLite verification
-are managed by the existing observability Argo Application. The new restore PVC
-is prune-protected; live recovery evidence is pending.
-Live component queries also found Authentik minted an internal-host issuer for the
-internal token URL; use the existing public HTTPS token URL so issuer validation
-stays enabled and the read-only UID resolver works.
-
-Rollout verification found an upstream 0.6.0 wrapped Basic-auth setup header and
-event-label mapping collisions. A GitOps compatibility fix uses the same pinned
-setup images/credentials and restricts event enrichment to OpenChoreo labels.
-Live acceptance remains pending.
-
-Implementation PRs prepared on 2026-10-19 (source changes; live Phase 5 gate pending):
-
-- [#300](https://github.com/onemindos/omos/pull/300): Hermes ecosystem placement,
-  2Gi request/5Gi limit; observed 7-day working-set maximum 1.44Gi and successful
-  Hermes VolSync at 2026-10-19T01:03:02Z.
-- [#301](https://github.com/onemindos/omos/pull/301): Loki ecosystem placement,
-  preserving retention and the immutable 20Gi template (live PVC verified 30Gi).
-- [#302](https://github.com/onemindos/omos/pull/302): disable duplicate OpenCost KSM
-  emission using the chart-supported metrics settings.
-- [#303](https://github.com/onemindos/omos/pull/303): remove unavailable DOKS
-  control-plane and kube-proxy scrape targets while keeping workload alerts.
-- [#304](https://github.com/onemindos/omos/pull/304): rebalance Prometheus, Grafana
-  and OpenSearch. Baseline memory requested: hub-core 91.8%, 93.4%, 97.2%;
-  ecosystem 37.8%. These are pre-change observations, not a passed capacity gate.
-- [#305](https://github.com/onemindos/omos/pull/305): Argo-owned ProxyClass and
-  admission-safe memory defaults; no TAK database or Helm-CLI workload changes.
-- [#306](https://github.com/onemindos/omos/pull/306): authenticated official plane,
-  adapters on existing backends, index setup, alert route and alert-store VolSync.
-  Merge only after capacity/resource changes reconcile and meet the target.
-- [#307](https://github.com/onemindos/omos/pull/307): after module setup, enable
-  scoped OTel component telemetry and KSM labels; register the plane with its own
-  agent CA, explicitly link the data plane, enable console observability and
-  register the official authenticated Observer MCP in Claude Code/Codex.
-
-Local checks include pinned Helm/Kustomize renders, changed-file YAML/schema gates,
-OTel 0.156.0 validation and an isolated log fan-out/schema test, plus MCP JSON/SSE,
-authentication-rejection and config-idempotence checks. Full make validate remains
-blocked by existing onetak/TAK/Matrix YAML debt. Keep all checklist items unticked
-until live capacity, Argo/agent health, console/MCP log/metric samples and recovery
-evidence are verified. The final evidence/brief PR is
+**Done — live gates verified 2026-10-19, 08:05–08:07 UTC.** Final evidence/brief:
 [#281](https://github.com/onemindos/omos/pull/281).
 
+- [x] Apply measured request/placement fixes; no extra node required.
+- [x] Install observability plane 1.3.1 with modules on the existing Prometheus,
+      OpenSearch and OTel collector; reuse OpenCost through its FinOps adapter.
+- [x] Register ClusterObservabilityPlane/default with its own agent CA and explicitly
+      link ClusterDataPlane/default. Agent connected: one authenticated connection.
+- [x] Connect Claude Code and Codex to the authenticated Observer MCP for logs,
+      metrics, traces, alerts, incidents and costs. Claude reports Connected.
 
-- [ ] Apply the request fixes from `docs/operations/cluster-review-2026-10-09.md` (H1), or
-      add an ecosystem node. Target: no node above about 80% of memory requested.
-- [ ] Observability plane 1.3.1 with modules wired to the existing Prometheus, OpenSearch
-      and OTel collector; OpenCost as the FinOps module.
-- [ ] Register `ClusterObservabilityPlane` and link the data plane to it.
-- [ ] Connect Claude to the observer MCP (logs, metrics, traces, alerts, incidents, costs).
+#### Capacity gate (live requested resources)
 
-Gate: an OpenChoreo component shows logs and metrics in the console and through the
-observer MCP.
+Effective pod requests include init containers/native sidecars and overhead; completed
+Jobs are excluded. No Pending pods at verification. Actual node memory use was
+44–65%, distinct from the scheduler request percentages below.
+
+| Node | Memory requested | CPU requested |
+|---|---:|---:|
+| onemind-ecosystem-cpu-3rhwrp | 21.18 GiB / 75.4% | 6.077 cores / 77.1% |
+| onemind-hub-core-v2-3rtf47 | 9.82 GiB / 73.7% | 3.832 cores / 48.6% |
+| onemind-hub-core-v2-3rtf4m | 9.38 GiB / 70.4% | 3.917 cores / 49.7% |
+| onemind-hub-core-v2-3rtf4q | 10.36 GiB / 77.7% | 5.862 cores / 74.4% |
+
+Hermes, Loki, Prometheus, Grafana and OpenSearch reconciled onto the existing ecosystem
+pool through preferred affinity, preserving fallback scheduling. No node-name pins,
+new node, descheduler or destructive volume operation was needed. OpenCost's two KSM
+emission flags are false. Unavailable DOKS scheduler/controller-manager and Cilium
+kube-proxy Down rules are absent; KubePodCrashLooping remains loaded.
+
+#### Observability and human/AI gate
+
+- Core, logs, traces, events and FinOps Argo Applications are Synced/Healthy with
+  successful operations; both OpenSearch setup Jobs completed. Core uses chart 1.3.1;
+  logs/traces 0.6.0, metrics 0.7.1, events 0.1.2 and FinOps 0.2.0.
+- Existing OTel DaemonSet is 4/4 ready. Original Loki/Tempo pipelines remain intact;
+  only OpenChoreo-tagged component signals are copied to the existing OpenSearch.
+  There is no second Prometheus, OpenSearch or application log/trace collector.
+- Pilot: namespace default, project onetak, component stac-browser, environment
+  development. Five ordinary HTTP requests returned 200 and produced five real logs.
+  The signed-in console visibly rendered all five logs and CPU/memory graphs.
+- Authenticated MCP returned the same five logs and eight one-minute points in each
+  of six CPU/memory usage/request/limit series. Memory usage was about 7.6 MiB.
+  Cost query returned one component allocation. Traces/alerts/incidents queries
+  succeeded with empty results: the pilot emits no application spans, and no data
+  or incidents were fabricated. Seventeen tools discovered; anonymous calls get 401.
+- Observer URL is https://onemind-observer.tail717ba0.ts.net; MCP path /mcp. Console
+  clients fetch directly, so registration must not use cluster-only DNS. Issuer,
+  audience, read-only authorization and tailnet isolation remain enabled. CORS
+  permits the console and portal origins only. Internal webhook port 8081 is not exposed.
+- Operator setup and actual Claude MCP connection checks passed for Kubernetes,
+  portal, control-plane and Observer servers. Codex uses the existing short-lived
+  OPENCHOREO_MCP_TOKEN environment variable; restart clients to load registrations.
+
+#### Recovery gate
+
+Observer SQLite is persistent (live PVC 1 GiB), with a distinct encrypted Restic
+repository. Backup completed at 07:52:31 UTC, snapshot 583bae7f (three files).
+An Argo-owned isolated restore to a NEW protected PVC completed at 07:59:46 UTC.
+The non-root, read-only verifier reported SQLite integrity_check=ok and the
+alert_entries/incident_entries tables. Production storage was never overwritten.
+The manual source trigger was removed after verification; daily schedule is 04:50
+UTC, next run 2026-10-20T04:50:00Z. The restore PVC remains prune/delete protected;
+cleanup requires explicit storage-deletion approval.
+
+#### PRs, rollout corrections and validation
+
+- Capacity/resource hygiene: [#300](https://github.com/onemindos/omos/pull/300),
+  [#301](https://github.com/onemindos/omos/pull/301), [#302](https://github.com/onemindos/omos/pull/302),
+  [#303](https://github.com/onemindos/omos/pull/303), [#304](https://github.com/onemindos/omos/pull/304),
+  [#305](https://github.com/onemindos/omos/pull/305).
+- Plane/modules and activation: [#306](https://github.com/onemindos/omos/pull/306),
+  [#307](https://github.com/onemindos/omos/pull/307).
+- Live verification fixes: [#308](https://github.com/onemindos/omos/pull/308) removes
+  upstream setup Base64 line wrapping without changing credentials and restricts
+  event labels to avoid mapping collisions; [#309](https://github.com/onemindos/omos/pull/309)
+  adds isolated recovery and uses Authentik's public token URL so the minted issuer
+  matches trust configuration; [#310](https://github.com/onemindos/omos/pull/310)
+  registers the browser-reachable private HTTPS Observer URL. URL caches expire in five minutes.
+- Local pinned Helm/Kustomize renders, changed YAML/schema gates, live CRD dry runs,
+  OTel 0.156.0 validation/fan-out test, MCP JSON/SSE/auth/config-idempotence checks,
+  ShellCheck and secret scans passed. Full make validate still fails on pre-existing
+  onetak/TAK/Matrix YAML lint debt. Later GitHub CI jobs did not start because of an
+  account payment/spending-limit error; no billing settings or merge rules were changed.
+- Final cluster snapshot: 70 Argo Applications, 68 Synced/Healthy. The only exceptions
+  are pre-existing platform-matrix (OutOfSync/Healthy) and platform-openclaw
+  (Synced/Progressing). Existing portal remains 2/2 available, readiness HTTP 200.
+  OpenSearch's existing self-signed/demo backend TLS is unchanged; hardening is separate.
+
+Next unfinished phase: **Phase 6**. This does not authorize starting it automatically.
 
 ### Phase 6: One portal
 

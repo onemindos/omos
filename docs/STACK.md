@@ -8,6 +8,18 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 - **Development phase:** every app is deliberate (system integration). This file ranks apps; it does not recommend removing any.
 - **Owner:** there is one operator, `zeus`, for everything. The "Owner" column is therefore omitted from the tables; the first thing to change when a second person joins is to add it.
 
+## Phase 5 addendum — 2026-10-19, 08:07 UTC
+
+This narrow refresh does not recertify the older inventory below. Live cluster:
+4 nodes, 70 Argo Applications (68 Synced/Healthy); only pre-existing Matrix
+OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending pods.
+All nodes are below 78% requested CPU/memory. OpenCost duplicate KSM emission is off.
+OpenChoreo observability core/modules are deployed on existing backends, with
+an authenticated tailnet Observer, real console/MCP pilot logs and metrics, and
+verified encrypted SQLite backup/isolated restore. See the timestamped
+[Phase 5 evidence](../PLATFORM-ROADMAP.md#phase-5-capacity-then-observability).
+Older node counts, request percentages and M2 findings below are historical.
+
 ## Summary
 
 | Item | Count / value |

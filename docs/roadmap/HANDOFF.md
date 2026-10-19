@@ -1,18 +1,25 @@
 # Handoff: continuing the platform roadmap
 
-Written 2026-10-18 after phase 2. Any AI agent (Claude Code, Codex, another) or person can
-continue from here. The plan, tracker and decisions live in
-[`PLATFORM-ROADMAP.md`](../../PLATFORM-ROADMAP.md); this file says where things stand and how to work.
+Updated 2026-10-19 after live Phase 5 acceptance. The authoritative tracker and
+phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
 ## Where we are
 
-Phases 0, 1 and 2 are done (PRs #256 to #277). Next is **phase 3** (pilot one app in OpenChoreo).
-Phases 3 to 8 each have a brief in this folder (on the draft PR branch until merged) and a draft PR carrying it. Open items:
+Phases 0–5 are done. **Phase 6 (one portal) is the first unfinished phase**; its
+brief is on draft PR [#282](https://github.com/onemindos/omos/pull/282).
+Do not begin a later phase or treat this handoff as authorization to deploy it.
 
-- Zeus has not yet signed in to the OpenChoreo console as `akadmin`
-  (`https://onemind-console.tail717ba0.ts.net`). If it fails, reopen phase 2.
-- `platform-matrix` is OutOfSync and `platform-openclaw` was still progressing at the last check.
-- The ecosystem node sits near 99% CPU requested (phase 5 work).
+- STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
+- Phase 5: all nodes below 78% requested CPU/memory; authenticated Observer core and
+  modules live, real logs/metrics in console and MCP, isolated backup recovery passed.
+- Zeus signed in to the console; the browser gate passed on 2026-10-19.
+- Existing exceptions remain: platform-matrix OutOfSync/Healthy and platform-openclaw
+  Synced/Progressing. These are not newly caused Phase 5 failures.
+- GitHub later refused to start CI jobs because of an account payment/spending-limit
+  error. Do not change billing or weaken merge requirements. Local validation evidence
+  and existing whole-tree YAML lint debt are recorded in Phase 5.
+- Recovery PVC observer-restore-20261019 is intentionally protected/retained. Ask
+  before storage cleanup; never delete or restore over production storage.
 
 ## Briefs and draft PRs
 
@@ -25,15 +32,15 @@ Phases 3 to 8 each have a brief in this folder (on the draft PR branch until mer
 | 7 | [phase-7-migrate-apps.md](phase-7-migrate-apps.md) | Move Layer 3 apps project by project | [#283](https://github.com/onemindos/omos/pull/283) |
 | 8 | [phase-8-expand.md](phase-8-expand.md) | Home server and Hermes | [#284](https://github.com/onemindos/omos/pull/284) |
 
-Each draft PR adds only its brief. Work the phase on that PR's branch (or a branch from it),
+Completed briefs record evidence; future draft PRs initially add only a brief. Work the phase on that PR's branch (or a branch from it),
 keep the PR a draft until the gate passes, then mark it ready and merge. Every PR also updates the
 tracker in `PLATFORM-ROADMAP.md`.
 
-## Access (set up in phase 1 and 2)
+## Access (set up through Phase 5)
 
 - Read-only cluster and portal access for AI agents: `scripts/ai-operator/setup.sh`, documented in
   [`docs/operations/ai-operator-access.md`](../operations/ai-operator-access.md). MCP servers:
-  `onemind-kubernetes`, `onemind-backstage`, `onemind-openchoreo` (63 read tools; writes refused).
+  `onemind-kubernetes`, `onemind-backstage`, `onemind-openchoreo` and `onemind-openchoreo-obs` (17 Observer query tools; writes refused).
 - Changes to the cluster go through Git and Argo CD. Mutating `kubectl` needs the admin context
   `do-nyc3-omos-cloud` and is only for incidents and one-off operations (for example re-running an
   Argo hook).
