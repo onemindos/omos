@@ -6,3 +6,4 @@ adapter:
   openSearchSecretName: opensearch-admin-credentials
 openSearchSetup:
   openSearchSecretName: opensearch-admin-credentials
+  enabled: false
