@@ -31,7 +31,7 @@ import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { navModule } from './modules/nav';
 import { homeModule } from './modules/home';
 import { todayPlugin } from './modules/home/Today';
-import { systemsPlugin } from './modules/systems';
+import { systemsPlugin } from '@internal/plugin-onemind-systems';
 import { authModule } from './modules/auth';
 import { servicesModule, accessModule } from './modules/services';
 import { assistantPlugin } from './modules/assistant';

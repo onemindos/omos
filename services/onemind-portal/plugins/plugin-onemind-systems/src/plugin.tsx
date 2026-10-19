@@ -10,6 +10,7 @@ const catalogUrl = (r:string) => {const [kind,rest]=r.split(':');const [namespac
 // Catalog metadata is untrusted. Resolve relative paths against a fixed same-origin
 // placeholder and reject executable schemes, protocol-relative URLs and backslashes.
 function safeMetadataLink(value:string):string|undefined {
+  // eslint-disable-next-line no-control-regex
   if (typeof value !== 'string' || !value || /[\u0000-\u0020\u007f\\]/.test(value)) return undefined;
   try {
     if (/^https?:\/\//i.test(value)) {
@@ -27,17 +28,27 @@ function InventoryState({entity}:{entity:Entity}) {
   const observed=annotations['onemind.io/inventory-observed-at']||annotations['onemind.io/observed-at'];
   const checked=annotations['onemind.io/inventory-last-checked-at'];
   const review=state==='missing-review-required'||state==='retirement-review-required';
-  return <Box mt={1}>
+  return (
+    <Box mt={1}>
     <Typography variant="caption" display="block" color={review?'error':'textSecondary'}>Inventory state: {state||'not recorded'}{review?' · review required; absence does not prove deletion':''}</Typography>
     <Typography variant="caption" display="block">Last successful discovery: {observed||'not recorded'}</Typography>
     {checked&&<Typography variant="caption" display="block">Last discovery check: {checked}</Typography>}
     {annotations['onemind.io/inventory-missing-observations']&&<Typography variant="caption" display="block">Missing discovery observations: {annotations['onemind.io/inventory-missing-observations']}</Typography>}
-  </Box>;
+  </Box>
+  );
 }
 function Systems(){
-  const discovery=useApi(discoveryApiRef),api=useApi(fetchApiRef);
-  const [entities,setEntities]=useState<Entity[]>([]),[loading,setLoading]=useState(true),[error,setError]=useState(false),[partial,setPartial]=useState(false),[loadedAt,setLoadedAt]=useState('');
-  const [query,setQuery]=useState(''),[focus,setFocus]=useState(''),[direction,setDirection]=useState('dependsOn'),[reload,setReload]=useState(0);
+  const discovery = useApi(discoveryApiRef);
+  const api = useApi(fetchApiRef);
+  const [entities, setEntities] = useState<Entity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [partial, setPartial] = useState(false);
+  const [loadedAt, setLoadedAt] = useState('');
+  const [query, setQuery] = useState('');
+  const [focus, setFocus] = useState('');
+  const [direction, setDirection] = useState('dependsOn');
+  const [reload, setReload] = useState(0);
   useEffect(()=>{let active=true;const controller=new AbortController();setLoading(true);setError(false);
     (async()=>{try{const base=await discovery.getBaseUrl('catalog');let cursor:string|undefined;const result:Entity[]=[];
       do{const url=new URL(`${base}/entities/by-query`);url.searchParams.set('limit','500');if(cursor)url.searchParams.set('cursor',cursor);
@@ -54,7 +65,8 @@ function Systems(){
   const first=related(focus);
   const label=(r:string)=>byRef.get(r)?.metadata.title||r;
   const node=(r:string)=><Box p={2} border={1} borderColor="divider" borderRadius={8}><Link href={catalogUrl(r)}>{label(r)}</Link><Typography variant="caption" display="block">{r}</Typography>{byRef.get(r)?<InventoryState entity={byRef.get(r)!}/>:<Typography color="error">Referenced entity is missing from this catalog view.</Typography>}<Button size="small" onClick={()=>setFocus(r)}>Explore</Button></Box>;
-  return <Box p={3}><Typography variant="h4">Systems</Typography><Typography>Explore documented dependencies and their impact. These relationships describe architecture; they are not live health checks.</Typography>
+  return (
+    <Box p={3}><Typography variant="h4">Systems</Typography><Typography>Explore documented dependencies and their impact. These relationships describe architecture; they are not live health checks.</Typography>
     <Box my={2}><Button onClick={()=>setReload(x=>x+1)} disabled={loading}>Refresh catalog</Button> <Link href="/catalog-graph">Open full catalog graph</Link></Box>
     {loading&&<Typography>Loading catalog relationships…</Typography>}{error&&<Typography color="error">Catalog update failed. Any previous results may be stale.</Typography>}{partial&&<Typography color="error">View limited to 5,000 entities. Missing relationships may be outside this view.</Typography>}
     {loadedAt&&<Typography variant="caption">Catalog loaded {new Date(loadedAt).toLocaleString()}. Inventory observation dates below refer to discovery snapshots.</Typography>}
@@ -68,6 +80,7 @@ function Systems(){
       {first.map(r=><Box key={r} my={2}><Typography variant="caption">{label(focus)} → {direction==='dependsOn'?'depends on':'is depended on by'}</Typography>{node(r)}<Box ml={3} mt={1}>{related(r).filter(next=>next!==focus&&next!==r).map(next=><Box key={next} mt={1}><Typography variant="caption">→ {direction==='dependsOn'?'depends on':'is depended on by'}</Typography>{node(next)}</Box>)}</Box></Box>)}
       <Typography variant="h6">Other recorded relationships</Typography>{entity.relations?.filter(x=>!['dependsOn','dependencyOf'].includes(x.type)).map(x=><Typography key={`${x.type}:${x.targetRef}`}>{x.type}: <Link href={catalogUrl(x.targetRef)}>{label(x.targetRef)}</Link></Typography>)}
     </>}
-  </Box>;
+  </Box>
+  );
 }
 export const systemsPlugin=createFrontendPlugin({pluginId:'onemind-systems',extensions:[PageBlueprint.make({params:{path:'/systems',title:'Systems',icon:<AccountTreeIcon/>,loader:async()=> <Systems/>}})]});

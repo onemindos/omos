@@ -6034,6 +6034,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-systems@workspace:^, @internal/plugin-onemind-systems@workspace:plugins/plugin-onemind-systems":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-systems@workspace:plugins/plugin-onemind-systems"
+  dependencies:
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/core-plugin-api": "npm:1.12.10"
+    "@backstage/frontend-plugin-api": "npm:0.18.1"
+    "@material-ui/core": "npm:^4.12.2"
+    "@material-ui/icons": "npm:^4.9.1"
+    "@types/react": "npm:18.3.28"
+    react-dom: "npm:^18.0.2"
+  peerDependencies:
+    react: ^18.0.2
+    react-dom: ^18.0.2
+  languageName: unknown
+  linkType: soft
+
 "@internationalized/date@npm:^3.12.0, @internationalized/date@npm:^3.12.1, @internationalized/date@npm:^3.12.4":
   version: 3.12.4
   resolution: "@internationalized/date@npm:3.12.4"
@@ -14306,6 +14323,7 @@ __metadata:
     "@backstage/theme": "npm:0.7.3"
     "@backstage/ui": "npm:0.18.0"
     "@internal/plugin-onemind-offline": "workspace:^"
+    "@internal/plugin-onemind-systems": "workspace:^"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
     "@playwright/test": "npm:^1.32.3"
