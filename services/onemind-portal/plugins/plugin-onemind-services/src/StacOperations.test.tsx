@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { StacOperations, isStacEntity } from './StacOperations';
 
@@ -7,15 +7,15 @@ jest.mock('@backstage/core-plugin-api', () => ({
   useApi: jest.fn(),
 }));
 const fetch = jest.fn();
+const discovery = {
+  getBaseUrl: async () => 'https://portal.example.test/api/onemind-services',
+};
+const fetchApi = { fetch };
+afterEach(() => jest.useRealTimers());
 beforeEach(() => {
   fetch.mockReset();
   (useApi as jest.Mock).mockImplementation(ref =>
-    ref === discoveryApiRef
-      ? {
-          getBaseUrl: async () =>
-            'https://portal.example.test/api/onemind-services',
-        }
-      : { fetch },
+    ref === discoveryApiRef ? discovery : fetchApi,
   );
 });
 const fixture = () => ({
@@ -77,6 +77,43 @@ test('does not replace a failed observation with healthy zeroes', async () => {
   render(<StacOperations />);
   expect(await screen.findByText(/Observation unavailable/)).toBeTruthy();
   expect(screen.queryByText(/Collections returned:/)).toBeNull();
+});
+test('a hung request becomes unavailable instead of remaining loading forever', async () => {
+  jest.useFakeTimers();
+  fetch.mockImplementation(() => new Promise(() => {}));
+  render(<StacOperations />);
+  await act(async () => {
+    await Promise.resolve();
+  });
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(15_001);
+  });
+  expect(screen.getByText(/Observation unavailable/)).toBeTruthy();
+  expect(screen.queryByText(/Loading service evidence/)).toBeNull();
+});
+test('a timed-out refresh retains previous evidence only as stale and can retry', async () => {
+  jest.useFakeTimers();
+  fetch.mockResolvedValueOnce({ ok: true, json: async () => fixture() });
+  render(<StacOperations />);
+  await act(async () => {
+    await Promise.resolve();
+  });
+  expect(screen.getByText(/Collections returned:/)).toBeTruthy();
+  fetch.mockImplementation(() => new Promise(() => {}));
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(60_000);
+  });
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(15_001);
+  });
+  expect(screen.getByText(/Stale observation/)).toBeTruthy();
+  expect(screen.getByText(/Collections returned:/)).toBeTruthy();
+  fetch.mockResolvedValue({ ok: true, json: async () => fixture() });
+  await act(async () => {
+    await jest.advanceTimersByTimeAsync(60_000);
+  });
+  expect(screen.queryByText(/Observation unavailable/)).toBeNull();
+  expect(screen.queryByText(/Stale observation/)).toBeNull();
 });
 test('rejects an unknown observation contract', async () => {
   fetch.mockResolvedValue({

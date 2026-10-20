@@ -348,12 +348,13 @@ export async function observeStacEvidence(
       'Read-only development pilot observations. Argo application state is shared configuration scope, not exclusive app health. No mutation capability is exposed.',
     partial:
       sources.some(r => r.status === 'rejected') ||
-      workloads.some(w => w.state === 'unknown') ||
+      workloads.some(w => w.state !== 'ready') ||
       [browserHttp, apiHttp, collectionHttp, searchHttp].some(
         p => p.state !== 'responding',
       ) ||
       data.state !== 'observed' ||
       apps.length !== names.length ||
+      apps.some(a => a.health !== 'Healthy' || a.sync !== 'Synced') ||
       workloads.some(
         w => w.cpu?.state !== 'observed' || w.memory?.state !== 'observed',
       ),

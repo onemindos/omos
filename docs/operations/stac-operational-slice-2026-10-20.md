@@ -76,6 +76,26 @@ or immutable-image acceptance. Live release evidence must follow.
 
 ## Release/live gate
 
+### Follow-through review (2026-10-20)
+
+Zeus explicitly approved verified local/Linux release gates while GitHub's jobs
+cannot start because of its account payment/spending restriction. Do not alter
+billing, disable checks, force an administrator merge, or mark those jobs green.
+
+Fresh review reproduced missing incomplete-state warnings for reconciling/zero
+replicas and Progressing/OutOfSync Argo, plus a hanging browser request that could
+stay loading indefinitely. Added regressions and repairs: non-ready/nonaccepted
+states set the incomplete summary; a 15-second client request deadline retains
+older evidence only as stale, permits later retries and cancels on unmount.
+The observation clock advances during polling and future timestamps are stale.
+
+The previous published candidate at source `af7770fb` / digest
+`sha256:fab6522342b40e6ce595ab2e932c84399d3aefec843af45829bade802f955de3`
+was independently verified in GHCR as Linux/AMD64 with matching revision/source
+labels. **It predates these repairs and must not be promoted as their image.**
+A new clean-commit Linux build, source label verification and separate digest-pin
+PR are required. This does not fix STAC's backing schema or certify a new rollout.
+
 - [ ] Publish and remotely verify an immutable Linux/AMD64 image with all gates.
 - [ ] Pin its digest in a separate GitOps PR; Argo healthy and both replicas ready.
 - [ ] Process API/dependency metadata with stable references, no new duplicates,

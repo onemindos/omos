@@ -148,7 +148,26 @@ test('unobserved generation and intentional zero replicas are not reported ready
   const result = await observeStacEvidence(deps);
   expect(result.workloads[1].state).toBe('reconciling');
   expect(result.workloads[2].state).toBe('scaled-to-zero');
+  expect(result.partial).toBe(true);
 });
+test.each([
+  ['Progressing', 'Synced'],
+  ['Healthy', 'OutOfSync'],
+])(
+  'nonaccepted GitOps state %s/%s marks the joined observation incomplete',
+  async (health, sync) => {
+    const { deps } = dependencies();
+    const initial = deps.list;
+    deps.list = async <T>(path: string) => {
+      if (!path.endsWith('/applications')) return initial<T>(path);
+      return ['platform-onetak', 'platform-openchoreo-projects'].map(name => ({
+        metadata: { name },
+        status: { health: { status: health }, sync: { status: sync } },
+      })) as T[];
+    };
+    expect((await observeStacEvidence(deps)).partial).toBe(true);
+  },
+);
 test.each(['NaN', '-1', 'Infinity', ''])(
   'invalid metric %s is unknown',
   async value => {

@@ -685,6 +685,16 @@ Implementation/rollout PRs: #311–#319. Detailed evidence and rollback:
 [Phase 6 integration runbook](docs/operations/phase6-portal-integration.md).
 Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
 
+### Phase 6 release follow-through — local/Linux executor
+
+2026-10-20: Zeus approved the existing verified local/Linux release checks while
+GitHub cannot start hosted jobs, and requested a reusable deployment/removal
+pipeline. No billing/check-disable/admin-bypass permission is implied. #330's
+review added explicit incomplete-state and bounded-request regressions; its old
+published candidate is superseded for these changes. Rebuild and remotely verify
+the new source before a separate GitOps digest-pin/live acceptance step. Phase 6
+remains In progress; no migration or removal is certified by source tests.
+
 ### Phase 7: Migrate Layer 3
 
 Order: `omos-feeds`, `onetak`, `takml`, `onemind`, `agent-fabric`, `n8n`, `matrix`,

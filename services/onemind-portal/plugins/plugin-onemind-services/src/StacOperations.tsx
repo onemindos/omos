@@ -88,32 +88,54 @@ export function StacOperations() {
   const [data, setData] = useState<Evidence>();
   const [error, setError] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [now, setNow] = useState(Date.now);
   useEffect(() => {
     let active = true;
     let pending = false;
-    const controller = new AbortController();
+    let cancelPending: (() => void) | undefined;
     const load = async () => {
+      // Advance evidence age even if an in-flight request never resolves.
+      setNow(Date.now());
       if (pending) return;
       pending = true;
+      const controller = new AbortController();
+      let rejectDeadline: (error: Error) => void = () => {};
+      const deadline = new Promise<never>((_, reject) => {
+        rejectDeadline = reject;
+      });
+      const cancel = () => {
+        controller.abort();
+        rejectDeadline(new Error('Observation request unavailable'));
+      };
+      cancelPending = cancel;
+      const timer = setTimeout(cancel, 15_000);
       try {
-        const base = await discovery.getBaseUrl('onemind-services');
-        const response = await api.fetch(`${base}/stac`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('Observation unavailable');
-        const value = await response.json();
+        const value = await Promise.race([
+          (async () => {
+            const base = await discovery.getBaseUrl('onemind-services');
+            const response = await api.fetch(`${base}/stac`, {
+              signal: controller.signal,
+            });
+            if (!response.ok) throw new Error('Observation unavailable');
+            return response.json();
+          })(),
+          deadline,
+        ]);
         if (
           value.schemaVersion !== 'onemind.stac-evidence.v1' ||
           !Array.isArray(value.workloads)
         )
           throw new Error('Invalid observation contract');
         if (active) {
+          setNow(Date.now());
           setData(value);
           setError(false);
         }
       } catch {
         if (active) setError(true);
       } finally {
+        clearTimeout(timer);
+        if (cancelPending === cancel) cancelPending = undefined;
         pending = false;
       }
     };
@@ -121,7 +143,7 @@ export function StacOperations() {
     const timer = setInterval(load, 60_000);
     return () => {
       active = false;
-      controller.abort();
+      cancelPending?.();
       clearInterval(timer);
     };
   }, [discovery, api, refresh]);
@@ -129,7 +151,8 @@ export function StacOperations() {
     error ||
     (!!data &&
       (!Number.isFinite(Date.parse(data.observedAt)) ||
-        Date.now() - Date.parse(data.observedAt) > 180_000));
+        now - Date.parse(data.observedAt) > 180_000 ||
+        Date.parse(data.observedAt) > now + 60_000));
   return (
     <Box p={3}>
       <Typography variant="h4">OneTAK · STAC operational picture</Typography>
