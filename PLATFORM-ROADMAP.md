@@ -753,8 +753,8 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 - Planning scope requested 2026-10-20: [full Kubernetes operating structure and
   execution queue](docs/architecture/kubernetes-operating-structure.md), backed by
   the [read-only baseline](docs/operations/kubernetes-structure-baseline-2026-10-20.md).
-  This is **not** a later-phase deployment or completion. Existing #331/#330
-  remain the immediate portal/readiness gates; #284 remains the home expansion
+  This is **not** a later-phase deployment or completion. #330/#335/#336
+  scoped portal release is verified; #331 records remaining trust/readiness gates; #284 remains the home expansion
   parent and must be revised against the actual Mac storage/power evidence.
 - [ ] Decide and verify the home runtime against actual hardware: proposed Mac
       ARM64 Linux VM/K3s pilot; Talos remains a dedicated-host candidate, not a
@@ -843,3 +843,20 @@ the known inactive workflow-plane target missing. Details and remaining limits:
 [STAC release evidence](docs/operations/stac-operational-slice-2026-10-20.md).
 Phase 6 is still In progress; STAC schema, broader trust/recovery and production
 expiry/second-role coverage are not certified by this release. No migration begun.
+
+### Kubernetes structure review — PR #333, 2026-10-20
+
+[#333](https://github.com/onemindos/omos/pull/333) reconciles the 20-category
+[operating structure](docs/architecture/kubernetes-operating-structure.md) with
+merged #331/#335/#336 and the fresh 17:40 UTC baseline. Existing integrations,
+upstream-supported but untested links and uninstalled candidates are distinguished.
+NATS StatefulSet Argo ownership is now observed; do not blindly re-adopt from an
+older report. SealedSecrets remains the repository credential pattern despite
+ESO controller presence. Portal pipeline proof is retained; other apps require
+reviewed profiles and removal remains plan-only. No new image/deployment required.
+
+Next structural implementation: #334 read-only public-ingress parity assessment
+and K02 ownership/recovery inventory. K03 will reuse existing onboarding templates
+and add a tested app/profile contract, not a second scaffolder. Remaining K00 trust
+checks stay open; no Phase 6 completion, Phase 7 migration, controller installation,
+OS/storage/provider change or widened AI permission is implied by this plan.
