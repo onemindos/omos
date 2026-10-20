@@ -5,6 +5,45 @@ every platform enhancement a prerequisite for every application migration.
 This is a planning/tracking change, not a release, cutover, credential change,
 schema migration, waiver of safety gates or claim that Phase 6 is complete.
 
+## Resume here: full Kubernetes / Backstage execution map
+
+Zeus subsequently requested PRs for the full Kubernetes structure, which apps we
+are using, Backstage soundness and the next implementation steps. The linked PRs
+below cover that request without pretending the entire stack is already integrated.
+
+| Order | PR | What it owns / next step |
+|---|---|---|
+| 1 — portal truth | This tracker **#331**, source [#330](https://github.com/onemindos/omos/pull/330) | Review source, verify immutable image/provenance, separate digest pin, then signed-in live UI/API/security acceptance. Fix app semantics rather than hide failures behind ready pods. |
+| 2 — structure | [#333](https://github.com/onemindos/omos/pull/333) | Full 20-category capability map, observed versus proposed apps, controller boundaries, per-app Backstage/onboarding contract and K00–K11 execution packages. Planning only. |
+| 2 — foundation assessment (parallel) | [#334](https://github.com/onemindos/omos/pull/334) | Retired community ingress-nginx assessment: eight live nginx-class Ingress resources; installed Cilium/Gateway API parity test, safe canary and per-route rollback plan. No traffic/DNS/identity change authorized. |
+| 3 — agent surface | [#332](https://github.com/onemindos/omos/pull/332) | Staged private LibreChat → actual Legacy. Metadata/discovery work; configured DigitalOcean inference returned 402. Identity, sealed credentials, database, backup/restore and session/approval gates must pass before sync. |
+| 3 — home preparation | Existing [#284](https://github.com/onemindos/omos/pull/284) | Revise old dedicated-host assumptions for the Mac: storage, ARM64 Linux VM/runtime, 24/7 closed-lid/reboot/FileVault, private access, local recovery and WAN-loss acceptance. Do not move files or create the VM yet. |
+| Later — app and site expansion | Existing #283/#320/#321 and scoped follow-up PRs from #333 | One approved app/capability at a time; Karmada/KubeEdge and ML after prerequisites. No blanket namespace migration or competing app controllers. |
+
+**Fresh read-only observation, 2026-10-20 around 16:33 UTC:** four Ready nodes,
+Backstage 2/2, 69 Argo Applications with 67 Synced/Healthy; existing Matrix
+OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending/unready
+nonterminal pods in that sweep. Internal HTTP200 checks do not certify application
+semantics, browser access, backup restore or AI tool permissions. Full evidence
+and actual installed/proposed services are in #333, not inferred from this count.
+
+**Do first:** Section A below, plus the read-only route/ownership/recovery
+assessment. Do not begin by installing Crossplane, KubeVela, Karmada, KubeEdge,
+Rancher/Fleet or a second mesh. Their inclusion in the blueprint means a bounded
+evaluation/acceptance task, not current deployment or a final platform decision.
+Review existing Helm-CLI ownership exceptions before adoption. Independent backup
+and public ingress lifecycle risks remain visible even while portal work proceeds.
+
+Mac internal free space was only 13–14 GiB; existing external data and Time Machine
+volumes are **not** approved for repurposing. The latest GitHub jobs were blocked
+from starting by account payment/spending restrictions. No provider, billing,
+credential, permission or storage changes are part of these PRs.
+
+All three new PRs are drafts. They may touch the same roadmap/handoff sections:
+rebase/reconcile the tracker and rerun checks against current main before merging
+them one at a time. Do not resolve conflicts by dropping another PR's gates or
+copying a historical acceptance claim over current known failures.
+
 ## Rule: core portal gate, then one application's safety gate
 
 The immediate release gate is the existing
@@ -106,6 +145,13 @@ Re-observe live conditions before acting; this is not a fresh health audit.
 
 ## D. Already tracked separately — do not duplicate or silently deploy
 
+- [#333: full Kubernetes operating structure](https://github.com/onemindos/omos/pull/333)
+  and [#334: public ingress lifecycle](https://github.com/onemindos/omos/pull/334):
+  preparation and explicit acceptance tasks, not installed extra platforms.
+- [#332: private LibreChat/Legacy pilot](https://github.com/onemindos/omos/pull/332):
+  staged source, not usable chat or proven persistence until its gates pass.
+- [#284: home expansion](https://github.com/onemindos/omos/pull/284): update against
+  the user's actual Mac production requirement before infrastructure work.
 - [#328: workflow-plane pilot](https://github.com/onemindos/omos/pull/328): high
   priority, optional for prebuilt-image migration; no build-plane installation here.
 - [#283: Phase 7 app migrations](https://github.com/onemindos/omos/pull/283): parent

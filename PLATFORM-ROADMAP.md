@@ -140,6 +140,17 @@ blanket prerequisites for every migration. State/recovery and security failures
 still block affected applications; risks require explicit disposition, not a waiver.
 Phase 6 remains In progress and Phase 7 Not started until actual acceptance.
 
+Full-stack continuation requested 2026-10-20: **#331 is the resume index** linking
+[#333](https://github.com/onemindos/omos/pull/333) (20-category Kubernetes structure,
+installed/proposed apps and execution queue),
+[#334](https://github.com/onemindos/omos/pull/334) (public ingress lifecycle plan),
+[#332](https://github.com/onemindos/omos/pull/332) (staged private Legacy/LibreChat)
+and existing [#284](https://github.com/onemindos/omos/pull/284) (home expansion,
+to revise against Mac evidence). Planning/read-only preparation may run in
+parallel with Phase 6. This does not authorize new controllers, app cutovers,
+identity/DNS/storage/provider/billing changes or wider AI permissions. Start with
+the core gate and foundation assessment, not a simultaneous platform installation.
+
 ## Phases
 
 ### Phase 0: Blueprint

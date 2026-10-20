@@ -17,6 +17,20 @@ Broader token-lifecycle, launcher/empty-card and COP coverage gates remain in th
 evidence; absent workflow plane stays explicit and build workflows disabled.
 Zeus requested no further Ollama delegation: handle follow-through directly.
 
+**Resume index for the full Kubernetes structure request:**
+[readiness/ordered queue #331](https://github.com/onemindos/omos/pull/331),
+[full structure #333](https://github.com/onemindos/omos/pull/333),
+[public ingress lifecycle #334](https://github.com/onemindos/omos/pull/334),
+[staged private Legacy/LibreChat #332](https://github.com/onemindos/omos/pull/332).
+Begin with the #330 source/image/live acceptance chain and read-only foundation
+assessment; keep #284 as home expansion parent, revised against the Mac's actual
+storage/power/runtime gates. Eight nginx-class Ingress resources still need a
+maintenance-lifecycle plan. Legacy's configured inference failed with provider 402;
+Mac internal free space is only 13–14 GiB. Proposed Karmada/KubeEdge/Crossplane/
+KubeVela are not installed/accepted capabilities. Draft/planning PRs do not deploy
+or merge themselves, complete a phase or authorize credential/billing/permission
+changes. Reconcile shared tracker edits before merging one PR at a time.
+
 - STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
 - Phase 5: all nodes below 78% requested CPU/memory; authenticated Observer core and
   modules live, real logs/metrics in console and MCP, isolated backup recovery passed.
