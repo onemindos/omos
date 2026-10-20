@@ -263,7 +263,7 @@ metadata:
   name: backup-grafana-sqlite
   namespace: monitoring
 spec:
-  suspend: true
+  suspend: false
   schedule: 25 4 * * *
   timeZone: Etc/UTC
   concurrencyPolicy: Forbid
@@ -345,4 +345,87 @@ spec:
                   matchLabels:
                     app.kubernetes.io/instance: monitoring
                     app.kubernetes.io/name: grafana
+                    onemind.io/grafana-persistent: 'true'
                 topologyKey: kubernetes.io/hostname
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-state-verify-20261020
+  namespace: monitoring
+spec:
+  backoffLimit: 1
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      labels:
+        app: grafana-state
+        backup-kind: grafana
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: grafana-backup-pull
+      securityContext:
+        runAsUser: 472
+        runAsGroup: 472
+        runAsNonRoot: true
+        fsGroup: 472
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: state
+        image: ghcr.io/onemindos/platform-backup@sha256:236250e0cb4165cb94ec7b22ab926ad4307ad435a430e5ef867acce93b6d8d30
+        command:
+        - python3
+        - /scripts/state.py
+        - backup
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        envFrom:
+        - secretRef:
+            name: grafana-state-backup
+        env:
+        - name: HOME
+          value: /tmp
+        - name: S3_REGION
+          value: nyc3
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+        volumeMounts:
+        - name: data
+          mountPath: /grafana
+          readOnly: true
+        - name: scripts
+          mountPath: /scripts
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: grafana-data
+      - name: scripts
+        configMap:
+          name: grafana-state-scripts
+      - name: tmp
+        emptyDir:
+          sizeLimit: 256Mi
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/instance: monitoring
+                app.kubernetes.io/name: grafana
+                onemind.io/grafana-persistent: 'true'
+            topologyKey: kubernetes.io/hostname

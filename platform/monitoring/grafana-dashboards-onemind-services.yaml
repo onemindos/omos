@@ -1,0 +1,464 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-onemind-services
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  onemind-backstage.json: |
+    {
+      "uid": "onemind-backstage",
+      "title": "OneMind / Backstage",
+      "description": "Observed Kubernetes workload telemetry only: backstage/backstage (deployment). Pod health is not app correctness, NATS delivery, data freshness or alert coverage. Prometheus alerts and Grafana-managed rules are separate.",
+      "tags": [
+        "onemind-service",
+        "backstage",
+        "backstage"
+      ],
+      "schemaVersion": 39,
+      "version": 1,
+      "editable": false,
+      "timezone": "browser",
+      "refresh": "30s",
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "templating": {
+        "list": []
+      },
+      "annotations": {
+        "list": []
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Ready replicas",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "kube_deployment_status_replicas_available{namespace=\"backstage\",deployment=\"backstage\"}",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 2,
+          "title": "CPU usage by pod",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (pod) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"backstage\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"backstage\",workload=\"backstage\",workload_type=\"deployment\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "cores"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 3,
+          "title": "Memory working set by pod",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"backstage\",job=\"kubelet\",metrics_path=\"/metrics/cadvisor\",container!=\"\",image!=\"\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"backstage\",workload=\"backstage\",workload_type=\"deployment\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 4,
+          "title": "Restarts (last hour, current pods)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"backstage\"}[1h]) * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"backstage\",workload=\"backstage\",workload_type=\"deployment\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none"
+            },
+            "overrides": []
+          }
+        }
+      ],
+      "links": [
+        {
+          "title": "Backstage service and runbook",
+          "url": "https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354",
+          "type": "link",
+          "targetBlank": true
+        }
+      ]
+    }
+  onemind-backstage-postgres.json: |
+    {
+      "uid": "onemind-backstage-postgres",
+      "title": "OneMind / Backstage PostgreSQL",
+      "description": "Observed Kubernetes workload telemetry only: backstage/backstage-postgres (statefulset). Pod health is not app correctness, NATS delivery, data freshness or alert coverage. Prometheus alerts and Grafana-managed rules are separate.",
+      "tags": [
+        "onemind-service",
+        "backstage",
+        "backstage-postgres"
+      ],
+      "schemaVersion": 39,
+      "version": 1,
+      "editable": false,
+      "timezone": "browser",
+      "refresh": "30s",
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "templating": {
+        "list": []
+      },
+      "annotations": {
+        "list": []
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Ready replicas",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "kube_statefulset_status_replicas_ready{namespace=\"backstage\",statefulset=\"backstage-postgres\"}",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 2,
+          "title": "CPU usage by pod",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (pod) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"backstage\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"backstage\",workload=\"backstage-postgres\",workload_type=\"statefulset\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "cores"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 3,
+          "title": "Memory working set by pod",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"backstage\",job=\"kubelet\",metrics_path=\"/metrics/cadvisor\",container!=\"\",image!=\"\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"backstage\",workload=\"backstage-postgres\",workload_type=\"statefulset\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 4,
+          "title": "Restarts (last hour, current pods)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"backstage\"}[1h]) * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"backstage\",workload=\"backstage-postgres\",workload_type=\"statefulset\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none"
+            },
+            "overrides": []
+          }
+        }
+      ],
+      "links": [
+        {
+          "title": "Backstage service and runbook",
+          "url": "https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351",
+          "type": "link",
+          "targetBlank": true
+        }
+      ]
+    }
+  onemind-nats.json: |
+    {
+      "uid": "onemind-nats",
+      "title": "OneMind / NATS workload",
+      "description": "Observed Kubernetes workload telemetry only: nats/nats (statefulset). Pod health is not app correctness, NATS delivery, data freshness or alert coverage. Prometheus alerts and Grafana-managed rules are separate.",
+      "tags": [
+        "onemind-service",
+        "nats",
+        "nats"
+      ],
+      "schemaVersion": 39,
+      "version": 1,
+      "editable": false,
+      "timezone": "browser",
+      "refresh": "30s",
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "templating": {
+        "list": []
+      },
+      "annotations": {
+        "list": []
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Ready replicas",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "kube_statefulset_status_replicas_ready{namespace=\"nats\",statefulset=\"nats\"}",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 2,
+          "title": "CPU usage by pod",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (pod) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"nats\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"nats\",workload=\"nats\",workload_type=\"statefulset\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "cores"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 3,
+          "title": "Memory working set by pod",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"nats\",job=\"kubelet\",metrics_path=\"/metrics/cadvisor\",container!=\"\",image!=\"\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"nats\",workload=\"nats\",workload_type=\"statefulset\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 4,
+          "title": "Restarts (last hour, current pods)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"nats\"}[1h]) * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\"nats\",workload=\"nats\",workload_type=\"statefulset\"})",
+              "legendFormat": "{{pod}}",
+              "range": true
+            }
+          ],
+          "gridPos": {
+            "x": 12,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "none"
+            },
+            "overrides": []
+          }
+        }
+      ],
+      "links": [
+        {
+          "title": "Backstage service and runbook",
+          "url": "https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac",
+          "type": "link",
+          "targetBlank": true
+        }
+      ]
+    }

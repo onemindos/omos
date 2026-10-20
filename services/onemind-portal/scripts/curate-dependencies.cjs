@@ -13,6 +13,7 @@ const reviewedWorkloads = [
     source: 'platform/backstage',
     runbook: 'resilience',
     runbookTitle: 'Portal recovery runbook',
+    grafanaUid: 'onemind-backstage',
   },
   {
     name: 'k8s-backstage-backstage-postgres-17d2f351',
@@ -22,6 +23,7 @@ const reviewedWorkloads = [
     source: 'platform/backstage',
     runbook: 'resilience',
     runbookTitle: 'Database recovery runbook',
+    grafanaUid: 'onemind-backstage-postgres',
   },
   {
     name: 'k8s-nats-nats-0dee54ac',
@@ -32,6 +34,7 @@ const reviewedWorkloads = [
     source: 'platform/nats',
     runbook: 'nats',
     runbookTitle: 'NATS operations runbook',
+    grafanaUid: 'onemind-nats',
   },
 ];
 const normalizeSelector = value => (value || '').split(',').sort().join(',');
@@ -60,6 +63,7 @@ function curateDependencies(entities) {
       );
     }
     Object.assign(annotations, {
+      'grafana/dashboard-selector': `uid == '${reviewed.grafanaUid}'`,
       'argocd/app-name': reviewed.application,
       'argocd/instance-name': 'onemind-cloud',
       'github.com/project-slug': 'onemindos/omos',
@@ -68,6 +72,11 @@ function curateDependencies(entities) {
     });
     const entityUrl = `${portalUrl}/catalog/default/component/${reviewed.name}`;
     const links = [
+      {
+        title: 'Grafana workload dashboard',
+        type: 'grafana',
+        url: `https://grafana.tail717ba0.ts.net/d/${reviewed.grafanaUid}`,
+      },
       {
         title: 'Live Kubernetes resources',
         type: 'kubernetes',

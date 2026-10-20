@@ -120,6 +120,7 @@ test('curation is pure, idempotent and restores all reviewed native mappings aft
       'argocd/app-name',
       'argocd/instance-name',
       'backstage.io/source-location',
+      'grafana/dashboard-selector',
     ]) {
       delete e.metadata.annotations?.[key];
     }
@@ -137,6 +138,18 @@ test('curation is pure, idempotent and restores all reviewed native mappings aft
       x => x.kind === 'Component' && x.metadata.name === target.name,
     );
     assert.equal(e.metadata.annotations['argocd/app-name'], target.application);
+    assert.equal(
+      e.metadata.annotations['grafana/dashboard-selector'],
+      `uid == '${target.grafanaUid}'`,
+    );
+    assert.ok(
+      e.metadata.links.some(
+        link =>
+          link.type === 'grafana' &&
+          link.url ===
+            `https://grafana.tail717ba0.ts.net/d/${target.grafanaUid}`,
+      ),
+    );
     assert.equal(
       e.metadata.annotations['argocd/instance-name'],
       'onemind-cloud',
@@ -239,4 +252,30 @@ test('portal dependency is re-created exactly once after inventory refresh', () 
       .spec.dependsOn.filter(ref => ref === databaseRef).length,
     1,
   );
+});
+
+test('installed predicate schema admits only explicit Grafana alert selector metadata', () => {
+  const {
+    parseFilterPredicate,
+    filterPredicateToFilterFunction,
+  } = require('@backstage/filter-predicates');
+  const predicate = parseFilterPredicate({
+    'metadata.annotations.grafana/alert-label-selector': { $exists: true },
+  });
+  const accepts = filterPredicateToFilterFunction(predicate);
+  assert.equal(
+    accepts({
+      metadata: { annotations: { 'grafana/dashboard-selector': 'nats' } },
+    }),
+    false,
+  );
+  assert.equal(
+    accepts({
+      metadata: {
+        annotations: { 'grafana/alert-label-selector': 'namespace=nats' },
+      },
+    }),
+    true,
+  );
+  assert.equal(accepts({ metadata: {} }), false);
 });

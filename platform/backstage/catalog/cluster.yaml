@@ -784,10 +784,14 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
     onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
+    grafana/dashboard-selector: uid == 'onemind-backstage'
   tags:
     - kubernetes
     - backstage
   links:
+    - title: Grafana workload dashboard
+      type: grafana
+      url: https://grafana.tail717ba0.ts.net/d/onemind-backstage
     - title: Live Kubernetes resources
       type: kubernetes
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/kubernetes
@@ -3790,10 +3794,14 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
     onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
+    grafana/dashboard-selector: uid == 'onemind-backstage-postgres'
   tags:
     - kubernetes
     - backstage
   links:
+    - title: Grafana workload dashboard
+      type: grafana
+      url: https://grafana.tail717ba0.ts.net/d/onemind-backstage-postgres
     - title: Live Kubernetes resources
       type: kubernetes
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/kubernetes
@@ -4091,10 +4099,14 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/nats
     onemind.io/deployment-source: platform/nats; platform/argocd/platform-nats.yaml
+    grafana/dashboard-selector: uid == 'onemind-nats'
   tags:
     - kubernetes
     - nats
   links:
+    - title: Grafana workload dashboard
+      type: grafana
+      url: https://grafana.tail717ba0.ts.net/d/onemind-nats
     - title: Live Kubernetes resources
       type: kubernetes
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/kubernetes
