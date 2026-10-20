@@ -44,7 +44,7 @@ AI that can see every layer and act within clear limits.
 | Layer | What it is | Managed by | What AI may do |
 |---|---|---|---|
 | **3. Apps** | Software we write or run as products | OpenChoreo Components (Projects group them) | See and act: restart, scale, roll back a release |
-| **2. Shared services** | Data, messaging, AI plumbing and observability that apps use | Argo CD; modelled in OpenChoreo as ResourceTypes and observability-plane modules | See, and propose changes as pull requests |
+| **2. Shared services** | Data, messaging, AI plumbing and observability that apps use | Argo CD/operator bootstrap; integrate managed service instances and dependencies through OpenChoreo ResourceTypes and observability modules, with reviewed ownership handoffs | See, and propose changes as pull requests |
 | **1. Foundation** | Everything needed to log in, reach, secure, back up and rebuild the platform, including OpenChoreo itself | Plain Argo CD (break-glass layer) | See only. May draft a pull request; a human merges |
 | **0. Kubernetes** | DOKS-managed system namespaces and the Cilium CNI | DigitalOcean | See only |
 
@@ -126,7 +126,7 @@ it could lock out both itself and the human who has to recover it.
 | 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
 | 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Done | [#282](https://github.com/onemindos/omos/pull/282) acceptance; [#318](https://github.com/onemindos/omos/pull/318) shared authz; [#319](https://github.com/onemindos/omos/pull/319) retirement | 7 |
-| 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
+| 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | In progress | Maputnik stateless quick win prepared; live acceptance pending | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
 ## Phases
@@ -673,9 +673,22 @@ Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
 Order: `omos-feeds`, `onetak`, `takml`, `onemind`, `agent-fabric`, `n8n`, `matrix`,
 `openclaw`, then `hermes` last.
 
+- **2026-10-20 quick-win exception:** the user requested low-risk apps first and
+  confirmed that shared infrastructure should be evaluated for OpenChoreo
+  management, not blanket-excluded. Start with a parallel Maputnik candidate in
+  the existing `onetak` Project; retain the legacy app until functional/UI/MCP
+  checks and a controlled cutover pass. This does not complete the `onetak` project
+  or change foundation recovery boundaries. See the
+  [docs-backed boundary correction](docs/research/2026-10-20-openchoreo-management-boundaries.md)
+  and [migration checks](docs/operations/phase7-maputnik-migration.md).
 - [ ] One PR per project. Old manifests are deleted only after the new release is healthy.
 - [ ] ResourceTypes for NATS streams and CNPG databases so components declare their
       dependencies.
+- [ ] Evaluate suitable shared-service instance ownership through ResourceTypes;
+      retain operator/bootstrap recovery and explicit cross-project contracts.
+- [ ] Prove the COP for both managed releases and independent foundation resources:
+      live source/freshness, runtime details, relevant UI/MCP/CLI access and no
+      inferred AI write authority from visibility alone.
 - [ ] Bring `matrix` back in sync and put the OpenClaw Deployment in Git as part of their moves.
 
 Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resources removed.
@@ -687,6 +700,13 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 - [ ] Revisit `takserver` placement.
 
 ## Decision log
+
+- **2026-10-20:** Shared does not mean technically ineligible for OpenChoreo.
+  ResourceTypes can govern managed infrastructure backed by existing operators;
+  ownership, project scope, recovery and UI/tool coverage must be checked rather
+  than assumed. Keep independent foundation recovery and existing read-only AI
+  permissions. User requested a Kubernetes COP and stateless quick wins; Maputnik
+  is the first parallel Phase 7 candidate, ahead of the original project order.
 
 | Date | Decision |
 |---|---|

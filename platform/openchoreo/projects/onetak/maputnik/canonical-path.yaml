@@ -1,0 +1,29 @@
+# This app uses relative asset URLs. Canonicalize the generated endpoint's bare
+# prefix before OpenChoreo's prefix-rewrite route serves the HTML. Exact path
+# matching takes precedence; the generated route still owns all app traffic.
+# Argo owns this distinct redirect resource, not OpenChoreo's runtime Deployment.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: maputnik-canonical-path
+  namespace: dp-default-onetak-development-b188bf98
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  parentRefs:
+    - name: gateway-default
+      namespace: openchoreo-data-plane
+  hostnames:
+    - development-default.apps.openchoreo.100-110-185-30.nip.io
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /maputnik-http
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /maputnik-http/
+            statusCode: 302

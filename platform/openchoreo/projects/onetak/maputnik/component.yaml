@@ -1,0 +1,72 @@
+# Phase 7a: parallel, stateless migration. The legacy onetak deployment is retained
+# until the new release passes functional and portal checks; no data is moved.
+apiVersion: openchoreo.dev/v1alpha1
+kind: Component
+metadata:
+  name: maputnik
+  namespace: default
+  annotations:
+    openchoreo.dev/display-name: Maputnik
+    openchoreo.dev/description: OneTAK map style editor; Phase 7 stateless quick win.
+spec:
+  owner:
+    projectName: onetak
+  autoDeploy: false
+  componentType:
+    kind: ClusterComponentType
+    name: deployment/onemind-service
+  traits:
+    - kind: ClusterTrait
+      name: cilium-gateway-ingress
+      instanceName: gateway
+      parameters:
+        port: 8888
+    - kind: ClusterTrait
+      name: health-probes
+      instanceName: health
+      parameters:
+        liveness:
+          enabled: true
+          handler:
+            httpGet:
+              path: /
+              port: 8888
+          periodSeconds: 30
+          failureThreshold: 3
+          timeoutSeconds: 3
+        readiness:
+          enabled: true
+          handler:
+            httpGet:
+              path: /
+              port: 8888
+          periodSeconds: 10
+          timeoutSeconds: 3
+        startup:
+          enabled: true
+          handler:
+            httpGet:
+              path: /
+              port: 8888
+          periodSeconds: 5
+          failureThreshold: 24
+          timeoutSeconds: 3
+---
+apiVersion: openchoreo.dev/v1alpha1
+kind: Workload
+metadata:
+  name: maputnik
+  namespace: default
+spec:
+  owner:
+    projectName: onetak
+    componentName: maputnik
+  container:
+    # Exact image digest observed on the existing healthy AMD64 pod, not :latest.
+    image: docker.io/maputnik/editor@sha256:35d3074330b01a55b14cd29c7a0168f09728afabc673b7d262eb70546eed7d75
+  endpoints:
+    http:
+      type: HTTP
+      port: 8888
+      basePath: /
+      visibility: [external]

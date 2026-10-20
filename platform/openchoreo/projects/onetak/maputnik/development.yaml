@@ -1,0 +1,22 @@
+apiVersion: openchoreo.dev/v1alpha1
+kind: ReleaseBinding
+metadata:
+  name: maputnik-development
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  owner:
+    projectName: onetak
+    componentName: maputnik
+  environment: development
+  releaseName: maputnik-v1
+  componentTypeEnvironmentConfigs:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
