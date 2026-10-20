@@ -1,7 +1,7 @@
 # Portal stabilization before further migrations
 
 Authorized by Zeus on 2026-10-20 after the live portal/catalog audit. This is a
-Phase 6 follow-up, not permission to start Phase 7. Historical October 19 release
+Phase 6 follow-up ([PR #322](https://github.com/onemindos/omos/pull/322)), not permission to start Phase 7. Historical October 19 release
 acceptance remains valid for its tested scope; it did not establish complete
 catalog accuracy or UI quality. Migration drafts #320 and #321 stay unmerged.
 
@@ -130,3 +130,7 @@ that separately from changed-file gates and local portal tests.
   unchanged `sharedCache.ts` (`no-use-before-define`, `consistent-return`).
 - No Linux release image was built/published and no deployment digest changed.
   Layer 1 review/merge and the subsequent release/live gates remain required.
+
+GitHub checks on PR #322 did not start: the check annotation reports account
+payment/spending-limit failure. Local passes are not GitHub green; no billing or
+merge-rule bypass was attempted.
