@@ -869,7 +869,12 @@ matching for Backstage/PostgreSQL and explicitly map the NATS broker to its obse
 `platform-nats` Argo Application. Stable entities, ownership and dependency graph
 are retained; direct native Kubernetes/Argo/runbook links and refresh regression
 checks are added. See [scope and acceptance](docs/operations/native-portal-visibility-2026-10-20.md).
-At PR preparation, production acceptance is **pending**, not certified by source.
+[PR #337](https://github.com/onemindos/omos/pull/337) merged as `e98f1436`.
+Scoped production acceptance passed at 18:50–18:54 UTC: native Backstage/DB/NATS
+workloads and metrics, correct Argo summaries, source/runbook/dependency links,
+read-only MCP metadata and existing denial boundaries. Portal 2/2, generation 73,
+same verified digest; DB spec/revision unchanged; NATS 3/3. Native Argo history
+revision is distinct from the latest compared Git revision (documented for NATS).
 The catalog ConfigMap hash naturally rolls the same image; no database template,
 image digest, RBAC, credentials, OpenChoreo ownership or event contracts change.
 Phase 6 stays In progress and Phase 7 Not started. After browser acceptance, next
