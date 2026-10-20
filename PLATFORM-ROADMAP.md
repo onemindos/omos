@@ -616,6 +616,11 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 
 ### Phase 6: One portal
 
+Existing pilot integration: [PR #330](https://github.com/onemindos/omos/pull/330), [STAC operational slice](docs/operations/stac-operational-slice-2026-10-20.md) joins identity/dependencies and real evidence; source checks pass,
+immutable image/live UI acceptance remains required. STAC collections/search
+currently return 500 (no pgstac schema observed); data freshness is unknown.
+No data/schema repair or new application migration is performed by this integration.
+
 2026-10-20 follow-through: [PR #329](https://github.com/onemindos/omos/pull/329), [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
 16 remaining launcher findings are flagged, offsite/Grafana gaps remain explicit.
 The existing STAC operational slice is authorized next; this is not a Phase 7 cutover.
@@ -679,6 +684,16 @@ hits unrelated old YAML debt. Neither was represented as green or bypassed.
 Implementation/rollout PRs: #311–#319. Detailed evidence and rollback:
 [Phase 6 integration runbook](docs/operations/phase6-portal-integration.md).
 Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
+
+### Phase 6 release follow-through — local/Linux executor
+
+2026-10-20: Zeus approved the existing verified local/Linux release checks while
+GitHub cannot start hosted jobs, and requested a reusable deployment/removal
+pipeline. No billing/check-disable/admin-bypass permission is implied. #330's
+review added explicit incomplete-state and bounded-request regressions; its old
+published candidate is superseded for these changes. Rebuild and remotely verify
+the new source before a separate GitOps digest-pin/live acceptance step. Phase 6
+remains In progress; no migration or removal is certified by source tests.
 
 ### Phase 7: Migrate Layer 3
 

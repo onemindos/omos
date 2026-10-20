@@ -3403,7 +3403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-catalog-common@npm:^1.1.10, @backstage/plugin-catalog-common@npm:^1.2.0":
+"@backstage/plugin-catalog-common@npm:1.2.0, @backstage/plugin-catalog-common@npm:^1.1.10, @backstage/plugin-catalog-common@npm:^1.2.0":
   version: 1.2.0
   resolution: "@backstage/plugin-catalog-common@npm:1.2.0"
   dependencies:
@@ -6356,7 +6356,10 @@ __metadata:
   resolution: "@internal/plugin-onemind-services-backend@workspace:plugins/plugin-onemind-services-backend"
   dependencies:
     "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/catalog-model": "npm:1.10.1"
     "@backstage/cli": "npm:0.36.6"
+    "@backstage/plugin-catalog-common": "npm:1.2.0"
+    "@backstage/plugin-catalog-node": "npm:2.2.5"
     "@internal/plugin-onemind-common-backend": "workspace:^"
     express: "npm:4.22.1"
   languageName: unknown
@@ -6373,6 +6376,7 @@ __metadata:
     "@internal/plugin-onemind-common": "workspace:^"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
+    "@testing-library/react": "npm:^14.0.0"
     "@types/react": "npm:18.3.28"
     jest: "npm:~30.2.0"
     react-dom: "npm:^18.0.2"
