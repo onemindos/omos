@@ -28,11 +28,17 @@ import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
 import { componentOverviewModule } from './componentOverviewModule';
+import {
+  catalogCompositionModule,
+  graphCompositionModule,
+} from './catalogCompositionModules';
 
 export default createApp({
   features: [
     openchoreoPlugin,
     componentOverviewModule,
+    catalogCompositionModule,
+    graphCompositionModule,
     openChoreoEntityGroupsModule,
     observabilityPlugin,
     githubActionsPlugin,

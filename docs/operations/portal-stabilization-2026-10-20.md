@@ -128,7 +128,8 @@ that separately from changed-file gates and local portal tests.
 - No Helm-affecting change. Commit-range and clean-export baseline-aware secret
   scans passed. Full permission-package lint still reports two existing errors in
   unchanged `sharedCache.ts` (`no-use-before-define`, `consistent-return`).
-- No Linux release image was built/published and no deployment digest changed.
+- At creation of source PR #322, no Linux release image had been built/published
+  and no deployment digest had changed; subsequent release evidence follows.
   Layer 1 review/merge and the subsequent release/live gates remain required.
 
 GitHub checks on PR #322 did not start: the check annotation reports account
@@ -155,3 +156,46 @@ The image pin is a separate GitOps change. Live rollout/browser/MCP evidence wil
 be appended after Argo reconciliation; the image build alone is not acceptance.
 GitHub jobs still fail before execution because of the account billing restriction.
 No billing, branch protection or credentials were changed.
+
+## Live acceptance of the first release and inventory
+
+- #322 source, #323 immutable image pin and #324 catalog reconciliation merged.
+- At 06:57–07:03 UTC, Argo reconciled both rollouts; both replicas became ready
+  on digest `694dfc6e188f9664c513bf160f4d474080a9d586fe566087c3a5bda9c1aa3cb6`.
+- Each replica passed readiness 200, anonymous APIs 401, disabled guest 404,
+  machine catalog read 200, catalog/platform/cache/context writes/access 403,
+  and MCP enumeration of six explicitly read-only/non-destructive tools.
+- Signed-in browser: pilot Overview has one About/Relations pair, the source
+  description, no disabled-workflow error; Deploy shows stac-browser-v5 Active;
+  Logs shows a fresh HTTP 200 at 06:58:33 UTC; CPU/memory graphs render.
+- Processed catalog converged to 715 entities, containing all 664 expected file
+  source identities. No duplicate refs, reported processing errors or orphans.
+  Both canonical alias annotations appeared after processing, not merely in Git.
+- Stale observations fell from 227 to 22, exactly matching the retained absent
+  identities marked missing-review-required. No unknown was converted to healthy.
+- The only missing relationship target remains the uninstalled workflow plane
+  referenced by four inactive default builders. Build workflows stay disabled;
+  prebuilt-image GitOps releases do not require pretending that plane exists.
+- Fresh browser authentication logged capability pre-caching. Both new replicas
+  serve authorized internal catalog reads using the shared profile cache; no
+  repeated no-token/no-cache warning was observed during these checks. Expiry
+  denial is regression-tested, not suppressed or bypassed; deliberately expiring
+  the production identity or claiming every long-running session is tested is
+  outside this observation.
+
+## Project/platform overview composition follow-up
+
+The live OneTAK project page still rendered two About/Relations pairs after the
+Component repair. A second small frontend module filters only the host duplicates
+for the 22 OC-managed kinds with reviewed bespoke upstream overview layouts.
+Components keep OneMind's host-owned pair; ordinary Backstage records, managed API
+and unknown future kinds retain native cards. User/Group About exclusions remain.
+No third-party card, permission, backend, dependency cohort or metadata is removed.
+
+Tests exercise both real host extension filters, all 22 actual upstream layout
+selectors, and the pinned OC 1.3.1 version. The targeted release suite is now 100
+checks (50 auth/security, 44 frontend, six audit). Source checks/build do not
+establish live acceptance; a new immutable image and browser verification follow.
+GLM-5.3 Flash's bounded read-only review found no concrete functional defect;
+GPT addressed its mapping-coverage gap with the 22 selector tests. Worker reported
+76,511 input tokens (45,568 cached) and 1,914 output tokens; no charge is inferred.
