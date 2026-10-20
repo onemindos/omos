@@ -97,12 +97,12 @@ A new clean-commit Linux build, source label verification and separate digest-pi
 PR are required. This does not fix STAC's backing schema or certify a new rollout.
 
 - [x] Publish and remotely verify an immutable Linux/AMD64 image with all gates.
-- [ ] Pin its digest in a separate GitOps PR; Argo healthy and both replicas ready.
-- [ ] Process API/dependency metadata with stable references, no new duplicates,
+- [x] Pin its digest in a separate GitOps PR; Argo healthy and both replicas ready.
+- [x] Process API/dependency metadata with stable references, no new duplicates,
       errors/orphans or missing relations beyond the known inactive workflow plane.
-- [ ] Signed-in Project and Component Operations pages render the joined evidence,
+- [x] Signed-in Project and Component Operations pages render the joined evidence,
       real 500/data-unknown findings, source/logs/metrics and TechDocs links.
-- [ ] Anonymous access denied; machine direct service/platform writes/access remain
+- [x] Anonymous access denied; machine direct service/platform writes/access remain
       denied; existing six read-only MCP tools remain read-only.
 
 Phase 6 is not declared universally complete by this feature. The follow-through
@@ -119,3 +119,44 @@ and opened [#336](https://github.com/onemindos/omos/pull/336) for promotion.
 Required local gates passed; whole-tree YAML debt remains diagnostic failure.
 No hosted CI success is asserted. Rollout and semantic/security acceptance follow
 this pin; source publication alone is not deployed acceptance.
+
+### Live release acceptance — 2026-10-20, 17:29–17:32 UTC
+
+Promotion #336 merged at `1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6`.
+The pipeline verified that exact Argo revision Synced/Healthy, Deployment generation
+72 observed, and 2/2 updated/ready/available replicas with verified runtime digests:
+`backstage-78595fcc4c-gbp2z` and `backstage-78595fcc4c-n9j5b`. No restarts observed.
+No imperative apply, forced sync, rollout restart, database/schema change or app
+removal was used. Earlier UI requests during the rolling mixed-version window
+correctly showed unavailable; normal refresh after convergence succeeded.
+
+- On **both** pods: readiness 200; anonymous catalog/platform/permission/cache/STAC
+  requests 401; guest refresh 404; machine catalog read 200, catalog write and
+  platform/cache/context/STAC access 403; MCP exposes exactly six explicitly
+  read-only, non-destructive tools. No token was printed or copied from the pod.
+- Signed-in existing human session survived reload. Component and Project
+  Operations show timestamps, Browser → API → database, source and active-release
+  links, per-workload CPU/memory, and the real collection/search HTTP500 with data
+  unknown. No second live identity or production-expiry simulation was performed;
+  those wider security coverage limits remain explicit, with source regressions
+  tested rather than represented as live evidence.
+- TechDocs STAC diagnosis/recovery content rendered from the immutable image;
+  native runtime logs displayed a real pilot GET200, and native CPU/memory charts
+  loaded. No synthetic telemetry or invented healthy data was generated.
+- Catalog processing converged naturally after rollout: **716 entities**, no
+  duplicate identities, reported errors/warnings or orphans. Both replicas return
+  the expected consumes/provides-API and Browser → API → database relations.
+  The only missing relation target remains the pre-existing inactive
+  `clusterworkflowplane:openchoreo-cluster/default` (715 entities before release;
+  the one addition is the reviewed API descriptor). No forced catalog write used.
+
+Private operator receipts: `/tmp/onemind-gitops-portal-release-v2/run.json`,
+`/tmp/onemind-gitops-stac-promotion/run.json`, `/tmp/onemind-gitops-stac-rollout/run.json`;
+pod security logs `/tmp/onemind-stac-first-security.log` and
+`/tmp/onemind-stac-second-security.log`; browser proof
+`/tmp/onemind-stac-live-operations.png`. These paths are local evidence, not recovery
+dependencies. Git/GHCR and the recorded digest remain the release source.
+
+This closes this portal feature's scoped release/rollout checks, **not** the STAC
+schema repair, all Phase 6 trust findings, live expiry/second-role coverage, offsite
+backup acceptance or an application migration. Phase 6 remains In progress.
