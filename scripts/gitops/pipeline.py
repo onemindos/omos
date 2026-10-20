@@ -164,8 +164,10 @@ def quality(run, base, p):
         tree = Path(tmp) / "tree"
         tree.mkdir()
         subprocess.run(["tar", "-xf", str(archive), "-C", str(tree)], check=True)
-        run.command("tracked-tree-secrets", ["gitleaks", "dir", str(tree), "--config", str(run.root / ".gitleaks.toml"),
-                    "--baseline-path", str(run.root / ".gitleaks-baseline.json"), "--redact", "--no-banner"])
+        # Scan from the archived root so relative paths match the existing
+        # baseline; an absolute scan target makes all nine old findings look new.
+        run.command("tracked-tree-secrets", ["gitleaks", "dir", ".", "--config", str(run.root / ".gitleaks.toml"),
+                    "--baseline-path", str(run.root / ".gitleaks-baseline.json"), "--redact", "--no-banner"], cwd=tree)
     # Historical whole-tree YAML debt is diagnostic, not silently called passing.
     # Changed YAML, shell, Terraform, schemas and secret gates above remain required.
     run.command("whole-tree-diagnostic", ["make", "validate"], required=False)

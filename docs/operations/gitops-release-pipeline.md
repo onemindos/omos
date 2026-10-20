@@ -105,6 +105,9 @@ actual Dockerfile's Linux tests, TechDocs/backend build and final runtime artifa
 starting at `platform/onetak/media-mtx.yaml:86` is not called passing; new changed
 YAML and all required checks still stop the pipeline. An unrelated diagnostic
 failure is not permission to skip a new required failure. Read each run receipt.
+The tracked-tree scan preserves repo-relative paths for the existing nine-finding
+baseline. Passing it means no new findings beyond that baseline, **not** that
+historical exposed credentials were rotated or the repository is secret-free.
 
 ### Promotion and reconciliation
 
