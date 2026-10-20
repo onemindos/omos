@@ -154,6 +154,7 @@ def quality(run, base, p):
         run.command("portal-layout-tests", [*yarn, "workspace", "app", "test", "--watch=false", "--runInBand",
                     "ComponentOverview.test.tsx", "componentOverviewModule.test.ts", "catalogCompositionModules.test.ts", "prometheusApi.test.ts", "prometheusPlugin.test.ts", "PrometheusAlerts.test.tsx"], cwd=cwd)
         run.command("catalog-audit-tests", ["node", "--test", "scripts/test-audit-catalog.cjs"], cwd=cwd)
+    run.command("topology-catalog-tests", ["node", "--test", "scripts/test-topology.cjs"], cwd=run.root / p["sourcePath"])
     run.command("commit-secrets", ["gitleaks", "git", ".", "--config", ".gitleaks.toml", "--redact",
                                   "--no-banner", f"--log-opts={base}..HEAD"])
     # Inspect the exact tracked release tree, not host caches/ignored local credentials.

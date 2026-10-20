@@ -995,3 +995,17 @@ user GET 200 observed on both replicas. Anonymous/machine/write denials retained
 Firing/outage scenarios are fixture evidence, not a production alert-delivery drill.
 Next: topology/OpenCost; broaden coverage and accessible native state text in
 bounded follow-ups. Phase 6 stays In progress; Phase 7 Not started; #339 unmerged.
+
+
+### Native dependency and location topology — 2026-10-20
+
+Next requested Phase 6 slice: enrich the installed native graph with reviewed
+Backstage runtime/identity/NATS/Grafana/Argo feature dependencies and five existing
+PVC catalog identities; fix namespace-group titles without changing entity IDs.
+Add bounded forward/reverse/core graph and location links, preserve current
+Kubernetes/Grafana/Prometheus/Argo/runbook mappings, and enforce refresh/source
+contracts. This is source-reviewed metadata, not live traffic or all-app impact.
+No new controller, PVC, permission, image, migration or cloud charge. Mounted
+catalog changes naturally roll the same portal image through Argo. [Scope/gates](docs/operations/native-service-topology-2026-10-20.md).
+Source merge/Argo/catalog/browser acceptance remain distinct. Phase 6 In progress;
+Phase 7 Not started; #339 remains draft. Actual release evidence follows.
