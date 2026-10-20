@@ -125,7 +125,7 @@ it could lock out both itself and the human who has to recover it.
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
-| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory; project/platform composition follow-up in this PR) | none |
+| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
@@ -619,7 +619,10 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 **Stabilization reopened 2026-10-20 by Zeus.** Historical release acceptance below
 is preserved, but the broader UI/catalog quality audit found integration defects.
 Work the [repair and acceptance gates](docs/operations/portal-stabilization-2026-10-20.md)
-before Phase 7. Source fixes are not a deployed/live pass; migration remains paused.
+before Phase 7. Repairs #322–#326 are merged and deployed: 2/2 healthy,
+715 processed catalog entities, final browser/MCP gates passed. Remaining broader
+acceptance gaps are explicitly recorded; migration remains paused, not implicitly
+authorized by the portal repair.
 
 **Done — live acceptance 2026-10-19, 18:32 UTC.** Existing OneMind Backstage is
 preserved, not replaced: https://onemind-preview.tail717ba0.ts.net/.

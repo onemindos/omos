@@ -7,10 +7,15 @@ phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
 Phases 0–5 are done. **Phase 6 stabilization is the first unfinished phase**;
 its historical acceptance is preserved, but Zeus requested UI/catalog repairs
-before further migrations. Source/image/inventory PRs #322–#324 are merged;
+before further migrations. Source/image/inventory/composition PRs #322–#326 are merged and deployed;
+final image `sha256:4a52c3b840fcd2b4e2fc0287929e1704721f7420018f2c09deb8543a6aab74da`
+is 2/2 healthy, with 715 processed catalog entities and passing targeted live gates;
 [stabilization evidence and remaining gates](../operations/portal-stabilization-2026-10-20.md)
 are authoritative. Phase 7 remains not started; migration drafts #320/#321 stay unmerged.
 Do not begin a later phase or treat this handoff as authorization to deploy it.
+Broader token-lifecycle, launcher/empty-card and COP coverage gates remain in the
+evidence; absent workflow plane stays explicit and build workflows disabled.
+Zeus requested no further Ollama delegation: handle follow-through directly.
 
 - STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
 - Phase 5: all nodes below 78% requested CPU/memory; authenticated Observer core and
