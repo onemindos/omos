@@ -134,3 +134,24 @@ that separately from changed-file gates and local portal tests.
 GitHub checks on PR #322 did not start: the check annotation reports account
 payment/spending-limit failure. Local passes are not GitHub green; no billing or
 merge-rule bypass was attempted.
+
+## Repair release (2026-10-20)
+
+Zeus explicitly authorized merging #322 and completing deployment/verification.
+Source PR merged at 06:43:55 UTC as
+`68a5c612916e8caafa4df945d375dbfc3f7aacb2`.
+The pinned Docker Desktop Linux build passed immutable install, TypeScript,
+50 security/auth tests, five overview tests, six audit tests, TechDocs and backend
+compilation. GHCR publication and remote digest inspection succeeded:
+
+- Image: `ghcr.io/onemindos/onemind-portal@sha256:694dfc6e188f9664c513bf160f4d474080a9d586fe566087c3a5bda9c1aa3cb6`
+- Source revision label: `68a5c612916e8caafa4df945d375dbfc3f7aacb2`
+- Runtime architecture: Linux/AMD64 (not the Mac's native architecture).
+- No backend schema/package cohort or production permission-policy change.
+- Rollback: restore digest `sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`
+  through a reviewed GitOps PR. Do not alter the database or identity.
+
+The image pin is a separate GitOps change. Live rollout/browser/MCP evidence will
+be appended after Argo reconciliation; the image build alone is not acceptance.
+GitHub jobs still fail before execution because of the account billing restriction.
+No billing, branch protection or credentials were changed.
