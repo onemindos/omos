@@ -41,7 +41,8 @@ data:
     \"deployment\\\"})\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n    \
     \  \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\"\
     : {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n        \"overrides\": []\n      }\n    }\n  ],\n\
-    \  \"links\": [\n    {\n      \"title\": \"Backstage service and runbook\",\n      \"url\": \"https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354\"\
+    \  \"links\": [\n    {\n      \"title\": \"Backstage service and runbook\",\n      \"url\": \"https://onemind-previe\
+    w.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354\"\
     ,\n      \"type\": \"link\",\n      \"targetBlank\": true\n    }\n  ]\n}\n"
   onemind-backstage-postgres.json: "{\n  \"uid\": \"onemind-backstage-postgres\",\n  \"title\": \"OneMind / Backstage PostgreSQL\"\
     ,\n  \"description\": \"Observed Kubernetes workload telemetry only: backstage/backstage-postgres (statefulset). Pod health\
@@ -57,7 +58,8 @@ data:
     h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n      \
     \  \"overrides\": []\n      }\n    },\n    {\n      \"id\": 2,\n      \"title\": \"CPU usage by pod\",\n      \"type\"\
     : \"timeseries\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n     \
-    \ },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"sum by (pod) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\\\
+    \ },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"sum by (pod) (node_namespa\
+    ce_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\\\
     \"backstage\\\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"\
     backstage\\\",workload=\\\"backstage-postgres\\\",workload_type=\\\"statefulset\\\"})\",\n          \"legendFormat\":\
     \ \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\"\
