@@ -23,7 +23,7 @@
     "@backstage/plugin-catalog-react": "^3.2.3",
     "@internal/plugin-onemind-common": "workspace:^",
     "@material-ui/core": "^4.12.2",
-    "@material-ui/icons": "^4.9.1"
+    "@mui/icons-material": "^5.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.36.6",
