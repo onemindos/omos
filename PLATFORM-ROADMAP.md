@@ -922,3 +922,17 @@ supported legacy diff for this one Application and `Replace=true` on the fully
 rendered Grafana Deployment only; no Force, PVC deletion, force sync, new owner,
 automated-prune change or wider permissions. Full server replace dry-run and local
 gates must pass before the normal exact-head PR merge. Acceptance still pending.
+
+
+Grafana durability/native visibility **accepted 2026-10-20 22:29–22:35 UTC**.
+[#342](https://github.com/onemindos/omos/pull/342) merged `f145f14d`; all three
+owning apps Synced/Healthy at that revision. Grafana 3/3 on retained 5 GiB PVC,
+Deployment UID/image preserved; enabled daily backup plus successful post-cutover
+encrypted remote download/decrypt/SQLite restore verification. Portal generation
+74, 2/2, same digest; DB unchanged; NATS 3/3. Migrated Viewer identity verified on
+both replicas; native Backstage/DB/NATS dashboard links and real CPU/memory panels
+passed. Anonymous/machine proxy and Kubernetes mutation denials remain intact.
+See [acceptance and remaining limits](docs/operations/grafana-durable-visibility-2026-10-20.md).
+Root-folder link presentation, old ClickHouse panels, Prometheus alert integration,
+expiry monitoring and wider topology/OpenCost remain separate work. Phase 6 stays
+In progress; Phase 7 Not started; #339 action-layer draft is not deployed by this.
