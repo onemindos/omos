@@ -60,3 +60,26 @@ Grafana-managed rules remain distinct from Prometheus rules.
 
 Phase 6 stays In progress; Phase 7 not started. Permissioned action draft #339 is
 not deployed or authorized by this observation-only feature.
+
+
+## Source and image release
+
+Source [#346](https://github.com/onemindos/omos/pull/346) merged `cbf0e637`;
+exact implementation head `725c5e4e544ef2f2b20344e52993d88e0df708b2` passed required
+portable gates and Linux image gates. Native/API/card tests 13, backend source
+fixtures 12, HTTP auth/route fixtures 4; catalog tests 13 including scope curation.
+The real 167-rule protocol parsed at preflight: 10 candidate families for
+Backstage/DB, 15 for NATS; no scoped active instance then. Fixture firing/pending
+and outage checks are tests, not production fault injection or an alert delivery drill.
+
+Published source-pinned linux/amd64 image:
+`ghcr.io/onemindos/onemind-portal@sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`.
+Registry source/platform/digest checks passed. Promotion
+[#347](https://github.com/onemindos/omos/pull/347) uses the portable pipeline;
+old image remains the reviewed rollback input, not an automatic data rollback.
+Receipts: `/tmp/onemind-prometheus-source-check`, `/tmp/onemind-prometheus-publish`,
+`/tmp/onemind-prometheus-promotion`. No real credentials were passed to image build;
+Docker's pre-existing build-only AUTH_* placeholder warnings are not runtime keys.
+Required gates are separate from existing `make validate` whole-tree YAML failure
+beginning at `platform/onetak/media-mtx.yaml:86` and GitHub billing-blocked CI.
+Live acceptance is still pending the reviewed pin merge and Argo rollout.

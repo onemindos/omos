@@ -971,3 +971,15 @@ PromQL proxy, new credentials, mutation rights or rule changes. Tests join both
 portable local/Linux and image gates; source merge is distinct from built image,
 GitOps pin and live acceptance. [Scope/gates](docs/operations/prometheus-native-alerts-2026-10-20.md).
 Phase 6 stays In progress; Phase 7 Not started. Actual PR/release evidence follows.
+
+
+Prometheus alert source [#346](https://github.com/onemindos/omos/pull/346) merged
+`cbf0e637` (implementation `725c5e4e`). Required local/Linux gates passed;
+29 new scoped frontend/backend/route checks plus catalog regression are enforced
+in both executors. Real 167-rule source parsed; no selected-scope active match
+at preflight, not an all-clear. Linux image published with source/platform/digest
+verified: `sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`.
+[#347](https://github.com/onemindos/omos/pull/347) promotes that immutable image;
+Argo/browser/replica/denial acceptance remains pending this normal merge.
+GitHub CI billing block and historical whole-tree YAML debt remain explicit.
+No Phase 6 completion, Phase 7 start or wider AI action permission is implied.
