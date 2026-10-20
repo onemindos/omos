@@ -129,6 +129,16 @@ it could lock out both itself and the human who has to recover it.
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
+### Queued follow-up: workflow-plane pilot (high priority)
+
+**Not started; planning only, requested by Zeus 2026-10-20.** Preserve the
+[workflow-plane pilot brief](docs/roadmap/openchoreo-workflow-plane-pilot.md)
+for one first-party application's source-to-image workflow in our existing
+portal. Phase 6 stabilization remains the first unfinished phase; this adds no
+deployment authorization or new numbered migration phase. Recheck capacity,
+security, durable registry and the build-to-GitOps handoff before implementation.
+Argo CD remains the reconciler; builds cannot silently promote production.
+
 ## Phases
 
 ### Phase 0: Blueprint
