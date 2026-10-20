@@ -28,6 +28,7 @@ import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
 import { componentOverviewModule } from './componentOverviewModule';
+import { prometheusPlugin, prometheusApiModule } from './prometheusPlugin';
 import {
   catalogCompositionModule,
   graphCompositionModule,
@@ -44,6 +45,8 @@ export default createApp({
     githubActionsPlugin,
     githubPullRequestsPlugin,
     grafanaPlugin,
+    prometheusPlugin,
+    prometheusApiModule,
     argocdPlugin,
     argocdTranslationsModule,
     techInsightsPlugin,

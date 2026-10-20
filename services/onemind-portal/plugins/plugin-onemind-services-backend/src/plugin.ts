@@ -2,6 +2,7 @@
 import { createBackendPlugin, coreServices } from '@backstage/backend-plugin-api';
 import express from 'express';
 import https from 'node:https';
+import { alertScopes, AlertScope, readPrometheusAlerts } from './prometheusAlerts';
 import { readFileSync } from 'node:fs';
 import { health, stacEvidence } from '@internal/plugin-onemind-common-backend';
 
@@ -48,6 +49,17 @@ export default createBackendPlugin({ pluginId: 'onemind-services', register(reg)
         grafana: { state: namespace === 'nats' ? 'linked' : 'dashboard-mapping-required', link: namespace === 'nats' ? 'https://grafana.tail717ba0.ts.net/d/omos-nats-observ' : 'https://grafana.tail717ba0.ts.net/dashboards' } });
     } catch (error) { next(error); } });
     routes.get('/stac', async (req,res,next)=>{try{await httpAuth.credentials(req,{allow:['user']});res.json(await stacEvidence());}catch(error){next(error);}});
+    routes.get('/prometheus/:scope', async (req, res, next) => {
+      try {
+        await httpAuth.credentials(req, { allow: ['user'] });
+        res.setHeader('Cache-Control', 'no-store');
+        if (!alertScopes.includes(req.params.scope as AlertScope) || Object.keys(req.query).length) {
+          res.status(400).json({ error: 'A supported alert scope without query parameters is required' }); return;
+        }
+        try { res.json(await readPrometheusAlerts(req.params.scope as AlertScope)); }
+        catch { res.status(503).json({ error: 'Prometheus alert observation unavailable', observedAt: new Date().toISOString() }); }
+      } catch (error) { next(error); }
+    });
     router.use(routes);
   } });
 } });

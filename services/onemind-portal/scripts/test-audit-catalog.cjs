@@ -279,3 +279,23 @@ test('installed predicate schema admits only explicit Grafana alert selector met
   );
   assert.equal(accepts({ metadata: {} }), false);
 });
+
+
+test('reviewed service Prometheus scopes survive inventory curation', () => {
+  const { curateDependencies, reviewedWorkloads } = require('./curate-dependencies.cjs');
+  const YAML = require('yaml');
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const docs = YAML.parseAllDocuments(fs.readFileSync(path.join(__dirname, '../catalog/cluster.yaml'), 'utf8')).map(d => d.toJSON());
+  for (const item of docs) {
+    delete item.metadata.annotations?.['prometheus.io/service-name'];
+    delete item.metadata.annotations?.['prometheus.io/alert'];
+  }
+  const curated = curateDependencies(docs);
+  for (const reviewed of reviewedWorkloads) {
+    const entry = curated.find(e => e.kind === 'Component' && e.metadata.name === reviewed.name);
+    assert.equal(entry.metadata.annotations['prometheus.io/service-name'], reviewed.alertScope);
+    assert.equal(entry.metadata.annotations['prometheus.io/alert'], 'all');
+    assert.equal(entry.metadata.annotations['prometheus.io/labels'], undefined);
+  }
+});
