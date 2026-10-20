@@ -33,6 +33,11 @@ Zeus requested no further Ollama delegation: handle follow-through directly.
 - Recovery PVC observer-restore-20261019 is intentionally protected/retained. Ask
   before storage cleanup; never delete or restore over production storage.
 
+Latest follow-through: [portal acceptance review](../operations/portal-acceptance-followthrough-2026-10-20.md).
+Argo locator works in the production overlay; Grafana dashboard search currently
+returns 401. Two suspended backup jobs are intentionally replaced; independent
+offsite copy remains unconfigured. Do not infer all-green health from portal readiness.
+
 ## Briefs and draft PRs
 
 | Phase | Brief | Goal | Draft PR |

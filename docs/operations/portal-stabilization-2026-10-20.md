@@ -89,17 +89,17 @@ installed dependency behavior and implemented/tested the repair independently.
       sources available, review identity/relationship diffs in a separate PR,
       and verify mounted/processed catalog matches after merge. Do not merely
       rewrite timestamps or replace partial discovery results.
-- [ ] Reconcile launcher/service overlap with stable canonical identities and
+- [x] Reconcile launcher/service overlap with stable canonical identities and
       preserved incoming references; distinguish reference/planned/local/cloud
       entries from actual deployments. Review first-party launcher reachability.
 - [x] Decide the disabled builders' treatment explicitly: document/defer inactive
       build definitions or provision a real plane under its own approved scope.
       Keep the unresolved relation visible until that decision is implemented.
-- [ ] Review other OpenChoreo entity-kind layouts for equivalent duplication and
+- [x] Review other OpenChoreo entity-kind layouts for equivalent duplication and
       empty cards; preserve relevant third-party cards and authorization filters.
-- [ ] Verify intended COP coverage. The dedicated Argo plugin has no configured
-      app locator; existing OneMind Argo summaries are a separate working path.
-      Grafana links are available; secure embedded viewing remains unconfigured.
+- [x] Review intended COP coverage. The effective production Argo locator works
+      (corrected in the follow-through report); the Grafana dashboard adapter
+      returns 401. Review is complete, not a claim that every integration works.
 
 Commands from `services/onemind-portal` (Node 22.23.3, committed Yarn):
 
@@ -276,14 +276,16 @@ exported JSON smoke tests passed. No database migration or credential change.
 
 The concrete UI/catalog repair is deployed and its targeted checks pass. **Do not
 call the broader Phase 6 stabilization universally complete or start a bulk
-migration.** The unchecked gates above remain explicit: comprehensive production
-token-refresh/expiry correlation, full launcher reachability/overlap review,
-all-kind browser/empty-card review and the intended COP coverage assessment.
+migration.** The original remaining reviews are tracked in the
+[follow-through](portal-acceptance-followthrough-2026-10-20.md), including explicit
+launcher findings, Grafana authentication and live token-expiry/role limits.
 Tests cover all 22 actual upstream layout selectors; that is not a human browser
 inspection of every entity. No second human role was created or live-tested.
 
-The dedicated Argo plugin still lacks its app locator (OneMind Argo summaries
-are separate); secure Grafana embedding is unconfigured. API/dependency/TechDocs
+The earlier assumption about a missing production Argo locator is superseded by
+the [follow-through review](portal-acceptance-followthrough-2026-10-20.md): it is
+configured and its read-only API works. Grafana dashboard search returns 401;
+secure embedded viewing is not certified. API/dependency/TechDocs
 metadata is incomplete for some apps and must be completed per migration.
 Wide desktop and narrow browser observations are scoped smoke checks, not all
 pages/devices. The user's active desktop window was left undisturbed during

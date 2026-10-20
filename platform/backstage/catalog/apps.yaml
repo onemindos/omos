@@ -357,7 +357,7 @@ metadata:
     - ai-agents
     - deployment-verified
   links:
-    - url: https://agent-web-ui-1.tail717ba0.ts.net/
+    - url: https://agent-console.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
@@ -365,6 +365,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
       title: "Archived registry: Agent Web UI"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -374,7 +376,7 @@ metadata:
           "method": "Kubernetes",
           "location": "OneMind Cloud — NYC3",
           "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://agent-web-ui-1.tail717ba0.ts.net/",
+          "url": "https://agent-console.tail717ba0.ts.net/",
           "evidence": "Catalog snapshot",
           "observedAt": "2026-10-06"
         }
@@ -398,7 +400,7 @@ spec:
   owner: group:default/onemind-admins
   system: ai-agents
   dependsOn:
-    - component:default/k8s-nats-agent-web-ui-be5be217
+    - component:default/k8s-agent-fabric-agent-console-19ca739f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -407,12 +409,15 @@ metadata:
   title: OpenClaw
   description: Agent orchestration
   tags:
+    - launcher-review-required
     - ai-agents
   links:
     - url: https://openclaw.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -498,10 +503,12 @@ metadata:
   tags:
     - communication
   links:
-    - url: https://element.onemindos.com
+    - url: https://element.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -523,10 +530,12 @@ metadata:
   tags:
     - communication
   links:
-    - url: https://matrix.onemindos.com
+    - url: https://matrix.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -638,12 +647,15 @@ metadata:
   title: CloudTAK
   description: Cloud TAK — COP
   tags:
+    - launcher-review-required
     - tak-ecosystem
   links:
     - url: https://atoc.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/tech-stack-status: Active
@@ -668,6 +680,7 @@ metadata:
   title: TAK Server
   description: TAK 5.8 hardened
   tags:
+    - launcher-review-required
     - tak-ecosystem
   links:
     - url: https://tak.onemindos.dev:8446
@@ -676,6 +689,8 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: certificate-untrusted-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
 spec:
@@ -691,6 +706,7 @@ metadata:
   title: OneTAK
   description: OneMind TAK platform
   tags:
+    - launcher-review-required
     - tak-ecosystem
     - tak-server
     - documented-unverified
@@ -709,6 +725,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
       title: "Archived registry: OneTAK"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-purpose: OneMind fork of CloudTAK — AI-native, NATS-fabric TAK COP platform
@@ -733,12 +751,15 @@ metadata:
   title: FedHub
   description: TAK federation hub
   tags:
+    - launcher-review-required
     - tak-ecosystem
   links:
     - url: https://fedhub.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -992,10 +1013,12 @@ metadata:
   tags:
     - intelligence
   links:
-    - url: https://agenttap-1.tail717ba0.ts.net
+    - url: https://agent-tap.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -1005,7 +1028,7 @@ spec:
   owner: group:default/onemind-admins
   system: intelligence
   dependsOn:
-    - component:default/k8s-nats-agenttap-3e09fc8c
+    - component:default/k8s-agent-fabric-agent-tap-0a491ad0
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1014,12 +1037,15 @@ metadata:
   title: ClickHouse
   description: 10-year event DB
   tags:
+    - launcher-review-required
     - intelligence
   links:
     - url: https://clickhouse.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/tech-stack-status: Active
@@ -1052,12 +1078,15 @@ metadata:
   title: MinIO
   description: Object storage
   tags:
+    - launcher-review-required
     - data-storage
   links:
     - url: https://minio.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
 spec:
@@ -1073,12 +1102,15 @@ metadata:
   title: PostGIS
   description: Spatial database
   tags:
+    - launcher-review-required
     - data-storage
   links:
     - url: https://pgadmin.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
 spec:
@@ -1094,12 +1126,15 @@ metadata:
   title: Longhorn
   description: Distributed block storage
   tags:
+    - launcher-review-required
     - data-storage
   links:
     - url: https://longhorn.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
 spec:
@@ -1147,12 +1182,15 @@ metadata:
   title: Prometheus
   description: Metrics scraper
   tags:
+    - launcher-review-required
     - observability
   links:
     - url: https://prometheus.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/tech-stack-status: Active
@@ -1177,6 +1215,7 @@ metadata:
   title: NATS Surveyor
   description: NATS metrics
   tags:
+    - launcher-review-required
     - observability
     - nats
     - monitoring
@@ -1190,6 +1229,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
       title: "Archived registry: NATS Surveyor"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1241,6 +1282,7 @@ metadata:
   title: TileServer GL
   description: Vector tiles
   tags:
+    - launcher-review-required
     - geospatial
     - geo
     - deployment-verified
@@ -1253,6 +1295,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
       title: "Archived registry: TileServer GL"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1300,6 +1344,7 @@ metadata:
   title: Valhalla
   description: Routing engine
   tags:
+    - launcher-review-required
     - geospatial
     - geo
     - deployment-verified
@@ -1312,6 +1357,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md
       title: "Archived registry: Valhalla"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1359,6 +1406,7 @@ metadata:
   title: Maputnik
   description: Map style editor
   tags:
+    - launcher-review-required
     - geospatial
     - geo
     - deployment-verified
@@ -1371,6 +1419,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md
       title: "Archived registry: Maputnik"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1418,6 +1468,7 @@ metadata:
   title: WebODM
   description: Drone imagery
   tags:
+    - launcher-review-required
     - geospatial
     - geo
     - deployment-verified
@@ -1430,6 +1481,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
       title: "Archived registry: WebODM"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -2347,6 +2400,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/canonical-entity-ref: component:default/kubernetes-dashboard
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -2356,6 +2410,7 @@ spec:
   owner: group:default/onemind-admins
   system: external
   dependsOn:
+    - component:default/kubernetes-dashboard
     - component:default/k8s-kube-kubernetes-dashboard-226fa5ac
 ---
 apiVersion: backstage.io/v1alpha1
@@ -5083,6 +5138,7 @@ metadata:
   description: Open-source home automation platform. Manages smart devices,
     sensors, and automations. Runs on local K8s or dedicated node.
   tags:
+    - launcher-review-required
     - devops-infra
     - tech-stack
     - edge-device
@@ -5096,6 +5152,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
       title: "Archived registry: Home Assistant"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: timeout-from-operator-mac
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/documented-status: ✅ Live
     onemind.io/documented-category: 🤖 IoT / Automation
