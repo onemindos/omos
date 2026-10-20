@@ -73,3 +73,24 @@ or the `onetak` Project to roll back one app.
   `sha256:35d3074330b01a55b14cd29c7a0168f09728afabc673b7d262eb70546eed7d75`.
 - Current OpenChoreo CRDs support managed Resources and StatefulSet ComponentTypes.
 - Live rollout, UI, MCP and browser evidence: pending.
+
+### Pre-PR validation, 2026-10-20
+
+- Eight offline migration tests passed; all four changed YAML files pass lint.
+- Server-side dry-run admission accepted all five new resources. This is not a
+  live reconciliation or rollout check.
+- Changed-manifest kubeconform: HTTPRoute valid; four OpenChoreo CRs skipped for
+  unavailable external schemas and checked by the installed API instead.
+- No Helm-affecting change; Terraform format/init/validation passed.
+- `make validate` remains blocked by unrelated existing whole-tree YAML lint
+  debt; separately running whole-tree ShellCheck also finds existing issues in
+  unchanged shell scripts. No gate configuration or baseline was weakened.
+- Commit/new-file gitleaks scans passed. A broad local directory scan includes
+  unrelated nested worktrees; the CI-equivalent clean-checkout scan is recorded
+  separately rather than treating those directories as new PR content.
+- Independent read-only DeepSeek-V4.1 Flash review found no blocking static issue.
+  Coordinator added liveness, a temporary redirect and explicit route-consistency
+  acceptance checks following its comments.
+- Existing read-only CP MCP successfully lists `onetak` components and Resources;
+  only STAC Browser is present before deployment, and the Resource list is empty.
+- `onetak-development.status.namespace` matches the redirect's target namespace.
