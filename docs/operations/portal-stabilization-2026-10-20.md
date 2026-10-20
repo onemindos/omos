@@ -199,3 +199,27 @@ establish live acceptance; a new immutable image and browser verification follow
 GLM-5.3 Flash's bounded read-only review found no concrete functional defect;
 GPT addressed its mapping-coverage gap with the 22 selector tests. Worker reported
 76,511 input tokens (45,568 cached) and 1,914 output tokens; no charge is inferred.
+
+## Composition release and visible missing-inventory qualifiers
+
+#325 merged as `de8764e3647bd91613ee3097040184e89918c37e`. Its pinned Linux
+production build passed all 100 targeted checks, TypeScript, TechDocs and backend
+compilation. Published/remote-verified image:
+`ghcr.io/onemindos/onemind-portal@sha256:4a52c3b840fcd2b4e2fc0287929e1704721f7420018f2c09deb8543a6aab74da`.
+This image contains the project/platform card composition fix; no plugin cohort,
+authorization or database change. Its immediate rollback digest is the first
+stabilization release `694dfc6e188f9664c513bf160f4d474080a9d586fe566087c3a5bda9c1aa3cb6`.
+
+The final GitOps change also prefixes the descriptions of exactly the 22 retained
+absent inventory records with **Not observed in the latest inventory; review
+required.** This is visible in search/About, not only hidden in annotations. It
+asserts neither downtime nor deletion and preserves IDs, links and timestamps.
+The operator-only refresh script applies this qualifier idempotently on future
+missing observations (three standalone regression tests). It is not a runtime
+portal plugin and does not require rebuilding the just-verified frontend image.
+The mounted catalog ConfigMap carries the reviewed descriptions. A newly observed
+identity is rebuilt from actual discovery rather than inheriting a missing flag.
+
+No Ollama worker remains active. Zeus requested no further Ollama use during the
+follow-through; all remaining implementation, release and verification are by GPT.
+Final Argo/browser/MCP/catalog observations must be recorded after reconciliation.

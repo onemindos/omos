@@ -44,3 +44,12 @@ processing, source origins/counts, owner/dependency resolution, home/favorites a
 machine read-only permissions. Do not equate the source file change with processed
 live acceptance. The four inactive default builders still reference a genuinely
 absent workflow plane; workflows remain disabled, and no plane is fabricated.
+
+
+### Visible absence qualifiers
+
+The follow-up release annotates descriptions of the same 22 missing-review records
+with a human-visible qualifier, preserving every ID, URL and observation timestamp.
+The refresh operator applies it idempotently in future; rediscovery reconstructs
+the entity from the new observation. This avoids search/About implying that a
+retained historical workload is still a current deployment. No entity is retired.
