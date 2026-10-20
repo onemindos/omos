@@ -60,6 +60,14 @@ Its scoped image/pin/live gates are now recorded as passed. Three ready workload
 not hide the actual collections/search 500s or unknown data freshness. No schema
 initialization is authorized by this integration; it needs its own recovery gates.
 
+Latest native visibility first win: [#337](https://github.com/onemindos/omos/pull/337)
+is merged/deployed; portal 2/2 generation 73 on the same digest, DB unchanged,
+NATS 3/3. Kubernetes controller matching and explicit Argo/runbook/source links
+are browser-verified for these first services. [Evidence and remaining Grafana
+credential/proxy work](../operations/native-portal-visibility-2026-10-20.md).
+Grafana API search still returns 401; do not silently rotate its credential.
+This is not full catalog/COP coverage or Phase 6 completion.
+
 ## Briefs and draft PRs
 
 Full-stack structure is in [PR #333](https://github.com/onemindos/omos/pull/333):
