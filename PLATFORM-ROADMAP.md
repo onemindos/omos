@@ -705,6 +705,15 @@ PVC, Secret or backup deletion is executed. First Linux rebuild exposed floating
 retry. Do not promote the failed build's old candidate or call the pipeline proven
 end to end until a new immutable artifact and real rollout are verified.
 
+Release execution update 2026-10-20: source PR [#330](https://github.com/onemindos/omos/pull/330)
+is merged. Pipeline PR [#335](https://github.com/onemindos/omos/pull/335)
+produced and remotely verified Linux/AMD64 source `c9a05f8d0b1fc1809b0496945d99593e884f561d`,
+image digest `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`.
+All required local gates passed, including 82 security/STAC, 44 layout, 6 catalog,
+20 pipeline and 7 release-command tests; the existing whole-tree YAML diagnostic
+remains failing and hosted jobs remain unavailable. No rollout is claimed here;
+separate pin, Argo and signed-in semantic/security acceptance still follow.
+
 ### Phase 7: Migrate Layer 3
 
 Order: `omos-feeds`, `onetak`, `takml`, `onemind`, `agent-fabric`, `n8n`, `matrix`,
