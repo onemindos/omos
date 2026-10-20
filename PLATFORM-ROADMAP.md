@@ -983,3 +983,15 @@ verified: `sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0
 Argo/browser/replica/denial acceptance remains pending this normal merge.
 GitHub CI billing block and historical whole-tree YAML debt remain explicit.
 No Phase 6 completion, Phase 7 start or wider AI action permission is implied.
+
+
+Prometheus scoped visibility **accepted 23:30–23:34 UTC** after #347 merge
+`f27bb770`: `platform-backstage` Synced/Healthy, generation 76, 2/2 actual imageIDs
+match the verified published digest; DB spec/revision unchanged, Grafana retained
+storage/template unchanged, NATS 3/3. Native Backstage/DB/NATS alert cards, scoped
+metadata/links/timestamps and real pending-alert → no-match transition verified;
+user GET 200 observed on both replicas. Anonymous/machine/write denials retained.
+[Acceptance and limits](docs/operations/prometheus-native-alerts-2026-10-20.md).
+Firing/outage scenarios are fixture evidence, not a production alert-delivery drill.
+Next: topology/OpenCost; broaden coverage and accessible native state text in
+bounded follow-ups. Phase 6 stays In progress; Phase 7 Not started; #339 unmerged.
