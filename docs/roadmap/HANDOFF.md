@@ -171,3 +171,13 @@ Argo field-ownership compatibility settings until a separately tested removal.
 Next: topology/Prometheus alert integration/OpenCost, token-expiry monitoring,
 native root-folder presentation and old ClickHouse plugin follow-up. No whole-COP
 or Phase 6 completion; #339 remains draft and does not authorize live AI mutations.
+
+
+Follow-up #344 fixed the three service dashboards' native root-folder presentation
+through a real provisioned OneMind folder. [Accepted folder receipt](../operations/grafana-native-folder-2026-10-20.md):
+31 dashboard UIDs preserved, only Backstage/DB/NATS moved, real native links and
+folder listing verified, healthy same persistent Grafana/portal and read-only
+boundaries. Upstream root-dashboard handling elsewhere is not blanket certified.
+**Next requested work: Prometheus alert integration**, with native plugin/new
+frontend compatibility, service-label scoping, read-only access and honest
+firing/pending/no-match/unavailable states. This has not yet been deployed.
