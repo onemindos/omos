@@ -882,9 +882,10 @@ visibility work is the existing Grafana 401, then topology/Prometheus/OpenCost w
 separate compatibility and access checks. This does not install new controllers.
 
 
-### Permissioned AI actions — planning requested 2026-10-20
+### Permissioned AI actions — planning PR #339, 2026-10-20
 
-[Controlled-action plan](docs/roadmap/permissioned-ai-actions.md) records the path
+[PR #339](https://github.com/onemindos/omos/pull/339), the
+[controlled-action plan](docs/roadmap/permissioned-ai-actions.md), records the path
 from read-only observation to separately authenticated, policy-bound actions.
 Preparation belongs alongside Phase 6 trust stabilization and K03/K07; no new
 phase is started. First pilot: one reviewed stateless app/profile, verified
