@@ -695,6 +695,16 @@ published candidate is superseded for these changes. Rebuild and remotely verify
 the new source before a separate GitOps digest-pin/live acceptance step. Phase 6
 remains In progress; no migration or removal is certified by source tests.
 
+Pipeline implementation requested 2026-10-20:
+[portable release/lifecycle gates](docs/operations/gitops-release-pipeline.md),
+initial portal profile. Stages: local checks, Linux publication, registry/source
+proof, separate pin PR, reviewed merge, read-only Argo/rollout verification and
+separate semantic acceptance. Protected retirement is plan-only; no app, namespace,
+PVC, Secret or backup deletion is executed. First Linux rebuild exposed floating
+`npx` TechDocs dependencies; the CLI graph is now locked in workspace Yarn before
+retry. Do not promote the failed build's old candidate or call the pipeline proven
+end to end until a new immutable artifact and real rollout are verified.
+
 ### Phase 7: Migrate Layer 3
 
 Order: `omos-feeds`, `onetak`, `takml`, `onemind`, `agent-fabric`, `n8n`, `matrix`,
