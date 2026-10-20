@@ -129,6 +129,16 @@ it could lock out both itself and the human who has to recover it.
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
+### Migration readiness: core gate versus parallel follow-ups
+
+Zeus requested [a tracked readiness/follow-up checklist](docs/roadmap/migration-readiness-followups.md)
+on 2026-10-20. Release/live verification of #330 and the chosen app's security,
+dependencies, data/recovery and rollback gates come first. Unrelated launcher
+repairs, optional dashboards and the separately planned workflow plane are not
+blanket prerequisites for every migration. State/recovery and security failures
+still block affected applications; risks require explicit disposition, not a waiver.
+Phase 6 remains In progress and Phase 7 Not started until actual acceptance.
+
 ## Phases
 
 ### Phase 0: Blueprint

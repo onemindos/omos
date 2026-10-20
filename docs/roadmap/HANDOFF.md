@@ -40,6 +40,13 @@ offsite copy remains unconfigured. Do not infer all-green health from portal rea
 
 ## Briefs and draft PRs
 
+Before selecting a migration, use the
+[migration-readiness and follow-up checklist](migration-readiness-followups.md).
+It separates #330 release/core acceptance and per-app safety gates from parallel
+STAC/Grafana/launcher/offsite/security/validation follow-ups. Existing #328, #283,
+#320 and #321 are linked there; do not duplicate them or infer a cutover from
+the planning PR. No phase is marked complete merely by recording the backlog.
+
 | Phase | Brief | Goal | Draft PR |
 |---|---|---|---|
 | 3 | [phase-3-pilot-app.md](phase-3-pilot-app.md) | One small app as an OpenChoreo Component | [#279](https://github.com/onemindos/omos/pull/279) |
