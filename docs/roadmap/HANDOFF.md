@@ -1,12 +1,15 @@
 # Handoff: continuing the platform roadmap
 
-Updated 2026-10-19 after live Phase 6 acceptance. The authoritative tracker and
+Updated 2026-10-20 during the authorized portal/catalog stabilization. The authoritative tracker and
 phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
 ## Where we are
 
-Phases 0–6 are done. **Phase 7 (Layer 3 migrations) is the first unfinished phase**;
-its brief is on draft PR [#283](https://github.com/onemindos/omos/pull/283).
+Phases 0–5 are done. **Phase 6 stabilization is the first unfinished phase**;
+its historical acceptance is preserved, but Zeus requested UI/catalog repairs
+before further migrations. Source/image/inventory PRs #322–#324 are merged;
+[stabilization evidence and remaining gates](../operations/portal-stabilization-2026-10-20.md)
+are authoritative. Phase 7 remains not started; migration drafts #320/#321 stay unmerged.
 Do not begin a later phase or treat this handoff as authorization to deploy it.
 
 - STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
