@@ -90,8 +90,9 @@ Before implementing write actions, specify and test:
 - Separate propose/check/approve/execute/observe/result states with run ID,
   idempotency key, per-target lock, bounded retries/concurrency/time/spend and a
   durable outcome. Distinguish denied, expired, cancelled, running, succeeded,
-  failed and **unknown/needs reconciliation**. Broker delivery is at-least-once;
-  do not claim exactly-once effects across GitHub and Kubernetes.
+  failed and **unknown/needs reconciliation**. Requests may repeat and
+  acknowledgements may be lost; do not claim exactly-once effects across GitHub
+  and Kubernetes. Specify the selected transport's actual durability guarantees.
 - Lost acknowledgements, worker restarts and duplicate jobs reconcile existing
   branch/PR/merge/run state before retrying. Cancellation cannot undo a merged
   commit; once merged, report the stage honestly and require a new reviewed
