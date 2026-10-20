@@ -3,6 +3,7 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const YAML = require('yaml');
+const { missingDescription } = require('./inventory-status.cjs');
 process.chdir(path.resolve(__dirname, '..'));
 const files = ['catalog/cluster.yaml', 'catalog/apps.yaml', 'catalog/repositories-source.json', 'catalog/runtime-source.json', '../../platform/backstage/catalog/cluster.yaml', '../../platform/backstage/catalog/apps.yaml'];
 const original = new Map(files.map(file => [file, fs.existsSync(file) ? fs.readFileSync(file) : null]));
@@ -35,6 +36,7 @@ try {
     const prior = priorByIdentity.get(identity(entity))?.metadata.annotations || annotations;
     const misses = Math.max(0, Number(prior['onemind.io/inventory-missing-observations']) || 0) + 1;
     entity.metadata.annotations = { ...annotations, 'onemind.io/inventory-state': misses >= 3 ? 'retirement-review-required' : 'missing-review-required', 'onemind.io/inventory-missing-observations': String(misses), 'onemind.io/inventory-last-checked-at': observedAt };
+    entity.metadata.description = missingDescription(entity.metadata.description);
     // Keep last successful observed-at: disappearance is not evidence of deletion.
     current.push(entity);
   }

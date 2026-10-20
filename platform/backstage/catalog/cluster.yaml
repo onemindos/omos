@@ -10233,7 +10233,8 @@ kind: Component
 metadata:
   name: k8s-kube-system-clickhouse-operator-a41fe06e
   title: kube-system / clickhouse-operator
-  description: Deployment in kube-system
+  description: Not observed in the latest inventory; review required. Deployment
+    in kube-system
   annotations:
     backstage.io/kubernetes-label-selector: app=clickhouse-operator
     backstage.io/kubernetes-namespace: kube-system
@@ -10260,7 +10261,7 @@ kind: Component
 metadata:
   name: k8s-nats-agent-web-ui-be5be217
   title: nats / agent-web-ui
-  description: Deployment in nats
+  description: Not observed in the latest inventory; review required. Deployment in nats
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-web-ui
     backstage.io/kubernetes-namespace: nats
@@ -10287,7 +10288,7 @@ kind: Component
 metadata:
   name: k8s-nats-agenttap-3e09fc8c
   title: nats / agenttap
-  description: Deployment in nats
+  description: Not observed in the latest inventory; review required. Deployment in nats
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agenttap
     backstage.io/kubernetes-namespace: nats
@@ -10314,7 +10315,7 @@ kind: Component
 metadata:
   name: k8s-omos-omos-mission-engine-23fd014f
   title: omos / omos-mission-engine
-  description: Deployment in omos
+  description: Not observed in the latest inventory; review required. Deployment in omos
   annotations:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=omos-mission-engine
     backstage.io/kubernetes-namespace: omos
@@ -10341,7 +10342,7 @@ kind: Component
 metadata:
   name: k8s-onetak-stac-browser-2881a2ef
   title: dp-default-onetak-development-b188bf98 / stac-browser
-  description: Deployment in onetak
+  description: Not observed in the latest inventory; review required. Deployment in onetak
   annotations:
     backstage.io/kubernetes-label-selector: openchoreo.dev/component=stac-browser
     backstage.io/kubernetes-namespace: dp-default-onetak-development-b188bf98
@@ -10368,7 +10369,8 @@ kind: Component
 metadata:
   name: k8s-tailscale-ts-agent-web-ui-l74d4-3f9cba27
   title: tailscale / ts-agent-web-ui-l74d4
-  description: StatefulSet in tailscale
+  description: Not observed in the latest inventory; review required. StatefulSet
+    in tailscale
   annotations:
     backstage.io/kubernetes-label-selector: app=558c1899-1b5d-44b1-9d1a-8bf0033286a6
     backstage.io/kubernetes-namespace: tailscale
@@ -10395,7 +10397,8 @@ kind: Component
 metadata:
   name: k8s-tailscale-ts-agenttap-8ddc6-c08d03f9
   title: tailscale / ts-agenttap-8ddc6
-  description: StatefulSet in tailscale
+  description: Not observed in the latest inventory; review required. StatefulSet
+    in tailscale
   annotations:
     backstage.io/kubernetes-label-selector: app=8730c2e0-28ca-4dc2-898c-3cf4edf6084d
     backstage.io/kubernetes-namespace: tailscale
@@ -10422,7 +10425,8 @@ kind: Component
 metadata:
   name: k8s-tailscale-ts-omos-dell-edge-qfrh9-dc605fd4
   title: tailscale / ts-omos-dell-edge-qfrh9
-  description: StatefulSet in tailscale
+  description: Not observed in the latest inventory; review required. StatefulSet
+    in tailscale
   annotations:
     backstage.io/kubernetes-label-selector: app=ef4a4284-c2ff-445b-a833-5c1dd1d70263
     backstage.io/kubernetes-namespace: tailscale
@@ -10449,7 +10453,8 @@ kind: Component
 metadata:
   name: k8s-tailscale-ts-omos-dell-zeus-wsv6m-3f4d22b4
   title: tailscale / ts-omos-dell-zeus-wsv6m
-  description: StatefulSet in tailscale
+  description: Not observed in the latest inventory; review required. StatefulSet
+    in tailscale
   annotations:
     backstage.io/kubernetes-label-selector: app=f89631ec-d3c1-4a05-a653-baf65eb228f3
     backstage.io/kubernetes-namespace: tailscale
@@ -10476,7 +10481,8 @@ kind: Component
 metadata:
   name: k8s-tailscale-ts-omos-intel-zzn2k-23daf484
   title: tailscale / ts-omos-intel-zzn2k
-  description: StatefulSet in tailscale
+  description: Not observed in the latest inventory; review required. StatefulSet
+    in tailscale
   annotations:
     backstage.io/kubernetes-label-selector: app=969dc35f-b2ab-4dd6-9775-8aa806bf6284
     backstage.io/kubernetes-namespace: tailscale
@@ -10503,8 +10509,8 @@ kind: Resource
 metadata:
   name: mesh-d7c628bfbdf4
   title: intel-crucix-ingress
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10527,8 +10533,8 @@ kind: Resource
 metadata:
   name: mesh-97e495361c00
   title: agent-web-ui
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10551,8 +10557,8 @@ kind: Resource
 metadata:
   name: mesh-b052cf149808
   title: hermes-omos-dell-edge
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10575,8 +10581,8 @@ kind: Resource
 metadata:
   name: mesh-29e728660888
   title: openclaw
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10599,8 +10605,8 @@ kind: Resource
 metadata:
   name: mesh-8c830a9729f5
   title: hermes-omos-intel
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10623,8 +10629,8 @@ kind: Resource
 metadata:
   name: mesh-c8494c949f0b
   title: omos-ipad
-  description: iOS mesh endpoint. Availability is a discovery snapshot, not a live
-    health check.
+  description: Not observed in the latest inventory; review required. iOS mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10647,8 +10653,8 @@ kind: Resource
 metadata:
   name: mesh-e2e1e8582d97
   title: hermes-omos-dell-zeus
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10671,8 +10677,8 @@ kind: Resource
 metadata:
   name: mesh-eb4bcd2d04aa
   title: hermes-legacy
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10695,8 +10701,8 @@ kind: Resource
 metadata:
   name: mesh-e0b87b391e90
   title: intel-worldmonitor-ingress
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10719,8 +10725,8 @@ kind: Resource
 metadata:
   name: mesh-cdf4b0be239e
   title: wp-zeus
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10743,8 +10749,8 @@ kind: Resource
 metadata:
   name: mesh-3f6b2c2528f8
   title: agenttap
-  description: linux mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. linux mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
@@ -10767,8 +10773,8 @@ kind: Resource
 metadata:
   name: mesh-e70c1174e607
   title: Omos-tablet
-  description: android mesh endpoint. Availability is a discovery snapshot, not a
-    live health check.
+  description: Not observed in the latest inventory; review required. android mesh
+    endpoint. Availability is a discovery snapshot, not a live health check.
   annotations:
     onemind.io/inventory-source: tailscale
     onemind.io/inventory-observed-at: 2026-10-06T17:39:45.660Z
