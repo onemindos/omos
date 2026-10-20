@@ -694,7 +694,16 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 
 ### Phase 8: Expand
 
-- [ ] Home server on Talos Linux, registered in Argo CD and as a second OpenChoreo data plane.
+- Planning scope requested 2026-10-20: [full Kubernetes operating structure and
+  execution queue](docs/architecture/kubernetes-operating-structure.md), backed by
+  the [read-only baseline](docs/operations/kubernetes-structure-baseline-2026-10-20.md).
+  This is **not** a later-phase deployment or completion. Existing #331/#330
+  remain the immediate portal/readiness gates; #284 remains the home expansion
+  parent and must be revised against the actual Mac storage/power evidence.
+- [ ] Decide and verify the home runtime against actual hardware: proposed Mac
+      ARM64 Linux VM/K3s pilot; Talos remains a dedicated-host candidate, not a
+      requirement to replace macOS. Register approved cluster visibility/GitOps
+      and separately prove any second OpenChoreo data-plane integration.
 - [ ] Hermes gets a model through LiteLLM and the same read-only tools through the tool gateway.
 - [ ] Revisit `takserver` placement.
 
@@ -710,6 +719,7 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
+| 2026-10-20 | Zeus requested full Kubernetes/Backstage structure and linked PRs. Keep the installed stack and existing phase gates; permit planning and bounded comparison of KubeVela/Crossplane/fleet candidates without deploying or assigning a second owner to live resources. The new queue is a proposal, not a replacement approval or claim of verified integration. |
 
 ## Incidents found while working the roadmap
 

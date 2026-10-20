@@ -40,6 +40,16 @@ offsite copy remains unconfigured. Do not infer all-green health from portal rea
 
 ## Briefs and draft PRs
 
+Full-stack planning requested 2026-10-20 is organized in
+[the Kubernetes operating structure](../architecture/kubernetes-operating-structure.md)
+and [fresh baseline](../operations/kubernetes-structure-baseline-2026-10-20.md).
+Start with existing #331/#330 portal acceptance, public ingress lifecycle assessment
+and recovery/ownership checks. Do not begin by installing overlapping controllers.
+The plan lists observed apps, all 20 capability categories, onboarding contracts,
+and gated Mac/home, NATS agents/spend, Karmada/KubeEdge and ML work packages.
+[#332](https://github.com/onemindos/omos/pull/332) stages the private LibreChat/Legacy
+pilot but is not deployed. This planning does not mark Phases 6/7/8 complete.
+
 | Phase | Brief | Goal | Draft PR |
 |---|---|---|---|
 | 3 | [phase-3-pilot-app.md](phase-3-pilot-app.md) | One small app as an OpenChoreo Component | [#279](https://github.com/onemindos/omos/pull/279) |
