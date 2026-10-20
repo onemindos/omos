@@ -936,3 +936,16 @@ See [acceptance and remaining limits](docs/operations/grafana-durable-visibility
 Root-folder link presentation, old ClickHouse panels, Prometheus alert integration,
 expiry monitoring and wider topology/OpenCost remain separate work. Phase 6 stays
 In progress; Phase 7 Not started; #339 action-layer draft is not deployed by this.
+
+
+### Native Grafana folder links — 2026-10-20
+
+Next bounded Phase 6 fix: provision the three existing service dashboards in a real
+`OneMind` folder using the pinned chart's sidecar folder annotation and filesystem
+folder provider. Native plugin 1.1.0 otherwise concatenates an absent root-folder
+URL into `undefined/`. Dashboard UIDs, queries, selectors, credentials, PVC,
+versions and permission boundaries remain unchanged. Unannotated dashboards keep
+the root default. Argo owns the brief Grafana restart; no imperative move/apply.
+Live folder metadata, signed-in native links, unchanged dashboard inventory and
+healthy persistent rollout must pass after merge. Then Prometheus alert visibility
+is next, separately scoped; Phase 6 stays In progress and Phase 7 Not started.

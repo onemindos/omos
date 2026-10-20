@@ -120,6 +120,21 @@ class GrafanaStateTests(unittest.TestCase):
             self.assertNotIn('grafana/overview-dashboard', matches[0]['metadata']['annotations'])
             self.assertNotIn('grafana/alert-label-selector', matches[0]['metadata']['annotations'])
 
+    def test_native_dashboard_folder_is_provisioned_without_changing_root_default(self):
+        cm = yaml.safe_load((ROOT / 'platform/monitoring/grafana-dashboards-onemind-services.yaml').read_text())
+        grafana = yaml.safe_load((ROOT / 'platform/values/kube-prometheus-stack.yaml').read_text())['grafana']
+        dashboards = grafana['sidecar']['dashboards']
+        annotation = dashboards['folderAnnotation']
+        self.assertEqual(annotation, 'onemind.io/grafana-folder')
+        self.assertEqual(cm['metadata']['annotations'][annotation], '/tmp/dashboards/OneMind')
+        self.assertTrue(dashboards['provider']['foldersFromFilesStructure'])
+        # Explicit folder/folderUid conflict with filesystem provisioning. Do not
+        # move unrelated unannotated dashboards by changing the provider default.
+        for key in ['folder', 'folderUid']:
+            self.assertNotIn(key, dashboards['provider'])
+        self.assertNotIn('defaultFolderName', dashboards)
+        self.assertEqual(sorted(cm['data']), ['onemind-backstage-postgres.json', 'onemind-backstage.json', 'onemind-nats.json'])
+
     def test_mounted_script_and_source_match(self):
         docs = list(yaml.safe_load_all((ROOT / 'platform/monitoring/grafana-state.yaml').read_text()))
         config = next(d for d in docs if d['kind'] == 'ConfigMap')
