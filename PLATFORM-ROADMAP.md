@@ -949,3 +949,13 @@ the root default. Argo owns the brief Grafana restart; no imperative move/apply.
 Live folder metadata, signed-in native links, unchanged dashboard inventory and
 healthy persistent rollout must pass after merge. Then Prometheus alert visibility
 is next, separately scoped; Phase 6 stays In progress and Phase 7 Not started.
+
+
+Grafana folder fix [#344](https://github.com/onemindos/omos/pull/344) accepted
+23:01–23:04 UTC at `48d841b3`: both owning apps Synced/Healthy, Grafana 3/3 on
+same PVC/image/Deployment UID; portal remains 2/2, DB unchanged, NATS 3/3.
+All 31 dashboard UIDs retained, only three scoped boards moved to `OneMind`;
+Viewer metadata and signed-in native folder links/listing verified. Read-only
+access/denials preserved. [Evidence](docs/operations/grafana-native-folder-2026-10-20.md).
+Prometheus alert integration is the next separately verified task; not installed
+by this repair. Phase 6 stays In progress; Phase 7 Not started.
