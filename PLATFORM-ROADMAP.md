@@ -616,7 +616,7 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 
 ### Phase 6: One portal
 
-2026-10-20 follow-through: [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
+2026-10-20 follow-through: [PR #329](https://github.com/onemindos/omos/pull/329), [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
 16 remaining launcher findings are flagged, offsite/Grafana gaps remain explicit.
 The existing STAC operational slice is authorized next; this is not a Phase 7 cutover.
 
