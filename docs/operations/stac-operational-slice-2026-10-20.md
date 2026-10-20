@@ -96,7 +96,7 @@ labels. **It predates these repairs and must not be promoted as their image.**
 A new clean-commit Linux build, source label verification and separate digest-pin
 PR are required. This does not fix STAC's backing schema or certify a new rollout.
 
-- [ ] Publish and remotely verify an immutable Linux/AMD64 image with all gates.
+- [x] Publish and remotely verify an immutable Linux/AMD64 image with all gates.
 - [ ] Pin its digest in a separate GitOps PR; Argo healthy and both replicas ready.
 - [ ] Process API/dependency metadata with stable references, no new duplicates,
       errors/orphans or missing relations beyond the known inactive workflow plane.
@@ -109,3 +109,13 @@ Phase 6 is not declared universally complete by this feature. The follow-through
 report retains 16 launcher findings, Grafana adapter 401, offsite-copy gap and
 production expiry/second-role coverage limits. Application readiness and recovery
 must be proven before a later migration or database change.
+
+### Verified artifact and promotion (2026-10-20)
+
+Source #330 and pipeline #335 are merged. The portable pipeline published source
+`c9a05f8d0b1fc1809b0496945d99593e884f561d`, remotely verified
+`ghcr.io/onemindos/onemind-portal@sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`
+and opened [#336](https://github.com/onemindos/omos/pull/336) for promotion.
+Required local gates passed; whole-tree YAML debt remains diagnostic failure.
+No hosted CI success is asserted. Rollout and semantic/security acceptance follow
+this pin; source publication alone is not deployed acceptance.
