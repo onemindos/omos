@@ -880,3 +880,22 @@ image digest, RBAC, credentials, OpenChoreo ownership or event contracts change.
 Phase 6 stays In progress and Phase 7 Not started. After browser acceptance, next
 visibility work is the existing Grafana 401, then topology/Prometheus/OpenCost with
 separate compatibility and access checks. This does not install new controllers.
+
+
+### Permissioned AI actions — planning requested 2026-10-20
+
+[Controlled-action plan](docs/roadmap/permissioned-ai-actions.md) records the path
+from read-only observation to separately authenticated, policy-bound actions.
+Preparation belongs alongside Phase 6 trust stabilization and K03/K07; no new
+phase is started. First pilot: one reviewed stateless app/profile, verified
+release PR, exact-head human merge, normal Argo reconciliation and real app/
+recovery verification. The portal-only profile is protected foundation, not an
+autonomous write target. Target selection and all implementation/live gates
+remain **Not started**.
+
+Future small PRs cover typed contracts/threat model, durable approvals/audit,
+scoped proposal executor, Backstage/agent interfaces, supervised pilot and only
+then separately approved bounded autonomy. Existing read-only guards, foundation
+human-merge rules, GitOps ownership and credential boundaries stay intact.
+This planning PR grants nothing, deploys nothing and does not authorize its own
+activation or a phase completion. See the plan's unchecked acceptance gates.
