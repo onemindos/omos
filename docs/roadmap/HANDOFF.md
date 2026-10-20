@@ -62,6 +62,16 @@ initialization is authorized by this integration; it needs its own recovery gate
 
 ## Briefs and draft PRs
 
+Full-stack structure is in [PR #333](https://github.com/onemindos/omos/pull/333):
+[operating structure](../architecture/kubernetes-operating-structure.md) and
+[timestamped baseline](../operations/kubernetes-structure-baseline-2026-10-20.md).
+The #330/#335/#336 portal release is already verified; do not rebuild or repin it
+just to resume the plan. Next structural work is #334's read-only ingress assessment
+and K02 ownership/recovery inventory; remaining Phase 6 trust gates stay explicit.
+All 20 categories, actual versus candidate tools, integration gaps, app contracts
+and gated home/agent/edge/ML work are covered. #332 remains staged, not activated.
+No new platform, phase completion or migration is authorized by this plan.
+
 Before selecting a migration, use the
 [migration-readiness and follow-up checklist](migration-readiness-followups.md)
 in [PR #331](https://github.com/onemindos/omos/pull/331).
@@ -76,8 +86,8 @@ the planning PR. No phase is marked complete merely by recording the backlog.
 | 4 | [phase-4-portal-refactor.md](phase-4-portal-refactor.md) | Portal features into `plugins/` packages | [#280](https://github.com/onemindos/omos/pull/280) |
 | 5 | [phase-5-capacity-observability.md](phase-5-capacity-observability.md) | Capacity, then the observability plane | [#281](https://github.com/onemindos/omos/pull/281) |
 | 6 | [phase-6-one-portal.md](phase-6-one-portal.md) | OpenChoreo plugins in our portal | [#282](https://github.com/onemindos/omos/pull/282) |
-| 7 | [phase-7-migrate-apps.md](phase-7-migrate-apps.md) | Move Layer 3 apps project by project | [#283](https://github.com/onemindos/omos/pull/283) |
-| 8 | [phase-8-expand.md](phase-8-expand.md) | Home server and Hermes | [#284](https://github.com/onemindos/omos/pull/284) |
+| 7 | [Migration plan in #283](https://github.com/onemindos/omos/pull/283) | Move Layer 3 apps project by project | [#283](https://github.com/onemindos/omos/pull/283) |
+| 8 | [Expansion plan in #284](https://github.com/onemindos/omos/pull/284) | Home server and Hermes | [#284](https://github.com/onemindos/omos/pull/284) |
 
 Completed briefs record evidence; future draft PRs initially add only a brief. Work the phase on that PR's branch (or a branch from it),
 keep the PR a draft until the gate passes, then mark it ready and merge. Every PR also updates the
