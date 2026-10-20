@@ -131,7 +131,8 @@ it could lock out both itself and the human who has to recover it.
 
 ### Queued follow-up: workflow-plane pilot (high priority)
 
-**Not started; planning only, requested by Zeus 2026-10-20.** Preserve the
+**Not started; planning only, requested by Zeus 2026-10-20.** Draft
+[PR #328](https://github.com/onemindos/omos/pull/328). Preserve the
 [workflow-plane pilot brief](docs/roadmap/openchoreo-workflow-plane-pilot.md)
 for one first-party application's source-to-image workflow in our existing
 portal. Phase 6 stabilization remains the first unfinished phase; this adds no

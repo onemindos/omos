@@ -36,7 +36,8 @@ Zeus requested no further Ollama delegation: handle follow-through directly.
 ## Briefs and draft PRs
 
 High-priority queued follow-up (2026-10-20):
-[OpenChoreo workflow-plane pilot](openchoreo-workflow-plane-pilot.md).
+[OpenChoreo workflow-plane pilot](openchoreo-workflow-plane-pilot.md),
+draft [PR #328](https://github.com/onemindos/omos/pull/328).
 Planning only: one first-party app, isolated/capped builds, durable OCI artifacts,
 readable run evidence and explicit GitOps promotion. Do not install it or enable
 workflow execution from this brief; Phase 6 stabilization remains first.
