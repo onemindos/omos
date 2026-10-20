@@ -46,9 +46,9 @@ copying a historical acceptance claim over current known failures.
 
 ## Rule: core portal gate, then one application's safety gate
 
-The immediate release gate is the existing
-[PR #330](https://github.com/onemindos/omos/pull/330), its separately reviewed image
-pin and live verification. Closing that gate does not fix every service in the
+The scoped release chain is now merged/verified: source
+[#330](https://github.com/onemindos/omos/pull/330), pipeline #335 and image pin #336.
+Broader security/recovery gates below remain open. Closing that gate does not fix every service in the
 catalog. Once the required core checks pass and outstanding risks are explicitly
 recorded in the roadmap, evaluate the selected app on its own dependencies,
 permissions, data/recovery requirements and rollback. Do not wait for every link,

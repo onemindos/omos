@@ -7,11 +7,13 @@ phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
 Phases 0–5 are done. **Phase 6 stabilization is the first unfinished phase**;
 its historical acceptance is preserved, but Zeus requested UI/catalog repairs
-before further migrations. Source/image/inventory/composition PRs #322–#326 are merged and deployed;
-final image `sha256:4a52c3b840fcd2b4e2fc0287929e1704721f7420018f2c09deb8543a6aab74da`
-is 2/2 healthy, with 715 processed catalog entities and passing targeted live gates;
-[stabilization evidence and remaining gates](../operations/portal-stabilization-2026-10-20.md)
-are authoritative. Phase 7 remains not started; migration drafts #320/#321 stay unmerged.
+before further migrations. Source/image/inventory/composition PRs #322–#326 were the earlier stabilization.
+The latest source #330, pipeline #335 and pin #336 are now merged/deployed:
+`sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`,
+2/2 healthy, 716 processed catalog entities and scoped live acceptance recorded in
+[STAC release evidence](../operations/stac-operational-slice-2026-10-20.md).
+The earlier [stabilization review](../operations/portal-stabilization-2026-10-20.md)
+retains broader unresolved gates. Phase 7 remains not started; migration drafts #320/#321 stay unmerged.
 Do not begin a later phase or treat this handoff as authorization to deploy it.
 Broader token-lifecycle, launcher/empty-card and COP coverage gates remain in the
 evidence; absent workflow plane stays explicit and build workflows disabled.
@@ -22,11 +24,12 @@ Zeus requested no further Ollama delegation: handle follow-through directly.
 [full structure #333](https://github.com/onemindos/omos/pull/333),
 [public ingress lifecycle #334](https://github.com/onemindos/omos/pull/334),
 [staged private Legacy/LibreChat #332](https://github.com/onemindos/omos/pull/332).
-Begin with the #330 source/image/live acceptance chain and read-only foundation
-assessment; keep #284 as home expansion parent, revised against the Mac's actual
+The #330/#335/#336 scoped release is verified; next review the remaining trust
+gates and read-only foundation assessment; keep #284 as home expansion parent, revised against the Mac's actual
 storage/power/runtime gates. Eight nginx-class Ingress resources still need a
 maintenance-lifecycle plan. Legacy's configured inference failed with provider 402;
-Mac internal free space is only 13–14 GiB. Proposed Karmada/KubeEdge/Crossplane/
+Mac internal free space was 13–14 GiB at that earlier observation; recheck before
+allocating anything. Proposed Karmada/KubeEdge/Crossplane/
 KubeVela are not installed/accepted capabilities. Draft/planning PRs do not deploy
 or merge themselves, complete a phase or authorize credential/billing/permission
 changes. Reconcile shared tracker edits before merging one PR at a time.
@@ -53,7 +56,7 @@ returns 401. Two suspended backup jobs are intentionally replaced; independent
 offsite copy remains unconfigured. Do not infer all-green health from portal readiness.
 
 Existing pilot integration: [STAC operational slice](../operations/stac-operational-slice-2026-10-20.md).
-Finish image/pin/live gates before calling it deployed. Three ready workloads do
+Its scoped image/pin/live gates are now recorded as passed. Three ready workloads do
 not hide the actual collections/search 500s or unknown data freshness. No schema
 initialization is authorized by this integration; it needs its own recovery gates.
 
@@ -61,7 +64,7 @@ initialization is authorized by this integration; it needs its own recovery gate
 
 Before selecting a migration, use the
 [migration-readiness and follow-up checklist](migration-readiness-followups.md)
-in [draft PR #331](https://github.com/onemindos/omos/pull/331).
+in [PR #331](https://github.com/onemindos/omos/pull/331).
 It separates #330 release/core acceptance and per-app safety gates from parallel
 STAC/Grafana/launcher/offsite/security/validation follow-ups. Existing #328, #283,
 #320 and #321 are linked there; do not duplicate them or infer a cutover from
