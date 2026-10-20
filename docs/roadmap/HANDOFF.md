@@ -7,15 +7,32 @@ phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
 Phases 0–5 are done. **Phase 6 stabilization is the first unfinished phase**;
 its historical acceptance is preserved, but Zeus requested UI/catalog repairs
-before further migrations. Source/image/inventory/composition PRs #322–#326 are merged and deployed;
-final image `sha256:4a52c3b840fcd2b4e2fc0287929e1704721f7420018f2c09deb8543a6aab74da`
-is 2/2 healthy, with 715 processed catalog entities and passing targeted live gates;
-[stabilization evidence and remaining gates](../operations/portal-stabilization-2026-10-20.md)
-are authoritative. Phase 7 remains not started; migration drafts #320/#321 stay unmerged.
+before further migrations. Source/image/inventory/composition PRs #322–#326 were the earlier stabilization.
+The latest source #330, pipeline #335 and pin #336 are now merged/deployed:
+`sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`,
+2/2 healthy, 716 processed catalog entities and scoped live acceptance recorded in
+[STAC release evidence](../operations/stac-operational-slice-2026-10-20.md).
+The earlier [stabilization review](../operations/portal-stabilization-2026-10-20.md)
+retains broader unresolved gates. Phase 7 remains not started; migration drafts #320/#321 stay unmerged.
 Do not begin a later phase or treat this handoff as authorization to deploy it.
 Broader token-lifecycle, launcher/empty-card and COP coverage gates remain in the
 evidence; absent workflow plane stays explicit and build workflows disabled.
 Zeus requested no further Ollama delegation: handle follow-through directly.
+
+**Resume index for the full Kubernetes structure request:**
+[readiness/ordered queue #331](https://github.com/onemindos/omos/pull/331),
+[full structure #333](https://github.com/onemindos/omos/pull/333),
+[public ingress lifecycle #334](https://github.com/onemindos/omos/pull/334),
+[staged private Legacy/LibreChat #332](https://github.com/onemindos/omos/pull/332).
+The #330/#335/#336 scoped release is verified; next review the remaining trust
+gates and read-only foundation assessment; keep #284 as home expansion parent, revised against the Mac's actual
+storage/power/runtime gates. Eight nginx-class Ingress resources still need a
+maintenance-lifecycle plan. Legacy's configured inference failed with provider 402;
+Mac internal free space was 13–14 GiB at that earlier observation; recheck before
+allocating anything. Proposed Karmada/KubeEdge/Crossplane/
+KubeVela are not installed/accepted capabilities. Draft/planning PRs do not deploy
+or merge themselves, complete a phase or authorize credential/billing/permission
+changes. Reconcile shared tracker edits before merging one PR at a time.
 
 - STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
 - Phase 5: all nodes below 78% requested CPU/memory; authenticated Observer core and
@@ -38,17 +55,30 @@ Argo locator works in the production overlay; Grafana dashboard search currently
 returns 401. Two suspended backup jobs are intentionally replaced; independent
 offsite copy remains unconfigured. Do not infer all-green health from portal readiness.
 
+Existing pilot integration: [STAC operational slice](../operations/stac-operational-slice-2026-10-20.md).
+Its scoped image/pin/live gates are now recorded as passed. Three ready workloads do
+not hide the actual collections/search 500s or unknown data freshness. No schema
+initialization is authorized by this integration; it needs its own recovery gates.
+
 ## Briefs and draft PRs
 
-Full-stack planning requested 2026-10-20 is organized in
-[the Kubernetes operating structure](../architecture/kubernetes-operating-structure.md)
-and [fresh baseline](../operations/kubernetes-structure-baseline-2026-10-20.md).
-Start with existing #331/#330 portal acceptance, public ingress lifecycle assessment
-and recovery/ownership checks. Do not begin by installing overlapping controllers.
-The plan lists observed apps, all 20 capability categories, onboarding contracts,
-and gated Mac/home, NATS agents/spend, Karmada/KubeEdge and ML work packages.
-[#332](https://github.com/onemindos/omos/pull/332) stages the private LibreChat/Legacy
-pilot but is not deployed. This planning does not mark Phases 6/7/8 complete.
+Full-stack structure is in [PR #333](https://github.com/onemindos/omos/pull/333):
+[operating structure](../architecture/kubernetes-operating-structure.md) and
+[timestamped baseline](../operations/kubernetes-structure-baseline-2026-10-20.md).
+The #330/#335/#336 portal release is already verified; do not rebuild or repin it
+just to resume the plan. Next structural work is #334's read-only ingress assessment
+and K02 ownership/recovery inventory; remaining Phase 6 trust gates stay explicit.
+All 20 categories, actual versus candidate tools, integration gaps, app contracts
+and gated home/agent/edge/ML work are covered. #332 remains staged, not activated.
+No new platform, phase completion or migration is authorized by this plan.
+
+Before selecting a migration, use the
+[migration-readiness and follow-up checklist](migration-readiness-followups.md)
+in [PR #331](https://github.com/onemindos/omos/pull/331).
+It separates #330 release/core acceptance and per-app safety gates from parallel
+STAC/Grafana/launcher/offsite/security/validation follow-ups. Existing #328, #283,
+#320 and #321 are linked there; do not duplicate them or infer a cutover from
+the planning PR. No phase is marked complete merely by recording the backlog.
 
 | Phase | Brief | Goal | Draft PR |
 |---|---|---|---|
@@ -106,3 +136,16 @@ tracker in `PLATFORM-ROADMAP.md`.
 ## Prompt for the next agent
 
 See [HANDOFF-PROMPT.md](HANDOFF-PROMPT.md).
+
+## Latest scoped release — 2026-10-20
+
+Source #330, portable pipeline #335 and image-pin #336 are merged; actual Argo
+revision `1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6` and both new replicas verified.
+See [STAC acceptance](../operations/stac-operational-slice-2026-10-20.md) and
+[migration-readiness tracker](migration-readiness-followups.md) for exact digest,
+716-entity topology audit, browser checks and per-pod negative/MCP checks.
+Old `af7770fb` / `fab652...` candidate is superseded. The pipeline was really used;
+first profile is portal, retirement is plan-only. Hosted CI remains unavailable,
+not green; old whole-tree YAML debt remains. Phase 6 is still In progress and
+Phase 7 Not started: do not turn this successful portal release into approval for
+STAC schema changes, service migrations or new infrastructure controllers.

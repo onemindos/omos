@@ -10,6 +10,7 @@ These runbooks describe the deployed OneMind configuration reviewed on October 6
 | Login fails or access is denied | [Identity](identity.md) |
 | Agent events or message delivery fail | [NATS](nats.md) |
 | TAK clients or geospatial services fail | [TAK](tak.md) |
+| STAC pilot loads but collections/search fail | [STAC pilot](stac.md) |
 | A health check fails, or metrics are missing | [Monitoring](monitoring.md) |
 
 ## Prerequisites

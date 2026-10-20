@@ -129,6 +129,28 @@ it could lock out both itself and the human who has to recover it.
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
+### Migration readiness: core gate versus parallel follow-ups
+
+Zeus requested [a tracked readiness/follow-up checklist](docs/roadmap/migration-readiness-followups.md)
+on 2026-10-20, tracked in [PR #331](https://github.com/onemindos/omos/pull/331).
+Release/live verification of #330 and the chosen app's security,
+dependencies, data/recovery and rollback gates come first. Unrelated launcher
+repairs, optional dashboards and the separately planned workflow plane are not
+blanket prerequisites for every migration. State/recovery and security failures
+still block affected applications; risks require explicit disposition, not a waiver.
+Phase 6 remains In progress and Phase 7 Not started until actual acceptance.
+
+Full-stack continuation requested 2026-10-20: **#331 is the resume index** linking
+[#333](https://github.com/onemindos/omos/pull/333) (20-category Kubernetes structure,
+installed/proposed apps and execution queue),
+[#334](https://github.com/onemindos/omos/pull/334) (public ingress lifecycle plan),
+[#332](https://github.com/onemindos/omos/pull/332) (staged private Legacy/LibreChat)
+and existing [#284](https://github.com/onemindos/omos/pull/284) (home expansion,
+to revise against Mac evidence). Planning/read-only preparation may run in
+parallel with Phase 6. This does not authorize new controllers, app cutovers,
+identity/DNS/storage/provider/billing changes or wider AI permissions. Start with
+the core gate and foundation assessment, not a simultaneous platform installation.
+
 ## Phases
 
 ### Phase 0: Blueprint
@@ -616,6 +638,11 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 
 ### Phase 6: One portal
 
+Existing pilot integration: [PR #330](https://github.com/onemindos/omos/pull/330), [STAC operational slice](docs/operations/stac-operational-slice-2026-10-20.md) joins identity/dependencies and real evidence; source checks pass,
+immutable image/live UI acceptance remains required. STAC collections/search
+currently return 500 (no pgstac schema observed); data freshness is unknown.
+No data/schema repair or new application migration is performed by this integration.
+
 2026-10-20 follow-through: [PR #329](https://github.com/onemindos/omos/pull/329), [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
 16 remaining launcher findings are flagged, offsite/Grafana gaps remain explicit.
 The existing STAC operational slice is authorized next; this is not a Phase 7 cutover.
@@ -679,6 +706,35 @@ hits unrelated old YAML debt. Neither was represented as green or bypassed.
 Implementation/rollout PRs: #311–#319. Detailed evidence and rollback:
 [Phase 6 integration runbook](docs/operations/phase6-portal-integration.md).
 Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
+
+### Phase 6 release follow-through — local/Linux executor
+
+2026-10-20: Zeus approved the existing verified local/Linux release checks while
+GitHub cannot start hosted jobs, and requested a reusable deployment/removal
+pipeline. No billing/check-disable/admin-bypass permission is implied. #330's
+review added explicit incomplete-state and bounded-request regressions; its old
+published candidate is superseded for these changes. Rebuild and remotely verify
+the new source before a separate GitOps digest-pin/live acceptance step. Phase 6
+remains In progress; no migration or removal is certified by source tests.
+
+Pipeline implementation requested 2026-10-20:
+[portable release/lifecycle gates](docs/operations/gitops-release-pipeline.md),
+initial portal profile. Stages: local checks, Linux publication, registry/source
+proof, separate pin PR, reviewed merge, read-only Argo/rollout verification and
+separate semantic acceptance. Protected retirement is plan-only; no app, namespace,
+PVC, Secret or backup deletion is executed. First Linux rebuild exposed floating
+`npx` TechDocs dependencies; the CLI graph is now locked in workspace Yarn before
+retry. Do not promote the failed build's old candidate or call the pipeline proven
+end to end until a new immutable artifact and real rollout are verified.
+
+Release execution update 2026-10-20: source PR [#330](https://github.com/onemindos/omos/pull/330)
+is merged. Pipeline PR [#335](https://github.com/onemindos/omos/pull/335)
+produced and remotely verified Linux/AMD64 source `c9a05f8d0b1fc1809b0496945d99593e884f561d`,
+image digest `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`.
+All required local gates passed, including 82 security/STAC, 44 layout, 6 catalog,
+20 pipeline and 7 release-command tests; the existing whole-tree YAML diagnostic
+remains failing and hosted jobs remain unavailable. No rollout is claimed here;
+separate pin, Argo and signed-in semantic/security acceptance still follow.
 
 ### Phase 7: Migrate Layer 3
 
@@ -757,3 +813,33 @@ descheduler (Layer 1) in phase 5 alongside the capacity work.
 - [Built-in console configuration](https://openchoreo.dev/docs/platform-engineer-guide/backstage-configuration/)
 - [MCP servers](https://openchoreo.dev/docs/ai/mcp-servers/)
 - [Community modules](https://github.com/openchoreo/community-modules)
+
+### Portal GitOps promotion — 2026-10-20
+
+Source #330 and pipeline #335 merged normally using the explicitly approved
+local/Linux release evidence (hosted CI unavailable, not green). Promotion
+[#336](https://github.com/onemindos/omos/pull/336) was generated by the new pipeline:
+only the portal Deployment image changes; no Argo policy, credentials, database,
+RBAC, other workload or removal. Verified source `c9a05f8d0b1fc1809b0496945d99593e884f561d`,
+digest `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`.
+
+- [x] Publish Linux image, remotely verify immutable source/platform/runtime manifest.
+- [x] Run promotion gates and open separate digest-pin PR.
+- [x] Verify actual merged revision, Argo Synced/Healthy and two exact-image ready replicas.
+- [x] Signed-in component/project Operations, topology, logs/metrics/runbook and scoped security checks.
+
+The old `af7770fb` / `fab652...` candidate in earlier follow-up drafts is superseded
+and must not be promoted. STAC collection/search HTTP 500 and data-unknown remain
+real backing-service findings, not portal release failures or authorization to
+change database schemas. Phase 6 remains In progress; no app migration certified.
+
+Live evidence 2026-10-20, 17:29–17:32 UTC: #336 merged at
+`1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6`; pipeline exact-revision/digest verification
+passed, 2/2 ready/updated/available replicas, generation 72. Both pods passed
+anonymous/machine denial and six-read-only-MCP-tool checks. Signed-in Component and
+Project Operations, real logs/metrics and packaged STAC runbook passed. Catalog
+converged to 716 entities, zero duplicates/errors/orphans, expected topology, only
+the known inactive workflow-plane target missing. Details and remaining limits:
+[STAC release evidence](docs/operations/stac-operational-slice-2026-10-20.md).
+Phase 6 is still In progress; STAC schema, broader trust/recovery and production
+expiry/second-role coverage are not certified by this release. No migration begun.
