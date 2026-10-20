@@ -122,6 +122,11 @@ jobs:
       - name: Install PyYAML
         run: pip install pyyaml
 
+      - name: LibreChat pilot safety and Legacy stream regression tests
+        run: |
+          python -m unittest discover -s scripts/tests -p 'test_librechat*.py' -v
+          python scripts/tests/test_librechat_pilot.py --render-with-helm
+
       # Renders every Argo CD Application that pulls a remote Helm chart when the Application file or one of
       # its valueFiles changed, plus the local charts (platform/takserver/chart, platform/ecosystem/charts/*) when
       # their files change. Weekly/manual runs render everything.

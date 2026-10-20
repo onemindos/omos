@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: librechat
+  annotations:
+    tailscale.com/hostname: librechat
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: librechat-pilot
+      port:
+        number: 3080
+  tls:
+  - hosts:
+    - librechat

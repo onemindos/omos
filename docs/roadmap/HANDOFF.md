@@ -17,6 +17,17 @@ Broader token-lifecycle, launcher/empty-card and COP coverage gates remain in th
 evidence; absent workflow plane stays explicit and build workflows disabled.
 Zeus requested no further Ollama delegation: handle follow-through directly.
 
+2026-10-20 parallel scope: Zeus authorized read-only Legacy/Mac checks, a staged
+LibreChat integration PR, and linked full-Kubernetes/Backstage planning PRs.
+This does not authorize a later-phase deployment. See the
+[preflight evidence](../operations/legacy-librechat-preflight-2026-10-20.md) and
+[pilot activation gates](../../platform/librechat/README.md). Legacy metadata and
+NATS discovery work, but actual chat failed on DigitalOcean provider HTTP 402
+(account blocked). Mac internal data volume has only 13–14 GiB free. No provider,
+billing, key, permission, storage or VM changes were made. Dedicated LibreChat
+identity/sealed credentials/database/backups and runtime acceptance are still
+unimplemented prerequisites; keep the draft and its manual Application unsynced.
+
 - STAC Browser is the phase-3 pilot; Phase 4 refactor/hotfix is deployed, portal 2/2 healthy.
 - Phase 5: all nodes below 78% requested CPU/memory; authenticated Observer core and
   modules live, real logs/metrics in console and MCP, isolated backup recovery passed.
