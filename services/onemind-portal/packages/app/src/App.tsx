@@ -27,10 +27,12 @@ import '@internal/plugin-onemind-theme/brand.css';
 import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
+import { componentOverviewModule } from './componentOverviewModule';
 
 export default createApp({
   features: [
     openchoreoPlugin,
+    componentOverviewModule,
     openChoreoEntityGroupsModule,
     observabilityPlugin,
     githubActionsPlugin,

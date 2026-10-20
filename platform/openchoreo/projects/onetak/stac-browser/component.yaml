@@ -3,6 +3,8 @@ kind: Component
 metadata:
   name: stac-browser
   namespace: default
+  annotations:
+    openchoreo.dev/description: Browse geospatial collections and items from the OneTAK STAC API.
 spec:
   owner:
     projectName: onetak
