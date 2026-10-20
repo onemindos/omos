@@ -5,6 +5,8 @@ metadata:
   namespace: monitoring
   labels:
     grafana_dashboard: '1'
+  annotations:
+    onemind.io/grafana-folder: /tmp/dashboards/OneMind
 data:
   onemind-backstage.json: "{\n  \"uid\": \"onemind-backstage\",\n  \"title\": \"OneMind / Backstage\",\n  \"description\"\
     : \"Observed Kubernetes workload telemetry only: backstage/backstage (deployment). Pod health is not app correctness,\

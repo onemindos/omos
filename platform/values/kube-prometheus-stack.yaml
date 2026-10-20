@@ -133,6 +133,11 @@ grafana:
     limits:
       memory: 2Gi
   sidecar:
+    dashboards:
+      # Only annotated ConfigMaps enter named folders; existing root boards stay put.
+      folderAnnotation: onemind.io/grafana-folder
+      provider:
+        foldersFromFilesStructure: true
     resources:
       requests:
         cpu: 10m
