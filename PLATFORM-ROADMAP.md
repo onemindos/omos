@@ -616,6 +616,10 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 
 ### Phase 6: One portal
 
+2026-10-20 follow-through: [PR #329](https://github.com/onemindos/omos/pull/329), [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
+16 remaining launcher findings are flagged, offsite/Grafana gaps remain explicit.
+The existing STAC operational slice is authorized next; this is not a Phase 7 cutover.
+
 **Stabilization reopened 2026-10-20 by Zeus.** Historical release acceptance below
 is preserved, but the broader UI/catalog quality audit found integration defects.
 Work the [repair and acceptance gates](docs/operations/portal-stabilization-2026-10-20.md)

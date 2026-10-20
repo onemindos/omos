@@ -13,6 +13,12 @@ import {
 import { createOneMindPolicy } from './policy';
 import { createSharedAuthzCache } from './sharedCache';
 
+type ProfileApiBoundary = {
+  getCapabilitiesFromApi(
+    ...args: Parameters<AuthzProfileService['getCapabilities']>
+  ): ReturnType<AuthzProfileService['getCapabilities']>;
+};
+
 describe('shared authorization cache', () => {
   let db: Knex;
   beforeEach(() => {
@@ -105,6 +111,83 @@ describe('shared authorization cache', () => {
       `No token and no cached capabilities for ${id}`,
     );
     expect(fetchCapabilities).not.toHaveBeenCalled();
+  });
+  test('a renewed profile restores cross-replica reads only until its new token expiry', async () => {
+    const now = jest.spyOn(Date, 'now').mockReturnValue(1000);
+    const logger: LoggerService = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      child: () => logger,
+    };
+    const a = new AuthzProfileCache(await createSharedAuthzCache(db));
+    const b = new AuthzProfileCache(await createSharedAuthzCache(db));
+    const service = new AuthzProfileService({
+      baseUrl: 'https://unused.example.test',
+      logger,
+      cache: a,
+    });
+    const profile = { capabilities: {} };
+    // Only the upstream network boundary is mocked. Actual cache/TTL logic runs.
+    const fetchProfile = jest
+      .spyOn(service as unknown as ProfileApiBoundary, 'getCapabilitiesFromApi')
+      .mockResolvedValue(profile);
+    const token = (exp: number) =>
+      `fixture.${Buffer.from(JSON.stringify({ exp })).toString(
+        'base64url',
+      )}.fixture`;
+    const actor = 'user:default/operator';
+    await service.getCapabilitiesForUser(actor, token(2));
+    expect(await b.getByUser(actor, 'global')).toEqual(profile);
+    now.mockReturnValue(2000);
+    expect(await b.getByUser(actor, 'global')).toBeUndefined();
+    expect(await service.getCapabilitiesForUser(actor)).toEqual({
+      capabilities: {},
+    });
+    expect(fetchProfile).toHaveBeenCalledTimes(1);
+    await service.getCapabilitiesForUser(actor, token(9));
+    expect(await b.getByUser(actor, 'global')).toEqual(profile);
+    expect(await b.getByUser('user:default/other', 'global')).toBeUndefined();
+    expect(await b.getByUser(actor, 'other-namespace')).toBeUndefined();
+    expect(fetchProfile).toHaveBeenCalledTimes(2);
+    now.mockReturnValue(9000);
+    expect(await b.getByUser(actor, 'global')).toBeUndefined();
+    expect(
+      JSON.stringify(await db('onemind_authz_cache').select()),
+    ).not.toContain('fixture.');
+  });
+  test('refresh failure does not resurrect an expired profile', async () => {
+    const now = jest.spyOn(Date, 'now').mockReturnValue(1000);
+    const cache = new AuthzProfileCache(await createSharedAuthzCache(db));
+    const logger: LoggerService = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      child: () => logger,
+    };
+    const service = new AuthzProfileService({
+      baseUrl: 'https://unused.example.test',
+      logger,
+      cache,
+    });
+    await cache.setByUser(
+      'user:default/operator',
+      { capabilities: {} },
+      1,
+      'global',
+    );
+    now.mockReturnValue(1001);
+    jest
+      .spyOn(service as unknown as ProfileApiBoundary, 'getCapabilitiesFromApi')
+      .mockRejectedValue(new Error('Provider unavailable'));
+    await expect(
+      service.getCapabilitiesForUser('user:default/operator', 'fixture'),
+    ).rejects.toThrow('Provider unavailable');
+    expect(
+      await cache.getByUser('user:default/operator', 'global'),
+    ).toBeUndefined();
   });
   test('preserves token TTL, stores only hashed keys, and isolates scopes', async () => {
     const cache = await createSharedAuthzCache(db);
