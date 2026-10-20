@@ -38,6 +38,11 @@ Argo locator works in the production overlay; Grafana dashboard search currently
 returns 401. Two suspended backup jobs are intentionally replaced; independent
 offsite copy remains unconfigured. Do not infer all-green health from portal readiness.
 
+Existing pilot integration: [STAC operational slice](../operations/stac-operational-slice-2026-10-20.md).
+Finish image/pin/live gates before calling it deployed. Three ready workloads do
+not hide the actual collections/search 500s or unknown data freshness. No schema
+initialization is authorized by this integration; it needs its own recovery gates.
+
 ## Briefs and draft PRs
 
 | Phase | Brief | Goal | Draft PR |

@@ -6,3 +6,6 @@ export { costSummary } from './costs';
 export { natsSummary } from './natsSummary';
 export { cloudSummary, zohoProjectsProvider } from './cloud';
 export type { CloudSummary, CloudTask, CloudProvider } from './cloudTypes';
+
+export { stacEvidence } from './stacEvidence';
+export type { StacEvidence } from './stacEvidence';

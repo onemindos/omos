@@ -616,6 +616,11 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 
 ### Phase 6: One portal
 
+Existing pilot integration: [STAC operational slice](docs/operations/stac-operational-slice-2026-10-20.md) joins identity/dependencies and real evidence; source checks pass,
+immutable image/live UI acceptance remains required. STAC collections/search
+currently return 500 (no pgstac schema observed); data freshness is unknown.
+No data/schema repair or new application migration is performed by this integration.
+
 2026-10-20 follow-through: [PR #329](https://github.com/onemindos/omos/pull/329), [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
 16 remaining launcher findings are flagged, offsite/Grafana gaps remain explicit.
 The existing STAC operational slice is authorized next; this is not a Phase 7 cutover.
