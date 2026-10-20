@@ -75,6 +75,51 @@ class GrafanaStateTests(unittest.TestCase):
             with sqlite3.connect(db) as conn: conn.execute('CREATE TABLE other (id INTEGER)')
             with self.assertRaises(ValueError): state.fingerprint(db)
 
+    def test_durable_cutover_and_backup_colocation(self):
+        grafana = yaml.safe_load((ROOT / 'platform/values/kube-prometheus-stack.yaml').read_text())['grafana']
+        self.assertEqual(grafana['deploymentStrategy']['type'], 'Recreate')
+        self.assertEqual(grafana['persistence']['existingClaim'], 'grafana-data')
+        self.assertTrue(grafana['persistence']['enabled'])
+        self.assertFalse(grafana['initChownData']['enabled'])
+        self.assertIn('.onemind-grafana-seed.json', grafana['extraInitContainers'][0]['args'][0])
+        docs = list(yaml.safe_load_all((ROOT / 'platform/monitoring/grafana-state.yaml').read_text()))
+        verify = next(d for d in docs if d['kind'] == 'Job' and d['metadata']['name'].startswith('grafana-state-verify'))
+        labels = verify['spec']['template']['spec']['affinity']['podAffinity']['requiredDuringSchedulingIgnoredDuringExecution'][0]['labelSelector']['matchLabels']
+        self.assertEqual(labels['onemind.io/grafana-persistent'], 'true')
+
+    def test_runtime_config_retains_host_extensions_and_read_only_proxy(self):
+        base = yaml.safe_load((ROOT / 'services/onemind-portal/app-config.yaml').read_text())
+        runtime = yaml.safe_load((ROOT / 'platform/backstage/app-config.cluster.yaml').read_text())
+        self.assertEqual(runtime['app']['extensions'][:-1], base['app']['extensions'])
+        filter_config = runtime['app']['extensions'][-1]['entity-card:grafana/alerts']['config']['filter']
+        self.assertEqual(filter_config, {'metadata.annotations.grafana/alert-label-selector': {'$exists': True}})
+        endpoint = runtime['proxy']['endpoints']['/grafana/api']
+        self.assertEqual(endpoint['credentials'], 'require')
+        self.assertEqual(endpoint['allowedMethods'], ['GET', 'HEAD'])
+        self.assertEqual(endpoint['headers']['Authorization'], 'Bearer ${GRAFANA_TOKEN}')
+        self.assertNotIn('pathRewrite', endpoint)
+        deploy = next(yaml.safe_load_all((ROOT / 'platform/backstage/deployment.yaml').read_text()))
+        env = deploy['spec']['template']['spec']['containers'][0]['env']
+        self.assertEqual(next(e for e in env if e['name'] == 'GRAFANA_TOKEN')['valueFrom']['secretKeyRef']['name'], 'backstage-grafana')
+
+    def test_service_dashboards_are_fixed_scope_and_registered(self):
+        import json
+        cm = yaml.safe_load((ROOT / 'platform/monitoring/grafana-dashboards-onemind-services.yaml').read_text())
+        catalog = list(yaml.safe_load_all((ROOT / 'platform/backstage/catalog/cluster.yaml').read_text()))
+        for ns, workload in [('backstage', 'backstage'), ('backstage', 'backstage-postgres'), ('nats', 'nats')]:
+            uid = 'onemind-' + workload
+            board = json.loads(cm['data'][uid + '.json'])
+            self.assertEqual(board['uid'], uid)
+            self.assertEqual(board['templating']['list'], [])
+            self.assertIn('not', board['description'])
+            for panel in board['panels']:
+                self.assertEqual(panel['datasource']['uid'], 'prometheus')
+                self.assertIn('namespace="' + ns + '"', panel['targets'][0]['expr'])
+            matches = [e for e in catalog if e.get('metadata', {}).get('annotations', {}).get('grafana/dashboard-selector') == "uid == '" + uid + "'"]
+            self.assertEqual(len(matches), 1)
+            self.assertNotIn('grafana/overview-dashboard', matches[0]['metadata']['annotations'])
+            self.assertNotIn('grafana/alert-label-selector', matches[0]['metadata']['annotations'])
+
     def test_mounted_script_and_source_match(self):
         docs = list(yaml.safe_load_all((ROOT / 'platform/monitoring/grafana-state.yaml').read_text()))
         config = next(d for d in docs if d['kind'] == 'ConfigMap')
@@ -85,7 +130,7 @@ class GrafanaStateTests(unittest.TestCase):
         self.assertEqual(pvc['metadata']['annotations']['argocd.argoproj.io/sync-options'], 'Prune=false')
         cron = next(d for d in docs if d['kind'] == 'CronJob')
         self.assertEqual(cron['spec']['concurrencyPolicy'], 'Forbid')
-        self.assertTrue(cron['spec']['suspend'])  # enabled only after durable cutover
+        self.assertFalse(cron['spec']['suspend'])  # enabled after verified seed gate
         for template in [next(d for d in docs if d['kind'] == 'Job')['spec']['template'], cron['spec']['jobTemplate']['spec']['template']]:
             self.assertFalse(template['spec']['automountServiceAccountToken'])
             self.assertEqual(template['spec']['securityContext']['runAsUser'], 472)

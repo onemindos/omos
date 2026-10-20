@@ -897,3 +897,18 @@ Stage B is a separate reviewed cutover to the seeded PVC with Recreate and an
 init guard, then catalog dashboard mappings and browser verification. Initial
 preparation is not proof of migration or fixed authentication. Phase 6 remains
 In progress; Phase 7 Not started. PR links and actual acceptance follow below.
+
+
+Grafana Stage A [#340](https://github.com/onemindos/omos/pull/340) merged as
+`9f9358f6`. Retained PVC bound; original database capture quiesced the server for
+0.489 seconds, resumed it, then verified encrypted remote download/decrypt/SQLite
+restore across 87 tables before seeding the claim. Seed job completed. Original
+Grafana remains available until the separately reviewed Stage B cutover.
+
+Stage B prepares the seeded RWO Recreate switch/seed guard, online scheduled and
+one-time verified backup, dedicated token reference and three fixed-workload
+Prometheus dashboards mapped into Backstage. Existing host extensions are retained
+when configuring the native Grafana alert card to require an explicit alert-label
+selector; missing Grafana rules must not look like full Prometheus alert coverage.
+No iframe/authentication protection is weakened, no new portal image is required,
+and actual post-cutover/native browser acceptance remains pending.

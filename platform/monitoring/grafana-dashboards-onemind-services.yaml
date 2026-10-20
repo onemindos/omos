@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-onemind-services
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  onemind-backstage.json: "{\n  \"uid\": \"onemind-backstage\",\n  \"title\": \"OneMind / Backstage\",\n  \"description\"\
+    : \"Observed Kubernetes workload telemetry only: backstage/backstage (deployment). Pod health is not app correctness,\
+    \ NATS delivery, data freshness or alert coverage. Prometheus alerts and Grafana-managed rules are separate.\",\n  \"\
+    tags\": [\n    \"onemind-service\",\n    \"backstage\",\n    \"backstage\"\n  ],\n  \"schemaVersion\": 39,\n  \"version\"\
+    : 1,\n  \"editable\": false,\n  \"timezone\": \"browser\",\n  \"refresh\": \"30s\",\n  \"time\": {\n    \"from\": \"now-1h\"\
+    ,\n    \"to\": \"now\"\n  },\n  \"templating\": {\n    \"list\": []\n  },\n  \"annotations\": {\n    \"list\": []\n  },\n\
+    \  \"panels\": [\n    {\n      \"id\": 1,\n      \"title\": \"Ready replicas\",\n      \"type\": \"stat\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n \
+    \         \"refId\": \"A\",\n          \"expr\": \"kube_deployment_status_replicas_available{namespace=\\\"backstage\\\
+    \",deployment=\\\"backstage\\\"}\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\": true\n        }\n\
+    \      ],\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 0,\n        \"w\": 12,\n        \"h\": 8\n      },\n\
+    \      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n        \"overrides\": []\n\
+    \      }\n    },\n    {\n      \"id\": 2,\n      \"title\": \"CPU usage by pod\",\n      \"type\": \"timeseries\",\n \
+    \     \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n      \"targets\"\
+    : [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"sum by (pod) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\\\
+    \"backstage\\\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"\
+    backstage\\\",workload=\\\"backstage\\\",workload_type=\\\"deployment\\\"})\",\n          \"legendFormat\": \"{{pod}}\"\
+    ,\n          \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 0,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"\
+    cores\"\n        },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\": 3,\n      \"title\": \"Memory working\
+    \ set by pod\",\n      \"type\": \"timeseries\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n       \
+    \ \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\"\
+    : \"sum by (pod) (container_memory_working_set_bytes{namespace=\\\"backstage\\\",job=\\\"kubelet\\\",metrics_path=\\\"\
+    /metrics/cadvisor\\\",container!=\\\"\\\",image!=\\\"\\\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\
+    \"backstage\\\",workload=\\\"backstage\\\",workload_type=\\\"deployment\\\"})\",\n          \"legendFormat\": \"{{pod}}\"\
+    ,\n          \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n      \
+    \  \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"bytes\"\
+    \n        },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\": 4,\n      \"title\": \"Restarts (last hour,\
+    \ current pods)\",\n      \"type\": \"stat\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"\
+    uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"\
+    sum(increase(kube_pod_container_status_restarts_total{namespace=\\\"backstage\\\"}[1h]) * on(namespace,pod) group_left(workload)\
+    \ namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"backstage\\\",workload=\\\"backstage\\\",workload_type=\\\
+    \"deployment\\\"})\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n    \
+    \  \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n        \"overrides\": []\n      }\n    }\n  ],\n\
+    \  \"links\": [\n    {\n      \"title\": \"Backstage service and runbook\",\n      \"url\": \"https://onemind-previe\
+    w.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354\"\
+    ,\n      \"type\": \"link\",\n      \"targetBlank\": true\n    }\n  ]\n}\n"
+  onemind-backstage-postgres.json: "{\n  \"uid\": \"onemind-backstage-postgres\",\n  \"title\": \"OneMind / Backstage PostgreSQL\"\
+    ,\n  \"description\": \"Observed Kubernetes workload telemetry only: backstage/backstage-postgres (statefulset). Pod health\
+    \ is not app correctness, NATS delivery, data freshness or alert coverage. Prometheus alerts and Grafana-managed rules\
+    \ are separate.\",\n  \"tags\": [\n    \"onemind-service\",\n    \"backstage\",\n    \"backstage-postgres\"\n  ],\n  \"\
+    schemaVersion\": 39,\n  \"version\": 1,\n  \"editable\": false,\n  \"timezone\": \"browser\",\n  \"refresh\": \"30s\"\
+    ,\n  \"time\": {\n    \"from\": \"now-1h\",\n    \"to\": \"now\"\n  },\n  \"templating\": {\n    \"list\": []\n  },\n\
+    \  \"annotations\": {\n    \"list\": []\n  },\n  \"panels\": [\n    {\n      \"id\": 1,\n      \"title\": \"Ready replicas\"\
+    ,\n      \"type\": \"stat\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\
+    \n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"kube_statefulset_status_replicas_ready{namespace=\\\
+    \"backstage\\\",statefulset=\\\"backstage-postgres\\\"}\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\"\
+    : true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 0,\n        \"w\": 12,\n        \"\
+    h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n      \
+    \  \"overrides\": []\n      }\n    },\n    {\n      \"id\": 2,\n      \"title\": \"CPU usage by pod\",\n      \"type\"\
+    : \"timeseries\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n     \
+    \ },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"sum by (pod) (node_namespa\
+    ce_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\\\
+    \"backstage\\\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"\
+    backstage\\\",workload=\\\"backstage-postgres\\\",workload_type=\\\"statefulset\\\"})\",\n          \"legendFormat\":\
+    \ \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\"\
+    : 0,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"\
+    unit\": \"cores\"\n        },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\": 3,\n      \"title\": \"\
+    Memory working set by pod\",\n      \"type\": \"timeseries\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n         \
+    \ \"expr\": \"sum by (pod) (container_memory_working_set_bytes{namespace=\\\"backstage\\\",job=\\\"kubelet\\\",metrics_path=\\\
+    \"/metrics/cadvisor\\\",container!=\\\"\\\",image!=\\\"\\\"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\
+    \"backstage\\\",workload=\\\"backstage-postgres\\\",workload_type=\\\"statefulset\\\"})\",\n          \"legendFormat\"\
+    : \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\"\
+    : 8,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"\
+    unit\": \"bytes\"\n        },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\": 4,\n      \"title\": \"\
+    Restarts (last hour, current pods)\",\n      \"type\": \"stat\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n         \
+    \ \"expr\": \"sum(increase(kube_pod_container_status_restarts_total{namespace=\\\"backstage\\\"}[1h]) * on(namespace,pod)\
+    \ group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"backstage\\\",workload=\\\"backstage-postgres\\\
+    \",workload_type=\\\"statefulset\\\"})\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\": true\n     \
+    \   }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n        \"overrides\"\
+    : []\n      }\n    }\n  ],\n  \"links\": [\n    {\n      \"title\": \"Backstage service and runbook\",\n      \"url\"\
+    : \"https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351\",\n\
+    \      \"type\": \"link\",\n      \"targetBlank\": true\n    }\n  ]\n}\n"
+  onemind-nats.json: "{\n  \"uid\": \"onemind-nats\",\n  \"title\": \"OneMind / NATS workload\",\n  \"description\": \"Observed\
+    \ Kubernetes workload telemetry only: nats/nats (statefulset). Pod health is not app correctness, NATS delivery, data\
+    \ freshness or alert coverage. Prometheus alerts and Grafana-managed rules are separate.\",\n  \"tags\": [\n    \"onemind-service\"\
+    ,\n    \"nats\",\n    \"nats\"\n  ],\n  \"schemaVersion\": 39,\n  \"version\": 1,\n  \"editable\": false,\n  \"timezone\"\
+    : \"browser\",\n  \"refresh\": \"30s\",\n  \"time\": {\n    \"from\": \"now-1h\",\n    \"to\": \"now\"\n  },\n  \"templating\"\
+    : {\n    \"list\": []\n  },\n  \"annotations\": {\n    \"list\": []\n  },\n  \"panels\": [\n    {\n      \"id\": 1,\n\
+    \      \"title\": \"Ready replicas\",\n      \"type\": \"stat\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n         \
+    \ \"expr\": \"kube_statefulset_status_replicas_ready{namespace=\\\"nats\\\",statefulset=\\\"nats\\\"}\",\n          \"\
+    legendFormat\": \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 0,\n\
+    \        \"y\": 0,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n\
+    \          \"unit\": \"none\"\n        },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\": 2,\n     \
+    \ \"title\": \"CPU usage by pod\",\n      \"type\": \"timeseries\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n         \
+    \ \"expr\": \"sum by (pod) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\\\"nats\\\
+    \"} * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"nats\\\",workload=\\\
+    \"nats\\\",workload_type=\\\"statefulset\\\"})\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\": true\n\
+    \        }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 0,\n        \"w\": 12,\n        \"h\":\
+    \ 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"cores\"\n        },\n        \"\
+    overrides\": []\n      }\n    },\n    {\n      \"id\": 3,\n      \"title\": \"Memory working set by pod\",\n      \"type\"\
+    : \"timeseries\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n     \
+    \ },\n      \"targets\": [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"sum by (pod) (container_memory_working_set_bytes{namespace=\\\
+    \"nats\\\",job=\\\"kubelet\\\",metrics_path=\\\"/metrics/cadvisor\\\",container!=\\\"\\\",image!=\\\"\\\"} * on(namespace,pod)\
+    \ group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"nats\\\",workload=\\\"nats\\\",workload_type=\\\
+    \"statefulset\\\"})\",\n          \"legendFormat\": \"{{pod}}\",\n          \"range\": true\n        }\n      ],\n   \
+    \   \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"bytes\"\n        },\n        \"overrides\": []\n      }\n    },\n\
+    \    {\n      \"id\": 4,\n      \"title\": \"Restarts (last hour, current pods)\",\n      \"type\": \"stat\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n      \"targets\": [\n\
+    \        {\n          \"refId\": \"A\",\n          \"expr\": \"sum(increase(kube_pod_container_status_restarts_total{namespace=\\\
+    \"nats\\\"}[1h]) * on(namespace,pod) group_left(workload) namespace_workload_pod:kube_pod_owner:relabel{namespace=\\\"\
+    nats\\\",workload=\\\"nats\\\",workload_type=\\\"statefulset\\\"})\",\n          \"legendFormat\": \"{{pod}}\",\n    \
+    \      \"range\": true\n        }\n      ],\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\"\
+    : 12,\n        \"h\": 8\n      },\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\"\n \
+    \       },\n        \"overrides\": []\n      }\n    }\n  ],\n  \"links\": [\n    {\n      \"title\": \"Backstage service\
+    \ and runbook\",\n      \"url\": \"https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac\"\
+    ,\n      \"type\": \"link\",\n      \"targetBlank\": true\n    }\n  ]\n}\n"

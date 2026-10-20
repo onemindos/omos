@@ -1,6 +1,7 @@
 # Grafana durable state and Backstage visibility
 
-Status: Stage A preparation; cutover/browser acceptance pending. User explicitly
+Status: Stage A prepared/seeded; Stage B cutover/browser acceptance pending.
+Stage A: [#340](https://github.com/onemindos/omos/pull/340), merged `9f9358f6`. User explicitly
 approved a 5 GiB persistent volume (DO storage charges), backed-up migration,
 brief Grafana maintenance and a dedicated read-only Backstage credential.
 No Prometheus/NATS storage changes or wider AI permissions are authorized here.
@@ -107,3 +108,40 @@ this change does not silently install a credential-rotation service.
 - [ ] Grafana-managed alert rules versus Prometheus alerts are labelled honestly;
       an empty Grafana rule list is not proof of no cluster alerts.
 - [ ] GitOps ownership, database recovery inputs and limits recorded with PRs.
+
+
+## Stage A observed result and Stage B review
+
+At 22:09 UTC, the original process was quiesced for 0.489 seconds and resumed.
+2,582,016 bytes of DB/journal archive were streamed to the Argo-owned seed job.
+An initial capture attempt failed closed because a watchdog inherited stdout and
+held the stream open; no PVC data was seeded by that attempt, Grafana was resumed,
+and stdout redirection corrected the operator helper before the successful retry.
+The source database itself was not mutated by the capture.
+
+Verified encrypted object:
+`backups/grafana/20261020T220905Z-12b47eae2c094f3091abdbc64e5c58dd/archive.tar.gz.aesgcm`.
+Remote download/decrypt/hash equality and isolated SQLite integrity/count checks
+passed for all 87 tables before the PVC seed marker was written. Seed job succeeded.
+Original Grafana remains available pending the Stage B merge. The new Viewer
+account was created before this snapshot, so its token state is included.
+
+Full pinned kube-prometheus-stack 87.16.1 before/after Helm renders show **only**
+`Deployment/monitoring-grafana` changed: retained existing claim, Recreate, required
+seed guard and a persistent-pod label. No new Helm-owned PVC, no Prometheus/NATS
+workload, data-source, chart version or other rendered resource changes. Backup
+pods require the new persistent-pod label so they cannot race the old Grafana pod
+onto another node during RWO cutover.
+
+Three Git-owned dashboards are intrinsically scoped to Backstage, its PostgreSQL
+workload and NATS. Their Prometheus datasource and CPU/memory/owner record queries
+were tested against actual data before review. UID selectors and links are restored
+by inventory refresh. No generic namespace-variable defaults or unsigned iframe
+are presented as a service-specific view. Native alerts require an explicit label
+selector, using the installed predicate schema; a test ensures every existing host
+extension is retained by the runtime config's replacement array.
+
+The older ClickHouse NATS dashboard/datasource remains separate: the original
+Grafana had no installed ClickHouse datasource plugin. These new workload panels
+use the existing working Prometheus path; no claim the old ClickHouse panels or
+application-level/JetStream metrics have been repaired.
