@@ -181,3 +181,15 @@ boundaries. Upstream root-dashboard handling elsewhere is not blanket certified.
 **Next requested work: Prometheus alert integration**, with native plugin/new
 frontend compatibility, service-label scoping, read-only access and honest
 firing/pending/no-match/unavailable states. This has not yet been deployed.
+
+
+Latest Prometheus follow-through: #346 source and #347 image pin merged/deployed;
+[scoped acceptance](../operations/prometheus-native-alerts-2026-10-20.md) passed
+23:30–23:34 UTC. Portal generation 76, 2/2 healthy on
+`sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`.
+Native alert cards for Backstage/PostgreSQL/NATS show timestamps, exact scope,
+real pending-alert rows/no-match transition and coverage limitations. Fixed
+user-only backend reads; machine/anonymous/mutation denials preserved, DB/Grafana
+unchanged, NATS 3/3. This supersedes the prior “not yet deployed” next-work entry.
+Next: topology/dependencies, OpenCost, broader alert coverage and native state-text
+accessibility. No Phase 6 completion/Phase 7 migration/AI mutation authorization.
