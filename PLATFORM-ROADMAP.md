@@ -616,7 +616,7 @@ Next unfinished phase: **Phase 7**. This does not authorize starting it automati
 
 ### Phase 6: One portal
 
-Existing pilot integration: [STAC operational slice](docs/operations/stac-operational-slice-2026-10-20.md) joins identity/dependencies and real evidence; source checks pass,
+Existing pilot integration: [PR #330](https://github.com/onemindos/omos/pull/330), [STAC operational slice](docs/operations/stac-operational-slice-2026-10-20.md) joins identity/dependencies and real evidence; source checks pass,
 immutable image/live UI acceptance remains required. STAC collections/search
 currently return 500 (no pgstac schema observed); data freshness is unknown.
 No data/schema repair or new application migration is performed by this integration.

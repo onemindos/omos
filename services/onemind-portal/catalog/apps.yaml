@@ -5226,8 +5226,8 @@ metadata:
     backstage.io/source-location: url:https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml
     onemind.io/contract-scope: read-only subset; no catalog writes or full-STAC compliance claim
   links:
-  - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/
-    title: STAC diagnosis and recovery
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/
+      title: STAC diagnosis and recovery
 spec:
   type: openapi
   lifecycle: experimental
