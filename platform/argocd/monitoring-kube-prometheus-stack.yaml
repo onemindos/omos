@@ -11,7 +11,8 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '4'
-    argocd.argoproj.io/compare-options: ServerSideDiff=true
+    # Required during the Grafana union-field transition; API replace is dry-run validated.
+    argocd.argoproj.io/compare-options: ServerSideDiff=false
 spec:
   project: default
   sources:

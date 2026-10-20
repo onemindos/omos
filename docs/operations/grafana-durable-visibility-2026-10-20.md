@@ -145,3 +145,24 @@ The older ClickHouse NATS dashboard/datasource remains separate: the original
 Grafana had no installed ClickHouse datasource plugin. These new workload panels
 use the existing working Prometheus path; no claim the old ClickHouse panels or
 application-level/JetStream metrics have been repaired.
+
+
+## Argo field-ownership correction during Stage B
+
+At 22:21 UTC, Argo's server-side comparison rejected the union transition because
+live Helm-owned `emptyDir` and default `rollingUpdate` fields were retained beside
+the desired claim/Recreate. Nothing in Grafana was replaced by this failed diff;
+the original pod remained healthy and the seed was preserved. Other Applications
+can reconcile independently; never treat the partial portal rollout as cutover.
+
+A narrow follow-up selects legacy diff for `monitoring-kube-prometheus-stack`
+and annotates only its fully rendered Grafana Deployment `Replace=true`. This is
+an Argo-managed API replace of the Deployment specification, not Force deletion
+or a manual apply. The Deployment UID and source PVC must survive. All other
+resources retain server-side apply, prune=false and existing ignore rules.
+The exact complete Grafana replacement is server-dry-run validated first.
+
+References: [Argo diff strategies](https://argo-cd.readthedocs.io/en/latest/user-guide/diff-strategies/)
+and [resource-scoped replace](https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#replace-resource-instead-of-applying-changes).
+Once the transition is accepted, re-test server-side comparison before removing
+these compatibility settings; do not restore them blindly and recreate the loop.

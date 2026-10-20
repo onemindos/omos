@@ -912,3 +912,13 @@ when configuring the native Grafana alert card to require an explicit alert-labe
 selector; missing Grafana rules must not look like full Prometheus alert coverage.
 No iframe/authentication protection is weakened, no new portal image is required,
 and actual post-cutover/native browser acceptance remains pending.
+
+
+Grafana Stage B [#341](https://github.com/onemindos/omos/pull/341) merged as
+`dfe7611c`. Argo server-side diff safely blocked the Grafana update: the original
+Helm field owner retained `emptyDir`/`rollingUpdate`, creating invalid union fields.
+Original Grafana and the verified PVC seed remain intact. Follow-up uses the
+supported legacy diff for this one Application and `Replace=true` on the fully
+rendered Grafana Deployment only; no Force, PVC deletion, force sync, new owner,
+automated-prune change or wider permissions. Full server replace dry-run and local
+gates must pass before the normal exact-head PR merge. Acceptance still pending.
