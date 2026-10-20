@@ -860,3 +860,18 @@ and K02 ownership/recovery inventory. K03 will reuse existing onboarding templat
 and add a tested app/profile contract, not a second scaffolder. Remaining K00 trust
 checks stay open; no Phase 6 completion, Phase 7 migration, controller installation,
 OS/storage/provider change or widened AI permission is implied by this plan.
+
+
+### Native visibility first win — 2026-10-20
+
+Bounded Phase 6 follow-through: restore the installed Kubernetes plugin's controller
+matching for Backstage/PostgreSQL and explicitly map the NATS broker to its observed
+`platform-nats` Argo Application. Stable entities, ownership and dependency graph
+are retained; direct native Kubernetes/Argo/runbook links and refresh regression
+checks are added. See [scope and acceptance](docs/operations/native-portal-visibility-2026-10-20.md).
+At PR preparation, production acceptance is **pending**, not certified by source.
+The catalog ConfigMap hash naturally rolls the same image; no database template,
+image digest, RBAC, credentials, OpenChoreo ownership or event contracts change.
+Phase 6 stays In progress and Phase 7 Not started. After browser acceptance, next
+visibility work is the existing Grafana 401, then topology/Prometheus/OpenCost with
+separate compatibility and access checks. This does not install new controllers.

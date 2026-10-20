@@ -782,10 +782,18 @@ metadata:
       backend.database.connection.host; platform/backstage/postgres.yaml
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
+    onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
   tags:
     - kubernetes
     - backstage
   links:
+    - title: Live Kubernetes resources
+      type: kubernetes
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/kubernetes
+    - title: Argo CD deployment summary
+      type: argocd
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/deployment-summary
     - title: Portal recovery runbook
       type: runbook
       url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
@@ -3777,10 +3785,21 @@ metadata:
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    argocd/app-name: platform-backstage
+    argocd/instance-name: onemind-cloud
+    github.com/project-slug: onemindos/omos
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
+    onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
   tags:
     - kubernetes
     - backstage
   links:
+    - title: Live Kubernetes resources
+      type: kubernetes
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/kubernetes
+    - title: Argo CD deployment summary
+      type: argocd
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/deployment-summary
     - title: Database recovery runbook
       type: runbook
       url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
@@ -4067,9 +4086,24 @@ metadata:
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    argocd/app-name: platform-nats
+    argocd/instance-name: onemind-cloud
+    github.com/project-slug: onemindos/omos
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/nats
+    onemind.io/deployment-source: platform/nats; platform/argocd/platform-nats.yaml
   tags:
     - kubernetes
     - nats
+  links:
+    - title: Live Kubernetes resources
+      type: kubernetes
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/kubernetes
+    - title: Argo CD deployment summary
+      type: argocd
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/deployment-summary
+    - title: NATS operations runbook
+      type: runbook
+      url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
 spec:
   type: service
   lifecycle: production

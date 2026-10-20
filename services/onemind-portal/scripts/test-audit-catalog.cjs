@@ -98,3 +98,145 @@ test('rejects partial query envelopes, malformed entities and invalid clocks', (
   assert.throws(() => auditCatalog([{}], now));
   assert.throws(() => auditCatalog([], new Date('bad')));
 });
+
+// Native visibility metadata is reapplied by the reviewed inventory refresh.
+// Keep these in the existing catalog gate (local pipeline and Linux Dockerfile).
+const fs = require('node:fs');
+const path = require('node:path');
+const YAML = require('yaml');
+const {
+  curateDependencies,
+  reviewedWorkloads,
+} = require('./curate-dependencies.cjs');
+const root = path.resolve(__dirname, '..');
+const load = file =>
+  YAML.parseAllDocuments(fs.readFileSync(file, 'utf8')).map(d => d.toJSON());
+const catalog = () => load(path.join(root, 'catalog/cluster.yaml'));
+
+test('curation is pure, idempotent and restores all reviewed native mappings after refresh', () => {
+  const entries = catalog();
+  for (const e of entries) {
+    for (const key of [
+      'argocd/app-name',
+      'argocd/instance-name',
+      'backstage.io/source-location',
+    ]) {
+      delete e.metadata.annotations?.[key];
+    }
+  }
+  const before = JSON.stringify(entries);
+  const curated = curateDependencies(entries);
+  assert.equal(JSON.stringify(entries), before);
+  assert.deepEqual(curateDependencies(curated), curated);
+  assert.deepEqual(
+    curated.map(e => [e.kind, e.metadata.name]),
+    entries.map(e => [e.kind, e.metadata.name]),
+  );
+  for (const target of reviewedWorkloads) {
+    const e = curated.find(
+      x => x.kind === 'Component' && x.metadata.name === target.name,
+    );
+    assert.equal(e.metadata.annotations['argocd/app-name'], target.application);
+    assert.equal(
+      e.metadata.annotations['argocd/instance-name'],
+      'onemind-cloud',
+    );
+    for (const suffix of ['kubernetes', 'deployment-summary']) {
+      assert.ok(
+        e.metadata.links.some(link =>
+          link.url.endsWith(`/${target.name}/${suffix}`),
+        ),
+      );
+    }
+    assert.ok(
+      e.metadata.links.some(
+        link =>
+          link.type === 'runbook' && link.url.endsWith(`/${target.runbook}/`),
+      ),
+    );
+  }
+});
+test('native mappings preserve unrelated metadata, dependencies, owners and same-namespace services', () => {
+  const entries = catalog();
+  const e = entries.find(x => x.metadata.name === reviewedWorkloads[0].name);
+  e.metadata.annotations['example.test/keep'] = 'reviewed';
+  e.metadata.links.push({
+    title: 'Other runbook',
+    type: 'runbook',
+    url: 'https://example.test/runbook',
+  });
+  e.spec.dependsOn.push('resource:default/another-reviewed-dependency');
+  const result = curateDependencies(entries);
+  for (let i = 0; i < entries.length; i++) {
+    assert.deepEqual(result[i].spec, entries[i].spec);
+    if (!reviewedWorkloads.some(w => w.name === entries[i].metadata.name)) {
+      assert.deepEqual(result[i], entries[i]);
+    }
+  }
+  const curated = result.find(x => x.metadata.name === e.metadata.name);
+  assert.equal(curated.metadata.annotations['example.test/keep'], 'reviewed');
+  assert.ok(
+    curated.metadata.links.some(link => link.title === 'Other runbook'),
+  );
+});
+test('curation rejects missing, duplicate, wrong namespace or changed selectors without partial input writes', () => {
+  const mutations = [
+    entries =>
+      entries.filter(e => e.metadata.name !== reviewedWorkloads[0].name),
+    entries => [
+      ...entries,
+      structuredClone(
+        entries.find(e => e.metadata.name === reviewedWorkloads[0].name),
+      ),
+    ],
+    entries => {
+      entries.find(
+        e => e.metadata.name === reviewedWorkloads[0].name,
+      ).metadata.namespace = 'other';
+      return entries;
+    },
+    entries => {
+      entries.find(
+        e => e.metadata.name === reviewedWorkloads[0].name,
+      ).metadata.annotations['backstage.io/kubernetes-namespace'] = 'nats';
+      return entries;
+    },
+    entries => {
+      entries.find(
+        e => e.metadata.name === reviewedWorkloads[0].name,
+      ).metadata.annotations['backstage.io/kubernetes-label-selector'] =
+        'app=other';
+      return entries;
+    },
+  ];
+  for (const mutate of mutations) {
+    const input = mutate(catalog());
+    const before = JSON.stringify(input);
+    assert.throws(() => curateDependencies(input), /review ownership/);
+    assert.equal(JSON.stringify(input), before);
+  }
+});
+test('label selector order does not change reviewed workload identity', () => {
+  const entries = catalog();
+  const nats = entries.find(e => e.metadata.name === reviewedWorkloads[2].name);
+  nats.metadata.annotations['backstage.io/kubernetes-label-selector'] =
+    reviewedWorkloads[2].selector.split(',').reverse().join(',');
+  assert.doesNotThrow(() => curateDependencies(entries));
+});
+test('portal dependency is re-created exactly once after inventory refresh', () => {
+  const entries = catalog();
+  const portal = entries.find(
+    e => e.metadata.name === reviewedWorkloads[0].name,
+  );
+  const databaseRef = `component:default/${reviewedWorkloads[1].name}`;
+  portal.spec.dependsOn = portal.spec.dependsOn.filter(
+    ref => ref !== databaseRef,
+  );
+  const result = curateDependencies(curateDependencies(entries));
+  assert.equal(
+    result
+      .find(e => e.metadata.name === portal.metadata.name)
+      .spec.dependsOn.filter(ref => ref === databaseRef).length,
+    1,
+  );
+});
