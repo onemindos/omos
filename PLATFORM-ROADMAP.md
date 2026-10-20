@@ -680,6 +680,21 @@ Implementation/rollout PRs: #311–#319. Detailed evidence and rollback:
 [Phase 6 integration runbook](docs/operations/phase6-portal-integration.md).
 Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
 
+### Foundation follow-up: public ingress lifecycle (planning only)
+
+Zeus requested full Kubernetes/Backstage structure PRs on 2026-10-20. The read-only
+inventory found eight `nginx`-class Ingress resources using the retired community
+ingress-nginx controller. Track the [assessment and reversible migration plan](docs/roadmap/public-ingress-lifecycle.md)
+as a high-priority foundation follow-up; do not change identity/DNS/public exposure,
+upgrade DOKS-managed Cilium/CRDs or begin cutover from this planning authorization.
+
+- [x] Inventory and route/ownership/feature compatibility checklist prepared.
+- [ ] Effective route/DNS/TLS assessment and approved replacement canary.
+- [ ] Per-route live parity/denial/rollback tests, reviewed cutovers, then safe retirement.
+
+Phase 6 remains first unfinished; this follow-up does not imply completion of its
+portal gates or authority to migrate TAK/core workloads.
+
 ### Phase 7: Migrate Layer 3
 
 Order: `omos-feeds`, `onetak`, `takml`, `onemind`, `agent-fabric`, `n8n`, `matrix`,
