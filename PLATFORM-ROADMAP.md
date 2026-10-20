@@ -132,7 +132,8 @@ it could lock out both itself and the human who has to recover it.
 ### Migration readiness: core gate versus parallel follow-ups
 
 Zeus requested [a tracked readiness/follow-up checklist](docs/roadmap/migration-readiness-followups.md)
-on 2026-10-20. Release/live verification of #330 and the chosen app's security,
+on 2026-10-20, tracked in [PR #331](https://github.com/onemindos/omos/pull/331).
+Release/live verification of #330 and the chosen app's security,
 dependencies, data/recovery and rollback gates come first. Unrelated launcher
 repairs, optional dashboards and the separately planned workflow plane are not
 blanket prerequisites for every migration. State/recovery and security failures
