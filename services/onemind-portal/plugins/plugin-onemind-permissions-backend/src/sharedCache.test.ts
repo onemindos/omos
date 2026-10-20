@@ -1,6 +1,16 @@
 import knex from 'knex';
 import type { Knex } from 'knex';
-import { AuthzProfileCache } from '@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy';
+import {
+  AuthzProfileCache,
+  AuthzProfileService,
+  OpenChoreoPermissionPolicy,
+} from '@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy';
+import type { LoggerService } from '@backstage/backend-plugin-api';
+import {
+  AuthorizeResult,
+  createPermission,
+} from '@backstage/plugin-permission-common';
+import { createOneMindPolicy } from './policy';
 import { createSharedAuthzCache } from './sharedCache';
 
 describe('shared authorization cache', () => {
@@ -45,6 +55,57 @@ describe('shared authorization cache', () => {
       n: 1,
     });
   });
+  test('real upstream cache-miss warning fails closed without fetching, even for an administrator', async () => {
+    const now = jest.spyOn(Date, 'now').mockReturnValue(1000);
+    const cache = new AuthzProfileCache(await createSharedAuthzCache(db));
+    const logger: LoggerService = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      child: () => logger,
+    };
+    const service = new AuthzProfileService({
+      baseUrl: 'https://unused.example.test',
+      logger,
+      cache,
+    });
+    const fetchCapabilities = jest
+      .spyOn(service, 'getCapabilities')
+      .mockRejectedValue(new Error('Unexpected fetch'));
+    const id = 'user:default/operator';
+    const profile = { capabilities: {} };
+    await cache.setByUser(id, profile, 1000, 'global');
+    expect(await service.getCapabilitiesForUser(id)).toEqual(profile);
+    expect(logger.warn).not.toHaveBeenCalled();
+    now.mockReturnValue(2000);
+    const policy = createOneMindPolicy(
+      new OpenChoreoPermissionPolicy({ authzService: service, logger }),
+    );
+    const decision = await policy.handle(
+      {
+        permission: createPermission({
+          name: 'openchoreo.component.create',
+          attributes: { action: 'create' },
+        }),
+      },
+      {
+        credentials: {
+          $$type: '@backstage/BackstageCredentials',
+          principal: { type: 'user', userEntityRef: id },
+        },
+        info: {
+          userEntityRef: id,
+          ownershipEntityRefs: ['group:default/onemind-admins'],
+        },
+      },
+    );
+    expect(decision).toEqual({ result: AuthorizeResult.DENY });
+    expect(logger.warn).toHaveBeenCalledWith(
+      `No token and no cached capabilities for ${id}`,
+    );
+    expect(fetchCapabilities).not.toHaveBeenCalled();
+  });
   test('preserves token TTL, stores only hashed keys, and isolates scopes', async () => {
     const cache = await createSharedAuthzCache(db);
     jest.spyOn(Date, 'now').mockReturnValue(1000);
@@ -60,8 +121,8 @@ describe('shared authorization cache', () => {
     expect(await cache.get('user:default/operator:other')).toBeUndefined();
   });
   test('concurrent writes upsert and deletion is visible across replicas', async () => {
-    const a = await createSharedAuthzCache(db),
-      b = await createSharedAuthzCache(db);
+    const a = await createSharedAuthzCache(db);
+    const b = await createSharedAuthzCache(db);
     await Promise.all([a.set('same', true), b.set('same', false)]);
     expect(await db('onemind_authz_cache').count('* as n').first()).toEqual({
       n: 1,
