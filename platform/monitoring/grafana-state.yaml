@@ -1,0 +1,348 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+  namespace: monitoring
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: do-block-storage-retain
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-state-scripts
+  namespace: monitoring
+data:
+  state.py: |
+    """Grafana SQLite seed and encrypted remote-verified backup. Never print secrets."""
+    import base64
+    from contextlib import closing
+    import datetime
+    import hashlib
+    import io
+    import json
+    import os
+    from pathlib import Path
+    import sqlite3
+    import sys
+    import tarfile
+    import tempfile
+    import time
+    import uuid
+
+    DATA = Path('/grafana')
+    MARKER = '.onemind-grafana-seed.json'
+    MAX_SEED = 64 * 1024 * 1024
+
+
+    def fingerprint(database):
+        with closing(sqlite3.connect(f'file:{database}?mode=ro', uri=True, timeout=30)) as connection:
+            if connection.execute('PRAGMA integrity_check').fetchall() != [('ok',)]:
+                raise ValueError('SQLite integrity failed')
+            tables = [r[0] for r in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+            if not {'user', 'dashboard', 'data_source'} <= set(tables):
+                raise ValueError('Not a populated Grafana database')
+            return {name: connection.execute('SELECT count(*) FROM "' + name.replace('"', '""') + '"').fetchone()[0]
+                    for name in tables}
+
+
+    def snapshot(source, target):
+        with closing(sqlite3.connect(f'file:{source}?mode=ro', uri=True, timeout=30)) as src:
+            with closing(sqlite3.connect(target)) as dst:
+                src.backup(dst, pages=128, sleep=0.1)
+        return fingerprint(target)
+
+
+    def seed_snapshot(payload, directory):
+        # Operator captures DB + journal/WAL while Grafana is quiesced. Never extract
+        # arbitrary paths, links, plugin binaries or a caller-selected filesystem tree.
+        if not payload or len(payload) > MAX_SEED:
+            raise ValueError('Invalid seed size')
+        allowed = {'grafana.db', 'grafana.db-wal', 'grafana.db-shm', 'grafana.db-journal'}
+        with tarfile.open(fileobj=io.BytesIO(payload), mode='r:') as archive:
+            members = archive.getmembers()
+            names = [m.name for m in members]
+            if 'grafana.db' not in names or len(names) != len(set(names)):
+                raise ValueError('Missing or duplicate database')
+            if any(m.name not in allowed or not m.isfile() or m.size > MAX_SEED for m in members):
+                raise ValueError('Unsafe seed archive')
+            if sum(m.size for m in members) > MAX_SEED:
+                raise ValueError('Seed expands beyond limit')
+            for member in members:
+                with (directory / member.name).open('xb') as target:
+                    target.write(archive.extractfile(member).read())
+        # Opening the complete quiesced copy read/write recovers a hot journal/WAL.
+        with closing(sqlite3.connect(directory / 'grafana.db')) as connection:
+            connection.execute('PRAGMA integrity_check').fetchall()
+        destination = directory / 'canonical.db'
+        counts = snapshot(directory / 'grafana.db', destination)
+        return destination, counts
+
+
+    def remote_backup(database):
+        import boto3
+        sys.path.insert(0, '/')
+        from backup import encrypt, decrypt, digest
+        key = base64.b64decode(os.environ['BACKUP_ENCRYPTION_KEY'], validate=True)
+        if len(key) != 32:
+            raise ValueError('Invalid encryption key')
+        stamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+        object_key = f'backups/grafana/{stamp}-{uuid.uuid4().hex}/archive.tar.gz.aesgcm'
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            data = root / 'data'
+            data.mkdir()
+            counts = snapshot(database, data / 'grafana.db')
+            (data / 'manifest.json').write_text(json.dumps({'kind': 'grafana-sqlite', 'counts': counts}))
+            archive = root / 'archive.tar.gz'
+            with tarfile.open(archive, 'w:gz') as tar:
+                tar.add(data, arcname='data')
+            encrypted, remote, plain = (root / name for name in ['encrypted', 'remote', 'verified.tar.gz'])
+            encrypt(archive, encrypted, key)
+            client = boto3.client('s3', endpoint_url=os.environ['S3_ENDPOINT'],
+                                  aws_access_key_id=os.environ['S3_ACCESS_KEY'],
+                                  aws_secret_access_key=os.environ['S3_SECRET_KEY'],
+                                  region_name=os.environ.get('S3_REGION', 'nyc3'))
+            bucket = os.environ['S3_BUCKET']
+            client.upload_file(str(encrypted), bucket, object_key)
+            client.download_file(bucket, object_key, str(remote))
+            if digest(remote) != digest(encrypted):
+                raise ValueError('Remote checksum mismatch')
+            decrypt(remote, plain, key)
+            if digest(plain) != digest(archive):
+                raise ValueError('Remote decrypt mismatch')
+            restored = root / 'restored.db'
+            with tarfile.open(plain, 'r:gz') as tar:
+                with restored.open('xb') as target:
+                    target.write(tar.extractfile('data/grafana.db').read())
+            if fingerprint(restored) != counts:
+                raise ValueError('Remote isolated restore mismatch')
+            result = {'kind': 'grafana-sqlite', 'backup': object_key, 'restoreVerified': True,
+                      'tables': len(counts), 'databaseSha256': digest(data / 'grafana.db')}
+            client.put_object(Bucket=bucket, Key=object_key + '.verified.json',
+                              Body=json.dumps(result).encode())
+            return result
+
+
+    def seed(payload, data=DATA, backup=remote_backup):
+        if (data / 'grafana.db').exists() or (data / MARKER).exists():
+            raise ValueError('Refusing to overwrite Grafana data')
+        with tempfile.TemporaryDirectory() as temporary:
+            database, counts = seed_snapshot(payload, Path(temporary))
+            # Never switch to the new volume until its source has a verified remote copy.
+            receipt = backup(database)
+            if not receipt.get('restoreVerified'):
+                raise ValueError('Remote restore not verified')
+            target = data / '.grafana.db.seed'
+            with target.open('xb') as stream:
+                stream.write(database.read_bytes())
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.chmod(target, 0o640)
+            if fingerprint(target) != counts:
+                raise ValueError('Seeded database mismatch')
+            os.link(target, data / 'grafana.db')
+            target.unlink()
+            receipt['seedArchiveSha256'] = hashlib.sha256(payload).hexdigest()
+            marker = data / MARKER
+            with marker.open('x') as stream:
+                json.dump(receipt, stream)
+                stream.flush()
+                os.fsync(stream.fileno())
+            return receipt
+
+
+    if __name__ == '__main__':
+        try:
+            mode = sys.argv[1]
+            if mode == 'wait':
+                for _ in range(720):
+                    if (DATA / MARKER).exists():
+                        if not json.loads((DATA / MARKER).read_text()).get('restoreVerified'):
+                            raise ValueError('Invalid seed receipt')
+                        fingerprint(DATA / 'grafana.db')
+                        print('Grafana persistent seed and remote restore verified', flush=True)
+                        break
+                    time.sleep(5)
+                else:
+                    raise TimeoutError('Seed deadline exceeded')
+            elif mode == 'seed':
+                print(json.dumps(seed(sys.stdin.buffer.read(MAX_SEED + 1))))
+            elif mode == 'backup':
+                print(json.dumps(remote_backup(DATA / 'grafana.db')))
+            else:
+                raise ValueError('Unknown mode')
+        except Exception as error:
+            print(json.dumps({'failed': True, 'errorType': type(error).__name__}))
+            sys.exit(1)
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-state-seed-20261020
+  namespace: monitoring
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 3600
+  template:
+    metadata:
+      labels:
+        app: grafana-state
+        backup-kind: grafana
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: grafana-backup-pull
+      securityContext:
+        runAsUser: 472
+        runAsGroup: 472
+        runAsNonRoot: true
+        fsGroup: 472
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: state
+        image: ghcr.io/onemindos/platform-backup@sha256:236250e0cb4165cb94ec7b22ab926ad4307ad435a430e5ef867acce93b6d8d30
+        command:
+        - python3
+        - /scripts/state.py
+        - wait
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        envFrom:
+        - secretRef:
+            name: grafana-state-backup
+        env:
+        - name: HOME
+          value: /tmp
+        - name: S3_REGION
+          value: nyc3
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+        volumeMounts:
+        - name: data
+          mountPath: /grafana
+        - name: scripts
+          mountPath: /scripts
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: grafana-data
+      - name: scripts
+        configMap:
+          name: grafana-state-scripts
+      - name: tmp
+        emptyDir:
+          sizeLimit: 256Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-grafana-sqlite
+  namespace: monitoring
+spec:
+  suspend: true
+  schedule: 25 4 * * *
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 900
+      template:
+        metadata:
+          labels:
+            app: grafana-state
+            backup-kind: grafana
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: grafana-backup-pull
+          securityContext:
+            runAsUser: 472
+            runAsGroup: 472
+            runAsNonRoot: true
+            fsGroup: 472
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: state
+            image: ghcr.io/onemindos/platform-backup@sha256:236250e0cb4165cb94ec7b22ab926ad4307ad435a430e5ef867acce93b6d8d30
+            command:
+            - python3
+            - /scripts/state.py
+            - backup
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: grafana-state-backup
+            env:
+            - name: HOME
+              value: /tmp
+            - name: S3_REGION
+              value: nyc3
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                cpu: '1'
+                memory: 512Mi
+            volumeMounts:
+            - name: data
+              mountPath: /grafana
+              readOnly: true
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: grafana-data
+          - name: scripts
+            configMap:
+              name: grafana-state-scripts
+          - name: tmp
+            emptyDir:
+              sizeLimit: 256Mi
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: monitoring
+                    app.kubernetes.io/name: grafana
+                topologyKey: kubernetes.io/hostname

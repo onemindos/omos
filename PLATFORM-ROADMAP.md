@@ -880,3 +880,20 @@ image digest, RBAC, credentials, OpenChoreo ownership or event contracts change.
 Phase 6 stays In progress and Phase 7 Not started. After browser acceptance, next
 visibility work is the existing Grafana 401, then topology/Prometheus/OpenCost with
 separate compatibility and access checks. This does not install new controllers.
+
+
+### Grafana durability and native visibility — 2026-10-20
+
+User approved a 5 GiB persistent Grafana volume, backed-up data migration, a brief
+Grafana maintenance window and a dedicated read-only Backstage credential. The
+existing database is on emptyDir; read-only inspection found zero service accounts
+and the old portal token returned 401. The native plugin/proxy prefix combination
+is being verified rather than blindly rewritten. No AI action permissions change.
+
+Stage A prepares an Argo-owned retained PVC, seed job, encrypted remote-verified
+SQLite backup and namespace-bound sealed credentials. Grafana stays on its old
+pod until the seed/backup gate passes; the scheduled backup starts suspended.
+Stage B is a separate reviewed cutover to the seeded PVC with Recreate and an
+init guard, then catalog dashboard mappings and browser verification. Initial
+preparation is not proof of migration or fixed authentication. Phase 6 remains
+In progress; Phase 7 Not started. PR links and actual acceptance follow below.
