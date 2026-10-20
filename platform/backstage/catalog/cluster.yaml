@@ -785,6 +785,8 @@ metadata:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
     onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
     grafana/dashboard-selector: uid == 'onemind-backstage'
+    prometheus.io/alert: all
+    prometheus.io/service-name: backstage
   tags:
     - kubernetes
     - backstage
@@ -3795,6 +3797,8 @@ metadata:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
     onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
     grafana/dashboard-selector: uid == 'onemind-backstage-postgres'
+    prometheus.io/alert: all
+    prometheus.io/service-name: postgres
   tags:
     - kubernetes
     - backstage
@@ -4100,6 +4104,8 @@ metadata:
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/nats
     onemind.io/deployment-source: platform/nats; platform/argocd/platform-nats.yaml
     grafana/dashboard-selector: uid == 'onemind-nats'
+    prometheus.io/alert: all
+    prometheus.io/service-name: nats
   tags:
     - kubernetes
     - nats

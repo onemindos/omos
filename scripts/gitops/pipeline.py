@@ -150,9 +150,9 @@ def quality(run, base, p):
         run.command("portal-security-stac-tests", [*yarn, "test", "--watch=false", "--runInBand",
                     "plugins/plugin-onemind-permissions-backend/src", "plugins/plugin-onemind-auth/src/scopedFetch.test.ts",
                     "plugins/plugin-onemind-auth-backend/src/subject.test.ts", "plugins/plugin-onemind-common-backend/src/stacEvidence.test.ts",
-                    "plugins/plugin-onemind-services-backend/src/stacCatalog.test.ts", "plugins/plugin-onemind-services/src/StacOperations.test.tsx"], cwd=cwd)
+                    "plugins/plugin-onemind-services-backend/src/stacCatalog.test.ts", "plugins/plugin-onemind-services-backend/src/prometheusAlerts.test.ts", "plugins/plugin-onemind-services-backend/src/prometheusRoutes.test.ts", "plugins/plugin-onemind-services/src/StacOperations.test.tsx"], cwd=cwd)
         run.command("portal-layout-tests", [*yarn, "workspace", "app", "test", "--watch=false", "--runInBand",
-                    "ComponentOverview.test.tsx", "componentOverviewModule.test.ts", "catalogCompositionModules.test.ts"], cwd=cwd)
+                    "ComponentOverview.test.tsx", "componentOverviewModule.test.ts", "catalogCompositionModules.test.ts", "prometheusApi.test.ts", "prometheusPlugin.test.ts", "PrometheusAlerts.test.tsx"], cwd=cwd)
         run.command("catalog-audit-tests", ["node", "--test", "scripts/test-audit-catalog.cjs"], cwd=cwd)
     run.command("commit-secrets", ["gitleaks", "git", ".", "--config", ".gitleaks.toml", "--redact",
                                   "--no-banner", f"--log-opts={base}..HEAD"])

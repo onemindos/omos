@@ -959,3 +959,15 @@ Viewer metadata and signed-in native folder links/listing verified. Read-only
 access/denials preserved. [Evidence](docs/operations/grafana-native-folder-2026-10-20.md).
 Prometheus alert integration is the next separately verified task; not installed
 by this repair. Phase 6 stays In progress; Phase 7 Not started.
+
+
+### Native scoped Prometheus alerts — 2026-10-20
+
+User requested the next visibility slice after #344/#345. Prepare the native
+Roadie Prometheus alert table with the supported compatibility bridge, a bounded
+user-only backend adapter for Backstage/DB/NATS, refresh/timestamps and honest
+no-match/partial/unavailable states. Only reviewed fixed GETs/scopes; no generic
+PromQL proxy, new credentials, mutation rights or rule changes. Tests join both
+portable local/Linux and image gates; source merge is distinct from built image,
+GitOps pin and live acceptance. [Scope/gates](docs/operations/prometheus-native-alerts-2026-10-20.md).
+Phase 6 stays In progress; Phase 7 Not started. Actual PR/release evidence follows.

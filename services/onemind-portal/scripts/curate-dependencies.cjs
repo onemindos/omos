@@ -14,6 +14,7 @@ const reviewedWorkloads = [
     runbook: 'resilience',
     runbookTitle: 'Portal recovery runbook',
     grafanaUid: 'onemind-backstage',
+    alertScope: 'backstage',
   },
   {
     name: 'k8s-backstage-backstage-postgres-17d2f351',
@@ -24,6 +25,7 @@ const reviewedWorkloads = [
     runbook: 'resilience',
     runbookTitle: 'Database recovery runbook',
     grafanaUid: 'onemind-backstage-postgres',
+    alertScope: 'postgres',
   },
   {
     name: 'k8s-nats-nats-0dee54ac',
@@ -35,6 +37,7 @@ const reviewedWorkloads = [
     runbook: 'nats',
     runbookTitle: 'NATS operations runbook',
     grafanaUid: 'onemind-nats',
+    alertScope: 'nats',
   },
 ];
 const normalizeSelector = value => (value || '').split(',').sort().join(',');
@@ -64,6 +67,8 @@ function curateDependencies(entities) {
     }
     Object.assign(annotations, {
       'grafana/dashboard-selector': `uid == '${reviewed.grafanaUid}'`,
+      'prometheus.io/alert': 'all',
+      'prometheus.io/service-name': reviewed.alertScope,
       'argocd/app-name': reviewed.application,
       'argocd/instance-name': 'onemind-cloud',
       'github.com/project-slug': 'onemindos/omos',
