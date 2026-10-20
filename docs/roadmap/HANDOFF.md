@@ -86,8 +86,8 @@ the planning PR. No phase is marked complete merely by recording the backlog.
 | 4 | [phase-4-portal-refactor.md](phase-4-portal-refactor.md) | Portal features into `plugins/` packages | [#280](https://github.com/onemindos/omos/pull/280) |
 | 5 | [phase-5-capacity-observability.md](phase-5-capacity-observability.md) | Capacity, then the observability plane | [#281](https://github.com/onemindos/omos/pull/281) |
 | 6 | [phase-6-one-portal.md](phase-6-one-portal.md) | OpenChoreo plugins in our portal | [#282](https://github.com/onemindos/omos/pull/282) |
-| 7 | [phase-7-migrate-apps.md](phase-7-migrate-apps.md) | Move Layer 3 apps project by project | [#283](https://github.com/onemindos/omos/pull/283) |
-| 8 | [phase-8-expand.md](phase-8-expand.md) | Home server and Hermes | [#284](https://github.com/onemindos/omos/pull/284) |
+| 7 | [Migration plan in #283](https://github.com/onemindos/omos/pull/283) | Move Layer 3 apps project by project | [#283](https://github.com/onemindos/omos/pull/283) |
+| 8 | [Expansion plan in #284](https://github.com/onemindos/omos/pull/284) | Home server and Hermes | [#284](https://github.com/onemindos/omos/pull/284) |
 
 Completed briefs record evidence; future draft PRs initially add only a brief. Work the phase on that PR's branch (or a branch from it),
 keep the PR a draft until the gate passes, then mark it ready and merge. Every PR also updates the
