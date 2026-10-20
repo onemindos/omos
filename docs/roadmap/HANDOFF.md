@@ -51,8 +51,8 @@ changes. Reconcile shared tracker edits before merging one PR at a time.
   before storage cleanup; never delete or restore over production storage.
 
 Latest follow-through: [portal acceptance review](../operations/portal-acceptance-followthrough-2026-10-20.md).
-Argo locator works in the production overlay; Grafana dashboard search currently
-returns 401. Two suspended backup jobs are intentionally replaced; independent
+Argo locator works in the production overlay. The historical Grafana search 401
+is repaired by #340–#342; see the accepted durability receipt below. Two suspended backup jobs are intentionally replaced; independent
 offsite copy remains unconfigured. Do not infer all-green health from portal readiness.
 
 Existing pilot integration: [STAC operational slice](../operations/stac-operational-slice-2026-10-20.md).
@@ -65,7 +65,8 @@ is merged/deployed; portal 2/2 generation 73 on the same digest, DB unchanged,
 NATS 3/3. Kubernetes controller matching and explicit Argo/runbook/source links
 are browser-verified for these first services. [Evidence and remaining Grafana
 credential/proxy work](../operations/native-portal-visibility-2026-10-20.md).
-Grafana API search still returns 401; do not silently rotate its credential.
+The Grafana 401 recorded in that historical evidence is now repaired through the
+explicitly authorized durable migration below.
 This is not full catalog/COP coverage or Phase 6 completion.
 
 ## Briefs and draft PRs
@@ -157,3 +158,16 @@ first profile is portal, retirement is plan-only. Hosted CI remains unavailable,
 not green; old whole-tree YAML debt remains. Phase 6 is still In progress and
 Phase 7 Not started: do not turn this successful portal release into approval for
 STAC schema changes, service migrations or new infrastructure controllers.
+
+
+Latest Grafana follow-through: #340/#341/#342 merged/reconciled; scoped acceptance
+passed at 22:29–22:35 UTC. [Durability/native visibility receipt](../operations/grafana-durable-visibility-2026-10-20.md):
+retained 5 GiB PVC, same Grafana image/Deployment UID, migrated read-only Viewer
+credential, verified encrypted remote SQLite backup/restore and enabled daily job;
+portal generation 74, 2/2 same image, DB unchanged, NATS 3/3. Native dashboard links
+and actual CPU/memory panels work for Backstage, PostgreSQL and NATS. Anonymous
+and machine proxy restrictions and Kubernetes write denials passed. Keep scoped
+Argo field-ownership compatibility settings until a separately tested removal.
+Next: topology/Prometheus alert integration/OpenCost, token-expiry monitoring,
+native root-folder presentation and old ClickHouse plugin follow-up. No whole-COP
+or Phase 6 completion; #339 remains draft and does not authorize live AI mutations.
