@@ -678,7 +678,8 @@ Order: `omos-feeds`, `onetak`, `takml`, `onemind`, `agent-fabric`, `n8n`, `matri
       dependencies.
 - [ ] Bring `matrix` back in sync and put the OpenClaw Deployment in Git as part of their moves.
 - [ ] After verified migration/cutover, execute the gated
-      [post-migration cleanup plan](docs/roadmap/post-migration-cleanup.md):
+      [post-migration cleanup plan](docs/roadmap/post-migration-cleanup.md)
+      (draft [#321](https://github.com/onemindos/omos/pull/321)):
       review app retention, retire superseded definitions, align catalog/CI/docs
       and verify one deployment owner per resource. Planning only for now; no
       file deletion, resource pruning or migration is authorized by this draft.
