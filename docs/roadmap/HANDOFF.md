@@ -123,3 +123,16 @@ tracker in `PLATFORM-ROADMAP.md`.
 ## Prompt for the next agent
 
 See [HANDOFF-PROMPT.md](HANDOFF-PROMPT.md).
+
+## Latest scoped release — 2026-10-20
+
+Source #330, portable pipeline #335 and image-pin #336 are merged; actual Argo
+revision `1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6` and both new replicas verified.
+See [STAC acceptance](../operations/stac-operational-slice-2026-10-20.md) and
+[migration-readiness tracker](migration-readiness-followups.md) for exact digest,
+716-entity topology audit, browser checks and per-pod negative/MCP checks.
+Old `af7770fb` / `fab652...` candidate is superseded. The pipeline was really used;
+first profile is portal, retirement is plan-only. Hosted CI remains unavailable,
+not green; old whole-tree YAML debt remains. Phase 6 is still In progress and
+Phase 7 Not started: do not turn this successful portal release into approval for
+STAC schema changes, service migrations or new infrastructure controllers.

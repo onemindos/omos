@@ -13,7 +13,7 @@ below cover that request without pretending the entire stack is already integrat
 
 | Order | PR | What it owns / next step |
 |---|---|---|
-| 1 — portal truth | This tracker **#331**, source [#330](https://github.com/onemindos/omos/pull/330) | Review source, verify immutable image/provenance, separate digest pin, then signed-in live UI/API/security acceptance. Fix app semantics rather than hide failures behind ready pods. |
+| 1 — portal truth | This tracker **#331**, merged source #330, pipeline #335, promotion #336 | Scoped portal release/rollout and signed-in UI/catalog/pod-boundary checks passed. STAC schema failure and wider trust/recovery/security coverage remain explicit; Phase 6 is not universally complete. |
 | 2 — structure | [#333](https://github.com/onemindos/omos/pull/333) | Full 20-category capability map, observed versus proposed apps, controller boundaries, per-app Backstage/onboarding contract and K00–K11 execution packages. Planning only. |
 | 2 — foundation assessment (parallel) | [#334](https://github.com/onemindos/omos/pull/334) | Retired community ingress-nginx assessment: eight live nginx-class Ingress resources; installed Cilium/Gateway API parity test, safe canary and per-route rollback plan. No traffic/DNS/identity change authorized. |
 | 3 — agent surface | [#332](https://github.com/onemindos/omos/pull/332) | Staged private LibreChat → actual Legacy. Metadata/discovery work; configured DigitalOcean inference returned 402. Identity, sealed credentials, database, backup/restore and session/approval gates must pass before sync. |
@@ -61,10 +61,10 @@ the background merely by calling them follow-ups.
 
 ## A. Immediate release/core acceptance — before a new cutover
 
-- [ ] Review and merge #330 after its source/release evidence is accepted.
-- [ ] Open a **separate image-pin implementation PR** against current main; verify
+- [x] Review and merge #330 after its source/release evidence is accepted.
+- [x] Open a **separate image-pin implementation PR** against current main; verify
       the chosen image is built from the accepted source and its remote digest.
-- [ ] Verify Argo Synced/Healthy, two ready replicas, no rollout regression and
+- [x] Verify Argo Synced/Healthy, two ready replicas, no rollout regression and
       signed-in Project/Component Operations pages, API relationships, source,
       runbook, logs and metrics links. Report failing STAC queries honestly.
 - [ ] Check anonymous denial, current machine read-only boundaries, authentication
@@ -74,12 +74,24 @@ the background merely by calling them follow-ups.
 - [ ] Record known exceptions and the selected migration's acceptance criteria;
       update Phase 6/7 tracker status only from actual accepted live evidence.
 
-Recorded release candidate, **not a deployed-image claim**:
+Verified deployment update, 2026-10-20, 17:29–17:32 UTC:
 
-- Source commit: `af7770fbd06d630ddd1a9256d759c1eb0995e921` (#330 head when checked).
-- Linux/AMD64 image publication/remote verification completed locally.
-- Candidate digest: `sha256:fab6522342b40e6ce595ab2e932c84399d3aefec843af45829bade802f955de3`.
-- Recheck head/digest/provenance before pinning, especially if #330 changes.
+- Source #330, pipeline [#335](https://github.com/onemindos/omos/pull/335) and
+  promotion [#336](https://github.com/onemindos/omos/pull/336) merged normally.
+- Image source `c9a05f8d0b1fc1809b0496945d99593e884f561d`, Linux/AMD64 digest
+  `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`.
+- Exact Argo revision `1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6` Synced/Healthy,
+  2/2 ready/updated/available replicas. Both pods passed anonymous/machine denial
+  checks and expose exactly six read-only MCP tools.
+- Signed-in Component/Project Operations, real pilot logs/metrics and packaged
+  runbook passed. Catalog: 716 entities, no duplicates/errors/orphans, reviewed
+  API/dependency edges, only the known inactive workflow-plane reference missing.
+- **Old source `af7770fb` / digest `fab652...` is superseded; do not promote it.**
+- STAC collection/search still return 500 and data is unknown. Existing-session
+  reload worked; second-role and production-expiry live coverage is not asserted.
+- Full evidence and boundaries: [STAC release acceptance](../operations/stac-operational-slice-2026-10-20.md).
+  Pipeline first profile is portal; removal remains plan-only, not a universal
+  app onboarding/removal executor or a newly scheduled daemon.
 
 GitHub jobs have been unable to start because of account billing restrictions;
 that is not passing CI. Preserve all required checks and permissions. Where a

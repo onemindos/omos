@@ -815,10 +815,21 @@ digest `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`
 
 - [x] Publish Linux image, remotely verify immutable source/platform/runtime manifest.
 - [x] Run promotion gates and open separate digest-pin PR.
-- [ ] Verify actual merged revision, Argo Synced/Healthy and two exact-image ready replicas.
-- [ ] Signed-in component/project Operations, topology, logs/metrics/runbook and security checks.
+- [x] Verify actual merged revision, Argo Synced/Healthy and two exact-image ready replicas.
+- [x] Signed-in component/project Operations, topology, logs/metrics/runbook and scoped security checks.
 
 The old `af7770fb` / `fab652...` candidate in earlier follow-up drafts is superseded
 and must not be promoted. STAC collection/search HTTP 500 and data-unknown remain
 real backing-service findings, not portal release failures or authorization to
 change database schemas. Phase 6 remains In progress; no app migration certified.
+
+Live evidence 2026-10-20, 17:29–17:32 UTC: #336 merged at
+`1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6`; pipeline exact-revision/digest verification
+passed, 2/2 ready/updated/available replicas, generation 72. Both pods passed
+anonymous/machine denial and six-read-only-MCP-tool checks. Signed-in Component and
+Project Operations, real logs/metrics and packaged STAC runbook passed. Catalog
+converged to 716 entities, zero duplicates/errors/orphans, expected topology, only
+the known inactive workflow-plane target missing. Details and remaining limits:
+[STAC release evidence](docs/operations/stac-operational-slice-2026-10-20.md).
+Phase 6 is still In progress; STAC schema, broader trust/recovery and production
+expiry/second-role coverage are not certified by this release. No migration begun.
