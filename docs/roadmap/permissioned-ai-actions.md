@@ -193,3 +193,68 @@ Existing plans remain separate: [#328](https://github.com/onemindos/omos/pull/32
 [#284](https://github.com/onemindos/omos/pull/284) (home expansion).
 No need to deploy all of those to test offline contracts; activation dependencies
 must be demonstrated, not assumed. Phase 6 remains In progress, Phase 7 Not started.
+
+## Draft A0 implementation: offline contract slice
+
+This appended draft qualifies the planning-only status above: source preparation
+now includes a partial A0 evaluator and synthetic tests, but no runtime is
+activated and no A0/A1 acceptance gate or platform phase is declared complete.
+The coordinator owns the tracker update and integration into this existing draft.
+
+[`action_contract.py`](../../scripts/ai-operator/action_contract.py) defines strict
+v1 typed request, target, revision, approval, policy, observation and journal
+records. The only supported action is `propose_release`, for one exact target
+specified by the supplied policy, classified as reviewed, stateless, application
+layer and `offline-test`. The test target is synthetic (`offline/test-fixture`);
+no live application has been selected or granted access. Unknown/missing fields,
+invalid types, unsupported versions and malformed paths/commits/digests deny.
+
+Approval binds to SHA-256 over the complete validated request: compact sorted-key
+ASCII JSON, including request/idempotency IDs, distinct requester/executor labels,
+action, exact repository/branch/path/cluster/environment/namespace/catalog/
+controller/workload, base and candidate commits, diff hash, artifact digest,
+evidence hash, observed commit/generation, policy version and validity interval.
+The approval has a separate approver label and bounded validity interval.
+Evaluation denies mismatched hashes, actors, targets or observations, expired or
+future records, stale observations, revoked actors/approvals, recorded reuse,
+disabled policy, stop state and unavailable journal data. Time is an explicit
+integer UTC Unix-seconds input; no clock or external state is read.
+
+Trust boundaries and remaining gates:
+
+- Caller and approver labels are unverified claims. Hashing proves neither
+  identity nor consent; a caller could fabricate every supplied record. A future
+  backend must independently authenticate actors, load protected policy and
+  approval records, enforce role separation and verify revocation on every entry.
+- Reviewed/application/stateless labels are test policy assertions, not discovery
+  of an actual target's safety or ownership. Live readiness needs independent
+  review, enforceable protected paths/main, a scoped non-merge credential and
+  exact-diff validation. No human token reuse or new grants are included here.
+- Revision/evidence hashes and observations are supplied data, not verified build
+  receipts or fresh Git/Argo reads. A future adapter must obtain and validate them
+  independently, recheck drift and preserve human exact-head merge authority.
+- The journal is a supplied snapshot. This pure evaluator never consumes an
+  approval or reserves an idempotency key. Repeated/concurrent evaluation of the
+  same unused snapshot can pass; runtime replay prevention requires atomic,
+  durable reservation, per-target locking and crash/reconciliation handling.
+  Cross-replica stop/revocation, audit retention/recovery and outage handling
+  remain unimplemented.
+
+Every decision has `execution_authorized=False`, including an
+`offline_contract_passed=True` result. There is no executor, network client,
+backend route, credential access, NATS integration or connection to the release
+pipeline. A passing fixture does not authorize creating a PR, merging, deploying
+or operating any application. Live identity/isolation, application/digest/Argo,
+recovery and independent stop gates above remain unexecuted.
+
+Run the stdlib-only synthetic suite without writing Python cache files:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests -p test_gitops_action_contract.py -v
+```
+
+The suite covers positive offline evaluation, canonical hashing, validly formed
+changes retaining old approvals, every target/revision dimension, actor
+separation, TTL/staleness, revocation, recorded replay, stop/failure states,
+malformed inputs and the explicit absence of atomic replay protection. This is
+partial A0 contract evidence, not proof of the broad live acceptance checklist.
