@@ -438,3 +438,11 @@ descheduler (Layer 1) in phase 5 alongside the capacity work.
 - [Built-in console configuration](https://openchoreo.dev/docs/platform-engineer-guide/backstage-configuration/)
 - [MCP servers](https://openchoreo.dev/docs/ai/mcp-servers/)
 - [Community modules](https://github.com/openchoreo/community-modules)
+
+
+### Parallel run continuation — home, 2026-10-21 UTC
+
+Existing draft advanced with bounded home source/acceptance preparation.
+No runtime activation, permission, credential, storage, billing or migration.
+Offline fixtures/procedures are not production evidence. Phase 6 In progress;
+Phase 7/8 Not started. All original activation gates remain blocking.
