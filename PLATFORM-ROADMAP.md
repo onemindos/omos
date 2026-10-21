@@ -1021,3 +1021,17 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+
+### Home expansion draft #284
+
+The [revised Mac/home brief](docs/roadmap/phase-8-expand.md) records production
+capacity, local recovery and separate registration gates. No allocation or
+multicluster deployment is approved or claimed by this preparation.
+
+### Parallel run continuation — home, 2026-10-21 UTC
+
+Existing draft advanced with bounded home source/acceptance preparation.
+No runtime activation, permission, credential, storage, billing or migration.
+Offline fixtures/procedures are not production evidence. Phase 6 In progress;
+Phase 7/8 Not started. All original activation gates remain blocking.
