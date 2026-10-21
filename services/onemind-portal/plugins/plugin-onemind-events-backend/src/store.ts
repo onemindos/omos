@@ -28,22 +28,39 @@ export type DigestSummary = {
   byResource: { resource: string; count: number }[];
 };
 
-// Creates a table only if absent. Concurrent replicas may race, so a failed create is
-// tolerated when the table now exists.
+// Creates a table only if absent. Two modules of the same plugin may initialise at once, so a
+// failed create is retried briefly and tolerated when the table now exists.
 async function ensureTable(
   db: Db,
   name: string,
   build: Parameters<Db['schema']['createTable']>[1],
 ) {
-  if (await db.schema.hasTable(name)) return;
-  try {
-    await db.schema.createTable(name, build);
-  } catch (error) {
-    if (!(await db.schema.hasTable(name))) throw error;
+  for (let attempt = 0; ; attempt += 1) {
+    if (await db.schema.hasTable(name)) return;
+    try {
+      await db.schema.createTable(name, build);
+      return;
+    } catch (error) {
+      if (attempt >= 3) throw error;
+      await new Promise(resolve => setTimeout(resolve, 250 * (attempt + 1)));
+    }
   }
 }
 
-export async function createStore(db: Db) {
+const stores = new WeakMap<object, Promise<Store>>();
+
+// One store per database client: the observer and alert routing modules share it, so the
+// tables are created once.
+export function createStore(db: Db): Promise<Store> {
+  let store = stores.get(db);
+  if (!store) {
+    store = buildStore(db);
+    stores.set(db, store);
+  }
+  return store;
+}
+
+async function buildStore(db: Db) {
   await ensureTable(db, 'onemind_activity_timeline', table => {
     table.string('id', 64).primary();
     table.string('kind', 40).notNullable();
@@ -191,4 +208,4 @@ export async function createStore(db: Db) {
   };
 }
 
-export type Store = Awaited<ReturnType<typeof createStore>>;
+export type Store = Awaited<ReturnType<typeof buildStore>>;

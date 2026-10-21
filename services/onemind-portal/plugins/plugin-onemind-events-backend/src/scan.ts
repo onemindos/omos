@@ -52,11 +52,15 @@ export const hash = (value: string) =>
 
 export async function ensureDeliveryTables(db: Db) {
   const create = async (name: string, build: Parameters<Db['schema']['createTable']>[1]) => {
-    if (await db.schema.hasTable(name)) return;
-    try {
-      await db.schema.createTable(name, build);
-    } catch (error) {
-      if (!(await db.schema.hasTable(name))) throw error;
+    for (let attempt = 0; ; attempt += 1) {
+      if (await db.schema.hasTable(name)) return;
+      try {
+        await db.schema.createTable(name, build);
+        return;
+      } catch (error) {
+        if (attempt >= 3) throw error;
+        await new Promise(resolve => setTimeout(resolve, 250 * (attempt + 1)));
+      }
     }
   };
   await create('onemind_operation_delivery', table => {
