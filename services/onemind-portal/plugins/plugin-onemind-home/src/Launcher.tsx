@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Link, TextField, Tooltip, Typography, useTheme } from '@material-ui/core';
+import { Theme, Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Link, TextField, Tooltip, Typography, useTheme } from '@material-ui/core';
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Close from '@material-ui/icons/Close';
@@ -16,9 +16,8 @@ function abbreviationWord(word: string, index: number, words: string[]) {
   return '';
 }
 
-function favoriteIconColor(isFavorite: boolean, dark: boolean) {
-  if (isFavorite) return dark ? '#ffcf68' : '#926400';
-  return dark ? '#afbdcf' : '#64748b';
+function favoriteIconColor(isFavorite: boolean, theme: Theme) {
+  return isFavorite ? theme.palette.warning.main : theme.palette.text.secondary;
 }
 
 const abbreviation = (app: AppEntry) => ({ 'github': 'GH', '1password': '1P', 'argocd': 'CD', 'digitalocean': 'DO', 'grafana': 'GF', 'headlamp': 'HL' }[app.name] ?? (app.title.match(/[A-Za-z0-9]+/g) ?? []).map(abbreviationWord).join('').toUpperCase());
@@ -71,12 +70,12 @@ export function AppTile({ app, controls, compact = false }: { app: AppEntry; con
         <HostingBadge hosting={app.hosting} status={app.status} />
       </Box>
     </Link>
-    <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:favoriteIconColor(starred, dark) }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
+    <Tooltip title={starred ? 'Remove from favorites' : 'Add to favorites'}><span><IconButton size="small" aria-label={`${starred ? 'Remove' : 'Add'} ${app.title} ${starred ? 'from' : 'to'} favorites`} aria-pressed={starred} disabled={!controls.loaded || controls.busy || !!controls.error} onClick={() => controls.toggle(app)} style={{ margin: '8px 6px 0 0',minWidth:44,minHeight:44,color:favoriteIconColor(starred, theme) }}>{starred ? <Star fontSize="small" /> : <StarBorder fontSize="small" />}</IconButton></span></Tooltip>
   </Box><Box display="flex" flexWrap="wrap" alignItems="center" style={{gap:6}}><Typography variant="caption">{[...new Set(access.points.map(point => point.platform))].join(' · ')}</Typography><AccessButton app={app} /></Box>{accessOpen && <AccessDeployments app={app} open={accessOpen} onClose={()=>setAccessOpen(false)} />}</Box>);
 }
 export const appGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 12 };
 
-export function QuickAccess() {
+export function QuickAccess({ dense = false }: { dense?: boolean }) {
   const searchId=useId();
   const titleId=useId();
   const {directory:launcherApps}=useDirectory();
@@ -91,12 +90,12 @@ export function QuickAccess() {
   const starters = ['zoho-mail', 'github', 'grafana', 'headlamp', '1password', 'mercury'].flatMap(name => launcherApps.find(app => app.name === name) ?? []);
   return (<Box className="onemind-workspace onemind-favorites">
     <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" style={{ gap: 12 }} mb={1}>
-      <Box><Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Favorites</Typography><Typography variant="body2" color="textSecondary">Your apps, one click away. Stars are shared with your catalog favorites.</Typography></Box>
+      <Box><Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>Favorites</Typography>{!dense&&<Typography variant="body2" color="textSecondary">Your apps, one click away. Stars are shared with your catalog favorites.</Typography>}</Box>
       <Button variant="contained" color="primary" disableElevation onClick={() => { setQuery(''); setOpen(true); }}>Manage favorites</Button>
     </Box>
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     {!controls.loaded && <Typography role="status">Loading saved favorites…</Typography>}
-    {controls.loaded && (controls.favorites.length ? <Box mt={2} style={appGridStyle}>{controls.favorites.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box> : <Box mt={2}><Typography>No favorite apps yet. Use a star below or choose apps in Manage favorites.</Typography><Typography variant="overline" component="p" style={{ marginTop: 16 }}>Suggested starting points</Typography><Box style={appGridStyle}>{starters.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box></Box>)}
+    {controls.loaded && (controls.favorites.length ? <Box mt={dense?1:2} style={appGridStyle}>{controls.favorites.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box> : <Box mt={2}><Typography>No favorite apps yet. Use a star below or choose apps in Manage favorites.</Typography><Typography variant="overline" component="p" style={{ marginTop: 16 }}>Suggested starting points</Typography><Box style={appGridStyle}>{starters.map(app => <AppTile key={app.name} app={app} controls={controls} compact />)}</Box></Box>)}
     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md" aria-labelledby={titleId}>
       <DialogTitle><Box display="flex" justifyContent="space-between" alignItems="center"><span id={titleId}>Choose your quick-access apps</span><IconButton aria-label="Close favorites picker" onClick={() => setOpen(false)}><Close /></IconButton></Box></DialogTitle>
       <DialogContent><TextField id={searchId} inputRef={searchInputRef}
