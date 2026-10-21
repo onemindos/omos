@@ -54,12 +54,12 @@ export type GroupSpec = {
   collapsed?: boolean;
 };
 
-// F2 owns the Domain entities; adjust these refs there if their names change.
+// F2 Domains: domain:default/onemind-so|le|hp|ge (parent onemind).
 const pillar = (slug: string, title: string): EntrySpec => ({
   key: `pillar-${slug}`,
   title,
   icon: 'pillar',
-  href: `/catalog/default/domain/${slug}`,
+  href: `/catalog/default/domain/onemind-${slug}`,
 });
 
 export const NAV_GROUPS: GroupSpec[] = [

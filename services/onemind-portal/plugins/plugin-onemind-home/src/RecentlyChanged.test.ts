@@ -31,21 +31,15 @@ describe('recentChanges', () => {
 });
 
 describe('countAppsByPillar', () => {
-  it('counts components through system to domain', () => {
-    const counts = countAppsByPillar(
-      [
-        { name: 'ops', domain: 'default/so' },
-        { name: 'family', domain: 'le' },
-        { name: 'orphan' },
-      ],
-      [
-        { system: 'ops' },
-        { system: 'default/ops' },
-        { system: 'family' },
-        { system: 'orphan' },
-        {},
-      ],
-    );
+  it('counts components by their pillar label and ignores others', () => {
+    const counts = countAppsByPillar([
+      { labels: { 'onemind.io/pillar': 'so' } },
+      { labels: { 'onemind.io/pillar': 'so' } },
+      { labels: { 'onemind.io/pillar': 'le' } },
+      { labels: { 'onemind.io/pillar': 'shared' } },
+      { labels: {} },
+      {},
+    ]);
     expect(counts).toEqual({ so: 2, le: 1, hp: 0, ge: 0 });
   });
 });

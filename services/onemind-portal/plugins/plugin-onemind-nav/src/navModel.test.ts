@@ -90,6 +90,14 @@ describe('buildNavModel', () => {
       'HP · Holistic Performance',
       'GE · Generational Empire',
     ]);
+    expect(
+      shown.find(g => g.key === 'pillars')?.entries.map(e => e.href),
+    ).toEqual([
+      '/catalog/default/domain/onemind-so',
+      '/catalog/default/domain/onemind-le',
+      '/catalog/default/domain/onemind-hp',
+      '/catalog/default/domain/onemind-ge',
+    ]);
     expect(titles(shown, 'services')).toContain('DigitalOcean');
     expect(titles(shown, 'change')).toContain('Retire app');
   });

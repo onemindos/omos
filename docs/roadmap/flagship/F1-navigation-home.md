@@ -119,9 +119,11 @@ notifications and catalog APIs).
   status route; Alertmanager alerts arrive with F3/F4.
 - "Catalog changes" in Recently changed need a source (F11); only deployment
   and catalog-topic notifications appear today.
-- Pillar and Retire routes (`/catalog/default/domain/<so|le|hp|ge>`,
-  `/create/templates/default/retire-app`) are constants in `navModel.ts`; F2/F8
-  must confirm them. DevTools and Audit Logs show only if those pages exist.
+- Pillar routes follow F2 names; counts use the `onemind.io/pillar` label. The Retire route
+  (`/create/templates/default/retire-app`) is a constant in `navModel.ts`; F8
+  must confirm it. A "Shared" pillar tile was skipped: the catalog index only
+  supports built-in filters (kind, type, owner, lifecycle, tags), not a
+  `onemind.io/pillar` query parameter. DevTools and Audit Logs show only if those pages exist.
 - Search result types: no custom result items; runbooks and apps already come
   from the existing collators. Alerts and DigitalOcean are not indexed yet.
 - Admin visibility is a UI convenience (identity ownership refs); backend

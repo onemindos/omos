@@ -11,25 +11,17 @@ export const PILLARS = [
   { slug: 'ge', short: 'GE', title: 'Generational Empire' },
 ] as const;
 
-const domainName = (ref: unknown) =>
-  String(ref ?? '')
-    .split('/')
-    .pop()
-    ?.toLowerCase();
+const PILLAR_LABEL = 'onemind.io/pillar';
 
-/** Counts Components per pillar through Component -> System -> Domain. */
+/** Counts Components by their `onemind.io/pillar` label (F2 copies it from the System). */
 export function countAppsByPillar(
-  systems: { name: string; domain?: string }[],
-  components: { system?: string }[],
+  components: { labels?: Record<string, string> }[],
 ) {
-  const pillarOf = new Map(
-    systems.map(system => [system.name, domainName(system.domain)] as const),
-  );
   const counts: Record<string, number> = {};
   for (const pillar of PILLARS) counts[pillar.slug] = 0;
   for (const component of components) {
-    const pillar = pillarOf.get(domainName(component.system) ?? '');
-    if (pillar && pillar in counts) counts[pillar] += 1;
+    const value = component.labels?.[PILLAR_LABEL];
+    if (value && value in counts) counts[value] += 1;
   }
   return counts;
 }
@@ -48,26 +40,17 @@ export function PillarTiles() {
     let active = true;
     (async () => {
       try {
-        const [systems, components] = await Promise.all([
-          catalog.getEntities({
-            filter: { kind: 'System' },
-            fields: ['metadata.name', 'spec.domain'],
-          }),
-          catalog.getEntities({
-            filter: { kind: 'Component' },
-            fields: ['spec.system'],
-          }),
-        ]);
+        const components = await catalog.getEntities({
+          filter: {
+            kind: 'Component',
+            [`metadata.labels.${PILLAR_LABEL}`]: PILLARS.map(p => p.slug),
+          },
+          fields: ['metadata.labels'],
+        });
         if (!active) return;
         setCounts(
           countAppsByPillar(
-            systems.items.map(item => ({
-              name: item.metadata.name,
-              domain: item.spec?.domain as string | undefined,
-            })),
-            components.items.map(item => ({
-              system: item.spec?.system as string | undefined,
-            })),
+            components.items.map(item => ({ labels: item.metadata.labels })),
           ),
         );
       } catch {
@@ -93,7 +76,7 @@ export function PillarTiles() {
         {PILLARS.map(pillar => (
           <Link
             key={pillar.slug}
-            href={`/catalog/default/domain/${pillar.slug}`}
+            href={`/catalog/default/domain/onemind-${pillar.slug}`}
             underline="none"
             color="inherit"
             aria-label={`${pillar.title}: ${
