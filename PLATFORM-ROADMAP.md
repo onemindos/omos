@@ -1021,3 +1021,31 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+
+### Permissioned AI actions — planning PR #339, 2026-10-20
+
+[PR #339](https://github.com/onemindos/omos/pull/339), the
+[controlled-action plan](docs/roadmap/permissioned-ai-actions.md), records the path
+from read-only observation to separately authenticated, policy-bound actions.
+Preparation belongs alongside Phase 6 trust stabilization and K03/K07; no new
+phase is started. First pilot: one reviewed stateless app/profile, verified
+release PR, exact-head human merge, normal Argo reconciliation and real app/
+recovery verification. The portal-only profile is protected foundation, not an
+autonomous write target. Target selection and live gates remain **Not started**. A bounded offline
+A0 contract slice is now drafted; no executor or activation is included.
+
+Future small PRs cover typed contracts/threat model, durable approvals/audit,
+scoped proposal executor, Backstage/agent interfaces, supervised pilot and only
+then separately approved bounded autonomy. Existing read-only guards, foundation
+human-merge rules, GitOps ownership and credential boundaries stay intact.
+This planning PR grants nothing, deploys nothing and does not authorize its own
+activation or a phase completion. See the plan's unchecked acceptance gates.
+
+
+### Parallel run continuation — actions, 2026-10-21 UTC
+
+Existing draft advanced with bounded actions source/acceptance preparation.
+No runtime activation, permission, credential, storage, billing or migration.
+Offline fixtures/procedures are not production evidence. Phase 6 In progress;
+Phase 7/8 Not started. All original activation gates remain blocking.
