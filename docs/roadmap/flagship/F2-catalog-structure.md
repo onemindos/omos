@@ -148,4 +148,4 @@ Everything below is built against that map and is `proposed` until Zeus approves
 
 - `yarn install --immutable`: ok.
 - `pipeline.py check --profile portal --base origin/main`: `check_passed` (only the optional `whole-tree-diagnostic` fails, known debt).
-- Tests: `test-topology.cjs` (5 topology + 15 structure + 1 snapshot guards) with `test-audit-catalog.cjs` (13): 34 pass; launcher-review and service-coverage: 17 pass; app jest `catalogCompositionModules.test.ts` 49 pass (10 new).
+- Tests: `test-topology.cjs` (5 topology + 16 structure + 1 snapshot guards) with `test-audit-catalog.cjs` (13): 35 pass; launcher-review and service-coverage: 17 pass; app jest `catalogCompositionModules.test.ts` 52 pass (13 new).
