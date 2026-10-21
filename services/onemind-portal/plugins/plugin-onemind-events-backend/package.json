@@ -1,0 +1,33 @@
+{
+  "name": "@internal/plugin-onemind-events-backend",
+  "version": "0.1.0",
+  "main": "dist/index.cjs.js",
+  "types": "src/index.ts",
+  "private": true,
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "onemind",
+    "moduleId": "operational-events"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "lint": "backstage-cli package lint",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "test": "backstage-cli package test"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "1.10.1",
+    "@backstage/plugin-notifications-node": "^0.2.30",
+    "@internal/plugin-onemind-common-backend": "workspace:^",
+    "express": "4.22.1"
+  },
+  "devDependencies": {
+    "@backstage/cli": "0.36.6"
+  },
+  "files": [
+    "dist"
+  ]
+}

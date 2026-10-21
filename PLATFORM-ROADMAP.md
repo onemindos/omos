@@ -123,11 +123,33 @@ it could lock out both itself and the human who has to recover it.
 | 1 | Claude sees every layer (MCP on the Mac) | Done | [#257](https://github.com/onemindos/omos/pull/257), [#258](https://github.com/onemindos/omos/pull/258) | 2 |
 | 2 | OpenChoreo foundations: data plane, gateway, secrets, first template, built-in console | Done | 2a [#262](https://github.com/onemindos/omos/pull/262), 2b [#263](https://github.com/onemindos/omos/pull/263), 2c [#264](https://github.com/onemindos/omos/pull/264), 2d [#265](https://github.com/onemindos/omos/pull/265), 2e [#266](https://github.com/onemindos/omos/pull/266), 2g-1 [#268](https://github.com/onemindos/omos/pull/268), [#269](https://github.com/onemindos/omos/pull/269), 2g-2 [#270](https://github.com/onemindos/omos/pull/270) [#271](https://github.com/onemindos/omos/pull/271) [#272](https://github.com/onemindos/omos/pull/272) [#273](https://github.com/onemindos/omos/pull/273), 2g-3 [#274](https://github.com/onemindos/omos/pull/274), 2f-1 [#275](https://github.com/onemindos/omos/pull/275), 2f-2 [#276](https://github.com/onemindos/omos/pull/276), (this PR) | 3, 4 |
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
-| 4 | Portal refactor: custom features into `plugins/` packages | Not started | | 2, 3 |
-| 5 | Capacity fixes, then the observability plane | Not started | | none |
-| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | Not started | | 7 |
+| 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
+| 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
+| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
+
+### Migration readiness: core gate versus parallel follow-ups
+
+Zeus requested [a tracked readiness/follow-up checklist](docs/roadmap/migration-readiness-followups.md)
+on 2026-10-20, tracked in [PR #331](https://github.com/onemindos/omos/pull/331).
+Release/live verification of #330 and the chosen app's security,
+dependencies, data/recovery and rollback gates come first. Unrelated launcher
+repairs, optional dashboards and the separately planned workflow plane are not
+blanket prerequisites for every migration. State/recovery and security failures
+still block affected applications; risks require explicit disposition, not a waiver.
+Phase 6 remains In progress and Phase 7 Not started until actual acceptance.
+
+Full-stack continuation requested 2026-10-20: **#331 is the resume index** linking
+[#333](https://github.com/onemindos/omos/pull/333) (20-category Kubernetes structure,
+installed/proposed apps and execution queue),
+[#334](https://github.com/onemindos/omos/pull/334) (public ingress lifecycle plan),
+[#332](https://github.com/onemindos/omos/pull/332) (staged private Legacy/LibreChat)
+and existing [#284](https://github.com/onemindos/omos/pull/284) (home expansion,
+to revise against Mac evidence). Planning/read-only preparation may run in
+parallel with Phase 6. This does not authorize new controllers, app cutovers,
+identity/DNS/storage/provider/billing changes or wider AI permissions. Start with
+the core gate and foundation assessment, not a simultaneous platform installation.
 
 ## Phases
 
@@ -493,38 +515,226 @@ If not, stop and record why before Phase 7.
 
 Goal: our portal features become portable Backstage plugin packages. No behaviour change.
 
-- [ ] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
-      into its own package under `services/onemind-portal/plugins/`.
-- [ ] Move each backend feature from `packages/backend/src/` into its own backend plugin
-      or module package.
-- [ ] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+Progress (2026-10-19): rebased `roadmap/phase-4-portal-refactor` onto `main`; frontend and backend modules extracted into `@internal/plugin-onemind-*` packages, all wired via `packages/backend/src/index.ts` and `packages/app/src/App.tsx`. Phase 4 PR #280 merged; hotfix PR #298 shipped `directory.json` in the production bundle; live gate checks passed.
 
-Gate: the deployed portal behaves exactly as before.
+- [x] Move each frontend feature from `services/onemind-portal/packages/app/src/modules/`
+      into its own package under `services/onemind-portal/plugins/`.
+- [x] Move each backend feature from `packages/backend/src/` into its own backend plugin
+      or module package.
+- [x] Tests, TypeScript check, image build and a browser check pass; new image digest pinned.
+
+Evidence:
+- `yarn tsc`, `yarn lint:all`, `yarn test:all`, `yarn build:all` pass locally (Node 22.23.3, Yarn 4.13.0).
+- CI `Build OneMind Portal` on branch `roadmap/phase-4-portal-refactor` succeeded (run 39205172177); image pushed to `ghcr.io/onemindos/onemind-portal@sha256:3d2c5bdb6cf56c45b051b373c5085d79616af60055420332a452e5b80cc469c3`.
+- `platform/backstage/deployment.yaml` updated to the new digest; Argo CD `backstage` Application is OutOfSync and syncing (live read-only verification in progress).
+- `scripts/validate_changed_yaml.py` against `origin/main` passed (0 changed YAML files in this branch).
+- Full `make validate` still reports pre-existing YAML lint debt in `platform/matrix/*` (unchanged from `origin/main`), so the root Makefile fails at `lint-yaml`; the changed-files gate is clean.
+
+PR: https://github.com/onemindos/omos/pull/280
+
+Gate (2026-10-19): the deployed portal behaves exactly as before.
+- CI `Build OneMind Portal` on `main` succeeded after hotfix PR #298 (run 39206336020, SHA `133dfd72`); artifact digest `sha256:8110199af6a56dfd8538cfe2145eba319201128b9dfca555b0c93caa1f6bc6b2`.
+- `platform/backstage/deployment.yaml` pinned to that digest in commit `28900eb1`.
+- Argo CD `platform-backstage` Application synced revision `28900eb1` at 2026-10-19T05:54:44Z; status `Synced`, health `Healthy`.
+- Kubernetes deployment `backstage` rolled out: 2 desired, 2 updated, 2 total, 2 available, 0 unavailable.
+- Live gate checks against `https://onemind-preview.tail717ba0.ts.net`:
+  - `/.backstage/health/v1/readiness` → HTTP 200 in ~58 ms
+  - `/.backstage/health/v1/liveness` → HTTP 200 in ~56 ms
+  - `/` → HTTP 200 in ~61 ms (HTML landing page returned)
+
 
 ### Phase 5: Capacity, then observability
 
-- [ ] Apply the request fixes from `docs/operations/cluster-review-2026-10-09.md` (H1), or
-      add an ecosystem node. Target: no node above about 80% of memory requested.
-- [ ] Observability plane 1.3.1 with modules wired to the existing Prometheus, OpenSearch
-      and OTel collector; OpenCost as the FinOps module.
-- [ ] Register `ClusterObservabilityPlane` and link the data plane to it.
-- [ ] Connect Claude to the observer MCP (logs, metrics, traces, alerts, incidents, costs).
+**Done — live gates verified 2026-10-19, 08:05–08:07 UTC.** Final evidence/brief:
+[#281](https://github.com/onemindos/omos/pull/281).
 
-Gate: an OpenChoreo component shows logs and metrics in the console and through the
-observer MCP.
+- [x] Apply measured request/placement fixes; no extra node required.
+- [x] Install observability plane 1.3.1 with modules on the existing Prometheus,
+      OpenSearch and OTel collector; reuse OpenCost through its FinOps adapter.
+- [x] Register ClusterObservabilityPlane/default with its own agent CA and explicitly
+      link ClusterDataPlane/default. Agent connected: one authenticated connection.
+- [x] Connect Claude Code and Codex to the authenticated Observer MCP for logs,
+      metrics, traces, alerts, incidents and costs. Claude reports Connected.
+
+#### Capacity gate (live requested resources)
+
+Effective pod requests include init containers/native sidecars and overhead; completed
+Jobs are excluded. No Pending pods at verification. Actual node memory use was
+44–65%, distinct from the scheduler request percentages below.
+
+| Node | Memory requested | CPU requested |
+|---|---:|---:|
+| onemind-ecosystem-cpu-3rhwrp | 21.18 GiB / 75.4% | 6.077 cores / 77.1% |
+| onemind-hub-core-v2-3rtf47 | 9.82 GiB / 73.7% | 3.832 cores / 48.6% |
+| onemind-hub-core-v2-3rtf4m | 9.38 GiB / 70.4% | 3.917 cores / 49.7% |
+| onemind-hub-core-v2-3rtf4q | 10.36 GiB / 77.7% | 5.862 cores / 74.4% |
+
+Hermes, Loki, Prometheus, Grafana and OpenSearch reconciled onto the existing ecosystem
+pool through preferred affinity, preserving fallback scheduling. No node-name pins,
+new node, descheduler or destructive volume operation was needed. OpenCost's two KSM
+emission flags are false. Unavailable DOKS scheduler/controller-manager and Cilium
+kube-proxy Down rules are absent; KubePodCrashLooping remains loaded.
+
+#### Observability and human/AI gate
+
+- Core, logs, traces, events and FinOps Argo Applications are Synced/Healthy with
+  successful operations; both OpenSearch setup Jobs completed. Core uses chart 1.3.1;
+  logs/traces 0.6.0, metrics 0.7.1, events 0.1.2 and FinOps 0.2.0.
+- Existing OTel DaemonSet is 4/4 ready. Original Loki/Tempo pipelines remain intact;
+  only OpenChoreo-tagged component signals are copied to the existing OpenSearch.
+  There is no second Prometheus, OpenSearch or application log/trace collector.
+- Pilot: namespace default, project onetak, component stac-browser, environment
+  development. Five ordinary HTTP requests returned 200 and produced five real logs.
+  The signed-in console visibly rendered all five logs and CPU/memory graphs.
+- Authenticated MCP returned the same five logs and eight one-minute points in each
+  of six CPU/memory usage/request/limit series. Memory usage was about 7.6 MiB.
+  Cost query returned one component allocation. Traces/alerts/incidents queries
+  succeeded with empty results: the pilot emits no application spans, and no data
+  or incidents were fabricated. Seventeen tools discovered; anonymous calls get 401.
+- Observer URL is https://onemind-observer.tail717ba0.ts.net; MCP path /mcp. Console
+  clients fetch directly, so registration must not use cluster-only DNS. Issuer,
+  audience, read-only authorization and tailnet isolation remain enabled. CORS
+  permits the console and portal origins only. Internal webhook port 8081 is not exposed.
+- Operator setup and actual Claude MCP connection checks passed for Kubernetes,
+  portal, control-plane and Observer servers. Codex uses the existing short-lived
+  OPENCHOREO_MCP_TOKEN environment variable; restart clients to load registrations.
+
+#### Recovery gate
+
+Observer SQLite is persistent (live PVC 1 GiB), with a distinct encrypted Restic
+repository. Backup completed at 07:52:31 UTC, snapshot 583bae7f (three files).
+An Argo-owned isolated restore to a NEW protected PVC completed at 07:59:46 UTC.
+The non-root, read-only verifier reported SQLite integrity_check=ok and the
+alert_entries/incident_entries tables. Production storage was never overwritten.
+The manual source trigger was removed after verification; daily schedule is 04:50
+UTC, next run 2026-10-20T04:50:00Z. The restore PVC remains prune/delete protected;
+cleanup requires explicit storage-deletion approval.
+
+#### PRs, rollout corrections and validation
+
+- Capacity/resource hygiene: [#300](https://github.com/onemindos/omos/pull/300),
+  [#301](https://github.com/onemindos/omos/pull/301), [#302](https://github.com/onemindos/omos/pull/302),
+  [#303](https://github.com/onemindos/omos/pull/303), [#304](https://github.com/onemindos/omos/pull/304),
+  [#305](https://github.com/onemindos/omos/pull/305).
+- Plane/modules and activation: [#306](https://github.com/onemindos/omos/pull/306),
+  [#307](https://github.com/onemindos/omos/pull/307).
+- Live verification fixes: [#308](https://github.com/onemindos/omos/pull/308) removes
+  upstream setup Base64 line wrapping without changing credentials and restricts
+  event labels to avoid mapping collisions; [#309](https://github.com/onemindos/omos/pull/309)
+  adds isolated recovery and uses Authentik's public token URL so the minted issuer
+  matches trust configuration; [#310](https://github.com/onemindos/omos/pull/310)
+  registers the browser-reachable private HTTPS Observer URL. URL caches expire in five minutes.
+- Local pinned Helm/Kustomize renders, changed YAML/schema gates, live CRD dry runs,
+  OTel 0.156.0 validation/fan-out test, MCP JSON/SSE/auth/config-idempotence checks,
+  ShellCheck and secret scans passed. Full make validate still fails on pre-existing
+  onetak/TAK/Matrix YAML lint debt. Later GitHub CI jobs did not start because of an
+  account payment/spending-limit error; no billing settings or merge rules were changed.
+- Final cluster snapshot: 70 Argo Applications, 68 Synced/Healthy. The only exceptions
+  are pre-existing platform-matrix (OutOfSync/Healthy) and platform-openclaw
+  (Synced/Progressing). Existing portal remains 2/2 available, readiness HTTP 200.
+  OpenSearch's existing self-signed/demo backend TLS is unchanged; hardening is separate.
+
+Next unfinished phase: **Phase 7**. This does not authorize starting it automatically.
 
 ### Phase 6: One portal
 
-- [ ] Align our Backstage with the release line the OpenChoreo plugins support
-      (tested on 1.51.0 today; we run 1.55.3), or confirm 1.55 works.
-- [ ] Install the core OpenChoreo plugins and the observability pack into our portal,
-      using `openchoreo/backstage-plugins` `packages/portal-app` as the reference wiring.
-- [ ] Switch sign-in to the `openchoreo-auth` provider against Authentik and keep the
-      `onemind.io/oidc-sub` user mapping working.
-- [ ] Merge the OpenChoreo permission policy with ours (only one policy can be active).
-- [ ] Turn the built-in console off.
+Existing pilot integration: [PR #330](https://github.com/onemindos/omos/pull/330), [STAC operational slice](docs/operations/stac-operational-slice-2026-10-20.md) joins identity/dependencies and real evidence; source checks pass,
+immutable image/live UI acceptance remains required. STAC collections/search
+currently return 500 (no pgstac schema observed); data freshness is unknown.
+No data/schema repair or new application migration is performed by this integration.
 
-Gate: one portal shows our home screens, the full catalog and OpenChoreo tabs.
+2026-10-20 follow-through: [PR #329](https://github.com/onemindos/omos/pull/329), [trust/coverage review and launcher repairs](docs/operations/portal-acceptance-followthrough-2026-10-20.md). Refreshed login observed on both replicas; four confirmed launcher fixes;
+16 remaining launcher findings are flagged, offsite/Grafana gaps remain explicit.
+The existing STAC operational slice is authorized next; this is not a Phase 7 cutover.
+
+**Stabilization reopened 2026-10-20 by Zeus.** Historical release acceptance below
+is preserved, but the broader UI/catalog quality audit found integration defects.
+Work the [repair and acceptance gates](docs/operations/portal-stabilization-2026-10-20.md)
+before Phase 7. Repairs #322–#326 are merged and deployed: 2/2 healthy,
+715 processed catalog entities, final browser/MCP gates passed. Remaining broader
+acceptance gaps are explicitly recorded; migration remains paused, not implicitly
+authorized by the portal repair.
+
+**Done — live acceptance 2026-10-19, 18:32 UTC.** Existing OneMind Backstage is
+preserved, not replaced: https://onemind-preview.tail717ba0.ts.net/.
+
+- [x] Backstage 1.55.3 confirmed with pinned OpenChoreo 1.3.1 core/observability
+      plugins, Node 22.23.3 and one frontend dependency cohort. This is our tested
+      integration, not a claim that upstream's published 1.51 matrix changed.
+- [x] Core/catalog/scaffolder/observability plugins installed in the existing host;
+      OneMind home, Today, 130 launcher entries, 606 catalog entities, runbooks,
+      settings, notifications and operational observations remain available.
+- [x] `openchoreo-auth` Authentik login preserves signed-subject mapping to
+      `user:default/akadmin` and the existing `onemind-admins` group.
+- [x] One intersected permission policy: no admin bypass of upstream authorization;
+      host non-admin mutations and machine platform/write access remain denied.
+- [x] Built-in console disabled; its Deployment/Service/ingress/Application and
+      the memory-only candidate are gone. Reused catalog credential and operator/
+      catalog bindings remain. No PVC, database, backup or identity was removed.
+
+**Release:** source `3dd34900a5b455696387394398b72f80ce3376ba`, GHCR digest
+`sha256:b2fc101eacc504fadff99b638b342ce9bf56782a4901ea49dffe2fdd09f1967a`.
+Main Deployment is **2/2 ready**, Argo Synced/Healthy. App-of-apps, control plane,
+observability and identity resources also reconcile Synced/Healthy.
+
+**Live gates:** pilot `stac-browser-v5` Active in Deploy; real Component Definition;
+CPU/memory charts and runtime logs including a fresh HTTP 200 at 18:27:08 UTC.
+Each new replica passed anonymous API 401, guest 404, machine catalog read 200,
+catalog writes/platform/cache/context 403, and six read-only MCP tools. Actual
+MCP health reads work. Non-admin human decisions have regression coverage; no
+second human login was created or claimed live-tested. No live mutation was used
+as a test. Existing PostgreSQL/preferences, integrations, SA/RBAC, PDB and
+zero-unavailable rolling strategy remain intact. Today's encrypted backup reports
+restoreVerified=true (24 databases/148 tables).
+
+**Pitfalls corrected:** Request-body reuse, exact-origin CORS/CSP, provider owner
+name prefix, and a multi-replica authorization cache gap. Capability results now
+use the permission plugin DB with SHA-256 keys, upstream expiration and fail-closed
+errors; no raw token is stored. Independent PostgreSQL connections and concurrent
+initialization/upsert were tested; both production replicas use the shared DB.
+The upstream ABAC router remains a version-locked private-API adapter to review
+on every upgrade. Catalog sync deliberately polls; the unused webhook forwarder
+is disabled rather than posting to a disabled HTTP receiver. Internal Backstage
+PostgreSQL events and NATS are unchanged.
+
+**Verification:** 49 tests, immutable Linux build, TypeScript, TechDocs, backend,
+JSON exports, AMD64 SQLite, remote digest verification, changed YAML, strict
+manifest/schema checks, pinned Helm renders, kustomize and new-secret scans pass.
+GitHub Actions still cannot start due account billing; full `make validate` still
+hits unrelated old YAML debt. Neither was represented as green or bypassed.
+
+Implementation/rollout PRs: #311–#319. Detailed evidence and rollback:
+[Phase 6 integration runbook](docs/operations/phase6-portal-integration.md).
+Phases 7 and 8 remain **Not started**; this acceptance does not authorize them.
+
+### Phase 6 release follow-through — local/Linux executor
+
+2026-10-20: Zeus approved the existing verified local/Linux release checks while
+GitHub cannot start hosted jobs, and requested a reusable deployment/removal
+pipeline. No billing/check-disable/admin-bypass permission is implied. #330's
+review added explicit incomplete-state and bounded-request regressions; its old
+published candidate is superseded for these changes. Rebuild and remotely verify
+the new source before a separate GitOps digest-pin/live acceptance step. Phase 6
+remains In progress; no migration or removal is certified by source tests.
+
+Pipeline implementation requested 2026-10-20:
+[portable release/lifecycle gates](docs/operations/gitops-release-pipeline.md),
+initial portal profile. Stages: local checks, Linux publication, registry/source
+proof, separate pin PR, reviewed merge, read-only Argo/rollout verification and
+separate semantic acceptance. Protected retirement is plan-only; no app, namespace,
+PVC, Secret or backup deletion is executed. First Linux rebuild exposed floating
+`npx` TechDocs dependencies; the CLI graph is now locked in workspace Yarn before
+retry. Do not promote the failed build's old candidate or call the pipeline proven
+end to end until a new immutable artifact and real rollout are verified.
+
+Release execution update 2026-10-20: source PR [#330](https://github.com/onemindos/omos/pull/330)
+is merged. Pipeline PR [#335](https://github.com/onemindos/omos/pull/335)
+produced and remotely verified Linux/AMD64 source `c9a05f8d0b1fc1809b0496945d99593e884f561d`,
+image digest `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`.
+All required local gates passed, including 82 security/STAC, 44 layout, 6 catalog,
+20 pipeline and 7 release-command tests; the existing whole-tree YAML diagnostic
+remains failing and hosted jobs remain unavailable. No rollout is claimed here;
+separate pin, Argo and signed-in semantic/security acceptance still follow.
 
 ### Phase 7: Migrate Layer 3
 
@@ -540,7 +750,16 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 
 ### Phase 8: Expand
 
-- [ ] Home server on Talos Linux, registered in Argo CD and as a second OpenChoreo data plane.
+- Planning scope requested 2026-10-20: [full Kubernetes operating structure and
+  execution queue](docs/architecture/kubernetes-operating-structure.md), backed by
+  the [read-only baseline](docs/operations/kubernetes-structure-baseline-2026-10-20.md).
+  This is **not** a later-phase deployment or completion. #330/#335/#336
+  scoped portal release is verified; #331 records remaining trust/readiness gates; #284 remains the home expansion
+  parent and must be revised against the actual Mac storage/power evidence.
+- [ ] Decide and verify the home runtime against actual hardware: proposed Mac
+      ARM64 Linux VM/K3s pilot; Talos remains a dedicated-host candidate, not a
+      requirement to replace macOS. Register approved cluster visibility/GitOps
+      and separately prove any second OpenChoreo data-plane integration.
 - [ ] Hermes gets a model through LiteLLM and the same read-only tools through the tool gateway.
 - [ ] Revisit `takserver` placement.
 
@@ -556,6 +775,7 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
+| 2026-10-20 | Zeus requested full Kubernetes/Backstage structure and linked PRs. Keep the installed stack and existing phase gates; permit planning and bounded comparison of KubeVela/Crossplane/fleet candidates without deploying or assigning a second owner to live resources. The new queue is a proposal, not a replacement approval or claim of verified integration. |
 
 ## Incidents found while working the roadmap
 
@@ -570,7 +790,7 @@ descheduler (Layer 1) in phase 5 alongside the capacity work.
 
 - **Maturity:** OpenChoreo is a CNCF Sandbox project with frequent releases and several
   supported lines at once. Pin chart versions and read release notes before upgrades.
-- **Backstage version:** the OpenChoreo plugins pin Backstage 1.51.0; our portal runs 1.55.3.
+- **Backstage version:** upstream documents 1.51.0; our 1.55.3 integration passed Phase 6 live gates. Keep the dependency cohort and private ABAC-router adapter pinned; reverify upgrades.
 - **Gateway:** Cilium Gateway API works with the OpenChoreo data plane (phase 2c), but
   its CRDs are v1.2.1 (DOKS-managed) while OpenChoreo targets v1.5.1. The upstream
   `service` component type's CORS filter cannot be used; use `onemind-service`.
@@ -593,3 +813,211 @@ descheduler (Layer 1) in phase 5 alongside the capacity work.
 - [Built-in console configuration](https://openchoreo.dev/docs/platform-engineer-guide/backstage-configuration/)
 - [MCP servers](https://openchoreo.dev/docs/ai/mcp-servers/)
 - [Community modules](https://github.com/openchoreo/community-modules)
+
+### Portal GitOps promotion — 2026-10-20
+
+Source #330 and pipeline #335 merged normally using the explicitly approved
+local/Linux release evidence (hosted CI unavailable, not green). Promotion
+[#336](https://github.com/onemindos/omos/pull/336) was generated by the new pipeline:
+only the portal Deployment image changes; no Argo policy, credentials, database,
+RBAC, other workload or removal. Verified source `c9a05f8d0b1fc1809b0496945d99593e884f561d`,
+digest `sha256:6c729bd20c0a0a40330be8f0c7bd5213c59c7540bd1ea54c38e05f8c63fc3e7c`.
+
+- [x] Publish Linux image, remotely verify immutable source/platform/runtime manifest.
+- [x] Run promotion gates and open separate digest-pin PR.
+- [x] Verify actual merged revision, Argo Synced/Healthy and two exact-image ready replicas.
+- [x] Signed-in component/project Operations, topology, logs/metrics/runbook and scoped security checks.
+
+The old `af7770fb` / `fab652...` candidate in earlier follow-up drafts is superseded
+and must not be promoted. STAC collection/search HTTP 500 and data-unknown remain
+real backing-service findings, not portal release failures or authorization to
+change database schemas. Phase 6 remains In progress; no app migration certified.
+
+Live evidence 2026-10-20, 17:29–17:32 UTC: #336 merged at
+`1545b50f4fb5521dbdfc9eb22fa302cf2e4b45d6`; pipeline exact-revision/digest verification
+passed, 2/2 ready/updated/available replicas, generation 72. Both pods passed
+anonymous/machine denial and six-read-only-MCP-tool checks. Signed-in Component and
+Project Operations, real logs/metrics and packaged STAC runbook passed. Catalog
+converged to 716 entities, zero duplicates/errors/orphans, expected topology, only
+the known inactive workflow-plane target missing. Details and remaining limits:
+[STAC release evidence](docs/operations/stac-operational-slice-2026-10-20.md).
+Phase 6 is still In progress; STAC schema, broader trust/recovery and production
+expiry/second-role coverage are not certified by this release. No migration begun.
+
+### Kubernetes structure review — PR #333, 2026-10-20
+
+[#333](https://github.com/onemindos/omos/pull/333) reconciles the 20-category
+[operating structure](docs/architecture/kubernetes-operating-structure.md) with
+merged #331/#335/#336 and the fresh 17:40 UTC baseline. Existing integrations,
+upstream-supported but untested links and uninstalled candidates are distinguished.
+NATS StatefulSet Argo ownership is now observed; do not blindly re-adopt from an
+older report. SealedSecrets remains the repository credential pattern despite
+ESO controller presence. Portal pipeline proof is retained; other apps require
+reviewed profiles and removal remains plan-only. No new image/deployment required.
+
+Next structural implementation: #334 read-only public-ingress parity assessment
+and K02 ownership/recovery inventory. K03 will reuse existing onboarding templates
+and add a tested app/profile contract, not a second scaffolder. Remaining K00 trust
+checks stay open; no Phase 6 completion, Phase 7 migration, controller installation,
+OS/storage/provider change or widened AI permission is implied by this plan.
+
+
+### Native visibility first win — 2026-10-20
+
+Bounded Phase 6 follow-through: restore the installed Kubernetes plugin's controller
+matching for Backstage/PostgreSQL and explicitly map the NATS broker to its observed
+`platform-nats` Argo Application. Stable entities, ownership and dependency graph
+are retained; direct native Kubernetes/Argo/runbook links and refresh regression
+checks are added. See [scope and acceptance](docs/operations/native-portal-visibility-2026-10-20.md).
+[PR #337](https://github.com/onemindos/omos/pull/337) merged as `e98f1436`.
+Scoped production acceptance passed at 18:50–18:54 UTC: native Backstage/DB/NATS
+workloads and metrics, correct Argo summaries, source/runbook/dependency links,
+read-only MCP metadata and existing denial boundaries. Portal 2/2, generation 73,
+same verified digest; DB spec/revision unchanged; NATS 3/3. Native Argo history
+revision is distinct from the latest compared Git revision (documented for NATS).
+The catalog ConfigMap hash naturally rolls the same image; no database template,
+image digest, RBAC, credentials, OpenChoreo ownership or event contracts change.
+Phase 6 stays In progress and Phase 7 Not started. After browser acceptance, next
+visibility work is the existing Grafana 401, then topology/Prometheus/OpenCost with
+separate compatibility and access checks. This does not install new controllers.
+
+
+### Grafana durability and native visibility — 2026-10-20
+
+User approved a 5 GiB persistent Grafana volume, backed-up data migration, a brief
+Grafana maintenance window and a dedicated read-only Backstage credential. The
+existing database is on emptyDir; read-only inspection found zero service accounts
+and the old portal token returned 401. The native plugin/proxy prefix combination
+is being verified rather than blindly rewritten. No AI action permissions change.
+
+Stage A prepares an Argo-owned retained PVC, seed job, encrypted remote-verified
+SQLite backup and namespace-bound sealed credentials. Grafana stays on its old
+pod until the seed/backup gate passes; the scheduled backup starts suspended.
+Stage B is a separate reviewed cutover to the seeded PVC with Recreate and an
+init guard, then catalog dashboard mappings and browser verification. Initial
+preparation is not proof of migration or fixed authentication. Phase 6 remains
+In progress; Phase 7 Not started. PR links and actual acceptance follow below.
+
+
+Grafana Stage A [#340](https://github.com/onemindos/omos/pull/340) merged as
+`9f9358f6`. Retained PVC bound; original database capture quiesced the server for
+0.489 seconds, resumed it, then verified encrypted remote download/decrypt/SQLite
+restore across 87 tables before seeding the claim. Seed job completed. Original
+Grafana remains available until the separately reviewed Stage B cutover.
+
+Stage B prepares the seeded RWO Recreate switch/seed guard, online scheduled and
+one-time verified backup, dedicated token reference and three fixed-workload
+Prometheus dashboards mapped into Backstage. Existing host extensions are retained
+when configuring the native Grafana alert card to require an explicit alert-label
+selector; missing Grafana rules must not look like full Prometheus alert coverage.
+No iframe/authentication protection is weakened, no new portal image is required,
+and actual post-cutover/native browser acceptance remains pending.
+
+
+Grafana Stage B [#341](https://github.com/onemindos/omos/pull/341) merged as
+`dfe7611c`. Argo server-side diff safely blocked the Grafana update: the original
+Helm field owner retained `emptyDir`/`rollingUpdate`, creating invalid union fields.
+Original Grafana and the verified PVC seed remain intact. Follow-up uses the
+supported legacy diff for this one Application and `Replace=true` on the fully
+rendered Grafana Deployment only; no Force, PVC deletion, force sync, new owner,
+automated-prune change or wider permissions. Full server replace dry-run and local
+gates must pass before the normal exact-head PR merge. Acceptance still pending.
+
+
+Grafana durability/native visibility **accepted 2026-10-20 22:29–22:35 UTC**.
+[#342](https://github.com/onemindos/omos/pull/342) merged `f145f14d`; all three
+owning apps Synced/Healthy at that revision. Grafana 3/3 on retained 5 GiB PVC,
+Deployment UID/image preserved; enabled daily backup plus successful post-cutover
+encrypted remote download/decrypt/SQLite restore verification. Portal generation
+74, 2/2, same digest; DB unchanged; NATS 3/3. Migrated Viewer identity verified on
+both replicas; native Backstage/DB/NATS dashboard links and real CPU/memory panels
+passed. Anonymous/machine proxy and Kubernetes mutation denials remain intact.
+See [acceptance and remaining limits](docs/operations/grafana-durable-visibility-2026-10-20.md).
+Root-folder link presentation, old ClickHouse panels, Prometheus alert integration,
+expiry monitoring and wider topology/OpenCost remain separate work. Phase 6 stays
+In progress; Phase 7 Not started; #339 action-layer draft is not deployed by this.
+
+
+### Native Grafana folder links — 2026-10-20
+
+Next bounded Phase 6 fix: provision the three existing service dashboards in a real
+`OneMind` folder using the pinned chart's sidecar folder annotation and filesystem
+folder provider. Native plugin 1.1.0 otherwise concatenates an absent root-folder
+URL into `undefined/`. Dashboard UIDs, queries, selectors, credentials, PVC,
+versions and permission boundaries remain unchanged. Unannotated dashboards keep
+the root default. Argo owns the brief Grafana restart; no imperative move/apply.
+Live folder metadata, signed-in native links, unchanged dashboard inventory and
+healthy persistent rollout must pass after merge. Then Prometheus alert visibility
+is next, separately scoped; Phase 6 stays In progress and Phase 7 Not started.
+
+
+Grafana folder fix [#344](https://github.com/onemindos/omos/pull/344) accepted
+23:01–23:04 UTC at `48d841b3`: both owning apps Synced/Healthy, Grafana 3/3 on
+same PVC/image/Deployment UID; portal remains 2/2, DB unchanged, NATS 3/3.
+All 31 dashboard UIDs retained, only three scoped boards moved to `OneMind`;
+Viewer metadata and signed-in native folder links/listing verified. Read-only
+access/denials preserved. [Evidence](docs/operations/grafana-native-folder-2026-10-20.md).
+Prometheus alert integration is the next separately verified task; not installed
+by this repair. Phase 6 stays In progress; Phase 7 Not started.
+
+
+### Native scoped Prometheus alerts — 2026-10-20
+
+User requested the next visibility slice after #344/#345. Prepare the native
+Roadie Prometheus alert table with the supported compatibility bridge, a bounded
+user-only backend adapter for Backstage/DB/NATS, refresh/timestamps and honest
+no-match/partial/unavailable states. Only reviewed fixed GETs/scopes; no generic
+PromQL proxy, new credentials, mutation rights or rule changes. Tests join both
+portable local/Linux and image gates; source merge is distinct from built image,
+GitOps pin and live acceptance. [Scope/gates](docs/operations/prometheus-native-alerts-2026-10-20.md).
+Phase 6 stays In progress; Phase 7 Not started. Actual PR/release evidence follows.
+
+
+Prometheus alert source [#346](https://github.com/onemindos/omos/pull/346) merged
+`cbf0e637` (implementation `725c5e4e`). Required local/Linux gates passed;
+29 new scoped frontend/backend/route checks plus catalog regression are enforced
+in both executors. Real 167-rule source parsed; no selected-scope active match
+at preflight, not an all-clear. Linux image published with source/platform/digest
+verified: `sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`.
+[#347](https://github.com/onemindos/omos/pull/347) promotes that immutable image;
+Argo/browser/replica/denial acceptance remains pending this normal merge.
+GitHub CI billing block and historical whole-tree YAML debt remain explicit.
+No Phase 6 completion, Phase 7 start or wider AI action permission is implied.
+
+
+Prometheus scoped visibility **accepted 23:30–23:34 UTC** after #347 merge
+`f27bb770`: `platform-backstage` Synced/Healthy, generation 76, 2/2 actual imageIDs
+match the verified published digest; DB spec/revision unchanged, Grafana retained
+storage/template unchanged, NATS 3/3. Native Backstage/DB/NATS alert cards, scoped
+metadata/links/timestamps and real pending-alert → no-match transition verified;
+user GET 200 observed on both replicas. Anonymous/machine/write denials retained.
+[Acceptance and limits](docs/operations/prometheus-native-alerts-2026-10-20.md).
+Firing/outage scenarios are fixture evidence, not a production alert-delivery drill.
+Next: topology/OpenCost; broaden coverage and accessible native state text in
+bounded follow-ups. Phase 6 stays In progress; Phase 7 Not started; #339 unmerged.
+
+
+### Native dependency and location topology — 2026-10-20
+
+Next requested Phase 6 slice: enrich the installed native graph with reviewed
+Backstage runtime/identity/NATS/Grafana/Argo feature dependencies and five existing
+PVC catalog identities; fix namespace-group titles without changing entity IDs.
+Add bounded forward/reverse/core graph and location links, preserve current
+Kubernetes/Grafana/Prometheus/Argo/runbook mappings, and enforce refresh/source
+contracts. This is source-reviewed metadata, not live traffic or all-app impact.
+No new controller, PVC, permission, image, migration or cloud charge. Mounted
+catalog changes naturally roll the same portal image through Argo. [Scope/gates](docs/operations/native-service-topology-2026-10-20.md).
+Source merge/Argo/catalog/browser acceptance remain distinct. Phase 6 In progress;
+Phase 7 Not started; #339 remains draft. Actual release evidence follows.
+
+Native topology [#349](https://github.com/onemindos/omos/pull/349) **accepted**
+2026-10-21 UTC at `82c05d3c`: owning Argo Synced/Healthy, portal generation 77,
+2/2 on the same verified image; DB/Grafana specifications unchanged, retained
+Grafana storage/backup and NATS 3/3 intact. Both replicas return reviewed catalog
+relationships without selected-entity errors. Signed-in core graph shows six
+services, five existing PVC records and NYC3; reverse DB graph/location navigation
+verified. Existing native Grafana/Prometheus views and read-only denials retained.
+[Receipt and limits](docs/operations/native-service-topology-2026-10-20.md).
+This is documented dependency metadata, not live traffic/all-app coverage.
+**Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
+started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.

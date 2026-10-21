@@ -14,12 +14,14 @@ metadata:
   description: GitOps CD
   tags:
     - infrastructure
-    - deployment-verified
     - monitoring
+    - deployment-verified
   links:
     - url: https://argocd.tail717ba0.ts.net
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
+      title: "Archived registry: ArgoCD"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
       title: "Archived registry: ArgoCD"
   annotations:
@@ -47,7 +49,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:01:08Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/documented-address: https://argocd.tail717ba0.ts.net
     onemind.io/documented-tags: Monitoring
 spec:
@@ -73,8 +75,10 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e1b21dcc86988a49ba.md
       title: "Archived registry: Kubernetes Dashboard"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e1b21dcc86988a49ba.md
+      title: "Archived registry: Kubernetes Dashboard"
   annotations:
-    onemind.io/access-points: |-
+    onemind.io/access-points: >-
       [
         {
           "id": "cluster-web",
@@ -99,7 +103,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:19:40Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment kube/kubernetes-dashboard; Service kube/kubernetes-dashboard
     onemind.io/documented-address: https://k8s-dashboard.tail717ba0.ts.net
 spec:
@@ -127,6 +131,8 @@ metadata:
       title: "Archived registry: Headlamp"
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
       title: Operations runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899931d63301bfe25d.md
+      title: "Archived registry: Headlamp"
   annotations:
     onemind.io/access-points: |-
       [
@@ -153,7 +159,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 21:19:39Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment kube/headlamp; Service kube/headlamp
     onemind.io/documented-address: https://headlamp.tail717ba0.ts.net
 spec:
@@ -172,12 +178,14 @@ metadata:
   description: Mesh VPN
   tags:
     - infrastructure
-    - documented-unverified
     - networking
+    - documented-unverified
   links:
     - url: https://login.tailscale.com/admin/machines
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814781a8e3955ee46860.md
+      title: "Archived registry: Tailscale Mesh (15 proxies)"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814781a8e3955ee46860.md
       title: "Archived registry: Tailscale Mesh (15 proxies)"
   annotations:
@@ -190,7 +198,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:55Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://login.tailscale.com/admin/machines
     onemind.io/documented-tags: Networking
     onemind.io/tech-stack-status: Active
@@ -216,12 +223,14 @@ metadata:
   description: DNS & edge
   tags:
     - infrastructure
-    - documented-unverified
     - external
+    - documented-unverified
   links:
     - url: https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8188a304d6e8212ce8a0.md
+      title: "Archived registry: Cloudflare"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8188a304d6e8212ce8a0.md
       title: "Archived registry: Cloudflare"
   annotations:
@@ -234,7 +243,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:11:31Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://dash.cloudflare.com
     onemind.io/documented-tags: External
     onemind.io/tech-stack-status: Active
@@ -267,6 +275,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819b853bed35001c206b.md
       title: "Archived registry: DigitalOcean"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819b853bed35001c206b.md
+      title: "Archived registry: DigitalOcean"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -278,7 +288,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:27:44Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://digitalocean.com
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: DevOps / Infra
@@ -327,7 +336,8 @@ metadata:
     onemind.io/onemind-integration: "true"
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f4b144f3e8313ce477
     onemind.io/tech-stack-notes: OneMind's primary AI agent. Runs on NATS,
-      interfaces with Bedrock/Claude, manages state.db, handles voice + text tasks.
+      interfaces with Bedrock/Claude, manages state.db, handles voice + text
+      tasks.
     onemind.io/supported-platforms: Linux,K8s
 spec:
   type: website
@@ -347,12 +357,16 @@ metadata:
     - ai-agents
     - deployment-verified
   links:
-    - url: https://agent-web-ui-1.tail717ba0.ts.net/
+    - url: https://agent-console.tail717ba0.ts.net/
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
       title: "Archived registry: Agent Web UI"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
+      title: "Archived registry: Agent Web UI"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -362,7 +376,7 @@ metadata:
           "method": "Kubernetes",
           "location": "OneMind Cloud — NYC3",
           "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://agent-web-ui-1.tail717ba0.ts.net/",
+          "url": "https://agent-console.tail717ba0.ts.net/",
           "evidence": "Catalog snapshot",
           "observedAt": "2026-10-06"
         }
@@ -377,7 +391,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment nats/agent-web-ui; Service nats/agent-web-ui
     onemind.io/documented-address: https://agent-web-ui.tail717ba0.ts.net
 spec:
@@ -386,7 +400,7 @@ spec:
   owner: group:default/onemind-admins
   system: ai-agents
   dependsOn:
-    - component:default/k8s-nats-agent-web-ui-be5be217
+    - component:default/k8s-agent-fabric-agent-console-19ca739f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -395,12 +409,15 @@ metadata:
   title: OpenClaw
   description: Agent orchestration
   tags:
+    - launcher-review-required
     - ai-agents
   links:
     - url: https://openclaw.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -429,6 +446,8 @@ metadata:
       title: "Archived registry: NATS Dashboard"
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8123b817ccdf71662d03.md
+      title: "Archived registry: NATS Dashboard"
   annotations:
     onemind.io/access-points: |-
       [
@@ -456,7 +475,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment nats/nats-dashboard; Service nats/nats-dashboard
     onemind.io/documented-address: https://nats-dashboard.tail717ba0.ts.net
 spec:
@@ -484,10 +503,12 @@ metadata:
   tags:
     - communication
   links:
-    - url: https://element.onemindos.com
+    - url: https://element.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -509,10 +530,12 @@ metadata:
   tags:
     - communication
   links:
-    - url: https://matrix.onemindos.com
+    - url: https://matrix.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -540,6 +563,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md
       title: "Archived registry: heynats"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a9b338c9d2b2f65479.md
+      title: "Archived registry: heynats"
   annotations:
     onemind.io/access-points: |-
       [
@@ -565,7 +590,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:14:18Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment nats/heynats; Service nats/heynats
     onemind.io/repository-url: https://github.com/onemindos/heynats
     onemind.io/documented-address: https://github.com/onemindos/heynats
@@ -622,12 +647,15 @@ metadata:
   title: CloudTAK
   description: Cloud TAK — COP
   tags:
+    - launcher-review-required
     - tak-ecosystem
   links:
     - url: https://atoc.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/tech-stack-status: Active
@@ -652,6 +680,7 @@ metadata:
   title: TAK Server
   description: TAK 5.8 hardened
   tags:
+    - launcher-review-required
     - tak-ecosystem
   links:
     - url: https://tak.onemindos.dev:8446
@@ -660,6 +689,8 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: certificate-untrusted-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
 spec:
@@ -675,9 +706,10 @@ metadata:
   title: OneTAK
   description: OneMind TAK platform
   tags:
+    - launcher-review-required
     - tak-ecosystem
-    - documented-unverified
     - tak-server
+    - documented-unverified
   links:
     - url: https://onetak.onemindos.dev
       title: Open application
@@ -688,7 +720,13 @@ metadata:
       title: "Archived registry: OneTAK"
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815eb011df18773e15dc.md
+      title: "Archived registry: OneTAK"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
+      title: "Archived registry: OneTAK"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-purpose: OneMind fork of CloudTAK — AI-native, NATS-fabric TAK COP platform
@@ -698,7 +736,6 @@ metadata:
     onemind.io/documented-at: 2026-09-14 00:44:22Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://atoc.onemindos.dev
     onemind.io/documented-tags: TAK Server
 spec:
@@ -714,12 +751,15 @@ metadata:
   title: FedHub
   description: TAK federation hub
   tags:
+    - launcher-review-required
     - tak-ecosystem
   links:
     - url: https://fedhub.onemindos.dev
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -767,6 +807,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab80dc586e6c4cf42.md
       title: "Archived registry: TAK GOV"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab80dc586e6c4cf42.md
+      title: "Archived registry: TAK GOV"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -777,7 +819,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:46:24Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://tak.gov
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: TAK Ecosystem
@@ -786,8 +827,8 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e812196e3c2a81067057a
     onemind.io/tech-stack-url: https://tak.gov
     onemind.io/tech-stack-notes: Core SA platform. ATAK (Android), WinTAK (Windows),
-      WebTAK/CloudTAK (browser), iTAK (iOS). CoT protocol. TAK Server 5.8 hardened
-      in Downloads. SDK 5.7.0.10 at root.
+      WebTAK/CloudTAK (browser), iTAK (iOS). CoT protocol. TAK Server 5.8
+      hardened in Downloads. SDK 5.7.0.10 at root.
     onemind.io/supported-platforms: Android,Windows,Web
 spec:
   type: website
@@ -853,8 +894,8 @@ metadata:
   description: Dashboards & alerts
   tags:
     - intelligence
-    - deployment-verified
     - monitoring
+    - deployment-verified
   links:
     - url: https://grafana.tail717ba0.ts.net/login
       title: Open application
@@ -863,6 +904,8 @@ metadata:
       title: "Archived registry: Grafana"
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/monitoring/
       title: Operations runbook
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e39fd6f5e8cda2cb01.md
+      title: "Archived registry: Grafana"
   annotations:
     onemind.io/access-points: |-
       [
@@ -888,7 +931,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:01:11Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/documented-address: https://grafana.tail717ba0.ts.net
     onemind.io/documented-tags: Monitoring
     onemind.io/tech-stack-status: Active
@@ -923,6 +966,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md
       title: "Archived registry: NATS UI"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab4f1cb4d8a159823.md
+      title: "Archived registry: NATS UI"
   annotations:
     onemind.io/access-points: |-
       [
@@ -948,7 +993,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:33:16Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment nats/nats-ui; Service nats/nats-ui
     onemind.io/documented-address: https://nats-ui.tail717ba0.ts.net
 spec:
@@ -968,10 +1013,12 @@ metadata:
   tags:
     - intelligence
   links:
-    - url: https://agenttap-1.tail717ba0.ts.net
+    - url: https://agent-tap.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
+    onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -981,7 +1028,7 @@ spec:
   owner: group:default/onemind-admins
   system: intelligence
   dependsOn:
-    - component:default/k8s-nats-agenttap-3e09fc8c
+    - component:default/k8s-agent-fabric-agent-tap-0a491ad0
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -990,12 +1037,15 @@ metadata:
   title: ClickHouse
   description: 10-year event DB
   tags:
+    - launcher-review-required
     - intelligence
   links:
     - url: https://clickhouse.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/tech-stack-status: Active
@@ -1028,12 +1078,15 @@ metadata:
   title: MinIO
   description: Object storage
   tags:
+    - launcher-review-required
     - data-storage
   links:
     - url: https://minio.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
 spec:
@@ -1049,12 +1102,15 @@ metadata:
   title: PostGIS
   description: Spatial database
   tags:
+    - launcher-review-required
     - data-storage
   links:
     - url: https://pgadmin.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
 spec:
@@ -1070,12 +1126,15 @@ metadata:
   title: Longhorn
   description: Distributed block storage
   tags:
+    - launcher-review-required
     - data-storage
   links:
     - url: https://longhorn.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
 spec:
@@ -1123,12 +1182,15 @@ metadata:
   title: Prometheus
   description: Metrics scraper
   tags:
+    - launcher-review-required
     - observability
   links:
     - url: https://prometheus.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/tech-stack-status: Active
@@ -1153,17 +1215,22 @@ metadata:
   title: NATS Surveyor
   description: NATS metrics
   tags:
+    - launcher-review-required
     - observability
-    - deployment-verified
     - nats
     - monitoring
+    - deployment-verified
   links:
     - url: https://nats-surveyor-1.tail717ba0.ts.net
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
       title: "Archived registry: NATS Surveyor"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
+      title: "Archived registry: NATS Surveyor"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1188,7 +1255,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:14:19Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment nats/nats-surveyor; Service nats/nats-surveyor
     onemind.io/documented-address: https://github.com/nats-io/nats-surveyor
     onemind.io/documented-tags: NATS, Monitoring
@@ -1215,16 +1282,21 @@ metadata:
   title: TileServer GL
   description: Vector tiles
   tags:
+    - launcher-review-required
     - geospatial
-    - deployment-verified
     - geo
+    - deployment-verified
   links:
     - url: https://tileserver.onemindos.dev
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
       title: "Archived registry: TileServer GL"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
+      title: "Archived registry: TileServer GL"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1249,7 +1321,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:37Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/tileserver-gl; Service onetak/tileserver-gl
     onemind.io/documented-address: https://tileserver.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
@@ -1272,16 +1344,21 @@ metadata:
   title: Valhalla
   description: Routing engine
   tags:
+    - launcher-review-required
     - geospatial
-    - deployment-verified
     - geo
+    - deployment-verified
   links:
     - url: https://valhalla.onemindos.dev
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md
       title: "Archived registry: Valhalla"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md
+      title: "Archived registry: Valhalla"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1306,7 +1383,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:38Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/valhalla; Service onetak/valhalla
     onemind.io/documented-address: https://valhalla.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
@@ -1329,16 +1406,21 @@ metadata:
   title: Maputnik
   description: Map style editor
   tags:
+    - launcher-review-required
     - geospatial
-    - deployment-verified
     - geo
+    - deployment-verified
   links:
     - url: https://maputnik.onemindos.dev
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md
       title: "Archived registry: Maputnik"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md
+      title: "Archived registry: Maputnik"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1363,7 +1445,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:40Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/maputnik; Service onetak/maputnik
     onemind.io/documented-address: https://maputnik.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
@@ -1386,16 +1468,21 @@ metadata:
   title: WebODM
   description: Drone imagery
   tags:
+    - launcher-review-required
     - geospatial
-    - deployment-verified
     - geo
+    - deployment-verified
   links:
     - url: https://webodm.onemindos.dev
       title: Open application
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
       title: "Archived registry: WebODM"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
+      title: "Archived registry: WebODM"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
         {
@@ -1419,7 +1506,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:00:34Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-06
+    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/webodm; Service onetak/webodm
     onemind.io/documented-address: https://webodm.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
@@ -1714,6 +1801,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8165a3a2fb59b639a15b.md
       title: "Archived registry: 1Password"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8165a3a2fb59b639a15b.md
+      title: "Archived registry: 1Password"
   annotations:
     onemind.io/access-points: |-
       [
@@ -1740,7 +1829,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:47:22Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://1password.com
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: Security
@@ -1802,12 +1890,14 @@ metadata:
   description: Bookmarks and reading
   tags:
     - personal-tools
-    - documented-unverified
     - external
+    - documented-unverified
   links:
     - url: https://app.raindrop.io/my/0
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b69fcce49a37fc8a7c.md
+      title: "Archived registry: Raindrop.io"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b69fcce49a37fc8a7c.md
       title: "Archived registry: Raindrop.io"
   annotations:
@@ -1820,7 +1910,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:14:46Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://raindrop.io
     onemind.io/documented-tags: External
     onemind.io/tech-stack-status: Active
@@ -1854,6 +1943,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814ca638d7301b53411b.md
       title: "Archived registry: AT&T Prepaid"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814ca638d7301b53411b.md
+      title: "Archived registry: AT&T Prepaid"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -1864,7 +1955,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:46:22Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://att.com
 spec:
   type: website
@@ -1888,12 +1978,14 @@ metadata:
   description: OneMind repositories
   tags:
     - workspaces
-    - documented-unverified
     - external
+    - documented-unverified
   links:
     - url: https://github.com/onemindos
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a59a22e9df6ad509db.md
+      title: "Archived registry: GitHub"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a59a22e9df6ad509db.md
       title: "Archived registry: GitHub"
   annotations:
@@ -1906,7 +1998,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:11:32Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://github.com/Zeus-Delacruz
     onemind.io/documented-tags: External
     onemind.io/tech-stack-status: Active
@@ -1933,13 +2024,15 @@ metadata:
   description: App connections and integrations
   tags:
     - workspaces
-    - documented-unverified
     - external
     - ai-agent
+    - documented-unverified
   links:
     - url: https://dashboard.composio.dev/OneMind/~/connect
       title: Open application
       icon: dashboard
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817eb25cc0716ec0cacd.md
+      title: "Archived registry: Composio"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817eb25cc0716ec0cacd.md
       title: "Archived registry: Composio"
   annotations:
@@ -1952,7 +2045,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:11:30Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://dashboard.composio.dev/omos_saas/~/connect
     onemind.io/documented-tags: External, AI / Agent
 spec:
@@ -1976,6 +2068,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ae96ade7dffe2f1f3d.md
       title: "Archived registry: Miro"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ae96ade7dffe2f1f3d.md
+      title: "Archived registry: Miro"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -1986,7 +2080,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 08:46:35Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://miro.com
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: Productivity
@@ -1995,8 +2088,8 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e814aa7edcf0b7fe83dae
     onemind.io/tech-stack-url: https://miro.com
     onemind.io/tech-stack-notes: Collaborative online whiteboard. Used for system
-      architecture diagrams, planning sessions, and visual brainstorming across the
-      OneMind team.
+      architecture diagrams, planning sessions, and visual brainstorming across
+      the OneMind team.
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
 spec:
   type: website
@@ -2057,6 +2150,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81038e5cff998afacc9e.md
       title: "Archived registry: Mercury"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81038e5cff998afacc9e.md
+      title: "Archived registry: Mercury"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2067,7 +2162,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:08:24Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://mercury.com
 spec:
   type: website
@@ -2111,6 +2205,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fd8220d62858309f05.md
       title: "Archived registry: Experian"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fd8220d62858309f05.md
+      title: "Archived registry: Experian"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2121,7 +2217,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:08:27Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://experian.com
 spec:
   type: website
@@ -2144,6 +2239,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8181ad96c13f18a45db7.md
       title: "Archived registry: TransUnion"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8181ad96c13f18a45db7.md
+      title: "Archived registry: TransUnion"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2154,7 +2251,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:08:29Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://transunion.com
 spec:
   type: website
@@ -2177,6 +2273,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e5b4b0e7460dc5e132.md
       title: "Archived registry: Equifax"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e5b4b0e7460dc5e132.md
+      title: "Archived registry: Equifax"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2187,7 +2285,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:08:30Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://equifax.com
 spec:
   type: website
@@ -2210,6 +2307,8 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8162b34dea7818b74301.md
       title: "Archived registry: Innovis"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8162b34dea7818b74301.md
+      title: "Archived registry: Innovis"
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -2220,7 +2319,6 @@ metadata:
     onemind.io/documented-at: 2026-09-03 09:08:30Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/verified-at: 2026-10-06
     onemind.io/documented-address: https://innovis.com
 spec:
   type: website
@@ -2260,6 +2358,7 @@ spec:
   dependsOn:
     - component:default/k8s-onetak-tak-portal-034c1ce9
     - component:default/k8s-onetak-martin-c119168d
+    - component:default/k8s-matrix-synapse-c02538fc
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2277,6 +2376,8 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/catalog-role: compatibility-alias
+    onemind.io/canonical-entity-ref: component:default/argocd
 spec:
   type: website
   lifecycle: production
@@ -2284,6 +2385,7 @@ spec:
   system: external
   dependsOn:
     - component:default/k8s-argocd-argocd-server-4414022f
+    - component:default/argocd
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2298,6 +2400,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
+    onemind.io/canonical-entity-ref: component:default/kubernetes-dashboard
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -2307,6 +2410,7 @@ spec:
   owner: group:default/onemind-admins
   system: external
   dependsOn:
+    - component:default/kubernetes-dashboard
     - component:default/k8s-kube-kubernetes-dashboard-226fa5ac
 ---
 apiVersion: backstage.io/v1alpha1
@@ -2324,11 +2428,15 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/catalog-role: compatibility-alias
+    onemind.io/canonical-entity-ref: component:default/tailscale
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
   system: external
+  dependsOn:
+    - component:default/tailscale
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -2361,6 +2469,8 @@ metadata:
     backstage.io/adr-location: https://github.com/onemindos/omos/tree/main/docs/architecture/decisions
     github.com/project-slug: onemindos/omos
     backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/services/onemind-portal/runbooks
+    onemind.io/inventory-review: imported-link
+    onemind.io/hosting: external-provider-unverified
   tags:
     - runbooks
     - documentation
@@ -2369,20 +2479,23 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
-
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: onemind-observations
   title: OneMind Observational API
-  description: Source-verified read-only portal observations; provider setup and data freshness are explicit.
-  tags: [onemind, openapi, observational]
+  description: Source-verified read-only portal observations; provider setup and
+    data freshness are explicit.
+  tags:
+    - onemind
+    - openapi
+    - observational
 spec:
   type: openapi
   lifecycle: production
   owner: group:default/onemind-admins
-  definition: |
+  definition: >
     {
       "openapi": "3.0.3",
       "info": {
@@ -2899,6 +3012,7 @@ metadata:
     onemind.io/tech-stack-notes: MAVLink GCS for ArduPilot/PX4. MAVLink→CoT bridge
       for ATAK. Already installed at ~/QGroundControl.
     onemind.io/supported-platforms: macOS,Windows,Linux,Android,iOS
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://qgroundcontrol.com/
       title: Open application
@@ -2931,6 +3045,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-purpose: Streaming 3D reconstruction with a browser viewer
     onemind.io/source-repository: https://github.com/Robbyant/lingbot-map
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://github.com/Robbyant/lingbot-map
       title: Open application
@@ -2962,6 +3077,7 @@ metadata:
     onemind.io/documented-status: Planned
     onemind.io/hosting: vehicle-firmware
     onemind.io/source-repository: https://github.com/PX4/PX4-Autopilot
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://px4.io/
       title: Open application
@@ -2996,6 +3112,7 @@ metadata:
     onemind.io/documented-status: Planned
     onemind.io/hosting: vehicle-firmware
     onemind.io/source-repository: https://github.com/ArduPilot/ardupilot
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://ardupilot.org/
       title: Open application
@@ -3011,14 +3128,14 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: geospatial
-
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: platform-backup-recovery
   title: Platform Backup and Recovery
-  description: Encrypted logical backups, retained CSI snapshots and staged portable filesystem recovery.
+  description: Encrypted logical backups, retained CSI snapshots and staged
+    portable filesystem recovery.
   tags:
     - infrastructure
     - backup
@@ -3026,8 +3143,11 @@ metadata:
   annotations:
     argocd/app-name: platform-backups
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backups
-    onemind.io/verified-at: '2026-10-08'
+    onemind.io/verified-at: 2026-10-08
     onemind.io/verification: partial-restore-verified
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/relationship-source: ingress-service-selector
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-backups
       title: Logical backups and retained snapshots
@@ -3046,6 +3166,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+  dependsOn:
+    - component:default/k8s-argocd-argocd-server-4414022f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3063,6 +3185,7 @@ metadata:
     onemind.io/launcher-category: Open Source & Foundations
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.linuxfoundation.org/
       title: Open application
@@ -3089,6 +3212,7 @@ metadata:
     onemind.io/launcher-category: Open Source & Foundations
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.cncf.io/
       title: Open application
@@ -3112,6 +3236,7 @@ metadata:
     onemind.io/launcher-category: Open Source & Foundations
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://landscape.cncf.io/
       title: Open application
@@ -3136,6 +3261,7 @@ metadata:
     onemind.io/launcher-category: Open Source & Foundations
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://lfedge.org/
       title: Open application
@@ -3160,6 +3286,7 @@ metadata:
     onemind.io/launcher-category: Open Source & Foundations
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://openssf.org/
       title: Open application
@@ -3184,6 +3311,7 @@ metadata:
     onemind.io/launcher-category: Robotics & Autonomy
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.openrobotics.org/
       title: Open application
@@ -3202,6 +3330,7 @@ metadata:
   tags:
     - email
     - communication
+    - documented-unverified
   annotations:
     onemind.io/access-points: |-
       [
@@ -3230,6 +3359,15 @@ metadata:
     onemind.io/tech-stack-notes: Secure vault email for sensitive accounts only —
       Cloudflare, Apple, banking, infra. AI intentionally cannot access Proton.
     onemind.io/supported-platforms: Web,Android,iOS
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Encrypted private email
+    onemind.io/documented-host: 🌐 SaaS / Cloud
+    onemind.io/documented-status: ✅ Live
+    onemind.io/documented-category: 📡 Comms
+    onemind.io/documented-at: 2026-09-03 09:08:23Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://proton.me
+    onemind.io/verification: documented-unverified
   links:
     - url: https://mail.proton.me/
       title: Open application
@@ -3237,6 +3375,8 @@ metadata:
     - url: https://proton.me/mail
       title: Product website
       icon: docs
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
+      title: "Archived registry: Proton Mail"
 spec:
   type: website
   lifecycle: production
@@ -3256,6 +3396,7 @@ metadata:
     onemind.io/launcher-category: Robotics & Autonomy
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://autoware.org/
       title: Open application
@@ -3282,6 +3423,7 @@ metadata:
     onemind.io/launcher-category: Robotics & Autonomy
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://docs.ros.org/
       title: Open application
@@ -3308,6 +3450,7 @@ metadata:
     onemind.io/launcher-category: Robotics & Autonomy
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://zenoh.io/
       title: Open application
@@ -3334,6 +3477,7 @@ metadata:
     onemind.io/launcher-category: Digital Twins
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://eclipse.dev/ditto/
       title: Open application
@@ -3360,6 +3504,7 @@ metadata:
     onemind.io/launcher-category: Digital Twins
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.nvidia.com/en-us/omniverse/
       title: Open application
@@ -3377,7 +3522,8 @@ kind: Component
 metadata:
   name: vllm
   title: vLLM
-  description: "High-throughput local and self-hosted model serving, with Docker and Kubernetes deployment guides."
+  description: High-throughput local and self-hosted model serving, with Docker
+    and Kubernetes deployment guides.
   tags:
     - local-ai
     - planned
@@ -3387,6 +3533,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: Linux
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://docs.vllm.ai/en/stable/deployment/k8s/
       title: Open application
@@ -3407,7 +3554,8 @@ kind: Component
 metadata:
   name: lm-studio
   title: LM Studio
-  description: "Desktop local AI model runtime and chat application for macOS, Windows, and Linux."
+  description: Desktop local AI model runtime and chat application for macOS,
+    Windows, and Linux.
   tags:
     - local-ai
     - planned
@@ -3425,6 +3573,7 @@ metadata:
     onemind.io/tech-stack-url: https://lmstudio.ai
     onemind.io/tech-stack-notes: Local LLM runner with OpenAI-compatible API. Used
       for offline model testing and edge inference without cloud dependency.
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://lmstudio.ai/
       title: Open application
@@ -3445,7 +3594,8 @@ kind: Component
 metadata:
   name: omlx
   title: oMLX
-  description: "Apple Silicon MLX inference server with a native macOS menu bar app and local web dashboard; requires macOS 15 or newer."
+  description: Apple Silicon MLX inference server with a native macOS menu bar app
+    and local web dashboard; requires macOS 15 or newer.
   tags:
     - local-ai
     - planned
@@ -3455,6 +3605,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: macOS
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://omlx.ai/
       title: Open application
@@ -3472,7 +3623,8 @@ kind: Component
 metadata:
   name: jan
   title: Jan
-  description: "Open-source local AI desktop application and local API server; can also connect to external model providers."
+  description: Open-source local AI desktop application and local API server; can
+    also connect to external model providers.
   tags:
     - local-ai
     - planned
@@ -3482,6 +3634,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: macOS,Windows,Linux
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.jan.ai/
       title: Open application
@@ -3499,7 +3652,8 @@ kind: Component
 metadata:
   name: ollama
   title: Ollama
-  description: "Local model runtime and API for macOS, Linux, and Windows; optional cloud models run on provider infrastructure."
+  description: Local model runtime and API for macOS, Linux, and Windows; optional
+    cloud models run on provider infrastructure.
   tags:
     - local-ai
     - planned
@@ -3507,8 +3661,16 @@ metadata:
     onemind.io/launcher-url: https://ollama.com/
     onemind.io/launcher-category: Local AI
     onemind.io/hosting: planned
-    onemind.io/documented-status: Planned
+    onemind.io/documented-status: ✅ Live
     onemind.io/supported-platforms: macOS,Linux,Windows
+    onemind.io/inventory-review: imported-link
+    onemind.io/documented-purpose: Local LLM runtime — Mac edge inference
+    onemind.io/documented-host: 💻 Mac
+    onemind.io/documented-category: 🧠 Agents
+    onemind.io/documented-at: 2026-09-03 08:46:29Z
+    onemind.io/registry-review: source-reviewed-runtime-unverified
+    onemind.io/documented-address: https://ollama.com
+    onemind.io/verification: planned
   links:
     - url: https://ollama.com/
       title: Open application
@@ -3522,6 +3684,8 @@ metadata:
     - url: https://github.com/ollama/ollama
       title: GitHub repository
       icon: docs
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md
+      title: "Archived registry: Ollama"
 spec:
   type: model-serving
   lifecycle: experimental
@@ -3532,7 +3696,8 @@ kind: Component
 metadata:
   name: digitalocean-inference
   title: DigitalOcean Inference
-  description: "Hosted inference model catalog and API; account access and OneMind integration are unverified."
+  description: Hosted inference model catalog and API; account access and OneMind
+    integration are unverified.
   tags:
     - ai-inference
     - evaluation-candidate
@@ -3542,6 +3707,7 @@ metadata:
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://docs.digitalocean.com/products/inference/details/models/
       title: Open application
@@ -3556,7 +3722,8 @@ kind: Component
 metadata:
   name: nvidia-build
   title: NVIDIA Build / NIM
-  description: "NVIDIA model discovery and hosted API trials, with NIM deployment options; no OneMind endpoint is configured."
+  description: NVIDIA model discovery and hosted API trials, with NIM deployment
+    options; no OneMind endpoint is configured.
   tags:
     - ai-inference
     - evaluation-candidate
@@ -3566,6 +3733,7 @@ metadata:
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://build.nvidia.com/explore
       title: Open application
@@ -3580,7 +3748,8 @@ kind: Component
 metadata:
   name: together-ai
   title: Together AI
-  description: "Cloud inference provider; evaluate hosted NVIDIA Nemotron 3 Super for reasoning and agent workloads."
+  description: Cloud inference provider; evaluate hosted NVIDIA Nemotron 3 Super
+    for reasoning and agent workloads.
   tags:
     - ai-inference
     - evaluation-candidate
@@ -3590,6 +3759,7 @@ metadata:
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.together.ai/models/nvidia-nemotron-3-super
       title: Open application
@@ -3604,7 +3774,8 @@ kind: Component
 metadata:
   name: fireworks-ai
   title: Fireworks AI
-  description: "Cloud inference provider with NVIDIA Nemotron models and NIM integration; account access is unverified."
+  description: Cloud inference provider with NVIDIA Nemotron models and NIM
+    integration; account access is unverified.
   tags:
     - ai-inference
     - evaluation-candidate
@@ -3614,6 +3785,7 @@ metadata:
     onemind.io/hosting: external-provider-unverified
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://fireworks.ai/partners/nvidia
       title: Open application
@@ -3628,7 +3800,8 @@ kind: Component
 metadata:
   name: qwen-models
   title: Alibaba / Qwen
-  description: "Qwen3.8-27B is the first evaluation candidate for local coding, reasoning, and agent work; this release uses Apache 2.0."
+  description: Qwen3.8-27B is the first evaluation candidate for local coding,
+    reasoning, and agent work; this release uses Apache 2.0.
   tags:
     - open-models
     - evaluation-candidate
@@ -3638,9 +3811,10 @@ metadata:
     onemind.io/launcher-category: Open Model Families
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
-    onemind.io/model-candidates: "Qwen3.8-27B"
-    onemind.io/model-license: "Apache-2.0"
-    onemind.io/evaluation-role: "Local coding, reasoning, and agent work"
+    onemind.io/model-candidates: Qwen3.8-27B
+    onemind.io/model-license: Apache-2.0
+    onemind.io/evaluation-role: Local coding, reasoning, and agent work
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://huggingface.co/Qwen/Qwen3.8-27B
       title: Open application
@@ -3655,7 +3829,8 @@ kind: Component
 metadata:
   name: gemma-models
   title: Google / Gemma
-  description: "Evaluate Gemma 4 12B Unified and smaller E2B/E4B variants for everyday assistance and edge devices; multimodal family under Apache 2.0."
+  description: Evaluate Gemma 4 12B Unified and smaller E2B/E4B variants for
+    everyday assistance and edge devices; multimodal family under Apache 2.0.
   tags:
     - open-models
     - evaluation-candidate
@@ -3665,9 +3840,10 @@ metadata:
     onemind.io/launcher-category: Open Model Families
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
-    onemind.io/model-candidates: "Gemma 4 12B Unified; Gemma 4 E2B; Gemma 4 E4B"
-    onemind.io/model-license: "Apache-2.0"
-    onemind.io/evaluation-role: "Everyday assistance and smaller edge devices"
+    onemind.io/model-candidates: Gemma 4 12B Unified; Gemma 4 E2B; Gemma 4 E4B
+    onemind.io/model-license: Apache-2.0
+    onemind.io/evaluation-role: Everyday assistance and smaller edge devices
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://ai.google.dev/gemma/docs/core/model_card_4
       title: Open application
@@ -3682,7 +3858,8 @@ kind: Component
 metadata:
   name: ministral-models
   title: Mistral / Ministral
-  description: "Evaluate Ministral 3 3B, 8B, and 14B for local assistants, extraction, and bounded workflows; model cards document vision and tool use."
+  description: Evaluate Ministral 3 3B, 8B, and 14B for local assistants,
+    extraction, and bounded workflows; model cards document vision and tool use.
   tags:
     - open-models
     - evaluation-candidate
@@ -3692,9 +3869,10 @@ metadata:
     onemind.io/launcher-category: Open Model Families
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
-    onemind.io/model-candidates: "Ministral 3 3B; Ministral 3 8B; Ministral 3 14B"
-    onemind.io/model-license: "Apache-2.0 (linked 14B Instruct release)"
-    onemind.io/evaluation-role: "Local assistants, extraction, and bounded workflows"
+    onemind.io/model-candidates: Ministral 3 3B; Ministral 3 8B; Ministral 3 14B
+    onemind.io/model-license: Apache-2.0 (linked 14B Instruct release)
+    onemind.io/evaluation-role: Local assistants, extraction, and bounded workflows
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
       title: Open application
@@ -3709,7 +3887,8 @@ kind: Component
 metadata:
   name: nemotron-models
   title: NVIDIA / Nemotron
-  description: "Evaluate Nemotron 3 Super 120B A12B for reasoning, tool use, and multi-agent work via hosted inference or suitable self-hosted hardware."
+  description: Evaluate Nemotron 3 Super 120B A12B for reasoning, tool use, and
+    multi-agent work via hosted inference or suitable self-hosted hardware.
   tags:
     - open-models
     - evaluation-candidate
@@ -3719,9 +3898,10 @@ metadata:
     onemind.io/launcher-category: Open Model Families
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
-    onemind.io/model-candidates: "Nemotron 3 Super 120B A12B"
-    onemind.io/model-license: "NVIDIA Nemotron Open Model License"
-    onemind.io/evaluation-role: "Reasoning, tool use, and multi-agent workloads"
+    onemind.io/model-candidates: Nemotron 3 Super 120B A12B
+    onemind.io/model-license: NVIDIA Nemotron Open Model License
+    onemind.io/evaluation-role: Reasoning, tool use, and multi-agent workloads
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b/modelcard
       title: Open application
@@ -3736,14 +3916,14 @@ spec:
   type: model-family
   lifecycle: experimental
   owner: group:default/onemind-admins
-
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: deskflow
   title: Deskflow
-  description: Local keyboard and mouse sharing between computers; official project and downloads.
+  description: Local keyboard and mouse sharing between computers; official
+    project and downloads.
   tags:
     - personal-tools
     - desktop-app
@@ -3753,6 +3933,7 @@ metadata:
     onemind.io/hosting: native-application
     onemind.io/supported-platforms: macOS,Windows,Linux
     onemind.io/verification: installation-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://github.com/deskflow/deskflow
       title: Open application
@@ -3762,7 +3943,6 @@ spec:
   lifecycle: experimental
   owner: group:default/onemind-admins
   system: personal-tools
-
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -3777,12 +3957,13 @@ kind: Component
 metadata:
   name: facebook-zeus
   title: Facebook — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.facebook.com/zeuslegacydelacruz
       title: Open application
@@ -3798,12 +3979,13 @@ kind: Component
 metadata:
   name: facebook-legacy
   title: Facebook — Legacy Platform
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.facebook.com/LegacyPlatformOfficial
       title: Open application
@@ -3819,12 +4001,13 @@ kind: Component
 metadata:
   name: x-zeus
   title: X — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://x.com/zeusDelacruz_
       title: Open application
@@ -3840,12 +4023,13 @@ kind: Component
 metadata:
   name: linkedin-zeus
   title: LinkedIn — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.linkedin.com/in/zeuslegacydelacruz/
       title: Open application
@@ -3861,12 +4045,13 @@ kind: Component
 metadata:
   name: tiktok-zeus
   title: TikTok — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.tiktok.com/@zeusdelacruz_
       title: Open application
@@ -3882,12 +4067,13 @@ kind: Component
 metadata:
   name: instagram-zeus
   title: Instagram — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.instagram.com/zeusdelacruz_/
       title: Open application
@@ -3903,12 +4089,13 @@ kind: Component
 metadata:
   name: twitch-zeus
   title: Twitch — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.twitch.tv/zeusdelacruz_
       title: Open application
@@ -3924,12 +4111,13 @@ kind: Component
 metadata:
   name: reddit-zeus
   title: Reddit — callsign_zero0
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.reddit.com/user/callsign_zero0/
       title: Open application
@@ -3945,12 +4133,13 @@ kind: Component
 metadata:
   name: pinterest-zeus
   title: Pinterest — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.pinterest.com/ZeusDelacruz_/
       title: Open application
@@ -3966,12 +4155,13 @@ kind: Component
 metadata:
   name: threads-zeus
   title: Threads — Zeus
-  description: "Social media profile provided by Zeus."
+  description: Social media profile provided by Zeus.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.threads.com/@zeusdelacruz_
       title: Open application
@@ -3993,6 +4183,7 @@ metadata:
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.youtube.com/
       title: Open application
@@ -4008,12 +4199,14 @@ kind: Component
 metadata:
   name: linkedin-company-admin
   title: LinkedIn — Company Admin
-  description: LinkedIn company administration dashboard; requires authorized LinkedIn account.
+  description: LinkedIn company administration dashboard; requires authorized
+    LinkedIn account.
   tags:
     - social-media
   annotations:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
+    onemind.io/inventory-review: imported-link
   links:
     - url: https://www.linkedin.com/company/74305203/admin/dashboard/
       title: Open application
@@ -4055,6 +4248,7 @@ metadata:
     onemind.io/tech-stack-category: Hardware
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e81128cbafd7d6a3e4957
     onemind.io/tech-stack-url: https://bambulab.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4091,6 +4285,7 @@ metadata:
     onemind.io/tech-stack-category: Hardware
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fa8da9ddcd368bcacd
     onemind.io/tech-stack-url: https://bambulab.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: software-platform
   lifecycle: production
@@ -4128,6 +4323,7 @@ metadata:
     onemind.io/tech-stack-category: UAS / Drone
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e816292c5d736b48fe71e
     onemind.io/tech-stack-url: https://foxglove.dev
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4164,6 +4360,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8107a8bfedbdaca522e6
     onemind.io/tech-stack-url: https://obsproject.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4200,6 +4397,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fbb074c80989712ef4
     onemind.io/tech-stack-url: https://blender.org
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4236,6 +4434,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8155bd8cec47b974eb09
     onemind.io/tech-stack-url: https://madmapper.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4272,6 +4471,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b8af60f682a17316c0
     onemind.io/tech-stack-url: https://derivative.ca
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4307,6 +4507,7 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81ea87d7efbe9d4510be
     onemind.io/tech-stack-url: https://termius.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4342,6 +4543,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813ebf6df9a7bcd81453
     onemind.io/tech-stack-url: https://brave.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4378,6 +4580,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81e5ab51d19463c34afc
     onemind.io/tech-stack-url: https://www.google.com/chrome
+    onemind.io/inventory-review: imported-link
 spec:
   type: desktop-application
   lifecycle: production
@@ -4413,6 +4616,7 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813e935dcb0d1038486d
     onemind.io/tech-stack-url: https://cloud.google.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
@@ -4450,6 +4654,7 @@ metadata:
     onemind.io/tech-stack-category: Business
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81c08d9edda9345684de
     onemind.io/tech-stack-url: https://riverside.fm
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: experimental
@@ -4486,6 +4691,7 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f58995f0e7bc6d05ea
     onemind.io/tech-stack-url: https://notionbackups.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: experimental
@@ -4521,6 +4727,7 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81db8259e26601d9f680
     onemind.io/tech-stack-url: https://probackup.io
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: experimental
@@ -4557,6 +4764,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81a28e06df070cab8725
     onemind.io/tech-stack-url: https://strava.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
@@ -4592,6 +4800,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e818f840bd88909d0f6a1
     onemind.io/tech-stack-url: https://music.apple.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
@@ -4627,6 +4836,7 @@ metadata:
     onemind.io/tech-stack-category: AI / ML
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8106bd1dd6bce183659a
     onemind.io/tech-stack-url: https://langfuse.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: service
   lifecycle: production
@@ -4662,6 +4872,7 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8151bafaeb0323ca7438
     onemind.io/tech-stack-url: https://github.com/louislam/uptime-kuma
+    onemind.io/inventory-review: imported-link
 spec:
   type: service
   lifecycle: production
@@ -4692,6 +4903,7 @@ metadata:
     onemind.io/tech-stack-status: Active
     onemind.io/tech-stack-category: Messaging
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8130b6c3eb9c22a142c1
+    onemind.io/inventory-review: imported-link
 spec:
   type: service
   lifecycle: production
@@ -4723,6 +4935,7 @@ metadata:
     onemind.io/tech-stack-status: Evaluating
     onemind.io/tech-stack-category: AI / ML
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8195bea2de947b3bffed
+    onemind.io/inventory-review: imported-link
 spec:
   type: service
   lifecycle: experimental
@@ -4762,6 +4975,7 @@ metadata:
     onemind.io/tech-stack-category: AI / ML
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e819f8760da42f3dadd13
     onemind.io/tech-stack-url: https://github.com/RyanCodrai/turbovec
+    onemind.io/inventory-review: imported-link
 spec:
   type: software-platform
   lifecycle: experimental
@@ -4799,6 +5013,7 @@ metadata:
     onemind.io/tech-stack-category: Security
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8118a652c84455fb2a9b
     onemind.io/tech-stack-url: https://www.samsungknox.com
+    onemind.io/inventory-review: imported-link
 spec:
   type: software-platform
   lifecycle: production
@@ -4835,6 +5050,7 @@ metadata:
     onemind.io/tech-stack-category: Hardware
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e810880b0e5134dff2558
     onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/one-ui
+    onemind.io/inventory-review: imported-link
 spec:
   type: software-platform
   lifecycle: production
@@ -4871,6 +5087,7 @@ metadata:
     onemind.io/tech-stack-category: Hardware
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817ea374f0efe714c835
     onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/dex
+    onemind.io/inventory-review: imported-link
 spec:
   type: software-platform
   lifecycle: production
@@ -4906,6 +5123,7 @@ metadata:
     onemind.io/tech-stack-category: Productivity
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e816fa7d6ca5062cdfbf5
     onemind.io/tech-stack-url: https://notion.so
+    onemind.io/inventory-review: imported-link
 spec:
   type: website
   lifecycle: production
@@ -4920,6 +5138,7 @@ metadata:
   description: Open-source home automation platform. Manages smart devices,
     sensors, and automations. Runs on local K8s or dedicated node.
   tags:
+    - launcher-review-required
     - devops-infra
     - tech-stack
     - edge-device
@@ -4930,7 +5149,11 @@ metadata:
       icon: dashboard
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
       title: "Archived registry: Home Assistant"
+    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
+      title: "Archived registry: Home Assistant"
   annotations:
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
+    onemind.io/launcher-review: timeout-from-operator-mac
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/documented-status: ✅ Live
     onemind.io/documented-category: 🤖 IoT / Automation
@@ -4949,6 +5172,7 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817bad15ec3a6490dc6c
     onemind.io/tech-stack-url: https://home-assistant.io
+    onemind.io/inventory-review: imported-link
 spec:
   type: service
   lifecycle: production
@@ -4984,8 +5208,62 @@ metadata:
     onemind.io/tech-stack-category: DevOps / Infra
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b88b31c856790cfe10
     onemind.io/tech-stack-url: https://grafana.com/oss/loki
+    onemind.io/inventory-review: imported-link
 spec:
   type: service
   lifecycle: production
   owner: group:default/onemind-admins
   system: observability
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: onetak-stac-readonly
+  title: OneTAK STAC read-only API
+  description: Reviewed collection/search surface for the existing STAC pilot. Documentation is not proof
+    of live query success.
+  annotations:
+    backstage.io/source-location: url:https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml
+    onemind.io/contract-scope: read-only subset; no catalog writes or full-STAC compliance claim
+  links:
+    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/
+      title: STAC diagnosis and recovery
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: onetak
+  definition: |
+    openapi: 3.0.3
+    info:
+      title: OneTAK STAC read-only subset
+      version: 1.0.0
+      description: Reviewed interface subset, not generated or validated full upstream
+        OpenAPI. Runtime errors and data freshness are observed separately.
+    servers:
+    - url: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http/catalog
+    paths:
+      /:
+        get:
+          summary: Landing page
+          responses:
+            '200':
+              description: STAC response
+            '500':
+              description: Backing API error; no data freshness conclusion
+      /collections:
+        get:
+          summary: Collection listing
+          responses:
+            '200':
+              description: STAC response
+            '500':
+              description: Backing API error; no data freshness conclusion
+      /search:
+        get:
+          summary: Read-only bounded item search
+          responses:
+            '200':
+              description: STAC response
+            '500':
+              description: Backing API error; no data freshness conclusion

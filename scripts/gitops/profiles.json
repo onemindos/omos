@@ -1,0 +1,21 @@
+{
+  "portal": {
+    "application": "platform-backstage",
+    "argoNamespace": "argocd",
+    "context": "do-nyc3-omos-cloud",
+    "namespace": "backstage",
+    "deployment": "backstage",
+    "container": "backstage",
+    "podSelector": "app=backstage",
+    "replicas": 2,
+    "gitopsPath": "platform/backstage",
+    "applicationFile": "platform/argocd/platform-backstage.yaml",
+    "manifest": "platform/backstage/deployment.yaml",
+    "sourcePath": "services/onemind-portal",
+    "buildWorkflow": ".github/workflows/build-onemind-portal.yml",
+    "imageRepository": "ghcr.io/onemindos/onemind-portal",
+    "repository": "https://github.com/onemindos/omos",
+    "platform": "linux/amd64",
+    "protected": true
+  }
+}

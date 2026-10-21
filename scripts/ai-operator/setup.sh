@@ -6,9 +6,9 @@
 #    (platform/kube/ai-operator.yaml) and checks it cannot read Secrets or write.
 # 2. Writes ~/.config/onemind/openchoreo-mcp.cred (mode 600) from the Secret
 #    auth/ai-operator-openchoreo and checks the read-only OpenChoreo account works.
-# 3. Registers three MCP servers for Claude Code (user scope) and Codex (~/.codex/config.toml):
+# 3. Registers four MCP servers for Claude Code (user scope) and Codex (~/.codex/config.toml):
 #    onemind-kubernetes (kubernetes-mcp-server --read-only), onemind-backstage and
-#    onemind-openchoreo. Claude Code mints an OpenChoreo token per session through
+#    onemind-openchoreo and onemind-openchoreo-obs. Claude Code mints an OpenChoreo token per session through
 #    scripts/ai-operator/openchoreo-token.sh; Codex reads OPENCHOREO_MCP_TOKEN.
 #
 # Re-run it to refresh tokens. Credentials stay on this machine; nothing is printed.
@@ -22,6 +22,7 @@ K8S_MCP_VERSION="0.0.67"
 CODEX_CONFIG="${CODEX_CONFIG:-$HOME/.codex/config.toml}"
 OPENCHOREO_CRED_FILE="${OPENCHOREO_CRED_FILE:-$HOME/.config/onemind/openchoreo-mcp.cred}"
 OPENCHOREO_MCP_URL="http://onemind-openchoreo-api.tail717ba0.ts.net/mcp"
+OBSERVER_MCP_URL="https://onemind-observer.tail717ba0.ts.net/mcp"
 TOKEN_HELPER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/openchoreo-token.sh"
 
 log() { printf '==> %s\n' "$*"; }
@@ -113,14 +114,17 @@ register_claude() {
   claude mcp remove --scope user onemind-openchoreo >/dev/null 2>&1 || true
   claude mcp add-json --scope user onemind-openchoreo \
     "$(python3 -c 'import json,sys; print(json.dumps({"type":"http","url":sys.argv[1],"headersHelper":sys.argv[2]}))' "$OPENCHOREO_MCP_URL" "$TOKEN_HELPER")" >/dev/null
-  log "registered onemind-kubernetes, onemind-backstage and onemind-openchoreo in Claude Code (user scope)"
+  claude mcp remove --scope user onemind-openchoreo-obs >/dev/null 2>&1 || true
+  claude mcp add-json --scope user onemind-openchoreo-obs \
+    "$(python3 -c 'import json,sys; print(json.dumps({"type":"http","url":sys.argv[1],"headersHelper":sys.argv[2]}))' "$OBSERVER_MCP_URL" "$TOKEN_HELPER")" >/dev/null
+  log "registered Kubernetes, portal, OpenChoreo and Observer MCP servers in Claude Code (user scope)"
 }
 
 register_codex() {
   [[ -f "$CODEX_CONFIG" ]] || { log "no $CODEX_CONFIG, skipping Codex"; return; }
-  python3 - "$CODEX_CONFIG" "$KUBECONFIG_OUT" "$BACKSTAGE_TOKEN_FILE" "$BACKSTAGE_MCP_URL" "$K8S_MCP_VERSION" "$OPENCHOREO_MCP_URL" <<'PY'
+  python3 - "$CODEX_CONFIG" "$KUBECONFIG_OUT" "$BACKSTAGE_TOKEN_FILE" "$BACKSTAGE_MCP_URL" "$K8S_MCP_VERSION" "$OPENCHOREO_MCP_URL" "$OBSERVER_MCP_URL" <<'PY'
 import re, sys, pathlib
-path, kubeconfig, token_file, url, version, oc_url = sys.argv[1:]
+path, kubeconfig, token_file, url, version, oc_url, obs_url = sys.argv[1:]
 token = pathlib.Path(token_file).read_text().strip()
 cfg = pathlib.Path(path)
 text = cfg.read_text()
@@ -142,6 +146,11 @@ blocks = {
         f'url = "{oc_url}"\n'
         'bearer_token_env_var = "OPENCHOREO_MCP_TOKEN"\n'
     ),
+    "onemind-openchoreo-obs": (
+        '[mcp_servers.onemind-openchoreo-obs]\n'
+        f'url = "{obs_url}"\n'
+        'bearer_token_env_var = "OPENCHOREO_MCP_TOKEN"\n'
+    ),
 }
 for name, block in blocks.items():
     pattern = re.compile(r'^\[mcp_servers\.' + re.escape(name) + r'\]\n(?:(?!^\[).*\n?)*', re.M)
@@ -149,7 +158,7 @@ for name, block in blocks.items():
 cfg.write_text(text)
 PY
   chmod 600 "$CODEX_CONFIG"
-  log "registered onemind-kubernetes, onemind-backstage and onemind-openchoreo in $CODEX_CONFIG"
+  log "registered Kubernetes, portal, OpenChoreo and Observer MCP servers in $CODEX_CONFIG"
   log "Codex: export OPENCHOREO_MCP_TOKEN=\"\$($TOKEN_HELPER --raw)\" before starting it (tokens last one hour)"
 }
 
@@ -158,6 +167,7 @@ build_kubeconfig
 verify_kubeconfig
 write_openchoreo_credential
 verify_openchoreo
+OPENCHOREO_MCP_CRED="$OPENCHOREO_CRED_FILE" python3 "$(dirname "$TOKEN_HELPER")/verify-observer.py" --url "$OBSERVER_MCP_URL"
 register_claude
 register_codex
 log "done. Start a new Claude Code or Codex session to load the servers."

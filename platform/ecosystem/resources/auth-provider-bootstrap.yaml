@@ -37,8 +37,7 @@ spec:
                   owner = next(u["pk"] for u in users if u["username"] == "akadmin")
                   callbacks = {
                       "openchoreo": ["https://onemind-preview.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
-                                     "https://homepage.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
-                                     "https://onemind-console.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame"],
+                                     "https://homepage.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame"],
                       "workflows": ["https://onemind-workflows.tail717ba0.ts.net/oauth2/callback"],
                       "langfuse": ["https://onemind-langfuse.tail717ba0.ts.net/api/auth/callback/authentik"],
                       "registry": ["https://onemind-registry.tail717ba0.ts.net/c/oidc/callback"],
