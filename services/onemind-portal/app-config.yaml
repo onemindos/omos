@@ -251,6 +251,12 @@ openchoreo:
       enabled: false
 
 onemind:
+  # Sidebar and home sections for work that has not shipped yet. Flip each to
+  # true in the PR that builds its target (see docs/roadmap/flagship).
+  features:
+    pillars: false      # F2: SO/LE/HP/GE Domain pages
+    digitalocean: false # F6: /digitalocean
+    retireApp: false    # F8: retire-app template
   openchoreo:
     # Only operator-approved endpoints may receive the human's IDP token directly.
     directApiAllowlist:
