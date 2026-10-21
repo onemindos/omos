@@ -37,6 +37,31 @@ disclaimers on every card; put one info tooltip per card instead.
   `catalogCompositionModules.ts`. Existing tests: `ComponentOverview.test.tsx`,
   `componentOverviewModule.test.ts`, `catalogCompositionModules.test.ts`.
 
+## Coverage contract: every service shows everything
+
+Zeus's requirement: **every service** shows its Argo app, Grafana dashboard,
+alerts, Kubernetes resources, logs, cost and runbook. Not 6 of 69.
+
+| Capability | Plugin | Annotation(s) each Kubernetes app gets | Source of the value |
+|---|---|---|---|
+| Argo CD status/history | Argo CD (installed) | `argocd/app-name` | F2 `workload-map.yaml` (all 69 apps) |
+| Kubernetes resources/pods | Kubernetes (installed) | `backstage.io/kubernetes-id` or `backstage.io/kubernetes-label-selector` + `backstage.io/kubernetes-namespace` | F2/F11 |
+| Grafana dashboard | Grafana (installed) | `grafana/dashboard-selector` (tag based) | **One generic "OneMind workload" dashboard** with `namespace`/`workload` variables, provisioned through GitOps in the existing Grafana folder; every app links it with its own variables. Apps with a bespoke dashboard tag it `app:<name>` instead |
+| Alerts | Grafana / Roadie Prometheus (installed) | `grafana/alert-label-selector`, `prometheus.io/alert` | namespace + app labels |
+| Logs | KwirthLog/Kubelog, or a Loki link | plugin's annotation, or a generated Explore URL | namespace + selector |
+| Cost | OpenCost (F9) | namespace/label selector | namespace |
+| Docs/runbook | TechDocs (installed) | `backstage.io/techdocs-ref`, `onemind.io/recovery-runbook` | a default runbook template per app |
+| Source/CI | GitHub (installed, connect button) | `github.com/project-slug` | repo map |
+
+Rules:
+- Annotations are **generated** from the F2 mapping by the curate scripts, not
+  hand-typed per app, so a new app gets full coverage automatically.
+- A coverage test (extend `audit-catalog.cjs`, reusing #355's report) **fails the
+  build** when a Kubernetes app lacks any required annotation, unless it is
+  listed in a reviewed exceptions file with a reason.
+- Non-Kubernetes apps (F7) get the subset that applies: health check,
+  Grafana/Gatus dashboard, runbook and cost.
+
 ## Plugin first
 
 Fill tabs with existing plugins wherever possible:
@@ -74,6 +99,7 @@ status hook), and their tests.
 
 ## Acceptance
 
+- [ ] Coverage report: 69/69 Argo-managed apps have Argo, Kubernetes, Grafana dashboard, alerts, logs and runbook links, or a reviewed exception. Spot-check 5 apps signed in.
 - [ ] The same tab set appears on a K8s app (backstage), a SaaS app (for example
       Zoho), and a DO resource (after F6). Tabs without data are hidden.
 - [ ] Opening any app page triggers no OAuth pop-up.
