@@ -1,0 +1,33 @@
+{
+  "name": "@internal/plugin-onemind-auth-backend",
+  "version": "0.1.0",
+  "main": "dist/index.cjs.js",
+  "types": "src/index.ts",
+  "private": true,
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "auth",
+    "moduleId": "onemind-oidc"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "lint": "backstage-cli package lint",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "test": "backstage-cli package test"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "1.10.1",
+    "@backstage/catalog-model": "1.10.1",
+    "@backstage/plugin-auth-backend-module-oidc-provider": "0.4.21",
+    "@backstage/plugin-auth-node": "0.7.6"
+  },
+  "devDependencies": {
+    "@backstage/cli": "0.36.6"
+  },
+  "files": [
+    "dist"
+  ]
+}

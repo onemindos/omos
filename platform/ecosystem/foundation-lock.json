@@ -20,16 +20,6 @@
     "sha256": "9fa3ca7ee9151b7d9bd415565a5a5d67ae3265ff621a6b6e128baf21920d57df"
   },
   {
-    "name": "rollouts",
-    "repo": "https://argoproj.github.io/argo-helm",
-    "chart": "argo-rollouts",
-    "version": "2.43.6",
-    "appVersion": "v1.10.0",
-    "url": "https://github.com/argoproj/argo-helm/releases/download/argo-rollouts-2.43.6/argo-rollouts-2.43.6.tgz",
-    "namespace": "argo-rollouts",
-    "sha256": "5494db63b2727a0d771cb58e4e6431355bf00a5cb04857404519c8f5eb0ce020"
-  },
-  {
     "name": "keda",
     "repo": "https://kedacore.github.io/charts",
     "chart": "keda",

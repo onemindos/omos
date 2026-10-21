@@ -21,8 +21,8 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-takserver.yml"
-      - "tak-server/docker/**"
-      - "tak-server/plugin/**"
+      - "services/takserver/docker/**"
+      - "services/takserver/plugin/**"
   workflow_dispatch:
 
 jobs:
@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "::group::Build takserver-base"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver \
+            -f services/takserver/docker/Dockerfile.takserver \
             --target base \
             -t ghcr.io/onemindos/takserver-base:5.8-onemind \
             "$DISTRO"
@@ -72,7 +72,7 @@ jobs:
 
           echo "::group::Build takserver-config"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver \
+            -f services/takserver/docker/Dockerfile.takserver \
             --target config \
             -t ghcr.io/onemindos/takserver-config:5.8-onemind \
             "$DISTRO"
@@ -80,7 +80,7 @@ jobs:
 
           echo "::group::Build takserver-api"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver \
+            -f services/takserver/docker/Dockerfile.takserver \
             --target api \
             -t ghcr.io/onemindos/takserver-api:5.8-onemind \
             "$DISTRO"
@@ -88,7 +88,7 @@ jobs:
 
           echo "::group::Build takserver-messaging"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver \
+            -f services/takserver/docker/Dockerfile.takserver \
             --target messaging \
             -t ghcr.io/onemindos/takserver-messaging:5.8-onemind \
             "$DISTRO"
@@ -96,7 +96,7 @@ jobs:
 
           echo "::group::Build takserver-plugins (upstream)"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver \
+            -f services/takserver/docker/Dockerfile.takserver \
             --target plugins \
             -t ghcr.io/onemindos/takserver-plugins-upstream:5.8-onemind \
             "$DISTRO"
@@ -104,26 +104,26 @@ jobs:
 
           echo "::group::Build takserver-database-setup"
           docker build \
-            -f tak-server/docker/Dockerfile.database-setup \
+            -f services/takserver/docker/Dockerfile.database-setup \
             -t ghcr.io/onemindos/takserver-database-setup:5.8-onemind \
             "$DISTRO"
           echo "::endgroup::"
 
           echo "::group::Build takserver-plugins (OneMind)"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver-plugins.onemind \
+            -f services/takserver/docker/Dockerfile.takserver-plugins.onemind \
             --build-arg TAKSERVER_IMAGE_REPO=ghcr.io/onemindos/takserver-plugins-upstream \
             --build-arg TAKSERVER_IMAGE_TAG=5.8-onemind \
             -t ghcr.io/onemindos/takserver-plugins:5.8-onemind \
             -t ghcr.io/onemindos/takserver-base:plugins-5.8-onemind \
-            tak-server
+            services/takserver
           echo "::endgroup::"
 
           echo "::group::Build takserver-ignite (custom Java-17 server with TAK classes)"
           docker build \
-            -f tak-server/docker/Dockerfile.takserver-ignite \
+            -f services/takserver/docker/Dockerfile.takserver-ignite \
             -t ghcr.io/onemindos/takserver-base:ignite-5.8-onemind \
-            tak-server/docker
+            services/takserver/docker
           echo "::endgroup::"
 
       - name: Tag images for single-package push

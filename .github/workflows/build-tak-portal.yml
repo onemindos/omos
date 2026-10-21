@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-tak-portal.yml"
-      - "apps/tak-portal/**"
+      - "services/tak-portal/**"
   workflow_dispatch:
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          context: apps/tak-portal
+          context: services/tak-portal
           push: true
           tags: ghcr.io/onemindos/tak-portal:latest
           cache-from: type=registry,ref=ghcr.io/onemindos/tak-portal:cache

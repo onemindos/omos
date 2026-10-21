@@ -1,0 +1,634 @@
+[
+  {
+    "name": "argocd",
+    "title": "ArgoCD",
+    "url": "https://argocd.tail717ba0.ts.net",
+    "description": "GitOps CD",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "kubernetes-dashboard",
+    "title": "Kubernetes Dashboard",
+    "url": "https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default",
+    "description": "Cluster UI",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "headlamp",
+    "title": "Headlamp",
+    "url": "https://headlamp.tail717ba0.ts.net/c/main/token",
+    "description": "Kubernetes cluster dashboard",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "tailscale",
+    "title": "Tailscale",
+    "url": "https://login.tailscale.com/admin/machines",
+    "description": "Mesh VPN",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "cloudflare",
+    "title": "Cloudflare",
+    "url": "https://dash.cloudflare.com/ce13703e0b76938c179ebc51e2945c7e/home",
+    "description": "DNS & edge",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "digitalocean",
+    "title": "DigitalOcean",
+    "url": "https://cloud.digitalocean.com/",
+    "description": "Cloud infrastructure and DOKS",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "hermes-legacy",
+    "title": "Hermes (Legacy)",
+    "url": "https://hermes-agent.tail717ba0.ts.net/login?next=%2F",
+    "description": "Legacy AI — cloud",
+    "group": "ai-agents",
+    "groupTitle": "AI & Agents"
+  },
+  {
+    "name": "agent-web-ui",
+    "title": "Agent Web UI",
+    "url": "https://agent-web-ui-1.tail717ba0.ts.net/",
+    "description": "NATS agent browser",
+    "group": "ai-agents",
+    "groupTitle": "AI & Agents"
+  },
+  {
+    "name": "openclaw",
+    "title": "OpenClaw",
+    "url": "https://openclaw.tail717ba0.ts.net",
+    "description": "Agent orchestration",
+    "group": "ai-agents",
+    "groupTitle": "AI & Agents"
+  },
+  {
+    "name": "nats-dashboard",
+    "title": "NATS Dashboard",
+    "url": "https://nats-dashboard-1.tail717ba0.ts.net/",
+    "description": "NATS stream monitor",
+    "group": "ai-agents",
+    "groupTitle": "AI & Agents"
+  },
+  {
+    "name": "element-chat",
+    "title": "Element Chat",
+    "url": "https://element.onemindos.com",
+    "description": "Matrix E2EE chat",
+    "group": "communication",
+    "groupTitle": "Communication"
+  },
+  {
+    "name": "matrix-synapse",
+    "title": "Matrix Synapse",
+    "url": "https://matrix.onemindos.com",
+    "description": "Homeserver",
+    "group": "communication",
+    "groupTitle": "Communication"
+  },
+  {
+    "name": "heynats",
+    "title": "HeyNATS",
+    "url": "https://heynats-1.tail717ba0.ts.net/",
+    "description": "NATS pub/sub debugger",
+    "group": "communication",
+    "groupTitle": "Communication"
+  },
+  {
+    "name": "google-messages",
+    "title": "Google Messages",
+    "url": "https://messages.google.com/web/",
+    "description": "Phone messages in your browser",
+    "group": "communication",
+    "groupTitle": "Communication"
+  },
+  {
+    "name": "cloudtak",
+    "title": "CloudTAK",
+    "url": "https://atoc.onemindos.dev",
+    "description": "Cloud TAK — COP",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "tak-server",
+    "title": "TAK Server",
+    "url": "https://tak.onemindos.dev:8446",
+    "description": "TAK 5.8 hardened",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "onetak",
+    "title": "OneTAK",
+    "url": "https://onetak.onemindos.dev",
+    "description": "OneMind TAK platform",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "fedhub",
+    "title": "FedHub",
+    "url": "https://fedhub.onemindos.dev",
+    "description": "TAK federation hub",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "tak-product-center",
+    "title": "TAK Product Center",
+    "url": "https://github.com/orgs/TAK-Product-Center/repositories",
+    "description": "TAK ecosystem repositories",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "tak-gov",
+    "title": "TAK.gov",
+    "url": "https://tak.gov/",
+    "description": "Official TAK program",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "eolianvr",
+    "title": "EolianVR",
+    "url": "https://www.eolianvr.com/",
+    "description": "Eolian virtual reality",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "pytak",
+    "title": "PyTAK",
+    "url": "https://pytak.readthedocs.io/en/latest/",
+    "description": "Python TAK SDK documentation",
+    "group": "tak-ecosystem",
+    "groupTitle": "TAK Ecosystem"
+  },
+  {
+    "name": "grafana",
+    "title": "Grafana",
+    "url": "https://grafana.tail717ba0.ts.net/login",
+    "description": "Dashboards & alerts",
+    "group": "intelligence",
+    "groupTitle": "Intelligence"
+  },
+  {
+    "name": "nats-ui",
+    "title": "NATS UI",
+    "url": "https://nats-ui-1.tail717ba0.ts.net/",
+    "description": "JetStream browser",
+    "group": "intelligence",
+    "groupTitle": "Intelligence"
+  },
+  {
+    "name": "agent-monitor",
+    "title": "Agent Monitor",
+    "url": "https://agenttap-1.tail717ba0.ts.net",
+    "description": "Real-time agent TUI",
+    "group": "intelligence",
+    "groupTitle": "Intelligence"
+  },
+  {
+    "name": "clickhouse",
+    "title": "ClickHouse",
+    "url": "https://clickhouse.tail717ba0.ts.net",
+    "description": "10-year event DB",
+    "group": "intelligence",
+    "groupTitle": "Intelligence"
+  },
+  {
+    "name": "minio",
+    "title": "MinIO",
+    "url": "https://minio.tail717ba0.ts.net",
+    "description": "Object storage",
+    "group": "data-storage",
+    "groupTitle": "Data & Storage"
+  },
+  {
+    "name": "postgis",
+    "title": "PostGIS",
+    "url": "https://pgadmin.tail717ba0.ts.net",
+    "description": "Spatial database",
+    "group": "data-storage",
+    "groupTitle": "Data & Storage"
+  },
+  {
+    "name": "longhorn",
+    "title": "Longhorn",
+    "url": "https://longhorn.tail717ba0.ts.net",
+    "description": "Distributed block storage",
+    "group": "data-storage",
+    "groupTitle": "Data & Storage"
+  },
+  {
+    "name": "hubble-ui",
+    "title": "Hubble UI",
+    "url": "https://hubble.tail717ba0.ts.net/?namespace=hermes",
+    "description": "Cilium network flows",
+    "group": "observability",
+    "groupTitle": "Observability"
+  },
+  {
+    "name": "prometheus",
+    "title": "Prometheus",
+    "url": "https://prometheus.tail717ba0.ts.net",
+    "description": "Metrics scraper",
+    "group": "observability",
+    "groupTitle": "Observability"
+  },
+  {
+    "name": "nats-surveyor",
+    "title": "NATS Surveyor",
+    "url": "https://nats-surveyor-1.tail717ba0.ts.net",
+    "description": "NATS metrics",
+    "group": "observability",
+    "groupTitle": "Observability"
+  },
+  {
+    "name": "tileserver-gl",
+    "title": "TileServer GL",
+    "url": "https://tileserver.onemindos.dev",
+    "description": "Vector tiles",
+    "group": "geospatial",
+    "groupTitle": "Geospatial"
+  },
+  {
+    "name": "valhalla",
+    "title": "Valhalla",
+    "url": "https://valhalla.onemindos.dev",
+    "description": "Routing engine",
+    "group": "geospatial",
+    "groupTitle": "Geospatial"
+  },
+  {
+    "name": "maputnik",
+    "title": "Maputnik",
+    "url": "https://maputnik.onemindos.dev",
+    "description": "Map style editor",
+    "group": "geospatial",
+    "groupTitle": "Geospatial"
+  },
+  {
+    "name": "webodm",
+    "title": "WebODM",
+    "url": "https://webodm.onemindos.dev",
+    "description": "Drone imagery",
+    "group": "geospatial",
+    "groupTitle": "Geospatial"
+  },
+  {
+    "name": "zoho-one",
+    "title": "Zoho One",
+    "url": "https://one.zoho.com/zohoone/onemindinnovationsholdingsllc/home/dashboards/940981000000002043",
+    "description": "Zoho One workspace",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-mail",
+    "title": "Zoho Mail",
+    "url": "https://mail.zoho.com/zm/#mail",
+    "description": "Inbox and mail",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-store",
+    "title": "Zoho Store",
+    "url": "https://store.zoho.com/html/store/home.html",
+    "description": "Zoho apps and subscriptions",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-account",
+    "title": "Zoho Account",
+    "url": "https://accounts.zoho.com/home#profile/personal",
+    "description": "Profile and account settings",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-mcp-client",
+    "title": "Zoho MCP Client",
+    "url": "https://mcp.zoho.com/mcp-client/931949197#/server",
+    "description": "MCP server connections",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-api-console",
+    "title": "Zoho API Console",
+    "url": "https://api-console.zoho.com/",
+    "description": "Zoho API applications and credentials",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-social",
+    "title": "Zoho Social",
+    "url": "https://social.zoho.com/social/zeusdelacruz/1698072000000023009/Home.do?isAccessRequested=true#home",
+    "description": "Social media management",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-workplace",
+    "title": "Zoho Workplace",
+    "url": "https://workplace.zoho.com/#dashboard/",
+    "description": "Workplace dashboard",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-projects",
+    "title": "Zoho Projects",
+    "url": "https://projects.zoho.com/portal/zeusdelacruz#zp/dashboard/2727104000000135028",
+    "description": "Project management",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-flow",
+    "title": "Zoho Flow",
+    "url": "https://flow.zoho.com/#/dashboard",
+    "description": "Workflow automation",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-iot",
+    "title": "Zoho IoT",
+    "url": "https://iot.zoho.com/platform/p/OM99URW/home",
+    "description": "IoT platform",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "zoho-zia-agents",
+    "title": "Zoho Zia Agents",
+    "url": "https://ziaagents.zoho.com/941902808/home",
+    "description": "Zia AI agents workspace",
+    "group": "zoho-apps",
+    "groupTitle": "Zoho Apps"
+  },
+  {
+    "name": "1password",
+    "title": "1Password",
+    "url": "https://my.1password.com/home",
+    "description": "Password manager",
+    "group": "personal-tools",
+    "groupTitle": "Personal Tools"
+  },
+  {
+    "name": "dropbox",
+    "title": "Dropbox",
+    "url": "https://www.dropbox.com/home",
+    "description": "Files and cloud storage",
+    "group": "personal-tools",
+    "groupTitle": "Personal Tools"
+  },
+  {
+    "name": "raindrop-io",
+    "title": "Raindrop.io",
+    "url": "https://app.raindrop.io/my/0",
+    "description": "Bookmarks and reading",
+    "group": "personal-tools",
+    "groupTitle": "Personal Tools"
+  },
+  {
+    "name": "at-t-prepaid",
+    "title": "AT&T Prepaid",
+    "url": "https://www.att.com/prepaid/",
+    "description": "Wireless account",
+    "group": "personal-tools",
+    "groupTitle": "Personal Tools"
+  },
+  {
+    "name": "github",
+    "title": "GitHub",
+    "url": "https://github.com/onemindos",
+    "description": "OneMind repositories",
+    "group": "workspaces",
+    "groupTitle": "Workspaces"
+  },
+  {
+    "name": "composio",
+    "title": "Composio",
+    "url": "https://dashboard.composio.dev/OneMind/~/connect",
+    "description": "App connections and integrations",
+    "group": "workspaces",
+    "groupTitle": "Workspaces"
+  },
+  {
+    "name": "miro",
+    "title": "Miro",
+    "url": "https://miro.com/app/dashboard/org/3458764575937063233/team/3458764575937063234/",
+    "description": "Team boards and collaboration",
+    "group": "workspaces",
+    "groupTitle": "Workspaces"
+  },
+  {
+    "name": "circle",
+    "title": "Circle",
+    "url": "https://login.circle.so/sign_in",
+    "description": "Community workspace",
+    "group": "workspaces",
+    "groupTitle": "Workspaces"
+  },
+  {
+    "name": "mercury",
+    "title": "Mercury",
+    "url": "https://app.mercury.com/home",
+    "description": "Banking and finances",
+    "group": "personal-finance",
+    "groupTitle": "Personal Finance"
+  },
+  {
+    "name": "credit-karma",
+    "title": "Credit Karma",
+    "url": "https://www.creditkarma.com/auth/logon",
+    "description": "Credit monitoring",
+    "group": "personal-finance",
+    "groupTitle": "Personal Finance"
+  },
+  {
+    "name": "experian",
+    "title": "Experian",
+    "url": "https://usa.experian.com/login/",
+    "description": "Credit report and score",
+    "group": "personal-finance",
+    "groupTitle": "Personal Finance"
+  },
+  {
+    "name": "transunion",
+    "title": "TransUnion",
+    "url": "https://ciam.tui.transunion.com/realms/TransUnion/protocol/openid-connect/auth?response_type=code&redirect_uri=https://service.transunion.com/dss/ssoRedirect.page&client_id=Phoenix&scope=openid",
+    "description": "Credit report and score",
+    "group": "personal-finance",
+    "groupTitle": "Personal Finance"
+  },
+  {
+    "name": "equifax",
+    "title": "Equifax",
+    "url": "https://secure.equifax.com/auth/login?lang=en-US",
+    "description": "Credit report and score",
+    "group": "personal-finance",
+    "groupTitle": "Personal Finance"
+  },
+  {
+    "name": "innovis",
+    "title": "Innovis",
+    "url": "https://www.innovis.com/login/index",
+    "description": "Credit report",
+    "group": "personal-finance",
+    "groupTitle": "Personal Finance"
+  },
+  {
+    "name": "onemind-os",
+    "title": "OneMind OS",
+    "url": "https://onemindos.dev",
+    "description": "Main platform",
+    "group": "external",
+    "groupTitle": "External"
+  },
+  {
+    "name": "external-argocd",
+    "title": "ArgoCD",
+    "url": "https://argocd.tail717ba0.ts.net",
+    "description": "GitOps CD",
+    "group": "external",
+    "groupTitle": "External"
+  },
+  {
+    "name": "external-kubernetes-dashboard",
+    "title": "Kubernetes Dashboard",
+    "url": "https://k8s-dashboard.tail717ba0.ts.net",
+    "description": "Cluster UI",
+    "group": "external",
+    "groupTitle": "External"
+  },
+  {
+    "name": "external-tailscale",
+    "title": "Tailscale",
+    "url": "https://login.tailscale.com/admin/machines",
+    "description": "Mesh VPN",
+    "group": "external",
+    "groupTitle": "External"
+  },
+  {
+    "name": "tailscale-admin",
+    "title": "Tailscale Admin",
+    "url": "https://login.tailscale.com/admin",
+    "description": "Mesh VPN administration",
+    "group": "infrastructure",
+    "groupTitle": "Infrastructure"
+  },
+  {
+    "name": "facebook-zeus",
+    "title": "Facebook — Zeus",
+    "url": "https://www.facebook.com/zeuslegacydelacruz",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "facebook-legacy",
+    "title": "Facebook — Legacy Platform",
+    "url": "https://www.facebook.com/LegacyPlatformOfficial",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "x-zeus",
+    "title": "X — Zeus",
+    "url": "https://x.com/zeusDelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "linkedin-zeus",
+    "title": "LinkedIn — Zeus",
+    "url": "https://www.linkedin.com/in/zeuslegacydelacruz/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "tiktok-zeus",
+    "title": "TikTok — Zeus",
+    "url": "https://www.tiktok.com/@zeusdelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "instagram-zeus",
+    "title": "Instagram — Zeus",
+    "url": "https://www.instagram.com/zeusdelacruz_/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "twitch-zeus",
+    "title": "Twitch — Zeus",
+    "url": "https://www.twitch.tv/zeusdelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "reddit-zeus",
+    "title": "Reddit — callsign_zero0",
+    "url": "https://www.reddit.com/user/callsign_zero0/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "pinterest-zeus",
+    "title": "Pinterest — Zeus",
+    "url": "https://www.pinterest.com/ZeusDelacruz_/",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "threads-zeus",
+    "title": "Threads — Zeus",
+    "url": "https://www.threads.com/@zeusdelacruz_",
+    "description": "Social media profile",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "youtube-zeus",
+    "title": "YouTube — profile pending",
+    "url": "https://www.youtube.com/",
+    "description": "Channel URL pending",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  },
+  {
+    "name": "linkedin-company-admin",
+    "title": "LinkedIn — Company Admin",
+    "url": "https://www.linkedin.com/company/74305203/admin/dashboard/",
+    "description": "Company administration dashboard",
+    "group": "social-media",
+    "groupTitle": "Social Media"
+  }
+]

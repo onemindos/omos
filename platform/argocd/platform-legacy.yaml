@@ -47,6 +47,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
   ignoreDifferences:
     - group: apps
       kind: Deployment
@@ -56,3 +57,8 @@ spec:
       kind: PersistentVolumeClaim
       jsonPointers:
         - /spec/storageClassName
+    # The Tailscale operator owns spec.externalName on the egress Services (egress.yaml).
+    - group: ""
+      kind: Service
+      jsonPointers:
+        - /spec/externalName

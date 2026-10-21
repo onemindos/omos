@@ -46,7 +46,7 @@ Never attach a test instance to production NATS routes or enable live automation
 ## Repository layout
 
 `platform/argocd` owns application paths; `platform/<service>` owns shared platform
-manifests; `tak-server/deploy` owns TAK workloads; `apps/onemind-portal` owns portal
+manifests; `platform/takserver/deploy` owns TAK workloads; `services/onemind-portal` owns portal
 source/catalog/runbooks; `platform/backups` owns backup workloads, ciphertext and
 restore templates; `docs/operations` owns observed evidence and recovery procedures.
 Keep these stable paths while reorganizing service internals. Update Argo and

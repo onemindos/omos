@@ -74,16 +74,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: kagent
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: velero
   annotations:
     argocd.argoproj.io/sync-wave: '-2'

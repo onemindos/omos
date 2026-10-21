@@ -1,0 +1,104 @@
+# OneMind Forward Edge TAK Server — minimal footprint for field deployments.
+#
+# This is a lightweight TAK Server for edge/field locations that federates back
+# to the HQ FedHub (fedhub.onemindos.dev ports 9101/9102).
+#
+# DEPLOY:
+#   helm upgrade --install takserver-edge ./chart \
+#     -n takserver-edge --create-namespace \
+#     -f infra/edge/takserver/values-edge.yaml
+#
+# AFTER DEPLOY — connect to HQ FedHub:
+#   1. Get the FedHub external LB IP:
+#        kubectl -n takserver get svc fedhub-fed-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+#   2. In this edge TAK Server's WebTAK UI:
+#        Configuration → Manage Federates → Edit Configuration → Enable federation
+#        Then: Create Outgoing Connection → <FedHub LB IP> : 9102 (v2)
+#   3. Upload the FedHub CA cert (from fedhub-certs secret, ca.pem file)
+#        Configuration → Federation Certificate Authorities → Upload
+#   4. Configure groups (Inbound/Outbound) for data sharing
+#
+# NOTE: Edge server should use its own cert CA (separate from HQ)
+#       so ATAK clients have edge-specific certs. FedHub handles the trust.
+
+imagePullSecret: ghcr
+certConfigMapName: cert-migration
+coreConfigMapName: core-config-edge
+takIgniteConfigMapName: tak-ignite-config-edge
+
+takserver:
+  ingress:
+    enabled: false    # Edge exposed via direct TCP LB, not Cloudflare
+
+  config:
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "config-5.8-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 500m, memory: 512Mi}, limits: {cpu: 1, memory: 1Gi}}
+
+  messaging:
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 500m, memory: 2Gi}, limits: {cpu: 1, memory: 2Gi}}
+
+  api:
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "api-5.8-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 500m, memory: 2Gi}, limits: {cpu: 1, memory: 2Gi}}
+
+  plugins:
+    enabled: true
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "plugins-upstream-5.8-onemind"}
+    replicas: 1
+    resources: {requests: {cpu: 250m, memory: 512Mi}, limits: {cpu: 1, memory: 1Gi}}
+
+  takserverDatabaseSetup:
+    image: {repository: ghcr.io/onemindos/takserver-base, tag: "db-setup-5.8-onemind"}
+
+  limits:
+    persistentVolumeClaims: '3'
+    requests: {storage: 20Gi}
+    storage: {max: 20Gi, min: 1Gi}
+
+postgresql:
+  enabled: true
+  image: {registry: docker.io, repository: postgis/postgis, tag: 15-3.4}
+  configurationConfigMap: postgres-configuration
+global:
+  postgresql:
+    host: takserver-edge-postgresql
+    port: "5432"
+    auth: {postgresqlUsername: postgres, postgresqlPassword: postgres, postgresqlDatabase: cot}
+
+ignite:
+  image: {repository: ghcr.io/onemindos/takserver-base, tag: "ignite-5.8-onemind", pullPolicy: Always}
+  serviceAccount: {name: takserver-ignite-edge}
+  peerClassLoadingEnabled: false
+  resources: {requests: {cpu: 200m, memory: 512Mi}, limits: {cpu: "1", memory: 1Gi}}
+  env:
+    OPTION_LIBS: "ignite-kubernetes,ignite-rest-http,ignite-json,ignite-slf4j,ignite-urideploy,ignite-web,ignite-calcite"
+    IGNITE_QUIET: "false"
+    JVM_OPTS: >-
+      -Djava.net.preferIPv4Stack=true
+      --add-opens=java.base/jdk.internal.access=ALL-UNNAMED
+      --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
+      --add-opens=java.base/java.lang=ALL-UNNAMED
+      --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+      --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+      --add-opens=java.base/java.io=ALL-UNNAMED
+      --add-opens=java.base/java.net=ALL-UNNAMED
+      --add-opens=java.base/java.nio=ALL-UNNAMED
+      --add-opens=java.base/java.util=ALL-UNNAMED
+      --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+      --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+      --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+
+nats:
+  image: {tag: 1.0.1}
+  config:
+    jetstream: {enabled: true}
+    cluster: {enabled: false, replicas: 1}
+  container:
+    merge:
+      resources:
+        requests: {cpu: 50m, memory: 128Mi}
+        limits: {memory: 256Mi}

@@ -88,7 +88,7 @@
   "EndColumn": 85,
   "Match": "keystore, REDACTED ",
   "Secret": "REDACTED",
-  "File": "references/ai/orp.md",
+  "File": "docs/references/ai/orp.md",
   "SymlinkFile": "",
   "Commit": "",
   "Entropy": 3.5216405,
@@ -97,7 +97,7 @@
   "Date": "",
   "Message": "",
   "Tags": [],
-  "Fingerprint": "references/ai/orp.md:generic-api-key:28"
+  "Fingerprint": "docs/references/ai/orp.md:generic-api-key:28"
  },
  {
   "RuleID": "generic-api-key",
@@ -148,7 +148,7 @@
   "EndColumn": 46,
   "Match": "curl -sk -o /dev/null -w '%{http_code}\\n' https://100.74.182.117:8446/Marti/api/tls/config\n# with creds → 200 + \u003ccertificateConfig\u003e XML\ncurl -sk -u REDACTED ",
   "Secret": "REDACTED",
-  "File": "tak-server/edge/deploy/docs/enrollment.md",
+  "File": "infra/edge/takserver/deploy/docs/enrollment.md",
   "SymlinkFile": "",
   "Commit": "",
   "Entropy": 4.3042293,
@@ -157,7 +157,7 @@
   "Date": "",
   "Message": "",
   "Tags": [],
-  "Fingerprint": "tak-server/edge/deploy/docs/enrollment.md:curl-auth-user:123"
+  "Fingerprint": "infra/edge/takserver/deploy/docs/enrollment.md:curl-auth-user:123"
  },
  {
   "RuleID": "curl-auth-user",
@@ -168,7 +168,7 @@
   "EndColumn": 46,
   "Match": "curl -sk -u REDACTED ",
   "Secret": "REDACTED",
-  "File": "tak-server/edge/deploy/docs/enrollment.md",
+  "File": "infra/edge/takserver/deploy/docs/enrollment.md",
   "SymlinkFile": "",
   "Commit": "",
   "Entropy": 4.3042293,
@@ -177,6 +177,6 @@
   "Date": "",
   "Message": "",
   "Tags": [],
-  "Fingerprint": "tak-server/edge/deploy/docs/enrollment.md:curl-auth-user:139"
+  "Fingerprint": "infra/edge/takserver/deploy/docs/enrollment.md:curl-auth-user:139"
  }
 ]

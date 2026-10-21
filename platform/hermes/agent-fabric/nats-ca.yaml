@@ -1,0 +1,19 @@
+# Public CA certificate of the NATS server (from secret nats/nats-ca, ca.crt only). Lets the
+# agent-fabric apps verify the NATS server's TLS certificate instead of disabling checks.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-ca
+  namespace: agent-fabric
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIBeTCCAR6gAwIBAgIUKeGZE7oTtrHxWkGqtngNAU1diG0wCgYIKoZIzj0EAwIw
+    GjEYMBYGA1UEAxMPb25lbWluZC1uYXRzLWNhMB4XDTI2MDcwNDE5MjkxNVoXDTM2
+    MDcwMTE5MjkxNVowGjEYMBYGA1UEAxMPb25lbWluZC1uYXRzLWNhMFkwEwYHKoZI
+    zj0CAQYIKoZIzj0DAQcDQgAElOXe/zSJcZZTpMxZCMLvpR9eVZ/UKZq5gsr+oPyS
+    rmjZUB1TgcDZfVLgAwymPY26NXEb+50qymckA0fU+zGwS6NCMEAwDgYDVR0PAQH/
+    BAQDAgKkMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFECORKSnsxywQk+K2m9N
+    298+cwY/MAoGCCqGSM49BAMCA0kAMEYCIQCDYh5de+TUH6mLQuYrLhZn5H7lxAgo
+    YmpTTij74EjWiwIhAO6nTfTuS0TjxhjtiReNrNMjDz95RJ87BeU8HIPB0CfZ
+    -----END CERTIFICATE-----

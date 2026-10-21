@@ -1,80 +1,324 @@
-# Legacy Agent Fabric — Agent Identities (source of truth)
+# OneMind agent registry
 #
-# This file is the canonical registry of every agent on the OneMind fabric.
-# Legacy is the mother (sovereign); legacy-edge is Legacy's own edge body;
-# named servants serve Legacy. Each agent's persona lives at agents/<name>/SOUL.md.
-# See CREED.md for the fabric hierarchy law. Edit here, then propagate: the hub
-# image bakes in its SOUL.md + config; the Mac reads ~/.hermes/ (synced from here).
+# One registry for every agent on the OneMind fabric, with a status for each:
+#   running     - verified running on 2026-10-16
+#   configured  - has a soul and config on a live volume, but was not registering on the cluster bus
+#   planned     - written down, no running profile (see agents/planned/README.md)
+#
+# Legacy is the sovereign mind. Legacy-Edge is Legacy's edge instance. The four overseers
+# (SO, HP, LE, GE) sit between Legacy and the planned servants. Persona files live in agents/.
+# See doctrine/CREED.md for the hierarchy law and docs/operations/hermes-recoverability-plan.md
+# for how this directory is meant to be kept recoverable.
+#
+# Rebuilt 2026-10-16 from the pod's copy of the registry and checked against the live pod
+# (config.yaml, profiles/, bus listing) and the Mac. Model names come from the live config.
 
 fabric:
   name: OneMind
   bus: NATS
   account: ONEMIND
   agent_protocol: synadia-ai v0.4.1
-  subject_pattern: "agents.prompt.{agent}.{owner}.{session}"
+  subject_pattern: "agents.prompt.{framework}.{owner}.{session}"
 
 agents:
-  # ── The Mother ──────────────────────────────────────────────────────
-  - name: Legacy (Mother)
-    agent: hermes
+  - name: Legacy
+    status: running
+    framework: hermes
     owner: zeus
     session: legacy
     bus_subject: agents.prompt.hermes.zeus.legacy
-    role: primary
-    description: "The authoritative primary Legacy. Sovereign state, final decisions, source of truth."
+    role: sovereign
+    description: >
+      The sovereign mind of the fabric. Holds authoritative state and makes final decisions.
+      Runs 24/7 on the cluster and is the only agent that registers on the cluster bus.
+    persona: agents/legacy/SOUL.md
     location:
       type: cloud
-      cluster: DOKS
+      cluster: omos-cloud
       namespace: hermes
-      pod: hermes-legacy
-      image: ghcr.io/onemindos/hermes-legacy:v3
+      workload: deployment/hermes-legacy
+      image: nousresearch/hermes-agent:v2026.9.24
+      volume: pvc/hermes-data (25Gi, mounted at /opt/data)
     model:
-      provider: bedrock
-      default: us.anthropic.claude-haiku-4-5-20251001-v1:0
-      base_url: https://bedrock-runtime.us-east-1.amazonaws.com
+      provider: digitalocean
+      default: nemotron-3-ultra-550b
     nats:
-      connection: leaf-sidecar (localhost:4222 plaintext → tls uplink to cluster:7422)
+      connection: nats-leaf sidecar (localhost:4222, uplink to the cluster)
       heartbeat_interval_s: 30
-    persona: agents/legacy/SOUL.md
-    supervised_by: s6-overlay (container)
+    backup: "VolSync nightly 01:00 (restic: 7 daily, 4 weekly, 3 monthly, 1 yearly)"
 
-  # ── Legacy's Edge Body ──────────────────────────────────────────────
-  - name: Legacy (Edge)
-    agent: hermes
+  - name: Legacy-Edge
+    status: running
+    framework: hermes
     owner: zeus
     session: legacy-edge
     bus_subject: agents.prompt.hermes.zeus.legacy-edge
-    role: edge-body
-    description: "Legacy's own body at the edge — NOT a separate agent. Local access: terminal, files, sensors, TAK, LAN. Defers to the mother for fabric-wide authority."
+    role: edge
+    description: >
+      Legacy's edge instance on Zeus's Mac: same mind, local hands (terminal, files, LAN devices, TAK).
+      Defers to Legacy for fabric-wide decisions. Not seen in the cluster agent listing on 2026-10-16.
+    persona: agents/legacy-edge/SOUL.md
     location:
       type: edge
-      device: Zeus's MacBook Pro
+      device: Zeus's MacBook Pro (omos-mbp)
       hermes_home: /Users/zeus/.hermes
       supervised_by: launchd (ai.hermes.gateway)
     model:
-      provider: bedrock
-      default: us.anthropic.claude-haiku-4-5-20251001-v1:0
-      base_url: https://bedrock-runtime.us-east-1.amazonaws.com
+      provider: digitalocean
+      default: deepseek-v4-pro
     nats:
-      connection: localhost:4222 (local NATS → leaf to cluster)
-      heartbeat_interval_s: 30
-    persona: agents/legacy-edge/SOUL.md
-    env_overrides:
-      HERMES_NATS_SESSION_NAME: legacy-edge
+      connection: local NATS server (leaf to the cluster)
+    backup: Time Machine (local disk only)
 
-  # ── Named Servant Agents ────────────────────────────────────────────
-  # Specialized workers. Each serves Legacy (the mother). Each has its own
-  # agents/<name>/SOUL.md derived from agents/_template/SOUL.md, opening with
-  # a declaration of servitude to Legacy (see CREED.md). Add entries here as
-  # servants are created. Example shape:
-  #
-  # - name: Scout
-  #   agent: hermes
-  #   owner: zeus
-  #   session: scout
-  #   bus_subject: agents.prompt.hermes.zeus.scout
-  #   role: servant
-  #   serves: legacy
-  #   description: "Watches <feed>; reports findings to Legacy."
-  #   persona: agents/scout/SOUL.md
-servants: []
+  # ── Overseers ───────────────────────────────────────────────────────
+  # Each has a soul, a config and the NATS platform enabled in its profile on the Hermes
+  # volume, but none registered on the cluster bus on 2026-10-16. They also exist as OpenClaw
+  # agents (so, hp, le, ge). The pod's earlier registry used long bus subjects such as
+  # agents.prompt.hermes.zeus.sovereign-operations; the live profiles and souls use the short
+  # session names below, so those are recorded here.
+  - name: SO (Sovereign Operations)
+    status: configured
+    framework: hermes
+    owner: zeus
+    session: so
+    bus_subject: agents.prompt.hermes.zeus.so
+    role: tech-overseer
+    description: Technical overseer for infrastructure, security, TAK, NATS, DevOps, AI agents, drones and robotics.
+    persona: agents/so/SOUL.md
+    profile: /opt/data/profiles/sovereign-operations/
+    model:
+      provider: digitalocean
+      default: deepseek-v4-pro
+    servants_under_command: [forge, grid, guardian, oracle, trinity, spartan]
+
+  - name: HP (Holistic Performance)
+    status: configured
+    framework: hermes
+    owner: zeus
+    session: hp
+    bus_subject: agents.prompt.hermes.zeus.hp
+    role: personal-overseer
+    description: Personal overseer for health, fitness, finance, learning, goals, habits, identity and relationships.
+    persona: agents/hp/SOUL.md
+    profile: /opt/data/profiles/holistic-performance/
+    model:
+      provider: digitalocean
+      default: qwen3.5-397b-a17b
+    servants_under_command: [spartan]
+
+  - name: LE (Legacy Evolution)
+    status: configured
+    framework: hermes
+    owner: zeus
+    session: le
+    bus_subject: agents.prompt.hermes.zeus.le
+    role: home-overseer
+    description: Home and estate overseer for the homestead, family records, property, vehicles, maintenance and education.
+    persona: agents/le/SOUL.md
+    profile: /opt/data/profiles/legacy-evolution/
+    model:
+      provider: digitalocean
+      default: kimi-k2.6
+    servants_under_command: [eden, haven, heritage]
+
+  - name: GE (Generational Empire)
+    status: configured
+    framework: hermes
+    owner: zeus
+    session: ge
+    bus_subject: agents.prompt.hermes.zeus.ge
+    role: business-overseer
+    description: Business overseer for OneMind revenue, strategy, partnerships, marketing, legal and competitive intelligence.
+    persona: agents/ge/SOUL.md
+    profile: /opt/data/profiles/generational-empire/
+    model:
+      provider: digitalocean
+      default: kimi-k2.6
+    servants_under_command: [empire]
+
+# ── Planned agents ──────────────────────────────────────────────────
+# Forge and the nine servants. None runs: their profile folders on the Hermes volume are empty
+# (Forge included, although earlier docs called it active) and their cron jobs were paused.
+# Personas and configs live in agents/planned/. Entries marked model_status: stale name a
+# Bedrock model; the platform now uses DigitalOcean inference, so update before activating.
+planned:
+  - name: Forge
+    status: planned
+    framework: hermes
+    owner: zeus
+    session: forge
+    bus_subject: agents.prompt.hermes.zeus.forge
+    role: orchestrator
+    description: >
+      Coding orchestrator: reviews PRs, dispatches coding tasks to worker profiles, manages the
+      development pipeline. Intended split: a strong model plans and reviews, cheap models write code.
+    persona: agents/planned/forge/SOUL.md
+    profile: /opt/data/profiles/forge/
+    overseers: [so]
+    model:
+      provider: bedrock
+      primary: us.anthropic.claude-opus-4-6-v1
+      workers: qwen3-coder-flash (DigitalOcean inference)
+    model_status: stale
+  - name: Oracle
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.oracle
+    role: intelligence
+    description: Intelligence and analytics agent. Queries data, produces briefings for Legacy.
+    persona: agents/planned/oracle/SOUL.md
+    overseers: [so]
+    profile: /opt/data/profiles/oracle/
+    model: qwen3-coder-flash
+    cron:
+      - name: morning-briefing
+        schedule: "0 8 * * *"
+        prompt: "Query overnight fabric data (ClickHouse, NATS streams, weather). Produce concise briefing for Legacy."
+      - name: anomaly-scan
+        schedule: "*/15 * * * *"
+        prompt: "Scan queried data for anomalies across all streams. Alert Legacy if anything unusual."
+
+  - name: Guardian
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.guardian
+    role: security
+    description: Security and threat sentinel. Monitors fabric for danger, alerts Legacy immediately.
+    persona: agents/planned/guardian/SOUL.md
+    overseers: [so]
+    profile: /opt/data/profiles/guardian/
+    model: us.anthropic.claude-sonnet-4-20250514-v1:0
+    model_status: stale
+    cron:
+      - name: threat-scan
+        schedule: "*/15 * * * *"
+        prompt: "Scan fabric access logs and service health for anomalies. Alert Legacy immediately on any threat."
+      - name: security-posture
+        schedule: "0 */6 * * *"
+        prompt: "Full security posture report to Legacy: all services, tailnet, access patterns."
+
+  - name: Grid
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.grid
+    role: infrastructure
+    description: Infrastructure and resource manager. Monitors DOKS, Tailscale, costs, IoT.
+    persona: agents/planned/grid/SOUL.md
+    overseers: [so]
+    profile: /opt/data/profiles/grid/
+    model: us.anthropic.claude-haiku-4-5-20251001-v1:0
+    model_status: stale
+    cron:
+      - name: infra-health
+        schedule: "*/30 * * * *"
+        prompt: "Check DOKS cluster, node status, storage, Tailscale network. Report issues to Legacy."
+      - name: resource-digest
+        schedule: "0 9 * * *"
+        prompt: "Daily cost, capacity, and resource utilization report to Legacy with optimization suggestions."
+
+  - name: Spartan
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.spartan
+    role: performance
+    description: Personal health and performance tracker for Zeus. Reports readiness to Legacy.
+    persona: agents/planned/spartan/SOUL.md
+    overseers: [so, hp]
+    profile: /opt/data/profiles/spartan/
+    model: us.anthropic.claude-haiku-4-5-20251001-v1:0
+    model_status: stale
+    cron:
+      - name: morning-readiness
+        schedule: "0 7 * * *"
+        prompt: "Morning Zeus readiness briefing: sleep, activity, schedule load. Report to Legacy."
+      - name: weekly-review
+        schedule: "0 8 * * 1"
+        prompt: "Weekly performance trends, optimization suggestions, and goal review to Legacy."
+
+  - name: Haven
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.haven
+    role: home
+    description: Home Assistant and estate manager. Monitors home state, automations, security.
+    persona: agents/planned/haven/SOUL.md
+    overseers: [le]
+    profile: /opt/data/profiles/haven/
+    model: us.anthropic.claude-haiku-4-5-20251001-v1:0
+    model_status: stale
+    cron:
+      - name: home-status
+        schedule: "0 6,18 * * *"
+        prompt: "Morning and evening home status report: HA state, devices, security, comfort to Legacy."
+      - name: device-scan
+        schedule: "0 */4 * * *"
+        prompt: "Device health scan: all Zigbee/Z-Wave entities, automation rules. Report failures to Legacy."
+
+  - name: Heritage
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.heritage
+    role: records
+    description: Family records and memory keeper. Obsidian, documents, dates, estate data.
+    persona: agents/planned/heritage/SOUL.md
+    overseers: [le]
+    profile: /opt/data/profiles/heritage/
+    model: us.anthropic.claude-sonnet-4-20250514-v1:0
+    model_status: stale
+    cron:
+      - name: backup-check
+        schedule: "0 3 * * *"
+        prompt: "Verify vault backups, record integrity. Report to Legacy."
+      - name: date-digest
+        schedule: "0 8 * * 1"
+        prompt: "Weekly important dates digest: birthdays, renewals, deadlines, tasks for Legacy."
+
+  - name: Empire
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.empire
+    role: business
+    description: OneMind business administrator. Clients, projects, billing, admin.
+    persona: agents/planned/empire/SOUL.md
+    overseers: [ge]
+    profile: /opt/data/profiles/empire/
+    model: us.anthropic.claude-sonnet-4-20250514-v1:0
+    model_status: stale
+    cron:
+      - name: business-digest
+        schedule: "0 9 * * *"
+        prompt: "Daily business dashboard: active projects, communications, financial snapshot to Legacy."
+      - name: weekly-ops
+        schedule: "0 9 * * 1"
+        prompt: "Weekly operations summary: pipeline, KPIs, growth metrics to Legacy."
+
+  - name: Eden
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.eden
+    role: sustainability
+    description: Sustainability and environmental. RADS sensors, weather, greenhouses, harvest.
+    persona: agents/planned/eden/SOUL.md
+    overseers: [le]
+    profile: /opt/data/profiles/eden/
+    model: us.anthropic.claude-haiku-4-5-20251001-v1:0
+    model_status: stale
+    cron:
+      - name: sensor-ingest
+        schedule: "0,30 * * * *"
+        prompt: "Ingest RADS soil sensor data, weather API. Alert Legacy on anomalies."
+      - name: environmental-brief
+        schedule: "0 9 * * *"
+        prompt: "Daily environmental brief: weather, sensor trends, greenhouse status to Legacy."
+
+  - name: Trinity
+    status: planned
+    bus_subject: agents.prompt.hermes.zeus.trinity
+    role: integration
+    description: Cross-system integration coordinator. Bridges TAK, HA, NATS, external systems.
+    persona: agents/planned/trinity/SOUL.md
+    overseers: [so]
+    profile: /opt/data/profiles/trinity/
+    model: us.anthropic.claude-sonnet-4-20250514-v1:0
+    model_status: stale
+    cron:
+      - name: integration-health
+        schedule: "*/5 * * * *"
+        prompt: "Check integration heartbeat: TAK↔HA↔NATS cross-system status. Report to Legacy."
+      - name: cross-domain-scan
+        schedule: "*/15 * * * *"
+        prompt: "Scan for cross-domain events that need routing. Route and alert Legacy."
+
+# ── Hermes Profiles on This Pod ───────────────────────────────────────

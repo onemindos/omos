@@ -59,8 +59,8 @@ def test_outbox_matches_existing_envelope_and_new_payload_contract(database):
     row = store.pending_events()[0]
     event = envelope(row)
     root = Path(__file__).resolve().parents[3]
-    for file, value in [("schemas/envelope/envelope.schema.json", event),
-                        ("schemas/missions/mission-state.schema.json", event["data"])]:
+    for file, value in [("services/schemas/envelope/envelope.schema.json", event),
+                        ("services/schemas/missions/mission-state.schema.json", event["data"])]:
         Draft202012Validator(json.loads((root / file).read_text()), format_checker=FormatChecker()).validate(value)
     assert event["corr"] == mid
     assert event["subject"] == "evt.so.mission.requested"

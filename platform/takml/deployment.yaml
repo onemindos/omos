@@ -8,6 +8,8 @@ metadata:
     app: takml-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate          # RWO PVC — a rolling update deadlocks waiting for the volume
   selector:
     matchLabels:
       app: takml-db
@@ -66,7 +68,7 @@ spec:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \
 #     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],
 #       "containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
-#   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
+#   kubectl cp platform/takserver/server/takml_server-2.1.jar takml/jar-loader:/jar/
 #   kubectl delete pod jar-loader -n takml
 apiVersion: apps/v1
 kind: Deployment
@@ -85,6 +87,15 @@ spec:
       labels:
         app: takml-server
     spec:
+      # takml-models is ReadWriteOnce and also mounted by takml-vision-worker, so both
+      # pods must share a node. Follow the worker instead of naming a node.
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: takml-vision-worker
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: check-jar
           image: busybox:1.36

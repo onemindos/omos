@@ -15,7 +15,7 @@ Related existing documents (inputs, not replaced by these):
 [../../platform/backups/OFFSITE-COPY.md](../../platform/backups/OFFSITE-COPY.md),
 [../../platform/backups/tools/README.md](../../platform/backups/tools/README.md),
 [../operations/home-migration.md](../operations/home-migration.md),
-[../../reports/cluster-review-2026-10-09.md](../../reports/cluster-review-2026-10-09.md).
+[../operations/cluster-review-2026-10-09.md](../operations/cluster-review-2026-10-09.md).
 
 Ground rules used throughout: nothing is deleted until the replacement has been
 verified; every phase has a way back; no secret values ever appear in these

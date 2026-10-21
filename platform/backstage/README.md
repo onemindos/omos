@@ -3,7 +3,7 @@
 Private preview: https://onemind-preview.tail717ba0.ts.net
 Identity provider: https://onemind-auth.tail717ba0.ts.net
 
-This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `apps/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its source was removed; Git history retains the pre-retirement configuration for recovery.
+This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `services/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its source was removed; Git history retains the pre-retirement configuration for recovery.
 
 ## Identity and access
 
@@ -17,7 +17,10 @@ Cluster OIDC requests use the existing Tailscale egress ProxyGroup. CoreDNS rewr
 
 PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. Two application replicas use rolling updates with zero unavailable replicas and one surge replica. Preferred node separation and a disruption budget preserve application availability during routine updates and voluntary eviction. Review schema migration compatibility before each upgrade. PostgreSQL and identity remain single-instance dependencies; this is not full high availability.
 
-`backstage-backup` runs daily at 07:15 UTC. It dumps all databases owned by the application role, encrypts the compressed archive with AES-256-GCM, and uploads to the existing private Spaces bucket under `backups/backstage/`. Each run downloads the object, checks authenticated decryption, restores the catalog to a uniquely named temporary database, verifies tables, and removes only that temporary database. Job failure means backup or recovery verification failed. Objects are retained; no automatic deletion policy is configured.
+The old `backstage-backup` CronJob is suspended, superseded by the managed
+`backup-postgres-backstage` job at 06:40 UTC. Its current encrypted prefix is
+`backups/postgres-backstage/` and it verifies restore of all owned plugin databases.
+The older recovery mechanism described below is historical: `backstage-backup` ran daily at 07:15 UTC. It dumps all databases owned by the application role, encrypts the compressed archive with AES-256-GCM, and uploads to the existing private Spaces bucket under `backups/backstage/`. Each run downloads the object, checks authenticated decryption, restores the catalog to a uniquely named temporary database, verifies tables, and removes only that temporary database. Job failure means backup or recovery verification failed. Objects are retained; no automatic deletion policy is configured.
 
 Recovery requires the backup Secret's encryption key, Spaces access, database credentials, and access to the SealedSecrets controller's sealing key when rebuilding the cluster. Keep an independent secure copy of recovery keys; Git alone cannot decrypt a SealedSecret on a new controller. Do not rotate or remove the encryption key without preserving access to prior archives.
 
@@ -35,9 +38,32 @@ Do not claim offline operation: self-hosted pages still require reachability to 
 
 ## Inventory maintenance
 
-Run `node scripts/enrich-inventory.cjs` from `apps/onemind-portal` on the authorized Mac to refresh both catalog copies. It checks the cluster context, captures workload identities and Tailscale endpoint names/OS/DNS, and connects app links to workloads only through matching ingress hosts and service selectors. It does not collect credentials, user profiles or IP addresses. Review the Git diff before merging; the script is not scheduled automatically. Plain `snapshot-cluster.cjs` replaces cluster.yaml and omits mesh enrichment, so use the enrichment command for the complete inventory.
+Run `node scripts/enrich-inventory.cjs` from `services/onemind-portal` on the authorized Mac to refresh both catalog copies. It checks the cluster context, captures workload identities and Tailscale endpoint names/OS/DNS, and connects app links to workloads only through matching ingress hosts and service selectors. It does not collect credentials, user profiles or IP addresses. Review the Git diff before merging; the script is not scheduled automatically. Plain `snapshot-cluster.cjs` replaces cluster.yaml and omits mesh enrichment, so use the enrichment command for the complete inventory.
 
 Hosting annotations distinguish verified cluster routing from unverified mesh endpoints and external providers. Device location and purpose are explicitly unreviewed; an offline discovery snapshot is not a service incident. The catalog graph exposes verified application-to-workload and workload-to-cluster relationships. Cloud API integrations, repository discovery beyond the infrastructure repository, and physical device classification still require reviewed sources.
+
+## Native Kubernetes and Argo CD visibility
+
+The installed native plugins are discovered by `app.packages: all`. On a workload
+entity, **Deployment → Kubernetes** shows selector-matched live resources;
+**Deployment → Deployment Summary** shows the explicitly named Argo Application.
+The Overview Links card also links directly to these views and the owning runbook.
+Backstage, its PostgreSQL dependency and the NATS broker are the first reviewed
+mappings; this is not coverage of every workload in their namespaces.
+
+Controller **metadata.labels** must match the entity selector, not only the pod
+labels. Otherwise the native Kubernetes view can fetch pods but omit their
+Deployment/StatefulSet grouping. Keep existing immutable selectors and pod labels.
+`services/onemind-portal/scripts/curate-dependencies.cjs` reapplies these exact
+identity/namespace/selector mappings after full inventory refresh and rejects
+identity drift. Do not infer Argo ownership from namespace co-location. In
+particular the NATS dashboard is not the broker StatefulSet.
+
+Catalog-only changes need no image rebuild, but the generated catalog ConfigMap's
+new hash changes the portal volume reference and naturally rolls the same pinned
+image. Review the Kustomize render first; preserve the database template/PVCs,
+read-only RBAC and normal Argo reconciliation. Plugin visibility is not app-level
+health, message-delivery verification or new AI mutation authority.
 
 ## Curated Fabric registry
 
@@ -57,7 +83,7 @@ The same server reads fixed Prometheus queries for five namespaces: backstage, a
 
 ## P4 TechDocs
 
-Operations documentation lives in `apps/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.
+Operations documentation lives in `services/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.
 
 TechDocs search uses the existing PostgreSQL search engine and collates every minute. The catalog documentation entity appears in Docs; selected critical-service entries have runbook links. Documentation is versioned with the portal, does not require Notion, and requires host reachability rather than promising offline browser access. These runbooks distinguish verified configuration from untested data recovery and historical Fabric notes.
 
@@ -117,3 +143,21 @@ served locally or by a cloud provider; license and hosting are separate facts.
 Runtime compatibility and hardware capacity must be checked before installing a
 particular release. No account credentials or inference endpoints are configured
 by adding a directory entry.
+
+## Phase 6: one portal
+
+OpenChoreo 1.3.1 core/observability plugins run inside the existing Backstage 1.55.3
+host; they do not replace OneMind. Authentik `openchoreo-auth` preserves the signed
+subject mapping and existing group. The single host policy intersects upstream
+permissions; machine catalog writes and platform access remain denied. Shared
+authorization results use the permission plugin PostgreSQL DB, keyed by SHA-256
+with token-expiration TTL, never raw tokens. Keep the version-locked upstream ABAC
+router adapter pinned and review on upgrade.
+
+The built-in console and candidate are retired. The catalog SealedSecret and
+operator/catalog bindings remain deliberately reused. Catalog sync polls; the
+unused webhook forwarder is off until authenticated ingress is reviewed. Native
+Backstage Events/PostgreSQL and NATS are unchanged. Verified release, browser,
+security, backup/migration and rollback evidence is in
+[`docs/operations/phase6-portal-integration.md`](../../docs/operations/phase6-portal-integration.md).
+Phases 7/8 are not included in this release.

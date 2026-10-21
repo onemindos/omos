@@ -1,0 +1,30 @@
+{
+  "name": "@internal/plugin-onemind-machine-backend",
+  "version": "0.1.0",
+  "main": "dist/index.cjs.js",
+  "types": "src/index.ts",
+  "private": true,
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "catalog",
+    "moduleId": "onemind-machine-readonly"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "lint": "backstage-cli package lint",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "test": "backstage-cli package test"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "1.10.1"
+  },
+  "devDependencies": {
+    "@backstage/cli": "0.36.6"
+  },
+  "files": [
+    "dist"
+  ]
+}

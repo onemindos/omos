@@ -1,0 +1,43 @@
+# Install guide v1.3.x step 4 (Install Default Resources), through Argo CD:
+#   kubectl label namespace default openchoreo.dev/control-plane=true --overwrite
+#   kubectl apply -f https://raw.githubusercontent.com/openchoreo/openchoreo/<v1.3.x>/samples/getting-started/all.yaml
+# The second source is that exact upstream file, pinned to the installed control-plane
+# version (v1.3.1). Upgrade it together with the control-plane chart.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-openchoreo-defaults
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/onemindos/omos.git
+      targetRevision: main
+      path: platform/openchoreo/defaults
+    - repoURL: https://github.com/openchoreo/openchoreo.git
+      targetRevision: v1.3.1
+      path: samples/getting-started
+      directory:
+        include: all.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  ignoreDifferences:
+    # The Project controller seeds spec.projectRelease on each binding (see all.yaml).
+    - group: openchoreo.dev
+      kind: ProjectReleaseBinding
+      jsonPointers: [/spec/projectRelease]
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+      - RespectIgnoreDifferences=true

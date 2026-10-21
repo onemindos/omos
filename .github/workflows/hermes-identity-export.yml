@@ -1,0 +1,97 @@
+name: Hermes identity export
+# Exports Hermes' soul, skills, redacted config and cron jobs from the live pod into a reviewable PR.
+# Rules: docs/operations/hermes-export-rules.md. Plan: docs/operations/hermes-recoverability-plan.md (Step 2a).
+#
+# OFF BY DEFAULT. It needs all of the following before it will run:
+#   1. the dedicated runner labelled onemind-hermes-readonly (platform/core/github-runner-hermes.yaml), which uses the
+#      ServiceAccount github-runner/hermes-identity-export (platform/core/hermes-identity-export-rbac.yaml);
+#   2. the repository variable HERMES_IDENTITY_EXPORT_ENABLED set to 'true';
+#   3. the credentials found in the live config and skills rotated and replaced by env or op:// references,
+#      otherwise the export refuses to produce a PR (this is intended: it fails closed).
+# The pod gets no credential. This job only reads from it.
+on:
+  workflow_dispatch:
+  # schedule:  # enable once the prerequisites above are met
+  #   - cron: '0 2 * * *'   # after the 01:00 VolSync backup
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: hermes-identity-export
+  cancel-in-progress: false
+env:
+  GITLEAKS_VERSION: 8.30.1
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+  KUBECTL_VERSION: v1.36.0
+  KUBECTL_SHA256: 123d8c8844f46b1244c547fffb3c17180c0c26dac9890589fe7e67763298748e
+  AGENT_DIR: platform/hermes/agent
+jobs:
+  export:
+    if: vars.HERMES_IDENTITY_EXPORT_ENABLED == 'true'
+    runs-on: [self-hosted, onemind-hermes-readonly]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install kubectl ${{ env.KUBECTL_VERSION }} (pinned)
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/kubectl" "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+          echo "${KUBECTL_SHA256}  $RUNNER_TEMP/kubectl" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/kubectl"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Export from the Hermes pod (read-only)
+        run: |
+          set -u
+          POD=$(kubectl -n hermes get pod -l app.kubernetes.io/name=hermes,onemind.io/agent=legacy \
+            -o jsonpath='{.items[0].metadata.name}')
+          test -n "$POD"
+          mkdir -p "$RUNNER_TEMP/export"
+          set +e
+          kubectl -n hermes exec -i "$POD" -c hermes -- /opt/hermes/.venv/bin/python - \
+            < scripts/hermes_identity_export.py > "$RUNNER_TEMP/export.tar"
+          status=$?
+          set -e
+          tar -xf "$RUNNER_TEMP/export.tar" -C "$RUNNER_TEMP/export"
+          cat "$RUNNER_TEMP/export/EXPORT-REPORT.md" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then
+            echo "The export was refused (exit $status). See the report in the job summary."
+            exit "$status"
+          fi
+      - name: Install gitleaks ${{ env.GITLEAKS_VERSION }}
+        run: |
+          curl -fsSL -o gitleaks.tgz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum -c -
+          tar -xzf gitleaks.tgz gitleaks
+          install -m 0755 gitleaks "$RUNNER_TEMP/gitleaks"
+          rm -f gitleaks gitleaks.tgz
+      - name: Scan the export (second line of defence)
+        run: |
+          "$RUNNER_TEMP/gitleaks" dir "$RUNNER_TEMP/export" --config .gitleaks.toml --redact --no-banner --exit-code 1
+      - name: Replace the exported paths in the working tree
+        run: |
+          set -eu
+          E="$RUNNER_TEMP/export"
+          # Only these paths are ever written. Anything else in the repo is left alone.
+          rm -rf "$AGENT_DIR/skills" "$AGENT_DIR/config" "$AGENT_DIR/profiles" "$AGENT_DIR/cron" "$AGENT_DIR/live"
+          for d in skills config profiles cron live; do
+            if [ -d "$E/$d" ]; then cp -R "$E/$d" "$AGENT_DIR/$d"; fi
+          done
+          cp "$E/EXPORT-REPORT.md" "$AGENT_DIR/EXPORT-REPORT.md"
+      - name: Open or update the review PR
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        with:
+          branch: automation/hermes-identity-export
+          commit-message: 'chore(hermes): export identity from the live pod'
+          title: 'chore(hermes): review latest identity export'
+          body: |
+            Redacted export of Hermes' skills, config template, cron jobs and live SOUL.md from the running pod.
+            See `platform/hermes/agent/EXPORT-REPORT.md` for what was exported, skipped and sent to review.
+            `live/SOUL.md` differs from `agents/legacy/SOUL.md` until the edited soul is applied to the agent.
+            Review before merging; this workflow never auto-merges.
+          add-paths: |
+            platform/hermes/agent/skills/
+            platform/hermes/agent/config/
+            platform/hermes/agent/profiles/
+            platform/hermes/agent/cron/
+            platform/hermes/agent/live/
+            platform/hermes/agent/EXPORT-REPORT.md

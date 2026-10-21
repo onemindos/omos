@@ -4,6 +4,12 @@ The canonical architecture and doctrine documents for OneMind OS. **Read these b
 
 ---
 
+## Design documents (under review)
+
+`architecture/` holds the OneMind OS design documents: `OneMind-OS-Architecture.md` (unified architecture), `ONEMIND-MASTER-PICTURE.md` (system synthesis) and `OMOS-DATA-PICTURE.md` (data pipeline), plus `decisions/`. They are being reviewed and updated; until then, `STACK.md` and `../CLAUDE.md` win on live facts.
+
+---
+
 ## Canon (read in order)
 
 | File | Purpose |
@@ -43,13 +49,4 @@ Reusable NATS code patterns:
 
 ## `references/`
 
-Research and ecosystem notes:
-
-| File | Purpose |
-|------|---------|
-| `nats-ecosystem-references.md` | NATS ecosystem repo index and notes |
-| `agri_tactical_nats_repos.md` | Agricultural + tactical NATS use cases |
-| `nats_simulation_quick_reference.md` | NATS simulation quick reference |
-| `nats_simulation_report.md` | Full NATS simulation research report |
-| `nats_simulation_urls_for_forking.txt` | Source URLs from simulation research |
-| `onemind-recovery/` | Recovery procedures and backup notes |
+Research notes on external projects and the NATS ecosystem (`nats-ecosystem-references.md`, `nats/`, `ai/`, `defense/` and about 30 single-project notes). The top-level `references/` folder was merged in here on 2026-10-17. Not code, not deployed; review checklist in `research/2026-10-17-references-review.md`.

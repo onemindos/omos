@@ -1,0 +1,20 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  labels:
+    app.kubernetes.io/instance: kagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kagent
+    app.kubernetes.io/part-of: kagent
+    app.kubernetes.io/version: 0.10.3
+    helm.sh/chart: kagent-0.10.3
+  name: default-model-config
+  namespace: kagent
+spec:
+  apiKeySecret: kagent-model
+  apiKeySecretKey: api-key
+  model: onemind-chat
+  openAI:
+    apiFormat: chatCompletions
+    baseUrl: http://litellm.onemind-ai.svc.cluster.local:4000/v1
+  provider: OpenAI

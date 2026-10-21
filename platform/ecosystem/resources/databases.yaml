@@ -74,17 +74,3 @@ spec:
   cluster:
     name: onemind-data
   databaseReclaimPolicy: retain
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Database
-metadata:
-  name: onemind-kagent
-  namespace: onemind-data
-  annotations:
-    argocd.argoproj.io/sync-wave: '2'
-spec:
-  name: kagent
-  owner: kagent
-  cluster:
-    name: onemind-data
-  databaseReclaimPolicy: retain

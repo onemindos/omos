@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-openchoreo-observability
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '5'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/openchoreo/helm-charts
+    chart: openchoreo-observability-plane
+    targetRevision: 1.3.1
+    helm:
+      releaseName: openchoreo-observability-plane
+      valueFiles:
+      - $values/platform/openchoreo/observability/values.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/openchoreo/observability/resources
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openchoreo-observability-plane
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - ServerSideApply=true

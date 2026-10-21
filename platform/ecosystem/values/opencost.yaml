@@ -26,6 +26,10 @@ opencost:
       enabled: true
       url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
   metrics:
+    # kube-state-metrics already owns these series; do not emit duplicates.
+    kubeStateMetrics:
+      emitKsmV1Metrics: false
+      emitKsmV1MetricsOnly: false
     serviceMonitor:
       enabled: true
       additionalLabels:

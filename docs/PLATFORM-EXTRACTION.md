@@ -270,7 +270,7 @@ github-bridge, aoe-bridge).
 #### 3.2 — Typed Envelope on Every Message
 
 Paperclip enforced that every NATS message carries a typed header block. We already have
-this in `schemas/envelope/envelope.schema.json`. The discipline: never publish raw JSON
+this in `services/schemas/envelope/envelope.schema.json`. The discipline: never publish raw JSON
 directly — always wrap in the envelope.
 
 **The current gap:** hermes-bridge today publishes raw JSON payloads (not wrapped in the

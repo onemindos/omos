@@ -4,9 +4,11 @@ This repo is the infrastructure-as-code and GitOps source of truth for the OneMi
 
 Read `docs/MISSION.md` before architecture, product, AI or infrastructure decisions. Live state is in `docs/STACK.md` (tiered inventory, generated from the cluster); directory purposes are in `docs/REPO-LAYOUT.md`. Distinguish verified live state from intent: verify against the cluster (read-only) before writing "live" in docs.
 
+The platform plan (four layers, AI trust model, OpenChoreo migration phases and their tracker) is in `PLATFORM-ROADMAP.md` at the repository root. Read it before platform or AI-operations work, and update its tracker in the same PR when you complete roadmap work.
+
 ## What This Repo Is
 
-If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 47 Argo Applications reconcile from `main`, but **11 Helm releases are installed by hand** (argocd, cert-manager, ingress-nginx, loki, monitoring, nack, nats, otel-collector, tailscale-operator, takserver, tempo) and a few namespaces (`matrix`, `openclaw`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 52 Argo Applications reconcile from `main` (2026-10-17). Of the 11 Helm releases first installed by hand, 8 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-tempo`, `monitoring-otel-collector` (2026-10-17). **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, `openclaw`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
 
 The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
@@ -34,27 +36,28 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
   backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)
   hermes/      Hermes agent (agent/) and its sealed secrets (bridge/)
+  security/    Zero-trust layer (platform-security): Kyverno, Falco, SPIRE, OpenFGA apps + labelled namespaces
+  takserver/   TAK Server: Helm chart (chart/) + values-onemind.yaml (Helm CLI), Argo overlays deploy/ and fedhub/, runbook
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
-  values/      Helm values for the hand-installed add-ons (argocd, cert-manager, ingress-nginx, loki, ...)
-tak-server/    TAK Server chart (chart/), Dockerfiles, NatsBridgePlugin source, overlays (deploy/, fedhub/)
-infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root)
-services/ apps/ schemas/ edge/ docs/ scripts/ reports/    code, contracts, edge config, docs, CI helpers
+  values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator, kube-prometheus-stack, loki, tempo, otel-collector; Helm CLI: argocd)
+infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root); edge/ holds Mac leaf config (not deployed)
+services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
 ```
 
-Not active or not deployed: `legacy/`, `rads/`, `references/`, `OneMind-Platform/`, `blueprints/`, `plugins/`, and the dangling `omos-infra` submodule pointer. Do not edit them unless asked.
+Not active or not deployed: `docs/references/` (external project research, moved from the top-level `references/` on 2026-10-17). Do not edit it unless asked. (The `onemind-vision` plugin, installed by hand in the Hermes pod, has its source in `platform/hermes/agent/plugins/`.) The Hermes agent's souls, registry, doctrine and runbook are in `platform/hermes/agent/`.
 
 ## The Deployment Pattern
 
-1. Application manifests live under `platform/<layer>/` (or `tak-server/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
+1. Application manifests live under `platform/<layer>/` (or `platform/takserver/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
 2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
 3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is an in-cluster Harbor. DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
-5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (report H1); do not add requests casually.
+5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (`docs/operations/cluster-review-2026-10-09.md`, H1); do not add requests casually.
 
 ### Public ingress
 
-Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`. (`zeusdelacruz.com` retired 2026-10-10.) `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only. `cloudflared` is scaled to 0 (cold standby).
+Public hostnames go through `ingress-nginx` (class `nginx`, LB `143.244.220.155`). DNS is Cloudflare-proxied A records pointing at that LB; ingresses carry the `whitelist-source-range` annotation with Cloudflare ranges. Exceptions today with no source restriction: `enroll.onemindos.dev`, `fedhub.onemindos.dev` (no DNS record at last check), `matrix.`/`element.onemindos.com`. (`zeusdelacruz.com` retired 2026-10-10.) `tak.onemindos.dev` is an unproxied A record straight to the TAK LB `152.42.155.95`. Admin UIs (Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, NATS UIs, Backstage preview, OpenClaw) use the `tailscale` ingress class and are tailnet-only (OpenCost too, at `opencost.tail717ba0.ts.net`). `cloudflared` is scaled to 0 (cold standby).
 
 ## NATS Subject Grammar (LOCKED — do not invent new patterns)
 
@@ -75,7 +78,7 @@ Full doctrine: `docs/NATS-DOCTRINE.md`.
 
 ## NATS Streams
 
-The 39 Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats` Application and reconciled into JetStream by the NACK controller, which is a Helm-CLI release (`nack`), not an Argo app. Do not use the older Python provisioning scripts as the source of truth.
+The 39 Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats` Application and reconciled into JetStream by the NACK controller (Helm release `nack`, adopted into Argo as `edge-nack`). Do not use the older Python provisioning scripts as the source of truth.
 
 ## Secrets
 
@@ -102,15 +105,15 @@ doctl kubernetes cluster kubeconfig save omos-cloud     # context: do-nyc3-omos-
 kubectl --context do-nyc3-omos-cloud get nodes
 ```
 
-- The Kubernetes API endpoint is **public** (no control-plane firewall; review H3). Tailscale gives access to admin UIs, not a private API.
+- The Kubernetes API endpoint is **public** (no control-plane firewall; `docs/operations/cluster-review-2026-10-09.md`, H3). Tailscale gives access to admin UIs, not a private API.
 - Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (2 x 8 vCPU / 32 GiB, autoscale 2 to 4). `infra/main.tf` defaults do not match; do not `terraform apply` without a clean plan.
 - Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
 
 ## TAK Server
 
-TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `tak-server/chart` with `tak-server/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `tak-server/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `tak-server/fedhub`. Both fedhub and tak-ldap are running. The LB `tak-external` exposes 8089, 8443, 8446, 9101, 9102 and 64738 to the internet.
+TAK Server 5.8 on OneMind hardened images (`ghcr.io/onemindos/takserver-base:*-5.8-onemind`). The core (API, messaging, config, plugins, Ignite, PostgreSQL) is the **Helm release `takserver`** from `platform/takserver/chart` with `platform/takserver/values-onemind.yaml`, applied by hand (revision 34 on 2026-09-29). The `platform-takserver` Application manages only the overlay in `platform/takserver/deploy` (LB proxy, NATS leaf, Mumble, LDAP, secrets) and `platform-fedhub` manages `platform/takserver/fedhub`. Both fedhub and tak-ldap are running. The LB `tak-external` exposes 8089, 8443, 8446, 9101, 9102 and 64738 to the internet.
 
-The NatsBridgePlugin (`tak-server/plugin-src/`, JAR in `tak-server/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `tak-server/DEPLOY-RUNBOOK.md`.
+The NatsBridgePlugin (`services/takserver/plugin-src/`, JAR in `services/takserver/plugin/`) is the CoT-to-NATS wire (`tak.cot.inject` in, `tak.cot.>` out). Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner. Deploy runbook: `platform/takserver/DEPLOY-RUNBOOK.md`.
 
 ## CI (`.github/workflows/quality.yml`)
 

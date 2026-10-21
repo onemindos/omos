@@ -73,7 +73,7 @@ SETTINGS
 -- ---------------------------------------------------------------------------
 -- 3. NEW: events_v2 — envelope-aligned MergeTree sink for evt.> events
 -- ---------------------------------------------------------------------------
--- Column alignment follows the P0-E target shape documented in schemas/README.md:
+-- Column alignment follows the P0-E target shape documented in services/schemas/README.md:
 --   v       Int32            — envelope version (default 1)
 --   id      String           — UUIDv4 message id
 --   ts      DateTime64(3)    — RFC3339 event timestamp (authoritative)

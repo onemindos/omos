@@ -33,7 +33,7 @@ spec:
               with httpx.Client(timeout=30) as client:
                   for attempt in range(160):
                       try:
-                          for name in ["core", "kagent", "openchoreo"]:
+                          for name in ["core", "openchoreo"]:
                               body = {"key": os.environ[name], "key_alias": "onemind-" + name,
                                       "models": ["onemind-chat", "onemind-fast"], "metadata": {"service": name}}
                               response = client.post(url + "/key/generate", headers=headers, json=body)

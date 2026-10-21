@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: backstage
   namespace: backstage
+  labels:
+    app: backstage
 spec:
   replicas: 2
   revisionHistoryLimit: 3
@@ -31,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: backstage
-        image: ghcr.io/onemindos/onemind-portal@sha256:1c02b6af6601f47b042fe531aad5890d1b2a23da82277ba547c99e22e0778fda
+        image: ghcr.io/onemindos/onemind-portal@sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6
         command:
         - node
         args:
@@ -53,6 +55,10 @@ spec:
           containerPort: 7007
         envFrom:
         - secretRef:
+            name: openchoreo-oidc
+        - secretRef:
+            name: openchoreo-catalog
+        - secretRef:
             name: backstage-zoho
             optional: true
         - secretRef:
@@ -65,6 +71,11 @@ spec:
         - secretRef:
             name: onemind-fga-client
         env:
+        - name: GRAFANA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-grafana
+              key: GRAFANA_TOKEN
         - name: MCP_TOKEN
           valueFrom:
             secretKeyRef:

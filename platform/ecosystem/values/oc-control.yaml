@@ -1,3 +1,5 @@
+# Phase 6: OneMind Backstage now hosts the OpenChoreo plugins.
+# The temporary built-in console is retired; portal identity/catalog roles remain.
 backstage:
   enabled: false
 security:
@@ -20,8 +22,18 @@ security:
   authz:
     enabled: true
 controllerManager:
-  nodeSelector: &id001
-    onemind.io/compute-role: ecosystem
+  # Prefer the ecosystem pool but do not require it: after the 2026-10-18 DOKS node
+  # recycle the ecosystem node was at 99% CPU requested and a required nodeSelector left the
+  # new API pod Pending while the three new hub-core nodes had room.
+  affinity: &id001
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values: [ecosystem]
   resources:
     requests:
       cpu: 10m
@@ -30,7 +42,7 @@ controllerManager:
       cpu: '2'
       memory: 1Gi
 openchoreoApi:
-  nodeSelector: *id001
+  affinity: *id001
   resources:
     requests:
       cpu: 10m
@@ -39,6 +51,10 @@ openchoreoApi:
       cpu: '2'
       memory: 1Gi
   config:
+    server:
+      # Advertised in the OAuth protected-resource metadata and links; was the chart's
+      # placeholder api.openchoreo.invalid.
+      publicUrl: http://onemind-openchoreo-api.tail717ba0.ts.net
     security:
       subjects:
         user:
@@ -52,7 +68,7 @@ openchoreoApi:
     hostnames:
     - onemind-openchoreo-api.tail717ba0.ts.net
 clusterGateway:
-  nodeSelector: *id001
+  affinity: *id001
   resources:
     requests:
       cpu: 10m
@@ -62,11 +78,20 @@ clusterGateway:
       memory: 1Gi
 gateway:
   gatewayClassName: onemind-private
+  # The Cilium gateway Service is a Tailscale LoadBalancer. This annotation (propagated
+  # from the Gateway to its Service) names the tailnet device after the API hostname, so
+  # onemind-openchoreo-api.tail717ba0.ts.net resolves on the tailnet and matches the HTTPRoute.
+  infrastructure:
+    annotations:
+      tailscale.com/hostname: onemind-openchoreo-api
   tls:
     enabled: false
     hostname: onemind-openchoreo-api.tail717ba0.ts.net
 eventForwarder:
-  nodeSelector: *id001
+  # Portal catalog sync is poll-only until authenticated event ingress is reviewed.
+  # Do not leave a forwarder posting to the deliberately disabled HTTP receiver.
+  enabled: false
+  affinity: *id001
   config:
     webhooks:
       endpoints:
@@ -75,7 +100,7 @@ portalAssistant:
   enabled: true
   http:
     enabled: false
-  nodeSelector: *id001
+  affinity: *id001
   llm:
     secretName: openchoreo-assistant
     modelName: openai:onemind-chat

@@ -1,0 +1,9 @@
+# Agent fabric: tools that watch and talk to the agent protocol on NATS (agents.*).
+# They belong to Hermes in Git, but run in their own namespace so a compromised web UI is
+# not next to Hermes's secrets (hermes-env) or its data volume.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agent-fabric
+  labels:
+    onemind.io/layer: agents

@@ -25,7 +25,7 @@ The backstage-zoho Secret is absent. Existing Zoho Projects task support require
 
 ## Local Zoho connection preparation
 
-User authorized preparation of the read-only connection. Run python3 apps/onemind-portal/scripts/prepare-zoho.py in a local terminal. It prompts privately for a US Self Client grant and stores the refresh configuration at ~/.config/onemind/zoho-readonly.json with mode 600, preserving existing files. The task grant is ZohoProjects.tasks.READ. Future Calendar grants are ZohoCalendar.calendar.READ,ZohoCalendar.event.READ; Calendar still needs selected calendar UID/timezone and actual response acceptance. Preparing credentials does not activate Calendar.
+User authorized preparation of the read-only connection. Run python3 services/onemind-portal/scripts/prepare-zoho.py in a local terminal. It prompts privately for a US Self Client grant and stores the refresh configuration at ~/.config/onemind/zoho-readonly.json with mode 600, preserving existing files. The task grant is ZohoProjects.tasks.READ. Future Calendar grants are ZohoCalendar.calendar.READ,ZohoCalendar.event.READ; Calendar still needs selected calendar UID/timezone and actual response acceptance. Preparing credentials does not activate Calendar.
 
 Seal the local JSON as backstage-zoho in namespace backstage through the existing cluster-context/SealedSecrets procedure. Existing deployment references this optional Secret. No OAuth authorization or token exchange has been run by this PR. The user must generate the grant in Zoho; do not request plaintext credentials in chat.
 

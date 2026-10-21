@@ -3,17 +3,43 @@
 Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), what owns it, what state it holds, whether it is backed up, who can reach it, and whether Git or a laptop controls it.
 
 - **Captured:** 2026-10-09, read-only, kube context `do-nyc3-omos-cloud`, Argo CD synced to `main` at `4934f532`.
-- **Scope:** all 47 Argo CD Applications, all 11 Helm-CLI releases, and the workloads that nothing in Git or Helm tracks.
+- **Scope:** all 47 Argo CD Applications (52 on 2026-10-17), all 11 Helm releases first installed by hand (4 adopted into Argo since, see GitOps gaps), and the workloads that nothing in Git or Helm tracks.
 - **Status:** a point-in-time snapshot, not a live view. To refresh it, rerun the commands in [How to refresh](#how-to-refresh). Counts in the Summary go stale first.
 - **Development phase:** every app is deliberate (system integration). This file ranks apps; it does not recommend removing any.
 - **Owner:** there is one operator, `zeus`, for everything. The "Owner" column is therefore omitted from the tables; the first thing to change when a second person joins is to add it.
+
+## Phase 5 addendum — 2026-10-19, 08:07 UTC
+
+This narrow refresh does not recertify the older inventory below. Live cluster:
+4 nodes, 70 Argo Applications (68 Synced/Healthy); only pre-existing Matrix
+OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending pods.
+All nodes are below 78% requested CPU/memory. OpenCost duplicate KSM emission is off.
+OpenChoreo observability core/modules are deployed on existing backends, with
+an authenticated tailnet Observer, real console/MCP pilot logs and metrics, and
+verified encrypted SQLite backup/isolated restore. See the timestamped
+[Phase 5 evidence](../PLATFORM-ROADMAP.md#phase-5-capacity-then-observability).
+Older node counts, request percentages and M2 findings below are historical.
+
+## Phase 6 addendum — 2026-10-19, 18:32 UTC
+
+Existing OneMind Backstage 1.55.3 now hosts pinned OpenChoreo 1.3.1 core and
+observability plugins, 2/2 ready and Argo Synced/Healthy. Real Authentik subject
+mapping, existing home/Today/catalog/runbooks/settings, pilot Deploy/Definition,
+logs/metrics and machine read-only boundaries passed. Shared permission-cache
+results use the existing PostgreSQL service; no raw IDP token is stored.
+Temporary console and candidate Deployments/routes are removed; their production
+replacement is `onemind-preview`, not a second portal. No storage, identity or
+backup was deleted. At acceptance: 69 Argo Applications, 68 Healthy; only existing
+Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. This narrow
+observation does not recertify historical inventory.
+See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
 
 ## Summary
 
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
-| Helm-CLI releases (not in Git as Applications) | 11 |
+| Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
 | Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4), `nats` UIs (5) and `openclaw` (1) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`, `platform-openclaw`) that take ownership once synced; until then they are untracked |
 | Namespaces | 48 |
 | Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
@@ -59,13 +85,13 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 | Release | Namespace | Chart | Purpose | State | Backup | Exposure | GitOps |
 |---------|-----------|-------|---------|-------|--------|----------|--------|
-| `takserver` | takserver | takserver-4.6.0 (rev 34, 2026-09-29), local chart `tak-server/chart` | TAK Server API, messaging, config, plugins, Ignite, PostgreSQL | see `platform-takserver` | see `platform-takserver` | see `platform-takserver` | **Helm CLI** |
+| `takserver` | takserver | takserver-4.6.0 (rev 34, 2026-09-29), local chart `platform/takserver/chart` | TAK Server API, messaging, config, plugins, Ignite, PostgreSQL | see `platform-takserver` | see `platform-takserver` | see `platform-takserver` | **Helm CLI** |
 | `nats` | nats | nats-2.14.2 (rev 10) | NATS StatefulSet | see `platform-nats` | see `platform-nats` | see `platform-nats` | **Helm CLI** (and Argo tracks the same StatefulSet) |
-| `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | **Helm CLI** |
+| `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | Argo (`edge-nack`, adopted in PR #176) |
 | `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet | **Helm CLI** (not self-managed) |
-| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | **Helm CLI** (issuers are in `platform-core`) |
-| `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | **Helm CLI** |
-| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | **Helm CLI** |
+| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | Argo (`edge-cert-manager`, adopted in PR #176) (issuers are in `platform-core`) |
+| `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | Argo (`edge-ingress-nginx`, adopted in PR #176) |
+| `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | Argo (`edge-tailscale-operator`, adopted in PR #176) |
 
 ## Tier 2: everything else
 
@@ -102,12 +128,10 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
 | `ecosystem-opensearch` | onemind-search | opensearch 3.9.0 | Search | 20 GiB | `VolSync` | internal |
 | `ecosystem-harbor` | onemind-registry | harbor 1.19.2 | In-cluster container registry | 61 GiB | `VolSync` x5 | internal |
-| `ecosystem-kagent` / `ecosystem-kagent-crds` | kagent | kagent 0.10.3 | Kubernetes agent framework | none | Git | internal |
-| `ecosystem-agent-sandbox` | agent-sandbox-system | local `platform/ecosystem/charts/agent-sandbox` | Sandboxed agent execution | none | Git | internal |
 | `ecosystem-oc-control` | openchoreo-control-plane | openchoreo-control-plane 1.3.1 (+ overrides) | OpenChoreo developer platform | none | Git | gateway LB on **tailnet** |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
-| `ecosystem-rollouts` | argo-rollouts | argo-rollouts 2.43.6 | Progressive delivery | none | Git | internal |
+| `argo-rollouts` | argocd | argo-rollouts 2.43.6 | Progressive delivery (moved from `argo-rollouts` namespace to `argocd` on 2026-10-17; no Rollouts configured yet) | none | Git | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-spire` / `ecosystem-spire-crds` | spire-system | spire 0.30.3 / spire-crds 0.6.1 | Workload identity | 5 GiB | `VolSync` | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
@@ -117,10 +141,10 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 
 | Release | Namespace | Chart | Purpose | State | Backup | Exposure | GitOps |
 |---------|-----------|-------|---------|-------|--------|----------|--------|
-| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Prometheus, Alertmanager, Grafana | Prometheus TSDB, Grafana DB, 40 GiB PVCs in the namespace | `VolSync` | Grafana tailnet; Alertmanager internal | **Helm CLI** |
-| `loki` | monitoring | loki-7.0.0 | Log storage. **PVC 89% full** (A4) | 20 GiB | `VolSync` | internal | **Helm CLI** |
-| `tempo` | monitoring | tempo-1.24.4 | Trace storage | PVC | `VolSync` | internal | **Helm CLI** |
-| `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Telemetry pipeline | none | Git | internal | **Helm CLI** |
+| `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | Prometheus, Alertmanager, Grafana | Prometheus TSDB, Grafana DB, 40 GiB PVCs in the namespace | `VolSync` | Grafana tailnet; Alertmanager internal | Argo (`monitoring-kube-prometheus-stack`, adopted 2026-10-17) |
+| `loki` | monitoring | loki-7.0.0 | Log storage. **PVC 89% full** (A4) | 20 GiB | `VolSync` | internal | Argo (`monitoring-loki`, adopted 2026-10-17) |
+| `tempo` | monitoring | tempo-1.24.4 | Trace storage | PVC | `VolSync` | internal | Argo (`monitoring-tempo`, adopted 2026-10-17) |
+| `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | Telemetry pipeline | none | Git | internal | Argo (`monitoring-otel-collector`, adopted 2026-10-17) |
 
 ## Not tracked by Argo or Helm
 
@@ -128,7 +152,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
-| `nats` (UIs) | `agent-web-ui`, `agenttap`, `heynats`, `nats-dashboard`, `nats-ui` (all `:latest`) | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
+| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (`:latest`); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
 | `openclaw` | `openclaw` gateway | `platform/openclaw/`, Application `platform-openclaw` (auto-sync, `prune: false`) | 2 | `VolSync` (50 GiB) | tailnet |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
@@ -136,7 +160,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 ## GitOps gaps
 
-Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`) and are not Argo Applications. `helm list -A` shows all of them as `deployed`.
+Eleven releases were installed with `helm upgrade --install` (see `platform/install.sh`). **Update 2026-10-17:** four of them (`cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator`) were adopted into Argo in PR #176 and are owned by the `edge-*` Applications. The four monitoring releases (`monitoring`, `loki`, `tempo`, `otel-collector`) were adopted later the same day as `monitoring-*` Applications. The remaining three are Helm CLI only: `nats`, `takserver` and `argocd`. `helm list -A` still shows all eleven, because adoption leaves the release record. Do not run `platform/install.sh`: it would `helm upgrade` the adopted releases too. Current status: `docs/gitops/HELM-ADOPTION.md`.
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
@@ -149,7 +173,7 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 | `nats` | nats | nats-2.14.2 | 10 | 2026-07-11 | `platform/nats/values.template.yaml` plus an **out-of-band, gitignored** `values.secret.yaml` | Passwords exist only on the machine that last ran Helm; Argo and Helm both own the StatefulSet |
 | `otel-collector` | monitoring | opentelemetry-collector-0.165.0 | 3 | 2026-07-17 | `platform/values/otel-collector.yaml` | Telemetry only |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | 3 | 2026-07-11 | `platform/values/tailscale-operator.yaml` | All admin UIs depend on it |
-| `takserver` | takserver | takserver-4.6.0 | 34 | 2026-09-29 | `tak-server/values-onemind.yaml` and chart `tak-server/chart` | The most important workload has no reproducible rebuild path |
+| `takserver` | takserver | takserver-4.6.0 | 34 | 2026-09-29 | `platform/takserver/values-onemind.yaml` and chart `platform/takserver/chart` | The most important workload has no reproducible rebuild path |
 | `tempo` | monitoring | tempo-1.24.4 | 4 | 2026-07-17 | `platform/values/tempo.yaml` | Traces only |
 
 Whether the values in Git still match what is deployed was not checked; `helm get values` can contain secrets and was not run. Verify with a values diff before adopting any release.
@@ -179,10 +203,9 @@ Gaps beyond the eleven releases:
 
 | Namespace | Workloads |
 |-----------|-----------|
-| nats | `agent-web-ui`, `agenttap`, `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
+| nats | `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
 | onetak | `maputnik`, `martin`, `nodeodm`, `overpass`, `pg-featureserv`, `stac-api`, `stac-browser`, `tak-portal`, `tile38`, `tileserver-gl`, `valhalla:run-latest`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
 | omos | `omos-mission-engine:latest` |
-| kagent | `kagent-grafana-mcp:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |
 | matrix, onemind-search | init containers using bare `busybox` / `busybox:latest` |
@@ -199,8 +222,8 @@ The new secret scan found nine locations that look like real or example credenti
 | `platform/hermes/agent/SECRETS.md` | 74, 80 | OAuth client secret in an example command |
 | `platform/monitoring/deployment.yaml` | 53 | `--password=` argument on a container |
 | `services/om_presence.py` | 50, 52 | Default token and API key in code |
-| `tak-server/edge/deploy/docs/enrollment.md` | 123, 139 | Line 139 is a `curl -u user:password` example; line 123 is probably a false positive |
-| `references/ai/orp.md` | 28 | False positive (prose about a keystore) |
+| `infra/edge/takserver/deploy/docs/enrollment.md` | 123, 139 | Line 139 is a `curl -u user:password` example; line 123 is probably a false positive |
+| `docs/references/ai/orp.md` | 28 | False positive (prose about a keystore) |
 
 `platform/monitoring/` belongs to another change; flag the `--password` argument there rather than editing it in this one.
 

@@ -1,0 +1,44 @@
+# Install guide v1.3.x step 5, "Namespace and Certificates": a copy of the control
+# plane's cluster-gateway CA so the data-plane agent trusts the cluster gateway.
+#   kubectl get secret cluster-gateway-ca -n openchoreo-control-plane -o jsonpath='{.data.ca\.crt}' | base64 -d
+# Public certificate only (no key). Valid until 2036-10-06; refresh if the CA is reissued.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-gateway-ca
+  namespace: openchoreo-data-plane
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIFSjCCAzKgAwIBAgIUDdaxTmExjUiVJSMkYT1Dj+Fwa+MwDQYJKoZIhvcNAQEN
+    BQAwPTETMBEGA1UEChMKT3BlbkNob3JlbzEmMCQGA1UEAxMdb3BlbmNob3Jlby1j
+    bHVzdGVyLWdhdGV3YXktY2EwHhcNMjYxMDA5MDA1NTA5WhcNMzYxMDA2MDA1NTA5
+    WjA9MRMwEQYDVQQKEwpPcGVuQ2hvcmVvMSYwJAYDVQQDEx1vcGVuY2hvcmVvLWNs
+    dXN0ZXItZ2F0ZXdheS1jYTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIB
+    ALz/HZPk2VNUtFUYuEIHbFhbSNV0fBkzncCSATOqRApsuLczR7TQVFYNkEfAQJVB
+    oTPYCn0+F2MgpRm7NTeYNBms3xse6x51mBwVKzmXhNQNpvxo88R2X8IwxmWT1JKj
+    UsNyyskDmHC7s1q1hhmFlaGnssmHl6DhiVwqEol1H9Kg/MKpdLf9I/lqIyYmymba
+    ef0ESypwGk10TPBkW/JUZRR9XZbD9Wuy6CmAtBOs7fQWQNJl/S/4GPLb9IiulZzA
+    Z9hxQ4xuyh/VOsacrpBjYUIzGzQpOa0fAl6l872bd6ljQq3BRRhMBNy7pifECu3U
+    nKxPNeaO0Z8fTQDnHyG2DBUDZzMTLyVJNNtwxoImCPsLWeLWcxGV/Te8ijuucFrN
+    HYTckMJ2asQ9Li4DHZ0CbCveZsoFbatjiK6CDyxCiKjTTSHKb5sSjMlfCqxwvoT8
+    Tg0y9yr1IIQsiZhvuj6n7ZavB0wz/AH/rolmGUsuV6qEjtMyzSsIzasKWpYYtjwS
+    S/y6fknY2ZZ3q6r0PzSwdraZLNX8mJaDik2hqRuaZFekkoaioFsHIb1+7F9ZLZFU
+    el3U6ZrRRmpuOyG+GbBNUwi4ahGkJONNPjQuRvJFhCXhFczKlJFGqRa30omzV34J
+    OhZN1q3CWDQFqdSMFzt3EjPYB8vUGLybs2ZkmImn9WvvAgMBAAGjQjBAMA4GA1Ud
+    DwEB/wQEAwICpDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBR55myt31x9mw1T
+    CMT2Px9dqJb70zANBgkqhkiG9w0BAQ0FAAOCAgEAI7xsYL1Y+yfndUEa+dDFJ2Nn
+    +3N+fl/xqLmn0QFTpFr4aWq7nJr6I+6sfFDYhZ73/dueWUHXvwBX85RjZXp5FxK0
+    8AlmyS9AyewUks/fYcrKYVGtmWOZ34MZsaVEXyRvQeZg1YmawWj8eJPbQP1Rk0Ig
+    Qzl3YgzY4xwfGlfpvPGCEB5xduKMOD12NlKcpC5noOACRfZ4OJ9JaAJSBA6aAm+3
+    rsbfUvN3gZ0uC/hWM/4GbmHXc095Mdq7mvHECc1TstDmQakgrILlKyAmXFDRie/5
+    wp+F96Rzcv83cqsiC/Y0bpDXkLtyVkzpodDavQ4ie47gPxUd9ZLWvdEypS6Pl78d
+    g+6wm9DX6eSgx0hpD9rZS86Vuq+IpVFxJqmPX0n6RwkjuawJZlYukTzfSlk/wfAI
+    JOzBvWJ8aON5ZH60oBBm3oxCz/fGmxYGn4KJknkan4GEGPDLkURa0NgKOAyi/K51
+    Pg/M6iui3qTmP+KoibC57z5X5txfDPmC8dGVYU47nI+t1Gix3iB9fH7qTk13tU9T
+    kEgmqWiS5zRT/uaww7/koPTYG2sQbd3EczNh7IFyi2J6euSuV6HkTLFt/phdjsyZ
+    PKE5SmrNAk5Fa0lgI9RZcA+RwcrUD9D5VQNJf4k4sWYzJLTlaD90GiLjydTVaDVJ
+    QaoPT/HYFR6CbMO2glw=
+    -----END CERTIFICATE-----

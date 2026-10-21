@@ -15,21 +15,10 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | Path | Purpose |
 |------|---------|
 | `.github/` | CI quality gate (`quality.yml`) and service image build workflows |
-| `infra/` | Terraform for the DigitalOcean foundation, including the VPC and DOKS cluster |
+| `infra/` | Terraform for the DigitalOcean foundation (VPC and DOKS cluster), plus `edge/` for hardware-bound and Mac edge configuration |
 | `platform/` | Kubernetes resources, Helm values, and Argo CD applications for cluster workloads |
-| `tak-server/` | TAK Server chart, image build files, plugins, deployment overlays, and edge tools |
-| `services/` | OneMind runtime services, bridges, and supporting scripts |
-| `apps/` | Application code, including the TAK portal |
-| `edge/` | Hardware-bound and Mac edge configuration |
-| `schemas/` | Versioned event contracts and code generators |
-| `plugins/` | OneMind platform plugins |
-| `rads/` | Remote Autonomous Deployment System simulation and robotics work |
-| `legacy/` | Legacy agent source, configuration, and operating material |
+| `services/` | First-party source code built into images (portals, OneMind runtime services, bridges), the bus contracts in `schemas/`, and supporting scripts |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
-| `blueprints/` | Product, interface, and capability blueprints |
-| `OneMind-Platform/` | Platform capability and integration notes |
-| `references/` | External project and ecosystem research |
-| `reports/` | Dated cluster review reports |
 | `scripts/` | CI validation helpers and ecosystem tooling |
 The two `*-PICTURE.md` files at the repository root are dated architecture snapshots. For current architecture and deployment guidance, use `docs/` and the manifests under `platform/`.
 

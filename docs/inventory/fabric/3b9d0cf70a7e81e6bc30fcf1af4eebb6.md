@@ -8,6 +8,7 @@ These are historical documentation claims, not current deployment instructions o
 - Documented host: ☁️ DOKS Cluster
 - Recorded status: ✅ Live
 - Recorded address: https://tile38.tail717ba0.ts.net
+- Tags: Geo
 
 Real-time geospatial database & geofencing
 

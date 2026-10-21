@@ -18,11 +18,7 @@
   "ignorePaths": [
     "**/node_modules/**",
     "**/third-party/**",
-    "legacy/**",
-    "references/**",
-    "OneMind-Platform/**",
-    "omos-infra/**",
-    "rads/**",
+    "docs/references/**",
     "platform/future/**",
     ".obsidian/**",
     "vault/**"
@@ -37,21 +33,21 @@
   "kubernetes": {
     "managerFilePatterns": [
       "/^platform/.+\\.ya?ml$/",
-      "/^tak-server/(deploy|fedhub)/.+\\.ya?ml$/"
+      "/^platform/takserver/(deploy|fedhub)/.+\\.ya?ml$/"
     ]
   },
   "helm-values": {
     "managerFilePatterns": [
       "/^platform/values/.+\\.ya?ml$/",
       "/^platform/ecosystem/values/.+\\.ya?ml$/",
-      "/^tak-server/values-onemind\\.ya?ml$/"
+      "/^platform/takserver/values-onemind\\.ya?ml$/"
     ]
   },
   "github-actions": {
     "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"]
   },
   "helmv3": {
-    "description": "tak-server/chart vendors its dependencies (charts/*.tgz + Chart.lock); bump them by hand with `helm dependency update`.",
+    "description": "platform/takserver/chart vendors its dependencies (charts/*.tgz + Chart.lock); bump them by hand with `helm dependency update`.",
     "enabled": false
   },
 

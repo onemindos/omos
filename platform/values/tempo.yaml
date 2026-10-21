@@ -24,7 +24,8 @@ tempo:
 persistence:
   enabled: true
   size: 20Gi
-  storageClassName: do-block-storage-retain
+  # No storageClassName: the live PVC uses the cluster default (do-block-storage) and
+  # StatefulSet volumeClaimTemplates are immutable.
 
 monolithic:
   resources:

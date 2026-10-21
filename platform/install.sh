@@ -202,10 +202,10 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
 
 # -----------------------------------------------------------------------------
 # 11. TAK SERVER OVERLAYS — additional deployments in the takserver namespace
-# These live alongside the Helm-managed TAK Server core (see tak-server/chart/).
-# Apply AFTER the Helm chart is deployed (step in tak-server/DEPLOY-RUNBOOK.md).
+# These live alongside the Helm-managed TAK Server core (see platform/takserver/chart/).
+# Apply AFTER the Helm chart is deployed (step in platform/takserver/DEPLOY-RUNBOOK.md).
 # Secrets:
-#   takserver-nats-creds: SealedSecret in tak-server/deploy/ (NATS password for mumble-bridge)
+#   takserver-nats-creds: SealedSecret in platform/takserver/deploy/ (NATS password for mumble-bridge)
 #   tak-3dviewer-cert: out-of-band — re-enroll "3DViewer" EUD in TAK Server UI after wipe
 #     kubectl create secret generic tak-3dviewer-cert -n takserver \
 #       --from-file=ca.pem=... --from-file=cert.pem=... --from-file=cert.key=...
@@ -231,7 +231,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/core/github-runner.yaml"
 # NOTE: takml-server-jar PVC must be populated manually on first deploy:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \
 #     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],"containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
-#   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
+#   kubectl cp platform/takserver/server/takml_server-2.1.jar takml/jar-loader:/jar/
 #   kubectl delete pod jar-loader -n takml
 # Models (visdrone.torchscript) must be copied to the takml-models PVC similarly.
 # -----------------------------------------------------------------------------
