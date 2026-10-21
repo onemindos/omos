@@ -132,6 +132,59 @@ describe('base background in brand.css', () => {
   });
 });
 
+describe('floating surfaces', () => {
+  modes.forEach(mode => {
+    const t = tokens[mode];
+    it(`${mode}: toast, menus, popovers, dialogs and snackbars use surface tokens`, () => {
+      const c = (createOneMindTheme(mode).getTheme('v5') as any).components;
+      expect(c.MuiPopover.styleOverrides.paper.backgroundColor).toBe(
+        t.surface[2],
+      );
+      expect(c.MuiDialog.styleOverrides.paper.backgroundColor).toBe(
+        t.surface[1],
+      );
+      expect(c.MuiSnackbarContent.styleOverrides.root.backgroundColor).toBe(
+        t.surface[2],
+      );
+      expect(c.MuiTooltip.styleOverrides.tooltip.backgroundColor).toBe(
+        t.surface[3],
+      );
+      expect(c.MuiAlert.styleOverrides.standardError.color).toBe(
+        t.status.critical.fg,
+      );
+      expect(c.MuiAlert.styleOverrides.standardError.backgroundColor).toBe(
+        t.status.critical.bg,
+      );
+    });
+
+    it(`${mode}: Backstage UI toast reads portal surface and status tokens`, () => {
+      const v = buiVariables(mode);
+      expect(v['--bui-bg-app']).toBe(t.surface[0]); // toast background
+      expect(v['--bui-border-1']).toBe(t.border.subtle);
+      expect(v['--bui-fg-primary']).toBe(t.text[1]);
+      expect(v['--bui-fg-danger']).toBe(t.status.critical.fg);
+      expect(v['--bui-fg-success']).toBe(t.status.ok.fg);
+      expect(v['--bui-fg-warning']).toBe(t.status.warn.fg);
+      expect(v['--bui-fg-info']).toBe(t.status.info.fg);
+      // Severity accents are readable on the toast surface and critical is not the brand.
+      (['critical', 'ok', 'warn', 'info'] as const).forEach(k =>
+        expect(
+          contrastRatio(t.status[k].fg, t.surface[0]),
+        ).toBeGreaterThanOrEqual(4.5),
+      );
+      expect(v['--bui-fg-danger']).not.toBe(t.brand.base);
+    });
+  });
+
+  it("keeps the toast region on the portal theme, not Backstage's inverted one", () => {
+    ['light', 'dark'].forEach(mode =>
+      expect(css).toContain(
+        `body[data-theme-mode='${mode}'] [class*='Toast_container']`,
+      ),
+    );
+  });
+});
+
 describe('MUI theme', () => {
   modes.forEach(mode => {
     it(`${mode} theme uses the tokens`, () => {

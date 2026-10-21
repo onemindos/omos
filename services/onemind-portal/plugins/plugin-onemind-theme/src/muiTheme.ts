@@ -213,6 +213,55 @@ export function createOneMindTheme(
           notchedOutline: { borderColor: t.border.strong },
         },
       },
+      // Floating surfaces: raised one step above the page, with a hairline.
+      MuiPopover: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: t.surface[2],
+            backgroundImage: 'none',
+            border: `1px solid ${t.border.subtle}`,
+          },
+        },
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            '&:hover': { backgroundColor: t.surface[3] },
+            '&.Mui-selected, &.Mui-selected:hover': {
+              backgroundColor: t.brand.subtle,
+            },
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: t.surface[1],
+            backgroundImage: 'none',
+            border: `1px solid ${t.border.subtle}`,
+          },
+        },
+      },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            backgroundColor: t.surface[2],
+            color: t.text[1],
+            border: `1px solid ${t.border.subtle}`,
+          },
+        },
+      },
+      MuiAlert: {
+        styleOverrides: {
+          standardError: {
+            backgroundColor: s.critical.bg,
+            color: s.critical.fg,
+          },
+          standardWarning: { backgroundColor: s.warn.bg, color: s.warn.fg },
+          standardInfo: { backgroundColor: s.info.bg, color: s.info.fg },
+          standardSuccess: { backgroundColor: s.ok.bg, color: s.ok.fg },
+        },
+      },
       MuiTooltip: {
         styleOverrides: {
           tooltip: {

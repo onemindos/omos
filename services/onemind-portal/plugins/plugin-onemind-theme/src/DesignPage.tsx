@@ -1,7 +1,12 @@
+import { useState } from 'react';
 import {
   Button as MuiButton,
   Chip,
   FormControlLabel,
+  Menu,
+  MenuItem,
+  Select,
+  Tooltip,
   Paper,
   Switch,
   Table,
@@ -106,6 +111,8 @@ function Contrast({ mode }: { mode: ThemeMode }) {
 export function DesignPage() {
   const classes = useStyles();
   const [background, setBackground] = useBackgroundImage();
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [choice, setChoice] = useState('prod');
   return (
     <Container my="6">
       <Typography variant="h4" component="h1" gutterBottom>
@@ -222,6 +229,40 @@ export function DesignPage() {
               ))}
             </TableBody>
           </Table>
+        </Paper>
+        <Paper variant="outlined" style={{ padding: 16 }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Menus and popovers
+          </Typography>
+          <div className={classes.row}>
+            <Select
+              value={choice}
+              onChange={e => setChoice(e.target.value as string)}
+              variant="outlined"
+              data-testid="design-select"
+            >
+              <MenuItem value="prod">production</MenuItem>
+              <MenuItem value="staging">staging</MenuItem>
+              <MenuItem value="dev">development</MenuItem>
+            </Select>
+            <MuiButton
+              variant="outlined"
+              onClick={e => setAnchor(e.currentTarget)}
+            >
+              Open menu
+            </MuiButton>
+            <Tooltip title="Tooltip on the surface tokens">
+              <MuiButton variant="text">Hover me</MuiButton>
+            </Tooltip>
+          </div>
+          <Menu
+            anchorEl={anchor}
+            open={Boolean(anchor)}
+            onClose={() => setAnchor(null)}
+          >
+            <MenuItem onClick={() => setAnchor(null)}>Open</MenuItem>
+            <MenuItem onClick={() => setAnchor(null)}>Copy link</MenuItem>
+          </Menu>
         </Paper>
         <Paper variant="outlined" style={{ padding: 16 }}>
           <Typography variant="h6" component="h3" gutterBottom>

@@ -186,8 +186,27 @@ Fix in `brand.css` (native `--bui-bg-app`, which is surface 0): `html, body, #ro
 variables sit on `<body>`). The theme also sets the same on `MuiCssBaseline` for any host
 that does render it. Tests assert both. Retaken screenshots (`fixed-*`): bottom rows
 sampled as surface 0 in dark (`#0e0e0f`) and light (`#f4f4f5`) for Home, Catalog, entity,
-Today. Note: the toast ("Failed to load entity types") still renders as a white card in
-dark mode; it is a separate BUI/core-components surface, not yet themed.
+Today. 
+
+### Fix: white toast and floating surfaces
+
+Source: the toast is Backstage UI's `ToastDisplay` (`@backstage/plugin-app`), which
+deliberately renders its region with the inverted theme mode (`data-theme-mode=light`
+on a dark page), so it showed light variables. Fix, all in the theme package: the token
+block in `brand.css` (generated) also applies to `body[data-theme-mode=...]
+[class*='Toast_container']`, which outranks the inverted attribute, so toasts follow the
+portal theme; and `--bui-fg-danger/success/info` now map to the status tokens (the toast
+colours its icon and title with them, so critical is the rose red, never the brand red).
+Toast surface = `--bui-bg-app` (surface 0) with `--bui-border-1`; status accents on it are
+6.4 (critical), 9.5 (ok), 10.8 (warn), 9.0 (info) in dark and at least 4.9 in light.
+MUI overrides added: `MuiPopover` paper (surface 2 + border, also covers `MuiMenu` and
+Select dropdowns), `MuiMenuItem` hover/selected, `MuiDialog` paper, `MuiSnackbarContent`,
+`MuiAlert` standard severities. Sweep in dark: login dialog, search modal, dropdown, menu,
+tooltip and toast are all on tokens (the search modal's empty-state illustration is an
+image and stays light). `/design` gained a "Menus and popovers" card (select, menu,
+tooltip) for review. Tests: 25 in the theme package, including toast and popover tokens
+in both modes. New lint warnings (BUI deprecated-token rule) are the `--bui-fg-*` keys
+the toast still reads.
 
 ### Deferred or open
 
