@@ -52,6 +52,13 @@ Rule behind it: the thing that fixes problems must not depend on the thing it is
 If an AI could break Authentik, Tailscale, cert-manager, Velero or the policy engines,
 it could lock out both itself and the human who has to recover it.
 
+**Target clarification (2026-10-21):** the table above records the historical
+OpenChoreo baseline, not authorization for all listed AI actions. The user's
+selected future KubeVela/Crossplane ownership split is recorded in
+[decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md);
+implementation/coexistence acceptance and per-app transfers remain pending.
+Current foundation/shared-service and machine read-only boundaries are unchanged.
+
 ### Namespace map (live cluster, 2026-10-18)
 
 | Namespace | Main workloads | Layer | Target |
@@ -774,8 +781,9 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
-| 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
+| 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. (KubeVela part superseded 2026-10-21, below.) |
 | 2026-10-20 | Zeus requested full Kubernetes/Backstage structure and linked PRs. Keep the installed stack and existing phase gates; permit planning and bounded comparison of KubeVela/Crossplane/fleet candidates without deploying or assigning a second owner to live resources. The new queue is a proposal, not a replacement approval or claim of verified integration. |
+| 2026-10-21 | Zeus selected Backstage → reviewed Git PR → Argo CD → KubeVela (app lifecycle) + Crossplane (app infrastructure) as the target; Terraform keeps its recorded infrastructure, NATS carries operational events. Recorded in [decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md). Selection only: nothing installed, no version approved, no ownership transferred from Terraform or OpenChoreo, existing OpenChoreo workloads stay until a separately approved transition. kagent, Kratix and Humanitec stay not adopted. |
 
 ## Incidents found while working the roadmap
 
@@ -1022,6 +1030,69 @@ This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
 
+### Eight-workstream parallel preparation run — 2026-10-21 UTC
+
+User authorized separate PRs and agent distribution for the remaining Backstage
+backlog. [Run index, owners, PRs and dependencies](docs/roadmap/backstage-parallel-run.md)
+tracks cost, coverage, catalog, trust, lifecycle, actions, agents and home/edge.
+Existing #339/#332/#284 are reused. Bounded source/test preparation runs in
+parallel; production review/rebase/merge/release remains one PR at a time.
+Correct the stale handoff prompt that claimed Phase 6 complete; reconcile scoped
+Grafana/Prometheus/topology acceptance without erasing the remaining gaps.
+No new permissions, storage, deployment, app cutover or phase completion.
+Phase 6 stays In progress; Phases 7/8 Not started.
+
+
+### Backstage capability and UI/layout foundation — 2026-10-21
+
+User requested a foundation review of the supplied application-flow/plugin list,
+not runtime implementation. Master #356 now includes the
+[experience foundation](docs/roadmap/backstage-experience-foundation.md): native
+feature/source matrix, proposed home/navigation/entity layout, evidence states,
+search/docs/events/AI integration gaps, dual MUI/BUI theming, accessibility,
+performance and U00–U06 future implementation/acceptance packages.
+[Decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md)
+records user-selected KubeVela/Crossplane target boundaries, with Terraform, Argo,
+OpenChoreo, domain operators and NATS ownership explicit. No controller install,
+OpenChoreo removal, UI/dependency change or new AI permission is included.
+The eight existing workstream PRs remain drafts; no new UI implementation PR or
+production acceptance is claimed. Phase 6 In progress; Phases 7/8 Not started.
+
+
+### OneMind mission pillars in the catalog — 2026-10-21
+
+User explicitly requested SO / LE / HP / GE catalog structure as part of the
+foundation. [Specification](docs/roadmap/onemind-catalog-pillars.md) records
+Sovereign Operations, Legacy Evolution, Holistic Performance and Generational
+Empire using the existing doctrine, proposed native Domains/System mappings,
+shared/unclassified discovery and stable-reference/permissions/curation gates.
+Master #356 and the UI foundation are updated; no live catalog or workload is
+reclassified, no new identity permission or NATS routing is granted. Historical
+numeric ranges remain unconfirmed, not reordered with the requested UI order.
+Phase 6 In progress; Phases 7/8 Not started.
+
+### Flagship portal program — 2026-10-21
+
+Zeus asked for Backstage to become the single, organized front door for every
+OneMind service (Kubernetes and not), with live dashboards, DigitalOcean at a
+glance, add/remove lifecycle and a brand-correct theme. A signed-in review found
+7,750 unread notifications, an alphabetical sidebar, about 70 Systems under three
+naming schemes, 6 of 69 Argo apps linked, an empty Cost page, an unrequested
+GitHub OAuth pop-up on app pages, a navy/teal theme, and an offsite backup copy
+that has never run (two other "suspended" backup jobs are deliberate replacements). Eleven work orders, one draft PR each, for implementing
+agents: [index](docs/roadmap/flagship/README.md), F1–F11 =
+[#357](https://github.com/onemindos/omos/pull/357)–[#367](https://github.com/onemindos/omos/pull/367).
+This supersedes the U00–U06 order in #356. It is Phase 6 follow-through: no
+Phase 7 start, no app migration, no AI permission change. Work-order PRs do not
+edit this file; the coordinator records each merge here.
+
+### Parallel portal run — coverage
+
+User requested a separate draft workstream for coverage. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-coverage-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
 
 ### Parallel portal run — catalog
 
