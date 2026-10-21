@@ -57,7 +57,7 @@ spec:
             - name: work
               mountPath: /tmp/runner/work
         - name: dind
-          image: docker.io/library/docker@sha256:12e683a161823b2a839aeea999b9d960e6e1f9a97b1679ad6b441982e2d9cf07
+          image: docker.io/library/docker@sha256:3e5756e2b6dad6a5f1f5deacf0a19f9eaa2581b76ae092b2d4a118162e1d4d4e
           args:
             - dockerd
             - --host=unix:///var/run/docker.sock
