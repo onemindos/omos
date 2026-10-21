@@ -1085,3 +1085,11 @@ agents: [index](docs/roadmap/flagship/README.md), F1–F11 =
 This supersedes the U00–U06 order in #356. It is Phase 6 follow-through: no
 Phase 7 start, no app migration, no AI permission change. Work-order PRs do not
 edit this file; the coordinator records each merge here.
+
+### Parallel portal run — coverage
+
+User requested a separate draft workstream for coverage. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-coverage-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
