@@ -158,6 +158,24 @@ integrations:
 
 notifications:
   retention: 90d
+  # Lists every topic in each user's native Notifications settings from day one, so any of
+  # them can be muted per person. Origins are the producing plugins (onemind = observer,
+  # alert routing and daily digest; onemind-events = the authenticated event bridge).
+  defaultSettings:
+    channels:
+      - id: Web
+        origins:
+          - id: plugin:onemind
+            topics:
+              - {id: alerts, enabled: true}
+              - {id: deployments, enabled: true}
+              - {id: backups, enabled: true}
+              - {id: digest, enabled: true}
+          - id: plugin:onemind-events
+            topics:
+              - {id: deployments, enabled: true}
+              - {id: backups, enabled: true}
+              - {id: agents, enabled: true}
 
 # Empty until a dedicated read-only Argo token is provided. No fallback login.
 argocd:
@@ -251,6 +269,11 @@ openchoreo:
       enabled: false
 
 onemind:
+  alerts:
+    # Bearer token Alertmanager presents at POST /api/events/http/alertmanager. OPTIONAL: when
+    # the env var is absent the key is dropped, the route rejects every request (503) and the
+    # portal starts normally. See docs/operations/notifications.md.
+    webhookToken: ${ONEMIND_ALERT_WEBHOOK_TOKEN}
   openchoreo:
     # Only operator-approved endpoints may receive the human's IDP token directly.
     directApiAllowlist:
