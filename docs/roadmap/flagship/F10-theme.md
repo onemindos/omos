@@ -186,7 +186,7 @@ Fix in `brand.css` (native `--bui-bg-app`, which is surface 0): `html, body, #ro
 variables sit on `<body>`). The theme also sets the same on `MuiCssBaseline` for any host
 that does render it. Tests assert both. Retaken screenshots (`fixed-*`): bottom rows
 sampled as surface 0 in dark (`#0e0e0f`) and light (`#f4f4f5`) for Home, Catalog, entity,
-Today. 
+Today.
 
 ### Fix: white toast and floating surfaces
 
