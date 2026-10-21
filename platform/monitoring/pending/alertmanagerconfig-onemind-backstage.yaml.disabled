@@ -1,0 +1,44 @@
+# NOT DEPLOYED. The ".disabled" suffix keeps Argo CD (platform-monitoring, directory source,
+# recurse: true) from picking this file up. Read README.md in this folder before enabling.
+#
+# Routes critical and warning alerts to the OneMind portal's native events ingress, which
+# turns them into inbox items and Signals (docs/operations/notifications.md).
+#
+# Safe alongside existing routing: `continue: true` means matching alerts are still handled
+# by every other route and receiver exactly as before. Same pattern as the live
+# `openchoreo` AlertmanagerConfig.
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: onemind-backstage
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/part-of: onemind-portal
+spec:
+  route:
+    receiver: onemind-backstage
+    continue: true
+    # One webhook call per alert, so the portal keeps one inbox item per alert fingerprint.
+    groupBy: ['...']
+    groupWait: 5s
+    groupInterval: 30s
+    # Repeats are harmless: the portal ignores a firing alert it already announced.
+    repeatInterval: 12h
+    matchers:
+      - {name: severity, matchType: '=~', value: 'critical|warning'}
+      # The always-firing heartbeat and inhibitor placeholders are not for humans.
+      - {name: alertname, matchType: '!~', value: 'Watchdog|InfoInhibitor'}
+  receivers:
+    - name: onemind-backstage
+      webhookConfigs:
+        - url: http://backstage.backstage.svc.cluster.local:7007/api/events/http/alertmanager
+          sendResolved: true
+          timeout: 10s
+          maxAlerts: 50
+          httpConfig:
+            authorization:
+              type: Bearer
+              credentials:
+                # SealedSecret that Zeus creates in THIS namespace (monitoring); see README.md.
+                name: onemind-alert-webhook
+                key: token
