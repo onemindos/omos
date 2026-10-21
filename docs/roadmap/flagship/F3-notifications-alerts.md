@@ -145,8 +145,8 @@ Deferred, needs Zeus or a later step:
 
 ### Tests
 
-common-backend 44 (policy 15 new in two files), events-backend 39, activity-backend 10: 93 passing in
-the three workspaces, plus 4 Python guard tests in `scripts/tests/test_gitops_alert_routing.py`.
+common-backend 44 (29 new in two files, 15 existing), events-backend 39 (7 suites, all new), activity-backend 10
+(new): 93 passing in the three workspaces, plus 4 Python guard tests in `scripts/tests/test_gitops_alert_routing.py`.
 Acceptance mapping: synthetic Argo success 0 notifications and failure 1 with no second on repeat
 (`scan.test.ts`); firing then resolved creating and updating one item with a Signal under 5 s
 server-side, plus 401/400/503 negatives (`alertmanagerIngress.test.ts`, real events-backend ingress);
@@ -155,4 +155,8 @@ live cleanup run.
 
 ### Gate
 
-(filled in below after the final run)
+`python3 scripts/gitops/pipeline.py check --profile portal --base origin/main` at head `069fd4cf` (merged with
+`origin/main` 1ce9cb31): `run.json` phase `check_passed`. All required steps passed (diff-check, YAML and
+manifest validation, Helm renders, shellcheck, Terraform, pipeline tests incl. the new alert-routing
+guard, portal immutable install, `tsc`, lint, security/STAC and layout tests, catalog audit, topology,
+commit and tracked-tree secret scans). Only the optional `whole-tree-diagnostic` failed (old debt).
