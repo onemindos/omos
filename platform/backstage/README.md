@@ -42,6 +42,29 @@ Run `node scripts/enrich-inventory.cjs` from `services/onemind-portal` on the au
 
 Hosting annotations distinguish verified cluster routing from unverified mesh endpoints and external providers. Device location and purpose are explicitly unreviewed; an offline discovery snapshot is not a service incident. The catalog graph exposes verified application-to-workload and workload-to-cluster relationships. Cloud API integrations, repository discovery beyond the infrastructure repository, and physical device classification still require reviewed sources.
 
+## Native Kubernetes and Argo CD visibility
+
+The installed native plugins are discovered by `app.packages: all`. On a workload
+entity, **Deployment → Kubernetes** shows selector-matched live resources;
+**Deployment → Deployment Summary** shows the explicitly named Argo Application.
+The Overview Links card also links directly to these views and the owning runbook.
+Backstage, its PostgreSQL dependency and the NATS broker are the first reviewed
+mappings; this is not coverage of every workload in their namespaces.
+
+Controller **metadata.labels** must match the entity selector, not only the pod
+labels. Otherwise the native Kubernetes view can fetch pods but omit their
+Deployment/StatefulSet grouping. Keep existing immutable selectors and pod labels.
+`services/onemind-portal/scripts/curate-dependencies.cjs` reapplies these exact
+identity/namespace/selector mappings after full inventory refresh and rejects
+identity drift. Do not infer Argo ownership from namespace co-location. In
+particular the NATS dashboard is not the broker StatefulSet.
+
+Catalog-only changes need no image rebuild, but the generated catalog ConfigMap's
+new hash changes the portal volume reference and naturally rolls the same pinned
+image. Review the Kustomize render first; preserve the database template/PVCs,
+read-only RBAC and normal Argo reconciliation. Plugin visibility is not app-level
+health, message-delivery verification or new AI mutation authority.
+
 ## Curated Fabric registry
 
 The reviewed Notion snapshot (`catalog/fabric-source.json`, 174 records, reviewed 2026-10-06) enriches existing app and mesh entries and adds documented capabilities, planned items and references. `scripts/reconcile-fabric.cjs` merges duplicate titles and Google Calendar/Drive/Photos aliases while retaining every source page link. Recorded status and hosting are provenance annotations, not live health or verified deployment. Original protocol addresses and old IPs remain in source documentation rather than becoming launch buttons. A source snapshot update requires review. The complete enrichment command reapplies this reconciliation so cluster refresh cannot erase curated records.
