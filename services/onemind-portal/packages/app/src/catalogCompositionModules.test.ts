@@ -1,11 +1,9 @@
 import { createElement } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { CATALOG_FILTER_EXISTS } from '@backstage/plugin-catalog-react';
 import { MockEntityListContextProvider } from '@backstage/plugin-catalog-react/testUtils';
 import {
   EntityPillarFilter,
   EntityRoleFilter,
-  PILLARS_SERVED,
   PILLAR_LABEL,
   PILLAR_REVIEW,
   PillarPicker,
@@ -134,9 +132,9 @@ describe('pillar filter contract', () => {
       });
     },
   );
-  it('Shared means a reviewed pillars-served list; Unclassified is a positive state, never a guess', () => {
+  it('Shared is the reviewed shared label; Unclassified is a positive state, never a guess', () => {
     expect(new EntityPillarFilter('shared').getCatalogFilters()).toEqual({
-      [PILLARS_SERVED]: CATALOG_FILTER_EXISTS,
+      [PILLAR_LABEL]: 'shared',
     });
     expect(new EntityPillarFilter('unclassified').getCatalogFilters()).toEqual({
       [PILLAR_REVIEW]: 'unclassified',
@@ -230,3 +228,6 @@ describe('pickers', () => {
     expect(linked).not.toHaveBeenCalled();
   });
 });
+
+// Runs the System-redirect routing tests inside the step the gate already names.
+import './systemRedirects.test';

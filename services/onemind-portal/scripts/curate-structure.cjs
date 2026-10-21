@@ -10,6 +10,8 @@ const root = path.resolve(__dirname, '..');
 const OWNER = 'group:default/onemind-admins';
 const UNASSIGNED = 'unassigned-workloads';
 const PILLARS = ['so', 'le', 'hp', 'ge'];
+// 'shared' is a label value for the Shared view, not a Domain.
+const LABEL_PILLARS = [...PILLARS, 'shared'];
 const ACRONYMS = new Set(['api', 'db', 'ui', 'ldap', 'dns', 'nats', 'tak', 'pg', 'ml', 'id', 'tls', 'ha', 'ws', 'oc', 'ai', 'cpu', 'crd', 'crds', 'tcp', 'url', 'ip', 'sql', 'mcp', 'stac', 'osm']);
 const refOf = e => `${e.kind.toLowerCase()}:${(e.metadata.namespace || 'default').toLowerCase()}/${e.metadata.name.toLowerCase()}`;
 const load = file => YAML.parseAllDocuments(fs.readFileSync(file, 'utf8')).map(d => d.toJSON()).filter(Boolean);
@@ -98,8 +100,8 @@ function systemEntities(structure) {
       name: s.name,
       title: s.title,
       description: s.description,
-      labels: { 'onemind.io/catalog-axis': 'deployment', ...(PILLARS.includes(s.pillar) ? { 'onemind.io/pillar': s.pillar } : {}) },
-      annotations: { 'onemind.io/pillar-review': PILLARS.includes(s.pillar) ? 'proposed' : 'unclassified' },
+      labels: { 'onemind.io/catalog-axis': 'deployment', ...(LABEL_PILLARS.includes(s.pillar) ? { 'onemind.io/pillar': s.pillar } : {}) },
+      annotations: { 'onemind.io/pillar-review': LABEL_PILLARS.includes(s.pillar) ? s.review || 'proposed' : 'unclassified' },
     },
     spec: { owner: OWNER, domain: s.domain },
   }));
@@ -125,9 +127,9 @@ function appEntity(app, previous) {
 
 function pillarFor(structure, system, ref) {
   const override = structure.pillarOverrides?.[ref];
-  if (override) return PILLARS.includes(override) ? override : null;
+  if (override) return LABEL_PILLARS.includes(override) ? override : null;
   const p = structure.systems.find(s => s.name === system)?.pillar;
-  return PILLARS.includes(p) ? p : null;
+  return LABEL_PILLARS.includes(p) ? p : null;
 }
 
 function setLabel(entity, key, value) {
@@ -266,7 +268,7 @@ function applyStructure(input, sources) {
     setLabel(e, 'onemind.io/pillar', pillar);
     // Backstage filters cannot ask for "label missing", so the review state is also recorded as a
     // positive value that the catalog Pillar filter can match (Unclassified).
-    e.metadata.annotations = { ...(e.metadata.annotations || {}), 'onemind.io/pillar-review': pillar ? 'proposed' : 'unclassified' };
+    e.metadata.annotations = { ...(e.metadata.annotations || {}), 'onemind.io/pillar-review': pillar ? structure.systems.find(x => x.name === e.spec.system)?.review || 'proposed' : 'unclassified' };
     // Role separates the primary entity (app) from the Kubernetes workloads that hang under it.
     setLabel(e, 'onemind.io/catalog-role', e.kind === 'Component' ? (e.spec.subcomponentOf || workloadIdentity(e) ? 'workload' : 'app') : null);
   }
@@ -330,10 +332,18 @@ function writeCatalog(result, base = root) {
   }
 }
 
+// The app forwards removed System URLs from this JSON (bundled at build time), so the YAML stays the single source.
+function writeRedirectBundle(base = root) {
+  const { redirects } = YAML.parse(fs.readFileSync(path.join(base, 'catalog/redirects.yaml'), 'utf8'));
+  const bundle = Object.fromEntries(redirects.map(r => [r.from.replace('system:default/', ''), r.to.replace('system:default/', '')]));
+  fs.writeFileSync(path.join(base, 'packages/app/src/systemRedirects.json'), JSON.stringify(bundle, null, 2) + '\n');
+}
+
 if (require.main === module) {
   const read = f => fs.readFileSync(path.join(root, 'catalog', f), 'utf8');
   const result = applyStructureToText({ apps: read('apps.yaml'), cluster: read('cluster.yaml') }, loadSources());
   writeCatalog(result);
+  writeRedirectBundle();
   const count = (text, kind) => (text.match(new RegExp(`^kind: ${kind}$`, 'gm')) || []).length;
   console.log(`Structure applied: ${count(result.apps, 'Domain')} domains, ${count(result.apps, 'System')} systems, ${(result.cluster.match(/^ {2}subcomponentOf: /gm) || []).length} subcomponents.`);
 }

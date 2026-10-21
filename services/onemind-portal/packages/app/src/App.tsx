@@ -33,12 +33,14 @@ import {
   catalogCompositionModule,
   graphCompositionModule,
 } from './catalogCompositionModules';
+import { systemRedirectsModule } from './systemRedirects';
 
 export default createApp({
   features: [
     openchoreoPlugin,
     componentOverviewModule,
     catalogCompositionModule,
+    systemRedirectsModule,
     graphCompositionModule,
     openChoreoEntityGroupsModule,
     observabilityPlugin,

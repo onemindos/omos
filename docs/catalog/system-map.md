@@ -10,12 +10,12 @@ Machine-readable form: `services/onemind-portal/catalog/structure.yaml` (Systems
 
 ## Decisions for Zeus
 
-1. **Approve the target Systems and pillar column below.** 22 Systems (limit 25), each placed in a Domain. Pillars are `proposed`. Systems marked Unclassified sit under the parent domain `OneMind` until you decide.
-2. **Seven Systems are Unclassified on purpose:** Intelligence & feeds (proposed SO: feeds that serve TAK and the bus), Communication (shared), Productivity & SaaS (Zoho and Google Workspace may be business GE or personal), Personal tools & devices (mixed), Brand & social media (proposed GE per the pillar doctrine "brand", but several accounts are personal), Reference & community, Unassigned workloads. Say which you want assigned.
+1. **Zeus decided the pillar questions on 2026-10-21 (approved).** 22 Systems (limit 25). SO, GE, HP and LE Systems sit in their pillar Domain; Shared Systems sit under `onemind` with label `onemind.io/pillar: shared` (Shared is a view, not a fifth Domain); only Unassigned workloads is Unclassified.
+2. **Approved by Zeus 2026-10-21:** Intelligence & feeds, Communication and (as before) Platform core and the technical Systems are SO; Brand & social media is GE; Productivity & SaaS, Personal tools & devices and Reference & community are Shared. Unassigned workloads stays a holding area under `onemind`, Unclassified.
 3. **GE, LE and HP are thin.** Only Business operations (GE: GoHighLevel, Circle), Home & homestead (LE: Home Assistant, FarmBot) and Personal finance (HP) have content today. There are no ventures, holdings, health or family systems in the catalog yet; none are invented here.
-4. **Mercury** (bank) sits in Personal finance (HP) but its pillar is left Unclassified: it may be a business account (GE). Credit bureaus and credit-building apps are HP.
+4. **Mercury** is a business account: approved by Zeus 2026-10-21, moved to Business operations (GE). Credit bureaus and credit-building apps stay HP.
 5. **Several Argo applications share one app** (for example 12 OpenChoreo applications, 4 Argo CD applications). The Argo CD plugin reads one `argocd/app-name` per Component, so the app carries the primary application and lists the rest in `onemind.io/argocd-apps`. Approve this, or ask for one Component per Argo application.
-6. **Removed Systems keep a redirect entry** (`catalog/redirects.yaml`, 74 current Systems, 61 get a redirect). Backstage has no built-in entity redirect, so the file and its test exist now, but making the old URLs forward needs a small route in the app (outside this work order's files). Say if you want it added here or in F1.
+6. **Removed Systems keep a redirect entry** (`catalog/redirects.yaml`, 74 current Systems, 61 get a redirect). The app forwards each old System URL with one native page extension per entry (`systemRedirects.json`, generated from the YAML).
 7. **Resource type rename deferred.** The consistent set (`database`, `volume`, `bucket`, `cluster`, `network`, `code-repository`, `capability`, `endpoint`) needs edits to `plugin-onemind-common/AccessDeployments.tsx`, `report-service-coverage.cjs` and `scripts/tests/test_gitops_topology.py`, which other work orders touch. Approve doing it in a follow-up.
 8. **Duplicate launcher entries** (`external-argocd`, `external-kubernetes-dashboard`, `external-tailscale`) are kept and retitled so titles are unique; they look like merge candidates.
 9. **Ollama.** `component:default/ollama` is documented as planned/local, but a cluster Ollama is deployed (`onemind-ai/onemind-cpu-model`, Argo `ecosystem-ollama`). The workload is mapped to that entity; its lifecycle text is not changed.
@@ -43,12 +43,12 @@ Machine-readable form: `services/onemind-portal/catalog/structure.yaml` (Systems
 | Personal finance | `system:default/personal-finance` | HP | Personal banking, credit monitoring and credit-building tools. |
 | Home & homestead | `system:default/home-homestead` | LE | Home automation and homestead/farm automation. |
 | Business operations | `system:default/business-operations` | GE | Customer relationship, community and other business-operations platforms. |
-| Intelligence & feeds | `system:default/intelligence` | OneMind (**Unclassified**) | Intelligence feeds, monitors and the observational API. Pillar not yet reviewed. |
-| Communication | `system:default/communication` | OneMind (**Unclassified**) | Messaging, mail and phone services, self-hosted and external. Shared across missions; pillar not yet reviewed. |
-| Productivity & SaaS | `system:default/productivity-saas` | OneMind (**Unclassified**) | Zoho, Google Workspace, Notion, Dropbox and other hosted productivity services. Mixed use; pillar not yet reviewed. |
-| Personal tools & devices | `system:default/personal-tools` | OneMind (**Unclassified**) | Desktop applications, hardware vendors and personal devices. Mixed use; pillar not yet reviewed. |
-| Brand & social media | `system:default/social-media` | OneMind (**Unclassified**) | Social and brand accounts. Pillar not yet reviewed (GE is the likely home). |
-| Reference & community | `system:default/reference-links` | OneMind (**Unclassified**) | Foundations, standards bodies and community reference sites. Hidden by default. |
+| Intelligence & feeds | `system:default/intelligence` | SO (approved by Zeus 2026-10-21) | Intelligence feeds, monitors and the observational API. SO per Zeus (2026-10-21). |
+| Communication | `system:default/communication` | SO (approved by Zeus 2026-10-21) | Messaging, mail and phone services, self-hosted and external: shared communications infrastructure. SO per Zeus (2026-10-21). |
+| Productivity & SaaS | `system:default/productivity-saas` | OneMind (**Shared**, approved by Zeus 2026-10-21) | Zoho, Google Workspace, Notion, Dropbox and other hosted productivity services. Shared across pillars (Zeus, 2026-10-21). |
+| Personal tools & devices | `system:default/personal-tools` | OneMind (**Shared**, approved by Zeus 2026-10-21) | Desktop applications, hardware vendors and personal devices. Shared across pillars (Zeus, 2026-10-21). |
+| Brand & social media | `system:default/social-media` | GE (approved by Zeus 2026-10-21) | Social and brand accounts. GE per Zeus (2026-10-21). |
+| Reference & community | `system:default/reference-links` | OneMind (**Shared**, approved by Zeus 2026-10-21) | Foundations, standards bodies and community reference sites. Shared across pillars; hidden by default (Zeus, 2026-10-21). |
 | Unassigned workloads | `system:default/unassigned-workloads` | OneMind (**Unclassified**) | Kubernetes workloads that no reviewed mapping assigns to an app yet. Nothing is hidden: new workloads land here until mapped. |
 
 Domains: `domain:default/onemind` (parent) with children `onemind-so`, `onemind-le`, `onemind-hp`, `onemind-ge`, owner `group:default/onemind-admins`.
@@ -60,18 +60,18 @@ Names are kept where an existing System survives (so its URL and favorites still
 |---|---|---|---|---|
 | `infrastructure` (Infrastructure) | 14 | Platform core | SO | Name kept; retitled "Platform core". Its members are split by function (see the app table). |
 | `ai-agents` (AI & Agents) | 6 | AI & agents | SO | Name kept. |
-| `communication` (Communication) | 5 | Communication | **Unclassified** | Name kept; now also holds mail and phone apps. |
+| `communication` (Communication) | 5 | Communication | SO | Name kept; now also holds mail and phone apps. |
 | `tak-ecosystem` (TAK Ecosystem) | 8 | TAK & field ops | SO | Name kept; retitled "TAK & field ops". |
-| `intelligence` (Intelligence) | 4 | Intelligence & feeds | **Unclassified** | Name kept; retitled "Intelligence & feeds". Grafana, NATS UI, Agent Monitor and ClickHouse move to the Systems that own them. |
+| `intelligence` (Intelligence) | 4 | Intelligence & feeds | SO | Name kept; retitled "Intelligence & feeds". Grafana, NATS UI, Agent Monitor and ClickHouse move to the Systems that own them. |
 | `data-storage` (Data & Storage) | 3 | Data & storage | SO | Name kept. |
 | `observability` (Observability) | 6 | Observability | SO | Name kept. |
 | `geospatial` (Geospatial) | 9 | Geospatial, drones & robotics | SO | Name kept; retitled to include drones and robotics. |
-| `zoho-apps` (Zoho Apps) | 12 | Productivity & SaaS | **Unclassified** | Zoho is one of several hosted productivity suites; merged into Productivity & SaaS. |
-| `personal-tools` (Personal Tools) | 18 | Personal tools & devices | **Unclassified** | Name kept. |
-| `workspaces` (Workspaces) | 6 | Productivity & SaaS | **Unclassified** | Mixed SaaS: GitHub moves to GitOps & delivery, Circle to Business operations, Composio to AI & agents, the rest to Productivity & SaaS. |
+| `zoho-apps` (Zoho Apps) | 12 | Productivity & SaaS | **Shared** | Zoho is one of several hosted productivity suites; merged into Productivity & SaaS. |
+| `personal-tools` (Personal Tools) | 18 | Personal tools & devices | **Shared** | Name kept. |
+| `workspaces` (Workspaces) | 6 | Productivity & SaaS | **Shared** | Mixed SaaS: GitHub moves to GitOps & delivery, Circle to Business operations, Composio to AI & agents, the rest to Productivity & SaaS. |
 | `personal-finance` (Personal Finance) | 6 | Personal finance | HP | Name kept. |
 | `external` (External) | 4 | Developer platform | SO | Duplicate launcher links ("external-*") and OneMind OS; each now sits with the service it points at. |
-| `social-media` (Social Media) | 12 | Brand & social media | **Unclassified** | Name kept; retitled "Brand & social media". |
+| `social-media` (Social Media) | 12 | Brand & social media | GE | Name kept; retitled "Brand & social media". |
 | `cluster-agent-fabric` (Namespace / agent-fabric) | 2 | AI & agents | SO | Namespace grouping dissolved; agent-fabric workloads attach to their app, whose System is AI & agents. |
 | `cluster-argocd` (Namespace / argocd) | 8 | GitOps & delivery | SO | Namespace grouping dissolved; argocd workloads attach to their app, whose System is GitOps & delivery. |
 | `cluster-auth` (Namespace / auth) | 4 | Identity & access | SO | Namespace grouping dissolved; auth workloads attach to their app, whose System is Identity & access. |
@@ -90,7 +90,7 @@ Names are kept where an existing System survives (so its URL and favorites still
 | `cluster-kube-system` (Namespace / kube-system) | 8 | Platform core | SO | Namespace grouping dissolved; kube-system workloads attach to their app, whose System is Platform core. |
 | `cluster-kube` (Namespace / kube) | 2 | Developer platform | SO | Namespace grouping dissolved; kube workloads attach to their app, whose System is Developer platform. |
 | `cluster-kyverno` (Namespace / kyverno) | 4 | Identity & access | SO | Namespace grouping dissolved; kyverno workloads attach to their app, whose System is Identity & access. |
-| `cluster-matrix` (Namespace / matrix) | 4 | Communication | **Unclassified** | Namespace grouping dissolved; matrix workloads attach to their app, whose System is Communication. |
+| `cluster-matrix` (Namespace / matrix) | 4 | Communication | SO | Namespace grouping dissolved; matrix workloads attach to their app, whose System is Communication. |
 | `cluster-monitoring` (Namespace / monitoring) | 9 | Observability | SO | Namespace grouping dissolved; monitoring workloads attach to their app, whose System is Observability. |
 | `cluster-n8n` (Namespace / n8n) | 2 | AI & agents | SO | Namespace grouping dissolved; n8n workloads attach to their app, whose System is AI & agents. |
 | `cluster-nats` (Namespace / nats) | 12 | Messaging (NATS) | SO | Namespace grouping dissolved; nats workloads attach to their app, whose System is Messaging (NATS). |
@@ -115,21 +115,21 @@ Names are kept where an existing System survives (so its URL and favorites still
 | `onemind-mesh` (OneMind mesh) | 47 | Mesh & devices | SO | Name kept; retitled "Mesh & devices". |
 | `fabric-geo` (Fabric / 🌍 Geo) | 13 | Geospatial, drones & robotics | SO | Notion registry category; its documented capabilities are Resources placed by topic in Geospatial, drones & robotics. |
 | `fabric-data` (Fabric / 💾 Data) | 4 | Data & storage | SO | Notion registry category; its documented capabilities are Resources placed by topic in Data & storage. |
-| `fabric-brandmarketing` (Fabric / 🎯 Brand & Marketing) | 9 | Brand & social media | **Unclassified** | Notion registry category; its documented capabilities are Resources placed by topic in Brand & social media. |
-| `fabric-googleworkspace` (Fabric / 🔵 Google Workspace) | 7 | Productivity & SaaS | **Unclassified** | Notion registry category; its documented capabilities are Resources placed by topic in Productivity & SaaS. |
+| `fabric-brandmarketing` (Fabric / 🎯 Brand & Marketing) | 9 | Brand & social media | GE | Notion registry category; its documented capabilities are Resources placed by topic in Brand & social media. |
+| `fabric-googleworkspace` (Fabric / 🔵 Google Workspace) | 7 | Productivity & SaaS | **Shared** | Notion registry category; its documented capabilities are Resources placed by topic in Productivity & SaaS. |
 | `fabric-infrastructure` (Fabric / 🏗️ Infrastructure) | 8 | Platform core | SO | Notion registry category; its documented capabilities are Resources placed by topic in Platform core. |
 | `fabric-tak` (Fabric / 🎯 TAK) | 19 | TAK & field ops | SO | Notion registry category; its documented capabilities are Resources placed by topic in TAK & field ops. |
 | `fabric-nats` (Fabric / 🚌 NATS) | 12 | Messaging (NATS) | SO | Notion registry category; its documented capabilities are Resources placed by topic in Messaging (NATS). |
-| `fabric-intel` (Fabric / 📡 Intel) | 9 | Intelligence & feeds | **Unclassified** | Notion registry category; its documented capabilities are Resources placed by topic in Intelligence & feeds. |
+| `fabric-intel` (Fabric / 📡 Intel) | 9 | Intelligence & feeds | SO | Notion registry category; its documented capabilities are Resources placed by topic in Intelligence & feeds. |
 | `fabric-bridge` (Fabric / 🌉 Bridge) | 9 | Messaging (NATS) | SO | Notion registry category; its documented capabilities are Resources placed by topic in Messaging (NATS). |
 | `fabric-finance` (Fabric / 💰 Finance) | 3 | Personal finance | HP | Notion registry category; its documented capabilities are Resources placed by topic in Personal finance. |
-| `fabric-comms` (Fabric / 📡 Comms) | 3 | Communication | **Unclassified** | Notion registry category; its documented capabilities are Resources placed by topic in Communication. |
+| `fabric-comms` (Fabric / 📡 Comms) | 3 | Communication | SO | Notion registry category; its documented capabilities are Resources placed by topic in Communication. |
 | `fabric-plugins` (Fabric / 🔌 Plugins) | 10 | TAK & field ops | SO | Notion registry category; its documented capabilities are Resources placed by topic in TAK & field ops. |
 | `fabric-agents` (Fabric / 🧠 Agents) | 13 | AI & agents | SO | Notion registry category; its documented capabilities are Resources placed by topic in AI & agents. |
 | `fabric-businessops` (Fabric / 💼 Business Ops) | 2 | Business operations | GE | Notion registry category; its documented capabilities are Resources placed by topic in Business operations. |
 | `fabric-devops` (Fabric / ⚙️ DevOps) | 8 | GitOps & delivery | SO | Notion registry category; its documented capabilities are Resources placed by topic in GitOps & delivery. |
 | `fabric-observability` (Fabric / 📊 Observability) | 1 | Observability | SO | Notion registry category; its documented capabilities are Resources placed by topic in Observability. |
-| `fabric-productivity` (Fabric / 🛠️ Productivity) | 1 | Productivity & SaaS | **Unclassified** | Notion registry category; its documented capabilities are Resources placed by topic in Productivity & SaaS. |
+| `fabric-productivity` (Fabric / 🛠️ Productivity) | 1 | Productivity & SaaS | **Shared** | Notion registry category; its documented capabilities are Resources placed by topic in Productivity & SaaS. |
 | `fabric-iotautomation` (Fabric / 🤖 IoT / Automation) | 1 | Home & homestead | LE | Notion registry category; its documented capabilities are Resources placed by topic in Home & homestead. |
 | `repo-onemind` (OneMind repositories) | 83 | Code repositories | SO | Name kept; retitled "Code repositories". |
 
@@ -315,10 +315,10 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Agent Web UI | `agent-web-ui` | ai-agents | AI & agents | SO |
 | OpenClaw | `openclaw` | ai-agents | AI & agents | SO |
 | NATS Dashboard | `nats-dashboard` | ai-agents | Messaging (NATS) | SO |
-| Element Chat | `element-chat` | communication | Communication | **Unclassified** |
-| Matrix Synapse | `matrix-synapse` | communication | Communication | **Unclassified** |
+| Element Chat | `element-chat` | communication | Communication | SO |
+| Matrix Synapse | `matrix-synapse` | communication | Communication | SO |
 | HeyNATS | `heynats` | communication | Messaging (NATS) | SO |
-| Google Messages | `google-messages` | communication | Communication | **Unclassified** |
+| Google Messages | `google-messages` | communication | Communication | SO |
 | CloudTAK | `cloudtak` | tak-ecosystem | TAK & field ops | SO |
 | TAK Server | `tak-server` | tak-ecosystem | TAK & field ops | SO |
 | OneTAK | `onetak` | tak-ecosystem | TAK & field ops | SO |
@@ -341,27 +341,27 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Valhalla | `valhalla` | geospatial | Geospatial, drones & robotics | SO |
 | Maputnik | `maputnik` | geospatial | Geospatial, drones & robotics | SO |
 | WebODM | `webodm` | geospatial | Geospatial, drones & robotics | SO |
-| Zoho One | `zoho-one` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Mail | `zoho-mail` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Store | `zoho-store` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Account | `zoho-account` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho MCP Client | `zoho-mcp-client` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho API Console | `zoho-api-console` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Social | `zoho-social` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Workplace | `zoho-workplace` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Projects | `zoho-projects` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Flow | `zoho-flow` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho IoT | `zoho-iot` | zoho-apps | Productivity & SaaS | **Unclassified** |
-| Zoho Zia Agents | `zoho-zia-agents` | zoho-apps | Productivity & SaaS | **Unclassified** |
+| Zoho One | `zoho-one` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Mail | `zoho-mail` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Store | `zoho-store` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Account | `zoho-account` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho MCP Client | `zoho-mcp-client` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho API Console | `zoho-api-console` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Social | `zoho-social` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Workplace | `zoho-workplace` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Projects | `zoho-projects` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Flow | `zoho-flow` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho IoT | `zoho-iot` | zoho-apps | Productivity & SaaS | **Shared** |
+| Zoho Zia Agents | `zoho-zia-agents` | zoho-apps | Productivity & SaaS | **Shared** |
 | 1Password | `1password` | personal-tools | Identity & access | SO |
-| Dropbox | `dropbox` | personal-tools | Productivity & SaaS | **Unclassified** |
-| Raindrop.io | `raindrop-io` | personal-tools | Productivity & SaaS | **Unclassified** |
-| AT&T Prepaid | `at-t-prepaid` | personal-tools | Communication | **Unclassified** |
+| Dropbox | `dropbox` | personal-tools | Productivity & SaaS | **Shared** |
+| Raindrop.io | `raindrop-io` | personal-tools | Productivity & SaaS | **Shared** |
+| AT&T Prepaid | `at-t-prepaid` | personal-tools | Communication | SO |
 | GitHub | `github` | workspaces | GitOps & delivery | SO |
 | Composio | `composio` | workspaces | AI & agents | SO |
-| Miro | `miro` | workspaces | Productivity & SaaS | **Unclassified** |
+| Miro | `miro` | workspaces | Productivity & SaaS | **Shared** |
 | Circle | `circle` | workspaces | Business operations | GE |
-| Mercury | `mercury` | personal-finance | Personal finance | **Unclassified** |
+| Mercury | `mercury` | personal-finance | Business operations | GE |
 | Credit Karma | `credit-karma` | personal-finance | Personal finance | HP |
 | Experian | `experian` | personal-finance | Personal finance | HP |
 | TransUnion | `transunion` | personal-finance | Personal finance | HP |
@@ -373,19 +373,19 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Tailscale | `external-tailscale` | external | Platform core | SO |
 | Tailscale Admin | `tailscale-admin` | infrastructure | Platform core | SO |
 | OneMind Operations Runbooks | `onemind-runbooks` | infrastructure | Developer platform | SO |
-| OneMind Observational API | `onemind-observations` | (none) | Intelligence & feeds | **Unclassified** |
+| OneMind Observational API | `onemind-observations` | (none) | Intelligence & feeds | SO |
 | QGroundControl | `qgroundcontrol` | geospatial | Geospatial, drones & robotics | SO |
 | LingBot-Map | `lingbot-map` | geospatial | Geospatial, drones & robotics | SO |
 | PX4 Autopilot | `px4` | geospatial | Geospatial, drones & robotics | SO |
 | ArduPilot | `ardupilot` | geospatial | Geospatial, drones & robotics | SO |
 | Platform Backup and Recovery | `platform-backup-recovery` | infrastructure | Data & storage | SO |
-| Linux Foundation | `linux-foundation` | (none) | Reference & community | **Unclassified** |
-| Cloud Native Computing Foundation (CNCF) | `cncf` | (none) | Reference & community | **Unclassified** |
-| CNCF Landscape | `cncf-landscape` | (none) | Reference & community | **Unclassified** |
-| LF Edge | `lf-edge` | (none) | Reference & community | **Unclassified** |
-| OpenSSF | `openssf` | (none) | Reference & community | **Unclassified** |
-| Open Robotics | `open-robotics` | (none) | Reference & community | **Unclassified** |
-| Proton Mail | `proton-mail` | (none) | Communication | **Unclassified** |
+| Linux Foundation | `linux-foundation` | (none) | Reference & community | **Shared** |
+| Cloud Native Computing Foundation (CNCF) | `cncf` | (none) | Reference & community | **Shared** |
+| CNCF Landscape | `cncf-landscape` | (none) | Reference & community | **Shared** |
+| LF Edge | `lf-edge` | (none) | Reference & community | **Shared** |
+| OpenSSF | `openssf` | (none) | Reference & community | **Shared** |
+| Open Robotics | `open-robotics` | (none) | Reference & community | **Shared** |
+| Proton Mail | `proton-mail` | (none) | Communication | SO |
 | Autoware | `autoware` | (none) | Geospatial, drones & robotics | SO |
 | ROS 2 | `ros-2` | (none) | Geospatial, drones & robotics | SO |
 | Eclipse Zenoh | `eclipse-zenoh` | (none) | Geospatial, drones & robotics | SO |
@@ -404,44 +404,44 @@ These Argo-managed products have no curated app today, so the workloads would st
 | Google / Gemma | `gemma-models` | (none) | AI & agents | SO |
 | Mistral / Ministral | `ministral-models` | (none) | AI & agents | SO |
 | NVIDIA / Nemotron | `nemotron-models` | (none) | AI & agents | SO |
-| Deskflow | `deskflow` | personal-tools | Personal tools & devices | **Unclassified** |
-| Facebook — Zeus | `facebook-zeus` | social-media | Brand & social media | **Unclassified** |
-| Facebook — Legacy Platform | `facebook-legacy` | social-media | Brand & social media | **Unclassified** |
-| X — Zeus | `x-zeus` | social-media | Brand & social media | **Unclassified** |
-| LinkedIn — Zeus | `linkedin-zeus` | social-media | Brand & social media | **Unclassified** |
-| TikTok — Zeus | `tiktok-zeus` | social-media | Brand & social media | **Unclassified** |
-| Instagram — Zeus | `instagram-zeus` | social-media | Brand & social media | **Unclassified** |
-| Twitch — Zeus | `twitch-zeus` | social-media | Brand & social media | **Unclassified** |
-| Reddit — callsign_zero0 | `reddit-zeus` | social-media | Brand & social media | **Unclassified** |
-| Pinterest — Zeus | `pinterest-zeus` | social-media | Brand & social media | **Unclassified** |
-| Threads — Zeus | `threads-zeus` | social-media | Brand & social media | **Unclassified** |
-| YouTube — profile pending | `youtube-zeus` | social-media | Brand & social media | **Unclassified** |
-| LinkedIn — Company Admin | `linkedin-company-admin` | social-media | Brand & social media | **Unclassified** |
-| Bambu Studio | `bambu-studio` | personal-tools | Personal tools & devices | **Unclassified** |
-| Bambu Lab | `bambu-lab` | personal-tools | Personal tools & devices | **Unclassified** |
+| Deskflow | `deskflow` | personal-tools | Personal tools & devices | **Shared** |
+| Facebook — Zeus | `facebook-zeus` | social-media | Brand & social media | GE |
+| Facebook — Legacy Platform | `facebook-legacy` | social-media | Brand & social media | GE |
+| X — Zeus | `x-zeus` | social-media | Brand & social media | GE |
+| LinkedIn — Zeus | `linkedin-zeus` | social-media | Brand & social media | GE |
+| TikTok — Zeus | `tiktok-zeus` | social-media | Brand & social media | GE |
+| Instagram — Zeus | `instagram-zeus` | social-media | Brand & social media | GE |
+| Twitch — Zeus | `twitch-zeus` | social-media | Brand & social media | GE |
+| Reddit — callsign_zero0 | `reddit-zeus` | social-media | Brand & social media | GE |
+| Pinterest — Zeus | `pinterest-zeus` | social-media | Brand & social media | GE |
+| Threads — Zeus | `threads-zeus` | social-media | Brand & social media | GE |
+| YouTube — profile pending | `youtube-zeus` | social-media | Brand & social media | GE |
+| LinkedIn — Company Admin | `linkedin-company-admin` | social-media | Brand & social media | GE |
+| Bambu Studio | `bambu-studio` | personal-tools | Personal tools & devices | **Shared** |
+| Bambu Lab | `bambu-lab` | personal-tools | Personal tools & devices | **Shared** |
 | Foxglove Studio | `foxglove-studio` | geospatial | Geospatial, drones & robotics | SO |
-| OBS Studio | `obs-studio` | personal-tools | Personal tools & devices | **Unclassified** |
-| Blender | `blender` | personal-tools | Personal tools & devices | **Unclassified** |
-| MadMapper | `madmapper` | personal-tools | Personal tools & devices | **Unclassified** |
-| TouchDesigner | `touchdesigner` | personal-tools | Personal tools & devices | **Unclassified** |
-| Termius | `termius` | infrastructure | Personal tools & devices | **Unclassified** |
-| Brave Browser | `brave-browser` | personal-tools | Personal tools & devices | **Unclassified** |
-| Google Chrome | `google-chrome` | personal-tools | Personal tools & devices | **Unclassified** |
+| OBS Studio | `obs-studio` | personal-tools | Personal tools & devices | **Shared** |
+| Blender | `blender` | personal-tools | Personal tools & devices | **Shared** |
+| MadMapper | `madmapper` | personal-tools | Personal tools & devices | **Shared** |
+| TouchDesigner | `touchdesigner` | personal-tools | Personal tools & devices | **Shared** |
+| Termius | `termius` | infrastructure | Personal tools & devices | **Shared** |
+| Brave Browser | `brave-browser` | personal-tools | Personal tools & devices | **Shared** |
+| Google Chrome | `google-chrome` | personal-tools | Personal tools & devices | **Shared** |
 | Google Cloud | `google-cloud` | infrastructure | Platform core | SO |
-| Riverside.fm | `riverside-fm` | workspaces | Productivity & SaaS | **Unclassified** |
+| Riverside.fm | `riverside-fm` | workspaces | Productivity & SaaS | **Shared** |
 | Notion Backups | `notion-backups` | infrastructure | Data & storage | SO |
 | ProBackup.io | `probackup-io` | infrastructure | Data & storage | SO |
-| Strava | `strava` | personal-tools | Personal tools & devices | **Unclassified** |
-| Apple Music | `apple-music` | personal-tools | Personal tools & devices | **Unclassified** |
+| Strava | `strava` | personal-tools | Personal tools & devices | **Shared** |
+| Apple Music | `apple-music` | personal-tools | Personal tools & devices | **Shared** |
 | Langfuse | `langfuse` | observability | Observability | SO |
 | Uptime Kuma | `uptime-kuma` | observability | Observability | SO |
-| MTA | `mta` | communication | Communication | **Unclassified** |
+| MTA | `mta` | communication | Communication | SO |
 | Agent Mail | `agent-mail` | ai-agents | AI & agents | SO |
 | turbovec | `turbovec` | ai-agents | AI & agents | SO |
-| Samsung KNOX | `samsung-knox` | personal-tools | Personal tools & devices | **Unclassified** |
-| Samsung One UI | `samsung-one-ui` | personal-tools | Personal tools & devices | **Unclassified** |
-| Samsung DeX | `samsung-dex` | personal-tools | Personal tools & devices | **Unclassified** |
-| Notion | `notion` | workspaces | Productivity & SaaS | **Unclassified** |
+| Samsung KNOX | `samsung-knox` | personal-tools | Personal tools & devices | **Shared** |
+| Samsung One UI | `samsung-one-ui` | personal-tools | Personal tools & devices | **Shared** |
+| Samsung DeX | `samsung-dex` | personal-tools | Personal tools & devices | **Shared** |
+| Notion | `notion` | workspaces | Productivity & SaaS | **Shared** |
 | Home Assistant | `home-assistant` | infrastructure | Home & homestead | LE |
 | Loki | `loki` | observability | Observability | SO |
 | OneTAK STAC read-only API | `onetak-stac-readonly` | onetak | Geospatial, drones & robotics | SO |

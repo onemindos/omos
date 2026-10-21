@@ -1722,12 +1722,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: element-web
     onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   tags:
     - kubernetes
     - matrix
   labels:
     onemind.io/catalog-role: workload
+    onemind.io/pillar: so
 spec:
   type: service
   lifecycle: production
@@ -1754,12 +1755,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: synapse
     onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   tags:
     - kubernetes
     - matrix
   labels:
     onemind.io/catalog-role: workload
+    onemind.io/pillar: so
 spec:
   type: service
   lifecycle: production
@@ -4519,12 +4521,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: postgres
     onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   tags:
     - kubernetes
     - matrix
   labels:
     onemind.io/catalog-role: workload
+    onemind.io/pillar: so
 spec:
   type: service
   lifecycle: production
@@ -4551,12 +4554,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: redis
     onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   tags:
     - kubernetes
     - matrix
   labels:
     onemind.io/catalog-role: workload
+    onemind.io/pillar: so
 spec:
   type: service
   lifecycle: production
@@ -7154,10 +7158,12 @@ metadata:
     onemind.io/documented-address: https://instagram.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810e84d5d447966b9242.md
       title: "Archived registry: Instagram"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7184,10 +7190,12 @@ metadata:
     onemind.io/documented-address: https://youtube.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8110a570ee43052b619f.md
       title: "Archived registry: YouTube"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7223,12 +7231,14 @@ metadata:
       Part of Google Workspace Standard.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81518da2ee7c70e8d25c.md
       title: "Archived registry: Google Calendar"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8110aacfeff6d5acf18c.md
       title: "Archived registry: Calendar"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7471,12 +7481,14 @@ metadata:
     onemind.io/tech-stack-notes: Primary file storage. OneMind folder (403GB) syncing to Drive desktop app.
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81faa9f5e8b0e4c2137e.md
       title: "Archived registry: Google Drive"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81429ddeeedb63f202e5.md
       title: "Archived registry: Drive"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7645,10 +7657,12 @@ metadata:
     onemind.io/documented-address: https://x.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815f84a4ef6b62156a7b.md
       title: "Archived registry: X.com"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7677,10 +7691,12 @@ metadata:
     onemind.io/documented-address: https://github.com/silvertakana/worldwideview
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8168813dcf78f5c99f1d.md
       title: "Archived registry: WorldWideView"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7785,10 +7801,12 @@ metadata:
     onemind.io/documented-address: https://github.com/bigbodycobain/shadowbroker
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8178acbaf60087482229.md
       title: "Archived registry: ShadowBroker"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7817,10 +7835,12 @@ metadata:
     onemind.io/documented-address: https://github.com/koala73/worldmonitor
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817c9538c8feb1e5ce3e.md
       title: "Archived registry: WorldMonitor"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -7856,12 +7876,14 @@ metadata:
       account. Migrating from iCloud.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e49fcedcf0041324b4.md
       title: "Archived registry: Google Photos"
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817e8bd1fbf841481943.md
       title: "Archived registry: Photos"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -7926,10 +7948,12 @@ metadata:
     onemind.io/documented-address: https://facebook.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818caa21cde074079ac2.md
       title: "Archived registry: Facebook"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -8098,10 +8122,12 @@ metadata:
     onemind.io/documented-address: https://github.com/simplifaisoul/osiris
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819cbdf7fbc0c195dbd7.md
       title: "Archived registry: Osiris"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -8194,10 +8220,12 @@ metadata:
     onemind.io/documented-address: https://github.com/calesthio/Crucix
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8abe9c60ec490ba21.md
       title: "Archived registry: Crucix"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -8224,10 +8252,12 @@ metadata:
     onemind.io/documented-address: https://linkedin.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81bb9632ca833cd5fa87.md
       title: "Archived registry: LinkedIn"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -8264,10 +8294,12 @@ metadata:
       $14/mo.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d2be23eda5893be74a.md
       title: "Archived registry: Gmail"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -8483,10 +8515,12 @@ metadata:
       syncs automatically via Google account.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e800a854cee91d59f7ad1.md
       title: "Archived registry: Contacts"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -8679,10 +8713,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tiktok.com
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810e8615c2f594744dca.md
       title: "Archived registry: TikTok"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -8739,10 +8775,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://weixin.qq.com
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8113bfb3c54fa5d44247.md
       title: "Archived registry: WeChat"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -9291,10 +9329,12 @@ metadata:
     onemind.io/documented-address: https://github.com/bilawalsidhu/gods-eye-view
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815192a3e2716188e0ef.md
       title: "Archived registry: Gods Eye View"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: reference
   owner: group:default/onemind-admins
@@ -9617,10 +9657,12 @@ metadata:
     onemind.io/tech-stack-notes: Mobile payments on Samsung. Replacing Apple Pay as moving off iPhone.
     onemind.io/supported-platforms: Android
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816aafedd09892f47e82.md
       title: "Archived registry: Wallet"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -9645,10 +9687,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://reddit.com
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab330c7b21cab93c8.md
       title: "Archived registry: Reddit"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -9706,10 +9750,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://opensky-network.org
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816f8042cbf5b699b5ec.md
       title: "Archived registry: OpenSky"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -9938,10 +9984,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://hushed.com
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180aefee4cf10297c32.md
       title: "Archived registry: Hushed"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -10044,10 +10092,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://raycast.com
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8188bfd2d16ba672fbce.md
       title: "Archived registry: Raycast"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -10356,10 +10406,12 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/feed-intel
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a7b836e7cf6518f1e7.md
       title: "Archived registry: feed-intel"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -10493,10 +10545,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://twitch.tv
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b9bc7bc879c11f5906.md
       title: "Archived registry: Twitch"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -10794,10 +10848,12 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:42:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d5987dcdf1ef081d87.md
       title: "Archived registry: Workspace"
+  labels:
+    onemind.io/pillar: shared
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -10955,10 +11011,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://pinterest.com
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db9a6fdcf35a5ff7b7.md
       title: "Archived registry: Pinterest"
+  labels:
+    onemind.io/pillar: ge
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -11488,10 +11546,12 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/feed-satellites
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fca08cfaf9f04514a1.md
       title: "Archived registry: feed-satellites"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: documented-capability
   owner: group:default/onemind-admins
@@ -12218,10 +12278,12 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://proton.me
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
       title: "Archived registry: Proton Mail"
+  labels:
+    onemind.io/pillar: so
 spec:
   type: documented-capability
   owner: group:default/onemind-admins

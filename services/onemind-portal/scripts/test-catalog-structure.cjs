@@ -172,26 +172,33 @@ test('pillars are reviewed, never guessed: enum only, inherited from the System,
   const { structure } = sources;
   for (const e of [...systems, ...members]) {
     const p = e.metadata.labels?.['onemind.io/pillar'];
-    assert.ok(p === undefined || PILLARS.includes(p), `${refOf(e)} pillar ${p}`);
+    assert.ok(p === undefined || [...PILLARS, 'shared'].includes(p), `${refOf(e)} pillar ${p}`);
     assert.equal(ann(e, 'onemind.io/pillars-served'), undefined);
   }
   for (const s of systems) {
     const declared = structure.systems.find(x => x.name === s.metadata.name).pillar;
-    assert.equal(s.metadata.labels?.['onemind.io/pillar'], PILLARS.includes(declared) ? declared : undefined);
+    assert.equal(s.metadata.labels?.['onemind.io/pillar'], [...PILLARS, 'shared'].includes(declared) ? declared : undefined);
     assert.equal(s.spec.domain, PILLARS.includes(declared) ? `domain:default/onemind-${declared}` : 'domain:default/onemind');
   }
   for (const e of members) {
     const override = structure.pillarOverrides?.[refOf(e)];
     const expected = override ?? s(e).metadata.labels?.['onemind.io/pillar'];
-    assert.equal(e.metadata.labels?.['onemind.io/pillar'], PILLARS.includes(expected) ? expected : undefined, refOf(e));
+    assert.equal(e.metadata.labels?.['onemind.io/pillar'], [...PILLARS, 'shared'].includes(expected) ? expected : undefined, refOf(e));
   }
   function s(e) { return byRef.get(`system:default/${e.spec.system}`); }
   const unclassified = members.filter(e => !e.metadata.labels?.['onemind.io/pillar']);
-  assert.ok(unclassified.length > 0 && unclassified.some(e => e.metadata.name === 'mercury'));
+  assert.ok(unclassified.every(e => e.spec.system === UNASSIGNED), 'only Unassigned workloads is Unclassified');
+  const decided = name => byRef.get(`system:default/${name}`);
+  for (const [name, pillar] of Object.entries({ intelligence: 'so', communication: 'so', 'social-media': 'ge', 'productivity-saas': 'shared', 'personal-tools': 'shared', 'reference-links': 'shared' })) {
+    assert.equal(decided(name).metadata.labels['onemind.io/pillar'], pillar, name);
+    assert.equal(decided(name).spec.domain, pillar === 'shared' ? 'domain:default/onemind' : `domain:default/onemind-${pillar}`);
+  }
+  assert.equal(byRef.get('component:default/mercury').spec.system, 'business-operations');
   // Unclassified is a positive, filterable state: label absent <=> pillar-review = unclassified.
   for (const e of members) {
     const classified = Boolean(e.metadata.labels?.['onemind.io/pillar']);
-    assert.equal(ann(e, 'onemind.io/pillar-review'), classified ? 'proposed' : 'unclassified', refOf(e));
+    if (classified) assert.ok(['proposed', 'approved'].includes(ann(e, 'onemind.io/pillar-review')), refOf(e));
+    else assert.equal(ann(e, 'onemind.io/pillar-review'), 'unclassified', refOf(e));
   }
 });
 
@@ -237,4 +244,18 @@ test('Components carry a role label: apps are top-level, workloads hang under an
   }
   const appCount = members.filter(e => e.metadata.labels?.['onemind.io/catalog-role'] === 'app').length;
   assert.ok(appCount >= 130 && appCount < 200, `${appCount} apps`);
+});
+
+test('the app forwards every removed System URL: bundled JSON matches redirects.yaml, every target exists, every removed System is listed', () => {
+  const { redirects } = YAML.parse(fs.readFileSync(path.join(root, 'catalog/redirects.yaml'), 'utf8'));
+  const bundled = JSON.parse(fs.readFileSync(path.join(root, 'packages/app/src/systemRedirects.json'), 'utf8'));
+  assert.deepEqual(bundled, Object.fromEntries(redirects.map(r => [r.from.replace('system:default/', ''), r.to.replace('system:default/', '')])));
+  const { refs } = JSON.parse(fs.readFileSync(path.join(root, 'catalog/ref-baseline.json'), 'utf8'));
+  const removedSystems = refs.filter(r => r.startsWith('system:') && !byRef.has(r));
+  assert.ok(removedSystems.length > 0);
+  for (const ref of removedSystems) assert.ok(bundled[ref.replace('system:default/', '')], `${ref} has no forwarding entry`);
+  for (const [from, to] of Object.entries(bundled)) {
+    assert.equal(byRef.get(`system:default/${to}`)?.kind, 'System', `${from} -> ${to}`);
+    assert.ok(!byRef.has(`system:default/${from}`), `${from} still exists`);
+  }
 });

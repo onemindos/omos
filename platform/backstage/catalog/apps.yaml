@@ -317,30 +317,32 @@ kind: System
 metadata:
   name: intelligence
   title: Intelligence & feeds
-  description: Intelligence feeds, monitors and the observational API. Pillar not
-    yet reviewed.
+  description: Intelligence feeds, monitors and the observational API. SO per Zeus
+    (2026-10-21).
   labels:
     onemind.io/catalog-axis: deployment
+    onemind.io/pillar: so
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
 spec:
   owner: group:default/onemind-admins
-  domain: domain:default/onemind
+  domain: domain:default/onemind-so
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: communication
   title: Communication
-  description: Messaging, mail and phone services, self-hosted and external.
-    Shared across missions; pillar not yet reviewed.
+  description: "Messaging, mail and phone services, self-hosted and external:
+    shared communications infrastructure. SO per Zeus (2026-10-21)."
   labels:
     onemind.io/catalog-axis: deployment
+    onemind.io/pillar: so
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
 spec:
   owner: group:default/onemind-admins
-  domain: domain:default/onemind
+  domain: domain:default/onemind-so
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -348,11 +350,12 @@ metadata:
   name: productivity-saas
   title: Productivity & SaaS
   description: Zoho, Google Workspace, Notion, Dropbox and other hosted
-    productivity services. Mixed use; pillar not yet reviewed.
+    productivity services. Shared across pillars (Zeus, 2026-10-21).
   labels:
     onemind.io/catalog-axis: deployment
+    onemind.io/pillar: shared
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
 spec:
   owner: group:default/onemind-admins
   domain: domain:default/onemind
@@ -362,12 +365,13 @@ kind: System
 metadata:
   name: personal-tools
   title: Personal tools & devices
-  description: Desktop applications, hardware vendors and personal devices. Mixed
-    use; pillar not yet reviewed.
+  description: Desktop applications, hardware vendors and personal devices. Shared
+    across pillars (Zeus, 2026-10-21).
   labels:
     onemind.io/catalog-axis: deployment
+    onemind.io/pillar: shared
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
 spec:
   owner: group:default/onemind-admins
   domain: domain:default/onemind
@@ -377,26 +381,28 @@ kind: System
 metadata:
   name: social-media
   title: Brand & social media
-  description: Social and brand accounts. Pillar not yet reviewed (GE is the likely home).
+  description: Social and brand accounts. GE per Zeus (2026-10-21).
   labels:
     onemind.io/catalog-axis: deployment
+    onemind.io/pillar: ge
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
 spec:
   owner: group:default/onemind-admins
-  domain: domain:default/onemind
+  domain: domain:default/onemind-ge
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: reference-links
   title: Reference & community
-  description: Foundations, standards bodies and community reference sites. Hidden
-    by default.
+  description: Foundations, standards bodies and community reference sites. Shared
+    across pillars; hidden by default (Zeus, 2026-10-21).
   labels:
     onemind.io/catalog-axis: deployment
+    onemind.io/pillar: shared
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
 spec:
   owner: group:default/onemind-admins
   domain: domain:default/onemind
@@ -971,9 +977,10 @@ metadata:
     onemind.io/inventory-review: imported-link
     backstage.io/kubernetes-namespace: matrix
     backstage.io/kubernetes-label-selector: app=element-web
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: so
 spec:
   type: website
   lifecycle: production
@@ -1003,9 +1010,10 @@ metadata:
     onemind.io/inventory-review: imported-link
     argocd/app-name: platform-matrix
     argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: so
 spec:
   type: website
   lifecycle: production
@@ -1099,9 +1107,10 @@ metadata:
     onemind.io/tech-stack-url: https://messages.google.com
     onemind.io/tech-stack-notes: Primary SMS/RCS messaging on Samsung. Web app for desktop access.
     onemind.io/supported-platforms: Android,Web
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: so
 spec:
   type: website
   lifecycle: production
@@ -2084,9 +2093,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2108,9 +2118,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2132,9 +2143,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2156,9 +2168,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2180,9 +2193,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2204,9 +2218,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2228,9 +2243,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2252,9 +2268,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2276,9 +2293,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2300,9 +2318,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2324,9 +2343,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2348,9 +2368,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2451,9 +2472,10 @@ metadata:
       ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2500,9 +2522,10 @@ metadata:
       browsers/devices. Collection: OneMind Research & Links (ID: 74086454). 12
       sub-collections. API token configured for Claude."
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2537,9 +2560,10 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://att.com
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: so
 spec:
   type: website
   lifecycle: production
@@ -2675,9 +2699,10 @@ metadata:
       architecture diagrams, planning sessions, and visual brainstorming across
       the OneMind team.
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -2746,14 +2771,15 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://mercury.com
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: production
   owner: group:default/onemind-admins
-  system: personal-finance
+  system: business-operations
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3114,7 +3140,9 @@ metadata:
     - openapi
     - observational
   annotations:
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
+  labels:
+    onemind.io/pillar: so
 spec:
   type: openapi
   lifecycle: production
@@ -3833,13 +3861,14 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.linuxfoundation.org/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -3864,13 +3893,14 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.cncf.io/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -3892,13 +3922,14 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://landscape.cncf.io/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -3921,13 +3952,14 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://lfedge.org/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -3950,13 +3982,14 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://openssf.org/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -3979,13 +4012,14 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.openrobotics.org/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -4039,7 +4073,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://proton.me
     onemind.io/verification: documented-unverified
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://mail.proton.me/
       title: Open application
@@ -4051,6 +4085,7 @@ metadata:
       title: "Archived registry: Proton Mail"
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: so
 spec:
   type: website
   lifecycle: production
@@ -4703,13 +4738,14 @@ metadata:
     onemind.io/supported-platforms: macOS,Windows,Linux
     onemind.io/verification: installation-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://github.com/deskflow/deskflow
       title: Open application
       icon: github
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: experimental
@@ -4728,13 +4764,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.facebook.com/zeuslegacydelacruz
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4753,13 +4790,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.facebook.com/LegacyPlatformOfficial
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4778,13 +4816,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://x.com/zeusDelacruz_
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4803,13 +4842,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.linkedin.com/in/zeuslegacydelacruz/
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4828,13 +4868,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.tiktok.com/@zeusdelacruz_
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4853,13 +4894,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.instagram.com/zeusdelacruz_/
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4878,13 +4920,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.twitch.tv/zeusdelacruz_
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4903,13 +4946,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.reddit.com/user/callsign_zero0/
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4928,13 +4972,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.pinterest.com/ZeusDelacruz_/
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4953,13 +4998,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.threads.com/@zeusdelacruz_
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -4978,13 +5024,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.youtube.com/
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -5004,13 +5051,14 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   links:
     - url: https://www.linkedin.com/company/74305203/admin/dashboard/
       title: Open application
       icon: web
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: ge
 spec:
   type: website
   lifecycle: experimental
@@ -5049,9 +5097,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e81128cbafd7d6a3e4957
     onemind.io/tech-stack-url: https://bambulab.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5089,9 +5138,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fa8da9ddcd368bcacd
     onemind.io/tech-stack-url: https://bambulab.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: software-platform
   lifecycle: production
@@ -5171,9 +5221,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8107a8bfedbdaca522e6
     onemind.io/tech-stack-url: https://obsproject.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5211,9 +5262,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fbb074c80989712ef4
     onemind.io/tech-stack-url: https://blender.org
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5251,9 +5303,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8155bd8cec47b974eb09
     onemind.io/tech-stack-url: https://madmapper.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5291,9 +5344,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b8af60f682a17316c0
     onemind.io/tech-stack-url: https://derivative.ca
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5330,9 +5384,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81ea87d7efbe9d4510be
     onemind.io/tech-stack-url: https://termius.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5369,9 +5424,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813ebf6df9a7bcd81453
     onemind.io/tech-stack-url: https://brave.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5409,9 +5465,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81e5ab51d19463c34afc
     onemind.io/tech-stack-url: https://www.google.com/chrome
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: desktop-application
   lifecycle: production
@@ -5490,9 +5547,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81c08d9edda9345684de
     onemind.io/tech-stack-url: https://riverside.fm
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: experimental
@@ -5611,9 +5669,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81a28e06df070cab8725
     onemind.io/tech-stack-url: https://strava.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -5650,9 +5709,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e818f840bd88909d0f6a1
     onemind.io/tech-stack-url: https://music.apple.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production
@@ -5764,9 +5824,10 @@ metadata:
     onemind.io/tech-stack-category: Messaging
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8130b6c3eb9c22a142c1
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: so
 spec:
   type: service
   lifecycle: production
@@ -5885,9 +5946,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8118a652c84455fb2a9b
     onemind.io/tech-stack-url: https://www.samsungknox.com
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: software-platform
   lifecycle: production
@@ -5925,9 +5987,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e810880b0e5134dff2558
     onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/one-ui
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: software-platform
   lifecycle: production
@@ -5965,9 +6028,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817ea374f0efe714c835
     onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/dex
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: software-platform
   lifecycle: production
@@ -6004,9 +6068,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e816fa7d6ca5062cdfbf5
     onemind.io/tech-stack-url: https://notion.so
     onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: unclassified
+    onemind.io/pillar-review: approved
   labels:
     onemind.io/catalog-role: app
+    onemind.io/pillar: shared
 spec:
   type: website
   lifecycle: production

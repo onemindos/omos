@@ -116,11 +116,15 @@ Everything below is built against that map and is `proposed` until Zeus approves
 - **Guards.** `scripts/test-catalog-structure.cjs` and `test-snapshot-cluster.cjs` (run through `test-topology.cjs`, so the existing gate covers them): five Domains, <= 25 Systems with Domain, titles and no duplicates, every Component/Resource/API has a System, workload and Argo mapping, every ref in `ref-baseline.json` still exists or has a redirect, every relation target resolves, pillars never guessed, role labels, byte-stable rewrite, mounted copies equal.
 - **Catalog files stay byte-faithful.** The curator patches changed fields only (the first version re-serialized everything and broke the launcher-review fixture; fixed and tested).
 
+### Zeus's decisions applied (2026-10-21)
+
+- Pillars: Intelligence & feeds and Communication are SO, Brand & social media is GE; Productivity & SaaS, Personal tools & devices and Reference & community are Shared (under `domain:default/onemind`, label `onemind.io/pillar: shared`, found by the Pillar filter's Shared view). Unassigned workloads stays Unclassified. Mercury moved to Business operations (GE). Argo convention approved. Domain names stay `onemind-so|le|hp|ge`; F1 fixes its links.
+- Old System URLs: `packages/app/src/systemRedirects.tsx` registers one native `PageBlueprint` page per removed System at the static path `/catalog/default/system/<old>`, rendering react-router `<Navigate replace>` to the successor. A static path outranks the catalog's `/catalog/:namespace/:kind/:name`, and no entity exists under the old names, so live entities are never intercepted. Data comes from `systemRedirects.json`, generated from `catalog/redirects.yaml` by `curate-structure.cjs`. No third-party code. Tests: forwarding, no interception of live Systems, bundle equals YAML, every target exists, every removed System listed.
+
 ### Deferred / not done
 
 - **Resource type rename** (`database`, `volume`, `bucket`, `cluster`, `network`, `code-repository`, `capability`, `endpoint`): needs edits to `plugin-onemind-common/AccessDeployments.tsx`, `report-service-coverage.cjs` and `scripts/tests/test_gitops_topology.py`, which other work orders touch.
 - **Pillar column.** The new-frontend catalog table has no column extension point (plugin-catalog 2.0.9). Delivered the filter instead; a column needs replacing the index page.
-- **Old System URLs.** `redirects.yaml` and its test exist; Backstage has no built-in redirect, so a forwarding route in the app is still needed for `/catalog/default/system/<old>` (starred Systems among the 61 would show "not found"). Components, APIs and Resources are not removed, so their URLs and stars are unaffected.
 - **The 10 not-observed workloads** (`missing-review-required`) are kept and mapped to their apps, not deleted.
 - **Both-replica processed-entity counts** and signed-in acceptance: only possible after merge and rollout.
 - **Before/after screenshots** (rule 10): the filter UI has not been rendered in a signed-in portal.

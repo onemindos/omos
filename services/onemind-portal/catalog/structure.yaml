@@ -32,111 +32,133 @@ systems:
     title: Platform core
     description: "Cluster foundations: networking and ingress, certificates, DNS, autoscaling, operators, Tailscale and Cloudflare, and the DigitalOcean account."
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: identity-access
     title: Identity & access
     description: Sign-in, authorization, workload identity, secrets management and admission/runtime policy.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: gitops-delivery
     title: GitOps & delivery
     description: Argo CD and Argo Rollouts, the container registry, the GitHub runner and source hosting.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: developer-platform
     title: Developer platform
     description: The Backstage portal, OpenChoreo control and data planes, cluster dashboards and runbooks.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: observability
     title: Observability
     description: Metrics, logs, traces, dashboards, alerting, cost and cluster-health tooling.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: data-storage
     title: Data & storage
     description: Databases and operators, object and block storage, search, backups and recovery.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: messaging-nats
     title: Messaging (NATS)
     description: The NATS bus, its UIs and tools, and the data pipelines that publish to or consume from it.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: tak-ecosystem
     title: TAK & field ops
     description: TAK Server and its plugins, OneTAK, FedHub, TAK-ML, voice and the TAK clients and references.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: geospatial
     title: Geospatial, drones & robotics
     description: Map, routing, geocoding and imagery services, drone software and firmware, and robotics platforms.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: ai-agents
     title: AI & agents
     description: Hermes (Legacy), agent consoles, model gateways and runtimes, model providers and workflow automation.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: repo-onemind
     title: Code repositories
     description: Source repositories in the onemindos GitHub organization. Hidden by default.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: onemind-mesh
     title: Mesh & devices
     description: Tailscale mesh endpoints (devices and service proxies). Discovery snapshot, not live health. Hidden by default.
     pillar: so
+    review: proposed
     domain: domain:default/onemind-so
   - name: personal-finance
     title: Personal finance
     description: Personal banking, credit monitoring and credit-building tools.
     pillar: hp
+    review: proposed
     domain: domain:default/onemind-hp
   - name: home-homestead
     title: Home & homestead
     description: Home automation and homestead/farm automation.
     pillar: le
+    review: proposed
     domain: domain:default/onemind-le
   - name: business-operations
     title: Business operations
     description: Customer relationship, community and other business-operations platforms.
     pillar: ge
+    review: proposed
     domain: domain:default/onemind-ge
   - name: intelligence
     title: Intelligence & feeds
-    description: Intelligence feeds, monitors and the observational API. Pillar not yet reviewed.
-    pillar: unclassified
-    domain: domain:default/onemind
+    description: Intelligence feeds, monitors and the observational API. SO per Zeus (2026-10-21).
+    pillar: so
+    review: approved
+    domain: domain:default/onemind-so
   - name: communication
     title: Communication
-    description: Messaging, mail and phone services, self-hosted and external. Shared across missions; pillar not yet reviewed.
-    pillar: unclassified
-    domain: domain:default/onemind
+    description: "Messaging, mail and phone services, self-hosted and external: shared communications infrastructure. SO per Zeus (2026-10-21)."
+    pillar: so
+    review: approved
+    domain: domain:default/onemind-so
   - name: productivity-saas
     title: Productivity & SaaS
-    description: Zoho, Google Workspace, Notion, Dropbox and other hosted productivity services. Mixed use; pillar not yet reviewed.
-    pillar: unclassified
+    description: Zoho, Google Workspace, Notion, Dropbox and other hosted productivity services. Shared across pillars (Zeus, 2026-10-21).
+    pillar: shared
+    review: approved
     domain: domain:default/onemind
   - name: personal-tools
     title: Personal tools & devices
-    description: Desktop applications, hardware vendors and personal devices. Mixed use; pillar not yet reviewed.
-    pillar: unclassified
+    description: Desktop applications, hardware vendors and personal devices. Shared across pillars (Zeus, 2026-10-21).
+    pillar: shared
+    review: approved
     domain: domain:default/onemind
   - name: social-media
     title: Brand & social media
-    description: Social and brand accounts. Pillar not yet reviewed (GE is the likely home).
-    pillar: unclassified
-    domain: domain:default/onemind
+    description: Social and brand accounts. GE per Zeus (2026-10-21).
+    pillar: ge
+    review: approved
+    domain: domain:default/onemind-ge
   - name: reference-links
     title: Reference & community
-    description: Foundations, standards bodies and community reference sites. Hidden by default.
-    pillar: unclassified
+    description: Foundations, standards bodies and community reference sites. Shared across pillars; hidden by default (Zeus, 2026-10-21).
+    pillar: shared
+    review: approved
     domain: domain:default/onemind
   - name: unassigned-workloads
     title: Unassigned workloads
     description: "Kubernetes workloads that no reviewed mapping assigns to an app yet. Nothing is hidden: new workloads land here until mapped."
     pillar: unclassified
+    review: proposed
     domain: domain:default/onemind
 apps:
   - name: platform-core
@@ -350,7 +372,7 @@ placement:
   madmapper: personal-tools
   maputnik: geospatial
   matrix-synapse: communication
-  mercury: personal-finance
+  mercury: business-operations
   minio: data-storage
   ministral-models: ai-agents
   miro: productivity-saas
@@ -499,8 +521,7 @@ fallbackSystems:
   fabric-observability: observability
   fabric-productivity: productivity-saas
   fabric-iotautomation: home-homestead
-pillarOverrides:
-  component:default/mercury: unclassified
+pillarOverrides: {}
 titles:
   component:default/external-argocd: ArgoCD (external launcher)
   component:default/external-kubernetes-dashboard: Kubernetes Dashboard (external launcher)

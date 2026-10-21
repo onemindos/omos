@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import { CatalogFilterBlueprint } from '@backstage/plugin-catalog-react/alpha';
 import {
-  CATALOG_FILTER_EXISTS,
   DefaultEntityFilters,
   EntityFilter,
   EntityKindFilter,
@@ -22,7 +21,6 @@ import {
 // `onemind.io/pillar-review: unclassified`; both come from catalog/structure.yaml.
 export const PILLAR_LABEL = 'metadata.labels.onemind.io/pillar';
 export const PILLAR_REVIEW = 'metadata.annotations.onemind.io/pillar-review';
-export const PILLARS_SERVED = 'metadata.annotations.onemind.io/pillars-served';
 export const ROLE_LABEL = 'metadata.labels.onemind.io/catalog-role';
 
 export type PillarOption =
@@ -39,7 +37,7 @@ export const pillarOptions: { id: PillarOption; label: string }[] = [
   { id: 'le', label: 'LE — Legacy Evolution' },
   { id: 'hp', label: 'HP — Holistic Performance' },
   { id: 'ge', label: 'GE — Generational Empire' },
-  { id: 'shared', label: 'Shared (serves several)' },
+  { id: 'shared', label: 'Shared' },
   { id: 'unclassified', label: 'Unclassified' },
 ];
 
@@ -53,7 +51,8 @@ export class EntityPillarFilter implements EntityFilter {
       case 'ge':
         return { [PILLAR_LABEL]: this.value };
       case 'shared':
-        return { [PILLARS_SERVED]: CATALOG_FILTER_EXISTS };
+        // Shared is a reviewed view (label value), not a fifth Domain.
+        return { [PILLAR_LABEL]: 'shared' };
       case 'unclassified':
         return { [PILLAR_REVIEW]: 'unclassified' };
       default:
