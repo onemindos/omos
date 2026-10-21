@@ -1030,7 +1030,6 @@ This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
 
-
 ### Eight-workstream parallel preparation run — 2026-10-21 UTC
 
 User authorized separate PRs and agent distribution for the remaining Backstage
@@ -1071,3 +1070,18 @@ Master #356 and the UI foundation are updated; no live catalog or workload is
 reclassified, no new identity permission or NATS routing is granted. Historical
 numeric ranges remain unconfirmed, not reordered with the requested UI order.
 Phase 6 In progress; Phases 7/8 Not started.
+
+### Flagship portal program — 2026-10-21
+
+Zeus asked for Backstage to become the single, organized front door for every
+OneMind service (Kubernetes and not), with live dashboards, DigitalOcean at a
+glance, add/remove lifecycle and a brand-correct theme. A signed-in review found
+7,750 unread notifications, an alphabetical sidebar, about 70 Systems under three
+naming schemes, 6 of 69 Argo apps linked, an empty Cost page, an unrequested
+GitHub OAuth pop-up on app pages, a navy/teal theme, and an offsite backup copy
+that has never run (two other "suspended" backup jobs are deliberate replacements). Eleven work orders, one draft PR each, for implementing
+agents: [index](docs/roadmap/flagship/README.md), F1–F11 =
+[#357](https://github.com/onemindos/omos/pull/357)–[#367](https://github.com/onemindos/omos/pull/367).
+This supersedes the U00–U06 order in #356. It is Phase 6 follow-through: no
+Phase 7 start, no app migration, no AI permission change. Work-order PRs do not
+edit this file; the coordinator records each merge here.
