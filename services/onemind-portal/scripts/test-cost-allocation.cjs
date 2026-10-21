@@ -112,3 +112,15 @@ test('freshness depends on fetch observation, separate from historical allocatio
   assert.throws(() => observationState({ ...clock, maxAgeMs: -1 }));
   assert.throws(() => observationState({ ...clock, now: NaN }));
 });
+
+// Independent review: JS `$` may match before a final newline; regex also coerces arrays.
+test('namespace and currency require exact typed strings without trailing control characters', () => {
+  for (const currency of ['USD\n', ['USD'], { toString: () => 'USD' }])
+    assert.throws(() => parse(envelope(), { window, currency }));
+  assert.throws(() => parse(envelope(), { window, namespaces: ['nats\n'] }));
+  const invalid = row('nats\n');
+  const result = parse({ code: 200, data: [{ ['nats\n']: invalid }] }, { window });
+  assert.equal(result.state, 'partial');
+  assert.equal(result.totalCost, null);
+  assert.deepEqual(result.rows, []);
+});

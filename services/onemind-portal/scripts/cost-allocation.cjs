@@ -8,7 +8,7 @@ const ADJUSTMENTS = ['cpuCostAdjustment', 'gpuCostAdjustment', 'ramCostAdjustmen
   'pvCostAdjustment', 'networkCostAdjustment', 'loadBalancerCostAdjustment'];
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const finite = value => typeof value === 'number' && Number.isFinite(value);
-const namespace = value => typeof value === 'string' && value.length <= 63 &&
+const namespace = value => typeof value === 'string' && value.length <= 63 && value === value.trim() &&
   /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(value);
 
 function timestamp(value) {
@@ -31,7 +31,7 @@ function validateWindow(value) {
 function parseNamespaceAllocation(payload, options) {
   const window = validateWindow(options?.window);
   const currency = options.currency ?? null; // Not present in AllocationJSON.
-  if (currency !== null && !/^[A-Z]{3}$/.test(currency))
+  if (currency !== null && (typeof currency !== 'string' || currency.length !== 3 || !/^[A-Z]{3}$/.test(currency)))
     throw new TypeError('Currency must be an explicitly verified three-letter code');
   const filter = options.namespaces;
   if (filter !== undefined && (!Array.isArray(filter) || !filter.length ||
