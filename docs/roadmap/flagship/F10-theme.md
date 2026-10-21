@@ -176,6 +176,19 @@ entity page shows the login-rejected banner). Palette review still works, but
 signed-in data pages need a look after release. Pages captured: Home, Catalog, an
 entity, Today, `/design`, dark and light; Home, Catalog and entity at 390px.
 
+### Fix: white canvas below short pages
+
+Cause: nothing in the app renders MUI `CssBaseline`, so the `MuiCssBaseline` overrides in
+the theme never reach the page, and the browser canvas showed white below short content.
+Fix in `brand.css` (native `--bui-bg-app`, which is surface 0): `html, body, #root` get
+`background-color: var(--bui-bg-app)` and `min-height: 100%`, `body` gets
+`min-height: 100vh`, and `html:has(body[data-theme-mode='dark'])` uses surface 0 (dark
+variables sit on `<body>`). The theme also sets the same on `MuiCssBaseline` for any host
+that does render it. Tests assert both. Retaken screenshots (`fixed-*`): bottom rows
+sampled as surface 0 in dark (`#0e0e0f`) and light (`#f4f4f5`) for Home, Catalog, entity,
+Today. Note: the toast ("Failed to load entity types") still renders as a white card in
+dark mode; it is a separate BUI/core-components surface, not yet themed.
+
 ### Deferred or open
 
 - No "before" shots (old navy/teal was not re-run). Nav and home still carry some

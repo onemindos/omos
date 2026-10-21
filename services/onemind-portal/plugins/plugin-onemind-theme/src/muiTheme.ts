@@ -224,6 +224,12 @@ export function createOneMindTheme(
       },
       MuiCssBaseline: {
         styleOverrides: {
+          // Paint the base surface everywhere, so short pages never show the
+          // browser's white canvas below the content.
+          'html, body, #root': {
+            backgroundColor: t.surface[0],
+            minHeight: '100%',
+          },
           'a:focus-visible, button:focus-visible, [role="button"]:focus-visible, [tabindex]:focus-visible':
             {
               outline: `3px solid ${t.focus}`,

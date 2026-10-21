@@ -169,8 +169,20 @@ body[data-theme-mode='dark'] {
 
 /* tokens:end */
 
-body {
+/* Base surface everywhere, so short pages never show the browser's white
+   canvas. Nothing renders MUI CssBaseline in this app, so this lives in CSS.
+   The dark variables sit on <body>, hence the :has() for <html>. */
+html,
+body,
+#root {
+  background-color: var(--bui-bg-app);
+  min-height: 100%;
+}
+html:has(body[data-theme-mode='dark']) {
   background-color: var(--onemind-surface-0);
+}
+body {
+  min-height: 100vh;
   color: var(--onemind-text-1);
   /* Hero image: off unless the user turns it on (see /design); the theme
      provider sets this to url(/brand/legacy-background-<mode>.webp). */

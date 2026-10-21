@@ -116,6 +116,22 @@ describe('brand.css stays in sync with tokens.ts', () => {
   });
 });
 
+describe('base background in brand.css', () => {
+  it('paints html, body and #root with the surface token and fills the viewport', () => {
+    expect(css).toMatch(
+      /html,\s*body,\s*#root\s*\{[^}]*background-color:\s*var\(--bui-bg-app\);[^}]*min-height:\s*100%/,
+    );
+    expect(css).toMatch(/body\s*\{[^}]*min-height:\s*100vh/);
+    expect(css).toMatch(
+      /html:has\(body\[data-theme-mode='dark'\]\)\s*\{[^}]*var\(--onemind-surface-0\)/,
+    );
+    // The variable it reads is surface 0 in both modes.
+    modes.forEach(mode =>
+      expect(buiVariables(mode)['--bui-bg-app']).toBe(tokens[mode].surface[0]),
+    );
+  });
+});
+
 describe('MUI theme', () => {
   modes.forEach(mode => {
     it(`${mode} theme uses the tokens`, () => {
@@ -127,6 +143,15 @@ describe('MUI theme', () => {
       expect(theme.palette.background.paper).toBe(t.surface[1]);
       expect(theme.palette.error.main).toBe(t.status.critical.fg);
       expect(theme.palette.navigation.indicator).toBe(t.brand.base);
+    });
+  });
+
+  modes.forEach(mode => {
+    it(`${mode} theme paints html, body and #root with surface 0`, () => {
+      const base = (createOneMindTheme(mode).getTheme('v5') as any).components
+        .MuiCssBaseline.styleOverrides['html, body, #root'];
+      expect(base.backgroundColor).toBe(tokens[mode].surface[0]);
+      expect(base.minHeight).toBe('100%');
     });
   });
 
