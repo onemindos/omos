@@ -882,6 +882,147 @@ visibility work is the existing Grafana 401, then topology/Prometheus/OpenCost w
 separate compatibility and access checks. This does not install new controllers.
 
 
+### Grafana durability and native visibility — 2026-10-20
+
+User approved a 5 GiB persistent Grafana volume, backed-up data migration, a brief
+Grafana maintenance window and a dedicated read-only Backstage credential. The
+existing database is on emptyDir; read-only inspection found zero service accounts
+and the old portal token returned 401. The native plugin/proxy prefix combination
+is being verified rather than blindly rewritten. No AI action permissions change.
+
+Stage A prepares an Argo-owned retained PVC, seed job, encrypted remote-verified
+SQLite backup and namespace-bound sealed credentials. Grafana stays on its old
+pod until the seed/backup gate passes; the scheduled backup starts suspended.
+Stage B is a separate reviewed cutover to the seeded PVC with Recreate and an
+init guard, then catalog dashboard mappings and browser verification. Initial
+preparation is not proof of migration or fixed authentication. Phase 6 remains
+In progress; Phase 7 Not started. PR links and actual acceptance follow below.
+
+
+Grafana Stage A [#340](https://github.com/onemindos/omos/pull/340) merged as
+`9f9358f6`. Retained PVC bound; original database capture quiesced the server for
+0.489 seconds, resumed it, then verified encrypted remote download/decrypt/SQLite
+restore across 87 tables before seeding the claim. Seed job completed. Original
+Grafana remains available until the separately reviewed Stage B cutover.
+
+Stage B prepares the seeded RWO Recreate switch/seed guard, online scheduled and
+one-time verified backup, dedicated token reference and three fixed-workload
+Prometheus dashboards mapped into Backstage. Existing host extensions are retained
+when configuring the native Grafana alert card to require an explicit alert-label
+selector; missing Grafana rules must not look like full Prometheus alert coverage.
+No iframe/authentication protection is weakened, no new portal image is required,
+and actual post-cutover/native browser acceptance remains pending.
+
+
+Grafana Stage B [#341](https://github.com/onemindos/omos/pull/341) merged as
+`dfe7611c`. Argo server-side diff safely blocked the Grafana update: the original
+Helm field owner retained `emptyDir`/`rollingUpdate`, creating invalid union fields.
+Original Grafana and the verified PVC seed remain intact. Follow-up uses the
+supported legacy diff for this one Application and `Replace=true` on the fully
+rendered Grafana Deployment only; no Force, PVC deletion, force sync, new owner,
+automated-prune change or wider permissions. Full server replace dry-run and local
+gates must pass before the normal exact-head PR merge. Acceptance still pending.
+
+
+Grafana durability/native visibility **accepted 2026-10-20 22:29–22:35 UTC**.
+[#342](https://github.com/onemindos/omos/pull/342) merged `f145f14d`; all three
+owning apps Synced/Healthy at that revision. Grafana 3/3 on retained 5 GiB PVC,
+Deployment UID/image preserved; enabled daily backup plus successful post-cutover
+encrypted remote download/decrypt/SQLite restore verification. Portal generation
+74, 2/2, same digest; DB unchanged; NATS 3/3. Migrated Viewer identity verified on
+both replicas; native Backstage/DB/NATS dashboard links and real CPU/memory panels
+passed. Anonymous/machine proxy and Kubernetes mutation denials remain intact.
+See [acceptance and remaining limits](docs/operations/grafana-durable-visibility-2026-10-20.md).
+Root-folder link presentation, old ClickHouse panels, Prometheus alert integration,
+expiry monitoring and wider topology/OpenCost remain separate work. Phase 6 stays
+In progress; Phase 7 Not started; #339 action-layer draft is not deployed by this.
+
+
+### Native Grafana folder links — 2026-10-20
+
+Next bounded Phase 6 fix: provision the three existing service dashboards in a real
+`OneMind` folder using the pinned chart's sidecar folder annotation and filesystem
+folder provider. Native plugin 1.1.0 otherwise concatenates an absent root-folder
+URL into `undefined/`. Dashboard UIDs, queries, selectors, credentials, PVC,
+versions and permission boundaries remain unchanged. Unannotated dashboards keep
+the root default. Argo owns the brief Grafana restart; no imperative move/apply.
+Live folder metadata, signed-in native links, unchanged dashboard inventory and
+healthy persistent rollout must pass after merge. Then Prometheus alert visibility
+is next, separately scoped; Phase 6 stays In progress and Phase 7 Not started.
+
+
+Grafana folder fix [#344](https://github.com/onemindos/omos/pull/344) accepted
+23:01–23:04 UTC at `48d841b3`: both owning apps Synced/Healthy, Grafana 3/3 on
+same PVC/image/Deployment UID; portal remains 2/2, DB unchanged, NATS 3/3.
+All 31 dashboard UIDs retained, only three scoped boards moved to `OneMind`;
+Viewer metadata and signed-in native folder links/listing verified. Read-only
+access/denials preserved. [Evidence](docs/operations/grafana-native-folder-2026-10-20.md).
+Prometheus alert integration is the next separately verified task; not installed
+by this repair. Phase 6 stays In progress; Phase 7 Not started.
+
+
+### Native scoped Prometheus alerts — 2026-10-20
+
+User requested the next visibility slice after #344/#345. Prepare the native
+Roadie Prometheus alert table with the supported compatibility bridge, a bounded
+user-only backend adapter for Backstage/DB/NATS, refresh/timestamps and honest
+no-match/partial/unavailable states. Only reviewed fixed GETs/scopes; no generic
+PromQL proxy, new credentials, mutation rights or rule changes. Tests join both
+portable local/Linux and image gates; source merge is distinct from built image,
+GitOps pin and live acceptance. [Scope/gates](docs/operations/prometheus-native-alerts-2026-10-20.md).
+Phase 6 stays In progress; Phase 7 Not started. Actual PR/release evidence follows.
+
+
+Prometheus alert source [#346](https://github.com/onemindos/omos/pull/346) merged
+`cbf0e637` (implementation `725c5e4e`). Required local/Linux gates passed;
+29 new scoped frontend/backend/route checks plus catalog regression are enforced
+in both executors. Real 167-rule source parsed; no selected-scope active match
+at preflight, not an all-clear. Linux image published with source/platform/digest
+verified: `sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`.
+[#347](https://github.com/onemindos/omos/pull/347) promotes that immutable image;
+Argo/browser/replica/denial acceptance remains pending this normal merge.
+GitHub CI billing block and historical whole-tree YAML debt remain explicit.
+No Phase 6 completion, Phase 7 start or wider AI action permission is implied.
+
+
+Prometheus scoped visibility **accepted 23:30–23:34 UTC** after #347 merge
+`f27bb770`: `platform-backstage` Synced/Healthy, generation 76, 2/2 actual imageIDs
+match the verified published digest; DB spec/revision unchanged, Grafana retained
+storage/template unchanged, NATS 3/3. Native Backstage/DB/NATS alert cards, scoped
+metadata/links/timestamps and real pending-alert → no-match transition verified;
+user GET 200 observed on both replicas. Anonymous/machine/write denials retained.
+[Acceptance and limits](docs/operations/prometheus-native-alerts-2026-10-20.md).
+Firing/outage scenarios are fixture evidence, not a production alert-delivery drill.
+Next: topology/OpenCost; broaden coverage and accessible native state text in
+bounded follow-ups. Phase 6 stays In progress; Phase 7 Not started; #339 unmerged.
+
+
+### Native dependency and location topology — 2026-10-20
+
+Next requested Phase 6 slice: enrich the installed native graph with reviewed
+Backstage runtime/identity/NATS/Grafana/Argo feature dependencies and five existing
+PVC catalog identities; fix namespace-group titles without changing entity IDs.
+Add bounded forward/reverse/core graph and location links, preserve current
+Kubernetes/Grafana/Prometheus/Argo/runbook mappings, and enforce refresh/source
+contracts. This is source-reviewed metadata, not live traffic or all-app impact.
+No new controller, PVC, permission, image, migration or cloud charge. Mounted
+catalog changes naturally roll the same portal image through Argo. [Scope/gates](docs/operations/native-service-topology-2026-10-20.md).
+Source merge/Argo/catalog/browser acceptance remain distinct. Phase 6 In progress;
+Phase 7 Not started; #339 remains draft. Actual release evidence follows.
+
+Native topology [#349](https://github.com/onemindos/omos/pull/349) **accepted**
+2026-10-21 UTC at `82c05d3c`: owning Argo Synced/Healthy, portal generation 77,
+2/2 on the same verified image; DB/Grafana specifications unchanged, retained
+Grafana storage/backup and NATS 3/3 intact. Both replicas return reviewed catalog
+relationships without selected-entity errors. Signed-in core graph shows six
+services, five existing PVC records and NYC3; reverse DB graph/location navigation
+verified. Existing native Grafana/Prometheus views and read-only denials retained.
+[Receipt and limits](docs/operations/native-service-topology-2026-10-20.md).
+This is documented dependency metadata, not live traffic/all-app coverage.
+**Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
+started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+
 ### Permissioned AI actions — planning PR #339, 2026-10-20
 
 [PR #339](https://github.com/onemindos/omos/pull/339), the
@@ -891,8 +1032,8 @@ Preparation belongs alongside Phase 6 trust stabilization and K03/K07; no new
 phase is started. First pilot: one reviewed stateless app/profile, verified
 release PR, exact-head human merge, normal Argo reconciliation and real app/
 recovery verification. The portal-only profile is protected foundation, not an
-autonomous write target. Target selection and all implementation/live gates
-remain **Not started**.
+autonomous write target. Target selection and live gates remain **Not started**. A bounded offline
+A0 contract slice is now drafted; no executor or activation is included.
 
 Future small PRs cover typed contracts/threat model, durable approvals/audit,
 scoped proposal executor, Backstage/agent interfaces, supervised pilot and only

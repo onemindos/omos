@@ -5,7 +5,7 @@ if(context!=='do-nyc3-omos-cloud')throw new Error('Unexpected Kubernetes context
 const data=JSON.parse(cp.execFileSync('kubectl',['get','deployments,statefulsets','-A','-o','json'],{encoding:'utf8',maxBuffer:20*1024*1024}));
 const docs=[{apiVersion:'backstage.io/v1alpha1',kind:'Resource',metadata:{name:context,title:'OneMind Cloud — NYC3'},spec:{type:'kubernetes-cluster',owner:'group:default/onemind-admins'}}];
 const namespaces=[...new Set(data.items.map(x=>x.metadata.namespace))];
-for(const ns of namespaces)docs.push({apiVersion:'backstage.io/v1alpha1',kind:'System',metadata:{name:'cluster-'+ns,title:'Cluster / '+ns},spec:{owner:'group:default/onemind-admins'}});
+for(const ns of namespaces)docs.push({apiVersion:'backstage.io/v1alpha1',kind:'System',metadata:{name:'cluster-'+ns,title:'Namespace / '+ns},spec:{owner:'group:default/onemind-admins'}});
 for(const x of data.items){
  const ns=x.metadata.namespace; const name=x.metadata.name;
  const labels=Object.entries(x.spec.selector.matchLabels).map(([k,v])=>k+'='+v).join(',');

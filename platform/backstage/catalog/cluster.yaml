@@ -6,6 +6,18 @@ metadata:
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Current DigitalOcean NYC3 Kubernetes deployment location.
+    Home/Mac/edge clusters are not claimed deployed by this graph. Dependency
+    edges are reviewed catalog metadata, not a live traffic or health map.
+  links:
+    - title: Core service topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRe\
+        fs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
+        ectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRela\
+        tions=true"
 spec:
   type: kubernetes-cluster
   owner: group:default/onemind-admins
@@ -14,10 +26,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-agent-fabric
-  title: Cluster / agent-fabric
+  title: Namespace / agent-fabric
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace agent-fabric on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -25,10 +39,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-argocd
-  title: Cluster / argocd
+  title: Namespace / argocd
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace argocd on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -36,10 +52,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-auth
-  title: Cluster / auth
+  title: Namespace / auth
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace auth on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -47,10 +65,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-backstage
-  title: Cluster / backstage
+  title: Namespace / backstage
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace backstage on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -58,10 +78,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-cert-manager
-  title: Cluster / cert-manager
+  title: Namespace / cert-manager
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace cert-manager on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -69,10 +91,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-cloudflare
-  title: Cluster / cloudflare
+  title: Namespace / cloudflare
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace cloudflare on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -80,10 +104,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-cnpg-system
-  title: Cluster / cnpg-system
+  title: Namespace / cnpg-system
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace cnpg-system on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -91,10 +117,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-dapr-system
-  title: Cluster / dapr-system
+  title: Namespace / dapr-system
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace dapr-system on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -102,10 +130,13 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-dp-default-onetak-development-b188bf98
-  title: Cluster / dp-default-onetak-development-b188bf98
+  title: Namespace / dp-default-onetak-development-b188bf98
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace dp-default-onetak-development-b188bf98 on
+    OneMind Cloud — NYC3. Inventory grouping, not an independent cluster or live
+    health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -113,10 +144,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-external-dns
-  title: Cluster / external-dns
+  title: Namespace / external-dns
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace external-dns on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -124,10 +157,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-external-secrets
-  title: Cluster / external-secrets
+  title: Namespace / external-secrets
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace external-secrets on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -135,10 +170,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-github-runner
-  title: Cluster / github-runner
+  title: Namespace / github-runner
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace github-runner on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -146,10 +183,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-hermes
-  title: Cluster / hermes
+  title: Namespace / hermes
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace hermes on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -157,10 +196,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-ingress-nginx
-  title: Cluster / ingress-nginx
+  title: Namespace / ingress-nginx
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace ingress-nginx on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -168,10 +209,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-keda
-  title: Cluster / keda
+  title: Namespace / keda
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace keda on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -179,10 +222,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-kube-system
-  title: Cluster / kube-system
+  title: Namespace / kube-system
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace kube-system on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -190,10 +235,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-kube
-  title: Cluster / kube
+  title: Namespace / kube
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace kube on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -201,10 +248,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-kyverno
-  title: Cluster / kyverno
+  title: Namespace / kyverno
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace kyverno on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -212,10 +261,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-matrix
-  title: Cluster / matrix
+  title: Namespace / matrix
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace matrix on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -223,10 +274,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-monitoring
-  title: Cluster / monitoring
+  title: Namespace / monitoring
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace monitoring on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -234,10 +287,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-n8n
-  title: Cluster / n8n
+  title: Namespace / n8n
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace n8n on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -245,10 +300,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-nats
-  title: Cluster / nats
+  title: Namespace / nats
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace nats on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -256,10 +313,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-omos
-  title: Cluster / omos
+  title: Namespace / omos
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace omos on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -267,10 +326,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-onemind-ai
-  title: Cluster / onemind-ai
+  title: Namespace / onemind-ai
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace onemind-ai on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -278,10 +339,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-onemind-core
-  title: Cluster / onemind-core
+  title: Namespace / onemind-core
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace onemind-core on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -289,10 +352,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-onemind-registry
-  title: Cluster / onemind-registry
+  title: Namespace / onemind-registry
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace onemind-registry on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -300,10 +365,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-onetak
-  title: Cluster / onetak
+  title: Namespace / onetak
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace onetak on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -311,10 +378,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-openchoreo-control-plane
-  title: Cluster / openchoreo-control-plane
+  title: Namespace / openchoreo-control-plane
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace openchoreo-control-plane on OneMind Cloud —
+    NYC3. Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -322,10 +391,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-openchoreo-data-plane
-  title: Cluster / openchoreo-data-plane
+  title: Namespace / openchoreo-data-plane
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace openchoreo-data-plane on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -333,10 +404,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-openchoreo-observability-plane
-  title: Cluster / openchoreo-observability-plane
+  title: Namespace / openchoreo-observability-plane
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace openchoreo-observability-plane on OneMind
+    Cloud — NYC3. Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -344,10 +417,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-openclaw
-  title: Cluster / openclaw
+  title: Namespace / openclaw
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace openclaw on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -355,10 +430,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-opencost
-  title: Cluster / opencost
+  title: Namespace / opencost
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace opencost on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -366,10 +443,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-ops
-  title: Cluster / ops
+  title: Namespace / ops
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace ops on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -377,10 +456,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-tailscale
-  title: Cluster / tailscale
+  title: Namespace / tailscale
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace tailscale on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -388,10 +469,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-takml
-  title: Cluster / takml
+  title: Namespace / takml
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace takml on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -399,10 +482,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-takserver
-  title: Cluster / takserver
+  title: Namespace / takserver
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace takserver on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -410,10 +495,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-velero
-  title: Cluster / velero
+  title: Namespace / velero
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace velero on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -421,10 +508,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-clickhouse
-  title: Cluster / clickhouse
+  title: Namespace / clickhouse
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace clickhouse on OneMind Cloud — NYC3. Inventory
+    grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -432,10 +521,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-onemind-search
-  title: Cluster / onemind-search
+  title: Namespace / onemind-search
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace onemind-search on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -443,10 +534,12 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: cluster-spire-system
-  title: Cluster / spire-system
+  title: Namespace / spire-system
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+  description: Kubernetes namespace spire-system on OneMind Cloud — NYC3.
+    Inventory grouping, not an independent cluster or live health.
 spec:
   owner: group:default/onemind-admins
 ---
@@ -647,9 +740,28 @@ metadata:
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/topology-scope: Reviewed source dependencies, not observed traffic,
+      live health or complete failure impact
+    onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
   tags:
     - kubernetes
     - argocd
+  links:
+    - title: Dependency topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRel\
+        ations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tr\
+        ue"
+    - title: Dependent services (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-argocd-argocd-server-4414022f&selectedRel\
+        ations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations\
+        =true"
+    - title: Deployment location — NYC3
+      type: location
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
 spec:
   type: service
   lifecycle: production
@@ -725,9 +837,28 @@ metadata:
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/topology-scope: Reviewed source dependencies, not observed traffic,
+      live health or complete failure impact
+    onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
   tags:
     - kubernetes
     - auth
+  links:
+    - title: Dependency topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-\
+        78f74c27&selectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=tr\
+        ue&mergeRelations=true"
+    - title: Dependent services (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-auth-platform-auth-helm-authentik-server-\
+        78f74c27&selectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional\
+        =true&mergeRelations=true"
+    - title: Deployment location — NYC3
+      type: location
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
 spec:
   type: service
   lifecycle: production
@@ -784,10 +915,22 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
     onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
+    grafana/dashboard-selector: uid == 'onemind-backstage'
+    prometheus.io/alert: all
+    prometheus.io/service-name: backstage
+    onemind.io/topology-scope: Reviewed source dependencies, not observed traffic,
+      live health or complete failure impact
+    onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
+    onemind.io/dependency-scope: "PostgreSQL: runtime; Authentik: sign-in; NATS: bus
+      summaries; Grafana: dashboards; Argo CD: delivery visibility. Feature
+      failure can degrade one view without stopping the portal."
   tags:
     - kubernetes
     - backstage
   links:
+    - title: Grafana workload dashboard
+      type: grafana
+      url: https://grafana.tail717ba0.ts.net/d/onemind-backstage
     - title: Live Kubernetes resources
       type: kubernetes
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-21b99354/kubernetes
@@ -797,6 +940,29 @@ metadata:
     - title: Portal recovery runbook
       type: runbook
       url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
+    - title: Dependency topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRela\
+        tions%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=tru\
+        e"
+    - title: Dependent services (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&selectedRela\
+        tions%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=\
+        true"
+    - title: Deployment location — NYC3
+      type: location
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
+    - title: Core service topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-21b99354&rootEntityRe\
+        fs%5B%5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
+        ectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRela\
+        tions=true"
 spec:
   type: service
   lifecycle: production
@@ -805,6 +971,10 @@ spec:
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
     - component:default/k8s-backstage-backstage-postgres-17d2f351
+    - component:default/k8s-auth-platform-auth-helm-authentik-server-78f74c27
+    - component:default/k8s-nats-nats-0dee54ac
+    - component:default/k8s-monitoring-monitoring-grafana-8ed6cac6
+    - component:default/k8s-argocd-argocd-server-4414022f
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1809,9 +1979,28 @@ metadata:
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/topology-scope: Reviewed source dependencies, not observed traffic,
+      live health or complete failure impact
+    onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
   tags:
     - kubernetes
     - monitoring
+  links:
+    - title: Dependency topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&se\
+        lectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRel\
+        ations=true"
+    - title: Dependent services (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-monitoring-monitoring-grafana-8ed6cac6&se\
+        lectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&merge\
+        Relations=true"
+    - title: Deployment location — NYC3
+      type: location
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
 spec:
   type: service
   lifecycle: production
@@ -1819,6 +2008,7 @@ spec:
   system: cluster-monitoring
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+    - resource:default/pvc-monitoring-grafana-data
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3790,10 +3980,19 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backstage
     onemind.io/deployment-source: platform/backstage; platform/argocd/platform-backstage.yaml
+    grafana/dashboard-selector: uid == 'onemind-backstage-postgres'
+    prometheus.io/alert: all
+    prometheus.io/service-name: postgres
+    onemind.io/topology-scope: Reviewed source dependencies, not observed traffic,
+      live health or complete failure impact
+    onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
   tags:
     - kubernetes
     - backstage
   links:
+    - title: Grafana workload dashboard
+      type: grafana
+      url: https://grafana.tail717ba0.ts.net/d/onemind-backstage-postgres
     - title: Live Kubernetes resources
       type: kubernetes
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-backstage-backstage-postgres-17d2f351/kubernetes
@@ -3803,6 +4002,21 @@ metadata:
     - title: Database recovery runbook
       type: runbook
       url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/resilience/
+    - title: Dependency topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
+        ectedRelations%5B%5D=dependsOn&maxDepth=2&unidirectional=true&mergeRela\
+        tions=true"
+    - title: Dependent services (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-backstage-backstage-postgres-17d2f351&sel\
+        ectedRelations%5B%5D=dependencyOf&maxDepth=1&unidirectional=true&mergeR\
+        elations=true"
+    - title: Deployment location — NYC3
+      type: location
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
 spec:
   type: service
   lifecycle: production
@@ -3810,6 +4024,7 @@ spec:
   system: cluster-backstage
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+    - resource:default/pvc-backstage-data-backstage-postgres-0
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -4091,10 +4306,19 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/nats
     onemind.io/deployment-source: platform/nats; platform/argocd/platform-nats.yaml
+    grafana/dashboard-selector: uid == 'onemind-nats'
+    prometheus.io/alert: all
+    prometheus.io/service-name: nats
+    onemind.io/topology-scope: Reviewed source dependencies, not observed traffic,
+      live health or complete failure impact
+    onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
   tags:
     - kubernetes
     - nats
   links:
+    - title: Grafana workload dashboard
+      type: grafana
+      url: https://grafana.tail717ba0.ts.net/d/onemind-nats
     - title: Live Kubernetes resources
       type: kubernetes
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/component/k8s-nats-nats-0dee54ac/kubernetes
@@ -4104,6 +4328,19 @@ metadata:
     - title: NATS operations runbook
       type: runbook
       url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
+    - title: Dependency topology (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5\
+        D=dependsOn&maxDepth=2&unidirectional=true&mergeRelations=true"
+    - title: Dependent services (documented)
+      type: topology
+      url: "https://onemind-preview.tail717ba0.ts.net/catalog-graph?rootEntityRefs%5B\
+        %5D=component%3Adefault%2Fk8s-nats-nats-0dee54ac&selectedRelations%5B%5\
+        D=dependencyOf&maxDepth=1&unidirectional=true&mergeRelations=true"
+    - title: Deployment location — NYC3
+      type: location
+      url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
 spec:
   type: service
   lifecycle: production
@@ -4111,6 +4348,9 @@ spec:
   system: cluster-nats
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+    - resource:default/pvc-nats-nats-js-nats-0
+    - resource:default/pvc-nats-nats-js-nats-1
+    - resource:default/pvc-nats-nats-js-nats-2
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -12686,3 +12926,127 @@ spec:
   type: code-repository
   owner: group:default/onemind-admins
   system: repo-onemind
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: pvc-backstage-data-backstage-postgres-0
+  title: backstage / data-backstage-postgres-0 (PVC)
+  description: Existing Kubernetes PVC identity from reviewed workload wiring.
+    Catalog metadata only, not a newly provisioned volume or live storage/backup
+    health.
+  annotations:
+    onemind.io/inventory-source: reviewed-topology
+    onemind.io/kubernetes-namespace: backstage
+    onemind.io/kubernetes-pvc: data-backstage-postgres-0
+    onemind.io/relationship-source: platform/backstage/postgres.yaml volumeClaimTemplates.data
+  links:
+    - title: Reviewed storage source
+      type: source
+      url: https://github.com/onemindos/omos/blob/main/platform/backstage/postgres.yaml
+spec:
+  type: kubernetes-persistent-volume-claim
+  owner: group:default/onemind-admins
+  system: cluster-backstage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: pvc-monitoring-grafana-data
+  title: monitoring / grafana-data (PVC)
+  description: Existing Kubernetes PVC identity from reviewed workload wiring.
+    Catalog metadata only, not a newly provisioned volume or live storage/backup
+    health.
+  annotations:
+    onemind.io/inventory-source: reviewed-topology
+    onemind.io/kubernetes-namespace: monitoring
+    onemind.io/kubernetes-pvc: grafana-data
+    onemind.io/relationship-source: platform/values/kube-prometheus-stack.yaml
+      grafana.persistence.existingClaim; platform/monitoring/grafana-state.yaml
+  links:
+    - title: Reviewed storage source
+      type: source
+      url: https://github.com/onemindos/omos/blob/main/platform/values/kube-prometheus-stack.yaml
+spec:
+  type: kubernetes-persistent-volume-claim
+  owner: group:default/onemind-admins
+  system: cluster-monitoring
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: pvc-nats-nats-js-nats-0
+  title: nats / nats-js-nats-0 (PVC)
+  description: Existing Kubernetes PVC identity from reviewed workload wiring.
+    Catalog metadata only, not a newly provisioned volume or live storage/backup
+    health.
+  annotations:
+    onemind.io/inventory-source: reviewed-topology
+    onemind.io/kubernetes-namespace: nats
+    onemind.io/kubernetes-pvc: nats-js-nats-0
+    onemind.io/relationship-source: platform/nats/nats-statefulset.yaml
+      volumeClaimTemplates.nats-js and replicas=3
+  links:
+    - title: Reviewed storage source
+      type: source
+      url: https://github.com/onemindos/omos/blob/main/platform/nats/nats-statefulset.yaml
+spec:
+  type: kubernetes-persistent-volume-claim
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: pvc-nats-nats-js-nats-1
+  title: nats / nats-js-nats-1 (PVC)
+  description: Existing Kubernetes PVC identity from reviewed workload wiring.
+    Catalog metadata only, not a newly provisioned volume or live storage/backup
+    health.
+  annotations:
+    onemind.io/inventory-source: reviewed-topology
+    onemind.io/kubernetes-namespace: nats
+    onemind.io/kubernetes-pvc: nats-js-nats-1
+    onemind.io/relationship-source: platform/nats/nats-statefulset.yaml
+      volumeClaimTemplates.nats-js and replicas=3
+  links:
+    - title: Reviewed storage source
+      type: source
+      url: https://github.com/onemindos/omos/blob/main/platform/nats/nats-statefulset.yaml
+spec:
+  type: kubernetes-persistent-volume-claim
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: pvc-nats-nats-js-nats-2
+  title: nats / nats-js-nats-2 (PVC)
+  description: Existing Kubernetes PVC identity from reviewed workload wiring.
+    Catalog metadata only, not a newly provisioned volume or live storage/backup
+    health.
+  annotations:
+    onemind.io/inventory-source: reviewed-topology
+    onemind.io/kubernetes-namespace: nats
+    onemind.io/kubernetes-pvc: nats-js-nats-2
+    onemind.io/relationship-source: platform/nats/nats-statefulset.yaml
+      volumeClaimTemplates.nats-js and replicas=3
+  links:
+    - title: Reviewed storage source
+      type: source
+      url: https://github.com/onemindos/omos/blob/main/platform/nats/nats-statefulset.yaml
+spec:
+  type: kubernetes-persistent-volume-claim
+  owner: group:default/onemind-admins
+  system: cluster-nats
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud

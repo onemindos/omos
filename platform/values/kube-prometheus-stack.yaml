@@ -77,6 +77,40 @@ nodeExporter:
   enabled: true
 
 grafana:
+  # Legacy Helm field ownership retains emptyDir/rollingUpdate under SSA.
+  # Replace this fully rendered Deployment only; never Force/delete its PVC.
+  annotations:
+    argocd.argoproj.io/sync-options: Replace=true
+  # Existing seed/remote restore passed before this RWO Recreate cutover.
+  deploymentStrategy: {type: Recreate}
+  persistence:
+    enabled: true
+    type: pvc
+    existingClaim: grafana-data
+  initChownData:
+    enabled: false
+  podLabels:
+    onemind.io/grafana-persistent: "true"
+  extraInitContainers:
+    - name: require-verified-state
+      image: docker.io/grafana/grafana:13.1.0
+      command: [sh, -ec]
+      args:
+        - >-
+          test -s /var/lib/grafana/grafana.db &&
+          grep -q '"restoreVerified": true' /var/lib/grafana/.onemind-grafana-seed.json
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 472
+        runAsGroup: 472
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: {drop: [ALL]}
+      resources:
+        requests: {cpu: 10m, memory: 16Mi}
+        limits: {cpu: 100m, memory: 64Mi}
+      volumeMounts:
+        - {name: storage, mountPath: /var/lib/grafana, readOnly: true}
   affinity:
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -99,6 +133,11 @@ grafana:
     limits:
       memory: 2Gi
   sidecar:
+    dashboards:
+      # Only annotated ConfigMaps enter named folders; existing root boards stay put.
+      folderAnnotation: onemind.io/grafana-folder
+      provider:
+        foldersFromFilesStructure: true
     resources:
       requests:
         cpu: 10m

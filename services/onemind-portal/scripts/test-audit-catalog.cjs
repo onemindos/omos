@@ -120,6 +120,7 @@ test('curation is pure, idempotent and restores all reviewed native mappings aft
       'argocd/app-name',
       'argocd/instance-name',
       'backstage.io/source-location',
+      'grafana/dashboard-selector',
     ]) {
       delete e.metadata.annotations?.[key];
     }
@@ -137,6 +138,18 @@ test('curation is pure, idempotent and restores all reviewed native mappings aft
       x => x.kind === 'Component' && x.metadata.name === target.name,
     );
     assert.equal(e.metadata.annotations['argocd/app-name'], target.application);
+    assert.equal(
+      e.metadata.annotations['grafana/dashboard-selector'],
+      `uid == '${target.grafanaUid}'`,
+    );
+    assert.ok(
+      e.metadata.links.some(
+        link =>
+          link.type === 'grafana' &&
+          link.url ===
+            `https://grafana.tail717ba0.ts.net/d/${target.grafanaUid}`,
+      ),
+    );
     assert.equal(
       e.metadata.annotations['argocd/instance-name'],
       'onemind-cloud',
@@ -239,4 +252,50 @@ test('portal dependency is re-created exactly once after inventory refresh', () 
       .spec.dependsOn.filter(ref => ref === databaseRef).length,
     1,
   );
+});
+
+test('installed predicate schema admits only explicit Grafana alert selector metadata', () => {
+  const {
+    parseFilterPredicate,
+    filterPredicateToFilterFunction,
+  } = require('@backstage/filter-predicates');
+  const predicate = parseFilterPredicate({
+    'metadata.annotations.grafana/alert-label-selector': { $exists: true },
+  });
+  const accepts = filterPredicateToFilterFunction(predicate);
+  assert.equal(
+    accepts({
+      metadata: { annotations: { 'grafana/dashboard-selector': 'nats' } },
+    }),
+    false,
+  );
+  assert.equal(
+    accepts({
+      metadata: {
+        annotations: { 'grafana/alert-label-selector': 'namespace=nats' },
+      },
+    }),
+    true,
+  );
+  assert.equal(accepts({ metadata: {} }), false);
+});
+
+
+test('reviewed service Prometheus scopes survive inventory curation', () => {
+  const { curateDependencies, reviewedWorkloads } = require('./curate-dependencies.cjs');
+  const YAML = require('yaml');
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const docs = YAML.parseAllDocuments(fs.readFileSync(path.join(__dirname, '../catalog/cluster.yaml'), 'utf8')).map(d => d.toJSON());
+  for (const item of docs) {
+    delete item.metadata.annotations?.['prometheus.io/service-name'];
+    delete item.metadata.annotations?.['prometheus.io/alert'];
+  }
+  const curated = curateDependencies(docs);
+  for (const reviewed of reviewedWorkloads) {
+    const entry = curated.find(e => e.kind === 'Component' && e.metadata.name === reviewed.name);
+    assert.equal(entry.metadata.annotations['prometheus.io/service-name'], reviewed.alertScope);
+    assert.equal(entry.metadata.annotations['prometheus.io/alert'], 'all');
+    assert.equal(entry.metadata.annotations['prometheus.io/labels'], undefined);
+  }
 });
