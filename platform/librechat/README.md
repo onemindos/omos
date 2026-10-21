@@ -171,3 +171,56 @@ follow redirects with credentials, and does not change the model/provider.
 
 Docs may describe newer features; pinned chart/source and actual runtime tests
 take precedence over claims based on latest documentation alone.
+
+## Executable acceptance matrix — preparation 2026-10-20
+
+These are operator procedures for a later authorized test window, not results.
+Preparation used the recorded 2026-10-20 preflight only; no new network or
+inference test was performed. The 16:17:38–39 UTC provider402 remains the last
+recorded inference result. Keep the draft unsynced. Source tests can pass while
+runtime acceptance remains blocked.
+
+Before execution, the coordinator must record exact source/image/chart, target
+namespace, operator, UTC window, approved request/spend ceiling and stop conditions.
+Identity, database, backup and restricted disposable test deployment need their
+own approved preparation; this matrix does not authorize them. Resolve provider402
+by separately approved means before live inference. Start with offline fixtures;
+never generate provider errors by changing billing or keys. A no-tools prompt is
+not a permission control.
+
+Use synthetic markers `PILOT_A1`, `PILOT_A2`, `PILOT_B1` without personal content.
+A is Zeus's pilot identity; B is an explicitly approved isolated test identity,
+not permission to onboard family or workers. Without B, mark isolation blocked;
+two tabs signed in as A do not substitute for two identities. Capture only
+allowlisted, redacted correlation metadata: pseudonymous user/conversation/session
+and request/run IDs, UTC timestamps, terminal outcomes and call counts. Never
+retain bearer headers, cookies, tokens or real conversation bodies in PR evidence.
+Keep any necessary sensitive evidence in approved storage.
+
+| ID / current status | Procedure in the approved test environment | Required evidence and pass condition |
+|---|---|---|
+| S1 / NOT RUN | Sign in as A; open conversation C1 and send one harmless `PILOT_A1` request. Inspect the first outbound request through an approved metadata-only trace. | User/conversation IDs exist before the first Hermes call; `X-Hermes-Session-Key` resolves to A/C1, never blank, literal template text or a global constant. Record returned session/run correlation. Require a real answer and successful stream termination; HTTP200 alone fails. |
+| S2 / NOT RUN | Reload C1, sign out/in as A, reopen it and send one approved follow-up. During a separately approved request, interrupt only the browser connection and reconnect. | Same A/C1 mapping, one persisted turn per request and no doubled context between LibreChat history and Hermes state. No blind resubmit or duplicate remote run. Browser disconnect must not be labelled remote cancellation. |
+| S3 / NOT RUN | As A, open C2 and send `PILOT_A2`; compare C1/C2 traces and reopen both histories. | Distinct session keys and correlated Hermes sessions; each history contains only its own markers. Separate identifiers alone do not prove authorization. |
+| I1 / BLOCKED: test identity | In a separate browser profile, sign in as approved B and create C3 with `PILOT_B1`. Using supported application history/read routes, attempt to open A's known C1/C2 IDs as B; repeat B-to-A. | Cross-user reads denied without content/session disclosure in UI and backend. A/C1, A/C2 and B/C3 mappings differ. Do not guess unrelated users' IDs or expose the shared Hermes credential to a browser. |
+| I2 / BLOCKED: dedicated OIDC | Check A login, nonmember login denial and anonymous history denial. Sign A out, then exercise a retained test session after the approved revocation action. | Exact redirect, signed group enforcement and issuer/JWKS/TLS pass. Record actual logout/revocation timing and remaining session usability; unexpected continued access blocks acceptance. Never record raw tokens. |
+| E1 / LIVE FAILURE RECORDED | Offline, replay redacted provider402 and HTTP200 SSE `finish_reason: error` fixtures, plus interrupted/malformed streams. After separately approved provider resolution, make one bounded harmless live request. | Fixtures show visible failure, no fabricated success and no automatic retry/title/summary calls. Retain the original 2026-10-20 failure receipt. Only a new dated real answer plus successful terminal event establishes recovery; fixtures do not. |
+| P1 / BLOCKED: storage | After approved authenticated MongoDB/PVC provisioning, retain C1/C2. Perform the reviewed disposable pilot restart, reopen histories and inspect session correlations. | Histories/ownership survive with no duplicated turns; anonymous database access denied. Record database/PVC ownership, revision and restart evidence. Image PVC existence or an unchanged pod proves no conversation persistence. |
+| R1 / BLOCKED: backup/restore | With approved RPO/RTO, capture an application-consistent encrypted off-host backup. Download/decrypt into an approved isolated recovery target; restore C1/C2 and necessary crypto/session material through the reviewed procedure. | Known markers, ownership/history and identity separation verified without inference or changing production. Record backup timestamp, independent destination, consistency method, integrity, measured data loss/recovery time and secret recovery references without values. Define revocation/relogin after restore. Restored MongoDB alone proves no Hermes session recovery; verify that state separately or block continuity acceptance. |
+| A1 / BLOCKED: action controls | With an approved non-destructive fixture operation, exercise approval denial and expiry before one explicit approval. Test actual stop/cancel and reconnect correlation separately. | No action before approval; trace ties approval/outcome to the correct user/session/run. Denial/expiry cause no action. Confirm remote terminal state; UI close or JetStream acknowledgement is insufficient. Existing Legacy remains privileged until enforced restrictions are proven. |
+| C1 / BLOCKED: spend controls | Before live calls, agree a per-window budget/request cap covering parent, worker, tool and delegated model calls. In an isolated fixture harness, exercise denial of unapproved delegation and cap exhaustion; reconcile one later approved request against available provider/tool records. | Name the enforcing component and prove blocking before excess/unauthorized dispatch; prompts/UI estimates are insufficient. Separate provider-reported, estimated and unknown cost with parent/child run IDs and call counts. Missing downstream accounting/enforcement leaves delegated/autonomous spend blocked; never infer zero cost. |
+
+Execution order: offline E1 fixtures, prerequisite review, approved bounded live
+S1, then S2/S3/I1/I2/P1/R1. A1/C1 need separately scoped operation/spend approval;
+the request/spend ceiling applies before any live row. Stop on isolation leaks,
+duplicate dispatch, unexpected tools, unapproved charges, recovery inconsistency
+or renewed provider error. Do not retry paid requests automatically. Preserve
+failed-row evidence before continuing. No real user history or autonomous/delegated
+work is accepted while its identity, persistence, recovery or spend gate is open.
+
+For each row the coordinator's receipt must contain: ID, PASS/FAIL/BLOCKED/NOT RUN,
+actual UTC date/time, tested revisions, prerequisite/authorization reference,
+redacted evidence location, observed result and remaining limitation. Keep offline
+and live receipts separate. The coordinator owns tests, tracker reconciliation
+and updates to existing #332; this appendix certifies no deployment, service
+acceptance or Phase 6 completion.
