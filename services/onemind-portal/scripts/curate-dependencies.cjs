@@ -2,6 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const YAML = require('yaml');
+const { curateTopology, renderCluster } = require('./curate-topology.cjs');
 
 const portalUrl = 'https://onemind-preview.tail717ba0.ts.net';
 const reviewedWorkloads = [
@@ -126,7 +127,7 @@ function curateDependencies(entities) {
   ];
   portal.metadata.annotations['onemind.io/relationship-source'] =
     'services/onemind-portal/app-config.production.yaml backend.database.connection.host; platform/backstage/postgres.yaml';
-  return docs;
+  return curateTopology(docs);
 }
 
 if (require.main === module) {
@@ -134,9 +135,7 @@ if (require.main === module) {
   const docs = YAML.parseAllDocuments(
     fs.readFileSync(path.join(root, 'catalog/cluster.yaml'), 'utf8'),
   ).map(doc => doc.toJSON());
-  const rendered = curateDependencies(docs)
-    .map(e => YAML.stringify(e))
-    .join('---\n');
+  const rendered = renderCluster(curateDependencies(docs));
   for (const base of ['catalog', '../../platform/backstage/catalog']) {
     fs.writeFileSync(path.join(root, base, 'cluster.yaml'), rendered);
   }
