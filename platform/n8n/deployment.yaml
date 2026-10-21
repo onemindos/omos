@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: n8n-data
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: do-block-storage-retain
+  resources:
+    requests: {storage: 5Gi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: n8n
+spec:
+  selector: {app: n8n}
+  ports: [{name: http, port: 5678, targetPort: http}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector:
+    matchLabels: {app: n8n}
+  template:
+    metadata:
+      labels: {app: n8n}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - {key: doks.digitalocean.com/node-pool, operator: In, values: [onemind-ecosystem-cpu]}
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: n8n
+          image: n8nio/n8n:2.42.4@sha256:9c0862a08090c79122069e23131d27529c250b92e90c9d51a6ec406fe1527c4e
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          ports: [{name: http, containerPort: 5678}]
+          env:
+            - {name: DB_TYPE, value: postgresdb}
+            - {name: DB_POSTGRESDB_HOST, value: postgres}
+            - {name: DB_POSTGRESDB_DATABASE, value: n8n}
+            - {name: DB_POSTGRESDB_USER, value: n8n}
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: n8n-secrets, key: DB_POSTGRESDB_PASSWORD}
+            - name: N8N_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef: {name: n8n-secrets, key: N8N_ENCRYPTION_KEY}
+            - name: N8N_RUNNERS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef: {name: n8n-secrets, key: N8N_RUNNERS_AUTH_TOKEN}
+            - {name: N8N_RUNNERS_MODE, value: external}
+            - {name: N8N_RUNNERS_BROKER_LISTEN_ADDRESS, value: 127.0.0.1}
+            - {name: N8N_HOST, value: n8n.tail717ba0.ts.net}
+            - {name: N8N_PROTOCOL, value: https}
+            - {name: N8N_EDITOR_BASE_URL, value: 'https://n8n.tail717ba0.ts.net/'}
+            - {name: WEBHOOK_URL, value: 'https://n8n.tail717ba0.ts.net/'}
+            - {name: N8N_PROXY_HOPS, value: '1'}
+            - {name: GENERIC_TIMEZONE, value: America/New_York}
+            - {name: TZ, value: America/New_York}
+            - {name: N8N_DIAGNOSTICS_ENABLED, value: 'false'}
+            - {name: N8N_VERSION_NOTIFICATIONS_ENABLED, value: 'false'}
+            - {name: N8N_TEMPLATES_ENABLED, value: 'false'}
+            - {name: N8N_BLOCK_ENV_ACCESS_IN_NODE, value: 'true'}
+            - {name: N8N_BLOCK_FILE_ACCESS_TO_N8N_FILES, value: 'true'}
+            - {name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS, value: 'true'}
+            - {name: N8N_GIT_NODE_DISABLE_BARE_REPOS, value: 'true'}
+            - {name: N8N_GIT_NODE_ENABLE_HOOKS, value: 'false'}
+            - {name: N8N_COMMUNITY_PACKAGES_ENABLED, value: 'false'}
+            - {name: NODES_EXCLUDE, value: '["n8n-nodes-base.executeCommand","n8n-nodes-base.readWriteFile"]'}
+            - {name: EXECUTIONS_DATA_PRUNE, value: 'true'}
+            - {name: EXECUTIONS_DATA_MAX_AGE, value: '168'}
+            - {name: EXECUTIONS_DATA_PRUNE_MAX_COUNT, value: '10000'}
+            - {name: N8N_CONCURRENCY_PRODUCTION_LIMIT, value: '5'}
+          resources:
+            requests: {cpu: 200m, memory: 512Mi}
+            limits: {cpu: '2', memory: 1536Mi}
+          startupProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 5
+            failureThreshold: 90
+          readinessProbe:
+            httpGet: {path: /healthz/readiness, port: http}
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 20
+          volumeMounts:
+            - {name: data, mountPath: /home/node/.n8n}
+            - {name: tmp, mountPath: /tmp}
+            - {name: cache, mountPath: /home/node/.cache}
+        - name: task-runners
+          image: n8nio/runners:2.42.4-distroless@sha256:d56b2207970449567fe594f542642574f560a7c0a247877abceb1fb2721daaca
+          securityContext:
+            runAsUser: 65532
+            runAsGroup: 65532
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          env:
+            - {name: N8N_RUNNERS_TASK_BROKER_URI, value: 'http://127.0.0.1:5679'}
+            - name: N8N_RUNNERS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef: {name: n8n-secrets, key: N8N_RUNNERS_AUTH_TOKEN}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: '1', memory: 512Mi}
+          volumeMounts:
+            - {name: runner-tmp, mountPath: /tmp}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: n8n-data}
+        - name: tmp
+          emptyDir: {sizeLimit: 256Mi}
+        - name: cache
+          emptyDir: {sizeLimit: 128Mi}
+        - name: runner-tmp
+          emptyDir: {sizeLimit: 128Mi}

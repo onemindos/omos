@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecosystem-oc-control
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/openchoreo/helm-charts
+    chart: openchoreo-control-plane
+    targetRevision: 1.3.1
+    helm:
+      releaseName: oc-control
+      valueFiles:
+      - $values/platform/ecosystem/values/oc-control.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/ecosystem/openchoreo-overrides
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openchoreo-control-plane
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true

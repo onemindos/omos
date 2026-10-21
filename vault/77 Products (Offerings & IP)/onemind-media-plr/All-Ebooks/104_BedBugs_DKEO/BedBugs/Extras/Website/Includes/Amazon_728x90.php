@@ -1,1 +1,0 @@
-<iframe src='http://rcm.amazon.com/e/cm?t=<?=$AmazonID;?>&o=1&p=48&l=st1&mode=<?=$AmazonMode;?>&search=<?=$AmazonSearch;?>&fc1=<?=$AmazonTextColor;?>&lt1=_blank&lc1=<?=$AmazonLinkColor;?>&bg1=&f=ifr' marginwidth='0' marginheight='0' width='728' height='90' border='0' frameborder='0' style='border:none;' scrolling='no'></iframe>

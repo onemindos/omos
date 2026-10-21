@@ -1,0 +1,53 @@
+global:
+  ha:
+    enabled: false
+  mtls:
+    enabled: true
+dapr_operator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  nodeSelector: &id001
+    onemind.io/compute-role: ecosystem
+dapr_placement:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  nodeSelector: *id001
+dapr_scheduler:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  cluster:
+    storageSize: 5Gi
+    storageClassName: do-block-storage-retain
+dapr_sentry:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  nodeSelector: *id001
+dapr_sidecar_injector:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  nodeSelector: *id001

@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  annotations:
+    onemind.io/hosting: ${{ values.hosting }}
+    onemind.io/inventory-review: proposed
+  tags: [proposed, app-onboarding]
+  links:
+    - url: '${{ values.url }}'
+      title: Open application
+spec:
+  type: website
+  lifecycle: experimental
+  owner: group:default/onemind-admins

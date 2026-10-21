@@ -1,0 +1,87 @@
+# Element Web, mirrored from the live matrix/element-web objects (2026-10-10). Live wins over the old base.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: element-web-config
+  namespace: matrix
+data:
+  config.json: |
+    {
+      "default_server_config": {
+        "m.homeserver": {
+          "base_url": "https://matrix.onemindos.com",
+          "server_name": "onemindos.com"
+        },
+        "m.identity_server": {
+          "base_url": "https://vector.im"
+        }
+      },
+      "disable_custom_urls": false,
+      "disable_guests": true,
+      "disable_3pid_login": true,
+      "brand": "OneMind OS",
+      "bug_report_endpoint_url": "https://github.com/onemindos/matrix/issues",
+      "default_country_code": "US",
+      "show_labs_settings": true,
+      "default_theme": "dark",
+      "themes": ["light", "dark"]
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: element-web
+  namespace: matrix
+spec:
+  type: ClusterIP
+  selector:
+    app: element-web
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: element-web
+  namespace: matrix
+spec:
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: element-web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: element-web
+    spec:
+      containers:
+        - name: element-web
+          image: vectorim/element-web:v1.11.70
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.json
+              subPath: config.json
+      volumes:
+        - name: config
+          configMap:
+            defaultMode: 420
+            name: element-web-config

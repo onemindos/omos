@@ -7,6 +7,8 @@ metadata:
     app: tile38
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: tile38
@@ -15,6 +17,16 @@ spec:
       labels:
         app: tile38
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       containers:
         - name: tile38
           image: tile38/tile38:latest
@@ -35,8 +47,8 @@ spec:
               mountPath: /data
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 25m
+              memory: 128Mi
             limits:
               cpu: "1"
               memory: 1Gi

@@ -16,6 +16,8 @@ kind: StatefulSet
 metadata:
   name: backstage-postgres
   namespace: backstage
+  labels:
+    app: backstage-postgres
 spec:
   serviceName: backstage-postgres
   replicas: 1

@@ -1,0 +1,23 @@
+replicaCount: 1
+fullnameOverride: openfga
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
+  limits:
+    cpu: '1'
+    memory: 1Gi
+postgresql:
+  enabled: false
+datastore:
+  engine: postgres
+  uriSecret: openfga-db
+  migrationType: initContainer
+authn:
+  method: preshared
+  preshared:
+    keysSecret: openfga-auth
+playground:
+  enabled: false

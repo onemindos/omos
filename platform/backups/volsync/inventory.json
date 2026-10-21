@@ -1,0 +1,272 @@
+[
+  {
+    "namespace": "auth",
+    "pvc": "pgdata-authentik-postgres-0",
+    "source": "volume-86c342dd8d39",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "backstage",
+    "pvc": "data-backstage-postgres-0",
+    "source": "volume-eb04d2fe651f",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "clickhouse",
+    "pvc": "data-storage-chi-onemind-onemind-0-0-0",
+    "source": "volume-ab4fbd87295d",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "hermes",
+    "pvc": "hermes-data",
+    "source": "volume-c96e219d2314",
+    "size": "25Gi"
+  },
+  {
+    "namespace": "matrix",
+    "pvc": "data-postgres-0",
+    "source": "volume-0af77b22c7a2",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "matrix",
+    "pvc": "data-redis-0",
+    "source": "volume-d946eeb02a16",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "matrix",
+    "pvc": "synapse-data",
+    "source": "volume-197d8a9e297d",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "monitoring",
+    "pvc": "storage-loki-0",
+    "source": "volume-0a77d3a320c8",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "monitoring",
+    "pvc": "storage-tempo-0",
+    "source": "volume-bec6172775e6",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "n8n",
+    "pvc": "data-postgres-0",
+    "source": "volume-e0d2f2fea651",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "n8n",
+    "pvc": "n8n-data",
+    "source": "volume-b98c04b6228d",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "nats",
+    "pvc": "nats-js-nats-0",
+    "source": "volume-cedf723508b6",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "nats",
+    "pvc": "nats-js-nats-1",
+    "source": "volume-f49adedad17d",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "nats",
+    "pvc": "nats-js-nats-2",
+    "source": "volume-bf2e7be6c2ff",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "nodeodm-data",
+    "source": "volume-5503f74cbdce",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "nominatim-data",
+    "source": "volume-93cec0eff115",
+    "size": "100Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "onetak-geo-db-data",
+    "source": "volume-50fb74ff16c6",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "onetak-minio-data",
+    "source": "volume-b455a3425ad0",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "onetak-pgdata",
+    "source": "volume-76694cc119e9",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "overpass-data",
+    "source": "volume-76d69bd17963",
+    "size": "100Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "tile38-data",
+    "source": "volume-adf3fcd472a7",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "tileserver-tiles",
+    "source": "volume-e39c1f238e64",
+    "size": "80Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "valhalla-data",
+    "source": "volume-edfbac6aab24",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "webodm-db-data",
+    "source": "volume-e0dfcd35f5a7",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "onetak",
+    "pvc": "webodm-media",
+    "source": "volume-cafdaa0bfb4a",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "openclaw",
+    "pvc": "openclaw-home-pvc",
+    "source": "volume-708da2be53bb",
+    "size": "50Gi"
+  },
+  {
+    "namespace": "takml",
+    "pvc": "takml-db-data",
+    "source": "volume-a9d9abb1777a",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "takml",
+    "pvc": "takml-models",
+    "source": "volume-45a600854340",
+    "size": "2Gi"
+  },
+  {
+    "namespace": "takml",
+    "pvc": "takml-server-jar",
+    "source": "volume-0800db843c3a",
+    "size": "1Gi"
+  },
+  {
+    "namespace": "takserver",
+    "pvc": "data-takserver-postgresql-0",
+    "source": "volume-cccc1afaa021",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "takserver",
+    "pvc": "ldap-config-tak-ldap-0",
+    "source": "volume-31bf7f4ddcf1",
+    "size": "1Gi"
+  },
+  {
+    "namespace": "takserver",
+    "pvc": "ldap-data-tak-ldap-0",
+    "source": "volume-ca153ea90369",
+    "size": "1Gi"
+  },
+  {
+    "namespace": "takserver",
+    "pvc": "mongo-data-fedhub-mongodb-0",
+    "source": "volume-b5898fcc79f1",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "takserver",
+    "pvc": "takserver-nats-js-takserver-nats-0",
+    "source": "volume-2b88c0eca294",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "dapr-system",
+    "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-0",
+    "source": "volume-e18340617b8d",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "dapr-system",
+    "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-1",
+    "source": "volume-cc7912733ca4",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "dapr-system",
+    "pvc": "dapr-scheduler-data-dir-dapr-scheduler-server-2",
+    "source": "volume-5b6b57939ee3",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "onemind-ai",
+    "pvc": "onemind-cpu-model",
+    "source": "volume-aeb2c9c4e472",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "onemind-registry",
+    "pvc": "data-harbor-redis-0",
+    "source": "volume-baee1f2a0bd3",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "onemind-registry",
+    "pvc": "data-harbor-trivy-0",
+    "source": "volume-2bf1a9962441",
+    "size": "10Gi"
+  },
+  {
+    "namespace": "onemind-registry",
+    "pvc": "database-data-harbor-database-0",
+    "source": "volume-7db10f24603b",
+    "size": "5Gi"
+  },
+  {
+    "namespace": "onemind-registry",
+    "pvc": "harbor-jobservice",
+    "source": "volume-01764533bacc",
+    "size": "1Gi"
+  },
+  {
+    "namespace": "onemind-registry",
+    "pvc": "harbor-registry",
+    "source": "volume-f0b56ae255e2",
+    "size": "40Gi"
+  },
+  {
+    "namespace": "onemind-search",
+    "pvc": "onemind-search-master-onemind-search-master-0",
+    "source": "volume-bf5e2b142d4b",
+    "size": "20Gi"
+  },
+  {
+    "namespace": "spire-system",
+    "pvc": "spire-data-spire-server-0",
+    "source": "volume-cdf02d607f9c",
+    "size": "5Gi"
+  }
+]

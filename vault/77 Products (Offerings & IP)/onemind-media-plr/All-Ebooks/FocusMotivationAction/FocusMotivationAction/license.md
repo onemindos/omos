@@ -1,9 +1,0 @@
-# Yes - You may resell this product. Suggest retail price: $10-$20.
-
-Yes - You may sell/pass resell rights/master resell rights to this product. If doing so please include this license for your customers. 
-Yes - You may edit the sales page. 
-Yes - May add to a paid membership site. 
-Yes - You may add this product to a paid package. 
-Yes - You may give away. 
-
-No - You may not sell private label rights.

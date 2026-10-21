@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: backstage
   namespace: backstage
+  labels:
+    app: backstage
 spec:
   replicas: 2
   revisionHistoryLimit: 3
@@ -31,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: backstage
-        image: ghcr.io/onemindos/onemind-portal@sha256:495dbab34a5f9fb2dfae62c604334b9ee83da2ddb439fbd9e4a041037b27ec73
+        image: ghcr.io/onemindos/onemind-portal@sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6
         command:
         - node
         args:
@@ -52,11 +54,33 @@ spec:
         - name: http
           containerPort: 7007
         envFrom:
-        - secretRef: {name: backstage-zoho, optional: true}
+        - secretRef:
+            name: openchoreo-oidc
+        - secretRef:
+            name: openchoreo-catalog
+        - secretRef:
+            name: backstage-zoho
+            optional: true
+        - secretRef:
+            name: backstage-billing
+            optional: true
+        - secretRef:
+            name: backstage-plugin-integrations
+        - secretRef:
+            name: onemind-core-gateway
+        - secretRef:
+            name: onemind-fga-client
         env:
+        - name: GRAFANA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-grafana
+              key: GRAFANA_TOKEN
         - name: MCP_TOKEN
           valueFrom:
-            secretKeyRef: {name: backstage-mcp, key: MCP_TOKEN}
+            secretKeyRef:
+              name: backstage-mcp
+              key: MCP_TOKEN
         - name: PORTAL_URL
           value: https://onemind-preview.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD
@@ -82,7 +106,7 @@ spec:
         resources:
           requests:
             cpu: 250m
-            memory: 1Gi
+            memory: 512Mi
           limits:
             cpu: '2'
             memory: 2Gi
@@ -112,6 +136,9 @@ spec:
           mountPath: /app/app-config.cluster.yaml
           subPath: app-config.cluster.yaml
           readOnly: true
+        - name: onemind-fga-context
+          mountPath: /etc/onemind-fga
+          readOnly: true
         lifecycle:
           preStop:
             exec:
@@ -129,8 +156,20 @@ spec:
       - name: tmp
         emptyDir:
           sizeLimit: 1Gi
+      - name: onemind-fga-context
+        configMap:
+          name: onemind-fga-context
       terminationGracePeriodSeconds: 45
       affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-ecosystem-cpu
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100

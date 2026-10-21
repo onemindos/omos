@@ -1,0 +1,49 @@
+name: OneMind inventory review
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: onemind-inventory-review
+  cancel-in-progress: false
+jobs:
+  discover:
+    # Explicit opt-in: runner must have observational kubectl, tailnet and GitHub access.
+    if: vars.ONEMIND_INVENTORY_REFRESH_ENABLED == 'true' && vars.ONEMIND_INVENTORY_ORG_VISIBILITY_VERIFIED == 'true'
+    runs-on: [self-hosted, onemind-inventory-readonly]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Install locked portal dependencies
+        working-directory: services/onemind-portal
+        run: corepack yarn install --immutable
+      - name: Load previous review counters
+        run: git fetch origin automation/onemind-inventory-review || true
+      - name: Discover complete inventory
+        env:
+          GH_TOKEN: ${{ secrets.ONEMIND_INVENTORY_DISCOVERY_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo 'Configure the dedicated read-only repository discovery credential first.'
+            exit 1
+          fi
+          node services/onemind-portal/scripts/refresh-inventory.cjs
+      - name: Open or update review proposal
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        with:
+          branch: automation/onemind-inventory-review
+          commit-message: 'chore(inventory): refresh observed OneMind resources'
+          title: 'chore(inventory): review latest OneMind discovery'
+          body: |
+            Complete Kubernetes, Tailscale and GitHub discovery. Curated Fabric entries are reconciled.
+            Missing identities remain in the catalog for review; three complete missing observations flag retirement review.
+            Observation timestamps describe discovery, not live health. Review before merging; this workflow never auto-merges.
+          add-paths: |
+            services/onemind-portal/catalog/
+            platform/backstage/catalog/

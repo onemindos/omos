@@ -1,0 +1,34 @@
+# Tailnet-only NATS monitoring endpoint (port 8222: /varz, /connz, /jsz ...) for the
+# browser-based NATS UI. Read-only server stats; NATS sends Access-Control-Allow-Origin: *
+# so the UI can fetch it cross-origin. The `nats` Service does not expose 8222, so this
+# small ClusterIP Service selects the NATS pods directly.
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-monitor
+  namespace: nats
+spec:
+  selector:
+    app.kubernetes.io/component: nats
+    app.kubernetes.io/instance: nats
+    app.kubernetes.io/name: nats
+  ports:
+    - name: monitor
+      port: 8222
+      targetPort: 8222
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nats-monitor
+  namespace: nats
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: nats-monitor
+      port:
+        number: 8222
+  tls:
+    - hosts:
+        - nats-monitor

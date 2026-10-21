@@ -1,0 +1,42 @@
+# Manual restore exercise; excluded from production kustomization.
+# No WAL archiver: reads the production backup repository only.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: onemind-data-restorecheck-20261009
+  namespace: onemind-data
+spec:
+  instances: 1
+  bootstrap:
+    recovery:
+      source: production-backup
+  externalClusters:
+  - name: production-backup
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: onemind-backups
+        serverName: onemind-data
+  storage:
+    size: 40Gi
+    storageClass: do-block-storage
+  affinity:
+    nodeSelector:
+      onemind.io/compute-role: ecosystem
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: '1'
+      memory: 2Gi
+  postgresql:
+    shared_preload_libraries:
+    - age
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ImageCatalog
+    major: 16
+    name: onemind-postgres
+  imagePullSecrets:
+  - name: ghcr

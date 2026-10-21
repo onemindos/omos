@@ -8,6 +8,7 @@ These are historical documentation claims, not current deployment instructions o
 - Documented host: 📱 Edge Device
 - Recorded status: ✅ Live
 - Recorded address: https://tak.gov/products/itak
+- Tags: None
 
 iOS TAK client — connects to tak server ssl://152.42.155.95:8089
 

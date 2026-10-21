@@ -12,9 +12,6 @@ rules:
   - apiGroups: [""]
     resources: ["pods", "persistentvolumeclaims", "persistentvolumes", "nodes", "events"]
     verbs: ["get", "list"]
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["delete"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
     verbs: ["get", "list"]
@@ -49,26 +46,31 @@ data:
     def api(path, method='GET'):
         req = urllib.request.Request(URL+path, method=method)
         req.add_header('Authorization', 'Bearer '+TOKEN)
-        with urllib.request.urlopen(req, context=CTX) as f:
+        with urllib.request.urlopen(req, context=CTX, timeout=10) as f:
             return json.load(f)
 
     report = {"kind": "health-report", "findings": []}
     def emit(subject, payload):
         report['findings'].append({"subject": subject, **payload})
 
-    # 1. non-running pods -> delete + log
+    # 1. Observe pods. Never delete Pending/Failed pods: controllers own their
+    # lifecycle, and failure evidence is required for diagnosis and backup recovery.
     try:
         pods = api('/api/v1/pods')['items']
         for p in pods:
-            st = p['status'].get('phase')
-            why = p['status'].get('reason','')
-            if st not in ('Running','Succeeded') or why in ('CrashLoopBackOff','OOMKilled'):
-                emit('ops.health.repair', {"pod": p['metadata']['name'], "ns": p['metadata']['namespace'], "why": why})
-                try:
-                    api('/api/v1/namespaces/'+p['metadata']['namespace']+'/pods/'+p['metadata']['name'], method='DELETE')
-                    emit('ops.health.repair', {"action":"deleted", "pod":p['metadata']['name']})
-                except Exception as e:
-                    emit('ops.health.escalate', {"action":"delete-failed","pod":p['metadata']['name'],"err":str(e)})
+            status = p.get('status', {})
+            phase = status.get('phase', 'Unknown')
+            reasons = [status.get('reason', '')]
+            for c in status.get('containerStatuses', []):
+                reasons.append(c.get('state', {}).get('waiting', {}).get('reason', ''))
+                reasons.append(c.get('state', {}).get('terminated', {}).get('reason', ''))
+            reasons = sorted({reason for reason in reasons if reason})
+            ready = next((c.get('status') for c in status.get('conditions', [])
+                          if c.get('type') == 'Ready'), None)
+            if phase not in ('Running', 'Succeeded') or (phase == 'Running' and ready != 'True'):
+                emit('ops.health.escalate', {"action": "pod-unhealthy",
+                     "pod": p['metadata']['name'], "ns": p['metadata']['namespace'],
+                     "phase": phase, "reasons": reasons, "ready": ready})
     except Exception as e:
         emit('ops.health.escalate', {"action":"pod-scan-failed","err":str(e)})
 
@@ -99,21 +101,34 @@ metadata:
   namespace: ops
 spec:
   schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 120
       template:
         metadata:
           labels:
             app: health-keeper
         spec:
           serviceAccountName: health-keeper
-          restartPolicy: OnFailure
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile: {type: RuntimeDefault}
           containers:
             - name: health-keeper
               image: python:3.12-alpine
               imagePullPolicy: IfNotPresent
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: {drop: [ALL]}
               resources:
                 requests:
                   cpu: 50m

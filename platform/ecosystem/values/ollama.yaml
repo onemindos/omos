@@ -1,0 +1,30 @@
+fullnameOverride: onemind-cpu-model
+image:
+  tag: 0.40.1
+ollama:
+  gpu:
+    enabled: false
+  models:
+    pull:
+    - qwen3:8b
+persistentVolume:
+  enabled: true
+  storageClass: do-block-storage-retain
+  size: 20Gi
+resources:
+  # Reservation sized to real use (7-day peak 0.18 GiB, no model calls); the 16Gi limit still lets it load qwen3:8b when used.
+  requests:
+    cpu: 250m
+    memory: 2Gi
+  limits:
+    cpu: '6'
+    memory: 16Gi
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+extraEnv:
+- name: OLLAMA_NUM_PARALLEL
+  value: '1'
+- name: OLLAMA_CONTEXT_LENGTH
+  value: '8192'
+- name: OLLAMA_KEEP_ALIVE
+  value: 30m

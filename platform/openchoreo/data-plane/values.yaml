@@ -1,0 +1,24 @@
+# openchoreo-data-plane 1.3.1 (install guide v1.3.x step 5).
+# Guide flag: --set gateway.tls.enabled=false (TLS comes later, see PLATFORM-ROADMAP.md).
+gateway:
+  # Cilium Gateway API with the tailnet-only class instead of kgateway. The chart only
+  # renders the kgateway HTTPListenerPolicy when the class is "kgateway".
+  gatewayClassName: onemind-private
+  tls:
+    enabled: false
+clusterAgent:
+  tls:
+    # The agent's client certificate is self-signed (generateCerts: true), and the
+    # ClusterDataPlane registration pins it as clientCA. A renewal would replace it and
+    # break the registration, so use a long lifetime instead of the 90-day default.
+    duration: 87600h
+    renewBefore: 720h
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: onemind.io/compute-role
+                operator: In
+                values: [ecosystem]

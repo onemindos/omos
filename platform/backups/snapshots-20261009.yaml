@@ -1,0 +1,139 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-e18340617b8d
+  namespace: dapr-system
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: dapr-scheduler-data-dir-dapr-scheduler-server-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-cc7912733ca4
+  namespace: dapr-system
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: dapr-scheduler-data-dir-dapr-scheduler-server-1
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-5b6b57939ee3
+  namespace: dapr-system
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: dapr-scheduler-data-dir-dapr-scheduler-server-2
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-aeb2c9c4e472
+  namespace: onemind-ai
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onemind-cpu-model
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-bf1fba7438f7
+  namespace: onemind-data
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onemind-data-1
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-6377902d660e
+  namespace: onemind-data
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onemind-data-2
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-cf1b424ed2b5
+  namespace: onemind-data
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onemind-data-3
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-baee1f2a0bd3
+  namespace: onemind-registry
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-harbor-redis-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-2bf1a9962441
+  namespace: onemind-registry
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-harbor-trivy-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-7db10f24603b
+  namespace: onemind-registry
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: database-data-harbor-database-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-01764533bacc
+  namespace: onemind-registry
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: harbor-jobservice
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-f0b56ae255e2
+  namespace: onemind-registry
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: harbor-registry
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-bf5e2b142d4b
+  namespace: onemind-search
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onemind-search-master-onemind-search-master-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261009-cdf02d607f9c
+  namespace: spire-system
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: spire-data-spire-server-0

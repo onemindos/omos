@@ -1,0 +1,80 @@
+replicaCount: 1
+fullnameOverride: litellm
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+image:
+  tag: v1.104.2@sha256:3d88bd757134a00e8c00237b85a021ab1f6d54abb9c1df750f411dbe7256a500
+  pullPolicy: IfNotPresent
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: '2'
+    memory: 2Gi
+masterkeySecretName: litellm-auth
+masterkeySecretKey: master-key
+db:
+  useExisting: true
+  deployStandalone: false
+  endpoint: onemind-data-rw.onemind-data.svc.cluster.local
+  database: litellm
+  secret:
+    name: litellm-db
+    usernameKey: username
+    passwordKey: password
+  url: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=require
+redis:
+  enabled: false
+environmentSecrets:
+- litellm-providers
+proxy_config:
+  model_list:
+  - model_name: onemind-chat
+    litellm_params:
+      model: ollama_chat/qwen3:8b
+      api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+      num_ctx: 8192
+      extra_body:
+        think: false
+  - model_name: onemind-fast
+    litellm_params:
+      model: ollama_chat/qwen3:8b
+      api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+      num_ctx: 8192
+      extra_body:
+        think: false
+  general_settings:
+    master_key: os.environ/PROXY_MASTER_KEY
+    store_model_in_db: true
+  litellm_settings:
+    drop_params: true
+    set_verbose: false
+    # /metrics is only reachable in-cluster (ClusterIP); Prometheus scrapes it
+    # without a key. With auth on, every scrape 401'd (TargetDown + log noise).
+    require_auth_for_metrics_endpoint: false
+    # /metrics is only mounted when the prometheus callback is enabled
+    # (proxy_server.py: "prometheus" in success_callback -> _mount_metrics_endpoint).
+    success_callback:
+    - prometheus
+serviceMonitor:
+  enabled: true
+  labels:
+    release: monitoring
+envVars:
+  DATABASE_CONNECTION_POOL_LIMIT: '10'
+migrationJob:
+  hooks:
+    helm:
+      enabled: false
+    # Run migrations as an Argo CD PreSync hook so the completed Job is not
+    # tracked as live state (it kept the app OutOfSync and was re-created).
+    argocd:
+      enabled: true
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: '2'
+      memory: 2Gi

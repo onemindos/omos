@@ -1,0 +1,31 @@
+# platform-matrix: Synapse, Element Web, PostgreSQL and Redis in namespace matrix.
+#
+# MANUAL SYNC ON PURPOSE (no syncPolicy.automated). The live Synapse homeserver.yaml holds the database, Redis and
+# registration secrets as plaintext inside ConfigMap/synapse-config. Those cannot live in Git, so this path mounts the
+# config from Secret/synapse-homeserver instead (a sealed copy of the same file). Syncing before that Secret exists
+# would roll Synapse onto a pod that cannot start. Follow platform/matrix/SECRETS-TODO.md first, then sync by hand,
+# then switch this to automated (prune: false, selfHeal: true).
+#
+# Only the objects that exist live are in platform/matrix/argo/. The older kustomize base (mautrix-telegram,
+# nats-matrix-bridge, ingress, placeholder Secrets) was never deployed and is intentionally not synced.
+# Secret/matrix-secrets and the Namespace are managed out of band.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-matrix
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/matrix/argo
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: matrix
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true

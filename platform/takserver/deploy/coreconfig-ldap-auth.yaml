@@ -1,0 +1,101 @@
+# CoreConfig.xml LDAP auth patch for TAK Server.
+#
+# After deploying tak-ldap (platform/takserver/deploy/tak-ldap.yaml) and building the
+# ghcr.io/onemindos/tak-ldap:5.8 image, add this <auth> block to the
+# core-config ConfigMap (CoreConfig.xml) in the takserver namespace.
+#
+# TWO WAYS TO APPLY:
+#
+# Option A — Web UI (recommended):
+#   Navigate to: https://tak.onemindos.dev → Configuration → Security & Auth
+#   Set LDAP URL:         ldap://tak-ldap:389
+#   Set User String:      uid={username},ou=People,dc=onemindos,dc=dev
+#   Set Style:            DS  (OpenLDAP, NOT AD)
+#   Set Service DN:       cn=ldapadm,dc=onemindos,dc=dev
+#   Set Service Password: <LDAP_ADMIN_PASSWORD from tak-ldap-creds secret>
+#   Set Callsign Attr:    takCallSign
+#   Set Color Attr:       takColor
+#   Set Role Attr:        takRole
+#   Click Save → restart server when prompted.
+#
+# Option B — direct ConfigMap patch:
+#   kubectl -n takserver edit configmap core-config
+#   Find the <auth> tag (or add before </Configuration>) and replace with:
+#
+#   <auth default="ldap">
+#       <ldap url="ldap://tak-ldap:389"
+#             userstring="uid={username},ou=People,dc=onemindos,dc=dev"
+#             style="DS"
+#             serviceAccountDN="cn=ldapadm,dc=onemindos,dc=dev"
+#             serviceAccountCredential="<LDAP_ADMIN_PASSWORD>"
+#             callsignAttribute="takCallSign"
+#             colorAttribute="takColor"
+#             roleAttribute="takRole"
+#             updateinterval="60000"
+#             groupprefix=""
+#             groupObjectClass="groupOfNames"
+#             userObjectClass="inetOrgPerson" />
+#       <File location="UserAuthenticationFile.xml"/>
+#   </auth>
+#
+#   Then restart TAK Server pods (in order):
+#   kubectl -n takserver rollout restart deploy/takserver-config
+#   kubectl -n takserver rollout restart deploy/takserver-messaging
+#   kubectl -n takserver rollout restart deploy/takserver-api
+#
+# TAK INPUT — to require LDAP auth on the TLS port, also update the input:
+#   <input _name="ldapssl" protocol="tls" port="8089" auth="ldap"/>
+#
+# TEST LDAP USERS (from tak-ldap pod):
+#   kubectl -n takserver exec -it statefulset/tak-ldap -- \
+#     ldapsearch -x -H ldap://localhost:389 \
+#     -b "ou=People,dc=onemindos,dc=dev" -D "cn=ldapadm,dc=onemindos,dc=dev" -W
+#
+# ADD A TAK USER (from tak-ldap pod):
+#   kubectl -n takserver exec -it statefulset/tak-ldap -- bash -c '
+#   ldapadd -x -H ldap://localhost:389 \
+#     -D "cn=ldapadm,dc=onemindos,dc=dev" -W <<EOF
+#   dn: uid=zeus,ou=People,dc=onemindos,dc=dev
+#   objectClass: inetOrgPerson
+#   objectClass: posixAccount
+#   objectClass: takUser
+#   uid: zeus
+#   cn: Zeus Delacruz
+#   sn: Delacruz
+#   userPassword: <password>
+#   takCallSign: Zeus
+#   takRole: ROLE_ADMIN
+#   takColor: Cyan
+#   uidNumber: 1001
+#   gidNumber: 1001
+#   homeDirectory: /home/zeus
+#   EOF'
+#
+# This is a documentation/runbook file, not a deployable manifest.
+# It lives in git for operator reference.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tak-ldap-auth-runbook
+  namespace: takserver
+  labels:
+    app: tak-ldap
+    component: runbook
+data:
+  ldap-auth-block.xml: |
+    <!-- Add this inside <Configuration> in CoreConfig.xml -->
+    <!-- Replace <LDAP_ADMIN_PASSWORD> with value from tak-ldap-creds secret -->
+    <auth default="ldap">
+        <ldap url="ldap://tak-ldap:389"
+              userstring="uid={username},ou=People,dc=onemindos,dc=dev"
+              style="DS"
+              serviceAccountDN="cn=ldapadm,dc=onemindos,dc=dev"
+              serviceAccountCredential="<LDAP_ADMIN_PASSWORD>"
+              callsignAttribute="takCallSign"
+              colorAttribute="takColor"
+              roleAttribute="takRole"
+              updateinterval="60000"
+              groupObjectClass="groupOfNames"
+              userObjectClass="inetOrgPerson" />
+        <File location="UserAuthenticationFile.xml"/>
+    </auth>

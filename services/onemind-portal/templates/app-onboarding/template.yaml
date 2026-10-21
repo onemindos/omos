@@ -1,0 +1,93 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: onemind-app-onboarding
+  title: OneMind app onboarding proposal
+  description: Creates or updates a draft PR for explicit human review. No account provisioning, live deployment, restore,
+    or catalog registration is performed.
+spec:
+  owner: group:default/onemind-admins
+  type: website
+  parameters:
+  - title: OneMind app onboarding proposal
+    required:
+    - name
+    - url
+    - hosting
+    properties:
+      name:
+        title: Proposal name
+        type: string
+        pattern: ^[a-z][a-z0-9-]{2,39}$
+      url:
+        title: Canonical HTTPS app URL
+        type: string
+        pattern: ^https://[^\s"'<>`\\]+$
+        maxLength: 2000
+        description: Use the stable application URL, without tracking or temporary session credentials.
+      hosting:
+        title: Hosting model
+        type: string
+        enum:
+        - external-provider
+        - private-mesh
+        - self-hosted
+        default: external-provider
+  - title: Review information
+    required:
+    - reason
+    - reviewer
+    properties:
+      reason:
+        title: Purpose and expected outcome
+        type: string
+        minLength: 10
+        maxLength: 1500
+        ui:widget: textarea
+      reviewer:
+        title: Reviewer / accountable owner
+        type: string
+        minLength: 3
+        maxLength: 100
+        description: Human review remains mandatory; this field does not assign or notify anyone.
+  - title: GitHub access
+    required:
+    - githubToken
+    properties:
+      githubToken:
+        title: Fine-grained GitHub token
+        description: Restrict to onemindos/omos, Contents and Pull requests write, with a short expiry. Never put credentials
+          in proposal fields.
+        type: string
+        ui:field: Secret
+  steps:
+  - id: render
+    name: Prepare review package
+    action: fetch:template
+    input:
+      url: ./skeleton
+      values:
+        name: ${{ parameters.name }}
+        url: ${{ parameters.url }}
+        hosting: ${{ parameters.hosting }}
+        reason: ${{ parameters.reason }}
+        reviewer: ${{ parameters.reviewer }}
+  - id: publish
+    name: Create or update draft PR
+    action: publish:github:pull-request
+    input:
+      repoUrl: github.com?owner=onemindos&repo=omos
+      branchName: proposal/app-onboarding-${{ parameters.name }}
+      targetBranchName: main
+      title: 'OneMind app onboarding proposal: ${{ parameters.name }}'
+      description: Review this proposal and complete its checklist. Files are outside live catalog and GitOps paths. Merging
+        this proposal does not deploy or execute anything. A separate promotion PR is required.
+      sourcePath: .
+      targetPath: proposals/apps/${{ parameters.name }}
+      draft: true
+      update: true
+      token: ${{ secrets.githubToken }}
+  output:
+    links:
+    - title: Review draft pull request
+      url: ${{ steps.publish.output.remoteUrl }}

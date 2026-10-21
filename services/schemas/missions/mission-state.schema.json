@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/missions/state/v1",
+  "title": "OneMind mission state fact payload",
+  "description": "Payload inside the existing v1 event envelope on evt.so.mission.requested, started, completed, failed or cancelled. Event identity allows consumers to deduplicate an at-least-once outbox publication.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "event_id", "source_id", "mission_id", "actor", "state"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "event_id": {"type": "string", "format": "uuid"},
+    "source_id": {"const": "onemind-core"},
+    "mission_id": {"type": "string", "format": "uuid"},
+    "actor": {"type": "string", "minLength": 1},
+    "state": {"enum": ["requested", "running", "completed", "failed", "cancelled"]}
+  }
+}

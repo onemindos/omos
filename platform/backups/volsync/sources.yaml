@@ -1,0 +1,1965 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: auth
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: backstage
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: clickhouse
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: hermes
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: matrix
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: monitoring
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: n8n
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: nats
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: onetak
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: openclaw
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: takml
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: takserver
+automountServiceAccountToken: false
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-86c342dd8d39
+  namespace: auth
+  annotations:
+    onemind.dev/source-pvc: pgdata-authentik-postgres-0
+spec:
+  sourcePVC: pgdata-authentik-postgres-0
+  paused: false
+  trigger:
+    schedule: 0 0 * * *
+  restic:
+    repository: volume-86c342dd8d39-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-eb04d2fe651f
+  namespace: backstage
+  annotations:
+    onemind.dev/source-pvc: data-backstage-postgres-0
+spec:
+  sourcePVC: data-backstage-postgres-0
+  paused: false
+  trigger:
+    schedule: 20 0 * * *
+  restic:
+    repository: volume-eb04d2fe651f-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-ab4fbd87295d
+  namespace: clickhouse
+  annotations:
+    onemind.dev/source-pvc: data-storage-chi-onemind-onemind-0-0-0
+spec:
+  sourcePVC: data-storage-chi-onemind-onemind-0-0-0
+  paused: false
+  trigger:
+    schedule: 40 0 * * *
+  restic:
+    repository: volume-ab4fbd87295d-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-c96e219d2314
+  namespace: hermes
+  annotations:
+    onemind.dev/source-pvc: hermes-data
+spec:
+  sourcePVC: hermes-data
+  paused: false
+  trigger:
+    schedule: 0 1 * * *
+  restic:
+    repository: volume-c96e219d2314-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-0af77b22c7a2
+  namespace: matrix
+  annotations:
+    onemind.dev/source-pvc: data-postgres-0
+spec:
+  sourcePVC: data-postgres-0
+  paused: false
+  trigger:
+    schedule: 20 1 * * *
+  restic:
+    repository: volume-0af77b22c7a2-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-d946eeb02a16
+  namespace: matrix
+  annotations:
+    onemind.dev/source-pvc: data-redis-0
+spec:
+  sourcePVC: data-redis-0
+  paused: false
+  trigger:
+    schedule: 40 1 * * *
+  restic:
+    repository: volume-d946eeb02a16-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-197d8a9e297d
+  namespace: matrix
+  annotations:
+    onemind.dev/source-pvc: synapse-data
+spec:
+  sourcePVC: synapse-data
+  paused: false
+  trigger:
+    schedule: 0 2 * * *
+  restic:
+    repository: volume-197d8a9e297d-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-0a77d3a320c8
+  namespace: monitoring
+  annotations:
+    onemind.dev/source-pvc: storage-loki-0
+spec:
+  sourcePVC: storage-loki-0
+  paused: false
+  trigger:
+    schedule: 20 2 * * *
+  restic:
+    repository: volume-0a77d3a320c8-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-bec6172775e6
+  namespace: monitoring
+  annotations:
+    onemind.dev/source-pvc: storage-tempo-0
+spec:
+  sourcePVC: storage-tempo-0
+  paused: false
+  trigger:
+    schedule: 40 2 * * *
+  restic:
+    repository: volume-bec6172775e6-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-e0d2f2fea651
+  namespace: n8n
+  annotations:
+    onemind.dev/source-pvc: data-postgres-0
+spec:
+  sourcePVC: data-postgres-0
+  paused: false
+  trigger:
+    schedule: 0 3 * * *
+  restic:
+    repository: volume-e0d2f2fea651-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 70
+      runAsGroup: 70
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-b98c04b6228d
+  namespace: n8n
+  annotations:
+    onemind.dev/source-pvc: n8n-data
+spec:
+  sourcePVC: n8n-data
+  paused: false
+  trigger:
+    schedule: 20 3 * * *
+  restic:
+    repository: volume-b98c04b6228d-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-cedf723508b6
+  namespace: nats
+  annotations:
+    onemind.dev/source-pvc: nats-js-nats-0
+spec:
+  sourcePVC: nats-js-nats-0
+  paused: false
+  trigger:
+    schedule: 40 3 * * *
+  restic:
+    repository: volume-cedf723508b6-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-f49adedad17d
+  namespace: nats
+  annotations:
+    onemind.dev/source-pvc: nats-js-nats-1
+spec:
+  sourcePVC: nats-js-nats-1
+  paused: false
+  trigger:
+    schedule: 0 4 * * *
+  restic:
+    repository: volume-f49adedad17d-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-bf2e7be6c2ff
+  namespace: nats
+  annotations:
+    onemind.dev/source-pvc: nats-js-nats-2
+spec:
+  sourcePVC: nats-js-nats-2
+  paused: false
+  trigger:
+    schedule: 20 4 * * *
+  restic:
+    repository: volume-bf2e7be6c2ff-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-5503f74cbdce
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: nodeodm-data
+spec:
+  sourcePVC: nodeodm-data
+  paused: false
+  trigger:
+    schedule: 40 4 * * *
+  restic:
+    repository: volume-5503f74cbdce-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-93cec0eff115
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: nominatim-data
+spec:
+  sourcePVC: nominatim-data
+  paused: false
+  trigger:
+    schedule: 0 5 * * *
+  restic:
+    repository: volume-93cec0eff115-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-50fb74ff16c6
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: onetak-geo-db-data
+spec:
+  sourcePVC: onetak-geo-db-data
+  paused: false
+  trigger:
+    schedule: 20 5 * * *
+  restic:
+    repository: volume-50fb74ff16c6-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-b455a3425ad0
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: onetak-minio-data
+spec:
+  sourcePVC: onetak-minio-data
+  paused: false
+  trigger:
+    schedule: 40 5 * * *
+  restic:
+    repository: volume-b455a3425ad0-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-76694cc119e9
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: onetak-pgdata
+spec:
+  sourcePVC: onetak-pgdata
+  paused: false
+  trigger:
+    schedule: 0 6 * * *
+  restic:
+    repository: volume-76694cc119e9-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-76d69bd17963
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: overpass-data
+spec:
+  sourcePVC: overpass-data
+  paused: false
+  trigger:
+    schedule: 20 6 * * *
+  restic:
+    repository: volume-76d69bd17963-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-adf3fcd472a7
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: tile38-data
+spec:
+  sourcePVC: tile38-data
+  paused: false
+  trigger:
+    schedule: 40 6 * * *
+  restic:
+    repository: volume-adf3fcd472a7-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-e39c1f238e64
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: tileserver-tiles
+spec:
+  sourcePVC: tileserver-tiles
+  paused: false
+  trigger:
+    schedule: 0 7 * * *
+  restic:
+    repository: volume-e39c1f238e64-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-edfbac6aab24
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: valhalla-data
+spec:
+  sourcePVC: valhalla-data
+  paused: false
+  trigger:
+    schedule: 20 7 * * *
+  restic:
+    repository: volume-edfbac6aab24-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-e0dfcd35f5a7
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: webodm-db-data
+spec:
+  sourcePVC: webodm-db-data
+  paused: false
+  trigger:
+    schedule: 40 7 * * *
+  restic:
+    repository: volume-e0dfcd35f5a7-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-cafdaa0bfb4a
+  namespace: onetak
+  annotations:
+    onemind.dev/source-pvc: webodm-media
+spec:
+  sourcePVC: webodm-media
+  paused: false
+  trigger:
+    schedule: 0 8 * * *
+  restic:
+    repository: volume-cafdaa0bfb4a-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-708da2be53bb
+  namespace: openclaw
+  annotations:
+    onemind.dev/source-pvc: openclaw-home-pvc
+spec:
+  sourcePVC: openclaw-home-pvc
+  paused: false
+  trigger:
+    schedule: 20 8 * * *
+  restic:
+    repository: volume-708da2be53bb-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-a9d9abb1777a
+  namespace: takml
+  annotations:
+    onemind.dev/source-pvc: takml-db-data
+spec:
+  sourcePVC: takml-db-data
+  paused: false
+  trigger:
+    schedule: 40 8 * * *
+  restic:
+    repository: volume-a9d9abb1777a-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-45a600854340
+  namespace: takml
+  annotations:
+    onemind.dev/source-pvc: takml-models
+spec:
+  sourcePVC: takml-models
+  paused: false
+  trigger:
+    schedule: 0 9 * * *
+  restic:
+    repository: volume-45a600854340-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-0800db843c3a
+  namespace: takml
+  annotations:
+    onemind.dev/source-pvc: takml-server-jar
+spec:
+  sourcePVC: takml-server-jar
+  paused: false
+  trigger:
+    schedule: 20 9 * * *
+  restic:
+    repository: volume-0800db843c3a-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-cccc1afaa021
+  namespace: takserver
+  annotations:
+    onemind.dev/source-pvc: data-takserver-postgresql-0
+spec:
+  sourcePVC: data-takserver-postgresql-0
+  paused: false
+  trigger:
+    schedule: 40 9 * * *
+  restic:
+    repository: volume-cccc1afaa021-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-31bf7f4ddcf1
+  namespace: takserver
+  annotations:
+    onemind.dev/source-pvc: ldap-config-tak-ldap-0
+spec:
+  sourcePVC: ldap-config-tak-ldap-0
+  paused: false
+  trigger:
+    schedule: 0 10 * * *
+  restic:
+    repository: volume-31bf7f4ddcf1-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-ca153ea90369
+  namespace: takserver
+  annotations:
+    onemind.dev/source-pvc: ldap-data-tak-ldap-0
+spec:
+  sourcePVC: ldap-data-tak-ldap-0
+  paused: false
+  trigger:
+    schedule: 20 10 * * *
+  restic:
+    repository: volume-ca153ea90369-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-b5898fcc79f1
+  namespace: takserver
+  annotations:
+    onemind.dev/source-pvc: mongo-data-fedhub-mongodb-0
+spec:
+  sourcePVC: mongo-data-fedhub-mongodb-0
+  paused: false
+  trigger:
+    schedule: 40 10 * * *
+  restic:
+    repository: volume-b5898fcc79f1-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-2b88c0eca294
+  namespace: takserver
+  annotations:
+    onemind.dev/source-pvc: takserver-nats-js-takserver-nats-0
+spec:
+  sourcePVC: takserver-nats-js-takserver-nats-0
+  paused: false
+  trigger:
+    schedule: 0 11 * * *
+  restic:
+    repository: volume-2b88c0eca294-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: dapr-system
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: onemind-ai
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: onemind-registry
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: onemind-search
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: spire-system
+automountServiceAccountToken: false
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-e18340617b8d
+  namespace: dapr-system
+  annotations:
+    onemind.dev/source-pvc: dapr-scheduler-data-dir-dapr-scheduler-server-0
+spec:
+  sourcePVC: dapr-scheduler-data-dir-dapr-scheduler-server-0
+  paused: false
+  trigger:
+    schedule: 40 11 * * *
+  restic:
+    repository: volume-e18340617b8d-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-cc7912733ca4
+  namespace: dapr-system
+  annotations:
+    onemind.dev/source-pvc: dapr-scheduler-data-dir-dapr-scheduler-server-1
+spec:
+  sourcePVC: dapr-scheduler-data-dir-dapr-scheduler-server-1
+  paused: false
+  trigger:
+    schedule: 0 12 * * *
+  restic:
+    repository: volume-cc7912733ca4-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-5b6b57939ee3
+  namespace: dapr-system
+  annotations:
+    onemind.dev/source-pvc: dapr-scheduler-data-dir-dapr-scheduler-server-2
+spec:
+  sourcePVC: dapr-scheduler-data-dir-dapr-scheduler-server-2
+  paused: false
+  trigger:
+    schedule: 20 12 * * *
+  restic:
+    repository: volume-5b6b57939ee3-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-aeb2c9c4e472
+  namespace: onemind-ai
+  annotations:
+    onemind.dev/source-pvc: onemind-cpu-model
+spec:
+  sourcePVC: onemind-cpu-model
+  paused: false
+  trigger:
+    schedule: 40 12 * * *
+  restic:
+    repository: volume-aeb2c9c4e472-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-baee1f2a0bd3
+  namespace: onemind-registry
+  annotations:
+    onemind.dev/source-pvc: data-harbor-redis-0
+spec:
+  sourcePVC: data-harbor-redis-0
+  paused: false
+  trigger:
+    schedule: 0 13 * * *
+  restic:
+    repository: volume-baee1f2a0bd3-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-2bf1a9962441
+  namespace: onemind-registry
+  annotations:
+    onemind.dev/source-pvc: data-harbor-trivy-0
+spec:
+  sourcePVC: data-harbor-trivy-0
+  paused: false
+  trigger:
+    schedule: 20 13 * * *
+  restic:
+    repository: volume-2bf1a9962441-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-7db10f24603b
+  namespace: onemind-registry
+  annotations:
+    onemind.dev/source-pvc: database-data-harbor-database-0
+spec:
+  sourcePVC: database-data-harbor-database-0
+  paused: false
+  trigger:
+    schedule: 40 13 * * *
+  restic:
+    repository: volume-7db10f24603b-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-01764533bacc
+  namespace: onemind-registry
+  annotations:
+    onemind.dev/source-pvc: harbor-jobservice
+spec:
+  sourcePVC: harbor-jobservice
+  paused: false
+  trigger:
+    schedule: 0 14 * * *
+  restic:
+    repository: volume-01764533bacc-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-f0b56ae255e2
+  namespace: onemind-registry
+  annotations:
+    onemind.dev/source-pvc: harbor-registry
+spec:
+  sourcePVC: harbor-registry
+  paused: false
+  trigger:
+    schedule: 20 14 * * *
+  restic:
+    repository: volume-f0b56ae255e2-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-bf5e2b142d4b
+  namespace: onemind-search
+  annotations:
+    onemind.dev/source-pvc: onemind-search-master-onemind-search-master-0
+spec:
+  sourcePVC: onemind-search-master-onemind-search-master-0
+  paused: false
+  trigger:
+    schedule: 40 14 * * *
+  restic:
+    repository: volume-bf5e2b142d4b-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: volume-cdf02d607f9c
+  namespace: spire-system
+  annotations:
+    onemind.dev/source-pvc: spire-data-spire-server-0
+spec:
+  sourcePVC: spire-data-spire-server-0
+  paused: false
+  trigger:
+    schedule: 0 15 * * *
+  restic:
+    repository: volume-cdf02d607f9c-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi

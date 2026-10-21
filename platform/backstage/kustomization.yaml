@@ -12,6 +12,10 @@ resources:
   - backup.sealedsecret.yaml
   - backup.yaml
   - mcp.sealedsecret.yaml
+  - plugin-integrations.sealedsecret.yaml
+  - grafana.sealedsecret.yaml
+  - argocd-ingress.yaml
+  - openchoreo-catalog.sealedsecret.yaml
 configMapGenerator:
   - name: backstage-cluster-config
     namespace: backstage

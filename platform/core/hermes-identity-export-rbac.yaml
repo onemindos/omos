@@ -1,0 +1,40 @@
+# Read-only access for the Hermes identity export (.github/workflows/hermes-identity-export.yml).
+#
+# The export runs `kubectl exec` into the hermes-legacy pod to read an allow-listed set of files and to run
+# scripts/hermes_identity_export.py, which never writes to the volume. `pods/exec` cannot be limited to one
+# command, so this role can read anything in the pod: keep it bound only to the dedicated export ServiceAccount.
+#
+# The runner that uses this ServiceAccount (label onemind-hermes-readonly, with kubectl) is not deployed yet.
+# Until it is, nothing uses this ServiceAccount and the role is inert.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hermes-identity-export
+  namespace: github-runner
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: hermes-identity-export
+  namespace: hermes
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: hermes-identity-export
+  namespace: hermes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: hermes-identity-export
+subjects:
+  - kind: ServiceAccount
+    name: hermes-identity-export
+    namespace: github-runner

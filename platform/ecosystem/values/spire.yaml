@@ -1,0 +1,60 @@
+global:
+  installAndUpgradeHooks:
+    enabled: false
+  deleteHooks:
+    enabled: false
+  spire:
+    clusterName: onemind-cloud
+    trustDomain: onemind.local
+    namespaces:
+      create: false
+      system:
+        name: spire-system
+        create: false
+      server:
+        name: spire-system
+        create: false
+spire-server:
+  replicaCount: 1
+  # Prefer the ecosystem pool but do not require it, so the pod can run on a core node if the pool shrinks.
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values:
+            - ecosystem
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  dataStore:
+    sql:
+      databaseType: sqlite3
+  persistence:
+    size: 5Gi
+    storageClass: do-block-storage-retain
+spire-agent:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+spiffe-oidc-discovery-provider:
+  enabled: false
+tornjak-frontend:
+  enabled: false
+spike-keeper:
+  enabled: false
+spike-nexus:
+  enabled: false
+spike-pilot:
+  enabled: false

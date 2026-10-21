@@ -5,29 +5,62 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Weekly full-tree run: re-renders every Helm chart and re-validates every manifest, so
+    # upstream chart/schema drift is caught even when nobody touched the files.
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # Pinned tool versions. Binaries are checksum-verified before use.
+  KUBECONFORM_VERSION: v0.8.0
+  KUBECONFORM_SHA256: 9bc2bffbf71f261128533edaf912153948b7ff238f9a531ae6d34466ec287883
+  GITLEAKS_VERSION: 8.30.1
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+  HELM_VERSION: v3.19.0
+  # Kubernetes minor to validate against. kubeconform schemas are published for 1.36.x.
+  KUBECONFORM_K8S_VERSION: "1.36.0"
 
 jobs:
   lint:
     name: Lint & Validate
-    runs-on: self-hosted
+    # Per-change lint gates do not apply to the scheduled/manual full-tree run.
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
 
       - name: Install yamllint
         run: pip install yamllint
 
-      - name: Lint YAML
-        run: yamllint -c .yamllint.yml platform/ docs/ tak-server/ || true
+      - name: Lint changed YAML (required)
+        env:
+          YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python scripts/validate_changed_yaml.py
+
+      - name: Report existing repository YAML debt
+        continue-on-error: true
+        run: yamllint -c .yamllint.yml platform/ docs/ platform/takserver/
 
       - name: ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
         with:
           scandir: '.'
           ignore_paths: 'vault' # historical/archive scripts are not maintained runtime code
           severity: error
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: "~1.9"
           terraform_wrapper: false
@@ -41,15 +74,100 @@ jobs:
           terraform init -backend=false
           terraform validate
 
-      - name: Check for secrets
+  manifests:
+    name: Kubernetes manifest schema (kubeconform)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Install kubeconform ${{ env.KUBECONFORM_VERSION }}
         run: |
-          echo "Scanning for potential secrets..."
-          key_begin="BEGIN"
-          key_kind="PRIVATE KEY"
-          if grep -rn "${key_begin}.*${key_kind}" --include="*.yaml" --include="*.yml" --include="*.tf" .; then
-            echo "::error::Private key found in tracked files!"
-            exit 1
-          fi
-          if grep -rn "password:" --include="*.yaml" --include="*.yml" platform/ | grep -v "secretKeyRef" | grep -v "external-secret" | grep -v "valueFrom" | grep -v "#"; then
-            echo "::warning::Possible hardcoded password found (review manually)"
-          fi
+          set -euo pipefail
+          curl -fsSL -o kubeconform.tgz \
+            "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
+          echo "${KUBECONFORM_SHA256}  kubeconform.tgz" | sha256sum -c -
+          tar -xzf kubeconform.tgz kubeconform
+          sudo install -m 0755 kubeconform /usr/local/bin/kubeconform
+          rm -f kubeconform kubeconform.tgz
+
+      # Plain manifests under platform/, platform/takserver/deploy and platform/takserver/fedhub. Kubernetes core kinds
+      # use the upstream schemas; CRDs use datreeio/CRDs-catalog. Kinds without a published schema
+      # (for example Backstage catalog entities) are skipped rather than failing, because the repo uses
+      # many CRDs that have no public schema. -strict (unknown fields are errors) is ON: the current tree
+      # is clean under it, so it catches typos such as `replica:` instead of `replicas:`.
+      - name: kubeconform (changed manifests; whole tree on schedule/manual)
+        env:
+          YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          ARGS=""
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then ARGS="--all"; fi
+          python scripts/validate_manifests.py $ARGS
+
+  helm:
+    name: Helm render check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Portable GitOps pipeline safety contracts
+        run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v
+
+      # Renders every Argo CD Application that pulls a remote Helm chart when the Application file or one of
+      # its valueFiles changed, plus the local charts (platform/takserver/chart, platform/ecosystem/charts/*) when
+      # their files change. Weekly/manual runs render everything.
+      - name: helm template (changed Applications and local charts)
+        env:
+          YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          ARGS=""
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then ARGS="--all"; fi
+          python scripts/validate_helm_renders.py $ARGS
+
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks ${{ env.GITLEAKS_VERSION }}
+        run: |
+          set -euo pipefail
+          curl -fsSL -o gitleaks.tgz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum -c -
+          tar -xzf gitleaks.tgz gitleaks
+          sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
+          rm -f gitleaks gitleaks.tgz
+
+      # Whole working tree. This FAILS the job on any finding that is not in .gitleaks-baseline.json.
+      # SealedSecret ciphertext is allowlisted in .gitleaks.toml by pattern (not by path), so a plaintext
+      # value pasted into a *.sealedsecret.yaml file is still caught. --redact keeps values out of the logs.
+      - name: gitleaks (working tree, baseline-aware)
+        run: |
+          gitleaks dir . --config .gitleaks.toml --baseline-path .gitleaks-baseline.json \
+            --redact --no-banner --exit-code 1
+
+      # Commits introduced by this PR/push, including secrets added and then deleted again within the range.
+      - name: gitleaks (commits in this change)
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000')
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          gitleaks git . --config .gitleaks.toml --redact --no-banner --exit-code 1 \
+            --log-opts="${BASE_SHA}..HEAD"

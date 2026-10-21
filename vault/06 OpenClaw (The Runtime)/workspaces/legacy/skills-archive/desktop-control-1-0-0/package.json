@@ -1,7 +1,0 @@
-{
-  "name": "desktop-control",
-  "version": "1.0.0",
-  "description": "Desktop automation — mouse control, keyboard input, screenshots, window management via Python bridge",
-  "main": "index.js",
-  "dependencies": {}
-}

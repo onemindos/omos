@@ -1,0 +1,518 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: onemind-backup-retain
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+driver: dobs.csi.digitalocean.com
+deletionPolicy: Retain
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-86c342dd8d39
+  namespace: auth
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: pgdata-authentik-postgres-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: pgdata-authentik-postgres-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-eb04d2fe651f
+  namespace: backstage
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: data-backstage-postgres-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-backstage-postgres-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-ab4fbd87295d
+  namespace: clickhouse
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: data-storage-chi-onemind-onemind-0-0-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-storage-chi-onemind-onemind-0-0-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-c96e219d2314
+  namespace: hermes
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: hermes-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: hermes-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-0af77b22c7a2
+  namespace: matrix
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: data-postgres-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-postgres-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-d946eeb02a16
+  namespace: matrix
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: data-redis-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-redis-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-197d8a9e297d
+  namespace: matrix
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: synapse-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: synapse-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-0a77d3a320c8
+  namespace: monitoring
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: storage-loki-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: storage-loki-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-bec6172775e6
+  namespace: monitoring
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: storage-tempo-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: storage-tempo-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-e0d2f2fea651
+  namespace: n8n
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: data-postgres-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-postgres-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-b98c04b6228d
+  namespace: n8n
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: n8n-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: n8n-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-cedf723508b6
+  namespace: nats
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: nats-js-nats-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: nats-js-nats-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-f49adedad17d
+  namespace: nats
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: nats-js-nats-1
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: nats-js-nats-1
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-bf2e7be6c2ff
+  namespace: nats
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: nats-js-nats-2
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: nats-js-nats-2
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-5503f74cbdce
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: nodeodm-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: nodeodm-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-93cec0eff115
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: nominatim-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: nominatim-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-50fb74ff16c6
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: onetak-geo-db-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onetak-geo-db-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-b455a3425ad0
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: onetak-minio-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onetak-minio-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-76694cc119e9
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: onetak-pgdata
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: onetak-pgdata
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-76d69bd17963
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: overpass-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: overpass-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-adf3fcd472a7
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: tile38-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: tile38-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-e39c1f238e64
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: tileserver-tiles
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: tileserver-tiles
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-edfbac6aab24
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: valhalla-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: valhalla-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-e0dfcd35f5a7
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: webodm-db-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: webodm-db-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-cafdaa0bfb4a
+  namespace: onetak
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: webodm-media
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: webodm-media
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-708da2be53bb
+  namespace: openclaw
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: openclaw-home-pvc
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: openclaw-home-pvc
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-a9d9abb1777a
+  namespace: takml
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: takml-db-data
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: takml-db-data
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-45a600854340
+  namespace: takml
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: takml-models
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: takml-models
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-0800db843c3a
+  namespace: takml
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: takml-server-jar
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: takml-server-jar
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-cccc1afaa021
+  namespace: takserver
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: data-takserver-postgresql-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: data-takserver-postgresql-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-31bf7f4ddcf1
+  namespace: takserver
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: ldap-config-tak-ldap-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: ldap-config-tak-ldap-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-ca153ea90369
+  namespace: takserver
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: ldap-data-tak-ldap-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: ldap-data-tak-ldap-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-b5898fcc79f1
+  namespace: takserver
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: mongo-data-fedhub-mongodb-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: mongo-data-fedhub-mongodb-0
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: readiness-20261008-2b88c0eca294
+  namespace: takserver
+  labels:
+    onemind.io/backup-set: readiness-20261008
+  annotations:
+    onemind.io/source-pvc: takserver-nats-js-takserver-nats-0
+    onemind.io/consistency: crash-consistent
+spec:
+  volumeSnapshotClassName: onemind-backup-retain
+  source:
+    persistentVolumeClaimName: takserver-nats-js-takserver-nats-0

@@ -1,13 +1,19 @@
-# Tailscale K8s Operator — deployed values
-# IMPORTANT: clientSecret is a real credential — stored here for reference ONLY.
-# On a fresh deploy, inject from 1Password: op read "op://00-24 SO/tailscale-oauth/credential"
-# oauth.clientId and oauth.clientSecret are the Tailscale OAuth client for the operator.
+# Tailscale K8s Operator, deployed values (Helm release "tailscale-operator", managed by Argo CD).
+#
+# OAuth credentials are deliberately NOT set here. The operator Deployment mounts the
+# pre-existing Secret "operator-oauth" (namespace tailscale), which is owned by the
+# SealedSecret of the same name. With oauth.clientId unset the chart does not render its own
+# operator-oauth Secret, so Argo CD can never overwrite the real credential with an empty
+# client_secret. The Deployment is byte-for-byte the same either way (it always references
+# secretName operator-oauth). Never put oauth.clientId/clientSecret in this file.
 # autoApprovers are set in platform/core/policy.hujson (GitOps ACLs).
+proxyConfig:
+  # Apply the cluster ProxyClass defined in platform/core/tailscale-proxyclass.yaml to
+  # service/ingress proxies that do not name a ProxyClass explicitly.
+  defaultProxyClass: tailscale-default
+
 apiServerProxyConfig:
   mode: "true"
-oauth:
-  clientId: kUqyevoBNS11CNTRL
-  # clientSecret: <inject from 1Password — DO NOT commit real value>
 
 operator:
   resources:

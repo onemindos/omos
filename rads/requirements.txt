@@ -1,6 +1,0 @@
-nats-py>=2.6.0
-asyncio
-mavsdk>=1.4.0
-clickhouse-driver>=0.2.7
-python-dotenv>=1.0.0
-paho-mqtt>=2.0.0

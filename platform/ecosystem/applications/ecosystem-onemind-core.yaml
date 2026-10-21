@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecosystem-onemind-core
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onemind-core
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true
+    - RespectIgnoreDifferences=true
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/ecosystem/charts/onemind-core
+    helm:
+      releaseName: onemind-core
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: onemind-ingestion
+    namespace: onemind-core
+    jqPathExpressions:
+    - .spec.template.metadata.annotations."onemind.io/restart-mission"

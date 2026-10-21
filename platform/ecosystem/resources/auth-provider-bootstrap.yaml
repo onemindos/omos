@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onemind-platform-oidc-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 4
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: providers
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, httpx
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+              headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+              with httpx.Client(headers=headers, timeout=30) as client:
+                  def request(method, path, body=None):
+                      response = client.request(method, base + path, json=body)
+                      if not response.is_success:
+                          raise RuntimeError("Identity API failed with status " + str(response.status_code))
+                      return response.json() if response.content else {}
+                  providers = request("GET", "providers/oauth2/")["results"]
+                  original = next(p for p in providers if p["client_id"] == "onemind-backstage")
+                  users = request("GET", "core/users/?username=akadmin")["results"]
+                  owner = next(u["pk"] for u in users if u["username"] == "akadmin")
+                  callbacks = {
+                      "openchoreo": ["https://onemind-preview.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
+                                     "https://homepage.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame"],
+                      "workflows": ["https://onemind-workflows.tail717ba0.ts.net/oauth2/callback"],
+                      "langfuse": ["https://onemind-langfuse.tail717ba0.ts.net/api/auth/callback/authentik"],
+                      "registry": ["https://onemind-registry.tail717ba0.ts.net/c/oidc/callback"],
+                  }
+                  for name, redirects in callbacks.items():
+                      client_id = "onemind-" + name
+                      body = {k: original[k] for k in ["authorization_flow", "invalidation_flow", "signing_key", "property_mappings", "sub_mode", "issuer_mode", "access_token_validity"]}
+                      body.update(name="OneMind " + name, client_type="confidential", client_id=client_id,
+                          client_secret=os.environ[name.upper() + "_CLIENT_SECRET"], include_claims_in_id_token=True,
+                          redirect_uris=[{"matching_mode": "strict", "url": u, "redirect_uri_type": "authorization"} for u in redirects])
+                      matches = [p for p in providers if p["client_id"] == client_id]
+                      provider = request("PATCH", "providers/oauth2/" + str(matches[0]["pk"]) + "/", body) if matches else request("POST", "providers/oauth2/", body)
+                      apps = request("GET", "core/applications/?slug=" + client_id)["results"]
+                      # "any": the openchoreo app also admits the ai-operator service account (ai-operator-identity.yaml)
+                      app_body = {"name": "OneMind " + name, "slug": client_id, "provider": provider["pk"], "policy_engine_mode": "any" if name == "openchoreo" else "all"}
+                      app = request("PATCH", "core/applications/" + client_id + "/", app_body) if apps else request("POST", "core/applications/", app_body)
+                      bindings = request("GET", "policies/bindings/?target=" + app["pk"])["results"]
+                      if not any(b.get("user") == owner for b in bindings):
+                          request("POST", "policies/bindings/", {"target": app["pk"], "user": owner, "enabled": True, "order": 0})
+                  print("Private platform OAuth providers ready for the registered operator")
+          envFrom:
+            - secretRef:
+                name: onemind-platform-oidc
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

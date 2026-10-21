@@ -1,0 +1,102 @@
+# NATS Agent Console (Synadia agents SDK example): lists every agent on the bus and lets
+# you chat with one (for example agents.prompt.hermes.zeus.legacy).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-console
+  namespace: agent-fabric
+  labels:
+    app.kubernetes.io/name: agent-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agent-console
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: agent-console
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: agent-console
+          # Same image the old nats/agent-web-ui ran, pinned by digest.
+          image: ghcr.io/onemindos/agent-web-ui@sha256:a38739f6edf7c98194aee33b9600863ae3998e804f46cb25666546a90f8ee1e7
+          ports:
+            - name: http
+              containerPort: 3300
+          env:
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: agent-fabric-nats
+                  key: NATS_USER
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: agent-fabric-nats
+                  key: NATS_PASSWORD
+            - name: NATS_URL
+              value: "nats://$(NATS_USER):$(NATS_PASSWORD)@nats.nats.svc.cluster.local:4222"
+            - name: AGENT_WEB_UI_HOST
+              value: "0.0.0.0"
+            # Verify the NATS server certificate against the NATS CA.
+            - name: NODE_EXTRA_CA_CERTS
+              value: /etc/nats-ca/ca.crt
+          volumeMounts:
+            - name: nats-ca
+              mountPath: /etc/nats-ca
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+      volumes:
+        - name: nats-ca
+          configMap:
+            name: nats-ca
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-console
+  namespace: agent-fabric
+spec:
+  selector:
+    app.kubernetes.io/name: agent-console
+  ports:
+    - name: http
+      port: 3300
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agent-console
+  namespace: agent-fabric
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: agent-console
+      port:
+        number: 3300
+  tls:
+    - hosts:
+        - agent-console

@@ -1,0 +1,538 @@
+# TAK Server OpenLDAP — TAK-specific LDAP backend.
+#
+# Source: takserver-ldap-5.8-RELEASE-79.zip (downloaded from tak.gov, Sept 2026).
+# The Dockerfile in that archive builds a Debian 12 OpenLDAP with TAK-specific
+# schema (takCallSign, takRole, takColor objectClass) pre-loaded via bootstrap.sh.
+#
+# IMAGE BUILD (one-time, run from extracted zip root):
+#   docker build -f Dockerfile.takserver-ldap -t ghcr.io/onemindos/tak-ldap:5.8 .
+#   docker push ghcr.io/onemindos/tak-ldap:5.8
+#
+# AFTER DEPLOYING — patch CoreConfig.xml in the `core-config` ConfigMap to add:
+#   <auth default="ldap">
+#     <ldap url="ldap://tak-ldap:389"
+#           userstring="uid={username},ou=People,dc=onemindos,dc=dev"
+#           style="DS"
+#           serviceAccountDN="cn=ldapadm,dc=onemindos,dc=dev"
+#           serviceAccountCredential="<LDAP_ADMIN_PASSWORD from secret>"
+#           callsignAttribute="takCallSign"
+#           colorAttribute="takColor"
+#           roleAttribute="takRole"
+#           updateinterval="60000" />
+#     <File location="UserAuthenticationFile.xml"/>
+#   </auth>
+# Then restart: takserver-config → takserver-messaging → takserver-plugins
+#
+# TEST LDAP:
+#   kubectl -n takserver exec -it deploy/tak-ldap -- ldapsearch \
+#     -x -H ldap://localhost:389 -b "dc=onemindos,dc=dev" \
+#     -D "cn=ldapadm,dc=onemindos,dc=dev" -W
+#
+# ADD USERS (example):
+#   See takcl-test-users.sh in the source zip. Adapt DN to dc=onemindos,dc=dev.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tak-ldap-config
+  namespace: takserver
+data:
+  LDAP_BASE_DN: "dc=onemindos,dc=dev"
+  LDAP_ADMIN: "ldapadm"
+  LDAP_EXTERNAL_PORT_TCP: "389"
+  LDAP_EXTERNAL_PORT_TLS: "636"
+---
+# REQUIRED before deploying — create a SealedSecret for LDAP_ADMIN_PASSWORD:
+#   kubectl -n takserver create secret generic tak-ldap-creds \
+#     --from-literal=LDAP_ADMIN_PASSWORD='<strong-password>' \
+#     --dry-run=client -o yaml | kubeseal -o yaml > \
+#     tak-server/deploy/tak-ldap-creds.sealedsecret.yaml
+# Commit the .sealedsecret.yaml file, NOT the plaintext secret.
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tak-ldap
+  namespace: takserver
+  labels: {app: tak-ldap}
+spec:
+  serviceName: tak-ldap
+  replicas: 1
+  selector:
+    matchLabels: {app: tak-ldap}
+  template:
+    metadata:
+      labels: {app: tak-ldap}
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      # Pin to the hub-core pool, never to a node name: DOKS replaces nodes on upgrade
+      # (2026-10-18 the old hostname pin left this pod Pending).
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-hub-core-v2]
+      initContainers:
+        - name: seed-slapd-config
+          image: ghcr.io/onemindos/tak-ldap:5.8
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              # Seed the slapd.d PVC from image defaults if it is empty (first run).
+              # lost+found is the only entry on a fresh ext4 volume.
+              if [ "$(ls /target/ | grep -v lost+found | wc -l)" = "0" ]; then
+                echo "slapd.d PVC is empty — seeding from image defaults..."
+                cp -a /etc/ldap/slapd.d/. /target/
+                chown -R openldap:openldap /target/
+                # Reduce LMDB mmap size from 1GB (default) to 64MB.
+                # On cgroup v2, MAP_SHARED mmaps count toward node memory and trigger
+                # the OOM killer on busy nodes. 64MB is more than enough for TAK LDAP.
+                # OpenLDAP only logs a CRC warning when the ldif is modified externally.
+                MDB_LDIF="/target/cn=config/olcDatabase={1}mdb.ldif"
+                if [ -f "$MDB_LDIF" ]; then
+                  sed -i 's/olcDbMaxSize: [0-9]*/olcDbMaxSize: 67108864/' "$MDB_LDIF"
+                  # Remove the CRC32 header — slapd skips validation when it's absent.
+                  # (The sed modification above invalidates the original CRC.)
+                  sed -i '/^# CRC32/d' "$MDB_LDIF"
+                  echo "Patched olcDbMaxSize to 64MB (CRC line removed)."
+                fi
+                echo "Seed complete."
+              else
+                echo "slapd.d PVC already has content — skipping seed."
+              fi
+              # Copy back_mdb.so and slapd for binary patching/scanning in next init.
+              cp /usr/lib/ldap/back_mdb.so /krb5stubs/back_mdb.so.orig
+              echo "Copied back_mdb.so to krb5stubs volume."
+              # Also copy slapd — LMDB may be statically linked into slapd itself.
+              cp /usr/sbin/slapd /krb5stubs/slapd.orig
+              echo "Copied slapd to krb5stubs volume ($(wc -c < /usr/sbin/slapd) bytes)."
+          volumeMounts:
+            - name: ldap-config
+              mountPath: /target
+            - name: krb5-stubs
+              mountPath: /krb5stubs
+
+        - name: build-krb5-stubs
+          # Builds Kerberos stubs (no-op .so files to replace the real Kerberos libs
+          # whose constructors cause a separate 56 GiB OOM), patches back_mdb.so to
+          # shrink MDB_VL32_MAPSIZE from 56 GiB to 64 MB, and builds nommap.so.
+          image: debian:bookworm-slim
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              # Install Kerberos libs (to extract symbol names) and gcc
+              apt-get update -qq && apt-get install -y --no-install-recommends \
+                gcc libc-dev libkrb5-3 libgssapi-krb5-2 libkrb5support0 libk5crypto3 2>/dev/null
+              mkdir -p /krb5stubs
+
+              # Generate stub C file: extract exported function names via strings,
+              # filter to Kerberos naming patterns, emit no-op implementations.
+              # Known GSSAPI data symbols (global OID pointers) - must be defined as
+              # variables, not functions; exclude them from the function stub loop.
+              DATA_SYMS="GSS_C_NT_HOSTBASED_SERVICE GSS_C_NT_HOSTBASED_SERVICE_X GSS_C_NT_USER_NAME GSS_C_NT_MACHINE_UID_NAME GSS_C_NT_STRING_UID_NAME GSS_C_NT_ANONYMOUS"
+              DATA_SYMS="$DATA_SYMS GSS_C_NT_EXPORT_NAME gss_mech_krb5 gss_mech_krb5_old gss_mech_krb5_wrong gss_nt_krb5_name gss_nt_krb5_principal krb5_gss_oid_array"
+              DATA_PAT=$(echo "$DATA_SYMS" | tr ' ' '|')
+
+              # Collect ALL symbols from ALL Kerberos libs in one pass, globally dedup.
+              {
+                echo "#include <stdlib.h>"
+                echo "// No-op Kerberos stubs — TAK LDAP uses simple bind, GSSAPI unused"
+                echo "// Data stubs (OID pointers, etc.)"
+                for sym in $DATA_SYMS; do printf 'void *%s = NULL;\n' "$sym"; done
+                echo "// Function stubs"
+                for lib in \
+                  /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2 \
+                  /usr/lib/x86_64-linux-gnu/libkrb5.so.3.3 \
+                  /usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1 \
+                  /usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1; do
+                  [ -f "$lib" ] || continue
+                  strings "$lib"
+                done | grep -E '^(gss_|krb5_|k5_|k5crypto_|gssspi_|gss)[a-z][a-z0-9_]*$' | \
+                  grep -vE "^($DATA_PAT)$" | \
+                  sort -u | while IFS= read -r sym; do
+                    printf 'void* %s() { return (void*)(unsigned long)1; }\n' "$sym"
+                  done
+              } > /tmp/s.c
+
+              # Version script: assign all symbols to gssapi_krb5_2_MIT version
+              # so libtirpc's versioned dlsym lookup for GSS_C_NT_* succeeds
+              printf 'gssapi_krb5_2_MIT { global: *; };\n' > /tmp/gssapi.map
+              echo "Generated $(grep -c 'void\*' /tmp/s.c) stub functions"
+              cat /tmp/s.c | head -5
+
+              # Compile one stub .so per Kerberos library SONAME.
+              # gssapi gets the version script so versioned symbol lookups succeed.
+              # -nostartfiles: prevents GCC adding CRT startup code that may include
+              # .init_array entries from libgcc/libc startup (eliminates any accidental
+              # constructor from the compiler runtime).
+              gcc -shared -fPIC -O2 -nostartfiles \
+                  -Wl,-soname,libgssapi_krb5.so.2 \
+                  -Wl,--version-script=/tmp/gssapi.map \
+                  -o /krb5stubs/libgssapi_krb5.so.2.2 /tmp/s.c && \
+                echo "Built gssapi stub"
+              for conf in \
+                "libkrb5.so.3.3:libkrb5.so.3" \
+                "libk5crypto.so.3.1:libk5crypto.so.3" \
+                "libkrb5support.so.0.1:libkrb5support.so.0"; do
+                file="${conf%%:*}"
+                soname="${conf##*:}"
+                gcc -shared -fPIC -O2 -nostartfiles -Wl,-soname,"$soname" \
+                    -o "/krb5stubs/$file" /tmp/s.c && \
+                  echo "Built $file"
+              done
+
+              # Verify stubs have no .init_array or DT_NEEDED for Kerberos
+              echo "=== stub ELF check ==="
+              for f in /krb5stubs/*.so*; do
+                echo "--- $f ---"
+                readelf -d "$f" 2>/dev/null | grep -E "NEEDED|INIT_ARRAY|INIT |FINI" || echo "  (no NEEDED/INIT_ARRAY — good)"
+                readelf -S "$f" 2>/dev/null | grep -E "init_array|ctors|preinit" | head -3 || true
+              done
+
+              # Binary-patch back_mdb.so: shrink MDB_VL32_MAPSIZE 56GiB → 64MB.
+              # Strategy:
+              #   1. Null out INIT_ARRAY[0] constructor (it resets .data@3f2cc at
+              #      dlopen time, undoing any .data patch we apply).
+              #   2. Patch .data@3f2cc from 0xE00000000 (56GiB) to 0x4000000 (64MB).
+              # back_mdb.so.orig was copied by seed-slapd-config (tak-ldap image).
+              printf '%s\n' \
+                '#include <stdio.h>' \
+                '#include <stdlib.h>' \
+                '#include <string.h>' \
+                '#include <stdint.h>' \
+                'int main(void){' \
+                '  FILE*f=fopen("/krb5stubs/back_mdb.so.orig","rb");' \
+                '  if(!f){perror("open");return 1;}' \
+                '  fseek(f,0,SEEK_END);long sz=ftell(f);fseek(f,0,SEEK_SET);' \
+                '  unsigned char*d=malloc(sz);fread(d,1,sz,f);fclose(f);' \
+                '' \
+                '  /* --- DIAGNOSTICS --- */' \
+                '  printf("=== .text around 0x5990 (32 bytes) ===\n");' \
+                '  for(long j=0x5990;j<0x59b0&&j<sz;j++){' \
+                '    printf("%02x ",d[j]);' \
+                '    if((j-0x5990+1)%16==0)printf("\n");' \
+                '  }' \
+                '  printf("\n");' \
+                '' \
+                '  printf("=== INIT_ARRAY at 0x3f0b0 (16 bytes) ===\n");' \
+                '  for(int j=0;j<16;j++)printf("%02x ",d[0x3f0b0+j]);' \
+                '  printf("\n");' \
+                '' \
+                '  uint64_t ctor=0;' \
+                '  memcpy(&ctor,d+0x3f0b0,8);' \
+                '  printf("INIT_ARRAY ctor VMA: 0x%lx\n",(unsigned long)ctor);' \
+                '  if(ctor>0&&ctor+64<=(size_t)sz){' \
+                '    printf("=== constructor thunk at 0x%lx (64 bytes) ===\n",(unsigned long)ctor);' \
+                '    for(int j=0;j<64;j++){printf("%02x ",d[ctor+j]);if((j+1)%16==0)printf("\n");}' \
+                '    printf("\n");' \
+                '  }else{printf("ctor VMA out of range or zero\n");}' \
+                '' \
+                '  printf("=== code at 0x92EC (64 bytes — real ctor body) ===\n");' \
+                '  for(int j=0;j<64;j++){printf("%02x ",d[0x92EC+j]);if((j+1)%16==0)printf("\n");}' \
+                '  printf("\n");' \
+                '' \
+                '  printf("=== .data@0x3f2c0 (32 bytes) ===\n");' \
+                '  for(int j=0;j<32;j++)printf("%02x ",d[0x3f2c0+j]);' \
+                '  printf("\n");' \
+                '' \
+                '  /* --- PATCHES --- */' \
+                '  /* P1 (REMOVED): constructor NOP patch removed — nommap.so v5 uses' \
+                '   *  MAP_NORESERVE so the constructor ch_calloc(1,56GiB) succeeds and' \
+                '   *  the VL32 zero-init runs normally without any SIGSEGV. */' \
+                '  printf("ctor@0x9374: %02x %02x %02x %02x %02x (not patched)\n",' \
+                '    d[0x9374],d[0x9375],d[0x9376],d[0x9377],d[0x9378]);' \
+                '' \
+                '  /* P2: change .data mapsize from 56GiB to 64MB */' \
+                '  static const unsigned char old56g[]={0x00,0x00,0x00,0x00,0x0E,0x00,0x00,0x00};' \
+                '  static const unsigned char new64m[]={0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00};' \
+                '  if(memcmp(d+0x3f2cc,old56g,8)==0){' \
+                '    memcpy(d+0x3f2cc,new64m,8);' \
+                '    printf("Patched: .data@0x3f2cc: 0xE00000000 → 0x4000000 (64MB)\n");' \
+                '  }else{' \
+                '    printf("WARN: .data@0x3f2cc unexpected bytes:");' \
+                '    for(int j=0;j<8;j++)printf(" %02x",d[0x3f2cc+j]);printf("\n");' \
+                '  }' \
+                '' \
+                '  /* Also scan for shl reg,32 instruction (48 C1 E? 20) — the constant' \
+                '   * 0xE00000000 may be computed as "mov reg32, 14; shl reg, 32" rather' \
+                '   * than a movabsq, which our earlier P2 scan would not find. */' \
+                '  printf("=== shl reg,32 occurrences (48 C1 E? 20) ===\n");' \
+                '  for(long j=0;j+3<sz;j++){' \
+                '    if(d[j]==0x48&&d[j+1]==0xC1&&(d[j+2]>>4)==0xE&&d[j+3]==0x20){' \
+                '      printf("  shl@0x%lx: prev16=",j);' \
+                '      for(long k=j-16;k<j;k++) printf("%02x ",(k>=0?d[k]:0));' \
+                '      printf("\n");' \
+                '    }' \
+                '  }' \
+                '' \
+                '  FILE*out=fopen("/krb5stubs/back_mdb.so","wb");' \
+                '  if(!out){perror("write");return 1;}' \
+                '  fwrite(d,1,sz,out);fclose(out);' \
+                '  printf("Wrote patched back_mdb.so (%ld bytes)\n",sz);' \
+                '' \
+                '  /* Verify patches in written file */' \
+                '  unsigned char vb[8];' \
+                '  FILE*vf=fopen("/krb5stubs/back_mdb.so","rb");' \
+                '  fseek(vf,0x9374,SEEK_SET);fread(vb,1,5,vf);' \
+                '  printf("Verify ctor@0x9374: %02x %02x %02x %02x %02x\n",vb[0],vb[1],vb[2],vb[3],vb[4]);' \
+                '  fseek(vf,0x3f2cc,SEEK_SET);fread(vb,1,8,vf);' \
+                '  printf("Verify .data@0x3f2cc:");for(int j=0;j<8;j++)printf(" %02x",vb[j]);printf("\n");' \
+                '  fclose(vf);' \
+                '  free(d);return 0;' \
+                '}' \
+                > /tmp/patch_mdb.c
+              gcc -O2 -o /tmp/patch_mdb /tmp/patch_mdb.c && /tmp/patch_mdb
+
+              # Scan BOTH back_mdb.so and slapd for the 56GiB constant.
+              # P1=60129541696 LE-8, P2=0xE00000000 LE-8.
+              printf '%s\n' \
+                '#include <stdio.h>' \
+                '#include <stdlib.h>' \
+                '#include <string.h>' \
+                'static void scan2(const char*path){' \
+                '  FILE*f=fopen(path,"rb");if(!f){printf("SKIP %s: not found\n",path);return;}' \
+                '  fseek(f,0,SEEK_END);long sz=ftell(f);fseek(f,0,SEEK_SET);' \
+                '  unsigned char*d=malloc(sz);if(!d){printf("OOM\n");fclose(f);return;}' \
+                '  fread(d,1,sz,f);fclose(f);' \
+                '  static const unsigned char p1[]={0x40,0xFE,0xFF,0xFF,0x0D,0x00,0x00,0x00};' \
+                '  static const unsigned char p2[]={0x00,0x00,0x00,0x00,0x0E,0x00,0x00,0x00};' \
+                '  int n1=0,n2=0;' \
+                '  for(long i=0;i<sz-7;i++){' \
+                '    if(!memcmp(d+i,p1,8)){printf("%s P1@0x%lx ctx:",path,i);for(int k=-4;k<12;k++)if(i+k>=0&&i+k<sz)printf("%02x ",d[i+k]);printf("\n");n1++;}' \
+                '    if(!memcmp(d+i,p2,8)){printf("%s P2@0x%lx ctx:",path,i);for(int k=-4;k<12;k++)if(i+k>=0&&i+k<sz)printf("%02x ",d[i+k]);printf("\n");n2++;}' \
+                '  }' \
+                '  printf("TOTAL %s: P1=%d P2=%d sz=%ld\n",path,n1,n2,sz);' \
+                '  free(d);' \
+                '}' \
+                'int main(void){' \
+                '  scan2("/krb5stubs/back_mdb.so.orig");' \
+                '  scan2("/krb5stubs/slapd.orig");' \
+                '  return 0;' \
+                '}' > /tmp/scan3.c
+              gcc -O2 -o /tmp/scan3 /tmp/scan3.c && /tmp/scan3
+              # Show ALL ch_calloc AND calloc callers in back_mdb.so
+              echo "=== ALL ch_calloc callers in back_mdb.so (8 lines before) ==="
+              objdump -d /krb5stubs/back_mdb.so.orig | grep -B8 '<ch_calloc@plt>'
+              echo "=== ALL calloc callers in back_mdb.so (12 lines before) ==="
+              objdump -d /krb5stubs/back_mdb.so.orig | grep -B12 ' <calloc'
+
+              # Disassemble slapd to find the ch_calloc(1, 56GiB) callsite.
+              echo "=== slapd dynamic symbols containing calloc/daemon ==="
+              nm -D /krb5stubs/slapd.orig 2>/dev/null | grep -iE 'calloc|daemon|slapd_' | head -20
+              echo "=== readelf entry point ==="
+              readelf -h /krb5stubs/slapd.orig 2>/dev/null | grep -E 'Entry point|Type:'
+              echo "=== ch_calloc disassembly (full function) ==="
+              objdump -d /krb5stubs/slapd.orig 2>/dev/null | \
+                awk '/^[0-9a-f]+ <ch_calloc/{p=1} p{print} /^$/{if(p)exit}' | head -30
+              echo "=== callers of ch_calloc (context before each call) ==="
+              objdump -d /krb5stubs/slapd.orig 2>/dev/null | grep -B 40 'call.*ch_calloc' | \
+                grep -E '^[[:space:]]|call' | tail -80
+
+              # Also scan slapd for shl-reg-32 pattern in a C scanner (covers
+              # both REX.W=0x48 and REX.WB=0x49).
+              printf '%s\n' \
+                '#include <stdio.h>' \
+                '#include <stdlib.h>' \
+                'int main(int argc,char**argv){' \
+                '  FILE*f=fopen(argv[1],"rb");' \
+                '  if(!f){perror(argv[1]);return 1;}' \
+                '  fseek(f,0,SEEK_END);long sz=ftell(f);fseek(f,0,SEEK_SET);' \
+                '  unsigned char*d=malloc(sz);fread(d,1,sz,f);fclose(f);' \
+                '  printf("Scanning %s for shl-reg-32 (48/49 C1 Ex 20)\n",argv[1]);' \
+                '  for(long j=4;j+3<sz;j++){' \
+                '    if((d[j]==0x48||d[j]==0x49)&&d[j+1]==0xC1&&((d[j+2]>>4)==0xE)&&d[j+3]==0x20){' \
+                '      printf("  @0x%06lx REX=%02x reg=r%d prev16: ",j,d[j],(d[j+2]&0xF)+((d[j]==0x49)?8:0));' \
+                '      for(long k=j-16;k<j;k++)printf("%02x ",(unsigned)d[k]);' \
+                '      printf("\n");' \
+                '    }' \
+                '  }' \
+                '  free(d);return 0;' \
+                '}' > /tmp/shlscan.c
+              gcc -O2 -o /tmp/shlscan /tmp/shlscan.c
+              /tmp/shlscan /krb5stubs/slapd.orig
+              /tmp/shlscan /krb5stubs/back_mdb.so.orig
+
+              # Patch slapd: replace all 56GiB constants with 64MiB.
+              # This changes ch_calloc(1,56GiB) to ch_calloc(1,64MiB).
+              # Real calloc handles 64MiB fine — no demand-paging needed.
+              printf '%s\n' \
+                '#include <stdio.h>' \
+                '#include <stdlib.h>' \
+                '#include <string.h>' \
+                'int main(void){' \
+                '  FILE*f=fopen("/krb5stubs/slapd.orig","rb");' \
+                '  if(!f){perror("slapd.orig");return 1;}' \
+                '  fseek(f,0,SEEK_END);long sz=ftell(f);fseek(f,0,SEEK_SET);' \
+                '  unsigned char*d=malloc(sz);fread(d,1,sz,f);fclose(f);' \
+                '  const unsigned char p56g[]={0x00,0x00,0x00,0x00,0x0E,0x00,0x00,0x00};' \
+                '  const unsigned char p64m[]={0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00};' \
+                '  int n=0;' \
+                '  for(long i=0;i+7<sz;i++){' \
+                '    if(!memcmp(d+i,p56g,8)){memcpy(d+i,p64m,8);' \
+                '      printf("slapd P2@0x%lx->64MiB\n",i);n++;}' \
+                '  }' \
+                '  printf("Patched %d slapd locations\n",n);' \
+                '  FILE*o=fopen("/krb5stubs/slapd","wb");' \
+                '  if(!o){perror("write slapd");return 1;}' \
+                '  fwrite(d,1,sz,o);fclose(o);free(d);return 0;' \
+                '}' > /tmp/patch_slapd.c
+              gcc -O2 -o /tmp/patch_slapd /tmp/patch_slapd.c && /tmp/patch_slapd
+              chmod 0755 /krb5stubs/slapd && echo "Patched slapd binary"
+
+              # Build demand-paging interceptor (nommap.so):
+              #
+              # ROOT CAUSE: slapd_daemon_init calls ch_calloc(1, 60129541696) and then
+              # iterates through the ENTIRE 56 GiB buffer writing zeros at ~1 GB/s.
+              # With a 4 GiB cgroup limit, OOM hits at ~4 s.
+              #
+              # FIX: demand-paging via PROT_NONE + SIGSEGV handler.
+              #   1. ber_memcalloc_x: allocate 56 GiB PROT_NONE (no physical pages).
+              #   2. SIGSEGV handler: on each page fault in the region, mprotect(RW)
+              #      that one page → slapd write succeeds → 1 page (4 KB) committed.
+              #   3. Every 256 MB committed: MADV_DONTNEED all prior pages + reset
+              #      to PROT_NONE.  Since this is calloc zero-init, fresh anonymous
+              #      pages (also zero) are identical to what was "written", so no
+              #      data loss.  Total physical RAM used ≤ 256 MB at any instant.
+              #   After the loop, LMDB VL32 uses MAP_FIXED to set up real pages,
+              #   completely replacing the anonymous backing — so the recycled data
+              #   is irrelevant.
+              echo "=== slapd_daemon_init disasm 0x3d100-0x3d600 ==="
+              objdump -d --start-address=0x3d100 --stop-address=0x3d600 /krb5stubs/slapd.orig 2>/dev/null || echo "objdump unavailable"
+              echo "=== END disasm ==="
+
+              # nommap.so v5: MAP_NORESERVE approach.
+              # ROOT CAUSE of v4 failure: 1,048,576 SIGSEGV deliveries inside dlopen
+              # corrupted ld.so's internal state (jmp_buf / link_map traversal).
+              # FIX: use PROT_READ|PROT_WRITE + MAP_NORESERVE so the 56 GiB virtual
+              # allocation succeeds immediately.  The VL32 zero-init writes ~4 GiB of
+              # physical pages via normal CoW faults (handled by kernel, no SIGSEGV).
+              # Total physical commit ≈ 4 GiB + slapd overhead ≈ 5 GiB < 8 GiB limit.
+              cat > /tmp/nommap.c << 'CEOF'
+              #define _GNU_SOURCE
+              #include <sys/mman.h>
+              #include <dlfcn.h>
+              #include <unistd.h>
+              #include <stddef.h>
+              #include <stdint.h>
+              #include <string.h>
+              #include <stdio.h>
+              typedef unsigned long bl_t;
+              #define HUGE ((size_t)(4UL<<30))
+              static void*huge_mmap(size_t t,const char*tag){
+                char buf[128];int l;
+                l=snprintf(buf,sizeof(buf),"[nommap] %s huge=%zu MAP_NORESERVE\n",tag,t);
+                write(2,buf,l);
+                void*p=mmap(NULL,t,PROT_READ|PROT_WRITE,
+                            MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE,-1,0);
+                if(p==MAP_FAILED){write(2,"[nommap] mmap FAILED\n",21);return NULL;}
+                l=snprintf(buf,sizeof(buf),"[nommap] mmap=%p ok\n",p);write(2,buf,l);
+                return p;
+              }
+              void*ber_memcalloc_x(bl_t n,bl_t s,void*ctx){
+                size_t t=(n&&s)?(size_t)n*(size_t)s:0;
+                if(t>=HUGE)return huge_mmap(t,"ber_memcalloc_x");
+                static void*(*r)(bl_t,bl_t,void*);
+                if(!r)r=dlsym(RTLD_NEXT,"ber_memcalloc_x");
+                return r(n,s,ctx);
+              }
+              /* NOTE: no crash_handler — ld.so's _dl_catch_exception uses
+               * siglongjmp to recover from SIGSEGV during dlopen. Installing
+               * our own handler intercepts that and kills the process. */
+              CEOF
+              gcc -shared -fPIC -O2 -o /krb5stubs/nommap.so /tmp/nommap.c -ldl && \
+                echo "Built nommap.so"
+          volumeMounts:
+            - name: krb5-stubs
+              mountPath: /krb5stubs
+
+      containers:
+        - name: openldap
+          image: ghcr.io/onemindos/tak-ldap:5.8
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              chown -R openldap:openldap /var/lib/ldap 2>/dev/null || true
+              # slapd_daemon_init does ch_calloc(dtblsize, sizeof(Connection)) where
+              # dtblsize = sysconf(_SC_OPEN_MAX) = the fd soft limit. In this pod the
+              # default soft limit is ~1 M, making the allocation >60 GiB → OOM kill.
+              # 4096 connections is ample for TAK LDAP; slapd initializes cleanly.
+              ulimit -Sn 4096
+              exec /usr/local/bin/entrypoint.sh
+          ports:
+            - {name: ldap, containerPort: 389, protocol: TCP}
+            - {name: ldaps, containerPort: 636, protocol: TCP}
+          envFrom:
+            - configMapRef: {name: tak-ldap-config}
+            - secretRef: {name: tak-ldap-creds}
+          readinessProbe:
+            exec:
+              command: ["ldapsearch", "-x", "-H", "ldap://localhost:389",
+                        "-b", "dc=onemindos,dc=dev", "-s", "base"]
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            failureThreshold: 10
+          livenessProbe:
+            exec:
+              command: ["ldapsearch", "-x", "-H", "ldap://localhost:389",
+                        "-b", "dc=onemindos,dc=dev", "-s", "base"]
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 5
+          resources:
+            requests: {cpu: 100m, memory: 512Mi}
+            limits: {cpu: 1000m, memory: 8Gi}
+          volumeMounts:
+            - {name: ldap-data, mountPath: /var/lib/ldap}
+            - {name: ldap-config, mountPath: /etc/ldap/slapd.d}
+            # Full emptyDir mount so startup script can cp patched binaries into place.
+            # (K8s subPath bind mounts silently fail on overlayfs container paths;
+            #  cp at startup is the reliable alternative.)
+            - {name: krb5-stubs, mountPath: /krb5stubs}
+            # Mount Kerberos stubs over the real .so files.  /lib -> /usr/lib on Debian.
+            - name: krb5-stubs
+              mountPath: /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2
+              subPath: libgssapi_krb5.so.2.2
+            - name: krb5-stubs
+              mountPath: /usr/lib/x86_64-linux-gnu/libkrb5.so.3.3
+              subPath: libkrb5.so.3.3
+            - name: krb5-stubs
+              mountPath: /usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1
+              subPath: libk5crypto.so.3.1
+            - name: krb5-stubs
+              mountPath: /usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1
+              subPath: libkrb5support.so.0.1
+      volumes:
+        - name: krb5-stubs
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: ldap-data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: {storage: 1Gi}
+    - metadata:
+        name: ldap-config
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: {storage: 1Gi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tak-ldap
+  namespace: takserver
+  labels: {app: tak-ldap}
+spec:
+  selector: {app: tak-ldap}
+  clusterIP: None   # headless — StatefulSet members address directly
+  ports:
+    - {name: ldap, port: 389, targetPort: 389, protocol: TCP}
+    - {name: ldaps, port: 636, targetPort: 636, protocol: TCP}

@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-ecosystem-resources
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '4'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/ecosystem/resources
+    directory:
+      recurse: true
+      exclude: '*.md'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true
+    - RespectIgnoreDifferences=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+  - group: ''
+    kind: ConfigMap
+    name: onemind-fga-context
+    namespace: backstage
+    jsonPointers:
+    - /data/store-id
+    - /data/model-id

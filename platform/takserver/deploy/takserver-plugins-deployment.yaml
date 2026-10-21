@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takserver-plugins
+  namespace: takserver
+spec:
+  selector:
+    matchLabels:
+      app: takserver-plugins
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: takserver-plugins
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-hub-core-v2
+      serviceAccountName: takserver-ignite
+      containers:
+      - name: takserver-plugins
+        image: ghcr.io/onemindos/takserver-base@sha256:f4824fba65a23efa9ebf946040509591b90823ab2b118b1e272c6cf55337d694
+        imagePullPolicy: Always
+        env:
+        - name: spring_profiles_active
+          value: k8cluster
+        - name: PLUGIN_MANAGER_MAX_HEAP
+          value: '1024'
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 2
+            memory: 2Gi
+        livenessProbe:
+          tcpSocket:
+            port: 10800
+          initialDelaySeconds: 600
+          periodSeconds: 30
+          failureThreshold: 3
+        volumeMounts:
+        - name: config
+          mountPath: /certs-configmap/
+        - name: tak-ignite-config
+          mountPath: /TAKIgniteConfig.xml
+        startupProbe:
+          tcpSocket:
+            port: 10800
+          periodSeconds: 10
+          failureThreshold: 90
+        readinessProbe:
+          tcpSocket:
+            port: 10800
+          periodSeconds: 10
+          failureThreshold: 3
+      volumes:
+      - name: config
+        configMap:
+          name: cert-migration
+      - name: tak-ignite-config
+        configMap:
+          name: tak-ignite-config
+      imagePullSecrets:
+      - name: ghcr

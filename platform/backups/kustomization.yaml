@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- snapshots-20261009.yaml
+- legacy-credentials.sealed.yaml
+- backups.yaml
+- sealed/takserver-platform-backup-credentials.yaml
+- sealed/nats-platform-backup-credentials.yaml
+- sealed/clickhouse-backup-s3-creds.yaml
+- postgres.yaml
+- sealed/auth-platform-backup-credentials.yaml
+- sealed/auth-ghcr.yaml
+- sealed/n8n-platform-backup-credentials.yaml
+- sealed/n8n-ghcr.yaml
+- sealed/matrix-platform-backup-credentials.yaml
+- sealed/matrix-ghcr.yaml
+- sealed/takml-platform-backup-credentials.yaml
+- sealed/backstage-platform-backup-credentials.yaml
+- network.yaml
+- snapshots-20261008.yaml
+- cluster-recovery.yaml
+- cluster-recovery-network.yaml
+- sealed/ops-platform-backup-credentials.yaml
+- sealed/ops-ghcr.yaml
+- offsite-copy.yaml

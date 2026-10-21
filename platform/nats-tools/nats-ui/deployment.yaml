@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nats-ui
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: nats-ui
 spec:
@@ -46,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nats-ui
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: nats-ui
 spec:

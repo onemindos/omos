@@ -1,0 +1,1030 @@
+[
+  {
+    "Tool Name": "Agent Mail",
+    "Category": "AI / ML",
+    "Status": "Evaluating",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Linux"
+    ],
+    "OneMind Integration": true,
+    "URL": null,
+    "Notes": "AI-powered email agent. Evaluating for autonomous inbox triage, drafting, and response workflows.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8195bea2de947b3bffed",
+    "catalogEntity": "agent-mail"
+  },
+  {
+    "Tool Name": "Claude Code",
+    "Category": "AI / ML",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://claude.ai/code",
+    "Notes": "Anthropic's agentic CLI. Primary coding assistant for OneMind OS development. Runs in terminal and IDE extensions.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81fba54cc7cb648fbec7",
+    "catalogEntity": "fabric-claudecodebedrock-5599216f"
+  },
+  {
+    "Tool Name": "Hermes Agent",
+    "Category": "AI / ML",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": null,
+    "Notes": "OneMind's primary AI agent. Runs on NATS, interfaces with Bedrock/Claude, manages state.db, handles voice + text tasks.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81f4b144f3e8313ce477",
+    "catalogEntity": "hermes-legacy"
+  },
+  {
+    "Tool Name": "Langfuse",
+    "Category": "AI / ML",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://langfuse.com",
+    "Notes": "LLM observability & tracing. Tracks prompts, completions, latency, cost, and evals for AI agents. Self-hostable.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8106bd1dd6bce183659a",
+    "catalogEntity": "langfuse"
+  },
+  {
+    "Tool Name": "LM Studio",
+    "Category": "AI / ML",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://lmstudio.ai",
+    "Notes": "Local LLM runner with OpenAI-compatible API. Used for offline model testing and edge inference without cloud dependency.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81cbb0f6f2b5b3a288a6",
+    "catalogEntity": "lm-studio"
+  },
+  {
+    "Tool Name": "turbovec",
+    "Category": "AI / ML",
+    "Status": "Evaluating",
+    "License": "Open Source",
+    "Platform": [
+      "macOS",
+      "Linux"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://github.com/RyanCodrai/turbovec",
+    "Notes": "Rust vector index with Python bindings for local RAG. Planned as One Mind RAG engine — faster than FAISS, 8x more memory efficient. Built on TurboQuant. Pairs with Ollama + nomic-embed-text for fully local embedding pipeline.",
+    "Last edited time": "2026-08-22",
+    "url": "https://app.notion.com/3c4d0cf70a7e819f8760da42f3dadd13",
+    "catalogEntity": "turbovec"
+  },
+  {
+    "Tool Name": "Circle.so",
+    "Category": "Business",
+    "Status": "Evaluating",
+    "License": "Commercial",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://circle.so",
+    "Notes": "Community platform for OneMind/weareonemind.com. Trial planned. Connected to Google Workspace + ClickUp.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8171803fc223edfccbb1",
+    "catalogEntity": "circle"
+  },
+  {
+    "Tool Name": "GoHighLevel",
+    "Category": "Business",
+    "Status": "Evaluating",
+    "License": "Commercial",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://gohighlevel.com",
+    "Notes": "CRM, funnels, marketing, SMS, email campaigns. Trial planned. First funnel to be built on start.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8138846fcc9385558f9c",
+    "catalogEntity": "fabric-ghlgohighlevel-9cc8ba76"
+  },
+  {
+    "Tool Name": "Riverside.fm",
+    "Category": "Business",
+    "Status": "Evaluating",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "iOS",
+      "Android"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://riverside.fm",
+    "Notes": "High-quality remote podcast and video recording. Local recording per participant - no compression. Good for OneMind content, interviews, TAK YouTube strategy.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81c08d9edda9345684de",
+    "catalogEntity": "riverside-fm"
+  },
+  {
+    "Tool Name": "ClickHouse",
+    "Category": "Database",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://clickhouse.com",
+    "Notes": "Columnar OLAP database. Used as the time-machine data store for OneMind intel feeds, COT history, and telemetry.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81208dd5ee399da9ae90",
+    "catalogEntity": "clickhouse"
+  },
+  {
+    "Tool Name": "AWS",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://aws.amazon.com",
+    "Notes": "Primary cloud provider. EC2, S3, Bedrock (Claude/Titan), EKS, and IAM. Core runtime for OneMind production workloads.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e815bb24fc8ef98b9c2f7",
+    "catalogEntity": "fabric-aws-7d150728"
+  },
+  {
+    "Tool Name": "Azure",
+    "Category": "DevOps / Infra",
+    "Status": "Evaluating",
+    "License": "Commercial",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://azure.microsoft.com",
+    "Notes": "Evaluating for government/defense workloads. Azure Government Cloud and integration with DoD services.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e815a9d94d4e1da1a9150",
+    "catalogEntity": "fabric-azure-79f43c3b"
+  },
+  {
+    "Tool Name": "Cloudflare",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://cloudflare.com",
+    "Notes": "DNS, CDN, Tunnel (Zero Trust), DDoS protection, and R2 storage. Gateway for OneMind public-facing services.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8157b0ece88a7a77e0c7",
+    "catalogEntity": "cloudflare"
+  },
+  {
+    "Tool Name": "DigitalOcean",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://digitalocean.com",
+    "Notes": "DOKS cluster hosting OneMind services. Managed Kubernetes with node pools for NATS, TAK, and agent workloads.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81a08495e551dad1245d",
+    "catalogEntity": "digitalocean"
+  },
+  {
+    "Tool Name": "GitHub",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://github.com",
+    "Notes": "Primary source control. Repos: omos-core, omos-ui, omos-infra, omos-legacy, omos-nats-plugin, omos-ai-plugin, omos-rads, omos-blueprints. Connected to ClickUp + ArgoCD GitOps.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8112bb34c8ab069fa868",
+    "catalogEntity": "github"
+  },
+  {
+    "Tool Name": "Google Cloud",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://cloud.google.com",
+    "Notes": "GCS storage, Firebase, Maps API, and Vertex AI. Secondary cloud for specific OneMind data and mapping services.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e813e935dcb0d1038486d",
+    "catalogEntity": "google-cloud"
+  },
+  {
+    "Tool Name": "Grafana",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://grafana.com",
+    "Notes": "Visualization dashboards for Prometheus metrics, Loki logs, and other data sources. Oncall alerting via Grafana Alerting.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8180ac1ff9e5a567aa29",
+    "catalogEntity": "grafana"
+  },
+  {
+    "Tool Name": "Home Assistant",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://home-assistant.io",
+    "Notes": "Open-source home automation platform. Manages smart devices, sensors, and automations. Runs on local K8s or dedicated node.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e817bad15ec3a6490dc6c",
+    "catalogEntity": "home-assistant"
+  },
+  {
+    "Tool Name": "Loki",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://grafana.com/oss/loki",
+    "Notes": "Log aggregation system by Grafana Labs. Pairs with Grafana for log querying via LogQL. Lightweight alternative to ELK.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81b88b31c856790cfe10",
+    "catalogEntity": "loki"
+  },
+  {
+    "Tool Name": "Notion Backups",
+    "Category": "DevOps / Infra",
+    "Status": "Evaluating",
+    "License": "Commercial",
+    "Platform": [
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://notionbackups.com",
+    "Notes": "Automated Notion workspace backups. Evaluating for OneMind Notion data protection.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81f58995f0e7bc6d05ea",
+    "catalogEntity": "notion-backups"
+  },
+  {
+    "Tool Name": "ProBackup.io",
+    "Category": "DevOps / Infra",
+    "Status": "Evaluating",
+    "License": "Commercial",
+    "Platform": [
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://probackup.io",
+    "Notes": "Backup service. Evaluating for OneMind stack data protection.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81db8259e26601d9f680",
+    "catalogEntity": "probackup-io"
+  },
+  {
+    "Tool Name": "Prometheus",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://prometheus.io",
+    "Notes": "Metrics collection & alerting. Scrapes time-series data from services. Core observability layer for OneMind cluster.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81f7b5c8d0d1e44a6324",
+    "catalogEntity": "prometheus"
+  },
+  {
+    "Tool Name": "Termius",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://termius.com",
+    "Notes": "Cross-platform SSH/SFTP client. Primary tool for managing cluster nodes and TAK server from any device.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81ea87d7efbe9d4510be",
+    "catalogEntity": "termius"
+  },
+  {
+    "Tool Name": "Termux",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Android"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://termux.dev",
+    "Notes": "Linux terminal emulator for Android. Used for SSH, NATS CLI, and field ops scripting from mobile.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81deae49faac5956b04a",
+    "catalogEntity": "fabric-termux-29d3f02c"
+  },
+  {
+    "Tool Name": "Uptime Kuma",
+    "Category": "DevOps / Infra",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://github.com/louislam/uptime-kuma",
+    "Notes": "Self-hosted uptime monitoring. Monitors HTTP, TCP, DNS, and more. Push/pull status pages. Alerts via Slack, Discord, etc.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8151bafaeb0323ca7438",
+    "catalogEntity": "uptime-kuma"
+  },
+  {
+    "Tool Name": "Bambu Lab",
+    "Category": "Hardware",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "macOS",
+      "Windows"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://bambulab.com",
+    "Notes": "High-speed FDM 3D printer + Bambu Studio slicer. Used for rapid prototyping of enclosures and hardware components.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81fa8da9ddcd368bcacd",
+    "catalogEntity": "bambu-lab"
+  },
+  {
+    "Tool Name": "Bambu Studio",
+    "Category": "Hardware",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "macOS",
+      "Windows"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://bambulab.com",
+    "Notes": "Bambu Lab slicing software for 3D printing. Converts STL/OBJ models to G-code for Bambu printers (X1, A1, P1 series). Direct Wi-Fi print sending, multi-material support. v02.07.01.57 (arm64/x86_64 universal).",
+    "Last edited time": "2026-08-22",
+    "url": "https://app.notion.com/3c4d0cf70a7e81128cbafd7d6a3e4957",
+    "catalogEntity": "bambu-studio"
+  },
+  {
+    "Tool Name": "NVIDIA",
+    "Category": "Hardware",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "Linux",
+      "Windows",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://nvidia.com",
+    "Notes": "GPU compute — CUDA, TensorRT, and NVIDIA Container Toolkit. Powers local LLM inference and ML workloads.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e810292e4f54b802c8fe1",
+    "catalogEntity": "fabric-nvidia-8d4321d9"
+  },
+  {
+    "Tool Name": "Samsung DeX",
+    "Category": "Hardware",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Android",
+      "Windows",
+      "macOS"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://www.samsung.com/us/smartphones/dex",
+    "Notes": "Desktop mode for Samsung devices. Turns phone/tablet into a full desktop experience. Used for field ops command station without a laptop.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e817ea374f0efe714c835",
+    "catalogEntity": "samsung-dex"
+  },
+  {
+    "Tool Name": "Samsung One UI",
+    "Category": "Hardware",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Android"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://www.samsung.com/us/smartphones/one-ui",
+    "Notes": "Samsung's Android skin. Core mobile OS layer on field devices. Manages KNOX integration, DeX mode, and device policies.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e810880b0e5134dff2558",
+    "catalogEntity": "samsung-one-ui"
+  },
+  {
+    "Tool Name": "Cesium Ion",
+    "Category": "Mapping / GIS",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://cesium.com/platform/cesium-ion",
+    "Notes": "3D geospatial tiling platform. Hosts terrain, imagery, and 3D tiles. Feeds CesiumJS maps in OneMind UI and TAK viewers.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8153bcd9cc7e14f30e50",
+    "catalogEntity": "fabric-cesiumion-443f79b3"
+  },
+  {
+    "Tool Name": "MTA",
+    "Category": "Messaging",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": null,
+    "Notes": "Message Transfer Agent — handles email/message routing within OneMind OS infrastructure. Linked to Hermes agent pipeline.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8130b6c3eb9c22a142c1",
+    "catalogEntity": "mta"
+  },
+  {
+    "Tool Name": "NATS",
+    "Category": "Messaging",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Linux",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://nats.io",
+    "Notes": "High-performance cloud-native messaging. Core data plane for OneMind OS — connects agents, TAK, voice, and all services.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81a287f4e6050ac2dee9",
+    "catalogEntity": "fabric-natsjetstreamcluster-b8fc84bc"
+  },
+  {
+    "Tool Name": "Apple Music",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "macOS",
+      "Android",
+      "iOS",
+      "Web"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://music.apple.com",
+    "Notes": "Music streaming. Available on Samsung via Android app.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e818f840bd88909d0f6a1",
+    "catalogEntity": "apple-music"
+  },
+  {
+    "Tool Name": "Blender",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://blender.org",
+    "Notes": "3D modeling, animation, and rendering. Used for asset creation, drone/hardware visualizations, and scene building.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81fbb074c80989712ef4",
+    "catalogEntity": "blender"
+  },
+  {
+    "Tool Name": "Brave Browser",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://brave.com",
+    "Notes": "Secondary browser for private/sensitive browsing. Chrome is primary.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e813ebf6df9a7bcd81453",
+    "catalogEntity": "brave-browser"
+  },
+  {
+    "Tool Name": "Gmail",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://mail.google.com",
+    "Notes": "Primary email. zeus@zeusdelacruz.com, zeus@onemindos.com, zeus@onemindcodex.com. Google Workspace Standard $14/mo.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81b7971cc45a90939972",
+    "catalogEntity": "fabric-gmail-576ba7c2"
+  },
+  {
+    "Tool Name": "Google Calendar",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://calendar.google.com",
+    "Notes": "Primary calendar. Migrating from iCloud Calendar. Part of Google Workspace Standard.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81378090cc64b36bdea7",
+    "catalogEntity": "fabric-calendar-5152790e"
+  },
+  {
+    "Tool Name": "Google Chrome",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://www.google.com/chrome",
+    "Notes": "Default browser. Signed into zeus@zeusdelacruz.com. Google Keep installed as PWA.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81e5ab51d19463c34afc",
+    "catalogEntity": "google-chrome"
+  },
+  {
+    "Tool Name": "Google Contacts",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://contacts.google.com",
+    "Notes": "175 contacts imported from Mac Contacts. Samsung syncs automatically via Google account.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8144a6a4fc338681ab45",
+    "catalogEntity": "fabric-contacts-aa5af408"
+  },
+  {
+    "Tool Name": "Google Drive",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://drive.google.com",
+    "Notes": "Primary file storage. OneMind folder (403GB) syncing to Drive desktop app.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e812f8bb3efae1e152c83",
+    "catalogEntity": "fabric-drive-7062520c"
+  },
+  {
+    "Tool Name": "Google Messages",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Android",
+      "Web"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://messages.google.com",
+    "Notes": "Primary SMS/RCS messaging on Samsung. Web app for desktop access.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81eaa8a1ef1f956c0903",
+    "catalogEntity": "google-messages"
+  },
+  {
+    "Tool Name": "Google Photos",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://photos.google.com",
+    "Notes": "Primary photo backup. Samsung auto-syncs via Google account. Migrating from iCloud.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e817eb648c91c340f7e4e",
+    "catalogEntity": "fabric-photos-84a6dae4"
+  },
+  {
+    "Tool Name": "Google Wallet",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Android"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://wallet.google.com",
+    "Notes": "Mobile payments on Samsung. Replacing Apple Pay as moving off iPhone.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81819663e54cc5c1484c",
+    "catalogEntity": "fabric-wallet-e8d44050"
+  },
+  {
+    "Tool Name": "MadMapper",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "macOS",
+      "Windows"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://madmapper.com",
+    "Notes": "Video mapping and projection software. Used for spatial augmented reality and live event installations.",
+    "Last edited time": "2026-08-22",
+    "url": "https://app.notion.com/3c2d0cf70a7e8155bd8cec47b974eb09",
+    "catalogEntity": "madmapper"
+  },
+  {
+    "Tool Name": "Miro",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://miro.com",
+    "Notes": "Collaborative online whiteboard. Used for system architecture diagrams, planning sessions, and visual brainstorming across the OneMind team.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e814aa7edcf0b7fe83dae",
+    "catalogEntity": "miro"
+  },
+  {
+    "Tool Name": "Notion",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://notion.so",
+    "Notes": "Primary knowledge base. 4 databases: GE, SO, LE, HP. Integrated via direct API (ntn_ token). Never use Composio for Notion.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e816fa7d6ca5062cdfbf5",
+    "catalogEntity": "notion"
+  },
+  {
+    "Tool Name": "OBS Studio",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://obsproject.com",
+    "Notes": "Open Broadcaster Software. Used for live streaming, recording, and screen capture for OneMind demos and content.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8107a8bfedbdaca522e6",
+    "catalogEntity": "obs-studio"
+  },
+  {
+    "Tool Name": "Raindrop.io",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://raindrop.io",
+    "Notes": "Bookmark manager. Works across all browsers/devices. Collection: OneMind Research & Links (ID: 74086454). 12 sub-collections. API token configured for Claude.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81afb3a2c089ed1a3d57",
+    "catalogEntity": "raindrop-io"
+  },
+  {
+    "Tool Name": "Strava",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Android",
+      "iOS",
+      "Web"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://strava.com",
+    "Notes": "Fitness and activity tracking. Logs runs, rides, and workouts. Evaluating for Exist.io integration and HP performance stack.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81a28e06df070cab8725",
+    "catalogEntity": "strava"
+  },
+  {
+    "Tool Name": "TouchDesigner",
+    "Category": "Productivity",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "macOS",
+      "Windows"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://derivative.ca",
+    "Notes": "Real-time visual programming for interactive media and installations. Used for live data-driven visual displays.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81b8af60f682a17316c0",
+    "catalogEntity": "touchdesigner"
+  },
+  {
+    "Tool Name": "1Password",
+    "Category": "Security",
+    "Status": "Active",
+    "License": "Commercial",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Android",
+      "iOS",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://1password.com",
+    "Notes": "Primary password manager. Service account token configured. 4 vaults: SO, HP, LE, GE. Claude accesses via OP_SERVICE_ACCOUNT_TOKEN.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81129acfe0e7e9ef5370",
+    "catalogEntity": "1password"
+  },
+  {
+    "Tool Name": "Proton Mail",
+    "Category": "Security",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://proton.me",
+    "Notes": "Secure vault email for sensitive accounts only — Cloudflare, Apple, banking, infra. AI intentionally cannot access Proton.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e81818f7cfddcce928b88",
+    "catalogEntity": "proton-mail"
+  },
+  {
+    "Tool Name": "Samsung KNOX",
+    "Category": "Security",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "Android"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://www.samsungknox.com",
+    "Notes": "Hardware-backed security platform on Samsung devices. Provides secure container, MDM/EMM integration, and defense-grade device management for field ops.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e8118a652c84455fb2a9b",
+    "catalogEntity": "samsung-knox"
+  },
+  {
+    "Tool Name": "Tailscale",
+    "Category": "Security",
+    "Status": "Active",
+    "License": "Free + Paid",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux",
+      "Android",
+      "iOS",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://tailscale.com",
+    "Notes": "Zero-config mesh VPN over WireGuard. Used for secure access to OneMind cluster nodes and remote TAK clients.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e811d9b32cb8d9a5cce75",
+    "catalogEntity": "tailscale"
+  },
+  {
+    "Tool Name": "CloudTAK",
+    "Category": "TAK Ecosystem",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "Web",
+      "K8s"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://github.com/dfpc-coe/CloudTAK",
+    "Notes": "Cloud-native TAK server frontend. Self-hosted at onemindos.dev. Manages COT streams, data packages, and mission data.",
+    "Last edited time": "2026-08-21",
+    "url": "https://app.notion.com/3c2d0cf70a7e81289a86c81a18d29511",
+    "catalogEntity": "cloudtak"
+  },
+  {
+    "Tool Name": "TAK (Team Awareness Kit)",
+    "Category": "TAK Ecosystem",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Android",
+      "Windows",
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://tak.gov",
+    "Notes": "Core SA platform. ATAK (Android), WinTAK (Windows), WebTAK/CloudTAK (browser), iTAK (iOS). CoT protocol. TAK Server 5.8 hardened in Downloads. SDK 5.7.0.10 at root.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e812196e3c2a81067057a",
+    "catalogEntity": "tak-gov"
+  },
+  {
+    "Tool Name": "TAK Awareness",
+    "Category": "TAK Ecosystem",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://tak.gov",
+    "Notes": "Lightweight TAK client for mobile. Tracks friendly forces and COT events. Pairs with TAK Server and NATS bridge.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e813fb72ec7bb75ba90c1",
+    "catalogEntity": "fabric-takaware-f2952965"
+  },
+  {
+    "Tool Name": "WebTAK",
+    "Category": "TAK Ecosystem",
+    "Status": "Active",
+    "License": "Free",
+    "Platform": [
+      "Web"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://tak.gov",
+    "Notes": "Browser-based TAK client. Connects to TAK Server over WebSocket. Used for quick situational awareness without ATAK.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e816d822de8202d590004",
+    "catalogEntity": "fabric-webtakadmin-1298be37"
+  },
+  {
+    "Tool Name": "Foxglove Studio",
+    "Category": "UAS / Drone",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux",
+      "Web"
+    ],
+    "OneMind Integration": false,
+    "URL": "https://foxglove.dev",
+    "Notes": "Robotics visualization and debugging tool for ROS 1/2. Visualizes point clouds, camera feeds, telemetry. Supports .mcap/.bag recording and playback. AGPL v3. v2.53.1 installed (arm64).",
+    "Last edited time": "2026-08-22",
+    "url": "https://app.notion.com/3c4d0cf70a7e816292c5d736b48fe71e",
+    "catalogEntity": "foxglove-studio"
+  },
+  {
+    "Tool Name": "QGroundControl",
+    "Category": "UAS / Drone",
+    "Status": "Active",
+    "License": "Open Source",
+    "Platform": [
+      "macOS",
+      "Windows",
+      "Linux",
+      "Android",
+      "iOS"
+    ],
+    "OneMind Integration": true,
+    "URL": "https://qgroundcontrol.com/",
+    "Notes": "MAVLink GCS for ArduPilot/PX4. MAVLink→CoT bridge for ATAK. Already installed at ~/QGroundControl.",
+    "Last edited time": "2026-08-20",
+    "url": "https://app.notion.com/3c2d0cf70a7e813b9e20e1db343ddfe3",
+    "catalogEntity": "qgroundcontrol"
+  }
+]

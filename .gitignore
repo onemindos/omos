@@ -14,18 +14,26 @@ kubeconfig*.yaml
 *.kubeconfig
 .env
 
+# Personal vault is maintained outside this source repository.
+/vault/
+
 # Letta worktrees
 /.letta/
 /platform/nats/*.secret.*
 /platform/nats/creds.secret.env
 values.secret.yaml
 
-# Cloudflare API token
-platform/cloudflare/*.secret.env
-platform/cloudflare/*.secret
+# Cloudflare and other local platform secret overrides
+platform/core/*.secret.env
+platform/core/*.secret
 
-# TAK cluster generated private keys / certs — NEVER commit
-tak-cluster/certs-out/
+# TAK Server generated private keys, certificates, and local build output — NEVER commit
+platform/takserver/certs-out/
+platform/takserver/certs/files/
+platform/takserver/b2-enrollment/
+platform/takserver/.tapvenv/
+platform/takserver/local-retirement-backup/
+services/takserver/build-root/
 *.key
 *.jks
 *.p12
@@ -34,20 +42,10 @@ tak-cluster/certs-out/
 .DS_Store
 **/.DS_Store
 
-# TAK bridge plugin artifacts — JAR + config ARE tracked (needed for CI image build)
+# Local Python bytecode and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
 
-# TAK client certs / CA keys — never commit
-tak-cluster/b2-enrollment/
-tak-cluster/.tapvenv/
-*.key
-*.p12
-
-# local TAK retirement DB backup (large, disposable)
-tak-cluster/local-retirement-backup/
-
-# TAK build-root — compiled JARs/WARs, not source (large binaries, not for git)
-tak-cluster/build-root/
-
-# uptime-kuma SQLite migration dump
-uptime-kuma/migration-data/
-# sensitive platform secrets + local overrides
+# Obsidian workspace settings (local only)
+.obsidian/

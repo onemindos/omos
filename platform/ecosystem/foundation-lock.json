@@ -1,0 +1,92 @@
+[
+  {
+    "name": "cnpg",
+    "repo": "https://cloudnative-pg.github.io/charts",
+    "chart": "cloudnative-pg",
+    "version": "0.29.1",
+    "appVersion": "1.30.1",
+    "url": "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v0.29.1/cloudnative-pg-0.29.1.tgz",
+    "namespace": "cnpg-system",
+    "sha256": "b53d3991fe84bcf38767e7702cae78666265427a127a26fff168ab4207d2b1df"
+  },
+  {
+    "name": "dapr",
+    "repo": "https://dapr.github.io/helm-charts",
+    "chart": "dapr",
+    "version": "1.18.5",
+    "appVersion": "1.18.5",
+    "url": "https://dapr.github.io/helm-charts/dapr-1.18.5.tgz",
+    "namespace": "dapr-system",
+    "sha256": "9fa3ca7ee9151b7d9bd415565a5a5d67ae3265ff621a6b6e128baf21920d57df"
+  },
+  {
+    "name": "keda",
+    "repo": "https://kedacore.github.io/charts",
+    "chart": "keda",
+    "version": "2.21.0",
+    "appVersion": "2.21.0",
+    "url": "https://kedacore.github.io/charts/keda-2.21.0.tgz",
+    "namespace": "keda",
+    "sha256": "a7da56bf41a33dad9d2fc82a6fdecee552fff947d80bf1e1dbcf4db0f9e26dee"
+  },
+  {
+    "name": "opencost",
+    "repo": "https://opencost.github.io/opencost-helm-chart",
+    "chart": "opencost",
+    "version": "2.5.32",
+    "appVersion": "1.121.3",
+    "url": "https://github.com/opencost/opencost-helm-chart/releases/download/opencost-2.5.32/opencost-2.5.32.tgz",
+    "namespace": "opencost",
+    "sha256": "7703e895529abf0fc582c2897d978099af9b8603bf30932732de5fddbfd4a40e"
+  },
+  {
+    "name": "kyverno",
+    "repo": "https://kyverno.github.io/kyverno",
+    "chart": "kyverno",
+    "version": "3.9.1",
+    "appVersion": "v1.19.1",
+    "url": "https://kyverno.github.io/kyverno/kyverno-3.9.1.tgz",
+    "namespace": "kyverno",
+    "sha256": "7b7fe51a431b5b133b0ce7eb9dcb222b6a37fb967c163223cf480054ad14d752"
+  },
+  {
+    "name": "falco",
+    "repo": "https://falcosecurity.github.io/charts",
+    "chart": "falco",
+    "version": "9.2.0",
+    "appVersion": "0.45.0",
+    "url": "https://github.com/falcosecurity/charts/releases/download/falco-9.2.0/falco-9.2.0.tgz",
+    "namespace": "falco",
+    "sha256": "5e0699e68e5e4abd5eab1d501b3e0300a15888f3a5c2b0977bf3ca3229a8d04a"
+  },
+  {
+    "name": "spire",
+    "repo": "https://spiffe.github.io/helm-charts-hardened",
+    "chart": "spire",
+    "version": "0.30.3",
+    "appVersion": "1.15.3",
+    "url": "https://github.com/spiffe/helm-charts-hardened/releases/download/spire-0.30.3/spire-0.30.3.tgz",
+    "namespace": "spire-system",
+    "sha256": "9e52f523dfb755b0d64b245be04d4085b0cff893aa939270a89b78e56ac62f6f"
+  },
+  {
+    "name": "barman",
+    "repo": "https://cloudnative-pg.github.io/charts",
+    "chart": "plugin-barman-cloud",
+    "version": "0.8.1",
+    "appVersion": "v0.15.1",
+    "url": "https://github.com/cloudnative-pg/charts/releases/download/plugin-barman-cloud-v0.8.1/plugin-barman-cloud-0.8.1.tgz",
+    "namespace": "cnpg-system",
+    "sha256": "9ad0b9e56da2777a1a0269feaf7215e18297e9c8b5730e04acb27b5d462e9456"
+  },
+  {
+    "name": "spire-crds",
+    "repo": "https://spiffe.github.io/helm-charts-hardened",
+    "chart": "spire-crds",
+    "version": "0.6.1",
+    "appVersion": "1.15.3",
+    "url": "https://github.com/spiffe/helm-charts-hardened/releases/download/spire-crds-0.6.1/spire-crds-0.6.1.tgz",
+    "namespace": "spire-system",
+    "sha256": "ce982e63fc375e392b014fc99e621a55442ab886052413e9bb052f72d66580a8"
+  }
+]

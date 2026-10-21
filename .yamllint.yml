@@ -1,5 +1,12 @@
 ---
 extends: default
+ignore: |
+  platform/takserver/chart/templates/**
+  platform/takserver/chart/third-party/**/templates/**
+  platform/ecosystem/charts/**/templates/**
+  services/onemind-portal/templates/*/skeleton/**
+  platform/parked/**/charts/**/templates/**
+  platform/parked/**/live-export/**
 
 rules:
   line-length:

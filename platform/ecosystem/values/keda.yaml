@@ -1,0 +1,37 @@
+resources:
+  operator:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  metricServer:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  webhooks:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+prometheus:
+  metricServer:
+    enabled: true
+    podMonitor:
+      enabled: true
+      additionalLabels:
+        release: monitoring
+  operator:
+    enabled: true
+    podMonitor:
+      enabled: true
+      additionalLabels:
+        release: monitoring

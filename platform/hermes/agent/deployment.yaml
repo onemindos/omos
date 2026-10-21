@@ -25,6 +25,16 @@ spec:
         app.kubernetes.io/name: hermes
         onemind.io/agent: legacy
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       imagePullSecrets:
         - name: ghcr
       initContainers:
@@ -101,11 +111,10 @@ spec:
               mountPath: /opt/data
             - name: gateway-deps
               mountPath: /gateway-deps
-          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
-          # Measured usage: 2803Mi. Request set to upper 60-90% band; limit = hard cap at 3200Mi.
+          # 2026-10-19: 7-day observed working-set maximum ~1.44Gi; 2Gi request with 5Gi headroom.
           resources:
-            requests: { cpu: "500m", memory: "2523Mi" }
-            limits:   { cpu: "4", memory: "3200Mi" }
+            requests: {cpu: "500m", memory: "2Gi"}
+            limits: {cpu: "4", memory: "5Gi"}
         # ---- NATS leaf sidecar ----
         # nats-server running as a leaf into the cluster ONEMIND account over TLS.
         # Exposes a local plaintext client listener on :4222 for Hermes only.
@@ -113,7 +122,7 @@ spec:
           image: nats:2.10-alpine
           args: ["-c", "/etc/nats/leaf.conf"]
           ports:
-            - { name: monitor, containerPort: 8222 }
+            - {name: monitor, containerPort: 8222}
           volumeMounts:
             - name: leaf-conf
               mountPath: /etc/nats
@@ -122,8 +131,8 @@ spec:
               mountPath: /etc/nats-ca
               readOnly: true
           resources:
-            requests: { cpu: "50m", memory: "64Mi" }
-            limits:   { memory: "128Mi" }
+            requests: {cpu: "50m", memory: "64Mi"}
+            limits: {memory: "128Mi"}
       volumes:
         - name: data
           persistentVolumeClaim:

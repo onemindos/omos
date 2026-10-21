@@ -1,0 +1,92 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: volsync
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  jobLabel: app.kubernetes.io/name
+  namespaceSelector:
+    matchNames: [ops]
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: platform-volsync
+      app.kubernetes.io/name: volsync
+  endpoints:
+  - port: https
+    path: /metrics
+    interval: 60s
+    scheme: https
+    # The installed CRD accepts projected token files via this field.
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      # The controller generates an internal self-signed metrics certificate.
+      # Token review stays enabled; this exception is only for this private scrape.
+      insecureSkipVerify: true
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: onemind-backup-health
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: onemind.backup
+    interval: 60s
+    rules:
+    - alert: ScheduledBackupOverdue
+      expr: |
+        (
+          (time() - kube_cronjob_status_last_successful_time{cronjob=~"backup-.*"} > 108000)
+          or
+          ((time() - kube_cronjob_created{cronjob=~"backup-.*"} > 108000)
+            unless on(namespace, cronjob) kube_cronjob_status_last_successful_time)
+        ) and on(namespace, cronjob) (kube_cronjob_spec_suspend == 0)
+      for: 10m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Scheduled backup {{ $labels.namespace }}/{{ $labels.cronjob }} is overdue"
+        description: "No successful scheduled job within 30 hours. Inspect its verified archive marker and restore result; manual jobs do not prove the recurring schedule."
+    - alert: OffsiteBackupCopyFailed
+      # Job-level failure (all retries exhausted), not per-pod attempts; filtered to
+      # kube-state-metrics because OpenCost re-exports the same series.
+      expr: kube_job_failed{job="kube-state-metrics",namespace="ops",job_name=~"backup-offsite-copy-.*",condition="true"} == 1
+      for: 5m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Offsite backup copy job {{ $labels.job_name }} failed"
+        description: "Second-region copy or verification failed; no current offsite copy. Check job logs in ops; see platform/backups/OFFSITE-COPY.md."
+    - alert: PortableVolumeBackupOutOfSync
+      expr: volsync_volume_out_of_sync{role="source"} == 1
+      for: 30m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Volume backup {{ $labels.obj_namespace }}/{{ $labels.obj_name }} is out of sync"
+        description: "Inspect source status, mover logs, snapshots and storage quota. Preserve original PVCs and encryption keys."
+    - alert: VolSyncMetricsUnavailable
+      expr: absent(up{job="volsync"}) or up{job="volsync"} == 0
+      for: 15m
+      labels:
+        severity: warning
+        service: backup
+      annotations:
+        summary: "Portable backup monitoring is unavailable"
+        description: "Verify the controller and its authenticated metrics scrape before assuming volume backup health."
+    - alert: KubeletResidentMemoryHigh
+      expr: process_resident_memory_bytes{job="kubelet"} > 1073741824
+      for: 15m
+      labels:
+        severity: warning
+        service: kubernetes
+      annotations:
+        summary: "Kubelet memory exceeds 1 GiB on {{ $labels.instance }}"
+        description: "Investigate the known release-specific leak, node pressure and supported upgrade. Do not automatically delete application pods."

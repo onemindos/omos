@@ -1,0 +1,19 @@
+# Tailnet-only NATS WebSocket for browser-based NATS UIs (NATS UI, NATS Dashboard clients).
+# Reachable only from tailnet devices allowed by platform/core/policy.hujson; NATS still
+# requires a user and password. The public wss://ws.onemindos.dev (nginx) is separate and
+# is a zero-trust review item.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nats-ws
+  namespace: nats
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: nats
+      port:
+        number: 8080
+  tls:
+    - hosts:
+        - nats-ws

@@ -1,92 +1,72 @@
-# Contributing to omos-infra
+# Contributing to OneMind OS
 
-## Branch Strategy
+This repository contains both application source and production GitOps configuration. Changes under `platform/` and `infra/` can affect the live cluster, so keep them small, reviewable, and tied to the resource they manage.
 
-- `main` — production-deployed state
-- Feature branches → PR → quality gate → merge
-- No direct pushes to main
+## Branch and review workflow
 
-## Code Standards
+- Treat `main` as the production-tracked branch.
+- Make changes on a feature branch and submit a pull request for review.
+- Do not assume GitHub branch protection is enabled; verify the repository settings when that matters.
+- For workload changes, check the corresponding Argo CD Application and sync wave under `platform/argocd/`.
 
-### YAML
-- 2-space indentation
-- No trailing whitespace
-- yamllint config: `.yamllint.yml`
+## Repository layout
+
+- `infra/`: Terraform for the DigitalOcean foundation.
+- `platform/`: Kubernetes resources and Argo CD deployment configuration.
+- `services/`: runtime and application source (TAK image builds and the NATS bridge plugin are in `services/takserver/`); `services/schemas/` holds the versioned event contracts and generated code.
+- `docs/`: architecture, operating procedures, and infrastructure guides.
+
+See the root [`README.md`](README.md) for the full directory map.
+
+## Code and configuration standards
+
+### YAML and Kubernetes
+
+- Use two-space indentation and avoid trailing whitespace.
+- Keep resources with the platform layer or service that owns them.
+- Follow the existing namespace, labels, probes, and resource request/limit pattern for that workload.
+- Update the relevant Argo CD application or Kustomize configuration when adding resources; avoid expanding the manual bootstrap script for routine application deployments.
 
 ### Terraform
-- `terraform fmt` (enforced by CI + pre-commit)
-- Variables in `variables.tf`, outputs in `outputs.tf`
-- Comments for non-obvious resource configs
 
-### Shell Scripts
-- `#!/usr/bin/env bash` shebang
-- `set -euo pipefail` at top
-- Pass ShellCheck with `-x -s bash`
+- Keep Terraform under `infra/` and format it with `terraform fmt`.
+- Declare inputs in `variables.tf` and outputs in `outputs.tf`.
+- Explain non-obvious resource settings in comments.
+- Review the plan before applying infrastructure changes.
 
-### Kubernetes Manifests
-- One resource per file (unless tightly coupled)
-- Namespace declared in its own `namespace.yaml`
-- Labels: `app.kubernetes.io/name`, `app.kubernetes.io/part-of: onemind`
-- Resource requests + limits on all Deployments
+### Shell
 
-## NATS Subject Grammar (LOCKED)
+- Use `#!/usr/bin/env bash` and `set -euo pipefail` for Bash scripts.
+- Keep scripts compatible with ShellCheck.
 
-```
-tel.{node}.{class}.{metric}          telemetry
-det.{domain}.{type}.{id}             detections
-evt.{domain}.{entity}.{event}        semantic events
-cmd.{domain}.{entity}.{action}       commands
-intel.{domain}.{source}.{type}       intelligence
-ent.{entity_type}.{entity_id}.state  fused entity state
-svc.{service}.{endpoint}             NATS RPC
-agents.{verb}.{agent}.{owner}.*      agent fabric
-tak.cot.inject                       CoT → TAK inject
-tak.cot.>                            CoT from TAK
-```
+### NATS contracts
 
-Do NOT invent new subject patterns without updating this grammar.
-
-## Adding a New Service
-
-1. Create `platform/{service}/` directory
-2. Add required files:
-   - `namespace.yaml`
-   - `deployment.yaml` (Deployment + Service)
-   - `external-secret.yaml` (ESO secret sync from 1Password)
-   - `cloudflare-route.yaml` (if public-facing)
-3. Image: `ghcr.io/onemindos/{service}:latest`
-4. Add `kubectl apply` lines to `platform/install.sh`
-5. Add ArgoCD Application in `platform/argocd/`
-6. Update CLAUDE.md service table
+Follow the subject grammar and compatibility rules in [`docs/NATS-DOCTRINE.md`](docs/NATS-DOCTRINE.md). Do not introduce a new subject prefix without updating the doctrine and affected schemas/consumers.
 
 ## Secrets
 
-**NEVER commit secrets.** All secrets flow through:
-```
-1Password vault "00-24 SO" → ESO → K8s Secret → Pod env
-```
+Never commit plaintext credentials, private keys, certificates, or local secret overrides. Use Bitnami SealedSecrets as described in the root `CLAUDE.md` ("Secrets") and follow the pattern used by the owning platform application. [`docs/secrets-eso.md`](docs/secrets-eso.md) is historical. Do not create or rotate live cluster secrets as part of a code change unless the task explicitly includes that operation.
 
-Bootstrap secrets (one-time on fresh cluster) are documented in `platform/install.sh`.
+## Local validation
 
-## Testing Changes
+Run the repository quality gate before opening a pull request:
 
 ```bash
-# Validate everything locally
 make validate
-
-# Terraform dry-run
-make plan
-
-# Deploy to cluster
-make install
 ```
 
-## Review Checklist
+For infrastructure changes, also review:
 
-- [ ] `make lint` passes
-- [ ] No hardcoded secrets/tokens
-- [ ] Resource requests/limits set
-- [ ] Namespace declared
-- [ ] ExternalSecret for any credentials
-- [ ] install.sh updated (if new service)
-- [ ] CLAUDE.md service table updated
+```bash
+make plan
+```
+
+Do not run `make apply` or `make install` as a validation step; both can change live infrastructure or cluster resources.
+
+## Pull request checklist
+
+- [ ] The change follows the owning directory's existing structure.
+- [ ] Related docs, manifests, schemas, or Argo CD configuration are updated.
+- [ ] No plaintext secrets or generated local state are included.
+- [ ] `make validate` passes, or the PR explains the exact blocker.
+- [ ] Any Terraform plan or cluster impact is described for review.

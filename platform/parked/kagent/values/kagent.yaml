@@ -1,0 +1,88 @@
+tag: 0.10.3
+nodeSelector: &id001
+  onemind.io/compute-role: ecosystem
+database:
+  postgres:
+    bundled:
+      enabled: false
+    urlFile: /etc/kagent-db/uri
+controller:
+  watchNamespaces:
+  - kagent
+  nodeSelector: *id001
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  agentDeployment:
+    nodeSelector: *id001
+  volumes:
+  - name: database
+    secret:
+      secretName: kagent-db
+  volumeMounts:
+  - name: database
+    mountPath: /etc/kagent-db
+    readOnly: true
+ui:
+  nodeSelector: *id001
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 768Mi
+  route:
+    enabled: false
+providers:
+  default: openAI
+  openAI:
+    provider: OpenAI
+    model: onemind-chat
+    apiKeySecretRef: kagent-model
+    apiKeySecretKey: api-key
+    config:
+      baseUrl: http://litellm.onemind-ai.svc.cluster.local:4000/v1
+istio-agent:
+  enabled: false
+kgateway-agent:
+  enabled: false
+helm-agent:
+  enabled: false
+cilium-policy-agent:
+  enabled: false
+cilium-manager-agent:
+  enabled: false
+argo-rollouts-agent:
+  enabled: false
+kagent-tools:
+  rbac:
+    namespaces:
+    - kagent
+    - onemind-jobs
+    - onemind-core
+    - onemind-ai
+    readOnly: true
+    allowSecrets: false
+  tools:
+    enabledTools:
+    - k8s
+    - prometheus
+    - utils
+    loglevel: info
+    prometheus:
+      url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: '1'
+      memory: 512Mi
+rbac:
+  namespaces:
+  - kagent

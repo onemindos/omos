@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onemind-model-clients-v1
+  namespace: onemind-ai
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 4
+  activeDeadlineSeconds: 1200
+  template:
+    metadata:
+      labels:
+        app: onemind-model-bootstrap
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      containers:
+        - name: clients
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, time, httpx
+              url = "http://litellm.onemind-ai.svc.cluster.local:4000"
+              headers = {"Authorization": "Bearer " + os.environ["MASTER_KEY"]}
+              with httpx.Client(timeout=30) as client:
+                  for attempt in range(160):
+                      try:
+                          for name in ["core", "openchoreo"]:
+                              body = {"key": os.environ[name], "key_alias": "onemind-" + name,
+                                      "models": ["onemind-chat", "onemind-fast"], "metadata": {"service": name}}
+                              response = client.post(url + "/key/generate", headers=headers, json=body)
+                              if response.status_code not in (200, 201):
+                                  response = client.post(url + "/key/update", headers=headers,
+                                                         json={"key": os.environ[name], "models": body["models"]})
+                              response.raise_for_status()
+                          print("Model service credentials provisioned")
+                          break
+                      except Exception:
+                          time.sleep(5)
+                  else:
+                      raise RuntimeError("Model credentials did not initialize")
+          envFrom:
+            - secretRef:
+                name: litellm-client-keys
+          env:
+            - name: MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: litellm-auth
+                  key: master-key
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

@@ -1,797 +1,0 @@
-Script started on Tue Mar 17 00:37:57 2026
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'cat > /home [K//onemind/.openviking/start.sh' << 'LOCALEOF'[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h##!/bin/bash[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hCCONFIG=/home/onemind/.openviking/ov.conf[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hiif [ -n "$OPENAI_API_KEY" ]; then[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h   python3 -c "[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hiimport json, os[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hwwith open('$CONFIG') as f:[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h     c = json.load(f)[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hcc.setdefault('embedding', {}).setdefault('dense', {})['api_key'] = os.e [Knnviron['OPENAI_API_KEY'][?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hwwith open('/tmp/ov-runtime.conf', 'w') as f:[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h     json.dump(c, f, indent=2)[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h"[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h   exec openviking-server --config /tmp/ov-runtime.conf --port 8900[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004heelse[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h   echo 'ERROR: OPENAI_API_KEY not set'[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004h   exit 1[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hffi[?2004l
-[0m[27m[24m[Jheredoc> [K[?2004hLLOCALEOF[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'chmod +x /h [Koome/onemind/.openviking/start.sh && chown onemind:onemind /home/onemind/.openvik [Kiing/start.sh && echo "Created start.sh"'[?2004l
-Created start.sh
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'cat /home/o [Knnemind/.openviking/start.sh'[?2004l
-#!/bin/bash
-CONFIG=/home/onemind/.openviking/ov.conf
-if [ -n "$OPENAI_API_KEY" ]; then
-  python3 -c "
-import json, os
-with open('$CONFIG') as f:
-    c = json.load(f)
-c.setdefault('embedding', {}).setdefault('dense', {})['api_key'] = os.environ['OPENAI_API_KEY']
-with open('/tmp/ov-runtime.conf', 'w') as f:
-    json.dump(c, f, indent=2)
-"
-  exec openviking-server --config /tmp/ov-runtime.conf --port 8900
-else
-  echo 'ERROR: OPENAI_API_KEY not set'
-  exit 1
-fi
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sed -i "s|E [KxxecStart=.*|ExecStart=/usr/bin/op run --env-file=/opt/onemind/.env.tpl -- /bin/b [Kaash /home/onemind/.openviking/start.sh|" /etc/systemd/system/openviking.service  [K&&& systemctl daemon-reload && systemctl restart openviking && sleep 5 && journal [Kcctl -u openviking --no-pager -n 15 -o cat'[?2004l
-2026-03-17 04:38:24,649 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,649 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,649 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,650 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,650 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,650 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,651 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,651 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,652 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,652 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,652 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,653 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,653 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,653 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,710 - openviking.server.app - WARNING - Dev mode: no root_api_key configured, authentication disabled. This is allowed because the server is bound to localhost (127.0.0.1). Do NOT expose this server to the network without configuring server.root_api_key in ov.conf.
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'journalctl  [K--u openviking --no-pager -n 20 -o cat && echo "---STATUS---" && systemctl is-act [Kiive openviking'[?2004l
-2026-03-17 04:38:24,653 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,653 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,653 - openviking.storage.viking_vector_index_backend - ERROR - Error querying collection <concealed by 1Password>-context: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:24,710 - openviking.server.app - WARNING - Dev mode: no root_api_key configured, authentication disabled. This is allowed because the server is bound to localhost (127.0.0.1). Do NOT expose this server to the network without configuring server.root_api_key in ov.conf.
-2026-03-17 04:38:26,055 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,160 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,177 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,226 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,255 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,258 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,259 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,303 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,449 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,517 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,691 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,787 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,925 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:26,928 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:27,044 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
-2026-03-17 04:38:27,241 - openviking.storage.collection_schemas - ERROR - Failed to write to vector database: Collection <concealed by 1Password>-context does not exist
----STATUS---
-active
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s htt [Kpp://127.0.0.1:8900/health 2>&1 && echo "" && curl -s http://127.0.0.1:8900/api/v [K11/observer/system 2>&1 | python3 -m json.tool 2>/dev/null | head -20'[?2004l
-{"status":"ok"}
-{
-    "status": "ok",
-    "result": {
-        "is_healthy": false,
-        "errors": [
-            "queue has errors"
-        ],
-        "components": {
-            "queue": {
-                "name": "queue",
-                "is_healthy": false,
-                "has_errors": true,
-                "status": "+----------------+---------+-------------+-----------+--------+-------+\n|     Queue      | Pending | In Progress | Processed | Errors | Total |\n+----------------+---------+-------------+-----------+--------+-------+\n|   Embedding    |    0    |      0      |     0     |   18   |   0   |\n|    Semantic    |    0    |      0      |     0     |   0    |   0   |\n| Semantic-Nodes |    0    |      0      |     0     |   0    |   0   |\n|     TOTAL      |    0    |      0      |     0     |   18   |   0   |\n+----------------+---------+-------------+-----------+--------+-------+"
-            },
-            "vikingdb": {
-                "name": "vikingdb",
-                "is_healthy": true,
-                "has_errors": false,
-                "status": "No collections found."
-            },
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s htt [Kpp://127.0.0.1:8900/docs 2>&1 | grep -oP "\"(/api/v1/[^\"]+)\"" | head -30'[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s htt [Kpp://127.0.0.1:8900/openapi.json 2>&1 | python3 -c "import sys,json; d=json.load( [Kssys.stdin); [print(f\"{method.upper():6s} {path}\") for path in sorted(d[\"paths [K\\"]) for method in d[\"paths\"][path]]" 2>&1 | head -30'[?2004l
-POST   /api/v1/admin/accounts
-GET    /api/v1/admin/accounts
-DELETE /api/v1/admin/accounts/{account_id}
-POST   /api/v1/admin/accounts/{account_id}/users
-GET    /api/v1/admin/accounts/{account_id}/users
-DELETE /api/v1/admin/accounts/{account_id}/users/{user_id}
-POST   /api/v1/admin/accounts/{account_id}/users/{user_id}/key
-PUT    /api/v1/admin/accounts/{account_id}/users/{user_id}/role
-GET    /api/v1/content/abstract
-GET    /api/v1/content/overview
-GET    /api/v1/content/read
-GET    /api/v1/debug/health
-DELETE /api/v1/fs
-GET    /api/v1/fs/ls
-POST   /api/v1/fs/mkdir
-POST   /api/v1/fs/mv
-GET    /api/v1/fs/stat
-GET    /api/v1/fs/tree
-GET    /api/v1/observer/queue
-GET    /api/v1/observer/system
-GET    /api/v1/observer/transaction
-GET    /api/v1/observer/vikingdb
-GET    /api/v1/observer/vlm
-POST   /api/v1/pack/export
-POST   /api/v1/pack/import
-GET    /api/v1/relations
-POST   /api/v1/relations/link
-DELETE /api/v1/relations/link
-POST   /api/v1/resources
-POST   /api/v1/resources/temp_upload
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s htt [Kpp://127.0.0.1:8900/openapi.json 2>&1 | python3 -c "import sys,json; d=json.load( [Kssys.stdin); [print(f\"{method.upper():6s} {path}\") for path in sorted(d[\"paths [K\\"]) for method in d[\"paths\"][path]]" 2>&1 | tail -20'[?2004l
-POST   /api/v1/search/glob
-POST   /api/v1/search/grep
-POST   /api/v1/search/search
-POST   /api/v1/sessions
-GET    /api/v1/sessions
-GET    /api/v1/sessions/{session_id}
-DELETE /api/v1/sessions/{session_id}
-POST   /api/v1/sessions/{session_id}/commit
-POST   /api/v1/sessions/{session_id}/extract
-POST   /api/v1/sessions/{session_id}/messages
-POST   /api/v1/skills
-GET    /api/v1/system/status
-POST   /api/v1/system/wait
-GET    /api/v1/tasks
-GET    /api/v1/tasks/{task_id}
-POST   /bot/v1/chat
-POST   /bot/v1/chat/stream
-GET    /bot/v1/health
-GET    /health
-GET    /ready
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s htt [Kpp://127.0.0.1:8900/api/v1/fs/tree 2>&1 | python3 -m json.tool 2>&1 | head -20'[?2004l
-{
-    "detail": [
-        {
-            "type": "missing",
-            "loc": [
-                "query",
-                "uri"
-            ],
-            "msg": "Field required",
-            "input": null
-        }
-    ]
-}
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s "ht [Kttp://127.0.0.1:8900/api/v1/fs/ls?uri=ov://default/default/default" 2>&1 | python [K33 -m json.tool 2>&1 | head -20'[?2004l
-{
-    "status": "error",
-    "result": null,
-    "error": {
-        "code": "NOT_FOUND",
-        "message": "Directory not found: ov://default/default/default",
-        "details": {
-            "resource": "ov://default/default/default",
-            "type": "directory"
-        }
-    },
-    "time": 0.0,
-    "usage": null
-}
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 '[?2004l
-[0m[27m[24m[Jquote> [K[?2004h## Add the codex as a resource directory[?2004l
-[0m[27m[24m[Jquote> [K[?2004hccurl -s -X POST http://127.0.0.1:8900/api/v1/resources \[?2004l
-[0m[27m[24m[Jquote> [K[?2004h   -H "Content-Type: application/json" \[?2004l
-[0m[27m[24m[Jquote> [K[?2004h   -d "{\"uri\": \"file:///home/onemind/onemind-os/codex\", \"type\": \"di [Krrectory\"}" 2>&1 | python3 -m json.tool 2>&1 | head -30[?2004l
-[0m[27m[24m[Jquote> [K[?2004h'[?2004l
-{
-    "detail": [
-        {
-            "type": "value_error",
-            "loc": [
-                "body"
-            ],
-            "msg": "Value error, Either 'path' or 'temp_path' must be provided",
-            "input": {
-                "uri": "file:///home/onemind/onemind-os/codex",
-                "type": "directory"
-            },
-            "ctx": {
-                "error": {}
-            }
-        }
-    ]
-}
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 '[?2004l
-[0m[27m[24m[Jquote> [K[?2004h## Use the CLI to add the codex as a resource[?2004l
-[0m[27m[24m[Jquote> [K[?2004hssudo -u onemind OPENAI_API_KEY=$(python3 -c "import json; d=json.load(ope [Knn(\"/tmp/ov-runtime.conf\")); print(d[\"embedding\"][\"dense\"][\"api_key\"])")  [K\[?2004l
-[0m[27m[24m[Jquote> [K[?2004h   ov add-resource /home/onemind/onemind-os/codex --help 2>&1 | head -20[?2004l
-[0m[27m[24m[Jquote> [K[?2004h'[?2004l
-Add resources into OpenViking
-
-Usage: ov add-resource [OPTIONS] <PATH>
-
-Arguments:
-  <PATH>  Local path or URL to import
-
-Options:
-  -o, --output <OUTPUT>            Output format [default: table]
-      --to <TO>                    Exact target URI (must not exist yet) (cannot be used with --parent)
-  -c, --compact                    Compact representation, defaults to true - compacts JSON output or uses simplified representation for Table output
-      --parent <PARENT>            Target parent URI (must already exist and be a directory) (cannot be used with --to)
-      --reason <REASON>            Reason for import [default: ""]
-      --instruction <INSTRUCTION>  Additional instruction [default: ""]
-      --wait                       Wait until processing is complete
-      --timeout <TIMEOUT>          Wait timeout in seconds (only used with --wait)
-      --no-strict                  No strict mode for directory scanning
-      --ignore-dirs <IGNORE_DIRS>  Ignore directories, e.g. --ignore-dirs "node_modules,dist"
-      --include <INCLUDE>          Include files extensions, e.g. --include "*.pdf,*.md"
-      --exclude <EXCLUDE>          Exclude files extensions, e.g. --exclude "*.tmp,*.log"
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sudo -u one [Kmmind ov add-resource /home/onemind/onemind-os/codex --include "*.md" --ignore-di [Krrs ".obsidian,assets,node_modules,index-folders-graveyard" --wait --timeout 120  [K22>&1 | tail -20'[?2004l
-Error: Network error: HTTP request failed: error sending request for url (http://localhost:1933/api/v1/resources)
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'ov --help 2 [K>>&1 | grep -A2 "port\|url\|host\|server"'[?2004l
-  export        Export context as .ovpack
-  import        Import .ovpack into target URI
-  wait          Wait for queued async processing to complete
-  status        Show OpenViking component status
---
-  observer      Observer status commands
-  session       Session management commands
-  admin         Account and user management commands (multi-tenant)
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'ov --help 2 [K>>&1'[?2004l
-OpenViking - An Agent-native context database
-
-Usage: ov [OPTIONS] <COMMAND>
-
-Commands:
-  add-resource  Add resources into OpenViking
-  add-skill     Add a skill into OpenViking
-  relations     List relations of a resource
-  link          Create relation links from one URI to one or more targets
-  unlink        Remove a relation link
-  export        Export context as .ovpack
-  import        Import .ovpack into target URI
-  wait          Wait for queued async processing to complete
-  status        Show OpenViking component status
-  health        Quick health check
-  system        System utility commands
-  observer      Observer status commands
-  session       Session management commands
-  admin         Account and user management commands (multi-tenant)
-  ls            List directory contents
-  tree          Get directory tree
-  mkdir         Create directory
-  rm            Remove resource
-  mv            Move or rename resource
-  stat          Get resource metadata
-  read          Read file content (L2)
-  abstract      Read abstract content (L0)
-  overview      Read overview content (L1)
-  find          Run semantic retrieval
-  search        Run context-aware retrieval
-  grep          Run content pattern search
-  glob          Run file glob pattern search
-  add-memory    Add memory in one shot (creates session, adds messages, commits)
-  tui           Interactive TUI file explorer
-  chat          Chat with vikingbot agent
-  config        Configuration management
-  version       Show CLI version
-  help          Print this message or the help of the given subcommand(s)
-
-Options:
-  -o, --output <OUTPUT>  Output format [default: table]
-  -c, --compact          Compact representation, defaults to true - compacts JSON output or uses simplified representation for Table output
-  -h, --help             Print help
-  -V, --version          Print version
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'ov config - [K--help 2>&1'[?2004l
-Configuration management
-
-Usage: ov config [OPTIONS] <COMMAND>
-
-Commands:
-  show      Show current configuration
-  validate  Validate configuration file
-  help      Print this message or the help of the given subcommand(s)
-
-Options:
-  -o, --output <OUTPUT>  Output format [default: table]
-  -c, --compact          Compact representation, defaults to true - compacts JSON output or uses simplified representation for Table output
-  -h, --help             Print help
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 '[?2004l
-[0m[27m[24m[Jquote> [K[?2004h## Update config to use default port 1933[?2004l
-[0m[27m[24m[Jquote> [K[?2004hppython3 -c "[?2004l
-[0m[27m[24m[Jquote> [K[?2004hiimport json[?2004l
-[0m[27m[24m[Jquote> [K[?2004hwwith open(\"/home/onemind/.openviking/ov.conf\") as f:[?2004l
-[0m[27m[24m[Jquote> [K[?2004h     c = json.load(f)[?2004l
-[0m[27m[24m[Jquote> [K[?2004hcc[\"server\"][\"port\"] = 1933[?2004l
-[0m[27m[24m[Jquote> [K[?2004hwwith open(\"/home/onemind/.openviking/ov.conf\", \"w\") as f:[?2004l
-[0m[27m[24m[Jquote> [K[?2004h     json.dump(c, f, indent=2)[?2004l
-[0m[27m[24m[Jquote> [K[?2004hpprint(\"Port updated to 1933\")[?2004l
-[0m[27m[24m[Jquote> [K[?2004h"[?2004l
-[0m[27m[24m[Jquote> [K[?2004h[?2004l
-[0m[27m[24m[Jquote> [K[?2004h## Update systemd service to use port 1933[?2004l
-[0m[27m[24m[Jquote> [K[?2004hssed -i "s/--port 8900/--port 1933/" /etc/systemd/system/openviking.servic [Ke[?2004l
-[0m[27m[24m[Jquote> [K[?2004hssed -i "s/--port 8900/--port 1933/" /home/onemind/.openviking/start.sh[?2004l
-[0m[27m[24m[Jquote> [K[?2004h[?2004l
-[0m[27m[24m[Jquote> [K[?2004hssystemctl daemon-reload[?2004l
-[0m[27m[24m[Jquote> [K[?2004hssystemctl restart openviking[?2004l
-[0m[27m[24m[Jquote> [K[?2004hssleep 3[?2004l
-[0m[27m[24m[Jquote> [K[?2004hccurl -s http://127.0.0.1:1933/health && echo ""[?2004l
-[0m[27m[24m[Jquote> [K[?2004h'[?2004l
-Port updated to 1933
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s htt [Kpp://127.0.0.1:1933/health 2>&1 && echo "" && systemctl is-active openviking'[?2004l
-{"status":"ok"}
-active
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sudo -u one [Kmmind ov add-resource /home/onemind/onemind-os/codex --include "*.md" --ignore-di [Krrs ".obsidian,assets,node_modules,index-folders-graveyard" --wait --timeout 300  [K22>&1 | tail -30'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sudo -u one [Kmmind ov add-resource /home/onemind/onemind-os/codex --include "*.md" --ignore-di [Krrs ".obsidian,assets,node_modules,index-folders-graveyard" 2>&1'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sudo -u one [Kmmind OPENVIKING_CONFIG_FILE=/home/onemind/.openviking/ov.conf ov health 2>&1'[?2004l
-healthy  true
-
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sudo -u one [Kmmind OPENVIKING_CONFIG_FILE=/home/onemind/.openviking/ov.conf ov add-resource /h [Koome/onemind/onemind-os/codex --include "*.md" --ignore-dirs ".obsidian,assets,no [Kdde_modules,index-folders-graveyard" 2>&1'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'sudo -u one [Kmmind OPENVIKING_CONFIG_FILE=/tmp/ov-runtime.conf ov add-resource /home/onemind/o [Knnemind-os/codex --include "*.md" --ignore-dirs ".obsidian,assets,node_modules,in [Kddex-folders-graveyard" 2>&1'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh -o ConnectTimeout=5 root@104.24 [K88.4.212 'timeout 30 sudo -u onemind OPENVIKING_CONFIG_FILE=/tmp/ov-runtime.conf  [Koov add-resource /home/onemind/onemind-os/codex --include "*.md" --ignore-dirs ". [Koobsidian,assets,node_modules,index-folders-graveyard" 2>&1; echo "EXIT=$?"'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s -X  [KPPOST "http://127.0.0.1:1933/api/v1/resources" -H "Content-Type: application/json [K"" -d "{\"path\":\"/home/onemind/onemind-os/codex\",\"content_types\":[\"markdown [K\\"]}" 2>&1'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 'curl -s --m [Kaax-time 10 -X POST "http://127.0.0.1:1933/api/v1/resources" -H "Content-Type: ap [Kpplication/json" -d "{\"path\":\"/home/onemind/onemind-os/codex\",\"content_types [K\\":[\"markdown\"]}" 2>&1; echo "CURLEXIT=$?"'[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "curl -s --m [Kaax-time 10 http://127.0.0.1:1933/health 2>&1; echo EXIT=\$?"[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh -o ServerAliveInterval=5 -o Ser [KvverAliveCountMax=2 root@104.248.4.212 "systemctl is-active openviking && curl -s [K  --max-time 5 http://127.0.0.1:1933/health"[?2004l
-active
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "curl -m 5 h [Ktttp://127.0.0.1:1933/health 2>&1"[?2004l
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:04 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:05 --:--:--     0
-curl: (28) Operation timed out after 5002 milliseconds with 0 bytes received
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl r [Keestart openviking && sleep 4 && curl -m 3 http://127.0.0.1:1933/health 2>/dev/nu [Klll && echo ''"[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl s [Kttatus openviking --no-pager | head -10"[?2004l
-● openviking.service - OneMind OS — OpenViking Context Database
-     Loaded: loaded (/etc/systemd/system/openviking.service; enabled; preset: enabled)
-     Active: deactivating (stop-sigterm) since Tue 2026-03-17 04:42:11 UTC; 6s ago
-   Main PID: 2057701 (op)
-      Tasks: 29 (limit: 19148)
-     Memory: 1.0G (max: 2.0G available: 999.4M peak: 1.0G)
-        CPU: 1min 59.939s
-     CGroup: /system.slice/openviking.service
-             ├─2057701 /usr/bin/op run --env-file=/opt/onemind/.env.tpl -- /bin/bash /home/onemind/.openviking/start.sh
-             └─2057710 /usr/bin/python3 /usr/local/bin/openviking-server --config /tmp/ov-runtime.conf --port 1933
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl k [Kiill openviking 2>/dev/null; sleep 2; systemctl start openviking && sleep 5 && sy [Ksstemctl is-active openviking && curl -m 3 -s http://127.0.0.1:1933/health"[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl i [Kss-active openviking"[?2004l
-deactivating
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "kill -9 \$( [Kppgrep -f openviking-server) 2>/dev/null; sleep 1; systemctl reset-failed openvik [Kiing 2>/dev/null; systemctl start openviking && echo started"[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "sleep 5 &&  [Kssystemctl is-active openviking && curl -m 5 -s http://127.0.0.1:1933/health 2>&1 [K;; echo DONE"[?2004l
-active
-{"status":"ok"}DONE
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl i [Kss-active openviking; journalctl -u openviking --no-pager -n 5 -o cat"[?2004l
-active
-time="2026-03-17T04:42:49Z" level=info msg="mounted localfs at /local"
-Loading config file: /tmp/ov-runtime.conf
-OpenViking HTTP Server is running on 127.0.0.1:1933
-2026-03-17 04:42:49,749 - openviking.storage.viking_vector_index_backend - ERROR - Error creating collection <concealed by 1Password>-context: invalid collection_meta
-2026-03-17 04:42:49,806 - openviking.server.app - WARNING - Dev mode: no root_api_key configured, authentication disabled. This is allowed because the server is bound to localhost (127.0.0.1). Do NOT expose this server to the network without configuring server.root_api_key in ov.conf.
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hppython3 -c '[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hiimport json[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hwwith open(\"/home/onemind/.openviking/ov.conf\") as f:[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h     c = json.load(f)[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hcc[\"storage\"][\"vectordb\"][\"name\"] = \"context\"[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hwwith open(\"/home/onemind/.openviking/ov.conf\", \"w\") as f:[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h     json.dump(c, f, indent=2)[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hpprint(\"Collection name changed to context\")[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h'[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hssystemctl restart openviking[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hssleep 5[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hjjournalctl -u openviking --no-pager -n 8 -o cat[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '---'[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hccurl -m 3 -s http://127.0.0.1:1933/health[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h"[?2004l
-Collection name changed to context
-time="2026-03-17T04:43:18Z" level=info msg="mounted serverinfofs at /serverinfo"
-time="2026-03-17T04:43:18Z" level=info msg="[queuefs] Initialized with backend: memory"
-time="2026-03-17T04:43:18Z" level=info msg="mounted queuefs at /queue"
-time="2026-03-17T04:43:18Z" level=info msg="[localfs] Initialized with base path: /home/<concealed by 1Password>/.openviking/data/viking"
-time="2026-03-17T04:43:18Z" level=info msg="mounted localfs at /local"
-Loading config file: /tmp/ov-runtime.conf
-OpenViking HTTP Server is running on 127.0.0.1:1933
-2026-03-17 04:43:18,751 - openviking.server.app - WARNING - Dev mode: no root_api_key configured, authentication disabled. This is allowed because the server is bound to localhost (127.0.0.1). Do NOT expose this server to the network without configuring server.root_api_key in ov.conf.
----
-{"status":"ok"}[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "systemctl i [Kss-active openviking && journalctl -u openviking --no-pager -n 10 -o cat"[?2004l
-active
-Started openviking.service - OneMind OS — OpenViking Context Database.
-2026-03-17 04:43:15,593 - openviking_cli.utils.config.storage_config - WARNING - StorageConfig: 'vectordb.path' is deprecated and will be ignored. Using '/home/<concealed by 1Password>/.openviking/data' from workspace instead of '/home/<concealed by 1Password>/.openviking/data'
-time="2026-03-17T04:43:18Z" level=info msg="mounted serverinfofs at /serverinfo"
-time="2026-03-17T04:43:18Z" level=info msg="[queuefs] Initialized with backend: memory"
-time="2026-03-17T04:43:18Z" level=info msg="mounted queuefs at /queue"
-time="2026-03-17T04:43:18Z" level=info msg="[localfs] Initialized with base path: /home/<concealed by 1Password>/.openviking/data/viking"
-time="2026-03-17T04:43:18Z" level=info msg="mounted localfs at /local"
-Loading config file: /tmp/ov-runtime.conf
-OpenViking HTTP Server is running on 127.0.0.1:1933
-2026-03-17 04:43:18,751 - openviking.server.app - WARNING - Dev mode: no root_api_key configured, authentication disabled. This is allowed because the server is bound to localhost (127.0.0.1). Do NOT expose this server to the network without configuring server.root_api_key in ov.conf.
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "curl -m 5 - [Kss http://127.0.0.1:1933/health && echo '' && curl -m 5 -s http://127.0.0.1:1933/ [Krready && echo ''"[?2004l
-{"status":"ok"}
-{"status":"ready","checks":{"agfs":"ok","vectordb":"ok","api_key_manager":"not_configured"}}
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h## Add a single small file first to test[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hccurl -m 30 -s -X POST 'http://127.0.0.1:1933/api/v1/resources' \[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   -H 'Content-Type: application/json' \[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   -d '{\"path\":\"/home/onemind/onemind-os/codex/ONEMIND-CODEX.md\"}' 2> [K&&1 | python3 -m json.tool | head -20[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h"[?2004l
-{
-    "status": "ok",
-    "result": {
-        "status": "success",
-        "errors": [],
-        "source_path": "/home/onemind/onemind-os/codex/ONEMIND-CODEX.md",
-        "meta": {
-            "frontmatter": {
-                "id": "root-00-20260113225954",
-                "title": "\"ONEMIND CODEX\"",
-                "type": "doctrine",
-                "status": "active",
-                "created": "2026-01-13",
-                "modified": "2026-01-13",
-                "owner": "zeus",
-                "tags": "[type/doctrine, status/active]",
-                "ai_summary": "\"ONEMIND CODEX\""
-            }
-        },
-        "root_uri": "viking://resources/ONEMIND_CODEX"
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h## Wait for embedding to complete, then test search[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hssleep 3[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hccurl -m 15 -s -X POST 'http://127.0.0.1:1933/api/v1/search/search' \[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   -H 'Content-Type: application/json' \[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   -d '{\"query\":\"What is the OneMind Codex?\",\"limit\":3}' 2>&1 | pyt [Khhon3 -m json.tool 2>&1 | head -30[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h"[?2004l
-{
-    "status": "ok",
-    "result": {
-        "memories": [],
-        "resources": [
-            {
-                "context_type": "resource",
-                "uri": "viking://resources/ONEMIND_CODEX/ONE_MIND_CODEX.md",
-                "level": 2,
-                "score": 0.6121676754210426,
-                "category": "",
-                "match_reason": "",
-                "relations": [],
-                "abstract": "",
-                "overview": null
-            },
-            {
-                "context_type": "resource",
-                "uri": "viking://resources/ONEMIND_CODEX/.overview.md",
-                "level": 1,
-                "score": 0.5532672737171247,
-                "category": "",
-                "match_reason": "",
-                "relations": [],
-                "abstract": "Directory overview",
-                "overview": null
-            },
-            {
-                "context_type": "resource",
-                "uri": "viking://resources/ONEMIND_CODEX/PART_2_THE_PHILOSOPHY.md",
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "curl -m 10  [K--s 'http://127.0.0.1:1933/api/v1/observer/queue' 2>&1"[?2004l
-{"status":"ok","result":{"name":"queue","is_healthy":true,"has_errors":false,"status":"+----------------+---------+-------------+-----------+--------+-------+\n|     Queue      | Pending | In Progress | Processed | Errors | Total |\n+----------------+---------+-------------+-----------+--------+-------+\n|   Embedding    |    0    |      0      |    48     |   0    |  48   |\n|    Semantic    |    0    |      0      |     1     |   0    |   1   |\n| Semantic-Nodes |    0    |      0      |    38     |   0    |  38   |\n|     TOTAL      |    0    |      0      |    49     |   0    |  49   |\n+----------------+---------+-------------+-----------+--------+-------+"},"error":null,"time":0.0,"usage":null}[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "curl -m 15  [K--s -X POST 'http://127.0.0.1:1933/api/v1/search/search' -H 'Content-Type: applic [Kaation/json' -d '{\"query\":\"What is the OneMind Codex?\",\"limit\":3}' 2>&1 | p [Kyython3 -c 'import sys,json; d=json.load(sys.stdin); print(json.dumps(d,indent=2) [K[[:1000])'"[?2004l
-{
-  "status": "ok",
-  "result": {
-    "memories": [],
-    "resources": [
-      {
-        "context_type": "resource",
-        "uri": "viking://resources/ONEMIND_CODEX/ONE_MIND_CODEX.md",
-        "level": 2,
-        "score": 0.6121661134563553,
-        "category": "",
-        "match_reason": "",
-        "relations": [],
-        "abstract": "",
-        "overview": null
-      },
-      {
-        "context_type": "resource",
-        "uri": "viking://resources/ONEMIND_CODEX/.overview.md",
-        "level": 1,
-        "score": 0.5532657117595075,
-        "category": "",
-        "match_reason": "",
-        "relations": [],
-        "abstract": "Directory overview",
-        "overview": null
-      },
-      {
-        "context_type": "resource",
-        "uri": "viking://resources/ONEMIND_CODEX/PART_2_THE_PHILOSOPHY.md",
-        "level": 2,
-        "score": 0.5429375119798089,
-        "category": "",
-        "match_reason": "",
-        "relations": [],
-        "abstract": "",
-        "overview": null
- 
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "nohup curl  [K--m 600 -s -X POST 'http://127.0.0.1:1933/api/v1/resources' -H 'Content-Type: app [Kllication/json' -d '{\"path\":\"/home/onemind/onemind-os/codex\",\"content_types\ [K"":[\"markdown\"]}' > /tmp/ov-index.log 2>&1 &[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho 'Codex indexing started in background'"[?2004l
-Codex indexing started in background
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '╔══════════════════════════════════════╗'[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '║  FINAL SYSTEM VERIFICATION           ║'[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '╚══════════════════════════════════════╝'[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho ''[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '=== SERVICES ==='[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hffor svc in openclaw swarmclaw openclaw-office legacy-pulse caddy codex-w [Kaatch openviking; do[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   printf '  %-20s %s\n' \"\$svc\" \"\$(systemctl is-active \$svc 2>/dev/ [Knnull)\"[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hddone[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho ''[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '=== ENDPOINTS ==='[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hffor port in 18789 3456 5180 1933; do[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   code=\$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 http://127 [K..0.0.1:\$port/health 2>/dev/null)[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h   printf '  :%s  %s\n' \"\$port\" \"\$code\"[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hddone[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho ''[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '=== OPENVIKING QUEUE ==='[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hccurl -m 5 -s http://127.0.0.1:1933/api/v1/observer/queue 2>&1 | python3  [K--c 'import sys,json; d=json.load(sys.stdin); print(d[\"result\"][\"status\"])' 2 [K>>/dev/null[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho ''[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '=== RESOURCES ==='[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho \"  Disk: \$(df -h / | awk 'NR==2{print \$3 \"/\" \$2 \" (\" \$5 \" [K  used)\"}')\"[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho \"  RAM: \$(free -h | awk 'NR==2{print \$3 \"/\" \$2 \" used\"}')\" [K[K[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h"[?2004l
-╔══════════════════════════════════════╗
-║  FINAL SYSTEM VERIFICATION           ║
-╚══════════════════════════════════════╝
-
-=== SERVICES ===
-  openclaw             active
-  swarmclaw            active
-  openclaw-office      active
-  legacy-pulse         active
-  caddy                active
-  codex-watch          active
-  openviking           active
-
-=== ENDPOINTS ===
-  :18789  200
-  :3456  404
-  :5180  200
-  :1933  200
-
-=== OPENVIKING QUEUE ===
-+----------------+---------+-------------+-----------+--------+-------+
-|     Queue      | Pending | In Progress | Processed | Errors | Total |
-+----------------+---------+-------------+-----------+--------+-------+
-|   Embedding    |  13495  |      7      |   1016    |   1    | 14518 |
-|    Semantic    |    0    |      0      |     2     |   0    |   2   |
-| Semantic-Nodes |    0    |      0      |   10535   |   0    | 10535 |
-|     TOTAL      |  13495  |      7      |   1018    |   1    | 14520 |
-+----------------+---------+-------------+-----------+--------+-------+
-
-=== RESOURCES ===
-  Disk: 39G/193G (20% used)
-  RAM: 2.5Gi/15Gi used
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h## Check if ClawVault is available as an OpenClaw hook/plugin[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hoopenclaw hooks list 2>&1 | head -20[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '==='[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hoopenclaw plugins list 2>&1 | head -20[?2004l
-[0m[27m[24m[Jdquote> [K[?2004heecho '==='[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h## Check npm registry[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hnnpm view clawvault version 2>&1[?2004l
-[0m[27m[24m[Jdquote> [K[?2004hnnpm view @versatly/clawvault version 2>&1[?2004l
-[0m[27m[24m[Jdquote> [K[?2004h"[?2004l
-Hooks (4/4 ready)
-┌──────────┬───────────────────────┬───────────────────────────────────────────────────────────────────┬───────────────┐
-│ Status   │ Hook                  │ Description                                                       │ Source        │
-├──────────┼───────────────────────┼───────────────────────────────────────────────────────────────────┼───────────────┤
-│ ✓ ready  │ 🚀 boot-md            │ Run BOOT.md on gateway startup                                    │ openclaw-     │
-│          │                       │                                                                   │ bundled       │
-│ ✓ ready  │ 📎 bootstrap-extra-   │ Inject additional workspace bootstrap files via glob/path         │ openclaw-     │
-│          │ files                 │ patterns                                                          │ bundled       │
-│ ✓ ready  │ 📝 command-logger     │ Log all command events to a centralized audit file                │ openclaw-     │
-│          │                       │                                                                   │ bundled       │
-│ ✓ ready  │ 💾 session-memory     │ Save session context to memory when /new or /reset command is     │ openclaw-     │
-│          │                       │ issued                                                            │ bundled       │
-└──────────┴───────────────────────┴───────────────────────────────────────────────────────────────────┴───────────────┘
-===
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "openclaw ho [Kooks list 2>&1 | head -20; echo '==='; openclaw plugins list 2>&1 | head -20"[?2004l
-Hooks (4/4 ready)
-┌──────────┬───────────────────────┬───────────────────────────────────────────────────────────────────┬───────────────┐
-│ Status   │ Hook                  │ Description                                                       │ Source        │
-├──────────┼───────────────────────┼───────────────────────────────────────────────────────────────────┼───────────────┤
-│ ✓ ready  │ 🚀 boot-md            │ Run BOOT.md on gateway startup                                    │ openclaw-     │
-│          │                       │                                                                   │ bundled       │
-│ ✓ ready  │ 📎 bootstrap-extra-   │ Inject additional workspace bootstrap files via glob/path         │ openclaw-     │
-│          │ files                 │ patterns                                                          │ bundled       │
-│ ✓ ready  │ 📝 command-logger     │ Log all command events to a centralized audit file                │ openclaw-     │
-│          │                       │                                                                   │ bundled       │
-│ ✓ ready  │ 💾 session-memory     │ Save session context to memory when /new or /reset command is     │ openclaw-     │
-│          │                       │ issued                                                            │ bundled       │
-└──────────┴───────────────────────┴───────────────────────────────────────────────────────────────────┴───────────────┘
-===
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hnnpm view clawvault version 2>&1; np [Kmm view @versatly/clawvault version 2>&1[?2004l
-⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K3.5.0
-⠼[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m E404
-⠸[1G[0K[1mnpm[22m [31merror[39m [94m404[39m Not Found - GET https://registry.npmjs.org/@versatly%2fclawvault - Not found
-⠸[1G[0K[1mnpm[22m [31merror[39m [94m404[39m
-⠸[1G[0K[1mnpm[22m [31merror[39m [94m404[39m  The requested resource '@versatly/clawvault@*' could not be found or you do not have permission to access it.
-⠸[1G[0K[1mnpm[22m [31merror[39m [94m404[39m
-⠸[1G[0K[1mnpm[22m [31merror[39m [94m404[39m Note that you can also install from a
-⠸[1G[0K[1mnpm[22m [31merror[39m [94m404[39m tarball, folder, http url, or git url.
-⠸[1G[0K[1mnpm[22m [31merror[39m A complete log of this run can be found in: /Users/zeuslegacy/.npm/_logs/2026-03-17T04_49_38_485Z-debug-0.log
-⠸[1G[0K[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hnnpm view clawvault --json 2>&1 | py [Ktthon3 -c "import sys,json; d=json.load(sys.stdin); print('name:', d.get('name')) [K;; print('version:', d.get('version')); print('description:', d.get('description' [K,,'')); print('keywords:', d.get('keywords',[])); print('bin:', d.get('bin',{})); [K  print('deps:', list(d.get('dependencies',{}).keys())[:10])"[?2004l
-name: clawvault
-version: 3.5.0
-description: Structured memory system for AI agents — typed storage, knowledge graph, context profiles, canvas dashboards, neural graph themes, and Obsidian-native task views. An elephant never forgets. 🐘
-keywords: ['ai-agent', 'memory', 'knowledge-graph', 'obsidian', 'markdown', 'task-management', 'context-death', 'openclaw', 'llm', 'agent-memory', 'canvas-dashboard', 'semantic-search']
-bin: {'clawvault': 'bin/clawvault.js'}
-deps: ['chalk', 'chokidar', 'commander', 'express', 'force-graph', 'glob', 'gray-matter', 'natural', 'ws', 'yaml']
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hnnpm view clawvault --json 2>&1 | py [Ktthon3 -c "[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hiimport sys,json[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hdd=json.load(sys.stdin)[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('=== FULL DETAILS ===')[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('name:', d.get('name'))[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('version:', d.get('version'))[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('license:', d.get('license'))[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint()[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('=== OPENCLAW INTEGRATION ===')[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('openclaw field:', d.get('openclaw', 'NONE'))[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint()[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hpprint('=== ALL DEPS ===')[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004hffor k,v in d.get('dependencies',{}).items():[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004h     print(f'  {k}: {v}')[?2004l
-[0m[27m[24m[Jpipe dquote> [K[?2004h"[?2004l
-=== FULL DETAILS ===
-name: clawvault
-version: 3.5.0
-license: MIT
-
-=== OPENCLAW INTEGRATION ===
-openclaw field: {'plugin': './openclaw.plugin.json', 'extensions': ['./dist/openclaw-plugin.js']}
-
-=== ALL DEPS ===
-  chalk: ^5.3.0
-  chokidar: ^5.0.0
-  commander: ^12.0.0
-  express: ^5.2.1
-  force-graph: ^1.51.1
-  glob: ^10.3.10
-  gray-matter: ^4.0.3
-  natural: ^6.10.4
-  ws: ^8.19.0
-  yaml: ^2.8.2
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h[?2004l
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "sudo -u one [Kmmind openclaw plugins install clawvault 2>&1 | tail -15"[?2004l
-^C[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004hsssh root@104.248.4.212 "timeout 60  [Kssudo -u onemind openclaw plugins install clawvault 2>&1; echo EXIT=\$?"[?2004l
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at models.providers.azure-openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at models.providers.azure-openai.headers.api-key — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "ANTHROPIC_API_KEY" at models.providers.anthropic.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENAI_API_KEY" at models.providers.openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "GRADIENT_BASE_URL" at models.providers.gradient.baseUrl — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "GRADIENT_API_KEY" at models.providers.gradient.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at messages.tts.openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENCLAW_HOOKS_TOKEN" at hooks.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "HEARTBEAT_CHANNEL_ID" at hooks.mappings[2].to — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "DISCORD_BOT_TOKEN" at channels.discord.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "BLUEBUBBLES_PASSWORD" at channels.bluebubbles.password — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENCLAW_GATEWAY_TOKEN" at gateway.auth.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at models.providers.azure-openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at models.providers.azure-openai.headers.api-key — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "ANTHROPIC_API_KEY" at models.providers.anthropic.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENAI_API_KEY" at models.providers.openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "GRADIENT_BASE_URL" at models.providers.gradient.baseUrl — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "GRADIENT_API_KEY" at models.providers.gradient.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at messages.tts.openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENCLAW_HOOKS_TOKEN" at hooks.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "HEARTBEAT_CHANNEL_ID" at hooks.mappings[2].to — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "DISCORD_BOT_TOKEN" at channels.discord.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "BLUEBUBBLES_PASSWORD" at channels.bluebubbles.password — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENCLAW_GATEWAY_TOKEN" at gateway.auth.token — feature using this value will be unavailable
-[35m[plugins][39m [33mplugins.allow is empty; discovered non-bundled plugins may auto-load: lossless-claw (/home/onemind/.openclaw/extensions/lossless-claw/index.ts). Set plugins.allow to explicit trusted ids.[39m
-[35m[plugins][39m [36m[lcm] Plugin loaded (enabled=true, db=/home/onemind/.openclaw/lcm.db, threshold=0.75)[39m
-│
-◇  Config warnings ────────────────────────────────────────────────────────╮
-│                                                                          │
-│  - models.providers.azure-openai.apiKey: Missing env var                 │
-│    "AZURE_OPENAI_API_KEY" — feature using this value will be             │
-│    unavailable                                                           │
-│  - models.providers.azure-openai.headers.api-key: Missing env var        │
-│    "AZURE_OPENAI_API_KEY" — feature using this value will be             │
-│    unavailable                                                           │
-│  - models.providers.anthropic.apiKey: Missing env var                    │
-│    "ANTHROPIC_API_KEY" — feature using this value will be unavailable    │
-│  - models.providers.openai.apiKey: Missing env var "OPENAI_API_KEY" —    │
-│    feature using this value will be unavailable                          │
-│  - models.providers.gradient.baseUrl: Missing env var                    │
-│    "GRADIENT_BASE_URL" — feature using this value will be unavailable    │
-│  - models.providers.gradient.apiKey: Missing env var "GRADIENT_API_KEY"  │
-│    — feature using this value will be unavailable                        │
-│  - messages.tts.openai.apiKey: Missing env var "AZURE_OPENAI_API_KEY" —  │
-│    feature using this value will be unavailable                          │
-│  - hooks.token: Missing env var "OPENCLAW_HOOKS_TOKEN" — feature using   │
-│    this value will be unavailable                                        │
-│  - hooks.mappings[2].to: Missing env var "HEARTBEAT_CHANNEL_ID" —        │
-│    feature using this value will be unavailable                          │
-│  - channels.discord.token: Missing env var "DISCORD_BOT_TOKEN" —         │
-│    feature using this value will be unavailable                          │
-│  - channels.bluebubbles.password: Missing env var                        │
-│    "BLUEBUBBLES_PASSWORD" — feature using this value will be             │
-│    unavailable                                                           │
-│  - gateway.auth.token: Missing env var "OPENCLAW_GATEWAY_TOKEN" —        │
-│    feature using this value will be unavailable                          │
-│                                                                          │
-├──────────────────────────────────────────────────────────────────────────╯
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at models.providers.azure-openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at models.providers.azure-openai.headers.api-key — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "ANTHROPIC_API_KEY" at models.providers.anthropic.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENAI_API_KEY" at models.providers.openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "GRADIENT_BASE_URL" at models.providers.gradient.baseUrl — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "GRADIENT_API_KEY" at models.providers.gradient.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "AZURE_OPENAI_API_KEY" at messages.tts.openai.apiKey — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENCLAW_HOOKS_TOKEN" at hooks.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "HEARTBEAT_CHANNEL_ID" at hooks.mappings[2].to — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "DISCORD_BOT_TOKEN" at channels.discord.token — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "BLUEBUBBLES_PASSWORD" at channels.bluebubbles.password — feature using this value will be unavailable
-Config (/home/onemind/.openclaw/openclaw.json): missing env var "OPENCLAW_GATEWAY_TOKEN" at gateway.auth.token — feature using this value will be unavailable
-Downloading clawvault…
-[35m[plugins][39m [33mplugins.allow is empty; discovered non-bundled plugins may auto-load: lossless-claw (/home/onemind/.openclaw/extensions/lossless-claw/index.ts). Set plugins.allow to explicit trusted ids.[39m
-[35m[plugins][39m [36m[lcm] Plugin loaded (enabled=true, db=/home/onemind/.openclaw/lcm.db, threshold=0.75)[39m
-Extracting /tmp/openclaw-npm-pack-ti8t3o/clawvault-3.5.0.tgz…
-WARNING: Plugin "clawvault" contains dangerous code patterns: Environment variable access combined with network send — possible credential harvesting (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-7SWP5FKU.js:156); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-BLQXXX7Q.js:371); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-CSHO3PJB.js:311); Environment variable access combined with network send — possible credential harvesting (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-DVOUSOR3.js:16); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-EL6UBSX5.js:341); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-F55HGNU4.js:61); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-FZ5I2NF7.js:97); Environment variable access combined with network send — possible credential harvesting (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-H3JZIB5O.js:172); Environment variable access combined with network send — possible credential harvesting (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-J3YUXVID.js:160); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-JI7VUQV7.js:59); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-PTWPPVC7.js:646); Environment variable access combined with network send — possible credential harvesting (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-PTWPPVC7.js:41); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-QUFQBAHP.js:56); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-TIGW564L.js:19); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/chunk-YIDV4VV2.js:10); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/index.js:299); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/commands/sleep.js:95); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/dist/commands/status.js:59); Environment variable access combined with network send — possible credential harvesting (/tmp/openclaw-plugin-mSqscS/extract/package/dist/commands/wake.js:151); Shell command execution detected (child_process) (/tmp/openclaw-plugin-mSqscS/extract/package/bin/command-runtime.js:74)
-Installing to /home/onemind/.openclaw/extensions/clawvault…
-Installing plugin dependencies…
-[35m[plugins][39m [33mplugins.allow is empty; discovered non-bundled plugins may auto-load: clawvault (/home/onemind/.openclaw/extensions/.openclaw-install-stage-ChzSwS/dist/openclaw-plugin.js), clawvault (/home/onemind/.openclaw/extensions/clawvault/dist/openclaw-plugin.js), lossless-claw (/home/onemind/.openclaw/extensions/lossless-claw/index.ts). Set plugins.allow to explicit trusted ids.[39m
-[35m[plugins][39m [31mclawvault failed to load from /home/onemind/.openclaw/extensions/.openclaw-install-stage-ChzSwS/dist/openclaw-plugin.js: Error: Cannot find module './chunk-QUFQBAHP.js'[39m
-[31mRequire stack:[39m
-[31m- /home/onemind/.openclaw/extensions/.openclaw-install-stage-ChzSwS/dist/openclaw-plugin.js[39m
-[35m[plugins][39m [36m[lcm] Plugin loaded (enabled=true, db=/home/onemind/.openclaw/lcm.db, threshold=0.75)[39m
-Config warnings:
-- plugins.entries.clawvault: plugin clawvault: duplicate plugin id detected; later plugin may be overridden (/home/onemind/.openclaw/extensions/clawvault/dist/openclaw-plugin.js)
-Config overwrite: /home/onemind/.openclaw/openclaw.json (sha256 88a6aa52ed3fd6c64ba6447f4372496b04e962fcce3f20e9c95abdf923350d59 -> b05473d7e1372b0c6cf58254d78e24c7b125c112ad70ce407f4efedd43469e27, backup=/home/onemind/.openclaw/openclaw.json.bak, changedPaths=5)
-Exclusive slot "memory" switched from "memory-core" to "clawvault".
-Disabled other "memory" slot plugins: memory-core, memory-lancedb.
-Installed plugin: clawvault
-Restart the gateway to load plugins.
-EXIT=0
-[1m[7m%[27m[1m[0m                                                                                [0m[27m[24m[J(base) zeuslegacy@Zeuss-MBP onemindos-v0.4 % [K[?2004h

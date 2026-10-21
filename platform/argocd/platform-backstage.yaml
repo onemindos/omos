@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/onemindos/omos-infra.git
-    targetRevision: HEAD
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
     path: platform/backstage
   destination:
     server: https://kubernetes.default.svc
@@ -24,4 +24,9 @@ spec:
       kind: Service
       namespace: backstage
       name: authentik-mesh
+      jsonPointers: [/spec/externalName]
+    - group: ''
+      kind: Service
+      namespace: backstage
+      name: argocd-mesh
       jsonPointers: [/spec/externalName]

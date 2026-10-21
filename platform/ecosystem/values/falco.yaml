@@ -1,0 +1,20 @@
+driver:
+  kind: modern_ebpf
+collectors:
+  containerd:
+    enabled: true
+    socket: /run/containerd/containerd.sock
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: '1'
+    memory: 768Mi
+falco:
+  json_output: true
+  json_include_output_property: true
+  stdout_output:
+    enabled: true
+falcosidekick:
+  enabled: false

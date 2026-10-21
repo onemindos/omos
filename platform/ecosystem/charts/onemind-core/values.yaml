@@ -1,0 +1,11 @@
+replicas: 2
+image: ghcr.io/onemindos/onemind-core@sha256:85269aad930bb65403e873bf0d4b58ad4a283eaa05c2fa0e36705b4eef33bed7
+nodeSelector:
+  onemind.io/compute-role: ecosystem
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: '2'
+    memory: 2Gi

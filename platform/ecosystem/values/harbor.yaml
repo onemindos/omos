@@ -1,0 +1,92 @@
+expose:
+  type: clusterIP
+  tls:
+    enabled: false
+externalURL: https://onemind-registry.tail717ba0.ts.net
+existingSecretAdminPassword: harbor-admin
+existingSecretAdminPasswordKey: password
+persistence:
+  persistentVolumeClaim:
+    registry:
+      storageClass: do-block-storage-retain
+      size: 40Gi
+    jobservice:
+      storageClass: do-block-storage-retain
+      size: 5Gi
+    database:
+      storageClass: do-block-storage-retain
+      size: 5Gi
+    redis:
+      storageClass: do-block-storage-retain
+      size: 5Gi
+    trivy:
+      storageClass: do-block-storage-retain
+      size: 10Gi
+core:
+  affinity: &ecoPref
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: onemind.io/compute-role
+            operator: In
+            values:
+            - ecosystem
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  existingSecret: harbor-internal
+  secretName: harbor-internal
+  existingXsrfSecret: harbor-internal
+portal:
+  affinity: *ecoPref
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+jobservice:
+  affinity: *ecoPref
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
+  existingSecret: harbor-internal
+registry:
+  affinity: *ecoPref
+  existingSecret: harbor-internal
+  credentials:
+    username: harbor_registry_user
+    existingSecret: harbor-internal
+database:
+  type: internal
+  internal:
+    affinity: *ecoPref
+redis:
+  type: internal
+  internal:
+    affinity: *ecoPref
+trivy:
+  enabled: true
+  affinity: *ecoPref
+  resources:
+    requests:
+      cpu: 10m
+      memory: 256Mi
+    limits:
+      cpu: '2'
+      memory: 2Gi
+existingSecretSecretKey: harbor-internal
+updateStrategy:
+  type: Recreate
+  rollingUpdate: null

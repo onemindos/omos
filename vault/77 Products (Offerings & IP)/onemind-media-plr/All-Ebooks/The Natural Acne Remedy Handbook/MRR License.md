@@ -1,8 +1,0 @@
-# Master Resell Rights Terms and Conditions
-
-[YES] You may giveaway this ebook
-[YES] You may resell this product. Suggested retail price: $10-$20.
-[YES] You may sell/pass resell rights/master resell rights to this product.
-[YES] You may edit the squeeze/sales page.
-
-You may NOT sell or giveaway private label rights.

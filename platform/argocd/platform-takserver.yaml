@@ -3,11 +3,11 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # platform-takserver: TAK Server 5.8 supplementary deploy manifests
 #
-# Covers: tak-server/deploy/
+# Covers: platform/takserver/deploy/
 #   mediamtx.yaml      — REMOVE: replaced by onetak-media
 #   LB proxy, NATS leaf ExternalSecret, ConfigMaps for TAK server config.
 #
-# The TAK Server Helm chart is in tak-server/chart/ and is managed via
+# The TAK Server Helm chart is in platform/takserver/chart/ and is managed via
 # Helm, not ArgoCD. This Application manages only the overlay K8s resources.
 #
 # NATS bridge plugin (NatsBridgePlugin) is the live CoT↔NATS wire:
@@ -29,9 +29,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/onemindos/omos-infra.git
-    targetRevision: HEAD
-    path: tak-server/deploy
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/takserver/deploy
     directory:
       recurse: false
       exclude: "CoreConfig.xml,TAKIgniteConfig.xml"

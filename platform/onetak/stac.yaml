@@ -15,13 +15,24 @@ spec:
       labels:
         app: stac-api
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       initContainers:
         - name: wait-for-db
           image: postgres:17-alpine
           command: ['sh', '-c', 'until pg_isready -h onetak-geo-db -U geo; do sleep 2; done']
       containers:
         - name: stac-api
-          image: ghcr.io/stac-utils/stac-fastapi-pgstac:latest
+          # Pinned to the digest of the working pod; a newer :latest fails at startup (pgdatabase required).
+          image: ghcr.io/stac-utils/stac-fastapi-pgstac@sha256:fa35b9519abb99fa83a38a296baa48a2630a7ca3109b3c2153c3c5c7c8baacd3
           ports:
             - containerPort: 8080
           env:
@@ -48,8 +59,8 @@ spec:
               value: "false"
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 10m
+              memory: 96Mi
             limits:
               cpu: "1"
               memory: 512Mi
@@ -77,51 +88,4 @@ spec:
     app: stac-api
   ports:
     - port: 8082
-      targetPort: 8080
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: stac-browser
-  namespace: onetak
-  labels:
-    app: stac-browser
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: stac-browser
-  template:
-    metadata:
-      labels:
-        app: stac-browser
-    spec:
-      containers:
-        - name: stac-browser
-          image: ghcr.io/radiantearth/stac-browser:latest
-          ports:
-            - containerPort: 8080
-          env:
-            - name: CATALOG_URL
-              value: "http://stac-api:8082"
-            - name: STAC_BROWSER_TITLE
-              value: "OneTAK — Imagery Catalog"
-          resources:
-            requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: stac-browser
-  namespace: onetak
-spec:
-  selector:
-    app: stac-browser
-  ports:
-    - port: 8085
       targetPort: 8080

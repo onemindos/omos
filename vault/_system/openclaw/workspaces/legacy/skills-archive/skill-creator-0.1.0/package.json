@@ -1,7 +1,0 @@
-{
-  "name": "skill-creator",
-  "version": "0.1.0",
-  "description": "Scaffold new OpenClaw skills from templates — creates SKILL.md, package.json, and index.js",
-  "main": "index.js",
-  "dependencies": {}
-}

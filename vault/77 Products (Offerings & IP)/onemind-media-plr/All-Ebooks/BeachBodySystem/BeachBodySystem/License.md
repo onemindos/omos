@@ -1,3 +1,0 @@
-# License
-
-Comes with private label rights which means that you can rename them, claim authourship, add them to a membership site, give them away, sell resale rights, master resale rights or private label rights to others, offer them as a bonus, bundle them with other products, edit them,sell them as a pack or on there own!

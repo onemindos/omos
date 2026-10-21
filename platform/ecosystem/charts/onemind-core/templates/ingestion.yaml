@@ -1,0 +1,137 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: onemind-ingestion
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onemind-ingestion
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onemind-ingestion
+  template:
+    metadata:
+      labels:
+        app: onemind-ingestion
+    spec:
+      serviceAccountName: onemind-ingestion
+      imagePullSecrets:
+        - name: ghcr
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: ingestion
+          image: {{ .Values.image | quote }}
+          command: [python, -m, onemind.ingestion]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: health
+              containerPort: 8081
+          envFrom:
+            - secretRef:
+                name: ingestion-runtime
+          env:
+            - name: NATS_CA_FILE
+              value: /etc/nats-trust/ca.crt
+          volumeMounts:
+            - name: nats-trust
+              mountPath: /etc/nats-trust
+              readOnly: true
+          resources:
+            requests:
+              cpu: 25m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: health
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: health
+            periodSeconds: 10
+      volumes:
+        - name: nats-trust
+          configMap:
+            name: onemind-nats-trust
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onemind-projection-grants-v1
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 8
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: onemind-core-bootstrap
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      containers:
+        - name: grants
+          image: {{ .Values.image | quote }}
+          command: [python, -c]
+          args:
+            - |
+              import os, time, psycopg
+              for attempt in range(100):
+                  try:
+                      with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+                          conn.execute("GRANT SELECT, INSERT, UPDATE ON objects TO onemind_ingestion")
+                          conn.execute("ALTER TABLE objects ENABLE ROW LEVEL SECURITY")
+                          conn.execute("DROP POLICY IF EXISTS source_projection_worker ON objects")
+                          conn.execute("CREATE POLICY source_projection_worker ON objects TO onemind_ingestion "
+                                       "USING (id LIKE 'source:%' AND source!='onemind') "
+                                       "WITH CHECK (id LIKE 'source:%' AND source!='onemind')")
+                      print("Projection grants ready")
+                      break
+                  except Exception:
+                      time.sleep(5)
+              else:
+                  raise RuntimeError("Projection grants did not initialize")
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-db
+                  key: uri
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

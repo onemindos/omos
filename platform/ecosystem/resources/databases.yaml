@@ -1,0 +1,76 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-onemind
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: onemind
+  owner: onemind
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+  extensions:
+  - name: postgis
+    ensure: present
+  - name: vector
+    ensure: present
+  - name: age
+    ensure: present
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-dapr-workflows
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: dapr_workflows
+  owner: dapr_workflows
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-litellm
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: litellm
+  owner: litellm
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-openfga
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: openfga
+  owner: openfga
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-langfuse
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: langfuse
+  owner: langfuse
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain

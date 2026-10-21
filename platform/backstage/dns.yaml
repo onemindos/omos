@@ -11,3 +11,7 @@ data:
       name exact onemind-auth.tail717ba0.ts.net authentik-mesh.backstage.svc.cluster.local
       answer auto
     }
+    rewrite stop {
+      name exact argocd.tail717ba0.ts.net argocd-mesh.backstage.svc.cluster.local
+      answer auto
+    }

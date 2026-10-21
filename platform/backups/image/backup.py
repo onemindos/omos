@@ -1,0 +1,295 @@
+"""Encrypted, fail-closed application backups with remote restore verification."""
+import base64
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import socket
+import ssl
+import urllib.parse
+import urllib.request
+import subprocess
+import tarfile
+import tempfile
+import time
+import uuid
+
+import boto3
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+HEADER = b"OMBKP002"
+AAD = b"OneMindPlatformBackupV1"
+CHUNK = 1024 * 1024
+
+
+def command(args, env=None):
+    # Never log argv/stderr: provider errors and URLs can contain credentials.
+    result = subprocess.run(args, env=env, capture_output=True, check=False)
+    if result.returncode:
+        raise RuntimeError(f"{Path(args[0]).name} failed (exit {result.returncode})")
+    return result.stdout
+
+
+def digest(path):
+    value = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(CHUNK), b""):
+            value.update(chunk)
+    return value.hexdigest()
+
+
+def encrypt(source, target, key):
+    nonce = os.urandom(12)
+    cipher = Cipher(algorithms.AES(key), modes.GCM(nonce)).encryptor()
+    cipher.authenticate_additional_data(AAD)
+    with source.open("rb") as src, target.open("wb") as dst:
+        dst.write(HEADER + nonce)
+        for chunk in iter(lambda: src.read(CHUNK), b""):
+            dst.write(cipher.update(chunk))
+        dst.write(cipher.finalize())
+        dst.write(cipher.tag)
+
+
+def decrypt(source, target, key):
+    try:
+        with source.open("rb") as src, target.open("wb") as dst:
+            if src.read(len(HEADER)) != HEADER:
+                raise ValueError("Invalid backup format")
+            nonce = src.read(12)
+            src.seek(-16, 2)
+            tag = src.read(16)
+            remaining = source.stat().st_size - len(HEADER) - 12 - 16
+            if remaining < 0:
+                raise ValueError("Truncated backup")
+            src.seek(len(HEADER) + 12)
+            cipher = Cipher(algorithms.AES(key), modes.GCM(nonce, tag)).decryptor()
+            cipher.authenticate_additional_data(AAD)
+            while remaining:
+                chunk = src.read(min(CHUNK, remaining))
+                if not chunk:
+                    raise ValueError("Truncated backup")
+                dst.write(cipher.update(chunk))
+                remaining -= len(chunk)
+            dst.write(cipher.finalize())
+    except Exception:
+        target.unlink(missing_ok=True)
+        raise
+
+
+def postgres_backup(directory, owned=False):
+    if owned:
+        databases = command([
+            "psql", "--dbname", "postgres", "-At", "-v", "ON_ERROR_STOP=1", "-c",
+            "SELECT datname FROM pg_database WHERE datdba=(SELECT oid FROM pg_roles "
+            "WHERE rolname=current_user) AND NOT datistemplate ORDER BY datname",
+        ]).decode().splitlines()
+        if not databases:
+            raise RuntimeError("Refusing an empty owned-database backup")
+        entries = []
+        for database in databases:
+            filename = hashlib.sha256(database.encode()).hexdigest() + ".dump"
+            command(["pg_dump", "--format=custom", "--compress=1", "--file",
+                     str(directory / filename), "--dbname", database])
+            entries.append({"database": database, "file": filename})
+        return {"kind": "postgres", "databases": entries}
+    database = os.environ["PGDATABASE"]
+    command(["pg_dump", "--format=custom", "--compress=1", "--file", str(directory / "database.dump"), database])
+    return {"kind": "postgres", "database": database}
+
+
+def postgres_restore(directory, metadata):
+    if "databases" in metadata:
+        results = [postgres_restore_one(directory / entry["file"], require_tables=False)
+                   for entry in metadata["databases"]]
+        tables = sum(result["tables"] for result in results)
+        if not results or tables < 1:
+            raise RuntimeError("Owned-database restore has no application tables")
+        return {"databases": len(results), "tables": tables}
+    return postgres_restore_one(directory / "database.dump")
+
+
+def postgres_restore_one(dump, require_tables=True):
+    # A separate loopback-only sidecar supplies restore storage and extensions.
+    # Never consume production PGHOST, PGHOSTADDR, PGPASSWORD or PGDATABASE here.
+    env = {k: v for k, v in os.environ.items() if not k.startswith("PG")}
+    env.update(PGHOST="127.0.0.1", PGPORT=os.environ.get("PG_RESTORE_PORT", "15432"),
+               PGUSER="postgres", PGCONNECT_TIMEOUT="15")
+    name = "onemind_restore_" + uuid.uuid4().hex
+    command(["createdb", "--maintenance-db=postgres", name], env=env)
+    try:
+        command(["pg_restore", "--exit-on-error", "--no-owner", "--no-privileges",
+                 "--dbname", name, str(dump)], env=env)
+        tables = int(command(["psql", "--dbname", name, "-At", "-v", "ON_ERROR_STOP=1",
+                              "-c", "SELECT count(*) FROM information_schema.tables "
+                              "WHERE table_schema NOT IN ('pg_catalog','information_schema')"], env=env))
+        if require_tables and tables < 1:
+            raise RuntimeError("Restored database has no application tables")
+        return {"tables": tables}
+    finally:
+        command(["dropdb", "--maintenance-db=postgres", "--if-exists", name], env=env)
+
+
+def nats_backup(directory):
+    streams = command(["nats", "--no-context", "stream", "ls", "--names", "--all"]).decode().splitlines()
+    if not streams:
+        raise RuntimeError("Refusing an empty NATS backup")
+    for stream in streams:
+        if not re.fullmatch(r"[A-Za-z0-9_-]+", stream):
+            raise ValueError("Unexpected stream name")
+        command(["nats", "--no-context", "backup", "stream", "--check", "--consumers",
+                 "--no-progress", stream, str(directory / stream)])
+    return {"kind": "nats", "streams": streams}
+
+
+def nats_restore(directory, metadata):
+    # No production credentials or routing in the restore process. Bind loopback.
+    env = {k: v for k, v in os.environ.items() if not k.startswith("NATS_")}
+    env["NATS_URL"] = "nats://127.0.0.1:14222"
+    with tempfile.TemporaryDirectory() as store:
+        server = subprocess.Popen(["nats-server", "-js", "-a", "127.0.0.1", "-p", "14222", "-sd", store],
+                                  env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        try:
+            for _ in range(100):
+                if server.poll() is not None:
+                    raise RuntimeError("Isolated restore server exited")
+                try:
+                    with socket.create_connection(("127.0.0.1", 14222), timeout=0.2):
+                        break
+                except OSError:
+                    time.sleep(0.1)
+            else:
+                raise RuntimeError("Isolated restore server did not start")
+            for stream in metadata["streams"]:
+                command(["nats", "--no-context", "backup", "restore", "stream", "--replicas=1",
+                         "--no-progress", str(directory / stream)], env=env)
+                info = json.loads(command(["nats", "--no-context", "stream", "info", stream, "--json"], env=env))
+                if info["config"]["name"] != stream:
+                    raise RuntimeError("Restored stream identity mismatch")
+            return {"streams": len(metadata["streams"])}
+        finally:
+            server.terminate()
+            try:
+                server.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                server.kill()
+                server.wait()
+
+
+def kubernetes_backup(directory):
+    """Read-only recovery export. Never copy server metadata or emit secret data."""
+    token_root = Path(os.environ.get("KUBE_TOKEN_DIR", "/var/run/secrets/kubernetes.io/serviceaccount"))
+    token = (token_root / "token").read_text().strip()
+    context = ssl.create_default_context(cafile=str(token_root / "ca.crt"))
+    host = os.environ["KUBERNETES_SERVICE_HOST"]
+    port = os.environ.get("KUBERNETES_SERVICE_PORT_HTTPS", "443")
+    records = []
+    counts = {}
+    for resource, kind in (("secrets", "Secret"), ("configmaps", "ConfigMap")):
+        continuation = ""
+        count = 0
+        while True:
+            query = urllib.parse.urlencode({"limit": 500, "continue": continuation})
+            request = urllib.request.Request(f"https://{host}:{port}/api/v1/{resource}?{query}",
+                                             headers={"Authorization": "Bearer " + token})
+            with urllib.request.urlopen(request, context=context, timeout=60) as response:
+                page = json.load(response)
+            for item in page["items"]:
+                metadata = item["metadata"]
+                record = {"apiVersion": "v1", "kind": kind,
+                          "metadata": {"name": metadata["name"], "namespace": metadata["namespace"]}}
+                if metadata.get("labels"):
+                    record["metadata"]["labels"] = metadata["labels"]
+                for field in ("type", "data", "binaryData", "immutable"):
+                    if field in item:
+                        record[field] = item[field]
+                records.append(record)
+                count += 1
+            continuation = page.get("metadata", {}).get("continue", "")
+            if not continuation:
+                break
+        counts[resource] = count
+    sealing_keys = sum(item["kind"] == "Secret" and item["metadata"].get("labels", {}).get(
+        "sealedsecrets.bitnami.com/sealed-secrets-key") == "active" for item in records)
+    if not counts["secrets"] or not sealing_keys:
+        raise RuntimeError("Recovery export lacks secrets or active sealing keys")
+    payload = json.dumps({"format": "OneMindClusterRecoveryV2", "items": records}, sort_keys=True).encode()
+    (directory / "recovery.json").write_bytes(payload)
+    return {"kind": "kubernetes", **counts, "sealingKeys": sealing_keys,
+            "payloadSha256": hashlib.sha256(payload).hexdigest()}
+
+
+def kubernetes_verify(directory, metadata):
+    payload = (directory / "recovery.json").read_bytes()
+    if hashlib.sha256(payload).hexdigest() != metadata["payloadSha256"]:
+        raise RuntimeError("Recovery export equality mismatch")
+    record = json.loads(payload)
+    if record["format"] != "OneMindClusterRecoveryV2":
+        raise RuntimeError("Unknown recovery export")
+    counts = {"secrets": sum(item["kind"] == "Secret" for item in record["items"]),
+              "configmaps": sum(item["kind"] == "ConfigMap" for item in record["items"])}
+    if any(counts[key] != metadata[key] for key in counts):
+        raise RuntimeError("Recovery resource count mismatch")
+    return {**counts, "sealingKeys": metadata["sealingKeys"], "downloadDecryptEqualityVerified": True}
+
+
+def run():
+    kind = os.environ["BACKUP_KIND"]
+    if kind not in ("postgres", "postgres-owned", "nats", "kubernetes"):
+        raise ValueError("Unknown backup kind")
+    key = base64.b64decode(os.environ["BACKUP_ENCRYPTION_KEY"], validate=True)
+    if len(key) != 32:
+        raise ValueError("Backup encryption key must be 32 bytes")
+    prefix = os.environ["BACKUP_PREFIX"].strip("/")
+    if not re.fullmatch(r"[A-Za-z0-9/_-]+", prefix):
+        raise ValueError("Invalid backup prefix")
+    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    object_key = f"{prefix}/{stamp}-{uuid.uuid4().hex}/archive.tar.gz.aesgcm"
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        data = root / "data"
+        data.mkdir()
+        if kind == "kubernetes":
+            metadata = kubernetes_backup(data)
+        else:
+            metadata = nats_backup(data) if kind == "nats" else postgres_backup(data, owned=kind == "postgres-owned")
+        (data / "manifest.json").write_text(json.dumps(metadata))
+        archive = root / "archive.tar.gz"
+        with tarfile.open(archive, "w:gz") as tar:
+            tar.add(data, arcname="data")
+        encrypted = root / "encrypted"
+        encrypt(archive, encrypted, key)
+        client = boto3.client("s3", endpoint_url=os.environ["S3_ENDPOINT"],
+                              aws_access_key_id=os.environ["S3_ACCESS_KEY"],
+                              aws_secret_access_key=os.environ["S3_SECRET_KEY"],
+                              region_name=os.environ.get("S3_REGION", "us-east-1"))
+        bucket = os.environ["S3_BUCKET"]
+        client.upload_file(str(encrypted), bucket, object_key)
+        remote = root / "remote"
+        client.download_file(bucket, object_key, str(remote))
+        if digest(remote) != digest(encrypted):
+            raise RuntimeError("Remote backup checksum mismatch")
+        verified = root / "verified.tar.gz"
+        decrypt(remote, verified, key)
+        restored = root / "restored"
+        restored.mkdir()
+        with tarfile.open(verified, "r:gz") as tar:
+            tar.extractall(restored, filter="data")
+        metadata = json.loads((restored / "data" / "manifest.json").read_text())
+        if kind == "kubernetes":
+            result = kubernetes_verify(restored / "data", metadata)
+        else:
+            result = nats_restore(restored / "data", metadata) if kind == "nats" else postgres_restore(restored / "data", metadata)
+        # This marker is written only after download, authentication and real restore.
+        client.put_object(Bucket=bucket, Key=object_key + ".verified.json",
+                          Body=json.dumps({"kind": kind, "sha256": digest(remote), "restore": result}).encode())
+        print(json.dumps({"backup": object_key, "kind": kind, "restoreVerified": kind != "kubernetes", **result}))
+
+
+if __name__ == "__main__":
+    try:
+        run()
+    except Exception as error:
+        print(json.dumps({"backupFailed": True, "errorType": type(error).__name__}), flush=True)
+        raise SystemExit(1)

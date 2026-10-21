@@ -1,0 +1,94 @@
+# One-off verification; intentionally excluded from the recurring Kustomization.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: auth-snapshot-verify-20261008
+  namespace: auth
+  labels:
+    onemind.io/restore-test: readiness-20261008
+spec:
+  storageClassName: do-block-storage
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 5Gi
+  dataSource:
+    apiGroup: snapshot.storage.k8s.io
+    kind: VolumeSnapshot
+    name: readiness-20261008-86c342dd8d39
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: auth-snapshot-verify-20261008
+  namespace: auth
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      labels:
+        onemind.io/restore-test: readiness-20261008
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsUser: 70
+        runAsGroup: 70
+        runAsNonRoot: true
+        fsGroup: 70
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: verify
+        image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+        command: [sh, -ec]
+        args:
+        - |
+          chmod 700 /data/pgdata
+          postgres -D /data/pgdata -h 127.0.0.1 -p 15432 -k /tmp > /tmp/postgres.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 90); do
+            if ! kill -0 "$server_pid" 2>/dev/null; then exit 1; fi
+            if pg_isready -h 127.0.0.1 -p 15432 -U authentik >/dev/null; then break; fi
+            sleep 2
+          done
+          tables="$(psql -h 127.0.0.1 -p 15432 -U authentik -d authentik -At -v ON_ERROR_STOP=1 \
+            -c "SELECT count(*) FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog','information_schema')")"
+          test "$tables" -gt 0
+          printf '{"snapshotRestoreVerified":true,"tables":%s}\n' "$tables"
+          kill "$server_pid"
+          wait "$server_pid"
+          trap - EXIT
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-secret
+              key: POSTGRES_PASSWORD
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: auth-snapshot-verify-20261008
+      - name: tmp
+        emptyDir:
+          sizeLimit: 256Mi

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    "helpers:pinGitHubActionDigests",
+    ":semanticCommitsDisabled"
+  ],
+  "description": "OneMind GitOps: Argo CD chart versions, Helm values image tags, Kubernetes manifest images, GitHub Actions digests. Weekly, minor/patch grouped, majors separate.",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard (Renovate)",
+  "timezone": "America/New_York",
+  "schedule": ["before 6am on monday"],
+  "prConcurrentLimit": 6,
+  "prHourlyLimit": 2,
+  "labels": ["dependencies"],
+  "commitMessagePrefix": "chore(deps):",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/third-party/**",
+    "docs/references/**",
+    "platform/future/**",
+    ".obsidian/**",
+    "vault/**"
+  ],
+
+  "argocd": {
+    "managerFilePatterns": [
+      "/^platform/argocd/.+\\.ya?ml$/",
+      "/^platform/ecosystem/(applications|foundation-applications)/.+\\.ya?ml$/"
+    ]
+  },
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/^platform/.+\\.ya?ml$/",
+      "/^platform/takserver/(deploy|fedhub)/.+\\.ya?ml$/"
+    ]
+  },
+  "helm-values": {
+    "managerFilePatterns": [
+      "/^platform/values/.+\\.ya?ml$/",
+      "/^platform/ecosystem/values/.+\\.ya?ml$/",
+      "/^platform/takserver/values-onemind\\.ya?ml$/"
+    ]
+  },
+  "github-actions": {
+    "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"]
+  },
+  "helmv3": {
+    "description": "platform/takserver/chart vendors its dependencies (charts/*.tgz + Chart.lock); bump them by hand with `helm dependency update`.",
+    "enabled": false
+  },
+
+  "packageRules": [
+    {
+      "description": "Group all minor/patch Argo CD Helm chart bumps into one weekly PR",
+      "matchManagers": ["argocd"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "argocd helm charts (minor/patch)",
+      "labels": ["dependencies", "helm-chart"]
+    },
+    {
+      "description": "Group minor/patch container image bumps in Helm values files",
+      "matchManagers": ["helm-values"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "helm values images (minor/patch)",
+      "labels": ["dependencies", "container-image"]
+    },
+    {
+      "description": "Group minor/patch container image bumps in plain Kubernetes manifests",
+      "matchManagers": ["kubernetes"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "kubernetes manifest images (minor/patch)",
+      "labels": ["dependencies", "container-image"]
+    },
+    {
+      "description": "Group GitHub Actions bumps (digest + minor/patch)",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
+      "groupName": "github actions",
+      "labels": ["dependencies", "ci"]
+    },
+    {
+      "description": "Majors always get their own PR, a visible label, and are never auto-grouped",
+      "matchUpdateTypes": ["major"],
+      "groupName": null,
+      "labels": ["dependencies", "major"],
+      "prPriority": -1
+    },
+    {
+      "description": "Foundation charts are checksum-pinned in platform/ecosystem/foundation-lock.json. Renovate cannot regenerate the lock, so these PRs need a manual lock refresh. Hold them behind the dashboard checkbox.",
+      "matchFileNames": ["platform/ecosystem/foundation-applications/**"],
+      "dependencyDashboardApproval": true,
+      "labels": ["dependencies", "helm-chart", "needs-chart-lock-refresh"],
+      "prBodyNotes": ["Regenerate `platform/ecosystem/foundation-lock.json` (chart version, URL, sha256) before merging; CI `ecosystem-charts` fails on a checksum mismatch."]
+    },
+    {
+      "description": "Stateful or risky platform components: dashboard approval required, never batched",
+      "matchPackageNames": [
+        "authentik",
+        "altinity-clickhouse-operator",
+        "cloudnative-pg",
+        "plugin-barman-cloud",
+        "velero",
+        "volsync",
+        "nats",
+        "natsio/**",
+        "ghcr.io/onemindos/takserver-base",
+        "postgis/postgis",
+        "timescale/timescaledb-ha",
+        "mongo"
+      ],
+      "groupName": null,
+      "dependencyDashboardApproval": true,
+      "labels": ["dependencies", "stateful", "needs-backup-before-merge"]
+    },
+    {
+      "description": "Do not pin :latest images to digests yet; that is a separate, deliberate PR (see docs/STACK.md, section Mutable image tags).",
+      "matchDatasources": ["docker"],
+      "pinDigests": false
+    }
+  ],
+
+  "vulnerabilityAlerts": {
+    "labels": ["dependencies", "security"],
+    "schedule": ["at any time"]
+  }
+}

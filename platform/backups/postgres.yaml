@@ -1,0 +1,652 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-postgres-auth
+  namespace: auth
+spec:
+  schedule: 0 5 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
+      template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:de795f12b6295d0db5cbe803c11cc4db38678670f4ec8cf7951484a090a7f863
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: postgres
+            - name: BACKUP_PREFIX
+              value: backups/postgres-auth
+            - name: S3_REGION
+              value: nyc3
+            - name: PGHOST
+              value: authentik-postgres
+            - name: PGUSER
+              value: authentik
+            - name: PGDATABASE
+              value: authentik
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: POSTGRES_PASSWORD
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 8Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 8Gi
+          - name: restore-data
+            emptyDir:
+              sizeLimit: 10Gi
+          initContainers:
+          - name: restore-postgres
+            image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+            restartPolicy: Always
+            args:
+            - postgres
+            - -c
+            - listen_addresses=127.0.0.1
+            - -p
+            - '15432'
+            env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: PGDATA
+              value: /restore/data
+            securityContext:
+              runAsUser: 70
+              runAsGroup: 70
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            startupProbe:
+              exec:
+                command:
+                - pg_isready
+                - -h
+                - 127.0.0.1
+                - -p
+                - '15432'
+                - -U
+                - postgres
+              periodSeconds: 5
+              failureThreshold: 60
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 10Gi
+            volumeMounts:
+            - name: restore-data
+              mountPath: /restore
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-postgres-n8n
+  namespace: n8n
+spec:
+  schedule: 20 5 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
+      template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:de795f12b6295d0db5cbe803c11cc4db38678670f4ec8cf7951484a090a7f863
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: postgres
+            - name: BACKUP_PREFIX
+              value: backups/postgres-n8n
+            - name: S3_REGION
+              value: nyc3
+            - name: PGHOST
+              value: postgres
+            - name: PGUSER
+              value: n8n
+            - name: PGDATABASE
+              value: n8n
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-secrets
+                  key: DB_POSTGRESDB_PASSWORD
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 8Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 8Gi
+          - name: restore-data
+            emptyDir:
+              sizeLimit: 10Gi
+          initContainers:
+          - name: restore-postgres
+            image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+            restartPolicy: Always
+            args:
+            - postgres
+            - -c
+            - listen_addresses=127.0.0.1
+            - -p
+            - '15432'
+            env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: PGDATA
+              value: /restore/data
+            securityContext:
+              runAsUser: 70
+              runAsGroup: 70
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            startupProbe:
+              exec:
+                command:
+                - pg_isready
+                - -h
+                - 127.0.0.1
+                - -p
+                - '15432'
+                - -U
+                - postgres
+              periodSeconds: 5
+              failureThreshold: 60
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 10Gi
+            volumeMounts:
+            - name: restore-data
+              mountPath: /restore
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-postgres-matrix
+  namespace: matrix
+spec:
+  schedule: 40 5 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
+      template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:f065ed3b2d304c35cfc102a0cf4d5d8ed62a66dc9cdb992b754e081f42e2db2a
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: postgres
+            - name: BACKUP_PREFIX
+              value: backups/postgres-matrix
+            - name: S3_REGION
+              value: nyc3
+            - name: PGHOST
+              value: postgres
+            - name: PGUSER
+              value: synapse
+            - name: PGDATABASE
+              value: synapse
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matrix-secrets
+                  key: postgres-password
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 8Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 8Gi
+          - name: restore-data
+            emptyDir:
+              sizeLimit: 10Gi
+          initContainers:
+          - name: restore-postgres
+            image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+            restartPolicy: Always
+            args:
+            - postgres
+            - -c
+            - listen_addresses=127.0.0.1
+            - -p
+            - '15432'
+            env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: PGDATA
+              value: /restore/data
+            securityContext:
+              runAsUser: 70
+              runAsGroup: 70
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            startupProbe:
+              exec:
+                command:
+                - pg_isready
+                - -h
+                - 127.0.0.1
+                - -p
+                - '15432'
+                - -U
+                - postgres
+              periodSeconds: 5
+              failureThreshold: 60
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 10Gi
+            volumeMounts:
+            - name: restore-data
+              mountPath: /restore
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-postgres-takml
+  namespace: takml
+spec:
+  schedule: 0 6 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
+      template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:f065ed3b2d304c35cfc102a0cf4d5d8ed62a66dc9cdb992b754e081f42e2db2a
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: postgres
+            - name: BACKUP_PREFIX
+              value: backups/postgres-takml
+            - name: S3_REGION
+              value: nyc3
+            - name: PGHOST
+              value: takml-db
+            - name: PGUSER
+              value: takml
+            - name: PGDATABASE
+              value: takml_server
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: takml-db-creds
+                  key: password
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 8Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 8Gi
+          - name: restore-data
+            emptyDir:
+              sizeLimit: 10Gi
+          initContainers:
+          - name: restore-postgres
+            image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+            restartPolicy: Always
+            args:
+            - postgres
+            - -c
+            - listen_addresses=127.0.0.1
+            - -p
+            - '15432'
+            env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: PGDATA
+              value: /restore/data
+            securityContext:
+              runAsUser: 70
+              runAsGroup: 70
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            startupProbe:
+              exec:
+                command:
+                - pg_isready
+                - -h
+                - 127.0.0.1
+                - -p
+                - '15432'
+                - -U
+                - postgres
+              periodSeconds: 5
+              failureThreshold: 60
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 10Gi
+            volumeMounts:
+            - name: restore-data
+              mountPath: /restore
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-postgres-backstage
+  namespace: backstage
+spec:
+  schedule: 40 6 * * *
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
+      template:
+        metadata:
+          labels:
+            app: platform-backup
+            backup-kind: postgres
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr
+          securityContext:
+            runAsUser: 70
+            runAsGroup: 70
+            runAsNonRoot: true
+            fsGroup: 70
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: backup
+            image: ghcr.io/onemindos/platform-backup@sha256:5b151e520bcdb086bbcf40dcc92a10bcfea810aa4cc4fe44f3f63598350b6e07
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: platform-backup-credentials
+            env:
+            - name: BACKUP_KIND
+              value: postgres-owned
+            - name: BACKUP_PREFIX
+              value: backups/postgres-backstage
+            - name: S3_REGION
+              value: nyc3
+            - name: PGHOST
+              value: backstage-postgres
+            - name: PGUSER
+              value: backstage
+            - name: PGCONNECT_TIMEOUT
+              value: '15'
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-secrets
+                  key: POSTGRES_PASSWORD
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 8Gi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir:
+              sizeLimit: 8Gi
+          - name: restore-data
+            emptyDir:
+              sizeLimit: 10Gi
+          initContainers:
+          - name: restore-postgres
+            image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+            restartPolicy: Always
+            args:
+            - postgres
+            - -c
+            - listen_addresses=127.0.0.1
+            - -p
+            - '15432'
+            env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: PGDATA
+              value: /restore/data
+            securityContext:
+              runAsUser: 70
+              runAsGroup: 70
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            startupProbe:
+              exec:
+                command:
+                - pg_isready
+                - -h
+                - 127.0.0.1
+                - -p
+                - '15432'
+                - -U
+                - postgres
+              periodSeconds: 5
+              failureThreshold: 60
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+                ephemeral-storage: 1Gi
+              limits:
+                cpu: '2'
+                memory: 1Gi
+                ephemeral-storage: 10Gi
+            volumeMounts:
+            - name: restore-data
+              mountPath: /restore
+  timeZone: Etc/UTC
+  startingDeadlineSeconds: 3600

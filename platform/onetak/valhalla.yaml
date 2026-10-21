@@ -7,6 +7,8 @@ metadata:
     app: valhalla
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: valhalla
@@ -15,6 +17,16 @@ spec:
       labels:
         app: valhalla
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
       initContainers:
         - name: download-pbf
           image: alpine:3.19
@@ -35,8 +47,8 @@ spec:
               mountPath: /custom_files
           resources:
             requests:
-              cpu: "500m"
-              memory: 512Mi
+              cpu: 100m
+              memory: 128Mi
             limits:
               cpu: "2"
               memory: 1Gi
@@ -76,8 +88,8 @@ spec:
               mountPath: /custom_files
           resources:
             requests:
-              cpu: 300m
-              memory: 1Gi
+              cpu: 10m
+              memory: 128Mi
             limits:
               cpu: "2"
               memory: 4Gi

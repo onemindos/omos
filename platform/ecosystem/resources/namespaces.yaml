@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-core
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-ai
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-media
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-search
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-registry
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-jobs
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velero
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu

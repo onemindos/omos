@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nats-dashboard
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: nats-dashboard
 spec:
@@ -44,11 +44,10 @@ spec:
                 secretKeyRef:
                   name: nats-creds
                   key: sys-password
+            # The monitoring port (8222) is only on the headless service; the `nats` Service
+            # exposes 4222/7422/8080. Not a secret, so set directly instead of from nats-creds.
             - name: NATS_MONITORING_URL
-              valueFrom:
-                secretKeyRef:
-                  name: nats-creds
-                  key: NATS_MONITORING_URL
+              value: http://nats-headless.nats.svc.cluster.local:8222
           resources:
             requests:
               cpu: 50m
@@ -73,7 +72,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nats-dashboard
-  namespace: nats-tools
+  namespace: nats
   labels:
     app.kubernetes.io/name: nats-dashboard
 spec:
@@ -84,4 +83,3 @@ spec:
     - name: http
       port: 3000
       targetPort: http
-

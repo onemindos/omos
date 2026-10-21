@@ -1,0 +1,43 @@
+# Adopts the hand-installed Helm release "tempo" (namespace monitoring) into
+# Argo CD. Chart version and releaseName match the live release exactly;
+# values: tempo.yaml.
+# Adoption safety: prune is OFF (Argo will never delete anything it did not
+# render) and there is deliberately no resources-finalizer, so deleting this
+# Application can never cascade to the workloads or PVCs.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-tempo
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '4'
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  sources:
+  - repoURL: https://grafana.github.io/helm-charts
+    chart: tempo
+    targetRevision: 1.24.4
+    helm:
+      releaseName: tempo
+      valueFiles:
+      - $values/platform/values/tempo.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+    - ServerSideApply=true
+    - SkipDryRunOnMissingResource=true

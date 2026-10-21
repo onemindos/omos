@@ -8,6 +8,7 @@ These are historical documentation claims, not current deployment instructions o
 - Documented host: ☁️ DOKS Cluster
 - Recorded status: ✅ Live
 - Recorded address: postgresql://takserver-postgresql.takserver.svc.cluster.local:5432
+- Tags: Data, TAK Server
 
 PostGIS spatial DB — CoT events, missions (20Gi, recently expanded)
 

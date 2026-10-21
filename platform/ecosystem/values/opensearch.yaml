@@ -1,0 +1,36 @@
+clusterName: onemind-search
+nodeGroup: master
+replicas: 1
+singleNode: true
+# Prefer the ecosystem pool but do not require it, so the pod can run on a core node if the pool shrinks.
+nodeAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+  - weight: 100
+    preference:
+      matchExpressions:
+      - key: doks.digitalocean.com/node-pool
+        operator: In
+        values:
+        - onemind-ecosystem-cpu
+opensearchJavaOpts: -Xms1g -Xmx1g
+resources:
+  requests:
+    cpu: 500m
+    memory: 2Gi
+  limits:
+    cpu: '2'
+    memory: 4Gi
+persistence:
+  enabled: true
+  storageClass: do-block-storage-retain
+  size: 20Gi
+extraEnvs:
+- name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: opensearch-auth
+      key: password
+sysctlInit:
+  enabled: false
+securityConfig:
+  enabled: false

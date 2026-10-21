@@ -8,6 +8,8 @@ metadata:
     app: takml-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate          # RWO PVC — a rolling update deadlocks waiting for the volume
   selector:
     matchLabels:
       app: takml-db
@@ -35,8 +37,8 @@ spec:
             - containerPort: 5432
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 10m
+              memory: 128Mi
             limits:
               cpu: 500m
               memory: 512Mi
@@ -64,8 +66,9 @@ spec:
 # NOTE: JAR is loaded from the takml-server-jar PVC.
 # On first deploy after a cluster wipe, copy the JAR into the PVC:
 #   kubectl run jar-loader --image=busybox --restart=Never -n takml \
-#     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],"containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
-#   kubectl cp tak-server/server/takml_server-2.1.jar takml/jar-loader:/jar/
+#     --overrides='{"spec":{"volumes":[{"name":"jar","persistentVolumeClaim":{"claimName":"takml-server-jar"}}],
+#       "containers":[{"name":"jar-loader","image":"busybox","command":["sleep","3600"],"volumeMounts":[{"mountPath":"/jar","name":"jar"}]}]}}'
+#   kubectl cp platform/takserver/server/takml_server-2.1.jar takml/jar-loader:/jar/
 #   kubectl delete pod jar-loader -n takml
 apiVersion: apps/v1
 kind: Deployment
@@ -84,6 +87,15 @@ spec:
       labels:
         app: takml-server
     spec:
+      # takml-models is ReadWriteOnce and also mounted by takml-vision-worker, so both
+      # pods must share a node. Follow the worker instead of naming a node.
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: takml-vision-worker
+              topologyKey: kubernetes.io/hostname
       initContainers:
         - name: check-jar
           image: busybox:1.36
@@ -235,7 +247,7 @@ spec:
         - name: ghcr
       containers:
         - name: vision-worker
-          image: ghcr.io/onemindos/takml-vision:latest
+          image: ghcr.io/onemindos/takml-vision@sha256:0aa83e2148ab0553c92b578d7b422f84726a76170d91eb146bbacdd03d1cfa0b
           imagePullPolicy: Always
           env:
             - name: NATS_URL
@@ -257,11 +269,11 @@ spec:
               value: "2.0"
             - name: FEEDS
               # feeds served by onetak-media (MediaMTX). Streams auto-register on publish.
-              value: '{"drone1":"rtsp://onetak-media.onetak.svc.cluster.local:8554/drone1","takcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/takcam","helmcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/helmcam","maccam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/maccam"}'
+              value: '{"drone1":"rtsp://onetak-media.onetak.svc.cluster.local:8554/drone1","takcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/takcam","helmcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/helmcam","maccam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/maccam"}'  # yamllint disable-line rule:line-length
           resources:
             requests:
-              cpu: 1500m
-              memory: 768Mi
+              cpu: 50m
+              memory: 512Mi
             limits:
               cpu: "2"
               memory: 1Gi
