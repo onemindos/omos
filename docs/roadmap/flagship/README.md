@@ -109,3 +109,14 @@ Do not close any of them without Zeus's explicit OK.
    acceptance. Catalog-only changes (mounted files) roll with Argo after merge.
 10. Every UI change includes before/after screenshots at desktop and phone width,
     in dark and light themes, attached to the PR.
+11. **Plugin first.** Before writing custom code, check the
+    [Backstage plugin directory](https://backstage.io/plugins), the
+    `backstage/community-plugins` repo, TeraSky, Red Hat (RHDH) and Roadie plugins.
+    Use an existing plugin when it covers the need, even partly; write custom code
+    only for the gap. Record the candidates you checked (name, maintainer, last
+    release, new-frontend support) and why you picked or rejected each, in your
+    work order's Status. Custom code needs a one-line justification per piece.
+    Known Kubernetes options to prefer: native Kubernetes plugin (installed),
+    Argo CD (installed), TeraSky Kubernetes Ingestor / Kubernetes resources /
+    Crossplane / Kyverno, Red Hat Application Topology for Kubernetes, Kubelog /
+    KwirthLog / KwirthMetrics, k8sgpt, OpenCost, Kubecost, Linkerd.
