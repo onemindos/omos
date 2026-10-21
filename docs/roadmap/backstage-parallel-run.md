@@ -8,12 +8,12 @@ Existing OneMind is preserved. Phase 6 remains In progress; Phase 7 Not started.
 
 | Workstream | PR | Assigned work completed in this batch | Still required before completion |
 |---|---|---|---|
-| Cost visibility | [#352](https://github.com/onemindos/omos/pull/352) | Volta: offline namespace allocation parser, window/currency/partial/freshness contracts and 50 synthetic tests | Real approved response/pricing evidence; existing native page/Observer adapter integration, unknown-state UI, source/image/GitOps/browser acceptance. Not a second Cost Insights page. |
+| Cost visibility | [#352](https://github.com/onemindos/omos/pull/352) | Volta: offline namespace allocation parser, window/currency/partial/freshness contracts and 51 synthetic tests | Real approved response/pricing evidence; existing native page/Observer adapter integration, unknown-state UI, source/image/GitOps/browser acceptance. Not a second Cost Insights page. |
 | Complete app coverage | [#355](https://github.com/onemindos/omos/pull/355) | Wegener: deterministic redacted catalog integration-coverage report and 9 tests; coordinator ran on current authorized catalog | One reviewed app batch at a time: real mappings and user/API/log/metric/alert/AI permission checks, not annotation-only badges. |
 | Catalog/navigation | [#353](https://github.com/onemindos/omos/pull/353) | Noether: launcher finding/closure report and 8 tests; coordinator confirmed 16 review tags still present | Repair/classify each actual endpoint, preserve canonical refs and favorites; no certificate bypass, invented URLs or blanket removal. |
-| Trust/recovery | [#354](https://github.com/onemindos/omos/pull/354) | Ptolemy: offline hashed receipt validator and 18 tests, explicit fixture/observation and incomplete states | Authorized live expiry/second-role checks, independent recovery evidence and retained artifacts; no fabricated identities or production fault injection. |
+| Trust/recovery | [#354](https://github.com/onemindos/omos/pull/354) | Ptolemy: offline hashed receipt validator and 19 tests, explicit fixture/observation and incomplete states | Authorized live expiry/second-role checks, independent recovery evidence and retained artifacts; no fabricated identities or production fault injection. |
 | Standard app lifecycle | [#351](https://github.com/onemindos/omos/pull/351) | Coordinator: extend existing onboarding skeleton with per-app acceptance contract, 2 regression tests; stale live-directory instructions corrected | Signed-in rendered proposal/release proof, one explicit allowlisted app pipeline profile and semantic/recovery acceptance. No generic deletion executor. |
-| Approved actions | [#339](https://github.com/onemindos/omos/pull/339) (existing) | Maxwell: first A0 offline request/approval evaluator and tests being prepared on existing draft | Resolve stale-main conflicts, verified principals, authorization, audit/locking/revocation/stop controls, selected pilot and human-merged release/recovery. No executor or live write permission. |
+| Approved actions | [#339](https://github.com/onemindos/omos/pull/339) (existing) | Maxwell: first A0 offline request/approval evaluator and 16 tests prepared on existing draft | Verify principals, authorization, audit/locking/revocation/stop controls, selected pilot and human-merged release/recovery. No executor or live write permission. |
 | Agents/conversation | [#332](https://github.com/onemindos/omos/pull/332) (existing) | Darwin: explicit conversation/identity/persistence/restore/agent-spend acceptance matrix on existing draft | Recorded provider 402 is unresolved, not freshly re-probed here. Approved inference remedy, identity, storage, backups and end-to-end isolated conversations precede activation. |
 | Home/multicluster/edge | [#284](https://github.com/onemindos/omos/pull/284) (existing) | Darwin: revise Mac/home requirements and measured-versus-approved capacity gates | Approved ARM64 VM sizing/storage; lid/reboot/FileVault/WAN-loss/local recovery, real Argo/Backstage registration, separate OpenChoreo/Karmada/KubeEdge acceptance. No VM or storage allocated. |
 
@@ -83,3 +83,17 @@ validation against the then-current main before sequential merges.
 - [Operating structure](../architecture/kubernetes-operating-structure.md): K00–K11,
   all twenty capability categories, candidate-platform comparisons, ML and physical
   operations. This batch does not install Crossplane/KubeVela/Karmada/KubeEdge.
+
+## Coordinator review follow-through
+
+Independent static review identified trailing-whitespace/type-coercion edge cases
+in the new cost contract and a UTC-offset overflow in the receipt parser. Both
+were fixed with regression tests (51 cost / 19 receipt tests). A synthetic API
+entity reference initially triggered the secret scanner; it was replaced with a
+short unambiguous test ref, with no allowlist/baseline/check change.
+
+The older #339/#332/#284 branches were merged with current main for preparation;
+shared tracker conflicts were reconciled without dropping acceptance gates. #332
+retains both its LibreChat safety/render tests and main's GitOps contract suite.
+No draft was production-merged. Final exact-head receipts and focused tests are
+reported on each PR; before later merging, recheck against then-current main.
