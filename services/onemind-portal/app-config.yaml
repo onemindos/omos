@@ -110,7 +110,7 @@ permission:
   enabled: true
 catalog:
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Domain]
   locations:
     - type: file
       target: ../../templates/service-registration/template.yaml
