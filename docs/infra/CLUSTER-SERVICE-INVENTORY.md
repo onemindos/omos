@@ -13,8 +13,16 @@
   Synced/Healthy, `platform-takserver` was Synced/Degraded, and `app-of-apps` plus
   `platform-clickhouse-operator` were OutOfSync/Healthy before PRs #34 and #35.
 - Backstage had two available application replicas and one ready PostgreSQL instance.
-  Service, storage and node-utilization counts below have not been recaptured and must
-  not be treated as current measurements.
+  Service and node-utilization counts below have not been recaptured and must not be
+  treated as current measurements. PVC state was rechecked after the TAK-ML claim removal.
+- On 2026-10-07, a read-only inspection found about 1.1 GiB of Python ML packages on
+  `takml/takml-deps`. No current pod mounts it; the TAK-ML vision image now installs its
+  dependencies in the image. PR #56 removed the claim; Argo CD synced revision
+  `6078b366` as Healthy, and both the PVC and PV are now absent. A local recovery archive
+  was validated before removal.
+- Rechecked read-only on 2026-10-21: `takml/takml-deps` still returns NotFound, no pod in
+  `takml` references the claim, no manifest under `platform/` mentions it, and
+  `platform-takml` is Synced/Healthy. No further deletion is pending for this claim.
 
 ## Summary
 
@@ -23,8 +31,10 @@
 - 129 Kubernetes Services exist across 20 namespaces. 115 currently have endpoint
   addresses, 7 are `ExternalName` aliases, and 7 have no endpoint addresses.
 - 5 Deployments have desired replicas set to zero.
-- 33 PVCs are `Bound`. Three are not mounted by any current pod (205 GiB requested
-  in total); this is provisioned capacity, not measured data usage.
+- At the 2026-10-06 snapshot, 33 PVCs were `Bound`; three were unmounted (205 GiB
+  requested). After PR #56 retired `takml-deps`, the 2026-10-07 check still found 33
+  `Bound` PVCs, with two unmounted Onetak claims (200 GiB requested). Requested capacity
+  is not measured filesystem usage.
 - The three cluster nodes each have 8 vCPU and 16 GiB memory capacity. `kubectl top`
   showed 13%, 18%, and 21% CPU and 103%, 69%, and 85% of allocatable memory at capture.
   This is a point-in-time observation, not a sizing recommendation.
@@ -124,24 +134,22 @@ by a future workload. The requested sizes below are not filesystem usage measure
 |---|---:|---|---|---|
 | `onetak/nominatim-data` | 100 GiB | Retain | `platform-onetak`; declared and mounted by the zero-replica Nominatim Deployment in `platform/onetak/nominatim.yaml` | Idle while Nominatim is stopped. Data and geocoding need are unverified. Retained PV means claim deletion alone would not release the volume. |
 | `onetak/overpass-data` | 100 GiB | Retain | `platform-onetak`; declared and mounted by the zero-replica Overpass Deployment in `platform/onetak/overpass.yaml` | Idle while Overpass is stopped. Data and mission-planning need are unverified. Retained PV means claim deletion alone would not release the volume. |
-| `takml/takml-deps` | 5 GiB | Delete | `platform-takml`; only declared in `platform/takml/pvcs.yaml`; no workload reference found in the repo or current pod volume mounts | Strongest manifest cleanup candidate, but claim deletion may delete the DigitalOcean volume. Confirm it is not populated or needed before removal. |
+| `takml/takml-deps` | 5 GiB | Delete | `platform-takml`; declared in `platform/takml/pvcs.yaml` at snapshot | Read-only inspection found 1.1 GiB of Python packages. The current vision image bakes dependencies into the image and no pod mounted this claim. Removed via PR #56 on 2026-10-07; Argo CD pruned the PVC and the PV was deleted. |
 
 ## Review queue
 
 These are investigation items, not approved deletions. Start with one at a time and update
 this inventory when an owner confirms the intended state.
 
-1. **Check the 5 GiB `takml-deps` claim.** Ask whether it is still used for a TAK-ML
-   dependency/build workflow; inspect its data or backup/rebuild path. If abandoned,
-   remove the Git declaration and then intentionally release its `Delete`-policy volume.
-2. **Decide whether the Nominatim service is needed.** Check route traffic and geocoding
+1. **Decide whether the Nominatim service is needed.** Check route traffic and geocoding
    consumers, then decide whether to keep the 100 GiB data, rebuild it later, or retire it.
-3. **Decide whether Overpass is still part of mission planning.** Check consumer usage and
+2. **Decide whether Overpass is still part of mission planning.** Check consumer usage and
    whether the data can be rebuilt before considering its 100 GiB retained volume.
-4. **Remove only confirmed unbuilt features.** NATS metrics scrape and mission engine are
+3. **Remove only confirmed unbuilt features.** NATS metrics scrape and mission engine are
    manifest cleanup candidates if their features are no longer planned. Cloudflared is
    explicitly a standby and stays out of that queue until routing failover is reviewed.
-5. **Investigate node memory and the TAK Server / Argo CD health exceptions.** Current node
+4. **Investigate node memory and the TAK Server / Argo CD health exceptions.** Current node
    memory is high on two nodes; this snapshot alone is not enough to safely resize nodes.
 
-No workloads, Services, claims, or volumes were changed as part of this inventory.
+The 2026-10-06 inventory capture changed no cluster resources. The `takml-deps` claim and
+its DigitalOcean volume were retired later via PR #56 on 2026-10-07.
