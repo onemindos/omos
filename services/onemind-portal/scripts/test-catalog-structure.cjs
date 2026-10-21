@@ -195,3 +195,24 @@ test('mounted copies equal the source copies', () => {
     assert.equal(fs.readFileSync(path.join(root, 'catalog', f), 'utf8'), fs.readFileSync(path.join(root, '../../platform/backstage/catalog', f), 'utf8'), f);
   }
 });
+
+test('every declared relation target resolves inside the catalog', () => {
+  const resolve = (ref, kind) => {
+    const r = ref.toLowerCase();
+    return byRef.has(r.includes(':') ? r : `${kind}:default/${r}`);
+  };
+  const missing = [];
+  for (const e of [...all, ...org]) {
+    const s = e.spec || {};
+    const targets = [
+      ...(s.dependsOn || []).map(r => [r, 'component']),
+      ...(s.dependencyOf || []).map(r => [r, 'component']),
+      ...(s.providesApis || []).map(r => [r, 'api']),
+      ...(s.consumesApis || []).map(r => [r, 'api']),
+      [s.subcomponentOf, 'component'], [s.owner, 'group'], [s.subdomainOf, 'domain'],
+      [e.kind === 'Domain' ? null : e.kind === 'System' ? s.domain : s.system, e.kind === 'System' ? 'domain' : 'system'],
+    ].filter(([r]) => r);
+    for (const [r, k] of targets) if (!resolve(r, k)) missing.push(`${refOf(e)} -> ${r}`);
+  }
+  assert.deepEqual(missing, []);
+});
