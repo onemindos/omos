@@ -1009,3 +1009,15 @@ No new controller, PVC, permission, image, migration or cloud charge. Mounted
 catalog changes naturally roll the same portal image through Argo. [Scope/gates](docs/operations/native-service-topology-2026-10-20.md).
 Source merge/Argo/catalog/browser acceptance remain distinct. Phase 6 In progress;
 Phase 7 Not started; #339 remains draft. Actual release evidence follows.
+
+Native topology [#349](https://github.com/onemindos/omos/pull/349) **accepted**
+2026-10-21 UTC at `82c05d3c`: owning Argo Synced/Healthy, portal generation 77,
+2/2 on the same verified image; DB/Grafana specifications unchanged, retained
+Grafana storage/backup and NATS 3/3 intact. Both replicas return reviewed catalog
+relationships without selected-entity errors. Signed-in core graph shows six
+services, five existing PVC records and NYC3; reverse DB graph/location navigation
+verified. Existing native Grafana/Prometheus views and read-only denials retained.
+[Receipt and limits](docs/operations/native-service-topology-2026-10-20.md).
+This is documented dependency metadata, not live traffic/all-app coverage.
+**Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
+started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.

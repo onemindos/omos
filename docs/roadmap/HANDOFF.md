@@ -193,3 +193,16 @@ user-only backend reads; machine/anonymous/mutation denials preserved, DB/Grafan
 unchanged, NATS 3/3. This supersedes the prior “not yet deployed” next-work entry.
 Next: topology/dependencies, OpenCost, broader alert coverage and native state-text
 accessibility. No Phase 6 completion/Phase 7 migration/AI mutation authorization.
+
+Latest topology follow-through: #349 merged and scoped acceptance passed on
+2026-10-21 UTC. [Receipt](../operations/native-service-topology-2026-10-20.md):
+Argo Synced/Healthy at `82c05d3c`, portal generation 77, 2/2 on unchanged
+`sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`;
+DB/Grafana specifications unchanged, retained storage/backup intact, NATS 3/3.
+Native core graph, database reverse dependencies, real NYC3 location and both
+replica catalog readers verified; read-only boundaries remain. Six reviewed
+services/five existing PVC records are documented metadata, not observed traffic
+or complete coverage. No new controller, image, storage or access was added.
+**Next: OpenCost**, then separately scoped broader coverage/accessibility and real
+multicluster/traffic work. This supersedes “topology next”; Phase 6 stays In
+progress, Phase 7 Not started and action PR #339 remains unmerged/draft.

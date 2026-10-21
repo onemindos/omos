@@ -1,6 +1,6 @@
 # Native service dependency and deployment-location topology
 
-Status: implementation prepared; source merge and live acceptance pending.
+Status: scoped production acceptance passed, 2026-10-21 UTC.
 Scope: next bounded Phase 6 visibility slice after Prometheus #346–#348.
 
 ## What this graph means
@@ -81,3 +81,66 @@ on the same pinned image; do not manually restart or apply a branch manifest.
 
 Phase 6 stays In progress, Phase 7 Not started; action draft #339 remains unmerged.
 OpenCost and broader topology/traffic/multicluster coverage are separate work.
+
+## Production acceptance
+
+Source [#349](https://github.com/onemindos/omos/pull/349) merged normally at
+`82c05d3ce54160696e4a9bb49b5465892a8be7e8`. Required portable exact-head gates
+passed for implementation `524e9c75c5d8ee7335961b12fdbb1597bd3cd400`;
+18 Node catalog/topology tests and 33 Python pipeline/GitOps contracts passed.
+Hosted GitHub CI remains billing-blocked, not green. Historical whole-tree
+`make validate` YAML failures begin at `platform/onetak/media-mtx.yaml:86`;
+changed-file and required portable checks passed independently.
+
+Natural Argo reconciliation was Synced/Healthy at the exact merge revision;
+Backstage generation 77 observed, 2/2 ready/updated/available, zero restarts:
+
+- `backstage-6ffb598ccc-9fklf`
+- `backstage-6ffb598ccc-f4qbj`
+
+Both actual imageIDs remain
+`ghcr.io/onemindos/onemind-portal@sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6`.
+The full pod specification matches the pre-change specification after normalizing
+only the reviewed generated catalog ConfigMap content hash. PostgreSQL's complete
+specification/controller revision are unchanged. Grafana's Deployment UID/spec
+are unchanged, its retained 5 GiB claim is Bound and backup schedule enabled;
+NATS remains 3/3. No forced sync, imperative workload change or new image was used.
+
+The paired source inventory grew from 509 to 514 entities with no removals.
+Both replica machine catalog readers returned the same reviewed entities, all
+15 selected references returned 200 with no catalog error items; forward/inverse
+relationships, five storage records and namespace titles matched expectations.
+This checks the selected slice, not every catalog entry or live traffic.
+
+Signed-in browser acceptance confirmed:
+
+- Backstage's Overview retains native Grafana folder/dashboard links, scoped
+  Prometheus alerts and existing operations links alongside new topology links.
+- The actual core-service link opens the installed native graph: exactly six
+  reviewed Components, five existing PVC Resources and the NYC3 location, with
+  bounded forward traversal. No unrelated workload fanout in this core view.
+- The database's documented-dependent link shows the database and Backstage.
+- The deployment-location link opens the real NYC3 Resource and its explicit
+  documented-metadata disclaimer. Namespace membership reads `Namespace / ...`,
+  not a claim of additional clusters.
+
+Native generic location-entity Relations still lists its many existing workload
+dependents; use its bounded core-service link for the readable scoped view.
+This release does not redesign the generic graph or certify all dependencies.
+
+Read-only boundaries were rechecked on both replicas: machine catalog GET 200;
+anonymous scoped Prometheus GET 401; machine Prometheus GET/POST and Grafana
+proxy GET 403. Kubernetes service-account reads remain allowed for Deployments
+and PVCs; Secret reads, pod exec, Deployment patch and pod deletion remain denied.
+No permissions or credentials changed. Fixture/source guards complement these
+observations; this is not authorization for live AI mutations.
+
+Local receipts: `/tmp/onemind-topology-check/run.json` and
+`/tmp/onemind-topology-ops/{application-after,deployment-after,pods-after,catalog-accepted,safety-accepted,rbac-accepted}.json`.
+Browser proof: `/Users/zeus/.codex/visualizations/2026/10/20/native-service-topology/core-topology.png`.
+Temporary receipts/screenshots are local evidence, not durable backup storage.
+The receipt PR changes documentation only; no second image build is needed.
+
+Next bounded visibility slice: OpenCost. Broader alert coverage, native state-text
+accessibility, observed network traffic and real multicluster topology remain
+separate work. Phase 6 is still In progress; Phase 7 Not started; #339 stays draft.
