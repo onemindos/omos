@@ -1021,3 +1021,12 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+
+### Parallel portal run — trust
+
+User requested a separate draft workstream for trust. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-trust-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
