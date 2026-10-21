@@ -1,0 +1,48 @@
+{
+  "name": "@internal/plugin-onemind-home",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "private": true,
+  "backstage": {
+    "role": "frontend-plugin",
+    "pluginId": "onemind-home"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "lint": "backstage-cli package lint",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "test": "backstage-cli package test"
+  },
+  "dependencies": {
+    "@backstage-community/plugin-grafana": "1.1.0",
+    "@backstage/core-components": "0.18.14",
+    "@backstage/core-plugin-api": "1.12.10",
+    "@backstage/frontend-plugin-api": "0.18.1",
+    "@backstage/plugin-catalog-react": "^3.2.3",
+    "@backstage/plugin-home": "0.9.10",
+    "@backstage/plugin-home-react": "0.1.42",
+    "@backstage/plugin-notifications": "0.6.0",
+    "@internal/plugin-onemind-common": "workspace:^",
+    "@material-ui/core": "^4.12.2",
+    "@material-ui/icons": "^4.9.1",
+    "@roadiehq/backstage-plugin-github-pull-requests": "3.9.1"
+  },
+  "devDependencies": {
+    "@backstage/cli": "0.36.6",
+    "@testing-library/react": "^14.0.0",
+    "@types/react": "18.3.28",
+    "jest": "~30.2.0",
+    "react-dom": "^18.0.2"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "react": "^18.0.2",
+    "react-dom": "^18.0.2"
+  }
+}

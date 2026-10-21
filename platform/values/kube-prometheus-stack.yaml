@@ -1,7 +1,17 @@
 # kube-prometheus-stack — resource requests/limits for DO upgrade compliance
-# Pass via: helm upgrade -f ./values/kube-prometheus-stack.yaml
+# Argo-owned release: monitoring-kube-prometheus-stack.
 prometheus:
   prometheusSpec:
+    # Rebalance the 2Gi request off hub-core; keep fallback capacity available.
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: doks.digitalocean.com/node-pool
+                  operator: In
+                  values: [onemind-ecosystem-cpu]
     resources:
       # Request matches real use (7-day peak 1.73 GiB; it was 512Mi); limit raised so the peak is not 86% of it.
       requests:
@@ -24,6 +34,7 @@ prometheus:
     # Pick up PrometheusRule CRs from all namespaces
     ruleSelector: {}
     ruleNamespaceSelector: {}
+    ruleSelectorNilUsesHelmValues: false
 
 alertmanager:
   alertmanagerSpec:
@@ -36,11 +47,17 @@ alertmanager:
     # Pick up AlertmanagerConfig CRs; with no namespace selector the operator only
     # reads Alertmanager's own namespace (monitoring). Matches the live release.
     alertmanagerConfigSelector: {}
+    # OpenChoreo metric alerts need not carry the Config CR namespace as a label.
+    # The route itself matches only openchoreo_alert=true; retain all other receivers.
+    alertmanagerConfigMatcherStrategy:
+      type: None
 
 kubeStateMetrics:
   enabled: true
 
 kube-state-metrics:
+  metricLabelsAllowlist:
+    - "pods=[openchoreo.dev/component-uid,openchoreo.dev/project-uid,openchoreo.dev/environment-uid,openchoreo.dev/namespace,openchoreo.dev/component,openchoreo.dev/project,openchoreo.dev/environment]"
   resources:
     requests:
       cpu: 50m
@@ -60,6 +77,49 @@ nodeExporter:
   enabled: true
 
 grafana:
+  # Legacy Helm field ownership retains emptyDir/rollingUpdate under SSA.
+  # Replace this fully rendered Deployment only; never Force/delete its PVC.
+  annotations:
+    argocd.argoproj.io/sync-options: Replace=true
+  # Existing seed/remote restore passed before this RWO Recreate cutover.
+  deploymentStrategy: {type: Recreate}
+  persistence:
+    enabled: true
+    type: pvc
+    existingClaim: grafana-data
+  initChownData:
+    enabled: false
+  podLabels:
+    onemind.io/grafana-persistent: "true"
+  extraInitContainers:
+    - name: require-verified-state
+      image: docker.io/grafana/grafana:13.1.0
+      command: [sh, -ec]
+      args:
+        - >-
+          test -s /var/lib/grafana/grafana.db &&
+          grep -q '"restoreVerified": true' /var/lib/grafana/.onemind-grafana-seed.json
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 472
+        runAsGroup: 472
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: {drop: [ALL]}
+      resources:
+        requests: {cpu: 10m, memory: 16Mi}
+        limits: {cpu: 100m, memory: 64Mi}
+      volumeMounts:
+        - {name: storage, mountPath: /var/lib/grafana, readOnly: true}
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values: [onemind-ecosystem-cpu]
   # Use the existing admin Secret. Without this the chart generates a random
   # password on every render, so Argo would change the Grafana password each sync.
   admin:
@@ -73,6 +133,11 @@ grafana:
     limits:
       memory: 2Gi
   sidecar:
+    dashboards:
+      # Only annotated ConfigMaps enter named folders; existing root boards stay put.
+      folderAnnotation: onemind.io/grafana-folder
+      provider:
+        foldersFromFilesStructure: true
     resources:
       requests:
         cpu: 10m
@@ -87,3 +152,11 @@ prometheusOperator:
       memory: 64Mi
     limits:
       memory: 256Mi
+
+# DOKS owns these control-plane endpoints; Cilium replaces kube-proxy.
+kubeScheduler:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeProxy:
+  enabled: false

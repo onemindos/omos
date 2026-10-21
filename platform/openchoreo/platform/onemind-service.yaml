@@ -35,6 +35,8 @@ spec:
 
   allowedTraits:
     - kind: ClusterTrait
+      name: cilium-gateway-ingress
+    - kind: ClusterTrait
       name: health-probes
     - kind: ClusterTrait
       name: horizontal-pod-autoscaler
