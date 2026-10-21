@@ -16,8 +16,8 @@ Every app, whether Kubernetes, DigitalOcean, SaaS or home device, opens to the
 - **Live** tab: Kubernetes resources and pods (native plugin), Argo history,
   recent events.
 - **Metrics** tab: Grafana dashboard plus scoped Prometheus alerts (existing).
-- **Logs** tab: Loki query for the app's namespace and selector, through a Grafana
-  Explore link or embed (no new log store).
+- **Logs** tab: prefer an existing plugin (KwirthLog or Kubelog for live pod logs);
+  otherwise a Loki query through a Grafana Explore link or embed. No new log store.
 - **Cost** tab: OpenCost allocation for the app's namespace and labels (F9).
 - **Docs** tab: TechDocs and runbook.
 - **Code** tab: repo, PRs and CI. Show "Connect GitHub" as a button there, and
@@ -36,6 +36,20 @@ disclaimers on every card; put one info tooltip per card instead.
 - Composition modules: `packages/app/src/componentOverviewModule.tsx`,
   `catalogCompositionModules.ts`. Existing tests: `ComponentOverview.test.tsx`,
   `componentOverviewModule.test.ts`, `catalogCompositionModules.test.ts`.
+
+## Plugin first
+
+Fill tabs with existing plugins wherever possible:
+- Kubernetes (installed), plus Red Hat Application Topology or TeraSky
+  Kubernetes resources, for the Live tab
+- Argo CD (installed)
+- Grafana and Roadie Prometheus (installed) for Metrics
+- KwirthLog/Kubelog for Logs
+- OpenCost for Cost (F9)
+- TechDocs (installed) for Docs
+- GitHub Actions/PRs (installed, behind a connect button) for Code
+
+Custom code is limited to the layout, the status dot and the hosting-aware filters.
 
 ## Build
 
