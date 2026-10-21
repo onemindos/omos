@@ -7,6 +7,17 @@ Kubernetes's native capabilities available; make operating them coherent, not
 invisible. AI doing the work does not remove failure domains, reconciliation
 conflicts, security boundaries, recovery requirements or compute costs.
 
+## Selection clarification — 2026-10-21
+
+The user's supplied application-flow list reiterates **KubeVela and Crossplane
+as selected targets, implementation/acceptance pending**, not merely generic
+comparison candidates. [Ownership decision](decisions/0002-application-delivery-and-infrastructure-boundaries.md)
+supersedes only that earlier selection wording. Keep current OpenChoreo/native
+Argo workloads until an explicitly accepted per-app transfer; Terraform resources
+remain with their recorded owner. No new controllers/credentials are installed.
+The [Backstage experience foundation](../roadmap/backstage-experience-foundation.md)
+adds UI/layout/native-feature planning; it is not a production redesign.
+
 ## Start here
 
 1. **Continue the remaining Backstage trust gates**, using merged
@@ -59,7 +70,7 @@ it is not itself the cluster lifecycle manager.
 | Foundation: identity, private access, recovery, policies, platform controllers | Argo CD + the installed owning controller | AI observes/proposes PRs; human approves foundation changes. Foundation must recover without the application abstraction. |
 | Shared data, messaging, registry and telemetry | Argo CD + domain operators | Catalog and APIs expose them without transferring ownership to an app platform. |
 | Product apps | Existing Argo resources; OpenChoreo for applications that pass its contract | Argo owns the OpenChoreo intent CR; OpenChoreo owns its generated resources. Never have Argo also apply those generated Deployments. Native CRDs remain possible. |
-| External infrastructure | Terraform today; a bounded Crossplane experiment only if approved | Never let Terraform and Crossplane control the same external resource concurrently. |
+| External infrastructure | Terraform today; selected Crossplane app-infrastructure target pending acceptance | Never let Terraform and Crossplane control the same external resource concurrently. |
 | Independent clusters | Per-cluster Argo registration/ApplicationSets after acceptance | Not a stretched WAN control plane. Future local recovery cannot depend solely on cloud-hosted GitOps/identity/inference. |
 | Selected federated workloads | Karmada only after a dedicated pilot | Argo owns intent in the Karmada control plane, not duplicate generated member-cluster workloads. |
 | Edge node/device lifecycle | KubeEdge pilot where disconnected edge nodes need it | Keep device safety and local authority separate from an LLM; normal site K3s clusters do not automatically need EdgeCore. |
@@ -99,14 +110,14 @@ uninstalled/unaccepted here. Recheck versions/compatibility when implementing.
 - **OpenChoreo:** existing app lifecycle/environment API and Backstage plugins.
   Keep the deployed pilot while testing suitability; do not force databases,
   foundation controllers or TAK into it merely to obtain a UI card.
-- **KubeVela:** a legitimate alternative application abstraction with extensible
+- **KubeVela:** the user-selected target application abstraction with extensible
   definitions, traits and workflows. Its addon ecosystem includes overlapping
   infrastructure. Compare a pinned version on disposable workloads against the
   actual OpenChoreo/native GitOps contract. An addon list is not proof of a
   maintained native integration with our pinned Backstage version. Do not enable
   its Flux addon over Argo-owned resources.
   [KubeVela addon overview](https://kubevela.io/docs/reference/addons/overview/)
-- **Crossplane:** custom infrastructure APIs/compositions and external providers;
+- **Crossplane:** the user-selected target for app-infrastructure APIs/compositions;
   useful if reusable database/bucket/environment requests justify it. It can also
   compose Kubernetes resources, so explicitly constrain the experiment's ownership
   rather than assuming it never overlaps an app platform.
@@ -126,8 +137,10 @@ uninstalled/unaccepted here. Recheck versions/compatibility when implementing.
   Harvester is the production virtualization answer for an Apple Silicon laptop.
   Existing Headlamp remains the Kubernetes drill-down/break-glass UI.
 
-These are **bounded candidate evaluations**, not rejection because “one person
-cannot handle complexity” and not blanket approvals to deploy them all.
+KubeVela/Crossplane are **selected targets with bounded implementation gates**.
+The other future platforms retain their separate evaluation/acceptance status.
+This is not rejection because “one person cannot handle complexity” and not
+blanket approval to install every controller.
 
 ## Integration reality: ecosystem support versus OneMind acceptance
 
@@ -138,7 +151,7 @@ cannot handle complexity” and not blanket approvals to deploy them all.
 | Backstage ↔ Kubernetes / Argo | Entity selectors, cluster identity and service-oriented drill-down; owning Argo Application linked | Existing single cloud cluster; prove each new app/cluster mapping rather than assume discovery is full observability |
 | NATS ↔ Legacy / other agents | Existing bus/agent workloads and protocol; scoped adapters, request/response/stream/approval/cancel correlation needed | Inventory/discovery is not working inference; earlier provider 402 remains unresolved. App APIs need adapters unless they already speak the contract |
 | Crossplane ↔ Argo | Upstream documents annotation tracking and resource-health customization | Documented integration, not installed/tested here; evaluate tracking, health, deletion/orphan and provider scopes in K08 before any adoption |
-| KubeVela ↔ current platform | Addons and extensible definitions/workflows exist upstream | Candidate comparison only; no accepted Backstage 1.55.3 plugin or coexistence proof here |
+| KubeVela ↔ current platform | Addons and extensible definitions/workflows exist upstream | Selected target; no accepted Backstage 1.55.3 plugin or coexistence proof here |
 | Karmada / KubeEdge ↔ home/sites | Placement/overrides versus edge-node/device lifecycle are different jobs | Not deployed; independent cluster recovery, ownership, WAN-loss and device tests precede a pilot |
 | TAK / Home Assistant / OpenRemote ↔ COP and agents | Native domain UI/API remains authoritative; scoped telemetry and permitted commands projected into the workspace | Per-service/device integration and safety proof still needed; no universal “NATS connects everything” assumption |
 
@@ -159,7 +172,8 @@ our Argo tracking settings. Inspect actual installed schemas/versions before imp
   where suitable; native Kubernetes/Helm/operator resources remain first-class
   choices, not second-class apps hidden from the portal.
 - Terraform remains current external-infrastructure ownership. Crossplane and
-  KubeVela are comparison candidates, not prerequisites or co-owners. Do not adopt
+  KubeVela are selected future targets, not current co-owners; implementation and
+  explicit object/field hand-offs remain gated. Do not adopt
   Flux/Fleet over the same Argo resources merely to obtain another integration.
 - Mac Linux VM/K3s is a proposed local pilot, not an installed production cluster
   or a final dedicated-host OS decision. Persistent storage, ARM64 images, local
@@ -222,7 +236,7 @@ is unnecessary unless independent ownership/release requirements emerge.
 | K05 — home foundation | Existing [#284](https://github.com/onemindos/omos/pull/284), revised against Mac evidence before implementation | Storage capacity, ARM64 VM/runtime, 24/7 closed-lid/reboot/FileVault operation, private access, GitOps, local identity/recovery and WAN-loss tests. No real file move now. |
 | K06 — Nextcloud / knowledge | Per-app PR after K05; retain Obsidian vault and existing Home Assistant | Dedicated data + DB backup/restore, lock/cache/cron/SSO, export, local access and disconnected client/conflict tests. Sync is not backup. Do not put the live server data directory inside a desktop sync folder. |
 | K07 — agent fabric + spend | One authenticated worker/adaptor at a time, then metering projection to Agent Console/Backstage | Discover, prompt, stream, approval, reconnect, stop semantics and audit correlation. Provider-reported / estimated / unknown spend remain distinct, including delegation. |
-| K08 — abstraction comparison | Disposable KubeVela/native/OpenChoreo and bounded Crossplane experiments if approved | Same app/API/secret/policy/recovery tests; actual plugin compatibility, CRD escape hatch and controller ownership. No production replacement on an unexecuted recommendation. |
+| K08 — abstraction comparison | Validate selected KubeVela/Crossplane targets against native/current OpenChoreo contracts before adoption | Same app/API/secret/policy/recovery tests; actual plugin compatibility, CRD escape hatch and controller ownership. No production replacement on an unexecuted recommendation. |
 | K09 — fleet / edge | Two independently recoverable clusters, then a Karmada placement pilot and separate KubeEdge node/device pilot | Placement and storage overrides, disconnection/reboot/rejoin, revocation, no duplicate reconciliation. No stretched cross-region etcd. |
 | K10 — ML compute | One real TAK-ML job/serving benchmark | GPU/ARM64 compatibility, priority/reserves/cost, bounded queues and model/artifact provenance. Consider Kueue for admission, KServe for a demonstrated serving need; full Kubeflow is not a prerequisite. |
 | K11 — local physical operations | OpenRemote/Home Assistant/TAK adapters with permitted test devices | Device identity, fresh telemetry, explicit command scope, human approval, local safety/interlocks and offline fallback. Transport latency is measured, not promised. |

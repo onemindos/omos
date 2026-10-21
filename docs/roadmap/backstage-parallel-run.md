@@ -97,3 +97,17 @@ shared tracker conflicts were reconciled without dropping acceptance gates. #332
 retains both its LibreChat safety/render tests and main's GitOps contract suite.
 No draft was production-merged. Final exact-head receipts and focused tests are
 reported on each PR; before later merging, recheck against then-current main.
+
+## Experience and architecture foundation — user follow-through
+
+The [capability/UI foundation](backstage-experience-foundation.md) compares the
+supplied list against installed source and official Backstage features. It adds
+U00–U06 future experience packages (navigation/home, consistent entity pages,
+search/docs, events/evidence, agents/actions/sites and release/accessibility),
+not a claim that another batch of implementation PRs already exists. The eight
+workstream PRs above remain the same; this is an expansion of master #356.
+
+The [ownership decision](../architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md)
+records KubeVela/Crossplane as the user's selected target, implementation pending;
+it supersedes old generic candidate wording without installing controllers,
+transferring Terraform/OpenChoreo ownership or relaxing existing trust gates.

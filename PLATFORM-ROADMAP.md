@@ -52,6 +52,13 @@ Rule behind it: the thing that fixes problems must not depend on the thing it is
 If an AI could break Authentik, Tailscale, cert-manager, Velero or the policy engines,
 it could lock out both itself and the human who has to recover it.
 
+**Target clarification (2026-10-21):** the table above records the historical
+OpenChoreo baseline, not authorization for all listed AI actions. The user's
+selected future KubeVela/Crossplane ownership split is recorded in
+[decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md);
+implementation/coexistence acceptance and per-app transfers remain pending.
+Current foundation/shared-service and machine read-only boundaries are unchanged.
+
 ### Namespace map (live cluster, 2026-10-18)
 
 | Namespace | Main workloads | Layer | Target |
@@ -1034,3 +1041,19 @@ Correct the stale handoff prompt that claimed Phase 6 complete; reconcile scoped
 Grafana/Prometheus/topology acceptance without erasing the remaining gaps.
 No new permissions, storage, deployment, app cutover or phase completion.
 Phase 6 stays In progress; Phases 7/8 Not started.
+
+
+### Backstage capability and UI/layout foundation — 2026-10-21
+
+User requested a foundation review of the supplied application-flow/plugin list,
+not runtime implementation. Master #356 now includes the
+[experience foundation](docs/roadmap/backstage-experience-foundation.md): native
+feature/source matrix, proposed home/navigation/entity layout, evidence states,
+search/docs/events/AI integration gaps, dual MUI/BUI theming, accessibility,
+performance and U00–U06 future implementation/acceptance packages.
+[Decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md)
+records user-selected KubeVela/Crossplane target boundaries, with Terraform, Argo,
+OpenChoreo, domain operators and NATS ownership explicit. No controller install,
+OpenChoreo removal, UI/dependency change or new AI permission is included.
+The eight existing workstream PRs remain drafts; no new UI implementation PR or
+production acceptance is claimed. Phase 6 In progress; Phases 7/8 Not started.
