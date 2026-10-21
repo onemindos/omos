@@ -8,10 +8,10 @@ nodeAffinity:
   - weight: 100
     preference:
       matchExpressions:
-      - key: onemind.io/compute-role
+      - key: doks.digitalocean.com/node-pool
         operator: In
         values:
-        - ecosystem
+        - onemind-ecosystem-cpu
 opensearchJavaOpts: -Xms1g -Xmx1g
 resources:
   requests:

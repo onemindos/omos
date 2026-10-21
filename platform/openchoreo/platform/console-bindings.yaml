@@ -1,7 +1,7 @@
-# Authorization for the built-in console (phase 2f). The `user` subject type matches the
+# Authorization retained for the OneMind portal after Phase 6 console retirement. The `user` subject type matches the
 # token's `sub` claim (oc-control.yaml), so both bindings use Authentik's hashed user ids.
 #
-# - backstage-catalog: the console's catalog-sync service account. Read-only role.
+# - backstage-catalog: the portal's reused catalog-sync service account. Read-only role.
 #   `sub` from the identity Job log (platform/ecosystem/resources/ai-operator-identity.yaml).
 # - akadmin: the registered human operator, the only Authentik user allowed to sign in to
 #   the application interactively. The same `sub` as the portal's catalog user

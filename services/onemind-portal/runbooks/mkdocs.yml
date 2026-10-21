@@ -13,6 +13,7 @@ nav:
   - Identity and access: identity.md
   - NATS fabric: nats.md
   - TAK services: tak.md
+  - STAC pilot operations: stac.md
   - Monitoring and health: monitoring.md
   - Resilience: resilience.md
   - Backup and recovery: backups.md

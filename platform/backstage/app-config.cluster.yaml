@@ -23,7 +23,7 @@ search:
 backend:
   csp:
     frame-src: ["'self'", "https://grafana.tail717ba0.ts.net"]
-    connect-src: ["'self'", 'https://api.github.com']
+    connect-src: ["'self'", 'https://api.github.com', 'https://onemind-observer.tail717ba0.ts.net']
     img-src: ["'self'", 'data:', 'https://avatars.githubusercontent.com']
   database:
     knexConfig:
@@ -89,3 +89,93 @@ events:
   useEventBus: always
   http:
     topics: []
+
+# OpenChoreo 1.3.1 prefixes group:default/ in the catalog provider.
+openchoreo:
+  defaultOwner: onemind-admins
+
+# Arrays replace rather than merge across config layers. Retain every host
+# extension; tests enforce parity with app-config.yaml before this opt-in filter.
+# Native Grafana alerts are not Prometheus-rule coverage: require an explicit
+# reviewed label selector instead of showing an empty "Alerts" card by default.
+app:
+  extensions:
+    - theme:app/light: false
+    - theme:app/dark: false
+    - app-root-element:announcements/banner: false
+    - nav-item:announcements
+    - page:tech-radar:
+        config:
+          pageTitle: OneMind Technology Radar
+          subtitle: Git-owned technology choices; this is not a live health report
+    - api:home/visits: true
+    - app-root-element:home/visit-listener: true
+    - home-page-widget:home/random-joke: false
+    - home-page-widget:home/world-clock:
+        config:
+          clockConfigs:
+            - label: New York
+              timeZone: America/New_York
+            - label: UTC
+              timeZone: UTC
+          customTimeFormat:
+            hour12: false
+    - home-page-widget:home/toolkit:
+        config:
+          tools:
+            - url: /today
+              label: Today
+              icon: dashboard
+            - url: /systems
+              label: Systems
+              icon: kind:system
+            - url: /docs
+              label: Runbooks
+              icon: docs
+            - url: /assistant
+              label: Assistant
+              icon: chat
+            - url: /offline
+              label: Offline knowledge
+              icon: docs
+    - page:home:
+        config:
+          path: /
+          defaultConfig:
+            - component: HomePageSearchBar
+              column: 0
+              row: 0
+              width: 12
+              height: 2
+              deletable: false
+            - component: OneMindDirectory
+              column: 0
+              row: 2
+              width: 8
+              height: 22
+              deletable: false
+            - component: HomePageWorldClock
+              column: 8
+              row: 2
+              width: 4
+              height: 4
+            - component: HomePageToolkit
+              column: 8
+              row: 6
+              width: 4
+              height: 5
+            - component: HomePageStarredEntities
+              column: 8
+              row: 11
+              width: 4
+              height: 5
+            - component: HomePageRecentlyVisited
+              column: 8
+              row: 16
+              width: 4
+              height: 8
+    - entity-card:grafana/alerts:
+        config:
+          filter:
+            metadata.annotations.grafana/alert-label-selector:
+              $exists: true

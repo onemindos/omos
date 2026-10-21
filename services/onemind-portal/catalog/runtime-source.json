@@ -1,6 +1,16 @@
 {
-  "observedAt": "2026-10-06",
+  "observedAt": "2026-10-20T06:51:11.173Z",
   "items": [
+    {
+      "kind": "Deployment",
+      "namespace": "agent-fabric",
+      "name": "agent-console"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "agent-fabric",
+      "name": "agent-tap"
+    },
     {
       "kind": "Deployment",
       "namespace": "argocd",
@@ -30,6 +40,11 @@
       "kind": "Deployment",
       "namespace": "argocd",
       "name": "argocd-server"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "argocd",
+      "name": "rollouts-argo-rollouts"
     },
     {
       "kind": "Deployment",
@@ -73,8 +88,68 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "cloudflare",
+      "name": "cloudflared-tunnel"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "cnpg-system",
+      "name": "barman-plugin-barman-cloud"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "cnpg-system",
+      "name": "cnpg-cloudnative-pg"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "dapr-system",
+      "name": "dapr-operator"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "dapr-system",
+      "name": "dapr-sentry"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "dapr-system",
+      "name": "dapr-sidecar-injector"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "dp-default-onetak-development-b188bf98",
+      "name": "stac-browser-development-0c6b80f7"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "external-dns",
+      "name": "external-dns"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "external-secrets",
+      "name": "external-secrets"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "external-secrets",
+      "name": "external-secrets-cert-controller"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "external-secrets",
+      "name": "external-secrets-webhook"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "github-runner",
       "name": "github-runner"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "github-runner",
+      "name": "github-runner-hermes"
     },
     {
       "kind": "Deployment",
@@ -88,8 +163,18 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "kube-system",
-      "name": "clickhouse-operator"
+      "namespace": "keda",
+      "name": "keda-admission-webhooks"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "keda",
+      "name": "keda-operator"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "keda",
+      "name": "keda-operator-metrics-apiserver"
     },
     {
       "kind": "Deployment",
@@ -119,6 +204,11 @@
     {
       "kind": "Deployment",
       "namespace": "kube-system",
+      "name": "platform-clickhouse-operator"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "kube-system",
       "name": "sealed-secrets-controller"
     },
     {
@@ -130,6 +220,26 @@
       "kind": "Deployment",
       "namespace": "kube",
       "name": "kubernetes-dashboard"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "kyverno",
+      "name": "kyverno-admission-controller"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "kyverno",
+      "name": "kyverno-background-controller"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "kyverno",
+      "name": "kyverno-cleanup-controller"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "kyverno",
+      "name": "kyverno-reports-controller"
     },
     {
       "kind": "Deployment",
@@ -163,13 +273,8 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "nats",
-      "name": "agent-web-ui"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "nats",
-      "name": "agenttap"
+      "namespace": "n8n",
+      "name": "n8n"
     },
     {
       "kind": "Deployment",
@@ -214,11 +319,6 @@
     {
       "kind": "Deployment",
       "namespace": "omos",
-      "name": "omos-mission-engine"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "omos",
       "name": "omos-tak-projector"
     },
     {
@@ -230,6 +330,56 @@
       "kind": "Deployment",
       "namespace": "omos",
       "name": "sink-clickhouse"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-ai",
+      "name": "litellm"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-ai",
+      "name": "onemind-cpu-model"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-core",
+      "name": "onemind-core"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-core",
+      "name": "onemind-ingestion"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-core",
+      "name": "openfga"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-registry",
+      "name": "harbor-core"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-registry",
+      "name": "harbor-jobservice"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-registry",
+      "name": "harbor-nginx"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-registry",
+      "name": "harbor-portal"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "onemind-registry",
+      "name": "harbor-registry"
     },
     {
       "kind": "Deployment",
@@ -288,11 +438,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "dp-default-onetak-development-b188bf98",
-      "name": "stac-browser"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "onetak",
       "name": "tak-portal"
     },
@@ -328,8 +473,83 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "openchoreo-control-plane",
+      "name": "cluster-gateway"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-control-plane",
+      "name": "controller-manager"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-control-plane",
+      "name": "openchoreo-api"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-control-plane",
+      "name": "portal-assistant"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-data-plane",
+      "name": "cluster-agent-dataplane"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "cluster-agent-observabilityplane"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "controller-manager"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "events-collector"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "finops-opencost-adapter"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "logs-adapter-opensearch"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "metrics-adapter-prometheus"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "observer"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "openchoreo-observability-plane",
+      "name": "tracing-adapter-opensearch"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "openclaw",
       "name": "openclaw"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "opencost",
+      "name": "opencost"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "ops",
+      "name": "platform-volsync"
     },
     {
       "kind": "Deployment",
@@ -402,6 +622,11 @@
       "name": "takserver-plugins"
     },
     {
+      "kind": "Deployment",
+      "namespace": "velero",
+      "name": "velero"
+    },
+    {
       "kind": "StatefulSet",
       "namespace": "argocd",
       "name": "argocd-application-controller"
@@ -420,6 +645,16 @@
       "kind": "StatefulSet",
       "namespace": "clickhouse",
       "name": "chi-onemind-onemind-0-0"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "dapr-system",
+      "name": "dapr-placement-server"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "dapr-system",
+      "name": "dapr-scheduler-server"
     },
     {
       "kind": "StatefulSet",
@@ -453,8 +688,38 @@
     },
     {
       "kind": "StatefulSet",
+      "namespace": "n8n",
+      "name": "postgres"
+    },
+    {
+      "kind": "StatefulSet",
       "namespace": "nats",
       "name": "nats"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "onemind-registry",
+      "name": "harbor-database"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "onemind-registry",
+      "name": "harbor-redis"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "onemind-registry",
+      "name": "harbor-trivy"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "onemind-search",
+      "name": "onemind-search-master"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "spire-system",
+      "name": "spire-server"
     },
     {
       "kind": "StatefulSet",
@@ -464,17 +729,27 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-agent-web-ui-l74d4"
+      "name": "ts-agent-console-8khxt"
     },
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-agenttap-8ddc6"
+      "name": "ts-agent-tap-v7ktr"
     },
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
       "name": "ts-argocd-slkzh"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "tailscale",
+      "name": "ts-cilium-gateway-gateway-default-bl4tw"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "tailscale",
+      "name": "ts-cilium-gateway-gateway-default-hl5fh"
     },
     {
       "kind": "StatefulSet",
@@ -509,7 +784,17 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
+      "name": "ts-n8n-pmtds"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "tailscale",
       "name": "ts-nats-dashboard-242wv"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "tailscale",
+      "name": "ts-nats-monitor-zh589"
     },
     {
       "kind": "StatefulSet",
@@ -519,22 +804,17 @@
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-omos-dell-edge-qfrh9"
+      "name": "ts-nats-ws-4q6bc"
     },
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
-      "name": "ts-omos-dell-zeus-wsv6m"
+      "name": "ts-observer-pftsp"
     },
     {
       "kind": "StatefulSet",
       "namespace": "tailscale",
       "name": "ts-omos-ha-edge-rlv6k"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "tailscale",
-      "name": "ts-omos-intel-zzn2k"
     },
     {
       "kind": "StatefulSet",
@@ -568,6 +848,16 @@
     },
     {
       "kind": "StatefulSet",
+      "namespace": "tailscale",
+      "name": "ts-opencost-rqpmq"
+    },
+    {
+      "kind": "StatefulSet",
+      "namespace": "tailscale",
+      "name": "ts-tak-tailnet-jtgn4"
+    },
+    {
+      "kind": "StatefulSet",
       "namespace": "takserver",
       "name": "fedhub-mongodb"
     },
@@ -593,13 +883,13 @@
     },
     {
       "kind": "DaemonSet",
-      "namespace": "kube-system",
-      "name": "cilium"
+      "namespace": "falco",
+      "name": "falco"
     },
     {
       "kind": "DaemonSet",
       "namespace": "kube-system",
-      "name": "cpc-bridge-proxy-ebpf"
+      "name": "cilium"
     },
     {
       "kind": "DaemonSet",
@@ -637,14 +927,49 @@
       "name": "otel-collector-opentelemetry-collector-agent"
     },
     {
+      "kind": "DaemonSet",
+      "namespace": "spire-system",
+      "name": "spire-agent"
+    },
+    {
+      "kind": "DaemonSet",
+      "namespace": "spire-system",
+      "name": "spire-spiffe-csi-driver"
+    },
+    {
+      "kind": "DaemonSet",
+      "namespace": "velero",
+      "name": "node-agent"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "auth",
+      "name": "backup-postgres-auth"
+    },
+    {
       "kind": "CronJob",
       "namespace": "backstage",
       "name": "backstage-backup"
     },
     {
       "kind": "CronJob",
+      "namespace": "backstage",
+      "name": "backup-postgres-backstage"
+    },
+    {
+      "kind": "CronJob",
       "namespace": "clickhouse",
       "name": "backup-clickhouse"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "matrix",
+      "name": "backup-postgres-matrix"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "n8n",
+      "name": "backup-postgres-n8n"
     },
     {
       "kind": "CronJob",
@@ -654,7 +979,22 @@
     {
       "kind": "CronJob",
       "namespace": "ops",
+      "name": "backup-cluster-recovery"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "ops",
+      "name": "backup-offsite-copy"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "ops",
       "name": "health-keeper"
+    },
+    {
+      "kind": "CronJob",
+      "namespace": "takml",
+      "name": "backup-postgres-takml"
     },
     {
       "kind": "CronJob",
@@ -665,6 +1005,16 @@
       "kind": "CronJob",
       "namespace": "takserver",
       "name": "cot-retention"
+    },
+    {
+      "kind": "Service",
+      "namespace": "agent-fabric",
+      "name": "agent-console"
+    },
+    {
+      "kind": "Service",
+      "namespace": "agent-fabric",
+      "name": "agent-tap"
     },
     {
       "kind": "Service",
@@ -693,6 +1043,11 @@
     },
     {
       "kind": "Service",
+      "namespace": "argocd",
+      "name": "rollouts-argo-rollouts-metrics"
+    },
+    {
+      "kind": "Service",
       "namespace": "auth",
       "name": "authentik-postgres"
     },
@@ -705,6 +1060,11 @@
       "kind": "Service",
       "namespace": "auth",
       "name": "platform-auth-helm-authentik-server"
+    },
+    {
+      "kind": "Service",
+      "namespace": "backstage",
+      "name": "argocd-mesh"
     },
     {
       "kind": "Service",
@@ -748,8 +1108,68 @@
     },
     {
       "kind": "Service",
+      "namespace": "cnpg-system",
+      "name": "barman-cloud"
+    },
+    {
+      "kind": "Service",
+      "namespace": "cnpg-system",
+      "name": "cnpg-webhook-service"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-api"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-placement-server"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-scheduler-server"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-scheduler-server-a"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-sentry"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-sidecar-injector"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dapr-system",
+      "name": "dapr-webhook"
+    },
+    {
+      "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
+    },
+    {
+      "kind": "Service",
+      "namespace": "dp-default-onetak-development-b188bf98",
+      "name": "stac-browser"
+    },
+    {
+      "kind": "Service",
+      "namespace": "external-dns",
+      "name": "external-dns"
+    },
+    {
+      "kind": "Service",
+      "namespace": "external-secrets",
+      "name": "external-secrets-webhook"
     },
     {
       "kind": "Service",
@@ -759,22 +1179,7 @@
     {
       "kind": "Service",
       "namespace": "hermes",
-      "name": "omos-dell-edge"
-    },
-    {
-      "kind": "Service",
-      "namespace": "hermes",
-      "name": "omos-dell-zeus"
-    },
-    {
-      "kind": "Service",
-      "namespace": "hermes",
       "name": "omos-ha-edge"
-    },
-    {
-      "kind": "Service",
-      "namespace": "hermes",
-      "name": "omos-intel"
     },
     {
       "kind": "Service",
@@ -798,13 +1203,23 @@
     },
     {
       "kind": "Service",
-      "namespace": "kube-system",
-      "name": "cilium-agent"
+      "namespace": "keda",
+      "name": "keda-admission-webhooks"
+    },
+    {
+      "kind": "Service",
+      "namespace": "keda",
+      "name": "keda-operator"
+    },
+    {
+      "kind": "Service",
+      "namespace": "keda",
+      "name": "keda-operator-metrics-apiserver"
     },
     {
       "kind": "Service",
       "namespace": "kube-system",
-      "name": "clickhouse-operator-metrics"
+      "name": "cilium-agent"
     },
     {
       "kind": "Service",
@@ -844,27 +1259,17 @@
     {
       "kind": "Service",
       "namespace": "kube-system",
-      "name": "monitoring-kube-prometheus-kube-controller-manager"
-    },
-    {
-      "kind": "Service",
-      "namespace": "kube-system",
       "name": "monitoring-kube-prometheus-kube-etcd"
     },
     {
       "kind": "Service",
       "namespace": "kube-system",
-      "name": "monitoring-kube-prometheus-kube-proxy"
-    },
-    {
-      "kind": "Service",
-      "namespace": "kube-system",
-      "name": "monitoring-kube-prometheus-kube-scheduler"
-    },
-    {
-      "kind": "Service",
-      "namespace": "kube-system",
       "name": "monitoring-kube-prometheus-kubelet"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kube-system",
+      "name": "platform-clickhouse-operator-metrics"
     },
     {
       "kind": "Service",
@@ -885,6 +1290,36 @@
       "kind": "Service",
       "namespace": "kube",
       "name": "kubernetes-dashboard"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kyverno",
+      "name": "kyverno-background-controller-metrics"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kyverno",
+      "name": "kyverno-cleanup-controller"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kyverno",
+      "name": "kyverno-cleanup-controller-metrics"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kyverno",
+      "name": "kyverno-reports-controller-metrics"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kyverno",
+      "name": "kyverno-svc"
+    },
+    {
+      "kind": "Service",
+      "namespace": "kyverno",
+      "name": "kyverno-svc-metrics"
     },
     {
       "kind": "Service",
@@ -973,13 +1408,13 @@
     },
     {
       "kind": "Service",
-      "namespace": "nats",
-      "name": "agent-web-ui"
+      "namespace": "n8n",
+      "name": "n8n"
     },
     {
       "kind": "Service",
-      "namespace": "nats",
-      "name": "agenttap"
+      "namespace": "n8n",
+      "name": "postgres"
     },
     {
       "kind": "Service",
@@ -1004,6 +1439,11 @@
     {
       "kind": "Service",
       "namespace": "nats",
+      "name": "nats-monitor"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nats",
       "name": "nats-surveyor"
     },
     {
@@ -1019,12 +1459,97 @@
     {
       "kind": "Service",
       "namespace": "omos",
-      "name": "omos-mission-engine"
+      "name": "redpanda-connect"
     },
     {
       "kind": "Service",
-      "namespace": "omos",
-      "name": "redpanda-connect"
+      "namespace": "onemind-ai",
+      "name": "litellm"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-ai",
+      "name": "onemind-cpu-model"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-core",
+      "name": "onemind-core"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-core",
+      "name": "onemind-core-dapr"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-core",
+      "name": "openfga"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-data",
+      "name": "onemind-data-r"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-data",
+      "name": "onemind-data-ro"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-data",
+      "name": "onemind-data-rw"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-core"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-database"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-jobservice"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-portal"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-redis"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-registry"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-registry",
+      "name": "harbor-trivy"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-search",
+      "name": "opensearch-cluster-master"
+    },
+    {
+      "kind": "Service",
+      "namespace": "onemind-search",
+      "name": "opensearch-cluster-master-headless"
     },
     {
       "kind": "Service",
@@ -1088,11 +1613,6 @@
     },
     {
       "kind": "Service",
-      "namespace": "dp-default-onetak-development-b188bf98",
-      "name": "stac-browser"
-    },
-    {
-      "kind": "Service",
       "namespace": "onetak",
       "name": "tak-portal"
     },
@@ -1123,18 +1643,113 @@
     },
     {
       "kind": "Service",
+      "namespace": "openchoreo-control-plane",
+      "name": "cilium-gateway-gateway-default"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-control-plane",
+      "name": "cluster-gateway"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-control-plane",
+      "name": "cluster-gateway-external"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-control-plane",
+      "name": "controller-manager-webhook-service"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-control-plane",
+      "name": "openchoreo-api"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-control-plane",
+      "name": "portal-assistant"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-data-plane",
+      "name": "cilium-gateway-gateway-default"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "finops-adapter"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "logs-adapter"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "metrics-adapter"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "observer"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "observer-internal"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "opensearch"
+    },
+    {
+      "kind": "Service",
+      "namespace": "openchoreo-observability-plane",
+      "name": "tracing-adapter"
+    },
+    {
+      "kind": "Service",
       "namespace": "openclaw",
       "name": "openclaw"
     },
     {
       "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-agent-web-ui-l74d4"
+      "namespace": "opencost",
+      "name": "opencost"
+    },
+    {
+      "kind": "Service",
+      "namespace": "ops",
+      "name": "platform-volsync-metrics"
+    },
+    {
+      "kind": "Service",
+      "namespace": "spire-system",
+      "name": "spire-controller-manager-webhook"
+    },
+    {
+      "kind": "Service",
+      "namespace": "spire-system",
+      "name": "spire-server"
     },
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-agenttap-8ddc6"
+      "name": "ts-agent-console-8khxt"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-agent-tap-v7ktr"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-argocd-mesh-k7vpp"
     },
     {
       "kind": "Service",
@@ -1145,6 +1760,16 @@
       "kind": "Service",
       "namespace": "tailscale",
       "name": "ts-authentik-mesh-wvznw"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-cilium-gateway-gateway-default-bl4tw"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-cilium-gateway-gateway-default-hl5fh"
     },
     {
       "kind": "Service",
@@ -1179,7 +1804,17 @@
     {
       "kind": "Service",
       "namespace": "tailscale",
+      "name": "ts-n8n-pmtds"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
       "name": "ts-nats-dashboard-242wv"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-nats-monitor-zh589"
     },
     {
       "kind": "Service",
@@ -1189,22 +1824,17 @@
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-omos-dell-edge-qfrh9"
+      "name": "ts-nats-ws-4q6bc"
     },
     {
       "kind": "Service",
       "namespace": "tailscale",
-      "name": "ts-omos-dell-zeus-wsv6m"
+      "name": "ts-observer-pftsp"
     },
     {
       "kind": "Service",
       "namespace": "tailscale",
       "name": "ts-omos-ha-edge-rlv6k"
-    },
-    {
-      "kind": "Service",
-      "namespace": "tailscale",
-      "name": "ts-omos-intel-zzn2k"
     },
     {
       "kind": "Service",
@@ -1235,6 +1865,16 @@
       "kind": "Service",
       "namespace": "tailscale",
       "name": "ts-openclaw-gateway-s7hcm"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-opencost-rqpmq"
+    },
+    {
+      "kind": "Service",
+      "namespace": "tailscale",
+      "name": "ts-tak-tailnet-jtgn4"
     },
     {
       "kind": "Service",
@@ -1284,6 +1924,11 @@
     {
       "kind": "Service",
       "namespace": "takserver",
+      "name": "tak-tailnet"
+    },
+    {
+      "kind": "Service",
+      "namespace": "takserver",
       "name": "takserver"
     },
     {
@@ -1320,6 +1965,11 @@
       "kind": "Service",
       "namespace": "takserver",
       "name": "takserver-postgresql-hl"
+    },
+    {
+      "kind": "Service",
+      "namespace": "velero",
+      "name": "velero"
     }
   ]
 }
