@@ -781,8 +781,9 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | LiteLLM stays the model gateway. The tool gateway (LiteLLM MCP or agentgateway) is decided in phase 8, when an in-cluster agent needs it. |
 | 2026-10-18 | Cilium Gateway API backends need a component-scoped `fromEntities: ingress` policy; keep OpenChoreo's generated policy and add an opt-in trait rather than allowing all ingress. |
 | 2026-10-18 | AI read access to the cluster uses ServiceAccount `kube/ai-operator` (built-in `view` plus platform CRDs, no Secrets) through kubernetes-mcp-server in read-only mode. No separate Argo CD MCP. |
-| 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. |
+| 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. (KubeVela part superseded 2026-10-21, below.) |
 | 2026-10-20 | Zeus requested full Kubernetes/Backstage structure and linked PRs. Keep the installed stack and existing phase gates; permit planning and bounded comparison of KubeVela/Crossplane/fleet candidates without deploying or assigning a second owner to live resources. The new queue is a proposal, not a replacement approval or claim of verified integration. |
+| 2026-10-21 | Zeus selected Backstage → reviewed Git PR → Argo CD → KubeVela (app lifecycle) + Crossplane (app infrastructure) as the target; Terraform keeps its recorded infrastructure, NATS carries operational events. Recorded in [decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md). Selection only: nothing installed, no version approved, no ownership transferred from Terraform or OpenChoreo, existing OpenChoreo workloads stay until a separately approved transition. kagent, Kratix and Humanitec stay not adopted. |
 
 ## Incidents found while working the roadmap
 
