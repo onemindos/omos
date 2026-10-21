@@ -1,0 +1,177 @@
+# Staged operator-only pilot: manual sync; see ../README.md for activation gates.
+fullnameOverride: librechat-pilot
+replicaCount: 1
+enableServiceLinks: false
+global:
+  librechat:
+    existingSecretName: ''
+    env:
+    - name: MONGO_URI
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: MONGO_URI
+          optional: false
+    - name: CREDS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: CREDS_KEY
+          optional: false
+    - name: CREDS_IV
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: CREDS_IV
+          optional: false
+    - name: JWT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: JWT_SECRET
+          optional: false
+    - name: JWT_REFRESH_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: JWT_REFRESH_SECRET
+          optional: false
+    - name: OPENID_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: OPENID_CLIENT_ID
+          optional: false
+    - name: OPENID_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: OPENID_CLIENT_SECRET
+          optional: false
+    - name: OPENID_SESSION_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: OPENID_SESSION_SECRET
+          optional: false
+    - name: HERMES_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: librechat-runtime
+          key: HERMES_API_KEY
+          optional: false
+librechat:
+  existingSecretName: ''
+  configEnv:
+    HOST: 0.0.0.0
+    PORT: '3080'
+    DOMAIN_CLIENT: https://librechat.tail717ba0.ts.net
+    DOMAIN_SERVER: https://librechat.tail717ba0.ts.net
+    ENDPOINTS: custom
+    ALLOW_EMAIL_LOGIN: 'false'
+    ALLOW_REGISTRATION: 'false'
+    ALLOW_SOCIAL_LOGIN: 'true'
+    ALLOW_SOCIAL_REGISTRATION: 'true'
+    OPENID_ISSUER: https://onemind-auth.tail717ba0.ts.net/application/o/onemind-librechat/.well-known/openid-configuration
+    OPENID_CALLBACK_URL: /oauth/openid/callback
+    OPENID_SCOPE: openid profile email
+    OPENID_REQUIRED_ROLE: onemind-librechat-pilot
+    OPENID_REQUIRED_ROLE_TOKEN_KIND: id
+    OPENID_REQUIRED_ROLE_PARAMETER_PATH: groups
+    OPENID_USE_END_SESSION_ENDPOINT: 'true'
+    SEARCH: 'false'
+    ALLOW_SHARED_LINKS: 'false'
+    ALLOW_SHARED_LINKS_PUBLIC: 'false'
+    DEBUG_LOGGING: 'false'
+    DEBUG_CONSOLE: 'false'
+    DEBUG_OPENAI: 'false'
+    OPENID_REUSE_TOKENS: 'false'
+  imageVolume:
+    enabled: true
+    size: 2Gi
+    accessModes: ReadWriteOnce
+  configYamlContent: |
+    version: 1.3.17
+    cache: true
+    registration:
+      socialLogins: [openid]
+    balance:
+      enabled: false
+    fileConfig:
+      endpoints:
+        default:
+          disabled: true
+        Legacy:
+          disabled: true
+    endpoints:
+      allowedAddresses:
+        - hermes-dashboard.hermes.svc.cluster.local:8642
+      custom:
+        - name: Legacy
+          apiKey: ${HERMES_API_KEY}
+          baseURL: http://hermes-dashboard.hermes.svc.cluster.local:8642/v1
+          models:
+            default: [hermes-agent]
+            fetch: false
+          titleConvo: false
+          summarize: false
+          modelDisplayLabel: Legacy (Hermes)
+          headers:
+            X-Hermes-Session-Key: 'librechat:{{LIBRECHAT_USER_ID}}:{{LIBRECHAT_BODY_CONVERSATIONID}}'
+image:
+  registry: registry.librechat.ai
+  repository: librechat-ai/librechat
+  tag: v0.8.8@sha256:5b706bcee1ca154a1e2987303aaeca0eb27f97919cccee4bb604226c2f8abf61
+  pullPolicy: IfNotPresent
+mongodb:
+  enabled: false
+meilisearch:
+  enabled: false
+redis:
+  enabled: false
+librechat-rag-api:
+  enabled: false
+langfuseFanout:
+  enabled: false
+serviceAccount:
+  create: true
+  automount: false
+  name: librechat-pilot
+podLabels:
+  onemind.io/pilot: librechat-legacy
+updateStrategy:
+  type: Recreate
+podSecurityContext:
+  fsGroup: 2000
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: '1'
+    memory: 1536Mi
+livenessProbe:
+  httpGet:
+    path: /livez
+    port: 3080
+  initialDelaySeconds: 30
+  periodSeconds: 20
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 3080
+  initialDelaySeconds: 15
+  periodSeconds: 10
+ingress:
+  enabled: false
+autoscaling:
+  enabled: false

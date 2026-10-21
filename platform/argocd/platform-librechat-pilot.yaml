@@ -1,0 +1,31 @@
+# No automated sync or deletion finalizer: activation is a separate reviewed action.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-librechat-pilot
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '4'
+    onemind.io/activation: manual; see platform/librechat/README.md
+spec:
+  project: default
+  sources:
+  - repoURL: ghcr.io/librechat-ai/librechat-chart
+    chart: librechat
+    targetRevision: 2.0.16
+    helm:
+      releaseName: librechat-pilot
+      skipTests: true
+      valueFiles:
+      - $values/platform/librechat/pilot/values.yaml
+  - repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    ref: values
+    path: platform/librechat/pilot
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: librechat-pilot
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - Prune=false

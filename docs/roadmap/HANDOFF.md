@@ -206,3 +206,16 @@ or complete coverage. No new controller, image, storage or access was added.
 **Next: OpenCost**, then separately scoped broader coverage/accessibility and real
 multicluster/traffic work. This supersedes “topology next”; Phase 6 stays In
 progress, Phase 7 Not started and action PR #339 remains unmerged/draft.
+
+
+2026-10-20 parallel scope: Zeus authorized read-only Legacy/Mac checks, a staged
+LibreChat integration PR, and linked full-Kubernetes/Backstage planning PRs.
+This does not authorize a later-phase deployment. See the
+[preflight evidence](../operations/legacy-librechat-preflight-2026-10-20.md) and
+[pilot activation gates](../../platform/librechat/README.md). Legacy metadata and
+NATS discovery work, but actual chat failed on DigitalOcean provider HTTP 402
+(account blocked). The earlier Mac preflight recorded only 13–14 GiB free; later preparation
+reported 26 GiB, not approved capacity. No provider,
+billing, key, permission, storage or VM changes were made. Dedicated LibreChat
+identity/sealed credentials/database/backups and runtime acceptance are still
+unimplemented prerequisites; keep the draft and its manual Application unsynced.

@@ -122,6 +122,10 @@ jobs:
       - name: Install PyYAML
         run: pip install pyyaml
 
+      - name: LibreChat pilot safety and Legacy stream regression tests
+        run: |
+          python -m unittest discover -s scripts/tests -p 'test_librechat*.py' -v
+          python scripts/tests/test_librechat_pilot.py --render-with-helm
       - name: Portable GitOps pipeline safety contracts
         run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v
 

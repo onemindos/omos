@@ -125,7 +125,7 @@ it could lock out both itself and the human who has to recover it.
 | 3 | Pilot one app as an OpenChoreo Component | Done | [#279](https://github.com/onemindos/omos/pull/279), [#286](https://github.com/onemindos/omos/pull/286), [#287](https://github.com/onemindos/omos/pull/287), [#288](https://github.com/onemindos/omos/pull/288), [#289](https://github.com/onemindos/omos/pull/289), [#290](https://github.com/onemindos/omos/pull/290), [#291](https://github.com/onemindos/omos/pull/291), [#292](https://github.com/onemindos/omos/pull/292), [#293](https://github.com/onemindos/omos/pull/293), [#294](https://github.com/onemindos/omos/pull/294) | 4 |
 | 4 | Portal refactor: custom features into `plugins/` packages | Done | [#280](https://github.com/onemindos/omos/pull/280) | 2, 3 |
 | 5 | Capacity fixes, then the observability plane | Done | [#281](https://github.com/onemindos/omos/pull/281), implementation #300–#310 (individual links and live evidence below) | none |
-| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | none |
+| 6 | One portal: OpenChoreo plugins in our Backstage, built-in console off | In progress | Historical acceptance #282, #318, #319; reopened for [portal stabilization](docs/operations/portal-stabilization-2026-10-20.md) before migration (#322 source, #323 release, #324 inventory, #325 composition, #326 final image); 2/2 healthy, 715 processed entities; broader acceptance gaps remain documented | bounded source/preflight preparation only; no later-phase deployment |
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
@@ -1021,3 +1021,31 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+
+### Authorized parallel preparation — 2026-10-20
+
+Zeus authorized read-only Legacy/Mac checks and preparation of a private LibreChat
+integration PR, then requested linked PRs for the full Kubernetes structure and
+Backstage soundness. This permits **planning and staged source preparation**, not
+blanket new controllers, migrations, billing/credential changes or expanded AI
+permissions. Phase 6 remains the first unfinished phase; Phases 7/8 are not done.
+
+- [x] Record [actual Legacy/NATS/Mac observations](docs/operations/legacy-librechat-preflight-2026-10-20.md).
+- [x] Prepare the [manual-sync LibreChat pilot](platform/librechat/README.md) with
+      source/render safety tests; no deployment or persistence acceptance claim.
+- [ ] Legacy inference works (currently provider HTTP 402); approved identity,
+      sealed credentials, dedicated database, backup/isolated restore and real
+      browser/session/permission gates pass before any pilot activation.
+- [ ] Mac production storage/power/reboot/recovery acceptance; no files moved.
+
+Existing portal/migration follow-ups stay in #330/#331, workflow-plane planning
+in #328, migration parent #283 and home expansion #284. Reuse those scopes rather
+than create duplicate deployment controllers or declare a new phase complete.
+
+### Parallel run continuation — agent, 2026-10-21 UTC
+
+Existing draft advanced with bounded agent source/acceptance preparation.
+No runtime activation, permission, credential, storage, billing or migration.
+Offline fixtures/procedures are not production evidence. Phase 6 In progress;
+Phase 7/8 Not started. All original activation gates remain blocking.

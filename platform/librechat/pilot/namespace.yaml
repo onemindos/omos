@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: librechat-pilot
+  labels:
+    onemind.io/layer: apps
+    onemind.io/lifecycle: pilot
+    pod-security.kubernetes.io/enforce: restricted
