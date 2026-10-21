@@ -67,7 +67,9 @@ abstraction before they can appear in Backstage.
 
 Version the contract before implementing adapters. Record:
 
-- Stable app/catalog/API identities, accountable owner and intended domain use.
+- Stable app/catalog/API identities, accountable owner and intended domain use;
+  reviewed primary/served [OneMind pillars](../../roadmap/onemind-catalog-pillars.md)
+  are mission classification, not deployment ownership or authorization.
 - Source, immutable artifact, architecture, environment, site/cluster/namespace.
 - Deployment owner/controller per object/field and authoritative desired-state ref.
 - Runtime and infrastructure dependencies, provisioning/configuration bindings,

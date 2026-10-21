@@ -165,6 +165,16 @@ where supported and do not render every integration for every entity kind.
 - Activity correlates approved changes, observed rollout, alerts and agent runs;
   authorization is enforced by the backend, not a button's disabled/hidden state.
 
+### OneMind mission structure in the catalog
+
+**SO — Sovereign Operations; LE — Legacy Evolution; HP — Holistic Performance;
+GE — Generational Empire** are required catalog pillars, not just home categories.
+The [pillar catalog specification](onemind-catalog-pillars.md) defines native
+OneMind/child Domains, reviewed System membership, primary/shared classifications,
+UI/search/onboarding filters and stable-reference/privacy/refresh gates. Keep
+mission, deployment/site and authorization as independent axes. No catalog
+reclassification or numeric agent routing is applied by this foundation.
+
 ### Entity and site model
 
 Use native Component/System/Domain/API/Resource/User/Group semantics deliberately.
@@ -226,7 +236,7 @@ compatible with this pinned cohort just because its README exists.
 
 | Package | Foundation / deliverable | Dependencies and pass gate |
 |---|---|---|
-| U00 — baseline and design contract | Browser/source inventory, user tasks, route/entity/plugin matrix, screenshots, a11y/performance baseline, shared evidence states and UI tokens | Remaining trust gates tracked; no fresh visual audit claimed by this document. Preserve exact installed package exports/permission behavior. |
+| U00 — baseline and design contract | Browser/source inventory, user tasks, route/entity/plugin and SO/LE/HP/GE mapping, screenshots, a11y/performance baseline, shared evidence states and UI tokens | Remaining trust gates tracked; no fresh visual audit claimed by this document. Preserve exact installed package exports/permission behavior. |
 | U01 — navigation/home | Task/site grouping, search/favorites, attention/approval entry points and responsive home | U00; stable deep links/settings, no lost favorites, two themes/mobile/keyboard and actual user acceptance. |
 | U02 — entity composition | Consistent app pages, kind-specific cards/tabs, source/scope/freshness and nonduplicated summaries | U00 + #355 mappings; regression across native and OpenChoreo kinds, no hidden unknowns or newly exposed API. |
 | U03 — knowledge/discovery | Catalog/API/runbook search facets, ingestion diagnostics, ownership and useful metadata scorecards | #353/#355 + permission checks; actual search/index refresh/removal/denial tests, not a new search cluster by default. |

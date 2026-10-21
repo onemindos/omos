@@ -111,3 +111,12 @@ The [ownership decision](../architecture/decisions/0002-application-delivery-and
 records KubeVela/Crossplane as the user's selected target, implementation pending;
 it supersedes old generic candidate wording without installing controllers,
 transferring Terraform/OpenChoreo ownership or relaxing existing trust gates.
+
+### OneMind pillar catalog requirement
+
+The user explicitly requires SO / LE / HP / GE in the catalog.
+[Specification](onemind-catalog-pillars.md) uses existing pillar doctrine names
+and native Domain/System semantics, with shared-service views and unclassified
+states. It links UI/search/onboarding and inventory-survival acceptance to
+#351/#353/#355 and U00–U03. This is foundation only: no live catalog descriptors,
+workload/identity migration, additional pillar ACLs or numeric routing change.

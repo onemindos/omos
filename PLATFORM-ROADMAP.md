@@ -1057,3 +1057,16 @@ OpenChoreo, domain operators and NATS ownership explicit. No controller install,
 OpenChoreo removal, UI/dependency change or new AI permission is included.
 The eight existing workstream PRs remain drafts; no new UI implementation PR or
 production acceptance is claimed. Phase 6 In progress; Phases 7/8 Not started.
+
+
+### OneMind mission pillars in the catalog — 2026-10-21
+
+User explicitly requested SO / LE / HP / GE catalog structure as part of the
+foundation. [Specification](docs/roadmap/onemind-catalog-pillars.md) records
+Sovereign Operations, Legacy Evolution, Holistic Performance and Generational
+Empire using the existing doctrine, proposed native Domains/System mappings,
+shared/unclassified discovery and stable-reference/permissions/curation gates.
+Master #356 and the UI foundation are updated; no live catalog or workload is
+reclassified, no new identity permission or NATS routing is granted. Historical
+numeric ranges remain unconfirmed, not reordered with the requested UI order.
+Phase 6 In progress; Phases 7/8 Not started.
