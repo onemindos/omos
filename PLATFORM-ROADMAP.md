@@ -1021,3 +1021,16 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+
+### Eight-workstream parallel preparation run — 2026-10-21 UTC
+
+User authorized separate PRs and agent distribution for the remaining Backstage
+backlog. [Run index, owners, PRs and dependencies](docs/roadmap/backstage-parallel-run.md)
+tracks cost, coverage, catalog, trust, lifecycle, actions, agents and home/edge.
+Existing #339/#332/#284 are reused. Bounded source/test preparation runs in
+parallel; production review/rebase/merge/release remains one PR at a time.
+Correct the stale handoff prompt that claimed Phase 6 complete; reconcile scoped
+Grafana/Prometheus/topology acceptance without erasing the remaining gaps.
+No new permissions, storage, deployment, app cutover or phase completion.
+Phase 6 stays In progress; Phases 7/8 Not started.
