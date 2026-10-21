@@ -39,6 +39,12 @@ class PortalAcceptanceTests(unittest.TestCase):
     def review(self, value, **kwargs):
         return acceptance.validate(value, expected_commit=COMMIT, now=NOW, **kwargs)
 
+    def test_offset_conversion_overflow_is_a_sanitized_invalid_receipt(self):
+        for timestamp in ('0001-01-01T00:00:00+00:01', '9999-12-31T23:59:59-00:01'):
+            with self.subTest(timestamp=timestamp):
+                with self.assertRaises(acceptance.InvalidReceipt):
+                    acceptance.timestamp(timestamp)
+
     def test_complete_observation_pass_is_scoped_and_never_authorizes(self):
         result = self.review(receipt())
         self.assertEqual(result["status"], "passed")

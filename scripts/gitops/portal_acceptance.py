@@ -60,7 +60,7 @@ def timestamp(value):
             "timestamp must be RFC3339 with timezone")
     try:
         return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
-    except ValueError:
+    except (ValueError, OverflowError):
         raise InvalidReceipt("invalid calendar timestamp") from None
 
 
