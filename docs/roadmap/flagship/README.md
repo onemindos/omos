@@ -25,7 +25,7 @@ controllers, or widen AI permissions.
 | App pages pop up an unrequested GitHub OAuth dialog | GitHub Actions/PR cards on every Component | F5 |
 | Cost Insights page loads empty | `/cost-insights` | F9 |
 | DigitalOcean cost card says it needs a `billing:read` token; no droplet/volume/LB/snapshot view | `/today`, no DO plugin exists in the directory | F6 |
-| Three backup jobs suspended since Oct 7–8 (backstage, clickhouse, offsite copy) | `/today` "Needs attention" | F4 shows it; the fix is an ops task outside this program |
+| Three backup CronJobs show as "suspended" on `/today`. Two are deliberate replacements: `backstage-backup` is superseded by `backup-postgres-backstage`, and `backup-clickhouse` by daily VolSync. The real gap is `backup-offsite-copy`: it has never run because its credentials do not exist, so every backup sits in one DO bucket. | `platform/backstage/backup.yaml`, `platform/backups/{backups,offsite-copy}.yaml`, live CronJob/VolSync status | F4 must tell retired from pending from failing; offsite setup is Zeus's step (OFFSITE-COPY.md 1–5) |
 | 98 DO volumes (all bound to PVCs) and 58 volume snapshots, no retention view | `doctl` read-only | F6, F8 |
 
 ## Work orders

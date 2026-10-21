@@ -1029,8 +1029,8 @@ OneMind service (Kubernetes and not), with live dashboards, DigitalOcean at a
 glance, add/remove lifecycle and a brand-correct theme. A signed-in review found
 7,750 unread notifications, an alphabetical sidebar, about 70 Systems under three
 naming schemes, 6 of 69 Argo apps linked, an empty Cost page, an unrequested
-GitHub OAuth pop-up on app pages, a navy/teal theme and three backup jobs
-suspended since Oct 7–8. Eleven work orders, one draft PR each, for implementing
+GitHub OAuth pop-up on app pages, a navy/teal theme, and an offsite backup copy
+that has never run (two other "suspended" backup jobs are deliberate replacements). Eleven work orders, one draft PR each, for implementing
 agents: [index](docs/roadmap/flagship/README.md), F1–F11 =
 [#357](https://github.com/onemindos/omos/pull/357)–[#367](https://github.com/onemindos/omos/pull/367).
 This supersedes the U00–U06 order in #356. It is Phase 6 follow-through: no
