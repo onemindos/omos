@@ -1021,3 +1021,13 @@ verified. Existing native Grafana/Prometheus views and read-only denials retaine
 This is documented dependency metadata, not live traffic/all-app coverage.
 **Next: OpenCost**, separately scoped. Phase 6 stays In progress; Phase 7 Not
 started; #339 remains draft. Hosted CI billing and whole-tree YAML debt remain.
+
+### Parallel backlog run — application lifecycle
+
+User requested separate PRs and bounded parallel agents for the remaining portal
+workstreams. This draft extends the existing onboarding proposal skeleton with
+the per-app identity/ownership/access/signals/AI/data/recovery/release/retirement
+contract; no new scaffolder, pipeline target or runtime mutation is added.
+[Scope and unexecuted acceptance](docs/operations/backstage-lifecycle-workstream.md).
+One app-specific allowlisted pipeline profile and signed-in render/live acceptance
+remain future work. Phase 6 In progress; Phase 7 Not started; approvals unchanged.
