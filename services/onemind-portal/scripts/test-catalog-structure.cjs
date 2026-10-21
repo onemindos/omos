@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const YAML = require('yaml');
-const { applyStructure, loadSources, load, refOf, UNASSIGNED } = require('./curate-structure.cjs');
+const { applyStructure, applyStructureToText, loadSources, load, refOf, UNASSIGNED } = require('./curate-structure.cjs');
 
 const root = path.join(__dirname, '..');
 const read = f => load(path.join(root, 'catalog', f));
@@ -215,4 +215,10 @@ test('every declared relation target resolves inside the catalog', () => {
     for (const [r, k] of targets) if (!resolve(r, k)) missing.push(`${refOf(e)} -> ${r}`);
   }
   assert.deepEqual(missing, []);
+});
+
+test('rewriting the checked-in files is byte-stable and keeps untouched scalar quoting', () => {
+  const text = { apps: fs.readFileSync(path.join(root, 'catalog/apps.yaml'), 'utf8'), cluster: fs.readFileSync(path.join(root, 'catalog/cluster.yaml'), 'utf8') };
+  assert.deepEqual(applyStructureToText(text, sources), text);
+  assert.match(text.apps, /onemind\.io\/launcher-reviewed-at: "2026-10-20T08:06:39\.971995\+00:00"/);
 });

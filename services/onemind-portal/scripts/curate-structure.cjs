@@ -273,23 +273,62 @@ function applyStructure(input, sources) {
   return { apps: [...head, ...appsOut], cluster: clusterOut };
 }
 
-function render(docs, renderer = d => YAML.stringify(d)) {
-  return docs.map(d => renderer(d)).join('---\n');
+const isObject = v => v && typeof v === 'object' && !Array.isArray(v);
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+// Apply only the changed leaves to the original YAML document so untouched entities keep their
+// exact bytes (scalar quoting, folding, ordering) and the diff shows real changes only.
+function patchDocument(doc, before, after, trail = []) {
+  if (isObject(before) && isObject(after)) {
+    for (const key of Object.keys(after)) {
+      if (!(key in before)) doc.setIn([...trail, key], doc.createNode(after[key]));
+      else patchDocument(doc, before[key], after[key], [...trail, key]);
+    }
+    for (const key of Object.keys(before)) if (!(key in after)) doc.deleteIn([...trail, key]);
+  } else if (!same(before, after)) doc.setIn(trail, doc.createNode(after));
+}
+
+function ownedRefs(structure) {
+  return new Set([
+    ...structure.domains.map(d => `domain:default/${d.name}`),
+    ...structure.systems.map(s => `system:default/${s.name}`),
+    ...(structure.apps || []).map(a => `component:default/${a.name}`),
+  ]);
+}
+
+/** Text in, text out: the form the catalog files are rewritten in. */
+function applyStructureToText(text, sources) {
+  const parse = t => YAML.parseAllDocuments(t).filter(d => d.contents);
+  const sides = { apps: parse(text.apps), cluster: parse(text.cluster) };
+  const before = Object.fromEntries(Object.entries(sides).map(([k, docs]) => [k, docs.map(d => d.toJS())]));
+  const out = applyStructure(before, sources);
+  const owned = ownedRefs(sources.structure);
+  const render = key => {
+    const existing = new Map(sides[key].map((d, i) => [refOf(before[key][i]), { doc: d, js: before[key][i] }]));
+    return out[key].map(entity => {
+      const ref = refOf(entity);
+      const hit = existing.get(ref);
+      if (owned.has(ref) || !hit) return YAML.stringify(entity);
+      patchDocument(hit.doc, hit.js, entity);
+      hit.doc.directives.docStart = null;
+      return hit.doc.toString();
+    }).join('---\n');
+  };
+  return { apps: render('apps'), cluster: render('cluster') };
 }
 
 function writeCatalog(result, base = root) {
-  const { renderCluster } = require('./curate-topology.cjs');
-  const targets = [path.join(base, 'catalog'), path.join(base, '../../platform/backstage/catalog')];
-  for (const dir of targets) {
-    fs.writeFileSync(path.join(dir, 'apps.yaml'), render(result.apps));
-    fs.writeFileSync(path.join(dir, 'cluster.yaml'), renderCluster(result.cluster));
+  for (const dir of [path.join(base, 'catalog'), path.join(base, '../../platform/backstage/catalog')]) {
+    fs.writeFileSync(path.join(dir, 'apps.yaml'), result.apps);
+    fs.writeFileSync(path.join(dir, 'cluster.yaml'), result.cluster);
   }
 }
 
 if (require.main === module) {
-  const input = { apps: load(path.join(root, 'catalog/apps.yaml')), cluster: load(path.join(root, 'catalog/cluster.yaml')) };
-  const result = applyStructure(input, loadSources());
+  const read = f => fs.readFileSync(path.join(root, 'catalog', f), 'utf8');
+  const result = applyStructureToText({ apps: read('apps.yaml'), cluster: read('cluster.yaml') }, loadSources());
   writeCatalog(result);
-  console.log(`Structure applied: ${result.apps.filter(e => e.kind === 'Domain').length} domains, ${result.apps.filter(e => e.kind === 'System').length} systems, ${result.cluster.filter(e => e.spec?.subcomponentOf).length} subcomponents.`);
+  const count = (text, kind) => (text.match(new RegExp(`^kind: ${kind}$`, 'gm')) || []).length;
+  console.log(`Structure applied: ${count(result.apps, 'Domain')} domains, ${count(result.apps, 'System')} systems, ${(result.cluster.match(/^ {2}subcomponentOf: /gm) || []).length} subcomponents.`);
 }
-module.exports = { applyStructure, loadSources, load, refOf, workloadIdentity, appForWorkload, workloadRole, writeCatalog, UNASSIGNED };
+module.exports = { applyStructure, applyStructureToText, loadSources, load, refOf, workloadIdentity, appForWorkload, workloadRole, writeCatalog, UNASSIGNED };

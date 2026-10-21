@@ -794,7 +794,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816a83c1dbdc285b898d.md
       title: "Archived registry: Agent Web UI"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:06:39.971995+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/access-points: |-
       [
@@ -851,7 +851,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -944,7 +944,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:06:39.971995+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -973,7 +973,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:06:39.971995+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -1091,7 +1091,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -1128,7 +1128,7 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: certificate-untrusted-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -1168,7 +1168,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a98fb4e78fdda75950.md
       title: "Archived registry: OneTAK"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
@@ -1205,7 +1205,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -1478,7 +1478,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:06:39.971995+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:06:39.971995+00:00"
     onemind.io/launcher-review: reachable-from-operator-mac
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
@@ -1509,7 +1509,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
@@ -1547,7 +1547,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
@@ -1573,7 +1573,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
@@ -1599,7 +1599,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
@@ -1651,7 +1651,7 @@ metadata:
       title: Open application
       icon: dashboard
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
@@ -1695,7 +1695,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141870fea96e2732cf7.md
       title: "Archived registry: NATS Surveyor"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
@@ -1757,7 +1757,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8aa3ddd0a1f032dac.md
       title: "Archived registry: TileServer GL"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
@@ -1823,7 +1823,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99634de87ffa4e749.md
       title: "Archived registry: Valhalla"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
@@ -1889,7 +1889,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81a8a942d9af85058ca8.md
       title: "Archived registry: Maputnik"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
@@ -1955,7 +1955,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e816c97dfc37ab88251bc.md
       title: "Archived registry: WebODM"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/access-points: |-
       [
@@ -5704,7 +5704,7 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812c9700faea244ec699.md
       title: "Archived registry: Home Assistant"
   annotations:
-    onemind.io/launcher-reviewed-at: 2026-10-20T08:02:51.107324+00:00
+    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: timeout-from-operator-mac
     onemind.io/hosting: mesh-endpoint-unverified
     onemind.io/documented-status: ✅ Live
