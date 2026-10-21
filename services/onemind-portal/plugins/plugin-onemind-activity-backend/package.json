@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "1.10.1",
+    "@backstage/plugin-events-node": "^0.4.26",
     "@backstage/plugin-notifications-node": "^0.2.30",
+    "@internal/plugin-onemind-common-backend": "workspace:^",
     "express": "4.22.1"
   },
   "devDependencies": {
