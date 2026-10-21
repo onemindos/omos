@@ -1109,3 +1109,11 @@ and regression contracts are prepared; see [scope and remaining gates](docs/oper
 Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
 No new access, storage, controller, deployment or migration. Phase 6 In progress;
 Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
+
+### Parallel portal run — cost
+
+User requested a separate draft workstream for cost. Bounded offline source
+and regression contracts are prepared; see [scope and remaining gates](docs/operations/backstage-cost-workstream.md).
+Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
+No new access, storage, controller, deployment or migration. Phase 6 In progress;
+Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
