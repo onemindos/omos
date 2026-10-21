@@ -129,6 +129,8 @@ notifications and catalog APIs).
 - Not verified against the live portal: ids of some plugin pages (matched by id
   or title). Local run used mocked APIs (Brave via Playwright), not real data.
 
+**Gate:** `pipeline.py check --profile portal` run.json = check_passed (only optional whole-tree-diagnostic fails).
+
 **Tests:** nav 15, home 16 new/updated (31 total passing).
 
 **Screenshots (local, not committed):** `<scratch>/agents/f1-shots/after-*.png`
