@@ -262,7 +262,13 @@ function applyStructure(input, sources) {
   const finalDocs = [...appsOut, ...clusterOut];
   for (const e of finalDocs) {
     if (e.kind === 'Domain') continue;
-    setLabel(e, 'onemind.io/pillar', pillarFor(structure, e.spec.system, refOf(e)));
+    const pillar = pillarFor(structure, e.spec.system, refOf(e));
+    setLabel(e, 'onemind.io/pillar', pillar);
+    // Backstage filters cannot ask for "label missing", so the review state is also recorded as a
+    // positive value that the catalog Pillar filter can match (Unclassified).
+    e.metadata.annotations = { ...(e.metadata.annotations || {}), 'onemind.io/pillar-review': pillar ? 'proposed' : 'unclassified' };
+    // Role separates the primary entity (app) from the Kubernetes workloads that hang under it.
+    setLabel(e, 'onemind.io/catalog-role', e.kind === 'Component' ? (e.spec.subcomponentOf || workloadIdentity(e) ? 'workload' : 'app') : null);
   }
   for (const e of finalDocs.filter(x => x.kind === 'Component')) {
     const w = workloadIdentity(e);

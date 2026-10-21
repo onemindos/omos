@@ -6,6 +6,7 @@ metadata:
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/inventory-review: discovered
+    onemind.io/pillar-review: proposed
   description: Current DigitalOcean NYC3 Kubernetes deployment location.
     Home/Mac/edge clusters are not claimed deployed by this graph. Dependency
     edges are reviewed catalog metadata, not a live traffic or health map.
@@ -42,11 +43,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: agent-console
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - agent-fabric
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -73,11 +76,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: agent-tap
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - agent-fabric
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -104,11 +109,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-applicationset-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -135,11 +142,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-dex-server
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -166,11 +175,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-notifications-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -197,11 +208,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-redis
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -228,11 +241,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-repo-server
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -262,6 +277,7 @@ metadata:
     onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
     onemind.io/kubernetes-workload: argocd-server
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
@@ -283,6 +299,7 @@ metadata:
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -309,11 +326,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: rollouts-argo-rollouts
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -340,11 +359,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: authentik-redis
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - auth
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -374,6 +395,7 @@ metadata:
     onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
     onemind.io/kubernetes-workload: platform-auth-helm-authentik-server
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - auth
@@ -395,6 +417,7 @@ metadata:
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -421,11 +444,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: platform-auth-helm-authentik-worker
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - auth
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -468,6 +493,7 @@ metadata:
       failure can degrade one view without stopping the portal."
     onemind.io/kubernetes-workload: backstage
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - backstage
@@ -509,6 +535,7 @@ metadata:
         tions=true"
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -540,11 +567,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cert-manager
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cert-manager
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -571,11 +600,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cert-manager-cainjector
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cert-manager
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -602,11 +633,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cert-manager-webhook
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cert-manager
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -633,11 +666,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cloudflared
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cloudflare
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -664,11 +699,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cloudflared-tunnel
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cloudflare
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -695,11 +732,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: barman-plugin-barman-cloud
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cnpg-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -726,11 +765,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cnpg-cloudnative-pg
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - cnpg-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -757,11 +798,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: dapr-operator
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - dapr-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -788,11 +831,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: dapr-sentry
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - dapr-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -819,11 +864,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: dapr-sidecar-injector
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - dapr-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -850,11 +897,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: stac-browser-development-0c6b80f7
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - dp-default-onetak-development-b188bf98
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -881,11 +930,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: external-dns
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - external-dns
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -912,11 +963,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: external-secrets
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - external-secrets
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -943,11 +996,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: external-secrets-cert-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - external-secrets
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -974,11 +1029,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: external-secrets-webhook
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - external-secrets
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1005,11 +1062,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: github-runner
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - github-runner
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1036,11 +1095,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: github-runner-hermes
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - github-runner
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1067,11 +1128,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: hermes-legacy
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - hermes
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1098,11 +1161,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ingress-nginx-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - ingress-nginx
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1129,11 +1194,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: keda-admission-webhooks
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - keda
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1160,11 +1227,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: keda-operator
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - keda
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1191,11 +1260,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: keda-operator-metrics-apiserver
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - keda
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1222,11 +1293,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: coredns
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1253,11 +1326,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: hubble-relay
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1284,11 +1359,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: hubble-ui
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1315,11 +1392,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: konnectivity-agent
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1346,11 +1425,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: metrics-server
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1377,11 +1458,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: platform-clickhouse-operator
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1408,11 +1491,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: sealed-secrets-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1439,11 +1524,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: headlamp
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1470,11 +1557,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: kubernetes-dashboard
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1501,11 +1590,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: kyverno-admission-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kyverno
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1532,11 +1623,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: kyverno-background-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kyverno
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1563,11 +1656,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: kyverno-cleanup-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kyverno
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1594,11 +1689,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: kyverno-reports-controller
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kyverno
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1625,9 +1722,12 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: element-web
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: unclassified
   tags:
     - kubernetes
     - matrix
+  labels:
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1654,9 +1754,12 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: synapse
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: unclassified
   tags:
     - kubernetes
     - matrix
+  labels:
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1683,11 +1786,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: loki-gateway
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1717,6 +1822,7 @@ metadata:
     onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
     onemind.io/kubernetes-workload: monitoring-grafana
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
@@ -1738,6 +1844,7 @@ metadata:
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1765,11 +1872,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: monitoring-kube-prometheus-operator
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1796,11 +1905,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: monitoring-kube-state-metrics
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1827,11 +1938,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: n8n
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - n8n
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1858,11 +1971,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: heynats
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1889,11 +2004,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nack
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1920,11 +2037,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nats-dashboard
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1951,11 +2070,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nats-metrics-scrape
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -1982,11 +2103,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nats-surveyor
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2013,11 +2136,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nats-ui
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2044,11 +2169,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: feed-intel
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - omos
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2075,11 +2202,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: feed-satellites
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - omos
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2106,11 +2235,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: omos-tak-projector
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - omos
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2137,11 +2268,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: redpanda-connect
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - omos
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2168,11 +2301,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: sink-clickhouse
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - omos
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2199,11 +2334,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: litellm
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-ai
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2230,11 +2367,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onemind-cpu-model
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-ai
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2261,11 +2400,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onemind-core
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-core
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2292,11 +2433,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onemind-ingestion
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-core
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2323,11 +2466,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: openfga
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-core
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2354,11 +2499,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-core
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2385,11 +2532,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-jobservice
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2416,11 +2565,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-nginx
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2447,11 +2598,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-portal
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2478,11 +2631,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-registry
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2509,11 +2664,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: maputnik
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2540,11 +2697,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: martin
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2571,11 +2730,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nodeodm
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2602,11 +2763,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: nominatim
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2633,11 +2796,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onetak-geo-db
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2664,11 +2829,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onetak-media
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2695,11 +2862,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onetak-minio
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2726,11 +2895,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onetak-postgis
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2757,11 +2928,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: overpass
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2788,11 +2961,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: pg-featureserv
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2819,11 +2994,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: stac-api
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2850,11 +3027,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tak-portal
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2881,11 +3060,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tile38
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2912,11 +3093,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tileserver-gl
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2943,11 +3126,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: valhalla
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -2974,11 +3159,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: webodm
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3005,11 +3192,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: webodm-broker
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3036,11 +3225,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: webodm-db
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3067,11 +3258,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cluster-gateway
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-control-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3098,11 +3291,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: controller-manager
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-control-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3129,11 +3324,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: openchoreo-api
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-control-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3160,11 +3357,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: portal-assistant
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-control-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3191,11 +3390,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cluster-agent-dataplane
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-data-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3222,11 +3423,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: cluster-agent-observabilityplane
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3253,11 +3456,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: controller-manager
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3284,11 +3489,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: events-collector
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3315,11 +3522,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: finops-opencost-adapter
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3346,11 +3555,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: logs-adapter-opensearch
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3377,11 +3588,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: metrics-adapter-prometheus
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3408,11 +3621,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: observer
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3439,11 +3654,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tracing-adapter-opensearch
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openchoreo-observability-plane
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3470,11 +3687,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: openclaw
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - openclaw
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3501,11 +3720,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: opencost
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - opencost
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3532,11 +3753,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: platform-volsync
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - ops
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3563,11 +3786,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: operator
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3594,11 +3819,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takml-db
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takml
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3625,11 +3852,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takml-server
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takml
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3656,11 +3885,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takml-vision-worker
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takml
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3687,11 +3918,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: fedhub
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3718,11 +3951,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: mumble-bridge
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3749,11 +3984,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: murmur
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3780,11 +4017,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tak-lb-proxy
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3811,11 +4050,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tak-nats-leaf
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3842,11 +4083,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-api
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3873,11 +4116,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-config
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3904,11 +4149,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-messaging
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3935,11 +4182,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-nats-box
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3966,11 +4215,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-plugins
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -3997,11 +4248,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: velero
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - velero
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4028,11 +4281,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: argocd-application-controller
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - argocd
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4059,11 +4314,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: authentik-postgres
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - auth
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4101,6 +4358,7 @@ metadata:
     onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
     onemind.io/kubernetes-workload: backstage-postgres
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - backstage
@@ -4134,6 +4392,7 @@ metadata:
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4161,11 +4420,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: chi-onemind-onemind-0-0
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - clickhouse
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4192,11 +4453,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: dapr-placement-server
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - dapr-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4223,11 +4486,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: dapr-scheduler-server
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - dapr-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4254,9 +4519,12 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: postgres
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: unclassified
   tags:
     - kubernetes
     - matrix
+  labels:
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4283,9 +4551,12 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: redis
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: unclassified
   tags:
     - kubernetes
     - matrix
+  labels:
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4312,11 +4583,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: alertmanager-monitoring-kube-prometheus-alertmanager
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4343,11 +4616,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: loki
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4374,11 +4649,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: prometheus-monitoring-kube-prometheus-prometheus
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4405,11 +4682,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tempo
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - monitoring
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4436,11 +4715,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: postgres
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - n8n
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4478,6 +4759,7 @@ metadata:
     onemind.io/topology-evidence: docs/operations/native-service-topology-2026-10-20.md
     onemind.io/kubernetes-workload: nats
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
@@ -4509,6 +4791,7 @@ metadata:
       url: https://onemind-preview.tail717ba0.ts.net/catalog/default/resource/do-nyc3-omos-cloud
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4538,11 +4821,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-database
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4569,11 +4854,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-redis
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4600,11 +4887,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: harbor-trivy
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-registry
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4631,11 +4920,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: onemind-search-master
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onemind-search
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4662,11 +4953,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: spire-server
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - spire-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4693,11 +4986,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: egress
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4724,11 +5019,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-agent-console-8khxt
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4755,11 +5052,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-agent-tap-v7ktr
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4786,11 +5085,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-argocd-slkzh
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4817,11 +5118,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-cilium-gateway-gateway-default-bl4tw
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4849,11 +5152,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-cilium-gateway-gateway-default-hl5fh
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4880,11 +5185,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-grafana-ksprn
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4911,11 +5218,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-headlamp-4qwkc
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4942,11 +5251,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-hermes-dashboard-6thbx
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -4973,11 +5284,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-heynats-p5dmf
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5004,11 +5317,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-hubble-tw85d
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5035,11 +5350,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-kubernetes-dashboard-9r9fp
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5066,11 +5383,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-n8n-pmtds
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5097,11 +5416,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-nats-dashboard-242wv
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5128,11 +5449,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-nats-monitor-zh589
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5159,11 +5482,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-nats-ui-d6rrg
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5190,11 +5515,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-nats-ws-4q6bc
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5221,11 +5548,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-observer-pftsp
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5252,11 +5581,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-omos-ha-edge-rlv6k
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5283,11 +5614,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-omos-mbp-hgq9w
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5314,11 +5647,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-omos-nats-fs6r4
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5345,11 +5680,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-omos-s24-44l4v
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5376,11 +5713,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-onemind-auth-4w5hk
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5407,11 +5746,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-onemind-preview-shtd7
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5438,11 +5779,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-openclaw-gateway-s7hcm
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5469,11 +5812,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-opencost-rqpmq
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5500,11 +5845,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: ts-tak-tailnet-jtgn4
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5531,11 +5878,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: fedhub-mongodb
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5562,11 +5911,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: tak-ldap
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5593,11 +5944,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-ignite
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5624,11 +5977,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-nats
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5655,11 +6010,13 @@ metadata:
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: takserver-postgresql
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - takserver
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -5694,6 +6051,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5725,6 +6083,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5751,6 +6110,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5786,6 +6146,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5817,6 +6178,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5843,6 +6205,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5869,6 +6232,7 @@ metadata:
     onemind.io/observed-online: "false"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5895,6 +6259,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5921,6 +6286,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5947,6 +6313,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5973,6 +6340,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -5999,6 +6367,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6025,6 +6394,7 @@ metadata:
     onemind.io/observed-online: "false"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6051,6 +6421,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6086,6 +6457,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6119,6 +6491,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6145,6 +6518,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6171,6 +6545,7 @@ metadata:
     onemind.io/observed-online: "false"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6206,6 +6581,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6238,6 +6614,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6264,6 +6641,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6290,6 +6668,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6316,6 +6695,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6342,6 +6722,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6377,6 +6758,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6409,6 +6791,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6435,6 +6818,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6461,6 +6845,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6496,6 +6881,7 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6528,6 +6914,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6554,6 +6941,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6580,6 +6968,7 @@ metadata:
     onemind.io/observed-online: "false"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6606,6 +6995,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6632,6 +7022,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6658,6 +7049,7 @@ metadata:
     onemind.io/observed-online: "true"
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -6691,6 +7083,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/martin; Service onetak/martin
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8102946eff79f4125152.md
       title: "Archived registry: Martin"
@@ -6727,6 +7120,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/onetak-postgis; Service onetak/onetak-postgis
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810aac3af58ff183e974.md
       title: "Archived registry: OneTAK PostgreSQL"
@@ -6760,6 +7154,7 @@ metadata:
     onemind.io/documented-address: https://instagram.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e810e84d5d447966b9242.md
       title: "Archived registry: Instagram"
@@ -6789,6 +7184,7 @@ metadata:
     onemind.io/documented-address: https://youtube.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8110a570ee43052b619f.md
       title: "Archived registry: YouTube"
@@ -6827,6 +7223,7 @@ metadata:
       Part of Google Workspace Standard.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81518da2ee7c70e8d25c.md
       title: "Archived registry: Google Calendar"
@@ -6860,6 +7257,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/stac-api; Service onetak/stac-api
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8112af60e8ea79c23728.md
       title: "Archived registry: STAC API"
@@ -6895,6 +7293,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment cloudflare/cloudflared
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e811fb22ff0467ff07122.md
       title: "Archived registry: Cloudflare Tunnel"
@@ -6930,6 +7329,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/runtime-evidence: Service dp-default-onetak-development-b188bf98/stac-browser
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md
       title: "Archived registry: STAC Browser"
@@ -6964,6 +7364,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment cert-manager/cert-manager; Service cert-manager/cert-manager
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812899b8c2b1670b04e6.md
       title: "Archived registry: cert-manager"
@@ -6997,6 +7398,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-tags: Cron, Edge Device
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e812fa332d7b0a3263d04.md
       title: "Archived registry: s24-pipeline-guardian"
@@ -7029,6 +7431,7 @@ metadata:
     onemind.io/documented-tags: Cron, TAK Server
     onemind.io/verification: documented-unverified
     onemind.io/runtime-evidence: CronJob takserver/cot-retention
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81399300ce8ae5c69770.md
       title: "Archived registry: cot-retention"
@@ -7068,6 +7471,7 @@ metadata:
     onemind.io/tech-stack-notes: Primary file storage. OneMind folder (403GB) syncing to Drive desktop app.
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81faa9f5e8b0e4c2137e.md
       title: "Archived registry: Google Drive"
@@ -7099,6 +7503,7 @@ metadata:
     onemind.io/documented-address: https://qgis.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8143a116e3464a69dadf.md
       title: "Archived registry: QGIS Server"
@@ -7139,6 +7544,7 @@ metadata:
       over WebSocket. Used for quick situational awareness without ATAK.
     onemind.io/supported-platforms: Web
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e814aa336d1ac4efc7303.md
       title: "Archived registry: WebTAK (Admin)"
@@ -7170,6 +7576,7 @@ metadata:
     onemind.io/documented-address: ws://nats.hermes.svc.cluster.local:8080
     onemind.io/documented-tags: NATS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8154a3b3e5435bb33606.md
       title: "Archived registry: NATS WebSocket"
@@ -7204,6 +7611,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: StatefulSet clickhouse/chi-onemind-onemind-0-0;
       Service clickhouse/chi-onemind-onemind-0-0
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81569955eb41a19a3c12.md
       title: "Archived registry: ClickHouse Time Machine"
@@ -7237,6 +7645,7 @@ metadata:
     onemind.io/documented-address: https://x.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e815f84a4ef6b62156a7b.md
       title: "Archived registry: X.com"
@@ -7268,6 +7677,7 @@ metadata:
     onemind.io/documented-address: https://github.com/silvertakana/worldwideview
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8168813dcf78f5c99f1d.md
       title: "Archived registry: WorldWideView"
@@ -7308,6 +7718,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: StatefulSet nats/nats; Service nats/nats
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81709d3cec611961a687.md
       title: "Archived registry: NATS JetStream Cluster"
@@ -7342,6 +7753,7 @@ metadata:
     onemind.io/documented-address: nats://omos.sink.tak
     onemind.io/documented-tags: OMOS Feed, TAK Server
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8173becdd056e98686a2.md
       title: "Archived registry: sink-tak"
@@ -7373,6 +7785,7 @@ metadata:
     onemind.io/documented-address: https://github.com/bigbodycobain/shadowbroker
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8178acbaf60087482229.md
       title: "Archived registry: ShadowBroker"
@@ -7404,6 +7817,7 @@ metadata:
     onemind.io/documented-address: https://github.com/koala73/worldmonitor
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e817c9538c8feb1e5ce3e.md
       title: "Archived registry: WorldMonitor"
@@ -7442,6 +7856,7 @@ metadata:
       account. Migrating from iCloud.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e49fcedcf0041324b4.md
       title: "Archived registry: Google Photos"
@@ -7477,6 +7892,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: StatefulSet takserver/takserver-postgresql; Service
       takserver/takserver-postgresql
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81809e0ecbcba85a7eaf.md
       title: "Archived registry: TAK PostgreSQL"
@@ -7510,6 +7926,7 @@ metadata:
     onemind.io/documented-address: https://facebook.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818caa21cde074079ac2.md
       title: "Archived registry: Facebook"
@@ -7542,6 +7959,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/omos-tak-projector
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e818eb6d2ddea4ff77c23.md
       title: "Archived registry: omos-tak-projector"
@@ -7577,6 +7995,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/nominatim; Service onetak/nominatim
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81979373c249a2d37537.md
       title: "Archived registry: Nominatim"
@@ -7613,6 +8032,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/sink-clickhouse
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8197af14e4631a656d65.md
       title: "Archived registry: sink-clickhouse"
@@ -7645,6 +8065,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-tags: Networking
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8198b4a5e3b0fc75ddf3.md
       title: "Archived registry: ingress-nginx"
@@ -7677,6 +8098,7 @@ metadata:
     onemind.io/documented-address: https://github.com/simplifaisoul/osiris
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819cbdf7fbc0c195dbd7.md
       title: "Archived registry: Osiris"
@@ -7707,6 +8129,7 @@ metadata:
     onemind.io/documented-address: https://github.com/onemindos/tak-webview-cesium
     onemind.io/documented-tags: TAK Server
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e819d83a8dc908bf57b6c.md
       title: "Archived registry: Cesium 3D Globe"
@@ -7738,6 +8161,7 @@ metadata:
     onemind.io/documented-address: https://godaddy.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b586f5f846351e4b5f.md
       title: "Archived registry: GoDaddy"
@@ -7770,6 +8194,7 @@ metadata:
     onemind.io/documented-address: https://github.com/calesthio/Crucix
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81b8abe9c60ec490ba21.md
       title: "Archived registry: Crucix"
@@ -7799,6 +8224,7 @@ metadata:
     onemind.io/documented-address: https://linkedin.com
     onemind.io/documented-tags: External
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81bb9632ca833cd5fa87.md
       title: "Archived registry: LinkedIn"
@@ -7838,6 +8264,7 @@ metadata:
       $14/mo.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d2be23eda5893be74a.md
       title: "Archived registry: Gmail"
@@ -7869,6 +8296,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/pg-featureserv; Service onetak/pg-featureserv
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81d783cae864daeb7c29.md
       title: "Archived registry: pg_featureserv"
@@ -7904,6 +8332,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/overpass; Service onetak/overpass
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e29fb4e3eb7c083985.md
       title: "Archived registry: Overpass"
@@ -7939,6 +8368,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/tile38; Service onetak/tile38
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e6bc30fcf1af4eebb6.md
       title: "Archived registry: Tile38"
@@ -7975,6 +8405,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/onetak-minio; Service onetak/onetak-minio
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81e886beca1809524d17.md
       title: "Archived registry: OneTAK MinIO"
@@ -8011,6 +8442,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takserver/takserver-api; Deployment
       takserver/takserver-messaging
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e81f99689dd357eba770d.md
       title: "Archived registry: TAK Server (Core)"
@@ -8051,6 +8483,7 @@ metadata:
       syncs automatically via Google account.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e800a854cee91d59f7ad1.md
       title: "Archived registry: Contacts"
@@ -8078,6 +8511,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tacos.tak.gov
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8101aa17dcd0d82cd1d4.md
       title: "Archived registry: TAK OS"
@@ -8113,6 +8547,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/onetak-geo-db; Service onetak/onetak-geo-db
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810487ecddf0af4380dc.md
       title: "Archived registry: Geo Database"
@@ -8144,6 +8579,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://kikoff.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8104990bd8feb428ab9f.md
       title: "Archived registry: Kikoff"
@@ -8183,6 +8619,7 @@ metadata:
       Government Cloud and integration with DoD services.
     onemind.io/supported-platforms: Linux,K8s,Web
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8108bb3cc3de14622942.md
       title: "Archived registry: Azure"
@@ -8212,6 +8649,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://unity.com
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810b82b3fa2448f0d099.md
       title: "Archived registry: Unity"
@@ -8241,6 +8679,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tiktok.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e810e8615c2f594744dca.md
       title: "Archived registry: TikTok"
@@ -8270,6 +8709,7 @@ metadata:
     onemind.io/documented-address: https://github.com/onemindos/cobra-nats
     onemind.io/documented-tags: NATS
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8110b6c6f43ce67d5e73.md
       title: "Archived registry: cobra-nats"
@@ -8299,6 +8739,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://weixin.qq.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8113bfb3c54fa5d44247.md
       title: "Archived registry: WeChat"
@@ -8328,6 +8769,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-nats
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8114ad63e5233b3c83ac.md
       title: "Archived registry: onetak-plugin-nats"
@@ -8360,6 +8802,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81169f70ea90560d5b8d.md
       title: "Archived registry: OneMind AI Bridge"
@@ -8397,6 +8840,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment hermes/hermes-legacy
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e811c914ce4f231123b3a.md
       title: "Archived registry: Hermes — Legacy Hive System"
@@ -8428,6 +8872,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://useorigin.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8122a508e26f616d976b.md
       title: "Archived registry: UseOrigin"
@@ -8460,6 +8905,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/atak-plugin-omhud
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b78b08e2caba493b87.md
       title: "Archived registry: atak-plugin-omhud"
@@ -8503,6 +8949,7 @@ metadata:
       for OneMind OS development. Runs in terminal and IDE extensions.
     onemind.io/supported-platforms: macOS,Windows,Linux
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8125a316ef1df9160933.md
       title: "Archived registry: Claude Code (Bedrock)"
@@ -8534,6 +8981,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tak.gov/products/atak
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81279781d378995c1e88.md
       title: "Archived registry: ATAK"
@@ -8574,6 +9022,7 @@ metadata:
       Trial planned. First funnel to be built on start.
     onemind.io/supported-platforms: Web,Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e812bb980d5ed40416328.md
       title: "Archived registry: GHL (GoHighLevel)"
@@ -8605,6 +9054,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-hermes
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e812c9d55c8e407db4045.md
       title: "Archived registry: onetak-plugin-hermes"
@@ -8639,6 +9089,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/nodeodm; Service onetak/nodeodm
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81338840ec1c874371c6.md
       title: "Archived registry: NodeODM"
@@ -8672,6 +9123,7 @@ metadata:
     onemind.io/documented-address: https://github.com/gastbob40/nats-ui
     onemind.io/documented-tags: NATS
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81379661cd62a0279c31.md
       title: "Archived registry: gastbob-nats-ui"
@@ -8704,6 +9156,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://www.synadia.com/protect
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8138979dee67a5486f63.md
       title: "Archived registry: Synadia Protect"
@@ -8742,6 +9195,7 @@ metadata:
       Toolkit. Powers local LLM inference and ML workloads.
     onemind.io/supported-platforms: Linux,Windows,K8s
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8141bd03db771bbe2cbd.md
       title: "Archived registry: NVIDIA"
@@ -8771,6 +9225,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://opentopography.org
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814a9d5ad52241438757.md
       title: "Archived registry: OpenTopography"
@@ -8800,6 +9255,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://openstreetmap.org
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e814fabc2e25bbd0e4aa8.md
       title: "Archived registry: OpenStreetMap"
@@ -8835,6 +9291,7 @@ metadata:
     onemind.io/documented-address: https://github.com/bilawalsidhu/gods-eye-view
     onemind.io/documented-tags: OMOS-Intel
     onemind.io/verification: reference
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815192a3e2716188e0ef.md
       title: "Archived registry: Gods Eye View"
@@ -8867,6 +9324,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: StatefulSet takserver/takserver-ignite; Service takserver/takserver-ignite
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8152ba0cc06d52978b62.md
       title: "Archived registry: TAKServer Ignite"
@@ -8902,6 +9360,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://github.com/agent-of-empires/agent-of-empires
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e815491a3e7b8cb7538f0.md
       title: "Archived registry: Agent of Empires"
@@ -8941,6 +9400,7 @@ metadata:
       workloads.
     onemind.io/supported-platforms: Linux,K8s,Web
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81569873d6a20f239849.md
       title: "Archived registry: AWS"
@@ -8975,6 +9435,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8156b543e41459836cf0.md
       title: "Archived registry: omos-feed-pipeline"
@@ -9012,6 +9473,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment nats/nack
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8164b995c1a9de84bc5c.md
       title: "Archived registry: NACK"
@@ -9048,6 +9510,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/hermes-plugin-nats-context
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8166b382ec5bbb6bde2c.md
       title: "Archived registry: hermes-plugin-nats-context"
@@ -9084,6 +9547,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://github.com/builderz-labs/mission-control
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81678448e2762ada52f4.md
       title: "Archived registry: Mission Control"
@@ -9116,6 +9580,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-ops
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8167a2edf29f6c5b84f3.md
       title: "Archived registry: onetak-plugin-ops"
@@ -9152,6 +9617,7 @@ metadata:
     onemind.io/tech-stack-notes: Mobile payments on Samsung. Replacing Apple Pay as moving off iPhone.
     onemind.io/supported-platforms: Android
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816aafedd09892f47e82.md
       title: "Archived registry: Wallet"
@@ -9179,6 +9645,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://reddit.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ab330c7b21cab93c8.md
       title: "Archived registry: Reddit"
@@ -9209,6 +9676,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-tags: Monitoring
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816ea737d1a5eac43a8a.md
       title: "Archived registry: OpenTelemetry Collector"
@@ -9238,6 +9706,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://opensky-network.org
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e816f8042cbf5b699b5ec.md
       title: "Archived registry: OpenSky"
@@ -9268,6 +9737,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:27:38Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8173810bcea30d73988f.md
       title: "Archived registry: Legacy-Edge (Daughter)"
@@ -9297,6 +9767,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://alibabacloud.com
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817684bbdedb73711864.md
       title: "Archived registry: Alibaba Cloud"
@@ -9328,6 +9799,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-clickhouse
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81769277f29c9db0b6fe.md
       title: "Archived registry: onetak-plugin-clickhouse"
@@ -9360,6 +9832,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/tak-server-mcp
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817cba65c66d49fdac38.md
       title: "Archived registry: tak-server-mcp"
@@ -9397,6 +9870,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takml/takml-server; Service takml/takml-server
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e817fae91f5285488795a.md
       title: "Archived registry: TAK-ML Server"
@@ -9432,6 +9906,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/OneTAK-Plugin-Sample
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180a19eff849ab17b5d.md
       title: "Archived registry: OneTAK-Plugin-Sample"
@@ -9463,6 +9938,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://hushed.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8180aefee4cf10297c32.md
       title: "Archived registry: Hushed"
@@ -9495,6 +9971,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takserver/tak-lb-proxy
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8186b758f7bffd78ce48.md
       title: "Archived registry: TAK LB Proxy"
@@ -9534,6 +10011,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takml/takml-db; Service takml/takml-db
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8187a663d1ee921f543b.md
       title: "Archived registry: TAK-ML Database"
@@ -9566,6 +10044,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://raycast.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e8188bfd2d16ba672fbce.md
       title: "Archived registry: Raycast"
@@ -9598,6 +10077,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://github.com/multica-ai/multica
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81899637c2f6427416c6.md
       title: "Archived registry: Multica"
@@ -9631,6 +10111,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://github.com/iofficeai/aionui
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e818b9388df7e71776626.md
       title: "Archived registry: AionUI"
@@ -9663,6 +10144,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/atak-sdk
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81918ff4ee7fedaa8c28.md
       title: "Archived registry: atak-sdk"
@@ -9699,6 +10181,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819d818fff592b12f8b5.md
       title: "Archived registry: takserver-nats-plugin"
@@ -9730,6 +10213,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tak.gov/products/itak
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819dacfcc8e3d800ba2b.md
       title: "Archived registry: iTAK"
@@ -9760,6 +10244,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment github-runner/github-runner
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a097aed595f98237e5.md
       title: "Archived registry: GitHub Runner"
@@ -9801,6 +10286,7 @@ metadata:
       NATS CLI, and field ops scripting from mobile.
     onemind.io/supported-platforms: Android
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a3bacac3a0ee53c2ec.md
       title: "Archived registry: Termux"
@@ -9832,6 +10318,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://gitlab.com
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a68680e0b433702183.md
       title: "Archived registry: GitLab"
@@ -9869,6 +10356,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/feed-intel
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81a7b836e7cf6518f1e7.md
       title: "Archived registry: feed-intel"
@@ -9901,6 +10389,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/nats-android
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81aa96c9c94ec8575773.md
       title: "Archived registry: nats-android"
@@ -9936,6 +10425,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://github.com/paperclipai/paperclip
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ada22bc5a0b2164e0b.md
       title: "Archived registry: Paperclip"
@@ -9970,6 +10460,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/redpanda-connect; Service omos/redpanda-connect
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b2a408e1eb8d640e22.md
       title: "Archived registry: Redpanda Connect (Wombat)"
@@ -10002,6 +10493,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://twitch.tv
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81b9bc7bc879c11f5906.md
       title: "Archived registry: Twitch"
@@ -10037,6 +10529,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takml/takml-vision-worker
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81bba30bea937c250d79.md
       title: "Archived registry: TAK-ML Vision Worker"
@@ -10074,6 +10567,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment agent-fabric/agent-tap; Service agent-fabric/agent-tap
     onemind.io/repository-url: https://github.com/onemindos/agenttap
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81bbaf34ea74b549d017.md
       title: "Archived registry: agenttap"
@@ -10108,6 +10602,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://farm.bot
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c4959fc2edea1a7f3a.md
       title: "Archived registry: FarmBot"
@@ -10137,6 +10632,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://monarchmoney.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c6aa3dd71c14097649.md
       title: "Archived registry: Monarch Money"
@@ -10166,6 +10662,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://apify.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81c8b47df736eaf55bad.md
       title: "Archived registry: Apify"
@@ -10204,6 +10701,7 @@ metadata:
       forces and COT events. Pairs with TAK Server and NATS bridge.
     onemind.io/supported-platforms: Android,iOS
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81cbb55ad6909474e599.md
       title: "Archived registry: TAK Aware"
@@ -10235,6 +10733,7 @@ metadata:
     onemind.io/documented-address: https://login.circle.so/sign_up?coupon_code=heycreator&request_host=app.circle.so
     onemind.io/documented-tags: External
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81cf96f3cf76fea93e99.md
       title: "Archived registry: Circle Community"
@@ -10266,6 +10765,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-mumble
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d28e35f9ed02f3ca48.md
       title: "Archived registry: onetak-plugin-mumble"
@@ -10294,6 +10794,7 @@ metadata:
     onemind.io/documented-at: 2026-09-03 07:42:36Z
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d5987dcdf1ef081d87.md
       title: "Archived registry: Workspace"
@@ -10325,6 +10826,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://www.synadia.com/insights
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d687d7f745725890e2.md
       title: "Archived registry: Synadia Insights"
@@ -10357,6 +10859,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/OneTAK-Native
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81d8b583f6e334300e28.md
       title: "Archived registry: OneTAK-Native"
@@ -10390,6 +10893,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/TAKWatch/WearTAK
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dabaece05924086d39.md
       title: "Archived registry: WearTAK"
@@ -10421,6 +10925,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tak.gov/products/vr-tak
     onemind.io/verification: planned
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db958be68a366d112e.md
       title: "Archived registry: VR-TAK"
@@ -10450,6 +10955,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://pinterest.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81db9a6fdcf35a5ff7b7.md
       title: "Archived registry: Pinterest"
@@ -10477,6 +10983,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://tavily.com
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81df9777eac9aa15b750.md
       title: "Archived registry: Tavily"
@@ -10508,6 +11015,7 @@ metadata:
     onemind.io/documented-address: https://github.com/nats-nui/nui
     onemind.io/documented-tags: NATS
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfb106d5c7afb68acd.md
       title: "Archived registry: nui"
@@ -10542,6 +11050,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takserver/tak-nats-leaf; Service takserver/tak-nats-leaf
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81dfba46d3863663e0ba.md
       title: "Archived registry: tak-nats-leaf"
@@ -10576,6 +11085,7 @@ metadata:
     onemind.io/documented-address: https://github.com/onemindos/natscope
     onemind.io/documented-tags: NATS
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e0be41fb11080c071e.md
       title: "Archived registry: natscope"
@@ -10614,6 +11124,7 @@ metadata:
       imagery, and 3D tiles. Feeds CesiumJS maps in OneMind UI and TAK viewers.
     onemind.io/supported-platforms: Web,K8s
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e38096f4acec966d27.md
       title: "Archived registry: Cesium Ion"
@@ -10647,6 +11158,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://www.synadia.com/platform
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e3b05ff2ea3a0776d5.md
       title: "Archived registry: Synadia Platform"
@@ -10679,6 +11191,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takserver/mumble-bridge
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e8ba62f5143a9fc0b6.md
       title: "Archived registry: mumble-bridge"
@@ -10714,6 +11227,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment takserver/murmur; Service takserver/murmur
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ec8825efde12e75493.md
       title: "Archived registry: Murmur (Voice)"
@@ -10745,6 +11259,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/onetak-plugin-legacy-ai
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ed9a06d17832222870.md
       title: "Archived registry: onetak-plugin-legacy-ai"
@@ -10779,6 +11294,7 @@ metadata:
     onemind.io/registry-conflict: Recorded Live but description identifies a reference or future deployment
     onemind.io/documented-address: https://github.com/swarmclawai/swarmclaw
     onemind.io/verification: reference
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ee8eacfe99be9e4085.md
       title: "Archived registry: SwarmClaw"
@@ -10808,6 +11324,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://openrouter.ai
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81eebb6adc26a94c0e88.md
       title: "Archived registry: OpenRouter (OneMindOS)"
@@ -10840,6 +11357,7 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.847Z
     onemind.io/repository-inventory-state: observed
     onemind.io/repository-url: https://github.com/onemindos/omos
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81efae8ef2a9f52f10dd.md
       title: "Archived registry: omos-infra"
@@ -10871,6 +11389,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/omos-legacy
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81f1904bcf8fb71fdde7.md
       title: "Archived registry: omos-legacy"
@@ -10900,6 +11419,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://github.com/onemindos/omos-core
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81f2ae36f7f0b5532841.md
       title: "Archived registry: omos-core"
@@ -10932,6 +11452,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment onetak/onetak-media; Service onetak/onetak-media
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fbba79e1a3d07472a8.md
       title: "Archived registry: MediaMTX"
@@ -10967,6 +11488,7 @@ metadata:
     onemind.io/verification: deployment-verified
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/runtime-evidence: Deployment omos/feed-satellites
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81fca08cfaf9f04514a1.md
       title: "Archived registry: feed-satellites"
@@ -10996,11 +11518,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: clickhouse-operator
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - kube-system
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11028,11 +11552,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: agent-web-ui
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11060,11 +11586,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: agenttap
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - nats
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11092,11 +11620,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: omos-mission-engine
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - omos
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11124,11 +11654,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: stac-browser
     onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - onetak
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11157,11 +11689,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: ts-agent-web-ui-l74d4
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11190,11 +11724,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: ts-agenttap-8ddc6
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11223,11 +11759,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: ts-omos-dell-edge-qfrh9
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11256,11 +11794,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: ts-omos-dell-zeus-wsv6m
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11289,11 +11829,13 @@ metadata:
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
     onemind.io/kubernetes-workload: ts-omos-intel-zzn2k
     onemind.io/kubernetes-workload-kind: StatefulSet
+    onemind.io/pillar-review: proposed
   tags:
     - kubernetes
     - tailscale
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: workload
 spec:
   type: service
   lifecycle: production
@@ -11319,6 +11861,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11345,6 +11888,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11371,6 +11915,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11397,6 +11942,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11423,6 +11969,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11449,6 +11996,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11475,6 +12023,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11501,6 +12050,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11527,6 +12077,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11553,6 +12104,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11579,6 +12131,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11605,6 +12158,7 @@ metadata:
     onemind.io/inventory-state: missing-review-required
     onemind.io/inventory-missing-observations: "1"
     onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   tags:
     - mesh
     - unreviewed
@@ -11634,6 +12188,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://ollama.com
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e819a92b8de74c33144cd.md
       title: "Archived registry: Ollama"
@@ -11663,6 +12218,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://proton.me
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
       title: "Archived registry: Proton Mail"
@@ -11688,6 +12244,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11712,6 +12269,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11736,6 +12294,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11760,6 +12319,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11784,6 +12344,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11808,6 +12369,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11832,6 +12394,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11856,6 +12419,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11881,6 +12445,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11905,6 +12470,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11928,6 +12494,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11951,6 +12518,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11975,6 +12543,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -11999,6 +12568,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12022,6 +12592,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12046,6 +12617,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12069,6 +12641,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12093,6 +12666,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12117,6 +12691,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12142,6 +12717,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12165,6 +12741,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12188,6 +12765,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12212,6 +12790,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12238,6 +12817,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12262,6 +12842,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12285,6 +12866,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12310,6 +12892,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12334,6 +12917,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12358,6 +12942,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12381,6 +12966,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12404,6 +12990,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12427,6 +13014,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12451,6 +13039,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12475,6 +13064,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12498,6 +13088,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12521,6 +13112,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12545,6 +13137,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12571,6 +13164,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12594,6 +13188,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12617,6 +13212,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12640,6 +13236,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12663,6 +13260,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12686,6 +13284,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12710,6 +13309,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12734,6 +13334,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12757,6 +13358,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12781,6 +13383,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12804,6 +13407,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12827,6 +13431,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12850,6 +13455,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12873,6 +13479,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12900,6 +13507,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12924,6 +13532,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12948,6 +13557,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12971,6 +13581,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -12994,6 +13605,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13018,6 +13630,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13041,6 +13654,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13065,6 +13679,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13090,6 +13705,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13114,6 +13730,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13138,6 +13755,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13162,6 +13780,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13185,6 +13804,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13208,6 +13828,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13231,6 +13852,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13254,6 +13876,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13277,6 +13900,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13300,6 +13924,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13324,6 +13949,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13347,6 +13973,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13371,6 +13998,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13394,6 +14022,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13417,6 +14046,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13442,6 +14072,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13465,6 +14096,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13488,6 +14120,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13511,6 +14144,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13535,6 +14169,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13558,6 +14193,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13581,6 +14217,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13604,6 +14241,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13629,6 +14267,7 @@ metadata:
     onemind.io/verification: repository-verified
     onemind.io/inventory-state: observed
     onemind.io/observed-at: 2026-10-20T06:51:11.847Z
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
 spec:
@@ -13649,6 +14288,7 @@ metadata:
     onemind.io/kubernetes-namespace: backstage
     onemind.io/kubernetes-pvc: data-backstage-postgres-0
     onemind.io/relationship-source: platform/backstage/postgres.yaml volumeClaimTemplates.data
+    onemind.io/pillar-review: proposed
   links:
     - title: Reviewed storage source
       type: source
@@ -13676,6 +14316,7 @@ metadata:
     onemind.io/kubernetes-pvc: grafana-data
     onemind.io/relationship-source: platform/values/kube-prometheus-stack.yaml
       grafana.persistence.existingClaim; platform/monitoring/grafana-state.yaml
+    onemind.io/pillar-review: proposed
   links:
     - title: Reviewed storage source
       type: source
@@ -13703,6 +14344,7 @@ metadata:
     onemind.io/kubernetes-pvc: nats-js-nats-0
     onemind.io/relationship-source: platform/nats/nats-statefulset.yaml
       volumeClaimTemplates.nats-js and replicas=3
+    onemind.io/pillar-review: proposed
   links:
     - title: Reviewed storage source
       type: source
@@ -13730,6 +14372,7 @@ metadata:
     onemind.io/kubernetes-pvc: nats-js-nats-1
     onemind.io/relationship-source: platform/nats/nats-statefulset.yaml
       volumeClaimTemplates.nats-js and replicas=3
+    onemind.io/pillar-review: proposed
   links:
     - title: Reviewed storage source
       type: source
@@ -13757,6 +14400,7 @@ metadata:
     onemind.io/kubernetes-pvc: nats-js-nats-2
     onemind.io/relationship-source: platform/nats/nats-statefulset.yaml
       volumeClaimTemplates.nats-js and replicas=3
+    onemind.io/pillar-review: proposed
   links:
     - title: Reviewed storage source
       type: source

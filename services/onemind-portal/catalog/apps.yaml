@@ -465,8 +465,10 @@ metadata:
     argocd/app-name: app-of-apps
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: app-of-apps,platform-ecosystem-applications,platform-ecosystem-foundation,platform-ecosystem-resources
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -523,8 +525,10 @@ metadata:
     onemind.io/documented-address: https://k8s-dashboard.tail717ba0.ts.net
     backstage.io/kubernetes-namespace: kube
     backstage.io/kubernetes-label-selector: app=kubernetes-dashboard
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -585,8 +589,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: kube
     backstage.io/kubernetes-label-selector: app=headlamp
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -634,8 +640,10 @@ metadata:
     onemind.io/tech-stack-notes: Zero-config mesh VPN over WireGuard. Used for
       secure access to OneMind cluster nodes and remote TAK clients.
     onemind.io/supported-platforms: macOS,Windows,Linux,Android,iOS,K8s
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -681,8 +689,10 @@ metadata:
     onemind.io/tech-stack-notes: DNS, CDN, Tunnel (Zero Trust), DDoS protection, and
       R2 storage. Gateway for OneMind public-facing services.
     onemind.io/supported-platforms: Web,Linux,K8s
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -727,8 +737,10 @@ metadata:
     onemind.io/tech-stack-notes: DOKS cluster hosting OneMind services. Managed
       Kubernetes with node pools for NATS, TAK, and agent workloads.
     onemind.io/supported-platforms: Linux,K8s,Web
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -766,8 +778,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: hermes
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -827,8 +841,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: agent-fabric
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-console
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -860,8 +876,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: openclaw
     backstage.io/kubernetes-label-selector: app=openclaw,onemind.os/component=openclaw-gateway,onemind.os/managed-by=kustomize
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -921,8 +939,10 @@ metadata:
     onemind.io/documented-address: https://nats-dashboard.tail717ba0.ts.net
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-dashboard
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -951,6 +971,9 @@ metadata:
     onemind.io/inventory-review: imported-link
     backstage.io/kubernetes-namespace: matrix
     backstage.io/kubernetes-label-selector: app=element-web
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -980,6 +1003,9 @@ metadata:
     onemind.io/inventory-review: imported-link
     argocd/app-name: platform-matrix
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1037,8 +1063,10 @@ metadata:
     onemind.io/documented-address: https://github.com/onemindos/heynats
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=heynats
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1071,6 +1099,9 @@ metadata:
     onemind.io/tech-stack-url: https://messages.google.com
     onemind.io/tech-stack-notes: Primary SMS/RCS messaging on Samsung. Web app for desktop access.
     onemind.io/supported-platforms: Android,Web
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1104,8 +1135,10 @@ metadata:
     onemind.io/tech-stack-notes: Cloud-native TAK server frontend. Self-hosted at
       onemindos.dev. Manages COT streams, data packages, and mission data.
     onemind.io/supported-platforms: Web,K8s
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1134,8 +1167,10 @@ metadata:
     onemind.io/hosting: external-provider-unverified
     argocd/app-name: platform-takserver
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1183,8 +1218,10 @@ metadata:
     onemind.io/documented-tags: TAK Server
     argocd/app-name: platform-onetak
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1212,8 +1249,10 @@ metadata:
     onemind.io/inventory-review: imported-link
     argocd/app-name: platform-fedhub
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1237,8 +1276,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1283,8 +1324,10 @@ metadata:
       WebTAK/CloudTAK (browser), iTAK (iOS). CoT protocol. TAK Server 5.8
       hardened in Downloads. SDK 5.7.0.10 at root.
     onemind.io/supported-platforms: Android,Windows,Web
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1306,8 +1349,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1329,8 +1374,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1398,8 +1445,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: monitoring
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring,app.kubernetes.io/name=grafana
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1455,8 +1504,10 @@ metadata:
     onemind.io/documented-address: https://nats-ui.tail717ba0.ts.net
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-ui
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1485,8 +1536,10 @@ metadata:
     onemind.io/inventory-review: imported-link
     backstage.io/kubernetes-namespace: agent-fabric
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-tap
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1525,8 +1578,10 @@ metadata:
     argocd/app-name: platform-clickhouse-operator
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-clickhouse-operator,platform-observability
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1551,8 +1606,10 @@ metadata:
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1577,8 +1634,10 @@ metadata:
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1603,8 +1662,10 @@ metadata:
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: mesh-endpoint-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1627,8 +1688,10 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1666,8 +1729,10 @@ metadata:
     onemind.io/supported-platforms: Linux,K8s
     argocd/app-name: monitoring-kube-prometheus-stack
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1727,8 +1792,10 @@ metadata:
     onemind.io/documented-tags: NATS, Monitoring
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=metrics,app.kubernetes.io/name=nats-surveyor
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1789,8 +1856,10 @@ metadata:
     onemind.io/documented-tags: Geo
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=tileserver-gl
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1855,8 +1924,10 @@ metadata:
     onemind.io/documented-tags: Geo
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=valhalla
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1921,8 +1992,10 @@ metadata:
     onemind.io/documented-tags: Geo
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=maputnik
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -1984,8 +2057,10 @@ metadata:
     onemind.io/runtime-evidence: Deployment onetak/webodm; Service onetak/webodm
     onemind.io/documented-address: https://webodm.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2009,6 +2084,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2030,6 +2108,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2051,6 +2132,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2072,6 +2156,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2093,6 +2180,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2114,6 +2204,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2135,6 +2228,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2156,6 +2252,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2177,6 +2276,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2198,6 +2300,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2219,6 +2324,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2240,6 +2348,9 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2300,8 +2411,10 @@ metadata:
       configured. 4 vaults: SO, HP, LE, GE. Claude accesses via
       OP_SERVICE_ACCOUNT_TOKEN."
     onemind.io/supported-platforms: macOS,Windows,Android,iOS,Web
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2338,6 +2451,9 @@ metadata:
       ]
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2384,6 +2500,9 @@ metadata:
       browsers/devices. Collection: OneMind Research & Links (ID: 74086454). 12
       sub-collections. API token configured for Claude."
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2418,6 +2537,9 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://att.com
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2464,8 +2586,10 @@ metadata:
       omos-infra, omos-legacy, omos-nats-plugin, omos-ai-plugin, omos-rads,
       omos-blueprints. Connected to ClickUp + ArgoCD GitOps."
     onemind.io/supported-platforms: Web,macOS,Windows,Linux
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2503,8 +2627,10 @@ metadata:
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://dashboard.composio.dev/omos_saas/~/connect
     onemind.io/documented-tags: External, AI / Agent
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2549,6 +2675,9 @@ metadata:
       architecture diagrams, planning sessions, and visual brainstorming across
       the OneMind team.
     onemind.io/supported-platforms: Web,macOS,Windows,Android,iOS
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2579,8 +2708,10 @@ metadata:
     onemind.io/tech-stack-notes: Community platform for OneMind/weareonemind.com.
       Trial planned. Connected to Google Workspace + ClickUp.
     onemind.io/supported-platforms: Web,Android,iOS
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: ge
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2615,6 +2746,9 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://mercury.com
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2636,8 +2770,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: hp
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2672,8 +2808,10 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://experian.com
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: hp
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2708,8 +2846,10 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://transunion.com
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: hp
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2744,8 +2884,10 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://equifax.com
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: hp
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2780,8 +2922,10 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/verification: documented-unverified
     onemind.io/documented-address: https://innovis.com
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: hp
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2804,8 +2948,10 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2834,8 +2980,10 @@ metadata:
     onemind.io/inventory-review: imported-link
     onemind.io/catalog-role: compatibility-alias
     onemind.io/canonical-entity-ref: component:default/argocd
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2862,8 +3010,10 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2890,8 +3040,10 @@ metadata:
     onemind.io/hosting: external-provider-unverified
     onemind.io/catalog-role: compatibility-alias
     onemind.io/canonical-entity-ref: component:default/tailscale
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2914,8 +3066,10 @@ metadata:
   annotations:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -2935,11 +3089,13 @@ metadata:
     backstage.io/techdocs-ref: url:https://github.com/onemindos/omos/tree/main/services/onemind-portal/runbooks
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
+    onemind.io/pillar-review: proposed
   tags:
     - runbooks
     - documentation
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: documentation
   lifecycle: production
@@ -2957,6 +3113,8 @@ metadata:
     - onemind
     - openapi
     - observational
+  annotations:
+    onemind.io/pillar-review: unclassified
 spec:
   type: openapi
   lifecycle: production
@@ -3480,6 +3638,7 @@ metadata:
       for ATAK. Already installed at ~/QGroundControl.
     onemind.io/supported-platforms: macOS,Windows,Linux,Android,iOS
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://qgroundcontrol.com/
       title: Open application
@@ -3489,6 +3648,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -3515,6 +3675,7 @@ metadata:
     onemind.io/documented-purpose: Streaming 3D reconstruction with a browser viewer
     onemind.io/source-repository: https://github.com/Robbyant/lingbot-map
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://github.com/Robbyant/lingbot-map
       title: Open application
@@ -3524,6 +3685,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: machine-learning-model
   lifecycle: experimental
@@ -3549,6 +3711,7 @@ metadata:
     onemind.io/hosting: vehicle-firmware
     onemind.io/source-repository: https://github.com/PX4/PX4-Autopilot
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://px4.io/
       title: Open application
@@ -3561,6 +3724,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: firmware
   lifecycle: experimental
@@ -3586,6 +3750,7 @@ metadata:
     onemind.io/hosting: vehicle-firmware
     onemind.io/source-repository: https://github.com/ArduPilot/ardupilot
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://ardupilot.org/
       title: Open application
@@ -3598,6 +3763,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: firmware
   lifecycle: experimental
@@ -3625,6 +3791,7 @@ metadata:
     onemind.io/inventory-review: imported-link
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-backups,platform-volume-backups
+    onemind.io/pillar-review: proposed
   links:
     - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-backups
       title: Logical backups and retained snapshots
@@ -3640,6 +3807,7 @@ metadata:
       title: Home migration acceptance
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -3665,10 +3833,13 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.linuxfoundation.org/
       title: Open application
       icon: dashboard
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3693,10 +3864,13 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.cncf.io/
       title: Open application
       icon: dashboard
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3718,10 +3892,13 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://landscape.cncf.io/
       title: Open application
       icon: dashboard
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3744,10 +3921,13 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://lfedge.org/
       title: Open application
       icon: dashboard
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3770,10 +3950,13 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://openssf.org/
       title: Open application
       icon: dashboard
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3796,10 +3979,13 @@ metadata:
     onemind.io/hosting: external-website
     onemind.io/documented-status: Reference
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.openrobotics.org/
       title: Open application
       icon: dashboard
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3853,6 +4039,7 @@ metadata:
     onemind.io/registry-review: source-reviewed-runtime-unverified
     onemind.io/documented-address: https://proton.me
     onemind.io/verification: documented-unverified
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://mail.proton.me/
       title: Open application
@@ -3862,6 +4049,8 @@ metadata:
       icon: docs
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81ff9adee34d630631f3.md
       title: "Archived registry: Proton Mail"
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -3883,6 +4072,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://autoware.org/
       title: Open application
@@ -3892,6 +4082,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: experimental
@@ -3913,6 +4104,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://docs.ros.org/
       title: Open application
@@ -3922,6 +4114,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: experimental
@@ -3943,6 +4136,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://zenoh.io/
       title: Open application
@@ -3952,6 +4146,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: experimental
@@ -3973,6 +4168,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://eclipse.dev/ditto/
       title: Open application
@@ -3982,6 +4178,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: experimental
@@ -4003,6 +4200,7 @@ metadata:
     onemind.io/hosting: planned
     onemind.io/documented-status: Planned
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://www.nvidia.com/en-us/omniverse/
       title: Open application
@@ -4012,6 +4210,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: experimental
@@ -4035,6 +4234,7 @@ metadata:
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: Linux
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://docs.vllm.ai/en/stable/deployment/k8s/
       title: Open application
@@ -4047,6 +4247,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-serving
   lifecycle: experimental
@@ -4078,6 +4279,7 @@ metadata:
     onemind.io/tech-stack-notes: Local LLM runner with OpenAI-compatible API. Used
       for offline model testing and edge inference without cloud dependency.
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://lmstudio.ai/
       title: Open application
@@ -4090,6 +4292,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: experimental
@@ -4113,6 +4316,7 @@ metadata:
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: macOS
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://omlx.ai/
       title: Open application
@@ -4122,6 +4326,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-serving
   lifecycle: experimental
@@ -4145,6 +4350,7 @@ metadata:
     onemind.io/documented-status: Planned
     onemind.io/supported-platforms: macOS,Windows,Linux
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://www.jan.ai/
       title: Open application
@@ -4154,6 +4360,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: experimental
@@ -4188,6 +4395,7 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: onemind-ai
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=ollama,app.kubernetes.io/name=ollama
+    onemind.io/pillar-review: proposed
   links:
     - url: https://ollama.com/
       title: Open application
@@ -4205,6 +4413,7 @@ metadata:
       title: "Archived registry: Ollama"
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-serving
   lifecycle: experimental
@@ -4228,12 +4437,14 @@ metadata:
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://docs.digitalocean.com/products/inference/details/models/
       title: Open application
       icon: dashboard
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: inference-provider
   lifecycle: experimental
@@ -4257,12 +4468,14 @@ metadata:
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://build.nvidia.com/explore
       title: Open application
       icon: dashboard
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: inference-provider
   lifecycle: experimental
@@ -4286,12 +4499,14 @@ metadata:
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://www.together.ai/models/nvidia-nemotron-3-super
       title: Open application
       icon: dashboard
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: inference-provider
   lifecycle: experimental
@@ -4315,12 +4530,14 @@ metadata:
     onemind.io/documented-status: Evaluation candidate
     onemind.io/supported-platforms: Web
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://fireworks.ai/partners/nvidia
       title: Open application
       icon: dashboard
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: inference-provider
   lifecycle: experimental
@@ -4347,12 +4564,14 @@ metadata:
     onemind.io/model-license: Apache-2.0
     onemind.io/evaluation-role: Local coding, reasoning, and agent work
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://huggingface.co/Qwen/Qwen3.8-27B
       title: Open application
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-family
   lifecycle: experimental
@@ -4379,12 +4598,14 @@ metadata:
     onemind.io/model-license: Apache-2.0
     onemind.io/evaluation-role: Everyday assistance and smaller edge devices
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://ai.google.dev/gemma/docs/core/model_card_4
       title: Open application
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-family
   lifecycle: experimental
@@ -4411,12 +4632,14 @@ metadata:
     onemind.io/model-license: Apache-2.0 (linked 14B Instruct release)
     onemind.io/evaluation-role: Local assistants, extraction, and bounded workflows
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512
       title: Open application
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-family
   lifecycle: experimental
@@ -4443,6 +4666,7 @@ metadata:
     onemind.io/model-license: NVIDIA Nemotron Open Model License
     onemind.io/evaluation-role: Reasoning, tool use, and multi-agent workloads
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   links:
     - url: https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b/modelcard
       title: Open application
@@ -4455,6 +4679,7 @@ metadata:
       icon: docs
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: model-family
   lifecycle: experimental
@@ -4478,10 +4703,13 @@ metadata:
     onemind.io/supported-platforms: macOS,Windows,Linux
     onemind.io/verification: installation-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://github.com/deskflow/deskflow
       title: Open application
       icon: github
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: experimental
@@ -4500,10 +4728,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.facebook.com/zeuslegacydelacruz
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4522,10 +4753,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.facebook.com/LegacyPlatformOfficial
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4544,10 +4778,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://x.com/zeusDelacruz_
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4566,10 +4803,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.linkedin.com/in/zeuslegacydelacruz/
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4588,10 +4828,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.tiktok.com/@zeusdelacruz_
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4610,10 +4853,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.instagram.com/zeusdelacruz_/
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4632,10 +4878,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.twitch.tv/zeusdelacruz_
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4654,10 +4903,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.reddit.com/user/callsign_zero0/
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4676,10 +4928,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.pinterest.com/ZeusDelacruz_/
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4698,10 +4953,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.threads.com/@zeusdelacruz_
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4720,10 +4978,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.youtube.com/
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4743,10 +5004,13 @@ metadata:
     onemind.io/launcher-category: Social Media
     onemind.io/hosting: external-provider-unverified
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
   links:
     - url: https://www.linkedin.com/company/74305203/admin/dashboard/
       title: Open application
       icon: web
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -4785,6 +5049,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e81128cbafd7d6a3e4957
     onemind.io/tech-stack-url: https://bambulab.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -4822,6 +5089,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fa8da9ddcd368bcacd
     onemind.io/tech-stack-url: https://bambulab.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: production
@@ -4860,8 +5130,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e816292c5d736b48fe71e
     onemind.io/tech-stack-url: https://foxglove.dev
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -4899,6 +5171,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8107a8bfedbdaca522e6
     onemind.io/tech-stack-url: https://obsproject.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -4936,6 +5211,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81fbb074c80989712ef4
     onemind.io/tech-stack-url: https://blender.org
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -4973,6 +5251,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8155bd8cec47b974eb09
     onemind.io/tech-stack-url: https://madmapper.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -5010,6 +5291,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81b8af60f682a17316c0
     onemind.io/tech-stack-url: https://derivative.ca
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -5046,6 +5330,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81ea87d7efbe9d4510be
     onemind.io/tech-stack-url: https://termius.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -5082,6 +5369,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813ebf6df9a7bcd81453
     onemind.io/tech-stack-url: https://brave.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -5119,6 +5409,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81e5ab51d19463c34afc
     onemind.io/tech-stack-url: https://www.google.com/chrome
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: desktop-application
   lifecycle: production
@@ -5155,8 +5448,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e813e935dcb0d1038486d
     onemind.io/tech-stack-url: https://cloud.google.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -5195,6 +5490,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81c08d9edda9345684de
     onemind.io/tech-stack-url: https://riverside.fm
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -5232,8 +5530,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81f58995f0e7bc6d05ea
     onemind.io/tech-stack-url: https://notionbackups.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -5270,8 +5570,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81db8259e26601d9f680
     onemind.io/tech-stack-url: https://probackup.io
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: experimental
@@ -5309,6 +5611,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81a28e06df070cab8725
     onemind.io/tech-stack-url: https://strava.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -5345,6 +5650,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e818f840bd88909d0f6a1
     onemind.io/tech-stack-url: https://music.apple.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -5381,8 +5689,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8106bd1dd6bce183659a
     onemind.io/tech-stack-url: https://langfuse.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5419,8 +5729,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8151bafaeb0323ca7438
     onemind.io/tech-stack-url: https://github.com/louislam/uptime-kuma
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5452,6 +5764,9 @@ metadata:
     onemind.io/tech-stack-category: Messaging
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8130b6c3eb9c22a142c1
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5484,8 +5799,10 @@ metadata:
     onemind.io/tech-stack-category: AI / ML
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8195bea2de947b3bffed
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: experimental
@@ -5526,8 +5843,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c4d0cf70a7e819f8760da42f3dadd13
     onemind.io/tech-stack-url: https://github.com/RyanCodrai/turbovec
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: experimental
@@ -5566,6 +5885,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e8118a652c84455fb2a9b
     onemind.io/tech-stack-url: https://www.samsungknox.com
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: production
@@ -5603,6 +5925,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e810880b0e5134dff2558
     onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/one-ui
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: production
@@ -5640,6 +5965,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817ea374f0efe714c835
     onemind.io/tech-stack-url: https://www.samsung.com/us/smartphones/dex
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: software-platform
   lifecycle: production
@@ -5676,6 +6004,9 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e816fa7d6ca5062cdfbf5
     onemind.io/tech-stack-url: https://notion.so
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: unclassified
+  labels:
+    onemind.io/catalog-role: app
 spec:
   type: website
   lifecycle: production
@@ -5725,8 +6056,10 @@ metadata:
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e817bad15ec3a6490dc6c
     onemind.io/tech-stack-url: https://home-assistant.io
     onemind.io/inventory-review: imported-link
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: le
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5767,8 +6100,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: monitoring
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5785,6 +6120,7 @@ metadata:
   annotations:
     backstage.io/source-location: url:https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml
     onemind.io/contract-scope: read-only subset; no catalog writes or full-STAC compliance claim
+    onemind.io/pillar-review: proposed
   links:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/
       title: STAC diagnosis and recovery
@@ -5845,8 +6181,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-core
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5868,8 +6206,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: cert-manager
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=cert-manager
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5891,8 +6231,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: ingress-nginx
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5914,8 +6256,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: external-dns
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=platform-external-dns,app.kubernetes.io/name=external-dns
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5935,8 +6279,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-cloudflared
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5956,8 +6302,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: edge-tailscale-operator
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5977,8 +6325,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-keda
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -5998,8 +6348,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-dapr
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6018,8 +6370,10 @@ metadata:
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6040,8 +6394,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-onemind-core
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6062,8 +6418,10 @@ metadata:
     argocd/app-name: platform-auth-helm
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-auth-helm,platform-auth-infra
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6085,8 +6443,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: onemind-core
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=openfga,app.kubernetes.io/name=openfga
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6109,8 +6469,10 @@ metadata:
     onemind.io/argocd-apps: ecosystem-spire,ecosystem-spire-crds
     backstage.io/kubernetes-namespace: spire-system
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/instance=spire,app.kubernetes.io/name=server
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6135,8 +6497,10 @@ metadata:
     onemind.io/argocd-apps: ecosystem-kyverno,platform-security
     backstage.io/kubernetes-namespace: kyverno
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=kyverno,app.kubernetes.io/part-of=kyverno
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6156,8 +6520,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-falco
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6179,8 +6545,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: external-secrets
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=external-secrets
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6202,8 +6570,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: argocd
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=rollouts-controller,app.kubernetes.io/instance=rollouts,app.kubernetes.io/name=argo-rollouts
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6225,8 +6595,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: onemind-registry
     backstage.io/kubernetes-label-selector: app=harbor,release=harbor
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6246,8 +6618,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-backstage
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6269,8 +6643,10 @@ metadata:
     argocd/app-name: ecosystem-oc-control
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-data-plane,platform-openchoreo-defaults,platform-openchoreo-platform,platform-openchoreo-prereqs,platform-openchoreo-projects
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6292,8 +6668,10 @@ metadata:
     argocd/app-name: platform-openchoreo-observability
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-openchoreo-events,platform-openchoreo-finops,platform-openchoreo-logs,platform-openchoreo-observability,platform-openchoreo-traces
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6315,8 +6693,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: monitoring
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6336,8 +6716,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: monitoring-otel-collector
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6359,8 +6741,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: opencost
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opencost,app.kubernetes.io/name=opencost
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6380,8 +6764,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-ops
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6402,8 +6788,10 @@ metadata:
     argocd/app-name: ecosystem-barman
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: ecosystem-barman,ecosystem-cnpg
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6425,8 +6813,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: onemind-search
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opensearch,app.kubernetes.io/name=opensearch
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6448,8 +6838,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: velero
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=velero,app.kubernetes.io/name=velero
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6471,8 +6863,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: ops
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=platform-volsync,app.kubernetes.io/name=volsync,control-plane=platform-volsync-controller
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6494,8 +6888,10 @@ metadata:
     argocd/app-name: platform-nats
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: edge-nack,platform-nats,platform-nats-tools
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6517,8 +6913,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: omos
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6538,8 +6936,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-omos
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6559,8 +6959,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-takml
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6579,8 +6981,10 @@ metadata:
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6600,8 +7004,10 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-n8n
     argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production
@@ -6623,8 +7029,10 @@ metadata:
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: onemind-ai
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=litellm,app.kubernetes.io/name=litellm
+    onemind.io/pillar-review: proposed
   labels:
     onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
   type: service
   lifecycle: production

@@ -20,6 +20,9 @@ Machine-readable form: `services/onemind-portal/catalog/structure.yaml` (Systems
 8. **Duplicate launcher entries** (`external-argocd`, `external-kubernetes-dashboard`, `external-tailscale`) are kept and retitled so titles are unique; they look like merge candidates.
 9. **Ollama.** `component:default/ollama` is documented as planned/local, but a cluster Ollama is deployed (`onemind-ai/onemind-cpu-model`, Argo `ecosystem-ollama`). The workload is mapped to that entity; its lifecycle text is not changed.
 10. **`onetak-stac-readonly`** pointed at `system:default/onetak`, which never existed. It moves to Geospatial.
+11. **Pillar column deferred; filter and saved views delivered.** The Backstage catalog table (plugin-catalog 2.0.9) has no column extension point on the new frontend, so a real column means replacing the whole index page. The index instead gets a Pillar filter (All / SO / LE / HP / GE / Shared / Unclassified) and saved views (Apps, Infrastructure, Repos, Everything) as filter extensions. These are app code: they need an image and your OK to release. The catalog data alone rolls out through Argo.
+12. **One config line outside the catalog files.** The `Domain` kind is added to `catalog.rules` in `platform/backstage/app-config.cluster.yaml` (and `app-config.yaml`); without it Backstage rejects the five Domains. A Backstage restart is needed for the rule to load.
+13. **Not changed:** Argo Applications, namespaces, workloads, owners and access. Pillar labels are metadata only and grant nothing.
 
 ## Target Systems
 

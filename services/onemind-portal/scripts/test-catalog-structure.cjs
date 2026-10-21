@@ -188,6 +188,11 @@ test('pillars are reviewed, never guessed: enum only, inherited from the System,
   function s(e) { return byRef.get(`system:default/${e.spec.system}`); }
   const unclassified = members.filter(e => !e.metadata.labels?.['onemind.io/pillar']);
   assert.ok(unclassified.length > 0 && unclassified.some(e => e.metadata.name === 'mercury'));
+  // Unclassified is a positive, filterable state: label absent <=> pillar-review = unclassified.
+  for (const e of members) {
+    const classified = Boolean(e.metadata.labels?.['onemind.io/pillar']);
+    assert.equal(ann(e, 'onemind.io/pillar-review'), classified ? 'proposed' : 'unclassified', refOf(e));
+  }
 });
 
 test('mounted copies equal the source copies', () => {
@@ -221,4 +226,15 @@ test('rewriting the checked-in files is byte-stable and keeps untouched scalar q
   const text = { apps: fs.readFileSync(path.join(root, 'catalog/apps.yaml'), 'utf8'), cluster: fs.readFileSync(path.join(root, 'catalog/cluster.yaml'), 'utf8') };
   assert.deepEqual(applyStructureToText(text, sources), text);
   assert.match(text.apps, /onemind\.io\/launcher-reviewed-at: "2026-10-20T08:06:39\.971995\+00:00"/);
+});
+
+test('Components carry a role label: apps are top-level, workloads hang under an app or sit unassigned', () => {
+  for (const e of members) {
+    const role = e.metadata.labels?.['onemind.io/catalog-role'];
+    if (e.kind !== 'Component') { assert.equal(role, undefined, refOf(e)); continue; }
+    const workload = Boolean(e.spec.subcomponentOf) || e.spec.system === UNASSIGNED;
+    assert.equal(role, workload ? 'workload' : 'app', refOf(e));
+  }
+  const appCount = members.filter(e => e.metadata.labels?.['onemind.io/catalog-role'] === 'app').length;
+  assert.ok(appCount >= 130 && appCount < 200, `${appCount} apps`);
 });
