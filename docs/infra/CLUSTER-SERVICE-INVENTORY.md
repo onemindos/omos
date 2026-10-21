@@ -20,6 +20,9 @@
   dependencies in the image. PR #56 removed the claim; Argo CD synced revision
   `6078b366` as Healthy, and both the PVC and PV are now absent. A local recovery archive
   was validated before removal.
+- Rechecked read-only on 2026-10-21: `takml/takml-deps` still returns NotFound, no pod in
+  `takml` references the claim, no manifest under `platform/` mentions it, and
+  `platform-takml` is Synced/Healthy. No further deletion is pending for this claim.
 
 ## Summary
 
