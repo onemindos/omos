@@ -81,4 +81,56 @@ Theme colours (F10), catalog data changes (F2), new data sources (F4/F6).
 
 ## Status
 
-(Implementing agent: write progress, decisions, screenshots and gate results here.)
+**Done (2026-10-21)**
+
+- Sidebar: groups Now, Pillars, Services, Insights, Knowledge, Change, Admin built
+  with `SidebarGroup`/`SidebarItem`/`SidebarSubmenu` (no fork). `buildNavModel`
+  (pure, `navModel.ts`) resolves the spec against the app's pages; anything not
+  placed goes to a collapsed **More** submenu, so every earlier page stays
+  reachable. Admin and More are collapsed buttons opening a keyboard-operable
+  flyout. Mobile bottom bar shows one entry per group (overlay menu), shrunk to
+  fit 390px. Live Ops links `/today`; Notifications keep the live unread badge.
+- Flags (`onemind.features.pillars|digitalocean|retireApp`, default false) in
+  `app-config.yaml`, schema in `plugin-onemind-nav/config.d.ts`.
+- Home: status strip (reuses `/api/onemind/status`; `status.ts` holds the shared
+  backup-review rule used by `/today` and the strip), favorites row, pillar
+  tiles (flagged), recently changed (notification feed, deployments/catalog
+  topics, deduped, max 10), launcher with search + category and hosting
+  selects, Active Stack, native Customize widgets. No fixed heights.
+- Palette: Cmd/Ctrl-K opens `SearchModal` (`@backstage/plugin-search`) with
+  arrow-key navigation. Runbooks and apps are found through the existing
+  TechDocs and catalog collators.
+- Colours in touched code come from `theme.palette.*` (no new hex).
+
+**Dependencies added:** `@backstage/test-utils` 1.7.22 and
+`@testing-library/react` ^14 (both devDependencies, nav plugin, tests only).
+No runtime dependency added.
+
+**Plugins considered (rule 11):** `@backstage/plugin-search` SearchModal and
+`@backstage/plugin-home` CustomHomepageGrid (used, Backstage core, current);
+`@backstage/plugin-catalog` starred entities API (used). No community plugin
+offers a grouped sidebar or status strip; custom code is limited to
+`navModel.ts` (grouping spec, no plugin exists), `StatusStrip` (reads the
+existing status route), `RecentlyChanged` and `PillarTiles` (thin readers of
+notifications and catalog APIs).
+
+**Deferred / decisions**
+- "Alerts firing" counts failing critical service checks from the existing
+  status route; Alertmanager alerts arrive with F3/F4.
+- "Catalog changes" in Recently changed need a source (F11); only deployment
+  and catalog-topic notifications appear today.
+- Pillar and Retire routes (`/catalog/default/domain/<so|le|hp|ge>`,
+  `/create/templates/default/retire-app`) are constants in `navModel.ts`; F2/F8
+  must confirm them. DevTools and Audit Logs show only if those pages exist.
+- Search result types: no custom result items; runbooks and apps already come
+  from the existing collators. Alerts and DigitalOcean are not indexed yet.
+- Admin visibility is a UI convenience (identity ownership refs); backend
+  permissions are unchanged.
+- Not verified against the live portal: ids of some plugin pages (matched by id
+  or title). Local run used mocked APIs (Brave via Playwright), not real data.
+
+**Tests:** nav 15, home 16 new/updated (31 total passing).
+
+**Screenshots (local, not committed):** `<scratch>/agents/f1-shots/after-*.png`
+(desktop 1440x900 and phone 390x844, dark and light, plus palette). No "before"
+set captured.

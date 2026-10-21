@@ -19,6 +19,7 @@ import { SearchModalProvider } from '@backstage/plugin-search';
 import { UserSettingsSignInAvatar } from '@backstage/plugin-user-settings';
 import { NotificationsSidebarItem } from '@backstage/plugin-notifications';
 import { Typography, useTheme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { SidebarLogo } from './SidebarLogo';
 import { CommandPalette, PaletteTrigger } from './CommandPalette';
 import { useNavFlags } from './features';
@@ -29,6 +30,19 @@ import {
   ResolvedGroup,
 } from './navModel';
 import { ICONS } from './icons';
+
+// Eight bottom-bar groups would overflow a 390px phone at Backstage's default
+// 80px minimum width, so let them share the row evenly.
+const useBarStyles = makeStyles({
+  '@global': {
+    '.MuiBottomNavigation-root .MuiBottomNavigationAction-root': {
+      flex: '1 1 0',
+      minWidth: 0,
+      margin: 0,
+      padding: '6px 0',
+    },
+  },
+});
 
 export const ADMIN_GROUP = 'group:default/onemind-admins';
 
@@ -148,6 +162,7 @@ function renderGroup(
 }
 
 export function OneMindSidebar({ navItems }: { navItems: NavContentNavItems }) {
+  useBarStyles();
   const flags = useNavFlags();
   const isAdmin = useIsAdmin();
   const groups = buildNavModel({ items: [...navItems.rest()], flags, isAdmin });
