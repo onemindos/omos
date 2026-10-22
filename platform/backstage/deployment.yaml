@@ -33,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: backstage
-        image: ghcr.io/onemindos/onemind-portal@sha256:37f17c546ffa4254363c003b7a8112dd1692567d40bbca92aca1b463616b0c3f
+        image: ghcr.io/onemindos/onemind-portal@sha256:5ae28ac6455bba5112090707ce9b9e6811e83a60d6a27a88e5a25444a5905f31
         command:
         - node
         args:
