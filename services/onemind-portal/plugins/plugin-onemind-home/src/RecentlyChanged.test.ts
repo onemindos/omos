@@ -1,4 +1,9 @@
 import { recentChanges } from './RecentlyChanged';
+import {
+  APP_ROLE,
+  isAppComponent,
+  ROLE_LABEL_KEY,
+} from '@internal/plugin-onemind-common';
 import { countAppsByPillar } from './PillarTiles';
 
 const n = (
@@ -31,15 +36,51 @@ describe('recentChanges', () => {
 });
 
 describe('countAppsByPillar', () => {
-  it('counts components by their pillar label and ignores others', () => {
+  const app = (pillar?: string) => ({
+    labels: {
+      'onemind.io/catalog-role': 'app',
+      ...(pillar ? { 'onemind.io/pillar': pillar } : {}),
+    },
+  });
+  const workload = (pillar: string) => ({
+    labels: {
+      'onemind.io/catalog-role': 'workload',
+      'onemind.io/pillar': pillar,
+    },
+  });
+
+  it('counts app components by their pillar label and ignores others', () => {
     const counts = countAppsByPillar([
-      { labels: { 'onemind.io/pillar': 'so' } },
-      { labels: { 'onemind.io/pillar': 'so' } },
-      { labels: { 'onemind.io/pillar': 'le' } },
-      { labels: { 'onemind.io/pillar': 'shared' } },
+      app('so'),
+      app('so'),
+      app('le'),
+      app('shared'),
+      app(),
       { labels: {} },
       {},
     ]);
     expect(counts).toEqual({ so: 2, le: 1, hp: 0, ge: 0 });
+  });
+
+  it('counts an app and a workload under SO as 1, not 2', () => {
+    expect(countAppsByPillar([app('so'), workload('so')])).toEqual({
+      so: 1,
+      le: 0,
+      hp: 0,
+      ge: 0,
+    });
+  });
+
+  it('does not count a component with no role label', () => {
+    expect(
+      countAppsByPillar([{ labels: { 'onemind.io/pillar': 'hp' } }]).hp,
+    ).toBe(0);
+  });
+});
+
+describe('catalog Apps view and tiles share one predicate', () => {
+  it('uses the shared role key and value', () => {
+    expect(isAppComponent({ [ROLE_LABEL_KEY]: APP_ROLE })).toBe(true);
+    expect(isAppComponent({ [ROLE_LABEL_KEY]: 'workload' })).toBe(false);
   });
 });

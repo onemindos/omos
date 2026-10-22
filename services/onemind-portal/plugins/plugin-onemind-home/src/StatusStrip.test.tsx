@@ -24,7 +24,7 @@ test('shows four linked counts with observed times', () => {
   state = { data, error: false };
   render(<StatusStrip />);
   const alerts = screen.getByRole('link', { name: /Alerts firing: 1/ });
-  expect(alerts.getAttribute('href')).toBe('/today');
+  expect(alerts.getAttribute('href')).toBe('/live');
   expect(
     screen.getByRole('link', { name: /Argo apps to review: 0/ }),
   ).toBeTruthy();
@@ -65,4 +65,20 @@ test('does not claim zero while loading', () => {
   state = { error: false };
   render(<StatusStrip />);
   expect(screen.getAllByText('Waiting for observation')).toHaveLength(4);
+});
+
+test('shows retired and needs-setup backups beside the count, not inside it', () => {
+  state = {
+    data: {
+      ...data,
+      counts: { alerts: 0, argo: 0, workloads: 0, backups: 0, backupsNeedSetup: 1, backupsRetired: 2 },
+      backups: [],
+    },
+    error: false,
+  };
+  render(<StatusStrip />);
+  expect(
+    screen.getByRole('link', { name: /Backups to review: 0/ }),
+  ).toBeTruthy();
+  expect(screen.getByText('1 needs setup · 2 retired')).toBeTruthy();
 });

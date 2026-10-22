@@ -85,6 +85,10 @@ metadata:
   # ScheduledBackupOverdue alert (platform/monitoring/backup-health.yaml).
   name: backup-offsite-copy
   namespace: ops
+  annotations:
+    # Read by the portal (Home, Today, Live Ops): shown as "needs setup", not as failing or retired.
+    onemind.io/backup-state: pending-setup
+    onemind.io/pending-reason: Waiting for SealedSecret offsite-copy-credentials (OFFSITE-COPY.md steps 1-5)
 spec:
   # Suspended until SealedSecret offsite-copy-credentials exists (OFFSITE-COPY.md step 5).
   suspend: true

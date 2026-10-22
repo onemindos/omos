@@ -5,3 +5,4 @@ export * from './hosting';
 export * from './AccessDeployments';
 export * from './status';
 export * from './InfoTooltip';
+export * from './catalogRoles';

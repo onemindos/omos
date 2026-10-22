@@ -237,11 +237,18 @@ body {
 .onemind-home-search {
   margin-bottom: 16px;
 }
+/* Light is the default (:root). The panel is a neutral card; red appears only as
+   the accent rule on top. Dark keeps its approved brand-tinted panel. */
 .onemind-favorites {
   margin: 16px 0 24px;
   padding: 16px;
   border: 1px solid var(--onemind-border);
+  border-top: 3px solid var(--onemind-brand);
   border-radius: 12px;
+  background: var(--onemind-surface-1);
+}
+body[data-theme-mode='dark'] .onemind-favorites {
+  border-top: 1px solid var(--onemind-border);
   background: var(--onemind-brand-subtle);
 }
 .onemind-home-utilities {
