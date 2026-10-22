@@ -66,3 +66,5 @@ test('quoted long URLs round-trip and catalog pairs match without duplicate edge
 // F2 structure guards run with the topology gate so the existing pipeline step covers them.
 require('./test-catalog-structure.cjs');
 require('./test-snapshot-cluster.cjs');
+// F5 coverage contract: generator, runbook pages and the audit guard run with the topology gate too.
+require('./test-coverage.cjs');
