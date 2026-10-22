@@ -6,6 +6,10 @@ import {
   MenuList,
   Typography,
 } from '@material-ui/core';
+import {
+  PILLAR_LABEL_KEY,
+  ROLE_LABEL_KEY,
+} from '@internal/plugin-onemind-common';
 import { CatalogFilterBlueprint } from '@backstage/plugin-catalog-react/alpha';
 import {
   DefaultEntityFilters,
@@ -19,9 +23,9 @@ import {
 // Backstage filters can only ask for values that exist, so every classified entity carries the
 // label `onemind.io/pillar` and every other entity carries the annotation
 // `onemind.io/pillar-review: unclassified`; both come from catalog/structure.yaml.
-export const PILLAR_LABEL = 'metadata.labels.onemind.io/pillar';
+export const PILLAR_LABEL = `metadata.labels.${PILLAR_LABEL_KEY}`;
 export const PILLAR_REVIEW = 'metadata.annotations.onemind.io/pillar-review';
-export const ROLE_LABEL = 'metadata.labels.onemind.io/catalog-role';
+export const ROLE_LABEL = `metadata.labels.${ROLE_LABEL_KEY}`;
 
 export type PillarOption =
   | 'all'

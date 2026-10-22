@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { Box, Link, Typography, useTheme } from '@material-ui/core';
 import { useApi } from '@backstage/core-plugin-api';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
+import {
+  APP_ROLE,
+  isAppComponent,
+  PILLAR_LABEL_KEY,
+  ROLE_LABEL_KEY,
+} from '@internal/plugin-onemind-common';
 
 // The four pillar Domains created by F2. Order is the sidebar order.
 export const PILLARS = [
@@ -11,16 +17,19 @@ export const PILLARS = [
   { slug: 'ge', short: 'GE', title: 'Generational Empire' },
 ] as const;
 
-const PILLAR_LABEL = 'onemind.io/pillar';
-
-/** Counts Components by their `onemind.io/pillar` label (F2 copies it from the System). */
+/**
+ * Counts app Components by their `onemind.io/pillar` label (F2 copies it from the System).
+ * Only `catalog-role=app` counts, the same predicate as the catalog Apps view, so Kubernetes
+ * workload Components do not inflate the tiles.
+ */
 export function countAppsByPillar(
   components: { labels?: Record<string, string> }[],
 ) {
   const counts: Record<string, number> = {};
   for (const pillar of PILLARS) counts[pillar.slug] = 0;
   for (const component of components) {
-    const value = component.labels?.[PILLAR_LABEL];
+    if (!isAppComponent(component.labels)) continue;
+    const value = component.labels?.[PILLAR_LABEL_KEY];
     if (value && value in counts) counts[value] += 1;
   }
   return counts;
@@ -43,7 +52,8 @@ export function PillarTiles() {
         const components = await catalog.getEntities({
           filter: {
             kind: 'Component',
-            [`metadata.labels.${PILLAR_LABEL}`]: PILLARS.map(p => p.slug),
+            [`metadata.labels.${PILLAR_LABEL_KEY}`]: PILLARS.map(p => p.slug),
+            [`metadata.labels.${ROLE_LABEL_KEY}`]: APP_ROLE,
           },
           fields: ['metadata.labels'],
         });
