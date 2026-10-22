@@ -18,6 +18,7 @@ const components: Parameters<typeof buildOwnerIndex>[0] = [
     },
   },
   { metadata: { name: 'plain', annotations: {} } },
+  { metadata: { name: 'loose', annotations: { 'backstage.io/kubernetes-namespace': 'loose' } } },
 ];
 
 describe('buildOwnerIndex', () => {
@@ -43,6 +44,15 @@ describe('groupByPillarAndApp', () => {
     );
     expect(groups.map(g => g.pillar)).toEqual(['LE · Legacy Evolution', 'SO · Sovereign Operations', 'Unassigned']);
     expect(groups[1].apps[0].items).toHaveLength(2);
+    expect(groups[2].apps[0].owner).toBeUndefined();
+  });
+  it('separates apps with no pillar yet from items with no owning app at all', () => {
+    const groups = groupByPillarAndApp(
+      [{ ns: 'mystery' }, { ns: 'loose' }, { ns: 'nats' }],
+      item => index.byNamespace(item.ns),
+    );
+    expect(groups.map(g => g.pillar)).toEqual(['SO · Sovereign Operations', 'No pillar set yet', 'Unassigned']);
+    expect(groups[1].apps[0].owner?.name).toBe('loose');
     expect(groups[2].apps[0].owner).toBeUndefined();
   });
 });

@@ -102,4 +102,35 @@ gates exist. Links to Argo and Grafana are fine.
 
 ## Status
 
-(Implementing agent: write progress here.)
+Built by an implementing agent, completed and reviewed by the coordinator (2026-10-22). Source only: nothing is live
+until an image is released and Argo syncs the CronJob annotations.
+
+**Done**
+- Read-only aggregator in `plugin-onemind-operations-backend` (`/api/onemind/live`, plus the existing `/api/onemind/status`
+  now served from the same collector so Home, Today and Live Ops cannot disagree). Per-source timeout and 15 s cache,
+  `ok | stale | error` with `observedAt`, short non-leaking error text, fixed in-cluster upstream URLs and fixed PromQL.
+  Both routes require a signed-in user (`allow: ['user']`).
+- `/live` page in the new `@internal/plugin-onemind-live` plugin: health banner, firing alerts grouped by pillar and app,
+  Argo CD, workloads, nodes, storage, backups, uptime, warning events and five Grafana panels (embedded only when
+  `onemind.grafanaEmbedding.enabled`; sandboxed iframe). Sidebar "Live Ops" now points at `/live`.
+- Backup states (Zeus's request): annotation-only edits keep the three CronJobs suspended and mark
+  `backstage-backup` and `backup-clickhouse` as `superseded`, `backup-offsite-copy` as `pending-setup`. Superseded is "Retired",
+  pending-setup is counted separately, failing or overdue is an attention item. A mistyped state counts as active.
+- Live refresh through F3's `onemind:alerts` signals channel with a 30 s polling fallback.
+- No new permissions: every Kubernetes read is already allowed by `backstage-observer`; the portal pod reaches Alertmanager
+  (:9093) and Prometheus (:9090) in `monitoring` (checked read-only on the live pod). Dependencies added: only
+  `@internal/plugin-onemind-live` (workspace), `@backstage/errors`, `@backstage/plugin-signals-react`, and test-only
+  `@backstage/test-utils` and `@testing-library/react`.
+
+**Plugin-first (rule 11)** Candidates considered: Red Hat Application Topology, TeraSky Kubernetes resources,
+Kwirth/Kubelog, k8sgpt. None provides a cluster-wide, pillar-grouped "what is wrong now" view; the installed Kubernetes,
+Argo CD, Grafana and Prometheus plugins stay the per-entity views (F5). Custom code is only the aggregation, banner and layout.
+
+**Tests** operations-backend 59, live page 16, nav 15, home 20 (all passing), including a source-timeout fixture,
+backup-state mapping and 401/403 route tests.
+
+**Not verified** Real-data rendering (screenshots need the signed-in portal after release), the two built-in
+kube-prometheus-stack Grafana dashboard UIDs (the NATS and Postgres UIDs exist in `platform/monitoring`), and signal latency in a browser.
+
+**Review note** A local-screenshot hack that bypassed the scoped fetch in `plugin-onemind-auth` was found uncommitted in the working
+tree and reverted; the auth plugin is unchanged against `main`.

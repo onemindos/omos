@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from '@material-ui/core';
 import { StatusChip } from '@internal/plugin-onemind-theme';
-import { age, clock, pillarTitle, UNASSIGNED } from './format';
+import { age, clock, NO_PILLAR, pillarTitle, UNASSIGNED } from './format';
 import { Empty, Meter, OwnerLink, Panel, Row } from './Panel';
 import type { Owner, OwnerIndex } from './owners';
 import type {
@@ -41,7 +41,7 @@ export function groupByPillarAndApp<T>(
   const pillars = new Map<string, Map<string, { owner?: Owner; items: T[] }>>();
   for (const item of items) {
     const owner = ownerOf(item);
-    const pillar = pillarTitle(owner?.pillar);
+    const pillar = owner ? (owner.pillar ? pillarTitle(owner.pillar) : NO_PILLAR) : UNASSIGNED;
     const apps = pillars.get(pillar) ?? new Map();
     const key = owner?.name ?? UNASSIGNED;
     const group = apps.get(key) ?? { owner, items: [] };
@@ -49,7 +49,7 @@ export function groupByPillarAndApp<T>(
     apps.set(key, group);
     pillars.set(pillar, apps);
   }
-  const rank = (name: string) => (name === UNASSIGNED ? 1 : 0);
+  const rank = (name: string) => [NO_PILLAR, UNASSIGNED].indexOf(name) + 1 || 0;
   return [...pillars]
     .sort(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b))
     .map(([pillar, apps]) => ({ pillar, apps: [...apps.values()] }));

@@ -25,4 +25,5 @@ export const PILLARS: Record<string, string> = {
   ge: 'GE · Generational Empire',
 };
 export const UNASSIGNED = 'Unassigned';
+export const NO_PILLAR = 'No pillar set yet';
 export const pillarTitle = (pillar?: string) => (pillar ? PILLARS[pillar] ?? pillar : UNASSIGNED);
