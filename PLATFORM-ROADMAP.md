@@ -1137,3 +1137,23 @@ Alertmanager webhook is disabled until Zeus seals `onemind-alert-webhook` (monit
 `platform/monitoring/pending/`; the 7,750-notification cleanup script has not been run; the home status strip still counts the
 two deliberately superseded backup jobs as "to review" (F4); offsite backup copy still has no credentials. Phase 6 In progress;
 Phase 7/8 Not started. GitHub-hosted CI remains billing-blocked; whole-tree YAML diagnostic debt unchanged.
+
+### Flagship wave 2 released — 2026-10-22
+
+Released as one verified portal image: F4 Live Operations [#360](https://github.com/onemindos/omos/pull/360), F5 standard app page
+and coverage contract [#361](https://github.com/onemindos/omos/pull/361), F11 live inventory [#367](https://github.com/onemindos/omos/pull/367),
+light-mode fix [#374](https://github.com/onemindos/omos/pull/374), alert-webhook sealing helper [#375](https://github.com/onemindos/omos/pull/375)
+and pillar tile counts [#376](https://github.com/onemindos/omos/pull/376). Source `d3195054`; image
+`sha256:5ae28ac6455bba5112090707ce9b9e6811e83a60d6a27a88e5a25444a5905f31`; previous image
+`sha256:37f17c546ffa4254363c003b7a8112dd1692567d40bbca92aca1b463616b0c3f` (rollback = reviewed revert of the pin). Pin PR
+[#377](https://github.com/onemindos/omos/pull/377) and the config PR [#373](https://github.com/onemindos/omos/pull/373) (pillar navigation and
+live inventory enabled through the mounted cluster config) were applied by Argo in one sync, one rollout, 2/2 on the new digest. The
+pipeline `verify` stopped on its source-changed guard (the config PR touched one portal test script after the image was built), so the
+same checks were made directly: Argo Synced/Healthy at `267831fa`, deployment image equals the release digest, 2/2 ready, no restarts,
+no error or warning logs, log line "Live inventory: 175 workloads tracked, 175 defined in catalog/cluster.yaml, 0 published".
+Signed-in checks passed: Live Ops (Alertmanager, Argo, workloads, storage, backups), Home status strip with "needs setup 1 · retired 2",
+pillar tiles SO 116 · LE 1 · HP 5 · GE 14, the standard app header and Logs/Cost/Runbook tabs, the generic OneMind workload dashboard,
+and no GitHub sign-in dialog (Connect GitHub prompt instead).
+Before the image: the three backup CronJob annotations, the F5 catalog annotations and the Grafana dashboard were applied by Argo on merge.
+Not yet done: offsite backup copy credentials; the 7,757-notification cleanup; alert webhook secrets (run `scripts/ops/seal-alert-webhook.sh`);
+F6 DigitalOcean, F7 non-Kubernetes apps and health checks, F8 add/retire templates, F9 plugin pack. Phase 6 In progress; Phase 7/8 Not started.
