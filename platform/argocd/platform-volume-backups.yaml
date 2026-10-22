@@ -16,5 +16,8 @@ spec:
     namespace: ops
   syncPolicy:
     automated:
-      prune: false
+      # TEMPORARY (OpenClaw retirement): prune on so the openclaw namespace, backup source and policies
+      # removed from platform/backups/volsync are deleted. Argo reported 0 resources needing pruning
+      # before this change. Set back to false in the final retirement PR.
+      prune: true
       selfHeal: true
