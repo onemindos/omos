@@ -1117,3 +1117,23 @@ and regression contracts are prepared; see [scope and remaining gates](docs/oper
 Tests join existing `test_gitops*.py` discovery; a source pass is not live acceptance.
 No new access, storage, controller, deployment or migration. Phase 6 In progress;
 Phase 7 Not started. Review/rebase and merge only one accepted PR at a time.
+
+### Flagship wave 1 released — 2026-10-22
+
+Merged and released as one verified portal image: F10 theme [#366](https://github.com/onemindos/omos/pull/366),
+F1 navigation and home [#357](https://github.com/onemindos/omos/pull/357), F2 catalog structure
+[#358](https://github.com/onemindos/omos/pull/358) (+ image-context test fix [#370](https://github.com/onemindos/omos/pull/370)),
+F3 alerts and notification triage [#359](https://github.com/onemindos/omos/pull/359). Source `7e2eea59`;
+image `sha256:37f17c546ffa4254363c003b7a8112dd1692567d40bbca92aca1b463616b0c3f`; previous image
+`sha256:e103bf7c0103b615bef2f4b9dfcb603ef952af7d9eb95d498117d1f48a5dc0e6` (rollback = reviewed revert of the pin).
+Pin PR [#371](https://github.com/onemindos/omos/pull/371) merged at `cf04980a`; `pipeline.py verify` passed (exact
+revision, digest, generation, 2/2 replicas). Signed-in checks passed: black/red theme in dark mode, grouped sidebar,
+home status strip and favorites, five pillar Domains with 24 Systems, old System URLs redirecting, ⌘K search, Pillar filter.
+Catalog data went live first (Argo applied #358 on 10-22 10:25Z, before the image carried the redirects); old System URLs
+returned not-found for about 17 minutes in between.
+
+Not yet done: the Pillars sidebar group and home tiles stay behind `onemind.features.pillars` (default off); the
+Alertmanager webhook is disabled until Zeus seals `onemind-alert-webhook` (monitoring + backstage) and the receiver is moved out of
+`platform/monitoring/pending/`; the 7,750-notification cleanup script has not been run; the home status strip still counts the
+two deliberately superseded backup jobs as "to review" (F4); offsite backup copy still has no credentials. Phase 6 In progress;
+Phase 7/8 Not started. GitHub-hosted CI remains billing-blocked; whole-tree YAML diagnostic debt unchanged.
