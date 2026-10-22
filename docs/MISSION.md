@@ -53,6 +53,15 @@ be exposed publicly through a tunnel in the future.
    portability part of app selection and onboarding, rather than postponing them
    until the migration home.
 
+9. Organize the OneMind catalog by **SO — Sovereign Operations**,
+   **LE — Legacy Evolution**, **HP — Holistic Performance** and
+   **GE — Generational Empire**, alongside technical/system/site views. Shared
+   services must remain one canonical entity with reviewed cross-pillar visibility.
+   Mission classification does not grant agent/user permissions or move workloads.
+   The user reiterated this requirement on 2026-10-21;
+   [catalog foundation](roadmap/onemind-catalog-pillars.md) defines the proposed
+   implementation and keeps historical numeric agent routing unconfirmed.
+
 The previously recorded personal workspace requirements remain applicable: calendar,
 habit tracking, attachments, AI reads/writes, webhooks, a usable mobile client and
 verified offline behavior. See `self-hosted-capability-plan.md` for those gates.

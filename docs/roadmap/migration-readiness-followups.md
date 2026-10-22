@@ -5,6 +5,15 @@ every platform enhancement a prerequisite for every application migration.
 This is a planning/tracking change, not a release, cutover, credential change,
 schema migration, waiver of safety gates or claim that Phase 6 is complete.
 
+## Current reconciliation — 2026-10-21 UTC
+
+The [eight-workstream parallel run](backstage-parallel-run.md) is the current
+execution index. #340–#345 resolved the scoped Grafana credential/durability/folder
+issue; #346–#348 accepted native scoped Prometheus alerts; #349/#350 accepted
+native dependency/location topology. Those receipts supersede the corresponding
+old pending entries below, not the remaining expiry/role/offsite/launcher/STAC gaps.
+New source drafts are not deployed capabilities. Phase 6 remains In progress.
+
 ## Resume here: full Kubernetes / Backstage execution map
 
 Zeus subsequently requested PRs for the full Kubernetes structure, which apps we
@@ -143,7 +152,9 @@ This tracker is the single place to retain the work until those PRs are opened.
 | GitHub execution restriction and pre-existing validation debt | If required checks/release policy cannot be satisfied | Resolve account restriction with the owner without changing billing unasked; fix formatting in separate scoped PRs. Never describe local passes as GitHub green. |
 
 - [ ] STAC repair implementation and acceptance evidence linked.
-- [ ] Grafana adapter repair implementation and acceptance evidence linked.
+- [x] Scoped Grafana adapter/durability/folder repairs and acceptance linked: #340–#345;
+      see [durability receipt](../operations/grafana-durable-visibility-2026-10-20.md)
+      and [folder receipt](../operations/grafana-native-folder-2026-10-20.md).
 - [ ] Launcher findings each repaired/classified and evidence linked.
 - [ ] Offsite copy decision, implementation and restore evidence linked.
 - [ ] Historical-backup UI clarification implemented and verified.
