@@ -131,6 +131,10 @@ notifications and catalog APIs).
 - Not verified against the live portal: ids of some plugin pages (matched by id
   or title). Local run used mocked APIs (Brave via Playwright), not real data.
 
+**Enabled in the cluster (2026-10-22):** `onemind.features.pillars: true` is set in the mounted
+`platform/backstage/app-config.cluster.yaml` (image default stays `false`). Rollback: set it to
+`false` there; Argo rolls the pod because the ConfigMap name carries a content hash.
+
 **Pillar tile counts (2026-10-22):** tiles count only Components with `onemind.io/catalog-role=app`,
 the same predicate as the catalog Apps view (shared constants in `plugin-onemind-common`
 `catalogRoles.ts`; the query filters natively on the role label). Workload Components no longer inflate SO.

@@ -102,3 +102,6 @@ silently dropped, because removing a reviewed entity should be a reviewed Git ch
 
 **Not verified** Against the live cluster. Acceptance after enabling: both replicas' entity counts and an inventory-checked-at age under
 5 minutes, plus the expected log lines in the doc.
+
+**Enabled 2026-10-22 (Zeus's request)** in `platform/backstage/app-config.cluster.yaml` (`onemind.inventory.live.enabled: true`),
+merged right after the image that contains the module was verified live. Rollback: set it to `false` and let Argo sync.

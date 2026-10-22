@@ -89,6 +89,18 @@ integrations:
 onemind:
   operationalEvents:
     enabled: true
+  # Objects merge across config layers, so only the flags that differ from the image
+  # defaults are listed. The SO/LE/HP/GE Domains and pillar labels are live in the catalog;
+  # this shows the sidebar Pillars group and the home tiles. Rollback: set it to false
+  # (or delete the line) and let Argo sync; no image build needed.
+  features:
+    pillars: true
+  # Live Kubernetes inventory (docs/catalog/live-inventory.md): publishes workloads that
+  # catalog/cluster.yaml does not define yet and flags vanished ones for review. Reviewed
+  # entities are never replaced. Rollback: set enabled to false (or delete the block).
+  inventory:
+    live:
+      enabled: true
 
 # Required shared bus: retry startup races instead of falling back to local-only delivery.
 events:

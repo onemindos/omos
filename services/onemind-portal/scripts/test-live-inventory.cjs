@@ -26,9 +26,12 @@ test('the live inventory ships disabled and the file-based catalog still lists c
   assert.notEqual(production.onemind?.inventory?.live?.enabled, true);
 });
 
-test('the cluster overlay does not enable the live inventory (enabling is its own reviewed change)', repoOnly, () => {
+test('the cluster overlay enables the live inventory explicitly (reviewed 2026-10-22) and overrides nothing else', repoOnly, () => {
   const cluster = YAML.parse(fs.readFileSync(path.join(portal, '../../platform/backstage/app-config.cluster.yaml'), 'utf8'));
-  assert.notEqual(cluster.onemind?.inventory?.live?.enabled, true);
+  const live = cluster.onemind?.inventory?.live;
+  assert.equal(live?.enabled, true);
+  // Only the switch is set here: scope (apiServer, excluded namespaces, curated file) stays at the reviewed defaults.
+  assert.deepEqual(Object.keys(live), ['enabled']);
 });
 
 test('the backend registers the inventory module', () => {
