@@ -132,6 +132,73 @@ describe('base background in brand.css', () => {
   });
 });
 
+describe('light mode panels stay neutral', () => {
+  const rules = [
+    ...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]*)\}/g),
+  ].map(m => ({
+    selector: m[1].trim(),
+    body: m[2],
+  }));
+  const hand = rules.filter(
+    r => !r.selector.includes('--onemind-') && !/^:root/.test(r.selector),
+  );
+
+  it('only dark-scoped hand-written rules paint a panel with the brand tint', () => {
+    const tinted = hand.filter(r =>
+      /background(-color)?:\s*var\(--onemind-brand-subtle\)/.test(r.body),
+    );
+    expect(tinted.length).toBeGreaterThan(0);
+    tinted.forEach(r =>
+      expect(r.selector).toMatch(/^body\[data-theme-mode='dark'\]/),
+    );
+  });
+
+  it('paints the home Favorites panel with surface 1 by default and a red accent rule', () => {
+    const base = hand.find(
+      r => r.selector === '.onemind-favorites' && /background/.test(r.body),
+    );
+    expect(base?.body).toMatch(/background:\s*var\(--onemind-surface-1\)/);
+    expect(base?.body).toMatch(
+      /border-top:\s*3px solid var\(--onemind-brand\)/,
+    );
+    const dark = hand.find(
+      r => r.selector === "body[data-theme-mode='dark'] .onemind-favorites",
+    );
+    // Dark is unchanged from the approved look: brand-tinted panel, hairline border.
+    expect(dark?.body).toMatch(/background:\s*var\(--onemind-brand-subtle\)/);
+    expect(dark?.body).toMatch(
+      /border-top:\s*1px solid var\(--onemind-border\)/,
+    );
+  });
+
+  it('keeps text on the light panel at AA (surface 1)', () => {
+    const t = tokens.light;
+    [t.text[1], t.text[2], t.text[3], t.brand.text].forEach(fg =>
+      expect(contrastRatio(fg, t.surface[1])).toBeGreaterThanOrEqual(4.5),
+    );
+    // The panel and its card contents are neutral, not pink.
+    expect(chroma(t.surface[1])).toBeLessThanOrEqual(2);
+  });
+
+  it('light MUI page, paper, chip, popover and tooltip surfaces are neutral grey', () => {
+    const t = tokens.light;
+    const theme = createOneMindTheme('light').getTheme('v5') as any;
+    const overrides = theme.components ?? {};
+    const colours = [
+      theme.palette.background.default,
+      theme.palette.background.paper,
+      overrides.MuiChip.styleOverrides.root.backgroundColor,
+      overrides.MuiPopover.styleOverrides.paper.backgroundColor,
+      overrides.MuiTooltip.styleOverrides.tooltip.backgroundColor,
+      overrides.MuiDialog.styleOverrides.paper.backgroundColor,
+      overrides.MuiSnackbarContent.styleOverrides.root.backgroundColor,
+      overrides.MuiTableRow.styleOverrides.root['&:hover'].backgroundColor,
+      t.surface[1],
+    ];
+    colours.forEach(hex => expect(chroma(hex)).toBeLessThanOrEqual(2));
+  });
+});
+
 describe('floating surfaces', () => {
   modes.forEach(mode => {
     const t = tokens[mode];

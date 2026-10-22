@@ -12,17 +12,11 @@ import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
 import { GrafanaHome } from './GrafanaHome';
 import { LiveOverview } from './LiveOverview';
-import { backupNeedsReview, isStale } from './status';
+import { attentionEntries, backupNeedsSetup, BackupStatus, isStale, useOperationsStatus } from './status';
 import { ServiceManager } from './ServiceManager';
 import { groupColors } from '@internal/plugin-onemind-common';
 import { ActivityInbox } from './ActivityInbox';
 import { HomePageRequestedReviewsCard, HomePageYourOpenPullRequestsCard } from '@roadiehq/backstage-plugin-github-pull-requests';
-
-function backupStatus(backup: {suspended:boolean;lastSuccess:string|null}) {
-  if (backup.suspended) return 'suspended';
-  if (!backup.lastSuccess) return 'no successful run recorded';
-  return 'overdue';
-}
 
 function cloudStateLabel(data: {state:string;open?:number;overdue?:number;sampled?:number}) {
   if (data.state === 'configuration-required') return 'Connect read-only Zoho access to enable this summary';
@@ -94,30 +88,22 @@ export function Directory({fluid=false,utilities,launcherOnly=false}: {fluid?:bo
     {loaded && !error && !matches.length && <Box p={3} textAlign="center"><Typography variant="h6">No matching apps</Typography><Typography color="textSecondary">Try another term or reset your filters.</Typography><Button onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); setHostingFilter('All hosting'); }}>Reset filters</Button></Box>}
   </Box>);
 }
-type ServiceHealth={observedAt:string;scope:string;metricsUnavailable:boolean;checks:{name:string;entity:string;link:string;scope:string;state:string;httpStatus?:number;latencyMs?:number;observedAt:string}[];metrics:{namespace:string;cpuCores:number|null;memoryBytes:number|null;observedAt:string}[]};
-type Status={serviceHealth?:ServiceHealth;observedAt:string;partial:boolean;unavailableSources?:string[];totalWorkloads:number;unavailable:string[];deployments:{name:string;health:string;sync:string}[];backups:{name:string;lastSuccess:string|null;suspended:boolean}[]};
+const backupRowLabel=(x:BackupStatus)=>x.state==='retired'?`retired${x.supersededBy?` (replaced by ${x.supersededBy})`:''}`:x.state==='needs-setup'?`needs setup${x.pendingReason?`: ${x.pendingReason}`:''}`:x.suspended?'suspended':!x.lastSuccess?'no successful run recorded':x.attention==='review'?'needs review':'ok';
 export function StatusPanel({ compact = false }: { compact?: boolean }){
-  const discovery=useApi(discoveryApiRef);const fetchApi=useApi(fetchApiRef);
-  const [data,setData]=useState<Status>();const [error,setError]=useState(false);
-  useEffect(()=>{let active=true;const controller=new AbortController();
-    const refresh=async()=>{try{const base=await discovery.getBaseUrl('onemind');const r=await fetchApi.fetch(`${base}/status`,{signal:controller.signal});if(!r.ok)throw new Error();const value=await r.json();if(active){setData(value);setError(false);}}catch{if(active)setError(true);}};
-    refresh();const timer=setInterval(refresh,60000);return()=>{active=false;controller.abort();clearInterval(timer);};
-  },[discovery,fetchApi]);
+  const {data,error}=useOperationsStatus();
   const theme=useTheme();
   const [expanded,setExpanded]=useState(false);
   const abbreviated=compact&&!expanded;
   const stale=!!data&&(error||isStale(data));
-  const backupProblems=data?.backups.filter(x=>backupNeedsReview(x))??[];
-  const issues=data?[...(data.serviceHealth?.checks.filter(x=>x.state!=='up').map(x=>({key:`health:${x.name}`,title:`${x.name}: ${x.state}`,detail:`${x.scope}. Inspect service health and connectivity; unknown is not healthy.`,url:x.link}))??[]),...data.unavailable.map(name=>({key:`workload:${name}`,title:`Workload not fully ready: ${name}`,detail:'Inspect pod readiness and events in Headlamp.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'})),
-    ...data.deployments.map(x=>({key:`deployment:${x.name}`,title:`${x.name}: ${x.health} / ${x.sync}`,detail:'Inspect the deployment health, sync difference, and last operation.',url:`https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(x.name)}`})),
-    ...backupProblems.map(x=>({key:`backup:${x.name}`,title:`Backup ${x.name}: ${backupStatus(x)}`,detail:x.lastSuccess?`Last successful job: ${new Date(x.lastSuccess).toLocaleString()}`:'Inspect the backup schedule and job logs.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))]:[];
+  const issues=data?attentionEntries(data):[];
+  const setup=data?.needsSetup??(data?.backups.filter(backupNeedsSetup).map(x=>({key:`backup:${x.name}`,kind:'backup',severity:'warning' as const,title:`Backup ${x.name}: needs setup`,detail:x.pendingReason??'Waiting for setup only a person can do.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))??[]);
   return (<Box p={2}>
     <Typography variant="h5">Needs attention</Typography>
-    <Typography variant="body2" color="textSecondary">Workload readiness, deployment health, and backup activity. Critical service checks and selected Prometheus metrics appear below.</Typography>
+    <Typography variant="body2" color="textSecondary">Firing alerts, workload readiness, deployment health, storage and backups. The same list drives the Home status strip and <Link href="/live">Live Ops</Link>.</Typography>
     {error&&<Typography color="error">Live update unavailable. Previous results may be stale.</Typography>}
     {!data&&!error&&<Typography>Loading cluster state…</Typography>}
     {data&&<>
-      <Typography variant="caption">{stale?'Stale observation':'Checked'} {new Date(data.observedAt).toLocaleString()} · {data.totalWorkloads} workloads · refreshes every minute</Typography>
+      <Typography variant="caption">{stale?'Stale observation':'Checked'} {new Date(data.observedAt).toLocaleString()} · {data.totalWorkloads} workloads · refreshes every 30 seconds and on alerts</Typography>
       {data.partial&&<Typography color="error">Incomplete view: {data.unavailableSources?.join(', ')||'some sources'} unavailable. Missing results do not mean healthy.</Typography>}
       <Box my={2}><Typography variant="h6">{issues.length} attention items{stale?' in previous results':''}</Typography></Box>
       {!stale&&!data.partial&&!issues.length&&<Typography>No issues reported by the configured checks.</Typography>}
@@ -126,21 +112,25 @@ export function StatusPanel({ compact = false }: { compact?: boolean }){
         <Typography variant="body2" color="textSecondary">{x.detail}</Typography>
         <Link href={x.url} target="_blank" rel="noopener noreferrer">Investigate</Link>
       </Box>))}
+      {!!setup.length&&<Box mt={2}><Typography variant="h6">Needs setup</Typography>
+        <Typography variant="caption">Waiting for something only a person can do. Not counted as attention.</Typography>
+        {setup.map(x=>(<Box key={x.key} mt={1}><Typography style={{fontWeight:600}}>{x.title}</Typography><Typography variant="body2" color="textSecondary">{x.detail}</Typography></Box>))}
+      </Box>}
       {compact && <Button size="small" onClick={()=>setExpanded(value=>!value)}>{expanded?'Show summary':'Show all observations'}</Button>}
       <Box mt={2}><Link href="https://argocd.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">All deployments</Link> · <Link href="https://grafana.tail717ba0.ts.net" target="_blank" rel="noopener noreferrer">Metrics in Grafana</Link></Box>
       {abbreviated && issues.length > 5 && <Typography variant="caption">Showing 5 of {issues.length} attention items. Open the full status view for the remaining observations.</Typography>}
       {!abbreviated && data.serviceHealth&&<Box mt={3}>
         <Typography variant="h6">Critical service health</Typography>
-        <Typography variant="caption">{data.serviceHealth.scope} Checked {new Date(data.serviceHealth.observedAt).toLocaleString()}</Typography>
-        {data.serviceHealth.checks.map(x=><Box key={x.name} mt={1}><Link href={x.link} target="_blank" rel="noopener noreferrer">{x.name}</Link> · {x.state}{x.httpStatus?` · HTTP ${x.httpStatus}`:''}{x.latencyMs!==undefined?` · ${x.latencyMs} ms`:''} · <Link href={`/catalog/${x.entity.split(':')[1].split('/')[0]}/${x.entity.split(':')[0]}/${x.entity.split('/')[1]}`}>Catalog</Link><Typography variant="caption" display="block">{x.scope}</Typography></Box>)}
+        <Typography variant="caption">{data.serviceHealth.scope} Checked {data.serviceHealth.observedAt?new Date(data.serviceHealth.observedAt).toLocaleString():'at an unknown time'}</Typography>
+        {data.serviceHealth.checks.map(x=><Box key={x.name} mt={1}>{x.link?<Link href={x.link} target="_blank" rel="noopener noreferrer">{x.name}</Link>:x.name} · {x.state}{x.httpStatus?` · HTTP ${x.httpStatus}`:''}{x.latencyMs!==undefined?` · ${x.latencyMs} ms`:''}{x.entity&&<> · <Link href={`/catalog/${x.entity.split(':')[1].split('/')[0]}/${x.entity.split(':')[0]}/${x.entity.split('/')[1]}`}>Catalog</Link></>}<Typography variant="caption" display="block">{x.scope}</Typography></Box>)}
         <Typography variant="h6">Namespace resource use</Typography>
         <Typography variant="caption">Prometheus: CPU cores averaged over 5 minutes; memory working set. Missing values mean unknown.</Typography>
         {data.serviceHealth.metricsUnavailable&&<Typography color="error">A metrics query failed; values may be incomplete.</Typography>}
-        {data.serviceHealth.metrics.map(x=><Typography key={x.namespace} variant="body2">{x.namespace}: CPU {x.cpuCores===null?'unknown':`${x.cpuCores.toFixed(2)} cores`} · memory {x.memoryBytes===null?'unknown':`${(x.memoryBytes/1048576).toFixed(0)} MiB`}</Typography>)}
+        {(data.serviceHealth.metrics??[]).map(x=><Typography key={x.namespace} variant="body2">{x.namespace}: CPU {x.cpuCores===null?'unknown':`${x.cpuCores.toFixed(2)} cores`} · memory {x.memoryBytes===null?'unknown':`${(x.memoryBytes/1048576).toFixed(0)} MiB`}</Typography>)}
       </Box>}
       {!abbreviated && <Box mt={3}><Typography variant="h6">Backup activity</Typography>
-        <Typography variant="caption">OneMind portal daily backup is overdue after 36 hours. Other schedules show activity without an assumed deadline. Job success alone does not prove restoration for every service.</Typography>
-        {data.backups.map(x=><Typography key={x.name} variant="body2">{x.name}: {backupStatus(x)}</Typography>)}
+        <Typography variant="caption">A daily backup is overdue after 36 hours. Retired jobs were replaced on purpose; needs-setup jobs wait for a person. Job success alone does not prove restoration for every service.</Typography>
+        {data.backups.map(x=><Typography key={x.name} variant="body2">{x.name}: {backupRowLabel(x)}</Typography>)}
         {!data.backups.length&&!data.partial&&<Typography>No backup schedules found.</Typography>}
       </Box>}
     </>}
