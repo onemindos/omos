@@ -9,6 +9,10 @@ kind: Application
 metadata:
   name: platform-openclaw
   namespace: argocd
+  # Retirement step 1 (Zeus: OpenClaw is no longer needed). With this finalizer, deleting this
+  # Application from Git also deletes everything it manages. Removed again with the Application.
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
