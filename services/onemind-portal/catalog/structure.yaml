@@ -1,0 +1,528 @@
+# OneMind catalog structure (reviewed source, not a Backstage location).
+# Read by scripts/curate-structure.cjs, which materializes the Domains, Systems and new app Components into catalog/apps.yaml
+# and re-parents every entity. Pillars are PROPOSED until Zeus approves docs/catalog/system-map.md.
+# A pillar of "unclassified" means the pillar has not been reviewed; it is never guessed.
+reviewStatus:
+  status: proposed
+  reviewer: Zeus Delacruz (approval pending, see docs/catalog/system-map.md)
+  evidence: docs/catalog/system-map.md; platform/argocd Application list; catalog/apps.yaml; catalog/cluster.yaml
+domains:
+  - name: onemind
+    title: OneMind
+    pillar: none
+    description: The OneMind mission catalog. Four pillar domains (SO, LE, HP, GE) sit under it; Systems whose pillar has not been reviewed sit here as Shared / Unclassified.
+  - name: onemind-so
+    title: SO — Sovereign Operations
+    pillar: so
+    description: Technical infrastructure, security, development, automation, agents, TAK, drones and robotics.
+  - name: onemind-le
+    title: LE — Legacy Evolution
+    pillar: le
+    description: Family, home and land, homestead, off-grid systems, heritage and community.
+  - name: onemind-hp
+    title: HP — Holistic Performance
+    pillar: hp
+    description: Personal health and performance, habits, learning, development and personal finance.
+  - name: onemind-ge
+    title: GE — Generational Empire
+    pillar: ge
+    description: Ventures, products, brand, business operations, partnerships and long-term enterprise.
+systems:
+  - name: infrastructure
+    title: Platform core
+    description: "Cluster foundations: networking and ingress, certificates, DNS, autoscaling, operators, Tailscale and Cloudflare, and the DigitalOcean account."
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: identity-access
+    title: Identity & access
+    description: Sign-in, authorization, workload identity, secrets management and admission/runtime policy.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: gitops-delivery
+    title: GitOps & delivery
+    description: Argo CD and Argo Rollouts, the container registry, the GitHub runner and source hosting.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: developer-platform
+    title: Developer platform
+    description: The Backstage portal, OpenChoreo control and data planes, cluster dashboards and runbooks.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: observability
+    title: Observability
+    description: Metrics, logs, traces, dashboards, alerting, cost and cluster-health tooling.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: data-storage
+    title: Data & storage
+    description: Databases and operators, object and block storage, search, backups and recovery.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: messaging-nats
+    title: Messaging (NATS)
+    description: The NATS bus, its UIs and tools, and the data pipelines that publish to or consume from it.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: tak-ecosystem
+    title: TAK & field ops
+    description: TAK Server and its plugins, OneTAK, FedHub, TAK-ML, voice and the TAK clients and references.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: geospatial
+    title: Geospatial, drones & robotics
+    description: Map, routing, geocoding and imagery services, drone software and firmware, and robotics platforms.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: ai-agents
+    title: AI & agents
+    description: Hermes (Legacy), agent consoles, model gateways and runtimes, model providers and workflow automation.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: repo-onemind
+    title: Code repositories
+    description: Source repositories in the onemindos GitHub organization. Hidden by default.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: onemind-mesh
+    title: Mesh & devices
+    description: Tailscale mesh endpoints (devices and service proxies). Discovery snapshot, not live health. Hidden by default.
+    pillar: so
+    review: proposed
+    domain: domain:default/onemind-so
+  - name: personal-finance
+    title: Personal finance
+    description: Personal banking, credit monitoring and credit-building tools.
+    pillar: hp
+    review: proposed
+    domain: domain:default/onemind-hp
+  - name: home-homestead
+    title: Home & homestead
+    description: Home automation and homestead/farm automation.
+    pillar: le
+    review: proposed
+    domain: domain:default/onemind-le
+  - name: business-operations
+    title: Business operations
+    description: Customer relationship, community and other business-operations platforms.
+    pillar: ge
+    review: proposed
+    domain: domain:default/onemind-ge
+  - name: intelligence
+    title: Intelligence & feeds
+    description: Intelligence feeds, monitors and the observational API. SO per Zeus (2026-10-21).
+    pillar: so
+    review: approved
+    domain: domain:default/onemind-so
+  - name: communication
+    title: Communication
+    description: "Messaging, mail and phone services, self-hosted and external: shared communications infrastructure. SO per Zeus (2026-10-21)."
+    pillar: so
+    review: approved
+    domain: domain:default/onemind-so
+  - name: productivity-saas
+    title: Productivity & SaaS
+    description: Zoho, Google Workspace, Notion, Dropbox and other hosted productivity services. Shared across pillars (Zeus, 2026-10-21).
+    pillar: shared
+    review: approved
+    domain: domain:default/onemind
+  - name: personal-tools
+    title: Personal tools & devices
+    description: Desktop applications, hardware vendors and personal devices. Shared across pillars (Zeus, 2026-10-21).
+    pillar: shared
+    review: approved
+    domain: domain:default/onemind
+  - name: social-media
+    title: Brand & social media
+    description: Social and brand accounts. GE per Zeus (2026-10-21).
+    pillar: ge
+    review: approved
+    domain: domain:default/onemind-ge
+  - name: reference-links
+    title: Reference & community
+    description: Foundations, standards bodies and community reference sites. Shared across pillars; hidden by default (Zeus, 2026-10-21).
+    pillar: shared
+    review: approved
+    domain: domain:default/onemind
+  - name: unassigned-workloads
+    title: Unassigned workloads
+    description: "Kubernetes workloads that no reviewed mapping assigns to an app yet. Nothing is hidden: new workloads land here until mapped."
+    pillar: unclassified
+    review: proposed
+    domain: domain:default/onemind
+apps:
+  - name: platform-core
+    title: Platform core manifests
+    system: infrastructure
+    description: Sealed Secrets controller, certificate issuers, standby Cloudflare tunnel config, GitHub runner and Tailscale policy (Argo application platform-core).
+  - name: cert-manager
+    title: cert-manager
+    system: infrastructure
+    description: Certificate management for the cluster.
+  - name: ingress-nginx
+    title: ingress-nginx
+    system: infrastructure
+    description: Public ingress controller.
+  - name: external-dns
+    title: ExternalDNS
+    system: infrastructure
+    description: Synchronizes DNS records for cluster ingresses.
+  - name: cloudflared
+    title: Cloudflare Tunnel (standby)
+    system: infrastructure
+    description: Cloudflare tunnel connector, kept as a cold standby.
+  - name: tailscale-operator
+    title: Tailscale operator and proxies
+    system: infrastructure
+    description: Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
+  - name: keda
+    title: KEDA
+    system: infrastructure
+    description: Event-driven autoscaling.
+  - name: dapr
+    title: Dapr
+    system: infrastructure
+    description: Dapr control plane.
+  - name: kubernetes-system
+    title: Kubernetes system services
+    system: infrastructure
+    description: "DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. No Argo application."
+  - name: onemind-core
+    title: OneMind core services
+    system: infrastructure
+    description: OneMind core API and ingestion services (Argo application ecosystem-onemind-core).
+  - name: authentik
+    title: Authentik
+    system: identity-access
+    description: Identity provider (server, worker, Redis, PostgreSQL).
+  - name: openfga
+    title: OpenFGA
+    system: identity-access
+    description: Fine-grained authorization service.
+  - name: spire
+    title: SPIRE
+    system: identity-access
+    description: Workload identity (SPIFFE).
+  - name: kyverno
+    title: Kyverno
+    system: identity-access
+    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, SPIRE and OpenFGA wiring).
+  - name: falco
+    title: Falco
+    system: identity-access
+    description: Runtime security detection (DaemonSet).
+  - name: external-secrets
+    title: External Secrets Operator
+    system: identity-access
+    description: Synchronizes secrets from external stores.
+  - name: argo-rollouts
+    title: Argo Rollouts
+    system: gitops-delivery
+    description: Progressive delivery controller.
+  - name: harbor
+    title: Harbor
+    system: gitops-delivery
+    description: In-cluster container registry with image scanning.
+  - name: backstage
+    title: Backstage portal
+    system: developer-platform
+    description: The OneMind developer portal and its PostgreSQL database.
+  - name: openchoreo
+    title: OpenChoreo
+    system: developer-platform
+    description: OpenChoreo control plane and data plane, defaults, projects and prerequisites.
+  - name: openchoreo-observability
+    title: OpenChoreo observability plane
+    system: observability
+    description: OpenChoreo observer, adapters and collectors for logs, traces, metrics, events and FinOps.
+  - name: tempo
+    title: Tempo
+    system: observability
+    description: Distributed tracing backend.
+  - name: opentelemetry-collector
+    title: OpenTelemetry Collector
+    system: observability
+    description: Telemetry collection (DaemonSet agent).
+  - name: opencost
+    title: OpenCost
+    system: observability
+    description: Kubernetes cost allocation.
+  - name: health-keeper
+    title: Cluster health observer
+    system: observability
+    description: Read-only five-minute cluster health observer (platform-ops).
+  - name: cloudnative-pg
+    title: CloudNativePG
+    system: data-storage
+    description: PostgreSQL operator and the Barman Cloud backup plugin.
+  - name: opensearch
+    title: OpenSearch
+    system: data-storage
+    description: Search and log store.
+  - name: velero
+    title: Velero
+    system: data-storage
+    description: Cluster backup and restore.
+  - name: volsync
+    title: VolSync
+    system: data-storage
+    description: Volume replication and backup controller.
+  - name: nats
+    title: NATS JetStream
+    system: messaging-nats
+    description: The authority message bus (3-node JetStream), the NACK controller and NATS tools.
+  - name: redpanda-connect
+    title: Redpanda Connect
+    system: messaging-nats
+    description: Stream processing between NATS and downstream sinks.
+  - name: omos-data-pipeline
+    title: OMOS data pipeline
+    system: messaging-nats
+    description: Feed, projector and sink services in the omos namespace.
+  - name: takml
+    title: TAK-ML
+    system: tak-ecosystem
+    description: TAK-ML server, database and vision worker.
+  - name: geo-data-services
+    title: OneTAK geospatial services
+    system: geospatial
+    description: Martin, Nominatim, Overpass, pg_featureserv, Tile38, STAC API/browser and the geo database.
+  - name: n8n
+    title: n8n
+    system: ai-agents
+    description: Workflow automation.
+  - name: litellm
+    title: LiteLLM
+    system: ai-agents
+    description: Model gateway.
+placement:
+  1password: identity-access
+  agent-mail: ai-agents
+  agent-monitor: ai-agents
+  agent-web-ui: ai-agents
+  apple-music: personal-tools
+  ardupilot: geospatial
+  argocd: gitops-delivery
+  at-t-prepaid: communication
+  autoware: geospatial
+  bambu-lab: personal-tools
+  bambu-studio: personal-tools
+  blender: personal-tools
+  brave-browser: personal-tools
+  circle: business-operations
+  clickhouse: data-storage
+  cloudflare: infrastructure
+  cloudtak: tak-ecosystem
+  cncf: reference-links
+  cncf-landscape: reference-links
+  composio: ai-agents
+  credit-karma: personal-finance
+  deskflow: personal-tools
+  digitalocean: infrastructure
+  digitalocean-inference: ai-agents
+  dropbox: productivity-saas
+  eclipse-ditto: geospatial
+  eclipse-zenoh: geospatial
+  element-chat: communication
+  eolianvr: tak-ecosystem
+  equifax: personal-finance
+  experian: personal-finance
+  external-argocd: gitops-delivery
+  external-kubernetes-dashboard: developer-platform
+  external-tailscale: infrastructure
+  facebook-legacy: social-media
+  facebook-zeus: social-media
+  fedhub: tak-ecosystem
+  fireworks-ai: ai-agents
+  foxglove-studio: geospatial
+  gemma-models: ai-agents
+  github: gitops-delivery
+  google-chrome: personal-tools
+  google-cloud: infrastructure
+  google-messages: communication
+  grafana: observability
+  headlamp: developer-platform
+  hermes-legacy: ai-agents
+  heynats: messaging-nats
+  home-assistant: home-homestead
+  hubble-ui: observability
+  innovis: personal-finance
+  instagram-zeus: social-media
+  jan: ai-agents
+  kubernetes-dashboard: developer-platform
+  langfuse: observability
+  lf-edge: reference-links
+  lingbot-map: geospatial
+  linkedin-company-admin: social-media
+  linkedin-zeus: social-media
+  linux-foundation: reference-links
+  lm-studio: ai-agents
+  loki: observability
+  longhorn: data-storage
+  madmapper: personal-tools
+  maputnik: geospatial
+  matrix-synapse: communication
+  mercury: business-operations
+  minio: data-storage
+  ministral-models: ai-agents
+  miro: productivity-saas
+  mta: communication
+  nats-dashboard: messaging-nats
+  nats-surveyor: messaging-nats
+  nats-ui: messaging-nats
+  nemotron-models: ai-agents
+  notion: productivity-saas
+  notion-backups: data-storage
+  nvidia-build: ai-agents
+  nvidia-omniverse: geospatial
+  obs-studio: personal-tools
+  ollama: ai-agents
+  omlx: ai-agents
+  onemind-observations: intelligence
+  onemind-os: developer-platform
+  onemind-runbooks: developer-platform
+  onetak: tak-ecosystem
+  onetak-stac-readonly: geospatial
+  open-robotics: reference-links
+  openclaw: ai-agents
+  openssf: reference-links
+  pinterest-zeus: social-media
+  platform-backup-recovery: data-storage
+  postgis: data-storage
+  probackup-io: data-storage
+  prometheus: observability
+  proton-mail: communication
+  px4: geospatial
+  pytak: tak-ecosystem
+  qgroundcontrol: geospatial
+  qwen-models: ai-agents
+  raindrop-io: productivity-saas
+  reddit-zeus: social-media
+  riverside-fm: productivity-saas
+  ros-2: geospatial
+  samsung-dex: personal-tools
+  samsung-knox: personal-tools
+  samsung-one-ui: personal-tools
+  strava: personal-tools
+  tailscale: infrastructure
+  tailscale-admin: infrastructure
+  tak-gov: tak-ecosystem
+  tak-product-center: tak-ecosystem
+  tak-server: tak-ecosystem
+  termius: personal-tools
+  threads-zeus: social-media
+  tiktok-zeus: social-media
+  tileserver-gl: geospatial
+  together-ai: ai-agents
+  touchdesigner: personal-tools
+  transunion: personal-finance
+  turbovec: ai-agents
+  twitch-zeus: social-media
+  uptime-kuma: observability
+  valhalla: geospatial
+  vllm: ai-agents
+  webodm: geospatial
+  x-zeus: social-media
+  youtube-zeus: social-media
+  zoho-account: productivity-saas
+  zoho-api-console: productivity-saas
+  zoho-flow: productivity-saas
+  zoho-iot: productivity-saas
+  zoho-mail: productivity-saas
+  zoho-mcp-client: productivity-saas
+  zoho-one: productivity-saas
+  zoho-projects: productivity-saas
+  zoho-social: productivity-saas
+  zoho-store: productivity-saas
+  zoho-workplace: productivity-saas
+  zoho-zia-agents: productivity-saas
+fallbackSystems:
+  infrastructure: infrastructure
+  ai-agents: ai-agents
+  communication: communication
+  tak-ecosystem: tak-ecosystem
+  intelligence: intelligence
+  data-storage: data-storage
+  observability: observability
+  geospatial: geospatial
+  personal-tools: personal-tools
+  personal-finance: personal-finance
+  social-media: social-media
+  onemind-mesh: onemind-mesh
+  repo-onemind: repo-onemind
+  zoho-apps: productivity-saas
+  workspaces: productivity-saas
+  external: developer-platform
+  cluster-agent-fabric: ai-agents
+  cluster-argocd: gitops-delivery
+  cluster-auth: identity-access
+  cluster-backstage: developer-platform
+  cluster-cert-manager: infrastructure
+  cluster-cloudflare: infrastructure
+  cluster-cnpg-system: data-storage
+  cluster-dapr-system: infrastructure
+  cluster-dp-default-onetak-development-b188bf98: geospatial
+  cluster-external-dns: infrastructure
+  cluster-external-secrets: identity-access
+  cluster-github-runner: infrastructure
+  cluster-hermes: ai-agents
+  cluster-ingress-nginx: infrastructure
+  cluster-keda: infrastructure
+  cluster-kube-system: infrastructure
+  cluster-kube: developer-platform
+  cluster-kyverno: identity-access
+  cluster-matrix: communication
+  cluster-monitoring: observability
+  cluster-n8n: ai-agents
+  cluster-nats: messaging-nats
+  cluster-omos: messaging-nats
+  cluster-onemind-ai: ai-agents
+  cluster-onemind-core: infrastructure
+  cluster-onemind-registry: gitops-delivery
+  cluster-onetak: tak-ecosystem
+  cluster-openchoreo-control-plane: developer-platform
+  cluster-openchoreo-data-plane: developer-platform
+  cluster-openchoreo-observability-plane: observability
+  cluster-openclaw: ai-agents
+  cluster-opencost: observability
+  cluster-ops: observability
+  cluster-tailscale: infrastructure
+  cluster-takml: tak-ecosystem
+  cluster-takserver: tak-ecosystem
+  cluster-velero: data-storage
+  cluster-clickhouse: data-storage
+  cluster-onemind-search: data-storage
+  cluster-spire-system: identity-access
+  fabric-geo: geospatial
+  fabric-data: data-storage
+  fabric-brandmarketing: social-media
+  fabric-googleworkspace: productivity-saas
+  fabric-infrastructure: infrastructure
+  fabric-tak: tak-ecosystem
+  fabric-nats: messaging-nats
+  fabric-intel: intelligence
+  fabric-bridge: messaging-nats
+  fabric-finance: personal-finance
+  fabric-comms: communication
+  fabric-plugins: tak-ecosystem
+  fabric-agents: ai-agents
+  fabric-businessops: business-operations
+  fabric-devops: gitops-delivery
+  fabric-observability: observability
+  fabric-productivity: productivity-saas
+  fabric-iotautomation: home-homestead
+pillarOverrides: {}
+titles:
+  component:default/external-argocd: ArgoCD (external launcher)
+  component:default/external-kubernetes-dashboard: Kubernetes Dashboard (external launcher)
+  component:default/external-tailscale: Tailscale (external launcher)
