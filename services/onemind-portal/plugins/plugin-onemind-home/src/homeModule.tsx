@@ -12,6 +12,7 @@ import { CostPanel } from './CostPanel';
 import { FabricPanel } from './FabricPanel';
 import { GrafanaHome } from './GrafanaHome';
 import { LiveOverview } from './LiveOverview';
+import { backupNeedsReview, isStale } from './status';
 import { ServiceManager } from './ServiceManager';
 import { groupColors } from '@internal/plugin-onemind-common';
 import { ActivityInbox } from './ActivityInbox';
@@ -29,7 +30,7 @@ function cloudStateLabel(data: {state:string;open?:number;overdue?:number;sample
   return `${data.open} open · ${data.overdue} overdue in ${data.sampled} sampled tasks`;
 }
 
-export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:ReactNode}) {
+export function Directory({fluid=false,utilities,launcherOnly=false}: {fluid?:boolean;utilities?:ReactNode;launcherOnly?:boolean}) {
   const {directory,loaded,error}=useDirectory();
   const searchId=useId();
   const [query, setQuery] = useState('');
@@ -51,35 +52,38 @@ export function Directory({fluid=false,utilities}: {fluid?:boolean;utilities?:Re
     { title: 'Offline', detail: 'Carry your knowledge', url: '/offline' },
   ];
   return (<Box p={fluid?0:2} className="onemind-workspace">
-    <Box p={3} mb={3} style={{ borderRadius: 24, border: `1px solid ${theme.palette.divider}`,
-      backgroundImage: `linear-gradient(115deg,${dark ? '#123951df,#35294add,#153c3ddb' : '#dceff8e8,#ece3f6df,#dff4ecdf'}),url(/brand/legacy-background-${dark ? 'dark' : 'light'}.webp)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    {!launcherOnly&&<Box p={3} mb={3} style={{ borderRadius: 24, border: `1px solid ${theme.palette.divider}`, background: theme.palette.background.paper }}>
       <Typography variant="overline" style={{ letterSpacing: 3 }}>ONEMIND OS · YOUR WORKSPACE</Typography>
       <Typography variant="h4" component="h1" style={{ fontWeight: 700, margin: '12px 0' }}>Your OneMind OS home.</Typography>
       <Typography color="textSecondary">Your apps, infrastructure, agents, and knowledge in one place.</Typography>
       <Box mt={2}><Chip size="small" label={`${directory.length} directory entries`} /> <Typography variant="caption">Live status and alerts are in Today.</Typography></Box>
-    </Box>
+    </Box>}
     <ServiceManager />
     {error&&<Typography color="error" role="alert">Catalog refresh failed. Previously loaded services may be stale; your personal shortcuts remain available.</Typography>}
     {!loaded&&<Typography role="status">Loading your catalog and shortcuts…</Typography>}
-    <TextField id={searchId} label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} fullWidth variant="outlined" size="small" />
-    <Box my={2} display="flex" flexWrap="wrap" style={{ gap: 8 }} aria-label="Application categories">
+    <Box display="flex" flexWrap="wrap" alignItems="center" className="onemind-launcher-controls" style={{ gap: 12 }}>
+      <TextField id={searchId} label="Find an app or capability" value={query} onChange={event => setQuery(event.target.value)} variant="outlined" size="small" style={{ flex: '2 1 260px' }} />
+      <TextField select SelectProps={{ native: true }} label="Category" value={category} onChange={event => setCategory(event.target.value)} variant="outlined" size="small" style={{ flex: '1 1 180px' }} inputProps={{ 'aria-label': 'Filter by category' }}>
+        {['All', ...groups].map(group => <option key={group} value={group}>{group === 'All' ? 'All categories' : group}</option>)}
+      </TextField>
+      <TextField select SelectProps={{ native: true }} label="Hosting" value={hostingFilter} onChange={event => setHostingFilter(event.target.value)} variant="outlined" size="small" style={{ flex: '1 1 160px' }} inputProps={{ 'aria-label': 'Filter by hosting' }}>
+        {['All hosting', 'Self-hosted', 'Cloud service', 'Local / native', 'Reference', 'Planned', 'Unknown'].map(value => <option key={value} value={value}>{value}</option>)}
+      </TextField>
       <Button size="small" variant={favoritesOnly?'contained':'outlined'} color="primary" aria-pressed={favoritesOnly} onClick={()=>setFavoritesOnly(value=>!value)}>Favorites only</Button>
-      {['All', ...groups].map(group => <Button key={group} size="small" variant={category === group ? 'contained' : 'outlined'} color="primary" aria-pressed={category === group} onClick={() => setCategory(group)} style={{borderColor: `${groupColors[group]?.base??'#237f91'}88`, background:category===group?`${groupColors[group]?.base??'#237f91'}${dark?'44':'22'}`:undefined,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary)}}>{group}</Button>)}
     </Box>
-    <Box mb={2} display="flex" flexWrap="wrap" style={{gap:8}} aria-label="Hosting filters">{['All hosting', 'Self-hosted', 'Cloud service', 'Local / native', 'Reference', 'Planned', 'Unknown'].map(value => <Button key={value} size="small" variant={hostingFilter===value?'contained':'outlined'} aria-pressed={hostingFilter===value} onClick={()=>setHostingFilter(value)}>{value}</Button>)}</Box>
-    {!query.trim() && category==='All' && !favoritesOnly && <><ActiveStack /><QuickAccess /></>}
-    {!query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind OS workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+    {!launcherOnly && !query.trim() && category==='All' && !favoritesOnly && <><ActiveStack /><QuickAccess /></>}
+    {!launcherOnly && !query.trim() && category==='All' && !favoritesOnly && <Box component="nav" aria-label="OneMind OS workspace" mb={3} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
       {destinations.map((item,index) => (<Button key={item.url} href={item.url} variant="outlined" style={{ justifyContent: 'flex-start', padding: 14, borderColor: `${Object.values(groupColors)[index].base}66`, background: `${Object.values(groupColors)[index].base}${dark?'22':'0b'}` }}>
         <Box textAlign="left"><Typography variant="subtitle2">{item.title}</Typography><Typography variant="caption" color="textSecondary">{item.detail}</Typography></Box>
       </Button>))}
     </Box>}
-    {!query.trim() && category==='All' && !favoritesOnly && <><LiveOverview /><GrafanaHome />{utilities}</>}
-    <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 24 }}>Your application fabric</Typography>
-    <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>Choose an area, open an app, or inspect its catalog record.</Typography>
+    {!launcherOnly && !query.trim() && category==='All' && !favoritesOnly && <><LiveOverview /><GrafanaHome />{utilities}</>}
+    <Typography variant="h5" component="h2" style={{ fontWeight: 700, marginTop: 16 }}>Launcher</Typography>
+    <Typography variant="body2" color="textSecondary" style={{ marginBottom: 8 }}>Search, or filter by category, then open an app or inspect its catalog record.</Typography>
     {controls.error && <Typography color="error" role="alert">{controls.error}</Typography>}
     <Typography variant="caption" component="p" role="status">{matches.length} matching entries</Typography>
     {groups.filter(group => matches.some(app => app.groupTitle === group)).map(group => (<Box key={group} mt={3}>
-      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base??'#237f91'}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
+      <Typography variant="h6" component="h3" style={{ marginBottom: 12, borderLeft:`4px solid ${groupColors[group]?.base??theme.palette.primary.main}`,paddingLeft:12,color:dark?(groupColors[group]?.bright??theme.palette.text.primary):(groupColors[group]?.base??theme.palette.text.primary) }}>{group}</Typography>
       <Box style={{...appGridStyle,gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))'}}>
         {matches.filter(app => app.groupTitle === group).map(app => (<Box key={app.ref}>
           <AppTile app={app} controls={controls} />
@@ -102,8 +106,8 @@ export function StatusPanel({ compact = false }: { compact?: boolean }){
   const theme=useTheme();
   const [expanded,setExpanded]=useState(false);
   const abbreviated=compact&&!expanded;
-  const stale=!!data&&(error||Date.now()-Date.parse(data.observedAt)>180000);
-  const backupProblems=data?.backups.filter(x=>x.suspended||!x.lastSuccess||(x.name==='backstage/backstage-backup'&&Date.now()-Date.parse(x.lastSuccess)>36*3600000))??[];
+  const stale=!!data&&(error||isStale(data));
+  const backupProblems=data?.backups.filter(x=>backupNeedsReview(x))??[];
   const issues=data?[...(data.serviceHealth?.checks.filter(x=>x.state!=='up').map(x=>({key:`health:${x.name}`,title:`${x.name}: ${x.state}`,detail:`${x.scope}. Inspect service health and connectivity; unknown is not healthy.`,url:x.link}))??[]),...data.unavailable.map(name=>({key:`workload:${name}`,title:`Workload not fully ready: ${name}`,detail:'Inspect pod readiness and events in Headlamp.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'})),
     ...data.deployments.map(x=>({key:`deployment:${x.name}`,title:`${x.name}: ${x.health} / ${x.sync}`,detail:'Inspect the deployment health, sync difference, and last operation.',url:`https://argocd.tail717ba0.ts.net/applications/argocd/${encodeURIComponent(x.name)}`})),
     ...backupProblems.map(x=>({key:`backup:${x.name}`,title:`Backup ${x.name}: ${backupStatus(x)}`,detail:x.lastSuccess?`Last successful job: ${new Date(x.lastSuccess).toLocaleString()}`:'Inspect the backup schedule and job logs.',url:'https://headlamp.tail717ba0.ts.net/c/main/workloads'}))]:[];

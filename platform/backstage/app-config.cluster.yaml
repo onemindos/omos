@@ -43,6 +43,12 @@ backend:
           - plugin: catalog
           - plugin: onemind
 
+catalog:
+  # Arrays replace the image defaults. Domain admits the OneMind / SO / LE / HP / GE Domains
+  # from catalog/apps.yaml; every other kind stays as in app-config.yaml.
+  rules:
+    - allow: [Component, System, API, Resource, Location, Domain]
+
 argocd:
   baseUrl: https://argocd.tail717ba0.ts.net
   appLocatorMethods:
