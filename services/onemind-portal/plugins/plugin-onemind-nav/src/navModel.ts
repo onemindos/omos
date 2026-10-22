@@ -75,8 +75,15 @@ export const NAV_GROUPS: GroupSpec[] = [
         ids: ['page:home'],
         href: '/',
       },
-      // F4 will replace this target with /live-ops.
-      { key: 'live-ops', title: 'Live Ops', icon: 'liveOps', href: '/today' },
+      {
+        key: 'live-ops',
+        title: 'Live Ops',
+        icon: 'liveOps',
+        ids: ['page:onemind-live'],
+        href: '/live',
+      },
+      // Today (inbox, calendar, work) keeps its own entry now that Live Ops has the page.
+      { key: 'today', title: 'Today', icon: 'insights', href: '/today' },
       // Notifications render as NotificationsSidebarItem (live unread badge).
     ],
   },

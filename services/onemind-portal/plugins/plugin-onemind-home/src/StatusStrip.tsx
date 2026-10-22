@@ -19,8 +19,8 @@ const TILES: Tile[] = [
   {
     key: 'alerts',
     label: 'Alerts firing',
-    href: '/today',
-    hint: 'Critical service checks that are not up',
+    href: '/live',
+    hint: 'Firing Alertmanager alerts and service checks that are not up',
   },
   {
     key: 'argo',
@@ -39,8 +39,8 @@ const TILES: Tile[] = [
   {
     key: 'backups',
     label: 'Backups to review',
-    href: '/today',
-    hint: 'Suspended, never succeeded, or overdue',
+    href: '/live',
+    hint: 'Failing, overdue, or suspended without a reason. Retired jobs are not counted.',
   },
 ];
 
@@ -63,6 +63,18 @@ function accentFor(value: Value, palette: Theme['palette']) {
 function valueLabel(value: Value) {
   if (value === undefined) return '—';
   return value === 'unknown' ? 'Unknown' : String(value);
+}
+
+// Retired and needs-setup backups are shown beside the count, never inside it.
+function backupNote(counts: StripCounts | undefined) {
+  if (!counts) return '';
+  const parts: string[] = [];
+  const setup = counts.backupsNeedSetup;
+  const retired = counts.backupsRetired;
+  if (setup === 'unknown' || retired === 'unknown') return '';
+  if (setup) parts.push(`${setup} needs setup`);
+  if (retired) parts.push(`${retired} retired`);
+  return parts.join(' · ');
 }
 
 function observedLabel(
@@ -128,6 +140,11 @@ export function StatusStrip() {
             >
               {valueLabel(value)}
             </Typography>
+            {tile.key === 'backups' && backupNote(counts) && (
+              <Typography variant="caption" display="block">
+                {backupNote(counts)}
+              </Typography>
+            )}
             <Typography variant="caption" color="textSecondary" display="block">
               {observedLabel(observed, stale, error)}
             </Typography>
