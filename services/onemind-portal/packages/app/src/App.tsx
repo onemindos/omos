@@ -20,6 +20,8 @@ import { oneMindRadar } from '@internal/plugin-onemind-radar';
 import {
   servicesModule,
   accessModule,
+  standardAppPageModule,
+  githubGateModules,
 } from '@internal/plugin-onemind-services';
 import { systemsPlugin } from '@internal/plugin-onemind-systems';
 import { designModule } from '@internal/plugin-onemind-theme';
@@ -27,6 +29,7 @@ import '@internal/plugin-onemind-theme/brand.css';
 import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
+import { livePlugin } from '@internal/plugin-onemind-live';
 import { componentOverviewModule } from './componentOverviewModule';
 import { prometheusPlugin, prometheusApiModule } from './prometheusPlugin';
 import {
@@ -60,10 +63,13 @@ export default createApp({
     navModule,
     homeModule,
     todayPlugin,
+    livePlugin,
     authModule,
     systemsPlugin,
     servicesModule,
     accessModule,
+    standardAppPageModule,
+    ...githubGateModules,
     assistantPlugin,
     offlinePlugin,
     missionsPlugin,

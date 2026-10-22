@@ -135,6 +135,10 @@ notifications and catalog APIs).
 `platform/backstage/app-config.cluster.yaml` (image default stays `false`). Rollback: set it to
 `false` there; Argo rolls the pod because the ConfigMap name carries a content hash.
 
+**Pillar tile counts (2026-10-22):** tiles count only Components with `onemind.io/catalog-role=app`,
+the same predicate as the catalog Apps view (shared constants in `plugin-onemind-common`
+`catalogRoles.ts`; the query filters natively on the role label). Workload Components no longer inflate SO.
+
 **Gate:** `pipeline.py check --profile portal` run.json = check_passed (only optional whole-tree-diagnostic fails).
 
 **Tests:** nav 15, home 16 new/updated (31 total passing).

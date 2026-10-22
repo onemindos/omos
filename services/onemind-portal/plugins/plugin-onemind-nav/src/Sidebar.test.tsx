@@ -80,6 +80,9 @@ describe('OneMindSidebar', () => {
     expect(screen.getByRole('button', { name: /More/ })).toBeTruthy();
     expect(
       screen.getByRole('link', { name: /Live Ops/ }).getAttribute('href'),
+    ).toBe('/live');
+    expect(
+      screen.getByRole('link', { name: /Today/ }).getAttribute('href'),
     ).toBe('/today');
     expect(screen.getByRole('link', { name: 'Notifications' })).toBeTruthy();
     expect(

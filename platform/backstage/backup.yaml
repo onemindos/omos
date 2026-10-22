@@ -3,6 +3,10 @@ kind: CronJob
 metadata:
   name: backstage-backup
   namespace: backstage
+  annotations:
+    # Read by the portal (Home, Today, Live Ops): retired on purpose, not an attention item.
+    onemind.io/backup-state: superseded
+    onemind.io/superseded-by: backup-postgres-backstage
 spec:
   # Superseded by verified all-plugin-db backup-postgres-backstage.
   suspend: true

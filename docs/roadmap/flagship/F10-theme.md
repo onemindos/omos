@@ -208,6 +208,16 @@ tooltip) for review. Tests: 25 in the theme package, including toast and popover
 in both modes. New lint warnings (BUI deprecated-token rule) are the `--bui-fg-*` keys
 the toast still reads.
 
+### Fix: pink Favorites panel in light mode
+
+Source: `.onemind-favorites` in `brand.css` painted the home Favorites panel with
+`--onemind-brand-subtle` (`#fdeaeb` in light), a pink surface. Fix is theme-package only:
+the panel is now a neutral card (`--onemind-surface-1`) with a 3px brand-red top rule in
+light; dark keeps its approved brand-tinted panel unchanged (explicit
+`body[data-theme-mode='dark']` rule). No token value changed, so the dark snapshot is
+untouched. Red remains only on accents, borders and active states (selected rows and menu
+items still use `brand-subtle`, deliberately). Tests: 4 new in `tokens.test.ts`.
+
 ### Deferred or open
 
 - No "before" shots (old navy/teal was not re-run). Nav and home still carry some

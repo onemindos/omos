@@ -81,7 +81,9 @@ in `alertmanagerIngress.test.ts`).
 | `monitoring` | `onemind-alert-webhook` | `token` | AlertmanagerConfig `httpConfig.authorization` |
 
 Both hold the same random value (64 hex characters recommended; the route also requires at
-least 24). Create both with `kubeseal` as in `CLAUDE.md`; the exact commands are in
+least 24). `scripts/ops/seal-alert-webhook.sh` generates it in memory and seals it for both
+namespaces with `kubeseal` (convention in `CLAUDE.md`); it is a dry run unless given `--apply`
+and refuses to overwrite. The ordered steps, verification and rollback are in
 `platform/monitoring/pending/README.md`.
 
 ### Alertmanager side (staged, not deployed)
