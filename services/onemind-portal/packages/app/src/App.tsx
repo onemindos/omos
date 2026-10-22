@@ -20,6 +20,8 @@ import { oneMindRadar } from '@internal/plugin-onemind-radar';
 import {
   servicesModule,
   accessModule,
+  standardAppPageModule,
+  githubGateModules,
 } from '@internal/plugin-onemind-services';
 import { systemsPlugin } from '@internal/plugin-onemind-systems';
 import { designModule } from '@internal/plugin-onemind-theme';
@@ -66,6 +68,8 @@ export default createApp({
     systemsPlugin,
     servicesModule,
     accessModule,
+    standardAppPageModule,
+    ...githubGateModules,
     assistantPlugin,
     offlinePlugin,
     missionsPlugin,
