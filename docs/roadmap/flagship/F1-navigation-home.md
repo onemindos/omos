@@ -131,6 +131,10 @@ notifications and catalog APIs).
 - Not verified against the live portal: ids of some plugin pages (matched by id
   or title). Local run used mocked APIs (Brave via Playwright), not real data.
 
+**Enabled in the cluster (2026-10-22):** `onemind.features.pillars: true` is set in the mounted
+`platform/backstage/app-config.cluster.yaml` (image default stays `false`). Rollback: set it to
+`false` there; Argo rolls the pod because the ConfigMap name carries a content hash.
+
 **Gate:** `pipeline.py check --profile portal` run.json = check_passed (only optional whole-tree-diagnostic fails).
 
 **Tests:** nav 15, home 16 new/updated (31 total passing).
