@@ -6417,6 +6417,7 @@ __metadata:
     "@backstage/core-plugin-api": "npm:1.12.10"
     "@backstage/frontend-plugin-api": "npm:0.18.1"
     "@backstage/plugin-catalog-react": "npm:^3.2.3"
+    "@backstage/test-utils": "npm:1.7.22"
     "@backstage/ui": "npm:0.18.0"
     "@internal/plugin-onemind-common": "workspace:^"
     "@material-ui/core": "npm:^4.12.2"

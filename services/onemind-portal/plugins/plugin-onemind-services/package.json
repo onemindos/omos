@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.36.6",
+    "@backstage/test-utils": "1.7.22",
     "@testing-library/react": "^14.0.0",
     "@types/react": "18.3.28",
     "jest": "~30.2.0",

@@ -110,4 +110,46 @@ status hook), and their tests.
 
 ## Status
 
-(Implementing agent: write progress here.)
+Built by an implementing agent, completed and reviewed by the coordinator (2026-10-22). Source only: the catalog annotations,
+runbooks and Grafana dashboard go live when Argo applies them (annotations and the dashboard need no image); the page layout,
+tabs and GitHub gate need an image release.
+
+**Done**
+- **Coverage contract.** `scripts/curate-coverage.cjs` generates, from F2's reviewed workload map and never by hand: Argo app, Kubernetes
+  selector and namespaces, Grafana dashboard path and alert selector, Loki query, runbook, OpenCost namespaces and source. It only
+  fills what is missing and never replaces a reviewed value. `audit-catalog.cjs` now fails when a Kubernetes app lacks a required
+  capability unless `catalog/coverage-exceptions.yaml` lists it with a reason (29 reviewed exceptions, each stating why; a stale
+  exception also fails). Negative tests cover both directions.
+- **Per-app runbooks.** 64 generated runbook pages under `runbooks/docs/apps/` (TechDocs, baked into the image).
+- **One Grafana dashboard for every app.** `platform/monitoring/grafana-dashboard-onemind-workload.yaml` (uid `onemind-workload`,
+  variables `namespace` and `workload`, eight panels), provisioned like the existing dashboards (sidecar label plus folder
+  annotation). Datasource `prometheus` verified against the live datasource ConfigMap.
+- **Standard page.** One header for every Component, System and Domain (Backstage UI `Header`: name, kind, pillar and hosting badges,
+  status dot, owner, lifecycle, Open app, star, more menu), a Live status card, a Key links card, and Logs, Cost and Runbook tabs that
+  appear only when the app has the data. System and Domain pages get an App status summary of member apps. OpenChoreo-managed
+  entities keep their own header. The existing Kubernetes, Argo CD, Grafana, Prometheus, TechDocs and GitHub plugins remain the Live,
+  Metrics, Docs and Code views.
+- **One status model.** `useAppStatus` / `StatusDot` in `plugin-onemind-common`: ok only when something is connected and healthy; grey
+  unknown for missing or stale data, never green. The source sits behind one adapter (`appStatusApiRef`) that reads
+  `/api/onemind/status` (still served by F4's collector, field names verified) and the scoped Prometheus routes, so it can move to the
+  Live Ops aggregator in one line.
+- **No automatic GitHub sign-in.** Native `PluginWrapperBlueprint` modules wrap the `github-pull-requests` and `github-actions` plugins:
+  their cards and tabs render only after one "Connect GitHub" click (shared across the page, remembered in the browser, works with
+  storage blocked), so the OAuth dialog no longer opens on every app page.
+- One info tooltip per card replaces the repeated "not proof of health" paragraphs.
+
+**Plugin-first (rule 11)** Evaluated against Backstage 1.55.3 and kept as the per-entity views (installed): Kubernetes, Argo CD, Grafana,
+Roadie Prometheus, TechDocs, GitHub Actions and Pull Requests. Not added in this PR: Red Hat Application Topology, TeraSky Kubernetes
+resources, Kwirth/Kubelog and OpenCost (OpenCost belongs to F9). Custom code is limited to the generated annotations, the header
+and cards, the status hook and the GitHub gate. Dependencies added: `@backstage/catalog-model`, `@backstage/core-components`,
+`@backstage/ui` (all pinned to the versions already in the lockfile) and test-only `@backstage/test-utils`.
+
+**Tests** common 37, services 30 (cards, header, GitHub gate, links), app 56 incl. the whole-app render, catalog node tests 60 on the host
+and 55 pass + 5 skipped in a simulated image build context (repo-level tests use the `repoOnly` skip guard).
+
+**Not verified** The page has been rendered only in Jest (real extensions and cards inside Backstage's test app), not yet in a browser
+against live data; that check is part of the release acceptance. Coverage numbers per capability should be re-read from the audit after
+release. The Cost tab links to OpenCost until F9 adds an allocation card.
+
+**Review notes** The agent's branch had no registration in `App.tsx` and two type errors (`type: 'summary'` is not a valid card type in this
+Backstage version; now `content`); both fixed. Header, cards and gate gained render tests.
