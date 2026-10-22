@@ -8,6 +8,9 @@ const YAML = require('yaml');
 const { applyStructure, applyStructureToText, loadSources, load, refOf, UNASSIGNED } = require('./curate-structure.cjs');
 
 const root = path.join(__dirname, '..');
+// Repo-level platform/ is absent in the image build context (only services/onemind-portal is copied).
+const hasRepo = fs.existsSync(path.join(__dirname, '../../../platform/backstage/catalog'));
+const repoOnly = hasRepo ? {} : { skip: 'repo-level platform/ is not in this build context' };
 const read = f => load(path.join(root, 'catalog', f));
 const apps = read('apps.yaml');
 const cluster = read('cluster.yaml');
@@ -139,7 +142,7 @@ test('colliding titles are disambiguated instead of dropped', () => {
   assert.equal(out.cluster.length, cluster.length);
 });
 
-test('every Argo application in Git maps to exactly one app Component, and a new one fails', () => {
+test('every Argo application in Git maps to exactly one app Component, and a new one fails', repoOnly, () => {
   const map = sources.map.argoApplications;
   const inGit = argoApplicationsInGit();
   assert.equal(inGit.size, 69, 'platform/ should define the 69 live Argo applications');
@@ -202,7 +205,7 @@ test('pillars are reviewed, never guessed: enum only, inherited from the System,
   }
 });
 
-test('mounted copies equal the source copies', () => {
+test('mounted copies equal the source copies', repoOnly, () => {
   for (const f of ['apps.yaml', 'cluster.yaml', 'org.yaml']) {
     assert.equal(fs.readFileSync(path.join(root, 'catalog', f), 'utf8'), fs.readFileSync(path.join(root, '../../platform/backstage/catalog', f), 'utf8'), f);
   }
