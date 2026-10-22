@@ -4,6 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const YAML = require('yaml');
 const { curateTopology, graphUrl, names, storage, pvcRef, renderCluster } = require('./curate-topology.cjs');
+// Repo-level platform/ is absent in the image build context (only services/onemind-portal is copied).
+const hasRepo = fs.existsSync(path.join(__dirname, '../../../platform/backstage/catalog'));
+const repoOnly = hasRepo ? {} : { skip: 'repo-level platform/ is not in this build context' };
 const input = () => YAML.parseAllDocuments(fs.readFileSync(path.join(__dirname, '../catalog/cluster.yaml'), 'utf8')).map(d => d.toJSON());
 const key = e => `${e.kind.toLowerCase()}:${e.metadata.namespace || 'default'}/${e.metadata.name}`;
 
@@ -49,7 +52,7 @@ test('native graph queries bound direction/depth and preserve exact root refs', 
     assert.equal(u.searchParams.get('maxDepth'), reverse ? '1' : '2');
   }
 });
-test('quoted long URLs round-trip and catalog pairs match without duplicate edges/links', () => {
+test('quoted long URLs round-trip and catalog pairs match without duplicate edges/links', repoOnly, () => {
   const out = curateTopology(input()), text = renderCluster(out);
   assert.deepEqual(YAML.parseAllDocuments(text).map(d => d.toJSON()), out);
   assert.ok(text.split('\n').filter(line => line.length > 200).every(line => line.includes('backstage.io/kubernetes-label-selector')));
