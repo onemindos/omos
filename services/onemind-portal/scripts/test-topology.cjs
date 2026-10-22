@@ -60,3 +60,6 @@ test('quoted long URLs round-trip and catalog pairs match without duplicate edge
     assert.equal(e.metadata.links.filter(l => l.title === 'Dependency topology (documented)').length, 1);
   }
 });
+// F2 structure guards run with the topology gate so the existing pipeline step covers them.
+require('./test-catalog-structure.cjs');
+require('./test-snapshot-cluster.cjs');

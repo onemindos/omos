@@ -1,0 +1,187 @@
+# Entities removed by the F2 restructure and where they went. Only Systems were removed; Components, APIs and Resources keep their refs.
+# Backstage has no built-in entity redirect: this file is the reviewed record, checked by scripts/test-catalog-structure.cjs.
+# A ref in catalog/ref-baseline.json that is neither in the catalog nor listed here fails the test.
+redirects:
+  - from: system:default/zoho-apps
+    to: system:default/productivity-saas
+    reason: Zoho is one of several hosted productivity suites; merged into Productivity & SaaS.
+  - from: system:default/workspaces
+    to: system:default/productivity-saas
+    reason: "Mixed SaaS: GitHub moves to GitOps & delivery, Circle to Business operations, Composio to AI & agents, the rest to Productivity & SaaS."
+  - from: system:default/external
+    to: system:default/developer-platform
+    reason: Duplicate launcher links ("external-*") and OneMind OS; each now sits with the service it points at.
+  - from: system:default/cluster-agent-fabric
+    to: system:default/ai-agents
+    reason: Namespace grouping replaced by the app's System (AI & agents).
+  - from: system:default/cluster-argocd
+    to: system:default/gitops-delivery
+    reason: Namespace grouping replaced by the app's System (GitOps & delivery).
+  - from: system:default/cluster-auth
+    to: system:default/identity-access
+    reason: Namespace grouping replaced by the app's System (Identity & access).
+  - from: system:default/cluster-backstage
+    to: system:default/developer-platform
+    reason: Namespace grouping replaced by the app's System (Developer platform).
+  - from: system:default/cluster-cert-manager
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-cloudflare
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-cnpg-system
+    to: system:default/data-storage
+    reason: Namespace grouping replaced by the app's System (Data & storage).
+  - from: system:default/cluster-dapr-system
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-dp-default-onetak-development-b188bf98
+    to: system:default/geospatial
+    reason: Namespace grouping replaced by the app's System (Geospatial, drones & robotics).
+  - from: system:default/cluster-external-dns
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-external-secrets
+    to: system:default/identity-access
+    reason: Namespace grouping replaced by the app's System (Identity & access).
+  - from: system:default/cluster-github-runner
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-hermes
+    to: system:default/ai-agents
+    reason: Namespace grouping replaced by the app's System (AI & agents).
+  - from: system:default/cluster-ingress-nginx
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-keda
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-kube-system
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-kube
+    to: system:default/developer-platform
+    reason: Namespace grouping replaced by the app's System (Developer platform).
+  - from: system:default/cluster-kyverno
+    to: system:default/identity-access
+    reason: Namespace grouping replaced by the app's System (Identity & access).
+  - from: system:default/cluster-matrix
+    to: system:default/communication
+    reason: Namespace grouping replaced by the app's System (Communication).
+  - from: system:default/cluster-monitoring
+    to: system:default/observability
+    reason: Namespace grouping replaced by the app's System (Observability).
+  - from: system:default/cluster-n8n
+    to: system:default/ai-agents
+    reason: Namespace grouping replaced by the app's System (AI & agents).
+  - from: system:default/cluster-nats
+    to: system:default/messaging-nats
+    reason: Namespace grouping replaced by the app's System (Messaging (NATS)).
+  - from: system:default/cluster-omos
+    to: system:default/messaging-nats
+    reason: Namespace grouping replaced by the app's System (Messaging (NATS)).
+  - from: system:default/cluster-onemind-ai
+    to: system:default/ai-agents
+    reason: Namespace grouping replaced by the app's System (AI & agents).
+  - from: system:default/cluster-onemind-core
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-onemind-registry
+    to: system:default/gitops-delivery
+    reason: Namespace grouping replaced by the app's System (GitOps & delivery).
+  - from: system:default/cluster-onetak
+    to: system:default/tak-ecosystem
+    reason: Namespace grouping replaced by the app's System (TAK & field ops).
+  - from: system:default/cluster-openchoreo-control-plane
+    to: system:default/developer-platform
+    reason: Namespace grouping replaced by the app's System (Developer platform).
+  - from: system:default/cluster-openchoreo-data-plane
+    to: system:default/developer-platform
+    reason: Namespace grouping replaced by the app's System (Developer platform).
+  - from: system:default/cluster-openchoreo-observability-plane
+    to: system:default/observability
+    reason: Namespace grouping replaced by the app's System (Observability).
+  - from: system:default/cluster-openclaw
+    to: system:default/ai-agents
+    reason: Namespace grouping replaced by the app's System (AI & agents).
+  - from: system:default/cluster-opencost
+    to: system:default/observability
+    reason: Namespace grouping replaced by the app's System (Observability).
+  - from: system:default/cluster-ops
+    to: system:default/observability
+    reason: Namespace grouping replaced by the app's System (Observability).
+  - from: system:default/cluster-tailscale
+    to: system:default/infrastructure
+    reason: Namespace grouping replaced by the app's System (Platform core).
+  - from: system:default/cluster-takml
+    to: system:default/tak-ecosystem
+    reason: Namespace grouping replaced by the app's System (TAK & field ops).
+  - from: system:default/cluster-takserver
+    to: system:default/tak-ecosystem
+    reason: Namespace grouping replaced by the app's System (TAK & field ops).
+  - from: system:default/cluster-velero
+    to: system:default/data-storage
+    reason: Namespace grouping replaced by the app's System (Data & storage).
+  - from: system:default/cluster-clickhouse
+    to: system:default/data-storage
+    reason: Namespace grouping replaced by the app's System (Data & storage).
+  - from: system:default/cluster-onemind-search
+    to: system:default/data-storage
+    reason: Namespace grouping replaced by the app's System (Data & storage).
+  - from: system:default/cluster-spire-system
+    to: system:default/identity-access
+    reason: Namespace grouping replaced by the app's System (Identity & access).
+  - from: system:default/fabric-geo
+    to: system:default/geospatial
+    reason: Notion registry category folded into Geospatial, drones & robotics.
+  - from: system:default/fabric-data
+    to: system:default/data-storage
+    reason: Notion registry category folded into Data & storage.
+  - from: system:default/fabric-brandmarketing
+    to: system:default/social-media
+    reason: Notion registry category folded into Brand & social media.
+  - from: system:default/fabric-googleworkspace
+    to: system:default/productivity-saas
+    reason: Notion registry category folded into Productivity & SaaS.
+  - from: system:default/fabric-infrastructure
+    to: system:default/infrastructure
+    reason: Notion registry category folded into Platform core.
+  - from: system:default/fabric-tak
+    to: system:default/tak-ecosystem
+    reason: Notion registry category folded into TAK & field ops.
+  - from: system:default/fabric-nats
+    to: system:default/messaging-nats
+    reason: Notion registry category folded into Messaging (NATS).
+  - from: system:default/fabric-intel
+    to: system:default/intelligence
+    reason: Notion registry category folded into Intelligence & feeds.
+  - from: system:default/fabric-bridge
+    to: system:default/messaging-nats
+    reason: Notion registry category folded into Messaging (NATS).
+  - from: system:default/fabric-finance
+    to: system:default/personal-finance
+    reason: Notion registry category folded into Personal finance.
+  - from: system:default/fabric-comms
+    to: system:default/communication
+    reason: Notion registry category folded into Communication.
+  - from: system:default/fabric-plugins
+    to: system:default/tak-ecosystem
+    reason: Notion registry category folded into TAK & field ops.
+  - from: system:default/fabric-agents
+    to: system:default/ai-agents
+    reason: Notion registry category folded into AI & agents.
+  - from: system:default/fabric-businessops
+    to: system:default/business-operations
+    reason: Notion registry category folded into Business operations.
+  - from: system:default/fabric-devops
+    to: system:default/gitops-delivery
+    reason: Notion registry category folded into GitOps & delivery.
+  - from: system:default/fabric-observability
+    to: system:default/observability
+    reason: Notion registry category folded into Observability.
+  - from: system:default/fabric-productivity
+    to: system:default/productivity-saas
+    reason: Notion registry category folded into Productivity & SaaS.
+  - from: system:default/fabric-iotautomation
+    to: system:default/home-homestead
+    reason: Notion registry category folded into Home & homestead.

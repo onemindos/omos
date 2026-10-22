@@ -1,6 +1,10 @@
 import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import catalogGraphPlugin from '@backstage/plugin-catalog-graph/alpha';
+import {
+  catalogPillarFilterExtension,
+  catalogViewFilterExtension,
+} from './catalogViewFilters';
 
 // OpenChoreo 1.3.1 supplies its own About and Relations cards on these layouts.
 // Components are deliberately excluded: OneMind's ComponentOverview delegates
@@ -57,7 +61,11 @@ export const hostRelationsExtension = catalogGraphPlugin
 
 export const catalogCompositionModule = createFrontendModule({
   pluginId: 'catalog',
-  extensions: [hostAboutExtension],
+  extensions: [
+    hostAboutExtension,
+    catalogViewFilterExtension,
+    catalogPillarFilterExtension,
+  ],
 });
 export const graphCompositionModule = createFrontendModule({
   pluginId: 'catalog-graph',
