@@ -39,7 +39,6 @@ Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
 | `ts-omos-s24-44l4v` | StatefulSet | `tailscale` |
 | `ts-onemind-auth-4w5hk` | StatefulSet | `tailscale` |
 | `ts-onemind-preview-shtd7` | StatefulSet | `tailscale` |
-| `ts-openclaw-gateway-s7hcm` | StatefulSet | `tailscale` |
 | `ts-opencost-rqpmq` | StatefulSet | `tailscale` |
 | `ts-tak-tailnet-jtgn4` | StatefulSet | `tailscale` |
 

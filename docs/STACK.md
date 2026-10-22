@@ -1,5 +1,7 @@
 # OneMind stack inventory
 
+> **OpenClaw retired 2026-10-22** (Zeus: not needed any more). Its Application, manifests, namespace, volume and backup source were removed through reviewed Git changes (PRs #379 and the retirement series). Earlier snapshots in this file that mention it are historical.
+
 Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), what owns it, what state it holds, whether it is backed up, who can reach it, and whether Git or a laptop controls it.
 
 - **Captured:** 2026-10-09, read-only, kube context `do-nyc3-omos-cloud`, Argo CD synced to `main` at `4934f532`.
@@ -40,7 +42,7 @@ See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
 | Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
-| Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4), `nats` UIs (5) and `openclaw` (1) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`, `platform-openclaw`) that take ownership once synced; until then they are untracked |
+| Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4) and `nats` UIs (5) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`) that take ownership once synced; until then they are untracked |
 | Namespaces | 48 |
 | Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
@@ -154,7 +156,6 @@ These run live and are not owned by any Application. Manifests for some of them 
 |-----------|-----------|------------------|------|--------|----------|
 | `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (`:latest`); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
-| `openclaw` | `openclaw` gateway | `platform/openclaw/`, Application `platform-openclaw` (auto-sync, `prune: false`) | 2 | `VolSync` (50 GiB) | tailnet |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
 
@@ -182,7 +183,7 @@ Whether the values in Git still match what is deployed was not checked; `helm ge
 
 Gaps beyond the eleven releases:
 
-- **Adopted workloads (pending first sync):** the `nats` UIs, `matrix` and `openclaw` now have Applications whose manifests were reconciled against the live objects (live won every difference). `platform-nats-tools` and `platform-openclaw` are auto-sync with `prune: false`; `platform-matrix` is manual because the live Synapse `homeserver.yaml` holds plaintext database, Redis and registration secrets that cannot be committed. Remaining gaps: the Secrets (`matrix-secrets`, `openclaw-secrets`, `nats-creds`, `ghcr`) and the `matrix` and `nats` Namespaces are still created out of band; `platform/nats-tools/*.sealedsecret.yaml` and `namespace.yaml` target a `nats-tools` namespace that does not exist and are excluded; the `agenttap` Ingress points at port 8080 while its Service listens on 8088 (unchanged from live); `matrix-secrets` was applied with `kubectl apply`, so its values sit in a `last-applied-configuration` annotation and should be rotated.
+- **Adopted workloads (pending first sync):** the `nats` UIs and `matrix` now have Applications whose manifests were reconciled against the live objects (live won every difference). `platform-nats-tools` is auto-sync with `prune: false`; `platform-matrix` is manual because the live Synapse `homeserver.yaml` holds plaintext database, Redis and registration secrets that cannot be committed. Remaining gaps: the Secrets (`matrix-secrets`, `nats-creds`, `ghcr`) and the `matrix` and `nats` Namespaces are still created out of band; `platform/nats-tools/*.sealedsecret.yaml` and `namespace.yaml` target a `nats-tools` namespace that does not exist and are excluded; the `agenttap` Ingress points at port 8080 while its Service listens on 8088 (unchanged from live); `matrix-secrets` was applied with `kubectl apply`, so its values sit in a `last-applied-configuration` annotation and should be rotated.
 - **Two owners of one resource:** `nats` StatefulSet (Helm and `platform-nats`); `SealedSecret auth/ghcr` (`platform-ecosystem-resources` and `platform-backups`).
 - **Terraform vs live:** `infra/main.tf` defaults (`onemind-hub`, `s-4vcpu-8gb` x3, `1.36.0-do.2`, pool `onemind-hub-core`) do not match the live cluster (`omos-cloud`, pool `onemind-hub-core-v2` on 8 vCPU / 16 GiB, `1.36.0-do.3`). `infra/ecosystem-workers/` is a separate root for the ecosystem pool. Terraform state was not inspected; do not apply `infra/` without a clean `terraform plan`.
 
@@ -194,7 +195,7 @@ Gaps beyond the eleven releases:
 | Public, **no source restriction** (nginx) | `enroll.onemindos.dev` (tak-portal), `fedhub.onemindos.dev`, `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, direct (L4 LB) | TAK `152.42.155.95`: 8089, 8443, 8446, 9101, 9102, 64738. No source ranges |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, OpenClaw, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 | Cold standby | `cloudflared` tunnel connector, 0 replicas |
 
 ## Mutable image tags
