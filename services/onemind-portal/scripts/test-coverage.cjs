@@ -61,6 +61,14 @@ test('every annotation of the contract is generated from the workloads, none typ
   assert.equal(ann['onemind.io/recovery-runbook'], 'apps/demo/');
   assert.equal(ann['github.com/project-slug'], 'onemindos/omos');
   assert.equal(ann['onemind.io/kubernetes-namespaces'], 'demo');
+  assert.equal(ann['onemind.io/kubernetes-workloads'], 'demo/db,demo/web');
+});
+
+test('scoped Prometheus alert rules are recorded only for the apps that have them', () => {
+  const nats = app('nats'), other = app('other');
+  applyCoverage(model([nats, other], { nats: [workload('nats', 'nats', 'app=nats')], other: [workload('o', 'o', 'app=o')] }), coverage);
+  assert.equal(nats.metadata.annotations['onemind.io/prometheus-scopes'], 'nats');
+  assert.equal(other.metadata.annotations['onemind.io/prometheus-scopes'], undefined);
 });
 
 test('an app sharing a namespace is narrowed to its own workloads in the dashboard link and the log query', () => {

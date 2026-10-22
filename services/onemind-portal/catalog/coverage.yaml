@@ -16,3 +16,7 @@ loki:
 # Generated runbook pages: runbooks/docs/<base><app>.md, served by the existing onemind-runbooks TechDocs site.
 runbooks:
   base: apps/
+# Apps that have scoped Prometheus alert rules (the allow-list in plugin-onemind-services-backend alertScopes).
+prometheusScopes:
+  backstage: [backstage, postgres]
+  nats: [nats]

@@ -98,6 +98,10 @@ function applyCoverage(model, coverage) {
 
     if (namespaces.length) {
       ann['onemind.io/kubernetes-namespaces'] = namespaces.join(',');
+      // "<namespace>/<workload>" of every live workload: the status dot matches readiness against these.
+      ann['onemind.io/kubernetes-workloads'] = members
+        .map(w => `${w.metadata.annotations['backstage.io/kubernetes-namespace']}/${workloadName(w)}`)
+        .filter(Boolean).sort().join(',');
       if (namespaces.length === 1 && !ann['backstage.io/kubernetes-namespace']) ann['backstage.io/kubernetes-namespace'] = namespaces[0];
       const current = ann['backstage.io/kubernetes-label-selector'];
       // A reviewed selector or kubernetes-id is never replaced; the generated namespace fallback is re-derived.
@@ -119,9 +123,12 @@ function applyCoverage(model, coverage) {
       ann['onemind.io/logs-query'] = logsQuery(coverage, namespaces, sharedWorkloads);
     } else {
       // Namespace unknown (no Deployment or StatefulSet observed): never guess one.
-      for (const key of ['onemind.io/kubernetes-namespaces', 'onemind.io/grafana-dashboard-path', 'onemind.io/logs-query']) delete ann[key];
+      for (const key of ['onemind.io/kubernetes-namespaces', 'onemind.io/kubernetes-workloads', 'onemind.io/grafana-dashboard-path', 'onemind.io/logs-query']) delete ann[key];
     }
     if (!ann['grafana/dashboard-selector']) ann['grafana/dashboard-selector'] = dashboardSelector(coverage, name);
+    // Scoped Prometheus alert rules exist for a few apps only (services backend allow-list).
+    const scopes = coverage.prometheusScopes?.[name];
+    if (scopes?.length) ann['onemind.io/prometheus-scopes'] = scopes.join(',');
     ann['onemind.io/recovery-runbook'] = `${coverage.runbooks.base}${name}/`;
     if (!ann['github.com/project-slug']) ann['github.com/project-slug'] = coverage.repo;
   }
