@@ -131,6 +131,10 @@ notifications and catalog APIs).
 - Not verified against the live portal: ids of some plugin pages (matched by id
   or title). Local run used mocked APIs (Brave via Playwright), not real data.
 
+**Pillar tile counts (2026-10-22):** tiles count only Components with `onemind.io/catalog-role=app`,
+the same predicate as the catalog Apps view (shared constants in `plugin-onemind-common`
+`catalogRoles.ts`; the query filters natively on the role label). Workload Components no longer inflate SO.
+
 **Gate:** `pipeline.py check --profile portal` run.json = check_passed (only optional whole-tree-diagnostic fails).
 
 **Tests:** nav 15, home 16 new/updated (31 total passing).
