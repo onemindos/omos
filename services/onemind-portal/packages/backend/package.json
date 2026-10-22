@@ -62,6 +62,7 @@
     "@internal/plugin-onemind-community-backend": "workspace:^",
     "@internal/plugin-onemind-context-backend": "workspace:^",
     "@internal/plugin-onemind-events-backend": "workspace:^",
+    "@internal/plugin-onemind-inventory-backend": "workspace:^",
     "@internal/plugin-onemind-machine-backend": "workspace:^",
     "@internal/plugin-onemind-missions-backend": "workspace:^",
     "@internal/plugin-onemind-offline-backend": "workspace:^",

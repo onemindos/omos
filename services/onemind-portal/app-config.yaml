@@ -285,3 +285,12 @@ onemind:
     directApiAllowlist:
       - http://onemind-openchoreo-api.tail717ba0.ts.net/api/v1
       - https://onemind-observer.tail717ba0.ts.net
+  inventory:
+    # Live Kubernetes inventory (docs/catalog/live-inventory.md). OFF by default: catalog/cluster.yaml
+    # stays the authoritative workload source until Zeus enables it. Enabling needs a backend restart.
+    live:
+      enabled: false
+      # frequencySeconds: 120        # cluster observation cadence
+      # removedRetentionHours: 24    # how long a removed workload stays flagged before it is dropped
+      # excludedNamespaces: [kube-node-lease, kube-public]
+      # excludedNamespacePatterns: ['dp-*']   # OpenChoreo data planes: published by OpenChoreo

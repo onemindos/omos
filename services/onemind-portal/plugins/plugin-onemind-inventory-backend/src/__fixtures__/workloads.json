@@ -1,0 +1,2769 @@
+{
+ "apiVersion": "v1",
+ "kind": "List",
+ "note": "Recorded 2026-10-22 from context do-nyc3-omos-cloud: kubectl get deployments,statefulsets -A -o json, reduced to identity and selector (no env, images, annotations, UIDs or status).",
+ "items": [
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "agent-console",
+    "namespace": "agent-fabric"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "agent-console"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "agent-tap",
+    "namespace": "agent-fabric"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "agent-tap"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "argocd-applicationset-controller",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-applicationset-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "argocd-dex-server",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-dex-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "argocd-notifications-controller",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-notifications-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "argocd-redis",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "argocd-redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "argocd-repo-server",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-repo-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "argocd-server",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "rollouts-argo-rollouts",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "rollouts-controller",
+      "app.kubernetes.io/instance": "rollouts",
+      "app.kubernetes.io/name": "argo-rollouts"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "authentik-redis",
+    "namespace": "auth"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "authentik-redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "platform-auth-helm-authentik-server",
+    "namespace": "auth"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "server",
+      "app.kubernetes.io/instance": "platform-auth-helm",
+      "app.kubernetes.io/name": "authentik"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "platform-auth-helm-authentik-worker",
+    "namespace": "auth"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "worker",
+      "app.kubernetes.io/instance": "platform-auth-helm",
+      "app.kubernetes.io/name": "authentik"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "backstage",
+    "namespace": "backstage"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "backstage"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cert-manager",
+    "namespace": "cert-manager"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "controller",
+      "app.kubernetes.io/instance": "cert-manager",
+      "app.kubernetes.io/name": "cert-manager"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cert-manager-cainjector",
+    "namespace": "cert-manager"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "cainjector",
+      "app.kubernetes.io/instance": "cert-manager",
+      "app.kubernetes.io/name": "cainjector"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cert-manager-webhook",
+    "namespace": "cert-manager"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "webhook",
+      "app.kubernetes.io/instance": "cert-manager",
+      "app.kubernetes.io/name": "webhook"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cloudflared",
+    "namespace": "cloudflare"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "cloudflared"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cloudflared-tunnel",
+    "namespace": "cloudflare"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "cloudflared-tunnel"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "barman-plugin-barman-cloud",
+    "namespace": "cnpg-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "barman",
+      "app.kubernetes.io/name": "plugin-barman-cloud"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cnpg-cloudnative-pg",
+    "namespace": "cnpg-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "cnpg",
+      "app.kubernetes.io/name": "cloudnative-pg"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "dapr-operator",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-operator"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "dapr-sentry",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-sentry"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "dapr-sidecar-injector",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-sidecar-injector"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "stac-browser-development-0c6b80f7",
+    "namespace": "dp-default-onetak-development-b188bf98"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "openchoreo.dev/component": "stac-browser",
+      "openchoreo.dev/component-uid": "d9099fca-45c3-48e3-82e9-f90003342655",
+      "openchoreo.dev/environment": "development",
+      "openchoreo.dev/environment-uid": "25431017-aaa2-4b53-abf9-f0b0af95fa72",
+      "openchoreo.dev/namespace": "default",
+      "openchoreo.dev/project": "onetak",
+      "openchoreo.dev/project-uid": "aff94086-3046-4228-b700-521e1d55085a"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "external-dns",
+    "namespace": "external-dns"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "platform-external-dns",
+      "app.kubernetes.io/name": "external-dns"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "external-secrets",
+    "namespace": "external-secrets"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "external-secrets",
+      "app.kubernetes.io/name": "external-secrets"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "external-secrets-cert-controller",
+    "namespace": "external-secrets"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "external-secrets",
+      "app.kubernetes.io/name": "external-secrets-cert-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "external-secrets-webhook",
+    "namespace": "external-secrets"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "external-secrets",
+      "app.kubernetes.io/name": "external-secrets-webhook"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "github-runner",
+    "namespace": "github-runner"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "github-runner"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "github-runner-hermes",
+    "namespace": "github-runner"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "github-runner-hermes"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "hermes-legacy",
+    "namespace": "hermes"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "hermes",
+      "onemind.io/agent": "legacy"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "ingress-nginx-controller",
+    "namespace": "ingress-nginx"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "controller",
+      "app.kubernetes.io/instance": "ingress-nginx",
+      "app.kubernetes.io/name": "ingress-nginx"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "keda-admission-webhooks",
+    "namespace": "keda"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "keda-admission-webhooks"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "keda-operator",
+    "namespace": "keda"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "keda-operator"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "keda-operator-metrics-apiserver",
+    "namespace": "keda"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "keda-operator-metrics-apiserver"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "coredns",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "k8s-app": "kube-dns"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "hubble-relay",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "k8s-app": "hubble-relay"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "hubble-ui",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "k8s-app": "hubble-ui"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "konnectivity-agent",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "k8s-app": "konnectivity-agent"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "metrics-server",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "k8s-app": "metrics-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "platform-clickhouse-operator",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "platform-clickhouse-operator",
+      "app.kubernetes.io/name": "altinity-clickhouse-operator"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "sealed-secrets-controller",
+    "namespace": "kube-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "name": "sealed-secrets-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "headlamp",
+    "namespace": "kube"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "headlamp"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "kubernetes-dashboard",
+    "namespace": "kube"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "kubernetes-dashboard"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "kyverno-admission-controller",
+    "namespace": "kyverno"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "admission-controller",
+      "app.kubernetes.io/instance": "kyverno",
+      "app.kubernetes.io/part-of": "kyverno"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "kyverno-background-controller",
+    "namespace": "kyverno"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "background-controller",
+      "app.kubernetes.io/instance": "kyverno",
+      "app.kubernetes.io/part-of": "kyverno"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "kyverno-cleanup-controller",
+    "namespace": "kyverno"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "cleanup-controller",
+      "app.kubernetes.io/instance": "kyverno",
+      "app.kubernetes.io/part-of": "kyverno"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "kyverno-reports-controller",
+    "namespace": "kyverno"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "reports-controller",
+      "app.kubernetes.io/instance": "kyverno",
+      "app.kubernetes.io/part-of": "kyverno"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "element-web",
+    "namespace": "matrix"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "element-web"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "synapse",
+    "namespace": "matrix"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "synapse"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "loki-gateway",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "gateway",
+      "app.kubernetes.io/instance": "loki",
+      "app.kubernetes.io/name": "loki"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "monitoring-grafana",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "monitoring",
+      "app.kubernetes.io/name": "grafana"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "monitoring-kube-prometheus-operator",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "kube-prometheus-stack-operator",
+      "release": "monitoring"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "monitoring-kube-state-metrics",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "monitoring",
+      "app.kubernetes.io/name": "kube-state-metrics"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "n8n",
+    "namespace": "n8n"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "n8n"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "heynats",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "heynats"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nack",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nack"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nats-dashboard",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "nats-dashboard"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nats-metrics-scrape",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nats-metrics-scrape"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nats-surveyor",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "metrics",
+      "app.kubernetes.io/name": "nats-surveyor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nats-ui",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "nats-ui"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "feed-intel",
+    "namespace": "omos"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "feed-intel"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "feed-satellites",
+    "namespace": "omos"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "feed-satellites"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "omos-tak-projector",
+    "namespace": "omos"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "omos-tak-projector"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "redpanda-connect",
+    "namespace": "omos"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "redpanda-connect"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "sink-clickhouse",
+    "namespace": "omos"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/name": "sink-clickhouse"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "litellm",
+    "namespace": "onemind-ai"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "litellm",
+      "app.kubernetes.io/name": "litellm"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onemind-cpu-model",
+    "namespace": "onemind-ai"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "ollama",
+      "app.kubernetes.io/name": "ollama"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onemind-core",
+    "namespace": "onemind-core"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "onemind-core"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onemind-ingestion",
+    "namespace": "onemind-core"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "onemind-ingestion"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "openfga",
+    "namespace": "onemind-core"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "openfga",
+      "app.kubernetes.io/name": "openfga"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "harbor-core",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "core",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "harbor-jobservice",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "jobservice",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "harbor-nginx",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "nginx",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "harbor-portal",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "portal",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "harbor-registry",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "registry",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "maputnik",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "maputnik"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "martin",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "martin"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nodeodm",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nodeodm"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nominatim",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nominatim"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onetak-geo-db",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "onetak-geo-db"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onetak-media",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "onetak-media"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onetak-minio",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "onetak-minio"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "onetak-postgis",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "onetak-postgis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "overpass",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "overpass"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "pg-featureserv",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "pg-featureserv"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "stac-api",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "stac-api"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tak-portal",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tak-portal"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tile38",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tile38"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tileserver-gl",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tileserver-gl"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "valhalla",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "valhalla"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "webodm",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "webodm"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "webodm-broker",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "webodm-broker"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "webodm-db",
+    "namespace": "onetak"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "webodm-db"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cluster-gateway",
+    "namespace": "openchoreo-control-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "cluster-gateway",
+      "app.kubernetes.io/component": "cluster-gateway",
+      "app.kubernetes.io/instance": "oc-control",
+      "app.kubernetes.io/name": "openchoreo-control-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "controller-manager",
+    "namespace": "openchoreo-control-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "controller-manager",
+      "app.kubernetes.io/instance": "oc-control",
+      "app.kubernetes.io/name": "openchoreo-control-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "openchoreo-api",
+    "namespace": "openchoreo-control-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "api-server",
+      "app.kubernetes.io/instance": "oc-control",
+      "app.kubernetes.io/name": "openchoreo-control-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "portal-assistant",
+    "namespace": "openchoreo-control-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "portal-assistant",
+      "app.kubernetes.io/instance": "oc-control",
+      "app.kubernetes.io/name": "openchoreo-control-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cluster-agent-dataplane",
+    "namespace": "openchoreo-data-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "cluster-agent",
+      "app.kubernetes.io/component": "cluster-agent",
+      "app.kubernetes.io/instance": "openchoreo-data-plane",
+      "app.kubernetes.io/name": "openchoreo-data-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "cluster-agent-observabilityplane",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "cluster-agent",
+      "app.kubernetes.io/component": "cluster-agent",
+      "app.kubernetes.io/instance": "openchoreo-observability-plane",
+      "app.kubernetes.io/name": "openchoreo-observability-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "controller-manager",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "controller-manager",
+      "app.kubernetes.io/instance": "openchoreo-observability-plane",
+      "app.kubernetes.io/name": "openchoreo-observability-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "events-collector",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "openchoreo-events",
+      "app.kubernetes.io/name": "events-collector"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "finops-opencost-adapter",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "finops-opencost-adapter"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "logs-adapter-opensearch",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "logs-adapter-opensearch"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "metrics-adapter-prometheus",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "metrics-adapter-prometheus"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "observer",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "observer",
+      "app.kubernetes.io/instance": "openchoreo-observability-plane",
+      "app.kubernetes.io/name": "openchoreo-observability-plane"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tracing-adapter-opensearch",
+    "namespace": "openchoreo-observability-plane"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tracing-adapter-opensearch"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "openclaw",
+    "namespace": "openclaw"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "openclaw",
+      "onemind.os/component": "openclaw-gateway",
+      "onemind.os/managed-by": "kustomize"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "opencost",
+    "namespace": "opencost"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "opencost",
+      "app.kubernetes.io/name": "opencost"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "platform-volsync",
+    "namespace": "ops"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "platform-volsync",
+      "app.kubernetes.io/name": "volsync",
+      "control-plane": "platform-volsync-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "operator",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "operator"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takml-db",
+    "namespace": "takml"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takml-db"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takml-server",
+    "namespace": "takml"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takml-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takml-vision-worker",
+    "namespace": "takml"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takml-vision-worker"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "fedhub",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "fedhub"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "mumble-bridge",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "mumble-bridge"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "murmur",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "murmur"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tak-lb-proxy",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tak-lb-proxy"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "tak-nats-leaf",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tak-nats-leaf"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-api",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-api"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-config",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-config"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-messaging",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-messaging"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-nats-box",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "nats-box",
+      "app.kubernetes.io/instance": "takserver",
+      "app.kubernetes.io/name": "nats"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "takserver-plugins",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-plugins"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "velero",
+    "namespace": "velero"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "velero",
+      "app.kubernetes.io/name": "velero"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "argocd-application-controller",
+    "namespace": "argocd"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "argocd",
+      "app.kubernetes.io/name": "argocd-application-controller"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "authentik-postgres",
+    "namespace": "auth"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "authentik-postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "backstage-postgres",
+    "namespace": "backstage"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "backstage-postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "chi-onemind-onemind-0-0",
+    "namespace": "clickhouse"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "clickhouse.altinity.com/app": "chop",
+      "clickhouse.altinity.com/chi": "onemind",
+      "clickhouse.altinity.com/cluster": "onemind",
+      "clickhouse.altinity.com/namespace": "clickhouse",
+      "clickhouse.altinity.com/replica": "0",
+      "clickhouse.altinity.com/shard": "0"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "dapr-placement-server",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-placement-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "dapr-scheduler-server",
+    "namespace": "dapr-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dapr-scheduler-server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "postgres",
+    "namespace": "matrix"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "redis",
+    "namespace": "matrix"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "alertmanager-monitoring-kube-prometheus-alertmanager",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "alertmanager": "monitoring-kube-prometheus-alertmanager",
+      "app.kubernetes.io/instance": "monitoring-kube-prometheus-alertmanager",
+      "app.kubernetes.io/managed-by": "prometheus-operator",
+      "app.kubernetes.io/name": "alertmanager"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "loki",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "single-binary",
+      "app.kubernetes.io/instance": "loki",
+      "app.kubernetes.io/name": "loki"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "prometheus-monitoring-kube-prometheus-prometheus",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "monitoring-kube-prometheus-prometheus",
+      "app.kubernetes.io/managed-by": "prometheus-operator",
+      "app.kubernetes.io/name": "prometheus",
+      "operator.prometheus.io/name": "monitoring-kube-prometheus-prometheus",
+      "operator.prometheus.io/shard": "0",
+      "prometheus": "monitoring-kube-prometheus-prometheus"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "tempo",
+    "namespace": "monitoring"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "tempo",
+      "app.kubernetes.io/name": "tempo"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "postgres",
+    "namespace": "n8n"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "n8n-postgres"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "nats",
+    "namespace": "nats"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "nats",
+      "app.kubernetes.io/instance": "nats",
+      "app.kubernetes.io/name": "nats"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "harbor-database",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "database",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "harbor-redis",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "redis",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "harbor-trivy",
+    "namespace": "onemind-registry"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "harbor",
+      "component": "trivy",
+      "release": "harbor"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "onemind-search-master",
+    "namespace": "onemind-search"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/instance": "opensearch",
+      "app.kubernetes.io/name": "opensearch"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "spire-server",
+    "namespace": "spire-system"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "server",
+      "app.kubernetes.io/instance": "spire",
+      "app.kubernetes.io/name": "server"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "egress",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "tailscale.com/managed": "true",
+      "tailscale.com/parent-resource": "egress",
+      "tailscale.com/parent-resource-type": "proxygroup"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-agent-console-8khxt",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "4ac54691-ac79-4ba1-97f1-03fc916b9822"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-agent-tap-v7ktr",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "3da53c49-c503-4904-9aad-4aed345f9387"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-argocd-slkzh",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "9de9b0f1-b1f7-457b-a409-93f3a7b7d30c"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-cilium-gateway-gateway-default-bl4tw",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "fe90e2db-68da-48ec-93a8-7e261afa25e6"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-cilium-gateway-gateway-default-hl5fh",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "fff3da69-c619-43e2-95eb-b6867b73e809"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-grafana-ksprn",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "3af5035b-576a-43a7-a2fd-99d6b7f8ed62"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-headlamp-4qwkc",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "d403c67b-b347-41db-bd05-92c26dfb4db5"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-hermes-dashboard-6thbx",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "7cb75f21-e0cc-4c50-ae63-cdb9dbf16c04"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-heynats-p5dmf",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "45324aa8-6e12-4fb9-a93e-bfff8834369b"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-hubble-tw85d",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "75bd5f05-7ab1-4c02-9720-08a46d10a76a"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-kubernetes-dashboard-9r9fp",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "c5dd0973-444a-4f0c-a535-3d6d8aa6c997"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-n8n-pmtds",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "88ed510f-c96d-4e15-8a10-7e3b26147093"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-nats-dashboard-242wv",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "3ae70c7a-97dc-43bc-b65f-7b639971c2a0"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-nats-monitor-zh589",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "52ac4314-7ad9-48cb-8280-4f097f97fea6"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-nats-ui-d6rrg",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "de8fe1dc-c7fb-4c42-9a5d-aacdcf8b61b0"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-nats-ws-4q6bc",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "30fb608e-ed2f-4579-8388-adf3660b2059"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-observer-pftsp",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "567a3f7d-253e-4739-a079-48b1c85a337a"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-omos-ha-edge-rlv6k",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "08e1542d-c5c3-43c5-bb65-f23c742fd1e5"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-omos-mbp-hgq9w",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "f7a6fea3-8716-4b68-8493-bbb6ed20d30f"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-omos-nats-fs6r4",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "535e811f-8aa7-46ee-ad89-b6df256ee8e3"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-omos-s24-44l4v",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "51e249ff-00db-47ad-96cc-1c5be53fd6a7"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-onemind-auth-4w5hk",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "8cdf28b9-9517-47e1-8727-6e33ac4c9b8f"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-onemind-preview-shtd7",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "bf582a24-1bac-4ae0-a170-b79d7dd626f3"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-openclaw-gateway-s7hcm",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "dfa22f2a-91cc-4d4a-ab89-b9327819ae9c"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-opencost-rqpmq",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "8346db93-b3d8-48ea-a8e4-16606a031f0c"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "ts-tak-tailnet-jtgn4",
+    "namespace": "tailscale"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "a7117eec-b79f-4a86-8a54-0e631f2479dd"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "fedhub-mongodb",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "fedhub-mongodb"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "tak-ldap",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "tak-ldap"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "takserver-ignite",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "takserver-ignite"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "takserver-nats",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "nats",
+      "app.kubernetes.io/instance": "takserver",
+      "app.kubernetes.io/name": "nats"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "StatefulSet",
+   "metadata": {
+    "name": "takserver-postgresql",
+    "namespace": "takserver"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "primary",
+      "app.kubernetes.io/instance": "takserver",
+      "app.kubernetes.io/name": "postgresql"
+     }
+    }
+   }
+  }
+ ]
+}
