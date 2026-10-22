@@ -1,3 +1,5 @@
+# yamllint disable rule:line-length
+# PromQL expressions inside the dashboard JSON are single-line strings and cannot be wrapped.
 # One generic workload dashboard for every OneMind app (flagship F5).
 # Provisioned by the existing Grafana sidecar (label grafana_dashboard, folder annotation) exactly like
 # grafana-dashboards-onemind-services.yaml. App pages link here with ?var-namespace=...&var-workload=...,

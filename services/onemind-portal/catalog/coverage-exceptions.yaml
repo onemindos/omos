@@ -5,37 +5,59 @@
 exceptions:
   - app: component:default/nats-ui
     capability: argocd
-    reason: "Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map
+      attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own.
   - app: component:default/nats-dashboard
     capability: argocd
-    reason: "Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map
+      attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own.
   - app: component:default/heynats
     capability: argocd
-    reason: "Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/nats-tools by the Argo application platform-nats-tools, which the reviewed workload map
+      attributes to the nats app (one Argo application maps to one app). It has no Argo application of its own.
   - app: component:default/nats-surveyor
     capability: argocd
-    reason: "Deployed from platform/monitoring by the Argo application platform-monitoring, which the reviewed workload map attributes to the grafana app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/monitoring by the Argo application platform-monitoring, which the reviewed workload map
+      attributes to the grafana app. It has no Argo application of its own.
   - app: component:default/tileserver-gl
     capability: argocd
-    reason: "Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map attributes to the onetak app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
+      attributes to the onetak app. It has no Argo application of its own.
   - app: component:default/valhalla
     capability: argocd
-    reason: "Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map attributes to the onetak app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
+      attributes to the onetak app. It has no Argo application of its own.
   - app: component:default/maputnik
     capability: argocd
-    reason: "Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map attributes to the onetak app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
+      attributes to the onetak app. It has no Argo application of its own.
   - app: component:default/webodm
     capability: argocd
-    reason: "Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map attributes to the onetak app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
+      attributes to the onetak app. It has no Argo application of its own.
   - app: component:default/kubernetes-dashboard
     capability: argocd
-    reason: "Deployed from platform/kube by the Argo application platform-kube, which the reviewed workload map attributes to the headlamp app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/kube by the Argo application platform-kube, which the reviewed workload map attributes
+      to the headlamp app. It has no Argo application of its own.
   - app: component:default/element-chat
     capability: argocd
-    reason: "Deployed from platform/matrix/argo by the Argo application platform-matrix, which the reviewed workload map attributes to the matrix-synapse app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/matrix/argo by the Argo application platform-matrix, which the reviewed workload map
+      attributes to the matrix-synapse app. It has no Argo application of its own.
   - app: component:default/agent-monitor
     capability: argocd
-    reason: "Deployed from platform/hermes/agent-fabric by the Argo application platform-agent-fabric, which the reviewed workload map attributes to the agent-web-ui app. It has no Argo application of its own."
+    reason: >-
+      Deployed from platform/hermes/agent-fabric by the Argo application platform-agent-fabric, which the reviewed
+      workload map attributes to the agent-web-ui app. It has no Argo application of its own.
   - app: component:default/hubble-ui
     capability: argocd
     reason: "Cluster add-on in kube-system installed and managed by DigitalOcean Kubernetes, not by an Argo CD application in Git."
@@ -47,46 +69,68 @@ exceptions:
     reason: "Workloads are created in OpenChoreo data-plane namespaces by the OpenChoreo controllers, not by an Argo CD application in Git."
   - app: component:default/geo-data-services
     capability: kubernetes
-    reason: "Workloads span an onetak namespace and OpenChoreo-generated namespaces and share no label key, so no single selector can scope them. Each workload entity has its own Kubernetes selector."
+    reason: >-
+      Workloads span an onetak namespace and OpenChoreo-generated namespaces and share no label key, so no single
+      selector can scope them. Each workload entity has its own Kubernetes selector.
   - app: component:default/clickhouse
     capability: kubernetes
-    reason: "Workloads span the clickhouse and kube-system namespaces and share no label key, so no single selector can scope them. Each workload entity has its own Kubernetes selector."
+    reason: >-
+      Workloads span the clickhouse and kube-system namespaces and share no label key, so no single selector can
+      scope them. Each workload entity has its own Kubernetes selector.
   - app: component:default/platform-core
     capability: kubernetes
-    reason: "Workloads span the github-runner and kube-system namespaces and share no label key, so no single selector can scope them. Each workload entity has its own Kubernetes selector."
+    reason: >-
+      Workloads span the github-runner and kube-system namespaces and share no label key, so no single selector can
+      scope them. Each workload entity has its own Kubernetes selector.
   - app: component:default/platform-backup-recovery
     capability: kubernetes
-    reason: "No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory does not read yet), so no namespace or selector can be generated without guessing."
+    reason: >-
+      No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory
+      does not read yet), so no namespace or selector can be generated without guessing.
   - app: component:default/platform-backup-recovery
     capability: grafana-alerts
-    reason: "The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
+    reason: >-
+      The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or
+      StatefulSet in the inventory).
   - app: component:default/platform-backup-recovery
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
   - app: component:default/falco
     capability: kubernetes
-    reason: "No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory does not read yet), so no namespace or selector can be generated without guessing."
+    reason: >-
+      No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory
+      does not read yet), so no namespace or selector can be generated without guessing.
   - app: component:default/falco
     capability: grafana-alerts
-    reason: "The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
+    reason: >-
+      The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or
+      StatefulSet in the inventory).
   - app: component:default/falco
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
   - app: component:default/opentelemetry-collector
     capability: kubernetes
-    reason: "No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory does not read yet), so no namespace or selector can be generated without guessing."
+    reason: >-
+      No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory
+      does not read yet), so no namespace or selector can be generated without guessing.
   - app: component:default/opentelemetry-collector
     capability: grafana-alerts
-    reason: "The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
+    reason: >-
+      The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or
+      StatefulSet in the inventory).
   - app: component:default/opentelemetry-collector
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
   - app: component:default/health-keeper
     capability: kubernetes
-    reason: "No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory does not read yet), so no namespace or selector can be generated without guessing."
+    reason: >-
+      No Deployment or StatefulSet is recorded for this app (it runs DaemonSets or CronJobs, which the inventory
+      does not read yet), so no namespace or selector can be generated without guessing.
   - app: component:default/health-keeper
     capability: grafana-alerts
-    reason: "The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
+    reason: >-
+      The Grafana alert selector is scoped by namespace, and no namespace is recorded for this app (no Deployment or
+      StatefulSet in the inventory).
   - app: component:default/health-keeper
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
