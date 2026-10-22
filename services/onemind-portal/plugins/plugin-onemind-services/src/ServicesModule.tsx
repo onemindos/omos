@@ -10,6 +10,7 @@ import {
 } from '@backstage/core-plugin-api';
 import {
   AccessButton,
+  InfoTooltip,
   parseAccessPoints,
   safeUrl,
 } from '@internal/plugin-onemind-common';
@@ -81,7 +82,15 @@ function ServiceOperations() {
   }, [namespace, discovery, api]);
   return (
     <Box p={3}>
-      <Typography variant="h4">Operations · {namespace}</Typography>
+      <Box display="flex" alignItems="center">
+        <Typography variant="h4">Operations · {namespace}</Typography>
+        <InfoTooltip label="operations">
+          Namespace-level associations, not exclusive service ownership: a shared namespace may hold several services
+          and deployments. Argo CD data is fetched from Kubernetes and cached for one minute; the fetch time does not
+          prove the controller is current. Metrics describe the namespace, not one service, and show CPU averaged over
+          five minutes.
+        </InfoTooltip>
+      </Box>
       {error && (
         <Typography color="error">
           Observation unavailable; previous results may be stale.
@@ -90,10 +99,6 @@ function ServiceOperations() {
       {!data && !error && <Typography>Loading observations…</Typography>}
       {data && (
         <>
-          <Typography>
-            {data.scope}. A shared namespace may contain multiple services and
-            deployments.
-          </Typography>
           <Typography variant="h5">Argo CD deployments</Typography>
           {data.argo.state === 'unavailable' && (
             <Typography color="error">
@@ -102,16 +107,11 @@ function ServiceOperations() {
           )}
           {data.argo.observedAt && (
             <Typography variant="caption">
-              Fetched from Kubernetes{' '}
-              {new Date(data.argo.observedAt).toLocaleString()} · cached for one
-              minute · fetch time does not prove controller freshness
+              Observed {new Date(data.argo.observedAt).toLocaleTimeString()}
             </Typography>
           )}
           {data.argo.state === 'observed' && !data.argo.applications.length && (
-            <Typography>
-              No Application destination matches this namespace. This does not
-              prove the service is unmanaged.
-            </Typography>
+            <Typography>No Application targets this namespace.</Typography>
           )}
           {data.argo.applications.map(app => (
             <Box key={app.name} my={2}>
@@ -131,7 +131,7 @@ function ServiceOperations() {
                 }
               >
                 {!app.reconciledAt
-                  ? 'Controller reconciliation time unknown; freshness cannot be established'
+                  ? 'Controller reconciliation time unknown'
                   : `${
                       Date.now() - Date.parse(app.reconciledAt) > 600000
                         ? 'Stale controller observation'
@@ -149,35 +149,21 @@ function ServiceOperations() {
               )}
             </Box>
           ))}
-          <Typography variant="h5">Metrics and Grafana</Typography>
-          <Typography>
-            Metrics: {data.metricsState}. Values describe the namespace, not
-            this individual service.
-          </Typography>
+          <Typography variant="h5">Metrics</Typography>
+          <Typography>Metrics: {data.metricsState}.</Typography>
           {data.metrics && (
-            <>
-              <Typography>
-                CPU{' '}
-                {data.metrics.cpuCores === null
-                  ? 'unknown'
-                  : `${data.metrics.cpuCores.toFixed(2)} cores`}{' '}
-                · memory{' '}
-                {data.metrics.memoryBytes === null
-                  ? 'unknown'
-                  : `${(data.metrics.memoryBytes / 1048576).toFixed(0)} MiB`}
+            <Typography>
+              CPU{' '}
+              {data.metrics.cpuCores === null
+                ? 'unknown'
+                : `${data.metrics.cpuCores.toFixed(2)} cores`}{' '}
+              · memory{' '}
+              {data.metrics.memoryBytes === null
+                ? 'unknown'
+                : `${(data.metrics.memoryBytes / 1048576).toFixed(0)} MiB`}{' '}
+              <Typography variant="caption" component="span">
+                observed {new Date(data.metrics.observedAt).toLocaleTimeString()}
               </Typography>
-              <Typography variant="caption">
-                Fetched metrics{' '}
-                {new Date(data.metrics.observedAt).toLocaleString()} · CPU
-                average over five minutes · sample times: CPU{' '}
-                {data.metrics.cpuSampleAt ?? 'unknown'}, memory{' '}
-                {data.metrics.memorySampleAt ?? 'unknown'}
-              </Typography>
-            </>
-          )}
-          {data.grafana.state === 'dashboard-mapping-required' && (
-            <Typography variant="body2">
-              A service-specific Grafana dashboard has not been mapped yet.
             </Typography>
           )}
           <Box mt={2}>
@@ -210,6 +196,7 @@ export const servicesModule = createFrontendModule({
       params: {
         path: '/operations',
         title: 'Operations',
+        group: 'live',
         filter: entity =>
           isStacEntity(entity) ||
           !!entity.metadata.annotations?.['backstage.io/kubernetes-namespace'],
