@@ -472,6 +472,17 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: app-of-apps,platform-ecosystem-applications,platform-ecosystem-foundation,platform-ecosystem-resources
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: argocd
+    backstage.io/kubernetes-namespace: argocd
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name in
+      (argocd-application-controller,argocd-applicationset-controller,argocd-dex-server,argocd-notifications-controller,argocd-redis,argocd-repo-server,argocd-server)
+    grafana/alert-label-selector: namespace=argocd
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=argocd-application-controller&var-workload=argocd-applicationset-controller&var-workload=argocd-dex-server&var-workload=argocd-notifications-controller&var-workload=argocd-redis&var-workload=argocd-repo-server&var-workload=argocd-server
+    onemind.io/logs-query: '{k8s_namespace_name="argocd",
+      k8s_pod_name=~"(argocd-application-controller|argocd-applicationset-controller|argocd-dex-server|argocd-notifications-controller|argocd-redis|argocd-repo-server|argocd-server)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/argocd/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -532,6 +543,13 @@ metadata:
     backstage.io/kubernetes-namespace: kube
     backstage.io/kubernetes-label-selector: app=kubernetes-dashboard
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: kube
+    grafana/alert-label-selector: namespace=kube
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube&var-workload=kubernetes-dashboard
+    onemind.io/logs-query: '{k8s_namespace_name="kube", k8s_pod_name=~"(kubernetes-dashboard)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/kubernetes-dashboard/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -596,6 +614,13 @@ metadata:
     backstage.io/kubernetes-namespace: kube
     backstage.io/kubernetes-label-selector: app=headlamp
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: kube
+    grafana/alert-label-selector: namespace=kube
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube&var-workload=headlamp
+    onemind.io/logs-query: '{k8s_namespace_name="kube", k8s_pod_name=~"(headlamp)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/headlamp/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -785,6 +810,13 @@ metadata:
     backstage.io/kubernetes-namespace: hermes
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes,onemind.io/agent=legacy
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: hermes
+    grafana/alert-label-selector: namespace=hermes
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes
+    onemind.io/logs-query: '{k8s_namespace_name="hermes"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/hermes-legacy/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -848,6 +880,13 @@ metadata:
     backstage.io/kubernetes-namespace: agent-fabric
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-console
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: agent-fabric
+    grafana/alert-label-selector: namespace=agent-fabric
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=agent-fabric&var-workload=agent-console
+    onemind.io/logs-query: '{k8s_namespace_name="agent-fabric", k8s_pod_name=~"(agent-console)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/agent-web-ui/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -883,6 +922,13 @@ metadata:
     backstage.io/kubernetes-namespace: openclaw
     backstage.io/kubernetes-label-selector: app=openclaw,onemind.os/component=openclaw-gateway,onemind.os/managed-by=kustomize
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: openclaw
+    grafana/alert-label-selector: namespace=openclaw
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openclaw
+    onemind.io/logs-query: '{k8s_namespace_name="openclaw"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/openclaw/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -946,6 +992,12 @@ metadata:
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-dashboard
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nats
+    grafana/alert-label-selector: namespace=nats
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nats-dashboard
+    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nats-dashboard)-.*"}'
+    onemind.io/recovery-runbook: apps/nats-dashboard/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -978,6 +1030,13 @@ metadata:
     backstage.io/kubernetes-namespace: matrix
     backstage.io/kubernetes-label-selector: app=element-web
     onemind.io/pillar-review: approved
+    onemind.io/kubernetes-namespaces: matrix
+    grafana/alert-label-selector: namespace=matrix
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=matrix&var-workload=element-web
+    onemind.io/logs-query: '{k8s_namespace_name="matrix", k8s_pod_name=~"(element-web)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/element-chat/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/catalog-role: app
     onemind.io/pillar: so
@@ -1011,6 +1070,16 @@ metadata:
     argocd/app-name: platform-matrix
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: approved
+    onemind.io/kubernetes-namespaces: matrix
+    backstage.io/kubernetes-namespace: matrix
+    backstage.io/kubernetes-label-selector: app in (postgres,redis,synapse)
+    grafana/alert-label-selector: namespace=matrix
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=matrix&var-workload=postgres&var-workload=redis&var-workload=synapse
+    onemind.io/logs-query: '{k8s_namespace_name="matrix",
+      k8s_pod_name=~"(postgres|redis|synapse)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/matrix-synapse/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/catalog-role: app
     onemind.io/pillar: so
@@ -1072,6 +1141,13 @@ metadata:
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=heynats
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nats
+    grafana/alert-label-selector: namespace=nats
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=heynats
+    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(heynats)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/heynats/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1177,6 +1253,17 @@ metadata:
     argocd/app-name: platform-takserver
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: takserver
+    backstage.io/kubernetes-namespace: takserver
+    grafana/alert-label-selector: namespace=takserver
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=takserver&var-workload=mumble-bridge&var-workload=murmur&var-workload=tak-lb-proxy&var-workload=tak-ldap&var-workload=tak-nats-leaf&var-workload=takserver-api&var-workload=takserver-config&var-workload=takserver-ignite&var-workload=takserver-messaging&var-workload=takserver-nats&var-workload=takserver-nats-box&var-workload=takserver-plugins&var-workload=takserver-postgresql
+    onemind.io/logs-query: '{k8s_namespace_name="takserver",
+      k8s_pod_name=~"(mumble-bridge|murmur|tak-lb-proxy|tak-ldap|tak-nats-leaf|takserver-api|takserver-config|takserver-ignite|takserver-messaging|takserver-nats|takserver-nats-box|takserver-plugins|takserver-postgresql)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/tak-server/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1228,6 +1315,16 @@ metadata:
     argocd/app-name: platform-onetak
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onetak
+    backstage.io/kubernetes-namespace: onetak
+    backstage.io/kubernetes-label-selector: app in (onetak-media,onetak-minio,onetak-postgis,tak-portal)
+    grafana/alert-label-selector: namespace=onetak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=onetak-media&var-workload=onetak-minio&var-workload=onetak-postgis&var-workload=tak-portal
+    onemind.io/logs-query: '{k8s_namespace_name="onetak",
+      k8s_pod_name=~"(onetak-media|onetak-minio|onetak-postgis|tak-portal)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/onetak/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1259,6 +1356,16 @@ metadata:
     argocd/app-name: platform-fedhub
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: takserver
+    backstage.io/kubernetes-namespace: takserver
+    backstage.io/kubernetes-label-selector: app in (fedhub,fedhub-mongodb)
+    grafana/alert-label-selector: namespace=takserver
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=takserver&var-workload=fedhub&var-workload=fedhub-mongodb
+    onemind.io/logs-query: '{k8s_namespace_name="takserver",
+      k8s_pod_name=~"(fedhub|fedhub-mongodb)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/fedhub/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1455,6 +1562,14 @@ metadata:
     backstage.io/kubernetes-namespace: monitoring
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=monitoring,app.kubernetes.io/name=grafana
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: monitoring
+    grafana/alert-label-selector: namespace=monitoring
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=monitoring-grafana
+    onemind.io/logs-query: '{k8s_namespace_name="monitoring",
+      k8s_pod_name=~"(monitoring-grafana)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/grafana/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1514,6 +1629,13 @@ metadata:
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=nats-ui
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nats
+    grafana/alert-label-selector: namespace=nats
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nats-ui
+    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nats-ui)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/nats-ui/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1546,6 +1668,13 @@ metadata:
     backstage.io/kubernetes-namespace: agent-fabric
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=agent-tap
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: agent-fabric
+    grafana/alert-label-selector: namespace=agent-fabric
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=agent-fabric&var-workload=agent-tap
+    onemind.io/logs-query: '{k8s_namespace_name="agent-fabric", k8s_pod_name=~"(agent-tap)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/agent-monitor/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1588,6 +1717,14 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-clickhouse-operator,platform-observability
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: clickhouse,kube-system
+    grafana/alert-label-selector: namespace=clickhouse
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=clickhouse&var-namespace=kube-system&var-workload=chi-onemind-onemind-0-0&var-workload=platform-clickhouse-operator
+    onemind.io/logs-query: '{k8s_namespace_name=~"clickhouse|kube-system",
+      k8s_pod_name=~"(chi-onemind-onemind-0-0|platform-clickhouse-operator)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/clickhouse/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1698,6 +1835,16 @@ metadata:
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: kube-system
+    backstage.io/kubernetes-namespace: kube-system
+    backstage.io/kubernetes-label-selector: k8s-app in (hubble-relay,hubble-ui)
+    grafana/alert-label-selector: namespace=kube-system
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube-system&var-workload=hubble-relay&var-workload=hubble-ui
+    onemind.io/logs-query: '{k8s_namespace_name="kube-system",
+      k8s_pod_name=~"(hubble-relay|hubble-ui)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/hubble-ui/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1739,6 +1886,17 @@ metadata:
     argocd/app-name: monitoring-kube-prometheus-stack
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: monitoring
+    backstage.io/kubernetes-namespace: monitoring
+    grafana/alert-label-selector: namespace=monitoring
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=alertmanager-monitoring-kube-prometheus-alertmanager&var-workload=monitoring-kube-prometheus-operator&var-workload=monitoring-kube-state-metrics&var-workload=prometheus-monitoring-kube-prometheus-prometheus
+    onemind.io/logs-query: '{k8s_namespace_name="monitoring",
+      k8s_pod_name=~"(alertmanager-monitoring-kube-prometheus-alertmanager|monitoring-kube-prometheus-operator|monitoring-kube-state-metrics|prometheus-monitoring-kube-prometheus-prometheus)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/prometheus/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1802,6 +1960,13 @@ metadata:
     backstage.io/kubernetes-namespace: nats
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=metrics,app.kubernetes.io/name=nats-surveyor
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nats
+    grafana/alert-label-selector: namespace=nats
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nats-surveyor
+    onemind.io/logs-query: '{k8s_namespace_name="nats", k8s_pod_name=~"(nats-surveyor)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/nats-surveyor/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1866,6 +2031,13 @@ metadata:
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=tileserver-gl
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onetak
+    grafana/alert-label-selector: namespace=onetak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=tileserver-gl
+    onemind.io/logs-query: '{k8s_namespace_name="onetak", k8s_pod_name=~"(tileserver-gl)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/tileserver-gl/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1934,6 +2106,13 @@ metadata:
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=valhalla
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onetak
+    grafana/alert-label-selector: namespace=onetak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=valhalla
+    onemind.io/logs-query: '{k8s_namespace_name="onetak", k8s_pod_name=~"(valhalla)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/valhalla/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2002,6 +2181,13 @@ metadata:
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app=maputnik
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onetak
+    grafana/alert-label-selector: namespace=onetak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=maputnik
+    onemind.io/logs-query: '{k8s_namespace_name="onetak", k8s_pod_name=~"(maputnik)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/maputnik/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -2067,6 +2253,16 @@ metadata:
     onemind.io/documented-address: https://webodm.tail717ba0.ts.net
     onemind.io/documented-tags: Geo
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onetak
+    backstage.io/kubernetes-namespace: onetak
+    backstage.io/kubernetes-label-selector: app in (nodeodm,webodm,webodm-broker,webodm-db)
+    grafana/alert-label-selector: namespace=onetak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=nodeodm&var-workload=webodm&var-workload=webodm-broker&var-workload=webodm-db
+    onemind.io/logs-query: '{k8s_namespace_name="onetak",
+      k8s_pod_name=~"(nodeodm|webodm|webodm-broker|webodm-db)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/webodm/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -3820,6 +4016,9 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-backups,platform-volume-backups
     onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/platform-backup-recovery/
+    github.com/project-slug: onemindos/omos
   links:
     - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-backups
       title: Logical backups and retained snapshots
@@ -4431,6 +4630,13 @@ metadata:
     backstage.io/kubernetes-namespace: onemind-ai
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=ollama,app.kubernetes.io/name=ollama
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onemind-ai
+    grafana/alert-label-selector: namespace=onemind-ai
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-ai&var-workload=onemind-cpu-model
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-ai", k8s_pod_name=~"(onemind-cpu-model)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/ollama/
+    github.com/project-slug: onemindos/omos
   links:
     - url: https://ollama.com/
       title: Open application
@@ -6166,6 +6372,13 @@ metadata:
     backstage.io/kubernetes-namespace: monitoring
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: monitoring
+    grafana/alert-label-selector: namespace=monitoring
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=loki&var-workload=loki-gateway
+    onemind.io/logs-query: '{k8s_namespace_name="monitoring", k8s_pod_name=~"(loki|loki-gateway)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/loki/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6247,6 +6460,14 @@ metadata:
     argocd/app-name: platform-core
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: github-runner,kube-system
+    grafana/alert-label-selector: namespace=github-runner
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=github-runner&var-namespace=kube-system&var-workload=github-runner&var-workload=github-runner-hermes&var-workload=sealed-secrets-controller
+    onemind.io/logs-query: '{k8s_namespace_name=~"github-runner|kube-system",
+      k8s_pod_name=~"(github-runner|github-runner-hermes|sealed-secrets-controller)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/platform-core/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6272,6 +6493,13 @@ metadata:
     backstage.io/kubernetes-namespace: cert-manager
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=cert-manager
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: cert-manager
+    grafana/alert-label-selector: namespace=cert-manager
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cert-manager
+    onemind.io/logs-query: '{k8s_namespace_name="cert-manager"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/cert-manager/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6297,6 +6525,13 @@ metadata:
     backstage.io/kubernetes-namespace: ingress-nginx
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: ingress-nginx
+    grafana/alert-label-selector: namespace=ingress-nginx
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=ingress-nginx
+    onemind.io/logs-query: '{k8s_namespace_name="ingress-nginx"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/ingress-nginx/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6322,6 +6557,13 @@ metadata:
     backstage.io/kubernetes-namespace: external-dns
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=platform-external-dns,app.kubernetes.io/name=external-dns
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: external-dns
+    grafana/alert-label-selector: namespace=external-dns
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=external-dns
+    onemind.io/logs-query: '{k8s_namespace_name="external-dns"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/external-dns/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6345,6 +6587,16 @@ metadata:
     argocd/app-name: platform-cloudflared
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: cloudflare
+    backstage.io/kubernetes-namespace: cloudflare
+    grafana/alert-label-selector: namespace=cloudflare
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cloudflare
+    onemind.io/logs-query: '{k8s_namespace_name="cloudflare"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/cloudflared/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6368,6 +6620,16 @@ metadata:
     argocd/app-name: edge-tailscale-operator
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: tailscale
+    backstage.io/kubernetes-namespace: tailscale
+    grafana/alert-label-selector: namespace=tailscale
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=tailscale
+    onemind.io/logs-query: '{k8s_namespace_name="tailscale"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/tailscale-operator/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6391,6 +6653,16 @@ metadata:
     argocd/app-name: ecosystem-keda
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: keda
+    backstage.io/kubernetes-namespace: keda
+    backstage.io/kubernetes-label-selector: app in
+      (keda-admission-webhooks,keda-operator,keda-operator-metrics-apiserver)
+    grafana/alert-label-selector: namespace=keda
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=keda
+    onemind.io/logs-query: '{k8s_namespace_name="keda"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/keda/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6414,6 +6686,16 @@ metadata:
     argocd/app-name: ecosystem-dapr
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: dapr-system
+    backstage.io/kubernetes-namespace: dapr-system
+    backstage.io/kubernetes-label-selector: app in
+      (dapr-operator,dapr-placement-server,dapr-scheduler-server,dapr-sentry,dapr-sidecar-injector)
+    grafana/alert-label-selector: namespace=dapr-system
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=dapr-system
+    onemind.io/logs-query: '{k8s_namespace_name="dapr-system"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/dapr/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6436,6 +6718,16 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: kube-system
+    backstage.io/kubernetes-namespace: kube-system
+    backstage.io/kubernetes-label-selector: k8s-app in (konnectivity-agent,kube-dns,metrics-server)
+    grafana/alert-label-selector: namespace=kube-system
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube-system&var-workload=coredns&var-workload=konnectivity-agent&var-workload=metrics-server
+    onemind.io/logs-query: '{k8s_namespace_name="kube-system",
+      k8s_pod_name=~"(coredns|konnectivity-agent|metrics-server)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/kubernetes-system/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6460,6 +6752,16 @@ metadata:
     argocd/app-name: ecosystem-onemind-core
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onemind-core
+    backstage.io/kubernetes-namespace: onemind-core
+    backstage.io/kubernetes-label-selector: app in (onemind-core,onemind-ingestion)
+    grafana/alert-label-selector: namespace=onemind-core
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-core&var-workload=onemind-core&var-workload=onemind-ingestion
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-core",
+      k8s_pod_name=~"(onemind-core|onemind-ingestion)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/onemind-core/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6484,6 +6786,16 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-auth-helm,platform-auth-infra
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: auth
+    backstage.io/kubernetes-namespace: auth
+    grafana/alert-label-selector: namespace=auth
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=auth
+    onemind.io/logs-query: '{k8s_namespace_name="auth"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/authentik/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6509,6 +6821,13 @@ metadata:
     backstage.io/kubernetes-namespace: onemind-core
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=openfga,app.kubernetes.io/name=openfga
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onemind-core
+    grafana/alert-label-selector: namespace=onemind-core
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-core&var-workload=openfga
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-core", k8s_pod_name=~"(openfga)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/openfga/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6535,6 +6854,13 @@ metadata:
     backstage.io/kubernetes-namespace: spire-system
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/instance=spire,app.kubernetes.io/name=server
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: spire-system
+    grafana/alert-label-selector: namespace=spire-system
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=spire-system
+    onemind.io/logs-query: '{k8s_namespace_name="spire-system"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/spire/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6563,6 +6889,13 @@ metadata:
     backstage.io/kubernetes-namespace: kyverno
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=kyverno,app.kubernetes.io/part-of=kyverno
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: kyverno
+    grafana/alert-label-selector: namespace=kyverno
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kyverno
+    onemind.io/logs-query: '{k8s_namespace_name="kyverno"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/kyverno/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6586,6 +6919,9 @@ metadata:
     argocd/app-name: ecosystem-falco
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/falco/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6611,6 +6947,13 @@ metadata:
     backstage.io/kubernetes-namespace: external-secrets
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=external-secrets
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: external-secrets
+    grafana/alert-label-selector: namespace=external-secrets
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=external-secrets
+    onemind.io/logs-query: '{k8s_namespace_name="external-secrets"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/external-secrets/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6636,6 +6979,14 @@ metadata:
     backstage.io/kubernetes-namespace: argocd
     backstage.io/kubernetes-label-selector: app.kubernetes.io/component=rollouts-controller,app.kubernetes.io/instance=rollouts,app.kubernetes.io/name=argo-rollouts
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: argocd
+    grafana/alert-label-selector: namespace=argocd
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=rollouts-argo-rollouts
+    onemind.io/logs-query: '{k8s_namespace_name="argocd",
+      k8s_pod_name=~"(rollouts-argo-rollouts)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/argo-rollouts/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6661,6 +7012,13 @@ metadata:
     backstage.io/kubernetes-namespace: onemind-registry
     backstage.io/kubernetes-label-selector: app=harbor,release=harbor
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onemind-registry
+    grafana/alert-label-selector: namespace=onemind-registry
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-registry
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-registry"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/harbor/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6684,6 +7042,16 @@ metadata:
     argocd/app-name: platform-backstage
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: backstage
+    backstage.io/kubernetes-namespace: backstage
+    backstage.io/kubernetes-label-selector: app in (backstage,backstage-postgres)
+    grafana/alert-label-selector: namespace=backstage
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=backstage
+    onemind.io/logs-query: '{k8s_namespace_name="backstage"}'
+    grafana/dashboard-selector: uid == 'onemind-backstage' || uid ==
+      'onemind-backstage-postgres' || uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/backstage/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6709,6 +7077,14 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-data-plane,platform-openchoreo-defaults,platform-openchoreo-platform,platform-openchoreo-prereqs,platform-openchoreo-projects
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: openchoreo-control-plane,openchoreo-data-plane
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (openchoreo-control-plane,openchoreo-data-plane)
+    grafana/alert-label-selector: namespace=openchoreo-control-plane
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane&var-namespace=openchoreo-data-plane
+    onemind.io/logs-query: '{k8s_namespace_name=~"openchoreo-control-plane|openchoreo-data-plane"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/openchoreo/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6734,6 +7110,16 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: platform-openchoreo-events,platform-openchoreo-finops,platform-openchoreo-logs,platform-openchoreo-observability,platform-openchoreo-traces
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: openchoreo-observability-plane
+    backstage.io/kubernetes-namespace: openchoreo-observability-plane
+    grafana/alert-label-selector: namespace=openchoreo-observability-plane
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-observability-plane
+    onemind.io/logs-query: '{k8s_namespace_name="openchoreo-observability-plane"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/openchoreo-observability/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6759,6 +7145,13 @@ metadata:
     backstage.io/kubernetes-namespace: monitoring
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=tempo,app.kubernetes.io/name=tempo
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: monitoring
+    grafana/alert-label-selector: namespace=monitoring
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=monitoring&var-workload=tempo
+    onemind.io/logs-query: '{k8s_namespace_name="monitoring", k8s_pod_name=~"(tempo)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/tempo/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6782,6 +7175,9 @@ metadata:
     argocd/app-name: monitoring-otel-collector
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/opentelemetry-collector/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6807,6 +7203,13 @@ metadata:
     backstage.io/kubernetes-namespace: opencost
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opencost,app.kubernetes.io/name=opencost
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: opencost
+    grafana/alert-label-selector: namespace=opencost
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=opencost
+    onemind.io/logs-query: '{k8s_namespace_name="opencost"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/opencost/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6830,6 +7233,9 @@ metadata:
     argocd/app-name: platform-ops
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/health-keeper/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6854,6 +7260,15 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: ecosystem-barman,ecosystem-cnpg
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: cnpg-system
+    backstage.io/kubernetes-namespace: cnpg-system
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (cloudnative-pg,plugin-barman-cloud)
+    grafana/alert-label-selector: namespace=cnpg-system
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cnpg-system
+    onemind.io/logs-query: '{k8s_namespace_name="cnpg-system"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/cloudnative-pg/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6879,6 +7294,13 @@ metadata:
     backstage.io/kubernetes-namespace: onemind-search
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opensearch,app.kubernetes.io/name=opensearch
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onemind-search
+    grafana/alert-label-selector: namespace=onemind-search
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-search
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-search"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/opensearch/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6904,6 +7326,13 @@ metadata:
     backstage.io/kubernetes-namespace: velero
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=velero,app.kubernetes.io/name=velero
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: velero
+    grafana/alert-label-selector: namespace=velero
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=velero
+    onemind.io/logs-query: '{k8s_namespace_name="velero"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/velero/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6929,6 +7358,13 @@ metadata:
     backstage.io/kubernetes-namespace: ops
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=platform-volsync,app.kubernetes.io/name=volsync,control-plane=platform-volsync-controller
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: ops
+    grafana/alert-label-selector: namespace=ops
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=ops
+    onemind.io/logs-query: '{k8s_namespace_name="ops"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/volsync/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6954,6 +7390,17 @@ metadata:
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: edge-nack,platform-nats,platform-nats-tools
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nats
+    backstage.io/kubernetes-namespace: nats
+    grafana/alert-label-selector: namespace=nats
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nats&var-workload=nack&var-workload=nats&var-workload=nats-metrics-scrape
+    onemind.io/logs-query: '{k8s_namespace_name="nats",
+      k8s_pod_name=~"(nack|nats|nats-metrics-scrape)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-nats' || uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/nats/
+    github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6979,6 +7426,13 @@ metadata:
     backstage.io/kubernetes-namespace: omos
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name=redpanda-connect
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: omos
+    grafana/alert-label-selector: namespace=omos
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=omos&var-workload=redpanda-connect
+    onemind.io/logs-query: '{k8s_namespace_name="omos", k8s_pod_name=~"(redpanda-connect)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/redpanda-connect/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7002,6 +7456,17 @@ metadata:
     argocd/app-name: platform-omos
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: omos
+    backstage.io/kubernetes-namespace: omos
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name in
+      (feed-intel,feed-satellites,omos-tak-projector,sink-clickhouse)
+    grafana/alert-label-selector: namespace=omos
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=omos&var-workload=feed-intel&var-workload=feed-satellites&var-workload=omos-tak-projector&var-workload=sink-clickhouse
+    onemind.io/logs-query: '{k8s_namespace_name="omos",
+      k8s_pod_name=~"(feed-intel|feed-satellites|omos-tak-projector|sink-clickhouse)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/omos-data-pipeline/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7025,6 +7490,15 @@ metadata:
     argocd/app-name: platform-takml
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: takml
+    backstage.io/kubernetes-namespace: takml
+    backstage.io/kubernetes-label-selector: app in (takml-db,takml-server,takml-vision-worker)
+    grafana/alert-label-selector: namespace=takml
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=takml
+    onemind.io/logs-query: '{k8s_namespace_name="takml"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/takml/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7047,6 +7521,14 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onetak,dp-default-onetak-development-b188bf98
+    grafana/alert-label-selector: namespace=onetak
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=martin&var-workload=nominatim&var-workload=onetak-geo-db&var-workload=overpass&var-workload=pg-featureserv&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
+    onemind.io/logs-query: '{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98",
+      k8s_pod_name=~"(martin|nominatim|onetak-geo-db|overpass|pg-featureserv|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/geo-data-services/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7070,6 +7552,15 @@ metadata:
     argocd/app-name: platform-n8n
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: n8n
+    backstage.io/kubernetes-namespace: n8n
+    backstage.io/kubernetes-label-selector: app in (n8n,n8n-postgres)
+    grafana/alert-label-selector: namespace=n8n
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=n8n
+    onemind.io/logs-query: '{k8s_namespace_name="n8n"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/n8n/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7095,6 +7586,13 @@ metadata:
     backstage.io/kubernetes-namespace: onemind-ai
     backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=litellm,app.kubernetes.io/name=litellm
     onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: onemind-ai
+    grafana/alert-label-selector: namespace=onemind-ai
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-ai&var-workload=litellm
+    onemind.io/logs-query: '{k8s_namespace_name="onemind-ai", k8s_pod_name=~"(litellm)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/litellm/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

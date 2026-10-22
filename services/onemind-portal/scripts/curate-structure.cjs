@@ -5,6 +5,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const YAML = require('yaml');
+const { applyCoverage, renderRunbooks, NOT_LIVE } = require('./curate-coverage.cjs');
 
 const root = path.resolve(__dirname, '..');
 const OWNER = 'group:default/onemind-admins';
@@ -18,7 +19,9 @@ const load = file => YAML.parseAllDocuments(fs.readFileSync(file, 'utf8')).map(d
 
 function loadSources(base = root) {
   const read = f => YAML.parse(fs.readFileSync(path.join(base, 'catalog', f), 'utf8'));
-  return { structure: read('structure.yaml'), map: read('workload-map.yaml') };
+  const coveragePath = path.join(base, 'catalog', 'coverage.yaml');
+  const coverage = fs.existsSync(coveragePath) ? read('coverage.yaml') : null;
+  return { structure: read('structure.yaml'), map: read('workload-map.yaml'), coverage };
 }
 
 const SPECIAL = { github: 'GitHub', coredns: 'CoreDNS', applicationset: 'ApplicationSet', apiserver: 'API Server', kube: 'Kube' };
@@ -150,7 +153,7 @@ function commonSelector(workloads) {
  * @param {{apps: object[], cluster: object[]}} input parsed apps.yaml and cluster.yaml documents
  * @param {{structure: object, map: object}} sources
  */
-function applyStructure(input, sources) {
+function runStructure(input, sources) {
   const { structure, map } = sources;
   const apps = structuredClone(input.apps);
   const cluster = structuredClone(input.cluster);
@@ -277,8 +280,32 @@ function applyStructure(input, sources) {
     if (w && !e.spec.subcomponentOf) delete e.spec.subcomponentOf;
   }
 
+  // --- coverage contract (F5): Kubernetes, Grafana, logs, runbook and source annotations
+  const workloadNamespaces = new Map();
+  for (const [name, list] of subcomponents) {
+    for (const w of list) {
+      if (NOT_LIVE.has(w.metadata.annotations['onemind.io/inventory-state'])) continue;
+      const ns = w.metadata.annotations['backstage.io/kubernetes-namespace'];
+      if (!workloadNamespaces.has(ns)) workloadNamespaces.set(ns, new Set());
+      workloadNamespaces.get(ns).add(name);
+    }
+  }
+  const coverageModel = { appComponent, subcomponents, argoByApp, workloadNamespaces };
+  applyCoverage(coverageModel, sources.coverage);
+
   const head = [...domainEntities(structure), ...systemEntities(structure)];
-  return { apps: [...head, ...appsOut], cluster: clusterOut };
+  return { apps: [...head, ...appsOut], cluster: clusterOut, coverageModel };
+}
+
+function applyStructure(input, sources) {
+  const { apps, cluster } = runStructure(input, sources);
+  return { apps, cluster };
+}
+
+/** Generated per-app runbook pages (path under runbooks/docs to Markdown); empty without coverage.yaml. */
+function runbooksFor(input, sources) {
+  if (!sources.coverage) return new Map();
+  return renderRunbooks(runStructure(input, sources).coverageModel, sources.coverage);
 }
 
 const isObject = v => v && typeof v === 'object' && !Array.isArray(v);
@@ -339,12 +366,24 @@ function writeRedirectBundle(base = root) {
   fs.writeFileSync(path.join(base, 'packages/app/src/systemRedirects.json'), JSON.stringify(bundle, null, 2) + '\n');
 }
 
+// Generated runbook pages live under runbooks/docs; files for apps that no longer exist are removed.
+function writeRunbooks(files, base = root) {
+  if (!files.size) return;
+  const docs = path.join(base, 'runbooks/docs');
+  const dir = path.join(docs, path.dirname([...files.keys()][0]));
+  fs.mkdirSync(dir, { recursive: true });
+  for (const f of fs.readdirSync(dir)) if (f.endsWith('.md') && !files.has(path.posix.join(path.dirname([...files.keys()][0]), f))) fs.unlinkSync(path.join(dir, f));
+  for (const [rel, text] of files) fs.writeFileSync(path.join(docs, rel), text);
+}
+
 if (require.main === module) {
   const read = f => fs.readFileSync(path.join(root, 'catalog', f), 'utf8');
-  const result = applyStructureToText({ apps: read('apps.yaml'), cluster: read('cluster.yaml') }, loadSources());
+  const sources = loadSources();
+  const result = applyStructureToText({ apps: read('apps.yaml'), cluster: read('cluster.yaml') }, sources);
   writeCatalog(result);
   writeRedirectBundle();
+  writeRunbooks(runbooksFor({ apps: load(path.join(root, 'catalog/apps.yaml')), cluster: load(path.join(root, 'catalog/cluster.yaml')) }, sources));
   const count = (text, kind) => (text.match(new RegExp(`^kind: ${kind}$`, 'gm')) || []).length;
   console.log(`Structure applied: ${count(result.apps, 'Domain')} domains, ${count(result.apps, 'System')} systems, ${(result.cluster.match(/^ {2}subcomponentOf: /gm) || []).length} subcomponents.`);
 }
-module.exports = { applyStructure, applyStructureToText, loadSources, load, refOf, workloadIdentity, appForWorkload, workloadRole, writeCatalog, UNASSIGNED };
+module.exports = { applyStructure, runbooksFor, writeRunbooks, applyStructureToText, loadSources, load, refOf, workloadIdentity, appForWorkload, workloadRole, writeCatalog, UNASSIGNED };

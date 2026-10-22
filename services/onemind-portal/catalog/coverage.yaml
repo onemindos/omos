@@ -1,0 +1,18 @@
+# Reviewed inputs for the F5 coverage contract. Read by scripts/curate-coverage.cjs (through
+# curate-structure.cjs), which writes the per-app annotations; nothing here is typed per app.
+# Required annotations and the reviewed exceptions are enforced by scripts/audit-catalog.cjs.
+repo: onemindos/omos
+# One variable-driven board for every app; provisioned from platform/monitoring/grafana-dashboard-onemind-workload.yaml.
+genericDashboard:
+  uid: onemind-workload
+# Apps that also have a bespoke board (platform/monitoring/grafana-dashboards-onemind-services.yaml and -nats.yaml).
+bespokeDashboards:
+  backstage: [onemind-backstage, onemind-backstage-postgres]
+  nats: [onemind-nats]
+# Loki receives logs through OTLP (platform/values/otel-collector.yaml); its default index labels are k8s_*.
+loki:
+  namespaceLabel: k8s_namespace_name
+  podLabel: k8s_pod_name
+# Generated runbook pages: runbooks/docs/<base><app>.md, served by the existing onemind-runbooks TechDocs site.
+runbooks:
+  base: apps/
