@@ -150,12 +150,6 @@
     "size": "5Gi"
   },
   {
-    "namespace": "openclaw",
-    "pvc": "openclaw-home-pvc",
-    "source": "volume-708da2be53bb",
-    "size": "50Gi"
-  },
-  {
     "namespace": "takml",
     "pvc": "takml-db-data",
     "source": "volume-a9d9abb1777a",

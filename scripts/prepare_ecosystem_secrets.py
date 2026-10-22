@@ -66,7 +66,8 @@ def main():
     clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core", "openchoreo"]}
     add("onemind-ai", "litellm-auth", {"master-key": master})
     add("onemind-ai", "litellm-client-keys", clients)
-    provider = existing("openclaw", "openclaw-secrets")
+    # Provider credentials come from the existing LiteLLM provider secret (OpenClaw, their former source, was retired).
+    provider = existing("onemind-ai", "litellm-providers")
     keys = {k: provider[k] for k in ["OPENROUTER_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"] if provider.get(k)}
     if not keys.get("OPENROUTER_API_KEY"):
         raise RuntimeError("The selected model provider has no configured credential")

@@ -906,49 +906,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: openclaw
-  title: OpenClaw
-  description: Agent orchestration
-  tags:
-    - launcher-review-required
-    - ai-agents
-  links:
-    - url: https://openclaw.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
-    onemind.io/launcher-review: dns-unresolved-from-operator-mac
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    argocd/app-name: platform-openclaw
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: openclaw
-    backstage.io/kubernetes-label-selector: app=openclaw,onemind.os/component=openclaw-gateway,onemind.os/managed-by=kustomize
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: openclaw
-    grafana/alert-label-selector: namespace=openclaw
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openclaw
-    onemind.io/logs-query: '{k8s_namespace_name="openclaw"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/openclaw/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: openclaw/openclaw
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: ai-agents
-  dependsOn:
-    - component:default/k8s-openclaw-openclaw-5dcd5a46
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: nats-dashboard
   title: NATS Dashboard
   description: NATS stream monitor
@@ -6661,7 +6618,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hermes-dashboard-6thbx,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-kubernetes-dashboard-9r9fp,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-openclaw-gateway-s7hcm,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hermes-dashboard-6thbx,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-kubernetes-dashboard-9r9fp,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

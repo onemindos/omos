@@ -163,7 +163,6 @@ export const mapping: InventoryMapping = {
       'component:default/openchoreo-observability',
     'openchoreo-observability-plane/tracing-adapter-opensearch':
       'component:default/openchoreo-observability',
-    'openclaw/openclaw': 'component:default/openclaw',
     'opencost/opencost': 'component:default/opencost',
     'ops/platform-volsync': 'component:default/volsync',
     'spire-system/spire-server': 'component:default/spire',
@@ -201,8 +200,6 @@ export const mapping: InventoryMapping = {
     'tailscale/ts-omos-s24-44l4v': 'component:default/tailscale-operator',
     'tailscale/ts-onemind-auth-4w5hk': 'component:default/tailscale-operator',
     'tailscale/ts-onemind-preview-shtd7':
-      'component:default/tailscale-operator',
-    'tailscale/ts-openclaw-gateway-s7hcm':
       'component:default/tailscale-operator',
     'tailscale/ts-opencost-rqpmq': 'component:default/tailscale-operator',
     'tailscale/ts-tak-tailnet-jtgn4': 'component:default/tailscale-operator',
@@ -476,12 +473,6 @@ export const mapping: InventoryMapping = {
     'openchoreo-observability': {
       title: 'OpenChoreo observability plane',
       system: 'observability',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    openclaw: {
-      title: 'OpenClaw',
-      system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',
     },

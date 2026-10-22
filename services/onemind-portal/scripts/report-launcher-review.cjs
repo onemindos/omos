@@ -5,10 +5,11 @@ const REVIEW = 'onemind.io/launcher-review';
 const REVIEWED_AT = 'onemind.io/launcher-reviewed-at';
 const TAG = 'launcher-review-required';
 const EVIDENCE = 'docs/operations/portal-acceptance-followthrough-2026-10-20.md#launcher-review-and-repairs';
+// OpenClaw was retired on 2026-10-22, which resolves its historical finding.
 const HISTORICAL_NAMES = Object.freeze([
   'cloudtak', 'tak-server', 'onetak', 'fedhub', 'clickhouse', 'minio',
   'postgis', 'longhorn', 'prometheus', 'nats-surveyor', 'tileserver-gl',
-  'valhalla', 'maputnik', 'webodm', 'home-assistant', 'openclaw',
+  'valhalla', 'maputnik', 'webodm', 'home-assistant',
 ]);
 const CLASSIFICATIONS = Object.freeze({
   'dns-unresolved-from-operator-mac': 'dns-unresolved',

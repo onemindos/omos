@@ -28,7 +28,6 @@ resources:
 - sealed/onetak-volume-edfbac6aab24.yaml
 - sealed/onetak-volume-e0dfcd35f5a7.yaml
 - sealed/onetak-volume-cafdaa0bfb4a.yaml
-- sealed/openclaw-volume-708da2be53bb.yaml
 - sealed/takml-volume-a9d9abb1777a.yaml
 - sealed/takml-volume-45a600854340.yaml
 - sealed/takml-volume-0800db843c3a.yaml
