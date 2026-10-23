@@ -97,7 +97,7 @@ describe('live inventory enabled, against a real catalog', () => {
         const count = (
           (await (await fetch(url, { headers })).json()) as Entity[]
         ).length;
-        if (count >= 171) return;
+        if (count >= 173) return;
         await new Promise(r => setTimeout(r, 500));
       }
     };
@@ -119,7 +119,7 @@ describe('live inventory enabled, against a real catalog', () => {
       if (
         items.some(e => e.metadata.name === worker) &&
         flagged === 'removed' &&
-        reviewedDone.length >= 160
+        reviewedDone.length >= 162
       )
         break;
       await new Promise(r => setTimeout(r, 500));

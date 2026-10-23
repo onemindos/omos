@@ -78,6 +78,8 @@ workloads:
   nats/nats-metrics-scrape: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nats-ui: component:default/nats-ui
+  nextcloud/nextcloud: component:default/nextcloud
+  nextcloud/nextcloud-redis: component:default/nextcloud
   omos/feed-intel: component:default/omos-data-pipeline
   omos/feed-satellites: component:default/omos-data-pipeline
   omos/omos-mission-engine: component:default/omos-data-pipeline
@@ -208,6 +210,7 @@ argoApplications:
   platform-n8n: component:default/n8n
   platform-nats: component:default/nats
   platform-nats-tools: component:default/nats
+  platform-nextcloud: component:default/nextcloud
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak

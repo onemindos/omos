@@ -288,6 +288,16 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "nextcloud",
+      "name": "nextcloud"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "nextcloud",
+      "name": "nextcloud-redis"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "omos",
       "name": "feed-intel"
     },
@@ -1360,6 +1370,16 @@
       "kind": "Service",
       "namespace": "nats",
       "name": "omos-nats"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nextcloud",
+      "name": "nextcloud"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nextcloud",
+      "name": "nextcloud-redis"
     },
     {
       "kind": "Service",

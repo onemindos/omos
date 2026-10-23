@@ -906,6 +906,38 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
+    "name": "nextcloud",
+    "namespace": "nextcloud"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "app",
+      "app.kubernetes.io/instance": "nextcloud",
+      "app.kubernetes.io/name": "nextcloud"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nextcloud-redis",
+    "namespace": "nextcloud"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nextcloud-redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
     "name": "feed-intel",
     "namespace": "omos"
    },
