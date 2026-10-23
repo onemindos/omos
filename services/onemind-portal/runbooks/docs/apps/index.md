@@ -14,7 +14,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Backstage portal](backstage.md) | developer-platform |
 | [cert-manager](cert-manager.md) | infrastructure |
 | [ClickHouse](clickhouse.md) | data-storage |
-| [Cloudflare Tunnel (standby)](cloudflared.md) | infrastructure |
 | [CloudNativePG](cloudnative-pg.md) | data-storage |
 | [Dapr](dapr.md) | infrastructure |
 | [Element Chat](element-chat.md) | communication |

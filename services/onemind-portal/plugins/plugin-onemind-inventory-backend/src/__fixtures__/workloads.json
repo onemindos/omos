@@ -264,36 +264,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "cloudflared",
-    "namespace": "cloudflare"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "cloudflared"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "cloudflared-tunnel",
-    "namespace": "cloudflare"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/name": "cloudflared-tunnel"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "barman-plugin-barman-cloud",
     "namespace": "cnpg-system"
    },

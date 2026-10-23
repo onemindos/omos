@@ -652,72 +652,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-cloudflare-cloudflared-a824aad1
-  title: Cloudflare Tunnel (standby) — Core
-  description: Deployment in cloudflare
-  annotations:
-    backstage.io/kubernetes-label-selector: app=cloudflared
-    backstage.io/kubernetes-namespace: cloudflare
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: cloudflared
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - cloudflare
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/cloudflared
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-cloudflare-cloudflared-tunnel-4afb3e6e
-  title: Cloudflare Tunnel (standby) — Tunnel
-  description: Deployment in cloudflare
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=cloudflared-tunnel
-    backstage.io/kubernetes-namespace: cloudflare
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: cloudflared-tunnel
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - cloudflare
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/cloudflared
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-cnpg-system-barman-plugin-barman-cloud-cf7a9790
   title: CloudNativePG — Barman Plugin Barman Cloud
   description: Deployment in cnpg-system
@@ -6946,8 +6880,6 @@ spec:
   type: documented-capability
   owner: group:default/onemind-admins
   system: infrastructure
-  dependsOn:
-    - component:default/k8s-cloudflare-cloudflared-a824aad1
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

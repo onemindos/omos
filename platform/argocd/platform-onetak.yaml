@@ -9,7 +9,6 @@
 #   media.yaml         — Media server (RTSP/HLS/SRT) for video wall
 #   tiles.yaml         — PMTiles proxy (tiles.onemindos.dev)
 #   ingress.yaml       — Internal ingress
-#   cloudflare-route.yaml — Public tunnel route
 #
 # Image: ghcr.io/onemindos/cloudtak-api:latest
 #

@@ -83,16 +83,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "cloudflare",
-      "name": "cloudflared"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "cloudflare",
-      "name": "cloudflared-tunnel"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "cnpg-system",
       "name": "barman-plugin-barman-cloud"
     },

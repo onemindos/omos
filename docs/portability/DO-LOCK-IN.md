@@ -91,8 +91,8 @@ repointed, and TAK clients (EUDs) that hardcode `152.42.155.95` need a DNS name 
 new connection profiles. Use a DNS name from now on.
 
 Replacements:
-- Web hosts (auth, ws, onetak, geo): Cloudflare Tunnel (staged and inert in
-  `platform/networking/cloudflared/`, see NETWORKING.md). No inbound ports at home. Effort S.
+- Web hosts (auth, ws, onetak, geo): Cloudflare Tunnel (the staged cloudflared
+  manifests were removed on 2026-10-23; recover them from Git history, see NETWORKING.md). No inbound ports at home. Effort S.
 - TAK raw TCP/UDP (8089 mTLS, 8443, 8446, 9101/9102, 64738 Mumble): a Cloudflare
   Tunnel does NOT carry these. Options: Tailscale only (`tak-tailnet`, staged);
   or a tiny VPS with a static IP forwarding to home over Tailscale (a cheap "front

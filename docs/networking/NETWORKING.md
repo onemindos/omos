@@ -1,6 +1,6 @@
 # OneMind networking model and cut-over runbook
 
-Status: target design plus the first (additive) PR. Written 2026-10-09 against cluster
+Status: **the cloudflared tunnel connector and its Argo app were removed on 2026-10-23** (Git history is the archive); sections below that describe the tunnel are design history. Target design plus the first (additive) PR. Written 2026-10-09 against cluster
 `omos-cloud` (DOKS nyc3), tailnet `tail717ba0.ts.net`, Tailscale operator v1.98.4.
 
 ## 1. Target model

@@ -35,8 +35,6 @@ export const mapping: InventoryMapping = {
     'cert-manager/cert-manager-cainjector': 'component:default/cert-manager',
     'cert-manager/cert-manager-webhook': 'component:default/cert-manager',
     'clickhouse/chi-onemind-onemind-0-0': 'component:default/clickhouse',
-    'cloudflare/cloudflared': 'component:default/cloudflared',
-    'cloudflare/cloudflared-tunnel': 'component:default/cloudflared',
     'cnpg-system/barman-plugin-barman-cloud':
       'component:default/cloudnative-pg',
     'cnpg-system/cnpg-cloudnative-pg': 'component:default/cloudnative-pg',
@@ -260,12 +258,6 @@ export const mapping: InventoryMapping = {
     clickhouse: {
       title: 'ClickHouse',
       system: 'data-storage',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    cloudflared: {
-      title: 'Cloudflare Tunnel (standby)',
-      system: 'infrastructure',
       pillar: 'so',
       review: 'proposed',
     },

@@ -48,7 +48,6 @@ Some secrets cannot be automated and must be created once out-of-band:
 
 | Secret | Namespace | Why not in ESO |
 |--------|-----------|----------------|
-| `tunnel-creds-json` | cloudflare | Derived by decoding TUNNEL_TOKEN — not stored as-is in 1Password |
 | `nats/values.secret.yaml` | nats | Helm values file injected at install time, not a K8s secret |
 | `ghcr` / `ghcr-pull-secret` | hermes/orp/omos/wwv | Docker registry credentials |
 | `cloudtak-agent-token` | hermes | Must be generated in CloudTAK UI → Settings → Tokens |

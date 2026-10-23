@@ -76,8 +76,6 @@
   "component:default/k8s-cert-manager-cert-manager-cainjector-509a4a79",
   "component:default/k8s-cert-manager-cert-manager-webhook-943e7fca",
   "component:default/k8s-clickhouse-chi-onemind-onemind-0-0-92949b93",
-  "component:default/k8s-cloudflare-cloudflared-a824aad1",
-  "component:default/k8s-cloudflare-cloudflared-tunnel-4afb3e6e",
   "component:default/k8s-cnpg-system-barman-plugin-barman-cloud-cf7a9790",
   "component:default/k8s-cnpg-system-cnpg-cloudnative-pg-aae96f92",
   "component:default/k8s-dapr-system-dapr-operator-e55d49c0",
