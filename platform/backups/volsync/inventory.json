@@ -97,12 +97,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "onetak-pgdata",
-    "source": "volume-76694cc119e9",
-    "size": "10Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "tile38-data",
     "source": "volume-adf3fcd472a7",
     "size": "10Gi"

@@ -187,7 +187,7 @@ kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/deployment.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/hermes/agent/tak-agent.yaml"
 
 # -----------------------------------------------------------------------------
-# 10. CLOUDTAK — API + Events + Media + Tiles + MinIO + PostGIS
+# 10. CLOUDTAK — API + Events + Media + Tiles
 # Secrets (cloudtak-secrets) are SealedSecrets in platform/cloudtak/
 # -----------------------------------------------------------------------------
 kubectl --context "$CTX" create namespace cloudtak --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
@@ -195,8 +195,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/api.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/events.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/media.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/tiles.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/minio.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/postgis.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
 

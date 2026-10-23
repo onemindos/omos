@@ -92,7 +92,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 |------|-----------|----------------|
 | 0 | `platform/core/` | ingress-nginx, cert-manager, sealed-secrets controller, Tailscale operator, GitHub Actions runner, cloudflared (standby) |
 | 1 | `platform/nats/` | NATS 3-node HA (Helm), NACK JetStream controller, TLS, all 39 stream + KV definitions |
-| 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, PostGIS (onetak-db), WebODM, NodeODM, STAC |
+| 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, WebODM, NodeODM, STAC |
 | 2 | `platform/takserver/` | TAK Server 5.8 (Helm), FedHub, tak-ldap, NATS leaf sidecar |
 | 3 | `platform/hermes/` | Legacy AI (Hermes) + copilot-runtime, Hermes web UI |
 | 3 | `platform/omos/` | tak-projector, feed-intel, feed-satellites, sink-clickhouse, redpanda-connect, mission-engine |
@@ -453,7 +453,6 @@ Six databases — each justified. The only consolidation is killing the empty `g
 |----------|-----------|-------------|
 | TAK PostgreSQL | takserver | CoT entities, missions, data packages. TAK Server owns schema — cannot merge. |
 | ClickHouse | clickhouse | Time-series columnar. Access pattern (TSDB) is fundamentally different from relational. |
-| PostGIS (onetak-db) | onetak | Tile sources, geo features, ETL state. CloudTAK's own schema. |
 | TAK-ML DB | takml | Model registry, sensor metadata, MBT (Model Building Toolkit). ML lifecycle is its own domain. |
 | FedHub MongoDB | takserver | Federation hub state. FedHub requires MongoDB specifically — cannot swap. |
 | Authentik PG | auth | Identity, sessions, OIDC state. Authentik owns its schema. |

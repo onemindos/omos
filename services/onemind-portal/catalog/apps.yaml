@@ -1287,13 +1287,13 @@ metadata:
     backstage.io/kubernetes-namespace: onetak
     backstage.io/kubernetes-label-selector: app in (onetak-media,onetak-minio,onetak-postgis,tak-portal)
     grafana/alert-label-selector: namespace=onetak
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=onetak-media&var-workload=onetak-postgis&var-workload=tak-portal
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=onetak-media&var-workload=tak-portal
     onemind.io/logs-query: '{k8s_namespace_name="onetak",
-      k8s_pod_name=~"(onetak-media|onetak-postgis|tak-portal)-.*"}'
+      k8s_pod_name=~"(onetak-media|tak-portal)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/onetak/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onetak/onetak-media,onetak/onetak-postgis,onetak/tak-portal
+    onemind.io/kubernetes-workloads: onetak/onetak-media,onetak/tak-portal
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

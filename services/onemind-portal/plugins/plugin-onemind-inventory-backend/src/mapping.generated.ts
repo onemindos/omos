@@ -125,7 +125,6 @@ export const mapping: InventoryMapping = {
     'onetak/nodeodm': 'component:default/webodm',
     'onetak/onetak-geo-db': 'component:default/geo-data-services',
     'onetak/onetak-media': 'component:default/onetak',
-    'onetak/onetak-postgis': 'component:default/onetak',
     'onetak/stac-api': 'component:default/geo-data-services',
     'onetak/tak-portal': 'component:default/onetak',
     'onetak/tile38': 'component:default/geo-data-services',

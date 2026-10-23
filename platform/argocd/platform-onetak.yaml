@@ -8,7 +8,6 @@
 #   events.yaml        — CoT event stream handler
 #   media.yaml         — Media server (RTSP/HLS/SRT) for video wall
 #   tiles.yaml         — PMTiles proxy (tiles.onemindos.dev)
-#   postgis.yaml       — PostGIS database (entities, tracks, packages)
 #   ingress.yaml       — Internal ingress
 #   cloudflare-route.yaml — Public tunnel route
 #
