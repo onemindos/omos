@@ -67,7 +67,19 @@ spec:
               cp -a /opt/tak/federation-hub/configs/. /mnt/configs/
               cp /cm/broker/federation-hub-broker.yml /mnt/configs/
               cp /cm/ui/federation-hub-ui.yml /mnt/configs/
+              # The UI ConfigMap carries the token __FEDHUB_OIDC_SECRET__ where the Authentik client secret
+              # belongs. Swap in the real value from the sealed Secret fedhub-oidc-secret; the file lives only
+              # in the pod's emptyDir. Fail the pod rather than start with a placeholder or an empty secret.
+              secret="$(cat /secrets/oidc/keycloakSecret)"
+              if [ -z "$secret" ]; then echo "fedhub-oidc-secret/keycloakSecret is empty" >&2; exit 1; fi
+              sed -i "s|__FEDHUB_OIDC_SECRET__|${secret}|" /mnt/configs/federation-hub-ui.yml
+              if grep -q "__FEDHUB_OIDC_SECRET__" /mnt/configs/federation-hub-ui.yml; then
+                echo "OIDC secret placeholder was not replaced" >&2; exit 1
+              fi
           volumeMounts:
+            - name: oidc-secret
+              mountPath: /secrets/oidc
+              readOnly: true
             - name: broker-config
               mountPath: /cm/broker
             - name: ui-config
@@ -106,6 +118,9 @@ spec:
             - name: fedhub-certs
               mountPath: /opt/tak/federation-hub/certs/files
               readOnly: true
+            - name: authentik-ca
+              mountPath: /opt/tak/federation-hub/authentik-ca
+              readOnly: true
             - name: authorized-users
               mountPath: /opt/tak/federation-hub/authorized_users.yml
               subPath: authorized_users.yml
@@ -125,6 +140,12 @@ spec:
         - name: fedhub-certs
           secret:
             secretName: fedhub-certs
+        - name: oidc-secret
+          secret:
+            secretName: fedhub-oidc-secret
+        - name: authentik-ca
+          configMap:
+            name: fedhub-authentik-ca
         - name: authorized-users
           configMap:
             name: fedhub-authorized-users
@@ -137,7 +158,9 @@ spec:
         - name: jetty-temp
           emptyDir: {}
 ---
-# ClusterIP for the admin UI — fronted by a Tailscale Ingress (fedhub-ingress.yaml, tailnet only)
+# ClusterIP for the admin UI — fronted by a Tailscale Ingress (fedhub-ingress.yaml, tailnet only).
+# The UI port serves TLS; the port is named `https` so the Tailscale operator proxies to it over HTTPS
+# (https+insecure) instead of plain HTTP. Nothing else in the repo refers to this port by name.
 apiVersion: v1
 kind: Service
 metadata:
@@ -147,7 +170,7 @@ metadata:
 spec:
   selector: {app: fedhub}
   ports:
-    - {name: ui, port: 9100, targetPort: 9100, protocol: TCP}
+    - {name: https, port: 9100, targetPort: 9100, protocol: TCP}
 ---
 # ClusterIP for federation ports — exposed externally via fedhub-lb.yaml LoadBalancer
 apiVersion: v1
