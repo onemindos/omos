@@ -7,11 +7,11 @@ kind: Namespace
 metadata:
   name: kyverno
   labels:
-    onemind.io/layer: security
+    onemind.io/layer: guard
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: falco
   labels:
-    onemind.io/layer: security
+    onemind.io/layer: guard

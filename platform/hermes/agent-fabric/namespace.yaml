@@ -6,4 +6,4 @@ kind: Namespace
 metadata:
   name: agent-fabric
   labels:
-    onemind.io/layer: agents
+    onemind.io/layer: decide

@@ -7,6 +7,7 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: make-sense
 ---
 apiVersion: v1
 kind: Namespace
@@ -17,6 +18,7 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: make-sense
 ---
 apiVersion: v1
 kind: Namespace
@@ -28,6 +30,7 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: decide
 ---
 apiVersion: v1
 kind: Namespace
@@ -49,3 +52,4 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: guard
