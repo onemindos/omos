@@ -1168,3 +1168,19 @@ Acceptance requires actual edits flowing in both directions, offline and conflic
 checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
 The native Mac upload has started. Full transfer, two-way device acceptance and
 recovery verification remain distinct from the observed healthy server deployment.
+
+## User-directed Paperclip installation — 2026-10-23
+
+Zeus requested Paperclip on Kubernetes for a business workforce using Codex,
+Claude Code and Hermes. This is a bounded Layer 2 agent coordination service
+alongside the portal roadmap, not a migration or a new execution authority.
+Phase 6 stays In progress; Phases 7/8 stay Not started.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Private Paperclip GitOps installation | Prepared; human review/merge and live acceptance pending | [Deployment and acceptance](platform/paperclip/README.md); PR link added after creation |
+
+No new controller, public exposure, shared-database migration, existing agent
+credential copy, model billing change or cluster write access is included.
+Runtime onboarding, mobile acceptance, backups/restore and automatic execution
+must be verified separately. Preparing manifests does not complete those gates.
