@@ -3,21 +3,16 @@ import {
   AppRootWrapperBlueprint,
 } from '@backstage/plugin-app-react';
 import { SignInPage } from '@backstage/core-components';
+import { OAuth2 } from '@backstage/core-app-api';
 import {
   createFrontendModule,
   configApiRef,
   discoveryApiRef,
-  identityApiRef,
-  fetchApiRef,
+  oauthRequestApiRef,
   ApiBlueprint,
 } from '@backstage/frontend-plugin-api';
-import { permissionApiRef } from '@backstage/plugin-permission-react';
-import {
-  openChoreoAuthApiRef,
-  OpenChoreoPermissionApi,
-} from '@openchoreo/backstage-plugin';
 import { OpenChoreoQueryProvider } from '@openchoreo/backstage-plugin-react';
-import { createScopedFetch } from './scopedFetch';
+import { oneMindAuthApiRef, ONEMIND_AUTH_PROVIDER_ID } from './authApi';
 
 const signIn = SignInPageBlueprint.make({
   params: {
@@ -29,45 +24,45 @@ const signIn = SignInPageBlueprint.make({
             id: 'onemind-auth',
             title: 'OneMind',
             message: 'Sign in with your OneMind account',
-            apiRef: openChoreoAuthApiRef,
+            apiRef: oneMindAuthApiRef,
           }}
         />
       ),
   },
 });
-const fetchApi = ApiBlueprint.make({
-  name: fetchApiRef.id,
+// Standard Backstage OAuth2 session against the backend `oidc` provider. The same
+// default scopes as before; the backend adds offline_access (auth.providers.oidc).
+const oidcAuthApi = ApiBlueprint.make({
+  name: 'onemind-oidc',
   params: define =>
     define({
-      api: fetchApiRef,
+      api: oneMindAuthApiRef,
       deps: {
-        config: configApiRef,
-        identity: identityApiRef,
-        oauth: openChoreoAuthApiRef,
-        discovery: discoveryApiRef,
+        discoveryApi: discoveryApiRef,
+        oauthRequestApi: oauthRequestApiRef,
+        configApi: configApiRef,
       },
-      factory: createScopedFetch,
+      factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
+        OAuth2.create({
+          discoveryApi,
+          oauthRequestApi,
+          configApi,
+          provider: {
+            id: ONEMIND_AUTH_PROVIDER_ID,
+            title: 'OneMind',
+            icon: () => null,
+          },
+          environment: configApi.getOptionalString('auth.environment'),
+          defaultScopes: ['openid', 'profile', 'email'],
+        }),
     }),
 });
-const permissionApi = ApiBlueprint.make({
-  name: permissionApiRef.id,
-  params: define =>
-    define({
-      api: permissionApiRef,
-      deps: {
-        config: configApiRef,
-        identity: identityApiRef,
-        oauthApi: openChoreoAuthApiRef,
-        discovery: discoveryApiRef,
-      },
-      factory: options => new OpenChoreoPermissionApi(options),
-    }),
-});
+// Removed with the OpenChoreo UI plugins.
 const queries = AppRootWrapperBlueprint.make({
   name: 'openchoreo-query',
   params: { component: OpenChoreoQueryProvider },
 });
 export const authModule = createFrontendModule({
   pluginId: 'app',
-  extensions: [signIn, fetchApi, permissionApi, queries],
+  extensions: [signIn, oidcAuthApi, queries],
 });

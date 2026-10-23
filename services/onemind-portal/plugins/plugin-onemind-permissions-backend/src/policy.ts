@@ -9,7 +9,8 @@ export const isOneMindAdmin = (user?: Pick<PolicyQueryUser, 'info'>) =>
     user?.info.ownershipEntityRefs.includes('group:default/onemind-admins'),
   );
 
-// OneMind is an upper bound, never an admin bypass of OpenChoreo authorization.
+// Administrators (group onemind-admins) are allowed; other signed-in users may only read.
+// An optional delegate can narrow (never widen) the result for OpenChoreo-owned permissions.
 export function createOneMindPolicy(
   delegate?: PermissionPolicy,
 ): PermissionPolicy {

@@ -147,9 +147,15 @@ by adding a directory entry.
 ## Phase 6: one portal
 
 OpenChoreo 1.3.1 core/observability plugins run inside the existing Backstage 1.55.3
-host; they do not replace OneMind. Authentik `openchoreo-auth` preserves the signed
-subject mapping and existing group. The single host policy intersects upstream
-permissions; machine catalog writes and platform access remain denied. Shared
+host; they do not replace OneMind. Sign-in is Backstage's own `oidc` provider against
+the Authentik application `onemind-backstage` (redirect URI
+`<portal>/api/auth/oidc/handler/frame`); it preserves the signed subject mapping to
+`onemind.io/oidc-sub` and the existing group, and no longer obtains an OpenChoreo
+token (the former `openchoreo-auth` provider and `cache-capabilities` call are gone,
+so the OpenChoreo views that need a user token no longer work). The single OneMind
+host policy no longer delegates to the upstream OpenChoreo policy: administrators
+are allowed, other signed-in users are read-only; machine catalog writes and platform
+access remain denied. Shared
 authorization results use the permission plugin PostgreSQL DB, keyed by SHA-256
 with token-expiration TTL, never raw tokens. Keep the version-locked upstream ABAC
 router adapter pinned and review on upgrade.

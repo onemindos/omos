@@ -106,3 +106,26 @@ describe('OneMind + OpenChoreo policy intersection', () => {
     expect(handle).not.toHaveBeenCalled();
   });
 });
+
+describe('OneMind policy without an OpenChoreo delegate', () => {
+  test.each([
+    ['catalog.entity.create', 'create'],
+    ['scaffolder.task.create', 'create'],
+    ['catalog.entity.read', 'read'],
+  ] as const)('administrator allowed: %s', async (name, action) => {
+    expect(
+      await createOneMindPolicy().handle(query(name, action), user(true)),
+    ).toEqual({ result: AuthorizeResult.ALLOW });
+  });
+  test('ordinary user: read allowed, scaffolder and catalog writes denied', async () => {
+    const policy = createOneMindPolicy();
+    expect(
+      await policy.handle(query('catalog.entity.read', 'read'), user(false)),
+    ).toEqual({ result: AuthorizeResult.ALLOW });
+    for (const name of ['catalog.entity.create', 'scaffolder.task.create']) {
+      expect(await policy.handle(query(name, 'create'), user(false))).toEqual({
+        result: AuthorizeResult.DENY,
+      });
+    }
+  });
+});

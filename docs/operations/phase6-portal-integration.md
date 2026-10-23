@@ -17,6 +17,11 @@ Completion required the real browser/security/deployment gates below, not build 
 Upstream tests Backstage 1.51.0. This host retains 1.55.3 and pins one compatible
 frontend API cohort; local compilation/bundling is evidence only for that gate.
 
+> Superseded in part: sign-in no longer registers `openchoreo-auth` or calls
+> `cache-capabilities` (item 1), and the OpenChoreo-token scoped fetch (item 5) is gone;
+> the portal uses the standard `oidc` provider and the default fetch. This record is
+> kept as the Phase 6 history.
+
 1. Retain the Backstage verified OIDC authenticator, register `openchoreo-auth`
    against the OpenChoreo Authentik provider, and resolve the signed subject to
    `onemind.io/oidc-sub`. No email fallback, guest access or claim-based admin

@@ -7,7 +7,6 @@ import { catalogServiceRef } from '@backstage/plugin-catalog-node';
 import {
   AuthzProfileService,
   AuthzProfileCache,
-  OpenChoreoPermissionPolicy,
 } from '@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy';
 import { openchoreoPermissions } from '@openchoreo/backstage-plugin-common';
 import { openChoreoTokenServiceRef } from '@openchoreo/openchoreo-auth';
@@ -61,11 +60,10 @@ export default createBackendModule({
             await createSharedAuthzCache(await database.getClient()),
           ),
         });
-        policy.setPolicy(
-          createOneMindPolicy(
-            new OpenChoreoPermissionPolicy({ authzService, logger }),
-          ),
-        );
+        // Sign-in no longer obtains an OpenChoreo token or caches OpenChoreo capabilities, so
+        // the upstream OpenChoreo policy has nothing to evaluate. The OneMind rule applies
+        // alone: administrators allowed, other signed-in users read-only, anonymous denied.
+        policy.setPolicy(createOneMindPolicy());
         httpRouter.use(express.json());
         httpRouter.use(async (req, res, next) => {
           try {
