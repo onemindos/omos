@@ -1,0 +1,213 @@
+# Kyverno ClusterPolicies, AUDIT ONLY. Applied by platform-security (platform/argocd/platform-security.yaml).
+#
+# Safety:
+#   * validationFailureAction: Audit on every policy. Nothing is blocked; violations show up in
+#     PolicyReports (wgpolicyk8s.io). Do not switch to Enforce without a cleanup PR and Zeus's approval.
+#   * failurePolicy: Ignore. Kyverno runs one admission replica; with the default (Fail) a Kyverno outage
+#     would reject every Pod create. Ignore lets requests through if the webhook is down.
+#   * Per-resource SkipDryRun + sync-wave 5 so these apply after the Kyverno CRDs on a fresh bootstrap.
+#
+# Excluded from the privileged/hostPath policy (what actually runs them, checked 2026-10-23):
+#   kube-system (cilium, csi-do-node, do-node-agent, doks-telemetry-config-reloader), falco, velero (node-agent),
+#   tailscale (proxy StatefulSets), spire-system (agent, spiffe-csi-driver), monitoring node-exporter and the
+#   otel-collector agent DaemonSet (by name, not the whole namespace).
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-latest-image-tag
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    policies.kyverno.io/title: Disallow latest and untagged images
+    policies.kyverno.io/category: Best Practices
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Images must carry an explicit tag or digest and must not use the mutable :latest tag.
+spec:
+  validationFailureAction: Audit
+  failurePolicy: Ignore
+  background: true
+  rules:
+    - name: require-image-tag
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Images must have an explicit tag or digest (not an implicit :latest)."
+        pattern:
+          spec:
+            =(ephemeralContainers):
+              - image: "*:*"
+            =(initContainers):
+              - image: "*:*"
+            containers:
+              - image: "*:*"
+    - name: validate-image-tag
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Using the :latest tag is not allowed. Pin a version or digest."
+        pattern:
+          spec:
+            =(ephemeralContainers):
+              - image: "!*:latest"
+            =(initContainers):
+              - image: "!*:latest"
+            containers:
+              - image: "!*:latest"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-requests-limits
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    policies.kyverno.io/title: Require CPU/memory requests and memory limits
+    policies.kyverno.io/category: Best Practices
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Every container must set CPU and memory requests and a memory limit. CPU limits are not required.
+spec:
+  validationFailureAction: Audit
+  failurePolicy: Ignore
+  background: true
+  rules:
+    - name: validate-resources
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Containers must set resources.requests.cpu, resources.requests.memory and resources.limits.memory."
+        pattern:
+          spec:
+            containers:
+              - resources:
+                  requests:
+                    cpu: "?*"
+                    memory: "?*"
+                  limits:
+                    memory: "?*"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-namespace-layer-label
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    policies.kyverno.io/title: Require onemind.io/layer on Namespaces
+    policies.kyverno.io/category: Best Practices
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Namespaces must carry onemind.io/layer with one of sense, make-sense, decide, act, data, guard, system.
+spec:
+  validationFailureAction: Audit
+  failurePolicy: Ignore
+  background: true
+  rules:
+    - name: check-layer-label
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+      validate:
+        message: "Namespace needs the label onemind.io/layer with a value in: sense, make-sense, decide, act, data, guard, system."
+        pattern:
+          metadata:
+            labels:
+              onemind.io/layer: "sense | make-sense | decide | act | data | guard | system"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-privileged-and-hostpath
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    policies.kyverno.io/title: Disallow privileged containers and hostPath volumes
+    policies.kyverno.io/category: Pod Security Standards (Baseline)
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Privileged containers and hostPath volumes give a workload the node. System namespaces and the named
+      node-level monitoring agents are excluded.
+spec:
+  validationFailureAction: Audit
+  failurePolicy: Ignore
+  background: true
+  rules:
+    - name: disallow-privileged
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      exclude:
+        any:
+          - resources:
+              namespaces: &system-namespaces
+                - kube-system
+                - kube-node-lease
+                - kube-public
+                - falco
+                - velero
+                - tailscale
+                - spire-system
+          - resources:
+              namespaces:
+                - monitoring
+              names: &monitoring-node-agents
+                - "monitoring-prometheus-node-exporter*"
+                - "otel-collector-opentelemetry-collector-agent*"
+      validate:
+        message: "Privileged containers are not allowed."
+        pattern:
+          spec:
+            =(ephemeralContainers):
+              - =(securityContext):
+                  =(privileged): "false"
+            =(initContainers):
+              - =(securityContext):
+                  =(privileged): "false"
+            containers:
+              - =(securityContext):
+                  =(privileged): "false"
+    - name: disallow-hostpath
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      exclude:
+        any:
+          - resources:
+              namespaces: *system-namespaces
+          - resources:
+              namespaces:
+                - monitoring
+              names: *monitoring-node-agents
+      validate:
+        message: "hostPath volumes are not allowed."
+        pattern:
+          spec:
+            =(volumes):
+              - X(hostPath): "null"
