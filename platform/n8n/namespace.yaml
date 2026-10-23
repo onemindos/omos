@@ -4,3 +4,4 @@ metadata:
   name: n8n
   labels:
     pod-security.kubernetes.io/enforce: restricted
+    onemind.io/layer: decide

@@ -7,3 +7,4 @@ metadata:
   labels:
     app.kubernetes.io/part-of: onemind
     onemind.io/component: legacy-agent
+    onemind.io/layer: decide

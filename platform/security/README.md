@@ -2,7 +2,7 @@
 
 One place for the security tools, applied by the `platform-security` Application
 (`platform/argocd/platform-security.yaml`). Each tool keeps its own namespace, labelled
-`onemind.io/layer: security`.
+`onemind.io/layer: guard`.
 
 | Application | Role in zero trust | Namespace |
 |---|---|---|
