@@ -71,7 +71,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | Application | Namespace | Purpose | State / data | Backup | Exposure | GitOps |
 |-------------|-----------|---------|--------------|--------|----------|--------|
 | `app-of-apps` | argocd | Root app; creates every `platform-*` Application from `platform/argocd` | none | Git | tailnet (Argo UI) | Argo. **OutOfSync** (not yet diagnosed) |
-| `platform-core` | kube-system, cloudflare, github-runner, tailscale | Sealed Secrets controller, Let's Encrypt DNS issuers, `cloudflared` (0 replicas, cold standby), self-hosted GitHub runner, Tailscale ACL policy | Sealed Secrets private keys (irreplaceable) | `backup-cluster-recovery` (daily 04:00 UTC) exports identity/config and the active sealing keys, encrypted | internal | Argo |
+| `platform-core` | kube-system, github-runner, tailscale | Sealed Secrets controller, Let's Encrypt DNS issuers, self-hosted GitHub runner, Tailscale ACL policy | Sealed Secrets private keys (irreplaceable) | `backup-cluster-recovery` (daily 04:00 UTC) exports identity/config and the active sealing keys, encrypted | internal | Argo |
 | `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS, Ignite, 37 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **public**: LB `152.42.155.95` ports 8089, 8443, 8446, 9101, 9102, 64738, no source ranges | Argo for the overlay, **Helm CLI for the core** |
 | `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 150 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
 | `platform-auth-helm` | auth | Authentik IdP (chart 2026.8.2) | PostgreSQL 17, Redis, 5 GiB | `PG dump` (05:00 UTC), `VolSync` | `auth.onemindos.dev` public (CF); `onemind-auth` tailnet | Argo |
@@ -195,7 +195,6 @@ Gaps beyond the eleven releases:
 | Public, direct (L4 LB) | TAK `152.42.155.95`: 8089, 8443, 8446, 9101, 9102, 64738. No source ranges |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
 | Tailnet only | Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
-| Cold standby | `cloudflared` tunnel connector, 0 replicas |
 
 ## Mutable image tags
 

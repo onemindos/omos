@@ -6277,9 +6277,8 @@ metadata:
   tags:
     - kubernetes
   title: Platform core manifests
-  description: Sealed Secrets controller, certificate issuers, standby Cloudflare
-    tunnel config, GitHub runner and Tailscale policy (Argo application
-    platform-core).
+  description: Sealed Secrets controller, certificate issuers, GitHub runner and
+    Tailscale policy (Argo application platform-core).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -6394,40 +6393,6 @@ metadata:
     onemind.io/recovery-runbook: apps/external-dns/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: external-dns/external-dns
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: cloudflared
-  tags:
-    - kubernetes
-  title: Cloudflare Tunnel (standby)
-  description: Cloudflare tunnel connector, kept as a cold standby.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-cloudflared
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: cloudflare
-    backstage.io/kubernetes-namespace: cloudflare
-    grafana/alert-label-selector: namespace=cloudflare
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cloudflare
-    onemind.io/logs-query: '{k8s_namespace_name="cloudflare"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/cloudflared/
-    github.com/project-slug: onemindos/omos
-    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
-    onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: cloudflare/cloudflared,cloudflare/cloudflared-tunnel
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

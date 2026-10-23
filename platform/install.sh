@@ -56,21 +56,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuer-dns.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuers.yaml"
 
 # -----------------------------------------------------------------------------
-# 3. CLOUDFLARE TUNNEL (zero public inbound)
-# Routes are declared in platform/cloudflare/config.yaml — edit + apply to add new routes.
-# Requires tunnel-creds-json secret (SealedSecret — see platform/cloudflare/tunnel-creds-json.sealedsecret.yaml):
-#   TOKEN=$(op read "op://00-24 SO/tunnel-credentials/tunnel-token")
-#   python3 -c "
-#     import sys,json,base64; t='$TOKEN'; p=t+'='*(4-len(t)%4)
-#     d=json.loads(base64.urlsafe_b64decode(p))
-#     print(json.dumps({'AccountTag':d['a'],'TunnelID':d['t'],'TunnelSecret':d['s']}))
-#   " | kubectl create secret generic tunnel-creds-json -n cloudflare --from-file=credentials.json=/dev/stdin
-# -----------------------------------------------------------------------------
-kubectl --context "$CTX" create namespace cloudflare --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/config.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudflare/cloudflared.yaml"
-
-# -----------------------------------------------------------------------------
 # 4. NATS — 3-node HA JetStream cluster
 # Requires: nats/values.secret.yaml (has ONEMIND/SYS passwords — inject from 1Password)
 # -----------------------------------------------------------------------------
@@ -85,7 +70,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/nats/omos-nats-tailnet-service.yaml
 #   websocket:
 #     enabled: true
 #     port: 8080
-# NATS WebSocket is exposed as wss://ws.onemindos.dev via Cloudflare tunnel (platform/cloudflare/config.yaml)
 
 # -----------------------------------------------------------------------------
 # 4b. NACK — JetStream CRD controller (Stream + KeyValue declarative mgmt)
@@ -195,7 +179,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/api.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/events.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/media.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/tiles.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/cloudflare-route.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/cloudtak/ingress.yaml"
 
 # -----------------------------------------------------------------------------
@@ -214,7 +197,6 @@ kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/murmur.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/mumble-bridge.yaml"
 kubectl --context "$CTX" apply -f "$TAKDEPLOY/tak-webview-cesium.yaml"
-kubectl --context "$CTX" apply -f "$TAKDEPLOY/mediamtx-cloudflare-route.yaml"
 
 # -----------------------------------------------------------------------------
 # 12. GITHUB RUNNER — self-hosted runner for onemindos org CI/CD
@@ -240,7 +222,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-nats-creds.sealedsecret
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-server.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-vision-worker.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/deployment.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/takml/cloudflare-route.yaml"
 
 echo ""
 echo "==> Platform install complete."

@@ -23,8 +23,6 @@ workloads:
   cert-manager/cert-manager-cainjector: component:default/cert-manager
   cert-manager/cert-manager-webhook: component:default/cert-manager
   clickhouse/chi-onemind-onemind-0-0: component:default/clickhouse
-  cloudflare/cloudflared: component:default/cloudflared
-  cloudflare/cloudflared-tunnel: component:default/cloudflared
   cnpg-system/barman-plugin-barman-cloud: component:default/cloudnative-pg
   cnpg-system/cnpg-cloudnative-pg: component:default/cloudnative-pg
   dapr-system/dapr-operator: component:default/dapr
@@ -211,7 +209,6 @@ argoApplications:
   platform-backstage: component:default/backstage
   platform-backups: component:default/platform-backup-recovery
   platform-clickhouse-operator: component:default/clickhouse
-  platform-cloudflared: component:default/cloudflared
   platform-core: component:default/platform-core
   platform-ecosystem-applications: component:default/argocd
   platform-ecosystem-foundation: component:default/argocd
