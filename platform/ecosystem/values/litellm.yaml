@@ -44,6 +44,17 @@ proxy_config:
       num_ctx: 8192
       extra_body:
         think: false
+  # Hermes cloud route; credentials stay in the existing litellm-providers Secret.
+  - model_name: hermes-agent
+    model_info:
+      supports_function_calling: true
+    litellm_params:
+      model: openrouter/anthropic/claude-sonnet-4.6
+      api_key: os.environ/OPENROUTER_API_KEY
+      extra_body:
+        provider:
+          only: [Anthropic]
+          allow_fallbacks: false
   # Local models served by ecosystem-ollama (CPU, in-cluster). Call these by name
   # from Hermes / OneMind Core through LiteLLM; do not talk to Ollama directly.
   - model_name: local-tools
@@ -64,6 +75,9 @@ proxy_config:
   general_settings:
     master_key: os.environ/PROXY_MASTER_KEY
     store_model_in_db: true
+  router_settings:
+    fallbacks:
+    - hermes-agent: [local-tools]
   litellm_settings:
     drop_params: true
     set_verbose: false

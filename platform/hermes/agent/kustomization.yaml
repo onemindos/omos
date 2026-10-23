@@ -7,5 +7,10 @@ resources:
   - deployment.yaml
   - dashboard.yaml
   - egress.yaml
+
+configMapGenerator:
+  - name: hermes-litellm-provider
+    files:
+      - litellm_provider_config.py
 # Secrets are managed by Sealed Secrets — SealedSecret YAMLs in platform/hermes/bridge/.
-# Apply with:  kubectl apply -k platform/hermes/agent/
+# Reconcile through platform-legacy; do not apply this directory by hand.
