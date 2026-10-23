@@ -16,7 +16,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [CloudNativePG](cloudnative-pg.md) | data-storage |
 | [Dapr](dapr.md) | infrastructure |
 | [Element Chat](element-chat.md) | communication |
-| [External Secrets Operator](external-secrets.md) | identity-access |
 | [Falco](falco.md) | identity-access |
 | [FedHub](fedhub.md) | tak-ecosystem |
 | [OneTAK geospatial services](geo-data-services.md) | geospatial |
