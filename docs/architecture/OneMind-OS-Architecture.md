@@ -403,7 +403,6 @@ kubectl create secret generic <name> -n <namespace> \
 | cloudtak-agent-token | hermes | CloudTAK API token (generate in CloudTAK UI) |
 | omos-nats-creds | omos | NATS user+password for omos namespace |
 | tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge |
-| cloudflare-api-token | cert-manager | Cloudflare DNS API token |
 | nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm — out-of-band) |
 | ghcr-pull-secret | hermes/omos | GHCR pull secret (out-of-band) |
 

@@ -1,0 +1,101 @@
+# Authentik side of "Harbor was removed": deletes the sign-in application and OAuth provider that Harbor used.
+# Same pattern as argocd-authentik-provider.yaml and fedhub-authentik-provider.yaml (Authentik has no blueprints in this
+# repo): a Sync hook that calls the Authentik API and is safe to run on every sync. For each entry in `stale` it:
+#   - fetches the application by its slug path (not a list filter, which is unreliable) and deletes it if it exists
+#   - deletes every OAuth2 provider whose client_id is the same slug, plus the provider the application pointed at
+#   - treats "already gone" (404) as success and logs what it did
+# Application first, then provider: deleting a provider alone would leave an application with no provider behind.
+# The creation of onemind-registry was removed from auth-provider-bootstrap.yaml in the Harbor removal, so nothing
+# recreates it. The key REGISTRY_CLIENT_SECRET is gone from the SealedSecret auth/onemind-platform-oidc, and this Job
+# deliberately does not mount that Secret: it needs only the Authentik API token.
+#
+# Failed pods are kept (restartPolicy Never) and the Job is removed after a day, so `kubectl -n auth logs` still works
+# after a failure. Error text is scrubbed of the API token and of any client_secret the API echoes back.
+# Once it has run on the live cluster this file can be deleted in a later PR; an Argo sync hook does not leave an
+# object behind, so there is nothing to prune.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: authentik-registry-removal-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: removal
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import os, re, httpx
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+              token = os.environ["AUTH_TOKEN"]
+              headers = {"Authorization": "Bearer " + token}
+              # Application slugs (= OAuth2 client ids) to remove. Add a slug here to remove another one.
+              stale = ["onemind-registry"]
+
+              def scrub(text):
+                  text = text.replace(token, "***")
+                  return re.sub(r'("client_secret"\s*:\s*")[^"]*', r'\1***', text)[:300]
+
+              with httpx.Client(headers=headers, timeout=30) as client:
+                  def request(method, path, missing_ok=False):
+                      response = client.request(method, base + path)
+                      if missing_ok and response.status_code == 404:
+                          return None
+                      if not response.is_success:
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0] + " failed with status " +
+                                             str(response.status_code) + ": " + scrub(response.text))
+                      return response.json() if response.content else {}
+
+                  removed = 0
+                  for slug in stale:
+                      provider_pks = set()
+                      app = request("GET", "core/applications/" + slug + "/", missing_ok=True)
+                      if app:
+                          if app.get("provider") is not None:
+                              provider_pks.add(app["provider"])
+                          request("DELETE", "core/applications/" + slug + "/")
+                          removed += 1
+                          print("application '" + slug + "': deleted (provider pk " + str(app.get("provider")) + ")")
+                      else:
+                          print("application '" + slug + "': not present")
+                      page = request("GET", "providers/oauth2/?page_size=200")
+                      if page.get("pagination", {}).get("next"):
+                          raise RuntimeError("More than 200 OAuth2 providers: extend this Job to page through them")
+                      for provider in page["results"]:
+                          if provider["client_id"] == slug:
+                              provider_pks.add(provider["pk"])
+                      if not provider_pks:
+                          print("provider '" + slug + "': not present")
+                      for pk in sorted(provider_pks):
+                          if request("DELETE", "providers/oauth2/" + str(pk) + "/", missing_ok=True) is None:
+                              print("provider pk " + str(pk) + ": already gone")
+                          else:
+                              removed += 1
+                              print("provider pk " + str(pk) + " ('" + slug + "'): deleted")
+                  print("Stale Authentik objects removed: " + str(removed) + (" (nothing left to remove)" if removed == 0 else ""))
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

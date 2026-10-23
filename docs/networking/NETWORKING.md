@@ -69,8 +69,8 @@ Savings: the TAK DO LB (`lb-small`, about $12/mo) is gone with `tak-external`. T
 | `cloudflared-tunnel-token` | `cloudflare` | `token` | cloudflared | Token of a new remotely-managed tunnel (section 4, step 2) |
 | `external-dns-cloudflare` | `external-dns` | `api-token` | external-dns | **New dedicated** Cloudflare API token: Zone:DNS:Edit + Zone:Zone:Read, restricted to zones `onemindos.dev`, `onemindos.com` |
 
-Do not reuse `cert-manager/cloudflare-api-token`: it is in another namespace (copying it
-spreads one credential across blast radii) and it has different rotation needs. The
+Do not reuse a token from another namespace (copying one credential spreads it across
+blast radii). The old `cert-manager/cloudflare-api-token` was invalid and has been removed. The
 `external-dns` namespace is created by Argo on first sync, so create it first if you want
 the Secret before merge: `kubectl create namespace external-dns`.
 

@@ -106,7 +106,7 @@ Argo CD itself is a Helm-CLI release, not self-managed (gap G3). Chart `argo-cd`
 
 ### Step 5. platform-core, cert-manager, ingress, Tailscale (about 1 h)
 
-- `platform-core`: Sealed Secrets, Let's Encrypt DNS issuers, `cloudflared` (0 replicas),
+- `platform-core`: Sealed Secrets, `cloudflared` (0 replicas),
   GitHub runner, Tailscale ACL policy.
 - Helm-CLI releases still needed (gap G3, install from `export_helm.py` inventory or
   `platform/values/*.yaml`): `cert-manager` v1.20.3, `ingress-nginx` 4.15.1,

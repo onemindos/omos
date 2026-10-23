@@ -50,11 +50,9 @@ helm upgrade --install argocd argo/argo-cd --version 10.1.2 \
 # values/argocd.yaml: resource limits, url, Authentik oidc.config, RBAC group mapping, Dex disabled
 
 # -----------------------------------------------------------------------------
-# 2. TLS ISSUERS (cert-manager ClusterIssuers)
-# cloudflare-api-token is a SealedSecret in platform/cert-manager/
+# 2. TLS ISSUERS: none. The unused letsencrypt-dns ClusterIssuer and its Cloudflare
+# token were removed; add an issuer under platform/core when a direct certificate is needed.
 # -----------------------------------------------------------------------------
-kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuer-dns.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/ingress/issuers.yaml"
 
 # -----------------------------------------------------------------------------
 # 4. NATS — 3-node HA JetStream cluster

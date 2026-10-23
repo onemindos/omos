@@ -31,7 +31,7 @@ Edge (Mac / home server)   MAVLink, HA, cameras ── NATS leaf ──►  K8s 
 ```
 platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the rest is grouped by layer
   argocd/      App-of-apps + 25 platform-* Applications
-  core/        sealed-secrets controller, cert issuers, GitHub runner, Tailscale policy
+  core/        sealed-secrets controller, GitHub runner, Tailscale policy
   nats/        NATS manifests, TLS, 39 Stream/KeyValue CRs in streams/, Helm values templates
   auth/        Authentik infra (Postgres, Redis, ingress); the chart is in argocd/platform-auth-helm.yaml
   backups/     PG/NATS backup CronJobs, cluster-recovery export, VolSync sources (volsync/)

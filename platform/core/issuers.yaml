@@ -1,4 +1,0 @@
-# HTTP-01 ClusterIssuers removed — TLS is handled at the Cloudflare edge
-# (proxied DNS to ingress-nginx). letsencrypt-dns (DNS-01, wildcard-capable) is the standby
-# issuer if direct cert-manager certificates are ever needed.
-# See platform/ingress/issuer-dns.yaml.
