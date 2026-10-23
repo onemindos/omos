@@ -18,3 +18,13 @@ falco:
     enabled: true
 falcosidekick:
   enabled: false
+falcoctl:
+  artifact:
+    install:
+      resources:
+        requests: {cpu: 10m, memory: 64Mi}
+        limits: {memory: 128Mi}
+    follow:
+      resources:
+        requests: {cpu: 10m, memory: 64Mi}
+        limits: {memory: 128Mi}

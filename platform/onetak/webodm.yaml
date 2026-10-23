@@ -34,6 +34,12 @@ spec:
         - name: fix-perms
           image: busybox
           command: ["sh", "-c", "mkdir -p /data/pgdata && chmod 700 /data/pgdata"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
           volumeMounts:
             - name: webodm-db-data
               mountPath: /data

@@ -15,6 +15,10 @@ datastore:
   engine: postgres
   uriSecret: openfga-db
   migrationType: initContainer
+  migrations:
+    resources:
+      requests: {cpu: 50m, memory: 64Mi}
+      limits: {memory: 128Mi}
 authn:
   method: preshared
   preshared:
