@@ -8,7 +8,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | --- | --- |
 | [Agent Monitor](agent-monitor.md) | ai-agents |
 | [Agent Web UI](agent-web-ui.md) | ai-agents |
-| [Argo Rollouts](argo-rollouts.md) | gitops-delivery |
 | [ArgoCD](argocd.md) | gitops-delivery |
 | [Authentik](authentik.md) | identity-access |
 | [Backstage portal](backstage.md) | developer-platform |

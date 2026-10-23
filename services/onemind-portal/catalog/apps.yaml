@@ -114,8 +114,7 @@ kind: System
 metadata:
   name: gitops-delivery
   title: GitOps & delivery
-  description: Argo CD and Argo Rollouts, the container registry, the GitHub
-    runner and source hosting.
+  description: Argo CD, the container registry, the GitHub runner and source hosting.
   labels:
     onemind.io/catalog-axis: deployment
     onemind.io/pillar: so
@@ -477,9 +476,8 @@ metadata:
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name in
       (argocd-application-controller,argocd-applicationset-controller,argocd-dex-server,argocd-notifications-controller,argocd-redis,argocd-repo-server,argocd-server)
     grafana/alert-label-selector: namespace=argocd
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=argocd-application-controller&var-workload=argocd-applicationset-controller&var-workload=argocd-dex-server&var-workload=argocd-notifications-controller&var-workload=argocd-redis&var-workload=argocd-repo-server&var-workload=argocd-server
-    onemind.io/logs-query: '{k8s_namespace_name="argocd",
-      k8s_pod_name=~"(argocd-application-controller|argocd-applicationset-controller|argocd-dex-server|argocd-notifications-controller|argocd-redis|argocd-repo-server|argocd-server)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd
+    onemind.io/logs-query: '{k8s_namespace_name="argocd"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/argocd/
     github.com/project-slug: onemindos/omos
@@ -6700,40 +6698,6 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: identity-access
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: argo-rollouts
-  tags:
-    - kubernetes
-  title: Argo Rollouts
-  description: Progressive delivery controller.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: argo-rollouts
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: argocd
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=rollouts-controller,app.kubernetes.io/instance=rollouts,app.kubernetes.io/name=argo-rollouts
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: argocd
-    grafana/alert-label-selector: namespace=argocd
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=rollouts-argo-rollouts
-    onemind.io/logs-query: '{k8s_namespace_name="argocd",
-      k8s_pod_name=~"(rollouts-argo-rollouts)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/argo-rollouts/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: argocd/rollouts-argo-rollouts
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: gitops-delivery
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

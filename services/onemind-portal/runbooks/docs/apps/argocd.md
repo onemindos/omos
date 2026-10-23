@@ -36,8 +36,8 @@ GitOps CD
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="argocd", k8s_pod_name=~"(argocd-application-controller|argocd-applicationset-controller|argocd-dex-server|argocd-notifications-controller|argocd-redis|argocd-repo-server|argocd-server)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=argocd-application-controller&var-workload=argocd-applicationset-controller&var-workload=argocd-dex-server&var-workload=argocd-notifications-controller&var-workload=argocd-redis&var-workload=argocd-repo-server&var-workload=argocd-server`
+- Loki query: `{k8s_namespace_name="argocd"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=argocd`
 - Source: `onemindos/omos`
 
 ## Escalate

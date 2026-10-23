@@ -24,7 +24,6 @@ export const mapping: InventoryMapping = {
     'argocd/argocd-redis': 'component:default/argocd',
     'argocd/argocd-repo-server': 'component:default/argocd',
     'argocd/argocd-server': 'component:default/argocd',
-    'argocd/rollouts-argo-rollouts': 'component:default/argo-rollouts',
     'auth/authentik-postgres': 'component:default/authentik',
     'auth/authentik-redis': 'component:default/authentik',
     'auth/platform-auth-helm-authentik-server': 'component:default/authentik',
@@ -221,12 +220,6 @@ export const mapping: InventoryMapping = {
     'agent-web-ui': {
       title: 'Agent Web UI',
       system: 'ai-agents',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    'argo-rollouts': {
-      title: 'Argo Rollouts',
-      system: 'gitops-delivery',
       pillar: 'so',
       review: 'proposed',
     },

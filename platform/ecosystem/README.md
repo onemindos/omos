@@ -1,7 +1,7 @@
 # OneMind CPU ecosystem rollout
 
-The foundation parent activates seven pinned Helm releases through Argo CD:
-CloudNativePG, Dapr, KEDA, Argo Rollouts, OpenCost, Kyverno and Falco.
+The foundation parent activates six pinned Helm releases through Argo CD:
+CloudNativePG, Dapr, KEDA, OpenCost, Kyverno and Falco.
 Their values are in `values/`; `foundation-lock.json` records release provenance.
 Existing Cilium, monitoring, NATS, Authentik and application data remain owned by
 existing applications. New workloads use the separate ecosystem worker pool;

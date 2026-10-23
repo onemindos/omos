@@ -42,7 +42,7 @@ systems:
     domain: domain:default/onemind-so
   - name: gitops-delivery
     title: GitOps & delivery
-    description: Argo CD and Argo Rollouts, the container registry, the GitHub runner and source hosting.
+    description: Argo CD, the container registry, the GitHub runner and source hosting.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
@@ -213,10 +213,6 @@ apps:
     title: External Secrets Operator
     system: identity-access
     description: Synchronizes secrets from external stores.
-  - name: argo-rollouts
-    title: Argo Rollouts
-    system: gitops-delivery
-    description: Progressive delivery controller.
   - name: harbor
     title: Harbor
     system: gitops-delivery

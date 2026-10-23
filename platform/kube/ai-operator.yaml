@@ -2,7 +2,7 @@
 # See docs/operations/ai-operator-access.md and PLATFORM-ROADMAP.md (phase 1).
 #
 # - Built-in `view` covers namespaced workloads, pods/log, events and the CRDs
-#   that aggregate to it (Argo Rollouts, cert-manager, Kyverno). It excludes Secrets.
+#   that aggregate to it (cert-manager, Kyverno). It excludes Secrets.
 # - `ai-operator-read` adds get/list/watch on the platform CRDs that do not aggregate
 #   to `view`. These API groups hold no Secret kinds. No write, exec or port-forward.
 apiVersion: v1
