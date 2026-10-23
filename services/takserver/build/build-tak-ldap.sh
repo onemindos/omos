@@ -43,8 +43,38 @@ if [ ! -f "${ORIG_DF}" ]; then
   exit 1
 fi
 
-# Append our environment defaults to the upstream Dockerfile.
+# Patch the upstream Dockerfile:
+# 1. Compile a tiny LD_PRELOAD interceptor that blocks the 56 GB anonymous
+#    mmap that Kerberos libraries create at startup. Without it, libkrb5 and
+#    libgssapi_krb5 commit ~1 GB/s of physical pages via that mapping and
+#    trigger cgroup OOMKill before slapd ever starts listening on port 389.
+#    File-backed mmaps (LMDB data.mdb, ~64 MB) have fd >= 0 and are unaffected.
+# 2. Set LD_PRELOAD so the interceptor is loaded before any library constructor.
+# 3. Add OneMind default environment variables.
 cat >> "${ORIG_DF}" <<'EXTRA'
+
+# Build a mmap interceptor that blocks huge anonymous Kerberos allocations.
+# Uses the builder's gcc — no extra packages needed in the final image.
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends gcc libc-dev && \
+    printf '%s\n' \
+      '#define _GNU_SOURCE' \
+      '#include <sys/mman.h>' \
+      '#include <dlfcn.h>' \
+      '#include <errno.h>' \
+      'void *mmap(void *a,size_t n,int p,int fl,int fd,off_t o){' \
+      '  static void*(*r)(void*,size_t,int,int,int,off_t);' \
+      '  if(!r)r=dlsym(RTLD_NEXT,"mmap");' \
+      '  if(fd<0&&n>=(size_t)8<<30){errno=ENOMEM;return MAP_FAILED;}' \
+      '  return r(a,n,p,fl,fd,o);' \
+      '}' > /tmp/nommap_krb5.c && \
+    gcc -shared -fPIC -O2 -o /usr/local/lib/nommap_krb5.so /tmp/nommap_krb5.c -ldl && \
+    rm /tmp/nommap_krb5.c && \
+    apt-get remove -y --purge gcc libc-dev cpp cpp-12 && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV LD_PRELOAD=/usr/local/lib/nommap_krb5.so
 
 # OneMind overrides — K8s manifest can override these via ConfigMap envFrom
 ENV LDAP_BASE_DN="dc=onemindos,dc=dev"
