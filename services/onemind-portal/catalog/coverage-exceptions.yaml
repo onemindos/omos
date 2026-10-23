@@ -33,11 +33,6 @@ exceptions:
     reason: >-
       Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
       attributes to the onetak app. It has no Argo application of its own.
-  - app: component:default/maputnik
-    capability: argocd
-    reason: >-
-      Deployed from platform/onetak by the Argo application platform-onetak, which the reviewed workload map
-      attributes to the onetak app. It has no Argo application of its own.
   - app: component:default/webodm
     capability: argocd
     reason: >-

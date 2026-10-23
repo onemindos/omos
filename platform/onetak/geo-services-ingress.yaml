@@ -6,7 +6,6 @@
 #   nominatim.onemindos.dev
 #   overpass.onemindos.dev
 #   tileserver.onemindos.dev
-#   maputnik.onemindos.dev
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -60,13 +59,3 @@ spec:
                 name: tileserver-gl
                 port:
                   number: 8080
-    - host: maputnik.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: maputnik
-                port:
-                  number: 8088

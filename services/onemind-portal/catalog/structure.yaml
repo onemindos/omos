@@ -370,7 +370,6 @@ placement:
   loki: observability
   longhorn: data-storage
   madmapper: personal-tools
-  maputnik: geospatial
   matrix-synapse: communication
   mercury: business-operations
   minio: data-storage
