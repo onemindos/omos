@@ -145,7 +145,7 @@ test('colliding titles are disambiguated instead of dropped', () => {
 test('every Argo application in Git maps to exactly one app Component, and a new one fails', repoOnly, () => {
   const map = sources.map.argoApplications;
   const inGit = argoApplicationsInGit();
-  assert.equal(inGit.size, 68, 'platform/ should define the 68 live Argo applications');
+  assert.equal(inGit.size, 69, 'platform/ should define the 69 live Argo applications');
   const unmapped = [...inGit].filter(a => !map[a]);
   assert.deepEqual(unmapped, [], `Argo applications without a mapping in catalog/workload-map.yaml: ${unmapped}`);
   assert.deepEqual(Object.keys(map).filter(a => !inGit.has(a)), [], 'mapping names an Argo application that Git does not define');

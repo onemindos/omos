@@ -84,6 +84,13 @@ spec:
       createdb: false
       passwordSecret:
         name: db-onemind-ingestion
+    - name: cloudtak
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-cloudtak
   postgresql:
     shared_preload_libraries:
     - age

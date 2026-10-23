@@ -1,0 +1,135 @@
+# CloudTAK API + web UI (nginx on :5000 in front of the node API on :5001), single process in
+# CLOUDTAK_Server_Mode=both. The process owns the in-memory TAK connection pool, so run exactly one replica
+# and replace it with Recreate, never two at once.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudtak-api
+  namespace: cloudtak
+  labels: &labels
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: cloudtak
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      containers:
+        - name: api
+          image: ghcr.io/dfpc-coe/cloudtak-api:v13.113.0@sha256:51e404b4cfabafdbd4b8ac40397f7e964f2d59f85e324f84b3e5543d43e0776b
+          # Same steps as upstream's ./start (render nginx.conf, start nginx, run the API), except:
+          #  - exec, so a crashed API restarts the container instead of looping inside it;
+          #  - --no-events and --no-etl-events turn off the AWS-only ETL layer plumbing (Lambda cron
+          #    invocations and SQS delivery), so nothing in this pod calls AWS;
+          #  - a heap cap that fits the container limit (upstream hard-codes 6144 MB).
+          args:
+            - bash
+            - -c
+            - node nginx.conf.js > /etc/nginx/nginx.conf && nginx && exec node --max-old-space-size=1024 dist/index.js --no-events --no-etl-events
+          ports:
+            - name: http
+              containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: cloudtak-config
+          env:
+            # Any value other than "test" keeps the SSRF guards on /api/basemap, /api/esri* and the video proxy
+            # (upstream skips them when StackName is unset or "test").
+            - name: StackName
+              value: cloudtak
+            - name: CLOUDTAK_Server_Mode
+              value: both
+            - name: API_URL
+              value: https://cloudtak.tail717ba0.ts.net
+            # Shared Tile38 in namespace onetak (Settings keys geofence::enabled and geofence::url, written to the
+            # database on every start). It has no password.
+            - name: CLOUDTAK_Config_geofence_enabled
+              value: "true"
+            - name: CLOUDTAK_Config_geofence_url
+              value: redis://tile38.onetak.svc.cluster.local:9851
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-signing
+                  key: secret
+            - name: POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-db
+                  key: uri
+            - name: AWS_S3_AccessKeyId
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-spaces
+                  key: access-key
+            - name: AWS_S3_SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-spaces
+                  key: secret-key
+          startupProbe:
+            httpGet:
+              path: /api
+              port: http
+            periodSeconds: 5
+            failureThreshold: 90
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1536Mi
+          # nginx starts as root (it drops to the nginx user), so no runAsNonRoot here.
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudtak-api
+  namespace: cloudtak
+  labels:
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: api
+spec:
+  selector:
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: 5000
+      targetPort: http

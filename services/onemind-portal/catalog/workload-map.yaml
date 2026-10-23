@@ -215,6 +215,7 @@ argoApplications:
   platform-backups: component:default/platform-backup-recovery
   platform-clickhouse-operator: component:default/clickhouse
   platform-cloudflared: component:default/cloudflared
+  platform-cloudtak: component:default/tak-server
   platform-core: component:default/platform-core
   platform-ecosystem-applications: component:default/argocd
   platform-ecosystem-foundation: component:default/argocd
@@ -248,3 +249,6 @@ argoApplications:
   platform-takserver: component:default/tak-server
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery
+# Argo applications that are not the primary link of a multi-application app (curate-structure.cjs picks the exact match, else the first by name).
+primaryArgoApplication:
+  tak-server: platform-takserver

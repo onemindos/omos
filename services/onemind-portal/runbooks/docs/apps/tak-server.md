@@ -7,7 +7,7 @@ TAK 5.8 hardened
 ## Where it runs
 
 - Catalog entity: `component:default/tak-server` in System `tak-ecosystem`
-- Argo CD application: `platform-takserver`
+- Argo CD applications: `platform-cloudtak`, `platform-takserver`
 - Namespace: `takserver`
 
 ## Workloads

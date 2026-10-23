@@ -1218,6 +1218,7 @@ metadata:
     onemind.io/inventory-review: imported-link
     onemind.io/hosting: external-provider-unverified
     argocd/app-name: platform-takserver
+    onemind.io/argocd-apps: platform-cloudtak,platform-takserver
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: takserver

@@ -1,0 +1,36 @@
+# platform-cloudtak: fresh install of upstream CloudTAK (dfpc-coe/CloudTAK) as a TAK client, namespace cloudtak.
+#
+# Covers: platform/cloudtak/ (api, tiles, events, retention, config, Tailscale Ingresses, NetworkPolicies, sealed secrets).
+# Wave 5, after platform-ecosystem-resources (wave 4) has created the cloudtak database and role in onemind-data.
+#
+# Needs one thing from a human before it can start: the Spaces access key, sealed as Secret/cloudtak-spaces
+# (platform/cloudtak/README.md). Until it exists the pods wait in CreateContainerConfigError and recover on their own.
+#
+# Shared services stay where they are: TAK Server (takserver), Tile38 and MediaMTX (onetak), Postgres (onemind-data).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-cloudtak
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/cloudtak
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudtak
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

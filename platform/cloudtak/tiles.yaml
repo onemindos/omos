@@ -1,0 +1,116 @@
+# PMTiles tile server (the cloudtak-pmtiles image). Reads tiles from the Spaces bucket and asks the API to
+# validate tokens. The browser reaches it through the cloudtak-tiles Tailscale Ingress (PMTILES_URL).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudtak-tiles
+  namespace: cloudtak
+  labels: &labels
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: tiles
+    app.kubernetes.io/part-of: cloudtak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: tiles
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: tiles
+          image: ghcr.io/dfpc-coe/cloudtak-pmtiles:v13.113.0@sha256:b753cc8ee8b4f63a2964417827c10af4d45dd9d6cf6e8c44ee7df554d5445997
+          ports:
+            - name: http
+              containerPort: 5002
+          envFrom:
+            - configMapRef:
+                name: cloudtak-config
+          env:
+            # In-cluster API address: the tiles pod cannot reach the tailnet hostname.
+            - name: API_URL
+              value: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+            - name: HOME
+              value: /tmp
+            - name: npm_config_cache
+              value: /tmp/.npm
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-signing
+                  key: secret
+            - name: AWS_S3_AccessKeyId
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-spaces
+                  key: access-key
+            - name: AWS_S3_SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-spaces
+                  key: secret-key
+          readinessProbe:
+            httpGet:
+              path: /tiles
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /tiles
+              port: http
+            periodSeconds: 20
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudtak-tiles
+  namespace: cloudtak
+  labels:
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: tiles
+spec:
+  selector:
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: tiles
+  ports:
+    - name: http
+      port: 5002
+      targetPort: http

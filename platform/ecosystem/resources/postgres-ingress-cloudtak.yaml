@@ -1,0 +1,25 @@
+# CloudTAK (namespace cloudtak) reaches the shared onemind-data cluster. NetworkPolicies are additive, so this adds
+# the one namespace without editing the postgres-ingress policy in postgres-network.yaml.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress-cloudtak
+  namespace: onemind-data
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: onemind-data
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cloudtak
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: cloudtak
+          app.kubernetes.io/component: api
+    ports:
+    - protocol: TCP
+      port: 5432
