@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: paperclip
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    onemind.io/layer: decide

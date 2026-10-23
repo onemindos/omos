@@ -37,6 +37,16 @@ Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. This narrow
 observation does not recertify historical inventory.
 See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
 
+## Paperclip preparation — 2026-10-23
+
+User-requested business agent workspace, **prepared in Git; not deployed or live-verified**.
+The namespace was absent during the read-only preflight. This entry does not refresh
+historical inventory counts or certify working agent integrations.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+|---|---|---|---|---|---|
+| 2 | `platform-paperclip` | `paperclip` | Dedicated PostgreSQL 17 and 10 GiB app + 10 GiB DB PVCs; encrypted logical dump/restore-check and two VolSync sources configured | Proposed private `paperclip.tail717ba0.ts.net`; app authentication | Awaiting reviewed merge, Argo sync and [acceptance](../platform/paperclip/README.md) |
+
 ## Summary
 
 | Item | Count / value |
