@@ -7,25 +7,25 @@ ollama:
   models:
     pull:
     # bge-m3: multilingual (100+ languages), 8192-token context, 1024-dim, ~1.2 GB.
-    # qwen3:1.7b: Q4_K_M, ~1.4 GB; cheap tasks and offline fallback.
+    # qwen3:4b: Q4_K_M, ~2.5 GB; supports tool calling; cheap tasks and offline fallback.
     # Pulling is additive: removing a name here does NOT delete it from the PVC.
     - bge-m3
-    - qwen3:1.7b
+    - qwen3:4b
 persistentVolume:
   enabled: true
   storageClass: do-block-storage-retain
   size: 20Gi
 resources:
-  # Sized to the loaded model, one at a time (OLLAMA_MAX_LOADED_MODELS=1):
-  # qwen3:1.7b ~1.4 GB weights + ~0.5 GB KV cache (q8_0, 8k ctx) + runtime ~0.2 GB.
-  # bge-m3 ~1.2 GB weights + activations. Request is the steady-state reservation;
-  # the limit leaves headroom for page cache of the mmapped weights during a model swap.
+  # One 4B model resident at a time (OLLAMA_MAX_LOADED_MODELS=1):
+  # qwen3:4b ~2.5 GB weights + KV cache 36 layers x 8 KV heads x 128 dim x 2 (K,V) x 1 B (q8_0)
+  # ~74 KB/token x 8192 ctx ~0.6 GB + runtime ~0.25 GB = ~3.4 GB ~= 3.2 GiB -> request 3328Mi.
+  # Limit 5Gi covers bge-m3 (~1.2 GB + activations) loaded alongside during a swap (~4.7 GB) and page cache.
   requests:
     cpu: 250m
-    memory: 1536Mi
+    memory: 3328Mi
   limits:
     cpu: '6'
-    memory: 3Gi
+    memory: 5Gi
 nodeSelector:
   onemind.io/compute-role: ecosystem
 extraEnv:
