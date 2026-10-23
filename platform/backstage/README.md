@@ -160,13 +160,10 @@ or `openchoreo.*` configuration. The portal stands alone:
   planes, the `stac-browser` pilot) are no longer synced into the catalog. Static catalog
   entries for cluster workloads, including the OpenChoreo applications themselves, are
   unchanged; tearing those down is a separate step.
-- STAC: the Operations tab on the STAC API component
-  (`component:default/k8s-onetak-stac-api-746ca5f2`) shows the API and database
-  observations from `GET /api/onemind-services/stac` (schema `onemind.stac-evidence.v2`).
-  It no longer observes the OpenChoreo-managed STAC Browser. All STAC code is in
-  `plugin-onemind-common-backend/src/stacEvidence.ts`, `plugin-onemind-services-backend/src/stacCatalog.ts`
-  and `plugin-onemind-services/src/StacOperations.tsx`, plus the `/stac` route in
-  `plugin-onemind-services-backend/src/plugin.ts`; delete those to remove STAC.
+- STAC portal integration is removed from source together with the former backend
+  observations and catalog module. This ships with the next portal release; this
+  change does not publish an image or deploy the portal. The shared bounded HTTP
+  observer remains available for Prometheus alerts.
 
 The historical Phase 6 record is
 [`docs/operations/phase6-portal-integration.md`](../../docs/operations/phase6-portal-integration.md).

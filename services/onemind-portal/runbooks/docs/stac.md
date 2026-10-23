@@ -3,7 +3,8 @@
 > **Status: backend removed.** `onetak/stac-api` and `onetak/onetak-geo-db` (with their
 > catalog entries, volume and backup source) were removed from Git because STAC was never
 > set up: the `stac` database has no `pgstac` schema. STAC Browser has no live catalog
-> behind it until a backend is deliberately re-added. The text below describes the former
+> behind it until a backend is deliberately re-added. The former portal operations code
+> has also been removed. The text below describes the former
 > setup and is kept as history.
 
 ## Ownership and request path

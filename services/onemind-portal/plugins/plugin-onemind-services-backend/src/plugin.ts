@@ -4,7 +4,7 @@ import express from 'express';
 import https from 'node:https';
 import { alertScopes, AlertScope, readPrometheusAlerts } from './prometheusAlerts';
 import { readFileSync } from 'node:fs';
-import { health, stacEvidence } from '@internal/plugin-onemind-common-backend';
+import { health } from '@internal/plugin-onemind-common-backend';
 
 type Application = { metadata: { name: string }; spec?: { destination?: { namespace?: string } }; status?: { reconciledAt?: string; health?: { status?: string }; sync?: { status?: string; revision?: string }; operationState?: { phase?: string; finishedAt?: string }; resources?: { health?: { status?: string } }[] } };
 let cache: { observedAt: string; apps: Application[] } | undefined;
@@ -48,7 +48,6 @@ export default createBackendPlugin({ pluginId: 'onemind-services', register(reg)
         metricsState: observations.status === 'rejected' ? 'unavailable' : !metric ? 'not-configured' : metric.cpuCores === null && metric.memoryBytes === null ? 'no-data' : observations.value.metricsUnavailable || metric.cpuCores === null || metric.memoryBytes === null ? 'partial' : 'observed',
         grafana: { state: namespace === 'nats' ? 'linked' : 'dashboard-mapping-required', link: namespace === 'nats' ? 'https://grafana.tail717ba0.ts.net/d/omos-nats-observ' : 'https://grafana.tail717ba0.ts.net/dashboards' } });
     } catch (error) { next(error); } });
-    routes.get('/stac', async (req,res,next)=>{try{await httpAuth.credentials(req,{allow:['user']});res.json(await stacEvidence());}catch(error){next(error);}});
     routes.get('/prometheus/:scope', async (req, res, next) => {
       try {
         await httpAuth.credentials(req, { allow: ['user'] });

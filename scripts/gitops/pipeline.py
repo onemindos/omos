@@ -147,10 +147,9 @@ def quality(run, base, p):
         run.command("portal-immutable-install", [*yarn, "install", "--immutable"], cwd=cwd)
         run.command("portal-types", [*yarn, "tsc"], cwd=cwd)
         run.command("portal-lint", [*yarn, "lint"], cwd=cwd)
-        run.command("portal-security-stac-tests", [*yarn, "test", "--watch=false", "--runInBand",
+        run.command("portal-security-tests", [*yarn, "test", "--watch=false", "--runInBand",
                     "plugins/plugin-onemind-permissions-backend/src", "plugins/plugin-onemind-auth/src/scopedFetch.test.ts",
-                    "plugins/plugin-onemind-auth-backend/src/subject.test.ts", "plugins/plugin-onemind-common-backend/src/stacEvidence.test.ts",
-                    "plugins/plugin-onemind-services-backend/src/stacCatalog.test.ts", "plugins/plugin-onemind-services-backend/src/prometheusAlerts.test.ts", "plugins/plugin-onemind-services-backend/src/prometheusRoutes.test.ts", "plugins/plugin-onemind-services/src/StacOperations.test.tsx"], cwd=cwd)
+                    "plugins/plugin-onemind-auth-backend/src/subject.test.ts", "plugins/plugin-onemind-common-backend/src/evidenceHttp.test.ts", "plugins/plugin-onemind-services-backend/src/prometheusAlerts.test.ts", "plugins/plugin-onemind-services-backend/src/prometheusRoutes.test.ts"], cwd=cwd)
         run.command("portal-layout-tests", [*yarn, "workspace", "app", "test", "--watch=false", "--runInBand",
                     "ComponentOverview.test.tsx", "componentOverviewModule.test.ts", "catalogCompositionModules.test.ts", "prometheusApi.test.ts", "prometheusPlugin.test.ts", "PrometheusAlerts.test.tsx"], cwd=cwd)
         run.command("catalog-audit-tests", ["node", "--test", "scripts/test-audit-catalog.cjs"], cwd=cwd)
