@@ -1,4 +1,4 @@
-# Element Web, mirrored from the live matrix/element-web objects (2026-10-10). Live wins over the old base.
+# Element Web, mirrored from the live matrix/element-web objects (2026-10-10, moved to onemindos.dev 2026-10-12). Live wins over the old base.
 apiVersion: v1
 kind: ConfigMap
 metadata:
