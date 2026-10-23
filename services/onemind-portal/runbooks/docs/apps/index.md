@@ -46,7 +46,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [OneTAK](onetak.md) | tak-ecosystem |
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
-| [OpenSearch](opensearch.md) | data-storage |
 | [OpenTelemetry Collector](opentelemetry-collector.md) | observability |
 | [Platform Backup and Recovery](platform-backup-recovery.md) | data-storage |
 | [Platform core manifests](platform-core.md) | infrastructure |

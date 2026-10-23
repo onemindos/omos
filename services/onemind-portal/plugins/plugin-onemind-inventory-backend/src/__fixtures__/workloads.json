@@ -1680,22 +1680,6 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "onemind-search-master",
-    "namespace": "onemind-search"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "opensearch",
-      "app.kubernetes.io/name": "opensearch"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
     "name": "egress",
     "namespace": "tailscale"
    },

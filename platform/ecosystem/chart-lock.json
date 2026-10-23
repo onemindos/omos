@@ -45,15 +45,6 @@
     "namespace": "onemind-core"
   },
   {
-    "name": "opensearch",
-    "repo": "https://opensearch-project.github.io/helm-charts",
-    "chart": "opensearch",
-    "version": "3.9.0",
-    "appVersion": "3.9.0",
-    "url": "https://github.com/opensearch-project/helm-charts/releases/download/opensearch-3.9.0/opensearch-3.9.0.tgz",
-    "namespace": "onemind-search"
-  },
-  {
     "name": "kyverno",
     "repo": "https://kyverno.github.io/kyverno",
     "chart": "kyverno",

@@ -57,7 +57,7 @@ Live (`kubectl get sc`, `kubectl get pv`):
   `platform/onetak/*`, `platform/auth/postgres.yaml`, `platform/n8n/*`,
   `platform/matrix/base/*`, `platform/backstage/postgres.yaml`, `platform/takml/pvcs.yaml`,
   `platform/hermes/agent/pvc.yaml`, `platform/data/clickhouse/clickhouse.yaml`,
-  `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr,opensearch}.yaml`,
+  `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr}.yaml`,
   `platform/ecosystem/resources/postgres-cluster.yaml`, the VolSync sources and
   restore tests under `platform/backups/`, and `platform/takserver/DEPLOY-RUNBOOK.md`.
 - DO volumes are ReadWriteOnce, single-region. They cannot be moved; data moves

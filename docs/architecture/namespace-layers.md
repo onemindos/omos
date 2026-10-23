@@ -33,5 +33,5 @@ that creates it.
 
 ## Defined in Git but deliberately unlabelled
 
-`onemind-search` (OpenSearch; no layer assigned), `geo` and `nats-tools` (defined in Git, not
-present in the cluster), (the `openchoreo-*` namespaces were removed with OpenChoreo).
+`geo` and `nats-tools` (defined in Git, not
+present in the cluster). (The `openchoreo-*` namespaces and `onemind-search` were removed with OpenChoreo and OpenSearch.)

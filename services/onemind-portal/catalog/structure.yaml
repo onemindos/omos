@@ -237,10 +237,6 @@ apps:
     title: CloudNativePG
     system: data-storage
     description: PostgreSQL operator and the Barman Cloud backup plugin.
-  - name: opensearch
-    title: OpenSearch
-    system: data-storage
-    description: Search and log store.
   - name: velero
     title: Velero
     system: data-storage

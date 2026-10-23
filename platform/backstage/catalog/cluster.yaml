@@ -3689,39 +3689,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-onemind-search-onemind-search-master-1dc21641
-  title: OpenSearch — Master
-  description: StatefulSet in onemind-search
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opensearch,app.kubernetes.io/name=opensearch
-    backstage.io/kubernetes-namespace: onemind-search
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: onemind-search-master
-    onemind.io/kubernetes-workload-kind: StatefulSet
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - onemind-search
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/opensearch
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-tailscale-egress-a22cb3a3
   title: Tailscale operator and proxies — Egress
   description: StatefulSet in tailscale

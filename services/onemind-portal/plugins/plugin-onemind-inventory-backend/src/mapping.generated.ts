@@ -107,7 +107,6 @@ export const mapping: InventoryMapping = {
     'onemind-core/onemind-core': 'component:default/onemind-core',
     'onemind-core/onemind-ingestion': 'component:default/onemind-core',
     'onemind-core/openfga': 'component:default/openfga',
-    'onemind-search/onemind-search-master': 'component:default/opensearch',
     'onetak/nodeodm': 'component:default/webodm',
     'onetak/onetak-media': 'component:default/onetak',
     'onetak/tak-portal': 'component:default/onetak',
@@ -401,12 +400,6 @@ export const mapping: InventoryMapping = {
     openfga: {
       title: 'OpenFGA',
       system: 'identity-access',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    opensearch: {
-      title: 'OpenSearch',
-      system: 'data-storage',
       pillar: 'so',
       review: 'proposed',
     },
