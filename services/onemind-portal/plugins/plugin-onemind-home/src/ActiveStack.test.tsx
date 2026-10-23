@@ -11,6 +11,7 @@ const bucket = {
   set,
 };
 jest.mock('@backstage/core-plugin-api', () => ({
+  ...jest.requireActual('@backstage/core-plugin-api'),
   storageApiRef: {},
   useApi: () => ({ forBucket: () => bucket }),
 }));

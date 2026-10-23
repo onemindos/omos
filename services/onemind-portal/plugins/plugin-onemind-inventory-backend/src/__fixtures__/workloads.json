@@ -1677,23 +1677,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "openclaw",
-    "namespace": "openclaw"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "openclaw",
-      "onemind.os/component": "openclaw-gateway",
-      "onemind.os/managed-by": "kustomize"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "opencost",
     "namespace": "opencost"
    },
@@ -2622,21 +2605,6 @@
     "selector": {
      "matchLabels": {
       "app": "bf582a24-1bac-4ae0-a170-b79d7dd626f3"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "ts-openclaw-gateway-s7hcm",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "dfa22f2a-91cc-4d4a-ab89-b9327819ae9c"
      }
     }
    }
