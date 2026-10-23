@@ -51,7 +51,7 @@ Not active or not deployed: `docs/references/` (external project research, moved
 
 1. Application manifests live under `platform/<layer>/` (or `platform/takserver/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
 2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
-3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is an in-cluster Harbor. DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
+3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is no in-cluster registry (Harbor was removed). DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
 5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (`docs/operations/cluster-review-2026-10-09.md`, H1); do not add requests casually.
 
@@ -135,7 +135,7 @@ On every PR to `main`: changed-YAML lint, ShellCheck, Terraform fmt/validate, ku
 - Never commit secrets or credentials (even test values) to this repo
 - Never deploy imperatively without a matching manifest here; never add a new Helm-CLI release
 - Never create a new NATS subject pattern outside the grammar above
-- Never use DOCR; images are on GHCR (and the in-cluster Harbor)
+- Never use DOCR; images are on GHCR
 - Never point a cloud workload at a Mac or edge NATS; cloud services use the in-cluster address (Hermes' sidecar is the one documented exception)
 - Never delete PVCs, namespaces or backup data without a fresh snapshot and explicit approval
 - Never add services that duplicate an existing layer; check `docs/STACK.md` first

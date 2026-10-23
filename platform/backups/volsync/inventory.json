@@ -192,36 +192,6 @@
     "size": "20Gi"
   },
   {
-    "namespace": "onemind-registry",
-    "pvc": "data-harbor-redis-0",
-    "source": "volume-baee1f2a0bd3",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "data-harbor-trivy-0",
-    "source": "volume-2bf1a9962441",
-    "size": "10Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "database-data-harbor-database-0",
-    "source": "volume-7db10f24603b",
-    "size": "5Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "harbor-jobservice",
-    "source": "volume-01764533bacc",
-    "size": "1Gi"
-  },
-  {
-    "namespace": "onemind-registry",
-    "pvc": "harbor-registry",
-    "source": "volume-f0b56ae255e2",
-    "size": "40Gi"
-  },
-  {
     "namespace": "onemind-search",
     "pvc": "onemind-search-master-onemind-search-master-0",
     "source": "volume-bf5e2b142d4b",

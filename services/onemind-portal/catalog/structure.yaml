@@ -213,10 +213,6 @@ apps:
     title: External Secrets Operator
     system: identity-access
     description: Synchronizes secrets from external stores.
-  - name: harbor
-    title: Harbor
-    system: gitops-delivery
-    description: In-cluster container registry with image scanning.
   - name: backstage
     title: Backstage portal
     system: developer-platform

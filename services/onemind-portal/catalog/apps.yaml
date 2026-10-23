@@ -6702,39 +6702,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: harbor
-  tags:
-    - kubernetes
-  title: Harbor
-  description: In-cluster container registry with image scanning.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-harbor
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: onemind-registry
-    backstage.io/kubernetes-label-selector: app=harbor,release=harbor
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onemind-registry
-    grafana/alert-label-selector: namespace=onemind-registry
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-registry
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-registry"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/harbor/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onemind-registry/harbor-core,onemind-registry/harbor-database,onemind-registry/harbor-jobservice,onemind-registry/harbor-nginx,onemind-registry/harbor-portal,onemind-registry/harbor-redis,onemind-registry/harbor-registry,onemind-registry/harbor-trivy
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: gitops-delivery
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: backstage
   tags:
     - kubernetes

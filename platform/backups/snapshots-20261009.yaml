@@ -71,56 +71,6 @@ spec:
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
-  name: readiness-20261009-baee1f2a0bd3
-  namespace: onemind-registry
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: data-harbor-redis-0
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-2bf1a9962441
-  namespace: onemind-registry
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: data-harbor-trivy-0
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-7db10f24603b
-  namespace: onemind-registry
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: database-data-harbor-database-0
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-01764533bacc
-  namespace: onemind-registry
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: harbor-jobservice
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-f0b56ae255e2
-  namespace: onemind-registry
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: harbor-registry
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
   name: readiness-20261009-bf5e2b142d4b
   namespace: onemind-search
 spec:

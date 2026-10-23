@@ -82,15 +82,6 @@
     "namespace": "onemind-ai"
   },
   {
-    "name": "harbor",
-    "repo": "https://helm.goharbor.io",
-    "chart": "harbor",
-    "version": "1.19.2",
-    "appVersion": "2.15.2",
-    "url": "harbor-1.19.2.tgz",
-    "namespace": "onemind-registry"
-  },
-  {
     "name": "velero",
     "repo": "https://vmware-tanzu.github.io/helm-charts",
     "chart": "velero",

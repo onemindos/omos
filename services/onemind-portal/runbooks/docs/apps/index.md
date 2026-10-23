@@ -21,7 +21,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [FedHub](fedhub.md) | tak-ecosystem |
 | [OneTAK geospatial services](geo-data-services.md) | geospatial |
 | [Grafana](grafana.md) | observability |
-| [Harbor](harbor.md) | gitops-delivery |
 | [Headlamp](headlamp.md) | developer-platform |
 | [Cluster health observer](health-keeper.md) | observability |
 | [Hermes (Legacy)](hermes-legacy.md) | ai-agents |
