@@ -51,7 +51,7 @@ Verified against live Ingress objects on 2026-10-09.
 | `zeusdelacruz.com`, `www.zeusdelacruz.com` | (none) | (none) | **Retired 2026-10-10** | zeus-site service removed; DNS cleanup is a manual owner step (`docs/operations/RETIRE-ZEUS-SITE.md`). |
 | `auth.onemindos.dev` | auth/authentik-ingress | Authentik | **Keep public via tunnel** | IdP / OIDC callbacks for users off the tailnet. Private mirror already exists: `onemind-auth.tail717ba0.ts.net`. |
 | `matrix.onemindos.com`, `element.onemindos.com` | matrix/matrix-ingress | Synapse, Element | **Keep public via tunnel** | Needed for federation and non-tailnet users. Confirm federation uses `.well-known` delegation to 443 (a tunnel cannot carry raw 8448). |
-| `onemindos.dev`, `tiles.onemindos.dev` | onetak/onetak-ingress | onetak-api (CloudTAK), onetak-tiles | **Tailnet only** (tunnel + Cloudflare Access as interim) | Operational C2 UI. Move once every user has Tailscale. Needs a `tailscale` Ingress (future PR). |
+| `onemindos.dev` | onetak/onetak-ingress | onetak-api (CloudTAK), onetak-tiles | **Tailnet only** (tunnel + Cloudflare Access as interim) | Operational C2 UI. Move once every user has Tailscale. Needs a `tailscale` Ingress (future PR). |
 | `ws.onemindos.dev` | nats/nats-ws-ingress | nats:8080 websocket | **Tailnet only** | `omos-nats` already exposes 8080 on the tailnet. Only keep public if a browser client off the tailnet needs it. |
 | `enroll.onemindos.dev` | onetak/tak-portal-ingress | tak-portal:8080 | **Tailnet only** | EUDs are on Tailscale now. |
 | `fedhub.onemindos.dev` | takserver/fedhub-ingress | fedhub-ui | **Tailnet only** | Admin UI. |

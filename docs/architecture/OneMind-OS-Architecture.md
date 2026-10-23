@@ -92,7 +92,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 |------|-----------|----------------|
 | 0 | `platform/core/` | ingress-nginx, cert-manager, sealed-secrets controller, Tailscale operator, GitHub Actions runner, cloudflared (standby) |
 | 1 | `platform/nats/` | NATS 3-node HA (Helm), NACK JetStream controller, TLS, all 39 stream + KV definitions |
-| 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, PostGIS (onetak-db), Martin, WebODM, NodeODM, STAC |
+| 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, PostGIS (onetak-db), WebODM, NodeODM, STAC |
 | 2 | `platform/takserver/` | TAK Server 5.8 (Helm), FedHub, tak-ldap, NATS leaf sidecar |
 | 3 | `platform/hermes/` | Legacy AI (Hermes) + copilot-runtime, Hermes web UI |
 | 3 | `platform/omos/` | tak-projector, feed-intel, feed-satellites, sink-clickhouse, redpanda-connect, mission-engine |
@@ -465,7 +465,6 @@ Six databases — each justified. The only consolidation is killing the empty `g
 
 | Service | Status | Verdict |
 |---------|--------|---------|
-| Martin (vector tiles from PostGIS) | Running | KEEP always-on — core map rendering |
 | Tile38 (geospatial index) | Manifest only | KEEP — activate when geofencing live |
 | STAC (imagery catalog) | Scaled to 0 | ACTIVATE when drone imagery pipeline live |
 | NodeODM (photogrammetry) | Running | KEEP — drone image → 3D Tiles pipeline |
