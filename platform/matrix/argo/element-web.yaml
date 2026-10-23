@@ -9,8 +9,8 @@ data:
     {
       "default_server_config": {
         "m.homeserver": {
-          "base_url": "https://matrix.onemindos.com",
-          "server_name": "onemindos.com"
+          "base_url": "https://matrix.onemindos.dev",
+          "server_name": "onemindos.dev"
         },
         "m.identity_server": {
           "base_url": "https://vector.im"

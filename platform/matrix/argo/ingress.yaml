@@ -1,0 +1,54 @@
+# Adopt the existing .dev routes without changing their live behavior.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: matrix-ingress
+  namespace: matrix
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: matrix.onemindos.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: synapse
+            port:
+              number: 8008
+        path: /
+        pathType: Prefix
+  - host: element.onemindos.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: element-web
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: matrix-wellknown
+  namespace: matrix
+  annotations: {}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: onemindos.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: synapse
+            port:
+              number: 8008
+        path: /.well-known/matrix
+        pathType: Prefix
