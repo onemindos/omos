@@ -109,7 +109,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
 | `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
-| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (STAC, Tile38), WebODM | about 170 GiB of PVCs | `VolSync` x6 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
+| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp and Kubernetes Dashboard | none | Git | tailnet | Argo |

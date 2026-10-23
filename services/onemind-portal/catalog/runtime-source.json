@@ -359,11 +359,6 @@
     {
       "kind": "Deployment",
       "namespace": "onetak",
-      "name": "onetak-geo-db"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
       "name": "onetak-media"
     },
     {
@@ -385,11 +380,6 @@
       "kind": "Deployment",
       "namespace": "onetak",
       "name": "pg-featureserv"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "stac-api"
     },
     {
       "kind": "Deployment",
@@ -1454,11 +1444,6 @@
     {
       "kind": "Service",
       "namespace": "onetak",
-      "name": "onetak-geo-db"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
       "name": "onetak-media"
     },
     {
@@ -1480,11 +1465,6 @@
       "kind": "Service",
       "namespace": "onetak",
       "name": "pg-featureserv"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "stac-api"
     },
     {
       "kind": "Service",

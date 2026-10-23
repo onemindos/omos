@@ -91,12 +91,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "onetak-geo-db-data",
-    "source": "volume-50fb74ff16c6",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "tile38-data",
     "source": "volume-adf3fcd472a7",
     "size": "10Gi"

@@ -6213,62 +6213,6 @@ spec:
   system: observability
 ---
 apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: onetak-stac-readonly
-  title: OneTAK STAC read-only API
-  description: Reviewed collection/search surface for the existing STAC pilot.
-    Documentation is not proof of live query success.
-  annotations:
-    backstage.io/source-location: url:https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml
-    onemind.io/contract-scope: read-only subset; no catalog writes or full-STAC compliance claim
-    onemind.io/pillar-review: proposed
-  links:
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/
-      title: STAC diagnosis and recovery
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: openapi
-  lifecycle: experimental
-  owner: group:default/onemind-admins
-  system: geospatial
-  definition: |
-    openapi: 3.0.3
-    info:
-      title: OneTAK STAC read-only subset
-      version: 1.0.0
-      description: Reviewed interface subset, not generated or validated full upstream
-        OpenAPI. Runtime errors and data freshness are observed separately.
-    servers:
-    - url: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http/catalog
-    paths:
-      /:
-        get:
-          summary: Landing page
-          responses:
-            '200':
-              description: STAC response
-            '500':
-              description: Backing API error; no data freshness conclusion
-      /collections:
-        get:
-          summary: Collection listing
-          responses:
-            '200':
-              description: STAC response
-            '500':
-              description: Backing API error; no data freshness conclusion
-      /search:
-        get:
-          summary: Read-only bounded item search
-          responses:
-            '200':
-              description: STAC response
-            '500':
-              description: Backing API error; no data freshness conclusion
----
-apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: platform-core
@@ -7201,20 +7145,20 @@ metadata:
   tags:
     - kubernetes
   title: OneTAK geospatial services
-  description: Tile38, STAC API/browser and the geo database.
+  description: Tile38 and the STAC browser.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onetak,dp-default-onetak-development-b188bf98
+    onemind.io/kubernetes-namespaces: dp-default-onetak-development-b188bf98,onetak
     grafana/alert-label-selector: namespace=onetak
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=onetak-geo-db&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
-    onemind.io/logs-query: '{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98",
-      k8s_pod_name=~"(onetak-geo-db|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=dp-default-onetak-development-b188bf98&var-namespace=onetak&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
+    onemind.io/logs-query: '{k8s_namespace_name=~"dp-default-onetak-development-b188bf98|onetak",
+      k8s_pod_name=~"(stac-browser-development-0c6b80f7|tile38)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/geo-data-services/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7,onetak/onetak-geo-db,onetak/stac-api,onetak/tile38
+    onemind.io/kubernetes-workloads: dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7,onetak/tile38
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

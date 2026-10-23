@@ -1,7 +1,9 @@
 # STAC database repair: preflight and recovery gates
 
-Status: read-only preflight complete; recovery proof and live repair remain unexecuted.
-No live schema initialization is authorized.
+Status: **superseded.** The STAC API (`onetak/stac-api`), the `onetak-geo-db` server and its
+VolSync source were removed from Git by the `cleanup/remove-stac-geodb` change, because STAC was
+never set up (no `pgstac` schema, see the evidence below). This page is kept as that evidence;
+the repair plan below is no longer pursued and nothing here is authorized.
 This is a dependency repair for the phase-3 frontend pilot; the shared PostgreSQL
 server remains managed by Argo CD outside OpenChoreo.
 

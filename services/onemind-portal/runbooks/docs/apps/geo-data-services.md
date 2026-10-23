@@ -2,20 +2,18 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Tile38, STAC API/browser and the geo database.
+Tile38 and the STAC browser.
 
 ## Where it runs
 
 - Catalog entity: `component:default/geo-data-services` in System `geospatial`
 - Argo CD application: none recorded for this app
-- Namespaces: `onetak`, `dp-default-onetak-development-b188bf98`
+- Namespaces: `dp-default-onetak-development-b188bf98`, `onetak`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `onetak-geo-db` | Deployment | `onetak` |
-| `stac-api` | Deployment | `onetak` |
 | `stac-browser-development-0c6b80f7` | Deployment | `dp-default-onetak-development-b188bf98` |
 | `tile38` | Deployment | `onetak` |
 
@@ -33,8 +31,8 @@ Tile38, STAC API/browser and the geo database.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98", k8s_pod_name=~"(onetak-geo-db|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=onetak-geo-db&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38`
+- Loki query: `{k8s_namespace_name=~"dp-default-onetak-development-b188bf98|onetak", k8s_pod_name=~"(stac-browser-development-0c6b80f7|tile38)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=dp-default-onetak-development-b188bf98&var-namespace=onetak&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38`
 - Source: `onemindos/omos`
 
 ## Escalate
