@@ -23,7 +23,7 @@ There are only a handful of such places, listed below.
 | 9 | `doctl` in scripts | 0 in-cluster jobs; local use in `platform/install.sh`, `scripts/manage_ecosystem_workers.py`, `platform/matrix/deploy-matrix.sh`, legacy runbooks | Remove / replace per section 9 | S |
 | 10 | Terraform `infra/` (DO provider) | 2 roots: `infra/` (VPC, cluster, project), `infra/ecosystem-workers/` (node pool) | Not needed for k3s/Talos | S |
 | 11 | DO-hosted system images | 12 images from `ghcr.io/digitalocean-packages/*` (all DOKS-managed, kube-system) | Disappear with DOKS | none |
-| 12 | DOCR (container registry) | 0 in use (images are GHCR + in-cluster Harbor) | none | none |
+| 12 | DOCR (container registry) | 0 in use (images are GHCR) | none | none |
 | 13 | Managed databases | 0 (CNPG + in-cluster Postgres) | none | none |
 
 Everything else (Argo CD, Authentik, NATS, TAK, CNPG, VolSync, Velero, Tailscale,
@@ -57,7 +57,7 @@ Live (`kubectl get sc`, `kubectl get pv`):
   `platform/onetak/*`, `platform/auth/postgres.yaml`, `platform/n8n/*`,
   `platform/matrix/base/*`, `platform/backstage/postgres.yaml`, `platform/takml/pvcs.yaml`,
   `platform/hermes/agent/pvc.yaml`, `platform/data/clickhouse/clickhouse.yaml`,
-  `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr,opensearch,harbor}.yaml`,
+  `platform/values/{loki,tempo}.yaml`, `platform/ecosystem/values/{ollama,dapr,opensearch}.yaml`,
   `platform/ecosystem/resources/postgres-cluster.yaml`, the VolSync sources and
   restore tests under `platform/backups/`, and `platform/takserver/DEPLOY-RUNBOOK.md`.
 - DO volumes are ReadWriteOnce, single-region. They cannot be moved; data moves

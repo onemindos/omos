@@ -32,11 +32,12 @@ against live `do-nyc3-omos-cloud` (read-only).
 | `platform-openchoreo-events`, `-finops`, `-logs`, `-traces` | openchoreo-observability-plane | adapters and collectors only |
 | `ecosystem-opensearch` | onemind-search | StatefulSet; its PVC is a volumeClaimTemplate (not tracked, Retain) |
 | `ecosystem-oc-control` | openchoreo-control-plane | OpenChoreo control plane **and 36 CRDs** (see below) |
-| `ecosystem-harbor` | onemind-registry | being removed; tracks PVCs `harbor-registry` (Retain) and `harbor-jobservice` |
 
 Cascade only deletes what the Application tracks. It never deletes the namespace unless the
 Application renders the Namespace object, and it never deletes StatefulSet
 volumeClaimTemplate PVCs (unless the StatefulSet sets `persistentVolumeClaimRetentionPolicy.whenDeleted: Delete`).
+
+`ecosystem-harbor` carried the finalizer for its removal and was deleted from Git in the Harbor removal PR; deleting its live Application cascades to its tracked objects (PVC objects for `harbor-registry` (Retain) and `harbor-jobservice`; the StatefulSet PVCs stay).
 
 `ecosystem-oc-control` is the one deliberate exception to "no CRDs": it is part of the
 OpenChoreo family (every other `platform-openchoreo-*` Application already cascades) and the

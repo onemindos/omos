@@ -130,7 +130,6 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-litellm` | onemind-ai | litellm-helm 1.104.2 (OCI) | Model gateway | PostgreSQL (CNPG) | `Velero`, `Barman` | internal. `/metrics` scrape returns 401 (A6) |
 | `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
 | `ecosystem-opensearch` | onemind-search | opensearch 3.9.0 | Search | 20 GiB | `VolSync` | internal |
-| `ecosystem-harbor` | onemind-registry | harbor 1.19.2 | In-cluster container registry | 61 GiB | `VolSync` x5 | internal |
 | `ecosystem-oc-control` | openchoreo-control-plane | openchoreo-control-plane 1.3.1 (+ overrides) | OpenChoreo developer platform | none | Git | gateway LB on **tailnet** |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |

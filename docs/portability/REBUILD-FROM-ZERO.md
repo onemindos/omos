@@ -180,10 +180,10 @@ Order: Postgres first, then the apps that use them.
 4. Check ownership and data-directory modes before starting any database.
 5. Only after the app is verified, re-enable that PVC's ReplicationSource.
 Raw copies of database or NATS volumes are crash-consistent only; prefer logical archives
-for Postgres/NATS (steps 7-8) and use VolSync for file data (Hermes state, Harbor, OpenSearch,
+for Postgres/NATS (steps 7-8) and use VolSync for file data (Hermes state, OpenSearch,
 Grafana/Prometheus, Valhalla/geo data, Matrix media, etc.).
 Per-PVC order of priority: Hermes (25 GiB), Authentik, TAK volumes, Matrix, n8n, Backstage,
-Harbor (61 GiB), OpenSearch, Dapr, ClickHouse (20 GiB), monitoring (Prometheus/Grafana/
+OpenSearch, Dapr, ClickHouse (20 GiB), monitoring (Prometheus/Grafana/
 Loki/Tempo), onetak geo data (about 450 GiB; may be rebuilt from public sources instead).
 
 ### Step 10. Velero and the remaining apps (about 1 h)
@@ -223,7 +223,7 @@ Tick every line; record date, who, and times.
 - [ ] Authentik: admin login works, an OIDC client (Argo, Grafana, Backstage) logs in.
 - [ ] CNPG: Cluster Ready, 7 databases, 114 tables.
 - [ ] Hermes: starts, `state.db` present, answers a prompt.
-- [ ] Harbor/OpenSearch/ClickHouse: UI/query works (ClickHouse: 9 tables, tens of millions of rows).
+- [ ] OpenSearch/ClickHouse: UI/query works (ClickHouse: 9 tables, tens of millions of rows).
 - [ ] Monitoring: Prometheus targets up; Alertmanager has a real receiver (gap G6).
 - [ ] Backups on the new cluster: run one job of each kind (`kubectl create job --from=cronjob/...`), confirm `.verified.json`, confirm VolSync sources `Successful`.
 - [ ] Offsite copy ran at least once and `_offsite/last-success.json` is fresh.
@@ -269,7 +269,7 @@ CNPG has WAL archiving, so it can recover to a point in time.
 | G6 | **Alertmanager delivers nowhere** (review A17) | You would not know a backup stopped | Wire a receiver |
 | G7 | **Secrets not in SealedSecret form**: NATS passwords (out-of-band), Helm values with credentials (monitoring has a plaintext `--password=` arg, review/STACK.md), Tailscale OAuth, Cloudflare tokens; the 1Password SA token and other tokens sit in plaintext in a Dropbox-synced vault file (review C1) | A rebuild depends on a password manager that must itself be safe and rotated | Rotate; move to sealed/ESO |
 | G8 | **Hermes local state**: the in-cluster agent home (25 GiB PVC, `state.db`) is covered by VolSync; any Hermes configuration kept on the laptop (local config, the `hermes()` shell function, local skills; location not verified here) is not backed up by this system | Laptop loss loses local agent config | Inventory those files and back them up with the same restic scheme |
-| G9 | **Mutable `:latest` images (31) and no air-gapped registry**: a rebuild may pull different images than today, and GHCR/Docker Hub must be reachable. Custom images are amd64-only | Behaviour drift; ARM hardware will fail | Pin digests; mirror images into Harbor; choose amd64 hardware |
+| G9 | **Mutable `:latest` images (31) and no air-gapped registry**: a rebuild may pull different images than today, and GHCR/Docker Hub must be reachable. Custom images are amd64-only | Behaviour drift; ARM hardware will fail | Pin digests; mirror images into a registry you run; choose amd64 hardware |
 | G10 | **Tailscale state**: proxy node keys are regenerated; tailnet hostnames and ACL references change. EUD profiles use `tak.tail717ba0.ts.net`; the old public IP `152.42.155.95` was released 2026-10-23 | EUDs need new profiles | Use DNS names |
 | G11 | **etcd/Kubernetes object state** is not backed up on DOKS (managed), and at home it will be our job. Velero covers 3 namespaces only | Cluster-scoped objects come from Git only | Add etcd snapshots at home; widen Velero |
 | G12 | **Not yet drilled end to end**; ClickHouse rows, TAK app workflows, Authentik login after restore are checked only at database level | Unknown unknowns | Run the game day |

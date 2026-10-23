@@ -13,7 +13,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "platform/ecosystem/resources/secrets"
 NAMESPACES = ["onemind-data", "onemind-core", "onemind-ai",
-              "onemind-search", "onemind-registry", "velero"]
+              "onemind-search", "velero"]
 
 
 def existing(namespace, name):
@@ -85,7 +85,6 @@ def main():
     add("backstage", "onemind-core-gateway", {"ONEMIND_CORE_GATEWAY_KEY": gateway})
     add("onemind-core", "openfga-auth", {"keys": secrets.token_urlsafe(48)})
     add("onemind-search", "opensearch-auth", {"password": "Om1!" + secrets.token_urlsafe(40)})
-    add("onemind-registry", "harbor-admin", {"password": secrets.token_urlsafe(40)})
     backup = existing("ops", "platform-backup-credentials")
     add("velero", "velero-credentials", {"cloud": "[default]\naws_access_key_id=" + backup["S3_ACCESS_KEY"] +
                                          "\naws_secret_access_key=" + backup["S3_SECRET_KEY"] + "\n"})

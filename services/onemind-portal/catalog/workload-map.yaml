@@ -89,14 +89,6 @@ workloads:
   onemind-core/onemind-core: component:default/onemind-core
   onemind-core/onemind-ingestion: component:default/onemind-core
   onemind-core/openfga: component:default/openfga
-  onemind-registry/harbor-core: component:default/harbor
-  onemind-registry/harbor-database: component:default/harbor
-  onemind-registry/harbor-jobservice: component:default/harbor
-  onemind-registry/harbor-nginx: component:default/harbor
-  onemind-registry/harbor-portal: component:default/harbor
-  onemind-registry/harbor-redis: component:default/harbor
-  onemind-registry/harbor-registry: component:default/harbor
-  onemind-registry/harbor-trivy: component:default/harbor
   onemind-search/onemind-search-master: component:default/opensearch
   onetak/nodeodm: component:default/webodm
   onetak/onetak-geo-db: component:default/geo-data-services
@@ -181,7 +173,6 @@ argoApplications:
   ecosystem-dapr: component:default/dapr
   ecosystem-external-secrets: component:default/external-secrets
   ecosystem-falco: component:default/falco
-  ecosystem-harbor: component:default/harbor
   ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm

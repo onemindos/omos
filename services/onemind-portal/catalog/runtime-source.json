@@ -338,31 +338,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-core"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-jobservice"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-nginx"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-portal"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-registry"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "onetak",
       "name": "maputnik"
     },
@@ -675,21 +650,6 @@
       "kind": "StatefulSet",
       "namespace": "nats",
       "name": "nats"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-registry",
-      "name": "harbor-database"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-registry",
-      "name": "harbor-redis"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-registry",
-      "name": "harbor-trivy"
     },
     {
       "kind": "StatefulSet",
@@ -1455,46 +1415,6 @@
       "kind": "Service",
       "namespace": "onemind-data",
       "name": "onemind-data-rw"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-core"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-database"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-jobservice"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-portal"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-redis"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-registry"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-trivy"
     },
     {
       "kind": "Service",
