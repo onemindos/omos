@@ -32,7 +32,6 @@ workloads:
   dapr-system/dapr-sidecar-injector: component:default/dapr
   dp-default-onetak-development-b188bf98/stac-browser: component:default/geo-data-services
   dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7: component:default/geo-data-services
-  external-dns/external-dns: component:default/external-dns
   external-secrets/external-secrets: component:default/external-secrets
   external-secrets/external-secrets-cert-controller: component:default/external-secrets
   external-secrets/external-secrets-webhook: component:default/external-secrets
@@ -213,7 +212,6 @@ argoApplications:
   platform-ecosystem-applications: component:default/argocd
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
-  platform-external-dns: component:default/external-dns
   platform-fedhub: component:default/fedhub
   platform-kube: component:default/headlamp
   platform-legacy: component:default/hermes-legacy

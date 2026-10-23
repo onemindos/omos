@@ -84,7 +84,6 @@
   "component:default/k8s-dapr-system-dapr-sentry-96e04aea",
   "component:default/k8s-dapr-system-dapr-sidecar-injector-3830c728",
   "component:default/k8s-dp-default-onetak-development-b188bf98-stac-browse-45be60df",
-  "component:default/k8s-external-dns-external-dns-50f1f7b6",
   "component:default/k8s-external-secrets-external-secrets-c757319b",
   "component:default/k8s-external-secrets-external-secrets-cert-controller-829caa4c",
   "component:default/k8s-external-secrets-external-secrets-webhook-65f46145",
