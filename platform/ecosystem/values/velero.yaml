@@ -43,5 +43,4 @@ schedules:
       - onemind-core
       - onemind-data
       - onemind-ai
-      - onemind-jobs
       snapshotVolumes: false

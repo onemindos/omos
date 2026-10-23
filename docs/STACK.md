@@ -60,7 +60,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 ### Column legend
 
-- **Backup:** `PG dump` = scheduled CronJob that uploads an encrypted archive to Spaces and restore-verifies it. `VolSync` = restic copy of the PVC to Spaces. `Velero` = daily namespace backup (06:00 UTC, 720 h retention) for `onemind-core`, `onemind-data`, `onemind-ai`, `onemind-jobs`. `Barman` = CNPG continuous backup. `Git` = stateless, rebuilt from this repo. All of these land in DigitalOcean Spaces `nyc3`, the same provider and region as the cluster (report finding A18).
+- **Backup:** `PG dump` = scheduled CronJob that uploads an encrypted archive to Spaces and restore-verifies it. `VolSync` = restic copy of the PVC to Spaces. `Velero` = daily namespace backup (06:00 UTC, 720 h retention) for `onemind-core`, `onemind-data`, `onemind-ai`. `Barman` = CNPG continuous backup. `Git` = stateless, rebuilt from this repo. All of these land in DigitalOcean Spaces `nyc3`, the same provider and region as the cluster (report finding A18).
 - **Exposure:** `public` = reachable from the internet. `public (CF)` = nginx ingress restricted to Cloudflare source ranges. `public (open)` = nginx ingress with no source restriction. `tailnet` = Tailscale ingress or LB only. `internal` = ClusterIP only.
 - **GitOps:** `Argo` = an Argo Application reconciles it from this repo. `Helm CLI` = installed with `helm upgrade` from a laptop (see [GitOps gaps](#gitops-gaps)). `none` = applied by hand, no owner in Git or Helm.
 

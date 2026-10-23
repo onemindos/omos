@@ -189,7 +189,7 @@ Loki/Tempo), onetak geo data (about 450 GiB; may be rebuilt from public sources 
 ### Step 10. Velero and the remaining apps (about 1 h)
 
 - Velero restores Kubernetes OBJECTS only (volume snapshots are off). Use it for namespaces
-  `onemind-core`, `onemind-data`, `onemind-ai`, `onemind-jobs` if Git is missing something:
+  `onemind-core`, `onemind-data`, `onemind-ai` if Git is missing something:
   new BSL, `accessMode: ReadOnly`, then `velero restore create --from-backup <name>`.
   Exclude Secrets that Sealed Secrets owns to avoid conflicts.
 - Let Argo finish syncing every remaining Application. Resolve the known OutOfSync items
@@ -271,7 +271,7 @@ CNPG has WAL archiving, so it can recover to a point in time.
 | G8 | **Hermes local state**: the in-cluster agent home (25 GiB PVC, `state.db`) is covered by VolSync; any Hermes configuration kept on the laptop (local config, the `hermes()` shell function, local skills; location not verified here) is not backed up by this system | Laptop loss loses local agent config | Inventory those files and back them up with the same restic scheme |
 | G9 | **Mutable `:latest` images (31) and no air-gapped registry**: a rebuild may pull different images than today, and GHCR/Docker Hub must be reachable. Custom images are amd64-only | Behaviour drift; ARM hardware will fail | Pin digests; mirror images into Harbor; choose amd64 hardware |
 | G10 | **Tailscale state**: proxy node keys are regenerated; tailnet hostnames and ACL references change. EUD profiles hardcode `152.42.155.95` | EUDs need new profiles | Use DNS names |
-| G11 | **etcd/Kubernetes object state** is not backed up on DOKS (managed), and at home it will be our job. Velero covers 4 namespaces only | Cluster-scoped objects come from Git only | Add etcd snapshots at home; widen Velero |
+| G11 | **etcd/Kubernetes object state** is not backed up on DOKS (managed), and at home it will be our job. Velero covers 3 namespaces only | Cluster-scoped objects come from Git only | Add etcd snapshots at home; widen Velero |
 | G12 | **Not yet drilled end to end**; ClickHouse rows, TAK app workflows, Authentik login after restore are checked only at database level | Unknown unknowns | Run the game day |
 | G13 | **Droplet (node) backups are off** and CSI snapshots are DO-only | Irrelevant for a rebuild, but do not count them as DR | none |
 | G14 | **Large geo volumes** (Valhalla 50 GiB at 99%, Nominatim/Overpass 2x100 GiB idle) | Restore time and cost | Decide rebuild-from-source vs restore |
