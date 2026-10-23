@@ -32,7 +32,7 @@ kind: ConfigMap
 metadata:
   name: fedhub-authorized-users
   namespace: takserver
-  labels: { app: fedhub }
+  labels: {app: fedhub}
 data:
   authorized_users.yml: |
     ---
@@ -45,14 +45,14 @@ kind: Deployment
 metadata:
   name: fedhub
   namespace: takserver
-  labels: { app: fedhub }
+  labels: {app: fedhub}
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: fedhub }
+    matchLabels: {app: fedhub}
   template:
     metadata:
-      labels: { app: fedhub }
+      labels: {app: fedhub}
     spec:
       imagePullSecrets:
         - name: ghcr
@@ -79,27 +79,27 @@ spec:
           image: ghcr.io/onemindos/fedhub:5.8
           imagePullPolicy: Always
           ports:
-            - { name: ui,    containerPort: 9100, protocol: TCP }
-            - { name: fed-v1, containerPort: 9101, protocol: TCP }
-            - { name: fed-v2, containerPort: 9102, protocol: TCP }
+            - {name: ui, containerPort: 9100, protocol: TCP}
+            - {name: fed-v1, containerPort: 9101, protocol: TCP}
+            - {name: fed-v2, containerPort: 9102, protocol: TCP}
           env:
-            - { name: BROKER_MAX_HEAP,         value: "512" }
-            - { name: UI_MAX_HEAP,             value: "256" }
-            - { name: POLICY_MAX_HEAP,         value: "256" }
-            - { name: PLUGIN_MANAGER_MAX_HEAP, value: "128" }
+            - {name: BROKER_MAX_HEAP, value: "512"}
+            - {name: UI_MAX_HEAP, value: "256"}
+            - {name: POLICY_MAX_HEAP, value: "256"}
+            - {name: PLUGIN_MANAGER_MAX_HEAP, value: "128"}
           readinessProbe:
-            tcpSocket: { port: 9100 }
+            tcpSocket: {port: 9100}
             initialDelaySeconds: 30
             periodSeconds: 15
             failureThreshold: 6
           livenessProbe:
-            tcpSocket: { port: 9100 }
+            tcpSocket: {port: 9100}
             initialDelaySeconds: 60
             periodSeconds: 30
             failureThreshold: 3
           resources:
-            requests: { cpu: 500m, memory: 1Gi }
-            limits:   { cpu: "2",  memory: 2Gi }
+            requests: {cpu: 500m, memory: 1Gi}
+            limits: {cpu: "2", memory: 2Gi}
           volumeMounts:
             - name: fedhub-configs
               mountPath: /opt/tak/federation-hub/configs
@@ -137,17 +137,17 @@ spec:
         - name: jetty-temp
           emptyDir: {}
 ---
-# ClusterIP for the admin UI — fronted by the nginx Ingress
+# ClusterIP for the admin UI — fronted by a Tailscale Ingress (fedhub-ingress.yaml, tailnet only)
 apiVersion: v1
 kind: Service
 metadata:
   name: fedhub-ui
   namespace: takserver
-  labels: { app: fedhub, component: ui }
+  labels: {app: fedhub, component: ui}
 spec:
-  selector: { app: fedhub }
+  selector: {app: fedhub}
   ports:
-    - { name: ui, port: 9100, targetPort: 9100, protocol: TCP }
+    - {name: ui, port: 9100, targetPort: 9100, protocol: TCP}
 ---
 # ClusterIP for federation ports — exposed externally via fedhub-lb.yaml LoadBalancer
 apiVersion: v1
@@ -155,9 +155,9 @@ kind: Service
 metadata:
   name: fedhub-fed
   namespace: takserver
-  labels: { app: fedhub, component: federation }
+  labels: {app: fedhub, component: federation}
 spec:
-  selector: { app: fedhub }
+  selector: {app: fedhub}
   ports:
-    - { name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP }
-    - { name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP }
+    - {name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP}
+    - {name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP}

@@ -82,13 +82,11 @@ Live (`kubectl get sc`, `kubectl get pv`):
 | Service | Kind | Notes |
 |---|---|---|
 | `ingress-nginx/ingress-nginx-controller` | **DO LB** `143.244.220.155` | annotation `service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL_NETWORK`, Helm-CLI release |
-| `takserver/tak-external` | **DO LB** `152.42.155.95` | defined in `platform/takserver/deploy/tak-lb-proxy.yaml` (`do-loadbalancer-name: onemind-tak`); ports 8089, 8443, 8446, 9101, 9102, 64738; no source ranges |
 | `nats/omos-nats`, `takserver/tak-tailnet`, `openchoreo-control-plane/cilium-gateway-gateway-default` | Tailscale (`loadBalancerClass: tailscale`) | already portable |
 
-The only `service.beta.kubernetes.io/do-` annotation in Git is in `tak-lb-proxy.yaml`.
-The two public IPs belong to DigitalOcean and cannot move. DNS (Cloudflare) must be
-repointed, and TAK clients (EUDs) that hardcode `152.42.155.95` need a DNS name or
-new connection profiles. Use a DNS name from now on.
+The TAK DO LB (`tak-external`, `152.42.155.95`) was removed on 2026-10-23; TAK now rides the
+tailnet only (`tak-tailnet`). The remaining public IP belongs to DigitalOcean and cannot move;
+Cloudflare DNS must be repointed when it does. EUDs use `tak.tail717ba0.ts.net`, not an IP.
 
 Replacements:
 - Web hosts (auth, ws, onetak, geo): Cloudflare Tunnel (the staged cloudflared

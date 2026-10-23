@@ -15,9 +15,9 @@ from cryptography.hazmat.primitives.serialization import pkcs12
 from cryptography.x509.oid import NameOID, ExtendedKeyUsageOID
 import qrcode
 
-TAK_HOST = os.getenv("TAK_HOST", "tak.onemindos.dev")
+TAK_HOST = os.getenv("TAK_HOST", "tak.tail717ba0.ts.net")
 TAK_PORT = os.getenv("TAK_PORT", "8089")
-PORTAL_URL = os.getenv("PORTAL_URL", "https://enroll.onemindos.dev")
+PORTAL_URL = os.getenv("PORTAL_URL", "https://enroll.tail717ba0.ts.net")
 CA_CERT_PATH = os.getenv("CA_CERT_PATH", "/certs/ca.pem")
 CA_KEY_PATH = os.getenv("CA_KEY_PATH", "/certs/ca.key")
 _raw_pass = os.getenv("CA_KEY_PASS", "")

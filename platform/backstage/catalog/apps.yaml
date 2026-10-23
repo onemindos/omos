@@ -1207,7 +1207,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
   links:
-    - url: https://tak.onemindos.dev:8446
+    - url: https://tak.tail717ba0.ts.net:8446
       title: Open application
       icon: dashboard
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
@@ -1313,7 +1313,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
   links:
-    - url: https://fedhub.onemindos.dev
+    - url: https://fedhub.tail717ba0.ts.net
       title: Open application
       icon: dashboard
   annotations:

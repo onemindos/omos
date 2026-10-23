@@ -1,6 +1,6 @@
 # FedHub 5.8 — multi-TAK federation hub.
 # Manages platform/takserver/fedhub/ manifests: MongoDB StatefulSet, FedHub Deployment,
-# Services (fedhub-ui, fedhub-fed), external LB (fedhub-fed-external), Ingress.
+# Services (fedhub-ui, fedhub-fed; both ClusterIP), Tailscale Ingress (tailnet only).
 #
 # BEFORE FIRST SYNC — complete these manual steps or the Deployment will
 # ImagePullBackOff / CrashLoop:
@@ -11,10 +11,11 @@
 #                        -n takserver --dry-run=client -o yaml | kubeseal -o yaml > \
 #                        platform/takserver/fedhub/fedhub-oidc.sealedsecret.yaml
 #   4. Commit fedhub-certs.sealedsecret.yaml + fedhub-oidc.sealedsecret.yaml
-#   5. Add DNS:  fedhub.onemindos.dev → 143.244.220.155  (Cloudflare)
+#   5. In Authentik, add redirect URI https://fedhub.tail717ba0.ts.net/login/redirect
+#      to the `fedhub` OIDC client. No DNS record is needed: the admin UI is reachable only
+#      on the tailnet at https://fedhub.tail717ba0.ts.net (Tailscale Ingress).
 #
-# After deploy, connect TAK Server to FedHub:
-#   WebTAK → Configuration → Federation → Create Outgoing → <fedhub-fed-external IP>:9102
+# Federation ports 9101/9102 are not exposed outside the cluster (no federation partners).
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

@@ -110,7 +110,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 
 **Image registry:** All images at `ghcr.io/onemindos/` — DOCR was retired 2026-07-05.
 **LB IP:** `143.244.220.155` (ingress-nginx)
-**TAK LB:** `152.42.155.95` (direct unproxied)
+**TAK:** tailnet only, `tak.tail717ba0.ts.net` (the public LB `152.42.155.95` was removed 2026-10-23)
 
 | Service | Namespace | Image | Status |
 |---------|-----------|-------|--------|
@@ -169,7 +169,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 
 ## Public Hostnames
 
-All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx), except `tak.onemindos.dev`.
+All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx). `tak`, `enroll` and `fedhub` are tailnet only and need no public record.
 
 | Hostname | Backend | Status |
 |----------|---------|--------|
@@ -178,7 +178,6 @@ All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx), exc
 | media.onemindos.dev | onetak-media:9997 | ⚠️ DNS update pending |
 | ws.onemindos.dev | nats:8080 (WebSocket) | ⚠️ DNS update pending |
 | auth.onemindos.dev | Authentik IdP | ✅ live |
-| tak.onemindos.dev | tak-external LB `152.42.155.95` | ✅ live (unproxied, direct) |
 
 **Tailscale-only (never public) — `*.tail717ba0.ts.net`:**
 
