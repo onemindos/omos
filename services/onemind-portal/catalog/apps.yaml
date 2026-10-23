@@ -6678,47 +6678,12 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: spire
-  tags:
-    - kubernetes
-  title: SPIRE
-  description: Workload identity (SPIFFE).
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-spire
-    argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-spire,ecosystem-spire-crds
-    backstage.io/kubernetes-namespace: spire-system
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/instance=spire,app.kubernetes.io/name=server
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: spire-system
-    grafana/alert-label-selector: namespace=spire-system
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=spire-system
-    onemind.io/logs-query: '{k8s_namespace_name="spire-system"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/spire/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: spire-system/spire-server
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: identity-access
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: kyverno
   tags:
     - kubernetes
   title: Kyverno
   description: Admission and background policy engine; also carries the
-    platform-security Argo application (Kyverno, Falco, SPIRE and OpenFGA
-    wiring).
+    platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml

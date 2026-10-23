@@ -2129,23 +2129,6 @@
    "apiVersion": "apps/v1",
    "kind": "StatefulSet",
    "metadata": {
-    "name": "spire-server",
-    "namespace": "spire-system"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "server",
-      "app.kubernetes.io/instance": "spire",
-      "app.kubernetes.io/name": "server"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
     "name": "egress",
     "namespace": "tailscale"
    },

@@ -81,15 +81,6 @@
     "namespace": "falco"
   },
   {
-    "name": "spire",
-    "repo": "https://spiffe.github.io/helm-charts-hardened",
-    "chart": "spire",
-    "version": "0.30.3",
-    "appVersion": "1.15.3",
-    "url": "https://github.com/spiffe/helm-charts-hardened/releases/download/spire-0.30.3/spire-0.30.3.tgz",
-    "namespace": "spire-system"
-  },
-  {
     "name": "litellm",
     "repo": "oci://ghcr.io/berriai/litellm-helm",
     "chart": "litellm-helm",

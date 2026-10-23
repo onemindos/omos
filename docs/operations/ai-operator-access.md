@@ -10,7 +10,7 @@ ServiceAccount, its token Secret and two ClusterRoleBindings.
 
 | MCP server | Source | Sees | Cannot |
 |---|---|---|---|
-| `onemind-kubernetes` | [kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) 0.0.67, `--read-only` | Every namespace: workloads, pods, logs, events, nodes, ConfigMaps, and the platform CRDs (Argo CD Applications, OpenChoreo, CNPG, NATS JetStream, Gateway API, Prometheus, KEDA, Velero, VolSync, Tailscale, Cilium, Dapr, SPIRE, ClickHouse, Kyverno reports) | Read Secrets, create, patch, delete, exec, port-forward |
+| `onemind-kubernetes` | [kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) 0.0.67, `--read-only` | Every namespace: workloads, pods, logs, events, nodes, ConfigMaps, and the platform CRDs (Argo CD Applications, OpenChoreo, CNPG, NATS JetStream, Gateway API, Prometheus, KEDA, Velero, VolSync, Tailscale, Cilium, Dapr, ClickHouse, Kyverno reports) | Read Secrets, create, patch, delete, exec, port-forward |
 | `onemind-backstage` | Portal MCP actions (`/api/mcp-actions/v1`) | Catalog entities and relations, OneMind health checks, runbooks | Any mutation (machine identity is restricted by the portal) |
 | `onemind-openchoreo` | OpenChoreo control-plane API (`http://onemind-openchoreo-api.tail717ba0.ts.net/mcp`, tailnet only) | Namespaces, projects, components, workloads, releases and bindings, environments, planes, component and resource types, traits, workflows and runs, resource logs and events, authorization roles | Create, update, delete, deploy, trigger builds, read secret values. Write tools are not listed for this account and are refused if called |
 

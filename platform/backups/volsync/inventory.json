@@ -226,11 +226,5 @@
     "pvc": "onemind-search-master-onemind-search-master-0",
     "source": "volume-bf5e2b142d4b",
     "size": "20Gi"
-  },
-  {
-    "namespace": "spire-system",
-    "pvc": "spire-data-spire-server-0",
-    "source": "volume-cdf02d607f9c",
-    "size": "5Gi"
   }
 ]

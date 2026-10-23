@@ -57,7 +57,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Platform core manifests](platform-core.md) | infrastructure |
 | [Prometheus](prometheus.md) | observability |
 | [Redpanda Connect](redpanda-connect.md) | messaging-nats |
-| [SPIRE](spire.md) | identity-access |
 | [Tailscale operator and proxies](tailscale-operator.md) | infrastructure |
 | [TAK Server](tak-server.md) | tak-ecosystem |
 | [TAK-ML](takml.md) | tak-ecosystem |

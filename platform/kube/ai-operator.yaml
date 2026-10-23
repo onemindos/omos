@@ -56,7 +56,6 @@ rules:
       - tailscale.com
       - cilium.io
       - dapr.io
-      - spire.spiffe.io
       - clickhouse.altinity.com
       - clickhouse-keeper.altinity.com
       - externaldns.k8s.io

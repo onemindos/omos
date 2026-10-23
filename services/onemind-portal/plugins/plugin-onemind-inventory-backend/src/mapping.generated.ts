@@ -157,7 +157,6 @@ export const mapping: InventoryMapping = {
       'component:default/openchoreo-observability',
     'opencost/opencost': 'component:default/opencost',
     'ops/platform-volsync': 'component:default/volsync',
-    'spire-system/spire-server': 'component:default/spire',
     'tailscale/egress': 'component:default/tailscale-operator',
     'tailscale/operator': 'component:default/tailscale-operator',
     'tailscale/ts-agent-console-8khxt': 'component:default/tailscale-operator',
@@ -495,12 +494,6 @@ export const mapping: InventoryMapping = {
     'redpanda-connect': {
       title: 'Redpanda Connect',
       system: 'messaging-nats',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    spire: {
-      title: 'SPIRE',
-      system: 'identity-access',
       pillar: 'so',
       review: 'proposed',
     },
