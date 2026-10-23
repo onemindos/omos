@@ -1,13 +1,16 @@
-# Authentik side of "Harbor was removed": deletes the sign-in application and OAuth provider that Harbor used.
+# Authentik side of "the consumer was removed": deletes the sign-in applications and OAuth providers that nothing uses.
+# Today that is onemind-registry (Harbor was removed) and onemind-workflows (Argo Workflows is gone). The file keeps its
+# name from the first entry; the Job name carries a version (-v2) that is bumped when the stale list changes.
 # Same pattern as argocd-authentik-provider.yaml and fedhub-authentik-provider.yaml (Authentik has no blueprints in this
 # repo): a Sync hook that calls the Authentik API and is safe to run on every sync. For each entry in `stale` it:
 #   - fetches the application by its slug path (not a list filter, which is unreliable) and deletes it if it exists
 #   - deletes every OAuth2 provider whose client_id is the same slug, plus the provider the application pointed at
 #   - treats "already gone" (404) as success and logs what it did
 # Application first, then provider: deleting a provider alone would leave an application with no provider behind.
-# The creation of onemind-registry was removed from auth-provider-bootstrap.yaml in the Harbor removal, so nothing
-# recreates it. The key REGISTRY_CLIENT_SECRET is gone from the SealedSecret auth/onemind-platform-oidc, and this Job
-# deliberately does not mount that Secret: it needs only the Authentik API token.
+# The creation of onemind-registry was removed from auth-provider-bootstrap.yaml in the Harbor removal, and the
+# `workflows` callback (which created onemind-workflows) in the Argo Workflows cleanup, so nothing recreates either.
+# REGISTRY_CLIENT_SECRET and WORKFLOWS_CLIENT_SECRET are gone from the SealedSecret auth/onemind-platform-oidc, and this
+# Job deliberately does not mount that Secret: it needs only the Authentik API token.
 #
 # Failed pods are kept (restartPolicy Never) and the Job is removed after a day, so `kubectl -n auth logs` still works
 # after a failure. Error text is scrubbed of the API token and of any client_secret the API echoes back.
@@ -16,7 +19,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: authentik-registry-removal-v1
+  name: authentik-registry-removal-v2
   namespace: auth
   annotations:
     argocd.argoproj.io/sync-wave: "4"
@@ -43,7 +46,7 @@ spec:
               token = os.environ["AUTH_TOKEN"]
               headers = {"Authorization": "Bearer " + token}
               # Application slugs (= OAuth2 client ids) to remove. Add a slug here to remove another one.
-              stale = ["onemind-registry"]
+              stale = ["onemind-registry", "onemind-workflows"]
 
               def scrub(text):
                   text = text.replace(token, "***")
