@@ -173,10 +173,6 @@ apps:
     title: ingress-nginx
     system: infrastructure
     description: Public ingress controller.
-  - name: external-dns
-    title: ExternalDNS
-    system: infrastructure
-    description: Synchronizes DNS records for cluster ingresses.
   - name: tailscale-operator
     title: Tailscale operator and proxies
     system: infrastructure

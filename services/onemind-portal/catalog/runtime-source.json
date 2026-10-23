@@ -113,11 +113,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "external-dns",
-      "name": "external-dns"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "external-secrets",
       "name": "external-secrets"
     },
@@ -1135,11 +1130,6 @@
       "kind": "Service",
       "namespace": "dp-default-onetak-development-b188bf98",
       "name": "stac-browser"
-    },
-    {
-      "kind": "Service",
-      "namespace": "external-dns",
-      "name": "external-dns"
     },
     {
       "kind": "Service",

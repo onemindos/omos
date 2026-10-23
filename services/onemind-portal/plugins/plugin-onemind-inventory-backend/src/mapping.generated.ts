@@ -47,7 +47,6 @@ export const mapping: InventoryMapping = {
       'component:default/geo-data-services',
     'dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7':
       'component:default/geo-data-services',
-    'external-dns/external-dns': 'component:default/external-dns',
     'external-secrets/external-secrets': 'component:default/external-secrets',
     'external-secrets/external-secrets-cert-controller':
       'component:default/external-secrets',
@@ -278,12 +277,6 @@ export const mapping: InventoryMapping = {
       system: 'communication',
       pillar: 'so',
       review: 'approved',
-    },
-    'external-dns': {
-      title: 'ExternalDNS',
-      system: 'infrastructure',
-      pillar: 'so',
-      review: 'proposed',
     },
     'external-secrets': {
       title: 'External Secrets Operator',

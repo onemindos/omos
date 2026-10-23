@@ -58,7 +58,6 @@ rules:
       - dapr.io
       - clickhouse.altinity.com
       - clickhouse-keeper.altinity.com
-      - externaldns.k8s.io
       - wgpolicyk8s.io
       - reports.kyverno.io
       - policies.kyverno.io

@@ -6372,39 +6372,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: external-dns
-  tags:
-    - kubernetes
-  title: ExternalDNS
-  description: Synchronizes DNS records for cluster ingresses.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-external-dns
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: external-dns
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=platform-external-dns,app.kubernetes.io/name=external-dns
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: external-dns
-    grafana/alert-label-selector: namespace=external-dns
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=external-dns
-    onemind.io/logs-query: '{k8s_namespace_name="external-dns"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/external-dns/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: external-dns/external-dns
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: tailscale-operator
   tags:
     - kubernetes
