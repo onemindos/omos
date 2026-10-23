@@ -6,14 +6,12 @@
 # ImagePullBackOff / CrashLoop:
 #   1. Build image:   bash services/takserver/build/build-fedhub.sh
 #   2. Seal certs:    see platform/takserver/fedhub/fedhub.yaml header (kubeseal)
-#   3. Seal Authentik: kubectl create secret generic fedhub-oidc-secret \
-#                        --from-literal=keycloakSecret=<authentik-client-secret> \
-#                        -n takserver --dry-run=client -o yaml | kubeseal -o yaml > \
-#                        platform/takserver/fedhub/fedhub-oidc.sealedsecret.yaml
-#   4. Commit fedhub-certs.sealedsecret.yaml + fedhub-oidc.sealedsecret.yaml
-#   5. In Authentik, add redirect URI https://fedhub.tail717ba0.ts.net/login/redirect
-#      to the `fedhub` OIDC client. No DNS record is needed: the admin UI is reachable only
-#      on the tailnet at https://fedhub.tail717ba0.ts.net (Tailscale Ingress).
+#   3. Authentik sign-in is managed as code: the Job platform/ecosystem/resources/fedhub-authentik-provider.yaml
+#      creates/updates the `fedhub` provider, application and group `fedhub-admins`, and the shared client secret is
+#      sealed for both sides (auth/onemind-platform-oidc key FEDHUB_CLIENT_SECRET and
+#      takserver/fedhub-oidc-secret in platform/takserver/fedhub/fedhub-oidc.sealedsecret.yaml).
+#      No DNS record is needed: the admin UI is reachable only on the tailnet at
+#      https://fedhub.tail717ba0.ts.net (Tailscale Ingress).
 #
 # Federation ports 9101/9102 are not exposed outside the cluster (no federation partners).
 apiVersion: argoproj.io/v1alpha1
