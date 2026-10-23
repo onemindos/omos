@@ -1153,3 +1153,17 @@ and no GitHub sign-in dialog (Connect GitHub prompt instead).
 Before the image: the three backup CronJob annotations, the F5 catalog annotations and the Grafana dashboard were applied by Argo on merge.
 Not yet done: offsite backup copy credentials; the 7,757-notification cleanup; alert webhook secrets (run `scripts/ops/seal-alert-webhook.sh`);
 F6 DigitalOcean, F7 non-Kubernetes apps and health checks, F8 add/retire templates, F9 plugin pack. Phase 6 In progress; Phase 7/8 Not started.
+
+## User-directed file synchronization — 2026-10-23
+
+Zeus requested immediate bidirectional Mac/Android Obsidian synchronization via
+Nextcloud, independently of the current portal phase. This change adds a Layer 2
+shared file service under Argo CD; it does not complete or bypass phase gates.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Nextcloud GitOps deployment and isolated phone pilot | Prepared; human merge and live verification pending | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424) |
+
+Acceptance requires actual edits flowing in both directions, offline and conflict
+checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
+No production vault upload or successful deployment is claimed by this entry.
