@@ -147,9 +147,9 @@ test('catalog coverage: every Kubernetes app has the full contract or a reviewed
   assert.deepEqual(report.missing, []);
   assert.deepEqual(report.invalidExceptions, []);
   assert.deepEqual(report.staleExceptions, []);
-  assert.ok(report.kubernetesApps >= 54, `${report.kubernetesApps} Kubernetes apps`);
-  // All 53 Argo applications are linked to an app (F2); the per-app coverage is reported, not hidden.
-  assert.equal(report.argoApplicationsLinked, 53);
+  assert.ok(report.kubernetesApps >= 53, `${report.kubernetesApps} Kubernetes apps`);
+  // All 52 Argo applications are linked to an app (F2); the per-app coverage is reported, not hidden.
+  assert.equal(report.argoApplicationsLinked, 52);
   assert.equal(report.byCapability['grafana-dashboard'].covered, report.kubernetesApps);
   assert.equal(report.byCapability.runbook.covered, report.kubernetesApps);
 });
@@ -174,7 +174,7 @@ test('catalog coverage: each exception has a reason naming a verifiable fact', (
 test('every runbook annotation resolves to a generated page that matches the catalog byte for byte', () => {
   const sources = loadSources();
   const expected = runbooksFor({ apps: load(path.join(root, 'catalog/apps.yaml')), cluster: load(path.join(root, 'catalog/cluster.yaml')) }, sources);
-  assert.ok(expected.size > 54);
+  assert.ok(expected.size > 53);
   for (const [rel, text] of expected) assert.equal(fs.readFileSync(path.join(root, 'runbooks/docs', rel), 'utf8'), text, rel);
   for (const e of entities) {
     const value = e.metadata.annotations?.['onemind.io/recovery-runbook'];

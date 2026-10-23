@@ -180,10 +180,10 @@ Order: Postgres first, then the apps that use them.
 4. Check ownership and data-directory modes before starting any database.
 5. Only after the app is verified, re-enable that PVC's ReplicationSource.
 Raw copies of database or NATS volumes are crash-consistent only; prefer logical archives
-for Postgres/NATS (steps 7-8) and use VolSync for file data (Hermes state, OpenSearch,
+for Postgres/NATS (steps 7-8) and use VolSync for file data (Hermes state,
 Grafana/Prometheus, Valhalla/geo data, Matrix media, etc.).
 Per-PVC order of priority: Hermes (25 GiB), Authentik, TAK volumes, Matrix, n8n, Backstage,
-OpenSearch, Dapr, ClickHouse (20 GiB), monitoring (Prometheus/Grafana/
+Dapr, ClickHouse (20 GiB), monitoring (Prometheus/Grafana/
 Loki/Tempo), onetak geo data (about 450 GiB; may be rebuilt from public sources instead).
 
 ### Step 10. Velero and the remaining apps (about 1 h)
@@ -223,7 +223,7 @@ Tick every line; record date, who, and times.
 - [ ] Authentik: admin login works, an OIDC client (Argo, Grafana, Backstage) logs in.
 - [ ] CNPG: Cluster Ready, 7 databases, 114 tables.
 - [ ] Hermes: starts, `state.db` present, answers a prompt.
-- [ ] OpenSearch/ClickHouse: UI/query works (ClickHouse: 9 tables, tens of millions of rows).
+- [ ] ClickHouse: UI/query works (ClickHouse: 9 tables, tens of millions of rows).
 - [ ] Monitoring: Prometheus targets up; Alertmanager has a real receiver (gap G6).
 - [ ] Backups on the new cluster: run one job of each kind (`kubectl create job --from=cronjob/...`), confirm `.verified.json`, confirm VolSync sources `Successful`.
 - [ ] Offsite copy ran at least once and `_offsite/last-success.json` is fresh.

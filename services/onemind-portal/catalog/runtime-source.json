@@ -583,11 +583,6 @@
     },
     {
       "kind": "StatefulSet",
-      "namespace": "onemind-search",
-      "name": "onemind-search-master"
-    },
-    {
-      "kind": "StatefulSet",
       "namespace": "tailscale",
       "name": "egress"
     },
@@ -1350,16 +1345,6 @@
       "kind": "Service",
       "namespace": "onemind-data",
       "name": "onemind-data-rw"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-search",
-      "name": "opensearch-cluster-master"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-search",
-      "name": "opensearch-cluster-master-headless"
     },
     {
       "kind": "Service",

@@ -184,11 +184,5 @@
     "pvc": "onemind-cpu-model",
     "source": "volume-aeb2c9c4e472",
     "size": "20Gi"
-  },
-  {
-    "namespace": "onemind-search",
-    "pvc": "onemind-search-master-onemind-search-master-0",
-    "source": "volume-bf5e2b142d4b",
-    "size": "20Gi"
   }
 ]

@@ -6832,39 +6832,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: opensearch
-  tags:
-    - kubernetes
-  title: OpenSearch
-  description: Search and log store.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-opensearch
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: onemind-search
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opensearch,app.kubernetes.io/name=opensearch
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onemind-search
-    grafana/alert-label-selector: namespace=onemind-search
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-search
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-search"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/opensearch/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onemind-search/onemind-search-master
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: velero
   tags:
     - kubernetes

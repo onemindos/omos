@@ -29,7 +29,6 @@ against live `do-nyc3-omos-cloud` (read-only).
 | `ecosystem-openfga` | onemind-core | Deployment, Service, Role |
 | `ecosystem-onemind-core` | onemind-core | Deployments, Dapr Component, RBAC |
 | `platform-nats-tools` | nats | UI Deployments, Services, Ingresses (not the JetStream cluster) |
-| `ecosystem-opensearch` | onemind-search | StatefulSet; its PVC is a volumeClaimTemplate (not tracked, Retain) |
 
 Cascade only deletes what the Application tracks. It never deletes the namespace unless the
 Application renders the Namespace object, and it never deletes StatefulSet

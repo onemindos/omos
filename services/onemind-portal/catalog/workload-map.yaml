@@ -89,7 +89,6 @@ workloads:
   onemind-core/onemind-core: component:default/onemind-core
   onemind-core/onemind-ingestion: component:default/onemind-core
   onemind-core/openfga: component:default/openfga
-  onemind-search/onemind-search-master: component:default/opensearch
   onetak/nodeodm: component:default/webodm
   onetak/onetak-media: component:default/onetak
   onetak/tak-portal: component:default/onetak
@@ -165,7 +164,6 @@ argoApplications:
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga
-  ecosystem-opensearch: component:default/opensearch
   ecosystem-velero: component:default/velero
   edge-cert-manager: component:default/cert-manager
   edge-ingress-nginx: component:default/ingress-nginx

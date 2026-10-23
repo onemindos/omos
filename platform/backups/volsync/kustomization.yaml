@@ -36,4 +36,3 @@ resources:
 - sealed/dapr-system-volume-cc7912733ca4.yaml
 - sealed/dapr-system-volume-5b6b57939ee3.yaml
 - sealed/onemind-ai-volume-aeb2c9c4e472.yaml
-- sealed/onemind-search-volume-bf5e2b142d4b.yaml
