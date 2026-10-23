@@ -97,12 +97,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "onetak-minio-data",
-    "source": "volume-b455a3425ad0",
-    "size": "20Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "onetak-pgdata",
     "source": "volume-76694cc119e9",
     "size": "10Gi"

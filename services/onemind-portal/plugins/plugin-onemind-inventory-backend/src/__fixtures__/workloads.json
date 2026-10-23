@@ -1267,21 +1267,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "onetak-minio",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "onetak-minio"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "onetak-postgis",
     "namespace": "onetak"
    },

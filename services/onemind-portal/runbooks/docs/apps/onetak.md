@@ -15,7 +15,6 @@ OneMind TAK platform
 | Workload | Kind | Namespace |
 | --- | --- | --- |
 | `onetak-media` | Deployment | `onetak` |
-| `onetak-minio` | Deployment | `onetak` |
 | `onetak-postgis` | Deployment | `onetak` |
 | `tak-portal` | Deployment | `onetak` |
 
@@ -33,8 +32,8 @@ OneMind TAK platform
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="onetak", k8s_pod_name=~"(onetak-media|onetak-minio|onetak-postgis|tak-portal)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=onetak-media&var-workload=onetak-minio&var-workload=onetak-postgis&var-workload=tak-portal`
+- Loki query: `{k8s_namespace_name="onetak", k8s_pod_name=~"(onetak-media|onetak-postgis|tak-portal)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=onetak-media&var-workload=onetak-postgis&var-workload=tak-portal`
 - Source: `onemindos/omos`
 
 ## Escalate
