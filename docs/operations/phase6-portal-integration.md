@@ -20,7 +20,8 @@ frontend API cohort; local compilation/bundling is evidence only for that gate.
 > Superseded in part: sign-in no longer registers `openchoreo-auth` or calls
 > `cache-capabilities` (item 1), and the OpenChoreo-token scoped fetch (item 5) is gone;
 > the portal uses the standard `oidc` provider and the default fetch. This record is
-> kept as the Phase 6 history. Items 2-4 are superseded too: the host policy is now a plain
+> kept as the Phase 6 history. The `openchoreo-catalog` SealedSecret and the `openchoreo-oidc`/`openchoreo-catalog`
+> environment references were later removed from the portal Deployment (the OpenChoreo plugins are gone). Items 2-4 are superseded too: the host policy is now a plain
 > admin/read-only rule (see `platform/backstage/README.md`, Permission policy), with no
 > upstream delegation, ABAC router adapter or shared capability cache.
 

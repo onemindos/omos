@@ -55,10 +55,6 @@ spec:
           containerPort: 7007
         envFrom:
         - secretRef:
-            name: openchoreo-oidc
-        - secretRef:
-            name: openchoreo-catalog
-        - secretRef:
             name: backstage-zoho
             optional: true
         - secretRef:
