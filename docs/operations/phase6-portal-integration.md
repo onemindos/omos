@@ -20,7 +20,9 @@ frontend API cohort; local compilation/bundling is evidence only for that gate.
 > Superseded in part: sign-in no longer registers `openchoreo-auth` or calls
 > `cache-capabilities` (item 1), and the OpenChoreo-token scoped fetch (item 5) is gone;
 > the portal uses the standard `oidc` provider and the default fetch. This record is
-> kept as the Phase 6 history.
+> kept as the Phase 6 history. Items 2-4 are superseded too: the host policy is now a plain
+> admin/read-only rule (see `platform/backstage/README.md`, Permission policy), with no
+> upstream delegation, ABAC router adapter or shared capability cache.
 
 1. Retain the Backstage verified OIDC authenticator, register `openchoreo-auth`
    against the OpenChoreo Authentik provider, and resolve the signed subject to

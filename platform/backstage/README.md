@@ -153,9 +153,9 @@ the Authentik application `onemind-backstage` (redirect URI
 `onemind.io/oidc-sub` and the existing group, and no longer obtains an OpenChoreo
 token (the former `openchoreo-auth` provider and `cache-capabilities` call are gone,
 so the OpenChoreo views that need a user token no longer work). The single OneMind
-host policy no longer delegates to the upstream OpenChoreo policy: administrators
-are allowed, other signed-in users are read-only; machine catalog writes and platform
-access remain denied. Shared
+host policy no longer delegates to the upstream OpenChoreo policy (see
+[Permission policy](#permission-policy)); machine catalog writes and platform access
+remain denied. Shared
 authorization results use the permission plugin PostgreSQL DB, keyed by SHA-256
 with token-expiration TTL, never raw tokens. Keep the version-locked upstream ABAC
 router adapter pinned and review on upgrade.
@@ -167,3 +167,33 @@ Backstage Events/PostgreSQL and NATS are unchanged. Verified release, browser,
 security, backup/migration and rollback evidence is in
 [`docs/operations/phase6-portal-integration.md`](../../docs/operations/phase6-portal-integration.md).
 Phases 7/8 are not included in this release.
+
+## Permission policy
+
+One plain policy (`plugins/plugin-onemind-permissions-backend/src/policy.ts`) answers every
+Backstage permission, including `catalog.entity.*` and `scaffolder.task.create`. It needs no
+OpenChoreo service or configuration.
+
+| Caller | Decision |
+| --- | --- |
+| No user identity | DENY, including reads |
+| Member of `group:default/onemind-admins` | ALLOW everything |
+| Any other signed-in user, `read` actions | ALLOW |
+| Any other signed-in user, create/update/delete (entity create/refresh/delete, location writes, `scaffolder.task.create`, ...) | DENY |
+
+Decisions are never conditional, so there is no per-entity filtering. Machine callers (the MCP
+token, plugin-to-plugin calls) are service principals limited by `backend.auth.externalAccess`,
+not by this policy.
+
+What the previous policy enforced, for the record: the OneMind rule above was an upper bound,
+then `catalog.entity.*` and `scaffolder.task.create` were delegated to the OpenChoreo policy.
+That policy let a user act on catalog entities that carry no `openchoreo.io/namespace`
+annotation (all OneMind entities) and gated OpenChoreo-managed entities by the user's
+OpenChoreo capabilities; `scaffolder.task.create` and `catalog.entity.create` needed any
+OpenChoreo create capability. Only the operator (`akadmin`) had an OpenChoreo binding
+(`operator-admin-binding`, admin), so in practice admin had full access and everyone else was
+read-only on non-OpenChoreo entities. Differences now: OpenChoreo-managed entities are readable
+by every signed-in user (they are removed with the OpenChoreo plugins in the next change), and an
+administrator no longer needs an OpenChoreo role. The `onemind_authz_cache` table that cached
+OpenChoreo capabilities is no longer used and is left in the permission database; drop it by
+hand when convenient.

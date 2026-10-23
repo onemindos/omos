@@ -4,38 +4,36 @@ import type {
   PolicyQueryUser,
 } from '@backstage/plugin-permission-node';
 
-export const isOneMindAdmin = (user?: Pick<PolicyQueryUser, 'info'>) =>
-  Boolean(
-    user?.info.ownershipEntityRefs.includes('group:default/onemind-admins'),
-  );
+export const ADMIN_GROUP_REF = 'group:default/onemind-admins';
 
-// Administrators (group onemind-admins) are allowed; other signed-in users may only read.
-// An optional delegate can narrow (never widen) the result for OpenChoreo-owned permissions.
-export function createOneMindPolicy(
-  delegate?: PermissionPolicy,
-): PermissionPolicy {
+export const isOneMindAdmin = (user?: Pick<PolicyQueryUser, 'info'>) =>
+  Boolean(user?.info.ownershipEntityRefs.includes(ADMIN_GROUP_REF));
+
+/**
+ * The one OneMind permission policy. It applies to every Backstage permission,
+ * including `catalog.entity.*` and `scaffolder.task.create`:
+ *
+ *   anonymous / no user identity                 DENY, including reads
+ *   member of group:default/onemind-admins       ALLOW everything
+ *   any other signed-in user, action `read`      ALLOW
+ *   any other signed-in user, create/update/delete   DENY
+ *
+ * Decisions are never CONDITIONAL, so there is no per-entity filtering: a user who may
+ * read the catalog may read every entity. Machine callers (MCP token, plugin-to-plugin)
+ * are service principals; they have no user identity here and are limited by the
+ * backend `externalAccess` restrictions, not by this policy.
+ */
+export function createOneMindPolicy(): PermissionPolicy {
   return {
     async handle(request, user) {
+      if (!user) return { result: AuthorizeResult.DENY };
       if (
-        !user ||
-        (!isOneMindAdmin(user) &&
-          request.permission.attributes.action !== 'read')
+        isOneMindAdmin(user) ||
+        request.permission.attributes.action === 'read'
       ) {
-        return { result: AuthorizeResult.DENY };
+        return { result: AuthorizeResult.ALLOW };
       }
-      if (
-        delegate &&
-        (request.permission.name.startsWith('openchoreo.') ||
-          request.permission.name.startsWith('catalog.entity.') ||
-          request.permission.name === 'scaffolder.task.create')
-      ) {
-        try {
-          return await delegate.handle(request, user);
-        } catch {
-          return { result: AuthorizeResult.DENY };
-        }
-      }
-      return { result: AuthorizeResult.ALLOW };
+      return { result: AuthorizeResult.DENY };
     },
   };
 }
