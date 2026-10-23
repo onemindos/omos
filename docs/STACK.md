@@ -243,3 +243,12 @@ kubectl --context $CTX get replicationsources.volsync.backube,schedules.velero.i
 ```
 
 Ownership rule used above: a workload carrying `argocd.argoproj.io/tracking-id` is Argo-managed; `meta.helm.sh/release-name` without it is Helm-CLI; neither means untracked.
+
+## Nextcloud sync preparation — 2026-10-23
+
+User-requested Layer 2 file service prepared in `platform/nextcloud/`; deployment
+and phone acceptance are pending. No Nextcloud resources were present at the
+read-only inspection. The proposed Argo Application uses private Tailscale HTTPS,
+a 20 GiB retained file PVC, Redis, a separate database/role on existing CNPG, and
+VolSync. This is not verified live inventory. See
+[setup and acceptance](../platform/nextcloud/README.md).

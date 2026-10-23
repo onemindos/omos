@@ -84,6 +84,13 @@ spec:
       createdb: false
       passwordSecret:
         name: db-onemind-ingestion
+    - name: nextcloud
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-nextcloud
   postgresql:
     shared_preload_libraries:
     - age
