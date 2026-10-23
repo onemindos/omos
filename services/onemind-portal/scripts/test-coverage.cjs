@@ -148,8 +148,8 @@ test('catalog coverage: every Kubernetes app has the full contract or a reviewed
   assert.deepEqual(report.invalidExceptions, []);
   assert.deepEqual(report.staleExceptions, []);
   assert.ok(report.kubernetesApps >= 55, `${report.kubernetesApps} Kubernetes apps`);
-  // All 62 Argo applications are linked to an app (F2); the per-app coverage is reported, not hidden.
-  assert.equal(report.argoApplicationsLinked, 62);
+  // All 63 Argo applications are linked to an app (F2); the per-app coverage is reported, not hidden.
+  assert.equal(report.argoApplicationsLinked, 63);
   assert.equal(report.byCapability['grafana-dashboard'].covered, report.kubernetesApps);
   assert.equal(report.byCapability.runbook.covered, report.kubernetesApps);
 });

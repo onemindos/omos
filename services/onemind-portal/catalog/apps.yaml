@@ -467,9 +467,9 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/documented-address: https://argocd.tail717ba0.ts.net
     onemind.io/documented-tags: Monitoring
-    argocd/app-name: app-of-apps
+    argocd/app-name: platform-argocd
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: app-of-apps,platform-ecosystem-applications,platform-ecosystem-foundation,platform-ecosystem-resources
+    onemind.io/argocd-apps: app-of-apps,platform-argocd,platform-ecosystem-applications,platform-ecosystem-foundation,platform-ecosystem-resources
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: argocd
     backstage.io/kubernetes-namespace: argocd

@@ -79,7 +79,7 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
 | `nack` | nats | nack-0.34.0 | Adopted in #176 | `edge-nack` | `platform/nats/nack-values.yaml` |
 | `nats` | nats | nats-2.14.2 | Remaining | none | `platform/nats/values.template.yaml` plus gitignored `values.secret.yaml` |
 | `takserver` | takserver | takserver-4.6.0 | Remaining | none | `platform/takserver/values-onemind.yaml`, chart `platform/takserver/chart` |
-| `argocd` | argocd | argo-cd-10.1.2 | Remaining | none | `platform/values/argocd.yaml` |
+| `argocd` | argocd | argo-cd-10.1.2 | Defined, not yet adopted (manual sync only; see `ARGOCD-SELF-MANAGEMENT.md`) | `platform-argocd` | `platform/values/argocd.yaml` |
 
 ### Notes for this PR
 
@@ -114,7 +114,7 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
   CA, Postgres data and certificates. Needs volume snapshots (and a restore drill) first, a
   render diff against the live manifest, and a freeze on `helm upgrade` from the existing
   deploy scripts before Argo takes over.
-- **argocd**: Argo cannot safely adopt itself in one step. Needs a self-management approach
+- **argocd**: Argo cannot safely adopt itself in one step. The Application and the step-by-step plan are in `ARGOCD-SELF-MANAGEMENT.md`; the pending #392 `helm upgrade` goes first. Needs a self-management approach
   (an Application for the `argocd` release with `prune: false`, manual sync only at first,
   `Replace` forbidden, and CRDs kept out of sync scope), a break-glass path that restores
   Argo with `helm` if a bad sync takes it down, and a maintenance window. Do it last so a

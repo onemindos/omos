@@ -1,6 +1,8 @@
 # ArgoCD — resource requests/limits for DO upgrade compliance, plus sign-in through Authentik
-# Argo CD is a Helm CLI release (not self-managed). Apply with:
+# Argo CD is still a Helm CLI release. Apply with:
 #   helm upgrade argocd argo/argo-cd --version 10.1.2 -n argocd -f platform/values/argocd.yaml
+# platform/argocd/platform-argocd.yaml defines the Application that will manage it (manual sync only).
+# Order and steps: docs/gitops/ARGOCD-SELF-MANAGEMENT.md. After adoption, never run helm upgrade again.
 controller:
   resources:
     requests:

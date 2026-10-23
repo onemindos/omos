@@ -91,7 +91,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `takserver` | takserver | takserver-4.6.0 (rev 34, 2026-09-29), local chart `platform/takserver/chart` | TAK Server API, messaging, config, plugins, Ignite, PostgreSQL | see `platform-takserver` | see `platform-takserver` | see `platform-takserver` | **Helm CLI** |
 | `nats` | nats | nats-2.14.2 (rev 10) | NATS StatefulSet | see `platform-nats` | see `platform-nats` | see `platform-nats` | **Helm CLI** (and Argo tracks the same StatefulSet) |
 | `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | Argo (`edge-nack`, adopted in PR #176) |
-| `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet (`argocd.tail717ba0.ts.net`) | **Helm CLI** (not self-managed). Signs in through Authentik (`oidc.config`, group `argocd-admins` = admin) once `platform/values/argocd.yaml` is applied; local `admin` stays as break-glass until SSO is proven; Dex disabled |
+| `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet (`argocd.tail717ba0.ts.net`) | **Helm CLI** today; `platform-argocd` (manual sync only, not yet synced) will adopt it after the pending #392 `helm upgrade`, see `docs/gitops/ARGOCD-SELF-MANAGEMENT.md`. Signs in through Authentik (`oidc.config`, group `argocd-admins` = admin) once `platform/values/argocd.yaml` is applied; local `admin` stays as break-glass until SSO is proven; Dex disabled |
 | `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | Argo (`edge-cert-manager`, adopted in PR #176) (issuers are in `platform-core`) |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | Argo (`edge-ingress-nginx`, adopted in PR #176) |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | Argo (`edge-tailscale-operator`, adopted in PR #176) |
@@ -163,7 +163,7 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
-| `argocd` | argocd | argo-cd-10.1.2 | 3 | 2026-07-11 | `platform/values/argocd.yaml` | Argo itself is not declarative; bootstrap needs a laptop |
+| `argocd` | argocd | argo-cd-10.1.2 | 3 | 2026-07-11 | `platform/values/argocd.yaml` | Argo itself is not declarative yet; `platform-argocd` is defined (manual sync), adoption steps in `docs/gitops/ARGOCD-SELF-MANAGEMENT.md` |
 | `cert-manager` | cert-manager | cert-manager-v1.20.3 | 5 | 2026-07-11 | `platform/values/cert-manager.yaml` | Issuers live in Git (`platform-core`), the controller does not |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | 1 | 2026-07-04 | `platform/values/ingress-nginx.yaml` | LB IP `143.244.220.155` is bound to this release |
 | `loki` | monitoring | loki-7.0.0 | 4 | 2026-07-11 | `platform/values/loki.yaml` | Logs only |

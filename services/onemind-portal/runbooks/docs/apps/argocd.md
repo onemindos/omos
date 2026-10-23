@@ -7,7 +7,7 @@ GitOps CD
 ## Where it runs
 
 - Catalog entity: `component:default/argocd` in System `gitops-delivery`
-- Argo CD applications: `app-of-apps`, `platform-ecosystem-applications`, `platform-ecosystem-foundation`, `platform-ecosystem-resources`
+- Argo CD applications: `app-of-apps`, `platform-argocd`, `platform-ecosystem-applications`, `platform-ecosystem-foundation`, `platform-ecosystem-resources`
 - Namespace: `argocd`
 
 ## Workloads
