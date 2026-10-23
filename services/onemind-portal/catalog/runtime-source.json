@@ -423,26 +423,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "cluster-gateway"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "controller-manager"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "openchoreo-api"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "portal-assistant"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "openclaw",
       "name": "openclaw"
     },
@@ -1460,36 +1440,6 @@
       "kind": "Service",
       "namespace": "onetak",
       "name": "webodm-db"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "cilium-gateway-gateway-default"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "cluster-gateway"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "cluster-gateway-external"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "controller-manager-webhook-service"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "openchoreo-api"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "portal-assistant"
     },
     {
       "kind": "Service",

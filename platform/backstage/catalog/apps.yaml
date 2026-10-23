@@ -129,8 +129,7 @@ kind: System
 metadata:
   name: developer-platform
   title: Developer platform
-  description: The Backstage portal, OpenChoreo control and data planes, cluster
-    dashboards and runbooks.
+  description: The Backstage portal, cluster dashboards and runbooks.
   labels:
     onemind.io/catalog-axis: deployment
     onemind.io/pillar: so
@@ -6669,40 +6668,6 @@ metadata:
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: backstage/backstage,backstage/backstage-postgres
     onemind.io/prometheus-scopes: backstage,postgres
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: developer-platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: openchoreo
-  tags:
-    - kubernetes
-  title: OpenChoreo
-  description: OpenChoreo control plane and data plane, defaults, projects and
-    prerequisites.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-oc-control
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: openchoreo-control-plane
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (openchoreo-control-plane,openchoreo-data-plane)
-    grafana/alert-label-selector: namespace=openchoreo-control-plane
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane
-    onemind.io/logs-query: '{k8s_namespace_name="openchoreo-control-plane"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/openchoreo/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: openchoreo-control-plane/cluster-gateway,openchoreo-control-plane/controller-manager,openchoreo-control-plane/openchoreo-api,openchoreo-control-plane/portal-assistant
-    backstage.io/kubernetes-namespace: openchoreo-control-plane
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

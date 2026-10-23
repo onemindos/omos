@@ -44,7 +44,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
 | [OneTAK](onetak.md) | tak-ecosystem |
-| [OpenChoreo](openchoreo.md) | developer-platform |
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
 | [OpenSearch](opensearch.md) | data-storage |

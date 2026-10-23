@@ -253,4 +253,4 @@ onemind:
       # frequencySeconds: 120        # cluster observation cadence
       # removedRetentionHours: 24    # how long a removed workload stays flagged before it is dropped
       # excludedNamespaces: [kube-node-lease, kube-public]
-      # excludedNamespacePatterns: ['dp-*']   # OpenChoreo data planes: excluded until that platform is torn down
+      # excludedNamespacePatterns: ['dp-*']   # former OpenChoreo data-plane namespaces (removed); the exclusion is kept

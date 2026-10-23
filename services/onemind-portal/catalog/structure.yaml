@@ -48,7 +48,7 @@ systems:
     domain: domain:default/onemind-so
   - name: developer-platform
     title: Developer platform
-    description: The Backstage portal, OpenChoreo control and data planes, cluster dashboards and runbooks.
+    description: The Backstage portal, cluster dashboards and runbooks.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
@@ -217,10 +217,6 @@ apps:
     title: Backstage portal
     system: developer-platform
     description: The OneMind developer portal and its PostgreSQL database.
-  - name: openchoreo
-    title: OpenChoreo
-    system: developer-platform
-    description: OpenChoreo control plane and data plane, defaults, projects and prerequisites.
   - name: tempo
     title: Tempo
     system: observability

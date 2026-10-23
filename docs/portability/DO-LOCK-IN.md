@@ -82,7 +82,7 @@ Live (`kubectl get sc`, `kubectl get pv`):
 | Service | Kind | Notes |
 |---|---|---|
 | `ingress-nginx/ingress-nginx-controller` | **DO LB** `143.244.220.155` | annotation `service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL_NETWORK`, Helm-CLI release |
-| `nats/omos-nats`, `takserver/tak-tailnet`, `openchoreo-control-plane/cilium-gateway-gateway-default` | Tailscale (`loadBalancerClass: tailscale`) | already portable |
+| `nats/omos-nats`, `takserver/tak-tailnet` | Tailscale (`loadBalancerClass: tailscale`) | already portable |
 
 The TAK DO LB (`tak-external`, `152.42.155.95`) was removed on 2026-10-23; TAK now rides the
 tailnet only (`tak-tailnet`). The remaining public IP belongs to DigitalOcean and cannot move;

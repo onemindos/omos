@@ -98,10 +98,6 @@ workloads:
   onetak/webodm: component:default/webodm
   onetak/webodm-broker: component:default/webodm
   onetak/webodm-db: component:default/webodm
-  openchoreo-control-plane/cluster-gateway: component:default/openchoreo
-  openchoreo-control-plane/controller-manager: component:default/openchoreo
-  openchoreo-control-plane/openchoreo-api: component:default/openchoreo
-  openchoreo-control-plane/portal-assistant: component:default/openchoreo
   opencost/opencost: component:default/opencost
   ops/platform-volsync: component:default/volsync
   tailscale/egress: component:default/tailscale-operator
@@ -165,7 +161,6 @@ argoApplications:
   ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm
-  ecosystem-oc-control: component:default/openchoreo
   ecosystem-ollama: component:default/ollama
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost

@@ -33,7 +33,7 @@ spec:
               with httpx.Client(timeout=30) as client:
                   for attempt in range(160):
                       try:
-                          for name in ["core", "openchoreo"]:
+                          for name in ["core"]:
                               body = {"key": os.environ[name], "key_alias": "onemind-" + name,
                                       "models": ["onemind-chat", "onemind-fast"], "metadata": {"service": name}}
                               response = client.post(url + "/key/generate", headers=headers, json=body)
@@ -42,6 +42,14 @@ spec:
                                                          json={"key": os.environ[name], "models": body["models"]})
                               response.raise_for_status()
                           print("Model service credentials provisioned")
+                          # The OpenChoreo portal assistant key was removed with OpenChoreo. Drop its LiteLLM
+                          # key by alias; best effort and idempotent, so a missing key is not an error.
+                          try:
+                              gone = client.post(url + "/key/delete", headers=headers,
+                                                 json={"key_aliases": ["onemind-openchoreo"]})
+                              print("LiteLLM key onemind-openchoreo delete: status " + str(gone.status_code))
+                          except Exception as error:
+                              print("LiteLLM key onemind-openchoreo delete skipped: " + type(error).__name__)
                           break
                       except Exception:
                           time.sleep(5)

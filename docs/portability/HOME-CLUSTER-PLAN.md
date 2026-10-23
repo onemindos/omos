@@ -39,9 +39,9 @@ features (the bundled Traefik, Helm controller CRDs, k3s Klipper-specific annota
 
 k3s install choices that match the current platform:
 - Disable bundled Traefik (`--disable traefik`): we use ingress-nginx and Cloudflare Tunnel.
-- Current cluster uses Cilium (Hubble UI, a Cilium Gateway for OpenChoreo). Either install
+- Current cluster uses Cilium (Hubble UI). Either install
   Cilium on k3s (`--flannel-backend=none --disable-network-policy`, then Cilium) to stay
-  identical, or accept flannel and re-test the NetworkPolicies and OpenChoreo gateway.
+  identical, or accept flannel and re-test the NetworkPolicies.
   Recommended: Cilium, for parity.
 - Enable etcd snapshots to S3 (`etcd-s3` options) and test a restore: the control plane is now yours.
 - Use SQLite (default) for 1 node; embedded etcd when moving to 3 server nodes.
