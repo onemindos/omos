@@ -116,11 +116,6 @@ export const mapping: InventoryMapping = {
     'onetak/webodm': 'component:default/webodm',
     'onetak/webodm-broker': 'component:default/webodm',
     'onetak/webodm-db': 'component:default/webodm',
-    'openchoreo-control-plane/cluster-gateway': 'component:default/openchoreo',
-    'openchoreo-control-plane/controller-manager':
-      'component:default/openchoreo',
-    'openchoreo-control-plane/openchoreo-api': 'component:default/openchoreo',
-    'openchoreo-control-plane/portal-assistant': 'component:default/openchoreo',
     'opencost/opencost': 'component:default/opencost',
     'ops/platform-volsync': 'component:default/volsync',
     'tailscale/egress': 'component:default/tailscale-operator',
@@ -394,12 +389,6 @@ export const mapping: InventoryMapping = {
     onetak: {
       title: 'OneTAK',
       system: 'tak-ecosystem',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    openchoreo: {
-      title: 'OpenChoreo',
-      system: 'developer-platform',
       pillar: 'so',
       review: 'proposed',
     },

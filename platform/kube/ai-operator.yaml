@@ -42,7 +42,6 @@ rules:
     verbs: [get, list]
   - apiGroups:
       - argoproj.io
-      - openchoreo.dev
       - postgresql.cnpg.io
       - barmancloud.cnpg.io
       - jetstream.nats.io

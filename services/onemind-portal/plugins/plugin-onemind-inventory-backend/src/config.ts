@@ -25,7 +25,7 @@ export interface LiveInventoryConfig {
 
 /** Namespaces that hold no workloads we catalog. kube-system is NOT here: F2 maps its workloads to apps. */
 export const DEFAULT_EXCLUDED_NAMESPACES = ['kube-node-lease', 'kube-public'];
-/** OpenChoreo data-plane namespaces (dp-*) stay excluded until that platform is torn down; no provider in this portal publishes them. */
+/** Former OpenChoreo data-plane namespaces (dp-*; the platform is torn down) stay excluded; no provider in this portal publishes them. */
 export const DEFAULT_EXCLUDED_PATTERNS = ['dp-*'];
 
 export function readLiveInventoryConfig(config: Config): LiveInventoryConfig {

@@ -36,8 +36,6 @@ spec:
                   users = request("GET", "core/users/?username=akadmin")["results"]
                   owner = next(u["pk"] for u in users if u["username"] == "akadmin")
                   callbacks = {
-                      "openchoreo": ["https://onemind-preview.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame",
-                                     "https://homepage.tail717ba0.ts.net/api/auth/openchoreo-auth/handler/frame"],
                       "langfuse": ["https://onemind-langfuse.tail717ba0.ts.net/api/auth/callback/authentik"],
                   }
                   for name, redirects in callbacks.items():
@@ -49,8 +47,7 @@ spec:
                       matches = [p for p in providers if p["client_id"] == client_id]
                       provider = request("PATCH", "providers/oauth2/" + str(matches[0]["pk"]) + "/", body) if matches else request("POST", "providers/oauth2/", body)
                       apps = request("GET", "core/applications/?slug=" + client_id)["results"]
-                      # "any": the openchoreo app also admits the ai-operator service account (ai-operator-identity.yaml)
-                      app_body = {"name": "OneMind " + name, "slug": client_id, "provider": provider["pk"], "policy_engine_mode": "any" if name == "openchoreo" else "all"}
+                      app_body = {"name": "OneMind " + name, "slug": client_id, "provider": provider["pk"], "policy_engine_mode": "all"}
                       app = request("PATCH", "core/applications/" + client_id + "/", app_body) if apps else request("POST", "core/applications/", app_body)
                       bindings = request("GET", "policies/bindings/?target=" + app["pk"])["results"]
                       if not any(b.get("user") == owner for b in bindings):

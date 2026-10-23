@@ -63,7 +63,7 @@ def main():
         add(app_namespaces[role], role.replace("_", "-") + "-db", {**pair, "uri": uri})
 
     master = "sk-" + secrets.token_urlsafe(40)
-    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core", "openchoreo"]}
+    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core"]}
     add("onemind-ai", "litellm-auth", {"master-key": master})
     add("onemind-ai", "litellm-client-keys", clients)
     # Provider credentials come from the existing LiteLLM provider secret (OpenClaw, their former source, was retired).
