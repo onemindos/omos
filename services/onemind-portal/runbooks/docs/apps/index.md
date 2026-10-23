@@ -45,7 +45,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [OneMind core services](onemind-core.md) | infrastructure |
 | [OneTAK](onetak.md) | tak-ecosystem |
 | [OpenChoreo](openchoreo.md) | developer-platform |
-| [OpenChoreo observability plane](openchoreo-observability.md) | observability |
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
 | [OpenSearch](opensearch.md) | data-storage |

@@ -6692,17 +6692,18 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-oc-control
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-data-plane,platform-openchoreo-prereqs
+    onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-prereqs
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: openchoreo-control-plane,openchoreo-data-plane
+    onemind.io/kubernetes-namespaces: openchoreo-control-plane
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (openchoreo-control-plane,openchoreo-data-plane)
     grafana/alert-label-selector: namespace=openchoreo-control-plane
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane&var-namespace=openchoreo-data-plane
-    onemind.io/logs-query: '{k8s_namespace_name=~"openchoreo-control-plane|openchoreo-data-plane"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane
+    onemind.io/logs-query: '{k8s_namespace_name="openchoreo-control-plane"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/openchoreo/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: openchoreo-control-plane/cluster-gateway,openchoreo-control-plane/controller-manager,openchoreo-control-plane/openchoreo-api,openchoreo-control-plane/portal-assistant,openchoreo-data-plane/cluster-agent-dataplane
+    onemind.io/kubernetes-workloads: openchoreo-control-plane/cluster-gateway,openchoreo-control-plane/controller-manager,openchoreo-control-plane/openchoreo-api,openchoreo-control-plane/portal-assistant
+    backstage.io/kubernetes-namespace: openchoreo-control-plane
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6711,41 +6712,6 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: developer-platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: openchoreo-observability
-  tags:
-    - kubernetes
-  title: OpenChoreo observability plane
-  description: OpenChoreo observer, adapters and collectors for logs, traces,
-    metrics, events and FinOps.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-openchoreo-observability
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: openchoreo-observability-plane
-    backstage.io/kubernetes-namespace: openchoreo-observability-plane
-    grafana/alert-label-selector: namespace=openchoreo-observability-plane
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-observability-plane
-    onemind.io/logs-query: '{k8s_namespace_name="openchoreo-observability-plane"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/openchoreo-observability/
-    github.com/project-slug: onemindos/omos
-    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
-    onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: openchoreo-observability-plane/cluster-agent-observabilityplane,openchoreo-observability-plane/controller-manager,openchoreo-observability-plane/metrics-adapter-prometheus,openchoreo-observability-plane/observer
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

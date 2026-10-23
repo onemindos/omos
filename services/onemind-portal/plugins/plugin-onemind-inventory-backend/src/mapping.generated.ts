@@ -121,16 +121,6 @@ export const mapping: InventoryMapping = {
       'component:default/openchoreo',
     'openchoreo-control-plane/openchoreo-api': 'component:default/openchoreo',
     'openchoreo-control-plane/portal-assistant': 'component:default/openchoreo',
-    'openchoreo-data-plane/cluster-agent-dataplane':
-      'component:default/openchoreo',
-    'openchoreo-observability-plane/cluster-agent-observabilityplane':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/controller-manager':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/metrics-adapter-prometheus':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/observer':
-      'component:default/openchoreo-observability',
     'opencost/opencost': 'component:default/opencost',
     'ops/platform-volsync': 'component:default/volsync',
     'tailscale/egress': 'component:default/tailscale-operator',
@@ -410,12 +400,6 @@ export const mapping: InventoryMapping = {
     openchoreo: {
       title: 'OpenChoreo',
       system: 'developer-platform',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    'openchoreo-observability': {
-      title: 'OpenChoreo observability plane',
-      system: 'observability',
       pillar: 'so',
       review: 'proposed',
     },
