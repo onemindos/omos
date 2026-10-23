@@ -404,7 +404,6 @@ kubectl create secret generic <name> -n <namespace> \
 | hermes-webui-auth | hermes | Hermes web UI password |
 | hermes-dashboard-auth | hermes | Hermes dashboard auth |
 | cloudtak-agent-token | hermes | CloudTAK API token (generate in CloudTAK UI) |
-| onetak-secrets | onetak | Signing secret, MinIO keys, postgres DSN |
 | omos-nats-creds | omos | NATS user+password for omos namespace |
 | tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge |
 | cloudflare-api-credentials | cloudflare | Cloudflare API key + email |

@@ -158,7 +158,6 @@
   "component:default/k8s-onetak-nodeodm-8a68cc40",
   "component:default/k8s-onetak-onetak-geo-db-a22783b9",
   "component:default/k8s-onetak-onetak-media-31c9ce7b",
-  "component:default/k8s-onetak-onetak-minio-98a87ea3",
   "component:default/k8s-onetak-onetak-postgis-adc924ce",
   "component:default/k8s-onetak-pg-featureserv-ca3dd68e",
   "component:default/k8s-onetak-stac-api-746ca5f2",

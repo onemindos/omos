@@ -19,7 +19,7 @@ describe('name stability', () => {
       ]),
     );
     const live = await liveWorkloads();
-    expect(live).toHaveLength(170);
+    expect(live).toHaveLength(169);
     const known = live.filter(w => curated.has(`${w.namespace}/${w.name}`));
     expect(known).toHaveLength(live.length); // every live workload is already in the file today
     for (const w of known) {
@@ -40,7 +40,7 @@ describe('name stability', () => {
     const names = docs
       .filter((d: { kind: string }) => d.kind === 'Component')
       .map((d: { metadata: { name: string } }) => d.metadata.name);
-    expect(names).toHaveLength(170);
+    expect(names).toHaveLength(169);
     expect(names.sort()).toEqual(
       recorded.items
         .map(i => entityName(i.metadata.namespace, i.metadata.name))

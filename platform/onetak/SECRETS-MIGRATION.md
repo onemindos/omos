@@ -7,11 +7,6 @@ the running cloudtak namespace into onetak, then seal them.
 ## Step 1 — Copy live secrets into onetak namespace
 
 ```bash
-# Copy main app secrets
-kubectl get secret cloudtak-secrets -n cloudtak -o json \
-  | jq 'del(.metadata.resourceVersion,.metadata.uid,.metadata.creationTimestamp,.metadata.annotations,.metadata.labels) | .metadata.namespace = "onetak" | .metadata.name = "onetak-secrets"' \
-  | kubectl apply -f -
-
 # Copy postgres credentials
 kubectl get secret cloudtak-postgres-creds -n cloudtak -o json \
   | jq 'del(.metadata.resourceVersion,.metadata.uid,.metadata.creationTimestamp,.metadata.annotations,.metadata.labels) | .metadata.namespace = "onetak" | .metadata.name = "onetak-postgres-creds"' \
@@ -28,10 +23,6 @@ kubectl get secret ghcr -n cloudtak -o json \
 Once the namespace is stable, re-seal the secrets properly:
 
 ```bash
-# Export and re-seal onetak-secrets
-kubectl get secret onetak-secrets -n onetak -o json \
-  | kubeseal --namespace onetak --format yaml > onetak-secrets.sealedsecret.yaml
-
 # Export and re-seal onetak-postgres-creds
 kubectl get secret onetak-postgres-creds -n onetak -o json \
   | kubeseal --namespace onetak --format yaml > onetak-postgres-creds.sealedsecret.yaml
@@ -39,9 +30,10 @@ kubectl get secret onetak-postgres-creds -n onetak -o json \
 
 Then replace the Step 1 manual copies with these SealedSecret files in GitOps.
 
-## Step 3 — Data migration (MinIO + PostGIS)
+## Step 3 — Data migration (PostGIS)
 
-MinIO bucket name stays `cloudtak` for data continuity — no migration needed for object storage.
+The `onetak-secrets` secret and the MinIO object store were removed from `onetak` (the
+`cloudtak` bucket held no objects); that part of this migration no longer applies.
 
 For PostGIS, the onetak-postgis starts fresh. To migrate existing data:
 

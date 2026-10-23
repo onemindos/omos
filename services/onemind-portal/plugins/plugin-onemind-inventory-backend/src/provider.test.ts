@@ -112,10 +112,10 @@ describe('what the provider publishes', () => {
     await h.connect();
     const summary = await h.provider.refresh();
     expect(summary).toMatchObject({
-      tracked: 169,
+      tracked: 168,
       published: 0,
-      skippedCurated: 169,
-    }); // 170 live, minus the one dp-* workload OpenChoreo owns;
+      skippedCurated: 168,
+    }); // 169 live, minus the one dp-* workload OpenChoreo owns;
     expect(h.published.size).toBe(0);
   });
 

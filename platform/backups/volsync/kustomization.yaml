@@ -19,7 +19,6 @@ resources:
 - sealed/nats-volume-bf2e7be6c2ff.yaml
 - sealed/onetak-volume-5503f74cbdce.yaml
 - sealed/onetak-volume-50fb74ff16c6.yaml
-- sealed/onetak-volume-b455a3425ad0.yaml
 - sealed/onetak-volume-76694cc119e9.yaml
 - sealed/onetak-volume-adf3fcd472a7.yaml
 - sealed/onetak-volume-e39c1f238e64.yaml
