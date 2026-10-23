@@ -102,7 +102,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 | Application | Namespace | Purpose | State / data | Backup | Exposure | GitOps |
 |-------------|-----------|---------|--------------|--------|----------|--------|
-| `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.tail717ba0.ts.net` **tailnet** | Argo. Health flaps to Progressing |
+| `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.tail717ba0.ts.net:9100` / `:9443` **tailnet (L4)** | Argo. Health flaps to Progressing |
 | `platform-backstage` | backstage | Backstage developer portal and service catalog | PostgreSQL, 10 GiB | `PG dump` (06:40 UTC), `VolSync` | `onemind-preview` tailnet | Argo |
 | `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-metrics-scrape` (0 replicas). **Alertmanager has no receiver** | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
 | `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI) | 20 GiB time-series | `VolSync`; native backup Job suspended | internal | Argo |

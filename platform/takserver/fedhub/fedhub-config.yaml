@@ -76,12 +76,14 @@ data:
     # discovery document (it does not fall back to the JVM trust store), so it must be the CA that signs
     # auth.onemindos.dev: the Google Trust Services root in ConfigMap fedhub-authentik-ca (below).
     allowOauth: true
-    oauthPort: 9100
+    # OAuth runs on its own TLS port without a client certificate; the main port (9100) always requires one.
+    oauthPort: 9443
+    oauthPortTls: true
     keycloakServerName: OneMind Authentik
     keycloakTlsCertFile: /opt/tak/federation-hub/authentik-ca/ca.pem
     keycloakClientId: fedhub
     keycloakSecret: __FEDHUB_OIDC_SECRET__
-    keycloakRedirectUri: https://fedhub.tail717ba0.ts.net/login/redirect
+    keycloakRedirectUri: https://fedhub.tail717ba0.ts.net:9443/login/redirect
     keycloakConfigurationEndpoint: https://auth.onemindos.dev/application/o/fedhub/.well-known/openid-configuration
     keycloakClaimName: groups
     keycloakAdminClaimValue: fedhub-admins

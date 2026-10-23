@@ -1,6 +1,6 @@
 # FedHub 5.8 — multi-TAK federation hub.
 # Manages platform/takserver/fedhub/ manifests: MongoDB StatefulSet, FedHub Deployment,
-# Services (fedhub-ui, fedhub-fed; both ClusterIP), Tailscale Ingress (tailnet only).
+# Services (fedhub-ui, fedhub-fed; both ClusterIP), Tailscale L4 LoadBalancer fedhub-tailnet (tailnet only).
 #
 # BEFORE FIRST SYNC — complete these manual steps or the Deployment will
 # ImagePullBackOff / CrashLoop:
@@ -11,7 +11,7 @@
 #      sealed for both sides (auth/onemind-platform-oidc key FEDHUB_CLIENT_SECRET and
 #      takserver/fedhub-oidc-secret in platform/takserver/fedhub/fedhub-oidc.sealedsecret.yaml).
 #      No DNS record is needed: the admin UI is reachable only on the tailnet at
-#      https://fedhub.tail717ba0.ts.net (Tailscale Ingress).
+#      https://fedhub.tail717ba0.ts.net:9100 (client certificate) and :9443 (Authentik sign-in), Tailscale L4 LoadBalancer.
 #
 # Federation ports 9101/9102 are not exposed outside the cluster (no federation partners).
 apiVersion: argoproj.io/v1alpha1

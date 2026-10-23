@@ -1,0 +1,32 @@
+# FedHub admin UI on the tailnet, L4 TCP passthrough -- https://fedhub.tail717ba0.ts.net:9100 and :9443
+#
+# Same mechanism as tak-tailnet (platform/takserver/deploy/tak-tailscale.yaml): the Tailscale operator sees
+# loadBalancerClass: tailscale and creates a tailnet node `fedhub` that forwards the ports below, untouched,
+# to the fedhub pod. The earlier Tailscale Ingress (L7) could not work: FedHub's UI on 9100 requires a TLS client
+# certificate, which a terminating proxy cannot present (proxy log: "tls: certificate required").
+#
+# Two UI ports (FederationHubUIServer.customize), both TLS with FedHub's own self-signed certificate (the browser
+# warns once per port; the certificate does not name fedhub.tail717ba0.ts.net):
+#   9100  `port`: client certificate REQUIRED (needClientAuth). Open it with the TAK admin client cert installed in
+#         the browser (certs/files/admin.p12 from fedhub-certs; fingerprint is in fedhub-authorized-users).
+#   9443  `oauthPort` + `oauthPortTls: true`: no client certificate. Authentik sign-in
+#         (keycloakRedirectUri https://fedhub.tail717ba0.ts.net:9443/login/redirect) works on this port only.
+# Federation ports 9101/9102 are deliberately not exposed (no federation partners).
+apiVersion: v1
+kind: Service
+metadata:
+  name: fedhub-tailnet
+  namespace: takserver
+  labels:
+    app: fedhub
+    component: ui
+    app.kubernetes.io/part-of: omos-networking
+  annotations:
+    tailscale.com/hostname: "fedhub"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector: {app: fedhub}
+  ports:
+    - {name: mtls-ui, port: 9100, targetPort: 9100, protocol: TCP}
+    - {name: oauth-ui, port: 9443, targetPort: 9443, protocol: TCP}

@@ -5,10 +5,15 @@
 #   - the `groups` scope mapping "OneMind groups" (shared with Argo CD; found by name, created if missing)
 #   - the group `fedhub-admins` (the owner `akadmin` is added) and an application access binding to it
 #   - the confidential OAuth2 provider + application `fedhub`, issuer https://auth.onemindos.dev/application/o/fedhub/,
-#     client id `fedhub`, strict redirect URI https://fedhub.tail717ba0.ts.net/login/redirect
+#     client id `fedhub`, strict redirect URI https://fedhub.tail717ba0.ts.net:9443/login/redirect (FedHub's OAuth port)
 # The client secret is FEDHUB_CLIENT_SECRET in the SealedSecret auth/onemind-platform-oidc. The same value is sealed
 # for FedHub as takserver/fedhub-oidc-secret (key keycloakSecret), see platform/takserver/fedhub/fedhub-oidc.sealedsecret.yaml.
 # Sync-wave 3 runs it after the Argo CD job (wave 2) so the two never race to create the shared scope mapping.
+#
+# Lookups never rely on list filters: Authentik's `?slug=` filter on core/applications returned results for a slug that
+# does not exist, which made the first version PATCH core/applications/fedhub/ and fail with 404 (BackoffLimitExceeded).
+# The application is now fetched by its slug path and created on 404. Failed pods are kept (restartPolicy Never) and the
+# Job is removed after a day, so `kubectl -n auth logs` still works after a failure; error messages carry the API's reply.
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -19,11 +24,12 @@ metadata:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
 spec:
-  backoffLimit: 4
+  backoffLimit: 3
   activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
   template:
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
       automountServiceAccountToken: false
       imagePullSecrets:
         - name: ghcr
@@ -39,10 +45,14 @@ spec:
               fedhub_url = "https://fedhub.tail717ba0.ts.net"
               provider_name = "OneMind FedHub"
               with httpx.Client(headers=headers, timeout=30) as client:
-                  def request(method, path, body=None):
+                  secret = os.environ["FEDHUB_CLIENT_SECRET"]
+                  def request(method, path, body=None, missing_ok=False):
                       response = client.request(method, base + path, json=body)
+                      if missing_ok and response.status_code == 404:
+                          return None
                       if not response.is_success:
-                          raise RuntimeError("Identity API failed with status " + str(response.status_code))
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0] + " failed with status " +
+                                             str(response.status_code) + ": " + response.text.replace(secret, "***")[:300])
                       return response.json() if response.content else {}
                   providers = request("GET", "providers/oauth2/?page_size=100")["results"]
                   original = next(p for p in providers if p["client_id"] == "onemind-backstage")
@@ -70,9 +80,9 @@ spec:
                   flows = {k: (existing or original)[k] for k in ["authorization_flow", "invalidation_flow", "signing_key", "sub_mode", "issuer_mode", "access_token_validity"]}
                   body = dict(flows)
                   body.update(name=provider_name, client_type="confidential", client_id="fedhub",
-                      client_secret=os.environ["FEDHUB_CLIENT_SECRET"], include_claims_in_id_token=True,
+                      client_secret=secret, include_claims_in_id_token=True,
                       property_mappings=sorted(set((existing or original)["property_mappings"]) | set(original["property_mappings"]) | {mapping["pk"]}),
-                      redirect_uris=[{"matching_mode": "strict", "url": fedhub_url + "/login/redirect", "redirect_uri_type": "authorization"}])
+                      redirect_uris=[{"matching_mode": "strict", "url": fedhub_url + ":9443/login/redirect", "redirect_uri_type": "authorization"}])
                   if existing:
                       provider = request("PATCH", "providers/oauth2/" + str(existing["pk"]) + "/", body)
                       print("provider 'fedhub': updated existing pk " + str(existing["pk"]) + ", no duplicate created")
@@ -80,12 +90,16 @@ spec:
                       provider = request("POST", "providers/oauth2/", body)
                       print("provider 'fedhub': created pk " + str(provider["pk"]))
 
-                  apps = request("GET", "core/applications/?slug=fedhub")["results"]
+                  existing_app = request("GET", "core/applications/fedhub/", missing_ok=True)
                   app_body = {"name": "FedHub", "slug": "fedhub", "provider": provider["pk"], "policy_engine_mode": "all",
-                              "meta_launch_url": fedhub_url}
-                  app = request("PATCH", "core/applications/fedhub/", app_body) if apps else request("POST", "core/applications/", app_body)
-                  print("application 'fedhub': " + ("updated" if apps else "created"))
-                  bindings = request("GET", "policies/bindings/?target=" + app["pk"])["results"]
+                              "meta_launch_url": fedhub_url + ":9100"}
+                  if existing_app:
+                      app = request("PATCH", "core/applications/fedhub/", app_body)
+                  else:
+                      app = request("POST", "core/applications/", app_body)
+                  print("application 'fedhub': " + ("updated" if existing_app else "created"))
+                  bindings = [b for b in request("GET", "policies/bindings/?page_size=200&target=" + app["pk"])["results"]
+                              if b.get("target") == app["pk"]]
                   if any(b.get("group") == group["pk"] for b in bindings):
                       print("access binding fedhub-admins -> application fedhub: already present")
                   else:
