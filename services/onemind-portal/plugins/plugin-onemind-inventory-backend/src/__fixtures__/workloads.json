@@ -132,23 +132,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "rollouts-argo-rollouts",
-    "namespace": "argocd"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "rollouts-controller",
-      "app.kubernetes.io/instance": "rollouts",
-      "app.kubernetes.io/name": "argo-rollouts"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "authentik-redis",
     "namespace": "auth"
    },

@@ -12,7 +12,6 @@ workloads:
   argocd/argocd-redis: component:default/argocd
   argocd/argocd-repo-server: component:default/argocd
   argocd/argocd-server: component:default/argocd
-  argocd/rollouts-argo-rollouts: component:default/argo-rollouts
   auth/authentik-postgres: component:default/authentik
   auth/authentik-redis: component:default/authentik
   auth/platform-auth-helm-authentik-server: component:default/authentik
@@ -177,7 +176,6 @@ workloads:
   velero/velero: component:default/velero
 argoApplications:
   app-of-apps: component:default/argocd
-  argo-rollouts: component:default/argo-rollouts
   ecosystem-barman: component:default/cloudnative-pg
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr

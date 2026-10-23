@@ -133,7 +133,6 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-oc-control` | openchoreo-control-plane | openchoreo-control-plane 1.3.1 (+ overrides) | OpenChoreo developer platform | none | Git | gateway LB on **tailnet** |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
-| `argo-rollouts` | argocd | argo-rollouts 2.43.6 | Progressive delivery (moved from `argo-rollouts` namespace to `argocd` on 2026-10-17; no Rollouts configured yet) | none | Git | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |
