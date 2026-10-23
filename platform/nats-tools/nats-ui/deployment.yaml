@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: nats-ui
-          image: ghcr.io/gastbob40/nats-ui:latest
+          image: ghcr.io/gastbob40/nats-ui@sha256:19f13ef3454bea03c8673ce7ac6702bce7bdd917ae82506f82e609027d136615
           imagePullPolicy: Always
           ports:
             - name: http
