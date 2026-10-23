@@ -1,0 +1,91 @@
+# The official STAC Browser (radiantearth/stac-browser): a static single-page app served by nginx. It runs in the
+# user's browser and calls the STAC API at SB_catalogUrl, so that URL must be the tailnet name of the read API, not a
+# cluster address. The image is amd64 only, which is what the cluster nodes are.
+#
+# The image's entrypoint writes its runtime config into the web root and the nginx config, so the root filesystem
+# stays writable here (everything else is locked down).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stac-browser
+  namespace: stac
+  labels: &labels
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: browser
+    app.kubernetes.io/part-of: stac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: browser
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: stac-browser
+          image: ghcr.io/radiantearth/stac-browser:5.1.0@sha256:e6d92b6ba593201b558219d0591fc83820b7f86a316d3fe565a27ad996fc7f63
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: SB_catalogUrl
+              value: https://stac.tail717ba0.ts.net/
+            - name: SB_catalogTitle
+              value: OneMind Imagery
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stac-browser
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: browser
+spec:
+  selector:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: browser
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

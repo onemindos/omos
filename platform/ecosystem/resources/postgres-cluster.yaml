@@ -91,6 +91,15 @@ spec:
       createdb: false
       passwordSecret:
         name: db-nextcloud
+    - name: stac
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      # pgstac creates its own pgstac_admin, pgstac_ingest and pgstac_read roles on first install.
+      createrole: true
+      passwordSecret:
+        name: db-stac
   postgresql:
     shared_preload_libraries:
     - age

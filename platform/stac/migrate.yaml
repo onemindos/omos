@@ -1,0 +1,97 @@
+# Installs or upgrades the pgstac schema in the stac database on every sync, as an Argo CD Sync hook (wave 1:
+# after the namespace, secret, config and NetworkPolicies of wave 0, before the Deployments of wave 2).
+#
+# Idempotent: `pypgstac migrate` creates the schema when it is missing and otherwise applies only the
+# migrations between the installed version and the version of this image, so a re-run on an up-to-date
+# database changes nothing. The image tag IS the pgstac version: to upgrade pgstac, raise the tag and digest
+# (and check that stac-fastapi-pgstac in api.yaml supports it; 7.1.0 supports pgstac >=0.9.2,<0.11). Migrations
+# are forward-only: take a Postgres backup first (README, "Upgrading").
+#
+# The database and the `stac` role come from platform/ecosystem/resources (Database CR and managed role); that
+# Application runs in wave 4 and this one in wave 5. The loop waits for the database if CNPG is still creating it.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: stac-pgstac-migrate
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: migrate
+    app.kubernetes.io/part-of: stac
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 6
+  activeDeadlineSeconds: 1200
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: stac
+        app.kubernetes.io/component: migrate
+        app.kubernetes.io/part-of: stac
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: migrate
+          image: ghcr.io/stac-utils/pgstac-pypgstac:v0.9.12@sha256:672faad776b55afe15fadb27589c390c4fc93de5bc73e8889d2c29a600c5dba4
+          command: [bash, -ceu]
+          args:
+            - |
+              until psql -qtAc 'select 1' >/dev/null 2>&1; do
+                echo "waiting for database ${PGDATABASE} on ${PGHOST}"
+                sleep 5
+              done
+              pypgstac migrate
+              # Keep each Collection's extent current as Items are added. pgstac ships this off.
+              psql -v ON_ERROR_STOP=1 -qc "INSERT INTO pgstac.pgstac_settings (name, value) VALUES ('update_collection_extent', 'true') ON CONFLICT (name) DO UPDATE SET value = EXCLUDED.value"
+              echo "pgstac schema version: $(pypgstac version)"
+          envFrom:
+            - configMapRef:
+                name: stac-config
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: stac-db
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: stac-db
+                  key: password
+            # pgstac creates three roles (pgstac_admin, pgstac_ingest, pgstac_read) and then SETs ROLE to them.
+            # PostgreSQL 16 gives a CREATEROLE user only ADMIN on the roles it creates, not the right to SET ROLE
+            # to them; this makes the creating role a member with SET and INHERIT, as in PostgreSQL 15.
+            - name: PGOPTIONS
+              value: -c createrole_self_grant=set,inherit
+            - name: HOME
+              value: /tmp
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi

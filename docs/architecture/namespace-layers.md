@@ -9,7 +9,7 @@ and `kube-node-lease`.
 |---|---|---|
 | `data` | Event bus and the network the data moves on | `nats` |
 | `sense` | Collection and edge sensors | `omos`, `takml`, `takserver` |
-| `make-sense` | Fusion, storage and analytics | `onetak`, `clickhouse`, `onemind-core`, `onemind-data` |
+| `make-sense` | Fusion, storage and analytics | `onetak`, `clickhouse`, `onemind-core`, `onemind-data`, `stac` |
 | `decide` | AI models and agents | `onemind-ai`, `hermes`, `agent-fabric`, `n8n` |
 | `act` | Human-facing surfaces and delivery | `backstage`, `matrix` |
 | `guard` | Security, identity, observability, backup and CI | `auth`, `monitoring`, `falco`, `kyverno`, `velero`, `ops`, `kube`, `github-runner` |
