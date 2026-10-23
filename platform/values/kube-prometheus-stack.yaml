@@ -146,6 +146,13 @@ grafana:
         memory: 128Mi
 
 prometheusOperator:
+  prometheusConfigReloader:
+    resources:
+      requests:
+        cpu: 2m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
   resources:
     requests:
       cpu: 50m
