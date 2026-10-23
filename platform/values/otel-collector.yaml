@@ -1,4 +1,4 @@
-# Existing OTel pipeline: Loki/Tempo retained; only OpenChoreo component signals also reach OpenSearch.
+# OTel pipeline: logs go to Loki, traces to Tempo. (The OpenSearch exporters for OpenChoreo were removed.)
 mode: daemonset
 image:
   repository: otel/opentelemetry-collector-contrib
@@ -23,21 +23,6 @@ config:
       endpoint: tempo.monitoring.svc.cluster.local:4317
       tls:
         insecure: true
-    opensearch/openchoreo-logs:
-      http: &id001
-        endpoint: https://opensearch-cluster-master.onemind-search.svc.cluster.local:9200
-        tls:
-          insecure_skip_verify: true
-        auth:
-          authenticator: basicauth/openchoreo
-      logs_index: container-logs
-      logs_index_time_format: yyyy-MM-dd
-      mapping:
-        mode: bodymap
-    opensearch/openchoreo-traces:
-      http: *id001
-      traces_index: otel-traces
-      traces_index_time_format: yyyy-MM-dd
   service:
     pipelines:
       traces:
@@ -48,36 +33,8 @@ config:
       logs:
         exporters:
         - otlphttp/loki
-      logs/openchoreo:
-        receivers:
-        - filelog
-        - otlp
-        processors:
-        - memory_limiter
-        - k8sattributes
-        - filter/openchoreo
-        - transform/openchoreo-logs
-        - batch
-        exporters:
-        - opensearch/openchoreo-logs
-      traces/openchoreo:
-        receivers:
-        - otlp
-        processors:
-        - memory_limiter
-        - k8sattributes
-        - filter/openchoreo
-        - batch
-        exporters:
-        - opensearch/openchoreo-traces
     extensions:
     - health_check
-    - basicauth/openchoreo
-  extensions:
-    basicauth/openchoreo:
-      client_auth:
-        username: ${env:OPENSEARCH_USERNAME}
-        password: ${env:OPENSEARCH_PASSWORD}
   processors:
     k8sattributes:
       extract:
@@ -112,52 +69,9 @@ config:
         - tag_name: version_id
           key: version_id
           from: pod
-    filter/openchoreo:
-      error_mode: propagate
-      logs:
-        log_record:
-        - resource.attributes["openchoreo.dev/component-uid"] == nil
-      traces:
-        span:
-        - resource.attributes["openchoreo.dev/component-uid"] == nil
-    transform/openchoreo-logs:
-      error_mode: propagate
-      log_statements:
-      - context: log
-        statements:
-        - set(cache["message"], body)
-        - set(body, {})
-        - set(body["log"], cache["message"])
-        - set(body["@timestamp"], FormatTime(time, "%Y-%m-%dT%H:%M:%S.%fZ"))
-        - set(body["kubernetes"], {})
-        - set(body["kubernetes"]["labels"], {})
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/component-uid"], resource.attributes["openchoreo.dev/component-uid"])
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/project-uid"], resource.attributes["openchoreo.dev/project-uid"])
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/environment-uid"], resource.attributes["openchoreo.dev/environment-uid"])
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/namespace"], resource.attributes["openchoreo.dev/namespace"])
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/component"], resource.attributes["openchoreo.dev/component"])
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/project"], resource.attributes["openchoreo.dev/project"])
-        - set(body["kubernetes"]["labels"]["openchoreo_dev/environment"], resource.attributes["openchoreo.dev/environment"])
-        - set(body["kubernetes"]["labels"]["target"], resource.attributes["target"])
-        - set(body["kubernetes"]["labels"]["version"], resource.attributes["version"])
-        - set(body["kubernetes"]["labels"]["version_id"], resource.attributes["version_id"])
-        - set(body["kubernetes"]["namespace_name"], resource.attributes["k8s.namespace.name"])
-        - set(body["kubernetes"]["pod_name"], resource.attributes["k8s.pod.name"])
-        - set(body["kubernetes"]["container_name"], resource.attributes["k8s.container.name"])
 resources:
   requests:
     cpu: 100m
     memory: 64Mi
   limits:
     memory: 256Mi
-extraEnvs:
-- name: OPENSEARCH_USERNAME
-  valueFrom:
-    secretKeyRef:
-      name: openchoreo-opensearch
-      key: username
-- name: OPENSEARCH_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: openchoreo-opensearch
-      key: password
