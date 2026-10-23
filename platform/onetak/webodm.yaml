@@ -32,7 +32,7 @@ spec:
                       - onemind-ecosystem-cpu
       initContainers:
         - name: fix-perms
-          image: busybox
+          image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           command: ["sh", "-c", "mkdir -p /data/pgdata && chmod 700 /data/pgdata"]
           resources:
             requests:
@@ -45,7 +45,7 @@ spec:
               mountPath: /data
       containers:
         - name: webodm-db
-          image: webodm/webodm_db:latest
+          image: webodm/webodm_db@sha256:03f18ec0089325ec2b8975ba1781277bcdc212b6d86c9de33f6409d313e90430
           ports:
             - containerPort: 5432
           volumeMounts:
@@ -174,7 +174,7 @@ spec:
                       - onemind-ecosystem-cpu
       containers:
         - name: webapp
-          image: webodm/webodm_webapp:latest
+          image: webodm/webodm_webapp@sha256:875cf97ee3278d9dfc517feba862ebe83aae1ccf76c398de96e993402f181659
           command: ["/bin/bash", "-c"]
           args:
             - "service cron start && chmod +x /webodm/*.sh && /webodm/wait-for-postgres.sh webodm-db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/start.sh"
@@ -218,7 +218,7 @@ spec:
             periodSeconds: 15
             failureThreshold: 6
         - name: worker
-          image: webodm/webodm_webapp:latest
+          image: webodm/webodm_webapp@sha256:875cf97ee3278d9dfc517feba862ebe83aae1ccf76c398de96e993402f181659
           command: ["/bin/bash", "-c"]
           args:
             - "/webodm/wait-for-postgres.sh webodm-db /webodm/wait-for-it.sh -t 0 broker:6379 -- /webodm/wait-for-it.sh -t 0 localhost:8000 -- /webodm/worker.sh start"
@@ -307,7 +307,7 @@ spec:
                       - onemind-ecosystem-cpu
       containers:
         - name: nodeodm
-          image: opendronemap/nodeodm:latest
+          image: opendronemap/nodeodm:3.6.2@sha256:fcd99eb23d8db194a7d1dc95f029f518283b3d6be32dd64422395f4e7af56720
           ports:
             - containerPort: 3000
           volumeMounts:
