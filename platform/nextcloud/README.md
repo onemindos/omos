@@ -8,8 +8,8 @@ and merges the PR. It does not change the OpenChoreo migration phase gates.
 
 - Application: `platform-nextcloud`, Nextcloud chart 9.4.1, server 35.0.2 Apache.
 - Private planned URL: `https://onemind-files.tail717ba0.ts.net`.
-- One application replica, Redis cache/locking, cron sidecar and a 20 GiB retained
-  filesystem PVC. The initial size is for a selected vault, not the 112 GB archive.
+- One application replica, Redis cache/locking, cron sidecar and a 200 GiB retained
+  filesystem PVC. This includes headroom for the full approximately 112 GB library and file history.
 - PostgreSQL: separate `nextcloud` role/database in existing CNPG `onemind-data`.
   Role credentials are sealed separately in the database and application namespaces.
 - Separate bootstrap administrator and non-admin `zeus` sync user. First-install
@@ -109,3 +109,16 @@ one server major at a time, with a coordinated backup and restore plan.
 References: [chart](https://github.com/nextcloud/helm),
 [plugin](https://github.com/siosig/obsidian-nextcloudsync),
 [Nextcloud backup](https://docs.nextcloud.com/server/stable/admin_manual/maintenance/backup.html).
+
+## Full-library update — 2026-10-23
+
+Zeus explicitly requested the full library. The file PVC is expanded to 200 GiB.
+The Samsung S24 has about 275 GiB free at inspection. Use a native Android
+Nextcloud/WebDAV two-way folder client for the full library, rather than the
+Obsidian plugin with its mobile file cap and large-file memory use. Leave the
+Obsidian sync plugin disabled when a native folder client owns the vault.
+Preserve local Mac files; exclude Git internals, credentials and device state.
+
+Initial live startup revealed that root rsync loses write access after chowning
+new directories to www-data without DAC_OVERRIDE. Restore that standard baseline
+capability for the Apache container; do not broaden the cron or Redis containers.
