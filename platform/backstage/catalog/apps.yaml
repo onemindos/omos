@@ -2025,7 +2025,6 @@ spec:
   owner: group:default/onemind-admins
   system: geospatial
   dependsOn:
-    - component:default/k8s-onetak-nominatim-081a4289
     - component:default/k8s-onetak-overpass-4e197497
     - component:default/k8s-onetak-tileserver-gl-90bbef41
 ---
@@ -7376,21 +7375,21 @@ metadata:
   tags:
     - kubernetes
   title: OneTAK geospatial services
-  description: Martin, Nominatim, Overpass, pg_featureserv, Tile38, STAC
-    API/browser and the geo database.
+  description: Martin, Overpass, pg_featureserv, Tile38, STAC API/browser and the
+    geo database.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: onetak,dp-default-onetak-development-b188bf98
     grafana/alert-label-selector: namespace=onetak
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=martin&var-workload=nominatim&var-workload=onetak-geo-db&var-workload=overpass&var-workload=pg-featureserv&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=martin&var-workload=onetak-geo-db&var-workload=overpass&var-workload=pg-featureserv&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
     onemind.io/logs-query: '{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98",
-      k8s_pod_name=~"(martin|nominatim|onetak-geo-db|overpass|pg-featureserv|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}'
+      k8s_pod_name=~"(martin|onetak-geo-db|overpass|pg-featureserv|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/geo-data-services/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7,onetak/martin,onetak/nominatim,onetak/onetak-geo-db,onetak/overpass,onetak/pg-featureserv,onetak/stac-api,onetak/tile38
+    onemind.io/kubernetes-workloads: dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7,onetak/martin,onetak/onetak-geo-db,onetak/overpass,onetak/pg-featureserv,onetak/stac-api,onetak/tile38
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

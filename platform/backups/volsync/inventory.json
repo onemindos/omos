@@ -91,12 +91,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "nominatim-data",
-    "source": "volume-93cec0eff115",
-    "size": "100Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "onetak-geo-db-data",
     "source": "volume-50fb74ff16c6",
     "size": "20Gi"

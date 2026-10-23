@@ -108,7 +108,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
 | `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
-| `platform-onetak` | onetak | Tak-portal (root host), Martin tiles, MediaMTX, geo stack (Nominatim 0 replicas, Overpass 0 replicas, STAC, Tile38, PostGIS, MinIO), WebODM | about 400 GiB of PVCs | `VolSync` x10 | `onemindos.dev`, `tiles.onemindos.dev`, geo hosts **public (CF)**; `enroll.onemindos.dev` **public (open)** | Argo |
+| `platform-onetak` | onetak | Tak-portal (root host), Martin tiles, MediaMTX, geo stack (Overpass 0 replicas, STAC, Tile38, PostGIS, MinIO), WebODM | about 300 GiB of PVCs | `VolSync` x9 | `onemindos.dev`, `tiles.onemindos.dev`, geo hosts **public (CF)**; `enroll.onemindos.dev` **public (open)** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp and Kubernetes Dashboard | none | Git | tailnet | Argo |
@@ -191,7 +191,7 @@ Gaps beyond the eleven releases:
 
 | Path | What is behind it |
 |------|-------------------|
-| Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal), `tiles.onemindos.dev`, `nominatim.`, `overpass.onemindos.dev` |
+| Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal), `tiles.onemindos.dev`, `overpass.onemindos.dev` |
 | Public, **no source restriction** (nginx) | `enroll.onemindos.dev` (tak-portal), `fedhub.onemindos.dev`, `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, direct (L4 LB) | TAK `152.42.155.95`: 8089, 8443, 8446, 9101, 9102, 64738. No source ranges |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |

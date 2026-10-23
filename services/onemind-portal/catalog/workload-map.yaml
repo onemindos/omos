@@ -104,7 +104,6 @@ workloads:
   onemind-search/onemind-search-master: component:default/opensearch
   onetak/martin: component:default/geo-data-services
   onetak/nodeodm: component:default/webodm
-  onetak/nominatim: component:default/geo-data-services
   onetak/onetak-geo-db: component:default/geo-data-services
   onetak/onetak-media: component:default/onetak
   onetak/onetak-minio: component:default/onetak
