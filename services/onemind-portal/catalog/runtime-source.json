@@ -103,21 +103,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "external-secrets",
-      "name": "external-secrets"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "external-secrets",
-      "name": "external-secrets-cert-controller"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "external-secrets",
-      "name": "external-secrets-webhook"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "github-runner",
       "name": "github-runner"
     },
@@ -1000,11 +985,6 @@
       "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
-    },
-    {
-      "kind": "Service",
-      "namespace": "external-secrets",
-      "name": "external-secrets-webhook"
     },
     {
       "kind": "Service",

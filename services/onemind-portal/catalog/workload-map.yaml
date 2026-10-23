@@ -29,9 +29,6 @@ workloads:
   dapr-system/dapr-scheduler-server: component:default/dapr
   dapr-system/dapr-sentry: component:default/dapr
   dapr-system/dapr-sidecar-injector: component:default/dapr
-  external-secrets/external-secrets: component:default/external-secrets
-  external-secrets/external-secrets-cert-controller: component:default/external-secrets
-  external-secrets/external-secrets-webhook: component:default/external-secrets
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
   hermes/hermes-legacy: component:default/hermes-legacy
@@ -155,7 +152,6 @@ argoApplications:
   ecosystem-barman: component:default/cloudnative-pg
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr
-  ecosystem-external-secrets: component:default/external-secrets
   ecosystem-falco: component:default/falco
   ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno

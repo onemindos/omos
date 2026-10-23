@@ -42,11 +42,6 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-scheduler-server': 'component:default/dapr',
     'dapr-system/dapr-sentry': 'component:default/dapr',
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
-    'external-secrets/external-secrets': 'component:default/external-secrets',
-    'external-secrets/external-secrets-cert-controller':
-      'component:default/external-secrets',
-    'external-secrets/external-secrets-webhook':
-      'component:default/external-secrets',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
     'hermes/hermes-legacy': 'component:default/hermes-legacy',
@@ -234,12 +229,6 @@ export const mapping: InventoryMapping = {
       system: 'communication',
       pillar: 'so',
       review: 'approved',
-    },
-    'external-secrets': {
-      title: 'External Secrets Operator',
-      system: 'identity-access',
-      pillar: 'so',
-      review: 'proposed',
     },
     fedhub: {
       title: 'FedHub',

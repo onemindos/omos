@@ -209,10 +209,6 @@ apps:
     title: Falco
     system: identity-access
     description: Runtime security detection (DaemonSet).
-  - name: external-secrets
-    title: External Secrets Operator
-    system: identity-access
-    description: Synchronizes secrets from external stores.
   - name: backstage
     title: Backstage portal
     system: developer-platform

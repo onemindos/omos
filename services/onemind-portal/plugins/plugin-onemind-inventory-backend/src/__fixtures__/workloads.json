@@ -324,54 +324,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "external-secrets",
-    "namespace": "external-secrets"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "external-secrets",
-      "app.kubernetes.io/name": "external-secrets"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "external-secrets-cert-controller",
-    "namespace": "external-secrets"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "external-secrets",
-      "app.kubernetes.io/name": "external-secrets-cert-controller"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "external-secrets-webhook",
-    "namespace": "external-secrets"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "external-secrets",
-      "app.kubernetes.io/name": "external-secrets-webhook"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "github-runner",
     "namespace": "github-runner"
    },

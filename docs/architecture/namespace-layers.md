@@ -26,7 +26,7 @@ A namespace created by `CreateNamespace=true`, by a Helm chart, by DigitalOcean 
 operator has no manifest, so it cannot be labelled through GitOps. Intended layer in brackets:
 `argocd` (act), `cert-manager` (guard), `ingress-nginx` (guard), `keda` (guard), `opencost`
 (guard), `tailscale` (data), `cnpg-system` (make-sense), `dapr-system` (decide),
-`external-secrets`, `kube-system` (system), `kube-public`, `kube-node-lease`. To label them,
+`kube-system` (system), `kube-public`, `kube-node-lease`. To label them,
 either add a Namespace manifest to an Application that does not prune (for example
 `platform/ecosystem/resources/`) or set `syncPolicy.managedNamespaceMetadata` on the Application
 that creates it.

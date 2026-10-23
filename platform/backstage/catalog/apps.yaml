@@ -6612,39 +6612,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: external-secrets
-  tags:
-    - kubernetes
-  title: External Secrets Operator
-  description: Synchronizes secrets from external stores.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-external-secrets
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: external-secrets
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=external-secrets
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: external-secrets
-    grafana/alert-label-selector: namespace=external-secrets
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=external-secrets
-    onemind.io/logs-query: '{k8s_namespace_name="external-secrets"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/external-secrets/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: external-secrets/external-secrets,external-secrets/external-secrets-cert-controller,external-secrets/external-secrets-webhook
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: identity-access
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: backstage
   tags:
     - kubernetes

@@ -92,7 +92,7 @@ test('no duplicate titles inside a System', () => {
 });
 
 test('every workload is a subcomponent of its mapped app or sits in Unassigned workloads', () => {
-  assert.ok(workloads.length >= 137);
+  assert.ok(workloads.length >= 134);
   for (const w of workloads) {
     const ref = w.spec.subcomponentOf;
     if (ref) {
@@ -145,7 +145,7 @@ test('colliding titles are disambiguated instead of dropped', () => {
 test('every Argo application in Git maps to exactly one app Component, and a new one fails', repoOnly, () => {
   const map = sources.map.argoApplications;
   const inGit = argoApplicationsInGit();
-  assert.equal(inGit.size, 52, 'platform/ should define the 52 Argo applications in Git');
+  assert.equal(inGit.size, 51, 'platform/ should define the 51 Argo applications in Git');
   const unmapped = [...inGit].filter(a => !map[a]);
   assert.deepEqual(unmapped, [], `Argo applications without a mapping in catalog/workload-map.yaml: ${unmapped}`);
   assert.deepEqual(Object.keys(map).filter(a => !inGit.has(a)), [], 'mapping names an Argo application that Git does not define');
