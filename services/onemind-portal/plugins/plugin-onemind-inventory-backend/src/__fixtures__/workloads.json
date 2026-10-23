@@ -1207,21 +1207,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "martin",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "martin"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "nodeodm",
     "namespace": "onetak"
    },
@@ -1274,21 +1259,6 @@
     "selector": {
      "matchLabels": {
       "app": "onetak-postgis"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "pg-featureserv",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "pg-featureserv"
      }
     }
    }

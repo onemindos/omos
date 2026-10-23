@@ -2,7 +2,7 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Martin, pg_featureserv, Tile38, STAC API/browser and the geo database.
+Tile38, STAC API/browser and the geo database.
 
 ## Where it runs
 
@@ -14,9 +14,7 @@ Martin, pg_featureserv, Tile38, STAC API/browser and the geo database.
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `martin` | Deployment | `onetak` |
 | `onetak-geo-db` | Deployment | `onetak` |
-| `pg-featureserv` | Deployment | `onetak` |
 | `stac-api` | Deployment | `onetak` |
 | `stac-browser-development-0c6b80f7` | Deployment | `dp-default-onetak-development-b188bf98` |
 | `tile38` | Deployment | `onetak` |
@@ -35,8 +33,8 @@ Martin, pg_featureserv, Tile38, STAC API/browser and the geo database.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98", k8s_pod_name=~"(martin|onetak-geo-db|pg-featureserv|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=martin&var-workload=onetak-geo-db&var-workload=pg-featureserv&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38`
+- Loki query: `{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98", k8s_pod_name=~"(onetak-geo-db|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=onetak-geo-db&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38`
 - Source: `onemindos/omos`
 
 ## Escalate
