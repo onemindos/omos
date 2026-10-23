@@ -32,16 +32,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: onemind-media
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: onemind-search
   annotations:
     argocd.argoproj.io/sync-wave: '-2'
@@ -57,16 +47,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: '-2'
     volsync.backube/privileged-movers: 'true'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-jobs
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu

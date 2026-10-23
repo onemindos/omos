@@ -92,7 +92,6 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | `onetak` | 19 geo and mapping apps (Valhalla, Martin, Nominatim, WebODM, STAC, TileServer and others) | 3 | OpenChoreo Project `onetak` |
 | `takml` | takml-server, takml-vision-worker, takml-db | 3 | OpenChoreo Project `takml` |
 | `onemind-core` | onemind-core, onemind-ingestion, OpenFGA | 3 | OpenChoreo Project `onemind` |
-| `onemind-jobs`, `onemind-media` | empty today | 3 | OpenChoreo Project `onemind` |
 | `agent-fabric` | agent-console, agent-tap | 3 | OpenChoreo Project `agent-fabric` |
 | `n8n` | n8n | 3 | OpenChoreo Component |
 | `matrix` | Synapse, Element | 3 | OpenChoreo Project `matrix` (Argo Application `platform-matrix` is OutOfSync today) |
