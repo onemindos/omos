@@ -35,8 +35,8 @@ request, raised above observed usage so its new limit can have safe headroom.
 | onemind-core/openfga migrate-database; platform/ecosystem/values/openfga.yaml | absent → 50m | absent → 64Mi | absent → 128Mi | Estimate, no init series; small database migration client; main server resources unchanged |
 | velero/velero plugin copy init; platform/ecosystem/values/velero.yaml | absent → 10m | absent → 32Mi | absent → 64Mi | Estimate, no init series; plugin binary copy, not a backup upload |
 | velero/node-agent; same values | absent → 25m | absent → 128Mi | absent → 256Mi | Top 1–3m / 25–43Mi; 7d avg up to 2.52m / 35.20Mi, sampled max 46.65Mi; conservative extra working room for future backup traffic |
-| falco/falcoctl-artifact-follow; platform/ecosystem/values/falco.yaml | absent → 10m | absent → 64Mi | absent → 128Mi | Top 0–1m / 25–44Mi; 7d avg up to 0.09m / 44.68Mi, sampled max 99.25Mi |
-| falco/falcoctl-artifact-install; same values | absent → 10m | absent → 64Mi | absent → 128Mi | Estimate; use follow/download working-set headroom rather than a tiny shell budget |
+| falco/falcoctl-artifact-follow; platform/ecosystem/values/falco.yaml | absent → 10m | absent → 128Mi | absent → 256Mi | Top 0–1m / 25–44Mi; 7d avg up to 0.09m / 44.68Mi, sampled max 99.25Mi; extra headroom for artifact download/unpack bursts missed by sampling |
+| falco/falcoctl-artifact-install; same values | absent → 10m | absent → 128Mi | absent → 256Mi | Estimate; align with the updater download/unpack headroom |
 | tailscale/operator; platform/values/tailscale-operator.yaml | absent → 25m | absent → 192Mi | absent → 384Mi | Top 5m / 81Mi; 7d avg up to 6.92m / 146.60Mi, sampled max 153.23Mi; correct ignored operator.resources to supported operatorConfig.resources |
 | default-class Tailscale proxy sysctler; platform/core/tailscale-proxyclass.yaml | absent → 10m | absent → 16Mi | absent → 32Mi | Estimate, no init series; supported tailscaleInitContainer.resources only; existing proxy main-container budgets stay unchanged |
 
