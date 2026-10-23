@@ -6692,7 +6692,7 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-oc-control
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-data-plane,platform-openchoreo-defaults,platform-openchoreo-platform,platform-openchoreo-prereqs,platform-openchoreo-projects
+    onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-data-plane,platform-openchoreo-prereqs
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: openchoreo-control-plane,openchoreo-data-plane
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (openchoreo-control-plane,openchoreo-data-plane)
@@ -7184,15 +7184,16 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: dp-default-onetak-development-b188bf98,onetak
+    onemind.io/kubernetes-namespaces: onetak
     grafana/alert-label-selector: namespace=onetak
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=dp-default-onetak-development-b188bf98&var-namespace=onetak&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
-    onemind.io/logs-query: '{k8s_namespace_name=~"dp-default-onetak-development-b188bf98|onetak",
-      k8s_pod_name=~"(stac-browser-development-0c6b80f7|tile38)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=tile38
+    onemind.io/logs-query: '{k8s_namespace_name="onetak", k8s_pod_name=~"(tile38)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/geo-data-services/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7,onetak/tile38
+    onemind.io/kubernetes-workloads: onetak/tile38
+    backstage.io/kubernetes-namespace: onetak
+    backstage.io/kubernetes-label-selector: app=tile38
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

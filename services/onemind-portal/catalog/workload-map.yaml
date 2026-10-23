@@ -29,8 +29,6 @@ workloads:
   dapr-system/dapr-scheduler-server: component:default/dapr
   dapr-system/dapr-sentry: component:default/dapr
   dapr-system/dapr-sidecar-injector: component:default/dapr
-  dp-default-onetak-development-b188bf98/stac-browser: component:default/geo-data-services
-  dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7: component:default/geo-data-services
   external-secrets/external-secrets: component:default/external-secrets
   external-secrets/external-secrets-cert-controller: component:default/external-secrets
   external-secrets/external-secrets-webhook: component:default/external-secrets
@@ -211,11 +209,8 @@ argoApplications:
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
   platform-openchoreo-data-plane: component:default/openchoreo
-  platform-openchoreo-defaults: component:default/openchoreo
   platform-openchoreo-observability: component:default/openchoreo-observability
-  platform-openchoreo-platform: component:default/openchoreo
   platform-openchoreo-prereqs: component:default/openchoreo
-  platform-openchoreo-projects: component:default/openchoreo
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno

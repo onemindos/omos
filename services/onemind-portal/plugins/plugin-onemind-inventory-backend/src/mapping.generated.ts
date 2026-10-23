@@ -42,10 +42,6 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-scheduler-server': 'component:default/dapr',
     'dapr-system/dapr-sentry': 'component:default/dapr',
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
-    'dp-default-onetak-development-b188bf98/stac-browser':
-      'component:default/geo-data-services',
-    'dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7':
-      'component:default/geo-data-services',
     'external-secrets/external-secrets': 'component:default/external-secrets',
     'external-secrets/external-secrets-cert-controller':
       'component:default/external-secrets',

@@ -784,39 +784,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-dp-default-onetak-development-b188bf98-stac-browse-45be60df
-  title: OneTAK geospatial services — STAC Browser Development
-  description: Deployment in dp-default-onetak-development-b188bf98
-  annotations:
-    backstage.io/kubernetes-label-selector: openchoreo.dev/component=stac-browser,openchoreo.dev/component-uid=d9099fca-45c3-48e3-82e9-f90003342655,openchoreo.dev/environment=development,openchoreo.dev/environment-uid=25431017-aaa2-4b53-abf9-f0b0af95fa72,openchoreo.dev/namespace=default,openchoreo.dev/project=onetak,openchoreo.dev/project-uid=aff94086-3046-4228-b700-521e1d55085a
-    backstage.io/kubernetes-namespace: dp-default-onetak-development-b188bf98
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: stac-browser-development-0c6b80f7
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - dp-default-onetak-development-b188bf98
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: geospatial
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/geo-data-services
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-external-secrets-external-secrets-c757319b
   title: External Secrets Operator — Core
   description: Deployment in external-secrets
@@ -6354,42 +6321,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: fabric-stacbrowser-006b0d40
-  title: STAC Browser
-  description: Browse STAC catalogs visually — Notion documentation; deployment
-    and availability unverified.
-  tags:
-    - fabric-registry
-    - geo
-    - deployment-verified
-  annotations:
-    onemind.io/documented-purpose: Browse STAC catalogs visually
-    onemind.io/documented-host: ☁️ DOKS Cluster
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 🌍 Geo
-    onemind.io/documented-at: 2026-09-03 07:00:34Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/documented-address: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http
-    onemind.io/documented-tags: Geo
-    onemind.io/verification: deployment-verified
-    onemind.io/runtime-evidence: Service dp-default-onetak-development-b188bf98/stac-browser
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/pillar-review: proposed
-  links:
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8124a3eed9d89f3a0a5c.md
-      title: "Archived registry: STAC Browser"
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: documented-capability
-  owner: group:default/onemind-admins
-  system: geospatial
-  dependsOn:
-    - component:default/k8s-onetak-stac-browser-2881a2ef
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
   name: fabric-certmanager-4f1dc863
   title: cert-manager (registry)
   description: Automated TLS via Let's Encrypt — Notion documentation; deployment
@@ -10720,40 +10651,6 @@ spec:
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
   subcomponentOf: component:default/omos-data-pipeline
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-onetak-stac-browser-2881a2ef
-  title: OneTAK geospatial services — STAC Browser
-  description: Not observed in the latest inventory; review required. Deployment in onetak
-  annotations:
-    backstage.io/kubernetes-label-selector: openchoreo.dev/component=stac-browser
-    backstage.io/kubernetes-namespace: dp-default-onetak-development-b188bf98
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-06T17:39:45.601Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: missing-review-required
-    onemind.io/inventory-missing-observations: "1"
-    onemind.io/inventory-last-checked-at: 2026-10-20T06:51:11.847Z
-    onemind.io/kubernetes-workload: stac-browser
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - onetak
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: geospatial
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/geo-data-services
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
