@@ -6419,18 +6419,12 @@ __metadata:
   resolution: "@internal/plugin-onemind-permissions-backend@workspace:plugins/plugin-onemind-permissions-backend"
   dependencies:
     "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/backend-test-utils": "npm:1.11.7"
     "@backstage/cli": "npm:0.36.6"
-    "@backstage/plugin-catalog-node": "npm:2.2.5"
+    "@backstage/plugin-catalog-common": "npm:1.2.0"
     "@backstage/plugin-permission-common": "npm:0.9.11"
     "@backstage/plugin-permission-node": "npm:0.11.4"
-    "@backstage/types": "npm:^1.2.2"
-    "@openchoreo/backstage-plugin-common": "npm:1.3.1"
-    "@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy": "npm:1.3.1"
-    "@openchoreo/openchoreo-auth": "npm:1.3.1"
-    "@types/express": "npm:4.17.21"
-    better-sqlite3: "npm:^12.0.0"
-    express: "npm:4.21.2"
-    knex: "npm:^3.0.0"
+    "@backstage/plugin-scaffolder-common": "npm:^2.3.0"
   languageName: unknown
   linkType: soft
 
@@ -9118,7 +9112,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openchoreo/backstage-plugin-common@npm:1.3.1, @openchoreo/backstage-plugin-common@npm:^1.3.1":
+"@openchoreo/backstage-plugin-common@npm:^1.3.1":
   version: 1.3.1
   resolution: "@openchoreo/backstage-plugin-common@npm:1.3.1"
   dependencies:
@@ -9178,7 +9172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy@npm:1.3.1, @openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy@npm:^1.3.1":
+"@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy@npm:^1.3.1":
   version: 1.3.1
   resolution: "@openchoreo/backstage-plugin-permission-backend-module-openchoreo-policy@npm:1.3.1"
   dependencies:
