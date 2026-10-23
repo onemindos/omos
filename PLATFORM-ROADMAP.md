@@ -1178,7 +1178,7 @@ Phase 6 stays In progress; Phases 7/8 stay Not started.
 
 | Work | Status | Evidence |
 |---|---|---|
-| Private Paperclip GitOps installation | Prepared; human review/merge and live acceptance pending | [Deployment and acceptance](platform/paperclip/README.md); PR link added after creation |
+| Private Paperclip GitOps installation | Prepared; human review/merge and live acceptance pending | [PR #438](https://github.com/onemindos/omos/pull/438); [deployment and acceptance](platform/paperclip/README.md) |
 
 No new controller, public exposure, shared-database migration, existing agent
 credential copy, model billing change or cluster write access is included.
