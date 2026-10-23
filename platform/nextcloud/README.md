@@ -61,6 +61,25 @@ links when moving files. Use one sync engine on each device; no second file-sync
 engine or Android Git sync against the same live vault. Mac Git can record mobile
 changes after they arrive, once its existing staged/deleted state is reconciled.
 
+## Connect the real Mac folder after the pilot
+
+Use the **Nextcloud desktop client** for the production Mac folder so external
+agent edits also sync while Obsidian is closed. The Mac plugin described above is
+only an isolated connection test; leave it disabled in the real OneMind vault.
+
+After reviewing the upload set and exclusions, connect Nextcloud remote folder
+`/OneMind` to existing local folder `/Users/zeus/OneMind`. Configure exclusions
+before transfer; keep the working files fully downloaded. Do not move the existing
+folder into a new default Nextcloud folder. Do not share its `.git` directory or
+credentials. The desktop client's ignore configuration and the Android plugin's
+exclusions are independent and must be checked together.
+
+On Android the production local vault must be named exactly `OneMind`, with the
+Nextcloud Sync plugin targeting the account-root WebDAV URL given above. The
+plugin adds the vault name to that endpoint, so it reaches the desktop client's
+`/OneMind` remote folder. Leave the separate test vault out of the production Git
+repository. An edit is accepted only after it appears on both actual devices.
+
 ## Backup and recovery
 
 The namespace has a dedicated VolSync repository for the complete application

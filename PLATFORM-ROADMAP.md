@@ -1166,7 +1166,7 @@ shared file service under Argo CD; it does not complete or bypass phase gates.
 
 | Work | Status | Evidence |
 |---|---|---|
-| Nextcloud GitOps deployment and isolated phone pilot | Prepared; human merge and live verification pending | [Runbook](platform/nextcloud/README.md); PR link pending |
+| Nextcloud GitOps deployment and isolated phone pilot | Prepared; human merge and live verification pending | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424) |
 
 Acceptance requires actual edits flowing in both directions, offline and conflict
 checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
