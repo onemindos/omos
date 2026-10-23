@@ -6726,7 +6726,6 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-openchoreo-observability
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: platform-openchoreo-events,platform-openchoreo-finops,platform-openchoreo-logs,platform-openchoreo-observability,platform-openchoreo-traces
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: openchoreo-observability-plane
     backstage.io/kubernetes-namespace: openchoreo-observability-plane
@@ -6738,7 +6737,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: openchoreo-observability-plane/cluster-agent-observabilityplane,openchoreo-observability-plane/controller-manager,openchoreo-observability-plane/events-collector,openchoreo-observability-plane/finops-opencost-adapter,openchoreo-observability-plane/logs-adapter-opensearch,openchoreo-observability-plane/metrics-adapter-prometheus,openchoreo-observability-plane/observer,openchoreo-observability-plane/tracing-adapter-opensearch
+    onemind.io/kubernetes-workloads: openchoreo-observability-plane/cluster-agent-observabilityplane,openchoreo-observability-plane/controller-manager,openchoreo-observability-plane/metrics-adapter-prometheus,openchoreo-observability-plane/observer
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6957,6 +6956,41 @@ metadata:
     onemind.io/recovery-runbook: apps/velero/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: velero/velero
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nextcloud
+  tags:
+    - kubernetes
+  title: Nextcloud
+  description: Private file and vault sync for the Mac and Android (Nextcloud, its
+    Redis and the files volume).
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-nextcloud
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nextcloud
+    onemind.io/kubernetes-workloads: nextcloud/nextcloud,nextcloud/nextcloud-redis
+    backstage.io/kubernetes-namespace: nextcloud
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
+    grafana/alert-label-selector: namespace=nextcloud
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nextcloud
+    onemind.io/logs-query: '{k8s_namespace_name="nextcloud"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/nextcloud/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

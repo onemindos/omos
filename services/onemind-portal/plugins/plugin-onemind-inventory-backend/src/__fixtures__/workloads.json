@@ -906,6 +906,38 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
+    "name": "nextcloud",
+    "namespace": "nextcloud"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "app",
+      "app.kubernetes.io/instance": "nextcloud",
+      "app.kubernetes.io/name": "nextcloud"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nextcloud-redis",
+    "namespace": "nextcloud"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nextcloud-redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
     "name": "feed-intel",
     "namespace": "omos"
    },
@@ -1301,52 +1333,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "events-collector",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "openchoreo-events",
-      "app.kubernetes.io/name": "events-collector"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "finops-opencost-adapter",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "finops-opencost-adapter"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "logs-adapter-opensearch",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "logs-adapter-opensearch"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "metrics-adapter-prometheus",
     "namespace": "openchoreo-observability-plane"
    },
@@ -1371,21 +1357,6 @@
       "app.kubernetes.io/component": "observer",
       "app.kubernetes.io/instance": "openchoreo-observability-plane",
       "app.kubernetes.io/name": "openchoreo-observability-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "tracing-adapter-opensearch",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "tracing-adapter-opensearch"
      }
     }
    }

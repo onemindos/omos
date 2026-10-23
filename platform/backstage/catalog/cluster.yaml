@@ -2850,105 +2850,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-openchoreo-observability-plane-events-collector-c6e112df
-  title: OpenChoreo observability plane — Events Collector
-  description: Deployment in openchoreo-observability-plane
-  annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=openchoreo-events,app.kubernetes.io/name=events-collector
-    backstage.io/kubernetes-namespace: openchoreo-observability-plane
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: events-collector
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - openchoreo-observability-plane
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/openchoreo-observability
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-openchoreo-observability-plane-finops-opencost-ada-96c546b1
-  title: OpenChoreo observability plane — Finops Opencost Adapter
-  description: Deployment in openchoreo-observability-plane
-  annotations:
-    backstage.io/kubernetes-label-selector: app=finops-opencost-adapter
-    backstage.io/kubernetes-namespace: openchoreo-observability-plane
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: finops-opencost-adapter
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - openchoreo-observability-plane
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/openchoreo-observability
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-openchoreo-observability-plane-logs-adapter-opense-f034b17a
-  title: OpenChoreo observability plane — Logs Adapter Opensearch
-  description: Deployment in openchoreo-observability-plane
-  annotations:
-    backstage.io/kubernetes-label-selector: app=logs-adapter-opensearch
-    backstage.io/kubernetes-namespace: openchoreo-observability-plane
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: logs-adapter-opensearch
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - openchoreo-observability-plane
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/openchoreo-observability
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: k8s-openchoreo-observability-plane-metrics-adapter-pro-05b69e8d
   title: OpenChoreo observability plane — Metrics Adapter Prometheus
   description: Deployment in openchoreo-observability-plane
@@ -2995,39 +2896,6 @@ metadata:
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
     onemind.io/kubernetes-workload: observer
-    onemind.io/kubernetes-workload-kind: Deployment
-    onemind.io/pillar-review: proposed
-  tags:
-    - kubernetes
-    - openchoreo-observability-plane
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: workload
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
-  dependsOn:
-    - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/openchoreo-observability
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: k8s-openchoreo-observability-plane-tracing-adapter-ope-3cd19846
-  title: OpenChoreo observability plane — Tracing Adapter Opensearch
-  description: Deployment in openchoreo-observability-plane
-  annotations:
-    backstage.io/kubernetes-label-selector: app=tracing-adapter-opensearch
-    backstage.io/kubernetes-namespace: openchoreo-observability-plane
-    onemind.io/inventory-source: kubernetes
-    onemind.io/inventory-observed-at: 2026-10-20T06:51:09.373Z
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/inventory-review: discovered
-    onemind.io/inventory-state: observed
-    onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: tracing-adapter-opensearch
     onemind.io/kubernetes-workload-kind: Deployment
     onemind.io/pillar-review: proposed
   tags:
@@ -13632,3 +13500,69 @@ spec:
   system: messaging-nats
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nextcloud-nextcloud-6f9de5a6
+  title: Nextcloud — Core
+  description: Deployment in nextcloud
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=app,app.kubernetes.io/instance=nextcloud,app.kubernetes.io/name=nextcloud
+    backstage.io/kubernetes-namespace: nextcloud
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-23T16:00:00.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: nextcloud
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - nextcloud
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/nextcloud
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-nextcloud-nextcloud-redis-18dd07ef
+  title: Nextcloud — Redis
+  description: Deployment in nextcloud
+  annotations:
+    backstage.io/kubernetes-label-selector: app=nextcloud-redis
+    backstage.io/kubernetes-namespace: nextcloud
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-23T16:00:00.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: nextcloud-redis
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - nextcloud
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/nextcloud

@@ -1,4 +1,4 @@
-# OTel pipeline: logs go to Loki, traces to Tempo. (The OpenSearch exporters for OpenChoreo were removed.)
+# OTel pipeline: logs go to Loki, traces to Tempo.
 mode: daemonset
 image:
   repository: otel/opentelemetry-collector-contrib
@@ -35,40 +35,6 @@ config:
         - otlphttp/loki
     extensions:
     - health_check
-  processors:
-    k8sattributes:
-      extract:
-        labels:
-        - tag_name: openchoreo.dev/component-uid
-          key: openchoreo.dev/component-uid
-          from: pod
-        - tag_name: openchoreo.dev/project-uid
-          key: openchoreo.dev/project-uid
-          from: pod
-        - tag_name: openchoreo.dev/environment-uid
-          key: openchoreo.dev/environment-uid
-          from: pod
-        - tag_name: openchoreo.dev/namespace
-          key: openchoreo.dev/namespace
-          from: pod
-        - tag_name: openchoreo.dev/component
-          key: openchoreo.dev/component
-          from: pod
-        - tag_name: openchoreo.dev/project
-          key: openchoreo.dev/project
-          from: pod
-        - tag_name: openchoreo.dev/environment
-          key: openchoreo.dev/environment
-          from: pod
-        - tag_name: target
-          key: target
-          from: pod
-        - tag_name: version
-          key: version
-          from: pod
-        - tag_name: version_id
-          key: version_id
-          from: pod
 resources:
   requests:
     cpu: 100m

@@ -1,9 +1,0 @@
-openSearch:
-  enabled: false
-opentelemetry-collector:
-  enabled: false
-adapter:
-  openSearchSecretName: opensearch-admin-credentials
-openSearchSetup:
-  openSearchSecretName: opensearch-admin-credentials
-  enabled: false

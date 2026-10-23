@@ -7,7 +7,7 @@ OpenChoreo observer, adapters and collectors for logs, traces, metrics, events a
 ## Where it runs
 
 - Catalog entity: `component:default/openchoreo-observability` in System `observability`
-- Argo CD applications: `platform-openchoreo-events`, `platform-openchoreo-finops`, `platform-openchoreo-logs`, `platform-openchoreo-observability`, `platform-openchoreo-traces`
+- Argo CD application: `platform-openchoreo-observability`
 - Namespace: `openchoreo-observability-plane`
 
 ## Workloads
@@ -16,12 +16,8 @@ OpenChoreo observer, adapters and collectors for logs, traces, metrics, events a
 | --- | --- | --- |
 | `cluster-agent-observabilityplane` | Deployment | `openchoreo-observability-plane` |
 | `controller-manager` | Deployment | `openchoreo-observability-plane` |
-| `events-collector` | Deployment | `openchoreo-observability-plane` |
-| `finops-opencost-adapter` | Deployment | `openchoreo-observability-plane` |
-| `logs-adapter-opensearch` | Deployment | `openchoreo-observability-plane` |
 | `metrics-adapter-prometheus` | Deployment | `openchoreo-observability-plane` |
 | `observer` | Deployment | `openchoreo-observability-plane` |
-| `tracing-adapter-opensearch` | Deployment | `openchoreo-observability-plane` |
 
 ## When it looks wrong
 

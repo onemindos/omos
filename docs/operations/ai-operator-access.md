@@ -86,6 +86,6 @@ The Authentik service account `ai-operator` (created by the hook Job in
 
 ## Not included yet
 
-- **OpenChoreo observer MCP** (logs, metrics, traces, incidents, costs): phase 5, when the
-  observability plane exists. It needs the same subject-type setting on that plane.
+- **OpenChoreo observer MCP** (logs, metrics, traces, incidents, costs): removed on
+  2026-10-23 with the OpenChoreo teardown; the observability plane is being retired.
 - **Write access of any kind.** Changes go through pull requests and Argo CD.

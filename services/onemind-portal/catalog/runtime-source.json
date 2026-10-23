@@ -288,6 +288,16 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "nextcloud",
+      "name": "nextcloud"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "nextcloud",
+      "name": "nextcloud-redis"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "omos",
       "name": "feed-intel"
     },
@@ -454,32 +464,12 @@
     {
       "kind": "Deployment",
       "namespace": "openchoreo-observability-plane",
-      "name": "events-collector"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "finops-opencost-adapter"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "logs-adapter-opensearch"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
       "name": "metrics-adapter-prometheus"
     },
     {
       "kind": "Deployment",
       "namespace": "openchoreo-observability-plane",
       "name": "observer"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "tracing-adapter-opensearch"
     },
     {
       "kind": "Deployment",
@@ -1363,6 +1353,16 @@
     },
     {
       "kind": "Service",
+      "namespace": "nextcloud",
+      "name": "nextcloud"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nextcloud",
+      "name": "nextcloud-redis"
+    },
+    {
+      "kind": "Service",
       "namespace": "omos",
       "name": "redpanda-connect"
     },
@@ -1534,16 +1534,6 @@
     {
       "kind": "Service",
       "namespace": "openchoreo-observability-plane",
-      "name": "finops-adapter"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "logs-adapter"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
       "name": "metrics-adapter"
     },
     {
@@ -1560,11 +1550,6 @@
       "kind": "Service",
       "namespace": "openchoreo-observability-plane",
       "name": "opensearch"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "tracing-adapter"
     },
     {
       "kind": "Service",

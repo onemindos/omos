@@ -90,7 +90,7 @@ and refuses to overwrite. The ordered steps, verification and rollback are in
 
 Alertmanager is run by the operator from the `monitoring-kube-prometheus-stack` Application with
 `alertmanagerConfigSelector: {}` and `alertmanagerConfigMatcherStrategy: None`, so every
-`AlertmanagerConfig` in `monitoring` is merged into the live config (today only `openchoreo`).
+`AlertmanagerConfig` in `monitoring` is merged into the live config (none today; the `openchoreo` one was removed with the OpenChoreo observability plane).
 The receiver is
 `platform/monitoring/pending/alertmanagerconfig-onemind-backstage.yaml.disabled`:
 `severity=~critical|warning`, excluding Watchdog and InfoInhibitor, `continue: true` so all

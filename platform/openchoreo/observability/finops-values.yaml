@@ -1,5 +1,0 @@
-opencost:
-  enabled: false
-adapter:
-  openCostUrl: http://opencost.opencost.svc.cluster.local:9003
-  observerUrl: http://observer:8080

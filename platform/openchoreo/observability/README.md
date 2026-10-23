@@ -1,5 +1,10 @@
 # OpenChoreo observability plane
 
+> **Being retired (OpenChoreo teardown, 2026-10-23).** The logs, traces, FinOps and events
+> modules, the `openchoreo` AlertmanagerConfig, the OTel label extraction and the Observer
+> MCP registration are already removed; the plane itself goes in a later PR of the series.
+> The text below describes the plane as it was and is kept until then.
+
 Stage 5B is deployed. Live Phase 5 acceptance passed on 2026-10-19 after the capacity
 PRs, module setup and activation; see PLATFORM-ROADMAP.md for evidence.
 
