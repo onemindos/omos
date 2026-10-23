@@ -89,10 +89,8 @@ function reportServiceCoverage(entities, reviewedNotApplicable = []) {
     if (namespace === 'default' && Object.hasOwn(scopes, a['prometheus.io/service-name']) &&
         scopes[a['prometheus.io/service-name']] === e.metadata.name)
       add('prometheus', 'configured-mapping', 'prometheusApi.scopeForEntity');
-    const stac = namespace === 'default' && e.kind.toLowerCase() === 'component' &&
-      e.metadata.name === 'k8s-onetak-stac-api-746ca5f2';
-    if (stac || nonempty(a['backstage.io/kubernetes-namespace']))
-      add('operations', 'configured-mapping', stac ? 'ServicesModule.isStacEntity' : 'ServicesModule.namespace-filter');
+    if (nonempty(a['backstage.io/kubernetes-namespace']))
+      add('operations', 'configured-mapping', 'ServicesModule.namespace-filter');
     typedLinks('operations', ['operations']);
     typedLinks('runbook', ['runbook'], ['Operations runbook', 'Recovery runbook']);
     const targets = (key, relation, kind) => [...new Set([

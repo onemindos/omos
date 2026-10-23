@@ -51,11 +51,6 @@ backend.add(import('@internal/plugin-onemind-missions-backend'));
 backend.add(import('@internal/plugin-onemind-events-backend'));
 backend.add(import('@internal/plugin-onemind-activity-backend'));
 backend.add(import('@internal/plugin-onemind-services-backend'));
-backend.add(
-  import('@internal/plugin-onemind-services-backend').then(m => ({
-    default: m.stacCatalogModule,
-  })),
-);
 
 backend.add(import('@internal/plugin-onemind-context-backend'));
 backend.add(import('@internal/plugin-onemind-assistant-backend'));
