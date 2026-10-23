@@ -240,11 +240,13 @@ kubectl --context $CTX get replicationsources.volsync.backube,schedules.velero.i
 
 Ownership rule used above: a workload carrying `argocd.argoproj.io/tracking-id` is Argo-managed; `meta.helm.sh/release-name` without it is Helm-CLI; neither means untracked.
 
-## Nextcloud sync preparation — 2026-10-23
+## Nextcloud file sync — 2026-10-23
 
-User-requested Layer 2 file service prepared in `platform/nextcloud/`; deployment
-and phone acceptance are pending. No Nextcloud resources were present at the
-read-only inspection. The proposed Argo Application uses private Tailscale HTTPS,
-a retained file PVC (expanded to 200 GiB for the requested full library), Redis, a separate database/role on existing CNPG, and
-VolSync. This is not verified live inventory. See
-[setup and acceptance](../platform/nextcloud/README.md).
+Observed live: Argo Application `platform-nextcloud` is Synced/Healthy, Nextcloud
+35.0.2 reports installed without maintenance/database upgrade pending, and the
+application (2/2) and Redis (1/1) pods are healthy. The retained file PVC is bound
+at 200 GiB; the VolSync cache PVC is 1 GiB. Private HTTPS is available at
+`https://onemind-files.tail717ba0.ts.net/`. A separate database/role uses existing
+CNPG. PRs #424/#425 are merged. The Mac's full-library upload has started;
+Samsung FolderSync two-way acceptance and full-transfer completion remain pending.
+See [setup, cost and acceptance](../platform/nextcloud/README.md).

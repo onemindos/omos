@@ -65,9 +65,11 @@ nextcloud:
       ];
   phpConfigs:
     onemind.ini: |
-      upload_max_filesize=128M
-      post_max_size=128M
+      upload_max_filesize=4G
+      post_max_size=4G
       memory_limit=512M
+      max_input_time=3600
+      max_execution_time=3600
   hooks:
     post-installation: |
       # The mobile sync account has no administrator privileges.
@@ -75,6 +77,11 @@ nextcloud:
       php /var/www/html/occ background:cron
       php /var/www/html/occ user:add --password-from-env --display-name=Zeus zeus
   extraEnv:
+  # Android WebDAV clients can send whole files; the library includes files over 1 GiB.
+  - name: APACHE_BODY_LIMIT
+    value: '0'
+  - name: PHP_UPLOAD_LIMIT
+    value: 4G
   - name: OC_PASS
     valueFrom:
       secretKeyRef:

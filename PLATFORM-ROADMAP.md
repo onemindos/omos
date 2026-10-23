@@ -1162,8 +1162,9 @@ shared file service under Argo CD; it does not complete or bypass phase gates.
 
 | Work | Status | Evidence |
 |---|---|---|
-| Nextcloud GitOps deployment and isolated phone pilot | Prepared; human merge and live verification pending | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424) |
+| Nextcloud GitOps deployment and full-library Mac/Android sync | Deployed and healthy; native client setup and acceptance in progress | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425) |
 
 Acceptance requires actual edits flowing in both directions, offline and conflict
 checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
-No production vault upload or successful deployment is claimed by this entry.
+The native Mac upload has started. Full transfer, two-way device acceptance and
+recovery verification remain distinct from the observed healthy server deployment.
