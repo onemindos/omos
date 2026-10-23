@@ -6726,7 +6726,6 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-openchoreo-observability
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: platform-openchoreo-events,platform-openchoreo-finops,platform-openchoreo-logs,platform-openchoreo-observability,platform-openchoreo-traces
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: openchoreo-observability-plane
     backstage.io/kubernetes-namespace: openchoreo-observability-plane
@@ -6738,7 +6737,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: openchoreo-observability-plane/cluster-agent-observabilityplane,openchoreo-observability-plane/controller-manager,openchoreo-observability-plane/events-collector,openchoreo-observability-plane/finops-opencost-adapter,openchoreo-observability-plane/logs-adapter-opensearch,openchoreo-observability-plane/metrics-adapter-prometheus,openchoreo-observability-plane/observer,openchoreo-observability-plane/tracing-adapter-opensearch
+    onemind.io/kubernetes-workloads: openchoreo-observability-plane/cluster-agent-observabilityplane,openchoreo-observability-plane/controller-manager,openchoreo-observability-plane/metrics-adapter-prometheus,openchoreo-observability-plane/observer
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

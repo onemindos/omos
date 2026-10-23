@@ -107,12 +107,8 @@ workloads:
   openchoreo-data-plane/cluster-agent-dataplane: component:default/openchoreo
   openchoreo-observability-plane/cluster-agent-observabilityplane: component:default/openchoreo-observability
   openchoreo-observability-plane/controller-manager: component:default/openchoreo-observability
-  openchoreo-observability-plane/events-collector: component:default/openchoreo-observability
-  openchoreo-observability-plane/finops-opencost-adapter: component:default/openchoreo-observability
-  openchoreo-observability-plane/logs-adapter-opensearch: component:default/openchoreo-observability
   openchoreo-observability-plane/metrics-adapter-prometheus: component:default/openchoreo-observability
   openchoreo-observability-plane/observer: component:default/openchoreo-observability
-  openchoreo-observability-plane/tracing-adapter-opensearch: component:default/openchoreo-observability
   opencost/opencost: component:default/opencost
   ops/platform-volsync: component:default/volsync
   tailscale/egress: component:default/tailscale-operator
@@ -216,14 +212,10 @@ argoApplications:
   platform-onetak: component:default/onetak
   platform-openchoreo-data-plane: component:default/openchoreo
   platform-openchoreo-defaults: component:default/openchoreo
-  platform-openchoreo-events: component:default/openchoreo-observability
-  platform-openchoreo-finops: component:default/openchoreo-observability
-  platform-openchoreo-logs: component:default/openchoreo-observability
   platform-openchoreo-observability: component:default/openchoreo-observability
   platform-openchoreo-platform: component:default/openchoreo
   platform-openchoreo-prereqs: component:default/openchoreo
   platform-openchoreo-projects: component:default/openchoreo
-  platform-openchoreo-traces: component:default/openchoreo-observability
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno

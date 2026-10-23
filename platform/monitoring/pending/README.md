@@ -15,9 +15,10 @@ the portal (`POST /api/events/http/alertmanager`). It is **not deployed**:
 Alertmanager is managed by the kube-prometheus-stack release (Argo Application
 `monitoring-kube-prometheus-stack`). Its `alertmanagerConfigSelector: {}` makes the operator
 merge every `AlertmanagerConfig` in the `monitoring` namespace into the live config, with no
-namespace matcher injected (`alertmanagerConfigMatcherStrategy: None`). The only other one
-today is `openchoreo`. A new config with `continue: true` adds a route and leaves existing
-ones untouched.
+namespace matcher injected (`alertmanagerConfigMatcherStrategy: None`). No other
+`AlertmanagerConfig` exists today (the `openchoreo` one was removed with the OpenChoreo
+observability plane). A new config with `continue: true` adds a route and leaves the
+default routing untouched.
 
 ## Secret (Zeus creates it; the same random value goes in two namespaces)
 

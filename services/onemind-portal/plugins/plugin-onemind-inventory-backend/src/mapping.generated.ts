@@ -131,17 +131,9 @@ export const mapping: InventoryMapping = {
       'component:default/openchoreo-observability',
     'openchoreo-observability-plane/controller-manager':
       'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/events-collector':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/finops-opencost-adapter':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/logs-adapter-opensearch':
-      'component:default/openchoreo-observability',
     'openchoreo-observability-plane/metrics-adapter-prometheus':
       'component:default/openchoreo-observability',
     'openchoreo-observability-plane/observer':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/tracing-adapter-opensearch':
       'component:default/openchoreo-observability',
     'opencost/opencost': 'component:default/opencost',
     'ops/platform-volsync': 'component:default/volsync',

@@ -29,7 +29,6 @@ against live `do-nyc3-omos-cloud` (read-only).
 | `ecosystem-openfga` | onemind-core | Deployment, Service, Role |
 | `ecosystem-onemind-core` | onemind-core | Deployments, Dapr Component, RBAC |
 | `platform-nats-tools` | nats | UI Deployments, Services, Ingresses (not the JetStream cluster) |
-| `platform-openchoreo-events`, `-finops`, `-logs`, `-traces` | openchoreo-observability-plane | adapters and collectors only |
 | `ecosystem-opensearch` | onemind-search | StatefulSet; its PVC is a volumeClaimTemplate (not tracked, Retain) |
 | `ecosystem-oc-control` | openchoreo-control-plane | OpenChoreo control plane **and 36 CRDs** (see below) |
 

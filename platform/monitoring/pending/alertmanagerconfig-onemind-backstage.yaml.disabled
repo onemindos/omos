@@ -5,8 +5,7 @@
 # turns them into inbox items and Signals (docs/operations/notifications.md).
 #
 # Safe alongside existing routing: `continue: true` means matching alerts are still handled
-# by every other route and receiver exactly as before. Same pattern as the live
-# `openchoreo` AlertmanagerConfig.
+# by every other route and receiver exactly as before.
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
