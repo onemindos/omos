@@ -33,12 +33,18 @@ jobs:
     name: Lint & Validate
     # Per-change lint gates do not apply to the scheduled/manual full-tree run.
     if: github.event_name == 'push' || github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
+
+      # The self-hosted image does not ship a pinned Python with pip: install one per job.
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
 
       - name: Install yamllint
         run: pip install yamllint
@@ -76,22 +82,32 @@ jobs:
 
   manifests:
     name: Kubernetes manifest schema (kubeconform)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
+
+      # The self-hosted image does not ship a pinned Python with pip: install one per job.
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
 
       - name: Install kubeconform ${{ env.KUBECONFORM_VERSION }}
         run: |
           set -euo pipefail
-          curl -fsSL -o kubeconform.tgz \
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL -o "$RUNNER_TEMP/kubeconform.tgz" \
             "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz"
-          echo "${KUBECONFORM_SHA256}  kubeconform.tgz" | sha256sum -c -
-          tar -xzf kubeconform.tgz kubeconform
-          sudo install -m 0755 kubeconform /usr/local/bin/kubeconform
-          rm -f kubeconform kubeconform.tgz
+          echo "${KUBECONFORM_SHA256}  $RUNNER_TEMP/kubeconform.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/kubeconform.tgz" -C "$RUNNER_TEMP/bin" kubeconform
+          rm -f "$RUNNER_TEMP/kubeconform.tgz"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
       # Plain manifests under platform/, platform/takserver/deploy and platform/takserver/fedhub. Kubernetes core kinds
       # use the upstream schemas; CRDs use datreeio/CRDs-catalog. Kinds without a published schema
@@ -108,19 +124,30 @@ jobs:
 
   helm:
     name: Helm render check
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
         with:
           version: ${{ env.HELM_VERSION }}
 
+      # The self-hosted image does not ship a pinned Python with pip: install one per job.
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
       - name: Install PyYAML
         run: pip install pyyaml
+
+      # The self-hosted image's system node is too old for `node --test` (used by the portal contract tests).
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24"
 
       - name: Portable GitOps pipeline safety contracts
         run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v
@@ -138,22 +165,24 @@ jobs:
 
   secrets:
     name: Secret scan (gitleaks)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Install gitleaks ${{ env.GITLEAKS_VERSION }}
         run: |
           set -euo pipefail
-          curl -fsSL -o gitleaks.tgz \
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tgz" \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
-          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum -c -
-          tar -xzf gitleaks.tgz gitleaks
-          sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
-          rm -f gitleaks gitleaks.tgz
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP/bin" gitleaks
+          rm -f "$RUNNER_TEMP/gitleaks.tgz"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
       # Whole working tree. This FAILS the job on any finding that is not in .gitleaks-baseline.json.
       # SealedSecret ciphertext is allowlisted in .gitleaks.toml by pattern (not by path), so a plaintext
