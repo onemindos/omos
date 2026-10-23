@@ -55,7 +55,7 @@ Verified against live Ingress objects on 2026-10-09.
 | `ws.onemindos.dev` | nats/nats-ws-ingress | nats:8080 websocket | **Tailnet only** | `omos-nats` already exposes 8080 on the tailnet. Only keep public if a browser client off the tailnet needs it. |
 | `enroll.onemindos.dev` | onetak/tak-portal-ingress | tak-portal:8080 | **Tailnet only** | EUDs are on Tailscale now. |
 | `fedhub.onemindos.dev` | takserver/fedhub-ingress | fedhub-ui | **Tailnet only** | Admin UI. |
-| `overpass`, `tileserver` `.onemindos.dev` | onetak/geo-services-ingress | geo services | **Tailnet only** | Internal tooling; has no reason to be public. |
+| `tileserver` `.onemindos.dev` | onetak/geo-services-ingress | geo services | **Tailnet only** | Internal tooling; has no reason to be public. |
 | `tak.onemindos.dev` (unproxied A -> `152.42.155.95`) | takserver/tak-external (DO LB `onemind-tak`) | tak-lb-proxy | **Tailnet for EUDs** (new `tak` node) | 8089/8443/8446/64738 move to the tailnet. |
 | TAK federation 9101/9102 on the same LB | tak-external | fedhub-fed | **Open decision** | Server-to-server TCP with peers outside our tailnet; cannot ride an HTTP tunnel. Either peers join the tailnet (shared node), or this LB stays (about $12/mo). |
 | `media.onemindos.dev` | none | none | Remove from docs | `CLAUDE.md` lists it but no Ingress exists. |

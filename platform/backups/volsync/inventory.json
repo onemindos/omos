@@ -109,12 +109,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "overpass-data",
-    "source": "volume-76d69bd17963",
-    "size": "100Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "tile38-data",
     "source": "volume-adf3fcd472a7",
     "size": "10Gi"

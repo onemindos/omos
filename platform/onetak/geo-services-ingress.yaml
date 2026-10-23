@@ -2,7 +2,6 @@
 # All routes are Cloudflare-proxied → ingress-nginx LB 143.244.220.155
 #
 # Add DNS A records (Cloudflare-proxied) pointing to 143.244.220.155:
-#   overpass.onemindos.dev
 #   tileserver.onemindos.dev
 
 apiVersion: networking.k8s.io/v1
@@ -17,16 +16,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: overpass.onemindos.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: overpass
-                port:
-                  number: 12345
     - host: tileserver.onemindos.dev
       http:
         paths:
