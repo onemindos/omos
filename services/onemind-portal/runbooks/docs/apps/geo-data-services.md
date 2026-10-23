@@ -8,13 +8,12 @@ Tile38 and the STAC browser.
 
 - Catalog entity: `component:default/geo-data-services` in System `geospatial`
 - Argo CD application: none recorded for this app
-- Namespaces: `dp-default-onetak-development-b188bf98`, `onetak`
+- Namespace: `onetak`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `stac-browser-development-0c6b80f7` | Deployment | `dp-default-onetak-development-b188bf98` |
 | `tile38` | Deployment | `onetak` |
 
 ## When it looks wrong
@@ -31,8 +30,8 @@ Tile38 and the STAC browser.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name=~"dp-default-onetak-development-b188bf98|onetak", k8s_pod_name=~"(stac-browser-development-0c6b80f7|tile38)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=dp-default-onetak-development-b188bf98&var-namespace=onetak&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38`
+- Loki query: `{k8s_namespace_name="onetak", k8s_pod_name=~"(tile38)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=tile38`
 - Source: `onemindos/omos`
 
 ## Escalate

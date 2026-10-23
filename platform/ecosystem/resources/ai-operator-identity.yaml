@@ -7,7 +7,7 @@
 # from it per session with grant_type=client_credentials against the same provider, so its
 # audience matches the OpenChoreo API (`onemind-openchoreo`).
 # What the identity may do in OpenChoreo is decided by the ClusterAuthzRole
-# `ai-operator-read` (platform/openchoreo/platform) and its binding.
+# `ai-operator-read` and its binding (both removed with platform-openchoreo-platform).
 #
 # The same Job also prepares the built-in OpenChoreo console (phase 2f): a second service
 # account `backstage-catalog` for its catalog sync, the Secret openchoreo-control-plane/

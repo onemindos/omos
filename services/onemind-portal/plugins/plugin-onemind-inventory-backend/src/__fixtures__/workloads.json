@@ -324,27 +324,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "stac-browser-development-0c6b80f7",
-    "namespace": "dp-default-onetak-development-b188bf98"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "openchoreo.dev/component": "stac-browser",
-      "openchoreo.dev/component-uid": "d9099fca-45c3-48e3-82e9-f90003342655",
-      "openchoreo.dev/environment": "development",
-      "openchoreo.dev/environment-uid": "25431017-aaa2-4b53-abf9-f0b0af95fa72",
-      "openchoreo.dev/namespace": "default",
-      "openchoreo.dev/project": "onetak",
-      "openchoreo.dev/project-uid": "aff94086-3046-4228-b700-521e1d55085a"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "external-secrets",
     "namespace": "external-secrets"
    },

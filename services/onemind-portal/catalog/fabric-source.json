@@ -120,19 +120,6 @@
     ]
   },
   {
-    "Page": "STAC Browser",
-    "Description": "Browse STAC catalogs visually",
-    "Category": "🌍 Geo",
-    "Host": "☁️ DOKS Cluster",
-    "Status": "✅ Live",
-    "userDefined:URL": "http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http",
-    "url": "https://app.notion.com/3b9d0cf70a7e8124a3eed9d89f3a0a5c",
-    "Last edited time": "2026-09-03 07:00:34Z",
-    "Tags": [
-      "Geo"
-    ]
-  },
-  {
     "Page": "cert-manager",
     "Description": "Automated TLS via Let's Encrypt",
     "Category": "🏗️ Infrastructure",

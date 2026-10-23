@@ -63,7 +63,8 @@ The Authentik service account `ai-operator` (created by the hook Job in
 `onemind-openchoreo` application. Its app password is in Secret `auth/ai-operator-openchoreo`
 (not in Git). OpenChoreo authorizes it through `ClusterAuthzRoleBinding`
 `ai-operator-read-binding` (claim `sub`) to `ClusterAuthzRole` `ai-operator-read`: every
-`:view` action except secrets (`platform/openchoreo/platform/`).
+`:view` action except secrets (both objects were removed with `platform-openchoreo-platform`;
+the OpenChoreo MCP goes with the rest of the teardown).
 
 - **Claude Code** runs `scripts/ai-operator/openchoreo-token.sh` as a `headersHelper` and gets
   a fresh one-hour token on every connect; it retries once on 401.

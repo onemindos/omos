@@ -115,7 +115,7 @@ describe('what the provider publishes', () => {
       tracked: 148,
       published: 0,
       skippedCurated: 148,
-    }); // 151 live, minus the one dp-* workload OpenChoreo owns;
+    }); // every live workload is already in cluster.yaml
     expect(h.published.size).toBe(0);
   });
 

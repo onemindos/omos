@@ -16,9 +16,9 @@ and `kube-node-lease`.
 | `system` | Cluster plumbing | `default` |
 
 `kyverno` and `falco` were `security`, and `agent-fabric` was `agents`; those values were
-retired. `default` is labelled by `platform/openchoreo/defaults/namespace-default.yaml`. When
-the OpenChoreo defaults Application is removed, move that Namespace document (with
-`Delete=false`) to a surviving Application so the label stays.
+retired. `default` is labelled by `platform/ecosystem/resources/namespaces.yaml` (Application
+`platform-ecosystem-resources`, which does not prune), with `Delete=false` so Argo CD never
+deletes it. It moved there from the OpenChoreo defaults Application when that was removed.
 
 ## Namespaces that Git does not define
 

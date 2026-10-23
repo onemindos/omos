@@ -103,11 +103,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "dp-default-onetak-development-b188bf98",
-      "name": "stac-browser-development-0c6b80f7"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "external-secrets",
       "name": "external-secrets"
     },
@@ -1055,11 +1050,6 @@
       "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dp-default-onetak-development-b188bf98",
-      "name": "stac-browser"
     },
     {
       "kind": "Service",
