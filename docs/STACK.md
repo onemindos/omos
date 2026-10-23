@@ -46,7 +46,7 @@ See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
 | Namespaces | 48 |
 | Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
-| Other external listeners | TAK LB `152.42.155.95` (public), `omos-nats` Tailscale LB, OpenChoreo gateway Tailscale LB |
+| Other external listeners | `tak-tailnet` Tailscale LB (TAK, 8089/8443/8446/64738), `omos-nats` Tailscale LB, OpenChoreo gateway Tailscale LB |
 | Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 (see [Mutable image tags](#mutable-image-tags)) |
 
 ## Tier definitions
@@ -72,7 +72,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 |-------------|-----------|---------|--------------|--------|----------|--------|
 | `app-of-apps` | argocd | Root app; creates every `platform-*` Application from `platform/argocd` | none | Git | tailnet (Argo UI) | Argo. **OutOfSync** (not yet diagnosed) |
 | `platform-core` | kube-system, github-runner, tailscale | Sealed Secrets controller, Let's Encrypt DNS issuers, self-hosted GitHub runner, Tailscale ACL policy | Sealed Secrets private keys (irreplaceable) | `backup-cluster-recovery` (daily 04:00 UTC) exports identity/config and the active sealing keys, encrypted | internal | Argo |
-| `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS, Ignite, 37 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **public**: LB `152.42.155.95` ports 8089, 8443, 8446, 9101, 9102, 64738, no source ranges | Argo for the overlay, **Helm CLI for the core** |
+| `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS, Ignite, 37 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **tailnet only**: `tak-tailnet` (`tak.tail717ba0.ts.net`) ports 8089, 8443, 8446, 64738/TCP. The public LB `tak-external` was removed 2026-10-23 | Argo for the overlay, **Helm CLI for the core** |
 | `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 150 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
 | `platform-auth-helm` | auth | Authentik IdP (chart 2026.8.2) | PostgreSQL 17, Redis, 5 GiB | `PG dump` (05:00 UTC), `VolSync` | `auth.onemindos.dev` public (CF); `onemind-auth` tailnet | Argo |
 | `platform-auth-infra` | auth | Authentik Postgres, Redis, secrets, ingress | see above | see above | see above | Argo |
@@ -101,14 +101,14 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 | Application | Namespace | Purpose | State / data | Backup | Exposure | GitOps |
 |-------------|-----------|---------|--------------|--------|----------|--------|
-| `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.onemindos.dev` **public (open)** | Argo. Health flaps to Progressing |
+| `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.tail717ba0.ts.net` **tailnet** | Argo. Health flaps to Progressing |
 | `platform-backstage` | backstage | Backstage developer portal and service catalog | PostgreSQL, 10 GiB | `PG dump` (06:40 UTC), `VolSync` | `onemind-preview` tailnet | Argo |
 | `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-metrics-scrape` (0 replicas). **Alertmanager has no receiver** | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
 | `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI) | 20 GiB time-series | `VolSync`; native backup Job suspended | internal | Argo |
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
 | `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
-| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (STAC, Tile38), WebODM | about 170 GiB of PVCs | `VolSync` x6 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.onemindos.dev` **public (open)** | Argo |
+| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (STAC, Tile38), WebODM | about 170 GiB of PVCs | `VolSync` x6 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp and Kubernetes Dashboard | none | Git | tailnet | Argo |
@@ -191,10 +191,9 @@ Gaps beyond the eleven releases:
 | Path | What is behind it |
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
-| Public, **no source restriction** (nginx) | `enroll.onemindos.dev` (tak-portal), `fedhub.onemindos.dev`, `matrix.onemindos.com`, `element.onemindos.com` |
-| Public, direct (L4 LB) | TAK `152.42.155.95`: 8089, 8443, 8446, 9101, 9102, 64738. No source ranges |
+| Public, **no source restriction** (nginx) | `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 
 ## Mutable image tags
 

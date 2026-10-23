@@ -1,7 +1,8 @@
-# OneMind TAK external ingress — single dedicated DO LoadBalancer via L4 TCP passthrough.
-# nginx `stream` mode does raw TCP proxying (NO TLS termination), so TAK mutual-TLS
-# passes straight through to the api/messaging pods. One LB, one IP, three ports.
-# Avoids DO's discouraged multi-Service LB-ID sharing (reconciliation conflicts).
+# OneMind TAK L4 TCP proxy. nginx `stream` mode does raw TCP proxying (NO TLS
+# termination), so TAK mutual-TLS passes straight through to the api/messaging pods.
+# It is reachable ONLY over the tailnet, through the `tak-tailnet` Service
+# (tak-tailscale.yaml). The public DigitalOcean LoadBalancer Service `tak-external`
+# (152.42.155.95) was removed; nothing in this cluster listens on a public TAK port.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -18,17 +19,12 @@ data:
       upstream tak_webtak  { server takserver-api-service:8443; }
       # 8089 — CoT streaming, mutual-TLS (messaging)
       upstream tak_cot     { server takserver-messaging-service:8089; }
-      # 9101/9102 — federation v1/v2 (fedhub) — merged from fedhub-fed-external LB
-      upstream fed_v1      { server fedhub-fed:9101; }
-      upstream fed_v2      { server fedhub-fed:9102; }
-      # 64738 — Mumble voice (murmur) — merged from murmur-lb
+      # 64738 — Mumble voice (murmur, TCP only)
       upstream murmur_v    { server murmur:64738; }
 
       server { listen 8446; proxy_pass tak_enroll; proxy_timeout 600s; }
       server { listen 8443; proxy_pass tak_webtak; proxy_timeout 600s; }
       server { listen 8089; proxy_pass tak_cot;    proxy_timeout 600s; }
-      server { listen 9101; proxy_pass fed_v1;     proxy_timeout 600s; }
-      server { listen 9102; proxy_pass fed_v2;     proxy_timeout 600s; }
       server { listen 64738; proxy_pass murmur_v;  proxy_timeout 600s; }
     }
 ---
@@ -37,50 +33,27 @@ kind: Deployment
 metadata:
   name: tak-lb-proxy
   namespace: takserver
-  labels: { app: tak-lb-proxy }
+  labels: {app: tak-lb-proxy}
 spec:
   replicas: 1
-  selector: { matchLabels: { app: tak-lb-proxy } }
+  selector: {matchLabels: {app: tak-lb-proxy}}
   template:
     metadata:
-      labels: { app: tak-lb-proxy }
+      labels: {app: tak-lb-proxy}
     spec:
       containers:
         - name: nginx
           image: nginx:1.27-alpine
           ports:
-            - { containerPort: 8089 }
-            - { containerPort: 8443 }
-            - { containerPort: 8446 }
-            - { containerPort: 9101 }
-            - { containerPort: 9102 }
-            - { containerPort: 64738 }
+            - {containerPort: 8089}
+            - {containerPort: 8443}
+            - {containerPort: 8446}
+            - {containerPort: 64738}
           volumeMounts:
-            - { name: conf, mountPath: /etc/nginx/nginx.conf, subPath: nginx.conf }
+            - {name: conf, mountPath: /etc/nginx/nginx.conf, subPath: nginx.conf}
           resources:
-            requests: { cpu: 50m, memory: 32Mi }
-            limits:   { cpu: 250m, memory: 128Mi }
+            requests: {cpu: 50m, memory: 32Mi}
+            limits: {cpu: 250m, memory: 128Mi}
       volumes:
         - name: conf
-          configMap: { name: tak-lb-proxy-conf }
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: tak-external
-  namespace: takserver
-  annotations:
-    service.beta.kubernetes.io/do-loadbalancer-name: "onemind-tak"
-    # raw TCP; no proxy-protocol so client cert chain is untouched
-spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  selector: { app: tak-lb-proxy }
-  ports:
-    - { name: cot,    port: 8089, targetPort: 8089, protocol: TCP }
-    - { name: webtak, port: 8443, targetPort: 8443, protocol: TCP }
-    - { name: enroll, port: 8446, targetPort: 8446, protocol: TCP }
-    # merged from fedhub-fed-external + murmur-lb LBs (2026-09-29)
-    - { name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP }
-    - { name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP }
-    - { name: mumble, port: 64738, targetPort: 64738, protocol: TCP }
+          configMap: {name: tak-lb-proxy-conf}

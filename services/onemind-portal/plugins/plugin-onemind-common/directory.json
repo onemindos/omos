@@ -122,7 +122,7 @@
   {
     "name": "tak-server",
     "title": "TAK Server",
-    "url": "https://tak.onemindos.dev:8446",
+    "url": "https://tak.tail717ba0.ts.net:8446",
     "description": "TAK 5.8 hardened",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"
@@ -138,7 +138,7 @@
   {
     "name": "fedhub",
     "title": "FedHub",
-    "url": "https://fedhub.onemindos.dev",
+    "url": "https://fedhub.tail717ba0.ts.net",
     "description": "TAK federation hub",
     "group": "tak-ecosystem",
     "groupTitle": "TAK Ecosystem"

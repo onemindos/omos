@@ -8,7 +8,7 @@ kind: ConfigMap
 metadata:
   name: fedhub-broker-config
   namespace: takserver
-  labels: { app: fedhub, component: broker }
+  labels: {app: fedhub, component: broker}
 data:
   federation-hub-broker.yml: |
     keystoreType: JKS
@@ -52,7 +52,7 @@ kind: ConfigMap
 metadata:
   name: fedhub-ui-config
   namespace: takserver
-  labels: { app: fedhub, component: ui }
+  labels: {app: fedhub, component: ui}
 data:
   federation-hub-ui.yml: |
     port: 9100
@@ -77,7 +77,7 @@ data:
     keycloakTlsCertFile: /opt/tak/federation-hub/certs/files/takserver.pem
     keycloakClientId: fedhub
     keycloakSecret: REPLACE_WITH_AUTHENTIK_SECRET
-    keycloakRedirectUri: https://fedhub.onemindos.dev/login/redirect
+    keycloakRedirectUri: https://fedhub.tail717ba0.ts.net/login/redirect
     keycloakConfigurationEndpoint: https://auth.onemindos.dev/application/o/fedhub/.well-known/openid-configuration
     keycloakClaimName: groups
     keycloakAdminClaimValue: hub-admin-group

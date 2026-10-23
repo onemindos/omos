@@ -22,11 +22,11 @@ spec:
             - containerPort: 8080
           env:
             - name: TAK_HOST
-              value: "tak.onemindos.dev"
+              value: "tak.tail717ba0.ts.net"
             - name: TAK_PORT
               value: "8089"
             - name: PORTAL_URL
-              value: "https://enroll.onemindos.dev"
+              value: "https://enroll.tail717ba0.ts.net"
             - name: CA_CERT_PATH
               value: "/certs/ca.pem"
             - name: CA_KEY_PATH
