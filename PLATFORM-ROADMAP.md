@@ -71,7 +71,7 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | `ingress-nginx` | public ingress | 1 | Argo CD |
 | `cloudflare` | cloudflared (cold standby) | 1 | Argo CD |
 | `external-dns` | external-dns | 1 | Argo CD |
-| `kyverno`, `falco`, `spire-system` | policy, runtime security, workload identity | 1 | Argo CD |
+| `kyverno`, `falco` | policy, runtime security | 1 | Argo CD |
 | `velero`, `ops` | Velero, VolSync | 1 | Argo CD |
 | `github-runner` | CI runners | 1 | Argo CD |
 | `kube` | Headlamp, Kubernetes Dashboard (break-glass UIs) | 1 | Argo CD |

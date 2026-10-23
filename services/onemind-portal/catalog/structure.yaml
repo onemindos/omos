@@ -209,14 +209,10 @@ apps:
     title: OpenFGA
     system: identity-access
     description: Fine-grained authorization service.
-  - name: spire
-    title: SPIRE
-    system: identity-access
-    description: Workload identity (SPIFFE).
   - name: kyverno
     title: Kyverno
     system: identity-access
-    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, SPIRE and OpenFGA wiring).
+    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
   - name: falco
     title: Falco
     system: identity-access

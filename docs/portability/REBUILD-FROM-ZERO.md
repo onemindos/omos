@@ -183,7 +183,7 @@ Raw copies of database or NATS volumes are crash-consistent only; prefer logical
 for Postgres/NATS (steps 7-8) and use VolSync for file data (Hermes state, Harbor, OpenSearch,
 Grafana/Prometheus, Valhalla/geo data, Matrix media, etc.).
 Per-PVC order of priority: Hermes (25 GiB), Authentik, TAK volumes, Matrix, n8n, Backstage,
-Harbor (61 GiB), OpenSearch, Dapr, SPIRE, ClickHouse (20 GiB), monitoring (Prometheus/Grafana/
+Harbor (61 GiB), OpenSearch, Dapr, ClickHouse (20 GiB), monitoring (Prometheus/Grafana/
 Loki/Tempo), onetak geo data (about 450 GiB; may be rebuilt from public sources instead).
 
 ### Step 10. Velero and the remaining apps (about 1 h)

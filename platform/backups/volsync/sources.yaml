@@ -1253,13 +1253,6 @@ metadata:
   namespace: onemind-search
 automountServiceAccountToken: false
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: platform-volume-backup
-  namespace: spire-system
-automountServiceAccountToken: false
----
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -1643,47 +1636,6 @@ spec:
     schedule: 40 14 * * *
   restic:
     repository: volume-bf5e2b142d4b-restic
-    copyMethod: Snapshot
-    volumeSnapshotClassName: do-block-storage
-    storageClassName: do-block-storage
-    cacheStorageClassName: do-block-storage
-    cacheCapacity: 1Gi
-    pruneIntervalDays: 14
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
-      yearly: 1
-    moverServiceAccount: platform-volume-backup
-    moverPodLabels:
-      app: platform-volume-backup
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      seccompProfile:
-        type: RuntimeDefault
-    moverResources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: '1'
-        memory: 1Gi
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: volume-cdf02d607f9c
-  namespace: spire-system
-  annotations:
-    onemind.dev/source-pvc: spire-data-spire-server-0
-spec:
-  sourcePVC: spire-data-spire-server-0
-  paused: false
-  trigger:
-    schedule: 0 15 * * *
-  restic:
-    repository: volume-cdf02d607f9c-restic
     copyMethod: Snapshot
     volumeSnapshotClassName: do-block-storage
     storageClassName: do-block-storage

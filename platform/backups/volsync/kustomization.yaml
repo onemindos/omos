@@ -43,4 +43,3 @@ resources:
 - sealed/onemind-registry-volume-01764533bacc.yaml
 - sealed/onemind-registry-volume-f0b56ae255e2.yaml
 - sealed/onemind-search-volume-bf5e2b142d4b.yaml
-- sealed/spire-system-volume-cdf02d607f9c.yaml

@@ -180,7 +180,6 @@
   "component:default/k8s-openchoreo-observability-plane-tracing-adapter-ope-3cd19846",
   "component:default/k8s-opencost-opencost-768f8da7",
   "component:default/k8s-ops-platform-volsync-f2d1548e",
-  "component:default/k8s-spire-system-spire-server-b98bd939",
   "component:default/k8s-tailscale-egress-a22cb3a3",
   "component:default/k8s-tailscale-operator-7120ef72",
   "component:default/k8s-tailscale-ts-agent-console-8khxt-4b7ac8ab",

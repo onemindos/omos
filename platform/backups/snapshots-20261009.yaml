@@ -127,13 +127,3 @@ spec:
   volumeSnapshotClassName: onemind-backup-retain
   source:
     persistentVolumeClaimName: onemind-search-master-onemind-search-master-0
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
-  name: readiness-20261009-cdf02d607f9c
-  namespace: spire-system
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: spire-data-spire-server-0

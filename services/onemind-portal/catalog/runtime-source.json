@@ -718,11 +718,6 @@
     },
     {
       "kind": "StatefulSet",
-      "namespace": "spire-system",
-      "name": "spire-server"
-    },
-    {
-      "kind": "StatefulSet",
       "namespace": "tailscale",
       "name": "egress"
     },
@@ -925,16 +920,6 @@
       "kind": "DaemonSet",
       "namespace": "monitoring",
       "name": "otel-collector-opentelemetry-collector-agent"
-    },
-    {
-      "kind": "DaemonSet",
-      "namespace": "spire-system",
-      "name": "spire-agent"
-    },
-    {
-      "kind": "DaemonSet",
-      "namespace": "spire-system",
-      "name": "spire-spiffe-csi-driver"
     },
     {
       "kind": "DaemonSet",
@@ -1725,16 +1710,6 @@
       "kind": "Service",
       "namespace": "ops",
       "name": "platform-volsync-metrics"
-    },
-    {
-      "kind": "Service",
-      "namespace": "spire-system",
-      "name": "spire-controller-manager-webhook"
-    },
-    {
-      "kind": "Service",
-      "namespace": "spire-system",
-      "name": "spire-server"
     },
     {
       "kind": "Service",

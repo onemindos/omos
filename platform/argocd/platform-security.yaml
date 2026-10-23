@@ -1,4 +1,4 @@
-# Security layer: Kyverno, Falco, SPIRE and OpenFGA Applications plus their labelled
+# Security layer: Kyverno, Falco and OpenFGA Applications plus their labelled
 # namespaces, from platform/security/. Same safety model as the ecosystem parents:
 # prune off and no resources-finalizer, so nothing is ever deleted by this parent.
 apiVersion: argoproj.io/v1alpha1

@@ -127,7 +127,6 @@ workloads:
   openchoreo-observability-plane/tracing-adapter-opensearch: component:default/openchoreo-observability
   opencost/opencost: component:default/opencost
   ops/platform-volsync: component:default/volsync
-  spire-system/spire-server: component:default/spire
   tailscale/egress: component:default/tailscale-operator
   tailscale/operator: component:default/tailscale-operator
   tailscale/ts-agent-console-8khxt: component:default/tailscale-operator
@@ -197,8 +196,6 @@ argoApplications:
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga
   ecosystem-opensearch: component:default/opensearch
-  ecosystem-spire: component:default/spire
-  ecosystem-spire-crds: component:default/spire
   ecosystem-velero: component:default/velero
   edge-cert-manager: component:default/cert-manager
   edge-ingress-nginx: component:default/ingress-nginx

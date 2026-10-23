@@ -2,7 +2,7 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, SPIRE and OpenFGA wiring).
+Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
 
 ## Where it runs
 
