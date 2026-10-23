@@ -1,5 +1,6 @@
-# ArgoCD — resource requests/limits for DO upgrade compliance
-# Pass via: helm upgrade -f ./values/argocd.yaml
+# ArgoCD — resource requests/limits for DO upgrade compliance, plus sign-in through Authentik
+# Argo CD is a Helm CLI release (not self-managed). Apply with:
+#   helm upgrade argocd argo/argo-cd --version 10.1.2 -n argocd -f platform/values/argocd.yaml
 controller:
   resources:
     requests:
@@ -32,13 +33,9 @@ applicationSet:
     limits:
       memory: 256Mi
 
+# Dex is not used: nothing configured dex.config, and Argo CD signs in to Authentik directly (configs.cm oidc.config).
 dex:
-  resources:
-    requests:
-      cpu: 10m
-      memory: 50Mi
-    limits:
-      memory: 128Mi
+  enabled: false
 
 notifications:
   resources:
@@ -64,3 +61,29 @@ copyutil:
       memory: 32Mi
     limits:
       memory: 128Mi
+
+configs:
+  cm:
+    # Tailscale hostname of the argocd Ingress (platform/backstage: Ingress argocd, ingressClassName tailscale).
+    url: https://argocd.tail717ba0.ts.net
+    # Break-glass local admin. KEEP until SSO login is proven; remove in a separate follow-up PR.
+    admin.enabled: "true"
+    # Authentik provider/application `argocd` is created by platform/ecosystem/resources/argocd-authentik-provider.yaml.
+    # clientSecret is read from Secret argocd/argocd-oidc-authentik (SealedSecret in platform/ecosystem/resources/secrets/).
+    oidc.config: |
+      name: Authentik
+      issuer: https://auth.onemindos.dev/application/o/argocd/
+      clientID: argocd
+      clientSecret: $argocd-oidc-authentik:client-secret
+      enablePKCEAuthentication: true
+      requestedScopes:
+        - openid
+        - profile
+        - email
+        - groups
+  rbac:
+    # Same as today: no default role, so a signed-in user outside a mapped group sees nothing.
+    policy.default: ""
+    policy.csv: |
+      g, argocd-admins, role:admin
+    scopes: "[groups]"

@@ -44,9 +44,10 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   -f "$PLATFORM/values/ingress-nginx.yaml"
 
 helm repo add argo https://argoproj.github.io/argo-helm --force-update
-helm upgrade --install argocd argo/argo-cd \
-  --kube-context "$CTX" -n argocd --create-namespace
-# ArgoCD uses all defaults — no custom values needed
+helm upgrade --install argocd argo/argo-cd --version 10.1.2 \
+  --kube-context "$CTX" -n argocd --create-namespace \
+  -f "$PLATFORM/values/argocd.yaml"
+# values/argocd.yaml: resource limits, url, Authentik oidc.config, RBAC group mapping, Dex disabled
 
 # -----------------------------------------------------------------------------
 # 2. TLS ISSUERS (cert-manager ClusterIssuers)
