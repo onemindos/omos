@@ -296,7 +296,7 @@ apps:
   - name: geo-data-services
     title: OneTAK geospatial services
     system: geospatial
-    description: Martin, Nominatim, Overpass, pg_featureserv, Tile38, STAC API/browser and the geo database.
+    description: Martin, Overpass, pg_featureserv, Tile38, STAC API/browser and the geo database.
   - name: n8n
     title: n8n
     system: ai-agents
