@@ -23,7 +23,6 @@ application OCI version labels; BusyBox 1.38.0 comes from OCI build history.
 | `platform/onetak/webodm.yaml` | `webodm/webodm_webapp:latest` | `webodm/webodm_webapp@sha256:875cf97ee3278d9dfc517feba862ebe83aae1ccf76c398de96e993402f181659` |
 | `platform/onetak/webodm.yaml` | `opendronemap/nodeodm:latest` | `opendronemap/nodeodm:3.6.2@sha256:fcd99eb23d8db194a7d1dc95f029f518283b3d6be32dd64422395f4e7af56720` |
 | `platform/takserver/deploy/murmur.yaml` | `mumblevoip/mumble-server:latest` | `mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a` |
-| `infra/edge/takserver/deploy/docker-compose.yml` | `mumblevoip/mumble-server:latest` | `mumblevoip/mumble-server:v1.5.915@sha256:018ad3515932e513d8fdc970df918373a2664c4da32b09a89a4aaee28eb7507a` |
 | `platform/matrix/argo/postgres.yaml` | `busybox` | `busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e` |
 | `platform/matrix/argo/redis.yaml` | `busybox` | `busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e` |
 | `platform/matrix/argo/synapse.yaml` | `busybox` | `busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e` |
@@ -32,27 +31,42 @@ application OCI version labels; BusyBox 1.38.0 comes from OCI build history.
 
 ## Remaining references and exclusions
 
-The following references have no uniquely observed running image. They were not
-replaced with invented versions or upgraded to an unrelated current release:
+The following references have no verified runtime bytes for their target environment.
+They were not replaced with invented versions or upgraded to an unrelated release:
 
 - `platform/monitoring/scraper-deployment.yaml:22` — `ghcr.io/onemindos/nats-metrics-scrape:latest`.
 - `platform/parked/omos-mission-engine/mission-engine-deployment.yaml:24` — `ghcr.io/onemindos/omos-mission-engine:latest`.
 - `infra/edge/takserver/deploy/docker-compose.yml:12` — `tak-database:latest`.
 - `infra/edge/takserver/deploy/docker-compose.yml:33` — `takserver:latest`.
+- `infra/edge/takserver/deploy/docker-compose.yml:67` — edge `mumblevoip/mumble-server:latest` (edge runtime not inspected).
 
 The edge `takserver` and `tak-database` images are local build outputs, not registry
 releases. Their Dockerfiles/compose build configuration need a separate reproducible
 edge build before a trustworthy pin exists. The parked mission engine is not deployed,
 and the obsolete metrics scraper has no matching pod. These are explicit residual
-Task 2 blockers; this change does not claim a zero-mutable-reference whole-tree audit.
-The edge Mumble example uses the verified cloud Mumble bytes; edge runtime was not
-accessible, so that example is a proposed alignment, not verified edge live parity.
+Task 2 findings; this change does not claim a zero-mutable-reference audit.
+The edge Mumble example stays unchanged: cloud runtime evidence does not establish
+which bytes the edge is running. This PR is limited to 18 verified cloud image
+references, including the matching legacy Matrix base reference.
 
 The running OpenSearch `fsgroup-volume` BusyBox reference belongs to an off-limits
 ecosystem OpenSearch application and is skipped. Excluded paths stay unchanged.
 `run-latest` and existing version-tag references are outside the literal latest/untagged
 audit scope; no registry-wide tag refresh was performed. The policy-report API returned
 no PolicyReports at observation time, so the earlier count of 17 was not recertified.
+
+## Current-main integration and evidence refresh
+
+This branch is rebased onto `85b9688ffba68fa596295db1ccd5d9b0b6d0455e`, preserving
+merged resource budgets and the portal cleanup. The targeted running imageIDs were
+rechecked after the resource rollout, including the replacement WebODM database
+pod. Its digest remains the same as this pin. BusyBox, NodeODM and Mumble release
+tags were also verified to resolve to their captured digests. No version upgrade
+or rollback is intended; no edge version is inferred from cloud evidence.
+
+The original scan scope is platform/ and infra/. Development compose references
+under services/bridge/ are outside that scope and unchanged. Policies/comments,
+parked images and local build outputs must not be mistaken for deployed workloads.
 
 ## Reviewer steps after merge
 
