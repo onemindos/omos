@@ -233,36 +233,6 @@ events:
   http:
     topics: []
 
-# Existing OneMind host with the pinned OpenChoreo core and observability packs.
-openchoreo:
-  baseUrl: http://openchoreo-api.openchoreo-control-plane.svc.cluster.local:8080/api/v1
-  defaultOwner: onemind-admins
-  auth:
-    clientId: onemind-openchoreo
-    clientSecret: ${OPENCHOREO_SERVICE_CLIENT_SECRET}
-    tokenUrl: https://onemind-auth.tail717ba0.ts.net/application/o/token/
-    scope: openid profile email
-  schedule:
-    frequency: 300
-    timeout: 120
-  events:
-    enabled: false
-  features:
-    auth:
-      enabled: true
-    authz:
-      enabled: true
-    observability:
-      enabled: true
-    workflows:
-      enabled: false
-    assistant:
-      enabled: false
-    secretManagement:
-      enabled: false
-    deliveryInsights:
-      enabled: false
-
 onemind:
   # Sidebar and home sections for work that has not shipped yet. Flip each to
   # true in the PR that builds its target (see docs/roadmap/flagship).
@@ -283,4 +253,4 @@ onemind:
       # frequencySeconds: 120        # cluster observation cadence
       # removedRetentionHours: 24    # how long a removed workload stays flagged before it is dropped
       # excludedNamespaces: [kube-node-lease, kube-public]
-      # excludedNamespacePatterns: ['dp-*']   # OpenChoreo data planes: published by OpenChoreo
+      # excludedNamespacePatterns: ['dp-*']   # OpenChoreo data planes: excluded until that platform is torn down

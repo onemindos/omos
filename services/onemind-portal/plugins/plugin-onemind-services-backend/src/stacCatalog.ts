@@ -12,7 +12,6 @@ import type {
 } from '@backstage/plugin-catalog-node';
 import type { LocationSpec } from '@backstage/plugin-catalog-common';
 
-const browser = 'component:default/stac-browser';
 const api = 'component:default/k8s-onetak-stac-api-746ca5f2';
 const database = 'component:default/k8s-onetak-onetak-geo-db-a22783b9';
 const contract = 'api:default/onetak-stac-readonly';
@@ -25,8 +24,8 @@ const append = (existing: unknown, refs: string[]) => [
   ]),
 ];
 
-// Curated topology from reviewed manifests, not runtime-health inference. Preserve
-// the owning OC provider and inventory identities; never register a competing entity.
+// Curated topology from reviewed manifests, not runtime-health inference. Preserves the
+// inventory identity of the STAC API; never registers a competing entity.
 export class StacCatalogProcessor implements CatalogProcessor {
   getProcessorName() {
     return 'OneMindStacReviewedRelationships';
@@ -37,26 +36,12 @@ export class StacCatalogProcessor implements CatalogProcessor {
     emit: CatalogProcessorEmit,
   ) {
     const ref = stringifyEntityRef(entity);
-    const managedBrowser =
-      ref === browser &&
-      entity.metadata.labels?.['openchoreo.io/managed'] === 'true';
-    if (!managedBrowser && ref !== api) return entity;
-    const dependencies = managedBrowser ? [api] : [database];
-    const apiRefs = managedBrowser
-      ? {
-          key: 'consumesApis',
-          relation: 'consumesApi',
-          inverse: 'apiConsumedBy',
-        }
-      : {
-          key: 'providesApis',
-          relation: 'providesApi',
-          inverse: 'apiProvidedBy',
-        };
+    if (ref !== api) return entity;
+    const dependencies = [database];
     entity.spec = {
       ...entity.spec,
       dependsOn: append(entity.spec?.dependsOn, dependencies),
-      [apiRefs.key]: append(entity.spec?.[apiRefs.key], [contract]),
+      providesApis: append(entity.spec?.providesApis, [contract]),
     };
     const annotations = entity.metadata.annotations ?? {};
     entity.metadata.annotations = {
@@ -65,14 +50,8 @@ export class StacCatalogProcessor implements CatalogProcessor {
         'reviewed-stac-manifests; not live health',
       'backstage.io/source-location':
         annotations['backstage.io/source-location'] ??
-        `url:https://github.com/onemindos/omos/${
-          managedBrowser
-            ? 'tree/main/platform/openchoreo/projects/onetak/stac-browser'
-            : 'blob/main/platform/onetak/stac.yaml'
-        }`,
-      'argocd/app-name':
-        annotations['argocd/app-name'] ??
-        (managedBrowser ? 'platform-openchoreo-projects' : 'platform-onetak'),
+        'url:https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml',
+      'argocd/app-name': annotations['argocd/app-name'] ?? 'platform-onetak',
     };
     const runbook =
       'https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/';
@@ -83,7 +62,7 @@ export class StacCatalogProcessor implements CatalogProcessor {
     const source = parseEntityRef(ref);
     for (const [targetRef, type, inverse] of [
       ...dependencies.map(r => [r, 'dependsOn', 'dependencyOf']),
-      [contract, apiRefs.relation, apiRefs.inverse],
+      [contract, 'providesApi', 'apiProvidedBy'],
     ]) {
       const target = parseEntityRef(targetRef);
       emit(processingResult.relation({ source, target, type }));

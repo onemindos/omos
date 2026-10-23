@@ -3,14 +3,8 @@ import type { AddressInfo } from 'node:net';
 import { getEvidenceHttp, observeStacEvidence } from './stacEvidence';
 import type { EvidenceDependencies } from './stacEvidence';
 
-const labels = {
-  'openchoreo.dev/component': 'stac-browser',
-  'openchoreo.dev/project': 'onetak',
-  'openchoreo.dev/environment': 'development',
-  'openchoreo.dev/namespace': 'default',
-};
-const deployment = (name: string, namespace: string, tagged = false) => ({
-  metadata: { name, namespace, generation: 2, ...(tagged ? { labels } : {}) },
+const deployment = (name: string, namespace: string) => ({
+  metadata: { name, namespace, generation: 2 },
   spec: {
     replicas: 1,
     template: {
@@ -47,16 +41,12 @@ function dependencies() {
     return { status: 200, body: '{}' };
   });
   const list = jest.fn(async (path: string): Promise<unknown[]> => {
-    if (path.includes('labelSelector='))
-      return [
-        deployment('browser', 'dp-default-onetak-development-abc123', true),
-      ];
     if (path.includes('/namespaces/onetak/'))
       return [
         deployment('stac-api', 'onetak'),
         deployment('onetak-geo-db', 'onetak'),
       ];
-    return ['platform-onetak', 'platform-openchoreo-projects'].map(name => ({
+    return ['platform-onetak'].map(name => ({
       metadata: { name },
       status: {
         health: { status: 'Healthy' },
@@ -70,20 +60,17 @@ function dependencies() {
   };
   return { get, list, deps };
 }
-test('joins only the fixed pilot and dependencies, with distinct workload/API/data observations', async () => {
+test('joins only the fixed STAC API and database, with distinct workload/API/data observations', async () => {
   const { deps, get, list } = dependencies();
   const result = await observeStacEvidence(deps);
   expect(result.partial).toBe(false);
-  expect(result.workloads.map(w => w.state)).toEqual([
-    'ready',
-    'ready',
-    'ready',
-  ]);
+  expect(result.workloads.map(w => w.role)).toEqual(['api', 'database']);
+  expect(result.workloads.map(w => w.state)).toEqual(['ready', 'ready']);
   expect(result.probes.collections.httpStatus).toBe(200);
   expect(result.data.collectionsReturned).toBe(0);
   expect(result.data.latestItemDatetime).toBeNull();
   expect(result.data.freshness).toContain('No ingestion SLA');
-  expect(list).toHaveBeenCalledTimes(3);
+  expect(list).toHaveBeenCalledTimes(2);
   expect(
     get.mock.calls.filter(([url]) => url.endsWith('/collections')),
   ).toHaveLength(1);
@@ -117,21 +104,21 @@ test('cluster observation failure is unknown, never zero-ready or all healthy', 
     result.workloads.every(w => w.state === 'unknown' && w.ready === null),
   ).toBe(true);
   expect(result.argo.state).toBe('partial-or-unknown');
-  expect(result.probes.browser.state).toBe('unknown');
 });
-test('ambiguous or other-environment browser workloads are not guessed', async () => {
+test('duplicate workloads with the same name are not guessed', async () => {
   const { deps } = dependencies();
   const initial = deps.list;
   deps.list = async <T>(path: string) =>
-    path.includes('labelSelector=')
+    path.includes('/namespaces/onetak/')
       ? ([
-          deployment('first', 'dp-default-onetak-development-abc123', true),
-          deployment('second', 'dp-default-onetak-development-def456', true),
+          deployment('stac-api', 'onetak'),
+          deployment('stac-api', 'onetak'),
+          deployment('onetak-geo-db', 'onetak'),
         ] as T[])
       : initial<T>(path);
   const result = await observeStacEvidence(deps);
   expect(result.workloads[0].state).toBe('unknown');
-  expect(result.probes.browser.state).toBe('unknown');
+  expect(result.workloads[1].state).toBe('ready');
 });
 test('unobserved generation and intentional zero replicas are not reported ready', async () => {
   const { deps } = dependencies();
@@ -146,8 +133,8 @@ test('unobserved generation and intentional zero replicas are not reported ready
     return [a, b] as T[];
   };
   const result = await observeStacEvidence(deps);
-  expect(result.workloads[1].state).toBe('reconciling');
-  expect(result.workloads[2].state).toBe('scaled-to-zero');
+  expect(result.workloads[0].state).toBe('reconciling');
+  expect(result.workloads[1].state).toBe('scaled-to-zero');
   expect(result.partial).toBe(true);
 });
 test.each([
@@ -160,7 +147,7 @@ test.each([
     const initial = deps.list;
     deps.list = async <T>(path: string) => {
       if (!path.endsWith('/applications')) return initial<T>(path);
-      return ['platform-onetak', 'platform-openchoreo-projects'].map(name => ({
+      return ['platform-onetak'].map(name => ({
         metadata: { name },
         status: { health: { status: health }, sync: { status: sync } },
       })) as T[];

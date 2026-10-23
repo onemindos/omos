@@ -1,7 +1,3 @@
-import openchoreoPlugin, {
-  openChoreoEntityGroupsModule,
-} from '@openchoreo/backstage-plugin/alpha';
-import observabilityPlugin from '@openchoreo/backstage-plugin-openchoreo-observability/alpha';
 import githubActionsPlugin from '@backstage-community/plugin-github-actions/alpha';
 import githubPullRequestsPlugin from '@roadiehq/backstage-plugin-github-pull-requests/alpha';
 import grafanaPlugin from '@backstage-community/plugin-grafana/alpha';
@@ -30,23 +26,14 @@ import { createApp } from '@backstage/frontend-defaults';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { homeModule, todayPlugin } from '@internal/plugin-onemind-home';
 import { livePlugin } from '@internal/plugin-onemind-live';
-import { componentOverviewModule } from './componentOverviewModule';
 import { prometheusPlugin, prometheusApiModule } from './prometheusPlugin';
-import {
-  catalogCompositionModule,
-  graphCompositionModule,
-} from './catalogCompositionModules';
+import { catalogCompositionModule } from './catalogCompositionModules';
 import { systemRedirectsModule } from './systemRedirects';
 
 export default createApp({
   features: [
-    openchoreoPlugin,
-    componentOverviewModule,
     catalogCompositionModule,
     systemRedirectsModule,
-    graphCompositionModule,
-    openChoreoEntityGroupsModule,
-    observabilityPlugin,
     githubActionsPlugin,
     githubPullRequestsPlugin,
     grafanaPlugin,
