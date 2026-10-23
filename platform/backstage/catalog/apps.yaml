@@ -6692,7 +6692,6 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-oc-control
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-prereqs
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: openchoreo-control-plane
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (openchoreo-control-plane,openchoreo-data-plane)

@@ -203,7 +203,6 @@ argoApplications:
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
-  platform-openchoreo-prereqs: component:default/openchoreo
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno

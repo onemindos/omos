@@ -7,7 +7,7 @@ OpenChoreo control plane and data plane, defaults, projects and prerequisites.
 ## Where it runs
 
 - Catalog entity: `component:default/openchoreo` in System `developer-platform`
-- Argo CD applications: `ecosystem-oc-control`, `platform-openchoreo-prereqs`
+- Argo CD application: `ecosystem-oc-control`
 - Namespace: `openchoreo-control-plane`
 
 ## Workloads
