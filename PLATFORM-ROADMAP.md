@@ -343,8 +343,8 @@ Findings to act on in later phases:
   configured entitlements, and Authentik tokens carry no `client_id`, so none of those match.
   They are inert, including `mcp-tryout-client-binding` (`admin` for `service_mcp_client`).
   Remove them with a `bootstrap` override when roles are reviewed (phase 6).
-- The Authentik providers made by `auth-provider-bootstrap.yaml` for `workflows` and `langfuse`
-  (and `registry`, deleted with Harbor by `authentik-registry-removal.yaml`) were created with an empty grant type list, like `openchoreo` was, and
+- The Authentik provider made by `auth-provider-bootstrap.yaml` for `langfuse` (and `registry` and `workflows`,
+  deleted with Harbor and Argo Workflows by `authentik-registry-removal.yaml`) was created with an empty grant type list, like `openchoreo` was, and
   cannot complete a browser login until given `authorization_code`.
 - The ecosystem node is at about 99% CPU requested; the control plane now prefers it
   without requiring it. Capacity work is phase 5.
