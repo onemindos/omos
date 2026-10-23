@@ -93,6 +93,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - {name: ui, containerPort: 9100, protocol: TCP}
+            - {name: oauth, containerPort: 9443, protocol: TCP}
             - {name: fed-v1, containerPort: 9101, protocol: TCP}
             - {name: fed-v2, containerPort: 9102, protocol: TCP}
           env:
@@ -159,9 +160,8 @@ spec:
         - name: jetty-temp
           emptyDir: {}
 ---
-# ClusterIP for the admin UI — fronted by a Tailscale Ingress (fedhub-ingress.yaml, tailnet only).
-# The UI port serves TLS; the port is named `https` so the Tailscale operator proxies to it over HTTPS
-# (https+insecure) instead of plain HTTP. Nothing else in the repo refers to this port by name.
+# ClusterIP for the admin UI (in-cluster only). The tailnet path is the L4 LoadBalancer in fedhub-tailnet.yaml.
+# 9100 requires a client certificate; 9443 is the OAuth (Authentik) port without one.
 apiVersion: v1
 kind: Service
 metadata:
@@ -171,7 +171,8 @@ metadata:
 spec:
   selector: {app: fedhub}
   ports:
-    - {name: https, port: 9100, targetPort: 9100, protocol: TCP}
+    - {name: ui, port: 9100, targetPort: 9100, protocol: TCP}
+    - {name: oauth, port: 9443, targetPort: 9443, protocol: TCP}
 ---
 # ClusterIP for federation ports — exposed externally via fedhub-lb.yaml LoadBalancer
 apiVersion: v1

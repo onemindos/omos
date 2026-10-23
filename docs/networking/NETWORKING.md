@@ -54,7 +54,7 @@ Verified against live Ingress objects on 2026-10-09.
 | `onemindos.dev` | onetak/onetak-ingress | onetak-api (CloudTAK), onetak-tiles | **Tailnet only** (tunnel + Cloudflare Access as interim) | Operational C2 UI. Move once every user has Tailscale. Needs a `tailscale` Ingress (future PR). |
 | `ws.onemindos.dev` | nats/nats-ws-ingress | nats:8080 websocket | **Tailnet only** | `omos-nats` already exposes 8080 on the tailnet. Only keep public if a browser client off the tailnet needs it. |
 | `enroll.onemindos.dev` | onetak/tak-portal-ingress | tak-portal:8080 | **Done 2026-10-23: `https://enroll.tail717ba0.ts.net`** | Tailscale Ingress; the public nginx rule is gone. Delete the DNS record. |
-| `fedhub.onemindos.dev` | takserver/fedhub-ingress | fedhub-ui | **Done 2026-10-23: `https://fedhub.tail717ba0.ts.net`** | Tailscale Ingress; the public nginx rule is gone. Delete the DNS record. |
+| `fedhub.onemindos.dev` | takserver/fedhub-tailnet | fedhub | **Done 2026-10-23: `https://fedhub.tail717ba0.ts.net:9100` (client certificate) and `:9443` (Authentik sign-in)** | Tailscale L4 LoadBalancer (TCP passthrough, like `tak-tailnet`). The first design, an L7 Tailscale Ingress, could not work: FedHub's UI on 9100 requires a TLS client certificate. The public nginx rule is gone. Delete the DNS record. |
 | `tileserver` `.onemindos.dev` | onetak/geo-services-ingress | geo services | **Tailnet only** | Internal tooling; has no reason to be public. |
 | `tak.onemindos.dev` (unproxied A -> `152.42.155.95`) | ~~takserver/tak-external (DO LB `onemind-tak`)~~ removed 2026-10-23 | tak-lb-proxy | **Done: tailnet only, `tak.tail717ba0.ts.net`** | 8089/8443/8446/64738 TCP via `tak-tailnet`. The IP is released; delete the DNS record. |
 | TAK federation 9101/9102 on the same LB | ~~tak-external~~ removed 2026-10-23 | fedhub-fed (ClusterIP) | **Closed** | There are no federation partners. Nothing exposes these ports outside the cluster. |
@@ -184,7 +184,8 @@ TAK has no public listener. The only path is the Tailscale Service `takserver/ta
 | WebTAK and Marti API | `https://tak.tail717ba0.ts.net:8443` | HTTPS, client cert required |
 | Mumble voice | `tak.tail717ba0.ts.net:64738` | TCP only (the proxy is a TCP stream; UDP is not forwarded, so Mumble uses its TCP tunnel mode) |
 | Device enrollment portal (QR codes) | `https://enroll.tail717ba0.ts.net` | Tailscale Ingress (HTTPS, tailnet certificate) |
-| FedHub admin UI | `https://fedhub.tail717ba0.ts.net` | Tailscale Ingress |
+| FedHub admin UI (client certificate) | `https://fedhub.tail717ba0.ts.net:9100` | Tailscale L4 LoadBalancer; install the TAK admin client cert in the browser; the self-signed server cert warns |
+| FedHub admin UI (Authentik sign-in) | `https://fedhub.tail717ba0.ts.net:9443` | same LoadBalancer; no client certificate; self-signed server cert warns |
 
 The TAK CA and client certificates do not change. Only the address the EUD dials changes.
 Existing devices need a changed server address, not re-enrollment.
@@ -215,8 +216,9 @@ The CoreConfig in Git and in the cluster does not reference `tak.onemindos.dev` 
 2. Replace the old server entry with `tak.tail717ba0.ts.net:8089:ssl` (ATAK/iTAK/WinTAK), or
    import a new data package from `https://enroll.tail717ba0.ts.net`.
 3. Verify CoT flows (own marker on a second device; CoT appears on `tak.cot.>`).
-4. Authentik: add redirect URI `https://fedhub.tail717ba0.ts.net/login/redirect` to the `fedhub`
-   OIDC client (the old `https://fedhub.onemindos.dev/login/redirect` can then be removed).
+4. Authentik: the `fedhub` OIDC client and its redirect URI `https://fedhub.tail717ba0.ts.net:9443/login/redirect`
+   are created by the Job `auth/fedhub-authentik-oidc-v1` (platform/ecosystem/resources/fedhub-authentik-provider.yaml);
+   nothing to do by hand.
 5. Cloudflare DNS: delete `enroll`, `fedhub` (if present) and `tak` under `onemindos.dev`.
    DNS is manual now: external-dns was removed on 2026-10-23, and no DNS records are managed in Git.
 

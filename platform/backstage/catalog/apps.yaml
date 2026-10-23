@@ -1311,7 +1311,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
   links:
-    - url: https://fedhub.tail717ba0.ts.net
+    - url: https://fedhub.tail717ba0.ts.net:9443
       title: Open application
       icon: dashboard
   annotations:
