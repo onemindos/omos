@@ -1,0 +1,118 @@
+# Re-create the OAuth2 provider that other sync hooks use as a template.
+# OpenChoreo cleanup PR #435 removed the onemind-backstage provider, which left
+# the argocd, fedhub and langfuse OIDC bootstrap Jobs unable to find a signing
+# key / authorization flow to copy. This wave-1 hook rebuilds a minimal
+# onemind-backstage provider from Authentik defaults if it is missing.
+# It is safe to re-run: existing objects are left untouched.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onemind-backstage-provider-bootstrap-v1
+  namespace: auth
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: bootstrap
+          image: ghcr.io/onemindos/onemind-core@sha256:667f9836cda15e3aadd51c6186eb80839946a0d1c76fc26fcb367e81cbc6ff9a
+          command: [python, -c]
+          args:
+            - |
+              import json, os, httpx, secrets
+              base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
+              headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
+              with httpx.Client(headers=headers, timeout=30) as client:
+                  def request(method, path, body=None, missing_ok=False):
+                      response = client.request(method, base + path, json=body)
+                      if missing_ok and response.status_code == 404:
+                          return None
+                      if not response.is_success:
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0] +
+                                             " failed with status " + str(response.status_code) +
+                                             ": " + response.text[:500])
+                      return response.json() if response.content else {}
+
+                  providers = request("GET", "providers/oauth2/?page_size=100")["results"]
+                  if any(p["client_id"] == "onemind-backstage" for p in providers):
+                      print("OAuth2 provider onemind-backstage already exists; nothing to do")
+                      return
+
+                  flows = {f["slug"]: f["pk"] for f in request("GET", "flows/instances/?page_size=100")["results"]}
+                  if "default-provider-authorization-implicit-consent" not in flows:
+                      raise RuntimeError("Default authorization flow not found")
+                  if "default-provider-invalidation-flow" not in flows:
+                      raise RuntimeError("Default invalidation flow not found")
+
+                  keys = [k for k in request("GET", "crypto/certificatekeypairs/?page_size=100")["results"]
+                          if k["name"] == "authentik Self-signed Certificate"]
+                  if not keys:
+                      raise RuntimeError("Authentik default self-signed certificate not found")
+
+                  scope_names = {"openid", "profile", "email", "offline_access", "groups"}
+                  mappings = sorted({m["pk"] for m in request("GET", "propertymappings/provider/scope/?page_size=100")["results"]
+                                    if m["scope_name"] in scope_names})
+                  if not mappings:
+                      raise RuntimeError("No standard OIDC scope mappings found")
+
+                  # A random secret is generated here because this provider is currently only
+                  # used as a template by other hooks. If Backstage OIDC is re-activated, the
+                  # AUTH_OIDC_CLIENT_SECRET in the backstage sealed secret must match.
+                  provider = request("POST", "providers/oauth2/", {
+                      "name": "OneMind Backstage",
+                      "client_type": "confidential",
+                      "client_id": "onemind-backstage",
+                      "client_secret": secrets.token_urlsafe(48),
+                      "authorization_flow": flows["default-provider-authorization-implicit-consent"],
+                      "invalidation_flow": flows["default-provider-invalidation-flow"],
+                      "property_mappings": mappings,
+                      "signing_key": keys[0]["pk"],
+                      "issuer_mode": "per_provider",
+                      "sub_mode": "hashed_user_id",
+                      "access_token_validity": "minutes=10",
+                      "grant_types": ["authorization_code", "refresh_token"],
+                      "redirect_uris": [{
+                          "matching_mode": "strict",
+                          "url": "https://onemind-preview.tail717ba0.ts.net/api/auth/oidc/handler/frame",
+                          "redirect_uri_type": "authorization"
+                      }],
+                      "include_claims_in_id_token": True,
+                  })
+                  print("Created OAuth2 provider onemind-backstage pk " + str(provider["pk"]))
+
+                  apps = request("GET", "core/applications/?page_size=100")["results"]
+                  if any(a["slug"] == "onemind-backstage" for a in apps):
+                      print("Application onemind-backstage already exists")
+                  else:
+                      request("POST", "core/applications/", {
+                          "name": "OneMind",
+                          "slug": "onemind-backstage",
+                          "provider": provider["pk"],
+                          "policy_engine_mode": "any",
+                          "meta_launch_url": "https://onemind-preview.tail717ba0.ts.net",
+                          "meta_description": "OneMind service catalog and operations portal",
+                      })
+                      print("Created application onemind-backstage")
+          env:
+            - name: AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: AUTHENTIK_BOOTSTRAP_TOKEN
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

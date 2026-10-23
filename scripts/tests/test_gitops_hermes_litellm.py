@@ -78,12 +78,12 @@ class BootstrapTests(unittest.TestCase):
         return calls
 
     def test_absent_hermes_key_keeps_existing_clients_working(self):
-        calls = self.provision(False)
-        self.assertEqual([c["metadata"]["service"] for c in calls], ["core", "openchoreo"])
+        calls = [c for c in self.provision(False) if c.get("metadata")]
+        self.assertEqual([c["metadata"]["service"] for c in calls], ["core"])
         self.assertTrue(all(c["models"] == ["onemind-chat", "onemind-fast"] for c in calls))
 
     def test_hermes_key_has_separate_scoped_model_allowlist(self):
-        calls = self.provision(True)
+        calls = [c for c in self.provision(True) if c.get("metadata")]
         hermes = next(c for c in calls if c["metadata"]["service"] == "hermes")
         self.assertEqual(hermes["models"], ["hermes-agent", "local-tools", "local-embed"])
         self.assertEqual(hermes["key_alias"], "onemind-hermes")
