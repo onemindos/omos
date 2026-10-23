@@ -264,14 +264,6 @@
     "groupTitle": "Geospatial"
   },
   {
-    "name": "valhalla",
-    "title": "Valhalla",
-    "url": "https://valhalla.onemindos.dev",
-    "description": "Routing engine",
-    "group": "geospatial",
-    "groupTitle": "Geospatial"
-  },
-  {
     "name": "webodm",
     "title": "WebODM",
     "url": "https://webodm.onemindos.dev",

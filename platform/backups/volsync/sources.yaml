@@ -982,47 +982,6 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: volume-edfbac6aab24
-  namespace: onetak
-  annotations:
-    onemind.dev/source-pvc: valhalla-data
-spec:
-  sourcePVC: valhalla-data
-  paused: false
-  trigger:
-    schedule: 20 7 * * *
-  restic:
-    repository: volume-edfbac6aab24-restic
-    copyMethod: Snapshot
-    volumeSnapshotClassName: do-block-storage
-    storageClassName: do-block-storage
-    cacheStorageClassName: do-block-storage
-    cacheCapacity: 1Gi
-    pruneIntervalDays: 14
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
-      yearly: 1
-    moverServiceAccount: platform-volume-backup
-    moverPodLabels:
-      app: platform-volume-backup
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      seccompProfile:
-        type: RuntimeDefault
-    moverResources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: '1'
-        memory: 1Gi
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
   name: volume-e0dfcd35f5a7
   namespace: onetak
   annotations:
