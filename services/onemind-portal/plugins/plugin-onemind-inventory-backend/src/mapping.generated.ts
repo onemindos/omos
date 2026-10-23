@@ -135,7 +135,6 @@ export const mapping: InventoryMapping = {
     'onetak/tak-portal': 'component:default/onetak',
     'onetak/tile38': 'component:default/geo-data-services',
     'onetak/tileserver-gl': 'component:default/tileserver-gl',
-    'onetak/valhalla': 'component:default/valhalla',
     'onetak/webodm': 'component:default/webodm',
     'onetak/webodm-broker': 'component:default/webodm',
     'onetak/webodm-db': 'component:default/webodm',
@@ -537,12 +536,6 @@ export const mapping: InventoryMapping = {
     },
     'tileserver-gl': {
       title: 'TileServer GL',
-      system: 'geospatial',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    valhalla: {
-      title: 'Valhalla',
       system: 'geospatial',
       pillar: 'so',
       review: 'proposed',

@@ -427,7 +427,6 @@ placement:
   turbovec: ai-agents
   twitch-zeus: social-media
   uptime-kuma: observability
-  valhalla: geospatial
   vllm: ai-agents
   webodm: geospatial
   x-zeus: social-media

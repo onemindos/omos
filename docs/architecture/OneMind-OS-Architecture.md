@@ -92,7 +92,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 |------|-----------|----------------|
 | 0 | `platform/core/` | ingress-nginx, cert-manager, sealed-secrets controller, Tailscale operator, GitHub Actions runner, cloudflared (standby) |
 | 1 | `platform/nats/` | NATS 3-node HA (Helm), NACK JetStream controller, TLS, all 39 stream + KV definitions |
-| 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, PostGIS (onetak-db), Martin, Nominatim, Valhalla, WebODM, NodeODM, STAC |
+| 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, PostGIS (onetak-db), Martin, Nominatim, WebODM, NodeODM, STAC |
 | 2 | `platform/takserver/` | TAK Server 5.8 (Helm), FedHub, tak-ldap, NATS leaf sidecar |
 | 3 | `platform/hermes/` | Legacy AI (Hermes) + copilot-runtime, Hermes web UI |
 | 3 | `platform/omos/` | tak-projector, feed-intel, feed-satellites, sink-clickhouse, redpanda-connect, mission-engine |
@@ -135,7 +135,6 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | sink-clickhouse | omos | ghcr.io/onemindos/sink-clickhouse:latest | ✅ live |
 | redpanda-connect | omos | ghcr.io/redpandadata/connect:latest | ✅ live |
 | omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | 🔴 scaled to 0 |
-| valhalla | onetak | valhalla/valhalla:run-latest | 🔴 scaled to 0 (awaiting tile build) |
 | nominatim | onetak | mediagis/nominatim:4.4 | 🔴 crashloop — scale to 0 |
 | cloudflared | cloudflare | cloudflare/cloudflared | 🔴 scaled to 0 (standby) |
 | fedhub | takserver | ghcr.io/onemindos/fedhub:5.8 | ⏳ awaiting image + certs |
@@ -471,7 +470,6 @@ Six databases — each justified. The only consolidation is killing the empty `g
 | Martin (vector tiles from PostGIS) | Running | KEEP always-on — core map rendering |
 | Tile38 (geospatial index) | Manifest only | KEEP — activate when geofencing live |
 | Nominatim (geocoding) | Crashlooping | FIX: scale to 0, activate on-demand |
-| Valhalla (routing) | Scaled to 0 | KEEP at 0 — on-demand only |
 | Overpass (OSM queries) | Scaled to 0 | KEEP at 0 — on-demand only |
 | STAC (imagery catalog) | Scaled to 0 | ACTIVATE when drone imagery pipeline live |
 | NodeODM (photogrammetry) | Running | KEEP — drone image → 3D Tiles pipeline |

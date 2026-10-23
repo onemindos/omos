@@ -133,12 +133,6 @@
   },
   {
     "namespace": "onetak",
-    "pvc": "valhalla-data",
-    "source": "volume-edfbac6aab24",
-    "size": "50Gi"
-  },
-  {
-    "namespace": "onetak",
     "pvc": "webodm-db-data",
     "source": "volume-e0dfcd35f5a7",
     "size": "5Gi"

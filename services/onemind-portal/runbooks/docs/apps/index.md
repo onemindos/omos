@@ -63,7 +63,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [TAK-ML](takml.md) | tak-ecosystem |
 | [Tempo](tempo.md) | observability |
 | [TileServer GL](tileserver-gl.md) | geospatial |
-| [Valhalla](valhalla.md) | geospatial |
 | [Velero](velero.md) | data-storage |
 | [VolSync](volsync.md) | data-storage |
 | [WebODM](webodm.md) | geospatial |

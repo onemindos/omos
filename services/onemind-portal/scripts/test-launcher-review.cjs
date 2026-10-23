@@ -11,20 +11,20 @@ const entity = (name = 'cloudtak', review = 'dns-unresolved-from-operator-mac', 
     annotations: { 'onemind.io/launcher-review': review, 'onemind.io/launcher-reviewed-at': date },
   },
 });
-test('canonical identities, current classifications and all 14 historical closures', () => {
+test('canonical identities, current classifications and all 13 historical closures', () => {
   const input = HISTORICAL_NAMES.map(name => entity(name));
   input[0].kind = 'COMPONENT'; input[0].metadata.name = 'CLOUDTAK';
   input[1].metadata.annotations['onemind.io/launcher-review'] = 'certificate-untrusted-from-operator-mac';
-  input[13].metadata.annotations['onemind.io/launcher-review'] = 'timeout-from-operator-mac';
+  input[12].metadata.annotations['onemind.io/launcher-review'] = 'timeout-from-operator-mac';
   const before = JSON.stringify(input);
   const result = reportLauncherReview(input, now);
-  assert.equal(result.reviewRequiredCount, 14);
-  assert.equal(result.historicalFindings.length, 14);
-  assert.equal(new Set(result.historicalFindings.map(row => row.ref)).size, 14);
+  assert.equal(result.reviewRequiredCount, 13);
+  assert.equal(result.historicalFindings.length, 13);
+  assert.equal(new Set(result.historicalFindings.map(row => row.ref)).size, 13);
   assert.ok(result.historicalFindings.every(row => row.closureStatus === 'unresolved'));
   assert.equal(result.historicalFindings[0].ref, 'component:default/cloudtak');
   assert.equal(result.historicalFindings[1].classification, 'certificate-untrusted');
-  assert.equal(result.historicalFindings[13].classification, 'timeout');
+  assert.equal(result.historicalFindings[12].classification, 'timeout');
   assert.equal(result.historicalFindings[0].observation.observedAt, timestamp);
   assert.ok(result.findings[0].evidenceRefs.some(ref => ref.endsWith('#onemind.io/launcher-review')));
   assert.equal(JSON.stringify(input), before);
@@ -92,7 +92,7 @@ test('CLI accepts complete-array stdin; unresolved findings exit 0 and bad input
   assert.equal(missing.status, 2); assert.ok(!missing.stderr.includes('/Users/private'));
 });
 
-test('current paired source catalogs retain all 14 historical findings and four other observations', () => {
+test('current paired source catalogs retain all 13 historical findings and four other observations', () => {
   const fs = require('node:fs');
   const root = path.resolve(__dirname, '../../..');
   const source = fs.readFileSync(path.join(root, 'services/onemind-portal/catalog/apps.yaml'), 'utf8');
@@ -101,7 +101,7 @@ test('current paired source catalogs retain all 14 historical findings and four 
   // Fixture extraction only, intentionally limited to the current source layout.
   // The reporting CLI accepts JSON and never attempts to parse YAML.
   const reviewed = source.split(/^---\s*$/m).filter(doc => doc.includes('onemind.io/launcher-review:'));
-  assert.equal(reviewed.length, 18);
+  assert.equal(reviewed.length, 17);
   const entries = reviewed.map(doc => {
     const name = doc.match(/^  name: (\S+)$/m)?.[1];
     const review = doc.match(/^    onemind.io\/launcher-review: (\S+)$/m)?.[1];
@@ -110,11 +110,11 @@ test('current paired source catalogs retain all 14 historical findings and four 
     return entity(name, review, date, /^    - launcher-review-required$/m.test(doc));
   });
   const result = reportLauncherReview(entries, now);
-  assert.equal(result.reviewRequiredCount, 14);
+  assert.equal(result.reviewRequiredCount, 13);
   assert.ok(result.historicalFindings.every(row => row.closureStatus === 'unresolved'));
   assert.deepEqual(result.historicalFindings.map(row => row.ref).sort(),
     result.findings.map(row => row.ref).sort());
-  assert.equal(result.findings.filter(row => row.classification === 'dns-unresolved').length, 12);
+  assert.equal(result.findings.filter(row => row.classification === 'dns-unresolved').length, 11);
   assert.equal(result.findings.filter(row => row.classification === 'certificate-untrusted').length, 1);
   assert.equal(result.findings.filter(row => row.classification === 'timeout').length, 1);
   assert.equal(result.otherReviewedLaunchers.length, 4);

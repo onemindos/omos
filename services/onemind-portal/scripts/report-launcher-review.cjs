@@ -9,7 +9,7 @@ const EVIDENCE = 'docs/operations/portal-acceptance-followthrough-2026-10-20.md#
 const HISTORICAL_NAMES = Object.freeze([
   'cloudtak', 'tak-server', 'onetak', 'fedhub', 'clickhouse', 'minio',
   'postgis', 'longhorn', 'prometheus', 'nats-surveyor', 'tileserver-gl',
-  'valhalla', 'webodm', 'home-assistant',
+  'webodm', 'home-assistant',
 ]);
 const CLASSIFICATIONS = Object.freeze({
   'dns-unresolved-from-operator-mac': 'dns-unresolved',
