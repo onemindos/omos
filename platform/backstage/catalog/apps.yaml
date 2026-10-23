@@ -7070,6 +7070,35 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: stac
+  tags:
+    - kubernetes
+  title: STAC imagery catalog
+  description: STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-stac
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    backstage.io/kubernetes-namespace: stac
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=stac
+    grafana/alert-label-selector: namespace=stac
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/stac/
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: n8n
   tags:
     - kubernetes

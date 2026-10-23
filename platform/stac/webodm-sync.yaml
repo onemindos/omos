@@ -1,0 +1,116 @@
+# WebODM -> STAC sync. Every 10 minutes, list completed WebODM tasks, copy each task's orthophoto and DSM/DTM
+# (as Cloud Optimized GeoTIFFs) to the Spaces bucket, and create or update one STAC Item per task in the `webodm`
+# Collection. Idempotent by task id: a task is only redone when WebODM reprocesses it. Code: services/stac-webodm-sync/
+# (sync.py is embedded in webodm-sync-code.configmap.yaml; a unit test fails if the two differ).
+#
+# Runs on the upstream GDAL image (pinned), which provides Python, the GDAL bindings and the COG driver, so no image
+# of our own has to be built. Needs two Secrets that are not in Git (README, "Before the first sync"):
+#   webodm-api   WEBODM_USERNAME and WEBODM_PASSWORD of a WebODM user that can view the projects
+#   stac-spaces  access-key and secret-key of a Spaces key limited to the imagery bucket
+# Both are optional here: until they exist the job logs what is missing and exits 0, so nothing fails or crash-loops.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: webodm-stac-sync
+  namespace: stac
+  labels:
+    app.kubernetes.io/name: stac
+    app.kubernetes.io/component: webodm-sync
+    app.kubernetes.io/part-of: stac
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 3300
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: stac
+            app.kubernetes.io/component: webodm-sync
+            app.kubernetes.io/part-of: stac
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: doks.digitalocean.com/node-pool
+                        operator: In
+                        values: [onemind-ecosystem-cpu]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: sync
+              image: ghcr.io/osgeo/gdal:ubuntu-small-3.13.3@sha256:64250faf833c06d4b21afce4c27190039ba7ab58d70f0eebc87cf77d929c0b40
+              command: [python3, /app/sync.py]
+              env:
+                - {name: WEBODM_URL, value: "http://webodm.onetak.svc.cluster.local:8000"}
+                - {name: STAC_URL, value: "http://stac-api-writer.stac.svc.cluster.local:8080"}
+                # DigitalOcean Spaces over the S3 protocol (GDAL /vsis3/). The AWS_* names below are GDAL's
+                # S3-protocol settings, not AWS: the endpoint is Spaces and nothing here can reach AWS.
+                - {name: SPACES_BUCKET, value: onemind-imagery}
+                - {name: SPACES_REGION, value: nyc3}
+                - {name: SPACES_ENDPOINT, value: nyc3.digitaloceanspaces.com}
+                - {name: SPACES_PREFIX, value: webodm}
+                - {name: MAX_TASKS_PER_RUN, value: "3"}
+                - {name: WORK_DIR, value: /work}
+                - {name: HOME, value: /tmp}
+                - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+                - {name: GDAL_CACHEMAX, value: "512"}
+                - name: WEBODM_USERNAME
+                  valueFrom:
+                    secretKeyRef: {name: webodm-api, key: username, optional: true}
+                - name: WEBODM_PASSWORD
+                  valueFrom:
+                    secretKeyRef: {name: webodm-api, key: password, optional: true}
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef: {name: stac-spaces, key: access-key, optional: true}
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef: {name: stac-spaces, key: secret-key, optional: true}
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                limits:
+                  cpu: "2"
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              volumeMounts:
+                - {name: code, mountPath: /app, readOnly: true}
+                - {name: work, mountPath: /work}
+                - {name: tmp, mountPath: /tmp}
+          volumes:
+            - name: code
+              configMap:
+                name: webodm-sync-code
+                defaultMode: 0444
+            # Scratch space for one task at a time (the raster, then its COG conversion). Orthophotos from a long
+            # flight can be several GB.
+            - name: work
+              emptyDir:
+                sizeLimit: 30Gi
+            - name: tmp
+              emptyDir:
+                sizeLimit: 256Mi

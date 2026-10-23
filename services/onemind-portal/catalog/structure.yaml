@@ -264,7 +264,11 @@ apps:
   - name: geo-data-services
     title: OneTAK geospatial services
     system: geospatial
-    description: Tile38 and the STAC browser.
+    description: Tile38, STAC API/browser and the geo database.
+  - name: stac
+    title: STAC imagery catalog
+    system: geospatial
+    description: STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
   - name: n8n
     title: n8n
     system: ai-agents

@@ -121,3 +121,9 @@ exceptions:
   - app: component:default/health-keeper
     capability: logs
     reason: "The logs query is scoped by namespace, and no namespace is recorded for this app (no Deployment or StatefulSet in the inventory)."
+  - app: component:default/stac
+    capability: logs
+    reason: >-
+      Not deployed yet. The namespace stac is created by the Argo application platform-stac on its first sync, and the
+      Loki query is generated from the workloads in the runtime snapshot. Delete this exception after the first
+      inventory refresh; the audit then fails it as stale.

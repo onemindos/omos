@@ -1,0 +1,153 @@
+# Default deny in both directions, then only the paths STAC needs. Cilium enforces these. Namespaces in this
+# cluster are otherwise open, so the other side needs no change except Postgres, which has its own ingress policy
+# (platform/ecosystem/resources/postgres-ingress-stac.yaml).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: stac
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: stac
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: kube-system}
+          podSelector:
+            matchLabels: {k8s-app: kube-dns}
+      ports: [{protocol: UDP, port: 53}, {protocol: TCP, port: 53}]
+---
+# api (read-only): from the Tailscale proxy pods that serve stac.tail717ba0.ts.net, and from Hermes in the cluster.
+# To: the shared Postgres only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api
+  namespace: stac
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: api
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: tailscale}
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: hermes}
+      ports: [{protocol: TCP, port: 8080}]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onemind-data}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: onemind-data}
+      ports: [{protocol: TCP, port: 5432}]
+---
+# api-writer (transactions enabled): ONLY from the WebODM sync CronJob. Not from Tailscale, not from other namespaces.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-writer
+  namespace: stac
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: api-writer
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: stac
+              app.kubernetes.io/component: webodm-sync
+      ports: [{protocol: TCP, port: 8080}]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onemind-data}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: onemind-data}
+      ports: [{protocol: TCP, port: 5432}]
+---
+# browser: static files, from the Tailscale proxy pods only. It makes no connections (the SPA runs in the user's
+# browser), so egress is DNS only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: browser
+  namespace: stac
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: browser
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: tailscale}
+      ports: [{protocol: TCP, port: 8080}]
+---
+# migrate hook: Postgres only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: migrate
+  namespace: stac
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: migrate
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onemind-data}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: onemind-data}
+      ports: [{protocol: TCP, port: 5432}]
+---
+# webodm-sync: WebODM in onetak (API on 8000), the write-enabled STAC API, and Spaces over HTTPS. Spaces is a public
+# address, so the rule allows public 443 and excludes private, tailnet, link-local and loopback ranges.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: webodm-sync
+  namespace: stac
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: stac
+      app.kubernetes.io/component: webodm-sync
+  policyTypes: [Ingress, Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onetak}
+          podSelector:
+            matchLabels: {app: webodm}
+      ports: [{protocol: TCP, port: 8000}]
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: stac
+              app.kubernetes.io/component: api-writer
+      ports: [{protocol: TCP, port: 8080}]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8]
+      ports: [{protocol: TCP, port: 443}]
