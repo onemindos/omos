@@ -1,7 +1,4 @@
-import {
-  SignInPageBlueprint,
-  AppRootWrapperBlueprint,
-} from '@backstage/plugin-app-react';
+import { SignInPageBlueprint } from '@backstage/plugin-app-react';
 import { SignInPage } from '@backstage/core-components';
 import { OAuth2 } from '@backstage/core-app-api';
 import {
@@ -11,7 +8,6 @@ import {
   oauthRequestApiRef,
   ApiBlueprint,
 } from '@backstage/frontend-plugin-api';
-import { OpenChoreoQueryProvider } from '@openchoreo/backstage-plugin-react';
 import { oneMindAuthApiRef, ONEMIND_AUTH_PROVIDER_ID } from './authApi';
 
 const signIn = SignInPageBlueprint.make({
@@ -57,12 +53,7 @@ const oidcAuthApi = ApiBlueprint.make({
         }),
     }),
 });
-// Removed with the OpenChoreo UI plugins.
-const queries = AppRootWrapperBlueprint.make({
-  name: 'openchoreo-query',
-  params: { component: OpenChoreoQueryProvider },
-});
 export const authModule = createFrontendModule({
   pluginId: 'app',
-  extensions: [signIn, oidcAuthApi, queries],
+  extensions: [signIn, oidcAuthApi],
 });

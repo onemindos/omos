@@ -5,16 +5,10 @@ type RecordValue = Record<string, unknown>;
 const object = (v: unknown): RecordValue =>
   v && typeof v === 'object' && !Array.isArray(v) ? (v as RecordValue) : {};
 const stamp = () => new Date().toISOString();
-const selector =
-  'openchoreo.dev/namespace=default,openchoreo.dev/project=onetak,openchoreo.dev/component=stac-browser,openchoreo.dev/environment=development';
 const api = 'http://stac-api.onetak.svc.cluster.local:8082';
-const gatewayBrowser =
-  'http://cilium-gateway-gateway-default.openchoreo-data-plane.svc.cluster.local/stac-browser-http/';
-const gatewayHost = 'development-default.apps.openchoreo.100-110-185-30.nip.io';
 const prometheus =
   'http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090';
 export const stacRefs = {
-  browser: 'component:default/stac-browser',
   api: 'component:default/k8s-onetak-stac-api-746ca5f2',
   database: 'component:default/k8s-onetak-onetak-geo-db-a22783b9',
   contract: 'api:default/onetak-stac-readonly',
@@ -25,7 +19,6 @@ type Deployment = {
     name: string;
     namespace: string;
     generation?: number;
-    labels?: Record<string, string>;
   };
   spec?: {
     replicas?: number;
@@ -50,29 +43,25 @@ export type EvidenceDependencies = {
 // Internal, fixed targets only. No client URL, credential forwarding or redirects.
 export function getEvidenceHttp(url: string): Promise<HttpObservation> {
   return new Promise((resolve, reject) => {
-    const req = http.get(
-      url,
-      { headers: url === gatewayBrowser ? { Host: gatewayHost } : {} },
-      response => {
-        const chunks: Buffer[] = [];
-        let bytes = 0;
-        response.on('data', (chunk: Buffer) => {
-          bytes += chunk.length;
-          if (bytes > 2_000_000) {
-            req.destroy(new Error('Observation response limit'));
-            return;
-          }
-          chunks.push(chunk);
-        });
-        response.on('error', reject);
-        response.on('end', () =>
-          resolve({
-            status: response.statusCode ?? 0,
-            body: Buffer.concat(chunks).toString('utf8'),
-          }),
-        );
-      },
-    );
+    const req = http.get(url, response => {
+      const chunks: Buffer[] = [];
+      let bytes = 0;
+      response.on('data', (chunk: Buffer) => {
+        bytes += chunk.length;
+        if (bytes > 2_000_000) {
+          req.destroy(new Error('Observation response limit'));
+          return;
+        }
+        chunks.push(chunk);
+      });
+      response.on('error', reject);
+      response.on('end', () =>
+        resolve({
+          status: response.statusCode ?? 0,
+          body: Buffer.concat(chunks).toString('utf8'),
+        }),
+      );
+    });
     const deadline = setTimeout(
       () => req.destroy(new Error('Observation deadline')),
       5000,
@@ -202,8 +191,6 @@ async function workload(
       name: c.name,
       image: c.image,
     })),
-    renderedRelease:
-      d.metadata.labels?.['openchoreo.dev/rendered-release-name'] ?? null,
     cpu,
     memory,
   };
@@ -274,59 +261,34 @@ export async function observeStacEvidence(
   };
   const observedAt = stamp();
   const sources = await Promise.allSettled([
-    deps.list<Deployment>(
-      `/apis/apps/v1/deployments?labelSelector=${encodeURIComponent(selector)}`,
-    ),
     deps.list<Deployment>('/apis/apps/v1/namespaces/onetak/deployments'),
     deps.list<Application>(
       '/apis/argoproj.io/v1alpha1/namespaces/argocd/applications',
     ),
   ]);
-  const deployments = (i: number) =>
-    sources[i].status === 'fulfilled'
-      ? (sources[i] as PromiseFulfilledResult<Deployment[]>).value
+  const onetak =
+    sources[0].status === 'fulfilled'
+      ? (sources[0] as PromiseFulfilledResult<Deployment[]>).value
       : [];
-  const browsers = deployments(0).filter(
-    d =>
-      d.metadata.labels?.['openchoreo.dev/component'] === 'stac-browser' &&
-      d.metadata.labels?.['openchoreo.dev/project'] === 'onetak' &&
-      d.metadata.labels?.['openchoreo.dev/environment'] === 'development' &&
-      d.metadata.labels?.['openchoreo.dev/namespace'] === 'default',
-  );
-  const browser = browsers.length === 1 ? browsers[0] : undefined;
-  const onetak = deployments(1);
   const choose = (name: string) => {
     const matches = onetak.filter(
       d => d.metadata.namespace === 'onetak' && d.metadata.name === name,
     );
     return matches.length === 1 ? matches[0] : undefined;
   };
-  const browserUrl =
-    browser &&
-    /^dp-default-onetak-development-[a-f0-9]+$/.test(browser.metadata.namespace)
-      ? gatewayBrowser
-      : undefined;
-  const [workloads, browserHttp, apiHttp, collectionHttp, searchHttp, data] =
+  const [workloads, apiHttp, collectionHttp, searchHttp, data] =
     await Promise.all([
       Promise.all([
-        workload(browser, 'browser', deps),
         workload(choose('stac-api'), 'api', deps),
         workload(choose('onetak-geo-db'), 'database', deps),
       ]),
-      browserUrl
-        ? probe(deps.get, browserUrl)
-        : Promise.resolve({
-            state: 'unknown',
-            httpStatus: null,
-            observedAt: stamp(),
-          }),
       probe(deps.get, `${api}/`),
       probe(deps.get, `${api}/collections`),
       probe(deps.get, `${api}/search?limit=1&sortby=-datetime`),
       catalog(deps.get),
     ]);
-  const argoResult = sources[2];
-  const names = ['platform-openchoreo-projects', 'platform-onetak'];
+  const argoResult = sources[1];
+  const names = ['platform-onetak'];
   const apps =
     argoResult.status === 'fulfilled'
       ? (argoResult.value as Application[])
@@ -340,16 +302,15 @@ export async function observeStacEvidence(
           }))
       : [];
   return {
-    schemaVersion: 'onemind.stac-evidence.v1',
-    serviceRef: stacRefs.browser,
-    systemRef: 'system:default/onetak',
+    schemaVersion: 'onemind.stac-evidence.v2',
+    serviceRef: stacRefs.api,
     observedAt,
     scope:
-      'Read-only development pilot observations. Argo application state is shared configuration scope, not exclusive app health. No mutation capability is exposed.',
+      'Read-only observations of the STAC API and its database. Argo application state is shared configuration scope, not exclusive app health. No mutation capability is exposed.',
     partial:
       sources.some(r => r.status === 'rejected') ||
       workloads.some(w => w.state !== 'ready') ||
-      [browserHttp, apiHttp, collectionHttp, searchHttp].some(
+      [apiHttp, collectionHttp, searchHttp].some(
         p => p.state !== 'responding',
       ) ||
       data.state !== 'observed' ||
@@ -360,7 +321,6 @@ export async function observeStacEvidence(
       ),
     workloads,
     probes: {
-      browser: browserHttp,
       apiLanding: apiHttp,
       collections: collectionHttp,
       search: searchHttp,

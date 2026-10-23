@@ -13,7 +13,7 @@ Every 2 minutes (configurable) the portal reads the cluster's Deployments and St
 | A workload exists in the cluster but not in `cluster.yaml` (new) | The provider publishes a Component with the same name scheme as the snapshot script, attached to its app by `catalog/workload-map.yaml`, or to **Unassigned workloads** when no mapping exists yet. |
 | A workload is gone from the cluster | A provider-published entity gets `lifecycle: removed` and `onemind.io/inventory-removed-at` for 24 hours, then is dropped. A **reviewed** entity from `cluster.yaml` gets `lifecycle: removed` and `inventory-state: missing-review-required` and stays (see "Decision for Zeus" below). |
 
-Excluded everywhere: namespaces `kube-node-lease` and `kube-public`, and every `dp-*` namespace (OpenChoreo data planes, published by the OpenChoreo provider, so there is never a second entity for one workload). `kube-system` stays tracked because F2 maps its workloads to apps.
+Excluded everywhere: namespaces `kube-node-lease` and `kube-public`, and every `dp-*` namespace (OpenChoreo data planes, which stay excluded until that platform is torn down). `kube-system` stays tracked because F2 maps its workloads to apps.
 
 Safety rails: a failed or empty cluster read changes nothing (it never mass-removes); freshness is only stamped from an observation younger than 3 cycles; the provider never publishes a name that `cluster.yaml` already defines.
 

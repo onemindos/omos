@@ -24,8 +24,9 @@ Older node counts, request percentages and M2 findings below are historical.
 
 ## Phase 6 addendum — 2026-10-19, 18:32 UTC
 
-Existing OneMind Backstage 1.55.3 now hosts pinned OpenChoreo 1.3.1 core and
-observability plugins, 2/2 ready and Argo Synced/Healthy. Real Authentik subject
+(Superseded: the OpenChoreo plugins were later removed from the portal; see
+`platform/backstage/README.md`.) Existing OneMind Backstage 1.55.3 then hosted pinned
+OpenChoreo 1.3.1 core and observability plugins, 2/2 ready and Argo Synced/Healthy. Real Authentik subject
 mapping, existing home/Today/catalog/runbooks/settings, pilot Deploy/Definition,
 logs/metrics and machine read-only boundaries passed. Shared permission-cache
 results use the existing PostgreSQL service; no raw IDP token is stored.

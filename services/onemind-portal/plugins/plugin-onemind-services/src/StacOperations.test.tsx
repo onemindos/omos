@@ -19,7 +19,7 @@ beforeEach(() => {
   );
 });
 const fixture = () => ({
-  schemaVersion: 'onemind.stac-evidence.v1',
+  schemaVersion: 'onemind.stac-evidence.v2',
   observedAt: new Date().toISOString(),
   scope: 'Read-only Development pilot',
   partial: true,
@@ -64,8 +64,8 @@ test('shows real query failure and unknown freshness instead of a green empty ca
     screen.getByText(/Newest queried item acquisition time:/).textContent,
   ).toContain('Unknown');
   expect(
-    screen.getByRole('link', { name: 'Live pilot logs' }).getAttribute('href'),
-  ).toContain('runtime-logs');
+    screen.getByRole('link', { name: 'STAC API logs' }).getAttribute('href'),
+  ).toContain('k8s-onetak-stac-api-746ca5f2/logs');
   expect(
     screen.queryByRole('button', {
       name: /restart|promote|migrate|initialize/i,
@@ -124,34 +124,17 @@ test('rejects an unknown observation contract', async () => {
   expect(await screen.findByText(/Observation unavailable/)).toBeTruthy();
 });
 test.each([
-  ['Component', 'stac-browser', true],
-  ['System', 'onetak', true],
-  ['Component', 'onetak', false],
-  ['System', 'other', false],
-  ['API', 'stac-browser', false],
+  ['Component', 'k8s-onetak-stac-api-746ca5f2', undefined, true],
+  ['Component', 'k8s-onetak-stac-api-746ca5f2', 'default', true],
+  ['Component', 'k8s-onetak-stac-api-746ca5f2', 'other', false],
+  ['Component', 'stac-browser', undefined, false],
+  ['System', 'k8s-onetak-stac-api-746ca5f2', undefined, false],
+  ['Component', 'k8s-onetak-onetak-geo-db-a22783b9', undefined, false],
 ])(
-  'selects only reviewed managed pilot pages: %s/%s',
-  (kind, name, expected) => {
-    expect(
-      isStacEntity({
-        kind,
-        metadata: { name, labels: { 'openchoreo.io/managed': 'true' } },
-      }),
-    ).toBe(expected);
+  'shows the STAC page only on the STAC API entity: %s/%s/%s',
+  (kind, name, namespace, expected) => {
+    expect(isStacEntity({ kind, metadata: { name, namespace } })).toBe(
+      expected,
+    );
   },
 );
-test('unmanaged names and other namespaces cannot opt into the pilot page', () => {
-  expect(
-    isStacEntity({ kind: 'Component', metadata: { name: 'stac-browser' } }),
-  ).toBe(false);
-  expect(
-    isStacEntity({
-      kind: 'Component',
-      metadata: {
-        name: 'stac-browser',
-        namespace: 'other',
-        labels: { 'openchoreo.io/managed': 'true' },
-      },
-    }),
-  ).toBe(false);
-});

@@ -20,7 +20,6 @@ type Workload = {
   desired: number | null;
   ready: number | null;
   images: { name: string; image: string }[];
-  renderedRelease?: string | null;
   cpu: Metric;
   memory: Metric;
 };
@@ -56,21 +55,16 @@ type Evidence = {
   };
   recovery: { state: string; detail: string };
 };
+export const STAC_API_NAME = 'k8s-onetak-stac-api-746ca5f2';
+// The STAC operational picture is shown on the STAC API's own catalog entity.
 export function isStacEntity(entity: {
   kind: string;
-  metadata: {
-    name: string;
-    namespace?: string;
-    labels?: Record<string, string>;
-  };
+  metadata: { name: string; namespace?: string };
 }) {
   return (
-    entity.metadata.labels?.['openchoreo.io/managed'] === 'true' &&
+    entity.kind.toLowerCase() === 'component' &&
     (entity.metadata.namespace ?? 'default') === 'default' &&
-    ((entity.kind.toLowerCase() === 'component' &&
-      entity.metadata.name === 'stac-browser') ||
-      (entity.kind.toLowerCase() === 'system' &&
-        entity.metadata.name === 'onetak'))
+    entity.metadata.name === STAC_API_NAME
   );
 }
 const time = (v: string | null) =>
@@ -122,7 +116,7 @@ export function StacOperations() {
           deadline,
         ]);
         if (
-          value.schemaVersion !== 'onemind.stac-evidence.v1' ||
+          value.schemaVersion !== 'onemind.stac-evidence.v2' ||
           !Array.isArray(value.workloads)
         )
           throw new Error('Invalid observation contract');
@@ -157,8 +151,8 @@ export function StacOperations() {
     <Box p={3}>
       <Typography variant="h4">OneTAK · STAC operational picture</Typography>
       <Typography>
-        Existing Development pilot only. STAC API and its database remain
-        Argo-managed in onetak; this page does not migrate or control them.
+        The STAC API and its database are Argo-managed in onetak; this page only
+        observes them and does not migrate or control anything.
       </Typography>
       <Box my={2}>
         <Button variant="outlined" onClick={() => setRefresh(x => x + 1)}>
@@ -190,10 +184,6 @@ export function StacOperations() {
               Identity, dependencies and source
             </Typography>
             <Typography>
-              <Link href="/catalog/default/component/stac-browser">
-                STAC Browser
-              </Link>{' '}
-              →{' '}
               <Link href="/catalog/default/component/k8s-onetak-stac-api-746ca5f2">
                 STAC API
               </Link>{' '}
@@ -205,23 +195,11 @@ export function StacOperations() {
             <Typography>
               <Link href="/catalog/default/api/onetak-stac-readonly">
                 Read-only API contract
-              </Link>{' '}
-              ·{' '}
-              <Link href="/catalog/default/component/stac-browser/environments">
-                Deployment and active release
-              </Link>{' '}
-              ·{' '}
-              <Link href="/catalog/default/component/stac-browser/definition">
-                OpenChoreo definition
               </Link>
             </Typography>
             <Typography>
-              <Link href="https://github.com/onemindos/omos/tree/main/platform/openchoreo/projects/onetak/stac-browser">
-                Reviewed pilot source
-              </Link>{' '}
-              ·{' '}
               <Link href="https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml">
-                Backing API source
+                STAC API source
               </Link>
             </Typography>
           </Box>
@@ -251,12 +229,6 @@ export function StacOperations() {
                 {w.resource ?? 'No unique workload observed'} · ready{' '}
                 {w.ready ?? '?'}/{w.desired ?? '?'} · {time(w.observedAt)}
               </Typography>
-              {w.renderedRelease && (
-                <Typography>
-                  RenderedRelease: {w.renderedRelease} (not the ComponentRelease
-                  version)
-                </Typography>
-              )}
               {w.images.map(i => (
                 <Typography variant="body2" key={i.name}>
                   {i.name}: {i.image}
@@ -339,12 +311,8 @@ export function StacOperations() {
           <Box my={3}>
             <Typography variant="h5">Investigate and recover</Typography>
             <Typography>
-              <Link href="/catalog/default/component/stac-browser/runtime-logs">
-                Live pilot logs
-              </Link>{' '}
-              ·{' '}
-              <Link href="/catalog/default/component/stac-browser/metrics">
-                Native OpenChoreo metrics
+              <Link href="/catalog/default/component/k8s-onetak-stac-api-746ca5f2/logs">
+                STAC API logs
               </Link>{' '}
               ·{' '}
               <Link href="/docs/default/component/onemind-runbooks/stac/">
