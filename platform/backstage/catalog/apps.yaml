@@ -6275,8 +6275,8 @@ metadata:
   tags:
     - kubernetes
   title: Platform core manifests
-  description: Sealed Secrets controller, certificate issuers, GitHub runner and
-    Tailscale policy (Argo application platform-core).
+  description: Sealed Secrets controller, GitHub runner and Tailscale policy (Argo
+    application platform-core).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml

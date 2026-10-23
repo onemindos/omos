@@ -82,8 +82,8 @@ by volume ID, not by name, and delete only with owner yes (this is the last bloc
 Remove records for `zeusdelacruz.com` and `www` (and any `extdns-*` TXT ownership records)
 in the Cloudflare zone, or remove the zone. external-dns is `upsert-only` and will not do it.
 The Cloudflare API token scope still lists the zone; narrow it when the zone is gone.
-The ACME account email in `platform/core/issuer-dns.yaml` (`zeus@zeusdelacruz.com`) is
-a mailbox, not a solver; keep or change it independently.
+(The `letsencrypt-dns` ClusterIssuer, whose ACME account email was `zeus@zeusdelacruz.com`,
+has been removed; no issuer uses that mailbox any more.)
 
 ### (e) Spaces objects
 

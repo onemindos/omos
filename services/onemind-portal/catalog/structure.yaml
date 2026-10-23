@@ -164,7 +164,7 @@ apps:
   - name: platform-core
     title: Platform core manifests
     system: infrastructure
-    description: Sealed Secrets controller, certificate issuers, GitHub runner and Tailscale policy (Argo application platform-core).
+    description: Sealed Secrets controller, GitHub runner and Tailscale policy (Argo application platform-core).
   - name: cert-manager
     title: cert-manager
     system: infrastructure

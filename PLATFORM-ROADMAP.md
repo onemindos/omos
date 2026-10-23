@@ -226,7 +226,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
 | 1. External Secrets | 2.0.1, `installCRDs=true` | same, as `ecosystem-external-secrets` | Only stale v1beta1 CRDs existed, no controller and no objects |
 | 1. kgateway | install | skip; gateways use the Cilium class `onemind-private` (tailnet) | The data-plane chart supports `gateway.gatewayClassName`; the control plane already uses it |
 | 1. OpenBao + `ClusterSecretStore` `default` | dev-mode OpenBao | `default` store on ESO's Kubernetes provider, reading the `openchoreo-secrets` namespace, filled by SealedSecrets | The secret-management guide allows any ESO backend named `default`; the guide marks dev-mode OpenBao as not for production |
-| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS uses the existing `letsencrypt-dns` issuer |
+| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS needs a new ClusterIssuer: `letsencrypt-dns` was removed as unused (its Cloudflare token was invalid) |
 
 - [ ] New tree `platform/openchoreo/` with its Argo Application(s):
       `planes/` (charts and registration), `platform/` (environments, pipeline,
@@ -257,7 +257,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       `secretStoreRef: default`, and the HTTP listener on the guide's nip.io domain built
       from the gateway's tailnet IP: `apps.openchoreo.100-110-185-30.nip.io` (resolves
       only to a tailnet address, so apps are tailnet-only). A real domain such as
-      `*.apps.onemindos.dev` with `letsencrypt-dns` TLS replaces it later. Verified
+      `*.apps.onemindos.dev` with TLS from a new DNS-01 ClusterIssuer replaces it later. Verified
       2026-10-18: agent connected (tunnel requests return 200), `ClusterDataPlane`
       `Created=True`, the three environments `EnvironmentReady`, and the `default`
       project's bindings `Ready` with namespaces `dp-default-default-{development,staging,production}-*`.
@@ -343,8 +343,8 @@ Findings to act on in later phases:
   configured entitlements, and Authentik tokens carry no `client_id`, so none of those match.
   They are inert, including `mcp-tryout-client-binding` (`admin` for `service_mcp_client`).
   Remove them with a `bootstrap` override when roles are reviewed (phase 6).
-- The Authentik providers made by `auth-provider-bootstrap.yaml` for `workflows`, `langfuse`
-  and `registry` were created with an empty grant type list, like `openchoreo` was, and
+- The Authentik providers made by `auth-provider-bootstrap.yaml` for `workflows` and `langfuse`
+  (and `registry`, deleted with Harbor by `authentik-registry-removal.yaml`) were created with an empty grant type list, like `openchoreo` was, and
   cannot complete a browser login until given `authorization_code`.
 - The ecosystem node is at about 99% CPU requested; the control plane now prefers it
   without requiring it. Capacity work is phase 5.

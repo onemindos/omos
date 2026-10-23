@@ -39,7 +39,6 @@ All K8s secrets in this cluster are managed declaratively via **External Secrets
 | `platform/omos/external-secret.yaml` | omos-nats-creds | omos |
 | `platform/orp/external-secret.yaml` | orp-nats-creds, orp-bridge-key | orp |
 | `platform/cloudflare/external-secret.yaml` | cloudflare-api-credentials | cloudflare |
-| `platform/ingress/external-secret.yaml` | cloudflare-api-token | cert-manager |
 | `tak-cluster/deploy/external-secret.yaml` | tak-nats-leaf | takserver |
 
 ## Secrets NOT Managed by ESO
