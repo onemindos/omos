@@ -198,6 +198,7 @@ argoApplications:
   platform-backups: component:default/platform-backup-recovery
   platform-clickhouse-operator: component:default/clickhouse
   platform-core: component:default/platform-core
+  platform-argocd: component:default/argocd
   platform-ecosystem-applications: component:default/argocd
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
