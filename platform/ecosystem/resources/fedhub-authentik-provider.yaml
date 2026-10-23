@@ -10,6 +10,11 @@
 # for FedHub as takserver/fedhub-oidc-secret (key keycloakSecret), see platform/takserver/fedhub/fedhub-oidc.sealedsecret.yaml.
 # Sync-wave 3 runs it after the Argo CD job (wave 2) so the two never race to create the shared scope mapping.
 #
+# The provider's grant_types always include authorization_code and refresh_token (existing ones are kept); without them
+# Authentik 2026.8 answers the authorize request with invalid_request. The Job name carries a version (-v2) so the
+# hook runs again on the next sync. Re-running is safe: the client secret is set from FEDHUB_CLIENT_SECRET (a fixed
+# value, the same one sealed for FedHub), never generated, so it does not change.
+#
 # Lookups never rely on list filters: Authentik's `?slug=` filter on core/applications returned results for a slug that
 # does not exist, which made the first version PATCH core/applications/fedhub/ and fail with 404 (BackoffLimitExceeded).
 # The application is now fetched by its slug path and created on 404. Failed pods are kept (restartPolicy Never) and the
@@ -17,7 +22,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fedhub-authentik-oidc-v1
+  name: fedhub-authentik-oidc-v2
   namespace: auth
   annotations:
     argocd.argoproj.io/sync-wave: "3"
@@ -39,7 +44,7 @@ spec:
           command: [python, -c]
           args:
             - |
-              import os, httpx
+              import json, os, httpx
               base = "http://platform-auth-helm-authentik-server.auth.svc.cluster.local/api/v3/"
               headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
               fedhub_url = "https://fedhub.tail717ba0.ts.net"
@@ -83,12 +88,18 @@ spec:
                       client_secret=secret, include_claims_in_id_token=True,
                       property_mappings=sorted(set((existing or original)["property_mappings"]) | set(original["property_mappings"]) | {mapping["pk"]}),
                       redirect_uris=[{"matching_mode": "strict", "url": fedhub_url + ":9443/login/redirect", "redirect_uri_type": "authorization"}])
+                  # Authentik 2026.8 rejects the authorize request ("invalid_request") when a provider lists no grant types.
+                  # Keep the grant types already set and add the missing ones, on create and on update.
+                  current_grants = (existing.get("grant_types") or []) if existing else []
+                  print("provider 'fedhub': grant_types before: " + json.dumps(current_grants))
+                  body["grant_types"] = current_grants + [g for g in ["authorization_code", "refresh_token"] if g not in current_grants]
                   if existing:
                       provider = request("PATCH", "providers/oauth2/" + str(existing["pk"]) + "/", body)
                       print("provider 'fedhub': updated existing pk " + str(existing["pk"]) + ", no duplicate created")
                   else:
                       provider = request("POST", "providers/oauth2/", body)
                       print("provider 'fedhub': created pk " + str(provider["pk"]))
+                  print("provider 'fedhub': grant_types now: " + json.dumps(provider.get("grant_types")))
 
                   existing_app = request("GET", "core/applications/fedhub/", missing_ok=True)
                   app_body = {"name": "FedHub", "slug": "fedhub", "provider": provider["pk"], "policy_engine_mode": "all",
