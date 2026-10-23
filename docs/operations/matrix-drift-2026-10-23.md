@@ -3,7 +3,8 @@
 Task 4: inspected read-only on `do-nyc3-omos-cloud`. Matrix is currently Healthy,
 with 11 Argo resources OutOfSync and no automated sync. This PR preserves that
 manual policy. It corrects public domain metadata, adopts the existing ingress
-routes, and protects the data claim. **Do not fully sync yet:** the existing
+routes, and protects the data claim. The branch includes the merged #432/#434
+changes from current main; their existing resource budgets are preserved. **Do not fully sync yet:** the existing
 Secret prerequisite has not been met.
 
 ## Findings and per-resource decisions
@@ -28,8 +29,8 @@ examined for reporting.
 | Service/synapse | Desired selectors and ports match; allocated/default fields are live | Git correct; preserve clusterIP and identity |
 | Deployment/element-web | Image, resources and config mount match; API supplies termination defaults | Git correct; no template change required by this PR |
 | Deployment/synapse | Git projects absent Secret/synapse-homeserver plus absent synapse-log-config; live mounts synapse-config | Git secret-backed design is correct **only after** sealing the current configuration; block workload sync until then |
-| StatefulSet/postgres | Image, requests/limits, init command, storage template match; live adds API defaults/template status | Git correct; no replace, storage edit, database reset or forced restart |
-| StatefulSet/redis | Image, requests/limits, init command, storage template match; live adds API defaults/template status | Git correct; no replace, storage edit or forced restart |
+| StatefulSet/postgres | Application image/resources, init command and storage template match; #434 additionally stages init resources while manual sync remains off | Git correct; review staged init budget after the credential gate, with no replace, storage edit, database reset or forced restart |
+| StatefulSet/redis | Application image/resources, init command and storage template match; #434 additionally stages init resources while manual sync remains off | Git correct; review staged init budget after the credential gate, with no replace, storage edit or forced restart |
 
 Functional comparisons checked Git-specified fields recursively against the live
 objects, distinguishing API default fields from meaningful differences. Matching
@@ -115,3 +116,13 @@ On failed Synapse readiness, stop further syncs. Preserve the old ConfigMap and
 all storage; restore the prior config-volume reference through a reviewed Git
 revert and manual ordinary Argo sync. Do not reset the database, change
 server_name, reseed users or roll back disk data to fix configuration drift.
+
+## Source readiness versus operational acceptance
+
+The public config/route adoption and PVC lifecycle guards can be reviewed and
+merged as source without enabling automated sync. This is not permission to run
+a full Matrix sync: the absent sealed-config prerequisite still blocks that
+operation. The current main base is
+`85b9688ffba68fa596295db1ccd5d9b0b6d0455e`; a fresh diff must include the staged
+init-container budgets from #434 and any image pins that merge subsequently.
+No credential was created and no Matrix resource was synced during this update.
