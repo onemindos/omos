@@ -1252,21 +1252,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "onetak-postgis",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "onetak-postgis"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "stac-api",
     "namespace": "onetak"
    },
