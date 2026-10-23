@@ -221,10 +221,6 @@ apps:
     title: OpenChoreo
     system: developer-platform
     description: OpenChoreo control plane and data plane, defaults, projects and prerequisites.
-  - name: openchoreo-observability
-    title: OpenChoreo observability plane
-    system: observability
-    description: OpenChoreo observer, adapters and collectors for logs, traces, metrics, events and FinOps.
   - name: tempo
     title: Tempo
     system: observability

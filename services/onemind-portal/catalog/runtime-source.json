@@ -443,31 +443,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "openchoreo-data-plane",
-      "name": "cluster-agent-dataplane"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "cluster-agent-observabilityplane"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "controller-manager"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "metrics-adapter-prometheus"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "observer"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "openclaw",
       "name": "openclaw"
     },
@@ -1515,31 +1490,6 @@
       "kind": "Service",
       "namespace": "openchoreo-control-plane",
       "name": "portal-assistant"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-data-plane",
-      "name": "cilium-gateway-gateway-default"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "metrics-adapter"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "observer"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "observer-internal"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "opensearch"
     },
     {
       "kind": "Service",

@@ -7,14 +7,13 @@ OpenChoreo control plane and data plane, defaults, projects and prerequisites.
 ## Where it runs
 
 - Catalog entity: `component:default/openchoreo` in System `developer-platform`
-- Argo CD applications: `ecosystem-oc-control`, `platform-openchoreo-data-plane`, `platform-openchoreo-prereqs`
-- Namespaces: `openchoreo-control-plane`, `openchoreo-data-plane`
+- Argo CD applications: `ecosystem-oc-control`, `platform-openchoreo-prereqs`
+- Namespace: `openchoreo-control-plane`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `cluster-agent-dataplane` | Deployment | `openchoreo-data-plane` |
 | `cluster-gateway` | Deployment | `openchoreo-control-plane` |
 | `controller-manager` | Deployment | `openchoreo-control-plane` |
 | `openchoreo-api` | Deployment | `openchoreo-control-plane` |
@@ -34,8 +33,8 @@ OpenChoreo control plane and data plane, defaults, projects and prerequisites.
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name=~"openchoreo-control-plane|openchoreo-data-plane"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane&var-namespace=openchoreo-data-plane`
+- Loki query: `{k8s_namespace_name="openchoreo-control-plane"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane`
 - Source: `onemindos/omos`
 
 ## Escalate
