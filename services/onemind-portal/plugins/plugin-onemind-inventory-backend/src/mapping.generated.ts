@@ -128,7 +128,6 @@ export const mapping: InventoryMapping = {
     'onetak/onetak-media': 'component:default/onetak',
     'onetak/onetak-minio': 'component:default/onetak',
     'onetak/onetak-postgis': 'component:default/onetak',
-    'onetak/overpass': 'component:default/geo-data-services',
     'onetak/pg-featureserv': 'component:default/geo-data-services',
     'onetak/stac-api': 'component:default/geo-data-services',
     'onetak/tak-portal': 'component:default/onetak',

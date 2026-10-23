@@ -160,7 +160,6 @@
   "component:default/k8s-onetak-onetak-media-31c9ce7b",
   "component:default/k8s-onetak-onetak-minio-98a87ea3",
   "component:default/k8s-onetak-onetak-postgis-adc924ce",
-  "component:default/k8s-onetak-overpass-4e197497",
   "component:default/k8s-onetak-pg-featureserv-ca3dd68e",
   "component:default/k8s-onetak-stac-api-746ca5f2",
   "component:default/k8s-onetak-stac-browser-2881a2ef",

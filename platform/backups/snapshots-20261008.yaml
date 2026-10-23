@@ -280,21 +280,6 @@ spec:
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
-  name: readiness-20261008-76d69bd17963
-  namespace: onetak
-  labels:
-    onemind.io/backup-set: readiness-20261008
-  annotations:
-    onemind.io/source-pvc: overpass-data
-    onemind.io/consistency: crash-consistent
-spec:
-  volumeSnapshotClassName: onemind-backup-retain
-  source:
-    persistentVolumeClaimName: overpass-data
----
-apiVersion: snapshot.storage.k8s.io/v1
-kind: VolumeSnapshot
-metadata:
   name: readiness-20261008-adf3fcd472a7
   namespace: onetak
   labels:

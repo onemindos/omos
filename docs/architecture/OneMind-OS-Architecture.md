@@ -468,7 +468,6 @@ Six databases — each justified. The only consolidation is killing the empty `g
 |---------|--------|---------|
 | Martin (vector tiles from PostGIS) | Running | KEEP always-on — core map rendering |
 | Tile38 (geospatial index) | Manifest only | KEEP — activate when geofencing live |
-| Overpass (OSM queries) | Scaled to 0 | KEEP at 0 — on-demand only |
 | STAC (imagery catalog) | Scaled to 0 | ACTIVATE when drone imagery pipeline live |
 | NodeODM (photogrammetry) | Running | KEEP — drone image → 3D Tiles pipeline |
 | WebODM | Running | KEEP — web UI for NodeODM (env: `WO_DB_HOSTNAME`) |
