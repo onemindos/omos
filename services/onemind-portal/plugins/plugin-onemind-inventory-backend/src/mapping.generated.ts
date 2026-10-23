@@ -122,7 +122,6 @@ export const mapping: InventoryMapping = {
     'onemind-registry/harbor-registry': 'component:default/harbor',
     'onemind-registry/harbor-trivy': 'component:default/harbor',
     'onemind-search/onemind-search-master': 'component:default/opensearch',
-    'onetak/maputnik': 'component:default/maputnik',
     'onetak/martin': 'component:default/geo-data-services',
     'onetak/nodeodm': 'component:default/webodm',
     'onetak/nominatim': 'component:default/geo-data-services',
@@ -395,12 +394,6 @@ export const mapping: InventoryMapping = {
     loki: {
       title: 'Loki',
       system: 'observability',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    maputnik: {
-      title: 'Maputnik',
-      system: 'geospatial',
       pillar: 'so',
       review: 'proposed',
     },

@@ -37,7 +37,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Kyverno](kyverno.md) | identity-access |
 | [LiteLLM](litellm.md) | ai-agents |
 | [Loki](loki.md) | observability |
-| [Maputnik](maputnik.md) | geospatial |
 | [Matrix Synapse](matrix-synapse.md) | communication |
 | [n8n](n8n.md) | ai-agents |
 | [NATS JetStream](nats.md) | messaging-nats |

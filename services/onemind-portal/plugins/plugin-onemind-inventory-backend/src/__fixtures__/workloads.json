@@ -1207,21 +1207,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "maputnik",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "maputnik"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "martin",
     "namespace": "onetak"
    },

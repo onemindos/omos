@@ -205,7 +205,7 @@ Gaps beyond the eleven releases:
 | Namespace | Workloads |
 |-----------|-----------|
 | nats | `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
-| onetak | `maputnik`, `martin`, `nodeodm`, `overpass`, `pg-featureserv`, `stac-api`, `stac-browser`, `tak-portal`, `tile38`, `tileserver-gl`, `valhalla:run-latest`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
+| onetak | `martin`, `nodeodm`, `overpass`, `pg-featureserv`, `stac-api`, `stac-browser`, `tak-portal`, `tile38`, `tileserver-gl`, `valhalla:run-latest`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
 | omos | `omos-mission-engine:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |

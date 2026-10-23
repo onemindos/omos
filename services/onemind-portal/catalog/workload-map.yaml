@@ -102,7 +102,6 @@ workloads:
   onemind-registry/harbor-registry: component:default/harbor
   onemind-registry/harbor-trivy: component:default/harbor
   onemind-search/onemind-search-master: component:default/opensearch
-  onetak/maputnik: component:default/maputnik
   onetak/martin: component:default/geo-data-services
   onetak/nodeodm: component:default/webodm
   onetak/nominatim: component:default/geo-data-services
