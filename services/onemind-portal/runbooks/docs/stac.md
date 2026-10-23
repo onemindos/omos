@@ -1,8 +1,10 @@
 # OneTAK STAC pilot: observe, diagnose and recover
 
-The STAC API is `component:default/k8s-onetak-stac-api-746ca5f2`. Its Operations tab
-joins reviewed topology with timestamped read-only observations of the API and its
-database. It does not migrate or mutate a service.
+> **Status: backend removed.** `onetak/stac-api` and `onetak/onetak-geo-db` (with their
+> catalog entries, volume and backup source) were removed from Git because STAC was never
+> set up: the `stac` database has no `pgstac` schema. STAC Browser has no live catalog
+> behind it until a backend is deliberately re-added. The text below describes the former
+> setup and is kept as history.
 
 ## Ownership and request path
 
@@ -45,8 +47,6 @@ an application rollback alone does not necessarily reverse a database migration.
 
 ## Useful surfaces
 
-- [STAC API catalog](/catalog/default/component/k8s-onetak-stac-api-746ca5f2)
-- [Database catalog](/catalog/default/component/k8s-onetak-onetak-geo-db-a22783b9)
 - [Backup/recovery runbook](backups.md)
 
 The page exposes no restart, write API, schema-initialization or promotion action.

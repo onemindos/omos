@@ -276,7 +276,7 @@ apps:
   - name: geo-data-services
     title: OneTAK geospatial services
     system: geospatial
-    description: Tile38, STAC API/browser and the geo database.
+    description: Tile38 and the STAC browser.
   - name: n8n
     title: n8n
     system: ai-agents
@@ -371,7 +371,6 @@ placement:
   onemind-os: developer-platform
   onemind-runbooks: developer-platform
   onetak: tak-ecosystem
-  onetak-stac-readonly: geospatial
   open-robotics: reference-links
   openssf: reference-links
   pinterest-zeus: social-media

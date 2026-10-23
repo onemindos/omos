@@ -2,7 +2,6 @@
  "description": "Entity refs present before the F2 restructure (2026-10-21). Every ref here must still exist, or have an entry in catalog/redirects.yaml.",
  "refs": [
   "api:default/onemind-observations",
-  "api:default/onetak-stac-readonly",
   "component:default/1password",
   "component:default/agent-mail",
   "component:default/agent-monitor",
@@ -143,9 +142,7 @@
   "component:default/k8s-onemind-core-openfga-2a5ad6d4",
   "component:default/k8s-onemind-search-onemind-search-master-1dc21641",
   "component:default/k8s-onetak-nodeodm-8a68cc40",
-  "component:default/k8s-onetak-onetak-geo-db-a22783b9",
   "component:default/k8s-onetak-onetak-media-31c9ce7b",
-  "component:default/k8s-onetak-stac-api-746ca5f2",
   "component:default/k8s-onetak-stac-browser-2881a2ef",
   "component:default/k8s-onetak-tak-portal-034c1ce9",
   "component:default/k8s-onetak-tile38-bfdfb57a",
