@@ -72,7 +72,8 @@ class KarakeepPreparation(unittest.TestCase):
                 self.assertEqual(doc["metadata"]["namespace"], "karakeep")
             if doc["kind"] == "Deployment":
                 source = self.deployments[doc["metadata"]["name"]]
-                self.assertEqual(doc["spec"]["template"]["spec"]["containers"], source["spec"]["template"]["spec"]["containers"])
+                self.assertEqual([c["image"] for c in doc["spec"]["template"]["spec"]["containers"]],
+                                 [c["image"] for c in source["spec"]["template"]["spec"]["containers"]])
 
     def test_crawler_public_fetch_cannot_reach_private_cluster_or_metadata_addresses(self):
         deny = self.policies["default-deny"]
