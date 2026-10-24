@@ -106,3 +106,9 @@ These checks do not yet establish the full Paperclip-to-Hermes task round trip.
 The corrected proxy also passed an actual TLS handshake with SAN verification
 in the same restricted container. Wrong-hostname verification failed closed,
 unlisted paths returned 404, and a disallowed HTTP method returned 403.
+
+The private CA and leaf certificates were issued successfully after PR #454.
+Only the public root certificate was copied into the strictly bound
+`paperclip/hermes-gateway-ca` SealedSecret. The private signing key stayed in
+Hermes. Making the CA mount required triggers a normal Paperclip restart so
+Node loads the certificate at startup; periodic scheduling remains disabled.
