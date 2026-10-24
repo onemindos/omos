@@ -3,6 +3,10 @@
 Living document. Started 2026-10-18. Owner: Zeus. Kept at the repository root so any
 agent (Claude Code, Codex or another) can pick up the work where the last one stopped.
 
+2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
+and sanitized readiness collector for the owner's Paperclip status-report task.
+Argo activation, RBAC acceptance and the agent-written report remain unverified.
+
 This is a plan, not a record of live state. Live state is in [`docs/STACK.md`](docs/STACK.md);
 the mission it serves is in [`docs/MISSION.md`](docs/MISSION.md).
 

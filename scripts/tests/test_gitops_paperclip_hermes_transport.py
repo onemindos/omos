@@ -120,7 +120,7 @@ class HermesTransport(unittest.TestCase):
                                     capture_output=True, text=True)
             rendered = list(yaml.safe_load_all(result.stdout))
             self.assertTrue(all(d['metadata']['namespace'] == namespace for d in rendered
-                                if d['kind'] != 'Namespace'))
+                                if d['kind'] not in ('Namespace', 'ClusterRole', 'ClusterRoleBinding')))
             if namespace == 'hermes':
                 deploy = next(d for d in rendered if d['kind'] == 'Deployment')
                 volume = next(v for v in deploy['spec']['template']['spec']['volumes']

@@ -118,3 +118,31 @@ These were operating rules kept in Legacy's memory. They belong with her behavio
 [Private HTTPS transport and ordered activation](../../paperclip/HERMES.md)
 adds a bounded sidecar to the existing agent. Activate only after certificate
 issuance, public CA trust and dedicated Paperclip agent credentials are ready.
+
+## Read-only cluster observations
+
+`hermes-observer` grants this existing agent read-only readiness inventory across
+the cluster. It cannot read Secrets, ConfigMaps, logs, exec/attach, proxy, or mutate
+resources/RBAC. Kubernetes workload reads still reveal operational metadata and
+may contain inline configuration; this identity is for the trusted Hermes runtime.
+The projected service-account credential belongs to the whole existing Pod,
+including its sidecars; it never grants write access. Do not copy its token into
+Paperclip, reports, prompts, or files on the data volume.
+
+For an assigned Paperclip status task, run:
+
+```sh
+/opt/hermes/.venv/bin/python /run/cluster-observer/report.py
+```
+
+The standard rotating token and cluster CA authenticate fixed HTTPS GET endpoints.
+The collector prints selected readiness/status fields, not raw Pod objects, env,
+annotations, event messages, credentials, or logs. Each unavailable/forbidden API
+is reported as incomplete rather than healthy; collection is bounded to 120 seconds,
+20 pages per API and 16 MiB per response. Hermes must write the requested analysis
+from this evidence and label inventory, application functional tests, and any
+unavailable sources separately. This collector neither submits the Paperclip report
+nor schedules/retries tasks. The owner still controls when the agent is resumed.
+
+This is source preparation. Activation requires review, Argo reconciliation and
+positive/negative RBAC checks; source readiness does not establish deployed access.
