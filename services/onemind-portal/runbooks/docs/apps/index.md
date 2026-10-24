@@ -27,6 +27,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [HeyNATS](heynats.md) | messaging-nats |
 | [Hubble UI](hubble-ui.md) | observability |
 | [ingress-nginx](ingress-nginx.md) | infrastructure |
+| [Karakeep](karakeep.md) | personal-tools |
 | [KEDA](keda.md) | infrastructure |
 | [Kubernetes Dashboard](kubernetes-dashboard.md) | developer-platform |
 | [Kubernetes system services](kubernetes-system.md) | infrastructure |

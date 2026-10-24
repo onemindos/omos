@@ -1,0 +1,20 @@
+# Manual application: replicas remain zero until recovery, identity and first-start gates are reviewed.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-karakeep
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '5'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/karakeep
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: karakeep
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true

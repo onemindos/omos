@@ -7198,3 +7198,38 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: karakeep
+  tags:
+    - kubernetes
+  title: Karakeep
+  description: Native bookmark and read-later workspace prepared with manual Argo
+    and zero replicas; first start, owner enrollment and recovery acceptance are
+    pending.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-karakeep
+    onemind.io/launcher-url: https://karakeep.tail717ba0.ts.net
+    onemind.io/runtime-evidence: Prepared source only; manual Argo and zero
+      replicas; no working-route or application acceptance recorded.
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: approved
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/karakeep/
+    github.com/project-slug: onemindos/omos
+  links:
+    - url: https://karakeep.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
+  labels:
+    onemind.io/pillar: shared
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: personal-tools

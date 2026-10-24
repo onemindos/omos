@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: karakeep
+resources:
+- namespace.yaml
+- web-deployment.yaml
+- web-service.yaml
+- chrome-deployment.yaml
+- chrome-service.yaml
+- meilisearch-deployment.yaml
+- meilisearch-service.yaml
+- data-pvc.yaml
+- meilisearch-pvc.yaml
+- ingress.yaml
+- network.yaml
+- karakeep-secrets.sealedsecret.yaml
+configMapGenerator:
+- name: karakeep-configuration
+  literals:
+  - NEXTAUTH_URL=https://karakeep.tail717ba0.ts.net
+  - AUTH_TRUSTED_ORIGINS=
+  - DISABLE_SIGNUPS=true
+  - DISABLE_PASSWORD_AUTH=false
+  - DISABLE_NEW_RELEASE_CHECK=true
+  - LOG_LEVEL=warn
+  - INFERENCE_ENABLE_AUTO_TAGGING=false
+  - INFERENCE_ENABLE_AUTO_SUMMARIZATION=false
+  - EMBEDDING_ENABLE_AUTO_INDEXING=false
+  - SEMANTIC_SEARCH_ENABLED=false
+  - OCR_LANGS=
+  - CRAWLER_NUM_WORKERS=1
+  - CRAWLER_FULL_PAGE_ARCHIVE=false
+  - CRAWLER_VIDEO_DOWNLOAD=false
+  - SEARCH_NUM_WORKERS=2
+  - DB_WAL_MODE=true

@@ -47,6 +47,16 @@ historical inventory counts or certify working agent integrations.
 |---|---|---|---|---|---|
 | 2 | `platform-paperclip` | `paperclip` | Dedicated PostgreSQL 17 and 10 GiB app + 10 GiB DB PVCs; encrypted logical dump/restore-check and two VolSync sources configured | Proposed private `paperclip.tail717ba0.ts.net`; app authentication | Awaiting reviewed merge, Argo sync and [acceptance](../platform/paperclip/README.md) |
 
+## Karakeep preparation — 2026-10-24
+
+User-requested bookmark/read-later workspace, **prepared source only**. No Karakeep,
+Hoarder, Meilisearch or shared crawler Deployment was found in the metadata preflight.
+This entry does not refresh historical counts or certify a working route.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-karakeep` | `karakeep` | Native SQLite/assets 20Gi + Meilisearch 5Gi; [backup activation and isolated restore](../platform/karakeep/BACKUP.md) required before real use | Private `https://karakeep.tail717ba0.ts.net`, app authentication | Manual Argo, all replicas zero; [first-start gates](../platform/karakeep/README.md) pending |
+
 ## Summary
 
 | Item | Count / value |
