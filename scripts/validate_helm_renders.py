@@ -23,6 +23,7 @@ import yaml  # installed with yamllint (PyYAML)
 ROOT = Path(__file__).resolve().parents[1]
 APP_DIRS = (
     "platform/argocd",
+    "platform/security",
     "platform/ecosystem/applications",
     "platform/ecosystem/foundation-applications",
 )

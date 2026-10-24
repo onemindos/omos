@@ -49,6 +49,12 @@ historical inventory counts or certify working agent integrations.
 
 ## Summary
 
+Trivy preparation, 2026-10-24: a bounded Argo-managed image-vulnerability pilot
+for `nextcloud,n8n` is prepared under `platform/security/`, with one concurrent
+scan Job, namespace-scoped operator permissions and a Grafana dashboard. It is
+not deployed or live-accepted by its preparation PR. No new PVC, node or public
+route is requested. See [capacity, scope and acceptance](operations/trivy-image-scan-pilot.md).
+
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |

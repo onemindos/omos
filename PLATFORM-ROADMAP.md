@@ -1185,3 +1185,21 @@ No new controller, public exposure, shared-database migration, existing agent
 credential copy, model billing change or cluster write access is included.
 Runtime onboarding, mobile acceptance, backups/restore and automatic execution
 must be verified separately. Preparing manifests does not complete those gates.
+
+## User-directed Trivy scanning pilot — 2026-10-24
+
+Zeus requested an implementation PR for a limited Trivy Operator pilot.
+The [runbook](docs/operations/trivy-image-scan-pilot.md) records the read-only
+capacity/monitoring preflight, pinned chart/images, scoped RBAC, resource cap,
+namespace-only image scans and Grafana view. The pilot creates reports, not
+deployment blocking or automatic remediation. Authentik work is separate.
+
+| Work | Status | Next gate |
+|---|---|---|
+| Argo-owned Trivy image-only pilot in `nextcloud,n8n` | Prepared in this PR; not deployed or live-accepted | Reviewed merge, actual Argo rollout, per-container digest/report coverage and deny tests |
+| One scan Job, bounded resources and Grafana visibility | Source/behavioral validation pending receipt; no production finding claimed | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
+
+This user-directed security slice does not close portal phases, reverse approved
+retirements, grant broader agent write rights or expand identity/machine access.
+Only report reads are added to the chart's standard aggregated viewer roles;
+application Secrets remain inaccessible to the scanner.

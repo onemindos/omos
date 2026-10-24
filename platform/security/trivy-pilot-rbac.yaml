@@ -1,0 +1,193 @@
+# Namespace-bound workloads/reports; scan Jobs and transient configuration only
+# in trivy-system. No application Secret access, workload writes or node access.
+# v0.35.0 always watches exposedsecretreports/sbomreports even with scanners off.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: trivy-pilot-discovery
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  resourceNames:
+  - trivy-system
+  - nextcloud
+  - n8n
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: trivy-pilot-discovery
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-pilot-discovery
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator
+  namespace: trivy-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: trivy-pilot-workloads
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  - replicationcontrollers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  - statefulsets
+  - daemonsets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  - cronjobs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - aquasecurity.github.io
+  resources:
+  - vulnerabilityreports
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - aquasecurity.github.io
+  resources:
+  - exposedsecretreports
+  - sbomreports
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trivy-pilot-workloads
+  namespace: trivy-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-pilot-workloads
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator
+  namespace: trivy-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trivy-pilot-workloads
+  namespace: nextcloud
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-pilot-workloads
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator
+  namespace: trivy-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trivy-pilot-workloads
+  namespace: n8n
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-pilot-workloads
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator
+  namespace: trivy-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: trivy-pilot-jobs
+  namespace: trivy-system
+rules:
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ''
+  resources:
+  - secrets
+  verbs:
+  - create
+  - get
+  - update
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trivy-pilot-jobs
+  namespace: trivy-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: trivy-pilot-jobs
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator
+  namespace: trivy-system
