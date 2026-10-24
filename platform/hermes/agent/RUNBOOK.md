@@ -173,3 +173,9 @@ remove both temporary credential files/directories, remove temporary path refere
 from instructions, and verify their absence without printing contents. The reviewed
 durable mount replaces this temporary bridge only after a safe Argo rollout; never
 restart Hermes during its active integrity scan merely to repair file permissions.
+
+ONE-2 completed successfully through Paperclip on 24 October 2026. Its report
+correctly flagged incomplete EndpointSlice collection: three live slices used
+`endpoints: null`. The collector now treats that valid empty form as zero
+endpoints, with regression coverage; a source-only routing recheck can validate
+the follow-up without inventing functional app acceptance.

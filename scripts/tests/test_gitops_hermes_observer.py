@@ -83,6 +83,15 @@ class Observer(unittest.TestCase):
             self.assertNotIn(sensitive, result, kind)
             self.assertNotIn('PASSWORD', result, kind)
 
+    def test_null_endpoint_list_is_complete_empty_evidence(self):
+        # The live STAC and managed-etcd slices serialize no endpoints as null.
+        row = observer.summarize('endpointslices', {
+            'metadata': {'name': 'empty-service'}, 'endpoints': None})
+        self.assertEqual((row['total'], row['ready']), (0, 0))
+        row = observer.summarize('endpointslices', {'endpoints': [
+            {'conditions': None}, {'conditions': {'ready': True}}]})
+        self.assertEqual((row['total'], row['ready']), (2, 1))
+
     def test_missing_api_is_incomplete_not_healthy_and_body_not_printed(self):
         class Unavailable:
             def open(self, request, timeout):

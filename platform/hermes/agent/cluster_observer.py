@@ -105,8 +105,8 @@ def summarize(kind, item):
         row.update(readyAddresses=sum(len(s.get('addresses', [])) for s in item.get('subsets', [])),
                    notReadyAddresses=sum(len(s.get('notReadyAddresses', [])) for s in item.get('subsets', [])))
     elif kind == 'endpointslices':
-        endpoints = item.get('endpoints', [])
-        row.update(total=len(endpoints), ready=sum(e.get('conditions', {}).get('ready') is True for e in endpoints))
+        endpoints = item.get('endpoints') or []
+        row.update(total=len(endpoints), ready=sum((e.get('conditions') or {}).get('ready') is True for e in endpoints))
     elif kind == 'events':
         involved = item.get('involvedObject', {})
         row.update(type=item.get('type'), reason=item.get('reason'), count=item.get('count', 1),
