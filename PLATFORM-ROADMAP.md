@@ -1197,9 +1197,9 @@ deployment blocking or automatic remediation. Authentik work is separate.
 | Work | Status | Next gate |
 |---|---|---|
 | Argo-owned Trivy image-only pilot in `nextcloud,n8n` | Prepared in this PR; not deployed or live-accepted | Reviewed merge, actual Argo rollout, per-container digest/report coverage and deny tests |
-| One scan Job, bounded resources and Grafana visibility | Source/behavioral validation pending receipt; no production finding claimed | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
+| One scan Job, bounded resources and Grafana visibility | 96 GitOps tests pass, including six rendered Trivy safety contracts; live acceptance pending | Scan resource measurements, metric/CRD parity, 24-hour refresh and safe pause acceptance |
 
 This user-directed security slice does not close portal phases, reverse approved
-retirements, grant broader agent write rights or expand identity/machine access.
+retirements, grant broader agent write rights or change application identities.
 Only report reads are added to the chart's standard aggregated viewer roles;
 application Secrets remain inaccessible to the scanner.

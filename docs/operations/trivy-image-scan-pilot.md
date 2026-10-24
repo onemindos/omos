@@ -213,6 +213,18 @@ Local `TRIVY_CHART_ARCHIVE` can point to an already downloaded archive, but its
 bytes must still match the committed checksum. Record actual pass/failure results
 in the PR; unrelated repository lint debt is not a green full validation.
 
+Preparation receipt: all 96 GitOps contracts passed, including six Trivy
+render/security tests; changed YAML lint passed for seven files; plain-manifest
+schema checks passed for 16 resources. The rendered chart plus new manifests
+passed strict schema checks for 24 resources; 12 CRDs, absent from the public
+schema catalog, passed separate Kubernetes server-side create dry runs with no
+persistence. The eight checksum-locked foundation charts rendered successfully,
+and the standard changed Helm gate discovered/rendered the new security child.
+The running Prometheus accepted all six dashboard expressions (empty scanner
+results are expected before deployment). Secret scan passed. `make validate`
+stopped at the existing YAML debt in 40 files, none modified by this PR; later
+make targets were not reached. No scanner deployment or finding is claimed.
+
 - [Pinned operator release](https://github.com/aquasecurity/trivy-operator/releases/tag/v0.35.0).
 - [Chart 0.37.0](https://github.com/aquasecurity/helm-charts/releases/tag/trivy-operator-0.37.0).
 - [Operator configuration](https://aquasecurity.github.io/trivy-operator/latest/getting-started/installation/configuration/).
