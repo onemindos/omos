@@ -1,6 +1,7 @@
 """Safety contracts for the disposable native-crash diagnostic fixture."""
 from copy import deepcopy
 from pathlib import Path
+import shutil
 import subprocess
 import unittest
 
@@ -83,8 +84,6 @@ class Isolation(unittest.TestCase):
         for name, script in scripts.items():
             result = subprocess.run(['bash', '-n'], input=script, text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, name + result.stderr)
-            result = subprocess.run(['shellcheck', '-s', 'bash', '-'], input=script, text=True, capture_output=True)
-            self.assertEqual(result.returncode, 0, name + result.stdout + result.stderr)
         postgres = scripts['postgres.sh']
         self.assertIn('listen_addresses=127.0.0.1', postgres)
         self.assertIn('host all all 127.0.0.1/32 trust', postgres)
@@ -97,6 +96,12 @@ class Isolation(unittest.TestCase):
             self.assertIn(f'CREATE EXTENSION {extension};', migration)
         self.assertNotIn('CREATE EXTENSION age', migration)
         self.assertEqual(migration.count('\npypgstac migrate\n'), 2)
+
+    @unittest.skipUnless(shutil.which('shellcheck'), 'ShellCheck is optional; Bash syntax is always checked')
+    def test_embedded_shellcheck_when_available(self):
+        for name, script in load(FIXTURE / 'scripts.yaml')['data'].items():
+            result = subprocess.run(['shellcheck', '-s', 'bash', '-'], input=script, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, name + result.stdout + result.stderr)
 
 
 if __name__ == '__main__':
