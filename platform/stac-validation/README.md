@@ -36,9 +36,13 @@ There is no Service, ingress, PVC, host mount, Secret, image pull credential,
 production service address or Kubernetes API access. PostgreSQL binds only
 `127.0.0.1`. Passwordless trust exists only inside that isolated pod; Unix sockets
 are on the PostgreSQL container's private `/tmp`. The namespace denies all ingress
-and egress, including DNS. Kubelet image pulls happen outside pod networking;
-the pinned GHCR images must be anonymously pullable, otherwise stop at
-ImagePullBackOff rather than injecting production credentials.
+and egress, including DNS. The exact private PostgreSQL digest is already cached on the ecosystem node,
+verified against node image inventory and running PostgreSQL imageIDs. Both cases
+select that existing node role and use the canonical digest-only image reference
+with imagePullPolicy Never. This avoids anonymous private-registry pulls without
+copying any registry credential into the fixture. If the cache is unavailable,
+stop at ErrImageNeverPull and review again; never inject production credentials.
+The public migration-client image may be pulled by the kubelet outside pod networking.
 
 The Jobs use Kubernetes native sidecars (`initContainers[].restartPolicy: Always`)
 and pod `restartPolicy: Never`. Kubernetes 1.36 supports this lifecycle: the client
@@ -85,7 +89,7 @@ resources were introduced. Never delete production resources or retained PVCs.
 
 ## Source proof and local checks
 
-- PostgreSQL image equals `platform/ecosystem/resources/postgres-image-catalog.yaml`:
+- PostgreSQL image digest equals `platform/ecosystem/resources/postgres-image-catalog.yaml`:
   digest `35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d`.
 - Client equals `platform/stac/migrate.yaml`: pgstac v0.9.12 digest
   `672faad776b55afe15fadb27589c390c4fc93de5bc73e8889d2c29a600c5dba4`.
@@ -105,3 +109,5 @@ Bash syntax and ShellCheck passed; all six manifests passed strict kubeconform
 1.36.0 with zero skipped schemas; changed YAML lint passed. `make validate` was
 run and stopped at pre-existing unrelated YAML lint errors under onetak, TAK,
 NATS, monitoring, data and matrix. No unrelated files were reformatted.
+
+Execution checkpoint: the first 2026-10-24 attempt never started PostgreSQL: its anonymous private GHCR token request returned401. No migration ran. The reviewed cached-image correction preserves the exact digest and all isolation boundaries. Only the failed disposable Job may be removed before the corrected run.

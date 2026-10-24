@@ -47,7 +47,9 @@ class Isolation(unittest.TestCase):
             for volume in pod['volumes']:
                 self.assertTrue(set(volume) <= {'name', 'emptyDir', 'configMap'})
             server = pod['initContainers'][0]
-            self.assertEqual(server['image'], image)
+            self.assertEqual(server['image'], 'ghcr.io/onemindos/onemind-postgres@' + image.split('@', 1)[1])
+            self.assertEqual(server['imagePullPolicy'], 'Never')
+            self.assertEqual(pod['nodeSelector']['onemind.io/compute-role'], 'ecosystem')
             self.assertEqual(server['restartPolicy'], 'Always')
             self.assertIn('startupProbe', server)
             self.assertEqual(server['resources']['limits']['memory'], '1Gi')
