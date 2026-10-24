@@ -7,6 +7,7 @@ resources:
   - deployment.yaml
   - dashboard.yaml
   - egress.yaml
+  - provider-config-backup.sealedsecret.yaml
 
 configMapGenerator:
   - name: hermes-litellm-provider
