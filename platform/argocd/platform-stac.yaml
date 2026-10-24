@@ -31,13 +31,12 @@ spec:
     server: https://kubernetes.default.svc
     namespace: stac
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    # Manual until the shared-Postgres migration crash is reproduced and fixed in isolation.
+    # See docs/operations/stac-migration-incident-2026-10-24.md.
     syncOptions:
       - CreateNamespace=true
     retry:
-      limit: 10
+      limit: 0
       backoff:
         duration: 15s
         factor: 2
