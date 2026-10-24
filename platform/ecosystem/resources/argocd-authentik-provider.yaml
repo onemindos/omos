@@ -41,10 +41,13 @@ spec:
               headers = {"Authorization": "Bearer " + os.environ["AUTH_TOKEN"]}
               argocd_url = "https://argocd.tail717ba0.ts.net"
               with httpx.Client(headers=headers, timeout=30) as client:
-                  def request(method, path, body=None):
+                  def request(method, path, body=None, missing_ok=False):
                       response = client.request(method, base + path, json=body)
+                      if missing_ok and response.status_code == 404:
+                          return None
                       if not response.is_success:
-                          raise RuntimeError("Identity API failed with status " + str(response.status_code))
+                          raise RuntimeError("Identity API " + method + " " + path.split("?")[0] + " failed with status " +
+                                             str(response.status_code) + ": " + response.text[:300])
                       return response.json() if response.content else {}
                   providers = request("GET", "providers/oauth2/?page_size=100")["results"]
                   original = next(p for p in providers if p["client_id"] == "onemind-backstage")
@@ -77,10 +80,10 @@ spec:
                   provider = request("PATCH", "providers/oauth2/" + str(matches[0]["pk"]) + "/", body) if matches else request("POST", "providers/oauth2/", body)
                   print("provider 'argocd': " + ("updated existing pk " if matches else "created pk ") + str(provider["pk"]) +
                         ", grant_types now: " + json.dumps(provider.get("grant_types")))
-                  apps = request("GET", "core/applications/?slug=argocd")["results"]
+                  existing_app = request("GET", "core/applications/argocd/", missing_ok=True)
                   app_body = {"name": "Argo CD", "slug": "argocd", "provider": provider["pk"], "policy_engine_mode": "all",
                               "meta_launch_url": argocd_url}
-                  app = request("PATCH", "core/applications/argocd/", app_body) if apps else request("POST", "core/applications/", app_body)
+                  app = request("PATCH", "core/applications/argocd/", app_body) if existing_app else request("POST", "core/applications/", app_body)
                   bindings = request("GET", "policies/bindings/?target=" + app["pk"])["results"]
                   if not any(b.get("group") == group["pk"] for b in bindings):
                       request("POST", "policies/bindings/", {"target": app["pk"], "group": group["pk"], "enabled": True, "order": 0})
