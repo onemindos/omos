@@ -1,0 +1,18 @@
+{
+  "name": "onemind-nodered-tak",
+  "version": "5.0.9-tak4.2.2-r1",
+  "private": true,
+  "description": "Immutable TAK conversion nodes for the official Node-RED runtime",
+  "scripts": {
+    "test": "node --test test/*.test.cjs"
+  },
+  "dependencies": {
+    "node-red-contrib-tak": "4.2.2"
+  },
+  "devDependencies": {
+    "node-red": "5.0.9"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

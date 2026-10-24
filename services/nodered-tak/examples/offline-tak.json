@@ -1,0 +1,6 @@
+[
+  {"id":"onemind-offline-tak","type":"tab","label":"TAK offline conversion example (disabled)","disabled":true,"info":"No transport or automatic inject. Import deliberately; enable only for offline conversion. Never connect this to a TAK transport without a dedicated reviewed enrollment."},
+  {"id":"offline-input","type":"inject","z":"onemind-offline-tak","name":"Manual synthetic CoT XML only","props":[{"p":"payload"}],"repeat":"","crontab":"","once":false,"onceDelay":0.1,"topic":"","payload":"<event version=\"2.0\" uid=\"onemind-offline-example\" type=\"a-f-G\" time=\"2026-10-24T00:00:00Z\" start=\"2026-10-24T00:00:00Z\" stale=\"2026-10-24T00:01:00Z\" how=\"h-g-i-g-o\"><point lat=\"0\" lon=\"0\" hae=\"0\" ce=\"9999999\" le=\"9999999\"/><detail><contact callsign=\"OFFLINE EXAMPLE\"/></detail></event>","payloadType":"str","x":190,"y":100,"wires":[["offline-convert"]]},
+  {"id":"offline-convert","type":"tak","z":"onemind-offline-tak","name":"CoT conversion only","property":"payload","x":450,"y":100,"wires":[["offline-output"],[],[]]},
+  {"id":"offline-output","type":"debug","z":"onemind-offline-tak","name":"Local converted output","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","targetType":"msg","x":710,"y":100,"wires":[]}
+]
