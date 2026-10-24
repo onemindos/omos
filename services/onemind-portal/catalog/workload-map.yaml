@@ -198,6 +198,7 @@ argoApplications:
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
   platform-stac: component:default/stac
+  platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
   platform-volsync: component:default/volsync

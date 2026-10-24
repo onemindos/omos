@@ -10,8 +10,9 @@ only an explicitly requested sync runs these diagnostics. No Helm or imperative
 workload installation is required. Coordinator owns review, merge, manual sync,
 evidence collection and cleanup. No production manifests or credentials change.
 
-The source adds **one** Argo Application to inventory (+1). Catalog baseline count
-updates belong to the coordinator's integration, alongside the CloudTAK change.
+The source adds **one** Argo Application to inventory (+1). Its reviewed canonical
+mapping points to `component:default/stac`; catalog guards now expect 55 source
+Applications, including the CloudTAK Application merged separately.
 
 ## Cases and boundaries
 

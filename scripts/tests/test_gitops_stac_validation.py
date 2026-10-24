@@ -25,6 +25,8 @@ class Isolation(unittest.TestCase):
         self.assertNotIn('finalizers', app['metadata'])
         self.assertEqual(app['spec']['syncPolicy'], {'retry': {'limit': 0}})
         self.assertEqual(app['spec']['source']['path'], 'platform/stac-validation')
+        mapping = load(ROOT / 'services/onemind-portal/catalog/workload-map.yaml')
+        self.assertEqual(mapping['argoApplications']['platform-stac-validation'], 'component:default/stac')
         policy = next(d for d in docs if d['kind'] == 'NetworkPolicy')
         self.assertEqual(policy['spec'], {'podSelector': {}, 'policyTypes': ['Ingress', 'Egress'],
                                           'ingress': [], 'egress': []})
