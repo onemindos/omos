@@ -78,6 +78,8 @@ spec:
             - {name: PAPERCLIP_MIGRATION_AUTO_APPLY, value: 'true'}
             - {name: PAPERCLIP_DB_BACKUP_ENABLED, value: 'false'}
             - {name: HEARTBEAT_SCHEDULER_ENABLED, value: 'false'}
+            # CA bundle contains only this application's public CA certificate.
+            - {name: NODE_EXTRA_CA_CERTS, value: /run/hermes-gateway-ca/ca.crt}
           resources:
             requests: {cpu: 250m, memory: 512Mi}
             limits: {cpu: '2', memory: 2Gi}
@@ -106,8 +108,17 @@ spec:
           volumeMounts:
             - {name: paperclip-data, mountPath: /paperclip}
             - {name: tmp, mountPath: /tmp}
+            - {name: hermes-gateway-ca, mountPath: /run/hermes-gateway-ca, readOnly: true}
       volumes:
         - name: paperclip-data
           persistentVolumeClaim: {claimName: paperclip-data}
         - name: tmp
           emptyDir: {sizeLimit: 1Gi}
+        - name: hermes-gateway-ca
+          secret:
+            secretName: hermes-gateway-ca
+            # Transport can be staged without taking Paperclip's UI offline.
+            # Missing trust fails closed when the HTTPS adapter connects.
+            optional: true
+            items:
+              - {key: ca.crt, path: ca.crt}

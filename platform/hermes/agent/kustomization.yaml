@@ -7,9 +7,13 @@ resources:
   - deployment.yaml
   - dashboard.yaml
   - egress.yaml
+  - paperclip-api.yaml
   - provider-config-backup.sealedsecret.yaml
 
 configMapGenerator:
+  - name: hermes-paperclip-api-nginx
+    files:
+      - nginx.conf=paperclip-api-nginx.conf
   - name: hermes-litellm-provider
     files:
       - litellm_provider_config.py

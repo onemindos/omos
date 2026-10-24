@@ -149,10 +149,40 @@ spec:
             - name: litellm-provider-config
               mountPath: /run/config
               readOnly: true
+            - name: paperclip-agent
+              mountPath: /run/paperclip
+              readOnly: true
           # 2026-10-19: 7-day observed working-set maximum ~1.44Gi; 2Gi request with 5Gi headroom.
           resources:
             requests: {cpu: "500m", memory: "2Gi"}
             limits: {cpu: "4", memory: "5Gi"}
+        # HTTPS transport only. Hermes retains all API bearer authorization.
+        - name: paperclip-api-tls
+          image: nginx:1.30.6-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
+          command: [nginx, -c, /etc/hermes-paperclip-nginx/nginx.conf, -g, 'daemon off;']
+          ports:
+            - {name: paperclip-tls, containerPort: 8643}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+            seccompProfile: {type: RuntimeDefault}
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {cpu: 100m, memory: 64Mi}
+          readinessProbe:
+            tcpSocket: {port: paperclip-tls}
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket: {port: paperclip-tls}
+            periodSeconds: 20
+          volumeMounts:
+            - {name: paperclip-api-nginx, mountPath: /etc/hermes-paperclip-nginx, readOnly: true}
+            - {name: paperclip-api-tls, mountPath: /etc/hermes-paperclip-tls, readOnly: true}
+            - {name: paperclip-api-tmp, mountPath: /tmp}
         # ---- NATS leaf sidecar ----
         # nats-server running as a leaf into the cluster ONEMIND account over TLS.
         # Exposes a local plaintext client listener on :4222 for Hermes only.
@@ -189,3 +219,18 @@ spec:
         - name: litellm-provider-config
           configMap:
             name: hermes-litellm-provider
+        - name: paperclip-api-nginx
+          configMap:
+            name: hermes-paperclip-api-nginx
+        - name: paperclip-api-tls
+          secret:
+            secretName: hermes-paperclip-api-tls
+        - name: paperclip-api-tmp
+          emptyDir: {sizeLimit: 32Mi}
+        - name: paperclip-agent
+          secret:
+            secretName: paperclip-agent
+            optional: true
+            defaultMode: 0440
+            items:
+              - {key: credentials.json, path: credentials.json}

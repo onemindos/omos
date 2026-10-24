@@ -1189,6 +1189,7 @@ Phase 6 stays In progress; Phases 7/8 stay Not started.
 
 | Work | Status | Evidence |
 |---|---|---|
+| Private Paperclip → existing Hermes HTTPS transport | Source prepared; CA trust, authenticated agent setup and end-to-end acceptance pending | [Transport and activation](platform/paperclip/HERMES.md) |
 | Private Paperclip GitOps installation | Prepared; human review/merge and live acceptance pending | [PR #438](https://github.com/onemindos/omos/pull/438); [deployment and acceptance](platform/paperclip/README.md) |
 
 No new controller, public exposure, shared-database migration, existing agent

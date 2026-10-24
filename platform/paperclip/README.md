@@ -140,3 +140,8 @@ was made. These preparation checks do not replace CI or live acceptance.
 - [Agent adapters](https://docs.paperclip.ing/reference/adapters/overview/)
 - [Existing backup contract](../backups/image/README.md)
 - [Existing VolSync recovery notes](../backups/volsync/README.md)
+
+## Hermes connection
+
+[Private native Hermes adapter transport and activation](HERMES.md) separates
+GitOps transport, public CA trust, agent credentials and functional acceptance.

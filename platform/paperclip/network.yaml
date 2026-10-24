@@ -21,7 +21,23 @@ spec:
         - podSelector:
             matchLabels: {app: paperclip}
       ports: [{protocol: TCP, port: 3100}]
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: hermes}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: hermes
+              onemind.io/agent: legacy
+      ports: [{protocol: TCP, port: 3100}]
   egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: hermes}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: hermes
+              onemind.io/agent: legacy
+      ports: [{protocol: TCP, port: 8643}]
     - to:
         - podSelector:
             matchLabels: {app: paperclip}
