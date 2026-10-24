@@ -49,6 +49,14 @@ historical inventory counts or certify working agent integrations.
 
 ## Summary
 
+Shared-login planning snapshot, 2026-10-23 20:44 EDT: see the narrow
+[Authentik baseline](operations/authentik-login-baseline-2026-10-23.md) and
+[app-by-app connection plan](roadmap/authentik-unified-login.md). Authentik
+server/worker are Ready, but the OIDC bootstrap Jobs are Failed and cross-app
+login is unverified. Paperclip/Langfuse workloads were not returned;
+STAC/OpenChoreo/OpenSearch still appear while approved retirement is pending.
+This addendum does not refresh the historical counts below or deploy the plan.
+
 | Item | Count / value |
 |------|---------------|
 | Argo CD Applications | 47 (45 Synced and Healthy; `app-of-apps` and `platform-ecosystem-resources` OutOfSync) |
