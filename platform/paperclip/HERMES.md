@@ -86,3 +86,23 @@ seal a bundle containing both public roots into Paperclip, roll it, reissue the
 leaf against the new root, verify, then retire the old trust. CA private-key rotation
 is disabled to avoid silently invalidating the consumer's pinned public trust.
 The 10-year root itself still needs this explicit rollover before its renewal.
+
+## Activation record, 24 October 2026
+
+Zeus approved Paperclip board CLI access. The Hermes employee was created paused
+with an encrypted company-secret reference, timers disabled, and agent/skill creation
+disabled. Its callback key uses `task_bridge`, bounded to the integration parent
+issue, with no additional assignees. Callbacks must use the assigned issue ID
+directly; company-wide search and secret administration are not permitted.
+The current Hermes provider passed an authenticated capability check and a real
+no-tool response before rollout. Preserve that provider configuration: the optional
+`hermes-litellm` Secret is absent, so the existing merge init container is a no-op.
+`provider-config-pre-paperclip-v1` preserves the current configuration separately
+from the earlier provider backup. New callback credentials are strictly sealed.
+The exact nginx image and configuration passed a nonroot, read-only, capability-free
+`nginx -t` test in a disposable container on the existing build runner.
+These checks do not yet establish the full Paperclip-to-Hermes task round trip.
+
+The corrected proxy also passed an actual TLS handshake with SAN verification
+in the same restricted container. Wrong-hostname verification failed closed,
+unlisted paths returned 404, and a disallowed HTTP method returned 403.

@@ -8,6 +8,8 @@ resources:
   - dashboard.yaml
   - egress.yaml
   - paperclip-api.yaml
+  - paperclip-agent.sealedsecret.yaml
+  - provider-config-pre-paperclip.sealedsecret.yaml
   - provider-config-backup.sealedsecret.yaml
 
 configMapGenerator:
