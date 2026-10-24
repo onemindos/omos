@@ -1,0 +1,76 @@
+# Private application CA: never publish the private key or copy it to Paperclip.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: hermes-paperclip-selfsigned
+  annotations:
+    argocd.argoproj.io/sync-wave: '-4'
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: hermes-paperclip-ca
+  annotations:
+    argocd.argoproj.io/sync-wave: '-3'
+spec:
+  isCA: true
+  commonName: hermes-paperclip-private-ca
+  secretName: hermes-paperclip-ca
+  duration: 87600h
+  renewBefore: 8760h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Never
+  issuerRef:
+    name: hermes-paperclip-selfsigned
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: hermes-paperclip-ca
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'
+spec:
+  ca:
+    secretName: hermes-paperclip-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: hermes-paperclip-api
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+spec:
+  secretName: hermes-paperclip-api-tls
+  duration: 2160h
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  dnsNames:
+    - hermes-paperclip-api.hermes.svc.cluster.local
+    - hermes-paperclip-api.hermes.svc
+  usages: [digital signature, server auth]
+  issuerRef:
+    name: hermes-paperclip-ca
+    kind: Issuer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-paperclip-api
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: hermes
+    onemind.io/agent: legacy
+  ports:
+    - name: https-api
+      port: 8643
+      targetPort: paperclip-tls
+      protocol: TCP

@@ -112,3 +112,9 @@ These were operating rules kept in Legacy's memory. They belong with her behavio
 | `fatal: could not read Username` on git push from the Mac | The Mac has no HTTPS git credentials: use SSH remotes, or push from the pod with `gh` |
 | Home Assistant API answers "unauthorized" | The token expired or is wrong: check the token file on the pod volume, then test against the HA bridge, not the REST port |
 | The pod cannot reach Home Assistant over HTTP | Expected. All Home Assistant traffic goes through the NATS bridge running on the Home Assistant host |
+
+## Paperclip gateway transport
+
+[Private HTTPS transport and ordered activation](../../paperclip/HERMES.md)
+adds a bounded sidecar to the existing agent. Activate only after certificate
+issuance, public CA trust and dedicated Paperclip agent credentials are ready.
