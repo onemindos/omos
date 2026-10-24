@@ -1,6 +1,7 @@
 # Trivy Operator image vulnerability pilot
 
 Prepared 2026-10-24 for Zeus. **Not deployed or live-accepted by this PR.**
+Implementation PR: [#442](https://github.com/onemindos/omos/pull/442).
 This implements the requested bounded scanning pilot alongside Kyverno/Falco.
 It does not block deployments, patch apps, install an admission webhook, or run
 commands inside application pods. Authentik's login program is separate.
