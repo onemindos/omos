@@ -7088,6 +7088,7 @@ metadata:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-stac
+    onemind.io/argocd-apps: platform-stac,platform-stac-validation
     argocd/instance-name: onemind-cloud
     onemind.io/pillar-review: proposed
     backstage.io/kubernetes-namespace: stac

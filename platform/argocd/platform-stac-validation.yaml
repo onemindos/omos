@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-stac-validation
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: stac-validation
+    app.kubernetes.io/part-of: stac-validation
+    onemind.io/temporary-diagnostics: 'true'
+  annotations:
+    argocd.argoproj.io/sync-wave: '6'
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/stac-validation
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stac-validation
+  syncPolicy:
+    retry:
+      limit: 0

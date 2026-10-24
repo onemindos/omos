@@ -7,7 +7,7 @@ STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
 ## Where it runs
 
 - Catalog entity: `component:default/stac` in System `geospatial`
-- Argo CD application: `platform-stac`
+- Argo CD applications: `platform-stac`, `platform-stac-validation`
 - Namespaces: not recorded (no Deployment or StatefulSet observed)
 
 ## When it looks wrong
