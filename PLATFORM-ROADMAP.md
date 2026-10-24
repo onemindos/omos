@@ -1185,3 +1185,24 @@ No new controller, public exposure, shared-database migration, existing agent
 credential copy, model billing change or cluster write access is included.
 Runtime onboarding, mobile acceptance, backups/restore and automatic execution
 must be verified separately. Preparing manifests does not complete those gates.
+
+## User-directed Authentik shared-login program — 2026-10-23
+
+Zeus requested a detailed PR to connect the hosted apps through one Authentik
+login. The [implementation and acceptance plan](docs/roadmap/authentik-unified-login.md)
+and [read-only baseline](docs/operations/authentik-login-baseline-2026-10-23.md)
+cover native SSO, protected browser tools, per-app permissions, existing-account
+linking, device/API exceptions and independent recovery. This is a documentation
+deliverable alongside the current portal work; it does not close existing phase
+gates or reverse the approved OpenChoreo/OpenSearch retirement decision.
+
+| Work | Status | Next gate |
+|---|---|---|
+| App inventory and S00–S10 shared-login implementation contract | Prepared in [PR #441](https://github.com/onemindos/omos/pull/441); implementation and live acceptance not started by this plan | S00: existing failed OIDC hooks, old Argo operation, portal/Argo/FedHub login and independent recovery |
+| Native app login, gateway pilot, directory status and cross-app acceptance | Not started by this plan; existing integrations retained for verification | One bounded implementation PR at a time; update the linked tracker with actual PR/release evidence |
+
+The Authentik server is healthy at the snapshot, but the Argo/platform OIDC Jobs
+report Failed; a newer compared Git revision is not a successful hook execution.
+No deployment, identity/role change, new public route, credential rotation,
+license purchase, workload migration or wider agent permission is part of this
+planning PR. Single browser login and machine tool authorization remain separate.

@@ -8,6 +8,12 @@ The canonical architecture and doctrine documents for OneMind OS. **Read these b
 
 `architecture/` holds the OneMind OS design documents: `OneMind-OS-Architecture.md` (unified architecture), `ONEMIND-MASTER-PICTURE.md` (system synthesis) and `OMOS-DATA-PICTURE.md` (data pipeline), plus `decisions/`. They are being reviewed and updated; until then, `STACK.md` and `../CLAUDE.md` win on live facts.
 
+The [Authentik shared-login program](roadmap/authentik-unified-login.md) maps
+native SSO, protected web tools and device/API exceptions, with ordered rollout
+packages and account-preservation, authorization and recovery acceptance gates.
+Its [2026-10-23 baseline](operations/authentik-login-baseline-2026-10-23.md) is a
+read-only snapshot; the program is a plan, not verified cross-app login.
+
 ---
 
 ## Canon (read in order)
