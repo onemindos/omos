@@ -1198,7 +1198,7 @@ gates or reverse the approved OpenChoreo/OpenSearch retirement decision.
 
 | Work | Status | Next gate |
 |---|---|---|
-| App inventory and S00–S10 shared-login implementation contract | Prepared in this PR; implementation and live acceptance not started by this plan | S00: existing failed OIDC hooks, old Argo operation, portal/Argo/FedHub login and independent recovery |
+| App inventory and S00–S10 shared-login implementation contract | Prepared in [PR #441](https://github.com/onemindos/omos/pull/441); implementation and live acceptance not started by this plan | S00: existing failed OIDC hooks, old Argo operation, portal/Argo/FedHub login and independent recovery |
 | Native app login, gateway pilot, directory status and cross-app acceptance | Not started by this plan; existing integrations retained for verification | One bounded implementation PR at a time; update the linked tracker with actual PR/release evidence |
 
 The Authentik server is healthy at the snapshot, but the Argo/platform OIDC Jobs
