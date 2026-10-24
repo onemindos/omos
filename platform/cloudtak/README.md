@@ -1,5 +1,7 @@
 # CloudTAK
 
+**Storage provisioned 2026-10-24:** private NYC3 bucket `onemind-cloudtak` exists. The dedicated Read/Write/Delete key is strictly sealed as `cloudtak/cloudtak-spaces` in this directory. Own-bucket listing and private ACL were verified; the temporary provisioning key was removed. This is credential/storage readiness, not application or recovery acceptance. No existing key was changed.
+
 A fresh install of upstream [CloudTAK](https://github.com/dfpc-coe/CloudTAK) (`dfpc-coe/CloudTAK`, pinned
 **v13.113.0**, released 2026-10-23) as a browser TAK client. Source is prepared for the Argo CD Application
 `platform-cloudtak` (sync wave 5) into the namespace `cloudtak`. Live acceptance is pending; this runbook is a deployment contract, not a health claim.

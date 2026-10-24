@@ -1,5 +1,7 @@
 # STAC
 
+**Storage provisioned 2026-10-24:** private NYC3 bucket `onemind-imagery` exists. The dedicated Read/Write/Delete key is strictly sealed as `stac/stac-spaces` in this directory. Own-bucket listing and private ACL were verified; the temporary provisioning key was removed. This is credential/storage readiness, not application or recovery acceptance. No existing key was changed.
+
 A fresh STAC (SpatioTemporal Asset Catalog) for OneMind imagery, on the shared `onemind-data` Postgres, filled
 automatically from WebODM. Namespace `stac`, Argo CD application `platform-stac` (sync wave 5). Deploy it together
 with CloudTAK (PR #390): same wave, same shared Postgres.
