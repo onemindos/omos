@@ -132,23 +132,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "rollouts-argo-rollouts",
-    "namespace": "argocd"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "rollouts-controller",
-      "app.kubernetes.io/instance": "rollouts",
-      "app.kubernetes.io/name": "argo-rollouts"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "authentik-redis",
     "namespace": "auth"
    },
@@ -264,36 +247,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "cloudflared",
-    "namespace": "cloudflare"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "cloudflared"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "cloudflared-tunnel",
-    "namespace": "cloudflare"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/name": "cloudflared-tunnel"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "barman-plugin-barman-cloud",
     "namespace": "cnpg-system"
    },
@@ -363,91 +316,6 @@
     "selector": {
      "matchLabels": {
       "app": "dapr-sidecar-injector"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "stac-browser-development-0c6b80f7",
-    "namespace": "dp-default-onetak-development-b188bf98"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "openchoreo.dev/component": "stac-browser",
-      "openchoreo.dev/component-uid": "d9099fca-45c3-48e3-82e9-f90003342655",
-      "openchoreo.dev/environment": "development",
-      "openchoreo.dev/environment-uid": "25431017-aaa2-4b53-abf9-f0b0af95fa72",
-      "openchoreo.dev/namespace": "default",
-      "openchoreo.dev/project": "onetak",
-      "openchoreo.dev/project-uid": "aff94086-3046-4228-b700-521e1d55085a"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "external-dns",
-    "namespace": "external-dns"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "platform-external-dns",
-      "app.kubernetes.io/name": "external-dns"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "external-secrets",
-    "namespace": "external-secrets"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "external-secrets",
-      "app.kubernetes.io/name": "external-secrets"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "external-secrets-cert-controller",
-    "namespace": "external-secrets"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "external-secrets",
-      "app.kubernetes.io/name": "external-secrets-cert-controller"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "external-secrets-webhook",
-    "namespace": "external-secrets"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "external-secrets",
-      "app.kubernetes.io/name": "external-secrets-webhook"
      }
     }
    }
@@ -969,6 +837,38 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
+    "name": "nextcloud",
+    "namespace": "nextcloud"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app.kubernetes.io/component": "app",
+      "app.kubernetes.io/instance": "nextcloud",
+      "app.kubernetes.io/name": "nextcloud"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+    "name": "nextcloud-redis",
+    "namespace": "nextcloud"
+   },
+   "spec": {
+    "selector": {
+     "matchLabels": {
+      "app": "nextcloud-redis"
+     }
+    }
+   }
+  },
+  {
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
     "name": "feed-intel",
     "namespace": "omos"
    },
@@ -1122,91 +1022,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "harbor-core",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "core",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "harbor-jobservice",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "jobservice",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "harbor-nginx",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "nginx",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "harbor-portal",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "portal",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "harbor-registry",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "registry",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "nodeodm",
     "namespace": "onetak"
    },
@@ -1222,21 +1037,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "onetak-geo-db",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "onetak-geo-db"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "onetak-media",
     "namespace": "onetak"
    },
@@ -1244,21 +1044,6 @@
     "selector": {
      "matchLabels": {
       "app": "onetak-media"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "stac-api",
-    "namespace": "onetak"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "stac-api"
      }
     }
    }
@@ -1349,221 +1134,6 @@
     "selector": {
      "matchLabels": {
       "app": "webodm-db"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "cluster-gateway",
-    "namespace": "openchoreo-control-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "cluster-gateway",
-      "app.kubernetes.io/component": "cluster-gateway",
-      "app.kubernetes.io/instance": "oc-control",
-      "app.kubernetes.io/name": "openchoreo-control-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "controller-manager",
-    "namespace": "openchoreo-control-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "controller-manager",
-      "app.kubernetes.io/instance": "oc-control",
-      "app.kubernetes.io/name": "openchoreo-control-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "openchoreo-api",
-    "namespace": "openchoreo-control-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "api-server",
-      "app.kubernetes.io/instance": "oc-control",
-      "app.kubernetes.io/name": "openchoreo-control-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "portal-assistant",
-    "namespace": "openchoreo-control-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "portal-assistant",
-      "app.kubernetes.io/instance": "oc-control",
-      "app.kubernetes.io/name": "openchoreo-control-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "cluster-agent-dataplane",
-    "namespace": "openchoreo-data-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "cluster-agent",
-      "app.kubernetes.io/component": "cluster-agent",
-      "app.kubernetes.io/instance": "openchoreo-data-plane",
-      "app.kubernetes.io/name": "openchoreo-data-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "cluster-agent-observabilityplane",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "cluster-agent",
-      "app.kubernetes.io/component": "cluster-agent",
-      "app.kubernetes.io/instance": "openchoreo-observability-plane",
-      "app.kubernetes.io/name": "openchoreo-observability-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "controller-manager",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "controller-manager",
-      "app.kubernetes.io/instance": "openchoreo-observability-plane",
-      "app.kubernetes.io/name": "openchoreo-observability-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "events-collector",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "openchoreo-events",
-      "app.kubernetes.io/name": "events-collector"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "finops-opencost-adapter",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "finops-opencost-adapter"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "logs-adapter-opensearch",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "logs-adapter-opensearch"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "metrics-adapter-prometheus",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "metrics-adapter-prometheus"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "observer",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "observer",
-      "app.kubernetes.io/instance": "openchoreo-observability-plane",
-      "app.kubernetes.io/name": "openchoreo-observability-plane"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
-    "name": "tracing-adapter-opensearch",
-    "namespace": "openchoreo-observability-plane"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "tracing-adapter-opensearch"
      }
     }
    }
@@ -2054,90 +1624,6 @@
       "app.kubernetes.io/component": "nats",
       "app.kubernetes.io/instance": "nats",
       "app.kubernetes.io/name": "nats"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "harbor-database",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "database",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "harbor-redis",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "redis",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "harbor-trivy",
-    "namespace": "onemind-registry"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "harbor",
-      "component": "trivy",
-      "release": "harbor"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "onemind-search-master",
-    "namespace": "onemind-search"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/instance": "opensearch",
-      "app.kubernetes.io/name": "opensearch"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "spire-server",
-    "namespace": "spire-system"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app.kubernetes.io/component": "server",
-      "app.kubernetes.io/instance": "spire",
-      "app.kubernetes.io/name": "server"
      }
     }
    }

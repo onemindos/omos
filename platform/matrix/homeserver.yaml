@@ -1,4 +1,5 @@
-server_name: "matrix.onemindos.com"
+server_name: "onemindos.dev"
+public_baseurl: "https://matrix.onemindos.dev/"
 pid_file: /data/homeserver.pid
 
 listeners:

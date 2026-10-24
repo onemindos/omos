@@ -8,23 +8,18 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | --- | --- |
 | [Agent Monitor](agent-monitor.md) | ai-agents |
 | [Agent Web UI](agent-web-ui.md) | ai-agents |
-| [Argo Rollouts](argo-rollouts.md) | gitops-delivery |
 | [ArgoCD](argocd.md) | gitops-delivery |
 | [Authentik](authentik.md) | identity-access |
 | [Backstage portal](backstage.md) | developer-platform |
 | [cert-manager](cert-manager.md) | infrastructure |
 | [ClickHouse](clickhouse.md) | data-storage |
-| [Cloudflare Tunnel (standby)](cloudflared.md) | infrastructure |
 | [CloudNativePG](cloudnative-pg.md) | data-storage |
 | [Dapr](dapr.md) | infrastructure |
 | [Element Chat](element-chat.md) | communication |
-| [ExternalDNS](external-dns.md) | infrastructure |
-| [External Secrets Operator](external-secrets.md) | identity-access |
 | [Falco](falco.md) | identity-access |
 | [FedHub](fedhub.md) | tak-ecosystem |
 | [OneTAK geospatial services](geo-data-services.md) | geospatial |
 | [Grafana](grafana.md) | observability |
-| [Harbor](harbor.md) | gitops-delivery |
 | [Headlamp](headlamp.md) | developer-platform |
 | [Cluster health observer](health-keeper.md) | observability |
 | [Hermes (Legacy)](hermes-legacy.md) | ai-agents |
@@ -43,21 +38,19 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [NATS Dashboard](nats-dashboard.md) | messaging-nats |
 | [NATS Surveyor](nats-surveyor.md) | messaging-nats |
 | [NATS UI](nats-ui.md) | messaging-nats |
+| [Nextcloud](nextcloud.md) | data-storage |
 | [Ollama](ollama.md) | ai-agents |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
 | [OneTAK](onetak.md) | tak-ecosystem |
-| [OpenChoreo](openchoreo.md) | developer-platform |
-| [OpenChoreo observability plane](openchoreo-observability.md) | observability |
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
-| [OpenSearch](opensearch.md) | data-storage |
 | [OpenTelemetry Collector](opentelemetry-collector.md) | observability |
 | [Platform Backup and Recovery](platform-backup-recovery.md) | data-storage |
 | [Platform core manifests](platform-core.md) | infrastructure |
 | [Prometheus](prometheus.md) | observability |
 | [Redpanda Connect](redpanda-connect.md) | messaging-nats |
-| [SPIRE](spire.md) | identity-access |
+| [STAC imagery catalog](stac.md) | geospatial |
 | [Tailscale operator and proxies](tailscale-operator.md) | infrastructure |
 | [TAK Server](tak-server.md) | tak-ecosystem |
 | [TAK-ML](takml.md) | tak-ecosystem |

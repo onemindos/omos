@@ -12,7 +12,6 @@ workloads:
   argocd/argocd-redis: component:default/argocd
   argocd/argocd-repo-server: component:default/argocd
   argocd/argocd-server: component:default/argocd
-  argocd/rollouts-argo-rollouts: component:default/argo-rollouts
   auth/authentik-postgres: component:default/authentik
   auth/authentik-redis: component:default/authentik
   auth/platform-auth-helm-authentik-server: component:default/authentik
@@ -23,8 +22,6 @@ workloads:
   cert-manager/cert-manager-cainjector: component:default/cert-manager
   cert-manager/cert-manager-webhook: component:default/cert-manager
   clickhouse/chi-onemind-onemind-0-0: component:default/clickhouse
-  cloudflare/cloudflared: component:default/cloudflared
-  cloudflare/cloudflared-tunnel: component:default/cloudflared
   cnpg-system/barman-plugin-barman-cloud: component:default/cloudnative-pg
   cnpg-system/cnpg-cloudnative-pg: component:default/cloudnative-pg
   dapr-system/dapr-operator: component:default/dapr
@@ -32,12 +29,6 @@ workloads:
   dapr-system/dapr-scheduler-server: component:default/dapr
   dapr-system/dapr-sentry: component:default/dapr
   dapr-system/dapr-sidecar-injector: component:default/dapr
-  dp-default-onetak-development-b188bf98/stac-browser: component:default/geo-data-services
-  dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7: component:default/geo-data-services
-  external-dns/external-dns: component:default/external-dns
-  external-secrets/external-secrets: component:default/external-secrets
-  external-secrets/external-secrets-cert-controller: component:default/external-secrets
-  external-secrets/external-secrets-webhook: component:default/external-secrets
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
   hermes/hermes-legacy: component:default/hermes-legacy
@@ -82,6 +73,8 @@ workloads:
   nats/nats-metrics-scrape: component:default/nats
   nats/nats-surveyor: component:default/nats-surveyor
   nats/nats-ui: component:default/nats-ui
+  nextcloud/nextcloud: component:default/nextcloud
+  nextcloud/nextcloud-redis: component:default/nextcloud
   omos/feed-intel: component:default/omos-data-pipeline
   omos/feed-satellites: component:default/omos-data-pipeline
   omos/omos-mission-engine: component:default/omos-data-pipeline
@@ -93,41 +86,16 @@ workloads:
   onemind-core/onemind-core: component:default/onemind-core
   onemind-core/onemind-ingestion: component:default/onemind-core
   onemind-core/openfga: component:default/openfga
-  onemind-registry/harbor-core: component:default/harbor
-  onemind-registry/harbor-database: component:default/harbor
-  onemind-registry/harbor-jobservice: component:default/harbor
-  onemind-registry/harbor-nginx: component:default/harbor
-  onemind-registry/harbor-portal: component:default/harbor
-  onemind-registry/harbor-redis: component:default/harbor
-  onemind-registry/harbor-registry: component:default/harbor
-  onemind-registry/harbor-trivy: component:default/harbor
-  onemind-search/onemind-search-master: component:default/opensearch
   onetak/nodeodm: component:default/webodm
-  onetak/onetak-geo-db: component:default/geo-data-services
   onetak/onetak-media: component:default/onetak
-  onetak/stac-api: component:default/geo-data-services
   onetak/tak-portal: component:default/onetak
   onetak/tile38: component:default/geo-data-services
   onetak/tileserver-gl: component:default/tileserver-gl
   onetak/webodm: component:default/webodm
   onetak/webodm-broker: component:default/webodm
   onetak/webodm-db: component:default/webodm
-  openchoreo-control-plane/cluster-gateway: component:default/openchoreo
-  openchoreo-control-plane/controller-manager: component:default/openchoreo
-  openchoreo-control-plane/openchoreo-api: component:default/openchoreo
-  openchoreo-control-plane/portal-assistant: component:default/openchoreo
-  openchoreo-data-plane/cluster-agent-dataplane: component:default/openchoreo
-  openchoreo-observability-plane/cluster-agent-observabilityplane: component:default/openchoreo-observability
-  openchoreo-observability-plane/controller-manager: component:default/openchoreo-observability
-  openchoreo-observability-plane/events-collector: component:default/openchoreo-observability
-  openchoreo-observability-plane/finops-opencost-adapter: component:default/openchoreo-observability
-  openchoreo-observability-plane/logs-adapter-opensearch: component:default/openchoreo-observability
-  openchoreo-observability-plane/metrics-adapter-prometheus: component:default/openchoreo-observability
-  openchoreo-observability-plane/observer: component:default/openchoreo-observability
-  openchoreo-observability-plane/tracing-adapter-opensearch: component:default/openchoreo-observability
   opencost/opencost: component:default/opencost
   ops/platform-volsync: component:default/volsync
-  spire-system/spire-server: component:default/spire
   tailscale/egress: component:default/tailscale-operator
   tailscale/operator: component:default/tailscale-operator
   tailscale/ts-agent-console-8khxt: component:default/tailscale-operator
@@ -181,24 +149,17 @@ workloads:
   velero/velero: component:default/velero
 argoApplications:
   app-of-apps: component:default/argocd
-  argo-rollouts: component:default/argo-rollouts
   ecosystem-barman: component:default/cloudnative-pg
   ecosystem-cnpg: component:default/cloudnative-pg
   ecosystem-dapr: component:default/dapr
-  ecosystem-external-secrets: component:default/external-secrets
   ecosystem-falco: component:default/falco
-  ecosystem-harbor: component:default/harbor
   ecosystem-keda: component:default/keda
   ecosystem-kyverno: component:default/kyverno
   ecosystem-litellm: component:default/litellm
-  ecosystem-oc-control: component:default/openchoreo
   ecosystem-ollama: component:default/ollama
   ecosystem-onemind-core: component:default/onemind-core
   ecosystem-opencost: component:default/opencost
   ecosystem-openfga: component:default/openfga
-  ecosystem-opensearch: component:default/opensearch
-  ecosystem-spire: component:default/spire
-  ecosystem-spire-crds: component:default/spire
   ecosystem-velero: component:default/velero
   edge-cert-manager: component:default/cert-manager
   edge-ingress-nginx: component:default/ingress-nginx
@@ -214,13 +175,12 @@ argoApplications:
   platform-backstage: component:default/backstage
   platform-backups: component:default/platform-backup-recovery
   platform-clickhouse-operator: component:default/clickhouse
-  platform-cloudflared: component:default/cloudflared
   platform-cloudtak: component:default/tak-server
   platform-core: component:default/platform-core
+  platform-argocd: component:default/argocd
   platform-ecosystem-applications: component:default/argocd
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
-  platform-external-dns: component:default/external-dns
   platform-fedhub: component:default/fedhub
   platform-kube: component:default/headlamp
   platform-legacy: component:default/hermes-legacy
@@ -229,26 +189,15 @@ argoApplications:
   platform-n8n: component:default/n8n
   platform-nats: component:default/nats
   platform-nats-tools: component:default/nats
+  platform-nextcloud: component:default/nextcloud
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
-  platform-openchoreo-data-plane: component:default/openchoreo
-  platform-openchoreo-defaults: component:default/openchoreo
-  platform-openchoreo-events: component:default/openchoreo-observability
-  platform-openchoreo-finops: component:default/openchoreo-observability
-  platform-openchoreo-logs: component:default/openchoreo-observability
-  platform-openchoreo-observability: component:default/openchoreo-observability
-  platform-openchoreo-platform: component:default/openchoreo
-  platform-openchoreo-prereqs: component:default/openchoreo
-  platform-openchoreo-projects: component:default/openchoreo
-  platform-openchoreo-traces: component:default/openchoreo-observability
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno
+  platform-stac: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery
-# Argo applications that are not the primary link of a multi-application app (curate-structure.cjs picks the exact match, else the first by name).
-primaryArgoApplication:
-  tak-server: platform-takserver

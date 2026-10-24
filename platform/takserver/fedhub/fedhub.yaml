@@ -32,7 +32,7 @@ kind: ConfigMap
 metadata:
   name: fedhub-authorized-users
   namespace: takserver
-  labels: { app: fedhub }
+  labels: {app: fedhub}
 data:
   authorized_users.yml: |
     ---
@@ -45,14 +45,14 @@ kind: Deployment
 metadata:
   name: fedhub
   namespace: takserver
-  labels: { app: fedhub }
+  labels: {app: fedhub}
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: fedhub }
+    matchLabels: {app: fedhub}
   template:
     metadata:
-      labels: { app: fedhub }
+      labels: {app: fedhub}
     spec:
       imagePullSecrets:
         - name: ghcr
@@ -67,7 +67,20 @@ spec:
               cp -a /opt/tak/federation-hub/configs/. /mnt/configs/
               cp /cm/broker/federation-hub-broker.yml /mnt/configs/
               cp /cm/ui/federation-hub-ui.yml /mnt/configs/
+              # The UI ConfigMap carries the token __FEDHUB_OIDC_SECRET__ where the Authentik client secret
+              # belongs. Swap in the real value from the sealed Secret fedhub-oidc-secret; the file lives only
+              # in the pod's emptyDir. Fail the pod rather than start with a placeholder or an empty secret.
+              secret="$(cat /secrets/oidc/keycloakSecret)"
+              if [ -z "$secret" ]; then echo "fedhub-oidc-secret/keycloakSecret is empty" >&2; exit 1; fi
+              sed "s|__FEDHUB_OIDC_SECRET__|${secret}|" /mnt/configs/federation-hub-ui.yml > /mnt/configs/federation-hub-ui.yml.new
+              mv /mnt/configs/federation-hub-ui.yml.new /mnt/configs/federation-hub-ui.yml
+              if grep -q "__FEDHUB_OIDC_SECRET__" /mnt/configs/federation-hub-ui.yml; then
+                echo "OIDC secret placeholder was not replaced" >&2; exit 1
+              fi
           volumeMounts:
+            - name: oidc-secret
+              mountPath: /secrets/oidc
+              readOnly: true
             - name: broker-config
               mountPath: /cm/broker
             - name: ui-config
@@ -79,32 +92,36 @@ spec:
           image: ghcr.io/onemindos/fedhub:5.8
           imagePullPolicy: Always
           ports:
-            - { name: ui,    containerPort: 9100, protocol: TCP }
-            - { name: fed-v1, containerPort: 9101, protocol: TCP }
-            - { name: fed-v2, containerPort: 9102, protocol: TCP }
+            - {name: ui, containerPort: 9100, protocol: TCP}
+            - {name: oauth, containerPort: 9443, protocol: TCP}
+            - {name: fed-v1, containerPort: 9101, protocol: TCP}
+            - {name: fed-v2, containerPort: 9102, protocol: TCP}
           env:
-            - { name: BROKER_MAX_HEAP,         value: "512" }
-            - { name: UI_MAX_HEAP,             value: "256" }
-            - { name: POLICY_MAX_HEAP,         value: "256" }
-            - { name: PLUGIN_MANAGER_MAX_HEAP, value: "128" }
+            - {name: BROKER_MAX_HEAP, value: "512"}
+            - {name: UI_MAX_HEAP, value: "256"}
+            - {name: POLICY_MAX_HEAP, value: "256"}
+            - {name: PLUGIN_MANAGER_MAX_HEAP, value: "128"}
           readinessProbe:
-            tcpSocket: { port: 9100 }
+            tcpSocket: {port: 9100}
             initialDelaySeconds: 30
             periodSeconds: 15
             failureThreshold: 6
           livenessProbe:
-            tcpSocket: { port: 9100 }
+            tcpSocket: {port: 9100}
             initialDelaySeconds: 60
             periodSeconds: 30
             failureThreshold: 3
           resources:
-            requests: { cpu: 500m, memory: 1Gi }
-            limits:   { cpu: "2",  memory: 2Gi }
+            requests: {cpu: 500m, memory: 1Gi}
+            limits: {cpu: "2", memory: 2Gi}
           volumeMounts:
             - name: fedhub-configs
               mountPath: /opt/tak/federation-hub/configs
             - name: fedhub-certs
               mountPath: /opt/tak/federation-hub/certs/files
+              readOnly: true
+            - name: authentik-ca
+              mountPath: /opt/tak/federation-hub/authentik-ca
               readOnly: true
             - name: authorized-users
               mountPath: /opt/tak/federation-hub/authorized_users.yml
@@ -125,6 +142,12 @@ spec:
         - name: fedhub-certs
           secret:
             secretName: fedhub-certs
+        - name: oidc-secret
+          secret:
+            secretName: fedhub-oidc-secret
+        - name: authentik-ca
+          configMap:
+            name: fedhub-authentik-ca
         - name: authorized-users
           configMap:
             name: fedhub-authorized-users
@@ -137,17 +160,19 @@ spec:
         - name: jetty-temp
           emptyDir: {}
 ---
-# ClusterIP for the admin UI — fronted by the nginx Ingress
+# ClusterIP for the admin UI (in-cluster only). The tailnet path is the L4 LoadBalancer in fedhub-tailnet.yaml.
+# 9100 requires a client certificate; 9443 is the OAuth (Authentik) port without one.
 apiVersion: v1
 kind: Service
 metadata:
   name: fedhub-ui
   namespace: takserver
-  labels: { app: fedhub, component: ui }
+  labels: {app: fedhub, component: ui}
 spec:
-  selector: { app: fedhub }
+  selector: {app: fedhub}
   ports:
-    - { name: ui, port: 9100, targetPort: 9100, protocol: TCP }
+    - {name: ui, port: 9100, targetPort: 9100, protocol: TCP}
+    - {name: oauth, port: 9443, targetPort: 9443, protocol: TCP}
 ---
 # ClusterIP for federation ports — exposed externally via fedhub-lb.yaml LoadBalancer
 apiVersion: v1
@@ -155,9 +180,9 @@ kind: Service
 metadata:
   name: fedhub-fed
   namespace: takserver
-  labels: { app: fedhub, component: federation }
+  labels: {app: fedhub, component: federation}
 spec:
-  selector: { app: fedhub }
+  selector: {app: fedhub}
   ports:
-    - { name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP }
-    - { name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP }
+    - {name: fed-v1, port: 9101, targetPort: 9101, protocol: TCP}
+    - {name: fed-v2, port: 9102, targetPort: 9102, protocol: TCP}

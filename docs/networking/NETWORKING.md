@@ -1,6 +1,6 @@
 # OneMind networking model and cut-over runbook
 
-Status: target design plus the first (additive) PR. Written 2026-10-09 against cluster
+Status: **TAK went tailnet-only on 2026-10-23 (section 5): `enroll`, `fedhub` and `tak` are no longer public, `tak-external` and its DigitalOcean LB were removed.** The cloudflared tunnel connector and external-dns, with their Argo apps, were removed on 2026-10-23** (Git history is the archive); sections below that describe the tunnel are design history. Target design plus the first (additive) PR. Written 2026-10-09 against cluster
 `omos-cloud` (DOKS nyc3), tailnet `tail717ba0.ts.net`, Tailscale operator v1.98.4.
 
 ## 1. Target model
@@ -27,7 +27,7 @@ Status: target design plus the first (additive) PR. Written 2026-10-09 against c
 |-------|------|-------------------|
 | cloudflared connector + PDB | `platform/networking/cloudflared/cloudflared.yaml`, `platform/argocd/platform-cloudflared.yaml` | Deployment at **0 replicas** (inert) |
 | external-dns | `platform/argocd/platform-external-dns.yaml` | Deployment at **0 replicas**; annotation filter matches nothing |
-| TAK on tailnet | `platform/takserver/deploy/tak-tailscale.yaml` (synced by existing `platform-takserver`) | New tailnet node `tak`; `tak-external` and its DO LB untouched |
+| TAK on tailnet | `platform/takserver/deploy/tak-tailscale.yaml` (synced by existing `platform-takserver`) | Tailnet node `tak`. (Update 2026-10-23: `tak-external` and its DO LB were removed.) |
 
 Why inert via replicas 0 rather than a guard: the Deployments need a Secret that does
 not exist yet. An optional `secretKeyRef` would start the pod and crash-loop (Argo
@@ -53,15 +53,14 @@ Verified against live Ingress objects on 2026-10-09.
 | `matrix.onemindos.com`, `element.onemindos.com` | matrix/matrix-ingress | Synapse, Element | **Keep public via tunnel** | Needed for federation and non-tailnet users. Confirm federation uses `.well-known` delegation to 443 (a tunnel cannot carry raw 8448). |
 | `onemindos.dev` | onetak/onetak-ingress | onetak-api (CloudTAK), onetak-tiles | **Tailnet only** (tunnel + Cloudflare Access as interim) | Operational C2 UI. Move once every user has Tailscale. Needs a `tailscale` Ingress (future PR). |
 | `ws.onemindos.dev` | nats/nats-ws-ingress | nats:8080 websocket | **Tailnet only** | `omos-nats` already exposes 8080 on the tailnet. Only keep public if a browser client off the tailnet needs it. |
-| `enroll.onemindos.dev` | onetak/tak-portal-ingress | tak-portal:8080 | **Tailnet only** | EUDs are on Tailscale now. |
-| `fedhub.onemindos.dev` | takserver/fedhub-ingress | fedhub-ui | **Tailnet only** | Admin UI. |
+| `enroll.onemindos.dev` | onetak/tak-portal-ingress | tak-portal:8080 | **Done 2026-10-23: `https://enroll.tail717ba0.ts.net`** | Tailscale Ingress; the public nginx rule is gone. Delete the DNS record. |
+| `fedhub.onemindos.dev` | takserver/fedhub-tailnet | fedhub | **Done 2026-10-23: `https://fedhub.tail717ba0.ts.net:9100` (client certificate) and `:9443` (Authentik sign-in)** | Tailscale L4 LoadBalancer (TCP passthrough, like `tak-tailnet`). The first design, an L7 Tailscale Ingress, could not work: FedHub's UI on 9100 requires a TLS client certificate. The public nginx rule is gone. Delete the DNS record. |
 | `tileserver` `.onemindos.dev` | onetak/geo-services-ingress | geo services | **Tailnet only** | Internal tooling; has no reason to be public. |
-| `tak.onemindos.dev` (unproxied A -> `152.42.155.95`) | takserver/tak-external (DO LB `onemind-tak`) | tak-lb-proxy | **Tailnet for EUDs** (new `tak` node) | 8089/8443/8446/64738 move to the tailnet. |
-| TAK federation 9101/9102 on the same LB | tak-external | fedhub-fed | **Open decision** | Server-to-server TCP with peers outside our tailnet; cannot ride an HTTP tunnel. Either peers join the tailnet (shared node), or this LB stays (about $12/mo). |
+| `tak.onemindos.dev` (unproxied A -> `152.42.155.95`) | ~~takserver/tak-external (DO LB `onemind-tak`)~~ removed 2026-10-23 | tak-lb-proxy | **Done: tailnet only, `tak.tail717ba0.ts.net`** | 8089/8443/8446/64738 TCP via `tak-tailnet`. The IP is released; delete the DNS record. |
+| TAK federation 9101/9102 on the same LB | ~~tak-external~~ removed 2026-10-23 | fedhub-fed (ClusterIP) | **Closed** | There are no federation partners. Nothing exposes these ports outside the cluster. |
 | `media.onemindos.dev` | none | none | Remove from docs | `CLAUDE.md` lists it but no Ingress exists. |
 
-Savings: two DO LBs (`lb-small`, about $12/mo each). About $24/mo if federation also
-moves to the tailnet; about $12/mo if the TAK LB stays only for 9101/9102.
+Savings: the TAK DO LB (`lb-small`, about $12/mo) is gone with `tak-external`. The ingress-nginx LB remains.
 
 ## 3. Secrets the operator creates (names only; never commit values)
 
@@ -70,8 +69,8 @@ moves to the tailnet; about $12/mo if the TAK LB stays only for 9101/9102.
 | `cloudflared-tunnel-token` | `cloudflare` | `token` | cloudflared | Token of a new remotely-managed tunnel (section 4, step 2) |
 | `external-dns-cloudflare` | `external-dns` | `api-token` | external-dns | **New dedicated** Cloudflare API token: Zone:DNS:Edit + Zone:Zone:Read, restricted to zones `onemindos.dev`, `onemindos.com` |
 
-Do not reuse `cert-manager/cloudflare-api-token`: it is in another namespace (copying it
-spreads one credential across blast radii) and it has different rotation needs. The
+Do not reuse a token from another namespace (copying one credential spreads it across
+blast radii). The old `cert-manager/cloudflare-api-token` was invalid and has been removed. The
 `external-dns` namespace is created by Argo on first sync, so create it first if you want
 the Secret before merge: `kubectl create namespace external-dns`.
 
@@ -167,43 +166,68 @@ restore the record and rule from Git/export.
 for errors and Cloudflare tunnel metrics; confirm nothing still reaches `143.244.220.155`
 (nginx access log).
 
-**9. Cut-over PR (later, separate).** Remove the public paths: ingress-nginx Service
-`type: ClusterIP` (helm upgrade of the CLI release, which makes DO delete the LB), delete
-`tak-external` once EUDs are migrated and the federation decision is made, remove the legacy
-`platform/core/cloudflared.yaml` + `config.yaml`, and delete the stale A records and the `tak`
-record. Rollback: re-create the Service as `LoadBalancer` (a new IP; DO LBs are not
+**9. Cut-over PR (later, separate).** Remove the remaining public paths (the TAK LB `tak-external` was already removed on 2026-10-23): ingress-nginx Service
+`type: ClusterIP` (helm upgrade of the CLI release, which makes DO delete the LB), remove the legacy
+`platform/core/cloudflared.yaml` + `config.yaml`, and delete the stale A records. Rollback: re-create the Service as `LoadBalancer` (a new IP; DO LBs are not
 recoverable, so re-point DNS).
 
-## 5. TAK clients over Tailscale
+## 5. TAK clients over Tailscale (current state, 2026-10-23)
 
-The TAK CA and client certificates do not change. Only the server address the EUD dials
-changes, from `tak.onemindos.dev` to `tak.tail717ba0.ts.net`. Existing devices usually need
-a changed connect string, not re-enrollment.
+TAK has no public listener. The only path is the Tailscale Service `takserver/tak-tailnet`
+(tailnet node `tak`). The DigitalOcean LB `onemind-tak` (`152.42.155.95`, Service
+`tak-external`) was deleted, and so were federation ports 9101/9102.
 
-1. Install Tailscale on the EUD and sign in to the tailnet; confirm `tak.tail717ba0.ts.net`
-   resolves (MagicDNS) and that Tailscale stays connected (always-on VPN, battery
-   optimisation exempt).
-2. Add the tailnet server in ATAK/iTAK: host `tak.tail717ba0.ts.net`, port 8089, protocol SSL.
-   Use a data package whose preferences contain `connectString0 =
-   tak.tail717ba0.ts.net:8089:ssl` (keep the old server entry until verified).
-3. New devices: enroll against `tak.tail717ba0.ts.net:8446` (cert enrollment). The package
-   generator `tak-portal` builds data packages from `TAK_HOST` (`platform/onetak/tak-portal.yaml`,
-   currently `tak.onemindos.dev`). Change it to `tak.tail717ba0.ts.net` in the cut-over PR, not before.
-4. Verify CoT flows (own marker visible on a second device; CoT appears on `tak.cot.>`).
-5. WebTAK/API: `https://tak.tail717ba0.ts.net:8443` (client cert required).
-6. If a client rejects the server on hostname mismatch, re-issue the TAK server certificate
-   with SAN `tak.tail717ba0.ts.net` (keep the old name too). Check this on one device first.
-7. After all devices are confirmed, delete the old server entry and remove `tak-external`
-   in the step 9 PR.
+| What | Address | Protocol |
+|------|---------|----------|
+| ATAK, iTAK, WinTAK streaming (CoT) | `tak.tail717ba0.ts.net` port `8089` (tailnet IP `100.119.127.43` as fallback) | TLS with client cert (ATAK/iTAK "ssl", connect string `tak.tail717ba0.ts.net:8089:ssl`) |
+| Certificate enrollment | `tak.tail717ba0.ts.net:8446` | HTTPS, no client cert |
+| WebTAK and Marti API | `https://tak.tail717ba0.ts.net:8443` | HTTPS, client cert required |
+| Mumble voice | `tak.tail717ba0.ts.net:64738` | TCP only (the proxy is a TCP stream; UDP is not forwarded, so Mumble uses its TCP tunnel mode) |
+| Device enrollment portal (QR codes) | `https://enroll.tail717ba0.ts.net` | Tailscale Ingress (HTTPS, tailnet certificate) |
+| FedHub admin UI (client certificate) | `https://fedhub.tail717ba0.ts.net:9100` | Tailscale L4 LoadBalancer; install the TAK admin client cert in the browser; the self-signed server cert warns |
+| FedHub admin UI (Authentik sign-in) | `https://fedhub.tail717ba0.ts.net:9443` | same LoadBalancer; no client certificate; self-signed server cert warns |
 
-Rollback: devices keep the old server entry, so switching back is selecting it. `tak-external`
-is untouched until step 9.
+The TAK CA and client certificates do not change. Only the address the EUD dials changes.
+Existing devices need a changed server address, not re-enrollment.
+
+### Server certificate and hostname
+
+Read from the live `tak-keystores` secret (public certificate only): `CN=takserver`, issuer
+`CN=onemind-tak`, valid until 2036-07-16. Subject Alternative Names: `DNS:takserver`,
+`DNS:takserver-api-service`, `DNS:takserver-messaging-service`, `DNS:localhost`,
+`IP:152.42.155.95`, `IP:10.109.1.202`.
+
+It does **not** contain `tak.tail717ba0.ts.net`, `100.119.127.43` or `tak.onemindos.dev`.
+Devices that dialed the old IP matched the IP SAN; over the tailnet nothing matches. Whether that
+matters depends on the client: ATAK validates the chain against the imported truststore and has
+not historically enforced the hostname, but this was not verified for ATAK, iTAK or WinTAK.
+Test one device first. If a client rejects the server on hostname mismatch, re-issue the TAK
+server certificate with `DNS:tak.tail717ba0.ts.net` and `IP:100.119.127.43` added (keep the old
+names). The certificates are not in Git (secret `tak-keystores`, Helm release `takserver`), so
+this is a manual step with the TAK CA and is not part of the manifests.
+
+The CoreConfig in Git and in the cluster does not reference `tak.onemindos.dev` or
+`152.42.155.95`.
+
+### Operator steps after merge
+
+1. On each EUD: Tailscale installed, signed in, always-on, battery optimisation off. Confirm
+   `tak.tail717ba0.ts.net` resolves.
+2. Replace the old server entry with `tak.tail717ba0.ts.net:8089:ssl` (ATAK/iTAK/WinTAK), or
+   import a new data package from `https://enroll.tail717ba0.ts.net`.
+3. Verify CoT flows (own marker on a second device; CoT appears on `tak.cot.>`).
+4. Authentik: the `fedhub` OIDC client and its redirect URI `https://fedhub.tail717ba0.ts.net:9443/login/redirect`
+   are created by the Job `auth/fedhub-authentik-oidc-v1` (platform/ecosystem/resources/fedhub-authentik-provider.yaml);
+   nothing to do by hand.
+5. Cloudflare DNS: delete `enroll`, `fedhub` (if present) and `tak` under `onemindos.dev`.
+   DNS is manual now: external-dns was removed on 2026-10-23, and no DNS records are managed in Git.
+
+Rollback: re-create `tak-external` from Git history. DigitalOcean allocates a new IP, so the
+`tak` record and any device configured with an IP would need updating.
 
 Notes: the tailnet ACL (`platform/core/policy.hujson`) is currently allow-all; consider
-restricting `tak` to a group for EUD users before relying on it. Mumble UDP is not forwarded
-(the proxy is TCP-only); Mumble falls back to TCP. The `tak-tailnet` Service has four ports
-(8089, 8443, 8446, 64738/TCP). Multi-port is supported and already used live by
-`nats/omos-nats` (4222/7422/8080).
+restricting `tak` to a group for EUD users. The `tak-tailnet` Service has four ports
+(8089, 8443, 8446, 64738/TCP).
 
 ## 6. Home server (behind NAT)
 
@@ -239,8 +263,8 @@ DigitalOcean control panel / API if your IP changed and you are locked out).
 
 ## 8. Open questions
 
-1. Is federation (9101/9102) needed with external peers, and can they join the tailnet?
+1. ~~Is federation (9101/9102) needed with external peers?~~ Answered 2026-10-23: no federation partners; ports removed.
 2. Does any user reach CloudTAK (`onemindos.dev`) or `ws.onemindos.dev` without Tailscale?
 3. Does Matrix federation use `.well-known` delegation to 443 only?
-4. Should `tak.onemindos.dev` be deleted at cut-over, or kept for a temporary public path?
+4. ~~Should `tak.onemindos.dev` be deleted?~~ Yes, delete the record. Nothing listens on the old IP.
 5. Should the tailnet ACL be tightened before TAK relies on it?

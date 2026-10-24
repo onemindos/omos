@@ -15,11 +15,18 @@ credentials:
 initContainers:
 - name: velero-plugin-for-aws
   image: velero/velero-plugin-for-aws:v1.14.4
+  resources:
+    requests: {cpu: 10m, memory: 32Mi}
+    limits: {memory: 64Mi}
   volumeMounts:
   - mountPath: /target
     name: plugins
 snapshotsEnabled: false
 deployNodeAgent: true
+nodeAgent:
+  resources:
+    requests: {cpu: 25m, memory: 128Mi}
+    limits: {memory: 256Mi}
 configuration:
   backupStorageLocation:
   - name: default
@@ -43,5 +50,4 @@ schedules:
       - onemind-core
       - onemind-data
       - onemind-ai
-      - onemind-jobs
       snapshotVolumes: false

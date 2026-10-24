@@ -1,0 +1,44 @@
+# platform-stac: fresh STAC (SpatioTemporal Asset Catalog) on the shared onemind-data Postgres, wired to WebODM. Namespace stac.
+#
+# Covers: platform/stac/ (stac-fastapi-pgstac read-only API and in-cluster write API, STAC Browser, pgstac migration
+# hook, WebODM sync CronJob, Tailscale Ingresses, NetworkPolicies, sealed database secret).
+# Wave 5, after platform-ecosystem-resources (wave 4) has created the stac database and role in onemind-data.
+#
+# Deploy together with platform-cloudtak (PR #390): same wave, same shared Postgres. Replaces the old onetak/stac-api
+# and onetak-geo-db that PR #406 removes; nothing here depends on them.
+#
+# Nothing breaks without a human: the API, browser and schema come up on their own. The WebODM sync waits for two
+# Secrets that are not in Git (platform/stac/README.md): webodm-api and stac-spaces. Until they exist it logs and exits 0.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-stac
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/stac
+    directory:
+      recurse: false
+      exclude: "*.secret*,*.env"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stac
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m

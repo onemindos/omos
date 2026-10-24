@@ -24,7 +24,6 @@ export const mapping: InventoryMapping = {
     'argocd/argocd-redis': 'component:default/argocd',
     'argocd/argocd-repo-server': 'component:default/argocd',
     'argocd/argocd-server': 'component:default/argocd',
-    'argocd/rollouts-argo-rollouts': 'component:default/argo-rollouts',
     'auth/authentik-postgres': 'component:default/authentik',
     'auth/authentik-redis': 'component:default/authentik',
     'auth/platform-auth-helm-authentik-server': 'component:default/authentik',
@@ -35,8 +34,6 @@ export const mapping: InventoryMapping = {
     'cert-manager/cert-manager-cainjector': 'component:default/cert-manager',
     'cert-manager/cert-manager-webhook': 'component:default/cert-manager',
     'clickhouse/chi-onemind-onemind-0-0': 'component:default/clickhouse',
-    'cloudflare/cloudflared': 'component:default/cloudflared',
-    'cloudflare/cloudflared-tunnel': 'component:default/cloudflared',
     'cnpg-system/barman-plugin-barman-cloud':
       'component:default/cloudnative-pg',
     'cnpg-system/cnpg-cloudnative-pg': 'component:default/cloudnative-pg',
@@ -45,16 +42,6 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-scheduler-server': 'component:default/dapr',
     'dapr-system/dapr-sentry': 'component:default/dapr',
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
-    'dp-default-onetak-development-b188bf98/stac-browser':
-      'component:default/geo-data-services',
-    'dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7':
-      'component:default/geo-data-services',
-    'external-dns/external-dns': 'component:default/external-dns',
-    'external-secrets/external-secrets': 'component:default/external-secrets',
-    'external-secrets/external-secrets-cert-controller':
-      'component:default/external-secrets',
-    'external-secrets/external-secrets-webhook':
-      'component:default/external-secrets',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
     'hermes/hermes-legacy': 'component:default/hermes-legacy',
@@ -102,6 +89,8 @@ export const mapping: InventoryMapping = {
     'nats/nats-metrics-scrape': 'component:default/nats',
     'nats/nats-surveyor': 'component:default/nats-surveyor',
     'nats/nats-ui': 'component:default/nats-ui',
+    'nextcloud/nextcloud': 'component:default/nextcloud',
+    'nextcloud/nextcloud-redis': 'component:default/nextcloud',
     'omos/feed-intel': 'component:default/omos-data-pipeline',
     'omos/feed-satellites': 'component:default/omos-data-pipeline',
     'omos/omos-mission-engine': 'component:default/omos-data-pipeline',
@@ -113,51 +102,16 @@ export const mapping: InventoryMapping = {
     'onemind-core/onemind-core': 'component:default/onemind-core',
     'onemind-core/onemind-ingestion': 'component:default/onemind-core',
     'onemind-core/openfga': 'component:default/openfga',
-    'onemind-registry/harbor-core': 'component:default/harbor',
-    'onemind-registry/harbor-database': 'component:default/harbor',
-    'onemind-registry/harbor-jobservice': 'component:default/harbor',
-    'onemind-registry/harbor-nginx': 'component:default/harbor',
-    'onemind-registry/harbor-portal': 'component:default/harbor',
-    'onemind-registry/harbor-redis': 'component:default/harbor',
-    'onemind-registry/harbor-registry': 'component:default/harbor',
-    'onemind-registry/harbor-trivy': 'component:default/harbor',
-    'onemind-search/onemind-search-master': 'component:default/opensearch',
     'onetak/nodeodm': 'component:default/webodm',
-    'onetak/onetak-geo-db': 'component:default/geo-data-services',
     'onetak/onetak-media': 'component:default/onetak',
-    'onetak/stac-api': 'component:default/geo-data-services',
     'onetak/tak-portal': 'component:default/onetak',
     'onetak/tile38': 'component:default/geo-data-services',
     'onetak/tileserver-gl': 'component:default/tileserver-gl',
     'onetak/webodm': 'component:default/webodm',
     'onetak/webodm-broker': 'component:default/webodm',
     'onetak/webodm-db': 'component:default/webodm',
-    'openchoreo-control-plane/cluster-gateway': 'component:default/openchoreo',
-    'openchoreo-control-plane/controller-manager':
-      'component:default/openchoreo',
-    'openchoreo-control-plane/openchoreo-api': 'component:default/openchoreo',
-    'openchoreo-control-plane/portal-assistant': 'component:default/openchoreo',
-    'openchoreo-data-plane/cluster-agent-dataplane':
-      'component:default/openchoreo',
-    'openchoreo-observability-plane/cluster-agent-observabilityplane':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/controller-manager':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/events-collector':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/finops-opencost-adapter':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/logs-adapter-opensearch':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/metrics-adapter-prometheus':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/observer':
-      'component:default/openchoreo-observability',
-    'openchoreo-observability-plane/tracing-adapter-opensearch':
-      'component:default/openchoreo-observability',
     'opencost/opencost': 'component:default/opencost',
     'ops/platform-volsync': 'component:default/volsync',
-    'spire-system/spire-server': 'component:default/spire',
     'tailscale/egress': 'component:default/tailscale-operator',
     'tailscale/operator': 'component:default/tailscale-operator',
     'tailscale/ts-agent-console-8khxt': 'component:default/tailscale-operator',
@@ -228,12 +182,6 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
-    'argo-rollouts': {
-      title: 'Argo Rollouts',
-      system: 'gitops-delivery',
-      pillar: 'so',
-      review: 'proposed',
-    },
     argocd: {
       title: 'ArgoCD',
       system: 'gitops-delivery',
@@ -264,12 +212,6 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
-    cloudflared: {
-      title: 'Cloudflare Tunnel (standby)',
-      system: 'infrastructure',
-      pillar: 'so',
-      review: 'proposed',
-    },
     'cloudnative-pg': {
       title: 'CloudNativePG',
       system: 'data-storage',
@@ -288,18 +230,6 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'approved',
     },
-    'external-dns': {
-      title: 'ExternalDNS',
-      system: 'infrastructure',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    'external-secrets': {
-      title: 'External Secrets Operator',
-      system: 'identity-access',
-      pillar: 'so',
-      review: 'proposed',
-    },
     fedhub: {
       title: 'FedHub',
       system: 'tak-ecosystem',
@@ -315,12 +245,6 @@ export const mapping: InventoryMapping = {
     grafana: {
       title: 'Grafana',
       system: 'observability',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    harbor: {
-      title: 'Harbor',
-      system: 'gitops-delivery',
       pillar: 'so',
       review: 'proposed',
     },
@@ -426,6 +350,12 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
+    nextcloud: {
+      title: 'Nextcloud',
+      system: 'data-storage',
+      pillar: 'so',
+      review: 'proposed',
+    },
     ollama: {
       title: 'Ollama',
       system: 'ai-agents',
@@ -450,18 +380,6 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
-    openchoreo: {
-      title: 'OpenChoreo',
-      system: 'developer-platform',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    'openchoreo-observability': {
-      title: 'OpenChoreo observability plane',
-      system: 'observability',
-      pillar: 'so',
-      review: 'proposed',
-    },
     opencost: {
       title: 'OpenCost',
       system: 'observability',
@@ -471,12 +389,6 @@ export const mapping: InventoryMapping = {
     openfga: {
       title: 'OpenFGA',
       system: 'identity-access',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    opensearch: {
-      title: 'OpenSearch',
-      system: 'data-storage',
       pillar: 'so',
       review: 'proposed',
     },
@@ -495,12 +407,6 @@ export const mapping: InventoryMapping = {
     'redpanda-connect': {
       title: 'Redpanda Connect',
       system: 'messaging-nats',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    spire: {
-      title: 'SPIRE',
-      system: 'identity-access',
       pillar: 'so',
       review: 'proposed',
     },

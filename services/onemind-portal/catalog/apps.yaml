@@ -114,8 +114,7 @@ kind: System
 metadata:
   name: gitops-delivery
   title: GitOps & delivery
-  description: Argo CD and Argo Rollouts, the container registry, the GitHub
-    runner and source hosting.
+  description: Argo CD, the container registry, the GitHub runner and source hosting.
   labels:
     onemind.io/catalog-axis: deployment
     onemind.io/pillar: so
@@ -130,8 +129,7 @@ kind: System
 metadata:
   name: developer-platform
   title: Developer platform
-  description: The Backstage portal, OpenChoreo control and data planes, cluster
-    dashboards and runbooks.
+  description: The Backstage portal, cluster dashboards and runbooks.
   labels:
     onemind.io/catalog-axis: deployment
     onemind.io/pillar: so
@@ -468,18 +466,17 @@ metadata:
     onemind.io/verified-at: 2026-10-20T06:51:11.173Z
     onemind.io/documented-address: https://argocd.tail717ba0.ts.net
     onemind.io/documented-tags: Monitoring
-    argocd/app-name: app-of-apps
+    argocd/app-name: platform-argocd
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: app-of-apps,platform-ecosystem-applications,platform-ecosystem-foundation,platform-ecosystem-resources
+    onemind.io/argocd-apps: app-of-apps,platform-argocd,platform-ecosystem-applications,platform-ecosystem-foundation,platform-ecosystem-resources
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: argocd
     backstage.io/kubernetes-namespace: argocd
     backstage.io/kubernetes-label-selector: app.kubernetes.io/name in
       (argocd-application-controller,argocd-applicationset-controller,argocd-dex-server,argocd-notifications-controller,argocd-redis,argocd-repo-server,argocd-server)
     grafana/alert-label-selector: namespace=argocd
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=argocd-application-controller&var-workload=argocd-applicationset-controller&var-workload=argocd-dex-server&var-workload=argocd-notifications-controller&var-workload=argocd-redis&var-workload=argocd-repo-server&var-workload=argocd-server
-    onemind.io/logs-query: '{k8s_namespace_name="argocd",
-      k8s_pod_name=~"(argocd-application-controller|argocd-applicationset-controller|argocd-dex-server|argocd-notifications-controller|argocd-redis|argocd-repo-server|argocd-server)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd
+    onemind.io/logs-query: '{k8s_namespace_name="argocd"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/argocd/
     github.com/project-slug: onemindos/omos
@@ -1207,7 +1204,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
   links:
-    - url: https://tak.onemindos.dev:8446
+    - url: https://tak.tail717ba0.ts.net:8446
       title: Open application
       icon: dashboard
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
@@ -1314,7 +1311,7 @@ metadata:
     - launcher-review-required
     - tak-ecosystem
   links:
-    - url: https://fedhub.onemindos.dev
+    - url: https://fedhub.tail717ba0.ts.net:9443
       title: Open application
       icon: dashboard
   annotations:
@@ -6216,71 +6213,14 @@ spec:
   system: observability
 ---
 apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: onetak-stac-readonly
-  title: OneTAK STAC read-only API
-  description: Reviewed collection/search surface for the existing STAC pilot.
-    Documentation is not proof of live query success.
-  annotations:
-    backstage.io/source-location: url:https://github.com/onemindos/omos/blob/main/platform/onetak/stac.yaml
-    onemind.io/contract-scope: read-only subset; no catalog writes or full-STAC compliance claim
-    onemind.io/pillar-review: proposed
-  links:
-    - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/stac/
-      title: STAC diagnosis and recovery
-  labels:
-    onemind.io/pillar: so
-spec:
-  type: openapi
-  lifecycle: experimental
-  owner: group:default/onemind-admins
-  system: geospatial
-  definition: |
-    openapi: 3.0.3
-    info:
-      title: OneTAK STAC read-only subset
-      version: 1.0.0
-      description: Reviewed interface subset, not generated or validated full upstream
-        OpenAPI. Runtime errors and data freshness are observed separately.
-    servers:
-    - url: http://development-default.apps.openchoreo.100-110-185-30.nip.io/stac-browser-http/catalog
-    paths:
-      /:
-        get:
-          summary: Landing page
-          responses:
-            '200':
-              description: STAC response
-            '500':
-              description: Backing API error; no data freshness conclusion
-      /collections:
-        get:
-          summary: Collection listing
-          responses:
-            '200':
-              description: STAC response
-            '500':
-              description: Backing API error; no data freshness conclusion
-      /search:
-        get:
-          summary: Read-only bounded item search
-          responses:
-            '200':
-              description: STAC response
-            '500':
-              description: Backing API error; no data freshness conclusion
----
-apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: platform-core
   tags:
     - kubernetes
   title: Platform core manifests
-  description: Sealed Secrets controller, certificate issuers, standby Cloudflare
-    tunnel config, GitHub runner and Tailscale policy (Argo application
-    platform-core).
+  description: Sealed Secrets controller, GitHub runner and Tailscale policy (Argo
+    application platform-core).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -6362,73 +6302,6 @@ metadata:
     onemind.io/recovery-runbook: apps/ingress-nginx/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: ingress-nginx/ingress-nginx-controller
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: external-dns
-  tags:
-    - kubernetes
-  title: ExternalDNS
-  description: Synchronizes DNS records for cluster ingresses.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-external-dns
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: external-dns
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=platform-external-dns,app.kubernetes.io/name=external-dns
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: external-dns
-    grafana/alert-label-selector: namespace=external-dns
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=external-dns
-    onemind.io/logs-query: '{k8s_namespace_name="external-dns"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/external-dns/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: external-dns/external-dns
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: infrastructure
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: cloudflared
-  tags:
-    - kubernetes
-  title: Cloudflare Tunnel (standby)
-  description: Cloudflare tunnel connector, kept as a cold standby.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-cloudflared
-    argocd/instance-name: onemind-cloud
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: cloudflare
-    backstage.io/kubernetes-namespace: cloudflare
-    grafana/alert-label-selector: namespace=cloudflare
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=cloudflare
-    onemind.io/logs-query: '{k8s_namespace_name="cloudflare"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/cloudflared/
-    github.com/project-slug: onemindos/omos
-    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
-    onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: cloudflare/cloudflared,cloudflare/cloudflared-tunnel
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6679,47 +6552,12 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: spire
-  tags:
-    - kubernetes
-  title: SPIRE
-  description: Workload identity (SPIFFE).
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-spire
-    argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-spire,ecosystem-spire-crds
-    backstage.io/kubernetes-namespace: spire-system
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=server,app.kubernetes.io/instance=spire,app.kubernetes.io/name=server
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: spire-system
-    grafana/alert-label-selector: namespace=spire-system
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=spire-system
-    onemind.io/logs-query: '{k8s_namespace_name="spire-system"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/spire/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: spire-system/spire-server
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: identity-access
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: kyverno
   tags:
     - kubernetes
   title: Kyverno
   description: Admission and background policy engine; also carries the
-    platform-security Argo application (Kyverno, Falco, SPIRE and OpenFGA
-    wiring).
+    platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -6775,106 +6613,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: external-secrets
-  tags:
-    - kubernetes
-  title: External Secrets Operator
-  description: Synchronizes secrets from external stores.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-external-secrets
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: external-secrets
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=external-secrets
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: external-secrets
-    grafana/alert-label-selector: namespace=external-secrets
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=external-secrets
-    onemind.io/logs-query: '{k8s_namespace_name="external-secrets"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/external-secrets/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: external-secrets/external-secrets,external-secrets/external-secrets-cert-controller,external-secrets/external-secrets-webhook
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: identity-access
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: argo-rollouts
-  tags:
-    - kubernetes
-  title: Argo Rollouts
-  description: Progressive delivery controller.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: argo-rollouts
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: argocd
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=rollouts-controller,app.kubernetes.io/instance=rollouts,app.kubernetes.io/name=argo-rollouts
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: argocd
-    grafana/alert-label-selector: namespace=argocd
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=argocd&var-workload=rollouts-argo-rollouts
-    onemind.io/logs-query: '{k8s_namespace_name="argocd",
-      k8s_pod_name=~"(rollouts-argo-rollouts)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/argo-rollouts/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: argocd/rollouts-argo-rollouts
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: gitops-delivery
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: harbor
-  tags:
-    - kubernetes
-  title: Harbor
-  description: In-cluster container registry with image scanning.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-harbor
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: onemind-registry
-    backstage.io/kubernetes-label-selector: app=harbor,release=harbor
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onemind-registry
-    grafana/alert-label-selector: namespace=onemind-registry
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-registry
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-registry"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/harbor/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onemind-registry/harbor-core,onemind-registry/harbor-database,onemind-registry/harbor-jobservice,onemind-registry/harbor-nginx,onemind-registry/harbor-portal,onemind-registry/harbor-redis,onemind-registry/harbor-registry,onemind-registry/harbor-trivy
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: gitops-delivery
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: backstage
   tags:
     - kubernetes
@@ -6906,76 +6644,6 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: developer-platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: openchoreo
-  tags:
-    - kubernetes
-  title: OpenChoreo
-  description: OpenChoreo control plane and data plane, defaults, projects and
-    prerequisites.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-oc-control
-    argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: ecosystem-oc-control,platform-openchoreo-data-plane,platform-openchoreo-defaults,platform-openchoreo-platform,platform-openchoreo-prereqs,platform-openchoreo-projects
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: openchoreo-control-plane,openchoreo-data-plane
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name in (openchoreo-control-plane,openchoreo-data-plane)
-    grafana/alert-label-selector: namespace=openchoreo-control-plane
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-control-plane&var-namespace=openchoreo-data-plane
-    onemind.io/logs-query: '{k8s_namespace_name=~"openchoreo-control-plane|openchoreo-data-plane"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/openchoreo/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: openchoreo-control-plane/cluster-gateway,openchoreo-control-plane/controller-manager,openchoreo-control-plane/openchoreo-api,openchoreo-control-plane/portal-assistant,openchoreo-data-plane/cluster-agent-dataplane
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: developer-platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: openchoreo-observability
-  tags:
-    - kubernetes
-  title: OpenChoreo observability plane
-  description: OpenChoreo observer, adapters and collectors for logs, traces,
-    metrics, events and FinOps.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-openchoreo-observability
-    argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: platform-openchoreo-events,platform-openchoreo-finops,platform-openchoreo-logs,platform-openchoreo-observability,platform-openchoreo-traces
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: openchoreo-observability-plane
-    backstage.io/kubernetes-namespace: openchoreo-observability-plane
-    grafana/alert-label-selector: namespace=openchoreo-observability-plane
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=openchoreo-observability-plane
-    onemind.io/logs-query: '{k8s_namespace_name="openchoreo-observability-plane"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/openchoreo-observability/
-    github.com/project-slug: onemindos/omos
-    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
-    onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: openchoreo-observability-plane/cluster-agent-observabilityplane,openchoreo-observability-plane/controller-manager,openchoreo-observability-plane/events-collector,openchoreo-observability-plane/finops-opencost-adapter,openchoreo-observability-plane/logs-adapter-opensearch,openchoreo-observability-plane/metrics-adapter-prometheus,openchoreo-observability-plane/observer,openchoreo-observability-plane/tracing-adapter-opensearch
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: observability
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7132,39 +6800,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: opensearch
-  tags:
-    - kubernetes
-  title: OpenSearch
-  description: Search and log store.
-  annotations:
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-opensearch
-    argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: onemind-search
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/instance=opensearch,app.kubernetes.io/name=opensearch
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onemind-search
-    grafana/alert-label-selector: namespace=onemind-search
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onemind-search
-    onemind.io/logs-query: '{k8s_namespace_name="onemind-search"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/opensearch/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: onemind-search/onemind-search-master
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: service
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: data-storage
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: velero
   tags:
     - kubernetes
@@ -7186,6 +6821,41 @@ metadata:
     onemind.io/recovery-runbook: apps/velero/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: velero/velero
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: data-storage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: nextcloud
+  tags:
+    - kubernetes
+  title: Nextcloud
+  description: Private file and vault sync for the Mac and Android (Nextcloud, its
+    Redis and the files volume).
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-nextcloud
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: nextcloud
+    onemind.io/kubernetes-workloads: nextcloud/nextcloud,nextcloud/nextcloud-redis
+    backstage.io/kubernetes-namespace: nextcloud
+    backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
+    onemind.io/kubernetes-scope: namespace
+    grafana/alert-label-selector: namespace=nextcloud
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=nextcloud
+    onemind.io/logs-query: '{k8s_namespace_name="nextcloud"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/nextcloud/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7374,20 +7044,50 @@ metadata:
   tags:
     - kubernetes
   title: OneTAK geospatial services
-  description: Tile38, STAC API/browser and the geo database.
+  description: Tile38 and the STAC browser.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: onetak,dp-default-onetak-development-b188bf98
+    onemind.io/kubernetes-namespaces: onetak
     grafana/alert-label-selector: namespace=onetak
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-namespace=dp-default-onetak-development-b188bf98&var-workload=onetak-geo-db&var-workload=stac-api&var-workload=stac-browser-development-0c6b80f7&var-workload=tile38
-    onemind.io/logs-query: '{k8s_namespace_name=~"onetak|dp-default-onetak-development-b188bf98",
-      k8s_pod_name=~"(onetak-geo-db|stac-api|stac-browser-development-0c6b80f7|tile38)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=onetak&var-workload=tile38
+    onemind.io/logs-query: '{k8s_namespace_name="onetak", k8s_pod_name=~"(tile38)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/geo-data-services/
     github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: dp-default-onetak-development-b188bf98/stac-browser-development-0c6b80f7,onetak/onetak-geo-db,onetak/stac-api,onetak/tile38
+    onemind.io/kubernetes-workloads: onetak/tile38
+    backstage.io/kubernetes-namespace: onetak
+    backstage.io/kubernetes-label-selector: app=tile38
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: geospatial
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: stac
+  tags:
+    - kubernetes
+  title: STAC imagery catalog
+  description: STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-stac
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    backstage.io/kubernetes-namespace: stac
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=stac
+    grafana/alert-label-selector: namespace=stac
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/stac/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

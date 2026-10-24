@@ -4,3 +4,4 @@ metadata:
   name: omos
   labels:
     app.kubernetes.io/part-of: omos-platform
+    onemind.io/layer: sense

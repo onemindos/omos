@@ -12,8 +12,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "platform/ecosystem/resources/secrets"
-NAMESPACES = ["onemind-data", "onemind-core", "onemind-ai", "onemind-media",
-              "onemind-search", "onemind-registry", "onemind-jobs", "velero"]
+NAMESPACES = ["onemind-data", "onemind-core", "onemind-ai", "velero"]
 
 
 def existing(namespace, name):
@@ -63,7 +62,7 @@ def main():
         add(app_namespaces[role], role.replace("_", "-") + "-db", {**pair, "uri": uri})
 
     master = "sk-" + secrets.token_urlsafe(40)
-    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core", "openchoreo"]}
+    clients = {n: "sk-" + secrets.token_urlsafe(40) for n in ["core"]}
     add("onemind-ai", "litellm-auth", {"master-key": master})
     add("onemind-ai", "litellm-client-keys", clients)
     # Provider credentials come from the existing LiteLLM provider secret (OpenClaw, their former source, was retired).
@@ -84,11 +83,6 @@ def main():
     })
     add("backstage", "onemind-core-gateway", {"ONEMIND_CORE_GATEWAY_KEY": gateway})
     add("onemind-core", "openfga-auth", {"keys": secrets.token_urlsafe(48)})
-    add("onemind-search", "opensearch-auth", {"password": "Om1!" + secrets.token_urlsafe(40)})
-    add("onemind-registry", "harbor-admin", {"password": secrets.token_urlsafe(40)})
-    media_key, media_secret = "onemind" + secrets.token_hex(6), secrets.token_urlsafe(48)
-    add("onemind-media", "livekit-keys", {"keys.yaml": media_key + ": " + media_secret + "\n"})
-    add("onemind-media", "livekit-client", {"api-key": media_key, "api-secret": media_secret})
     backup = existing("ops", "platform-backup-credentials")
     add("velero", "velero-credentials", {"cloud": "[default]\naws_access_key_id=" + backup["S3_ACCESS_KEY"] +
                                          "\naws_secret_access_key=" + backup["S3_SECRET_KEY"] + "\n"})

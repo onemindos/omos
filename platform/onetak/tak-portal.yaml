@@ -17,16 +17,16 @@ spec:
         - name: ghcr
       containers:
         - name: portal
-          image: ghcr.io/onemindos/tak-portal:latest
+          image: ghcr.io/onemindos/tak-portal@sha256:eaa1472927823165df82c715c9cd77da36c5d503f75c4172d1215c679fe27f6b
           ports:
             - containerPort: 8080
           env:
             - name: TAK_HOST
-              value: "tak.onemindos.dev"
+              value: "tak.tail717ba0.ts.net"
             - name: TAK_PORT
               value: "8089"
             - name: PORTAL_URL
-              value: "https://enroll.onemindos.dev"
+              value: "https://enroll.tail717ba0.ts.net"
             - name: CA_CERT_PATH
               value: "/certs/ca.pem"
             - name: CA_KEY_PATH

@@ -75,6 +75,30 @@ spec:
     name: onemind-data
   databaseReclaimPolicy: retain
 ---
+# STAC catalog (stac-fastapi-pgstac). pypgstac loads the pgstac schema into this database (platform/stac/migrate.yaml).
+# pgstac needs postgis, btree_gist and unaccent; CNPG creates them as superuser, so the stac role stays unprivileged
+# apart from CREATEROLE, which pgstac needs once to create its own pgstac_admin, pgstac_ingest and pgstac_read roles.
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-stac
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: stac
+  owner: stac
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+  extensions:
+  - name: postgis
+    ensure: present
+  - name: btree_gist
+    ensure: present
+  - name: unaccent
+    ensure: present
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:

@@ -69,15 +69,6 @@ test('an arbitrary Prometheus annotation or link cannot create a fixed native sc
   assert.equal(fields.kubernetesNamespace.status, 'missing'); // catalog default is not workload default
 });
 
-test('STAC Operations predicate requires exact managed metadata; no invented mappings', () => {
-  assert.equal(row([entity('stac-browser')]).operations.status, 'missing');
-  const e = entity('stac-browser');
-  e.metadata.labels = { 'openchoreo.io/managed': 'true' };
-  assert.equal(row([e]).operations.status, 'available');
-  e.metadata.namespace = 'other';
-  assert.equal(row([e]).operations.status, 'missing');
-});
-
 test('dependency and API relations deduplicate, resolve defaults and retain missing target counts', () => {
   const fields = row([entity('a', {}, { dependsOn: ['resource:r'], providesApis: ['x'] }, {
     relations: [{ type: 'dependsOn', targetRef: 'RESOURCE:DEFAULT/R' },

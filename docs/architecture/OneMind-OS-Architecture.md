@@ -90,7 +90,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 
 | Wave | Directory | What Lives Here |
 |------|-----------|----------------|
-| 0 | `platform/core/` | ingress-nginx, cert-manager, sealed-secrets controller, Tailscale operator, GitHub Actions runner, cloudflared (standby) |
+| 0 | `platform/core/` | ingress-nginx, cert-manager, sealed-secrets controller, Tailscale operator, GitHub Actions runner |
 | 1 | `platform/nats/` | NATS 3-node HA (Helm), NACK JetStream controller, TLS, all 39 stream + KV definitions |
 | 2 | `platform/onetak/` | OneTAK API/Events/Media/Tiles, WebODM, NodeODM, STAC |
 | 2 | `platform/takserver/` | TAK Server 5.8 (Helm), FedHub, tak-ldap, NATS leaf sidecar |
@@ -110,7 +110,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 
 **Image registry:** All images at `ghcr.io/onemindos/` — DOCR was retired 2026-07-05.
 **LB IP:** `143.244.220.155` (ingress-nginx)
-**TAK LB:** `152.42.155.95` (direct unproxied)
+**TAK:** tailnet only, `tak.tail717ba0.ts.net` (the public LB `152.42.155.95` was removed 2026-10-23)
 
 | Service | Namespace | Image | Status |
 |---------|-----------|-------|--------|
@@ -135,7 +135,6 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | sink-clickhouse | omos | ghcr.io/onemindos/sink-clickhouse:latest | ✅ live |
 | redpanda-connect | omos | ghcr.io/redpandadata/connect:latest | ✅ live |
 | omos-mission-engine | omos | ghcr.io/onemindos/omos-mission-engine | 🔴 scaled to 0 |
-| cloudflared | cloudflare | cloudflare/cloudflared | 🔴 scaled to 0 (standby) |
 | fedhub | takserver | ghcr.io/onemindos/fedhub:5.8 | ⏳ awaiting image + certs |
 | tak-ldap | takserver | ghcr.io/onemindos/tak-ldap:5.8 | ⏳ awaiting image + SealedSecret |
 | vrtak-releases | vrtak | nginx:1.27-alpine | ⏳ file server live; awaiting UE build upload |
@@ -155,7 +154,6 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 | takserver | TAK Server 5.8 + FedHub + LDAP |
 | clickhouse | ClickHouse (Altinity operator) |
 | monitoring | Prometheus + Grafana + Loki + Tempo + Alertmanager |
-| cloudflare | cloudflared (scaled to 0 — cold standby only) |
 | omos | Runtime services: tak-projector, feeds, sinks, redpanda |
 | geo | Geospatial stack (Tile38, STAC, additional tools) — **EMPTY, consolidate into onetak** |
 | takml | TAK-ML vision pipeline |
@@ -171,7 +169,7 @@ Everything in the cluster deploys in wave order. ArgoCD enforces sync order via 
 
 ## Public Hostnames
 
-All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx), except `tak.onemindos.dev`.
+All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx). `tak`, `enroll` and `fedhub` are tailnet only and need no public record.
 
 | Hostname | Backend | Status |
 |----------|---------|--------|
@@ -180,7 +178,6 @@ All DNS: Cloudflare-proxied A records → `143.244.220.155` (ingress-nginx), exc
 | media.onemindos.dev | onetak-media:9997 | ⚠️ DNS update pending |
 | ws.onemindos.dev | nats:8080 (WebSocket) | ⚠️ DNS update pending |
 | auth.onemindos.dev | Authentik IdP | ✅ live |
-| tak.onemindos.dev | tak-external LB `152.42.155.95` | ✅ live (unproxied, direct) |
 
 **Tailscale-only (never public) — `*.tail717ba0.ts.net`:**
 
@@ -406,9 +403,6 @@ kubectl create secret generic <name> -n <namespace> \
 | cloudtak-agent-token | hermes | CloudTAK API token (generate in CloudTAK UI) |
 | omos-nats-creds | omos | NATS user+password for omos namespace |
 | tak-nats-leaf | takserver | leaf.conf + ca.crt for TAK NATS bridge |
-| cloudflare-api-credentials | cloudflare | Cloudflare API key + email |
-| cloudflare-api-token | cert-manager | Cloudflare DNS API token |
-| tunnel-creds-json | cloudflare | Tunnel credentials.json |
 | nats/values.secret.yaml | nats | NATS ONEMIND + SYS passwords (Helm — out-of-band) |
 | ghcr-pull-secret | hermes/omos | GHCR pull secret (out-of-band) |
 
@@ -421,7 +415,6 @@ kubectl create secret generic <name> -n <namespace> \
 | **omos-ui** | Dead — CloudTAK is the web client. All 20 omos-ui modules become CloudTAK plugins. |
 | **`geo` namespace** | Empty — only holds secrets. Geo services already live in `onetak` ns. Move secrets, delete namespace. |
 | **worldwideview** | CesiumJS globe absorbed into CloudTAK `plugin-3d-tiles`. Not a separate app. |
-| **Cloudflared manifests** | Scaled to 0 for months — ingress-nginx handles everything. Keep as cold standby only. |
 | **osiris** | Intelligence dashboard becomes CloudTAK `plugin-intel`. Not a separate Next.js app. |
 | **VR-TAK as primary display** | Keep for VR/simulation training only. CloudTAK + CesiumJS 3D Tiles is the primary 3D experience for desktop/AR. |
 

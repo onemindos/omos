@@ -1,25 +1,22 @@
-# TAK Server on the tailnet (private path for EUDs) — Tailscale K8s Operator.
+# TAK Server on the tailnet -- the ONLY path to TAK (no public IP, no cloud LB).
 #
-# The operator sees loadBalancerClass: tailscale and creates a tailnet node named
-# `tak` (MagicDNS: tak.tail717ba0.ts.net) that forwards the ports below to the same
-# tak-lb-proxy pods that back the public tak-external LB. No public IP, no cloud LB.
-# tak-external is deliberately untouched: both paths run side by side until EUDs
-# have been re-enrolled onto the tailnet name (docs/networking/NETWORKING.md).
-#
-# Multi-port is proven on this cluster: nats/omos-nats (same class) forwards
-# 4222/7422/8080 under operator v1.98.4.
+# The Tailscale operator sees loadBalancerClass: tailscale and creates a tailnet node
+# named `tak` (MagicDNS: tak.tail717ba0.ts.net, tailnet IP 100.119.127.43) that forwards
+# the ports below to the tak-lb-proxy pods. The former public DigitalOcean LB Service
+# `tak-external` (152.42.155.95) was removed; see docs/networking/NETWORKING.md.
 #
 # Why tak-lb-proxy and not the TAK pods directly: it is already the single L4 TCP
 # passthrough in front of the api/messaging/murmur services (no TLS termination, so
-# client-cert mTLS is untouched) and keeps the two paths identical.
+# client-cert mTLS is untouched).
 #
-# Not exposed here on purpose:
-#   9101/9102  TAK federation is server-to-server with peers that are not on our tailnet;
-#              it stays on the public tak-external LB until that decision is made.
+# Not exposed on purpose:
+#   9101/9102  TAK federation. There are no federation partners; nothing serves these ports.
 #   64738/UDP  Mumble voice; the proxy is TCP-only (stream). Mumble falls back to TCP.
 #
-# Caveat: the TAK server certificate must be valid for the name EUDs dial. If clients
-# verify the hostname, add tak.tail717ba0.ts.net as a SAN when re-issuing (see runbook).
+# Certificate note: the TAK server certificate (CN=takserver) has SANs takserver,
+# takserver-api-service, takserver-messaging-service, localhost, 152.42.155.95 and
+# 10.109.1.202. It does not contain tak.tail717ba0.ts.net or 100.119.127.43. See
+# docs/networking/NETWORKING.md section 5 before relying on hostname verification.
 apiVersion: v1
 kind: Service
 metadata:

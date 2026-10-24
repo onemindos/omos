@@ -144,20 +144,55 @@ Runtime compatibility and hardware capacity must be checked before installing a
 particular release. No account credentials or inference endpoints are configured
 by adding a directory entry.
 
-## Phase 6: one portal
+## Phase 6: one portal (history) and separation from OpenChoreo
 
-OpenChoreo 1.3.1 core/observability plugins run inside the existing Backstage 1.55.3
-host; they do not replace OneMind. Authentik `openchoreo-auth` preserves the signed
-subject mapping and existing group. The single host policy intersects upstream
-permissions; machine catalog writes and platform access remain denied. Shared
-authorization results use the permission plugin PostgreSQL DB, keyed by SHA-256
-with token-expiration TTL, never raw tokens. Keep the version-locked upstream ABAC
-router adapter pinned and review on upgrade.
+In Phase 6 the OpenChoreo 1.3.1 core/observability Backstage plugins ran inside this
+host. They have been **removed again**: the portal no longer contains any `@openchoreo/*`
+package, OpenChoreo catalog sync, entity group/observability views, OpenChoreo secrets
+or `openchoreo.*` configuration. The portal stands alone:
 
-The built-in console and candidate are retired. The catalog SealedSecret and
-operator/catalog bindings remain deliberately reused. Catalog sync polls; the
-unused webhook forwarder is off until authenticated ingress is reviewed. Native
-Backstage Events/PostgreSQL and NATS are unchanged. Verified release, browser,
-security, backup/migration and rollback evidence is in
+- Sign-in is Backstage's own `oidc` provider against the Authentik application
+  `onemind-backstage` (redirect URI `<portal>/api/auth/oidc/handler/frame`), mapping the
+  signed subject to `onemind.io/oidc-sub` and the existing group. No OpenChoreo token is
+  obtained.
+- Permissions are one plain OneMind policy (see [Permission policy](#permission-policy)).
+- Catalog entities that described OpenChoreo-managed resources (projects, environments,
+  planes, the `stac-browser` pilot) are no longer synced into the catalog. Static catalog
+  entries for cluster workloads, including the OpenChoreo applications themselves, are
+  unchanged; tearing those down is a separate step.
+- STAC portal integration is removed from source together with the former backend
+  observations and catalog module. This ships with the next portal release; this
+  change does not publish an image or deploy the portal. The shared bounded HTTP
+  observer remains available for Prometheus alerts.
+
+The historical Phase 6 record is
 [`docs/operations/phase6-portal-integration.md`](../../docs/operations/phase6-portal-integration.md).
-Phases 7/8 are not included in this release.
+
+## Permission policy
+
+One plain policy (`plugins/plugin-onemind-permissions-backend/src/policy.ts`) answers every
+Backstage permission, including `catalog.entity.*` and `scaffolder.task.create`. It needs no
+OpenChoreo service or configuration.
+
+| Caller | Decision |
+| --- | --- |
+| No user identity | DENY, including reads |
+| Member of `group:default/onemind-admins` | ALLOW everything |
+| Any other signed-in user, `read` actions | ALLOW |
+| Any other signed-in user, create/update/delete (entity create/refresh/delete, location writes, `scaffolder.task.create`, ...) | DENY |
+
+Decisions are never conditional, so there is no per-entity filtering. Machine callers (the MCP
+token, plugin-to-plugin calls) are service principals limited by `backend.auth.externalAccess`,
+not by this policy.
+
+What the previous policy enforced, for the record: the OneMind rule above was an upper bound,
+then `catalog.entity.*` and `scaffolder.task.create` were delegated to the OpenChoreo policy.
+That policy let a user act on catalog entities that carry no `openchoreo.io/namespace`
+annotation (all OneMind entities) and gated OpenChoreo-managed entities by the user's
+OpenChoreo capabilities; `scaffolder.task.create` and `catalog.entity.create` needed any
+OpenChoreo create capability. Only the operator (`akadmin`) had an OpenChoreo binding
+(`operator-admin-binding`, admin), so in practice admin had full access and everyone else was
+read-only on non-OpenChoreo entities. Differences now: OpenChoreo-managed entities are no longer in the portal catalog, and an
+administrator no longer needs an OpenChoreo role. The `onemind_authz_cache` table that cached
+OpenChoreo capabilities is no longer used and is left in the permission database; drop it by
+hand when convenient.

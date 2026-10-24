@@ -32,7 +32,7 @@ spec:
                       - onemind-ecosystem-cpu
       containers:
         - name: tileserver-gl
-          image: maptiler/tileserver-gl:latest
+          image: maptiler/tileserver-gl@sha256:3a9ccdb24820b6814c8119bcc8a4376c39867cb0ffe69d62919ef898b90c2427
           ports:
             - containerPort: 8080
           args:

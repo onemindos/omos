@@ -97,7 +97,7 @@ describe('live inventory enabled, against a real catalog', () => {
         const count = (
           (await (await fetch(url, { headers })).json()) as Entity[]
         ).length;
-        if (count >= 186) return;
+        if (count >= 150) return;
         await new Promise(r => setTimeout(r, 500));
       }
     };
@@ -119,7 +119,7 @@ describe('live inventory enabled, against a real catalog', () => {
       if (
         items.some(e => e.metadata.name === worker) &&
         flagged === 'removed' &&
-        reviewedDone.length >= 175
+        reviewedDone.length >= 139
       )
         break;
       await new Promise(r => setTimeout(r, 500));
@@ -151,9 +151,5 @@ describe('live inventory enabled, against a real catalog', () => {
     const gone = byName.get(entityName('nats', 'agenttap'))!;
     expect(gone.metadata.annotations![A.state]).toBe('missing-review-required');
     expect(gone.spec!.lifecycle).toBe('removed');
-    const dpReviewed = byName.get(
-      'k8s-dp-default-onetak-development-b188bf98-stac-browse-45be60df',
-    )!;
-    expect(dpReviewed.metadata.annotations![A.checkedAt]).toBeUndefined(); // excluded namespace: not tracked
   });
 });

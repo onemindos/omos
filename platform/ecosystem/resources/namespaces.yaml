@@ -7,6 +7,7 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: make-sense
 ---
 apiVersion: v1
 kind: Namespace
@@ -17,6 +18,7 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: make-sense
 ---
 apiVersion: v1
 kind: Namespace
@@ -28,48 +30,7 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-media
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-search
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-    volsync.backube/privileged-movers: 'true'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-registry
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-    volsync.backube/privileged-movers: 'true'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-jobs
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
+    onemind.io/layer: decide
 ---
 apiVersion: v1
 kind: Namespace
@@ -80,3 +41,17 @@ metadata:
   labels:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
+    onemind.io/layer: guard
+---
+# `default` is the cluster's built-in namespace. It was defined by the (now removed)
+# platform-openchoreo-defaults Application, which also set openchoreo.dev/control-plane;
+# only the layer label lives on. ServerSideApply manages just this label and Delete=false
+# means Argo CD never deletes the namespace, even if this Application were ever removed.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true,Delete=false
+  labels:
+    onemind.io/layer: system

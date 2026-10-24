@@ -1,0 +1,130 @@
+# Private file sync only. No Office, Talk, AI, or public sharing endpoint.
+# Apache bootstrap needs ownership and uid switching; the namespace uses baseline Pod Security.
+fullnameOverride: nextcloud
+image:
+  tag: 35.0.2-apache
+replicaCount: 1
+internalDatabase:
+  enabled: false
+externalDatabase:
+  enabled: true
+  type: postgresql
+  host: onemind-data-rw.onemind-data.svc.cluster.local
+  database: nextcloud
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-runtime
+    usernameKey: db-username
+    passwordKey: db-password
+externalRedis:
+  enabled: true
+  host: nextcloud-redis
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-runtime
+    passwordKey: redis-password
+nextcloud:
+  host: onemind-files.tail717ba0.ts.net
+  trustedDomains:
+  - onemind-files.tail717ba0.ts.net
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-runtime
+    usernameKey: admin-username
+    passwordKey: admin-password
+  strategy:
+    type: Recreate
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+      add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
+  podSecurityContext:
+    fsGroup: 33
+    seccompProfile:
+      type: RuntimeDefault
+  configs:
+    onemind.config.php: |
+      <?php
+      $CONFIG = [
+        'overwritehost' => 'onemind-files.tail717ba0.ts.net',
+        'overwriteprotocol' => 'https',
+        'overwrite.cli.url' => 'https://onemind-files.tail717ba0.ts.net',
+        'default_phone_region' => 'US',
+        'skeletondirectory' => '',
+        'maintenance_window_start' => 7,
+        'log_type' => 'errorlog',
+        'loglevel' => 2,
+      ];
+  phpConfigs:
+    onemind.ini: |
+      upload_max_filesize=4G
+      post_max_size=4G
+      memory_limit=512M
+      max_input_time=3600
+      max_execution_time=3600
+  hooks:
+    post-installation: |
+      # The mobile sync account has no administrator privileges.
+      set -eu
+      php /var/www/html/occ background:cron
+      php /var/www/html/occ user:add --password-from-env --display-name=Zeus zeus
+  extraEnv:
+  # Android WebDAV clients can send whole files; the library includes files over 1 GiB.
+  - name: APACHE_BODY_LIMIT
+    value: '0'
+  - name: PHP_UPLOAD_LIMIT
+    value: 4G
+  - name: OC_PASS
+    valueFrom:
+      secretKeyRef:
+        name: nextcloud-runtime
+        key: sync-password
+cronjob:
+  enabled: true
+  type: sidecar
+  sidecar:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+        add:
+        - SETUID
+        - SETGID
+persistence:
+  enabled: true
+  existingClaim: nextcloud-files
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: '2'
+    memory: 2Gi
+startupProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 90
+livenessProbe:
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
+readinessProbe:
+  initialDelaySeconds: 10
+  timeoutSeconds: 10

@@ -52,6 +52,15 @@ be exposed publicly through a tunnel in the future.
 8. Make recovery, data export, app backups, identity recovery and infrastructure
    portability part of app selection and onboarding, rather than postponing them
    until the migration home.
+9. Extend the same operational model toward managing communities, multiple
+   locations and small smart cities. Provide a coherent bird's-eye view across
+   Kubernetes, AI work, physical assets and live operations; automate useful work
+   rather than only expanding the application inventory.
+10. Support the long-term direction of robotics, physical AI, drones and autonomy,
+    including useful local operation. Preserve extensibility across devices and
+    applications. These goals do not establish unlimited capacity, authorize
+    autonomous physical actions or imply that Kubernetes supplies real-time vehicle
+    control. Recorded from the user's additional instructions on 2026-10-08.
 
 9. Organize the OneMind catalog by **SO — Sovereign Operations**,
    **LE — Legacy Evolution**, **HP — Holistic Performance** and
@@ -82,6 +91,10 @@ verified offline behavior. See `self-hosted-capability-plan.md` for those gates.
   accepted deployments or permission changes.
 - Home hardware, physical network, outage targets, family/worker roles, autonomous
   action policy, recovery targets and exact app inventory still need definition.
+- The full CNCF portfolio screening and proposed physical-AI architecture are in
+  the CNCF Ecosystem Review, kept outside this repo at
+  `~/OneMind-NEW/CNCF Ecosystem Review/2026-10-08-cncf-onemind-ecosystem-review.md`. Its project dispositions
+  and staged acceptance gates are recommendations, not deployment decisions.
 
 ## How future work should use this memory
 

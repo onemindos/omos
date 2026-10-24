@@ -8,7 +8,7 @@ kind: ConfigMap
 metadata:
   name: fedhub-broker-config
   namespace: takserver
-  labels: { app: fedhub, component: broker }
+  labels: {app: fedhub, component: broker}
 data:
   federation-hub-broker.yml: |
     keystoreType: JKS
@@ -52,7 +52,7 @@ kind: ConfigMap
 metadata:
   name: fedhub-ui-config
   namespace: takserver
-  labels: { app: fedhub, component: ui }
+  labels: {app: fedhub, component: ui}
 data:
   federation-hub-ui.yml: |
     port: 9100
@@ -69,15 +69,51 @@ data:
     authUsers: /opt/tak/federation-hub/authorized_users.yml
     prometheusEnable: false
 
-    # Authentik OAuth — configure fedhub application in Authentik, then update
-    # keycloakSecret with the client secret via SealedSecret or patched ConfigMap.
+    # Authentik OAuth. The Authentik side (provider, application `fedhub`, group `fedhub-admins`) is created by
+    # platform/ecosystem/resources/fedhub-authentik-provider.yaml. keycloakSecret below is a token, not a value:
+    # the copy-configs init container in fedhub.yaml replaces it with the key `keycloakSecret` of the sealed Secret
+    # fedhub-oidc-secret. keycloakTlsCertFile is the ONLY trust anchor FedHub uses when it fetches the OIDC
+    # discovery document (it does not fall back to the JVM trust store), so it must be the CA that signs
+    # auth.onemindos.dev: the Google Trust Services root in ConfigMap fedhub-authentik-ca (below).
     allowOauth: true
-    oauthPort: 9100
+    # OAuth runs on its own TLS port without a client certificate; the main port (9100) always requires one.
+    oauthPort: 9443
+    oauthPortTls: true
     keycloakServerName: OneMind Authentik
-    keycloakTlsCertFile: /opt/tak/federation-hub/certs/files/takserver.pem
+    keycloakTlsCertFile: /opt/tak/federation-hub/authentik-ca/ca.pem
     keycloakClientId: fedhub
-    keycloakSecret: REPLACE_WITH_AUTHENTIK_SECRET
-    keycloakRedirectUri: https://fedhub.onemindos.dev/login/redirect
+    keycloakSecret: __FEDHUB_OIDC_SECRET__
+    # The key really is spelled `keycloakrRedirectUri` (extra r): that is the field name in FedHub 5.8's
+    # FederationHubUIConfig. The documented `keycloakRedirectUri` is silently ignored (the config class ignores unknown
+    # keys), the value stays empty, and FederationHubUIServer then never starts the OAuth connector on `oauthPort`
+    # (it requires allowOauth and every keycloak* field, including the redirect URI, to be non-empty).
+    keycloakrRedirectUri: https://fedhub.tail717ba0.ts.net:9443/login/redirect
     keycloakConfigurationEndpoint: https://auth.onemindos.dev/application/o/fedhub/.well-known/openid-configuration
     keycloakClaimName: groups
-    keycloakAdminClaimValue: hub-admin-group
+    keycloakAdminClaimValue: fedhub-admins
+---
+# Public CA certificate (not a secret): GTS Root R4, the Google Trust Services root that signs the certificate
+# chain served for auth.onemindos.dev (leaf -> WE1 -> GTS Root R4). SHA-256 fingerprint:
+# 34:9D:FA:40:58:C5:E2:63:12:3B:39:8A:E7:95:57:3C:4E:13:13:C8:3F:E6:8F:93:55:6C:D5:E8:03:1B:3C:7D
+# If the auth edge ever moves to another CA, replace this PEM (FedHub reads only the first certificate in it).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fedhub-authentik-ca
+  namespace: takserver
+  labels: {app: fedhub, component: ui}
+data:
+  ca.pem: |
+    -----BEGIN CERTIFICATE-----
+    MIICCTCCAY6gAwIBAgINAgPlwGjvYxqccpBQUjAKBggqhkjOPQQDAzBHMQswCQYD
+    VQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2VzIExMQzEUMBIG
+    A1UEAxMLR1RTIFJvb3QgUjQwHhcNMTYwNjIyMDAwMDAwWhcNMzYwNjIyMDAwMDAw
+    WjBHMQswCQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2Vz
+    IExMQzEUMBIGA1UEAxMLR1RTIFJvb3QgUjQwdjAQBgcqhkjOPQIBBgUrgQQAIgNi
+    AATzdHOnaItgrkO4NcWBMHtLSZ37wWHO5t5GvWvVYRg1rkDdc/eJkTBa6zzuhXyi
+    QHY7qca4R9gq55KRanPpsXI5nymfopjTX15YhmUPoYRlBtHci8nHc8iMai/lxKvR
+    HYqjQjBAMA4GA1UdDwEB/wQEAwIBhjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
+    BBSATNbrdP9JNqPV2Py1PsVq8JQdjDAKBggqhkjOPQQDAwNpADBmAjEA6ED/g94D
+    9J+uHXqnLrmvT/aDHQ4thQEd0dlq7A/Cr8deVl5c1RxYIigL9zC2L7F8AjEA8GE8
+    p/SgguMh1YQdc4acLa/KNJvxn7kjNuK8YAOdgLOaVsjh4rsUecrNIdSUtUlD
+    -----END CERTIFICATE-----

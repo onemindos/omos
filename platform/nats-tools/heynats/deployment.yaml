@@ -26,7 +26,7 @@ spec:
                 path: ca.crt
       containers:
         - name: heynats
-          image: ghcr.io/onemindos/heynats:latest
+          image: ghcr.io/onemindos/heynats@sha256:65f1d5aa46f21b14baba5942e2e5df3ec2e3d8700796cab9a7ac9d0361dffe92
           imagePullPolicy: Always
           ports:
             - name: http

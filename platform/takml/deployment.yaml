@@ -108,6 +108,12 @@ spec:
                 exit 1
               fi
               echo "JAR present: $(du -sh /jar/takml_server-2.1.jar)"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
           volumeMounts:
             - name: jar
               mountPath: /jar

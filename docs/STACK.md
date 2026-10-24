@@ -24,8 +24,9 @@ Older node counts, request percentages and M2 findings below are historical.
 
 ## Phase 6 addendum — 2026-10-19, 18:32 UTC
 
-Existing OneMind Backstage 1.55.3 now hosts pinned OpenChoreo 1.3.1 core and
-observability plugins, 2/2 ready and Argo Synced/Healthy. Real Authentik subject
+(Superseded: the OpenChoreo plugins were later removed from the portal; see
+`platform/backstage/README.md`.) Existing OneMind Backstage 1.55.3 then hosted pinned
+OpenChoreo 1.3.1 core and observability plugins, 2/2 ready and Argo Synced/Healthy. Real Authentik subject
 mapping, existing home/Today/catalog/runbooks/settings, pilot Deploy/Definition,
 logs/metrics and machine read-only boundaries passed. Shared permission-cache
 results use the existing PostgreSQL service; no raw IDP token is stored.
@@ -35,6 +36,16 @@ backup was deleted. At acceptance: 69 Argo Applications, 68 Healthy; only existi
 Matrix OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. This narrow
 observation does not recertify historical inventory.
 See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
+
+## Paperclip preparation — 2026-10-23
+
+User-requested business agent workspace, **prepared in Git; not deployed or live-verified**.
+The namespace was absent during the read-only preflight. This entry does not refresh
+historical inventory counts or certify working agent integrations.
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+|---|---|---|---|---|---|
+| 2 | `platform-paperclip` | `paperclip` | Dedicated PostgreSQL 17 and 10 GiB app + 10 GiB DB PVCs; encrypted logical dump/restore-check and two VolSync sources configured | Proposed private `paperclip.tail717ba0.ts.net`; app authentication | Awaiting reviewed merge, Argo sync and [acceptance](../platform/paperclip/README.md) |
 
 ## Summary
 
@@ -46,7 +57,7 @@ See [Phase 6 evidence](../PLATFORM-ROADMAP.md#phase-6-one-portal).
 | Namespaces | 48 |
 | Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
-| Other external listeners | TAK LB `152.42.155.95` (public), `omos-nats` Tailscale LB, OpenChoreo gateway Tailscale LB |
+| Other external listeners | `tak-tailnet` Tailscale LB (TAK, 8089/8443/8446/64738), `omos-nats` Tailscale LB |
 | Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 (see [Mutable image tags](#mutable-image-tags)) |
 
 ## Tier definitions
@@ -60,7 +71,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 ### Column legend
 
-- **Backup:** `PG dump` = scheduled CronJob that uploads an encrypted archive to Spaces and restore-verifies it. `VolSync` = restic copy of the PVC to Spaces. `Velero` = daily namespace backup (06:00 UTC, 720 h retention) for `onemind-core`, `onemind-data`, `onemind-ai`, `onemind-jobs`. `Barman` = CNPG continuous backup. `Git` = stateless, rebuilt from this repo. All of these land in DigitalOcean Spaces `nyc3`, the same provider and region as the cluster (report finding A18).
+- **Backup:** `PG dump` = scheduled CronJob that uploads an encrypted archive to Spaces and restore-verifies it. `VolSync` = restic copy of the PVC to Spaces. `Velero` = daily namespace backup (06:00 UTC, 720 h retention) for `onemind-core`, `onemind-data`, `onemind-ai`. `Barman` = CNPG continuous backup. `Git` = stateless, rebuilt from this repo. All of these land in DigitalOcean Spaces `nyc3`, the same provider and region as the cluster (report finding A18).
 - **Exposure:** `public` = reachable from the internet. `public (CF)` = nginx ingress restricted to Cloudflare source ranges. `public (open)` = nginx ingress with no source restriction. `tailnet` = Tailscale ingress or LB only. `internal` = ClusterIP only.
 - **GitOps:** `Argo` = an Argo Application reconciles it from this repo. `Helm CLI` = installed with `helm upgrade` from a laptop (see [GitOps gaps](#gitops-gaps)). `none` = applied by hand, no owner in Git or Helm.
 
@@ -71,8 +82,8 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | Application | Namespace | Purpose | State / data | Backup | Exposure | GitOps |
 |-------------|-----------|---------|--------------|--------|----------|--------|
 | `app-of-apps` | argocd | Root app; creates every `platform-*` Application from `platform/argocd` | none | Git | tailnet (Argo UI) | Argo. **OutOfSync** (not yet diagnosed) |
-| `platform-core` | kube-system, cloudflare, github-runner, tailscale | Sealed Secrets controller, Let's Encrypt DNS issuers, `cloudflared` (0 replicas, cold standby), self-hosted GitHub runner, Tailscale ACL policy | Sealed Secrets private keys (irreplaceable) | `backup-cluster-recovery` (daily 04:00 UTC) exports identity/config and the active sealing keys, encrypted | internal | Argo |
-| `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS, Ignite, 37 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **public**: LB `152.42.155.95` ports 8089, 8443, 8446, 9101, 9102, 64738, no source ranges | Argo for the overlay, **Helm CLI for the core** |
+| `platform-core` | kube-system, github-runner, tailscale | Sealed Secrets controller, self-hosted GitHub runner, Tailscale ACL policy | Sealed Secrets private keys (irreplaceable) | `backup-cluster-recovery` (daily 04:00 UTC) exports identity/config and the active sealing keys, encrypted | internal | Argo |
+| `platform-takserver` | takserver | TAK Server overlay: LB proxy, NATS leaf, ConfigMaps, Mumble, Ignite, CoT retention. **TAK core is the Helm release `takserver`** | PostgreSQL/PostGIS, Ignite, 37 GiB of PVCs | `PG dump` (02:00 UTC, 86 min), `VolSync` x5 | **tailnet only**: `tak-tailnet` (`tak.tail717ba0.ts.net`) ports 8089, 8443, 8446, 64738/TCP. The public LB `tak-external` was removed 2026-10-23 | Argo for the overlay, **Helm CLI for the core** |
 | `platform-nats` | nats | NATS 3-node JetStream cluster manifests, TLS, 39 Stream/KeyValue CRs, WebSocket ingress, Tailscale LB `omos-nats` | JetStream streams, 150 GiB of PVCs | `backup-nats-streams` stream archive (03:30 UTC, restore-verified, 39 streams), `VolSync` x3 | `ws.onemindos.dev` public (CF); `omos-nats` tailnet; 4222 internal | Argo **and** Helm CLI (two owners; the StatefulSet is tracked by both) |
 | `platform-auth-helm` | auth | Authentik IdP (chart 2026.8.2) | PostgreSQL 17, Redis, 5 GiB | `PG dump` (05:00 UTC), `VolSync` | `auth.onemindos.dev` public (CF); `onemind-auth` tailnet | Argo |
 | `platform-auth-infra` | auth | Authentik Postgres, Redis, secrets, ingress | see above | see above | see above | Argo |
@@ -90,8 +101,8 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `takserver` | takserver | takserver-4.6.0 (rev 34, 2026-09-29), local chart `platform/takserver/chart` | TAK Server API, messaging, config, plugins, Ignite, PostgreSQL | see `platform-takserver` | see `platform-takserver` | see `platform-takserver` | **Helm CLI** |
 | `nats` | nats | nats-2.14.2 (rev 10) | NATS StatefulSet | see `platform-nats` | see `platform-nats` | see `platform-nats` | **Helm CLI** (and Argo tracks the same StatefulSet) |
 | `nack` | nats | nack-0.34.0 | JetStream controller that reconciles `platform/nats/streams/` | none | Git | internal | Argo (`edge-nack`, adopted in PR #176) |
-| `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet | **Helm CLI** (not self-managed) |
-| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | Argo (`edge-cert-manager`, adopted in PR #176) (issuers are in `platform-core`) |
+| `argocd` | argocd | argo-cd-10.1.2 (app v3.4.4) | GitOps controller | CRDs and Application objects | Git, `backup-cluster-recovery` | tailnet (`argocd.tail717ba0.ts.net`) | **Helm CLI** today; `platform-argocd` (manual sync only, not yet synced) will adopt it after the pending #392 `helm upgrade`, see `docs/gitops/ARGOCD-SELF-MANAGEMENT.md`. Signs in through Authentik (`oidc.config`, group `argocd-admins` = admin) once `platform/values/argocd.yaml` is applied; local `admin` stays as break-glass until SSO is proven; Dex disabled |
+| `cert-manager` | cert-manager | cert-manager-v1.20.3 | Certificate issuance | Certificate/Secret objects | `backup-cluster-recovery` | internal | Argo (`edge-cert-manager`, adopted in PR #176). No `ClusterIssuer` exists (the unused `letsencrypt-dns` and its Cloudflare token were removed); the only issuers are namespaced self-signed ones for NATS, CloudNativePG and OpenChoreo, owned by those components |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 (app 1.15.1) | Public ingress controller, LB `143.244.220.155`, 1 replica | none | Git | **public** | Argo (`edge-ingress-nginx`, adopted in PR #176) |
 | `tailscale-operator` | tailscale | tailscale-operator-1.98.4 | Tailnet ingress, egress and LB proxies (about 24 proxy StatefulSets, operator-created) | proxy node keys | none | tailnet | Argo (`edge-tailscale-operator`, adopted in PR #176) |
 
@@ -101,14 +112,14 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 
 | Application | Namespace | Purpose | State / data | Backup | Exposure | GitOps |
 |-------------|-----------|---------|--------------|--------|----------|--------|
-| `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.onemindos.dev` **public (open)** | Argo. Health flaps to Progressing |
+| `platform-fedhub` | takserver | TAK federation hub (`fedhub:5.8`) plus MongoDB, `tak-ldap` | MongoDB | `VolSync` | `fedhub.tail717ba0.ts.net:9100` / `:9443` **tailnet (L4)** | Argo. Health flaps to Progressing |
 | `platform-backstage` | backstage | Backstage developer portal and service catalog | PostgreSQL, 10 GiB | `PG dump` (06:40 UTC), `VolSync` | `onemind-preview` tailnet | Argo |
 | `platform-monitoring` | monitoring, nats | Grafana dashboards, rules, ServiceMonitors, `nats-surveyor`, `nats-metrics-scrape` (0 replicas). **Alertmanager has no receiver** | none (stack lives in Helm release `monitoring`) | Git | `grafana` tailnet | Argo |
 | `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI) | 20 GiB time-series | `VolSync`; native backup Job suspended | internal | Argo |
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
 | `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
-| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (STAC, Tile38), WebODM | about 170 GiB of PVCs | `VolSync` x6 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.onemindos.dev` **public (open)** | Argo |
+| `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
 | `platform-kube` | kube | Headlamp and Kubernetes Dashboard | none | Git | tailnet | Argo |
@@ -128,14 +139,9 @@ All were `Synced` and `Healthy`. Chart versions are the pinned `targetRevision`.
 | `ecosystem-openfga` | onemind-core | openfga 0.3.16 | Fine-grained authorization | PostgreSQL (CNPG) | `Velero`, `Barman` | internal |
 | `ecosystem-litellm` | onemind-ai | litellm-helm 1.104.2 (OCI) | Model gateway | PostgreSQL (CNPG) | `Velero`, `Barman` | internal. `/metrics` scrape returns 401 (A6) |
 | `ecosystem-ollama` | onemind-ai | ollama 1.86.0 | Local model runtime | 20 GiB models | `Velero` (`onemind-ai`), `VolSync` | internal |
-| `ecosystem-opensearch` | onemind-search | opensearch 3.9.0 | Search | 20 GiB | `VolSync` | internal |
-| `ecosystem-harbor` | onemind-registry | harbor 1.19.2 | In-cluster container registry | 61 GiB | `VolSync` x5 | internal |
-| `ecosystem-oc-control` | openchoreo-control-plane | openchoreo-control-plane 1.3.1 (+ overrides) | OpenChoreo developer platform | none | Git | gateway LB on **tailnet** |
 | `ecosystem-dapr` | dapr-system | dapr 1.18.5 | Dapr runtime | 15 GiB | `VolSync` | internal |
 | `ecosystem-keda` | keda | keda 2.21.0 | Event-driven autoscaling | none | Git | internal |
-| `argo-rollouts` | argocd | argo-rollouts 2.43.6 | Progressive delivery (moved from `argo-rollouts` namespace to `argocd` on 2026-10-17; no Rollouts configured yet) | none | Git | internal |
 | `ecosystem-kyverno` | kyverno | kyverno 3.9.1 | Policy engine | none | Git | internal |
-| `ecosystem-spire` / `ecosystem-spire-crds` | spire-system | spire 0.30.3 / spire-crds 0.6.1 | Workload identity | 5 GiB | `VolSync` | internal |
 | `ecosystem-falco` | falco | falco 9.2.0 | Runtime security | none | Git | internal |
 | `ecosystem-opencost` | opencost | opencost 2.5.32 | Cost metrics. Duplicates kube-state-metrics series (M2) | none | Git | internal |
 
@@ -165,8 +171,8 @@ Eleven releases were installed with `helm upgrade --install` (see `platform/inst
 
 | Release | Namespace | Chart | Rev | Last updated | Values in Git | Risk if the cluster is rebuilt |
 |---------|-----------|-------|-----|--------------|---------------|-------------------------------|
-| `argocd` | argocd | argo-cd-10.1.2 | 3 | 2026-07-11 | `platform/values/argocd.yaml` | Argo itself is not declarative; bootstrap needs a laptop |
-| `cert-manager` | cert-manager | cert-manager-v1.20.3 | 5 | 2026-07-11 | `platform/values/cert-manager.yaml` | Issuers live in Git (`platform-core`), the controller does not |
+| `argocd` | argocd | argo-cd-10.1.2 | 3 | 2026-07-11 | `platform/values/argocd.yaml` | Argo itself is not declarative yet; `platform-argocd` is defined (manual sync), adoption steps in `docs/gitops/ARGOCD-SELF-MANAGEMENT.md` |
+| `cert-manager` | cert-manager | cert-manager-v1.20.3 | 5 | 2026-07-11 | `platform/values/cert-manager.yaml` | No `ClusterIssuer` is deployed (none is needed: public TLS ends at Cloudflare and tailnet TLS is Tailscale's). Add one with its own Cloudflare token the day a direct certificate is needed |
 | `ingress-nginx` | ingress-nginx | ingress-nginx-4.15.1 | 1 | 2026-07-04 | `platform/values/ingress-nginx.yaml` | LB IP `143.244.220.155` is bound to this release |
 | `loki` | monitoring | loki-7.0.0 | 4 | 2026-07-11 | `platform/values/loki.yaml` | Logs only |
 | `monitoring` | monitoring | kube-prometheus-stack-87.16.1 | 8 | 2026-07-17 | `platform/values/kube-prometheus-stack.yaml` | Alert routing (Alertmanager receiver) is not delivered anywhere (A17) |
@@ -192,11 +198,9 @@ Gaps beyond the eleven releases:
 | Path | What is behind it |
 |------|-------------------|
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
-| Public, **no source restriction** (nginx) | `enroll.onemindos.dev` (tak-portal), `fedhub.onemindos.dev`, `matrix.onemindos.com`, `element.onemindos.com` |
-| Public, direct (L4 LB) | TAK `152.42.155.95`: 8089, 8443, 8446, 9101, 9102, 64738. No source ranges |
+| Public, **no source restriction** (nginx) | `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
-| Cold standby | `cloudflared` tunnel connector, 0 replicas |
+| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 
 ## Mutable image tags
 
@@ -205,7 +209,7 @@ Gaps beyond the eleven releases:
 | Namespace | Workloads |
 |-----------|-----------|
 | nats | `heynats`, `nats-dashboard`, `nats-metrics-scrape`, `nats-ui` (all `ghcr.io/...:latest`), `nats-surveyor:latest` |
-| onetak | `nodeodm`, `stac-api`, `stac-browser`, `tak-portal`, `tile38`, `tileserver-gl`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
+| onetak | `nodeodm`, `stac-api`, `tak-portal`, `tile38`, `tileserver-gl`, `webodm`, `webodm-db` (and a bare `busybox` init container) |
 | omos | `omos-mission-engine:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |
@@ -243,3 +247,14 @@ kubectl --context $CTX get replicationsources.volsync.backube,schedules.velero.i
 ```
 
 Ownership rule used above: a workload carrying `argocd.argoproj.io/tracking-id` is Argo-managed; `meta.helm.sh/release-name` without it is Helm-CLI; neither means untracked.
+
+## Nextcloud file sync — 2026-10-23
+
+Observed live: Argo Application `platform-nextcloud` is Synced/Healthy, Nextcloud
+35.0.2 reports installed without maintenance/database upgrade pending, and the
+application (2/2) and Redis (1/1) pods are healthy. The retained file PVC is bound
+at 200 GiB; the VolSync cache PVC is 1 GiB. Private HTTPS is available at
+`https://onemind-files.tail717ba0.ts.net/`. A separate database/role uses existing
+CNPG. PRs #424/#425 are merged. The Mac's full-library upload has started;
+Samsung FolderSync two-way acceptance and full-transfer completion remain pending.
+See [setup, cost and acceptance](../platform/nextcloud/README.md).

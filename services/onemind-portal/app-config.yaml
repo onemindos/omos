@@ -90,13 +90,8 @@ auth:
   session:
     secret: ${AUTH_SESSION_SECRET}
   providers:
-    openchoreo-auth:
-      production:
-        metadataUrl: https://onemind-auth.tail717ba0.ts.net/application/o/onemind-openchoreo/.well-known/openid-configuration
-        clientId: ${OPENCHOREO_OIDC_CLIENT_ID}
-        clientSecret: ${OPENCHOREO_OIDC_CLIENT_SECRET}
-        prompt: auto
-        additionalScopes: [offline_access]
+    # The only sign-in provider: Backstage's standard OIDC provider against the Authentik
+    # application `onemind-backstage` (redirect URI <portal>/api/auth/oidc/handler/frame).
     oidc:
       production:
         metadataUrl: https://onemind-auth.tail717ba0.ts.net/application/o/onemind-backstage/.well-known/openid-configuration
@@ -238,36 +233,6 @@ events:
   http:
     topics: []
 
-# Existing OneMind host with the pinned OpenChoreo core and observability packs.
-openchoreo:
-  baseUrl: http://openchoreo-api.openchoreo-control-plane.svc.cluster.local:8080/api/v1
-  defaultOwner: onemind-admins
-  auth:
-    clientId: onemind-openchoreo
-    clientSecret: ${OPENCHOREO_SERVICE_CLIENT_SECRET}
-    tokenUrl: https://onemind-auth.tail717ba0.ts.net/application/o/token/
-    scope: openid profile email
-  schedule:
-    frequency: 300
-    timeout: 120
-  events:
-    enabled: false
-  features:
-    auth:
-      enabled: true
-    authz:
-      enabled: true
-    observability:
-      enabled: true
-    workflows:
-      enabled: false
-    assistant:
-      enabled: false
-    secretManagement:
-      enabled: false
-    deliveryInsights:
-      enabled: false
-
 onemind:
   # Sidebar and home sections for work that has not shipped yet. Flip each to
   # true in the PR that builds its target (see docs/roadmap/flagship).
@@ -280,11 +245,6 @@ onemind:
     # the env var is absent the key is dropped, the route rejects every request (503) and the
     # portal starts normally. See docs/operations/notifications.md.
     webhookToken: ${ONEMIND_ALERT_WEBHOOK_TOKEN}
-  openchoreo:
-    # Only operator-approved endpoints may receive the human's IDP token directly.
-    directApiAllowlist:
-      - http://onemind-openchoreo-api.tail717ba0.ts.net/api/v1
-      - https://onemind-observer.tail717ba0.ts.net
   inventory:
     # Live Kubernetes inventory (docs/catalog/live-inventory.md). OFF by default: catalog/cluster.yaml
     # stays the authoritative workload source until Zeus enables it. Enabling needs a backend restart.
@@ -293,4 +253,4 @@ onemind:
       # frequencySeconds: 120        # cluster observation cadence
       # removedRetentionHours: 24    # how long a removed workload stays flagged before it is dropped
       # excludedNamespaces: [kube-node-lease, kube-public]
-      # excludedNamespacePatterns: ['dp-*']   # OpenChoreo data planes: published by OpenChoreo
+      # excludedNamespacePatterns: ['dp-*']   # former OpenChoreo data-plane namespaces (removed); the exclusion is kept

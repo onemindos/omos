@@ -76,7 +76,10 @@ describe('freshness of the reviewed entities', () => {
   });
 
   it('leaves excluded namespaces, other kinds and provider-published entities alone', async () => {
-    const dp = find('dp-default-onetak-development-b188bf98', 'stac-browser');
+    // No catalog entity lives in a dp-* namespace any more: take a reviewed one and move it there.
+    const dp = find('backstage', 'backstage');
+    dp.metadata.annotations![A.namespace] =
+      'dp-default-onetak-development-b188bf98';
     expect(await processor([]).postProcessEntity(structuredClone(dp))).toEqual(
       dp,
     );

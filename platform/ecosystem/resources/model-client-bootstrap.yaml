@@ -33,15 +33,30 @@ spec:
               with httpx.Client(timeout=30) as client:
                   for attempt in range(160):
                       try:
-                          for name in ["core", "openchoreo"]:
+                          names_and_models = {
+                              "core": ["onemind-chat", "onemind-fast"],
+                          }
+                          if os.environ.get("hermes", "").strip():
+                              names_and_models["hermes"] = ["hermes-agent", "local-tools", "local-embed"]
+                          else:
+                              print("Hermes credential absent; existing clients only")
+                          for name, models in names_and_models.items():
                               body = {"key": os.environ[name], "key_alias": "onemind-" + name,
-                                      "models": ["onemind-chat", "onemind-fast"], "metadata": {"service": name}}
+                                      "models": models, "metadata": {"service": name}}
                               response = client.post(url + "/key/generate", headers=headers, json=body)
                               if response.status_code not in (200, 201):
                                   response = client.post(url + "/key/update", headers=headers,
-                                                         json={"key": os.environ[name], "models": body["models"]})
+                                                         json={"key": os.environ[name], "models": models})
                               response.raise_for_status()
                           print("Model service credentials provisioned")
+                          # The OpenChoreo portal assistant key was removed with OpenChoreo. Drop its LiteLLM
+                          # key by alias; best effort and idempotent, so a missing key is not an error.
+                          try:
+                              gone = client.post(url + "/key/delete", headers=headers,
+                                                 json={"key_aliases": ["onemind-openchoreo"]})
+                              print("LiteLLM key onemind-openchoreo delete: status " + str(gone.status_code))
+                          except Exception as error:
+                              print("LiteLLM key onemind-openchoreo delete skipped: " + type(error).__name__)
                           break
                       except Exception:
                           time.sleep(5)
@@ -51,6 +66,12 @@ spec:
             - secretRef:
                 name: litellm-client-keys
           env:
+            - name: hermes
+              valueFrom:
+                secretKeyRef:
+                  name: litellm-hermes-client
+                  key: key
+                  optional: true
             - name: MASTER_KEY
               valueFrom:
                 secretKeyRef:

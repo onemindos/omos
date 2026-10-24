@@ -43,11 +43,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "argocd",
-      "name": "rollouts-argo-rollouts"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "auth",
       "name": "authentik-redis"
     },
@@ -83,16 +78,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "cloudflare",
-      "name": "cloudflared"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "cloudflare",
-      "name": "cloudflared-tunnel"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "cnpg-system",
       "name": "barman-plugin-barman-cloud"
     },
@@ -115,31 +100,6 @@
       "kind": "Deployment",
       "namespace": "dapr-system",
       "name": "dapr-sidecar-injector"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "dp-default-onetak-development-b188bf98",
-      "name": "stac-browser-development-0c6b80f7"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "external-dns",
-      "name": "external-dns"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "external-secrets",
-      "name": "external-secrets"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "external-secrets",
-      "name": "external-secrets-cert-controller"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "external-secrets",
-      "name": "external-secrets-webhook"
     },
     {
       "kind": "Deployment",
@@ -308,6 +268,16 @@
     },
     {
       "kind": "Deployment",
+      "namespace": "nextcloud",
+      "name": "nextcloud"
+    },
+    {
+      "kind": "Deployment",
+      "namespace": "nextcloud",
+      "name": "nextcloud-redis"
+    },
+    {
+      "kind": "Deployment",
       "namespace": "omos",
       "name": "feed-intel"
     },
@@ -358,31 +328,6 @@
     },
     {
       "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-core"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-jobservice"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-nginx"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-portal"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onemind-registry",
-      "name": "harbor-registry"
-    },
-    {
-      "kind": "Deployment",
       "namespace": "onetak",
       "name": "maputnik"
     },
@@ -400,11 +345,6 @@
       "kind": "Deployment",
       "namespace": "onetak",
       "name": "nominatim"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "onetak-geo-db"
     },
     {
       "kind": "Deployment",
@@ -430,11 +370,6 @@
       "kind": "Deployment",
       "namespace": "onetak",
       "name": "pg-featureserv"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "onetak",
-      "name": "stac-api"
     },
     {
       "kind": "Deployment",
@@ -470,71 +405,6 @@
       "kind": "Deployment",
       "namespace": "onetak",
       "name": "webodm-db"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "cluster-gateway"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "controller-manager"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "openchoreo-api"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-control-plane",
-      "name": "portal-assistant"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-data-plane",
-      "name": "cluster-agent-dataplane"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "cluster-agent-observabilityplane"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "controller-manager"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "events-collector"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "finops-opencost-adapter"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "logs-adapter-opensearch"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "metrics-adapter-prometheus"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "observer"
-    },
-    {
-      "kind": "Deployment",
-      "namespace": "openchoreo-observability-plane",
-      "name": "tracing-adapter-opensearch"
     },
     {
       "kind": "Deployment",
@@ -695,31 +565,6 @@
       "kind": "StatefulSet",
       "namespace": "nats",
       "name": "nats"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-registry",
-      "name": "harbor-database"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-registry",
-      "name": "harbor-redis"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-registry",
-      "name": "harbor-trivy"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "onemind-search",
-      "name": "onemind-search-master"
-    },
-    {
-      "kind": "StatefulSet",
-      "namespace": "spire-system",
-      "name": "spire-server"
     },
     {
       "kind": "StatefulSet",
@@ -928,16 +773,6 @@
     },
     {
       "kind": "DaemonSet",
-      "namespace": "spire-system",
-      "name": "spire-agent"
-    },
-    {
-      "kind": "DaemonSet",
-      "namespace": "spire-system",
-      "name": "spire-spiffe-csi-driver"
-    },
-    {
-      "kind": "DaemonSet",
       "namespace": "velero",
       "name": "node-agent"
     },
@@ -1040,11 +875,6 @@
       "kind": "Service",
       "namespace": "argocd",
       "name": "argocd-server"
-    },
-    {
-      "kind": "Service",
-      "namespace": "argocd",
-      "name": "rollouts-argo-rollouts-metrics"
     },
     {
       "kind": "Service",
@@ -1155,21 +985,6 @@
       "kind": "Service",
       "namespace": "default",
       "name": "kubernetes"
-    },
-    {
-      "kind": "Service",
-      "namespace": "dp-default-onetak-development-b188bf98",
-      "name": "stac-browser"
-    },
-    {
-      "kind": "Service",
-      "namespace": "external-dns",
-      "name": "external-dns"
-    },
-    {
-      "kind": "Service",
-      "namespace": "external-secrets",
-      "name": "external-secrets-webhook"
     },
     {
       "kind": "Service",
@@ -1458,6 +1273,16 @@
     },
     {
       "kind": "Service",
+      "namespace": "nextcloud",
+      "name": "nextcloud"
+    },
+    {
+      "kind": "Service",
+      "namespace": "nextcloud",
+      "name": "nextcloud-redis"
+    },
+    {
+      "kind": "Service",
       "namespace": "omos",
       "name": "redpanda-connect"
     },
@@ -1503,56 +1328,6 @@
     },
     {
       "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-core"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-database"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-jobservice"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-portal"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-redis"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-registry"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-registry",
-      "name": "harbor-trivy"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-search",
-      "name": "opensearch-cluster-master"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onemind-search",
-      "name": "opensearch-cluster-master-headless"
-    },
-    {
-      "kind": "Service",
       "namespace": "onetak",
       "name": "broker"
     },
@@ -1579,11 +1354,6 @@
     {
       "kind": "Service",
       "namespace": "onetak",
-      "name": "onetak-geo-db"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
       "name": "onetak-media"
     },
     {
@@ -1605,11 +1375,6 @@
       "kind": "Service",
       "namespace": "onetak",
       "name": "pg-featureserv"
-    },
-    {
-      "kind": "Service",
-      "namespace": "onetak",
-      "name": "stac-api"
     },
     {
       "kind": "Service",
@@ -1643,76 +1408,6 @@
     },
     {
       "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "cilium-gateway-gateway-default"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "cluster-gateway"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "cluster-gateway-external"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "controller-manager-webhook-service"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "openchoreo-api"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-control-plane",
-      "name": "portal-assistant"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-data-plane",
-      "name": "cilium-gateway-gateway-default"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "finops-adapter"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "logs-adapter"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "metrics-adapter"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "observer"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "observer-internal"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "opensearch"
-    },
-    {
-      "kind": "Service",
-      "namespace": "openchoreo-observability-plane",
-      "name": "tracing-adapter"
-    },
-    {
-      "kind": "Service",
       "namespace": "openclaw",
       "name": "openclaw"
     },
@@ -1725,16 +1420,6 @@
       "kind": "Service",
       "namespace": "ops",
       "name": "platform-volsync-metrics"
-    },
-    {
-      "kind": "Service",
-      "namespace": "spire-system",
-      "name": "spire-controller-manager-webhook"
-    },
-    {
-      "kind": "Service",
-      "namespace": "spire-system",
-      "name": "spire-server"
     },
     {
       "kind": "Service",

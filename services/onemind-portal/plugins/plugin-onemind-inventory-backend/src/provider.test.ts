@@ -112,10 +112,10 @@ describe('what the provider publishes', () => {
     await h.connect();
     const summary = await h.provider.refresh();
     expect(summary).toMatchObject({
-      tracked: 165,
+      tracked: 135,
       published: 0,
-      skippedCurated: 165,
-    }); // 166 live, minus the one dp-* workload OpenChoreo owns;
+      skippedCurated: 135,
+    }); // every live workload is already in cluster.yaml
     expect(h.published.size).toBe(0);
   });
 

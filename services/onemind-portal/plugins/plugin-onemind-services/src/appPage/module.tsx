@@ -19,8 +19,6 @@ import { tabFilters } from './links';
 
 type Filterable = Parameters<typeof targetForEntity>[0];
 const kindIs = (...kinds: string[]) => (e: { kind: string }) => kinds.includes(e.kind.toLowerCase());
-// OpenChoreo-managed entities keep their own header, with its delete and annotation actions.
-const notOpenChoreo = (e: { metadata: { labels?: Record<string, string> } }) => e.metadata.labels?.['openchoreo.io/managed'] !== 'true';
 
 /** Entities that have at least one status signal to show (generated annotations). */
 export function hasStatusTarget(entity: Filterable) {
@@ -42,7 +40,7 @@ export const appStatusApiExtension = ApiBlueprint.make({
 export const appHeaderExtension = EntityHeaderLayoutBlueprint.make({
   name: 'onemind-app',
   params: {
-    filter: e => kindIs('component', 'system', 'domain')(e) && notOpenChoreo(e),
+    filter: e => kindIs('component', 'system', 'domain')(e),
     loader: async () => (await import('./AppHeader')).AppHeader,
   },
 });
@@ -63,7 +61,7 @@ export const keyLinksCard = EntityCardBlueprint.make({
   name: 'onemind-key-links',
   params: {
     type: 'info',
-    filter: e => kindIs('component')(e) && notOpenChoreo(e),
+    filter: e => kindIs('component')(e),
     loader: async () => {
       const { KeyLinksCard } = await import('./KeyLinksCard');
       return <KeyLinksCard />;
@@ -75,7 +73,7 @@ export const membersStatusCard = EntityCardBlueprint.make({
   name: 'onemind-members-status',
   params: {
     type: 'content',
-    filter: e => kindIs('system', 'domain')(e) && notOpenChoreo(e),
+    filter: e => kindIs('system', 'domain')(e),
     loader: async () => {
       const { MembersStatusCard } = await import('./MembersStatusCard');
       return <MembersStatusCard />;

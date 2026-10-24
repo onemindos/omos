@@ -42,13 +42,13 @@ systems:
     domain: domain:default/onemind-so
   - name: gitops-delivery
     title: GitOps & delivery
-    description: Argo CD and Argo Rollouts, the container registry, the GitHub runner and source hosting.
+    description: Argo CD, the container registry, the GitHub runner and source hosting.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
   - name: developer-platform
     title: Developer platform
-    description: The Backstage portal, OpenChoreo control and data planes, cluster dashboards and runbooks.
+    description: The Backstage portal, cluster dashboards and runbooks.
     pillar: so
     review: proposed
     domain: domain:default/onemind-so
@@ -164,7 +164,7 @@ apps:
   - name: platform-core
     title: Platform core manifests
     system: infrastructure
-    description: Sealed Secrets controller, certificate issuers, standby Cloudflare tunnel config, GitHub runner and Tailscale policy (Argo application platform-core).
+    description: Sealed Secrets controller, GitHub runner and Tailscale policy (Argo application platform-core).
   - name: cert-manager
     title: cert-manager
     system: infrastructure
@@ -173,14 +173,6 @@ apps:
     title: ingress-nginx
     system: infrastructure
     description: Public ingress controller.
-  - name: external-dns
-    title: ExternalDNS
-    system: infrastructure
-    description: Synchronizes DNS records for cluster ingresses.
-  - name: cloudflared
-    title: Cloudflare Tunnel (standby)
-    system: infrastructure
-    description: Cloudflare tunnel connector, kept as a cold standby.
   - name: tailscale-operator
     title: Tailscale operator and proxies
     system: infrastructure
@@ -209,42 +201,18 @@ apps:
     title: OpenFGA
     system: identity-access
     description: Fine-grained authorization service.
-  - name: spire
-    title: SPIRE
-    system: identity-access
-    description: Workload identity (SPIFFE).
   - name: kyverno
     title: Kyverno
     system: identity-access
-    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco, SPIRE and OpenFGA wiring).
+    description: Admission and background policy engine; also carries the platform-security Argo application (Kyverno, Falco and OpenFGA wiring).
   - name: falco
     title: Falco
     system: identity-access
     description: Runtime security detection (DaemonSet).
-  - name: external-secrets
-    title: External Secrets Operator
-    system: identity-access
-    description: Synchronizes secrets from external stores.
-  - name: argo-rollouts
-    title: Argo Rollouts
-    system: gitops-delivery
-    description: Progressive delivery controller.
-  - name: harbor
-    title: Harbor
-    system: gitops-delivery
-    description: In-cluster container registry with image scanning.
   - name: backstage
     title: Backstage portal
     system: developer-platform
     description: The OneMind developer portal and its PostgreSQL database.
-  - name: openchoreo
-    title: OpenChoreo
-    system: developer-platform
-    description: OpenChoreo control plane and data plane, defaults, projects and prerequisites.
-  - name: openchoreo-observability
-    title: OpenChoreo observability plane
-    system: observability
-    description: OpenChoreo observer, adapters and collectors for logs, traces, metrics, events and FinOps.
   - name: tempo
     title: Tempo
     system: observability
@@ -265,14 +233,14 @@ apps:
     title: CloudNativePG
     system: data-storage
     description: PostgreSQL operator and the Barman Cloud backup plugin.
-  - name: opensearch
-    title: OpenSearch
-    system: data-storage
-    description: Search and log store.
   - name: velero
     title: Velero
     system: data-storage
     description: Cluster backup and restore.
+  - name: nextcloud
+    title: Nextcloud
+    system: data-storage
+    description: Private file and vault sync for the Mac and Android (Nextcloud, its Redis and the files volume).
   - name: volsync
     title: VolSync
     system: data-storage
@@ -297,6 +265,10 @@ apps:
     title: OneTAK geospatial services
     system: geospatial
     description: Tile38, STAC API/browser and the geo database.
+  - name: stac
+    title: STAC imagery catalog
+    system: geospatial
+    description: STAC API (pgstac on onemind-data), STAC Browser and the WebODM-to-STAC sync.
   - name: n8n
     title: n8n
     system: ai-agents
@@ -391,7 +363,6 @@ placement:
   onemind-os: developer-platform
   onemind-runbooks: developer-platform
   onetak: tak-ecosystem
-  onetak-stac-readonly: geospatial
   open-robotics: reference-links
   openssf: reference-links
   pinterest-zeus: social-media

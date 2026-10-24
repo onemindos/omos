@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
         - name: surveyor
-          image: natsio/nats-surveyor:latest
+          image: natsio/nats-surveyor@sha256:7d0ca8d7ec52645b8366aa601762aa64d9690444584eb7311c9c4922216f7e2b
           imagePullPolicy: IfNotPresent
           args:
             - --servers=tls://nats.nats.svc.cluster.local:4222

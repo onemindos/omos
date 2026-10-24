@@ -38,6 +38,29 @@ spec:
       imagePullSecrets:
         - name: ghcr
       initContainers:
+        - name: merge-litellm-provider
+          image: nousresearch/hermes-agent:v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
+          imagePullPolicy: Always
+          command: ["/opt/hermes/.venv/bin/python3", "/run/config/litellm_provider_config.py", "/opt/data/config.yaml"]
+          resources:
+            requests: {cpu: "10m", memory: "32Mi"}
+            limits: {memory: "64Mi"}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          env:
+            - name: HERMES_LITELLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hermes-litellm
+                  key: HERMES_LITELLM_API_KEY
+                  optional: true
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: litellm-provider-config
+              mountPath: /run/config
+              readOnly: true
         # ---- Install gateway-only deps missing from the public Nous image ----
         # nousresearch/hermes-agent:v2026.9.24 ships without nats-py, nkeys,
         # synadia-ai-agents, and synadia-ai-agent-service — all required for
@@ -49,6 +72,12 @@ spec:
         - name: install-gateway-deps
           image: nousresearch/hermes-agent:v2026.9.24
           imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
           command:
             - sh
             - -c
@@ -106,11 +135,20 @@ spec:
               value: "0.0.0.0"
             - name: HERMES_DASHBOARD_PORT
               value: "9119"
+            - name: HERMES_LITELLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hermes-litellm
+                  key: HERMES_LITELLM_API_KEY
+                  optional: true
           volumeMounts:
             - name: data
               mountPath: /opt/data
             - name: gateway-deps
               mountPath: /gateway-deps
+            - name: litellm-provider-config
+              mountPath: /run/config
+              readOnly: true
           # 2026-10-19: 7-day observed working-set maximum ~1.44Gi; 2Gi request with 5Gi headroom.
           resources:
             requests: {cpu: "500m", memory: "2Gi"}
@@ -148,3 +186,6 @@ spec:
         - name: nats-platform-patch
           configMap:
             name: nats-platform-patch
+        - name: litellm-provider-config
+          configMap:
+            name: hermes-litellm-provider

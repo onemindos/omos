@@ -1,9 +1,3 @@
-import { rootHttpRouterServiceFactory } from '@backstage/backend-defaults/rootHttpRouter';
-import {
-  immediateCatalogServiceFactory,
-  annotationStoreFactory,
-} from '@openchoreo/backstage-plugin-catalog-backend-module';
-import { createIdpTokenHeaderMiddleware } from '@openchoreo/openchoreo-auth';
 /*
  * OneMind backend wiring.
  * All custom modules are loaded from @internal plugin packages.
@@ -12,24 +6,7 @@ import { createIdpTokenHeaderMiddleware } from '@openchoreo/openchoreo-auth';
 import { createBackend } from '@backstage/backend-defaults';
 
 const backend = createBackend();
-backend.add(immediateCatalogServiceFactory);
-backend.add(annotationStoreFactory);
-backend.add(
-  rootHttpRouterServiceFactory({
-    configure: ({ app, applyDefaults }) => {
-      // 1.55.3 applyDefaults installs the security/logging stack once.
-      app.use(createIdpTokenHeaderMiddleware());
-      applyDefaults();
-    },
-  }),
-);
-backend.add(import('@openchoreo/backstage-plugin-catalog-backend-module'));
-backend.add(import('@openchoreo/backstage-plugin-backend'));
-backend.add(import('@openchoreo/backstage-plugin-scaffolder-backend-module'));
-backend.add(
-  import('@openchoreo/backstage-plugin-openchoreo-observability-backend'),
-);
-// OneMind remains the sole permission policy and the sole sign-in resolver.
+// OneMind is the sole permission policy and the sole sign-in resolver.
 
 backend.add(import('@backstage/plugin-app-backend'));
 backend.add(import('@backstage/plugin-proxy-backend'));
@@ -56,11 +33,6 @@ backend.add(import('@internal/plugin-onemind-inventory-backend'));
 
 backend.add(import('@backstage/plugin-permission-backend'));
 backend.add(import('@internal/plugin-onemind-permissions-backend'));
-backend.add(
-  import('@internal/plugin-onemind-permissions-backend').then(m => ({
-    default: m.openChoreoHostGuard,
-  })),
-);
 
 backend.add(import('@backstage/plugin-search-backend'));
 backend.add(import('@backstage/plugin-search-backend-module-pg'));
@@ -79,11 +51,6 @@ backend.add(import('@internal/plugin-onemind-missions-backend'));
 backend.add(import('@internal/plugin-onemind-events-backend'));
 backend.add(import('@internal/plugin-onemind-activity-backend'));
 backend.add(import('@internal/plugin-onemind-services-backend'));
-backend.add(
-  import('@internal/plugin-onemind-services-backend').then(m => ({
-    default: m.stacCatalogModule,
-  })),
-);
 
 backend.add(import('@internal/plugin-onemind-context-backend'));
 backend.add(import('@internal/plugin-onemind-assistant-backend'));

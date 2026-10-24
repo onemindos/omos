@@ -1,0 +1,37 @@
+# Tailnet only (Tailscale operator, ingress class "tailscale"); no public ingress, no Funnel.
+# stac.tail717ba0.ts.net          read-only STAC API (the Deployment without the transaction extension)
+# stac-browser.tail717ba0.ts.net  STAC Browser, configured with the API URL above
+# The write-enabled stac-api-writer has no Ingress on purpose.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stac
+  namespace: stac
+  annotations:
+    tailscale.com/hostname: stac
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: stac-api
+      port:
+        number: 8080
+  tls:
+    - hosts: [stac]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stac-browser
+  namespace: stac
+  annotations:
+    tailscale.com/hostname: stac-browser
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: stac-browser
+      port:
+        number: 8080
+  tls:
+    - hosts: [stac-browser]

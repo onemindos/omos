@@ -14,7 +14,18 @@ spec:
             matchExpressions:
               - key: kubernetes.io/metadata.name
                 operator: In
-                values: [onemind-ai, onemind-core, backstage, openchoreo-control-plane, openchoreo-observability-plane]
+                values: [onemind-ai, onemind-core, backstage]
+      ports:
+        - protocol: TCP
+          port: 4000
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: hermes
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: hermes
+              onemind.io/agent: legacy
       ports:
         - protocol: TCP
           port: 4000

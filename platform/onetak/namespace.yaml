@@ -4,3 +4,5 @@ metadata:
   name: onetak
   annotations:
     volsync.backube/privileged-movers: "true"
+  labels:
+    onemind.io/layer: make-sense

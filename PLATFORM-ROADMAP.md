@@ -69,9 +69,7 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | `tailscale` | Tailscale operator and proxies | 1 | Argo CD |
 | `cert-manager` | cert-manager | 1 | Argo CD |
 | `ingress-nginx` | public ingress | 1 | Argo CD |
-| `cloudflare` | cloudflared (cold standby) | 1 | Argo CD |
-| `external-dns` | external-dns | 1 | Argo CD |
-| `kyverno`, `falco`, `spire-system` | policy, runtime security, workload identity | 1 | Argo CD |
+| `kyverno`, `falco` | policy, runtime security | 1 | Argo CD |
 | `velero`, `ops` | Velero, VolSync | 1 | Argo CD |
 | `github-runner` | CI runners | 1 | Argo CD |
 | `kube` | Headlamp, Kubernetes Dashboard (break-glass UIs) | 1 | Argo CD |
@@ -83,7 +81,6 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | `clickhouse` | ClickHouse | 2 | Argo CD; ResourceType later |
 | `onemind-search` | OpenSearch | 2 | Argo CD; also the observability plane's log store |
 | `onemind-ai` | LiteLLM, CPU model | 2 | Argo CD. LiteLLM stays the model gateway |
-| `onemind-registry` | Harbor | 2 | Argo CD |
 | `dapr-system` | Dapr | 2 | Argo CD |
 | `keda` | KEDA | 2 | Argo CD; OpenChoreo autoscaling module |
 | `monitoring` | Prometheus, Alertmanager, Grafana, Loki, Tempo, OTel collector | 2 | Argo CD; becomes the observability plane's metrics and events modules |
@@ -92,7 +89,6 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | `onetak` | 19 geo and mapping apps (Valhalla, Martin, Nominatim, WebODM, STAC, TileServer and others) | 3 | OpenChoreo Project `onetak` |
 | `takml` | takml-server, takml-vision-worker, takml-db | 3 | OpenChoreo Project `takml` |
 | `onemind-core` | onemind-core, onemind-ingestion, OpenFGA | 3 | OpenChoreo Project `onemind` |
-| `onemind-jobs`, `onemind-media` | empty today | 3 | OpenChoreo Project `onemind` |
 | `agent-fabric` | agent-console, agent-tap | 3 | OpenChoreo Project `agent-fabric` |
 | `n8n` | n8n | 3 | OpenChoreo Component |
 | `matrix` | Synapse, Element | 3 | OpenChoreo Project `matrix` (Argo Application `platform-matrix` is OutOfSync today) |
@@ -230,7 +226,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
 | 1. External Secrets | 2.0.1, `installCRDs=true` | same, as `ecosystem-external-secrets` | Only stale v1beta1 CRDs existed, no controller and no objects |
 | 1. kgateway | install | skip; gateways use the Cilium class `onemind-private` (tailnet) | The data-plane chart supports `gateway.gatewayClassName`; the control plane already uses it |
 | 1. OpenBao + `ClusterSecretStore` `default` | dev-mode OpenBao | `default` store on ESO's Kubernetes provider, reading the `openchoreo-secrets` namespace, filled by SealedSecrets | The secret-management guide allows any ESO backend named `default`; the guide marks dev-mode OpenBao as not for production |
-| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS uses the existing `letsencrypt-dns` issuer |
+| 2. `openchoreo-ca` ClusterIssuer | self-signed CA | not created yet | Gateways start with TLS off (the guide's first install also does). Later TLS needs a new ClusterIssuer: `letsencrypt-dns` was removed as unused (its Cloudflare token was invalid) |
 
 - [ ] New tree `platform/openchoreo/` with its Argo Application(s):
       `planes/` (charts and registration), `platform/` (environments, pipeline,
@@ -261,7 +257,7 @@ step by step, as PRs 2a to 2e. Where this cluster differs from the guide:
       `secretStoreRef: default`, and the HTTP listener on the guide's nip.io domain built
       from the gateway's tailnet IP: `apps.openchoreo.100-110-185-30.nip.io` (resolves
       only to a tailnet address, so apps are tailnet-only). A real domain such as
-      `*.apps.onemindos.dev` with `letsencrypt-dns` TLS replaces it later. Verified
+      `*.apps.onemindos.dev` with TLS from a new DNS-01 ClusterIssuer replaces it later. Verified
       2026-10-18: agent connected (tunnel requests return 200), `ClusterDataPlane`
       `Created=True`, the three environments `EnvironmentReady`, and the `default`
       project's bindings `Ready` with namespaces `dp-default-default-{development,staging,production}-*`.
@@ -347,8 +343,8 @@ Findings to act on in later phases:
   configured entitlements, and Authentik tokens carry no `client_id`, so none of those match.
   They are inert, including `mcp-tryout-client-binding` (`admin` for `service_mcp_client`).
   Remove them with a `bootstrap` override when roles are reviewed (phase 6).
-- The Authentik providers made by `auth-provider-bootstrap.yaml` for `workflows`, `langfuse`
-  and `registry` were created with an empty grant type list, like `openchoreo` was, and
+- The Authentik provider made by `auth-provider-bootstrap.yaml` for `langfuse` (and `registry` and `workflows`,
+  deleted with Harbor and Argo Workflows by `authentik-registry-removal.yaml`) was created with an empty grant type list, like `openchoreo` was, and
   cannot complete a browser login until given `authorization_code`.
 - The ecosystem node is at about 99% CPU requested; the control plane now prefers it
   without requiring it. Capacity work is phase 5.
@@ -784,6 +780,7 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 | 2026-10-18 | Not adopting kagent, KubeVela, Kratix or Humanitec. HolmesGPT is optional after Phase 5. (KubeVela part superseded 2026-10-21, below.) |
 | 2026-10-20 | Zeus requested full Kubernetes/Backstage structure and linked PRs. Keep the installed stack and existing phase gates; permit planning and bounded comparison of KubeVela/Crossplane/fleet candidates without deploying or assigning a second owner to live resources. The new queue is a proposal, not a replacement approval or claim of verified integration. |
 | 2026-10-21 | Zeus selected Backstage → reviewed Git PR → Argo CD → KubeVela (app lifecycle) + Crossplane (app infrastructure) as the target; Terraform keeps its recorded infrastructure, NATS carries operational events. Recorded in [decision 0002](docs/architecture/decisions/0002-application-delivery-and-infrastructure-boundaries.md). Selection only: nothing installed, no version approved, no ownership transferred from Terraform or OpenChoreo, existing OpenChoreo workloads stay until a separately approved transition. kagent, Kratix and Humanitec stay not adopted. |
+| 2026-10-23 | Zeus approved retiring OpenChoreo, then OpenSearch and External Secrets. The portal no longer calls OpenChoreo. Teardown is a stacked PR series (observability modules, then CR-holding apps, then observability plane and data plane, prereqs and gateway, control plane, OpenSearch, External Secrets). Phases 2 to 6 above are historical. Stage 1 (observability modules) removes the logs, traces, FinOps and events apps. Stage 2 removes the custom-resource apps (projects, platform, defaults) including the STAC Browser; the data plane must still be running while they go. Stage 3 removes the observability plane (including the observer alert store and its VolSync source) and the data plane. Stage 4 removes the External Secrets prerequisites (`openchoreo-secrets`, `ClusterSecretStore default`) and the `onemind-private` GatewayClass manifests. Stage 5 removes the control plane, the OpenChoreo identity objects in Authentik, the OpenChoreo secrets and the last namespaces; no OpenChoreo object remains in Git. Stage 6 removes OpenSearch (20 GiB volume, snapshot and restic repository) once nothing queries it. Stage 7 removes External Secrets (operator, 23 CRDs, 2 webhooks); nothing used an ExternalSecret. |
 
 ## Incidents found while working the roadmap
 
@@ -1157,3 +1154,34 @@ and no GitHub sign-in dialog (Connect GitHub prompt instead).
 Before the image: the three backup CronJob annotations, the F5 catalog annotations and the Grafana dashboard were applied by Argo on merge.
 Not yet done: offsite backup copy credentials; the 7,757-notification cleanup; alert webhook secrets (run `scripts/ops/seal-alert-webhook.sh`);
 F6 DigitalOcean, F7 non-Kubernetes apps and health checks, F8 add/retire templates, F9 plugin pack. Phase 6 In progress; Phase 7/8 Not started.
+
+## User-directed file synchronization — 2026-10-23
+
+Zeus requested immediate bidirectional Mac/Android Obsidian synchronization via
+Nextcloud, independently of the current portal phase. This change adds a Layer 2
+shared file service under Argo CD; it does not complete or bypass phase gates.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Nextcloud GitOps deployment and full-library Mac/Android sync | Deployed and healthy; native client setup and acceptance in progress | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425) |
+
+Acceptance requires actual edits flowing in both directions, offline and conflict
+checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
+The native Mac upload has started. Full transfer, two-way device acceptance and
+recovery verification remain distinct from the observed healthy server deployment.
+
+## User-directed Paperclip installation — 2026-10-23
+
+Zeus requested Paperclip on Kubernetes for a business workforce using Codex,
+Claude Code and Hermes. This is a bounded Layer 2 agent coordination service
+alongside the portal roadmap, not a migration or a new execution authority.
+Phase 6 stays In progress; Phases 7/8 stay Not started.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Private Paperclip GitOps installation | Prepared; human review/merge and live acceptance pending | [PR #438](https://github.com/onemindos/omos/pull/438); [deployment and acceptance](platform/paperclip/README.md) |
+
+No new controller, public exposure, shared-database migration, existing agent
+credential copy, model billing change or cluster write access is included.
+Runtime onboarding, mobile acceptance, backups/restore and automatic execution
+must be verified separately. Preparing manifests does not complete those gates.

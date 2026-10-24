@@ -1,4 +1,3 @@
-import { StacOperations, isStacEntity } from './StacOperations';
 import { useEffect, useState } from 'react';
 import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha';
@@ -184,10 +183,6 @@ function ServiceOperations() {
     </Box>
   );
 }
-function OperationsContent() {
-  const { entity } = useEntity();
-  return isStacEntity(entity) ? <StacOperations /> : <ServiceOperations />;
-}
 export const servicesModule = createFrontendModule({
   pluginId: 'catalog',
   extensions: [
@@ -198,9 +193,8 @@ export const servicesModule = createFrontendModule({
         title: 'Operations',
         group: 'live',
         filter: entity =>
-          isStacEntity(entity) ||
           !!entity.metadata.annotations?.['backstage.io/kubernetes-namespace'],
-        loader: async () => <OperationsContent />,
+        loader: async () => <ServiceOperations />,
       },
     }),
   ],

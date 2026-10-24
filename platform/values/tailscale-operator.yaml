@@ -15,13 +15,13 @@ proxyConfig:
 apiServerProxyConfig:
   mode: "true"
 
-operator:
+operatorConfig:
   resources:
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 25m
+      memory: 192Mi
     limits:
-      memory: 256Mi
+      memory: 384Mi
 
 proxy:
   resources:

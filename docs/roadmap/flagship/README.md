@@ -40,7 +40,7 @@ controllers, or widen AI permissions.
 | F6 | [#362](https://github.com/onemindos/omos/pull/362) | DigitalOcean at a glance (custom plugin) | read-only DO token from Zeus | Droplets, DOKS, volumes, snapshots, LBs, firewalls, VPCs, Spaces, uptime, bill |
 | F7 | [#363](https://github.com/onemindos/omos/pull/363) | Non-Kubernetes apps: model, health and access | F2 | SaaS/home/device apps managed with the same page and live health |
 | F8 | [#364](https://github.com/onemindos/omos/pull/364) | Add and remove apps: lifecycle templates and stack hygiene | F2 | "Add app" and "Retire app" produce reviewed PRs; hygiene report |
-| F9 | [#365](https://github.com/onemindos/omos/pull/365) | Plugin pack: verified additions | none | Kyverno policy reports, Harbor images, OpenCost, shortcuts/bookmarks, admin devtools |
+| F9 | [#365](https://github.com/onemindos/omos/pull/365) | Plugin pack: verified additions | none | Kyverno policy reports, OpenCost, shortcuts/bookmarks, admin devtools |
 | F10 | [#366](https://github.com/onemindos/omos/pull/366) | Theme and visual design system | none | Brand-correct red/graphite theme in dark and light, AA contrast |
 | F11 | [#367](https://github.com/onemindos/omos/pull/367) | Live inventory: catalog follows the cluster automatically | F2 | New and removed workloads appear within minutes, attached to their app |
 
@@ -57,7 +57,7 @@ rebases on the then-current `main` and reruns the gate.
   its policy reports so the portal can show them.
 - **Trivy Operator** (F9, optional): vulnerability reports per workload, surfaced
   through Policy Reporter. Needs a capacity check first.
-- Already installed and only needing portal wiring: Harbor, OpenCost, Loki,
+- Already installed and only needing portal wiring: OpenCost, Loki,
   Tempo, Alertmanager, Velero, Falco.
 
 ## Existing drafts

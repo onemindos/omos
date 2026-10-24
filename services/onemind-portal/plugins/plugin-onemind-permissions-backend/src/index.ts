@@ -1,3 +1,2 @@
 export { default } from './plugin';
-
-export { openChoreoHostGuard } from './hostGuard';
+export { createOneMindPolicy, isOneMindAdmin } from './policy';

@@ -37,8 +37,7 @@ deployment digest. Without --push, no deployable digest file is emitted.
 Next, review the release record, run the image's runtime checks, and open a separate
 GitOps PR pinning that verified digest in platform/backstage/deployment.yaml.
 Argo CD owns rollout. Verify login, existing home/catalog/MCP permissions, 2/2
-replicas and new behavior. Do not disable the temporary OpenChoreo console until
-all Phase 6 browser/auth/authorization gates pass. This script never merges a PR,
+replicas and new behavior. This script never merges a PR,
 patches a Deployment or marks unavailable GitHub checks green.
 
 Contract tests (fake Docker, no network or production changes):
