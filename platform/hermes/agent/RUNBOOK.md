@@ -125,9 +125,12 @@ issuance, public CA trust and dedicated Paperclip agent credentials are ready.
 the cluster. It cannot read Secrets, ConfigMaps, logs, exec/attach, proxy, or mutate
 resources/RBAC. Kubernetes workload reads still reveal operational metadata and
 may contain inline configuration; this identity is for the trusted Hermes runtime.
-The projected service-account credential belongs to the whole existing Pod,
-including its sidecars; it never grants write access. Do not copy its token into
-Paperclip, reports, prompts, or files on the data volume.
+The Pod disables automatic token mounting. An explicit projected volume exposes
+the rotating one-hour token, public cluster CA and namespace only to the Hermes
+container at the standard service-account path. The token uses the API server's
+default audience; neither the TLS/NATS sidecars nor init containers receive this
+identity. It never grants write access. Do not copy its token into Paperclip,
+reports, prompts, or files on the data volume.
 
 For an assigned Paperclip status task, run:
 
@@ -146,3 +149,33 @@ nor schedules/retries tasks. The owner still controls when the agent is resumed.
 
 This is source preparation. Activation requires review, Argo reconciliation and
 positive/negative RBAC checks; source readiness does not establish deployed access.
+The durable Deployment update is a separate commit from RBAC/collector preparation:
+do not roll Hermes while its existing state-database recovery scan is active.
+The eventual rollout uses a 120-second shutdown grace and HTTPS `/health` readiness
+through the sidecar; liveness remains listener-only so backend recovery does not
+cause a restart loop. Kubelet HTTPS readiness is not a certificate-trust test.
+
+The container's default exec identity is root, but s6 runs the actual gateway as
+`hermes`, UID/GID **10000**. Check file access as that runtime identity: a successful
+root `kubectl exec` read does not establish that the agent can read a credential.
+The canonical callback Secret therefore uses `0444` on its read-only mount, present
+only in the Hermes container. Do not introduce a Pod `fsGroup` to fix this: doing so
+may recursively change ownership across the existing persistent data volume.
+
+For the owner's bounded ONE-2 diagnostic while the database integrity scan is
+active, the coordinator may securely copy the canonical mounted callback credential
+to an isolated temporary directory, owned by the actual `hermes` runtime identity,
+with directory mode `0700` and file mode `0600`. Transfer values in memory without
+printing them or placing them in command arguments, prompts, report output or Git.
+Reference only the temporary file path in the agent instructions. The observer
+token is separately short-lived and read-only. After the diagnostic finishes,
+remove both temporary credential files/directories, remove temporary path references
+from instructions, and verify their absence without printing contents. The reviewed
+durable mount replaces this temporary bridge only after a safe Argo rollout; never
+restart Hermes during its active integrity scan merely to repair file permissions.
+
+ONE-2 completed successfully through Paperclip on 24 October 2026. Its report
+correctly flagged incomplete EndpointSlice collection: three live slices used
+`endpoints: null`. The collector now treats that valid empty form as zero
+endpoints, with regression coverage; a source-only routing recheck can validate
+the follow-up without inventing functional app acceptance.

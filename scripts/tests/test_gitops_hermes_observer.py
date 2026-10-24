@@ -40,6 +40,35 @@ class Observer(unittest.TestCase):
         binding = next(d for d in docs if d['kind'] == 'ClusterRoleBinding')
         self.assertEqual(binding['subjects'], [{'kind': 'ServiceAccount', 'name': 'hermes-observer',
                                                 'namespace': 'hermes'}])
+    def test_durable_runtime_mount_and_backend_readiness(self):
+        pod = yaml.safe_load((AGENT / 'deployment.yaml').read_text())['spec']['template']['spec']
+        self.assertEqual(pod['serviceAccountName'], 'hermes-observer')
+        self.assertFalse(pod['automountServiceAccountToken'])
+        self.assertEqual(pod['terminationGracePeriodSeconds'], 120)
+        mounts = next(c for c in pod['containers'] if c['name'] == 'hermes')['volumeMounts']
+        self.assertIn({'name': 'cluster-observer', 'mountPath': '/run/cluster-observer',
+                       'readOnly': True}, mounts)
+        self.assertIn({'name': 'cluster-observer-identity',
+                       'mountPath': '/var/run/secrets/kubernetes.io/serviceaccount',
+                       'readOnly': True}, mounts)
+        volume = next(v for v in pod['volumes'] if v['name'] == 'cluster-observer-identity')
+        self.assertEqual(volume['projected']['defaultMode'], 0o444)
+        self.assertEqual(volume['projected']['sources'], [
+            {'serviceAccountToken': {'path': 'token', 'expirationSeconds': 3600}},
+            {'configMap': {'name': 'kube-root-ca.crt', 'items': [{'key': 'ca.crt', 'path': 'ca.crt'}]}},
+            {'downwardAPI': {'items': [{'path': 'namespace', 'fieldRef': {'fieldPath': 'metadata.namespace'}}]}},
+        ])
+        for container in pod['containers'] + pod.get('initContainers', []):
+            if container['name'] == 'hermes':
+                continue
+            for mount in container.get('volumeMounts', []):
+                self.assertNotEqual(mount['name'], 'cluster-observer-identity')
+                self.assertFalse(mount['mountPath'].startswith('/var/run/secrets/kubernetes.io/serviceaccount'))
+        sidecar = next(c for c in pod['containers'] if c['name'] == 'paperclip-api-tls')
+        self.assertEqual(sidecar['readinessProbe']['httpGet'],
+                         {'scheme': 'HTTPS', 'path': '/health', 'port': 'paperclip-tls'})
+        self.assertEqual(sidecar['livenessProbe']['tcpSocket'], {'port': 'paperclip-tls'})
+
     def test_raw_sensitive_object_fields_never_leave_summarizer(self):
         sensitive = 'sentinel-value-that-must-not-be-reported'
         item = {'metadata': {'name': 'app', 'namespace': 'demo', 'annotations': {'token': sensitive}},
@@ -53,6 +82,15 @@ class Observer(unittest.TestCase):
             result = json.dumps(observer.summarize(kind, item))
             self.assertNotIn(sensitive, result, kind)
             self.assertNotIn('PASSWORD', result, kind)
+
+    def test_null_endpoint_list_is_complete_empty_evidence(self):
+        # The live STAC and managed-etcd slices serialize no endpoints as null.
+        row = observer.summarize('endpointslices', {
+            'metadata': {'name': 'empty-service'}, 'endpoints': None})
+        self.assertEqual((row['total'], row['ready']), (0, 0))
+        row = observer.summarize('endpointslices', {'endpoints': [
+            {'conditions': None}, {'conditions': {'ready': True}}]})
+        self.assertEqual((row['total'], row['ready']), (2, 1))
 
     def test_missing_api_is_incomplete_not_healthy_and_body_not_printed(self):
         class Unavailable:
