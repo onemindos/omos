@@ -19,7 +19,7 @@ class Isolation(unittest.TestCase):
     def test_only_disposable_resources_and_manual_application_are_declared(self):
         docs = [load(p) for p in FIXTURE.glob('*.yaml')]
         self.assertCountEqual([d['kind'] for d in docs],
-                              ['Namespace', 'NetworkPolicy', 'ConfigMap', 'Job', 'Job'])
+                              ['Namespace', 'NetworkPolicy', 'ConfigMap', 'SealedSecret', 'Job', 'Job'])
         for doc in docs:
             self.assertEqual(doc['metadata'].get('namespace', 'stac-validation'), 'stac-validation')
         app = load(ROOT / 'platform/argocd/platform-stac-validation.yaml')
@@ -31,8 +31,14 @@ class Isolation(unittest.TestCase):
         policy = next(d for d in docs if d['kind'] == 'NetworkPolicy')
         self.assertEqual(policy['spec'], {'podSelector': {}, 'policyTypes': ['Ingress', 'Egress'],
                                           'ingress': [], 'egress': []})
+        registry = next(d for d in docs if d['kind'] == 'SealedSecret')
+        self.assertEqual(registry['metadata']['name'], 'registry-pull')
+        self.assertEqual(set(registry['spec']['encryptedData']), {'.dockerconfigjson'})
+        self.assertEqual(registry['spec']['template']['type'], 'kubernetes.io/dockerconfigjson')
+        self.assertNotIn('bitnami.com/sealed-secrets/namespace-wide', registry['metadata'].get('annotations', {}))
+        self.assertNotIn('bitnami.com/sealed-secrets/cluster-wide', registry['metadata'].get('annotations', {}))
 
-    def test_jobs_have_no_external_access_credentials_or_persistent_storage(self):
+    def test_jobs_have_no_database_credentials_external_access_or_persistent_storage(self):
         image = load(ROOT / 'platform/ecosystem/resources/postgres-image-catalog.yaml')['spec']['images'][0]['image']
         client = load(ROOT / 'platform/stac/migrate.yaml')['spec']['template']['spec']['containers'][0]['image']
         for case in ['control', 'age']:
@@ -42,14 +48,14 @@ class Isolation(unittest.TestCase):
             pod = job['spec']['template']['spec']
             self.assertEqual(pod['restartPolicy'], 'Never')
             self.assertIs(pod['automountServiceAccountToken'], False)
-            for forbidden in ['hostNetwork', 'hostPID', 'hostIPC', 'imagePullSecrets']:
+            for forbidden in ['hostNetwork', 'hostPID', 'hostIPC']:
                 self.assertNotIn(forbidden, pod)
+            self.assertEqual(pod['imagePullSecrets'], [{'name': 'registry-pull'}])
             for volume in pod['volumes']:
                 self.assertTrue(set(volume) <= {'name', 'emptyDir', 'configMap'})
             server = pod['initContainers'][0]
             self.assertEqual(server['image'], 'ghcr.io/onemindos/onemind-postgres@' + image.split('@', 1)[1])
-            self.assertEqual(server['imagePullPolicy'], 'Never')
-            self.assertEqual(pod['nodeSelector']['onemind.io/compute-role'], 'ecosystem')
+            self.assertEqual(server['imagePullPolicy'], 'IfNotPresent')
             self.assertEqual(server['restartPolicy'], 'Always')
             self.assertIn('startupProbe', server)
             self.assertEqual(server['resources']['limits']['memory'], '1Gi')

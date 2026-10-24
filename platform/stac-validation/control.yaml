@@ -24,10 +24,11 @@ spec:
       restartPolicy: Never
       automountServiceAccountToken: false
       enableServiceLinks: false
+      imagePullSecrets:
+      - name: registry-pull
       terminationGracePeriodSeconds: 30
       nodeSelector:
         kubernetes.io/arch: amd64
-        onemind.io/compute-role: ecosystem
       securityContext:
         runAsNonRoot: true
         fsGroup: 26
@@ -36,7 +37,7 @@ spec:
       initContainers:
       - name: postgres
         image: ghcr.io/onemindos/onemind-postgres@sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         restartPolicy: Always
         command:
         - bash
