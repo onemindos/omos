@@ -58,6 +58,24 @@ class HermesTransport(unittest.TestCase):
                              ('/v1/runs/abc/events/other', 'GET'), ('/v1/runs/../health', 'GET')]:
             self.assertFalse(allowed(path, method), (path, method))
 
+    def test_certificate_path_exists_before_http_rewrite(self):
+        # nginx -t does not perform a TLS handshake: a server `set $tls_dir`
+        # passes syntax validation but is still unset during certificate lookup.
+        # Require a lazy http-level map from the handshake-native SNI variable,
+        # with a literal fixed result so untrusted SNI cannot select a file path.
+        config = (HERMES / 'paperclip-api-nginx.conf').read_text()
+        directives = re.sub(r'(?m)#.*$', '', config)
+        http_start = directives.index('http {')
+        server_start = directives.index('server {', http_start)
+        before_server = directives[http_start:server_start]
+        self.assertRegex(before_server,
+                         r'map \$ssl_server_name \$tls_dir\s*\{\s*'
+                         r'default /etc/hermes-paperclip-tls;\s*\}')
+        self.assertNotRegex(directives, r'\bset\s+\$tls_dir\b')
+        self.assertIn('ssl_certificate $tls_dir/tls.crt;', directives)
+        self.assertIn('ssl_certificate_key $tls_dir/tls.key;', directives)
+        self.assertNotRegex(directives, r'ssl_certificate(?:_key)?\s+[^;]*\$ssl_server_name')
+
     def test_sidecar_is_bounded_and_cannot_read_hermes_data(self):
         spec = documents(HERMES / 'deployment.yaml')[0]['spec']['template']['spec']
         sidecar = next(c for c in spec['containers'] if c['name'] == 'paperclip-api-tls')
