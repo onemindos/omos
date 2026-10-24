@@ -147,6 +147,9 @@ workloads:
   takserver/takserver-plugins: component:default/tak-server
   takserver/takserver-postgresql: component:default/tak-server
   velero/velero: component:default/velero
+  karakeep/web: component:default/karakeep
+  karakeep/chrome: component:default/karakeep
+  karakeep/meilisearch: component:default/karakeep
 argoApplications:
   app-of-apps: component:default/argocd
   ecosystem-barman: component:default/cloudnative-pg
@@ -203,3 +206,4 @@ argoApplications:
   platform-takserver: component:default/tak-server
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery
+  platform-karakeep: component:default/karakeep

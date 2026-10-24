@@ -155,3 +155,18 @@ exceptions:
     capability: logs
     reason: >-
       PR #438 prepares platform-paperclip source; no verified paperclip pods are recorded in the catalog. Generate the Loki query from the first verified workload snapshot after deployment.
+  - app: component:default/karakeep
+    capability: kubernetes
+    reason: >-
+      Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/karakeep
+    capability: grafana-alerts
+    reason: >-
+      Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
+  - app: component:default/karakeep
+    capability: logs
+    reason: >-
+      Karakeep native source is staged with manual Argo and zero replicas; no live namespace or workload snapshot is recorded.
+      Generate this scoped coverage only after deployment is observed, then remove this preparation exception.
