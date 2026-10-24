@@ -43,11 +43,27 @@ class Observer(unittest.TestCase):
     def test_durable_runtime_mount_and_backend_readiness(self):
         pod = yaml.safe_load((AGENT / 'deployment.yaml').read_text())['spec']['template']['spec']
         self.assertEqual(pod['serviceAccountName'], 'hermes-observer')
-        self.assertTrue(pod['automountServiceAccountToken'])
+        self.assertFalse(pod['automountServiceAccountToken'])
         self.assertEqual(pod['terminationGracePeriodSeconds'], 120)
         mounts = next(c for c in pod['containers'] if c['name'] == 'hermes')['volumeMounts']
         self.assertIn({'name': 'cluster-observer', 'mountPath': '/run/cluster-observer',
                        'readOnly': True}, mounts)
+        self.assertIn({'name': 'cluster-observer-identity',
+                       'mountPath': '/var/run/secrets/kubernetes.io/serviceaccount',
+                       'readOnly': True}, mounts)
+        volume = next(v for v in pod['volumes'] if v['name'] == 'cluster-observer-identity')
+        self.assertEqual(volume['projected']['defaultMode'], 0o444)
+        self.assertEqual(volume['projected']['sources'], [
+            {'serviceAccountToken': {'path': 'token', 'expirationSeconds': 3600}},
+            {'configMap': {'name': 'kube-root-ca.crt', 'items': [{'key': 'ca.crt', 'path': 'ca.crt'}]}},
+            {'downwardAPI': {'items': [{'path': 'namespace', 'fieldRef': {'fieldPath': 'metadata.namespace'}}]}},
+        ])
+        for container in pod['containers'] + pod.get('initContainers', []):
+            if container['name'] == 'hermes':
+                continue
+            for mount in container.get('volumeMounts', []):
+                self.assertNotEqual(mount['name'], 'cluster-observer-identity')
+                self.assertFalse(mount['mountPath'].startswith('/var/run/secrets/kubernetes.io/serviceaccount'))
         sidecar = next(c for c in pod['containers'] if c['name'] == 'paperclip-api-tls')
         self.assertEqual(sidecar['readinessProbe']['httpGet'],
                          {'scheme': 'HTTPS', 'path': '/health', 'port': 'paperclip-tls'})

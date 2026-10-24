@@ -26,7 +26,8 @@ spec:
         onemind.io/agent: legacy
     spec:
       serviceAccountName: hermes-observer
-      automountServiceAccountToken: true
+      # The observer identity belongs only to Hermes, not its TLS/NATS sidecars.
+      automountServiceAccountToken: false
       terminationGracePeriodSeconds: 120
       affinity:
         nodeAffinity:
@@ -158,6 +159,9 @@ spec:
             - name: cluster-observer
               mountPath: /run/cluster-observer
               readOnly: true
+            - name: cluster-observer-identity
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              readOnly: true
           # 2026-10-19: 7-day observed working-set maximum ~1.44Gi; 2Gi request with 5Gi headroom.
           resources:
             requests: {cpu: "500m", memory: "2Gi"}
@@ -210,6 +214,22 @@ spec:
             requests: {cpu: "50m", memory: "64Mi"}
             limits: {memory: "128Mi"}
       volumes:
+        - name: cluster-observer-identity
+          projected:
+            defaultMode: 0444
+            sources:
+              # Omit audience to select the API server's default audience.
+              - serviceAccountToken:
+                  path: token
+                  expirationSeconds: 3600
+              - configMap:
+                  name: kube-root-ca.crt
+                  items:
+                    - {key: ca.crt, path: ca.crt}
+              - downwardAPI:
+                  items:
+                    - path: namespace
+                      fieldRef: {fieldPath: metadata.namespace}
         - name: cluster-observer
           configMap:
             name: hermes-cluster-observer

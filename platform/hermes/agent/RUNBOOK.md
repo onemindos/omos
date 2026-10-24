@@ -125,9 +125,12 @@ issuance, public CA trust and dedicated Paperclip agent credentials are ready.
 the cluster. It cannot read Secrets, ConfigMaps, logs, exec/attach, proxy, or mutate
 resources/RBAC. Kubernetes workload reads still reveal operational metadata and
 may contain inline configuration; this identity is for the trusted Hermes runtime.
-The projected service-account credential belongs to the whole existing Pod,
-including its sidecars; it never grants write access. Do not copy its token into
-Paperclip, reports, prompts, or files on the data volume.
+The Pod disables automatic token mounting. An explicit projected volume exposes
+the rotating one-hour token, public cluster CA and namespace only to the Hermes
+container at the standard service-account path. The token uses the API server's
+default audience; neither the TLS/NATS sidecars nor init containers receive this
+identity. It never grants write access. Do not copy its token into Paperclip,
+reports, prompts, or files on the data volume.
 
 For an assigned Paperclip status task, run:
 
