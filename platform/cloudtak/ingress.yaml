@@ -1,0 +1,36 @@
+# Tailnet only (Tailscale operator, ingress class "tailscale"); no public ingress.
+# cloudtak.tail717ba0.ts.net       web UI and API   (API_URL)
+# cloudtak-tiles.tail717ba0.ts.net PMTiles server   (PMTILES_URL; the browser loads tiles from a second origin)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudtak
+  namespace: cloudtak
+  annotations:
+    tailscale.com/hostname: cloudtak
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: cloudtak-api
+      port:
+        number: 5000
+  tls:
+    - hosts: [cloudtak]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudtak-tiles
+  namespace: cloudtak
+  annotations:
+    tailscale.com/hostname: cloudtak-tiles
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: cloudtak-tiles
+      port:
+        number: 5002
+  tls:
+    - hosts: [cloudtak-tiles]

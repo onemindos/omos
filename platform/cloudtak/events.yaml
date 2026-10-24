@@ -1,0 +1,119 @@
+# Import worker: polls the API for pending uploads (KML, GeoJSON, Shapefile, GeoTIFF, MBTiles, data packages),
+# converts them with GDAL and tippecanoe, and writes PMTiles to the Spaces bucket. No Service: it only makes
+# outbound calls. Scratch space for conversions is the emptyDir below.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudtak-events
+  namespace: cloudtak
+  labels: &labels
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: events
+    app.kubernetes.io/part-of: cloudtak
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: events
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: events
+          image: ghcr.io/dfpc-coe/cloudtak-events:v13.113.0@sha256:f9623e71f0542cac3a697d2c05eadbb24c7b245250d8ecb2c02a5eb45d779ca8
+          # Upstream defaults to one import per host CPU. Serialize imports so a small pod does not
+          # start eight GDAL/tippecanoe jobs at once; use the exported v13.113.0 WorkerPool constructor.
+          command: [node, --max-old-space-size=768, --eval]
+          args:
+            - |
+              for (const key of ['API_URL', 'SigningSecret', 'ASSET_BUCKET']) {
+                if (!process.env[key]) throw new Error(`${key} environment variable is required`);
+              }
+              import('./dist/index.js').then(({ default: WorkerPool }) => {
+                new WorkerPool({
+                  api: process.env.API_URL,
+                  secret: process.env.SigningSecret,
+                  bucket: process.env.ASSET_BUCKET,
+                  interval: 1000,
+                  maxWorkers: 1,
+                });
+              }).catch((err) => {
+                console.error(err);
+                process.exit(1);
+              });
+          envFrom:
+            - configMapRef:
+                name: cloudtak-config
+          env:
+            - name: API_URL
+              value: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+            - name: HOME
+              value: /tmp
+            - name: TMPDIR
+              value: /scratch
+            - name: CPL_TMPDIR
+              value: /scratch
+            - name: npm_config_cache
+              value: /tmp/.npm
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-signing
+                  key: secret
+            - name: AWS_S3_AccessKeyId
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-spaces
+                  key: access-key
+            - name: AWS_S3_SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-spaces
+                  key: secret-key
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+              ephemeral-storage: 12Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: scratch
+              mountPath: /scratch
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 256Mi
+        - name: scratch
+          emptyDir:
+            sizeLimit: 10Gi

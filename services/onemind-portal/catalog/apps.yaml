@@ -1162,7 +1162,8 @@ kind: Component
 metadata:
   name: cloudtak
   title: CloudTAK
-  description: Cloud TAK — COP
+  description: Upstream CloudTAK browser client for TAK; fresh deployment pending
+    setup and verification
   tags:
     - launcher-review-required
     - tak-ecosystem
@@ -1170,21 +1171,29 @@ metadata:
     - url: https://atoc.onemindos.dev
       title: Open application
       icon: dashboard
+    - url: https://cloudtak.tail717ba0.ts.net
+      title: Fresh deployment setup (pending)
   annotations:
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: dns-unresolved-from-operator-mac
     onemind.io/inventory-review: imported-link
-    onemind.io/hosting: external-provider-unverified
-    onemind.io/tech-stack-status: Active
+    onemind.io/hosting: digitalocean-nyc3
+    argocd/app-name: platform-cloudtak
+    argocd/instance-name: onemind-cloud
+    onemind.io/tech-stack-status: Setup pending
     onemind.io/tech-stack-category: TAK Ecosystem
     onemind.io/license: Open Source
     onemind.io/onemind-integration: "true"
     onemind.io/tech-stack-source: notion-tech-stack/3c2d0cf70a7e81289a86c81a18d29511
     onemind.io/tech-stack-url: https://github.com/dfpc-coe/CloudTAK
-    onemind.io/tech-stack-notes: Cloud-native TAK server frontend. Self-hosted at
-      onemindos.dev. Manages COT streams, data packages, and mission data.
+    onemind.io/tech-stack-notes: Pinned upstream browser TAK client in
+      platform/cloudtak. Spaces credentials and first-run TAK configuration are
+      required; live acceptance is pending.
     onemind.io/supported-platforms: Web,K8s
     onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/cloudtak/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7153,6 +7162,33 @@ metadata:
     onemind.io/recovery-runbook: apps/litellm/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onemind-ai/litellm
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: paperclip
+  tags:
+    - kubernetes
+  title: Paperclip
+  description: Business agent workspace prepared in PR 438; owner setup and
+    runtime verification are pending.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-paperclip
+    argocd/instance-name: onemind-cloud
+    onemind.io/pillar-review: proposed
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/paperclip/
+    github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

@@ -14,6 +14,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [cert-manager](cert-manager.md) | infrastructure |
 | [ClickHouse](clickhouse.md) | data-storage |
 | [CloudNativePG](cloudnative-pg.md) | data-storage |
+| [CloudTAK](cloudtak.md) | tak-ecosystem |
 | [Dapr](dapr.md) | infrastructure |
 | [Element Chat](element-chat.md) | communication |
 | [Falco](falco.md) | identity-access |
@@ -46,6 +47,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
 | [OpenTelemetry Collector](opentelemetry-collector.md) | observability |
+| [Paperclip](paperclip.md) | ai-agents |
 | [Platform Backup and Recovery](platform-backup-recovery.md) | data-storage |
 | [Platform core manifests](platform-core.md) | infrastructure |
 | [Prometheus](prometheus.md) | observability |

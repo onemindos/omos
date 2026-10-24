@@ -1,0 +1,160 @@
+# Default deny in both directions, then only the paths CloudTAK needs.
+# Cilium enforces these. Namespaces in this cluster are otherwise open, so the other side needs no change except
+# Postgres, which has its own ingress policy (platform/ecosystem/resources/postgres-ingress-cloudtak.yaml).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: cloudtak
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: cloudtak
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: kube-system}
+          podSelector:
+            matchLabels: {k8s-app: kube-dns}
+      ports: [{protocol: UDP, port: 53}, {protocol: TCP, port: 53}]
+---
+# api: web UI and API from the Tailscale proxy pods and from the other CloudTAK workloads.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api
+  namespace: cloudtak
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: api
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: tailscale}
+      ports: [{protocol: TCP, port: 5000}]
+    - from:
+        - podSelector:
+            matchExpressions:
+              - {key: app.kubernetes.io/name, operator: In, values: [cloudtak]}
+              - {key: app.kubernetes.io/component, operator: In, values: [tiles, events, retention]}
+      ports: [{protocol: TCP, port: 5000}]
+  egress:
+    # Shared CloudNativePG cluster
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onemind-data}
+          podSelector:
+            matchLabels: {cnpg.io/cluster: onemind-data}
+      ports: [{protocol: TCP, port: 5432}]
+    # TAK Server: 8443 Marti API (client certificate), 8446 WebTAK login, 8089 streaming CoT.
+    # takserver-api and takserver-messaging directly, or the tak-lb-proxy that fronts all three ports.
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: takserver}
+          podSelector:
+            matchExpressions:
+              - {key: app, operator: In, values: [takserver-api, takserver-messaging, tak-lb-proxy]}
+      ports:
+        - {protocol: TCP, port: 8443}
+        - {protocol: TCP, port: 8446}
+        - {protocol: TCP, port: 8089}
+    # Shared Tile38 (geofences)
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: onetak}
+          podSelector:
+            matchLabels: {app: tile38}
+      ports: [{protocol: TCP, port: 9851}]
+    # Spaces (S3 over HTTPS) and the public internet CloudTAK proxies for basemaps, search and routing
+    # (its SSRF guard rejects private addresses). Private, tailnet and metadata ranges are excluded.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8]
+      ports: [{protocol: TCP, port: 443}]
+---
+# tiles: from the Tailscale proxy pods; to the API (token checks) and Spaces.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tiles
+  namespace: cloudtak
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: tiles
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: tailscale}
+      ports: [{protocol: TCP, port: 5002}]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudtak
+              app.kubernetes.io/component: api
+      ports: [{protocol: TCP, port: 5000}]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8]
+      ports: [{protocol: TCP, port: 443}]
+---
+# events: no inbound; to the API (job queue) and the public internet (Spaces, remote KML network links).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: events
+  namespace: cloudtak
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: events
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudtak
+              app.kubernetes.io/component: api
+      ports: [{protocol: TCP, port: 5000}]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8]
+      ports: [{protocol: TCP, port: 443}]
+---
+# retention: no inbound; to the API only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: retention
+  namespace: cloudtak
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: retention
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudtak
+              app.kubernetes.io/component: api
+      ports: [{protocol: TCP, port: 5000}]

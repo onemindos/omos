@@ -264,7 +264,7 @@ apps:
   - name: geo-data-services
     title: OneTAK geospatial services
     system: geospatial
-    description: Tile38, STAC API/browser and the geo database.
+    description: Tile38 and the STAC browser.
   - name: stac
     title: STAC imagery catalog
     system: geospatial
@@ -277,6 +277,10 @@ apps:
     title: LiteLLM
     system: ai-agents
     description: Model gateway.
+  - name: paperclip
+    title: Paperclip
+    system: ai-agents
+    description: Business agent workspace prepared in PR 438; owner setup and runtime verification are pending.
 placement:
   1password: identity-access
   agent-mail: ai-agents

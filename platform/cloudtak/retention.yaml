@@ -1,0 +1,80 @@
+# Retention scheduler: once a day (RETENTION_SCHEDULE, UTC) asks the API to purge old chat, imports, features
+# and connection data according to the retention::* settings an admin sets in the CloudTAK UI. It only talks
+# to the API. Nothing is deleted until an admin enables retention in the UI.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudtak-retention
+  namespace: cloudtak
+  labels: &labels
+    app.kubernetes.io/name: cloudtak
+    app.kubernetes.io/component: retention
+    app.kubernetes.io/part-of: cloudtak
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudtak
+      app.kubernetes.io/component: retention
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: retention
+          image: ghcr.io/dfpc-coe/cloudtak-retention:v13.113.0@sha256:343d96464bd4752927df74d74ad67ed4a46cea2f2096d8cc2ed94e2dad3988fd
+          # Bypass upstream npm prod, which hard-codes a 6144 MiB V8 heap.
+          command: [node, --max-old-space-size=128, dist/index.js]
+          env:
+            - name: API_URL
+              value: http://cloudtak-api.cloudtak.svc.cluster.local:5000
+            - name: RETENTION_SCHEDULE
+              value: "0 3 * * *"
+            - name: TZ
+              value: UTC
+            - name: HOME
+              value: /tmp
+            - name: npm_config_cache
+              value: /tmp/.npm
+            - name: SigningSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cloudtak-signing
+                  key: secret
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi
