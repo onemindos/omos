@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import shutil
 import subprocess
 import unittest
 from pathlib import Path
@@ -16,8 +17,10 @@ APP = ROOT / "platform/karakeep"
 class KarakeepPreparation(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.docs = list(yaml.safe_load_all(subprocess.check_output(
-            ["kubectl", "kustomize", str(APP)], text=True)))
+        cls.kustomization = yaml.safe_load((APP / "kustomization.yaml").read_text())
+        cls.docs = []
+        for resource in cls.kustomization["resources"]:
+            cls.docs.extend(yaml.safe_load_all((APP / resource).read_text()))
         cls.deployments = {d["metadata"]["name"]: d for d in cls.docs if d["kind"] == "Deployment"}
         cls.policies = {d["metadata"]["name"]: d["spec"] for d in cls.docs if d["kind"] == "NetworkPolicy"}
 
@@ -46,11 +49,30 @@ class KarakeepPreparation(unittest.TestCase):
         self.assertEqual(ingress["spec"]["ingressClassName"], "tailscale")
         self.assertEqual(ingress["metadata"]["annotations"], {"tailscale.com/hostname": "karakeep"})
         self.assertEqual(ingress["spec"]["defaultBackend"]["service"]["name"], "web")
-        configuration = next(d for d in self.docs if d["kind"] == "ConfigMap")
-        self.assertEqual(configuration["data"]["NEXTAUTH_URL"], "https://karakeep.tail717ba0.ts.net")
-        self.assertEqual(configuration["data"]["DISABLE_SIGNUPS"], "true")
-        self.assertEqual(configuration["data"]["INFERENCE_ENABLE_AUTO_TAGGING"], "false")
-        self.assertNotIn("OPENAI_API_KEY", configuration["data"])
+        self.assertEqual(self.kustomization["namespace"], "karakeep")
+        self.assertEqual(set(self.kustomization), {"apiVersion", "kind", "namespace", "resources", "configMapGenerator"})
+        generator, = self.kustomization["configMapGenerator"]
+        self.assertEqual(generator["name"], "karakeep-configuration")
+        configuration = dict(item.split("=", 1) for item in generator["literals"])
+        self.assertEqual(configuration["NEXTAUTH_URL"], "https://karakeep.tail717ba0.ts.net")
+        self.assertEqual(configuration["DISABLE_SIGNUPS"], "true")
+        self.assertEqual(configuration["INFERENCE_ENABLE_AUTO_TAGGING"], "false")
+        self.assertNotIn("OPENAI_API_KEY", configuration)
+
+    @unittest.skipUnless(shutil.which("kubectl"), "Kustomize render requires kubectl; source safety checks always run")
+    def test_native_kustomize_render_preserves_identity_and_images(self):
+        rendered = list(yaml.safe_load_all(subprocess.check_output(
+            ["kubectl", "kustomize", str(APP)], text=True)))
+        expected = {(d["kind"], d["metadata"]["name"]) for d in self.docs}
+        actual = {(d["kind"], d["metadata"]["name"]) for d in rendered}
+        self.assertTrue(expected <= actual)
+        self.assertEqual(len(actual - expected), 1)
+        for doc in rendered:
+            if doc["kind"] != "Namespace":
+                self.assertEqual(doc["metadata"]["namespace"], "karakeep")
+            if doc["kind"] == "Deployment":
+                source = self.deployments[doc["metadata"]["name"]]
+                self.assertEqual(doc["spec"]["template"]["spec"]["containers"], source["spec"]["template"]["spec"]["containers"])
 
     def test_crawler_public_fetch_cannot_reach_private_cluster_or_metadata_addresses(self):
         deny = self.policies["default-deny"]
