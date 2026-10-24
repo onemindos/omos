@@ -80,5 +80,14 @@
     "appVersion": "1.18.2",
     "url": "https://github.com/vmware-tanzu/helm-charts/releases/download/velero-12.2.1/velero-12.2.1.tgz",
     "namespace": "velero"
+  },
+  {
+    "name": "trivy-operator",
+    "repo": "https://aquasecurity.github.io/helm-charts",
+    "chart": "trivy-operator",
+    "version": "0.37.0",
+    "appVersion": "0.35.0",
+    "url": "https://github.com/aquasecurity/helm-charts/releases/download/trivy-operator-0.37.0/trivy-operator-0.37.0.tgz",
+    "namespace": "trivy-system"
   }
 ]

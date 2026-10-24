@@ -1,0 +1,274 @@
+# yamllint disable rule:line-length
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-trivy-pilot
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+  annotations:
+    onemind.io/grafana-folder: /tmp/dashboards/OneMind
+data:
+  trivy-image-pilot.json: |
+    {
+      "uid": "onemind-trivy-pilot",
+      "title": "OneMind / Trivy image pilot",
+      "description": "Image vulnerability findings for nextcloud and n8n only. No data is not zero vulnerabilities; an up scanner does not prove full coverage. Per-container findings can repeat across images/workloads. Scan freshness and digest coverage require VulnerabilityReport verification.",
+      "tags": [
+        "onemind-security",
+        "trivy-pilot"
+      ],
+      "schemaVersion": 39,
+      "version": 1,
+      "editable": false,
+      "timezone": "browser",
+      "refresh": "1m",
+      "time": {
+        "from": "now-24h",
+        "to": "now"
+      },
+      "templating": {
+        "list": []
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Scanner scrape health",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "1 = Prometheus can scrape the operator; 0 = scrape failed. No data means no discovered target/samples. This does not prove successful image scans.",
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "max(up{namespace=\"trivy-system\",service=\"trivy-operator\"})",
+              "instant": true,
+              "format": "time_series"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "noValue": "No data"
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            }
+          }
+        },
+        {
+          "id": 2,
+          "title": "Container reports represented",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Container/workload identities represented by report summary metrics, not all expected images. Missing reports and failed scans must be checked separately.",
+          "gridPos": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "count(count by (namespace,resource_kind,resource_name,container_name) (trivy_image_vulnerabilities{service=\"trivy-operator\",namespace=~\"nextcloud|n8n\"}))",
+              "instant": true,
+              "format": "time_series"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "noValue": "No data"
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            }
+          }
+        },
+        {
+          "id": 3,
+          "title": "Critical findings",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Findings summed across reported containers. Includes unfixed findings and may repeat a CVE across workloads.",
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(trivy_image_vulnerabilities{service=\"trivy-operator\",namespace=~\"nextcloud|n8n\",severity=\"Critical\"})",
+              "instant": true,
+              "format": "time_series"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "noValue": "No data"
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            }
+          }
+        },
+        {
+          "id": 4,
+          "title": "High findings",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "",
+          "gridPos": {
+            "x": 18,
+            "y": 0,
+            "w": 6,
+            "h": 5
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(trivy_image_vulnerabilities{service=\"trivy-operator\",namespace=~\"nextcloud|n8n\",severity=\"High\"})",
+              "instant": true,
+              "format": "time_series"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "noValue": "No data"
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            }
+          }
+        },
+        {
+          "id": 5,
+          "title": "Findings by severity",
+          "type": "bargauge",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Only returned vulnerability reports in the two pilot namespaces; no filtering of unfixed or lower-severity findings.",
+          "gridPos": {
+            "x": 0,
+            "y": 5,
+            "w": 24,
+            "h": 7
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (severity) (trivy_image_vulnerabilities{service=\"trivy-operator\",namespace=~\"nextcloud|n8n\"})",
+              "instant": true,
+              "format": "time_series"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "noValue": "No data"
+            },
+            "overrides": []
+          },
+          "options": {}
+        },
+        {
+          "id": 6,
+          "title": "Reported workload / container / image findings",
+          "type": "table",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Read full VulnerabilityReports for CVE IDs, installed and fixed versions. Per-CVE Prometheus labels are deliberately disabled to bound cardinality.",
+          "gridPos": {
+            "x": 0,
+            "y": 12,
+            "w": 24,
+            "h": 10
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (namespace,resource_kind,resource_name,container_name,image_repository,image_tag,image_digest,severity) (trivy_image_vulnerabilities{service=\"trivy-operator\",namespace=~\"nextcloud|n8n\"})",
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "noValue": "No data"
+            },
+            "overrides": []
+          },
+          "options": {}
+        },
+        {
+          "id": 7,
+          "title": "Pilot scope and evidence",
+          "type": "text",
+          "gridPos": {
+            "x": 0,
+            "y": 22,
+            "w": 24,
+            "h": 5
+          },
+          "options": {
+            "mode": "markdown",
+            "content": "**Scope:** nextcloud and n8n ReplicaSets/StatefulSets only; one scan Job at a time, with one scanner container per workload container. Config, secret, node, RBAC, compliance and SBOM scanning are disabled.\n\n**No data means unverified coverage**, not a clean scan. Check report creationTimestamp, scanner version, image digest and expected containers using the Git-owned runbook `docs/operations/trivy-image-scan-pilot.md`. Report refresh target is 24 hours; metrics scrape time is not scan time.\n\nReports do not patch or block applications. This pilot adds no public endpoint or automatic remediation."
+          }
+        }
+      ]
+    }

@@ -68,5 +68,15 @@
     "url": "https://github.com/cloudnative-pg/charts/releases/download/plugin-barman-cloud-v0.8.1/plugin-barman-cloud-0.8.1.tgz",
     "namespace": "cnpg-system",
     "sha256": "9ad0b9e56da2777a1a0269feaf7215e18297e9c8b5730e04acb27b5d462e9456"
+  },
+  {
+    "name": "trivy-operator",
+    "repo": "https://aquasecurity.github.io/helm-charts",
+    "chart": "trivy-operator",
+    "version": "0.37.0",
+    "appVersion": "0.35.0",
+    "url": "https://github.com/aquasecurity/helm-charts/releases/download/trivy-operator-0.37.0/trivy-operator-0.37.0.tgz",
+    "namespace": "trivy-system",
+    "sha256": "6d23f16d950496d17253258ca2e52bd068959041298e66c0652bf0841ccedf69"
   }
 ]

@@ -1,0 +1,117 @@
+# Public-image pilot only. RBAC is explicitly scoped by platform-security;
+# never enable chart RBAC or widen namespaces without reviewing those bindings.
+targetNamespaces: nextcloud,n8n
+targetWorkloads: replicaset,statefulset
+operator:
+  replicas: 1
+  revisionHistoryLimit: 2
+  scanJobsConcurrentLimit: 1
+  scanJobTimeout: 15m
+  scanJobsRetryDelay: 5m
+  scanJobTTL: 5m
+  scannerReportTTL: 24h
+  vulnerabilityScannerEnabled: true
+  vulnerabilityScannerScanOnlyCurrentRevisions: true
+  sbomGenerationEnabled: false
+  clusterSbomCacheEnabled: false
+  configAuditScannerEnabled: false
+  rbacAssessmentScannerEnabled: false
+  infraAssessmentScannerEnabled: false
+  clusterComplianceEnabled: false
+  exposedSecretScannerEnabled: false
+  accessGlobalSecretsAndServiceAccount: false
+  privateRegistryScanSecretsNames: {}
+  builtInTrivyServer: false
+  metricsFindingsEnabled: true
+  metricsVulnIdEnabled: false
+  webhookBroadcastURL: ''
+image:
+  registry: mirror.gcr.io
+  repository: aquasec/trivy-operator
+  tag: 0.35.0@sha256:4cdb11af98ff409cfa7af980098203a841a5fe957cc6a0bbb0df7668065eb5fa
+rbac:
+  create: false
+compliance:
+  specs: []
+serviceAccount:
+  create: true
+  name: trivy-operator
+serviceMonitor:
+  enabled: true
+  interval: 60s
+  labels:
+    release: monitoring
+  honorLabels: true
+  endpointAdditionalProperties:
+    scrapeTimeout: 15s
+trivyOperator:
+  scanJobsInSameNamespace: false
+  # Chart 0.37.0's `with` omits a boolean false; a string renders the explicit key.
+  scanJobAutomountServiceAccountToken: 'false'
+  useGCRServiceAccount: false
+  scanJobPodTemplateLabels: onemind.io/trivy-scan=true
+  scanJobPodTemplatePodSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
+    seccompProfile:
+      type: RuntimeDefault
+  scanJobPodTemplateContainerSecurityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  scanJobAffinity: &ecosystem_preference
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values: [onemind-ecosystem-cpu]
+trivy:
+  image:
+    registry: mirror.gcr.io
+    repository: aquasec/trivy
+    tag: 0.75.0@sha256:af6acf9a6b85dfe389a1941505c0ce9efef52a4719635e1a962f022a3d855daa
+  mode: Standalone
+  command: image
+  storageClassEnabled: false
+  slow: true
+  severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+  ignoreUnfixed: false
+  timeout: 12m
+  useBuiltinRegoPolicies: 'false'
+  useEmbeddedRegoPolicies: 'false'
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+      ephemeralStorage: 1Gi
+    limits:
+      cpu: '1'
+      memory: 2Gi
+      ephemeralStorage: 4Gi
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+    ephemeral-storage: 64Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+    ephemeral-storage: 256Mi
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+affinity: *ecosystem_preference
+nodeCollector:
+  volumes: []
+  volumeMounts: []
