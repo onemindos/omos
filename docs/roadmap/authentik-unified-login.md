@@ -2,6 +2,7 @@
 
 Owner: Zeus. Requested 2026-10-23 (America/New_York).
 Status: implementation plan; no login cutover or production acceptance in this PR.
+Master PR: [#441](https://github.com/onemindos/omos/pull/441).
 
 ## Outcome and scope
 
