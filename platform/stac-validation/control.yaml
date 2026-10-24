@@ -27,6 +27,7 @@ spec:
       terminationGracePeriodSeconds: 30
       nodeSelector:
         kubernetes.io/arch: amd64
+        onemind.io/compute-role: ecosystem
       securityContext:
         runAsNonRoot: true
         fsGroup: 26
@@ -34,7 +35,8 @@ spec:
           type: RuntimeDefault
       initContainers:
       - name: postgres
-        image: ghcr.io/onemindos/onemind-postgres:sha-0065f1991b58f009e49176630f1b45837d0451ae@sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d
+        image: ghcr.io/onemindos/onemind-postgres@sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d
+        imagePullPolicy: Never
         restartPolicy: Always
         command:
         - bash
