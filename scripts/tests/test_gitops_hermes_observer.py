@@ -40,6 +40,19 @@ class Observer(unittest.TestCase):
         binding = next(d for d in docs if d['kind'] == 'ClusterRoleBinding')
         self.assertEqual(binding['subjects'], [{'kind': 'ServiceAccount', 'name': 'hermes-observer',
                                                 'namespace': 'hermes'}])
+    def test_durable_runtime_mount_and_backend_readiness(self):
+        pod = yaml.safe_load((AGENT / 'deployment.yaml').read_text())['spec']['template']['spec']
+        self.assertEqual(pod['serviceAccountName'], 'hermes-observer')
+        self.assertTrue(pod['automountServiceAccountToken'])
+        self.assertEqual(pod['terminationGracePeriodSeconds'], 120)
+        mounts = next(c for c in pod['containers'] if c['name'] == 'hermes')['volumeMounts']
+        self.assertIn({'name': 'cluster-observer', 'mountPath': '/run/cluster-observer',
+                       'readOnly': True}, mounts)
+        sidecar = next(c for c in pod['containers'] if c['name'] == 'paperclip-api-tls')
+        self.assertEqual(sidecar['readinessProbe']['httpGet'],
+                         {'scheme': 'HTTPS', 'path': '/health', 'port': 'paperclip-tls'})
+        self.assertEqual(sidecar['livenessProbe']['tcpSocket'], {'port': 'paperclip-tls'})
+
     def test_raw_sensitive_object_fields_never_leave_summarizer(self):
         sensitive = 'sentinel-value-that-must-not-be-reported'
         item = {'metadata': {'name': 'app', 'namespace': 'demo', 'annotations': {'token': sensitive}},

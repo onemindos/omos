@@ -146,3 +146,8 @@ nor schedules/retries tasks. The owner still controls when the agent is resumed.
 
 This is source preparation. Activation requires review, Argo reconciliation and
 positive/negative RBAC checks; source readiness does not establish deployed access.
+The durable Deployment update is a separate commit from RBAC/collector preparation:
+do not roll Hermes while its existing state-database recovery scan is active.
+The eventual rollout uses a 120-second shutdown grace and HTTPS `/health` readiness
+through the sidecar; liveness remains listener-only so backend recovery does not
+cause a restart loop. Kubelet HTTPS readiness is not a certificate-trust test.

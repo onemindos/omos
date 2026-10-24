@@ -25,6 +25,9 @@ spec:
         app.kubernetes.io/name: hermes
         onemind.io/agent: legacy
     spec:
+      serviceAccountName: hermes-observer
+      automountServiceAccountToken: true
+      terminationGracePeriodSeconds: 120
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -152,6 +155,9 @@ spec:
             - name: paperclip-agent
               mountPath: /run/paperclip
               readOnly: true
+            - name: cluster-observer
+              mountPath: /run/cluster-observer
+              readOnly: true
           # 2026-10-19: 7-day observed working-set maximum ~1.44Gi; 2Gi request with 5Gi headroom.
           resources:
             requests: {cpu: "500m", memory: "2Gi"}
@@ -174,7 +180,9 @@ spec:
             requests: {cpu: 10m, memory: 16Mi}
             limits: {cpu: 100m, memory: 64Mi}
           readinessProbe:
-            tcpSocket: {port: paperclip-tls}
+            # Kubelet's HTTPS probe verifies the listener and native API route.
+            # The separate Paperclip acceptance check verifies CA and SAN trust.
+            httpGet: {scheme: HTTPS, path: /health, port: paperclip-tls}
             periodSeconds: 5
           livenessProbe:
             tcpSocket: {port: paperclip-tls}
@@ -202,6 +210,9 @@ spec:
             requests: {cpu: "50m", memory: "64Mi"}
             limits: {memory: "128Mi"}
       volumes:
+        - name: cluster-observer
+          configMap:
+            name: hermes-cluster-observer
         - name: data
           persistentVolumeClaim:
             claimName: hermes-data
