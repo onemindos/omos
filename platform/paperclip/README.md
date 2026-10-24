@@ -1,7 +1,10 @@
 # Paperclip business agent workspace
 
 Prepared 2026-10-23 at Zeus's request in [PR #438](https://github.com/onemindos/omos/pull/438).
-**Not deployed or runtime-verified yet.**
+**Deployed 2026-10-24:** app and database Ready; authenticated/private health
+verified, and Zeus created the first owner and OneMind Enterprise workspace.
+Hermes gateway transport is deployed; its Paperclip task round trip is under
+verification. Other acceptance items below remain open until evidenced.
 This is a user-directed installation alongside the existing portal work; Phase 6
 remains In progress and Phases 7/8 remain Not started. It introduces no new
 controller or transfer of existing workload ownership.

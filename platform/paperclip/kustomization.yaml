@@ -4,6 +4,7 @@ namespace: paperclip
 resources:
   - namespace.yaml
   - secrets.sealedsecret.yaml
+  - hermes-gateway-ca.sealedsecret.yaml
   - postgres.yaml
   - deployment.yaml
   - network.yaml

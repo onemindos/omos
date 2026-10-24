@@ -117,8 +117,7 @@ spec:
         - name: hermes-gateway-ca
           secret:
             secretName: hermes-gateway-ca
-            # Transport can be staged without taking Paperclip's UI offline.
-            # Missing trust fails closed when the HTTPS adapter connects.
-            optional: true
+            # Issued public CA is sealed into this namespace before activation.
+            optional: false
             items:
               - {key: ca.crt, path: ca.crt}
