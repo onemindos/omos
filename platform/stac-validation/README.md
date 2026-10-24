@@ -32,17 +32,18 @@ with its original transaction behavior. Only after success does it set collectio
 extent updates, check version, rerun the idempotent migration and read schema state.
 No remote source records or inference are involved.
 
-There is no Service, ingress, PVC, host mount, Secret, image pull credential,
-production service address or Kubernetes API access. PostgreSQL binds only
-`127.0.0.1`. Passwordless trust exists only inside that isolated pod; Unix sockets
-are on the PostgreSQL container's private `/tmp`. The namespace denies all ingress
-and egress, including DNS. The exact private PostgreSQL digest is already cached on the ecosystem node,
-verified against node image inventory and running PostgreSQL imageIDs. Both cases
-select that existing node role and use the canonical digest-only image reference
-with imagePullPolicy Never. This avoids anonymous private-registry pulls without
-copying any registry credential into the fixture. If the cache is unavailable,
-stop at ErrImageNeverPull and review again; never inject production credentials.
-The public migration-client image may be pulled by the kubelet outside pod networking.
+There is no Service, ingress, PVC, host mount, production database address or
+Kubernetes API access. PostgreSQL binds only `127.0.0.1`; passwordless trust is
+restricted to that pod. Both cases still deny all pod ingress/egress, including
+DNS. The private database image requires authenticated pulls: a strict SealedSecret
+`stac-validation/registry-pull` supplies only the existing GHCR read:packages
+credential to the kubelet through imagePullSecrets. Its OAuth scope was verified
+against GitHub's response headers. The credential is never mounted, placed in
+environment variables or otherwise supplied to either container. Only encrypted
+source is stored; the existing credential is neither changed nor rotated.
+Kubelet registry traffic is outside pod networking. Canonical digest references
+and IfNotPresent preserve exact-image selection without relying on unauthenticated
+cache reuse or changing node/kubelet security settings.
 
 The Jobs use Kubernetes native sidecars (`initContainers[].restartPolicy: Always`)
 and pod `restartPolicy: Never`. Kubernetes 1.36 supports this lifecycle: the client
@@ -104,10 +105,12 @@ they do not execute PostgreSQL or prove migrations passed. The local Docker daem
 was unavailable when this fixture was authored. Record actual run results and
 imageIDs separately after execution; never substitute manifest pins for imageIDs.
 
-Authoring verification (source only): four safety-contract tests passed; embedded
+Authoring verification (source only): five safety-contract tests passed; embedded
 Bash syntax and ShellCheck passed; all six manifests passed strict kubeconform
 1.36.0 with zero skipped schemas; changed YAML lint passed. `make validate` was
 run and stopped at pre-existing unrelated YAML lint errors under onetak, TAK,
 NATS, monitoring, data and matrix. No unrelated files were reformatted.
 
 Execution checkpoint: the first 2026-10-24 attempt never started PostgreSQL: its anonymous private GHCR token request returned401. No migration ran. The reviewed cached-image correction preserves the exact digest and all isolation boundaries. Only the failed disposable Job may be removed before the corrected run.
+
+The cached-image attempt also never started PostgreSQL: kubelet reported ErrImageNeverPull despite node inventory listing the digest. That attempt is not migration evidence. The registry-only correction authenticates the intended image pull and preserves database/network isolation.
