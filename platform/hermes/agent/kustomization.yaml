@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: hermes
 resources:
+  - cluster-observer.yaml
   - namespace.yaml
   - pvc.yaml
   - deployment.yaml
@@ -13,6 +14,9 @@ resources:
   - provider-config-backup.sealedsecret.yaml
 
 configMapGenerator:
+  - name: hermes-cluster-observer
+    files:
+      - report.py=cluster_observer.py
   - name: hermes-paperclip-api-nginx
     files:
       - nginx.conf=paperclip-api-nginx.conf
