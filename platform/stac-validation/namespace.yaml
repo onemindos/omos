@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stac-validation
+  labels:
+    app.kubernetes.io/name: stac-validation
+    app.kubernetes.io/part-of: stac-validation
+    onemind.io/temporary-diagnostics: 'true'
+    onemind.io/layer: make-sense
+    pod-security.kubernetes.io/enforce: restricted
+  annotations:
+    argocd.argoproj.io/sync-wave: '-2'

@@ -1,0 +1,133 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: stac-validation-control
+  namespace: stac-validation
+  labels:
+    app.kubernetes.io/name: stac-validation
+    app.kubernetes.io/part-of: stac-validation
+    onemind.io/temporary-diagnostics: 'true'
+    onemind.io/validation-case: control
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: stac-validation
+        app.kubernetes.io/part-of: stac-validation
+        onemind.io/temporary-diagnostics: 'true'
+        onemind.io/validation-case: control
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 30
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 26
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+      - name: postgres
+        image: ghcr.io/onemindos/onemind-postgres:sha-0065f1991b58f009e49176630f1b45837d0451ae@sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d
+        restartPolicy: Always
+        command:
+        - bash
+        - /scripts/postgres.sh
+        env:
+        - name: AGE_PRELOAD
+          value: ''
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: &id001
+            drop:
+            - ALL
+          runAsUser: 26
+          runAsGroup: 26
+        resources:
+          requests:
+            cpu: 50m
+            memory: 384Mi
+          limits:
+            cpu: '1'
+            memory: 1Gi
+        startupProbe:
+          exec:
+            command:
+            - pg_isready
+            - -h
+            - 127.0.0.1
+            - -U
+            - postgres
+            - -d
+            - postgres
+          periodSeconds: 2
+          failureThreshold: 60
+        volumeMounts:
+        - name: scratch
+          mountPath: /scratch
+        - name: pg-tmp
+          mountPath: /tmp
+        - name: scripts
+          mountPath: /scripts
+          readOnly: true
+      containers:
+      - name: migrate
+        image: ghcr.io/stac-utils/pgstac-pypgstac:v0.9.12@sha256:672faad776b55afe15fadb27589c390c4fc93de5bc73e8889d2c29a600c5dba4
+        command:
+        - bash
+        - /scripts/migrate.sh
+        env:
+        - name: PGHOST
+          value: 127.0.0.1
+        - name: PGPORT
+          value: '5432'
+        - name: PGDATABASE
+          value: stac
+        - name: PGUSER
+          value: stac
+        - name: PGOPTIONS
+          value: -c createrole_self_grant=set,inherit
+        - name: HOME
+          value: /tmp
+        - name: VALIDATION_CASE
+          value: control
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: *id001
+          runAsUser: 1000
+          runAsGroup: 1000
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+        volumeMounts:
+        - name: client-tmp
+          mountPath: /tmp
+        - name: scripts
+          mountPath: /scripts
+          readOnly: true
+      volumes:
+      - name: scratch
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: pg-tmp
+        emptyDir:
+          sizeLimit: 32Mi
+      - name: client-tmp
+        emptyDir:
+          sizeLimit: 64Mi
+      - name: scripts
+        configMap:
+          name: stac-validation-scripts
+          defaultMode: 292

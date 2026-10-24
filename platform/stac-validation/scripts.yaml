@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stac-validation-scripts
+  namespace: stac-validation
+  labels:
+    app.kubernetes.io/name: stac-validation
+    app.kubernetes.io/part-of: stac-validation
+    onemind.io/temporary-diagnostics: 'true'
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
+data:
+  postgres.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # A native-sidecar restart preserves the original fault and never restarts PostgreSQL.
+    if test -e /scratch/attempted; then
+      echo "Previous postmaster exited; database will not restart. Original synthetic log:"
+      cat /scratch/server.log 2>/dev/null || true
+      exec sleep 600
+    fi
+    touch /scratch/attempted
+    # Each Job receives its own emptyDir, never a production database or volume.
+    initdb -D /scratch/data --auth-local=trust --auth-host=reject
+    # Trust is restricted to this pod's IPv4 loopback. PostgreSQL never binds pod IPs.
+    cat > /scratch/data/pg_hba.conf <<'HBA'
+    local all all trust
+    host all all 127.0.0.1/32 trust
+    HBA
+    postgres -D /scratch/data \
+      -c listen_addresses=127.0.0.1 -c unix_socket_directories=/tmp \
+      -c shared_preload_libraries="${AGE_PRELOAD}" \
+      -c max_connections=150 -c shared_buffers=256MB \
+      -c restart_after_crash=off -c logging_collector=off \
+      -c log_destination=stderr -c log_statement=all \
+      -c log_min_error_statement=error -c log_error_verbosity=verbose \
+      -c 'log_line_prefix=%m [%p] %u@%d ' > /scratch/server.log 2>&1 &
+    pg_pid=$!
+    # Native sidecar termination must reach PostgreSQL and retain its final log.
+    trap 'kill -TERM "${pg_pid}" 2>/dev/null || true' TERM INT
+    status=0
+    wait "${pg_pid}" || status=$?
+    if kill -0 "${pg_pid}" 2>/dev/null; then
+      wait "${pg_pid}" || true
+    fi
+    cat /scratch/server.log
+    exit "${status}"
+  migrate.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+    status=0
+    trap 'status=$?; echo "validation case=${VALIDATION_CASE} exit=${status}"' EXIT
+    # The sidecar startup probe has already verified that this isolated server accepts connections.
+    # No Secret or password is needed: this pod has no network access or Service.
+    PGOPTIONS='' psql -X -v ON_ERROR_STOP=1 -U postgres -d postgres <<'SQL'
+    CREATE ROLE stac LOGIN CREATEROLE NOSUPERUSER NOCREATEDB NOREPLICATION NOBYPASSRLS;
+    CREATE DATABASE stac OWNER stac;
+    SQL
+    PGOPTIONS='' psql -X -v ON_ERROR_STOP=1 -U postgres -d stac <<'SQL'
+    CREATE EXTENSION postgis;
+    CREATE EXTENSION btree_gist;
+    CREATE EXTENSION unaccent;
+    SQL
+    echo "validation case=${VALIDATION_CASE}; synthetic database; no production access"
+    psql -X -v ON_ERROR_STOP=1 <<'SQL'
+    SELECT version();
+    SHOW shared_preload_libraries;
+    SHOW createrole_self_grant;
+    SELECT extname, extversion FROM pg_extension ORDER BY extname;
+    SELECT current_user, rolsuper, rolcreaterole FROM pg_roles WHERE rolname = current_user;
+    SQL
+    test "$(psql -X -Atqc 'SELECT current_user')" = stac
+    test "$(psql -X -Atqc "SELECT NOT EXISTS (SELECT FROM pg_extension WHERE extname='age')")" = t
+    # Preserve the production client's transaction behavior; do not split the migration SQL.
+    pypgstac migrate
+    psql -X -v ON_ERROR_STOP=1 -qc \
+      "INSERT INTO pgstac.pgstac_settings (name, value) VALUES ('update_collection_extent', 'true') ON CONFLICT (name) DO UPDATE SET value = EXCLUDED.value"
+    pypgstac version
+    test "$(psql -X -Atqc 'SELECT pgstac.get_version()')" = 0.9.12
+    # Exercise only after the first migration succeeds; failure never triggers a retry.
+    pypgstac migrate
+    psql -X -v ON_ERROR_STOP=1 -qc "SELECT pgstac.get_version(); SELECT count(*) FROM pgstac.collections;"
+    echo "validation case=${VALIDATION_CASE} migration-and-idempotency=passed"
