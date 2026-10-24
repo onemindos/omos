@@ -95,7 +95,7 @@ class HermesTransport(unittest.TestCase):
         self.assertTrue(callback_mount['readOnly'])
         secret = next(v for v in spec['volumes'] if v['name'] == 'paperclip-agent')['secret']
         self.assertEqual(secret['items'], [{'key': 'credentials.json', 'path': 'credentials.json'}])
-        self.assertEqual(secret['defaultMode'], 0o440)
+        self.assertEqual(secret['defaultMode'], 0o444)
 
     def test_paperclip_trust_and_exact_network_identity(self):
         deploy = next(d for d in documents(PAPERCLIP / 'deployment.yaml') if d['kind'] == 'Deployment')

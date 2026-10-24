@@ -242,6 +242,9 @@ spec:
           secret:
             secretName: paperclip-agent
             optional: true
-            defaultMode: 0440
+            # s6 drops the gateway to UID/GID 10000; root:root 0440 is unreadable.
+            # This mount exists only in Hermes, never its sidecars. Avoid fsGroup,
+            # which could recursively change ownership of the existing data PVC.
+            defaultMode: 0444
             items:
               - {key: credentials.json, path: credentials.json}
