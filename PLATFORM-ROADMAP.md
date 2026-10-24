@@ -132,6 +132,16 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
+### Fresh application replacement source (2026-10-24)
+
+[PR #390](https://github.com/onemindos/omos/pull/390) is prepared against the current cleanup baseline, preserving
+fresh STAC source and the shared CNPG roles/databases. CloudTAK is a separate TAK client with pinned upstream
+images, a held database/role prerequisite on `onemind-data`, and private Tailscale ingress. The Application is manual
+with zero retries while shared PostgreSQL recovery and isolated migration validation are pending. Source validation
+is not live acceptance. Spaces credentials, first-run TAK configuration and runtime checks remain deployment gates;
+imported/hosted tile layers need a trusted internal tile origin, and media-infra replacement needs a reviewed
+reader/publisher lease migration. See [CloudTAK's runbook](platform/cloudtak/README.md).
+
 ### Migration readiness: core gate versus parallel follow-ups
 
 Zeus requested [a tracked readiness/follow-up checklist](docs/roadmap/migration-readiness-followups.md)

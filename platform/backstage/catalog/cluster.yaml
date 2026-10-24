@@ -8904,7 +8904,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
   name: fabric-paperclip-670d47cc
-  title: Paperclip
+  title: Paperclip (registry)
   description: Open-source app for managing AI agents at work — 79.9k stars, most
     popular agent UI. Reference for OneMind agent management UI. — Notion
     documentation; deployment and availability unverified.

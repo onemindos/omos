@@ -1,8 +1,17 @@
 # CloudTAK
 
 A fresh install of upstream [CloudTAK](https://github.com/dfpc-coe/CloudTAK) (`dfpc-coe/CloudTAK`, pinned
-**v13.113.0**, released 2026-10-23) as a browser TAK client. Deployed by the Argo CD Application
-`platform-cloudtak` (sync wave 5) into the namespace `cloudtak`.
+**v13.113.0**, released 2026-10-23) as a browser TAK client. Source is prepared for the Argo CD Application
+`platform-cloudtak` (sync wave 5) into the namespace `cloudtak`. Live acceptance is pending; this runbook is a deployment contract, not a health claim.
+
+The branch includes current `main`, including the fresh STAC source in `platform/stac/`. CloudTAK and STAC use separate databases and roles on the existing `onemind-data` cluster; this PR creates no PostgreSQL server or PVC.
+
+**Deployment hold:** `platform-cloudtak` is manual with retry limit zero. The shared PostgreSQL incident in
+[the STAC containment record](../../docs/operations/stac-migration-incident-2026-10-24.md) must be resolved first.
+Do not sync CloudTAK or run its migrations until primary health, replica redundancy and recovery evidence are
+confirmed and the exact pinned CloudTAK migrations have passed against an isolated compatible database.
+CloudTAK owns its Database CR in this manual application; the active shared Cluster does not yet declare its role.
+Merging this source cannot automatically create or migrate the CloudTAK database.
 
 CloudTAK here is **a client only**. TAK Server stays the source of truth: CloudTAK holds a streaming connection to it
 per user, shows the map, chat, missions and data packages, and keeps its own small database for profiles, basemaps
@@ -28,7 +37,7 @@ Actions on each tag, so there is no build step in this repo. Exact tags and dige
 | Service | Where | How CloudTAK reaches it |
 | --- | --- | --- |
 | TAK Server 5.8 | namespace `takserver` | Set in the UI at first run (see below). 8443 Marti API with the admin client certificate, 8446 WebTAK login, 8089 streaming CoT |
-| PostgreSQL + PostGIS | `onemind-data` cluster, namespace `onemind-data` | Database and role `cloudtak` (declared in `platform/ecosystem/resources/`), `POSTGRES` from `Secret/cloudtak-db` |
+| PostgreSQL + PostGIS | `onemind-data` cluster, namespace `onemind-data` | Database `cloudtak` (manual `database.yaml`); role activation held below, `POSTGRES` from `Secret/cloudtak-db` |
 | Tile38 | `tile38` in namespace `onetak`, port 9851 | Settings `geofence::enabled` and `geofence::url`, set from env (`CLOUDTAK_Config_geofence_*`) |
 | Object storage | DigitalOcean Spaces, nyc3, bucket `onemind-cloudtak` | `ASSET_BUCKET`, `AWS_S3_Endpoint`, `AWS_S3_AccessKeyId`, `AWS_S3_SecretAccessKey`. These are upstream's S3-protocol names; nothing talks to AWS |
 | Media server | `onetak-media` (MediaMTX) in namespace `onetak` | **Not connected.** See "Media" |
@@ -42,13 +51,32 @@ Access is tailnet only, through the Tailscale operator (ingress class `tailscale
 There is no public Ingress. `network.yaml` denies all traffic in the namespace and then allows only: DNS; the Tailscale
 proxy pods in; API to Postgres 5432, TAK Server 8443/8446/8089, Tile38 9851, and public HTTPS 443 (Spaces, basemap
 and search proxying; private, tailnet and metadata ranges excluded); tiles and events to the API and public 443;
-retention to the API.
+retention to the API. No media egress is opened until a compatible media replacement is reviewed.
+
+## Held database prerequisite
+
+After the shared CNPG recovery gate and isolated migration check pass, add this role to
+`platform/ecosystem/resources/postgres-cluster.yaml` in a reviewed follow-up. Its sealed `db-cloudtak` password
+already lives beside the shared resources; do not generate a new password or grant superuser/role-creation rights.
+
+```yaml
+    - name: cloudtak
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      passwordSecret:
+        name: db-cloudtak
+```
+
+Verify CNPG reconciles the role before manually syncing `platform-cloudtak`. Its wave-2 Database resource creates
+only `cloudtak` and enables PostGIS before the API starts; this is still a database mutation requiring the gate above.
 
 ## Before the first sync: the Spaces key (Zeus)
 
 The pods read the Spaces key from `Secret/cloudtak-spaces`. It is not in Git: it must be created from a key only Zeus
-can issue. Do this **on the PR branch before merging**, so everything starts cleanly. If the secret is missing at
-merge, the pods wait in `CreateContainerConfigError` and start by themselves once it appears.
+can issue. Do this **on the PR branch before merging**, so everything starts cleanly. If the secret is missing at the first authorized manual sync, the pods wait in
+`CreateContainerConfigError` and start by themselves once it appears.
 
 1. DigitalOcean control panel, **Spaces Object Storage**, **Create bucket**:
    region **NYC3**, name `onemind-cloudtak`, file listing **Restricted**, CDN off. (If you pick another name, change
@@ -73,9 +101,9 @@ merge, the pods wait in `CreateContainerConfigError` and start by themselves onc
 4. Commit `platform/cloudtak/cloudtak-spaces.sealedsecret.yaml` to the PR branch. It is encrypted and safe to commit.
    Never commit the plain key.
 
-The other two secrets (`cloudtak-signing`, the JWT signing secret shared by all four workloads, and `cloudtak-db`,
-plus the role password in `onemind-data/db-cloudtak`) were generated at random and sealed in this PR; nobody has
-seen the values. To rotate the signing secret, reseal `cloudtak-signing` and restart all four Deployments; every
+The PR carries sealed `cloudtak-signing` (the JWT secret shared by all four workloads), `cloudtak-db`,
+and the role password in `onemind-data/db-cloudtak`. Validate the role/DSN binding at first deployment without
+printing the credential values. To rotate the signing secret, reseal `cloudtak-signing` and restart all four Deployments; every
 user session and API token is signed with it, so everyone has to log in again.
 
 ## First run (Zeus, in the CloudTAK UI)
@@ -117,32 +145,36 @@ What is set from the environment and what is set in the UI:
 - UI (stored in the database): the TAK Server URLs and admin certificate, system administrators, basemaps, retention,
   login branding, OIDC, search and routing providers.
 
-## Media (open decision)
+## Media replacement gate
 
-CloudTAK's video features do not work with plain MediaMTX. Its setting `media::url` must point at the `media-infra`
-wrapper (`ghcr.io/dfpc-coe/media-infra`), which exposes an API on port **9997** with routes CloudTAK calls
-(`/path`, `/path/:name`, `/v3/config/global/get`, `/stream/<name>/index.m3u8`) and which authenticates MediaMTX
-clients by calling back to CloudTAK (`/api/video/auth`). The shared `onetak-media` is plain `bluenviron/mediamtx`
-with no auth, no 9997 and none of those routes (it replaced media-infra on 2026-09-29), so `media::url` is left unset
-and CloudTAK's video lease feature is simply off. Everything else works.
+CloudTAK's video features require the [media-infra wrapper](https://github.com/dfpc-coe/media-infra/tree/v9.12.1),
+not plain MediaMTX. The reviewed v9.12.1 wrapper exposes port **9997** (`/path`, `/path/:name`,
+`/v3/config/global/get`, `/stream/<name>/index.m3u8`) and uses the same `SigningSecret` to authenticate with CloudTAK.
+The current `platform/onetak/media-mtx.yaml` is plain MediaMTX, so `media::url` remains unset and video leases are off.
 
-Options, if video leases are wanted:
+A direct image swap is unsafe for existing clients. The wrapper changes all RTSP/RTMP/SRT reader and publisher
+requests to HTTP authentication through CloudTAK's `/api/video/auth`; it also periodically removes MediaMTX paths
+that have no CloudTAK lease (`lib/persist.ts`). The existing takml vision worker uses the unauthenticated named paths
+`drone1`, `takcam`, `helmcam` and `maccam`. CloudTAK's video leases have generated identities, so preserving those names
+requires an explicit stream mapping or compatible alias/proxy design, plus credentials for every reader/publisher.
 
-1. **Swap `onetak-media` to media-infra** (`ghcr.io/dfpc-coe/media-infra`, pin by digest). One server for everyone, but
-   media-infra turns on MediaMTX HTTP auth, so every RTSP/RTMP/SRT publisher and reader, including the takml vision
-   worker, would have to authenticate through CloudTAK's lease system. That is the change the cluster moved away from.
-   `platform/onetak/` is being edited by another change set; do not do this in this PR.
-2. **Run media-infra for CloudTAK only** in this namespace, leaving `onetak-media` untouched. No impact on existing
-   feeds, but it is a second media server, which this install deliberately avoids, and it needs the same shared
-   `SigningSecret` and public ports for RTSP/WebRTC.
-3. **Do nothing** (current). The rest of CloudTAK works; only its own video lease feature is off.
+Replacement scope before enabling media:
 
-Whichever is chosen, set `CLOUDTAK_Config_media_url` on `cloudtak-api` and keep the 9997 egress rule in `network.yaml`.
+1. Inventory publishers/readers and existing path/recording state; preserve data and agree a maintenance window.
+2. Initialize CloudTAK, create corresponding video leases and distribute scoped reader/publisher credentials. Update
+   takml `FEEDS` and other clients to the resulting path identities; do not silently disable authentication.
+3. Pin a tested media-infra image; share only the required signing secret, set its internal `API_URL`, and allow
+   wrapper-to-CloudTAK authentication plus CloudTAK-to-wrapper port 9997 in NetworkPolicies.
+4. Preserve existing media Service endpoints during cutover, retain any recording storage with a backup, and verify
+   publishing, takml reads, HLS, RTSP and authenticated browser playback. WebRTC additionally needs a reachable ICE
+   transport (8189 UDP/TCP or a reviewed TURN service); HTTPS ingress alone does not carry ICE.
+
+This PR leaves the existing shared media server and its clients unchanged. No second media server, recording PVC,
+public port, shared-secret rotation or media egress permission is added.
 
 ## The AWS-only "layers" feature
 
-CloudTAK's ETL "Layers" create AWS Lambda functions and CloudFormation stacks and use SQS. Nothing here has AWS
-credentials, and the pods cannot reach AWS. The layer plumbing is switched off or inert:
+CloudTAK's ETL "Layers" create AWS Lambda functions and CloudFormation stacks and use SQS. No AWS credentials are supplied. Public HTTPS egress can reach AWS endpoints as well as Spaces; it is not a provider allowlist. The layer plumbing is switched off or inert:
 
 - `cloudtak-api` starts with `--no-events --no-etl-events` (no Lambda cron invocations, no SQS delivery).
 - `AWS_EC2_METADATA_DISABLED=true`, no AWS credentials in any pod, and the network policy blocks the metadata address.
@@ -151,14 +183,34 @@ credentials, and the pods cannot reach AWS. The layer plumbing is switched off o
 
 ## Known limitations
 
-- **Imported-data tiles may not load.** The API fetches TileJSON for user-imported assets from `PMTILES_URL` using
+- **Imported-data tiles are blocked with this configuration.** The API fetches TileJSON for user-imported assets from `PMTILES_URL` using
   upstream's SSRF-safe fetch, which refuses private and tailnet addresses, and pods cannot reach the tailnet at all.
   The import worker only needs the API and Spaces; the map layer for an imported asset is the part at risk.
-  Hosted basemaps, the map, chat, missions and the TAK connection are unaffected. A one-line upstream fix would allow
-  the tiles host; until then, treat imports as untested. Check this after the first import.
+  Hosted PMTiles basemap metadata also uses the external tile origin, so those layers need the same reachability
+  fix. Public upstream basemaps, chat, missions and the TAK connection do not use this fetch. A complete fix needs a
+  pinned upstream change supporting a trusted internal tiles origin while returning the browser-facing origin,
+  with scoped SSRF allowance and matching NetworkPolicies. Do not disable `StackName` or SSRF checks to bypass it.
+  Acceptance of imported/hosted data layers is blocked until that change is tested.
 - Single API replica. Upstream's split mode (`api` + `hub`) exists for scaling, but is not needed here.
-- Hardening of the three non-root pods (read-only root filesystem, uid 1000) is untested against the live images.
-  If one fails to start, relax `securityContext` in that Deployment first.
+- The image entrypoints/workdirs and required environment variables were checked against pinned source and registry
+  metadata. Non-root/read-only runtime compatibility still needs a live start; inspect the failing path before making
+  a narrowly scoped permission or mount change. The events scratch volume has `fsGroup: 1000` for its non-root writer.
+
+## Resource and recovery budget
+
+The four app pods request **260m CPU / 960 MiB memory**, plus about 50m/128 MiB for the two Tailscale proxies.
+They prefer the existing ecosystem node pool. Limits are API 1 CPU/1536 MiB, tiles 500m/512 MiB, events 2 CPU/2 GiB,
+and retention 200m/256 MiB. No new node pool or persistent app volume is added. Imports use at most 12 GiB ephemeral
+storage per events pod (10 GiB scratch plus 256 MiB `/tmp`), with a 1 GiB scheduling request.
+
+The tiles and retention commands bypass upstream npm scripts that force a 6144 MiB heap; V8 caps are 320/128 MiB.
+The API cap is 1024 MiB. Events use a 768 MiB heap per Node isolate and exactly **one** import worker, instead of the
+upstream host-CPU default; GDAL and tippecanoe still share the 2 GiB container budget. Large imports may require a
+measured resource change. API startup allows 450 seconds for first migrations; tiles has its own startup window.
+
+CNPG's existing cluster-wide WAL/object-store backup covers the new database after creation. Confirm the latest
+successful backup before schema upgrades. The new Spaces bucket's object retention/offsite export must be defined
+before storing irreplaceable imagery; no independent bucket backup or restore test is provided by this PR.
 
 ## Security notes
 
@@ -186,7 +238,7 @@ credentials, and the pods cannot reach AWS. The layer plumbing is switched off o
 
 3. Edit the `image:` line in `api.yaml`, `tiles.yaml`, `events.yaml` and `retention.yaml` to
    `ghcr.io/dfpc-coe/<image>:vX.Y.Z@sha256:<digest>`. Never `:latest`.
-4. Open a PR. After merge, Argo restarts `cloudtak-api` (Recreate, so a short outage); it runs the migrations on start, so
+4. Open a PR. After review and an explicitly authorized manual sync, Argo restarts `cloudtak-api` (Recreate, so a short outage); it runs the migrations on start, so
    watch `kubectl -n cloudtak logs deploy/cloudtak-api` until `/api` answers. Roll back by reverting the PR, but
    note that a migration that already ran is not undone; take a Postgres backup first when the notes mention one.
 
@@ -197,4 +249,6 @@ kubectl --context do-nyc3-omos-cloud -n cloudtak get pods
 kubectl --context do-nyc3-omos-cloud -n cloudtak logs deploy/cloudtak-api | tail -30
 ```
 
-Look for the API reporting its Tile38 geofence connection, no `ECONNREFUSED` to Postgres, and no S3 `AccessDenied`.
+Look for the API reporting its Tile38 geofence connection, no `ECONNREFUSED` to Postgres, and no S3 `AccessDenied`. Confirm all four pods stay Ready without restarts, the two private HTTPS origins work,
+and a TAK user can log in, see CoT/chat/mission data, and reconnect after an API restart. Check both database and
+bucket writes before declaring acceptance. Imported/hosted tile layers and media keep their gates above.

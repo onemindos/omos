@@ -41,6 +41,8 @@ spec:
       containers:
         - name: retention
           image: ghcr.io/dfpc-coe/cloudtak-retention:v13.113.0@sha256:343d96464bd4752927df74d74ad67ed4a46cea2f2096d8cc2ed94e2dad3988fd
+          # Bypass upstream npm prod, which hard-codes a 6144 MiB V8 heap.
+          command: [node, --max-old-space-size=128, dist/index.js]
           env:
             - name: API_URL
               value: http://cloudtak-api.cloudtak.svc.cluster.local:5000

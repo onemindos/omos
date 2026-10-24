@@ -175,7 +175,7 @@ argoApplications:
   platform-backstage: component:default/backstage
   platform-backups: component:default/platform-backup-recovery
   platform-clickhouse-operator: component:default/clickhouse
-  platform-cloudtak: component:default/tak-server
+  platform-cloudtak: component:default/cloudtak
   platform-core: component:default/platform-core
   platform-argocd: component:default/argocd
   platform-ecosystem-applications: component:default/argocd
@@ -193,6 +193,7 @@ argoApplications:
   platform-observability: component:default/clickhouse
   platform-omos: component:default/omos-data-pipeline
   platform-onetak: component:default/onetak
+  platform-paperclip: component:default/paperclip
   platform-ops: component:default/health-keeper
   platform-redpanda-connect: component:default/redpanda-connect
   platform-security: component:default/kyverno

@@ -76,14 +76,6 @@ spec:
           podSelector:
             matchLabels: {app: tile38}
       ports: [{protocol: TCP, port: 9851}]
-    # Shared media server. Unused until media::url is set. CloudTAK expects media-infra's wrapper API on 9997,
-    # which the current plain MediaMTX does not serve (README, "Media").
-    - to:
-        - namespaceSelector:
-            matchLabels: {kubernetes.io/metadata.name: onetak}
-          podSelector:
-            matchLabels: {app: onetak-media}
-      ports: [{protocol: TCP, port: 9997}]
     # Spaces (S3 over HTTPS) and the public internet CloudTAK proxies for basemaps, search and routing
     # (its SSRF guard rejects private addresses). Private, tailnet and metadata ranges are excluded.
     - to:

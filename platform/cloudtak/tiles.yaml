@@ -38,6 +38,8 @@ spec:
       containers:
         - name: tiles
           image: ghcr.io/dfpc-coe/cloudtak-pmtiles:v13.113.0@sha256:b753cc8ee8b4f63a2964417827c10af4d45dd9d6cf6e8c44ee7df554d5445997
+          # Bypass upstream npm prod, which hard-codes a 6144 MiB V8 heap.
+          command: [node, --max-old-space-size=320, dist/index.js]
           ports:
             - name: http
               containerPort: 5002
@@ -67,6 +69,12 @@ spec:
                 secretKeyRef:
                   name: cloudtak-spaces
                   key: secret-key
+          startupProbe:
+            httpGet:
+              path: /tiles
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /tiles

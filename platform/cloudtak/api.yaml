@@ -38,7 +38,7 @@ spec:
           # Same steps as upstream's ./start (render nginx.conf, start nginx, run the API), except:
           #  - exec, so a crashed API restarts the container instead of looping inside it;
           #  - --no-events and --no-etl-events turn off the AWS-only ETL layer plumbing (Lambda cron
-          #    invocations and SQS delivery), so nothing in this pod calls AWS;
+          #    invocations and SQS delivery); public HTTPS egress is not a provider allowlist;
           #  - a heap cap that fits the container limit (upstream hard-codes 6144 MB).
           args:
             - bash

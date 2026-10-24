@@ -1,0 +1,17 @@
+# Manual platform-cloudtak ownership: do not sync until shared CNPG recovery and the cloudtak role are verified.
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: onemind-cloudtak
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  name: cloudtak
+  owner: cloudtak
+  cluster:
+    name: onemind-data
+  databaseReclaimPolicy: retain
+  extensions:
+  - name: postgis
+    ensure: present

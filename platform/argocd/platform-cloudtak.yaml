@@ -1,10 +1,11 @@
 # platform-cloudtak: fresh install of upstream CloudTAK (dfpc-coe/CloudTAK) as a TAK client, namespace cloudtak.
 #
 # Covers: platform/cloudtak/ (api, tiles, events, retention, config, Tailscale Ingresses, NetworkPolicies, sealed secrets).
-# Wave 5, after platform-ecosystem-resources (wave 4) has created the cloudtak database and role in onemind-data.
+# Wave 5. Manual while shared CNPG recovery and CloudTAK migration validation are pending.
+# The Database CR is held by this Application; its managed role must be added by a separate reviewed change after recovery.
 #
-# Needs one thing from a human before it can start: the Spaces access key, sealed as Secret/cloudtak-spaces
-# (platform/cloudtak/README.md). Until it exists the pods wait in CreateContainerConfigError and recover on their own.
+# Gates: shared CNPG recovery, isolated migration proof, reviewed role activation, sealed Spaces credentials,
+# and an explicitly authorized manual sync (platform/cloudtak/README.md).
 #
 # Shared services stay where they are: TAK Server (takserver), Tile38 and MediaMTX (onetak), Postgres (onemind-data).
 apiVersion: argoproj.io/v1alpha1
@@ -29,8 +30,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: cloudtak
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    # Shared CNPG recovery and isolated exact-image migration proof are required before the first sync.
     syncOptions:
       - CreateNamespace=true
+    retry:
+      limit: 0

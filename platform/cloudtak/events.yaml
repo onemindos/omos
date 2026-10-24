@@ -36,11 +36,32 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: events
           image: ghcr.io/dfpc-coe/cloudtak-events:v13.113.0@sha256:f9623e71f0542cac3a697d2c05eadbb24c7b245250d8ecb2c02a5eb45d779ca8
+          # Upstream defaults to one import per host CPU. Serialize imports so a small pod does not
+          # start eight GDAL/tippecanoe jobs at once; use the exported v13.113.0 WorkerPool constructor.
+          command: [node, --max-old-space-size=768, --eval]
+          args:
+            - |
+              for (const key of ['API_URL', 'SigningSecret', 'ASSET_BUCKET']) {
+                if (!process.env[key]) throw new Error(`${key} environment variable is required`);
+              }
+              import('./dist/index.js').then(({ default: WorkerPool }) => {
+                new WorkerPool({
+                  api: process.env.API_URL,
+                  secret: process.env.SigningSecret,
+                  bucket: process.env.ASSET_BUCKET,
+                  interval: 1000,
+                  maxWorkers: 1,
+                });
+              }).catch((err) => {
+                console.error(err);
+                process.exit(1);
+              });
           envFrom:
             - configMapRef:
                 name: cloudtak-config
