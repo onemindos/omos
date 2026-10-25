@@ -18,6 +18,9 @@ spec:
   sourcePVC: data-pvc
   paused: false
   trigger:
+    # One-time post-start acceptance. Remove manual in Git after lastManualSync
+    # matches: VolSync gives manual priority over schedule until it is removed.
+    manual: poststart-20261025-v1
     schedule: 40 12 * * *
   restic:
     repository: karakeep-data-restic
@@ -61,6 +64,8 @@ spec:
   sourcePVC: meilisearch-pvc
   paused: false
   trigger:
+    # Keep the daily cron, then remove manual after the accepted nonempty copy.
+    manual: poststart-20261025-v1
     schedule: 0 13 * * *
   restic:
     repository: karakeep-meilisearch-restic
