@@ -17,7 +17,8 @@ The CA SHA-256 fingerprint is
 `72:93:0A:5B:51:50:D5:B3:66:C3:DC:F4:CF:F0:FB:E8:BC:E2:20:50:49:7F:B1:4B:07:64:C0:30:0F:B3:3A:15`.
 The existing encrypted CA key was checked against that public certificate before conversion.
 Only the encrypted JKS is committed, inside the namespace/name-bound
-`tak-enrollment-signer` SealedSecret. No plaintext key or keystore password is in Git.
+`tak-enrollment-signer` SealedSecret. No plaintext private key or new password is
+added to Git; the JKS uses TAK's existing configured keystore password.
 
 Validation used the exact currently running messaging image digest,
 `sha256:b4f5d8c522bb9620e87de444b32fc0824d4b6c0d58622138f1730bbff046ba77`,
@@ -55,3 +56,20 @@ volume through GitOps and wait for messaging readiness. Keep the existing CA, ce
 ConfigMap, identities, and sealed recovery material. The adopted Deployment has Prune=false and Delete=false protections. Coordinate ownership
 before removing its manifest; removal must not implicitly retire the production service.
 This rollback restores the earlier enrollment failure while preserving existing clients.
+
+## Observed production completion
+
+PR [#464](https://github.com/onemindos/omos/pull/464) passed all four repository
+checks and merged. The signer SealedSecret unsealed successfully, with only the
+expected key. Messaging rolled to the reviewed digest and became Ready with zero
+restarts. Its readable 0400 JKS matched the generated Secret byte for byte. API,
+config, plugins and LDAP pod identities remained unchanged.
+
+At 18:23:14 UTC, strict CA/hostname checks passed for the existing admin API,
+password grant and enrollment configuration. The supported CloudTAK first-run
+PATCH returned 200/configured/auth=true; dedicated login and own administrator
+profile returned 200. The normal TAK connection reported live within five seconds.
+Only the normal enrollment and configuration were performed: no test CoT message,
+asset, human-password reset, LDAP-policy change or TLS bypass was introduced.
+All 56 Argo applications were again Synced/Healthy; the three shared PostgreSQL
+pod identities and restart counts still matched the starting baseline.

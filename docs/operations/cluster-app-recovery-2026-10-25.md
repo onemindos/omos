@@ -56,3 +56,18 @@ three-node target would have little remaining reservation headroom before
 maintenance, and NATS still requires three distinct hosts. No Terraform node
 count or live pool size was changed. OpenProject, LibreChat and Vaultwarden
 were checked for deployed workloads/services and are absent.
+
+## Final CloudTAK acceptance
+
+TAK's V2 enrollment initially failed because the configured signing JKS was
+missing. PR [#464](https://github.com/onemindos/omos/pull/464) restored that file
+from the unchanged existing CA as a dedicated SealedSecret, with a messaging-only
+rollout. [The narrow repair receipt](tak-enrollment-repair-2026-10-25.md) records
+the loader proof, coordinated Helm/Argo ownership and rollback.
+
+At 18:23:14 UTC CloudTAK's supported setup succeeded. The dedicated login and own
+administrator profile passed, strict endpoint preflights passed, and the normal
+TAK connection became live. No test CoT messages or assets were sent. All 56 Argo
+applications were Synced/Healthy and all running pods Ready, with 80/80 claims
+Bound, four Ready nodes and three healthy unchanged shared PostgreSQL instances.
+Karakeep's existing owner still needs to complete first OIDC sign-in.

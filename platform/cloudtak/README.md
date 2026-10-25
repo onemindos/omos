@@ -1,10 +1,12 @@
 # CloudTAK
 
+**Live acceptance verified 2026-10-25 18:23 UTC:** all four workloads are Ready; browser/API/tiles respond over private TLS. Supported first-run setup completed against the existing TAK server. The dedicated CloudTAK login returns an administrator session, its own profile is verified, and the TAK connection reports **live**. Existing CA and hostname checks pass; no test CoT messages or assets were created. See [the signer repair and rollout evidence](../../docs/operations/tak-enrollment-repair-2026-10-25.md).
+
 **Storage provisioned 2026-10-24:** private NYC3 bucket `onemind-cloudtak` exists. The dedicated Read/Write/Delete key is strictly sealed as `cloudtak/cloudtak-spaces` in this directory. Own-bucket listing and private ACL were verified; the temporary provisioning key was removed. This is credential/storage readiness, not application or recovery acceptance. No existing key was changed.
 
 A fresh install of upstream [CloudTAK](https://github.com/dfpc-coe/CloudTAK) (`dfpc-coe/CloudTAK`, pinned
-**v13.113.0**, released 2026-10-23) as a browser TAK client. Source is prepared for the Argo CD Application
-`platform-cloudtak` (sync wave 5) into the namespace `cloudtak`. Live acceptance is pending; this runbook is a deployment contract, not a health claim.
+**v13.113.0**, released 2026-10-23) as a browser TAK client. It runs under the Argo CD Application
+`platform-cloudtak` (sync wave 5) in namespace `cloudtak`. Dated live observations are recorded above; the rest of this runbook describes its deployment contract.
 
 The branch includes current `main`, including the fresh STAC source in `platform/stac/`. CloudTAK and STAC use separate databases and roles on the existing `onemind-data` cluster; this PR creates no PostgreSQL server or PVC.
 
