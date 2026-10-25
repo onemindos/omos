@@ -17,7 +17,8 @@ The CA SHA-256 fingerprint is
 `72:93:0A:5B:51:50:D5:B3:66:C3:DC:F4:CF:F0:FB:E8:BC:E2:20:50:49:7F:B1:4B:07:64:C0:30:0F:B3:3A:15`.
 The existing encrypted CA key was checked against that public certificate before conversion.
 Only the encrypted JKS is committed, inside the namespace/name-bound
-`tak-enrollment-signer` SealedSecret. No plaintext key or keystore password is in Git.
+`tak-enrollment-signer` SealedSecret. No plaintext private key or new password is
+added to Git; the JKS uses TAK's existing configured keystore password.
 
 Validation used the exact currently running messaging image digest,
 `sha256:b4f5d8c522bb9620e87de444b32fc0824d4b6c0d58622138f1730bbff046ba77`,
