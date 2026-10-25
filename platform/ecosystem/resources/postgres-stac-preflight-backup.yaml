@@ -1,0 +1,16 @@
+# One observed recovery point before repairing the previously crashing STAC migration.
+# Keep the completed backup record and its archive; no data pruning is requested.
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: stac-repair-preflight-20261025
+  namespace: onemind-data
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  cluster:
+    name: onemind-data
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
