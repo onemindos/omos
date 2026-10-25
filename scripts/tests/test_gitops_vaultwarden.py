@@ -1,6 +1,7 @@
 """Rendered safety contracts for the private personal vault deployment."""
 import ipaddress
 import subprocess
+import shutil
 import unittest
 from pathlib import Path
 import yaml
@@ -11,8 +12,13 @@ ROOT = Path(__file__).resolve().parents[2]
 class VaultwardenSafety(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.docs = list(yaml.safe_load_all(subprocess.check_output(
-            ['kubectl', 'kustomize', str(ROOT / 'platform/vaultwarden')], text=True)))
+        app = ROOT / 'platform/vaultwarden'
+        k = yaml.safe_load((app / 'kustomization.yaml').read_text())
+        cls.docs = [d for resource in k['resources']
+                    for d in yaml.safe_load_all((app / resource).read_text())]
+        generator, = k['configMapGenerator']
+        cls.docs.append({'kind': 'ConfigMap', 'metadata': {'name': generator['name']},
+                         'data': dict(v.split('=', 1) for v in generator['literals'])})
 
     def one(self, kind):
         matches = [d for d in self.docs if d['kind'] == kind]
@@ -30,7 +36,6 @@ class VaultwardenSafety(unittest.TestCase):
         self.assertRegex(container['image'], r'^vaultwarden/server:1\.37\.4@sha256:[0-9a-f]{64}$')
         cm = self.one('ConfigMap')
         self.assertIn({'configMapRef': {'name': cm['metadata']['name']}}, container['envFrom'])
-        self.assertNotEqual(cm['metadata']['name'], 'vaultwarden-configuration')
         for key in ['SIGNUPS_ALLOWED', 'INVITATIONS_ALLOWED', 'SSO_ENABLED', 'SSO_SIGNUPS_ALLOWED']:
             self.assertEqual(cm['data'][key], 'false')
         self.assertEqual(cm['data']['SIGNUPS_DOMAINS_WHITELIST'], '')
@@ -41,6 +46,17 @@ class VaultwardenSafety(unittest.TestCase):
                             for p in ['startupProbe', 'readinessProbe', 'livenessProbe']))
         for d in self.docs:
             self.assertNotIn(d['kind'], ['Role', 'RoleBinding', 'ClusterRole', 'ClusterRoleBinding'])
+
+    @unittest.skipUnless(shutil.which('kubectl'), 'Kustomize render verified when kubectl is available')
+    def test_kustomize_rewrites_configuration_reference_to_content_hash(self):
+        docs = list(yaml.safe_load_all(subprocess.check_output(
+            ['kubectl', 'kustomize', str(ROOT / 'platform/vaultwarden')], text=True)))
+        cm, = [d for d in docs if d['kind'] == 'ConfigMap']
+        deployment, = [d for d in docs if d['kind'] == 'Deployment']
+        container, = deployment['spec']['template']['spec']['containers']
+        self.assertIn({'configMapRef': {'name': cm['metadata']['name']}}, container['envFrom'])
+        self.assertNotEqual(cm['metadata']['name'], 'vaultwarden-configuration')
+        self.assertEqual(cm['data'], self.one('ConfigMap')['data'])
 
     def test_storage_survives_gitops_deletion_and_no_public_listener(self):
         for kind in ['Namespace', 'PersistentVolumeClaim']:
