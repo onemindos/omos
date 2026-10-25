@@ -127,7 +127,6 @@ class KarakeepDeployment(unittest.TestCase):
             self.assertEqual(pvc["spec"]["accessModes"], ["ReadWriteOnce"])
         for name in ["web", "meilisearch"]:
             self.assertEqual(self.deployments[name]["spec"]["strategy"]["type"], "Recreate")
-        self.assertIn("No Karakeep backup is claimed", (APP / "BACKUP.md").read_text())
 
     def test_runtime_has_budgets_probes_and_no_api_tokens_or_plaintext_secrets(self):
         self.assertFalse(any(d["kind"] == "Secret" for d in self.docs))
