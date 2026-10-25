@@ -45,3 +45,14 @@ On 2026-10-25, preflight CNPG backup `stac-repair-preflight-20261025` completed 
 Karakeep's initialized encrypted data and Meilisearch backups completed at 18:01:23 UTC. The data snapshot contains six files/807624 bytes; a local read-only Restic restore of both SQLite databases and their matching WAL files passed integrity checks (36 app tables, three queue tables). Meilisearch's five-file/110598-byte snapshot is nonempty. No production PVC or remote archive was modified by the restore check. Remove the accepted manual tags to restore daily cron and verify nextSyncTime. Full owner/bookmark/attachment/search application restore remains a broader human acceptance check.
 
 Matrix's original three PVC UIDs/PV bindings and four Service UIDs/clusterIPs are unchanged. The obsolete plaintext synapse-config ConfigMap was removed only after checking no current pod references it, the replacement is byte-identical, and the new Synapse is Ready. The client versions endpoint still responds successfully.
+
+PR [#463](https://github.com/onemindos/omos/pull/463) passed all four checks and
+merged. VolSync manual tags are absent: the next data backup is scheduled for
+2026-10-26 12:40 UTC and the next Meilisearch backup for 13:00 UTC.
+
+After launch, node descriptions total 51,916 MiB (approximately 50.7 GiB) of
+reserved memory. All four nodes remain Ready and all 80 claims Bound. The
+three-node target would have little remaining reservation headroom before
+maintenance, and NATS still requires three distinct hosts. No Terraform node
+count or live pool size was changed. OpenProject, LibreChat and Vaultwarden
+were checked for deployed workloads/services and are absent.

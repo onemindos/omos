@@ -1,0 +1,156 @@
+# Adopt the existing live messaging tier into platform-takserver; preserve its Recreate rollout.
+# The only runtime additions are the existing-CA signing JKS projection and current-image digest pin.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takserver-messaging
+  namespace: takserver
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: takserver
+    meta.helm.sh/release-namespace: takserver
+    onemind.io/gitops-owner: platform-takserver
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+    argocd.argoproj.io/sync-wave: '0'
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: takserver-messaging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2026-09-13T00:51:39-04:00'
+      labels:
+        app: takserver-messaging
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - . /setenv.sh; cp /keystores/* /certs/files/ 2>/dev/null; cp /userauth-input/UserAuthenticationFile.xml /UserAuthenticationFile.xml
+          2>/dev/null; exec java -server -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC
+          -XX:MaxRAMPercentage=${MAX_HEAP_PERCENT} -Dspring.profiles.active=messaging,consolelog -Dkeystore.pkcs12.legacy
+          -jar takserver.war
+        env:
+        - name: MAX_HEAP_PERCENT
+          value: '75.0'
+        - name: spring_profiles_active
+          value: k8cluster
+        - name: POSTGRES_HOST
+          value: takserver-postgresql
+        - name: POSTGRES_PORT
+          value: '5432'
+        image: ghcr.io/onemindos/takserver-base@sha256:b4f5d8c522bb9620e87de444b32fc0824d4b6c0d58622138f1730bbff046ba77
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 480
+          periodSeconds: 30
+          successThreshold: 1
+          tcpSocket:
+            port: 8089
+          timeoutSeconds: 1
+        name: takserver-messaging
+        ports:
+        - containerPort: 8089
+          name: tls-8089
+          protocol: TCP
+        - containerPort: 9000
+          name: fedv1-9000
+          protocol: TCP
+        - containerPort: 9001
+          name: fedv2-9001
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 80
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8089
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: '2'
+            memory: 2560Mi
+          requests:
+            cpu: '1'
+            memory: 1536Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /certs-configmap/
+          name: config
+        - mountPath: /userauth-input/UserAuthenticationFile.xml
+          name: tak-keystores
+        - mountPath: /UserAuthenticationFile.xml
+          name: tak-userauth
+          subPath: UserAuthenticationFile.xml
+        - mountPath: /opt/tak/TAKIgniteConfig.xml
+          name: tak-ignite-config
+          subPath: TAKIgniteConfig.xml
+        - mountPath: /opt/tak/conf/CoreConfig.xml
+          name: tak-conf
+          subPath: CoreConfig.xml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: ghcr
+      initContainers:
+      - command:
+        - cp
+        - /tmp/cm/CoreConfig.xml
+        - /tak-conf/CoreConfig.xml
+        image: busybox:1.36
+        imagePullPolicy: IfNotPresent
+        name: copy-coreconfig
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp/cm/CoreConfig.xml
+          name: core-config-cm
+          subPath: CoreConfig.xml
+        - mountPath: /tak-conf
+          name: tak-conf
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccountName: takserver-ignite
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: config
+        projected:
+          defaultMode: 420
+          sources:
+          - configMap:
+              name: cert-migration
+          - secret:
+              name: tak-enrollment-signer
+              items:
+              - key: ca-signing.jks
+                path: ca-signing.jks
+                mode: 256
+      - configMap:
+          defaultMode: 420
+          name: tak-ignite-config
+        name: tak-ignite-config
+      - name: tak-keystores
+        secret:
+          defaultMode: 420
+          secretName: tak-keystores
+      - configMap:
+          defaultMode: 420
+          name: tak-userauth
+        name: tak-userauth
+      - configMap:
+          defaultMode: 420
+          name: core-config
+        name: core-config-cm
+      - emptyDir: {}
+        name: tak-conf

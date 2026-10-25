@@ -36,6 +36,9 @@ takserver:
 
   # messaging = the device-load tier (CoT/TCP 8089). SCALE THIS as EUD count grows (HPA-ready).
   messaging:
+    # This Deployment is reconciled by platform-takserver; coordinate core Helm
+    # upgrades with that owner rather than independently replacing its live spec.
+    enrollmentSignerSecret: tak-enrollment-signer
     image: {repository: ghcr.io/onemindos/takserver-base, tag: "messaging-5.8-onemind"}
     replicas: 1
     resources: {requests: {cpu: 1, memory: 1.5Gi}, limits: {cpu: 2, memory: 2Gi}}

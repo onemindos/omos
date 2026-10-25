@@ -1,5 +1,7 @@
 # Karakeep — private native Kubernetes deployment
 
+**Live rollout verified 2026-10-25:** all three workloads are Ready, private TLS responds, and native OIDC initiation reaches the existing owner-restricted Authentik flow with S256 PKCE. The existing owner still needs to complete first sign-in. Fresh nonempty encrypted snapshots restored both SQLite databases with matching WAL files and passed integrity checks; daily backup schedules have resumed. See [backup evidence](BACKUP.md).
+
 The user authorized deployment on 2026-10-25. Argo Application `platform-karakeep` now automatically reconciles one replica each of web/worker, Chrome and Meilisearch. Web starts in sync wave 2 after the app-specific Authentik hook succeeds in wave 1. **First web start runs the official SQLite migrations.** The private address is **https://karakeep.tail717ba0.ts.net**. Source activation is not proof of a successful live rollout, owner sign-in or restore; verify the acceptance checks below. No public Ingress, LoadBalancer, NodePort or Funnel is configured.
 
 ## Native source and dependencies
