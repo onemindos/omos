@@ -1,8 +1,12 @@
 """Safety contracts for the disposable native-crash diagnostic fixture."""
 from copy import deepcopy
 from pathlib import Path
+import json
+import os
 import shutil
 import subprocess
+import tempfile
+import textwrap
 import unittest
 
 import yaml
@@ -96,6 +100,7 @@ class Isolation(unittest.TestCase):
         self.assertIn('listen_addresses=127.0.0.1', postgres)
         self.assertIn('host all all 127.0.0.1/32 trust', postgres)
         self.assertIn('restart_after_crash=off', postgres)
+        self.assertIn('--encoding=UTF8', postgres)
         self.assertLess(postgres.index('test -e /scratch/attempted'), postgres.index('initdb -D'))
         self.assertIn('log_min_error_statement=error', postgres)
         migration = scripts['migrate.sh']
@@ -104,6 +109,56 @@ class Isolation(unittest.TestCase):
             self.assertIn(f'CREATE EXTENSION {extension};', migration)
         self.assertNotIn('CREATE EXTENSION age', migration)
         self.assertEqual(migration.count('\npypgstac migrate\n'), 2)
+
+    def test_restricted_preload_observation_does_not_elevate_the_migration_role(self):
+        """Reproduce PostgreSQL's restricted-setting boundary through the actual script."""
+        migration = load(FIXTURE / 'scripts.yaml')['data']['migrate.sh']
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            client = root / 'psql'
+            client.write_text('#!/usr/bin/env python3\n' + textwrap.dedent('''\
+                import json
+                import os
+                import sys
+                args = sys.argv[1:]
+                sql = args[-1] if any(a.startswith('-') and 'c' in a for a in args) else sys.stdin.read()
+                user = args[args.index('-U') + 1] if '-U' in args else os.environ['PGUSER']
+                with open(os.environ['PROOF_LOG'], 'a') as output:
+                    output.write(json.dumps({'client': 'psql', 'user': user, 'sql': sql}) + '\\n')
+                if 'shared_preload_libraries' in sql and user != 'postgres':
+                    sys.exit(3)
+                if 'GRANT ' in sql:
+                    sys.exit('The diagnostic must not grant additional privileges')
+                if sql == 'SELECT current_user':
+                    print(user)
+                elif 'NOT EXISTS' in sql:
+                    print('t')
+                elif sql == 'SELECT pgstac.get_version()':
+                    print('0.9.12')
+                elif sql == 'SHOW server_encoding':
+                    print('UTF8')
+            '''))
+            client.chmod(0o755)
+            command = root / 'pypgstac'
+            command.write_text('#!/usr/bin/env python3\n' + textwrap.dedent('''\
+                import json
+                import os
+                import sys
+                with open(os.environ['PROOF_LOG'], 'a') as output:
+                    output.write(json.dumps({'client': 'pypgstac', 'user': os.environ['PGUSER'],
+                                             'args': sys.argv[1:]}) + '\\n')
+            '''))
+            command.chmod(0o755)
+            proof_log = root / 'proof.jsonl'
+            env = dict(os.environ, PATH=str(root) + os.pathsep + os.environ['PATH'],
+                       PGUSER='stac', VALIDATION_CASE='control', PROOF_LOG=str(proof_log))
+            result = subprocess.run(['bash', '-ceu', migration], env=env, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            calls = [json.loads(line) for line in proof_log.read_text().splitlines()]
+            settings = [call for call in calls if 'shared_preload_libraries' in call.get('sql', '')]
+            self.assertEqual([call['user'] for call in settings], ['postgres'])
+            migrations = [call for call in calls if call['client'] == 'pypgstac' and call['args'] == ['migrate']]
+            self.assertEqual([call['user'] for call in migrations], ['stac', 'stac'])
 
     @unittest.skipUnless(shutil.which('shellcheck'), 'ShellCheck is optional; Bash syntax is always checked')
     def test_embedded_shellcheck_when_available(self):

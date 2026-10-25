@@ -1,8 +1,12 @@
 # Disposable STAC migration validation
 
-Source-only diagnostic fixture for the 2026-10-24 shared-PostgreSQL incident.
-It has not been executed, and does not establish the crash cause or authorize a
-production migration. Keep `platform-stac` manual and its migration Job absent.
+Disposable diagnostic fixture for the 2026-10-24 shared-PostgreSQL incident.
+Its first database run stopped during diagnostic preflight, before migration,
+because `stac` cannot inspect the restricted `shared_preload_libraries` setting.
+The setting is now observed only in the existing synthetic bootstrap-superuser
+connection; migration still runs as `stac`, without additional role grants.
+Keep `platform-stac` manual and its production migration Job absent until the
+corrected A/B run establishes safe evidence and a production change is reviewed.
 
 `platform-stac-validation` is a manual Argo CD Application without automated sync,
 pruning, retries or a deletion finalizer. Its root Application may register it;
@@ -21,7 +25,10 @@ Control (wave 1) has no AGE preload. AGE (wave 2) sets
 starting AGE, so only one case runs during a normal full sync. If control fails,
 stop and inspect it; AGE does not run automatically. Each case receives a separate
 fresh `emptyDir`; the only intended database difference is AGE preload. Both run
-PostgreSQL 16 with the production max_connections/shared_buffers values.
+PostgreSQL 16 with the production max_connections/shared_buffers values and
+explicit UTF-8 encoding. Bare `initdb` in this image defaults to SQL_ASCII; that
+causes the pinned Python client to reject non-ASCII migration SQL before sending
+it to the server and does not reproduce CNPG's UTF-8 databases.
 
 Each native PostgreSQL sidecar starts from initdb. The client creates synthetic
 `stac` LOGIN CREATEROLE NOSUPERUSER, owned database `stac`, and PostGIS, btree_gist
@@ -102,8 +109,10 @@ resources were introduced. Never delete production resources or retained PVCs.
 
 Local YAML/schema, embedded shell and safety-contract checks validate source;
 they do not execute PostgreSQL or prove migrations passed. The local Docker daemon
-was unavailable when this fixture was authored. Record actual run results and
-imageIDs separately after execution; never substitute manifest pins for imageIDs.
+was unavailable when this fixture was authored. Docker became available during
+the 2026-10-25 repair; local execution uses amd64 emulation on an arm64 host, so
+native cluster execution remains a separate observation. Record actual run results
+and imageIDs separately; never substitute manifest pins for imageIDs.
 
 Authoring verification (source only): five safety-contract tests passed; embedded
 Bash syntax and ShellCheck passed; all six manifests passed strict kubeconform
@@ -114,3 +123,10 @@ NATS, monitoring, data and matrix. No unrelated files were reformatted.
 Execution checkpoint: the first 2026-10-24 attempt never started PostgreSQL: its anonymous private GHCR token request returned401. No migration ran. The reviewed cached-image correction preserves the exact digest and all isolation boundaries. Only the failed disposable Job may be removed before the corrected run.
 
 The cached-image attempt also never started PostgreSQL: kubelet reported ErrImageNeverPull despite node inventory listing the digest. That attempt is not migration evidence. The registry-only correction authenticates the intended image pull and preserves database/network isolation.
+
+The authenticated control run on 2026-10-24 started PostgreSQL successfully but
+exited 3 at `15:24:34Z`: `permission denied to examine shared_preload_libraries`.
+It never reached `pypgstac migrate`, and the AGE wave did not start. Preserve both
+container logs and Pod/Job status before replacing only that failed disposable
+Job through Argo CD. A corrected ConfigMap does not rerun an already-failed Job.
+The correction grants no role membership in either synthetic or production data.
