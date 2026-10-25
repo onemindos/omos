@@ -61,6 +61,10 @@ spec:
               value: both
             - name: API_URL
               value: https://cloudtak.tail717ba0.ts.net
+            # Password-auth SDK calls verify ordinary TLS. Add the existing private TAK CA;
+            # the app-local takserver DNS alias also matches the existing certificate SAN.
+            - name: NODE_EXTRA_CA_CERTS
+              value: /var/run/tak-ca/ca.pem
             # Shared Tile38 in namespace onetak (Settings keys geofence::enabled and geofence::url, written to the
             # database on every start). It has no password.
             - name: CLOUDTAK_Config_geofence_enabled
@@ -87,6 +91,10 @@ spec:
                 secretKeyRef:
                   name: cloudtak-spaces
                   key: secret-key
+          volumeMounts:
+            - name: tak-ca
+              mountPath: /var/run/tak-ca
+              readOnly: true
           startupProbe:
             httpGet:
               path: /api
@@ -118,6 +126,10 @@ spec:
             allowPrivilegeEscalation: false
             seccompProfile:
               type: RuntimeDefault
+      volumes:
+        - name: tak-ca
+          secret:
+            secretName: cloudtak-tak-ca
 ---
 apiVersion: v1
 kind: Service
