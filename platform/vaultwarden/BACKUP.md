@@ -49,9 +49,9 @@ and required pod affinity avoids a second-node RWO attach.
 
 ## First archive acceptance
 
-These are acceptance steps, not a claim that rollout or recovery already passed.
-Run them after reviewed Git/Argo deployment; preserve all production files and
-existing archives.
+Run these checks after reviewed Git/Argo deployment; preserve all production files
+and existing archives. The initial results are recorded below. Repeat the checks
+when validating later changes or recovery points.
 
 1. Require the application Ready and SQLite initialized. Run one instance of the
    native backup job through the reviewed GitOps rollout, then require that Job
@@ -119,6 +119,35 @@ owner enrollment; do not invent an identity to claim them.
    sync and the intended private origin. Record actual results and retain the
    original claim/archive until the owner accepts recovery. Follow upstream
    version/migration guidance before changing server versions.
+
+## Verified initial recovery — 2026-10-25 UTC
+
+The initial encrypted archive and an isolated server restore passed. Snapshot
+`57a7711032f0628ca20003192b1465976fc3820bee8e4437dbe854fb3b526eab`, taken at
+**23:09:37.87693726 UTC**, contains the native
+`db_20261025_230700.sqlite3` backup completed at **23:07:00 UTC**. Its archived
+completion marker identifies the same database and SHA256; the database was
+about 158 seconds old at snapshot time. The source acknowledged manual tag
+`initial-native-20261025T230700Z` and completed successfully at 23:09:42 UTC.
+
+Read-only Restic retrieval restored all 6 files (591,654 bytes), including the signing
+key, into a private local target. The selected standalone native database matched
+its marker hash, passed SQLite integrity and foreign-key checks, and contained
+29 tables. The test installed that native copy as the target's `db.sqlite3` after
+removing only the target's live DB/WAL/SHM/journal; it preserved the production
+claim and did not create remote locks or repository writes.
+
+The same pinned Vaultwarden 1.37.4 image then started against the recovered state
+in an isolated local container as UID 1000 with a read-only root filesystem and all
+Linux capabilities dropped. Its database-aware `/alive` check passed, the web UI
+returned 200, and registration remained disabled. The test containers, restored
+plaintext database/key directories and temporary runtime environment were removed.
+
+This initial vault contained 0 users and 0 ciphers, with no attachments, sends or
+`config.json`. No account was fabricated. The proof covers archive decryption,
+SQLite structure, signing-key recovery and server startup; owner login, populated
+vault/client sync and attachment recovery still require the owner's own enrollment
+and data. It does not claim those workflows passed.
 
 Sources:
 [Vaultwarden backup guidance](https://github.com/dani-garcia/vaultwarden/wiki/Backing-up-your-vault),

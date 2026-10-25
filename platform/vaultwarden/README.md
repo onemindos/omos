@@ -2,7 +2,14 @@
 
 Argo Application `platform-vaultwarden` deploys one Vaultwarden 1.37.4 replica,
 SQLite on a protected 5Gi `data-pvc`, and private Tailscale HTTPS at
-**https://vaultwarden.tail717ba0.ts.net**. Source preparation is not live acceptance.
+**https://vaultwarden.tail717ba0.ts.net**.
+
+**Live verification 2026-10-25:** Argo Synced/Healthy, one ready replica, bound
+5Gi claim and private TLS checked; registration is disabled. The fresh encrypted
+remote archive was retrieved, its selected native SQLite passed integrity/hash
+checks, and an isolated exact-image server started successfully from the restored
+state. This is the initial empty vault (no owner accounts/items). Owner enrollment,
+client/passkey sync and populated-data recovery remain untested. See [receipt](BACKUP.md).
 The official image index digest is pinned in `deployment.yaml`. No community chart,
 PostgreSQL dependency, public ingress or agent vault access is introduced.
 
