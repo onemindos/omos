@@ -135,7 +135,11 @@ print("Backup to '%s' was successful" % backup)
 
     def test_encrypted_snapshot_is_distinct_and_preserves_daily_schedule(self):
         source, = [d for d in DOCS if d["kind"] == "ReplicationSource"]
-        self.assertEqual(source["spec"]["trigger"], {"schedule": "40 13 * * *"})
+        self.assertEqual(source["spec"]["trigger"]["schedule"], "40 13 * * *")
+        # A reviewed one-off acceptance trigger may coexist; remove it after
+        # acceptance because VolSync gives nonempty manual tags priority.
+        if "manual" in source["spec"]["trigger"]:
+            self.assertRegex(source["spec"]["trigger"]["manual"], r"^initial-native-[0-9]{8}T[0-9]{6}Z$")
         self.assertEqual(source["spec"]["sourcePVC"], "data-pvc")
         restic = source["spec"]["restic"]
         self.assertEqual(restic["copyMethod"], "Snapshot")
