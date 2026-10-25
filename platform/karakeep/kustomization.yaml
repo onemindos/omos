@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: karakeep
+# Resources carry their own namespace: the app owns its dedicated auth bootstrap.
 resources:
 - namespace.yaml
 - web-deployment.yaml
@@ -14,13 +14,28 @@ resources:
 - ingress.yaml
 - network.yaml
 - karakeep-secrets.sealedsecret.yaml
+- oidc.sealedsecret.yaml
+- auth-oidc.sealedsecret.yaml
+- auth-provider.yaml
+- backup.yaml
+- backup-data.sealedsecret.yaml
+- backup-meilisearch.sealedsecret.yaml
 configMapGenerator:
 - name: karakeep-configuration
+  namespace: karakeep
   literals:
   - NEXTAUTH_URL=https://karakeep.tail717ba0.ts.net
   - AUTH_TRUSTED_ORIGINS=
-  - DISABLE_SIGNUPS=true
-  - DISABLE_PASSWORD_AUTH=false
+  # v0.34.1 also blocks first OIDC enrollment when DISABLE_SIGNUPS=true.
+  # Password signup/login remain disabled; Authentik admits only the existing owner.
+  - DISABLE_SIGNUPS=false
+  - DISABLE_PASSWORD_AUTH=true
+  - OAUTH_AUTO_REDIRECT=true
+  - OAUTH_CLIENT_ID=onemind-karakeep
+  - OAUTH_WELLKNOWN_URL=https://auth.onemindos.dev/application/o/onemind-karakeep/.well-known/openid-configuration
+  - OAUTH_PROVIDER_NAME=OneMind
+  - OAUTH_SCOPE=openid email profile
+  - OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING=false
   - DISABLE_NEW_RELEASE_CHECK=true
   - LOG_LEVEL=warn
   - INFERENCE_ENABLE_AUTO_TAGGING=false

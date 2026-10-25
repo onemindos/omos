@@ -1,4 +1,4 @@
-# Manual application: replicas remain zero until recovery, identity and first-start gates are reviewed.
+# User-authorized first start; app, identity bootstrap and backups reconcile together.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -16,5 +16,15 @@ spec:
     server: https://kubernetes.default.svc
     namespace: karakeep
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 1m
     syncOptions:
     - CreateNamespace=true
+    - PruneLast=true

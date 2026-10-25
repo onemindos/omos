@@ -7,6 +7,7 @@ metadata:
   name: cloudtak
   namespace: cloudtak
   annotations:
+    argocd.argoproj.io/sync-wave: "5"
     tailscale.com/hostname: cloudtak
 spec:
   ingressClassName: tailscale
@@ -24,6 +25,7 @@ metadata:
   name: cloudtak-tiles
   namespace: cloudtak
   annotations:
+    argocd.argoproj.io/sync-wave: "5"
     tailscale.com/hostname: cloudtak-tiles
 spec:
   ingressClassName: tailscale

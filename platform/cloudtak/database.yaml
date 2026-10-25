@@ -1,4 +1,5 @@
-# Manual platform-cloudtak ownership: do not sync until shared CNPG recovery and the cloudtak role are verified.
+# Manual platform-cloudtak ownership: sync after shared CNPG health, current backup and the cloudtak role are verified.
+# Isolated exact-image migration/startup evidence is recorded in README.md (2026-10-25).
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:

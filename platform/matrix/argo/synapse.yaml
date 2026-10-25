@@ -64,10 +64,9 @@ spec:
     matchLabels:
       app: synapse
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+    # One media PVC is ReadWriteOnce: release the old pod before attaching on another node.
+    type: Recreate
+    rollingUpdate: null
   template:
     metadata:
       labels:
