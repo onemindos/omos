@@ -96,20 +96,46 @@ the page can configure it, so do it straight away.
 | Field | Value |
 | --- | --- |
 | Server Name | any label, for example `OneMind TAK` |
-| Server Hostname | `tak-tailnet.takserver.svc.cluster.local` |
+| Server Hostname | `takserver` (the app-local alias of the existing canonical TAK proxy) |
 | CoT Port | `8089` |
 | Marti Port | `8443` |
 | WebTAK | `8446` |
 | Admin Certificate | the TAK Server admin client certificate (`.p12`) and its password |
-| Initial Administrator Username / Password | an existing TAK Server user (LDAP-backed users work); it becomes the CloudTAK system administrator |
+| Initial Administrator Username / Password | dedicated TAK login `CloudTAK`; final credential is in strict `cloudtak/cloudtak-tak-login` and private recovery material. It becomes the CloudTAK system administrator |
 
-The hostname is the in-cluster name of the `tak-tailnet` Service, which forwards all three ports through the
-`tak-lb-proxy` pods. The form takes one hostname for all three ports; the network policy also allows
-`takserver-api` and `takserver-messaging` directly, so after the first run you can split them in **Admin, Server**
-(`ssl://takserver-messaging-service.takserver.svc.cluster.local:8089`,
-`https://takserver-api-service.takserver.svc.cluster.local:8443`,
-`https://takserver-api-service.takserver.svc.cluster.local:8446`). CloudTAK does not verify the TAK Server
-certificate chain, so the self-signed certificates are accepted.
+The app-local `Service/takserver` is an `ExternalName` pointing to
+`tak-tailnet.takserver.svc.cluster.local`; it follows the existing `tak-lb-proxy` service for all three ports.
+Bootstrap URLs are `ssl://takserver:8089`, `https://takserver:8443` and `https://takserver:8446`.
+The short hostname matches the existing TAK certificate SAN. The full canonical service hostname is absent
+from that certificate, so use this app-local alias rather than disabling hostname checks or rotating the server
+certificate. No platform DNS or NetworkPolicy scope is changed.
+
+Password-auth SDK calls use ordinary TLS validation. The API mounts the existing private TAK CA from strict
+`Secret/cloudtak-tak-ca` and loads it with supported `NODE_EXTRA_CA_CERTS`; no certificate key is included in
+this CA secret. This extends trust for this app without disabling certificate/hostname verification or changing
+system-wide TLS defaults. The pinned SDK's certificate-auth and CoT paths still disable verification internally;
+that upstream behavior is a separate limitation, not a reason to disable validation for password authentication.
+Strict chain/hostname preflight must pass for `takserver` before the first-run request.
+
+**Dedicated login provisioned 2026-10-25.** The pre-existing certificate/File principal `CloudTAK` already belonged
+to `OneMind` and had no reusable password. The LDAP directory had no user accounts. Under the user's explicit
+TAK-discovery/deployment authorization, only `uid=CloudTAK,ou=People,dc=onemindos,dc=dev` and
+`cn=OneMind,ou=Group,dc=onemindos,dc=dev` were added. The account uses `inetOrgPerson` plus `takUser`,
+`takRole=Team Member`, and the same OneMind group through the existing `memberOf` overlay. It receives no TAK
+administrator role. Existing human/File users, CoreConfig and global LDAP policy were preserved.
+
+The initial random password was replaced through authenticated LDAP password modify, respecting the existing
+mandatory first change. A final-password LDAP bind, group/policy metadata and the supported TAK
+`POST /oauth/token` password grant on 8446 passed; no credential or token was printed. The strict SealedSecret
+contains only the final username/password. This verifies the TAK login prerequisite, not CloudTAK first-run acceptance.
+
+**Password rotation.** Existing policy requires at least 12 characters, retains six prior passwords and expires
+passwords after 30 days (warning starts seven days before expiry). Before that deadline, use authenticated
+`ldappasswd` as this dedicated account to set a fresh random password, verify bind/token login, reseal
+`cloudtak-tak-login` and update its restricted recovery copy. Preserve global policy and all human credentials.
+CloudTAK does not perform this LDAP password change automatically; fresh username/password login fails after
+expiry even if an existing CloudTAK session or issued certificate remains usable. Do not rotate signing secrets
+or edit profile authentication rows as a password-change substitute.
 
 **Login.** CloudTAK has no user database of its own. Users sign in with their TAK Server username and password: it
 posts them to TAK Server's WebTAK endpoint (8446), and on success downloads that user's client certificate and uses it

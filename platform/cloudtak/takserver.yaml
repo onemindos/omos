@@ -1,0 +1,17 @@
+# Keep the original TLS hostname aligned with the existing TAK certificate SAN.
+# CoreDNS follows this alias to the existing canonical three-port TAK proxy.
+apiVersion: v1
+kind: Service
+metadata:
+  name: takserver
+  namespace: cloudtak
+spec:
+  type: ExternalName
+  externalName: tak-tailnet.takserver.svc.cluster.local
+  ports:
+    - name: cot
+      port: 8089
+    - name: marti
+      port: 8443
+    - name: webtak
+      port: 8446
