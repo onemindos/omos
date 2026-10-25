@@ -21,3 +21,11 @@ Current requests total approximately 47.2 GiB before new launches. Removing a 16
 ## Acceptance
 
 Source preparation, isolated reproduction, Argo sync, ready workloads and application behavior are separate gates. Record deployment evidence below after each actual rollout. Existing account login and historical Matrix message/media acceptance remain human checks; do not send messages on the user’s behalf.
+
+## Launch implementation
+
+- CloudTAK: all 226 pinned migrations and all four images passed isolated startup against the exact PostgreSQL digest with AGE preloaded. Add only the existing sealed cloudtak managed role, with no superuser/createdb/createrole, before the manual first sync. Dependency waves order database, API, workers and private ingress. TAK first-run integration remains a separate observed gate.
+- Karakeep: one web/SQLite writer, one Chrome and one Meilisearch pod; private access and an app-only Authentik provider restricted to the stable existing owner UID. Password authentication is disabled. Initial OIDC-only enrollment requires DISABLE_SIGNUPS=false under that sole-user provider; tighten it after the owner's first login. Daily encrypted whole-volume snapshots preserve crash-consistent recovery; initial export/restore remains to be observed.
+- Matrix: actual adoption exposed a pre-existing RollingUpdate/RWO deadlock: the replacement pod was scheduled on another node while the old Ready pod retained its media volume. Use Recreate for the single-instance Synapse Deployment to release that attachment before starting its replacement. Preserve all claims, Service identities, config bytes and databases.
+
+The ten Karakeep launch contracts, all 27 rendered resources, both installed VolSync schemas and five sealed-secret controller checks passed. Independent review found no actionable Karakeep launch issues. CloudTAK's 21 schemas and launch YAML lint passed.

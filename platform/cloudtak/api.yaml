@@ -6,6 +6,8 @@ kind: Deployment
 metadata:
   name: cloudtak-api
   namespace: cloudtak
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   labels: &labels
     app.kubernetes.io/name: cloudtak
     app.kubernetes.io/component: api

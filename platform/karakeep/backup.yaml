@@ -1,0 +1,136 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: karakeep
+automountServiceAccountToken: false
+---
+# Whole-volume snapshots include SQLite WAL/journals and all assets together.
+# Daily snapshots are crash-consistent, not a coordinated application restore.
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: karakeep-data
+  namespace: karakeep
+  annotations:
+    onemind.dev/source-pvc: data-pvc
+spec:
+  sourcePVC: data-pvc
+  paused: false
+  trigger:
+    schedule: 40 12 * * *
+  restic:
+    repository: karakeep-data-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: karakeep-meilisearch
+  namespace: karakeep
+  annotations:
+    onemind.dev/source-pvc: meilisearch-pvc
+spec:
+  sourcePVC: meilisearch-pvc
+  paused: false
+  trigger:
+    schedule: 0 13 * * *
+  restic:
+    repository: karakeep-meilisearch-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: platform-volume-backup-egress
+  namespace: karakeep
+spec:
+  podSelector:
+    matchLabels:
+      app: platform-volume-backup
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 100.64.0.0/10
+        - 169.254.0.0/16
+        - 127.0.0.0/8
+    # Existing cluster S3 proxy used by the current backup pipeline.
+    - ipBlock:
+        cidr: 10.10.255.254/32
+    ports:
+    - protocol: TCP
+      port: 443

@@ -5,6 +5,8 @@ kind: Deployment
 metadata:
   name: cloudtak-tiles
   namespace: cloudtak
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
   labels: &labels
     app.kubernetes.io/name: cloudtak
     app.kubernetes.io/component: tiles

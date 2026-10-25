@@ -100,6 +100,14 @@ spec:
       createrole: true
       passwordSecret:
         name: db-stac
+    - name: cloudtak
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      createrole: false
+      passwordSecret:
+        name: db-cloudtak
   postgresql:
     shared_preload_libraries:
     - age

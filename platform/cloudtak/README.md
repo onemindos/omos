@@ -8,12 +8,12 @@ A fresh install of upstream [CloudTAK](https://github.com/dfpc-coe/CloudTAK) (`d
 
 The branch includes current `main`, including the fresh STAC source in `platform/stac/`. CloudTAK and STAC use separate databases and roles on the existing `onemind-data` cluster; this PR creates no PostgreSQL server or PVC.
 
-**Deployment hold:** `platform-cloudtak` is manual with retry limit zero. The shared PostgreSQL incident in
-[the STAC containment record](../../docs/operations/stac-migration-incident-2026-10-24.md) must be resolved first.
-Do not sync CloudTAK or run its migrations until primary health, replica redundancy and recovery evidence are
-confirmed and the exact pinned CloudTAK migrations have passed against an isolated compatible database.
-CloudTAK owns its Database CR in this manual application; the active shared Cluster does not yet declare its role.
-Merging this source cannot automatically create or migrate the CloudTAK database.
+**Initial rollout authorized 2026-10-25.** Keep `platform-cloudtak` manual with retry limit zero for the
+observed first deployment. The shared CNPG primary and both replicas are healthy; the 2026-10-25 daily backup
+completed successfully. Exact pinned CloudTAK migrations and all four image entrypoints passed on an isolated
+instance of the exact current PostgreSQL image (see the dated evidence below). Activate the existing CloudTAK
+managed role through the shared GitOps application, verify the sealed DSN/password binding without printing it,
+then sync this application once. These are deployment prerequisites; local proof is not live application acceptance.
 
 CloudTAK here is **a client only**. TAK Server stays the source of truth: CloudTAK holds a streaming connection to it
 per user, shows the map, chat, missions and data packages, and keeps its own small database for profiles, basemaps
@@ -39,7 +39,7 @@ Actions on each tag, so there is no build step in this repo. Exact tags and dige
 | Service | Where | How CloudTAK reaches it |
 | --- | --- | --- |
 | TAK Server 5.8 | namespace `takserver` | Set in the UI at first run (see below). 8443 Marti API with the admin client certificate, 8446 WebTAK login, 8089 streaming CoT |
-| PostgreSQL + PostGIS | `onemind-data` cluster, namespace `onemind-data` | Database `cloudtak` (manual `database.yaml`); role activation held below, `POSTGRES` from `Secret/cloudtak-db` |
+| PostgreSQL + PostGIS | `onemind-data` cluster, namespace `onemind-data` | Database `cloudtak` (`database.yaml`); activate the existing managed role first, `POSTGRES` from `Secret/cloudtak-db` |
 | Tile38 | `tile38` in namespace `onetak`, port 9851 | Settings `geofence::enabled` and `geofence::url`, set from env (`CLOUDTAK_Config_geofence_*`) |
 | Object storage | DigitalOcean Spaces, nyc3, bucket `onemind-cloudtak` | `ASSET_BUCKET`, `AWS_S3_Endpoint`, `AWS_S3_AccessKeyId`, `AWS_S3_SecretAccessKey`. These are upstream's S3-protocol names; nothing talks to AWS |
 | Media server | `onetak-media` (MediaMTX) in namespace `onetak` | **Not connected.** See "Media" |
@@ -55,11 +55,11 @@ proxy pods in; API to Postgres 5432, TAK Server 8443/8446/8089, Tile38 9851, and
 and search proxying; private, tailnet and metadata ranges excluded); tiles and events to the API and public 443;
 retention to the API. No media egress is opened until a compatible media replacement is reviewed.
 
-## Held database prerequisite
+## Database and credential prerequisites
 
-After the shared CNPG recovery gate and isolated migration check pass, add this role to
-`platform/ecosystem/resources/postgres-cluster.yaml` in a reviewed follow-up. Its sealed `db-cloudtak` password
-already lives beside the shared resources; do not generate a new password or grant superuser/role-creation rights.
+The shared `onemind-data` Cluster must declare the following managed role before syncing CloudTAK. The existing
+sealed `db-cloudtak` password lives with the shared resources; do not generate a new password or grant
+superuser, database-creation or role-creation rights.
 
 ```yaml
     - name: cloudtak
@@ -71,46 +71,24 @@ already lives beside the shared resources; do not generate a new password or gra
         name: db-cloudtak
 ```
 
-Verify CNPG reconciles the role before manually syncing `platform-cloudtak`. Its wave-2 Database resource creates
-only `cloudtak` and enables PostGIS before the API starts; this is still a database mutation requiring the gate above.
+Sync the owning shared-resource Application and verify CNPG reconciles this role. CloudTAK's wave-2 Database
+resource creates only `cloudtak`, retains it on resource deletion and enables PostGIS as the operator before the
+wave-3 API starts. The tiles, import and retention workers follow in wave 4; private ingresses follow in wave 5.
+The exact-image proof used the same nonsuperuser role privileges with PostGIS preinstalled.
 
-## Before the first sync: the Spaces key (Zeus)
-
-The pods read the Spaces key from `Secret/cloudtak-spaces`. It is not in Git: it must be created from a key only Zeus
-can issue. Do this **on the PR branch before merging**, so everything starts cleanly. If the secret is missing at the first authorized manual sync, the pods wait in
-`CreateContainerConfigError` and start by themselves once it appears.
-
-1. DigitalOcean control panel, **Spaces Object Storage**, **Create bucket**:
-   region **NYC3**, name `onemind-cloudtak`, file listing **Restricted**, CDN off. (If you pick another name, change
-   `ASSET_BUCKET` in `config.yaml`.)
-2. **Spaces Object Storage**, **Access Keys**, **Create Access Key**: choose **Limited Access**, bucket
-   `onemind-cloudtak`, permission **Read/Write/Delete**. Copy the key ID and the secret now; the secret is shown once.
-3. Seal it with the cluster's public key (the command prompts for the values, so they never enter shell history):
-
-   ```bash
-   kubeseal --context do-nyc3-omos-cloud --fetch-cert \
-     --controller-name=sealed-secrets-controller --controller-namespace=kube-system > /tmp/pub-cert.pem
-   read -r -p 'Spaces access key ID: ' SPACES_KEY
-   read -r -s -p 'Spaces secret key: ' SPACES_SECRET; echo
-   kubectl create secret generic cloudtak-spaces -n cloudtak \
-     --from-literal=access-key="$SPACES_KEY" --from-literal=secret-key="$SPACES_SECRET" \
-     --dry-run=client -o json \
-     | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
-     > platform/cloudtak/cloudtak-spaces.sealedsecret.yaml
-   unset SPACES_KEY SPACES_SECRET
-   ```
-
-4. Commit `platform/cloudtak/cloudtak-spaces.sealedsecret.yaml` to the PR branch. It is encrypted and safe to commit.
-   Never commit the plain key.
+All Spaces prerequisites were completed on 2026-10-24: private NYC3 bucket `onemind-cloudtak`, restricted listing,
+CDN off and a dedicated bucket-scoped Read/Write/Delete key. The strictly sealed
+`cloudtak/cloudtak-spaces` credential is committed beside the workloads. No manual Secret or new key is required
+for this rollout. Check `SealedSecret` reconciliation and `Secret` key names after sync without printing values.
 
 The PR carries sealed `cloudtak-signing` (the JWT secret shared by all four workloads), `cloudtak-db`,
 and the role password in `onemind-data/db-cloudtak`. Validate the role/DSN binding at first deployment without
 printing the credential values. To rotate the signing secret, reseal `cloudtak-signing` and restart all four Deployments; every
 user session and API token is signed with it, so everyone has to log in again.
 
-## First run (Zeus, in the CloudTAK UI)
+## First run (existing TAK administrator, in the CloudTAK UI)
 
-After the Application syncs and `cloudtak-api` is Ready (the first start applies about 230 database migrations and
+After the Application syncs and `cloudtak-api` is Ready (the pinned first start applies 226 database migrations and
 loads the default iconsets and basemaps; allow a few minutes), open **https://cloudtak.tail717ba0.ts.net** from a
 device on the tailnet. CloudTAK shows **Initial Server Configuration**. Until it is submitted, anyone who can reach
 the page can configure it, so do it straight away.
@@ -240,9 +218,37 @@ before storing irreplaceable imagery; no independent bucket backup or restore te
 
 3. Edit the `image:` line in `api.yaml`, `tiles.yaml`, `events.yaml` and `retention.yaml` to
    `ghcr.io/dfpc-coe/<image>:vX.Y.Z@sha256:<digest>`. Never `:latest`.
-4. Open a PR. After review and an explicitly authorized manual sync, Argo restarts `cloudtak-api` (Recreate, so a short outage); it runs the migrations on start, so
+4. Open a PR. After review and an authorized manual sync, Argo restarts `cloudtak-api` (Recreate, so a short outage); it runs the migrations on start, so
    watch `kubectl -n cloudtak logs deploy/cloudtak-api` until `/api` answers. Roll back by reverting the PR, but
    note that a migration that already ran is not undone; take a Postgres backup first when the notes mention one.
+
+## Isolated image proof — 2026-10-25
+
+This proof used Docker Desktop on the operator Mac, running the production `linux/amd64` images under emulation
+on its arm64 host. The Docker network was internal, with no published ports and no connection to production
+PostgreSQL, TAK Server or Spaces. Only disposable credentials and data were used.
+
+- PostgreSQL: `ghcr.io/onemindos/onemind-postgres` at digest
+  `sha256:35302d70df121bc86b370ebad800d85401edcdb890f8146cd3db690826a9925d`, matching the live
+  `onemind-data` ImageCatalog and `status.image`; PostgreSQL 16.15, `shared_preload_libraries=age`,
+  `restart_after_crash=off`, TLS enabled, `shared_buffers=256MB`, `max_connections=150`.
+- Bootstrap: synthetic `cloudtak` login with `NOSUPERUSER NOCREATEDB NOCREATEROLE`, an empty database it owns,
+  and PostGIS installed by the test administrator before app startup. Local-only host authentication was trusted
+  on the internal Docker network; no production credential was copied into the fixture.
+- API: the exact pinned image and manifest command, `StackName=cloudtak` (SSRF guards retained), `both` mode,
+  1 CPU and 1536 MiB memory cap. All **226** migrations completed. The API returned 200/version 13.113.0,
+  `/api/server` correctly returned `unconfigured`, and the web UI returned 200. Seeding produced 5 basemaps,
+  10 iconsets and 3677 icons.
+- Repeat startup: restarting only the API returned to 200; migration and seed counts stayed unchanged, and the
+  database postmaster start time stayed unchanged. No native PostgreSQL crash or container OOM occurred.
+- Tiles, events and retention: the exact pinned images and manifest commands ran as UID/GID 1000 with read-only
+  root filesystems, all capabilities dropped, no privilege escalation and writable temporary/scratch mounts.
+  Each used its manifest CPU/memory cap. `/tiles` returned 200, the import worker polled the API without errors
+  using exactly one worker, and retention started its daily scheduler.
+
+This establishes local migration and container compatibility. It does not verify native amd64 cluster behavior,
+Kubernetes policies/probes, Spaces reads/writes, private HTTPS, a TAK login or live CoT. Keep the runtime checks
+below. Imported/hosted tile layers, video and independent bucket recovery retain their separate limitations.
 
 ## Checks after a sync
 
