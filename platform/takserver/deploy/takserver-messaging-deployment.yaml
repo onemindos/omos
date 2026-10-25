@@ -11,6 +11,7 @@ metadata:
     meta.helm.sh/release-name: takserver
     meta.helm.sh/release-namespace: takserver
     onemind.io/gitops-owner: platform-takserver
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
     argocd.argoproj.io/sync-wave: '0'
 spec:
   progressDeadlineSeconds: 600

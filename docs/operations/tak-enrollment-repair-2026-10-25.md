@@ -52,6 +52,6 @@ assets. Record completion only after those checks pass.
 
 To roll back the mount, restore the Deployment's original `configMap: cert-migration`
 volume through GitOps and wait for messaging readiness. Keep the existing CA, certificate
-ConfigMap, identities, and sealed recovery material. Coordinate ownership before removing
-the adopted manifest: deleting it with pruning could delete the production Deployment.
+ConfigMap, identities, and sealed recovery material. The adopted Deployment has Prune=false and Delete=false protections. Coordinate ownership
+before removing its manifest; removal must not implicitly retire the production service.
 This rollback restores the earlier enrollment failure while preserving existing clients.
