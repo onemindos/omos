@@ -21,7 +21,9 @@ data:
     fi
     touch /scratch/attempted
     # Each Job receives its own emptyDir, never a production database or volume.
-    initdb -D /scratch/data --auth-local=trust --auth-host=reject
+    # CNPG initializes UTF-8 databases. The image's bare initdb defaults to
+    # SQL_ASCII, which fails client-side on non-ASCII upstream migration SQL.
+    initdb -D /scratch/data --encoding=UTF8 --locale=C --auth-local=trust --auth-host=reject
     # Trust is restricted to this pod's IPv4 loopback. PostgreSQL never binds pod IPs.
     cat > /scratch/data/pg_hba.conf <<'HBA'
     local all all trust
@@ -60,16 +62,21 @@ data:
     CREATE EXTENSION postgis;
     CREATE EXTENSION btree_gist;
     CREATE EXTENSION unaccent;
+    -- This setting is restricted even to a database owner. Observe it during
+    -- synthetic bootstrap rather than grant the migration role extra privileges.
+    SHOW shared_preload_libraries;
     SQL
     echo "validation case=${VALIDATION_CASE}; synthetic database; no production access"
     psql -X -v ON_ERROR_STOP=1 <<'SQL'
     SELECT version();
-    SHOW shared_preload_libraries;
+    SHOW server_encoding;
+    SHOW client_encoding;
     SHOW createrole_self_grant;
     SELECT extname, extversion FROM pg_extension ORDER BY extname;
     SELECT current_user, rolsuper, rolcreaterole FROM pg_roles WHERE rolname = current_user;
     SQL
     test "$(psql -X -Atqc 'SELECT current_user')" = stac
+    test "$(psql -X -Atqc 'SHOW server_encoding')" = UTF8
     test "$(psql -X -Atqc "SELECT NOT EXISTS (SELECT FROM pg_extension WHERE extname='age')")" = t
     # Preserve the production client's transaction behavior; do not split the migration SQL.
     pypgstac migrate
