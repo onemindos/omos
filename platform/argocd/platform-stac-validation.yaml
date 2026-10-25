@@ -15,8 +15,6 @@ spec:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
     path: platform/stac-validation
-    directory:
-      recurse: false
   destination:
     server: https://kubernetes.default.svc
     namespace: stac-validation

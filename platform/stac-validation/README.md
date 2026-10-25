@@ -34,8 +34,13 @@ Each native PostgreSQL sidecar starts from initdb. The client creates synthetic
 `stac` LOGIN CREATEROLE NOSUPERUSER, owned database `stac`, and PostGIS, btree_gist
 and unaccent as bootstrap superuser, matching production's documented prerequisites.
 AGE is deliberately absent from the synthetic STAC database. Migration uses
-`PGOPTIONS=-c createrole_self_grant=set,inherit` and runs unchanged `pypgstac migrate`
-with its original transaction behavior. Only after success does it set collection
+`PGOPTIONS=-c createrole_self_grant=set,inherit` and invokes the original pypgstac
+CLI through the identical checksum-guarded wrapper used by the production Job.
+The wrapper changes one lateral COALESCE expression to an equivalent one-row
+lateral SELECT, avoiding the pinned AGE library's known parser crash while
+preserving the complete bootstrap transaction. It rejects upgrades or unexpected
+SQL. [Repair evidence](../stac/INCIDENT-2026-10-25.md) records the unmodified
+control-pass/AGE-crash comparison. Only after success does it set collection
 extent updates, check version, rerun the idempotent migration and read schema state.
 No remote source records or inference are involved.
 
@@ -104,6 +109,10 @@ resources were introduced. Never delete production resources or retained PVCs.
 - `services/onemind-postgres/Dockerfile` pins AGE commit
   `2db2f060c4c9265a14d40f007eb8c56febf31e4c`. Its globally installed native hooks
   are a candidate interaction, not a demonstrated cause.
+- [CloudNativePG bootstrap defaults](https://cloudnative-pg.io/documentation/current/bootstrap/)
+  specify UTF8 encoding and C locale, unlike bare initdb in this image.
+- [Apache AGE #2259](https://github.com/apache/age/pull/2259) fixes the native parser's
+  treatment of COALESCE FROM expressions. This fixture does not change AGE itself.
 - [Kubernetes native sidecar lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/)
   documents startup probes and Job completion behavior.
 

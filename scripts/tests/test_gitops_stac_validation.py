@@ -94,6 +94,9 @@ class Isolation(unittest.TestCase):
     def test_embedded_shell_is_valid_and_preserves_loopback_and_attempt_barrier(self):
         scripts = load(FIXTURE / 'scripts.yaml')['data']
         for name, script in scripts.items():
+            if not name.endswith('.sh'):
+                compile(script, name, 'exec')
+                continue
             result = subprocess.run(['bash', '-n'], input=script, text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, name + result.stderr)
         postgres = scripts['postgres.sh']
@@ -108,7 +111,7 @@ class Isolation(unittest.TestCase):
         for extension in ['postgis', 'btree_gist', 'unaccent']:
             self.assertIn(f'CREATE EXTENSION {extension};', migration)
         self.assertNotIn('CREATE EXTENSION age', migration)
-        self.assertEqual(migration.count('\npypgstac migrate\n'), 2)
+        self.assertEqual(migration.count('\npython3 /scripts/migrate-compat.py migrate\n'), 2)
 
     def test_restricted_preload_observation_does_not_elevate_the_migration_role(self):
         """Reproduce PostgreSQL's restricted-setting boundary through the actual script."""
@@ -139,7 +142,7 @@ class Isolation(unittest.TestCase):
                     print('UTF8')
             '''))
             client.chmod(0o755)
-            command = root / 'pypgstac'
+            command = root / 'migrate-compat.py'
             command.write_text('#!/usr/bin/env python3\n' + textwrap.dedent('''\
                 import json
                 import os
@@ -149,10 +152,14 @@ class Isolation(unittest.TestCase):
                                              'args': sys.argv[1:]}) + '\\n')
             '''))
             command.chmod(0o755)
+            version_client = root / 'pypgstac'
+            version_client.write_text(command.read_text())
+            version_client.chmod(0o755)
             proof_log = root / 'proof.jsonl'
             env = dict(os.environ, PATH=str(root) + os.pathsep + os.environ['PATH'],
                        PGUSER='stac', VALIDATION_CASE='control', PROOF_LOG=str(proof_log))
-            result = subprocess.run(['bash', '-ceu', migration], env=env, text=True, capture_output=True)
+            local_script = migration.replace('/scripts/migrate-compat.py', str(command))
+            result = subprocess.run(['bash', '-ceu', local_script], env=env, text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             calls = [json.loads(line) for line in proof_log.read_text().splitlines()]
             settings = [call for call in calls if 'shared_preload_libraries' in call.get('sql', '')]
@@ -163,6 +170,8 @@ class Isolation(unittest.TestCase):
     @unittest.skipUnless(shutil.which('shellcheck'), 'ShellCheck is optional; Bash syntax is always checked')
     def test_embedded_shellcheck_when_available(self):
         for name, script in load(FIXTURE / 'scripts.yaml')['data'].items():
+            if not name.endswith('.sh'):
+                continue
             result = subprocess.run(['shellcheck', '-s', 'bash', '-'], input=script, text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, name + result.stdout + result.stderr)
 
