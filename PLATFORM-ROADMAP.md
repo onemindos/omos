@@ -1200,3 +1200,19 @@ No new controller, public exposure, shared-database migration, existing agent
 credential copy, model billing change or cluster write access is included.
 Runtime onboarding, mobile acceptance, backups/restore and automatic execution
 must be verified separately. Preparing manifests does not complete those gates.
+
+## User-directed personal Vaultwarden — 2026-10-25
+
+Zeus authorized a private personal password vault on the existing Kubernetes stack.
+This bounded Layer 2 deployment uses native Kustomize/Argo, one SQLite writer,
+protected storage, private HTTPS, closed registration and encrypted backups.
+It does not advance the portal migration. Phase 6 stays In progress; Phases 7/8
+stay Not started.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Private personal Vaultwarden | Source prepared; live rollout and isolated recovery pending; owner enrollment remains private | [Deployment and acceptance](platform/vaultwarden/README.md); [backup procedure](platform/vaultwarden/BACKUP.md) |
+
+No 1Password migration, agent vault permission, user master password, model billing
+change or new Kubernetes authority is included. Owner login, client/passkey sync
+and future AI integration require separate authenticated acceptance.

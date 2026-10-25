@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- namespace.yaml
+- data-pvc.yaml
+- admin.sealedsecret.yaml
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- network.yaml
+- backup.yaml
+- backup-data.sealedsecret.yaml
+configMapGenerator:
+- name: vaultwarden-configuration
+  namespace: vaultwarden
+  literals:
+  - DOMAIN=https://vaultwarden.tail717ba0.ts.net
+  - DATA_FOLDER=/data
+  - TMP_FOLDER=/tmp
+  - ROCKET_ADDRESS=0.0.0.0
+  - ROCKET_PORT=8080
+  - UMASK=0077
+  - SIGNUPS_ALLOWED=false
+  - SIGNUPS_VERIFY=false
+  - SIGNUPS_DOMAINS_WHITELIST=
+  - INVITATIONS_ALLOWED=false
+  - PASSWORD_HINTS_ALLOWED=false
+  - SHOW_PASSWORD_HINT=false
+  - SSO_ENABLED=false
+  - SSO_SIGNUPS_ALLOWED=false
+  - LOG_LEVEL=warn
+  - IP_HEADER=X-Forwarded-For
+  - IP_HEADER_TRUSTED_PROXIES=10.109.2.0/23
