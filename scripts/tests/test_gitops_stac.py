@@ -121,13 +121,14 @@ class Database(unittest.TestCase):
         self.assertEqual(role["passwordSecret"]["name"], "db-stac")
         self.assertTrue((res / "secrets/onemind-data--db-stac.json").exists())
 
-    def test_migration_is_a_pinned_sync_hook_that_runs_pypgstac_migrate(self):
+    def test_migration_is_a_pinned_sync_hook_with_the_reviewed_compatibility_wrapper(self):
         job = next(d for n, d in all_stac_docs() if n == "migrate.yaml")
         ann = job["metadata"]["annotations"]
         self.assertEqual(ann["argocd.argoproj.io/hook"], "Sync")
         self.assertIn("BeforeHookCreation", ann["argocd.argoproj.io/hook-delete-policy"])
         c = job["spec"]["template"]["spec"]["containers"][0]
-        self.assertIn("pypgstac migrate", c["args"][0])
+        self.assertIn("python3 /scripts/migrate-compat.py migrate", c["args"][0])
+        self.assertIn({"name": "migration-compat", "mountPath": "/scripts", "readOnly": True}, c["volumeMounts"])
         tag = re.search(r"pgstac-pypgstac:(v[0-9.]+)@", c["image"]).group(1)
         self.assertRegex(tag, r"^v\d+\.\d+\.\d+$")
 

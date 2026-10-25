@@ -3,8 +3,9 @@
 **Storage provisioned 2026-10-24:** private NYC3 bucket `onemind-imagery` exists. The dedicated Read/Write/Delete key is strictly sealed as `stac/stac-spaces` in this directory. Own-bucket listing and private ACL were verified; the temporary provisioning key was removed. This is credential/storage readiness, not application or recovery acceptance. No existing key was changed.
 
 A fresh STAC (SpatioTemporal Asset Catalog) for OneMind imagery, on the shared `onemind-data` Postgres, filled
-automatically from WebODM. Namespace `stac`, Argo CD application `platform-stac` (sync wave 5). Deploy it together
-with CloudTAK (PR #390): same wave, same shared Postgres.
+from WebODM when its sync credentials and source are available. Namespace `stac`, Argo CD application
+`platform-stac` (sync wave 5). Deployment is manual after the October 24 migration incident; the browser alone
+does not establish a working catalog. See [the repair evidence](INCIDENT-2026-10-25.md).
 
 It replaces the old `onetak/stac-api` and the TimescaleDB `onetak-geo-db`, which PR #406 removes. Those never worked
 (pgstac was never installed in that database). Nothing here depends on them.
@@ -26,7 +27,7 @@ Item points at the files (here, Cloud Optimized GeoTIFFs in DigitalOcean Spaces)
 | Piece | What | Reachable at |
 |---|---|---|
 | Database | Database `stac` and role `stac` on CloudNativePG cluster `onemind-data` (PostGIS, `btree_gist`, `unaccent`), defined in `platform/ecosystem/resources/` | `onemind-data-rw.onemind-data` (NetworkPolicy allows only the stac pods) |
-| `stac-pgstac-migrate` | Argo CD Sync hook Job (`migrate.yaml`): `pypgstac migrate` with `ghcr.io/stac-utils/pgstac-pypgstac` v0.9.12. Installs the pgstac schema, or upgrades it | none |
+| `stac-pgstac-migrate` | Argo CD Sync hook Job (`migrate.yaml`): original pypgstac v0.9.12 CLI with the checksum-guarded AGE compatibility wrapper. Installs the schema; unreviewed upgrades are refused | none |
 | `stac-api` | stac-fastapi-pgstac 7.1.0, **read and search only** | `https://stac.tail717ba0.ts.net` (tailnet), `stac-api.stac:8080` (cluster, Hermes) |
 | `stac-api-writer` | the same image with the transaction extension on | `stac-api-writer.stac:8080`, only from the sync CronJob |
 | `stac-browser` | official `radiantearth/stac-browser` 5.1.0, static files, configured with the tailnet API URL | `https://stac-browser.tail717ba0.ts.net` (tailnet) |
@@ -96,8 +97,10 @@ S3-protocol settings, not AWS: no AWS service or tool is involved.
 
 ## Before the first sync (Zeus)
 
-The API, browser and database come up on their own. The sync needs two secrets that only you can create. Do this on the PR
-branch before merging (or any time after; until then the sync does nothing and does not fail).
+First verify both isolated validation Jobs, a recoverable shared-database backup and the reviewed migration
+diff, then explicitly sync the manual Application under observation. Never retry a failed migration against
+shared PostgreSQL to diagnose it. The sync needs the two credentials below; the Spaces credential already
+exists as a SealedSecret. Reuse it. Until WebODM credentials are available the sync reports that gap and exits.
 
 ### 1. Spaces bucket and key
 
@@ -148,7 +151,7 @@ The database password (`stac-db`, and the role secret in `onemind-data`) was gen
 - **Bucket privacy.** The bucket is private (file listing restricted, objects not public). The Item hrefs are HTTPS URLs, so a plain
   browser cannot open them and STAC Browser shows no previews. Clients with the Spaces key (or a future tile service) read them over S3.
   The alternative is public-read objects: simpler, but anyone with a URL sees drone imagery of the homestead and operations.
-- **Bucket name and region.** `onemind-imagery` in NYC3 is a proposal.
+- **Bucket name and region.** `onemind-imagery` in NYC3 is provisioned; imagery ingestion acceptance is separate.
 - **Item `datetime`** is the WebODM task's creation time, as asked. The flight time is in the image EXIF and is not in the WebODM API.
 - **NATS events** are not published, see below.
 
@@ -205,8 +208,11 @@ stac-fastapi uses to build links; that needs a fix before the browser can follow
 
 - **stac-fastapi-pgstac**: raise the tag and digest in `api.yaml` (both Deployments). Check its changelog for renamed settings (7.0 removed the
   `POSTGRES_*` variables, which is why the old Deployment broke on a newer image) and the supported pgstac range.
-- **pgstac**: raise the `pgstac-pypgstac` tag and digest in `migrate.yaml`. Migrations are forward-only: take a Postgres backup first
-  (the cluster is backed up by Barman, `platform/ecosystem/resources/postgres-backup-schedule.yaml`). The hook applies them on the next sync.
+- **pgstac**: review the `pgstac-pypgstac` tag/digest together with `migrate-compat.py` and its embedded ConfigMaps.
+  The current wrapper accepts only the exact v0.9.12 bootstrap; version/SQL changes fail closed. Prove the full
+  migration and API round trip on the exact PostgreSQL image with AGE preloaded before applying anything to
+  the shared server. Migrations are forward-only: verify a recoverable Postgres backup first (Barman schedule
+  in `platform/ecosystem/resources/postgres-backup-schedule.yaml`). Keep sync manual during recovery.
 - **The sync**: edit `sync.py`, run `render_configmap.py`, run `python -m unittest discover -s services/stac-webodm-sync`, commit both files.
 
 ## Notes
