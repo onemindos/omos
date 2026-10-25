@@ -8,7 +8,9 @@
 #   LB proxy, NATS leaf ExternalSecret, ConfigMaps for TAK server config.
 #
 # The TAK Server Helm chart is in platform/takserver/chart/ and is managed via
-# Helm, not ArgoCD. This Application manages only the overlay K8s resources.
+# Helm. The existing messaging and plugins Deployments are adopted into this
+# Application; coordinate any future Helm upgrade with their Argo-owned manifests.
+# Other core components remain Helm-managed.
 #
 # NATS bridge plugin (NatsBridgePlugin) is the live CoT↔NATS wire:
 #   tak.cot.inject  ← inbound CoT to inject into TAK (from tak-projector)

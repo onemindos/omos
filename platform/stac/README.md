@@ -1,11 +1,13 @@
 # STAC
 
+**Live recovery verified 2026-10-25:** PgSTAC 0.9.12 migration completed after a successful CNPG preflight backup. Reader, writer and browser are Ready; private collections/search/browser return HTTP 200 and the exposed reader rejects writes. All three shared database instances remained healthy without restarts. The catalog is initialized; source imagery ingestion and TAK imagery delivery remain separate acceptance work.
+
 **Storage provisioned 2026-10-24:** private NYC3 bucket `onemind-imagery` exists. The dedicated Read/Write/Delete key is strictly sealed as `stac/stac-spaces` in this directory. Own-bucket listing and private ACL were verified; the temporary provisioning key was removed. This is credential/storage readiness, not application or recovery acceptance. No existing key was changed.
 
 A fresh STAC (SpatioTemporal Asset Catalog) for OneMind imagery, on the shared `onemind-data` Postgres, filled
 from WebODM when its sync credentials and source are available. Namespace `stac`, Argo CD application
-`platform-stac` (sync wave 5). Deployment is manual after the October 24 migration incident; the browser alone
-does not establish a working catalog. See [the repair evidence](INCIDENT-2026-10-25.md).
+`platform-stac` (sync wave 5). Sync remains manual after the October 24 migration incident; both API backends
+and the browser are now deployed. See [the repair evidence](INCIDENT-2026-10-25.md).
 
 It replaces the old `onetak/stac-api` and the TimescaleDB `onetak-geo-db`, which PR #406 removes. Those never worked
 (pgstac was never installed in that database). Nothing here depends on them.
