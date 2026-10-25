@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+  namespace: vaultwarden
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: &id001
+      app.kubernetes.io/name: vaultwarden
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: vaultwarden
+        image: vaultwarden/server:1.37.4@sha256:efb3cde962015fcc036b2ea625242248611943b27212ebf4392841fb30fad055
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: vaultwarden-configuration
+        - secretRef:
+            name: vaultwarden-admin
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+            ephemeral-storage: 128Mi
+          limits:
+            cpu: '1'
+            memory: 512Mi
+            ephemeral-storage: 2Gi
+        startupProbe:
+          httpGet: &id002
+            path: /alive
+            port: http
+          timeoutSeconds: 5
+          periodSeconds: 5
+          failureThreshold: 60
+        readinessProbe:
+          httpGet: *id002
+          timeoutSeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          httpGet: *id002
+          timeoutSeconds: 5
+          periodSeconds: 30
+          failureThreshold: 6
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pvc
+      - name: tmp
+        emptyDir:
+          sizeLimit: 1Gi

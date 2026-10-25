@@ -1,0 +1,214 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-volume-backup
+  namespace: vaultwarden
+automountServiceAccountToken: false
+---
+# Native VACUUM INTO creates a complete SQLite backup on the source claim before
+# VolSync captures it. This job has no Kubernetes API or network permissions.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vaultwarden-sqlite-backup
+  namespace: vaultwarden
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  schedule: 20 13 * * *
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app: vaultwarden-sqlite-backup
+            app.kubernetes.io/part-of: vaultwarden
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile:
+              type: RuntimeDefault
+          affinity:
+            # DigitalOcean RWO storage permits both pods on the same node.
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: vaultwarden
+                    app.kubernetes.io/component: web
+                topologyKey: kubernetes.io/hostname
+          containers:
+          - name: sqlite-backup
+            image: vaultwarden/server:1.37.4@sha256:efb3cde962015fcc036b2ea625242248611943b27212ebf4392841fb30fad055
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: DATA_FOLDER
+              value: /data
+            - name: ROCKET_PORT
+              value: '8080'
+            - name: TMP_FOLDER
+              value: /tmp
+            command:
+            - /bin/sh
+            - -ec
+            args:
+            - |
+              set -eu
+              umask 077
+              data=${DATA_FOLDER:-/data}
+              cd "$data"
+              test -s db.sqlite3
+              result=$("${VAULTWARDEN_BIN:-/vaultwarden}" backup)
+              backup=$(printf '%s\n' "$result" | sed -n "s/^Backup to '\([^']*\)' was successful$/\1/p")
+              filename=${backup##*/}
+              # Only the native command's exact timestamped output is eligible.
+              printf '%s\n' "$filename" | grep -Eq '^db_[0-9]{8}_[0-9]{6}\.sqlite3$'
+              test "$backup" = "$data/$filename"
+              test -f "$backup" && test ! -L "$backup" && test -s "$backup"
+              checksum=$(sha256sum "$backup")
+              checksum=${checksum%% *}
+              printf '%s\n' "$checksum" | grep -Eq '^[0-9a-f]{64}$'
+              completed=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+              # Only exact native backup names can be removed; never the live DB,
+              # its WAL, configuration, keys, attachments or arbitrary db_* files.
+              old_copies=$(find . -maxdepth 1 -type f -name 'db_*.sqlite3' |
+                LC_ALL=C grep -E '^\./db_[0-9]{8}_[0-9]{6}\.sqlite3$' |
+                LC_ALL=C sort -r | tail -n +8)
+              for old in $old_copies; do
+                test "$old" != "./$filename"
+                rm -- "$old"
+              done
+              marker=$(mktemp "$data/.sqlite-backup-complete.XXXXXX")
+              trap 'rm -f -- "$marker"' EXIT HUP INT TERM
+              printf '{"database":"%s","sha256":"%s","completedAt":"%s"}\n' \
+                "$filename" "$checksum" "$completed" > "$marker"
+              mv -- "$marker" "$data/.sqlite-backup-complete.json"
+              trap - EXIT HUP INT TERM
+              printf 'Native SQLite backup completed: %s\n' "$filename"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: '1'
+                memory: 256Mi
+            volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: data-pvc
+          - name: tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+# Full-volume snapshots contain the last completed native SQLite backup and the
+# surrounding state. The live db.sqlite3/WAL and attachments are crash-consistent;
+# recovery should use the native database named by the snapshot's marker.
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: vaultwarden-data
+  namespace: vaultwarden
+  annotations:
+    onemind.dev/source-pvc: data-pvc
+    argocd.argoproj.io/sync-wave: '3'
+spec:
+  sourcePVC: data-pvc
+  paused: false
+  trigger:
+    schedule: 40 13 * * *
+  restic:
+    repository: vaultwarden-data-restic
+    copyMethod: Snapshot
+    volumeSnapshotClassName: do-block-storage
+    storageClassName: do-block-storage
+    cacheStorageClassName: do-block-storage
+    cacheCapacity: 1Gi
+    pruneIntervalDays: 14
+    retain:
+      daily: 7
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    moverServiceAccount: platform-volume-backup
+    moverPodLabels:
+      app: platform-volume-backup
+    moverSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: '1'
+        memory: 1Gi
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: platform-volume-backup-egress
+  namespace: vaultwarden
+spec:
+  podSelector:
+    matchLabels:
+      app: platform-volume-backup
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 100.64.0.0/10
+        - 169.254.0.0/16
+        - 127.0.0.0/8
+    # Existing cluster S3 proxy used by the current backup pipeline.
+    - ipBlock:
+        cidr: 10.10.255.254/32
+    ports:
+    - protocol: TCP
+      port: 443
