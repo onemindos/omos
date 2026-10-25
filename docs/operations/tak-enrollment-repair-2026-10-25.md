@@ -55,3 +55,20 @@ volume through GitOps and wait for messaging readiness. Keep the existing CA, ce
 ConfigMap, identities, and sealed recovery material. The adopted Deployment has Prune=false and Delete=false protections. Coordinate ownership
 before removing its manifest; removal must not implicitly retire the production service.
 This rollback restores the earlier enrollment failure while preserving existing clients.
+
+## Observed production completion
+
+PR [#464](https://github.com/onemindos/omos/pull/464) passed all four repository
+checks and merged. The signer SealedSecret unsealed successfully, with only the
+expected key. Messaging rolled to the reviewed digest and became Ready with zero
+restarts. Its readable 0400 JKS matched the generated Secret byte for byte. API,
+config, plugins and LDAP pod identities remained unchanged.
+
+At 18:23:14 UTC, strict CA/hostname checks passed for the existing admin API,
+password grant and enrollment configuration. The supported CloudTAK first-run
+PATCH returned 200/configured/auth=true; dedicated login and own administrator
+profile returned 200. The normal TAK connection reported live within five seconds.
+Only the normal enrollment and configuration were performed: no test CoT message,
+asset, human-password reset, LDAP-policy change or TLS bypass was introduced.
+All 56 Argo applications were again Synced/Healthy; the three shared PostgreSQL
+pod identities and restart counts still matched the starting baseline.
