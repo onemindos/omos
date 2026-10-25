@@ -30,18 +30,18 @@ registration or Secrets Manager compatibility is claimed by this deployment.
 ## Runtime and network
 
 One non-root writer, Recreate updates and RWO storage protect SQLite. The container
-has a read-only root, no API token, dropped capabilities, UID/GID1000 and seccomp.
+has a read-only root, no API token, dropped capabilities, UID/GID 1000 and seccomp.
 Startup/readiness/liveness use `/alive`, whose tagged source acquires a DB connection.
 Requests are 100m CPU/128Mi memory/128Mi ephemeral storage; limits are 1 CPU/512Mi
 memory/2Gi ephemeral storage. `/tmp` has a 1Gi disk-backed upload staging allowance.
 These are initial budgets, not usage measurements. The 5Gi claim also holds online
 backup copies; watch free space before importing large attachments.
 
-Default-deny policy admits only this Ingress's Tailscale proxy on8080; DNS and public
+Default-deny policy admits only this Ingress's Tailscale proxy on 8080; DNS and public
 IPv4 HTTPS are allowed. Private, metadata and tailnet egress are excluded. This
 keeps optional favicon/HIBP HTTPS working without allowing private targets. No
 SMTP, external push or IPv6 egress is configured. Trusted forwarded-header proxies
-are restricted to the observed Cilium pod CIDRs' aggregate10.109.2.0/23; update via
+are restricted to the observed Cilium pod CIDRs' aggregate 10.109.2.0/23; update via
 Git if cluster addressing changes. Network policy further restricts actual senders.
 
 `/data/config.json`, if later saved through the admin UI, overrides editable env
