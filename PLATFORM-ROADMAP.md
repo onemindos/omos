@@ -1211,7 +1211,7 @@ stay Not started.
 
 | Work | Status | Evidence |
 |---|---|---|
-| Private personal Vaultwarden | Source prepared; live rollout and isolated recovery pending; owner enrollment remains private | [Deployment and acceptance](platform/vaultwarden/README.md); [backup procedure](platform/vaultwarden/BACKUP.md) |
+| Private personal Vaultwarden | Deployed and healthy; encrypted initial empty-vault archive restored and server started in isolation; owner enrollment/client acceptance pending | [Deployment and acceptance](platform/vaultwarden/README.md); [recovery receipt](platform/vaultwarden/BACKUP.md); [PR #466](https://github.com/onemindos/omos/pull/466); [PR #467](https://github.com/onemindos/omos/pull/467) |
 
 No 1Password migration, agent vault permission, user master password, model billing
 change or new Kubernetes authority is included. Owner login, client/passkey sync

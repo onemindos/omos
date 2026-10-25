@@ -139,7 +139,6 @@ spec:
   sourcePVC: data-pvc
   paused: false
   trigger:
-    manual: initial-native-20261025T230700Z
     schedule: 40 13 * * *
   restic:
     repository: vaultwarden-data-restic
