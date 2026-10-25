@@ -29,3 +29,11 @@ Source preparation, isolated reproduction, Argo sync, ready workloads and applic
 - Matrix: actual adoption exposed a pre-existing RollingUpdate/RWO deadlock: the replacement pod was scheduled on another node while the old Ready pod retained its media volume. Use Recreate for the single-instance Synapse Deployment to release that attachment before starting its replacement. Preserve all claims, Service identities, config bytes and databases.
 
 The ten Karakeep launch contracts, all 27 rendered resources, both installed VolSync schemas and five sealed-secret controller checks passed. Independent review found no actionable Karakeep launch issues. CloudTAK's 21 schemas and launch YAML lint passed.
+
+## Observed acceptance progress
+
+PRs [#458](https://github.com/onemindos/omos/pull/458), [#459](https://github.com/onemindos/omos/pull/459) and [#460](https://github.com/onemindos/omos/pull/460) passed all GitHub checks and merged. Matrix is Synced/Healthy after the Recreate correction and ordinary Redis/PostgreSQL init-budget adoption; its original claims and Services will receive a final identity check. Karakeep is Synced/Healthy with all three pods Ready. Five retained-recovery/Argo ownership issues are resolved without deleting storage.
+
+The corrected STAC control and AGE-preloaded Jobs both completed natively on amd64 nodes, each passing full migration plus idempotent rerun with no container restarts, SIGSEGV, PANIC or OOM. Raw failed diagnostic evidence and successful logs are saved privately in this task's work/stac-native-before and work/stac-native-after. Production STAC remains manual pending the new explicit preflight CNPG recovery point.
+
+Zeus authorized discovering CloudTAK credentials from TAK. Existing LDAP had no user accounts and the human File password was a nonrecoverable hash. A dedicated LDAP login for the already-existing nonhuman CloudTAK certificate principal was created with its existing OneMind group semantics and Team Member role, without TAK admin privileges. Initial password change followed the unchanged LDAP password policy. Only the final username/password are strictly sealed in the app namespace; no human password, File user, global policy or TAK CoreConfig was changed. Preserve restricted offline recovery material and rotate through normal LDAP self-service before the existing 30-day policy expiry.
