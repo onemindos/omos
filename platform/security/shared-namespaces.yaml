@@ -62,3 +62,13 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: make-sense
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dapr-system
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true,Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/layer: system

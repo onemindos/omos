@@ -1255,4 +1255,9 @@ keeps Phase 6 In progress and Phases 7/8 Not started.
 | Namespace layer-label drift | Prepared: 12 existing namespaces classified; shared namespace metadata owned by security, existing explicit definitions kept with their original Applications | `platform/security/shared-namespaces.yaml`; server dry-run preserves namespace UIDs and all existing metadata; no live NetworkPolicy selects this label |
 | Failover memory headroom | Measured right-sizing and placement review in progress; keep four nodes | Live KubeMemoryOvercommit, no node pressure |
 | Independent backup copy | Destination/credential discovery in progress; do not unsuspend without working recovery credentials | `platform/backups/OFFSITE-COPY.md` |
-| Remaining TAK ownership and broad drift ignores | Live/spec comparison in progress; no broad Helm upgrade | `docs/gitops/HELM-ADOPTION.md` |
+| Remaining TAK ownership and broad drift ignores | API/config/Ignite exact-live adoption prepared with recovery archive equality verified; no broad Helm upgrade | `docs/gitops/HELM-ADOPTION.md` |
+
+Namespace acceptance follow-through: Dapr's managed-namespace label remained absent
+following sync; use a protected explicit Namespace under security, preserving its
+VolSync annotation and existing SSA option, rather than claiming source metadata
+was applied. Existing namespace UIDs remain unchanged.

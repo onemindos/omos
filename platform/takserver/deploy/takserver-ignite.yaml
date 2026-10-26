@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: takserver-ignite
+  namespace: takserver
+  labels:
+    app.kubernetes.io/instance: takserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: ignite
+    helm.sh/chart: ignite-2.17.0
+  annotations:
+    meta.helm.sh/release-name: takserver
+    meta.helm.sh/release-namespace: takserver
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: takserver-ignite
+  serviceName: takserver-ignite
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2026-08-27T22:38:26-04:00'
+      labels:
+        app: takserver-ignite
+    spec:
+      containers:
+      - env:
+        - name: IGNITE_QUIET
+          value: 'false'
+        - name: JVM_OPTS
+          value: -Djava.net.preferIPv4Stack=true --add-opens=java.base/jdk.internal.access=ALL-UNNAMED
+            --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED
+            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+            --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED
+            --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED
+            --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+            --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
+            --add-opens=java.base/sun.net.util=ALL-UNNAMED --add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED
+            --add-opens=java.management/com.sun.jmx.mbeanserver=ALL-UNNAMED --add-opens=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
+            --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED
+        - name: OPTION_LIBS
+          value: ignite-kubernetes,ignite-rest-http,ignite-json,ignite-slf4j,ignite-urideploy,ignite-web,ignite-calcite
+        image: ghcr.io/onemindos/takserver-base:ignite-5.8-onemind
+        imagePullPolicy: Always
+        name: ignite
+        ports:
+        - containerPort: 11211
+          protocol: TCP
+        - containerPort: 47100
+          protocol: TCP
+        - containerPort: 47500
+          protocol: TCP
+        - containerPort: 49112
+          protocol: TCP
+        - containerPort: 10800
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 10900
+          protocol: TCP
+        resources:
+          limits:
+            cpu: '2'
+            memory: 1536Mi
+          requests:
+            cpu: 250m
+            memory: 768Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/ignite/apache-ignite/libs/ignite-extensions.jar
+          name: ignite-extensions
+          subPath: ignite-extensions.jar
+        - mountPath: /opt/ignite/apache-ignite/config/default-config.xml
+          name: config-volume
+          subPath: default-config.xml
+        - mountPath: /opt/ignite/libs/ignite-extensions.jar
+          name: ignite-extensions
+          subPath: ignite-extensions.jar
+        - mountPath: /opt/ignite/config/default-config.xml
+          name: config-volume
+          subPath: default-config.xml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: ghcr-onemindos
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: takserver-ignite
+      serviceAccountName: takserver-ignite
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: ignite-extensions.jar
+            path: ignite-extensions.jar
+          name: ignite-extensions
+        name: ignite-extensions
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: ignite-config.xml
+            path: default-config.xml
+          name: takserver-ignite-configmap
+        name: config-volume
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate

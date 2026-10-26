@@ -15,8 +15,9 @@ functional classifications, not the numeric trust layers in the platform roadmap
 - `cloudtak`: `act`.
 
 Keep explicit existing Namespace resources with their current Applications. Dapr
-keeps its existing `managedNamespaceMetadata` owner and VolSync annotation. The
-other seven previously untracked shared namespaces receive metadata ownership from
+managed metadata did not apply its intended label after sync; preserve its VolSync
+annotation and SSA option in an explicit protected Namespace instead. The eight
+previously untracked shared namespaces receive metadata ownership from
 `platform-security`; deletion/prune/replacement/force are disabled per namespace.
 A server-side dry-run preserves their UIDs and existing labels/annotations. No live
 NetworkPolicy uses `onemind.io/layer` as a selector, so this classification does not
