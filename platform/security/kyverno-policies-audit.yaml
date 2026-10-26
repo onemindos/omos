@@ -32,6 +32,8 @@ metadata:
     policies.kyverno.io/description: >-
       Images must carry an explicit tag or digest and must not use the mutable :latest tag.
 spec:
+  admission: true
+  emitWarning: false
   validationFailureAction: Audit
   failurePolicy: Ignore
   background: true
@@ -71,7 +73,9 @@ spec:
           - key: "{{ retiredWorkloadHistory }}"
             operator: Equals
             value: false
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Images must have an explicit tag or digest (not an implicit :latest)."
         pattern:
           spec:
@@ -89,7 +93,9 @@ spec:
                 - Pod
       context: *historical-workload-context
       preconditions: *assess-admission-or-current
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Using the :latest tag is not allowed. Pin a version or digest."
         pattern:
           spec:
@@ -114,6 +120,8 @@ metadata:
     policies.kyverno.io/description: >-
       Every container must set CPU and memory requests and a memory limit. CPU limits are not required.
 spec:
+  admission: true
+  emitWarning: false
   validationFailureAction: Audit
   failurePolicy: Ignore
   background: true
@@ -153,7 +161,9 @@ spec:
           - key: "{{ retiredWorkloadHistory }}"
             operator: Equals
             value: false
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Containers must set resources.requests.cpu, resources.requests.memory and resources.limits.memory."
         pattern:
           spec:
@@ -179,6 +189,8 @@ metadata:
     policies.kyverno.io/description: >-
       Namespaces must carry onemind.io/layer with one of sense, make-sense, decide, act, data, guard, system.
 spec:
+  admission: true
+  emitWarning: false
   validationFailureAction: Audit
   failurePolicy: Ignore
   background: true
@@ -196,7 +208,9 @@ spec:
                 - kube-system
                 - kube-public
                 - kube-node-lease
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Namespace needs the label onemind.io/layer with a value in: sense, make-sense, decide, act, data, guard, system."
         pattern:
           metadata:
@@ -218,6 +232,8 @@ metadata:
       Privileged containers and hostPath volumes give a workload the node. System namespaces and the named
       node-level monitoring agents are excluded.
 spec:
+  admission: true
+  emitWarning: false
   validationFailureAction: Audit
   failurePolicy: Ignore
   background: true
@@ -245,7 +261,9 @@ spec:
               names: &monitoring-node-agents
                 - "monitoring-prometheus-node-exporter*"
                 - "otel-collector-opentelemetry-collector-agent*"
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "Privileged containers are not allowed."
         pattern:
           spec:
@@ -272,7 +290,9 @@ spec:
               namespaces:
                 - monitoring
               names: *monitoring-node-agents
+      skipBackgroundRequests: true
       validate:
+        allowExistingViolations: true
         message: "hostPath volumes are not allowed."
         pattern:
           spec:

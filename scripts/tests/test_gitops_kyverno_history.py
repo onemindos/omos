@@ -162,6 +162,22 @@ def fixtures():
     return cases
 
 
+class PolicyDelivery(unittest.TestCase):
+    def test_server_defaults_are_explicit_without_rule_list_prepatching(self):
+        app = yaml.safe_load((ROOT / "platform/argocd/platform-security.yaml").read_text())
+        self.assertIn("ServerSideApply=true", app["spec"]["syncPolicy"]["syncOptions"])
+        self.assertNotIn("RespectIgnoreDifferences=true", app["spec"]["syncPolicy"]["syncOptions"])
+        self.assertFalse(app["spec"].get("ignoreDifferences"))
+        for policy in yaml.safe_load_all(POLICY.read_text()):
+            with self.subTest(policy=policy["metadata"]["name"]):
+                spec = policy["spec"]
+                self.assertTrue(spec["admission"])
+                self.assertFalse(spec["emitWarning"])
+                for rule in spec["rules"]:
+                    self.assertTrue(rule["skipBackgroundRequests"])
+                    self.assertTrue(rule["validate"]["allowExistingViolations"])
+
+
 @unittest.skipUnless(CLI, "Set KYVERNO_CLI to the verified Kyverno 1.19.1 binary")
 class KyvernoHistoryEngine(unittest.TestCase):
     @classmethod
