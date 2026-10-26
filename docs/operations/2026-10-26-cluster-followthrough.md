@@ -39,3 +39,44 @@ Events may remain until normal expiration.
 
 `make validate` currently fails on existing full-tree YAML formatting debt. Changed
 YAML/schema/render checks and the GitOps regression suite are separate gates.
+
+## Measured capacity and Nextcloud corrections
+
+Seven-day measurements do not justify cutting the roughly 11GiB reserved-memory
+failover deficit. Some existing services already peak above their requests, and
+the sole ecosystem worker is required by AI workload node selectors. Keep four
+nodes while the owner reviews the prepared alternative: raise only the ecosystem
+pool minimum from 1 to 2, making five total workers. The isolated Terraform plan
+contains one in-place update, no additions/replacements/deletions at the resource
+level. The provider would provision one additional worker at its current quoted
+$168/month ($0.25/hour); available capacity remains subject to NYC3 provisioning.
+This would provide approximately15.45GiB of N-1 request headroom after daemon and
+Nextcloud corrections. The plan is not applied or committed as an approved change.
+
+Nextcloud's cron sidecar was OOM-killed on2026-10-23T19:55:28Z. Its sampled peak
+was498.2Mi at a512Mi cap, and its mounted PHP configuration permits512M per process.
+Raise the request128Mi→512Mi and cap512Mi→1Gi. The specific Nextcloud Tailscale
+proxy last OOM-killed at2026-10-23T20:12:57Z; sampled peak253.1Mi at its256Mi cap.
+Give only that ingress a dedicated ProxyClass with256Mi request/512Mi cap, retaining
+existing CPU/init budgets. Total standing request increase:576Mi. The global proxy
+class and all other proxies stay as configured.
+
+The exact pinned Nextcloud chart render changes only the two cron memory fields.
+The new ProxyClass passes the installed CRD's server dry-run. Rollout may briefly
+interrupt this single-replica app/proxy; verify both Ready, original PVC/PV UIDs,
+unchanged image IDs and authenticated-free endpoint reachability afterward.
+
+## Offsite copy preparation
+
+No independent backup destination is currently configured: primary objects remain
+in DigitalOcean NYC3, and the connected Cloudflare account lists no R2 bucket.
+The owner was asked to select an existing B2/R2/home-storage destination without
+sharing credentials in chat. The scheduled copy stays suspended until destination,
+sealed credentials, seed copy and recovery test are complete. The fixed-selection
+verification repair and real-engine regression cases are safe preparation now.
+
+Verified after PRs479/480: all policy-covered namespaces now carry a valid layer
+label, every original namespace UID remains unchanged, and all58 Applications are
+Synced/Healthy. TAK API/config/Ignite specs match their preflight SHA256 digests;
+workload and pod UIDs/restart counts are unchanged, all Ready, and Argo tracking is
+present. Thus the ownership sync did not restart these three running workloads.

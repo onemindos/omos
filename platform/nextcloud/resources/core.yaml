@@ -41,6 +41,7 @@ metadata:
   namespace: nextcloud
   annotations:
     tailscale.com/hostname: onemind-files
+    tailscale.com/proxy-class: tailscale-nextcloud
 spec:
   ingressClassName: tailscale
   defaultBackend:
