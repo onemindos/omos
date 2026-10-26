@@ -25,6 +25,8 @@ env:
   GITLEAKS_VERSION: 8.30.1
   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
   HELM_VERSION: v3.19.0
+  KYVERNO_CLI_VERSION: v1.19.1
+  KYVERNO_CLI_SHA256: b38228f367fc0fdc2b08f4c83ea50ac5f16c60ff8d62d76a66157c33c47b70ae
   # Kubernetes minor to validate against. kubeconform schemas are published for 1.36.x.
   KUBECONFORM_K8S_VERSION: "1.36.0"
 
@@ -148,6 +150,16 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "24"
+
+      # Match the deployed policy engine; these security tests must not silently skip in CI.
+      - name: Install checksum-verified Kyverno policy test engine
+        run: |
+          mkdir -p "$RUNNER_TEMP/kyverno-cli"
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/kyverno-cli.tar.gz" \
+            "https://github.com/kyverno/kyverno/releases/download/${KYVERNO_CLI_VERSION}/kyverno-cli_${KYVERNO_CLI_VERSION}_linux_x86_64.tar.gz"
+          echo "$KYVERNO_CLI_SHA256  $RUNNER_TEMP/kyverno-cli.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/kyverno-cli.tar.gz" -C "$RUNNER_TEMP/kyverno-cli" kyverno
+          echo "KYVERNO_CLI=$RUNNER_TEMP/kyverno-cli/kyverno" >> "$GITHUB_ENV"
 
       - name: Portable GitOps pipeline safety contracts
         run: python -m unittest discover -s scripts/tests -p 'test_gitops*.py' -v

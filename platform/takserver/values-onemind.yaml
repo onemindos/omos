@@ -71,6 +71,11 @@ postgresql:
   enabled: true
   image: {registry: docker.io, repository: postgis/postgis, tag: 15-3.4}
   configurationConfigMap: postgres-configuration
+  # Keep these budgets aligned with the adopted StatefulSet in deploy/.
+  primary:
+    resources:
+      requests: {cpu: 250m, memory: 768Mi}
+      limits: {memory: 2Gi}
 global:
   postgresql:
     host: takserver-postgresql
@@ -125,6 +130,11 @@ nats:
       resources:
         requests: {cpu: 50m, memory: 192Mi}
         limits: {memory: 512Mi}
+  reloader:
+    merge:
+      resources:
+        requests: {cpu: 10m, memory: 16Mi}
+        limits: {memory: 64Mi}
   natsBox:
     container:
       merge:

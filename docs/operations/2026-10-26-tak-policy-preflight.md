@@ -111,3 +111,18 @@ specification or volume-template change. After the first Argo sync, confirm the
 same StatefulSet pod UIDs/restart counts and bound claims, healthy application
 connections, and daily backup schedules after removal of the one-time manual
 tags. Change resource budgets only in the subsequent reviewed rollout.
+
+
+## No-op adoption acceptance
+
+PR [#474](https://github.com/onemindos/omos/pull/474) brought the two existing
+StatefulSets and retention CronJob under `platform-takserver`. The server-defaulted
+specification of each resource matched its captured baseline and fresh live reads
+exactly. The original PostgreSQL and internal NATS pod UIDs stayed unchanged;
+both source PVC/PV identities and capacities were preserved. Argo reported
+Synced/Healthy. No container was restarted by this ownership step.
+
+Both temporary manual backup triggers were removed. Their daily source
+`nextSyncTime` values resumed at 2026-10-26 09:40 UTC (PostgreSQL) and 11:00 UTC
+(internal NATS). The following resource-budget rollout is separate and intentionally
+restarts the single-replica workloads one at a time.
