@@ -3,6 +3,13 @@
 Living document. Started 2026-10-18. Owner: Zeus. Kept at the repository root so any
 agent (Claude Code, Codex or another) can pick up the work where the last one stopped.
 
+2026-10-26 user-directed work: launch an independent `hermes-fresh` beside Legacy
+through `platform-hermes-fresh`, with new storage and no imported agent state or
+operational credentials. Source and isolated image smoke checks are prepared;
+cluster rollout, private access and model sign-in require live acceptance. This
+does not mark the broader agent migration or Phase 8 complete. See
+[`fresh Hermes`](platform/hermes/fresh/README.md); deployment PR records live evidence.
+
 2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
 and sanitized readiness collector for the owner's Paperclip status-report task.
 Argo activation, RBAC acceptance and the agent-written report remain unverified.

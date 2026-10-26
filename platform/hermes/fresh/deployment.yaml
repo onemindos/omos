@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-fresh
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: hermes-fresh
+    onemind.io/agent: fresh
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hermes-fresh
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hermes-fresh
+        onemind.io/agent: fresh
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - onemind-ecosystem-cpu
+      initContainers:
+        - name: initial-config
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          command:
+            - /opt/hermes/.venv/bin/python3
+            - -c
+            - |
+              from pathlib import Path
+              import os
+              source = Path('/defaults/config.yaml')
+              target = Path('/opt/data/config.yaml')
+              if not target.exists():
+                  with target.open('xb') as handle:
+                      os.chmod(target, 0o600)
+                      handle.write(source.read_bytes())
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {cpu: 100m, memory: 64Mi}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: defaults
+              mountPath: /defaults
+              readOnly: true
+      containers:
+        - name: hermes
+          image: nousresearch/hermes-agent:v0.22.5@sha256:9c5561579f3ffdf333401797094ac3a743738d6c25d40f4331c7bf77b694238d
+          args: [gateway, run]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [NET_RAW]
+          envFrom:
+            # Dashboard login only: no Legacy model/channel/operational credentials.
+            - secretRef:
+                name: hermes-dashboard-auth
+            - secretRef:
+                name: hermes-fresh-runtime
+          env:
+            - name: HERMES_HOME
+              value: /opt/data
+            - name: HERMES_DASHBOARD
+              value: 'true'
+            - name: HERMES_DASHBOARD_HOST
+              value: 0.0.0.0
+            - name: HERMES_DASHBOARD_PORT
+              value: '9119'
+            - name: API_SERVER_ENABLED
+              value: 'true'
+            - name: API_SERVER_HOST
+              value: 0.0.0.0
+            - name: API_SERVER_PORT
+              value: '8642'
+          ports:
+            - name: dashboard
+              containerPort: 9119
+            - name: gateway
+              containerPort: 8642
+          startupProbe:
+            tcpSocket: {port: dashboard}
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: {path: /health, port: gateway}
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            tcpSocket: {port: dashboard}
+            periodSeconds: 20
+            failureThreshold: 6
+          resources:
+            requests: {cpu: 250m, memory: 1Gi}
+            limits: {cpu: '2', memory: 3Gi}
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: hermes-fresh-data
+        - name: defaults
+          configMap:
+            name: hermes-fresh-defaults
