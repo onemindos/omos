@@ -1,8 +1,9 @@
 # TAK Server 5.7 — OneMind cluster on DOKS
 
 > **2026-10-26 partial Argo ownership:** `platform-takserver` owns the existing
-> `takserver-postgresql`, `takserver-nats` StatefulSets and `cot-retention` CronJob
-> through `deploy/`, in addition to earlier overlays. Freeze whole-release
+> `takserver-postgresql`, `takserver-nats`, `takserver-ignite` StatefulSets,
+> `takserver-api`, `takserver-config` Deployments and `cot-retention` CronJob
+> through `deploy/`, in addition to earlier messaging/plugins and overlays. Freeze whole-release
 > `helm upgrade`/`helm rollback`/`helm uninstall`: these would create a second writer.
 > Helm revision34 remains historical; the rest of the release is not adopted here.
 > Follow [the bounded preflight](../../docs/operations/2026-10-26-tak-policy-preflight.md).

@@ -150,3 +150,28 @@ for fresh encrypted CSI-backed snapshots, PostgreSQL isolated logical restoratio
 and the bounded internal NATS archive/server test. No source claim is deleted,
 recreated or shrunk; the live PostgreSQL claim remains20Gi even though its existing
 immutable StatefulSet claim template is8Gi.
+
+### TAK API/config/Ignite follow-through — 2026-10-26
+
+Adopt these three exact observed workload specs through `platform-takserver`,
+without rendering/reapplying the historical whole release. Each server dry-run
+spec matches live exactly, including Recreate strategies, pod annotations,
+commands, mounts, image references and existing budgets. All three objects have
+Prune/Delete/Replace/Force disabled. Ignite has no volume claims; all running
+pod identities must remain unchanged after adoption.
+
+Recovery preflight authenticated, decrypted in memory and digest-verified the
+04:00:19Z remote cluster-recovery archive. All 11 referenced TAK ConfigMaps/Secrets
+are present and their data matches current live objects. This is archive recovery
+verification, not a claim that recovery objects were applied to another cluster.
+The fresh PostgreSQL/NATS volume archives from the prior preflight remain intact.
+
+Supporting legacy Services, RBAC and configuration are not all Git-owned yet.
+Some legacy ConfigMaps hold credential/private-key/keystore data: never copy their
+contents into plaintext Git. A later encrypted-source migration must preserve
+those payloads and mounts. Whole-release Helm operations remain frozen.
+
+All eight TAK Deployment budgets match live after server normalization. Remove the
+Application's blanket Deployment budget/annotation exceptions, keeping only the
+operator restart timestamp on `takserver/tak-lb-proxy`. Future budget drift is now
+visible to Argo; adoption itself changes no budget.
