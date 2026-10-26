@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tak-ignite-config
+  namespace: takserver
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '0'
+data:
+  TAKIgniteConfig.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"\
+    ?>\n<TAKIgniteConfiguration xmlns=\"http://bbn.com/marti/xml/config\"\n    clusterEnabled=\"\
+    true\"\n    clusterKubernetes=\"true\"\n    igniteClusterNamespace=\"takserver\"\
+    >\n</TAKIgniteConfiguration>\n"

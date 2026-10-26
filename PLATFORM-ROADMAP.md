@@ -1269,3 +1269,9 @@ reservation; independent copy verification now has fixed-selection regression
 coverage. The reviewed five-worker alternative needs an owner cost decision
 (+$168/month); independent backup activation needs a destination and credentials.
 Neither unresolved dependency is represented as a completed repair.
+
+TAK support follow-through:19 existing Services/RBAC/configuration/helper objects
+prepared for protected adoption with server dry-run parity; remove only the
+Ignite ServiceAccount's missing legacy pull-secret reference. Sensitive legacy
+ConfigMaps/runtime Secrets remain explicitly outside plaintext Git and require
+an encrypted-source migration. No full-release Helm operation is authorized.
