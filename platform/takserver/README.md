@@ -1,5 +1,12 @@
 # TAK Server 5.7 — OneMind cluster on DOKS
 
+> **2026-10-26 partial Argo ownership:** `platform-takserver` owns the existing
+> `takserver-postgresql`, `takserver-nats` StatefulSets and `cot-retention` CronJob
+> through `deploy/`, in addition to earlier overlays. Freeze whole-release
+> `helm upgrade`/`helm rollback`/`helm uninstall`: these would create a second writer.
+> Helm revision34 remains historical; the rest of the release is not adopted here.
+> Follow [the bounded preflight](../../docs/operations/2026-10-26-tak-policy-preflight.md).
+
 > **Layout (2026-10-17):** this folder now holds the deployment half only (`chart/`, `values-onemind.yaml`, `deploy/`, `fedhub/`). The image builds, NatsBridgePlugin source and JAR, build scripts and `cot-tap` moved to `services/takserver/`; the edge TAK deployment and device enrollment moved to `infra/edge/takserver/`. Paths below that start with `docker/`, `plugin/` or `build/` are relative to `services/takserver/`.
 
 Horizontally-scalable TAK Server (messaging / api / plugins / config split) on

@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cot-retention
+  namespace: takserver
+  labels:
+    app: cot-retention
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    metadata: {}
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -c
+            - 'echo "[cot-retention] Starting at $(date)"
+
+              psql -h takserver-postgresql -U postgres -d cot -At -c "DO $$ DECLARE
+              deleted_count bigint; BEGIN DELETE FROM cot_router WHERE servertime
+              < NOW() - INTERVAL ''24 hours''; GET DIAGNOSTICS deleted_count = ROW_COUNT;
+              RAISE NOTICE ''Deleted % rows'', deleted_count; END $$;" 2>&1
+
+              psql -h takserver-postgresql -U postgres -d cot -c "VACUUM ANALYZE cot_router;"
+              2>&1
+
+              echo "[cot-retention] Done at $(date)"
+
+              psql -h takserver-postgresql -U postgres -d cot -c "SELECT count(*)
+              as rows, pg_size_pretty(pg_total_relation_size(''cot_router'')) as size
+              FROM cot_router;"'
+            env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: PGPASSWORD
+                  name: cot-retention-secret
+            image: postgis/postgis:15-3.4
+            imagePullPolicy: IfNotPresent
+            name: cot-retention
+            resources: {}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+  schedule: 0 */4 * * *
+  successfulJobsHistoryLimit: 3
+  suspend: false

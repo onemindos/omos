@@ -8,7 +8,7 @@ reference in its pod template. Admission copied the stale reference from
 That Secret was absent from `kube-system`; no other current pod there used this account.
 
 The DigitalOcean API confirmed `omos-cloud` had `registry_enabled: false`,
-`registries: null`, and the account had no container registries. The account was created July 4 and retained resource version `2316` before repair.
+`registries: null`, and the account had no container registries. The ServiceAccount was created July 4 and retained resource version `2316` before repair.
 DigitalOcean's registry integration
 [populates default ServiceAccount pull-secret references](https://docs.digitalocean.com/products/container-registry/how-to/use-registry-docker-kubernetes/),
 and Kubernetes [copies those references into newly admitted pods](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account).
