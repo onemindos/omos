@@ -7,7 +7,7 @@ metadata:
     app: cot-retention
   annotations:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
-    argocd.argoproj.io/sync-wave: '1'
+    argocd.argoproj.io/sync-wave: '3'
 spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 3
@@ -45,7 +45,12 @@ spec:
             image: postgis/postgis:15-3.4
             imagePullPolicy: IfNotPresent
             name: cot-retention
-            resources: {}
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
           dnsPolicy: ClusterFirst

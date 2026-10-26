@@ -13,7 +13,7 @@ metadata:
     meta.helm.sh/release-name: takserver
     meta.helm.sh/release-namespace: takserver
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
-    argocd.argoproj.io/sync-wave: '1'
+    argocd.argoproj.io/sync-wave: '2'
 spec:
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
@@ -114,7 +114,9 @@ spec:
         resources:
           requests:
             cpu: 250m
-            memory: 256Mi
+            memory: 768Mi
+          limits:
+            memory: 2Gi
         securityContext:
           runAsUser: 1001
         terminationMessagePath: /dev/termination-log

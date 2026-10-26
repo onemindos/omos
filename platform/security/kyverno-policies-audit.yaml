@@ -7,6 +7,13 @@
 #     would reject every Pod create. Ignore lets requests through if the webhook is down.
 #   * Per-resource SkipDryRun + sync-wave 5 so these apply after the Kyverno CRDs on a fresh bootstrap.
 #
+# Image/resource background scans skip only settled controller history. Real admission
+# requests always retain validation, identified by their nonempty request.uid.
+# Kyverno 1.19.1 background scans also use operation CREATE, so operation cannot
+# distinguish them. Quoting request."object" preserves controller fields in autogen.
+# Keep the exact-version engine fixtures in test_gitops_kyverno_history.py passing
+# before changing this guard or upgrading Kyverno. Other security rules are unchanged.
+#
 # Excluded from the privileged/hostPath policy (what actually runs them, checked 2026-10-23):
 #   kube-system (cilium, csi-do-node, do-node-agent, doks-telemetry-config-reloader), falco, velero (node-agent),
 #   tailscale (proxy StatefulSets), spire-system (agent, spiffe-csi-driver), monitoring node-exporter and the
@@ -35,6 +42,35 @@ spec:
           - resources:
               kinds:
                 - Pod
+      context: &historical-workload-context
+        - name: retiredWorkloadHistory
+          variable:
+            # Missing or uncertain status stays evaluated; no API lookups are needed.
+            jmesPath: >-
+              (request."object".kind == 'ReplicaSet' &&
+               request."object".spec.replicas == `0` && request."object".status.replicas == `0` &&
+               (request."object".status.observedGeneration || `-1`) >= (request."object".metadata.generation || `0`) &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'apps/v1' && kind == 'Deployment' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Job' && (request."object".status.active || `0`) == `0` &&
+               (request."object".status.terminating || `0`) == `0` &&
+               length(request."object".status.conditions[?(type == 'Complete' || type == 'Failed') && status == 'True'] || `[]`) > `0` &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'batch/v1' && kind == 'CronJob' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Pod' && contains(`["Succeeded", "Failed"]`, request."object".status.phase || '') &&
+               length(request."object".metadata.ownerReferences[?controller == `true` && uid != null && uid != '' &&
+               ((apiVersion == 'batch/v1' && kind == 'Job') ||
+               (apiVersion == 'apps/v1' && contains(`["ReplicaSet", "StatefulSet", "DaemonSet"]`, kind)) ||
+               (apiVersion == 'v1' && kind == 'ReplicationController'))] || `[]`) > `0`)
+            default: false
+      preconditions: &assess-admission-or-current
+        any:
+          - key: "{{ request.uid || '' }}"
+            operator: NotEquals
+            value: ""
+          - key: "{{ retiredWorkloadHistory }}"
+            operator: Equals
+            value: false
       validate:
         message: "Images must have an explicit tag or digest (not an implicit :latest)."
         pattern:
@@ -51,6 +87,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+      context: *historical-workload-context
+      preconditions: *assess-admission-or-current
       validate:
         message: "Using the :latest tag is not allowed. Pin a version or digest."
         pattern:
@@ -86,6 +124,35 @@ spec:
           - resources:
               kinds:
                 - Pod
+      context:
+        - name: retiredWorkloadHistory
+          variable:
+            # Missing or uncertain status stays evaluated; no API lookups are needed.
+            jmesPath: >-
+              (request."object".kind == 'ReplicaSet' &&
+               request."object".spec.replicas == `0` && request."object".status.replicas == `0` &&
+               (request."object".status.observedGeneration || `-1`) >= (request."object".metadata.generation || `0`) &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'apps/v1' && kind == 'Deployment' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Job' && (request."object".status.active || `0`) == `0` &&
+               (request."object".status.terminating || `0`) == `0` &&
+               length(request."object".status.conditions[?(type == 'Complete' || type == 'Failed') && status == 'True'] || `[]`) > `0` &&
+               length(request."object".metadata.ownerReferences[?apiVersion == 'batch/v1' && kind == 'CronJob' &&
+               controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
+              (request."object".kind == 'Pod' && contains(`["Succeeded", "Failed"]`, request."object".status.phase || '') &&
+               length(request."object".metadata.ownerReferences[?controller == `true` && uid != null && uid != '' &&
+               ((apiVersion == 'batch/v1' && kind == 'Job') ||
+               (apiVersion == 'apps/v1' && contains(`["ReplicaSet", "StatefulSet", "DaemonSet"]`, kind)) ||
+               (apiVersion == 'v1' && kind == 'ReplicationController'))] || `[]`) > `0`)
+            default: false
+      preconditions:
+        any:
+          - key: "{{ request.uid || '' }}"
+            operator: NotEquals
+            value: ""
+          - key: "{{ retiredWorkloadHistory }}"
+            operator: Equals
+            value: false
       validate:
         message: "Containers must set resources.requests.cpu, resources.requests.memory and resources.limits.memory."
         pattern:
