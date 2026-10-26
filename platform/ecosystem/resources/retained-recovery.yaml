@@ -9,6 +9,7 @@ metadata:
     kubernetes.io/metadata.name: onemind-search
     onemind.io/ecosystem: cpu
     onemind.io/site: cloud
+    onemind.io/layer: data
     onemind.io/lifecycle: retained-recovery
   annotations:
     argocd.argoproj.io/sync-wave: '-2'
@@ -24,6 +25,7 @@ metadata:
   name: openchoreo-observability-plane
   labels:
     kubernetes.io/metadata.name: openchoreo-observability-plane
+    onemind.io/layer: system
     onemind.io/lifecycle: retained-recovery
   annotations:
     argocd.argoproj.io/sync-wave: '-2'

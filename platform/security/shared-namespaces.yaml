@@ -1,0 +1,64 @@
+# Existing shared namespaces: label ownership only; controllers remain in their
+# existing Applications. These namespaces must never be pruned or deleted by Argo.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: guard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: guard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: guard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tailscale
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: guard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cnpg-system
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: data
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keda
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: opencost
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/layer: make-sense

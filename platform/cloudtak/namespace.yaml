@@ -4,3 +4,4 @@ metadata:
   name: cloudtak
   labels:
     app.kubernetes.io/name: cloudtak
+    onemind.io/layer: act
