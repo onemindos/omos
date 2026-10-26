@@ -1238,3 +1238,9 @@ Runtime follow-through: TAK budget rollout is healthy and the original image/res
 checks pass on active app controllers/pods. Correct the pre-existing security-parent
 ignore/prepatch interaction that left intended audit history guards unapplied; use
 explicit observed Kyverno defaults and verify live policy generation and guards.
+
+Final ownership boundary: keep provider-marked DOKS system agents under DigitalOcean
+budget management in background scans, while retaining image/admission/other security
+checks. Adopt the manually installed unlabelled metrics-server Deployment with a
+measured512Mi cap and unchanged image, requests, Services and RBAC. This adds an Argo
+ownership record for an existing workload; full live acceptance follows reconciliation.
