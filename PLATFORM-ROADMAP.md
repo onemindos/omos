@@ -1227,7 +1227,7 @@ for active workloads and preserve rollback history and source data.
 
 | Work | Status | Evidence |
 |---|---|---|
-| TAK stateful budget safety preflight | Fresh encrypted volume archives requested before narrow no-op adoption and isolated resource updates; existing claims/images/credentials retained | `platform/backups/volsync/sources.yaml` |
+| TAK stateful budget safety preflight | Fresh encrypted volume archives and isolated recovery preflight verified; exact-spec no-op adoption prepared, resource changes remain a separate follow-up | `platform/backups/volsync/sources.yaml` |
 | Telemetry stale pull-secret reference | Root cause identified; guarded default-service-account repair and sequential provider telemetry pod replacement in verification | [Runbook](docs/operations/2026-10-26-telemetry-pull-secret.md) |
 
 This is bounded operational maintenance. Phase 6 stays In progress; Phases 7/8

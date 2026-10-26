@@ -126,3 +126,27 @@ Each Application should show `Synced` after the first sync, with no pod restarts
 render equals the live manifest apart from Helm hook Jobs (which run once) and server-side
 apply ownership metadata. If a workload restarts on the first sync, treat it as a defect and
 stop: it means the render differs from live.
+
+
+## TAK partial ownership — 2026-10-26
+
+The existing `platform-takserver` Application now owns the exact existing
+`takserver-postgresql` and `takserver-nats` StatefulSets and `cot-retention` CronJob.
+The first sync must preserve all three server-defaulted specs byte-for-byte; resource
+budgets are a separate follow-up. Namespace, source claims, PVC templates, images,
+selectors, credentials, schedules and workload names are preserved. Prune/Delete/
+Replace/Force are explicitly disabled for the adopted resources. Existing Helm
+revision34 and ownership labels are retained as history.
+
+Do not run whole-release Helm upgrades, rollbacks or uninstalls on `takserver`;
+they would compete with these resources and the already owned overlay Deployments.
+No repository shell script upgrades that release; legacy commands in the upstream
+chart README are not instructions for this live cluster. Full remaining release
+adoption is a different task. The old bootstrap script must not be run on this
+Argo-managed cluster.
+
+See [recovery preflight and evidence](../operations/2026-10-26-tak-policy-preflight.md)
+for fresh encrypted CSI-backed snapshots, PostgreSQL isolated logical restoration
+and the bounded internal NATS archive/server test. No source claim is deleted,
+recreated or shrunk; the live PostgreSQL claim remains20Gi even though its existing
+immutable StatefulSet claim template is8Gi.
