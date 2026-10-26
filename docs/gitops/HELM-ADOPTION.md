@@ -175,3 +175,27 @@ All eight TAK Deployment budgets match live after server normalization. Remove t
 Application's blanket Deployment budget/annotation exceptions, keeping only the
 operator restart timestamp on `takserver/tak-lb-proxy`. Future budget drift is now
 visible to Argo; adoption itself changes no budget.
+
+### TAK support-resource follow-through — 2026-10-26
+
+Nineteen additional existing resources are captured without changing runtime
+payloads: eight Services, Ignite ServiceAccount/ClusterRole/ClusterRoleBinding,
+storage LimitRange, internal NATS PDB, five nonsensitive ConfigMaps and the active
+one-replica NATS box Deployment. All have protected sync options. Normal allocated
+Service addresses are omitted from source so new-cluster recovery can allocate
+valid addresses; server dry-run preserves current addresses. Headless intent is
+retained. RBAC permissions, selectors, ports, configuration and pod budgets are
+unchanged. NATS box is running; do not describe it as a dormant deployment.
+
+One deliberate metadata correction removes the Ignite ServiceAccount's reference
+to absent `registry-onemind-hub`. Every current consumer has explicit working
+`ghcr`/`ghcr-onemindos` pull secrets in its pod template. This does not change or
+copy credentials or restart current pods. The remaining ServiceAccount payload is
+identical after server dry-run.
+
+The authenticated remote cluster-recovery archive additionally matches all14
+required TAK runtime configuration/credential objects including NATS box contexts,
+NATS and PostgreSQL configuration. No sensitive payload is exported into Git.
+Legacy `cert-migration`, `core-config`, `tak-userauth` ConfigMaps and remaining
+unadopted runtime Secrets need an encrypted-source/mount migration; that is still
+an open ownership gap. Preserve their current bytes and never commit plaintext.
