@@ -1244,3 +1244,15 @@ budget management in background scans, while retaining image/admission/other sec
 checks. Adopt the manually installed unlabelled metrics-server Deployment with a
 measured512Mi cap and unchanged image, requests, Services and RBAC. This adds an Argo
 ownership record for an existing workload; full live acceptance follows reconciliation.
+
+## User-directed cluster follow-through — 2026-10-26
+
+Zeus requested the remaining cluster findings be worked. This bounded maintenance
+keeps Phase 6 In progress and Phases 7/8 Not started.
+
+| Work | Status | Evidence |
+|---|---|---|
+| Namespace layer-label drift | Prepared: 12 existing namespaces classified; shared namespace metadata owned by security, existing explicit definitions kept with their original Applications | `platform/security/shared-namespaces.yaml`; server dry-run preserves namespace UIDs and all existing metadata; no live NetworkPolicy selects this label |
+| Failover memory headroom | Measured right-sizing and placement review in progress; keep four nodes | Live KubeMemoryOvercommit, no node pressure |
+| Independent backup copy | Destination/credential discovery in progress; do not unsuspend without working recovery credentials | `platform/backups/OFFSITE-COPY.md` |
+| Remaining TAK ownership and broad drift ignores | Live/spec comparison in progress; no broad Helm upgrade | `docs/gitops/HELM-ADOPTION.md` |

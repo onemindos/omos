@@ -26,8 +26,16 @@ spec:
     syncOptions:
       - CreateNamespace=true
   ignoreDifferences:
+    # Preserve operator restart timestamps only; resource budgets remain reconciled.
     - group: apps
       kind: Deployment
+      name: sealed-secrets-controller
+      namespace: kube-system
       jsonPointers:
-        - /spec/template/metadata/annotations
-        - /spec/template/spec/containers/0/resources
+        - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt
+    - group: apps
+      kind: Deployment
+      name: github-runner
+      namespace: github-runner
+      jsonPointers:
+        - /spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt

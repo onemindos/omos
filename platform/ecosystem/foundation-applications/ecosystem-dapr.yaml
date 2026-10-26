@@ -36,5 +36,7 @@ spec:
     - ServerSideApply=true
     - SkipDryRunOnMissingResource=true
     managedNamespaceMetadata:
+      labels:
+        onemind.io/layer: system
       annotations:
         volsync.backube/privileged-movers: 'true'
