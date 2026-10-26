@@ -28,6 +28,10 @@ IMAGE_POLICY = "disallow-latest-image-tag"
 RESOURCE_POLICY = "require-requests-limits"
 GUARDED_RULES = ("require-image-tag", "validate-image-tag", "validate-resources")
 BAD_CONTAINER = {"name": "workload", "image": "busybox:latest", "resources": {}}
+PROVIDER_BUDGET_SKIP = {
+    "provider-system-pod", "provider-system-deployment", "provider-system-daemonset",
+    "provider-system-active-replicaset", "provider-system-pod-untagged",
+}
 
 
 def owner(kind, api_version="apps/v1", **changes):
@@ -159,6 +163,41 @@ def fixtures():
     security["spec"]["containers"][0]["securityContext"] = {"privileged": True}
     security["spec"]["volumes"] = [{"name": "host", "hostPath": {"path": "/"}}]
     add(security, True)
+
+    # Provider ownership suppresses only background budgets, never image checks.
+    for kind, name in [
+        ("Pod", "provider-system-pod"),
+        ("Deployment", "provider-system-deployment"),
+        ("DaemonSet", "provider-system-daemonset"),
+        ("ReplicaSet", "provider-system-active-replicaset"),
+        ("Pod", "provider-system-pod-untagged"),
+    ]:
+        r = workload(kind, name, status={"phase": "Running"} if kind == "Pod" else {"replicas": 1})
+        r["metadata"].update({"namespace": "kube-system", "labels": {"doks.digitalocean.com/managed": "true"}})
+        if kind in ("Deployment", "ReplicaSet"):
+            r["spec"]["replicas"] = 1
+        if name == "provider-system-pod-untagged":
+            r["spec"]["containers"][0]["image"] = "busybox"
+        add(r)
+    for name, namespace, labels in [
+        ("provider-label-app-namespace", "history-tests", {"doks.digitalocean.com/managed": "true"}),
+        ("provider-unlabelled-system-pod", "kube-system", {}),
+        ("provider-false-system-pod", "kube-system", {"doks.digitalocean.com/managed": "false"}),
+        ("provider-case-sensitive-system-pod", "kube-system", {"doks.digitalocean.com/managed": "True"}),
+        ("provider-wrong-label-system-pod", "kube-system", {"doks.digitalocean.com/managed-by": "true"}),
+    ]:
+        r = workload("Pod", name, status={"phase": "Running"})
+        r["metadata"].update({"namespace": namespace, "labels": labels})
+        add(r)
+    for name, top_labels in [
+        ("provider-template-only-system-deployment", {}),
+        ("provider-top-false-template-true-deployment", {"doks.digitalocean.com/managed": "false"}),
+    ]:
+        r = workload("Deployment", name, status={"replicas": 1})
+        r["spec"]["replicas"] = 1
+        r["metadata"].update({"namespace": "kube-system", "labels": top_labels})
+        r["spec"]["template"]["metadata"]["labels"]["doks.digitalocean.com/managed"] = "true"
+        add(r)
     return cases
 
 
@@ -220,12 +259,14 @@ class KyvernoHistoryEngine(unittest.TestCase):
             kind = resource["kind"]
             prefix = "" if kind == "Pod" else ("autogen-cronjob-" if kind == "CronJob" else "autogen-")
             expected = ["pass", "fail", "fail"]
-            if name == "pod-untagged":
+            if name in ("pod-untagged", "provider-system-pod-untagged"):
                 expected = ["fail", "pass", "fail"]
             elif name == "pod-compliant":
                 expected = ["pass", "pass", "pass"]
             if background and skip:
                 expected = ["skip"] * 3
+            elif background and name in PROVIDER_BUDGET_SKIP:
+                expected[2] = "skip"
             for rule, result in zip(GUARDED_RULES, expected):
                 policy = RESOURCE_POLICY if rule == "validate-resources" else IMAGE_POLICY
                 with self.subTest(mode=mode, resource=name, rule=rule):
@@ -249,6 +290,17 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 with self.subTest(mode=mode, rule=rule):
                     self.assertEqual(results.get(("pod-terminal-security-violations",
                                                   "disallow-privileged-and-hostpath", rule)), "fail")
+
+    def test_provider_boundary_never_skips_image_rules(self):
+        for mode in ("background", "empty-uid"):
+            for resource in PROVIDER_BUDGET_SKIP:
+                prefix = "" if "pod" in resource else "autogen-"
+                with self.subTest(mode=mode, resource=resource):
+                    self.assertEqual(self.results[mode].get((resource, RESOURCE_POLICY,
+                                                            prefix + "validate-resources")), "skip")
+                    expected = ["fail", "pass"] if resource.endswith("untagged") else ["pass", "fail"]
+                    for rule, result in zip(GUARDED_RULES[:2], expected):
+                        self.assertEqual(self.results[mode].get((resource, IMAGE_POLICY, prefix + rule)), result)
 
 
 if __name__ == "__main__":

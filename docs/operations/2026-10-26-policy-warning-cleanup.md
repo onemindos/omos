@@ -88,3 +88,32 @@ while retaining server-side apply. This preserves existing effective policy
 semantics and allows future intended rule changes to be reconciled. Verify actual
 live contexts/preconditions and auto-generated guards, not only Argo's operation
 message, before claiming completion.
+
+## Explicit DigitalOcean budget ownership
+
+The final whole-cluster review identified provider components in `kube-system`
+whose resource budgets are DigitalOcean-managed defaults. Their controllers and
+pods carry `doks.digitalocean.com/managed: "true"` (observed on Cilium, CSI,
+telemetry, Hubble and Konnectivity). Do not take over the network/storage provider
+DaemonSets or impose arbitrary caps through a second writer.
+
+Only background resource-budget assessment has a narrow ownership exception:
+both the system namespace and this exact provider-managed label must match.
+There is no blanket namespace exception. All image checks, all nonempty-UID
+admission checks, other security policies, unlabelled system workloads and labelled
+workloads in application namespaces remain assessed. Provider defaults are an
+explicit exception, not claimed to have been repaired with new application budgets.
+The exact-engine fixtures test each boundary and retain original admission results.
+
+The legacy metrics-server is different: it was manually applied in July and lacks
+the provider label. Its existing Deployment is adopted into a dedicated
+`platform-metrics-server` Argo Application with only a512Mi memory cap added.
+The unchanged100m/200Mi requests already exceed its50.6Mi observed seven-day peak.
+No Service/APIService/RBAC/image/argument change is included; no existing core
+resource-ignore rule is broadened or removed. This adds one Argo ownership record,
+not a new metrics workload.
+
+The expanded exact-version suite now covers58 fixtures in four contexts. Provider
+boundary comparison preserved all210 admission resource/rule results per CREATE
+and UPDATE operation; exactly five background resource findings changed from fail
+to skip for the explicit managed-system cases. Image checks remained assessed.

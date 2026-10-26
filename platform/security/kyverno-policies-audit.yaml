@@ -153,12 +153,20 @@ spec:
                (apiVersion == 'apps/v1' && contains(`["ReplicaSet", "StatefulSet", "DaemonSet"]`, kind)) ||
                (apiVersion == 'v1' && kind == 'ReplicationController'))] || `[]`) > `0`)
             default: false
+        - name: providerManagedSystemDefaults
+          variable:
+            # Respect DOKS-owned budgets only during background assessment.
+            # Inspect controller metadata itself, not its autogen Pod template.
+            jmesPath: >-
+              request."object".metadata.namespace == 'kube-system' &&
+              request."object".metadata.labels."doks.digitalocean.com/managed" == 'true'
+            default: false
       preconditions:
         any:
           - key: "{{ request.uid || '' }}"
             operator: NotEquals
             value: ""
-          - key: "{{ retiredWorkloadHistory }}"
+          - key: "{{ retiredWorkloadHistory || providerManagedSystemDefaults }}"
             operator: Equals
             value: false
       skipBackgroundRequests: true
