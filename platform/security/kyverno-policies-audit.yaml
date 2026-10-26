@@ -11,6 +11,8 @@
 # requests always retain validation, identified by their nonempty request.uid.
 # Kyverno 1.19.1 background scans also use operation CREATE, so operation cannot
 # distinguish them. Quoting request."object" preserves controller fields in autogen.
+# Normalize native Kubernetes int64 values for JMESPath comparisons: CLI JSON floats
+# and the reports controller must classify history identically. Unknown values fail closed.
 # Keep the exact-version engine fixtures in test_gitops_kyverno_history.py passing
 # before changing this guard or upgrading Kyverno. Other security rules are unchanged.
 #
@@ -50,12 +52,15 @@ spec:
             # Missing or uncertain status stays evaluated; no API lookups are needed.
             jmesPath: >-
               (request."object".kind == 'ReplicaSet' &&
-               request."object".spec.replicas == `0` && request."object".status.replicas == `0` &&
-               (request."object".status.observedGeneration || `-1`) >= (request."object".metadata.generation || `0`) &&
+               to_number(to_string(request."object".spec.replicas)) == `0` &&
+               to_number(to_string(request."object".status.replicas)) == `0` &&
+               to_number(to_string(request."object".status.observedGeneration)) >=
+               to_number(to_string(request."object".metadata.generation)) &&
                length(request."object".metadata.ownerReferences[?apiVersion == 'apps/v1' && kind == 'Deployment' &&
                controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
-              (request."object".kind == 'Job' && (request."object".status.active || `0`) == `0` &&
-               (request."object".status.terminating || `0`) == `0` &&
+              (request."object".kind == 'Job' &&
+               to_number(to_string(not_null(request."object".status.active, `0`))) == `0` &&
+               to_number(to_string(not_null(request."object".status.terminating, `0`))) == `0` &&
                length(request."object".status.conditions[?(type == 'Complete' || type == 'Failed') && status == 'True'] || `[]`) > `0` &&
                length(request."object".metadata.ownerReferences[?apiVersion == 'batch/v1' && kind == 'CronJob' &&
                controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
@@ -138,12 +143,15 @@ spec:
             # Missing or uncertain status stays evaluated; no API lookups are needed.
             jmesPath: >-
               (request."object".kind == 'ReplicaSet' &&
-               request."object".spec.replicas == `0` && request."object".status.replicas == `0` &&
-               (request."object".status.observedGeneration || `-1`) >= (request."object".metadata.generation || `0`) &&
+               to_number(to_string(request."object".spec.replicas)) == `0` &&
+               to_number(to_string(request."object".status.replicas)) == `0` &&
+               to_number(to_string(request."object".status.observedGeneration)) >=
+               to_number(to_string(request."object".metadata.generation)) &&
                length(request."object".metadata.ownerReferences[?apiVersion == 'apps/v1' && kind == 'Deployment' &&
                controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||
-              (request."object".kind == 'Job' && (request."object".status.active || `0`) == `0` &&
-               (request."object".status.terminating || `0`) == `0` &&
+              (request."object".kind == 'Job' &&
+               to_number(to_string(not_null(request."object".status.active, `0`))) == `0` &&
+               to_number(to_string(not_null(request."object".status.terminating, `0`))) == `0` &&
                length(request."object".status.conditions[?(type == 'Complete' || type == 'Failed') && status == 'True'] || `[]`) > `0` &&
                length(request."object".metadata.ownerReferences[?apiVersion == 'batch/v1' && kind == 'CronJob' &&
                controller == `true` && uid != null && uid != ''] || `[]`) > `0`) ||

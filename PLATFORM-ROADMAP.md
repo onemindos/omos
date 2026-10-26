@@ -1282,3 +1282,16 @@ prepared for protected adoption with server dry-run parity; remove only the
 Ignite ServiceAccount's missing legacy pull-secret reference. Sensitive legacy
 ConfigMaps/runtime Secrets remain explicitly outside plaintext Git and require
 an encrypted-source migration. No full-release Helm operation is authorized.
+
+Live scanner correction: fresh history warnings revealed native-int64 comparisons
+in the reports controller were not represented by JSON CLI fixtures. Numeric
+normalization and exact pinned native-JMESPath regression are prepared, preserving
+all real admission checks and fail-closed unknown history. Actual reports-controller
+skip metrics are required for live acceptance; prior CLI-only evidence was incomplete.
+
+Support adoption is verified live: all19 original resource UIDs preserved,18 runtime
+payloads identical, only the missing Ignite SA pull-secret reference removed; all
+running TAK pod UIDs and restart counts unchanged. Nextcloud app/proxy are Ready
+with0restarts after the measured memory corrections; original data/cache PVC/PV
+identities and capacity are preserved. Separate concurrent Hermes work added one
+healthy Application; the latest snapshot is59 Synced/Healthy apps and84 Bound PVCs.

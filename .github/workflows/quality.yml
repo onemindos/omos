@@ -153,6 +153,12 @@ jobs:
         with:
           node-version: "24"
 
+      # Native Kubernetes int64 values must be tested before the JSON CLI boundary.
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+
       # Match the deployed policy engine; these security tests must not silently skip in CI.
       - name: Install checksum-verified Kyverno policy test engine
         run: |
