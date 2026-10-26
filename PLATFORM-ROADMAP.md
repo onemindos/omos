@@ -1233,3 +1233,8 @@ for active workloads and preserve rollback history and source data.
 This is bounded operational maintenance. Phase 6 stays In progress; Phases 7/8
 stay Not started. Source preparation and successful live verification remain
 separate. No node reduction, credential rotation or broad Helm upgrade is included.
+
+Runtime follow-through: TAK budget rollout is healthy and the original image/resource
+checks pass on active app controllers/pods. Correct the pre-existing security-parent
+ignore/prepatch interaction that left intended audit history guards unapplied; use
+explicit observed Kyverno defaults and verify live policy generation and guards.

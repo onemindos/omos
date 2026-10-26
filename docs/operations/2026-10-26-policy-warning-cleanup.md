@@ -71,3 +71,20 @@ warning timestamps. Scan all current top-level controllers and running app pods
 against the original image/resource rules; provider-owned kube-system budgets are
 outside this application repair. Evaluate the retained history with the exact engine
 and verify admission remains unchanged. Record actual runtime results separately.
+
+
+## Argo delivery correction
+
+Runtime verification found `platform-security` repeatedly reporting successful
+server-side sync while both changed ClusterPolicies stayed at generation1 with no
+new context/preconditions. The existing `RespectIgnoreDifferences=true` plus
+rule-list JQ ignore paths copied the old live rule list into the apply candidate.
+Source render and dry-run success alone did not establish delivery.
+
+Kyverno's observed default values are now explicit in all four source policies:
+`admission=true`, `emitWarning=false`, `skipBackgroundRequests=true`, and
+`allowExistingViolations=true`. Remove the default-field ignore/prepatch settings
+while retaining server-side apply. This preserves existing effective policy
+semantics and allows future intended rule changes to be reconciled. Verify actual
+live contexts/preconditions and auto-generated guards, not only Argo's operation
+message, before claiming completion.
