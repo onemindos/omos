@@ -990,6 +990,7 @@ spec:
   sourcePVC: data-takserver-postgresql-0
   paused: false
   trigger:
+    manual: policy-preflight-20261026T073053Z
     schedule: 40 9 * * *
   restic:
     repository: volume-cccc1afaa021-restic
@@ -1154,6 +1155,7 @@ spec:
   sourcePVC: takserver-nats-js-takserver-nats-0
   paused: false
   trigger:
+    manual: policy-preflight-20261026T073053Z
     schedule: 0 11 * * *
   restic:
     repository: volume-2b88c0eca294-restic

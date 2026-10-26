@@ -1216,3 +1216,20 @@ stay Not started.
 No 1Password migration, agent vault permission, user master password, model billing
 change or new Kubernetes authority is included. Owner login, client/passkey sync
 and future AI integration require separate authenticated acceptance.
+
+## User-directed policy warning cleanup — 2026-10-26
+
+Zeus requested repair of image-version/resource-budget and telemetry pull-secret
+warnings. Existing running app images are pinned; remaining background warnings
+include retained old revisions, alongside real budget gaps on TAK's legacy
+PostgreSQL/NATS workloads and retention CronJob. Keep all audit/admission checks
+for active workloads and preserve rollback history and source data.
+
+| Work | Status | Evidence |
+|---|---|---|
+| TAK stateful budget safety preflight | Fresh encrypted volume archives requested before narrow no-op adoption and isolated resource updates; existing claims/images/credentials retained | `platform/backups/volsync/sources.yaml` |
+| Telemetry stale pull-secret reference | Root cause identified; guarded default-service-account repair and sequential provider telemetry pod replacement in verification | [Runbook](docs/operations/2026-10-26-telemetry-pull-secret.md) |
+
+This is bounded operational maintenance. Phase 6 stays In progress; Phases 7/8
+stay Not started. Source preparation and successful live verification remain
+separate. No node reduction, credential rotation or broad Helm upgrade is included.
