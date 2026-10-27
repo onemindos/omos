@@ -10,7 +10,6 @@ resources:
   - backstage-secrets.sealedsecret.yaml
   - ghcr.sealedsecret.yaml
   - backup.sealedsecret.yaml
-  - backup.yaml
   - mcp.sealedsecret.yaml
   - plugin-integrations.sealedsecret.yaml
   - grafana.sealedsecret.yaml

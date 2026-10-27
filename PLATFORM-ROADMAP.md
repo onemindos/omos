@@ -99,7 +99,7 @@ patches; Telegram remains selected. See the updated approval record below.
 | `kyverno`, `falco` | policy, runtime security | 1 | Argo CD |
 | `velero`, `ops` | Velero, VolSync | 1 | Argo CD |
 | `github-runner` | CI runners | 1 | Argo CD |
-| `kube` | Headlamp, Kubernetes Dashboard (break-glass UIs) | 1 | Argo CD |
+| `kube` | Headlamp (break-glass UI) | 1 | Argo CD |
 | `backstage` | OneMind portal (the human home screen) | 1 | Argo CD |
 | `openchoreo-control-plane`, `openchoreo-data-plane`, `openchoreo-workflow-plane`, `openchoreo-observability-plane` | OpenChoreo itself | 1 | Argo CD |
 | `takserver` | TAK Server core | 1 for now | Argo CD; Helm CLI release today. Revisit after Phase 7 |

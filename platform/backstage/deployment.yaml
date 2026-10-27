@@ -77,6 +77,14 @@ spec:
             secretKeyRef:
               name: backstage-mcp
               key: MCP_TOKEN
+        # Read-only Authentik token for the org sync (authentik.orgSync, off by default). Optional:
+        # the owner seals backstage-authentik-catalog; until then the variable is simply absent.
+        - name: AUTHENTIK_CATALOG_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: backstage-authentik-catalog
+              key: AUTHENTIK_CATALOG_TOKEN
+              optional: true
         - name: PORTAL_URL
           value: https://onemind-preview.tail717ba0.ts.net
         - name: POSTGRES_PASSWORD
