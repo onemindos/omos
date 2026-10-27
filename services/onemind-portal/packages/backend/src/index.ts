@@ -27,6 +27,9 @@ backend.add(
   import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
 );
 backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
+// GitHub discovery through the read-only GitHub App; discovers nothing without catalog.providers.github.
+// Also lets Catalog Import analyze GitHub repository URLs (catalog.location.create stays admin-only).
+backend.add(import('@backstage/plugin-catalog-backend-module-github'));
 backend.add(import('@internal/plugin-onemind-machine-backend'));
 // Live cluster inventory. Disabled unless onemind.inventory.live.enabled is true; see docs/catalog/live-inventory.md.
 backend.add(import('@internal/plugin-onemind-inventory-backend'));
