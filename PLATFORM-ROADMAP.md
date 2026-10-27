@@ -1326,3 +1326,11 @@ their documentation-release/integration holds. Destructive retention, access,
 credentials, directory visibility and admission enforcement remain distinct
 decisions. No merge, image release, activation or deployment is claimed by this
 preparation. Phase 6 remains In progress; Phases 7/8 remain Not started.
+
+User-directed MCP coverage follow-through (2026-10-27): expansion prepared from the
+initial NATS/Prometheus slice to seven configured app integrations, 12 tools and an
+explicit 32-domain access catalog. CI requires coverage dispositions for all 56
+Git-declared Applications. Credential-gated and unimplemented app integrations
+remain blocked and visible; broad coverage is not claimed complete. No cluster
+administration, vault-content permission or physical actuation is added. Runtime
+acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.
