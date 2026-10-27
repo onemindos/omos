@@ -81,6 +81,10 @@ The authenticated operations endpoint now checks four fixed internal service tar
 
 The same server reads fixed Prometheus queries for five namespaces: backstage, auth, nats, takserver and onetak. CPU is a five-minute rate in cores; memory is working-set bytes. Empty series are unknown, not zero. No monitoring credentials reach the browser and no cluster write permissions were added. The panel exposes timestamps and investigation/catalog links. External monitoring and continuous alert routing can be added separately when needed.
 
+## OpenCost allocation proxy
+
+`/api/proxy/opencost/allocation` forwards GET requests to the in-cluster OpenCost allocation API (`opencost.opencost.svc.cluster.local:9003/allocation`). Backstage credentials are required and are not forwarded; other OpenCost routes are not reachable through it. It returns raw OpenCost estimates; `scripts/cost-allocation.cjs` defines how a future card should validate them (`docs/operations/backstage-cost-workstream.md`). The OpenCost catalog component links to the tailnet UI.
+
 ## P4 TechDocs
 
 Operations documentation lives in `services/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.
