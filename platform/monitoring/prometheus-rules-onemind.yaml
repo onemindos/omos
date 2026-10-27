@@ -138,6 +138,16 @@ spec:
             summary: "Hermes AI agent is down"
             description: "hermes-legacy deployment has no available replicas. AI brain is offline."
 
+        - alert: OneMindMCPDown
+          expr: kube_deployment_status_replicas_available{namespace="hermes",deployment="onemind-mcp"} == 0
+          for: 10m
+          labels:
+            severity: warning
+            service: hermes
+          annotations:
+            summary: "OneMind MCP is down"
+            description: "onemind-mcp has had no available replicas for 10m. Legacy loses all its internal app tools (NATS, Prometheus, Loki and others). Runbook: docs/operations/onemind-mcp.md"
+
     # ─── TAK / CloudTAK ──────────────────────────────────────────────────────
     - name: onemind.cloudtak
       interval: 30s
