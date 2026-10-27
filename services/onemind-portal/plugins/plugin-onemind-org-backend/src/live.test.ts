@@ -64,7 +64,7 @@ async function startReplica(orgSync: JsonObject, database?: Database) {
         },
         async init(deps) {
           scheduler = deps.scheduler;
-          registerAuthentikOrg({
+          await registerAuthentikOrg({
             ...deps,
             fetchJson: fakeAuthentik(directory).fetchJson,
           });

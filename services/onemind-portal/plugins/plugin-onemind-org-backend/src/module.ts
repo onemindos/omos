@@ -42,15 +42,17 @@ export const TASK_ID = `${PROVIDER_NAME}-refresh`;
  *   provider removes what the sync published when the catalog connects it and on every run of the
  *   task, so turning the sync off, or losing its secret, revokes synced users even if a replica of
  *   the enabled rollout runs the task once more.
- * Invalid reviewed settings still fail startup; an absent token never does.
+ * Invalid reviewed settings still fail startup; an absent token never does. So does a task that
+ * could not be stored (a database error): registration waits for the scheduler, so a pod never
+ * serves without the task that the rollback relies on.
  */
-export function registerAuthentikOrg({
+export async function registerAuthentikOrg({
   config,
   logger,
   scheduler,
   processing,
   fetchJson,
-}: RegisterDeps): AuthentikOrgMode {
+}: RegisterDeps): Promise<AuthentikOrgMode> {
   const settings = readAuthentikOrgConfig(config);
   // Both portal replicas register the task; the global scope runs each run on one of them.
   const schedule = (
@@ -83,7 +85,7 @@ export function registerAuthentikOrg({
       );
     const cleanup = new AuthentikOrgCleanup(logger);
     processing.addEntityProvider(cleanup);
-    schedule(DEFAULT_SCHEDULE, () => cleanup.clear());
+    await schedule(DEFAULT_SCHEDULE, () => cleanup.clear());
     return 'cleanup';
   }
 
@@ -96,7 +98,7 @@ export function registerAuthentikOrg({
     readCurated: () => readCurated(resolve(settings.curatedFile)),
   });
   processing.addEntityProvider(provider);
-  schedule(settings, signal => provider.refresh(signal));
+  await schedule(settings, signal => provider.refresh(signal));
   logger.info(
     `Authentik org sync enabled: members of ${settings.userGroups.join(
       ', ',
@@ -117,7 +119,7 @@ export const catalogModuleOnemindAuthentikOrg = createBackendModule({
         processing: catalogProcessingExtensionPoint,
       },
       async init(deps) {
-        registerAuthentikOrg(deps);
+        await registerAuthentikOrg(deps);
       },
     });
   },

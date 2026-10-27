@@ -34,12 +34,15 @@ const enabled = (
   },
 });
 
-const make = (config: Config) => {
+const make = async (
+  config: Config,
+  scheduleTask = jest.fn().mockResolvedValue(undefined),
+) => {
   const processing = { addEntityProvider: jest.fn() };
-  const scheduler = { scheduleTask: jest.fn() };
+  const scheduler = { scheduleTask };
   const fetchJson = jest.fn();
   const logger = mockServices.logger.mock();
-  const mode = registerAuthentikOrg({
+  const mode = await registerAuthentikOrg({
     config,
     logger,
     scheduler: scheduler as never,
@@ -48,7 +51,7 @@ const make = (config: Config) => {
   });
   return { mode, processing, scheduler, fetchJson, logger };
 };
-type Made = ReturnType<typeof make>;
+type Made = Awaited<ReturnType<typeof make>>;
 
 /** The default schedule, which the removal always uses. */
 const TASK = {
@@ -116,7 +119,7 @@ describe('feature flag', () => {
   ])(
     'calls nothing when the flag is %s, and only removes what the sync published, under the same task',
     async (_name, data) => {
-      const m = make(new ConfigReader(data));
+      const m = await make(new ConfigReader(data));
       expect(m.mode).toBe('cleanup');
       expect(registeredTask(m)).toEqual(TASK);
       // At startup (connect) and on every run: one full mutation without entities.
@@ -130,7 +133,7 @@ describe('feature flag', () => {
   );
 
   it('registers one provider and one global task when enabled, and reads nothing until it runs', async () => {
-    const m = make(new ConfigReader(enabled()));
+    const m = await make(new ConfigReader(enabled()));
     expect(m.mode).toBe('sync');
     expect(registeredTask(m)).toEqual(TASK);
     // Connecting the sync (a pod start) never removes what it published.
@@ -154,7 +157,7 @@ describe('feature flag', () => {
   ])(
     'does not fail startup when enabled with the token %s: it calls nothing, removes what it published and logs why',
     async (_name, token) => {
-      const m = make(new ConfigReader(enabled({}, { token })));
+      const m = await make(new ConfigReader(enabled({}, { token })));
       expect(m.mode).toBe('cleanup');
       expect(registeredTask(m)).toEqual(TASK);
       expect(await connectAndRunOnce(m)).toEqual([
@@ -248,16 +251,30 @@ describe('feature flag', () => {
     ],
   ])(
     'fails startup on %s, naming the key and never the token',
-    (_name, data, message) => {
-      let error: unknown;
-      try {
-        make(new ConfigReader(data));
-      } catch (e) {
-        error = e;
-      }
+    async (_name, data, message) => {
+      const error = await make(new ConfigReader(data)).then(
+        () => undefined,
+        (e: unknown) => e,
+      );
       expect(error).toBeInstanceOf(Error);
       expect((error as Error).message).toContain(message);
       expect((error as Error).message).not.toContain(TOKEN);
+    },
+  );
+
+  it.each([
+    ['disabled', {}],
+    ['enabled', enabled()],
+  ])(
+    'fails startup when %s and the scheduler cannot store the task, instead of serving without it',
+    async (_name, data) => {
+      const scheduleTask = jest
+        .fn()
+        .mockRejectedValue(new Error('Failed to persist task, database blip'));
+      await expect(make(new ConfigReader(data), scheduleTask)).rejects.toThrow(
+        'Failed to persist task, database blip',
+      );
+      expect(scheduleTask).toHaveBeenCalledTimes(1);
     },
   );
 });
@@ -339,7 +356,7 @@ describeRepo('the committed cluster overlay', () => {
       { AUTHENTIK_CATALOG_TOKEN: TOKEN },
     ];
     for (const env of envs) {
-      const m = make(await cluster(env));
+      const m = await make(await cluster(env));
       expect(m.mode).toBe('cleanup');
       expect(registeredTask(m)).toEqual(TASK);
       expect(await connectAndRunOnce(m)).toEqual([
