@@ -6,6 +6,7 @@ resources:
   - rbac.yaml
   - postgres.yaml
   - deployment.yaml
+  - portal-redirect.yaml
   - availability.yaml
   - backstage-secrets.sealedsecret.yaml
   - ghcr.sealedsecret.yaml
@@ -19,6 +20,9 @@ configMapGenerator:
   - name: backstage-cluster-config
     namespace: backstage
     files: [app-config.cluster.yaml]
+  - name: portal-redirect
+    namespace: backstage
+    files: [nginx.conf=portal-redirect.conf]
   - name: backstage-catalog
     options:
       annotations:
