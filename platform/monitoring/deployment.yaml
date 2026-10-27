@@ -6,7 +6,8 @@
 #
 # The $SYS password is never committed here. It comes from the
 # nats-surveyor-creds Secret (key: password) in the nats namespace, committed
-# only as a SealedSecret; Kubernetes expands $(NATS_SURVEYOR_PASSWORD) in args.
+# only as a SealedSecret. Surveyor reads NATS_SURVEYOR_PASSWORD natively, so
+# the password is not passed as an argument and stays off the command line.
 ---
 apiVersion: v1
 kind: Service
@@ -54,7 +55,6 @@ spec:
             - --servers=tls://nats.nats.svc.cluster.local:4222
             - --count=3
             - --user=sys
-            - --password=$(NATS_SURVEYOR_PASSWORD)
             - --tlscacert=/etc/nats-ca/ca.crt
             - --port=7777
             - --addr=0.0.0.0
