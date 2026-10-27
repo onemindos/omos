@@ -22,7 +22,14 @@ spec:
       containers:
         - name: nats
           image: nats:2.10-alpine
-          args: ["-c", "/etc/leaf/leaf.conf"]
+          # --name sets the server name the hub lists for this leaf (/leafz "name"), which
+          # NATSLeafnodeDown matches on. leaf.conf sets none, so it was a random ID that changed
+          # on every restart. The pod name rather than a fixed one: the hub drops an older leaf
+          # connection that has the same server name, and RollingUpdate briefly runs two pods.
+          args: ["-c", "/etc/leaf/leaf.conf", "--name", "$(POD_NAME)"]
+          env:
+            - name: POD_NAME
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
           ports:
             - {containerPort: 4222, name: client}
             - {containerPort: 8222, name: monitor}
