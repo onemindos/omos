@@ -12,8 +12,40 @@ import yaml
 URL = "http://onemind-mcp.hermes.svc.cluster.local:8000/mcp"
 
 
+async def observe_rollout():
+    """Only named workload status; no configuration, Secret or application data."""
+    identity = Path("/var/run/secrets/kubernetes.io/serviceaccount")
+    report = {}
+    async with httpx.AsyncClient(
+        verify=str(identity / "ca.crt"), trust_env=False,
+        headers={"Authorization": "Bearer " + (identity / "token").read_text()}, timeout=10,
+    ) as kube:
+        for name in ("onemind-mcp", "hermes-legacy"):
+            response = await kube.get(f"https://kubernetes.default.svc/apis/apps/v1/namespaces/hermes/deployments/{name}")
+            if response.status_code != 200:
+                report[name] = {"http_status": response.status_code}
+                continue
+            data = response.json()
+            report[name] = {"available_replicas": data["status"].get("availableReplicas", 0),
+                            "generation": data["metadata"]["generation"],
+                            "observed_generation": data["status"].get("observedGeneration", 0)}
+        response = await kube.get("https://kubernetes.default.svc/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/platform-legacy")
+        if response.status_code == 200:
+            data = response.json()
+            status = data["status"]
+            report["argo"] = {"sync": status.get("sync", {}).get("status"),
+                              "health": status.get("health", {}).get("status"),
+                              "phase": status.get("operationState", {}).get("phase"),
+                              "revisions": status.get("sync", {}).get("revisions", []),
+                              "source_count": len(data["spec"].get("sources", []))}
+    return report
+
+
 async def main():
-    token = os.environ["ONEMIND_MCP_TOKEN"]
+    token = os.environ.get("ONEMIND_MCP_TOKEN")
+    if not token:
+        print(json.dumps({"phase": "waiting_for_legacy_rollout", **await observe_rollout()}, indent=2))
+        return 75
     # Check only the owned non-secret keys; never export the volume-managed config.
     config = yaml.safe_load(Path("/opt/data/config.yaml").read_text())
     entry = config["mcp_servers"]["onemind"]
@@ -66,4 +98,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    raise SystemExit(asyncio.run(main()))
