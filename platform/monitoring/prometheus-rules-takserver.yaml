@@ -1,0 +1,104 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: onemind-takserver
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app: kube-prometheus-stack
+spec:
+  groups:
+    # ─── TAK Server (namespace takserver) ────────────────────────────────────
+    # Prometheus scrapes no TAK endpoint, so these use kube-state-metrics and kubelet
+    # volume stats only. Every TAK workload is single-replica, so "0 available" means
+    # the component is down. Series are filtered to job="kube-state-metrics" because
+    # OpenCost re-exports the same kube_* series.
+    - name: onemind.takserver
+      interval: 60s
+      rules:
+        # Core CoT path: EUD → tak-lb-proxy → messaging/api (+ config, plugins, Ignite,
+        # PostgreSQL, LDAP, internal NATS) → plugin → tak-nats-leaf → authority bus.
+        - alert: TAKCoreWorkloadUnavailable
+          expr: |
+            kube_deployment_status_replicas_available{job="kube-state-metrics",namespace="takserver",
+              deployment=~"takserver-messaging|takserver-api|takserver-config|takserver-plugins|tak-lb-proxy|tak-nats-leaf"} == 0
+            or
+            kube_statefulset_status_replicas_available{job="kube-state-metrics",namespace="takserver",
+              statefulset=~"takserver-postgresql|takserver-ignite|takserver-nats|tak-ldap"} == 0
+          for: 3m
+          labels:
+            severity: critical
+            service: takserver
+          annotations:
+            summary: "TAK core component {{ $labels.deployment }}{{ $labels.statefulset }} has no available replica"
+            description: "takserver/{{ $labels.deployment }}{{ $labels.statefulset }} is down (single replica). EUD connections, CoT routing or the TAK → NATS bridge are affected."
+
+        # Supporting services: federation hub, voice, NATS toolbox.
+        - alert: TAKSupportWorkloadUnavailable
+          expr: |
+            kube_deployment_status_replicas_available{job="kube-state-metrics",namespace="takserver",
+              deployment=~"fedhub|murmur|mumble-bridge|takserver-nats-box"} == 0
+            or
+            kube_statefulset_status_replicas_available{job="kube-state-metrics",namespace="takserver",
+              statefulset=~"fedhub-mongodb"} == 0
+          for: 10m
+          labels:
+            severity: warning
+            service: takserver
+          annotations:
+            summary: "TAK support component {{ $labels.deployment }}{{ $labels.statefulset }} has no available replica"
+            description: "takserver/{{ $labels.deployment }}{{ $labels.statefulset }} is down. Federation, Mumble voice or the NATS toolbox are affected; core CoT is not."
+
+        # data-takserver-postgresql-0 is 20Gi and cot_router is the bulk of it. Earlier
+        # than the generic 85% PVCFillingUp so retention or a resize can happen first.
+        - alert: TAKPostgresVolumeFillingUp
+          expr: |
+            kubelet_volume_stats_used_bytes{namespace="takserver",persistentvolumeclaim="data-takserver-postgresql-0"}
+              / kubelet_volume_stats_capacity_bytes{namespace="takserver",persistentvolumeclaim="data-takserver-postgresql-0"} > 0.75
+          for: 15m
+          labels:
+            severity: warning
+            service: takserver
+          annotations:
+            summary: "TAK PostgreSQL volume is {{ $value | humanizePercentage }} full"
+            description: >-
+              takserver/data-takserver-postgresql-0 is above 75%. Check that cot-retention is deleting rows;
+              plain VACUUM does not shrink files (VACUUM FULL or pg_repack needs an owner window).
+
+        # Job-level failure (Failed condition: retries or activeDeadlineSeconds exhausted).
+        # kube_job_failed rather than kube_job_status_failed: cot-retention uses
+        # restartPolicy OnFailure, which restarts containers in place and can end in a
+        # Failed Job with zero failed pods.
+        - alert: TAKCoTRetentionJobFailed
+          expr: kube_job_failed{job="kube-state-metrics",namespace="takserver",job_name=~"cot-retention-.*",condition="true"} == 1
+          for: 5m
+          labels:
+            severity: warning
+            service: takserver
+          annotations:
+            summary: "TAK CoT retention job {{ $labels.job_name }} failed"
+            description: "cot_router rows older than 24 h are not being deleted and the database will grow. Check the job log in takserver (it logs the failing step)."
+
+        - alert: TAKPostgresBackupFailed
+          expr: kube_job_failed{job="kube-state-metrics",namespace="takserver",job_name=~"backup-takserver-postgres-.*",condition="true"} == 1
+          for: 5m
+          labels:
+            severity: warning
+            service: backup
+          annotations:
+            summary: "TAK PostgreSQL backup job {{ $labels.job_name }} failed"
+            description: "The nightly TAK database dump failed; there is no fresh archive. Check the job log in takserver; see platform/backups."
+
+        # Baseline 2026-10-27: the last three runs took 134-140 min (activeDeadlineSeconds 6 h).
+        - alert: TAKPostgresBackupRunningLong
+          expr: |
+            (time() - kube_job_status_start_time{job="kube-state-metrics",namespace="takserver",job_name=~"backup-takserver-postgres-.*"}) > 10800
+            and on(namespace, job_name)
+            kube_job_status_active{job="kube-state-metrics",namespace="takserver",job_name=~"backup-takserver-postgres-.*"} > 0
+          for: 5m
+          labels:
+            severity: warning
+            service: backup
+          annotations:
+            summary: "TAK PostgreSQL backup {{ $labels.job_name }} has run for more than 3 hours"
+            description: "Normal runtime is ~2 h 20 min. A stuck dump holds a long snapshot on takserver-postgresql and may overlap cot-retention or the next schedule."

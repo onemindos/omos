@@ -97,10 +97,16 @@ self-deleting (`hook-delete-policy`), so they appear as short-lived Jobs during 
   renders identically (it always mounts `operator-oauth`). The Secret is referenced by name
   only. The seven tailscale CRDs come from templates and match live.
 - **nack**: live values equal `platform/nats/nack-values.yaml`, including
-  `jetstream.nats.url: null`. The controller therefore has no server URL and logs
-  reconcile timeouts today (also noted in `docs/STACK.md`). Adoption keeps that as is; the
-  follow-up fix must supply the connection through an existing Secret rather than a URL with
-  an embedded password. The nack chart has no CRDs (they live in `platform/nats/`).
+  `jetstream.nats.url: null`. The controller is nonetheless connected. It runs with
+  `-crd-connect`, so each Stream/KeyValue CR supplies its own `spec.servers`. That field was
+  set on every live CR with `kubectl patch` and is not in Git. All 38 CRs report `Ready=True`
+  with `observedGeneration` current (checked 2026-10-27). The only NACK errors are
+  `context deadline exceeded` during the 03:30 UTC `backup-nats-streams` window: 5 in
+  the 48h before 2026-10-27, all between 03:30:30 and 03:30:49. NACK retries after the
+  window. Outstanding: `spec.servers` embeds a password in the CR spec, readable by anyone
+  who can read these CRs. Rotate it, then supply the connection through an existing Secret
+  instead. The nack chart has no CRDs (they live in `platform/nats/`). The CRs are applied
+  by `platform-nats-streams` with `preventDelete: true`.
 
 ### Why the last three are last
 

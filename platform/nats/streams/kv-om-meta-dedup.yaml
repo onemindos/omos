@@ -9,3 +9,4 @@ spec:
   replicas: 3
   history: 1
   ttl: 30s
+  preventDelete: true

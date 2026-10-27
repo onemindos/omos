@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 1 — BUS (JetStream config)                               sync-wave: "2"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-nats-streams: the Stream / KeyValue CRs in platform/nats/streams/.
+# The NACK controller (edge-nack, wave 1) reconciles them into JetStream, so this
+# Application syncs after NACK. platform-nats does not apply this directory
+# (directory.recurse: false), so before this Application the CRs were applied by
+# hand with kubectl on 2026-07-07 and nothing reconciled them.
+#
+# Adoption safety:
+# - Every CR in Git matches the live CR spec, so the first sync changes no stream
+#   or bucket configuration. The only spec change is `preventDelete: true`.
+# - Every CR sets `preventDelete: true`: deleting a CR (or this Application)
+#   removes only the Kubernetes object. NACK keeps the JetStream stream and its data.
+# - prune is OFF and there is deliberately no resources-finalizer, so removing a
+#   file here or deleting this Application never deletes a CR.
+# - ServerSideApply: Git owns only the fields it sets. Live `spec.servers` was set
+#   out of band (kubectl patch, carries credentials) and stays untouched.
+# - kv-feed-config.yaml is excluded: the live bucket was created by an app (R1)
+#   and has no CR. Adopting it needs the full live config first (see that file).
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-nats-streams
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/nats/streams
+    directory:
+      recurse: false
+      exclude: "kv-feed-config.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nats
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

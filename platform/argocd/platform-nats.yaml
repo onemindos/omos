@@ -44,7 +44,12 @@ spec:
         - /spec/storageClassName
   syncPolicy:
     automated:
-      prune: true
+      # prune is OFF: this Application tracks the NATS StatefulSet (TIER-1). Removing
+      # or renaming a file here must never delete a live bus object. The StatefulSet
+      # also carries `argocd.argoproj.io/sync-options: Prune=false,Delete=false`,
+      # because the resources-finalizer above would otherwise cascade-delete it when
+      # this Application is deleted.
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
