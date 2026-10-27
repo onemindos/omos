@@ -22,6 +22,7 @@ Each page condenses the Git-owned documents named under "Sources" and was checke
 
 - Select and confirm context `do-nyc3-omos-cloud` first. The commands on these pages only read.
 - Change the cluster through a reviewed pull request and Argo CD. Never run `helm upgrade`, `helm rollback` or `helm uninstall` on a release that Argo CD has adopted, and never run `platform/install.sh` on this cluster (`docs/gitops/HELM-ADOPTION.md`).
+- Removing or renaming an Application file can delete everything that Application tracks, including a whole namespace and its volumes. Check the live finalizer and tracked resources first ([Argo CD](argocd.md)).
 - Before a change that touches storage, confirm the latest verified backup ([Backups and ops](backups-ops.md)). Never delete PVCs, namespaces or backup data without a fresh snapshot and explicit approval.
 - Never copy Secret values, keys or passwords into chat, Git, tickets or logs.
 - Recovery is complete only when the affected user workflow works, not when pods are Ready.

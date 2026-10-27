@@ -7,9 +7,9 @@ Sources: `platform/argocd/platform-legacy.yaml`, `platform/hermes/agent/RUNBOOK.
 ## Ownership and access
 
 - `platform-legacy` applies three paths: the Legacy agent (`platform/hermes/agent`), its sealed bridge secrets (`platform/hermes/bridge`) and the separate tier 2 `onemind-mcp` server (`platform/hermes/mcp`, runbook `docs/operations/onemind-mcp.md`). Changing or pruning `platform-legacy` therefore also affects `onemind-mcp`. `platform-hermes-fresh` applies `platform/hermes/fresh`.
-- `platform-legacy` prunes, carries the cascade finalizer and applies the `hermes` Namespace and the `hermes-data` PVC (volume reclaim policy `Delete`). Deleting or renaming the Application, including by removing its file from `platform/argocd/`, would delete that namespace with everything in it, `hermes-fresh` included, and the agent's volume. See [Argo CD](argocd.md) and `docs/gitops/APP-FINALIZERS.md`.
+- `platform-legacy` prunes, carries the cascade finalizer and applies the `hermes` Namespace and the `hermes-data` PVC (volume reclaim policy `Delete`). Deleting or renaming the Application, including by removing its file from `platform/argocd/`, would delete that namespace with everything in it, `hermes-fresh` included, and the agent's volume. See [Argo CD](argocd.md); `docs/gitops/APP-FINALIZERS.md` does not list `platform-legacy`.
 - Hermes always connects to `nats://localhost:4222`, where the sidecar runs a leaf node configured from the Secret `hermes-leaf-conf`. Do not copy this pattern into new services; they connect to the cluster NATS directly.
-- The pod cannot change the cluster: at most it holds the read-only `hermes-observer` identity, which cannot read Secrets, ConfigMaps or logs. Run cluster commands from an admin workstation.
+- The pod has no Kubernetes write access: its only API identity is the read-only `hermes-observer`, which cannot read Secrets, ConfigMaps or logs. Its `gh` token, however, is far more powerful than it needs to be and is due to be replaced with a narrow one (`RUNBOOK.md`, section 5). Argo CD deploys whatever reaches `main`, and GitHub does not enforce branch protection on this repository (`hermes-recoverability-plan.md`, section 2.3), so a push from the pod could reach production. Run cluster commands from an admin workstation.
 - The dashboards are tailnet-only.
 
 ## Investigate (read-only)

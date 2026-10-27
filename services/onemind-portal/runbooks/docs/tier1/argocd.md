@@ -9,7 +9,7 @@ Sources: `docs/gitops/ARGOCD-SELF-MANAGEMENT.md`, `docs/gitops/HELM-ADOPTION.md`
 - Argo CD manages itself through `platform-argocd`: chart `argo-cd` at the version pinned in `platform/argocd/platform-argocd.yaml`, release `argocd`, values in `platform/values/argocd.yaml`. The adoption sync on October 25, 2026 changed only tracking annotations and restarted no pods. The Application is on manual sync, without prune, `Replace` or a finalizer.
 - The `applications`, `applicationsets` and `appprojects` CRDs are outside its sync scope (`crds.install=false`). On a chart bump they are updated by hand first; the procedure is in `ARGOCD-SELF-MANAGEMENT.md`.
 - Never run `helm upgrade`, `helm rollback` or `helm uninstall argocd` for a normal change: uninstall deletes every object in the release record, including Argo CD itself. Never run `platform/install.sh` on this cluster.
-- `app-of-apps` prunes. Removing an Application file deletes the live Application, and if that Application carries `resources-finalizer.argocd.argoproj.io` its workloads are deleted with it. Check `docs/gitops/APP-FINALIZERS.md` before removing or renaming an Application.
+- `app-of-apps` prunes. Removing an Application file deletes the live Application. If that Application carries `resources-finalizer.argocd.argoproj.io`, everything it tracks is deleted with it, and a tracked Namespace takes every object in it, including objects that other Applications own. Before removing or renaming an Application, check the live object with the two finalizer commands under "Investigate". Do not rely on `docs/gitops/APP-FINALIZERS.md` for this, because its list is incomplete. On October 27, 2026, 25 live Applications carried the finalizer and 18 of them were missing from it, among them the tier 1 `platform-takserver`, `platform-nats`, `platform-core`, `platform-auth-helm`, `platform-auth-infra`, `platform-ops` and `platform-legacy`.
 
 ## Investigate (read-only)
 
@@ -17,6 +17,9 @@ Sources: `docs/gitops/ARGOCD-SELF-MANAGEMENT.md`, `docs/gitops/HELM-ADOPTION.md`
 kubectl --context do-nyc3-omos-cloud -n argocd get applications
 kubectl --context do-nyc3-omos-cloud -n argocd get deployments,statefulsets,pods
 kubectl --context do-nyc3-omos-cloud -n argocd logs statefulset/argocd-application-controller --tail=100
+# Before removing or renaming an Application: does deleting it cascade, and does it track a Namespace or PVC?
+kubectl --context do-nyc3-omos-cloud -n argocd get application <name> -o jsonpath='{.metadata.finalizers}'
+kubectl --context do-nyc3-omos-cloud -n argocd get application <name> -o jsonpath='{range .status.resources[*]}{.kind}{" "}{.namespace}{" "}{.name}{"\n"}{end}' | grep -E '^(Namespace|PersistentVolumeClaim) '
 ```
 
 OutOfSync means live state differs from Git: read the diff before syncing anything. Before a manual sync of `platform-argocd`, `argocd app diff platform-argocd` must show no unintended change to a Deployment, StatefulSet, Service, ConfigMap, Role or ClusterRole; an unintended pod-template change means fix Git or the values, not the cluster.

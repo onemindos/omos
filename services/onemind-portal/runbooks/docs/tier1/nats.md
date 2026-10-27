@@ -7,7 +7,7 @@ Sources: root `CLAUDE.md` ("Bus Authority", "NATS Streams"), `platform/nats/OPER
 ## Ownership
 
 - `platform-nats` applies `platform/nats` and owns the `nats` StatefulSet. The Helm release `nats` still owns configuration, Services and related resources, with its passwords in an out-of-band values file. Never run a Helm upgrade that overwrites the Git-owned StatefulSet; the full Helm-to-Argo migration, especially authentication and certificates, is unfinished.
-- Stream and KeyValue definitions are kept in `platform/nats/streams/`, and the NACK controller (`edge-nack`) reconciles Stream and KeyValue resources into JetStream. `platform-nats` does not recurse into that directory, so confirm how a definition reaches the cluster before relying on it. The older Python provisioning scripts are not the source of truth.
+- Stream and KeyValue definitions are kept in `platform/nats/streams/`, and the NACK controller (`edge-nack`) reconciles Stream and KeyValue resources into JetStream. `platform-nats` does not recurse into that directory, so before relying on a definition, confirm how it reaches the cluster: look in `platform/argocd/` for an Application whose source path is `platform/nats/streams`. The older Python provisioning scripts are not the source of truth.
 - Subjects follow the locked grammar in `docs/NATS-DOCTRINE.md`. Do not add a subject prefix without updating the doctrine and the affected schemas and consumers.
 - Server TLS is issued by cert-manager inside the namespace; see [cert-manager](cert-manager.md).
 
