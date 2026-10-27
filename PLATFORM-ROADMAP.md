@@ -1184,12 +1184,16 @@ shared file service under Argo CD; it does not complete or bypass phase gates.
 
 | Work | Status | Evidence |
 |---|---|---|
-| Nextcloud GitOps deployment and full-library Mac/Android sync | Deployed and healthy; native client setup and acceptance in progress | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425) |
+| Nextcloud GitOps deployment and full-library Mac/Android sync | Server healthy; Mac renamed-root mapping repaired and uploads verified 2026-10-26; 300 GiB headroom proposal awaits cost approval/deployment; full device/recovery acceptance pending | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425); [PR #426](https://github.com/onemindos/omos/pull/426); current repair/headroom PR |
 
 Acceptance requires actual edits flowing in both directions, offline and conflict
 checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
-The native Mac upload has started. Full transfer, two-way device acceptance and
-recovery verification remain distinct from the observed healthy server deployment.
+The native Mac upload resumed after its original folder/journal was reconnected to
+the renamed directory. The audited library is now approximately 159 GiB with a
+36.67 GiB archive; the requested 300 GiB PVC addresses verified local-storage chunk
+assembly overhead. The additional $10/month requires human approval before merge.
+No capacity expansion is claimed from source changes alone. Full transfer, two-way
+device acceptance and recovery verification remain separate gates.
 
 ## User-directed Paperclip installation — 2026-10-23
 
