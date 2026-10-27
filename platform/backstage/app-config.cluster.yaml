@@ -48,6 +48,23 @@ catalog:
   # from catalog/apps.yaml; every other kind stays as in app-config.yaml.
   rules:
     - allow: [Component, System, API, Resource, Location, Domain]
+  # GitHub discovery (catalog-backend-module-github; images without it ignore this block). Reuses
+  # the read-only GitHub App under integrations.github: no new credential and no webhook ingress.
+  # Registers a repository only when its main branch has /catalog-info.yaml; forks and archived
+  # repositories are skipped. Keep the path literal: a wildcard also matches the Scaffolder
+  # skeletons. The rules above apply to discovered entities. Rollback: delete this block.
+  providers:
+    github:
+      onemindos:
+        organization: onemindos
+        catalogPath: /catalog-info.yaml
+        filters:
+          branch: main
+          allowForks: false
+        validateLocationsExist: true
+        schedule:
+          frequency: {minutes: 30}
+          timeout: {minutes: 3}
 
 argocd:
   baseUrl: https://argocd.tail717ba0.ts.net

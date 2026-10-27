@@ -30,6 +30,33 @@ For a recovery exercise, create a Job from the CronJob and inspect its `restoreV
 
 Home reads shared app links from registered Catalog Components with an Open application link or launcher URL annotation, refreshing each minute. Keep Git-owned catalog changes in both apps.yaml copies for mounted entries, or use the shared-service template and register the merged main-branch descriptor URL. The bundled directory JSON supplies legacy category compatibility and offline export defaults; adding a registered shared service no longer requires a frontend rebuild. Personal shortcuts use account-backed UserSettings and remain separate from shared inventory. Cluster catalog identities are an explicit reviewed snapshot from `scripts/snapshot-cluster.cjs`, not automatic discovery. Stable hash suffixes prevent link/workload identity collisions. Rerun and review the snapshot when adding or removing workloads. The snapshot script updates both development and production copies. user enrollment must update both org.yaml copies. The operations panel queries the live cluster every minute and marks unavailable sources and stale results. Existing unrelated unhealthy workloads are shown, not hidden.
 
+## GitHub discovery
+
+`@backstage/plugin-catalog-backend-module-github` is pinned at `0.14.0`, the version in
+the Backstage `1.55.3` release manifest. `catalog.providers.github.onemindos` in
+`app-config.cluster.yaml` scans the `onemindos` repositories the GitHub App can see every
+30 minutes and registers `https://github.com/onemindos/<repo>/blob/main/catalog-info.yaml`
+only where the `main` branch contains that file (`validateLocationsExist`). Forks and
+archived repositories are skipped, and `catalog.rules` applies to everything discovered
+(no User, Group or Template). Keep the path literal: a `**/catalog-info.yaml` wildcard
+would also ingest the Scaffolder skeletons under
+`services/onemind-portal/templates/*/skeleton/`.
+
+The provider authenticates with the existing organization-owned read-only GitHub App
+(`integrations.github`, sealed in `backstage-plugin-integrations`). No credential, webhook
+ingress or event producer is added: a new repository descriptor is registered on the
+next scan, and edits to registered descriptors follow normal catalog processing. The App's
+repository selection is the access boundary (see the
+[installation record](../../docs/backstage-roadmap/COMMUNITY-PLUGIN-INSTALLATION.md)).
+On 2026-10-27 no organization repository had a root `catalog-info.yaml` on `main`, so the
+provider registers nothing until one is merged. The module also lets Catalog Import
+analyze GitHub repository URLs; registration still needs `catalog.location.create`
+(administrators only).
+
+The block takes effect only once a portal image built from this source is pinned in
+`deployment.yaml`; older images ignore it. Rollback: delete `catalog.providers.github`
+and let Argo sync (no image build), or drop the module in the next image.
+
 ## Release checks
 
 Use the official Backstage Kubernetes, Docker, OIDC, permissions and Kubernetes integration documentation. Require: immutable dependency install, TypeScript check, backend/container build, server-side manifest validation, healthy rollout, verified OIDC callback and identity, authenticated catalog and live status, denied anonymous APIs, read-only cluster permissions, and an encrypted backup with successful restore verification. Verify actual browser rendering before replacing Homepage.
