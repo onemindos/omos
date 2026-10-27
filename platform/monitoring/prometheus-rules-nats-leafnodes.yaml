@@ -18,9 +18,11 @@ spec:
     #
     # Each leaf rule fires only while the exporter reads at least one hub server (the
     # "and on() count(...)" guard), so an exporter outage raises NATSLeafzExporterDown
-    # instead of a NATSLeafnodeDown for every leaf. All leaves share one severity: the
-    # stack's default inhibit rules match on alertname, so a critical NATSLeafnodeDown
-    # would hide the warning ones.
+    # instead of a NATSLeafnodeDown for every leaf.
+    # All leaves share one severity: the stack's default inhibit rules match on alertname,
+    # so a critical NATSLeafnodeDown would hide the warning ones. Summaries spell out the
+    # leaf name: annotation templates see only the expression's labels, not the static
+    # "leaf" label, and absent() on a regex matcher returns only job.
     - name: onemind.nats.leafnodes
       interval: 30s
       rules:
@@ -34,7 +36,7 @@ spec:
             service: nats
             leaf: hermes-legacy-leaf
           annotations:
-            summary: "NATS leaf {{ $labels.leaf }} is not connected to the hub"
+            summary: "NATS leaf hermes-legacy-leaf is not connected to the hub"
             description: >-
               No hub server has a leafnode connection from hermes-legacy-leaf, the nats-leaf sidecar of
               hermes/hermes-legacy. The Hermes agent is cut off from the bus. Check that container's log.
@@ -52,7 +54,7 @@ spec:
             service: nats
             leaf: zeus-mac
           annotations:
-            summary: "NATS leaf {{ $labels.leaf }} is not connected to the hub"
+            summary: "NATS leaf zeus-mac is not connected to the hub"
             description: >-
               The Mac edge leaf has had no connection through the omos-nats Tailscale load balancer for
               15 minutes, so the Mac's edge bridges are off the bus. The cloud bus keeps running.
