@@ -15,7 +15,7 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 This narrow refresh does not recertify the older inventory below. Live cluster:
 4 nodes, 70 Argo Applications (68 Synced/Healthy); only pre-existing Matrix
 OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending pods.
-All nodes are below 78% requested CPU/memory. OpenCost duplicate KSM emission is off.
+All nodes were below 78% requested CPU/memory at that refresh. On 2026-10-27 hub-core memory requests were 79%, 96% and 71% (read-only `kubectl describe node`). OpenCost duplicate KSM emission is off.
 OpenChoreo observability core/modules are deployed on existing backends, with
 an authenticated tailnet Observer, real console/MCP pilot logs and metrics, and
 verified encrypted SQLite backup/isolated restore. See the timestamped
@@ -65,10 +65,10 @@ This entry does not refresh historical counts or certify a working route.
 | Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
 | Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4) and `nats` UIs (5) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`) that take ownership once synced; until then they are untracked |
 | Namespaces | 48 |
-| Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
+| Nodes | 5 at capture: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB). 4 on 2026-10-27: the ecosystem pool (autoscale 1–4) was at 1 node |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
 | Other external listeners | `tak-tailnet` Tailscale LB (TAK, 8089/8443/8446/64738), `omos-nats` Tailscale LB |
-| Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 (see [Mutable image tags](#mutable-image-tags)) |
+| Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 at capture; 0 running on 2026-10-27 (see [Mutable image tags](#mutable-image-tags)) |
 
 ## Tier definitions
 
@@ -171,7 +171,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
-| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (`:latest`); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
+| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (digest-pinned 2026-10-23); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
@@ -215,7 +215,14 @@ Gaps beyond the eleven releases:
 
 ## Mutable image tags
 
-31 container references use `:latest`, a bare image name, or `run-latest` and so are not reproducible. Renovate (`renovate.json`) is deliberately **not** pinning digests for these yet; pinning is a separate, deliberate change because it will touch many manifests at once.
+> **Resolved 2026-10-23.** The running references below were pinned to their observed
+> image digests ([running-image-pins-2026-10-23.md](operations/running-image-pins-2026-10-23.md)).
+> A read-only check on 2026-10-27 (`kubectl get pods -A`, 141 unique container images)
+> found none on `:latest` or a bare name. The only remaining `:latest` under `platform/`
+> is `platform/parked/omos-mission-engine/`, which has no Application.
+> The Kyverno `disallow-latest-image-tag` policy is still in `Audit` mode.
+
+At capture (2026-10-09), 31 container references used `:latest`, a bare image name, or `run-latest` and so were not reproducible:
 
 | Namespace | Workloads |
 |-----------|-----------|
