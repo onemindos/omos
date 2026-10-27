@@ -44,3 +44,7 @@ Python subscribers — see launchers above. All services connect to
 `nats://nats.nats.svc.cluster.local:4222` (K8s) or via edge leaf node, speak the
 OneMind subject grammar (`cmd.*`, `tel.*`, `evt.*`, `svc.*`), and deploy via
 `ghcr.io/onemindos/{service}:latest` with manifests in `platform/`.
+
+In K8s the NATS servers accept clients only from the namespaces listed in
+`platform/nats/network-policy.yaml`: a service in another namespace needs a rule
+there (see `platform/nats/OPERATIONS.md`), or its connections time out silently.
