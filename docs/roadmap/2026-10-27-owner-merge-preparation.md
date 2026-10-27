@@ -1,17 +1,43 @@
 # Owner-item merge preparation — 2026-10-27
 
-Zeus asked Codex to resolve the straightforward items from dcarku's 46-PR batch,
-prepare them for merge and leave Claude a checked continuation record. This is
-source/review preparation. No PR was merged, feature activated, live Secret
-changed or deployment synced by this task. Phase 6 remains In progress; Phases
-7/8 remain Not started. Follow the existing layer and merge rules in
-`PLATFORM-ROADMAP.md`, `CLAUDE.md` and `CONTRIBUTING.md`.
+Zeus asked Codex to prepare dcarku's 46-PR batch and leave Claude a checked
+continuation record. He subsequently approved all the remaining owner decisions
+and retained Telegram. **Owner approval is settled for PRs #495–#540.** Read the
+bounded authorization and approved decisions below before continuing. Technical
+review, credentials, CI, dependency order and rollout acceptance still apply.
+No PR was merged or live configuration changed by this recording task. Phase 6
+remains In progress; Phases 7/8 remain Not started.
+
+## Owner authorization — 2026-10-27
+
+In this Codex conversation, after the four remaining owner requirements and the
+foundation merge delegation were explained, Zeus stated:
+
+> I APPROVE THEM AND KEEP THE CHANNEL TELEGRAM
+>
+> I APROVE EVERYTHING ELSE ARE WELL MAKE SURE CLAUDE KNOWS IT SO IT CAN BE READY FOR IT SO ALL OF THE PR'S IT DID IS READY FOR MERGE
+
+Claude Code is authorized to review, fix, validate and execute sequential GitHub
+merges on Zeus's behalf for dcarku's **46 PRs #495–#540**, including foundation
+PRs in this batch. This is the human approval required by the default foundation
+merge rule, not a standing grant for unrelated PRs or infrastructure. Use the
+normal Git/Argo delivery path and satisfy the concrete technical gates below.
+The handoff PR #542 carries this record.
+
+Do not ask Zeus again for the settled choices. Handle routine fixes, builds,
+rebases, supported-runtime tests, credential sealing from existing authorized
+sources and release ordering. If one PR cannot proceed because an actual
+credential/configuration is unavailable or a technical check cannot be repaired,
+hold that PR, continue the rest and report the remaining blockers together at
+the end. Approval does not create credentials, waive checks or make a skipped
+PR merged. Do not mark every Draft ready before its own technical gates pass.
 
 ## Decisions and source candidates
 
-The recommendations below implement the user's delegated routine choices. They
-do not approve destructive retention, new client access, directory disclosure,
-policy enforcement or credential/billing changes.
+The table preserves the initial source-preparation dispositions. Owner decisions
+have now been approved as recorded below; technical integration/release holds
+still apply. Do not expand beyond the reviewed PR scopes or change billing or
+provider settings to work around release failures.
 
 | PR | Disposition | Next action |
 | --- | --- | --- |
@@ -117,29 +143,52 @@ necessary, without bypassing tests.
    unchanged user/machine authorization, provider task success/no access errors
    and the new runbook pages. Record actual receipts; source merges alone do not
    complete these steps.
-6. For #539, keep the current Hermes-only deployment until additional client
-   identities/access are chosen. Later generate distinct tokens without exposing
-   them, seal/mount the file, build/pin the MCP image, allow only intended client
-   paths and test anonymous denial and per-client audit attribution. All clients
-   retain the same existing tool permissions.
+6. For #539, derive intended existing client identities from the actual approved
+   client configuration, then generate distinct tokens without exposing them,
+   seal/mount the file, build/pin the MCP image, allow only intended client paths
+   and test anonymous denial and per-client audit attribution. Source merge does
+   not require a new client. Leave the existing Hermes deployment intact if no
+   additional client configuration is present; do not invent client identities
+   or grant additional tool permissions.
 
-## Decisions still needing Zeus
+## Approved decisions — do not request these approvals again
 
-- #514: choose the CoT retention window **before merge**; merging enables actual
-  deletion on the next scheduled run, rather than a separate feature toggle.
-- #523: confirm Headlamp's shared ServiceAccount may become view-only and decide
-  whether portal health-check access stays.
-- #533: choose the alerts channel/destination and supply its credentials through
-  the secure local workflow. #540 routing alone does not deliver alerts to a person.
-- #537: approve the Enforce policies and decide the bootstrap-race disposition.
-  Recommendation: resolve namespace-label bootstrap ordering before enforcement;
-  no admission-policy change is authorized or implemented here.
-- #538: choose directory groups and approve their visibility before enabling
-  synchronization. Keep it disabled until its credential, access binding,
-  working stale-sync alert and image gates pass. Its larger source change was
-  not fully reviewed in this preparation pass.
-- Additional #539 clients: identify them before onboarding; source merge does
-  not require new clients or credentials.
+- **#514: 24-hour CoT retention is approved**, including deletion of older
+  accumulated history on the scheduled run after merge. Verify the documented
+  recovery/preflight and bounded SQL behavior before merging; preserve backups.
+- **#523: the shared Headlamp ServiceAccount may become view-only; retain portal
+  health-check ingress.** Keep user-owned admin access, merge #503 first and
+  complete the child rebase/main-CI gates.
+- **#533: keep Telegram.** Channel approval is complete. Use the intended
+  existing alerts destination and valid bot credentials from authorized secure
+  configuration, seal them and verify decryption and actual delivery. If the
+  destination or token is unavailable, record that concrete credential/setup
+  blocker and continue other PRs. Do not merge an unconfigured receiver: the
+  required SealedSecret and delivery prerequisites remain. #540 routing alone
+  does not deliver alerts to a person.
+- **#537: Enforce is approved for `disallow-latest-image-tag` and
+  `require-namespace-layer-label`. Fix the bootstrap namespace-labeling race
+  before enforcement**, as recommended. Resolve the implementation through the
+  scoped GitOps workflow, then obtain main-targeted CI and admission/rebuild
+  verification. The other two policies stay Audit.
+- **#538: source merge and the documented directory-sync scope/visibility are
+  approved.** Use the existing intended portal-access groups from actual
+  configuration; the reviewed users' names, emails and published group
+  memberships may be visible as documented. Preserve the superuser-group
+  exclusions. Do not invent a group list or broaden portal access. Source can
+  merge disabled; enabling still needs valid credentials, verified bindings,
+  a working stale-sync alert, the image release and actual acceptance. Keep it
+  disabled if those inputs are unavailable. Its larger source change still needs
+  full source review by the integrating agent.
+- **#539: per-client credentials for the intended existing MCP clients are
+  approved.** Discover their actual configuration, preserve current tool
+  permissions and complete the implementation/acceptance steps above. No
+  additional personal approval is needed for the source merge.
+
+For the other PRs in #495–#540, owner authorization to review, repair and merge is
+also complete. Draft state, red/missing checks, conflicts, parent dependencies,
+unavailable credentials and image/rollout ordering are implementation gates for
+Claude to resolve; they are not a reason to ask again for these owner choices.
 
 Local raw logs and bounded review notes are under
 `/tmp/omos-pr-merge-prep-20261027/` on the preparation Mac. This tracked document

@@ -70,6 +70,15 @@ selected future KubeVela/Crossplane ownership split is recorded in
 implementation/coexistence acceptance and per-app transfers remain pending.
 Current foundation/shared-service and machine read-only boundaries are unchanged.
 
+**Bounded owner authorization (2026-10-27):** Zeus approved the owner decisions
+for dcarku's 46 PRs **#495–#540**, retained Telegram and authorized Claude Code
+to execute these reviewed GitHub merges on his behalf, including foundation
+PRs. This satisfies the table's human-merge requirement for this batch only;
+it is not standing authority for unrelated changes. The
+[approval record and technical merge queue](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+keep CI, credential, dependency and rollout gates explicit. Do not ask again for
+settled choices; continue past an actually blocked PR and report it at the end.
+
 ### Namespace map (live cluster, 2026-10-18)
 
 | Namespace | Main workloads | Layer | Target |
@@ -1318,14 +1327,15 @@ Capacity/independent recovery remain pending owner choices. Phase 6 stays In pro
 
 ## User-directed PR merge preparation — 2026-10-27
 
-Zeus delegated straightforward owner-item preparation and requested a checked
-handoff for Claude. [Merge queue and evidence](docs/roadmap/2026-10-27-owner-merge-preparation.md)
-records #524 (redirect alias with no new OIDC callback), #534 (OMOS-only discovery)
-and #539 (source-only MCP identities) as source-review candidates. #532/#535 keep
-their documentation-release/integration holds. Destructive retention, access,
-credentials, directory visibility and admission enforcement remain distinct
-decisions. No merge, image release, activation or deployment is claimed by this
-preparation. Phase 6 remains In progress; Phases 7/8 remain Not started.
+Zeus initially delegated straightforward owner-item preparation, then approved
+all owner decisions and merge execution for dcarku's #495–#540 batch, retaining
+Telegram. [Merge queue, approval and evidence](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+records the source candidates, approved 24-hour retention/read-only Headlamp/
+Telegram/enforcement choices, and #532/#535's remaining technical holds. The
+namespace-label bootstrap race must be fixed before enforcement. Technical
+credential, CI, image and rollout gates still apply; no approval is a claim that
+they passed. No merge or deployment is claimed by this recording task. Phase 6
+remains In progress; Phases 7/8 remain Not started.
 
 User-directed MCP coverage follow-through (2026-10-27): expansion prepared from the
 initial NATS/Prometheus slice to seven configured app integrations, 12 tools and an
