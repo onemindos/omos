@@ -2,9 +2,17 @@
 #
 # Safety:
 #   * validationFailureAction: Enforce on disallow-latest-image-tag and require-namespace-layer-label only
-#     (no live violation on 2026-10-27). Admission denies a CREATE that violates and an UPDATE that adds a
-#     violation; allowExistingViolations still admits updates to objects that already violated. A rule-level
-#     validate.failureAction would override this field in Kyverno 1.19.1; none is set.
+#     (no live violation on 2026-10-27). A rule-level validate.failureAction would override this field in
+#     Kyverno 1.19.1; none is set.
+#     - require-namespace-layer-label denies a CREATE that violates and an UPDATE that adds a violation;
+#       allowExistingViolations admits updates to namespaces that already violated.
+#     - The image rules match CREATE only. Kyverno 1.19.1 never applies allowExistingViolations to a rule
+#       with preconditions: validateOldObject re-checks the raw preconditions in matchResource, which fails
+#       even for a constant condition, so every UPDATE of an already-violating object would be denied
+#       (finalizer, label or ownerReference patches on a Pod admitted while the webhook was down).
+#       Every Pod a controller makes is still a CREATE, background scans run as CREATE, and an in-place
+#       image change to :latest on UPDATE is reported, not denied. Re-check on every Kyverno upgrade
+#       (test_admission_update_skips_image_rules).
 #     The installed CRD marks this spec field deprecated (and kyverno.io/v1 ClusterPolicy itself). On every Kyverno
 #     upgrade, check the release notes for it, then confirm both policies still show Enforce (kubectl get
 #     clusterpolicy) and that `kubectl create namespace enforce-probe --dry-run=server` and
@@ -61,6 +69,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              operations:
+                - CREATE
       context: &historical-workload-context
         - name: retiredWorkloadHistory
           variable:
@@ -111,6 +121,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              operations:
+                - CREATE
       context: *historical-workload-context
       preconditions: *assess-admission-or-current
       skipBackgroundRequests: true

@@ -31,7 +31,6 @@ RESOURCE_POLICY = "require-requests-limits"
 GUARDED_RULES = ("require-image-tag", "validate-image-tag", "validate-resources")
 # Admission enforces these; the other policies stay Audit (see the policy file header).
 ENFORCED_POLICIES = {IMAGE_POLICY, "require-namespace-layer-label"}
-PRE_EXISTING = "pre-existing violations are allowed"
 BAD_CONTAINER = {"name": "workload", "image": "busybox:latest", "resources": {}}
 PROVIDER_BUDGET_SKIP = {
     "provider-system-pod", "provider-system-deployment", "provider-system-daemonset",
@@ -439,12 +438,11 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 policy = RESOURCE_POLICY if rule == "validate-resources" else IMAGE_POLICY
                 key = (name, policy, prefix + rule)
                 with self.subTest(mode=mode, resource=name, rule=rule):
-                    if mode == "admission-update" and policy in ENFORCED_POLICIES and result == "fail":
-                        # The CLI simulates UPDATE with oldObject == object, so Enforce with
-                        # allowExistingViolations admits the unchanged violation. The message proves the
-                        # rule was evaluated rather than skipped by the history precondition.
-                        self.assertEqual(self.results[mode].get(key), "skip")
-                        self.assertIn(PRE_EXISTING, self.messages[mode].get(key, ""))
+                    if mode == "admission-update" and policy == IMAGE_POLICY:
+                        # The Enforce image rules match CREATE only (see the policy header): Kyverno
+                        # 1.19.1 never applies allowExistingViolations to a rule with preconditions, so
+                        # matching UPDATE would deny every update of an already-violating object.
+                        self.assertIsNone(self.results[mode].get(key))
                     else:
                         self.assertEqual(self.results[mode].get(key), result)
 
@@ -457,7 +455,7 @@ class KyvernoHistoryEngine(unittest.TestCase):
     def test_admission_create_evaluates_even_historical_status(self):
         self.assert_guarded_results("admission-create", False)
 
-    def test_admission_update_evaluates_even_historical_status(self):
+    def test_admission_update_skips_image_rules(self):
         self.assert_guarded_results("admission-update", False)
 
     def test_other_security_rules_still_assess_terminal_pods(self):
