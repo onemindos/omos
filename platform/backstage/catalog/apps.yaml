@@ -6920,7 +6920,7 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-nats
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: edge-nack,platform-nats,platform-nats-tools
+    onemind.io/argocd-apps: edge-nack,platform-nats,platform-nats-streams,platform-nats-tools
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: nats
     backstage.io/kubernetes-namespace: nats

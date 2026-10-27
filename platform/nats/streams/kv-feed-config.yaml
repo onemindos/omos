@@ -1,3 +1,16 @@
+# NOT APPLIED: excluded from platform-nats-streams (platform/argocd/platform-nats-streams.yaml).
+#
+# The live bucket KV_feed-config was created by an application, not by this CR, and
+# there is no live KeyValue CR for it. It is R1 (Raft group S-R1F-*, leader nats-2, per
+# surveyor on 2026-10-27). If this CR were applied, NACK would call UpdateKeyValue with
+# the full config below and change the live bucket in place. Apps that create the
+# bucket with their own config could then fail with "stream name already in use with a
+# different configuration".
+#
+# replicas matches live (1). history: 10 and the other unset fields (ttl, maxBytes) are
+# NOT verified against the live bucket. Before removing the exclusion, run
+# `nats kv info feed-config` and make this spec match it exactly. Move to R3 in a
+# separate change after that, as one deliberate edit of `replicas`.
 apiVersion: jetstream.nats.io/v1beta2
 kind: KeyValue
 metadata:
@@ -6,5 +19,6 @@ metadata:
 spec:
   bucket: feed-config
   storage: file
-  replicas: 3
+  replicas: 1
   history: 10
+  preventDelete: true
