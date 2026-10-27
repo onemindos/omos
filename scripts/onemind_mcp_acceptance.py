@@ -44,7 +44,7 @@ async def observe_rollout():
 
 async def main():
     token = os.environ.get("ONEMIND_MCP_TOKEN")
-    if not token:
+    if not token or os.environ.get("ONEMIND_MCP_TOOLSET_REVISION") != "app-coverage-v2":
         print(json.dumps({"phase": "waiting_for_legacy_rollout", **await observe_rollout()}, indent=2))
         return 75
     # Check only the owned non-secret keys; never export the volume-managed config.
@@ -83,6 +83,19 @@ async def main():
                         raise RuntimeError("Unrecognized MCP result error flag")
                     if error_flag:
                         raise RuntimeError(f"{name} failed; no response body exported")
+                    if name == "apps_list":
+                        catalog = payload.get("structuredContent", payload.get("structured_content"))
+                        if not catalog:
+                            catalog = json.loads(next(item["text"] for item in payload["content"] if item.get("type") == "text"))
+                        entries = catalog["apps"]
+                        report["catalog"] = {
+                            "domains": len(entries),
+                            "configured": sorted(item["id"] for item in entries if item["access"] == "configured"),
+                            "blocked": sorted(item["id"] for item in entries if item["access"] == "blocked"),
+                        }
+                        assert report["catalog"]["domains"] == 32
+                        assert len(report["catalog"]["configured"]) == 7
+                        assert all(not item["tools"] for item in entries if item["access"] == "blocked")
                     report["tools"][name] = "passed"
                 resources = await session.list_resources()
                 assert "onemind://apps" in {str(resource.uri) for resource in resources.resources}
