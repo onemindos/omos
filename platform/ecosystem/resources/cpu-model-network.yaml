@@ -17,3 +17,14 @@ spec:
     ports:
     - protocol: TCP
       port: 11434
+  # OneMind MCP exposes only reviewed inventory GETs; no inference/download tools.
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: hermes
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: onemind-mcp
+    ports:
+    - protocol: TCP
+      port: 11434
