@@ -1,0 +1,144 @@
+# Bake-off candidate A: always-on Syncthing peer holding the vault as plain files.
+# The vault-git sidecar commits every change into a git dir outside the synced folder,
+# so Syncthing never replicates .git and every edit (phone, Mac, agent) is recoverable.
+#
+# Layout on the PVC:
+#   /var/syncthing/config     Syncthing home (STHOMEDIR)
+#   /var/syncthing/vault      synced folder (add it in the GUI with this path)
+#   /var/syncthing/git        git dir for the vault (never shared)
+#
+# GUI stays on 127.0.0.1 inside the pod; reach it with
+#   kubectl -n vault port-forward statefulset/vault-sync 8384:8384
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-git
+data:
+  commit-loop.sh: |
+    #!/bin/sh
+    set -eu
+    export GIT_DIR=/var/syncthing/git/vault.git
+    export GIT_WORK_TREE=/var/syncthing/vault
+    export HOME=/tmp
+    interval="${COMMIT_INTERVAL_SECONDS:-60}"
+
+    until [ -d "$GIT_WORK_TREE" ]; do
+      echo "waiting for $GIT_WORK_TREE"
+      sleep "$interval"
+    done
+
+    if [ ! -d "$GIT_DIR" ]; then
+      mkdir -p "$GIT_DIR"
+      git init --initial-branch=main
+    fi
+    git config user.name "vault-git"
+    git config user.email "vault-git@onemindos.dev"
+    # Syncthing internals and per-device UI state are not vault content.
+    cat > "$GIT_DIR/info/exclude" <<'EOF'
+    .stfolder
+    .stversions/
+    .stignore
+    .obsidian/workspace*.json
+    EOF
+
+    while true; do
+      git add -A
+      if ! git diff --cached --quiet; then
+        git commit --quiet -m "vault: snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        if [ -n "${GIT_REMOTE_URL:-}" ]; then
+          git push --quiet "$GIT_REMOTE_URL" HEAD:main || echo "push failed; will retry next cycle"
+        fi
+      fi
+      sleep "$interval"
+    done
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-sync
+  annotations:
+    tailscale.com/hostname: "vault-sync"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector: {app: vault-sync}
+  ports:
+    - {name: sync-tcp, port: 22000, targetPort: 22000, protocol: TCP}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vault-sync
+spec:
+  serviceName: vault-sync
+  replicas: 1
+  selector:
+    matchLabels: {app: vault-sync}
+  template:
+    metadata:
+      labels: {app: vault-sync}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: syncthing
+          # syncthing/syncthing:2.1.6 (multi-arch index). Non-root start is supported:
+          # the image entrypoint execs syncthing directly when uid != 0.
+          image: syncthing/syncthing:2.1.6@sha256:4d0281bdcb4ed9baf503d251d0544ddd856f49fce3f114056257ae172b7fb670
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          env:
+            - {name: STGUIADDRESS, value: "127.0.0.1:8384"}
+            - {name: STHOMEDIR, value: /var/syncthing/config}
+          ports:
+            - {name: sync-tcp, containerPort: 22000, protocol: TCP}
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {cpu: '1', memory: 512Mi}
+          livenessProbe:
+            exec:
+              command: [sh, -c, "curl -fsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -q OK"]
+            periodSeconds: 60
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command: [sh, -c, "curl -fsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -q OK"]
+            periodSeconds: 30
+          volumeMounts:
+            - {name: data, mountPath: /var/syncthing}
+        - name: vault-git
+          # alpine/git:v2.54.0 (multi-arch index)
+          image: alpine/git:v2.54.0@sha256:ce84fd6a057b4dc5cf5009da2dd832f1c6d096c1984bf50496cf3c256402264d
+          command: [/bin/sh, /scripts/commit-loop.sh]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          env:
+            - {name: COMMIT_INTERVAL_SECONDS, value: "60"}
+            # Optional: https://<user>:<token>@host/org/repo.git. Created out of band.
+            - name: GIT_REMOTE_URL
+              valueFrom:
+                secretKeyRef: {name: vault-git-remote, key: url, optional: true}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+          volumeMounts:
+            - {name: data, mountPath: /var/syncthing}
+            - {name: scripts, mountPath: /scripts, readOnly: true}
+      volumes:
+        - name: scripts
+          configMap: {name: vault-git}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: do-block-storage-retain
+        resources:
+          requests: {storage: 20Gi}
