@@ -2,6 +2,7 @@
 import asyncio
 import json
 import os
+import re
 import traceback
 from pathlib import Path
 
@@ -44,7 +45,7 @@ async def observe_rollout():
 
 async def main():
     token = os.environ.get("ONEMIND_MCP_TOKEN")
-    if not token:
+    if not token or os.environ.get("ONEMIND_MCP_TOOLSET_REVISION") != "app-coverage-v2":
         print(json.dumps({"phase": "waiting_for_legacy_rollout", **await observe_rollout()}, indent=2))
         return 75
     # Check only the owned non-secret keys; never export the volume-managed config.
@@ -64,17 +65,60 @@ async def main():
             async with ClientSession(read, write) as session:
                 await session.initialize()
                 tools = {tool.name for tool in (await session.list_tools()).tools}
-                expected = {"apps_list", "nats_server_stats", "nats_jetstream_stats", "prometheus_query"}
-                assert expected <= tools
+                expected = {"apps_list", "nats_server_stats", "nats_jetstream_stats", "prometheus_query", "apps_describe", "stac_collections", "stac_search",
+                            "ollama_models", "ollama_running_models", "alertmanager_alerts",
+                            "loki_query", "opencost_allocation"}
+                assert expected == tools
+                report["tool_count"] = len(tools)
                 for name, args in [("apps_list", {}), ("nats_server_stats", {}),
-                                   ("nats_jetstream_stats", {}), ("prometheus_query", {"query": "up"})]:
+                                   ("nats_jetstream_stats", {}), ("prometheus_query", {"query": "up"}),
+                                   ("apps_describe", {"app_id": "nextcloud"}),
+                                   ("stac_collections", {}), ("stac_search", {"bbox": [-75, 40, -74, 41], "limit": 1}),
+                                   ("ollama_models", {}), ("ollama_running_models", {}),
+                                   ("alertmanager_alerts", {}), ("loki_query", {"query": '{namespace="hermes"}', "limit": 1}),
+                                   ("opencost_allocation", {"window": "1h"})]:
                     result = await session.call_tool(name, args)
                     payload = result.model_dump(by_alias=True)
                     error_flag = payload.get("isError", payload.get("is_error"))
                     if not isinstance(error_flag, bool):
                         raise RuntimeError("Unrecognized MCP result error flag")
                     if error_flag:
+                        error_text = " ".join(item.get("text", "") for item in payload.get("content", []))
+                        report["failure"] = {"tool": name,
+                            "http_status_codes": re.findall(r"Upstream returned HTTP ([0-9]{3})", error_text),
+                            "flags": [flag for flag in ("invalid JSON", "unexpected response", "exceeds 1 MiB", "unavailable", "timeout") if flag in error_text]}
+                        if name == "loki_query":
+                            async with httpx.AsyncClient(trust_env=False, timeout=10) as diagnostic:
+                                response = await diagnostic.get("http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/query_range",
+                                    params={"query": '{namespace="hermes"}', "limit": 1, "since": "1h", "direction": "backward"})
+                                report["failure"]["direct_status"] = response.status_code
+                                if response.status_code != 200:
+                                    # Classify known errors without exporting response content or logs.
+                                    text = response.text.lower()
+                                    report["failure"]["direct_flags"] = [term for term in (
+                                        "parse error", "invalid", "timeout", "max", "limit", "too many", "not ready", "no org id", "ring", "replica", "unhealthy") if term in text]
+                        if name == "loki_query":
+                            identity = Path("/var/run/secrets/kubernetes.io/serviceaccount")
+                            async with httpx.AsyncClient(verify=str(identity / "ca.crt"), trust_env=False,
+                                headers={"Authorization": "Bearer " + (identity / "token").read_text()}, timeout=10) as kube:
+                                response = await kube.get("https://kubernetes.default.svc/api/v1/namespaces/monitoring/services/loki-gateway")
+                                if response.status_code == 200:
+                                    report["failure"]["service_ports"] = response.json()["spec"]["ports"]
+                        print(json.dumps(report, indent=2))
                         raise RuntimeError(f"{name} failed; no response body exported")
+                    if name == "apps_list":
+                        catalog = payload.get("structuredContent", payload.get("structured_content"))
+                        if not catalog:
+                            catalog = json.loads(next(item["text"] for item in payload["content"] if item.get("type") == "text"))
+                        entries = catalog["apps"]
+                        report["catalog"] = {
+                            "domains": len(entries),
+                            "configured": sorted(item["id"] for item in entries if item["access"] == "configured"),
+                            "blocked": sorted(item["id"] for item in entries if item["access"] == "blocked"),
+                        }
+                        assert report["catalog"]["domains"] == 32
+                        assert len(report["catalog"]["configured"]) == 7
+                        assert all(not item["tools"] for item in entries if item["access"] == "blocked")
                     report["tools"][name] = "passed"
                 resources = await session.list_resources()
                 assert "onemind://apps" in {str(resource.uri) for resource in resources.resources}
