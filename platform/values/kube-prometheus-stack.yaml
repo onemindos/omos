@@ -38,10 +38,11 @@ prometheus:
 
 alertmanager:
   # Base Alertmanager config: the chart defaults, restated so live routing is readable here, plus
-  # Telegram for critical and warning alerts. AlertmanagerConfig CRs are merged in ahead of these
-  # routes with `continue: true`, so they never stop an alert from reaching Telegram. Telegram is
-  # configured here, not in an AlertmanagerConfig, because that CRD only takes the chat ID as a
-  # literal integer; here the token and chat ID are both files from a Secret, never in Git.
+  # Telegram for critical and warning alerts. AlertmanagerConfig routes are merged in ahead of these
+  # routes with `continue: true`, so they cannot take alerts away from Telegram; their inhibit rules
+  # apply globally, though (matcher strategy None, below), so one can still mute Telegram alerts.
+  # Telegram is configured here, not in an AlertmanagerConfig, because that CRD only takes the chat ID
+  # as a literal integer; here the token and chat ID are both files from a Secret, never in Git.
   # The restated defaults (global, inhibit_rules, root route timers, templates) are copied from chart
   # 87.16.1 and no longer follow it: re-sync them with the chart's values.yaml on every chart bump.
   config:
