@@ -111,7 +111,8 @@ onemind:
 # enabled: true and update scripts/tests/test_gitops_portal_org_sync.py. Users and Groups in
 # catalog/org.yaml, including onemind-admins, stay Git-owned. Rollback: set enabled to false; new
 # pods remove the synced entities at startup and every run of the sync's task removes them again,
-# so the catalog is clear within about 10 minutes of the last old pod's last run.
+# so the catalog is clear within 10 minutes (or frequencySeconds, if set higher) of the last old
+# pod's last run.
 authentik:
   baseUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
   token: ${AUTHENTIK_CATALOG_TOKEN}

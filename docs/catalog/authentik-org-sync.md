@@ -51,8 +51,8 @@ If `authentik.token` is unset while the sync is enabled (the secret was deleted,
 
 ## Turning it off
 
-Set `enabled: false` (or remove the block). The module stays registered and calls nothing: each new replica removes the synced entities when its catalog starts, and every run of the global task `onemind-authentik-org-refresh` removes them again. An old replica that runs the task once more during the rolling update can republish them only until the next run after it is gone, so the catalog is clear within about 10 minutes of the last old replica's last run. `catalog/org.yaml` is untouched.
+Set `enabled: false` (or remove the block). The module stays registered and calls nothing: each new replica removes the synced entities when its catalog starts, and every run of the global task `onemind-authentik-org-refresh` removes them again. An old replica that runs the task once more during the rolling update can republish them only until the next run after it is gone. Runs of a global task are spaced by the task's interval, so the catalog is clear within 10 minutes (or the enabled `frequencySeconds`, if it was set higher) of the last old replica's last run. `catalog/org.yaml` is untouched.
 
-To confirm, list `/api/catalog/entities?filter=metadata.annotations.backstage.io/managed-by-location=provider:onemind-authentik-org` once the rollout has finished and 10 minutes have passed: it must return nothing.
+To confirm, list `/api/catalog/entities?filter=metadata.annotations.backstage.io/managed-by-location=provider:onemind-authentik-org` once the rollout has finished and that interval has passed: it must return nothing.
 
 Removing the module from `packages/backend/src/index.ts` is different: the catalog then deletes its entities once at each pod start (`catalog.orphanProviderStrategy`, default `delete`), and nothing removes what an old replica republishes afterwards. Turn the sync off first, and remove the module only after the check above returns nothing.
