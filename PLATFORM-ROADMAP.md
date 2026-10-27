@@ -79,6 +79,13 @@ it is not standing authority for unrelated changes. The
 keep CI, credential, dependency and rollout gates explicit. Do not ask again for
 settled choices; continue past an actually blocked PR and report it at the end.
 
+**Latest merge coordination (2026-10-27): Hermes is the lead and sole merger.**
+The initial source-only queue is #542 → #504 → #497 → #498 → #496, with fresh
+review/current-main integration and final-head CI for each. The existing second
+harness prepares/tests #505 and application changes without merging. This initial
+batch does not authorize Terraform apply or execution of the proposed storage
+patches; Telegram remains selected. See the updated approval record below.
+
 ### Namespace map (live cluster, 2026-10-18)
 
 | Namespace | Main workloads | Layer | Target |
