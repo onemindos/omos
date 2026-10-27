@@ -207,6 +207,15 @@ Loki/Tempo), onetak geo data (about 450 GiB; may be rebuilt from public sources 
   `onemind-core`, `onemind-data`, `onemind-ai` if Git is missing something:
   new BSL, `accessMode: ReadOnly`, then `velero restore create --from-backup <name>`.
   Exclude Secrets that Sealed Secrets owns to avoid conflicts.
+  - Kyverno checks restored objects like new ones. Velero reuses an existing namespace, so
+    restoring into the three namespaces Argo has already created works. A missing target
+    namespace is created from the backed-up Namespace object, and backups taken before
+    2026-10-23T18:53Z (when these three got `onemind.io/layer`) carry no label; backups up to
+    2026-10-23 also include `onemind-jobs`, which no longer exists. A restore that creates a
+    namespace (`--namespace-mappings` into a scratch namespace, or `onemind-jobs`) is therefore
+    denied: create the target namespace with its label first (`docs/architecture/namespace-layers.md`,
+    "Creating a namespace by hand"). A backed-up workload with an untagged or `:latest` image is
+    denied the same way.
 - Let Argo finish syncing every remaining Application. Resolve the known OutOfSync items
   (`SealedSecret auth/ghcr` owned twice; `litellm-migrations` Job).
 - Apps with no Argo owner (gap G5): matrix (`platform/matrix/`, deploy script), NATS UIs

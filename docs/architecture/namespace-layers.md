@@ -40,10 +40,10 @@ Application that does not prune it:
 
 To label another such namespace, add it to one of these files. Do not also set
 `managedNamespaceMetadata` on an Application whose namespace is listed here: Argo CD 3.4 then
-applies that namespace on every sync of the Application and sets
-`argocd.argoproj.io/sync-options: ServerSideApply=true` on it, which replaces the
-`Prune=false,Delete=false` value that `shared-namespaces.yaml`, `retained-recovery.yaml` and
-`default` rely on.
+applies that namespace on every sync of the Application and overwrites its
+`argocd.argoproj.io/sync-options` annotation with `ServerSideApply=true`. That removes
+`Prune=false,Delete=false` from the namespaces in `shared-namespaces.yaml` and
+`retained-recovery.yaml`, and `Delete=false` from `default`.
 
 ## Namespaces that Git does not define
 

@@ -5,6 +5,12 @@
 #     (no live violation on 2026-10-27). Admission denies a CREATE that violates and an UPDATE that adds a
 #     violation; allowExistingViolations still admits updates to objects that already violated. A rule-level
 #     validate.failureAction would override this field in Kyverno 1.19.1; none is set.
+#     The installed CRD marks this spec field deprecated (and kyverno.io/v1 ClusterPolicy itself). On every Kyverno
+#     upgrade, check the release notes for it, then confirm both policies still show Enforce (kubectl get
+#     clusterpolicy) and that `kubectl create namespace enforce-probe --dry-run=server` and
+#     `kubectl run enforce-probe --image=busybox --dry-run=server` are denied. If the field is dropped or ignored,
+#     move all four policies to rules[].validate.failureAction and update test_only_violation_free_policies_enforce
+#     (scripts/tests/test_gitops_kyverno_history.py), which forbids the rule-level field today.
 #   * require-requests-limits and disallow-privileged-and-hostpath stay Audit (the github-runner dind container
 #     is privileged): violations only show up in PolicyReports (wgpolicyk8s.io). Do not switch them to Enforce
 #     without a cleanup PR and Zeus's approval.
