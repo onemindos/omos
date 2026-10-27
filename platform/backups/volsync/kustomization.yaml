@@ -30,7 +30,6 @@ resources:
 - sealed/takserver-volume-ca153ea90369.yaml
 - sealed/takserver-volume-b5898fcc79f1.yaml
 - sealed/takserver-volume-2b88c0eca294.yaml
-- namespaces.yaml
 - takserver-quota.yaml
 - sealed/dapr-system-volume-e18340617b8d.yaml
 - sealed/dapr-system-volume-cc7912733ca4.yaml
