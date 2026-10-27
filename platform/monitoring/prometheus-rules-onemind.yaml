@@ -67,6 +67,63 @@ spec:
             summary: "NATS metrics are not being collected"
             description: "nats-surveyor is not scraped, so every bus-flow alert above is blind."
 
+        # JetStream file storage vs the server's max_file_store (45Gi on 49Gi PVCs).
+        # A full store rejects every JetStream publish. Baseline 2026-10-27: 10.4% on all
+        # three servers (5.04 GB of 48.3 GB).
+        - alert: NATSJetStreamStorageHigh
+          expr: |
+            max by (server_name) (
+              nats_core_jetstream_filestore_used_bytes{job="nats-surveyor"}
+              / nats_core_jetstream_server_max_storage{job="nats-surveyor"}
+            ) > 0.70
+          for: 15m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "JetStream storage on {{ $labels.server_name }} is above 70% of max_file_store"
+            description: "{{ $value | humanizePercentage }} of the JetStream file store is used. Check stream sizes (COT is the largest) and retention before it reaches 85%."
+
+        - alert: NATSJetStreamStorageCritical
+          expr: |
+            max by (server_name) (
+              nats_core_jetstream_filestore_used_bytes{job="nats-surveyor"}
+              / nats_core_jetstream_server_max_storage{job="nats-surveyor"}
+            ) > 0.85
+          for: 5m
+          labels:
+            severity: critical
+            service: nats
+          annotations:
+            summary: "JetStream storage on {{ $labels.server_name }} is above 85% of max_file_store"
+            description: "{{ $value | humanizePercentage }} of the JetStream file store is used. At 100% the server rejects JetStream writes and the bus stops persisting messages."
+
+        # nats_core_slow_consumer_count is the server's cumulative slow-consumer counter
+        # (increase() handles resets on pod restart). Baseline 2026-10-27: 0 on all servers.
+        - alert: NATSSlowConsumers
+          expr: max by (server_name) (increase(nats_core_slow_consumer_count{job="nats-surveyor"}[10m])) > 0
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "NATS server {{ $labels.server_name }} is disconnecting slow consumers"
+            description: "{{ $value | printf \"%.0f\" }} slow-consumer events in the last 10 minutes. A client cannot keep up and the server is dropping its messages or connection."
+
+        # Full mesh of 3 servers: each server routes to its 2 peers. NATS 2.10+ opens
+        # several connections per peer (route pooling), so nats_core_route_count is 8 on
+        # every server when the mesh is complete (verified live 2026-10-27), not 2.
+        # Losing one peer drops a server to 4. Alert below the verified baseline.
+        - alert: NATSRouteCountLow
+          expr: min by (server_name) (nats_core_route_count{job="nats-surveyor", server_cluster="nats"}) < 8
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "NATS server {{ $labels.server_name }} has {{ $value }} cluster routes (expected 8)"
+            description: "The 3-node cluster mesh is incomplete: a peer is unreachable or a route is flapping. JetStream replication and Raft quorum depend on these routes."
+
     # ─── AI Brain ────────────────────────────────────────────────────────────
     - name: onemind.hermes
       interval: 30s

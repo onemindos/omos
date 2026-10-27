@@ -3,6 +3,11 @@ kind: StatefulSet
 metadata:
   name: nats
   namespace: nats
+  annotations:
+    # Never prune this StatefulSet and never delete it when platform-nats is deleted
+    # (the Application carries resources-finalizer). Object metadata only: the pod
+    # template below must stay byte-identical, or the whole cluster rolls.
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
   labels:
     app.kubernetes.io/component: nats
     app.kubernetes.io/instance: nats
