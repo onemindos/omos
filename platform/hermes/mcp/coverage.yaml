@@ -1,0 +1,234 @@
+# Git-declared inventory only; not a live-state assertion. New Applications must be classified.
+applications:
+  app-of-apps:
+    apps:
+    - argocd
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-barman:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-cnpg:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-dapr:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-keda:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-litellm:
+    apps:
+    - litellm
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-ollama:
+    apps:
+    - ollama
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-onemind-core:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-opencost:
+    apps:
+    - opencost
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  ecosystem-velero:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  edge-cert-manager:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  edge-ingress-nginx:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  edge-nack:
+    apps:
+    - nats
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  edge-tailscale-operator:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  monitoring-kube-prometheus-stack:
+    apps:
+    - prometheus
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  monitoring-loki:
+    apps:
+    - loki
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  monitoring-otel-collector:
+    apps:
+    - tempo
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  monitoring-tempo:
+    apps:
+    - tempo
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-agent-fabric:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-argocd:
+    apps:
+    - argocd
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-auth-helm:
+    apps:
+    - authentik
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-auth-infra:
+    apps:
+    - authentik
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-backstage:
+    apps:
+    - backstage
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-backups:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-clickhouse-operator:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-cloudtak:
+    apps:
+    - cloudtak
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-core:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-ecosystem-applications:
+    apps:
+    - argocd
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-ecosystem-foundation:
+    apps:
+    - argocd
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-ecosystem-resources:
+    apps:
+    - argocd
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-fedhub:
+    apps:
+    - fedhub
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-hermes-fresh:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-karakeep:
+    apps:
+    - karakeep
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-kube:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-legacy:
+    apps:
+    - agent_fabric
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-matrix:
+    apps:
+    - matrix
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-metrics-server:
+    apps:
+    - prometheus
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-monitoring:
+    apps:
+    - prometheus
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-n8n:
+    apps:
+    - n8n
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-nats:
+    apps:
+    - nats
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-nats-streams:
+    apps:
+    - nats
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-nats-tools:
+    apps:
+    - nats
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-nextcloud:
+    apps:
+    - nextcloud
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-observability:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-omos:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-onetak:
+    apps:
+    - mediamtx
+    - tiles
+    - tile38
+    - webodm
+    - tak
+    reason: Application APIs split by purpose; supporting databases and workers stay behind owning apps.
+  platform-ops:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-paperclip:
+    apps:
+    - paperclip
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-redpanda-connect:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-security:
+    apps:
+    - kubernetes
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-stac:
+    apps:
+    - stac
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-stac-validation:
+    apps:
+    - stac
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-takml:
+    apps:
+    - takml
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-takserver:
+    apps:
+    - tak
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-vaultwarden:
+    apps:
+    - vaultwarden
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-volsync:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-volume-backups:
+    apps:
+    - data_backups
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
