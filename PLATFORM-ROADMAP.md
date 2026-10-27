@@ -70,6 +70,22 @@ selected future KubeVela/Crossplane ownership split is recorded in
 implementation/coexistence acceptance and per-app transfers remain pending.
 Current foundation/shared-service and machine read-only boundaries are unchanged.
 
+**Bounded owner authorization (2026-10-27):** Zeus approved the owner decisions
+for dcarku's 46 PRs **#495–#540**, retained Telegram and authorized Claude Code
+to execute these reviewed GitHub merges on his behalf, including foundation
+PRs. This satisfies the table's human-merge requirement for this batch only;
+it is not standing authority for unrelated changes. The
+[approval record and technical merge queue](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+keep CI, credential, dependency and rollout gates explicit. Do not ask again for
+settled choices; continue past an actually blocked PR and report it at the end.
+
+**Latest merge coordination (2026-10-27): Hermes is the lead and sole merger.**
+The initial source-only queue is #542 → #504 → #497 → #498 → #496, with fresh
+review/current-main integration and final-head CI for each. The existing second
+harness prepares/tests #505 and application changes without merging. This initial
+batch does not authorize Terraform apply or execution of the proposed storage
+patches; Telegram remains selected. See the updated approval record below.
+
 ### Namespace map (live cluster, 2026-10-18)
 
 | Namespace | Main workloads | Layer | Target |
@@ -1315,3 +1331,23 @@ resource warnings during 150 seconds after sync;815-resource live engine run yie
 1446 pass / 999 expected skips / 0 fail / 0 error.153 regression tests and CI pass. The privileged
 GitHub DinD runner is a separate real open risk; do not hide it with an audit exception.
 Capacity/independent recovery remain pending owner choices. Phase 6 stays In progress.
+
+## User-directed PR merge preparation — 2026-10-27
+
+Zeus initially delegated straightforward owner-item preparation, then approved
+all owner decisions and merge execution for dcarku's #495–#540 batch, retaining
+Telegram. [Merge queue, approval and evidence](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+records the source candidates, approved 24-hour retention/read-only Headlamp/
+Telegram/enforcement choices, and #532/#535's remaining technical holds. The
+namespace-label bootstrap race must be fixed before enforcement. Technical
+credential, CI, image and rollout gates still apply; no approval is a claim that
+they passed. No merge or deployment is claimed by this recording task. Phase 6
+remains In progress; Phases 7/8 remain Not started.
+
+User-directed MCP coverage follow-through (2026-10-27): expansion prepared from the
+initial NATS/Prometheus slice to seven configured app integrations, 12 tools and an
+explicit 32-domain access catalog. CI requires coverage dispositions for all 56
+Git-declared Applications. Credential-gated and unimplemented app integrations
+remain blocked and visible; broad coverage is not claimed complete. No cluster
+administration, vault-content permission or physical actuation is added. Runtime
+acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.
