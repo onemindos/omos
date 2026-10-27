@@ -7,6 +7,8 @@ from urllib.parse import urlsplit
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+MAX_NODES = 8
+
 
 class App(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -23,16 +25,32 @@ class App(BaseModel):
             raise ValueError("Expected an environment variable name")
         return value
 
-    def connection(self) -> tuple[str, str | None]:
-        url = os.environ.get(self.url_env, "")
+    def _base_url(self, url: str, env: str) -> str:
         parsed = urlsplit(url)
         if (parsed.scheme not in {"http", "https"} or not parsed.hostname
                 or parsed.username or parsed.password or parsed.query or parsed.fragment):
-            raise ValueError(f"{self.id}: {self.url_env} must contain an HTTP(S) base URL without credentials, query or fragment")
+            raise ValueError(f"{self.id}: {env} must contain an HTTP(S) base URL without credentials, query or fragment")
+        return url.rstrip("/")
+
+    def _token(self) -> str | None:
         token = os.environ.get(self.token_env, "") if self.token_env else None
         if self.token_env and not token:
             raise ValueError(f"{self.id}: missing {self.token_env}")
-        return url.rstrip("/"), token
+        return token
+
+    def connection(self) -> tuple[str, str | None]:
+        return self._base_url(os.environ.get(self.url_env, ""), self.url_env), self._token()
+
+    def connections(self) -> list[tuple[str, str | None]]:
+        """Every node of a multi-node app: comma-separated `<url_env>S` when set, else `url_env`."""
+        env = f"{self.url_env}S"
+        urls = [url.strip() for url in os.environ.get(env, "").split(",") if url.strip()]
+        if not urls:
+            return [self.connection()]
+        if len(urls) > MAX_NODES:
+            raise ValueError(f"{self.id}: {env} lists more than {MAX_NODES} URLs")
+        token = self._token()
+        return [(url, token) for url in dict.fromkeys(self._base_url(url, env) for url in urls)]
 
 
 class Catalog(BaseModel):
