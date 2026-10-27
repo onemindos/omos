@@ -152,7 +152,7 @@ and sync GitOps. Track the token's chosen expiration in the password manager. Th
 registry token is used by Kubernetes image pulling, not loaded into the AI agent.
 SDK 2 acceptance compatibility and fail-fast checks were completed by #492/#493.
 
-## Broad app coverage expansion (prepared)
+## Broad app coverage expansion (rollout pending)
 
 The initial four-tool deployment covers NATS and Prometheus only. The expansion
 adds searchable inventory and descriptions, STAC imagery collections/search,
@@ -201,3 +201,6 @@ Legacy. MediaMTX returned 401 and stays blocked. Direct Legacy-to-Ollama timed o
 under the gateway-only ingress policy; the expansion adds an MCP-pod-only ingress
 exception for inventory reads, preserving the existing gateway rule. Legacy direct
 access stays denied. Runtime acceptance from the MCP must confirm that exception.
+
+The Legacy toolset-revision environment marker rolls its gateway after MCP readiness
+so startup MCP discovery includes the new tools. Bump it when adding/removing tools.

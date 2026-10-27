@@ -84,3 +84,18 @@ def test_fixed_read_endpoints_and_array_results(monkeypatch, adapter, name, path
         args = {'query': '{namespace="hermes"}'} if adapter == 'loki' else {}
         result = rpc(client, 'tools/call', {'name': 'app_' + name, 'arguments': args})
         assert not result['result'].get('isError')
+
+
+def test_production_catalog_boots_and_does_not_expose_blocked_apps(monkeypatch):
+    from pathlib import Path
+    from onemind_mcp.config import load_catalog
+    cat = load_catalog(Path(__file__).resolve().parents[3] / 'platform/hermes/mcp/apps.yaml')
+    for app in cat.apps:
+        if app.enabled:
+            monkeypatch.setenv(app.url_env, 'http://app.internal')
+    with TestClient(build(cat, lambda _: pytest.fail('Discovery must not probe apps'))) as client:
+        tools = rpc(client, 'tools/list')['result']['tools']
+        assert len(tools) == 12
+        assert all(t['annotations']['readOnlyHint'] for t in tools)
+        blocked = [app.id + '_' for app in cat.apps if not app.enabled]
+        assert all(not any(t['name'].startswith(prefix) for prefix in blocked) for t in tools)
