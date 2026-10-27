@@ -13,13 +13,15 @@ metadata:
   links:
     - url: https://github.com/onemindos/omos/blob/main/platform/ecosystem/resources/postgres-cluster.yaml
       title: Cluster manifest
+    - url: https://github.com/onemindos/omos/blob/main/platform/ecosystem/resources/postgres-image-catalog.yaml
+      title: Image catalog
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     argocd/app-name: platform-ecosystem-resources
     argocd/instance-name: onemind-cloud
     backstage.io/kubernetes-namespace: onemind-data
     backstage.io/kubernetes-label-selector: cnpg.io/cluster=onemind-data
-    onemind.io/relationship-source: platform/ecosystem/resources/postgres-cluster.yaml; platform/ecosystem/resources/postgres-image-catalog.yaml
+    onemind.io/relationship-source: platform/ecosystem/resources/postgres-cluster.yaml
     github.com/project-slug: onemindos/omos
     onemind.io/pillar-review: proposed
   labels:
