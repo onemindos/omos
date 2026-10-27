@@ -2,7 +2,7 @@
 
 Tier 1 is the owner's list of services without which the platform cannot operate or cannot be recovered: TAK Server, NATS, Authentik, ingress, cert-manager, Sealed Secrets, backups and ops, Argo CD and Hermes (`docs/STACK.md`, "Tier definitions"). A tier 1 change goes behind a backup check, dependency bumps are not auto-merged, and each service needs a restore test on record.
 
-Each page condenses the Git-owned documents named under "Sources" and was checked against `main` and read-only cluster observations on October 27, 2026. The pages record configuration and evidence, not live health: check the app page's Live tab and Argo CD before acting. Where a page and its source disagree, the source wins; correct the page.
+Each page condenses the Git-owned documents named under "Sources" and was checked against `main` and read-only cluster observations on October 27, 2026. The pages record configuration and evidence, not live health: check the app page's Live tab and Argo CD before acting. Some cited sections are older than that evidence, for example parts of the root `CLAUDE.md` and `docs/STACK.md`. Where a page and a source disagree, the newer verified evidence wins: confirm it read-only, then correct whichever document is stale.
 
 | Service | Runbook | Catalog entity | Argo CD applications |
 | --- | --- | --- | --- |

@@ -2,11 +2,12 @@
 
 Hermes "Legacy" is the platform's AI agent: Deployment `hermes-legacy` in namespace `hermes`, on the `nousresearch/hermes-agent` image pinned in Git, with a `nats-leaf` sidecar that gives the agent its own bus identity. All of its identity and state is the 25 GiB PVC `hermes-data`, mounted at `/opt/data`. A separate, vanilla `hermes-fresh` instance launched on October 26, 2026 runs beside it with its own volume and no imported Legacy data.
 
-Sources: `platform/hermes/agent/RUNBOOK.md`, `platform/hermes/agent/README.md`, `platform/hermes/fresh/README.md`, `docs/operations/hermes-recoverability-plan.md`, `docs/operations/hermes-restore-drill-2026-10-16.md`.
+Sources: `platform/argocd/platform-legacy.yaml`, `platform/hermes/agent/RUNBOOK.md`, `platform/hermes/agent/README.md`, `platform/hermes/fresh/README.md`, `docs/operations/hermes-recoverability-plan.md`, `docs/operations/hermes-restore-drill-2026-10-16.md`.
 
 ## Ownership and access
 
-- `platform-legacy` applies the Legacy agent and its sealed bridge secrets; `platform-hermes-fresh` applies `platform/hermes/fresh`.
+- `platform-legacy` applies three paths: the Legacy agent (`platform/hermes/agent`), its sealed bridge secrets (`platform/hermes/bridge`) and the separate tier 2 `onemind-mcp` server (`platform/hermes/mcp`, runbook `docs/operations/onemind-mcp.md`). Changing or pruning `platform-legacy` therefore also affects `onemind-mcp`. `platform-hermes-fresh` applies `platform/hermes/fresh`.
+- `platform-legacy` prunes, carries the cascade finalizer and applies the `hermes` Namespace and the `hermes-data` PVC (volume reclaim policy `Delete`). Deleting or renaming the Application, including by removing its file from `platform/argocd/`, would delete that namespace with everything in it, `hermes-fresh` included, and the agent's volume. See [Argo CD](argocd.md) and `docs/gitops/APP-FINALIZERS.md`.
 - Hermes always connects to `nats://localhost:4222`, where the sidecar runs a leaf node configured from the Secret `hermes-leaf-conf`. Do not copy this pattern into new services; they connect to the cluster NATS directly.
 - The pod cannot change the cluster: at most it holds the read-only `hermes-observer` identity, which cannot read Secrets, ConfigMaps or logs. Run cluster commands from an admin workstation.
 - The dashboards are tailnet-only.

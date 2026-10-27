@@ -6,7 +6,7 @@ Sources: root `CLAUDE.md` ("Public ingress"), `platform/values/ingress-nginx.yam
 
 ## Ownership
 
-- `edge-ingress-nginx` adopted the hand-installed Helm release in PR #176: chart `ingress-nginx` 4.15.1, release name `ingress-nginx`, values in `platform/values/ingress-nginx.yaml`. Never run `helm upgrade` on it; change the values file and merge.
+- `edge-ingress-nginx` adopted the hand-installed Helm release in PR #176: chart `ingress-nginx` at the version pinned in `platform/argocd/edge-ingress-nginx.yaml`, release name `ingress-nginx`, values in `platform/values/ingress-nginx.yaml`. Never run `helm upgrade` on it; change the values file and merge.
 - Prune is off, and the Application deliberately has no finalizer: a cascading delete would release the load balancer and its public IP.
 - Two controller replicas, spread across nodes where possible. The Service uses `externalTrafficPolicy: Local`, so the load balancer only sends traffic to nodes running a controller pod, and the client address reaches the allowlist check. With one replica that would be a single point of failure.
 - The admission webhook certificate comes from the chart's hook Jobs, which Argo CD runs as short-lived Jobs during a sync; Argo CD ignores the injected `caBundle`.

@@ -7,7 +7,7 @@ Sources: `platform/takserver/README.md`, `platform/takserver/DEPLOY-RUNBOOK.md` 
 ## Ownership and access
 
 - `platform-takserver` applies `platform/takserver/deploy`: the LB proxy, NATS leaf, Mumble, LDAP and sealed secrets, plus the adopted messaging, plugins, API and config Deployments, the Ignite, PostgreSQL and internal NATS StatefulSets and the `cot-retention` CronJob.
-- The historical Helm release `takserver` (revision 34) still records these objects, and parts of it are not Git-owned yet. Whole-release `helm upgrade`, `helm rollback` and `helm uninstall` are frozen: they would create a second writer for workloads Argo CD now owns. Legacy commands in the chart's upstream README are not instructions for this cluster.
+- The historical Helm release `takserver` still records these objects, and parts of it are not Git-owned yet. Whole-release `helm upgrade`, `helm rollback` and `helm uninstall` are frozen: they would create a second writer for workloads Argo CD now owns. Legacy commands in the chart's upstream README are not instructions for this cluster.
 - The legacy ConfigMaps `cert-migration`, `core-config` and `tak-userauth` and some runtime Secrets are not Git-owned, and some of those ConfigMaps hold credential, private-key or keystore data. Never copy their contents into Git or logs.
 - Access is `tak.tail717ba0.ts.net` through the Tailscale Service `tak-tailnet` (8089, 8443, 8446 and 64738/TCP). The public load balancer was removed on October 23, 2026, and federation ports 9101/9102 are not exposed. FedHub (`platform-fedhub`) is a separate tier 2 app.
 - Bus subjects follow `docs/NATS-DOCTRINE.md`; TAK's internal NATS never carries OneMind traffic.

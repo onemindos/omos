@@ -6,7 +6,7 @@ Sources: `platform/argocd/platform-auth-helm.yaml`, `platform/auth/`, `docs/netw
 
 ## Ownership
 
-- `platform-auth-helm` renders the pinned `goauthentik/authentik` chart (2026.8.2) with inline values. Every credential comes from the SealedSecret `authentik-secret`.
+- `platform-auth-helm` renders the `goauthentik/authentik` chart at the version pinned in `platform/argocd/platform-auth-helm.yaml`, with inline values. Every credential comes from the SealedSecret `authentik-secret`.
 - `platform-auth-infra` applies `platform/auth`: the `authentik-postgres` StatefulSet (5 GiB claim), the `authentik-redis` Deployment, the server PodDisruptionBudget, the sealed secret and the public Ingress.
 - Applications register their OIDC providers through Git-owned resources in `platform/ecosystem/resources/`, for example `argocd-authentik-provider.yaml`.
 

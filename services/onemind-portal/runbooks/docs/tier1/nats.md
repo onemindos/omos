@@ -26,7 +26,7 @@ A Ready pod does not establish stream quorum: check route connections, JetStream
 
 - Roll out a risky StatefulSet change with the update partition at 2. Verify `nats-2` readiness, route connections, JetStream quorum and stream replication, then lower the partition to 1 and to 0 through reviewed Git changes. The PodDisruptionBudget permits one voluntary disruption.
 - Never force-delete several replicas or delete PVCs. Do not reset streams, purge messages or recreate consumers as a generic fix.
-- `backup-nats-streams` (namespace `nats`, daily at 03:30 UTC) writes an encrypted stream archive, restores it into a loopback-only disposable server, and only then writes its verification marker. The production archive restored every stream (39 at the time) into an isolated server without production restarts. Repeat the restore check after changes to versions, sizing or credentials.
+- `backup-nats-streams` (namespace `nats`, daily at 03:30 UTC) writes an encrypted stream archive, restores it into a loopback-only disposable server, and only then writes its verification marker. In the readiness exercise recorded in `docs/operations/cluster-readiness-2026-10-08.md`, the production archive restored every stream into an isolated server without production restarts. Repeat the restore check after changes to versions, sizing or credentials.
 - VolSync also copies the JetStream volumes. Those copies are crash-consistent and not atomic across replicas, so prefer the verified stream archive.
 - A new cluster needs an explicit storage-class overlay and data restoration; the manifest's storage class describes the current DigitalOcean volumes.
 
