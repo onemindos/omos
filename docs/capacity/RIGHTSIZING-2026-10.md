@@ -208,3 +208,57 @@ savings above are about capacity headroom first (the most-requested hub-core nod
 - 27 h of history on ecosystem containers: a rarely-used controller could burst above the new request. Their limits are unchanged, so
   the worst case is an unreserved spike, not an OOM.
 - Rollback: revert the commit; Argo restores the old requests. No data migration is involved.
+
+## Addendum: hub-core pass (2026-10-27)
+
+The hub-core nodes were replaced on 2026-10-18 (`onemind-hub-core-v2-3rtf47/-3rtf4m/-3rtf4q`, 13,646 Mi allocatable each); the
+ecosystem pool is now one node, `onemind-ecosystem-cpu-3rhwrp`. Requested memory was 79% / 96% / 71% while actual use was 57-66%. Data taken read-only at
+2026-10-27 09:15 UTC: `kubectl describe nodes`, `kubectl top pods -A --containers`, and Prometheus 7-day and 10-day windows of
+`container_memory_working_set_bytes` (a single kubelet/cAdvisor job, so nothing is double counted; retention is 10 days).
+
+Rule: new memory request = 7-day p95 x 1.3, rounded up to the step list above (64 Mi floor, 128 Mi for databases), and never below
+current use x 1.25 or the 10-day peak. Limits are not changed. CPU is changed only where it is grossly over (Synapse).
+
+| Workload (node) | Container | p95 / 10-day peak / now (Mi) | Mem req old -> new | CPU req old -> new | Owning app |
+|---|---|---|---|---|---|
+| matrix synapse (3rtf4m) | synapse | 181 / 199 / 169 | 1Gi -> 256Mi | 500m -> 100m (p95 10m, max 25m) | platform-matrix (manual sync) |
+| matrix postgres-0 (3rtf47) | postgres | 67 / 89 / 58 | 256Mi -> 128Mi | 100m (unchanged) | platform-matrix (manual sync) |
+| omos feed-intel (3rtf4m) | feeds | 42 / 51 / 41 | 192Mi -> 64Mi | 100m (unchanged) | platform-omos |
+| onetak tak-portal (3rtf47) | portal | 44 / 54 / 43 | 128Mi -> 64Mi | 50m (unchanged) | platform-onetak |
+| onetak webodm-broker (3rtf47) | broker | 4 / 9 / 3 | 128Mi -> 64Mi | 100m (unchanged) | platform-onetak |
+
+Requested memory per hub-core node, assuming every pod stays on its current node (the scheduler may place a restarted pod elsewhere;
+webodm-broker already prefers the ecosystem pool):
+
+| Node | Before | After |
+|---|---|---|
+| hub-core ...3rtf47 | 10,630 Mi (77.9%); 10,886 Mi (79.8%) while a VolSync mover runs | 10,374 Mi (76.0%); 10,630 Mi (77.9%) with the mover |
+| hub-core ...3rtf4m | 13,136 Mi (96.3%) | 12,240 Mi (89.7%) |
+| hub-core ...3rtf4q | 9,805 Mi (71.9%) | 9,805 Mi (71.9%) |
+| **Pool** | **33,571 Mi (82.0%)** | **32,419 Mi (79.2%)** |
+
+...3rtf4m stays above 80% because what is left on it is tier-1 (TAK PostgreSQL, Ignite and NATS, the NATS cluster, Argo CD,
+Authentik PostgreSQL) or requests that are already **below** real use: hermes-legacy 2,128 Mi against a p95 of 3,404 Mi, ClickHouse
+2 Gi against a 10-day peak of 2,644 Mi (raised on purpose in #227), Nextcloud 1,024 Mi and onemind-data-2 512 Mi against container
+p95s that sum to about 1,520 Mi and 615 Mi. Lowering requests cannot fix that node. Placement can: hermes-legacy, ClickHouse and
+onemind-data-2 all prefer the ecosystem pool, but the single ecosystem node has 14 of its 15 DigitalOcean volume attachments in use,
+so pods with block volumes cannot follow that preference.
+
+Not changed in this pass:
+
+- `onemind-data` (CNPG): postgres is under-requested (p95 547 Mi against 384 Mi). `onemind-core` and kyverno run only on the
+  ecosystem node, and SPIRE has no running pods, so none of them affects hub-core.
+- `onetak-media` (mediamtx, 128 -> 64 Mi possible): `platform/onetak/media-mtx.yaml` has existing yamllint errors, and the
+  changed-YAML gate would force an unrelated reformat of the file.
+- hermes-fresh (9 h of history), vaultwarden (34 h of history, 64 Mi), n8n (the 10-day peak of 612 Mi is above its request),
+  matrix element-web and redis (already at the 64 Mi floor), and falcoctl (budget set on 2026-10-23 for download bursts).
+- Tier-1 (TAK Server including tak-ldap, NATS, Authentik, sealed-secrets, Argo CD), takml (separate PRs) and DOKS-managed
+  kube-system pods.
+
+Rollout: no pod restarts on merge alone. `platform-matrix` is manual-sync. `platform-onetak` and `platform-omos` list
+`/spec/template/spec/containers/0/resources` under `ignoreDifferences` without `RespectIgnoreDifferences`, so a change to resources
+alone leaves them Synced. Their next sync, manual or triggered by any other change in those directories, applies the new requests.
+Live resources matched Git for every container in the three apps before this change, so a sync touches only the five Deployments
+and StatefulSets above. Each of those restarts once when synced. Synapse uses `Recreate` (Matrix is down for about a minute while
+its volume re-attaches). Matrix PostgreSQL rolls its single pod. The Redis broker for webodm keeps no data on disk, so sync it while no
+WebODM task is running.
