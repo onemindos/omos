@@ -59,6 +59,11 @@ spec:
                   key: token
             - name: NATS_MONITOR_URL
               value: http://nats-0.nats-headless.nats.svc.cluster.local:8222
+            # Images with multi-node NATS tools read every node and fail over in this
+            # order; older images ignore this and use NATS_MONITOR_URL (nats-0).
+            - name: NATS_MONITOR_URLS
+              value: >-
+                http://nats-0.nats-headless.nats.svc.cluster.local:8222,http://nats-1.nats-headless.nats.svc.cluster.local:8222,http://nats-2.nats-headless.nats.svc.cluster.local:8222
             - name: PROMETHEUS_URL
               value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
             - name: STAC_URL
@@ -72,9 +77,10 @@ spec:
             - name: OPENCOST_URL
               value: http://opencost.opencost.svc.cluster.local:9003
           resources:
+            # Observed 2026-10-27: peak 5m CPU / 45Mi working set since deploy (incl. #541 image).
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 25m
+              memory: 64Mi
             limits:
               cpu: "1"
               memory: 512Mi

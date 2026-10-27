@@ -45,7 +45,6 @@ workloads:
   kube-system/platform-clickhouse-operator: component:default/clickhouse
   kube-system/sealed-secrets-controller: component:default/platform-core
   kube/headlamp: component:default/headlamp
-  kube/kubernetes-dashboard: component:default/kubernetes-dashboard
   kyverno/kyverno-admission-controller: component:default/kyverno
   kyverno/kyverno-background-controller: component:default/kyverno
   kyverno/kyverno-cleanup-controller: component:default/kyverno
@@ -110,7 +109,6 @@ workloads:
   tailscale/ts-hermes-dashboard-6thbx: component:default/tailscale-operator
   tailscale/ts-heynats-p5dmf: component:default/tailscale-operator
   tailscale/ts-hubble-tw85d: component:default/tailscale-operator
-  tailscale/ts-kubernetes-dashboard-9r9fp: component:default/tailscale-operator
   tailscale/ts-n8n-pmtds: component:default/tailscale-operator
   tailscale/ts-nats-dashboard-242wv: component:default/tailscale-operator
   tailscale/ts-nats-monitor-zh589: component:default/tailscale-operator
@@ -191,6 +189,7 @@ argoApplications:
   platform-monitoring: component:default/grafana
   platform-n8n: component:default/n8n
   platform-nats: component:default/nats
+  platform-nats-streams: component:default/nats
   platform-nats-tools: component:default/nats
   platform-nextcloud: component:default/nextcloud
   platform-observability: component:default/clickhouse

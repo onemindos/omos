@@ -37,6 +37,9 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
    and `monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090`.
    Git records these names; the preflight/live calls must confirm reachability.
    NATS tools report one node and never claim a cluster aggregate.
+   From the image that adds multi-node support, `NATS_MONITOR_URLS` lists
+   `nats-{0,1,2}` and the tools fail over in that order or read the node named in
+   `node`; the existing `NATS_MONITOR_URL` (nats-0) stays as the fallback for older images.
 3. The `OneMind internal MCP` workflow builds/pushes
    `ghcr.io/onemindos/onemind-mcp:sha-<source-sha>` on the feature branch and main.
    Obtain its `onemind-mcp-image` artifact and pin the returned `sha256` digest in
