@@ -6,12 +6,13 @@
 # Covers: platform/takml/
 #   deployment.yaml         — takml-server, takml-db, takml-vision-worker
 #   configmap-server.yaml   — server config
-#   configmap-vision-worker.yaml — vision worker config (GPU inference)
 #   pvcs.yaml               — persistent storage
 #   namespace.yaml          — takml namespace
+#   *.sealedsecret.yaml     — DB, NATS and GHCR pull credentials
 #
-# takml-vision-worker is scaled to 0 — activate when wired to onetak-media
-# RTSP stream for live inference (object detection → CoT → TAK Server).
+# takml-vision-worker runs 1 replica on CPU (YOLOv5s, image
+# ghcr.io/onemindos/takml-vision, code baked in). It pulls the FEEDS RTSP paths
+# from onetak-media and publishes detections to NATS.
 #
 # Pipeline:
 #   onetak-media (RTSP) → takml-vision-worker (inference) → NATS → TAK Server

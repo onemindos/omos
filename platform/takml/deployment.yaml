@@ -137,7 +137,7 @@ spec:
             - --server.api.key.enabled=true
             - --server.api.key_path=/apikey
             - --server.api.key.param_name=x-api-key
-            - --logging.level.com.bbn=DEBUG
+            - --logging.level.com.bbn=INFO
           env:
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:

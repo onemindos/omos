@@ -219,7 +219,6 @@ kubectl --context "$CTX" apply -f "$PLATFORM/takml/pvcs.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-db-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/takml-nats-creds.sealedsecret.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-server.yaml"
-kubectl --context "$CTX" apply -f "$PLATFORM/takml/configmap-vision-worker.yaml"
 kubectl --context "$CTX" apply -f "$PLATFORM/takml/deployment.yaml"
 
 echo ""
