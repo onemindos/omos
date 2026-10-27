@@ -41,13 +41,14 @@ def main():
         shutil.copyfile(ROOT / "scripts/smoke.py", context / "smoke.py")
         (context / "Dockerfile").write_text(
             f"FROM {image}\nCOPY --chmod=0444 launcher.py smoke.py /\n"
-            "COPY --chmod=0444 apps.yaml /etc/onemind/apps.yaml\n")
+            "COPY --chmod=0444 apps.yaml /app/apps.yaml\n")
         check_image = name + ":fixtures"
         subprocess.run(["docker", "build", "--network", "none", "-t", check_image, directory],
                        check=True, capture_output=True)
         args = ["docker", "run", "-d", "--name", name, "--network", "none", "--read-only",
                 "--cap-drop", "ALL", "--security-opt", "no-new-privileges", "--memory", "256m"]
         for value in [f"ONEMIND_MCP_TOKEN={secrets.token_urlsafe(32)}",
+                      "ONEMIND_APPS_FILE=/app/apps.yaml",
                       "ONEMIND_ALLOWED_HOSTS=127.0.0.1:8000", "NATS_MONITOR_URL=http://127.0.0.1:9000",
                       "PROMETHEUS_URL=http://127.0.0.1:9000", "ONEMIND_MCP_URL=http://127.0.0.1:8000/mcp"]:
             args += ["-e", value]
@@ -60,6 +61,7 @@ def main():
                     break
                 time.sleep(0.3)
             else:
+                subprocess.run(["docker", "logs", "--tail", "30", name], check=False)
                 raise RuntimeError("Container readiness did not pass")
             subprocess.run(["docker", "exec", name, "python", "/smoke.py"], check=True)
             subprocess.run(["docker", "exec", name, "python", "-c",
