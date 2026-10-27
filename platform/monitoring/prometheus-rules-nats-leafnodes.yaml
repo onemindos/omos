@@ -53,11 +53,12 @@ spec:
             service: nats
             leaf: tak-nats-leaf
           annotations:
-            summary: "NATS leaf {{ $labels.leaf }} is not connected to the hub"
+            summary: "NATS leaf tak-nats-leaf is not connected to the hub"
             description: >-
-              No hub server has a leafnode connection from takserver/tak-nats-leaf, so clients of that
-              leaf (the NatsBridgePlugin, per services/takserver/plugin) cannot reach the bus. Check the
-              tak-nats-leaf pod log.
+              No hub server has a leafnode connection from takserver/tak-nats-leaf. On 2026-10-27 nothing
+              used this leaf (0 client connections since it started, see #517), so this alone does not mean
+              CoT is off the bus; TAKCoTFlowStopped covers that. Check the tak-nats-leaf pod log and the
+              hub's /leafz.
 
         # zeus-mac is a laptop. Over the 10 days to 2026-10-27 the summed leaf count dipped
         # for 1-3 min at reconnects and pod restarts, and for 25 min to 5 h four times in the
