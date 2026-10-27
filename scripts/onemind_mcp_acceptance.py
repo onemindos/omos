@@ -58,7 +58,8 @@ async def main():
         assert report["anonymous_status"] == 401
     async with httpx.AsyncClient(headers={"Authorization": f"Bearer {token}"},
                                  trust_env=False, timeout=30) as client:
-        async with streamable_http_client(URL, http_client=client) as (read, write, _):
+        async with streamable_http_client(URL, http_client=client) as streams:
+            read, write = streams[:2]
             async with ClientSession(read, write) as session:
                 await session.initialize()
                 tools = {tool.name for tool in (await session.list_tools()).tools}
