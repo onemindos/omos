@@ -66,7 +66,7 @@ async def main():
                 tools = {tool.name for tool in (await session.list_tools()).tools}
                 expected = {"apps_list", "nats_server_stats", "nats_jetstream_stats", "prometheus_query", "apps_describe", "stac_collections", "stac_search",
                             "ollama_models", "ollama_running_models", "alertmanager_alerts",
-                            "loki_query", "opencost_allocation", "mediamtx_paths"}
+                            "loki_query", "opencost_allocation"}
                 assert expected == tools
                 report["tool_count"] = len(tools)
                 for name, args in [("apps_list", {}), ("nats_server_stats", {}),
@@ -75,7 +75,7 @@ async def main():
                                    ("stac_collections", {}), ("stac_search", {"bbox": [-75, 40, -74, 41], "limit": 1}),
                                    ("ollama_models", {}), ("ollama_running_models", {}),
                                    ("alertmanager_alerts", {}), ("loki_query", {"query": '{namespace="hermes"}', "limit": 1}),
-                                   ("opencost_allocation", {"window": "1h"}), ("mediamtx_paths", {})]:
+                                   ("opencost_allocation", {"window": "1h"})]:
                     result = await session.call_tool(name, args)
                     payload = result.model_dump(by_alias=True)
                     error_flag = payload.get("isError", payload.get("is_error"))

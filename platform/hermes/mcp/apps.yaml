@@ -32,6 +32,9 @@ apps:
   adapter: mediamtx
   description: Live media stream paths, readiness and traffic without camera control
   url_env: MEDIAMTX_URL
+  enabled: false
+  blocked_reason: Live preflight returned HTTP 401. Dedicated MediaMTX API-read identity and verified authentication adapter required; stream
+    source credentials must not be exposed.
 - id: karakeep
   description: Bookmarks, saved links and knowledge search
   enabled: false

@@ -157,8 +157,8 @@ SDK 2 acceptance compatibility and fail-fast checks were completed by #492/#493.
 The initial four-tool deployment covers NATS and Prometheus only. The expansion
 adds searchable inventory and descriptions, STAC imagery collections/search,
 Ollama installed/running models, active Alertmanager alerts, bounded Loki log
-queries, OpenCost namespace allocations and MediaMTX stream status. This is 13
-callable tools across eight configured apps, including the original integrations.
+queries, OpenCost namespace allocations with MediaMTX stream status blocked by API authentication. This is 12
+callable tools across seven configured apps, including the original integrations.
 Configured is a deployment setting, not proof of upstream health. The acceptance
 workflow checks each exposed tool without exporting application content.
 
@@ -195,3 +195,9 @@ adapter or implement typed operations, provision a dedicated least-privilege app
 identity with SealedSecrets, allow both network directions only for the intended
 pod/port, add boundary tests, pin the built image and run live acceptance from
 Legacy. Optional/blocked entries must not make otherwise healthy tools unavailable.
+
+Expansion preflight: STAC, Alertmanager, Loki and OpenCost returned HTTP 200 from
+Legacy. MediaMTX returned 401 and stays blocked. Direct Legacy-to-Ollama timed out
+under the gateway-only ingress policy; the expansion adds an MCP-pod-only ingress
+exception for inventory reads, preserving the existing gateway rule. Legacy direct
+access stays denied. Runtime acceptance from the MCP must confirm that exception.

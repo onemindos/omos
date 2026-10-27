@@ -1317,7 +1317,7 @@ GitHub DinD runner is a separate real open risk; do not hide it with an audit ex
 Capacity/independent recovery remain pending owner choices. Phase 6 stays In progress.
 
 User-directed MCP coverage follow-through (2026-10-27): expansion prepared from the
-initial NATS/Prometheus slice to eight configured app integrations, 13 tools and an
+initial NATS/Prometheus slice to seven configured app integrations, 12 tools and an
 explicit 32-domain access catalog. CI requires coverage dispositions for all 56
 Git-declared Applications. Credential-gated and unimplemented app integrations
 remain blocked and visible; broad coverage is not claimed complete. No cluster
