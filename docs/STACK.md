@@ -269,3 +269,14 @@ at 200 GiB; the VolSync cache PVC is 1 GiB. Private HTTPS is available at
 CNPG. PRs #424/#425 are merged. The Mac's full-library upload has started;
 Samsung FolderSync two-way acceptance and full-transfer completion remain pending.
 See [setup, cost and acceptance](../platform/nextcloud/README.md).
+
+## New integration awaiting live acceptance
+
+`services/onemind-mcp/` and `platform/hermes/mcp/` define a tier-2, stateless,
+private application MCP for Legacy Hermes. No database/PVC; source/catalog and
+sealed credentials are the recovery artifacts. `platform-legacy` owns the new
+source; the manifest pins the tested GHCR image and the client config merge is
+managed with Legacy. Initial adapters read NATS node
+statistics and Prometheus metrics. It has no Kubernetes API privileges or write
+tools. This is **source preparation**, not a deployed inventory row; see the
+[activation runbook](operations/onemind-mcp.md) for current gates and evidence.

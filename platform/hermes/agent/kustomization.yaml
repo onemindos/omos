@@ -23,5 +23,8 @@ configMapGenerator:
   - name: hermes-litellm-provider
     files:
       - litellm_provider_config.py
+  - name: hermes-onemind-mcp-config
+    files:
+      - onemind_mcp_config.py
 # Secrets are managed by Sealed Secrets — SealedSecret YAMLs in platform/hermes/bridge/.
 # Reconcile through platform-legacy; do not apply this directory by hand.

@@ -1,0 +1,10 @@
+# Verify upstream addresses and policy selectors before deploying.
+apps:
+  - id: nats
+    adapter: nats
+    description: NATS node and JetStream statistics (read only, one node per request)
+    url_env: NATS_MONITOR_URL
+  - id: prometheus
+    adapter: prometheus
+    description: Cluster and application metrics via PromQL (read only)
+    url_env: PROMETHEUS_URL
