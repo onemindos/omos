@@ -165,5 +165,10 @@ spec:
   # no run overlaps backup-takserver-postgres (02:00 UTC, ~2 h 20 min). Explicit UTC.
   schedule: 0 1-23/4 * * *
   timeZone: Etc/UTC
+  # Without a starting deadline the controller starts a missed slot as soon as it next
+  # syncs (for example right after this schedule changes, at whatever time that is, even
+  # inside the 02:00 backup). Skip a slot that is more than 10 min late; the next one
+  # catches up.
+  startingDeadlineSeconds: 600
   successfulJobsHistoryLimit: 3
   suspend: false
