@@ -102,6 +102,4 @@ spec:
     - from:
         - podSelector:
             matchLabels: {app: backstage}
-        - podSelector:
-            matchLabels: {app: backstage-backup}
       ports: [{port: 5432, protocol: TCP}]
