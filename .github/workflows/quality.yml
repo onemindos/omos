@@ -36,7 +36,10 @@ jobs:
   lint:
     name: Lint & Validate
     # Per-change lint gates do not apply to the scheduled/manual full-tree run.
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
@@ -57,6 +60,9 @@ jobs:
         env:
           YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python scripts/validate_changed_yaml.py
+
+      - name: Require MCP coverage for every Git-declared Application
+        run: python scripts/check_onemind_mcp_coverage.py
 
       - name: Report existing repository YAML debt
         continue-on-error: true
@@ -86,6 +92,8 @@ jobs:
 
   manifests:
     name: Kubernetes manifest schema (kubeconform)
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 15
     steps:
@@ -128,6 +136,8 @@ jobs:
 
   helm:
     name: Helm render check
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 30
     steps:
@@ -196,6 +206,8 @@ jobs:
 
   secrets:
     name: Secret scan (gitleaks)
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 10
     steps:
