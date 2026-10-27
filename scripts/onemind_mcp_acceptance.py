@@ -2,6 +2,7 @@
 import asyncio
 import json
 import os
+import re
 import traceback
 from pathlib import Path
 
@@ -82,6 +83,21 @@ async def main():
                     if not isinstance(error_flag, bool):
                         raise RuntimeError("Unrecognized MCP result error flag")
                     if error_flag:
+                        error_text = " ".join(item.get("text", "") for item in payload.get("content", []))
+                        report["failure"] = {"tool": name,
+                            "http_status_codes": re.findall(r"Upstream returned HTTP ([0-9]{3})", error_text),
+                            "flags": [flag for flag in ("invalid JSON", "unexpected response", "exceeds 1 MiB", "unavailable", "timeout") if flag in error_text]}
+                        if name == "loki_query":
+                            async with httpx.AsyncClient(trust_env=False, timeout=10) as diagnostic:
+                                response = await diagnostic.get("http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/query_range",
+                                    params={"query": '{namespace="hermes"}', "limit": 1, "since": "1h", "direction": "backward"})
+                                report["failure"]["direct_status"] = response.status_code
+                                if response.status_code != 200:
+                                    # Classify known errors without exporting response content or logs.
+                                    text = response.text.lower()
+                                    report["failure"]["direct_flags"] = [term for term in (
+                                        "parse error", "invalid", "timeout", "max", "limit", "too many", "not ready", "no org id", "ring", "replica", "unhealthy") if term in text]
+                        print(json.dumps(report, indent=2))
                         raise RuntimeError(f"{name} failed; no response body exported")
                     if name == "apps_list":
                         catalog = payload.get("structuredContent", payload.get("structured_content"))
