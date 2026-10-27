@@ -10,6 +10,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: make-sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 # `default` is the cluster's built-in namespace. It was defined by the (now removed)
 # platform-openchoreo-defaults Application, which also set openchoreo.dev/control-plane;

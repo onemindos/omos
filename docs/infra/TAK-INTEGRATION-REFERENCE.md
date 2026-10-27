@@ -1,9 +1,9 @@
 ---
 title: "TAK Integration Reference"
 type: reference
-status: active
+status: historical
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-10-27
 owner: zeus
 category: infrastructure
 domain: SO/03
@@ -18,6 +18,21 @@ ai_summary: "Complete TAK ecosystem reference — every product (ATAK/WinTAK/iTA
 ---
 
 # TAK Integration Reference
+
+> **HISTORICAL (marked 2026-10-27). Do not use this as a description of the live system.**
+> It was written in June 2026, for a Mac-hosted NATS (`onemind-mac`, accounts CORE/FABRIC/INTERFACE)
+> and a planned OpenTAKServer/FreeTAKServer deployment. Neither matches what runs today:
+>
+> - **Live:** official TAK Server **5.8** on OneMind GHCR images in namespace `takserver` on DOKS,
+>   reachable only over the tailnet (`tak.tail717ba0.ts.net`: 8089, 8443, 8446, 64738).
+>   See [`platform/takserver/README.md`](../../platform/takserver/README.md).
+> - **Bus:** the in-cluster 3-node NATS (`nats.nats`) is the authority. The NatsBridgePlugin
+>   reaches it through `tak-nats-leaf`.
+> - **Subjects:** the live bridge uses `tak.cot.out` (TAK → bus, stream `COT`) and `tak.cot.inject`
+>   (bus → TAK), not `evt.tak.cot.{uid}` as in §5–§6 below. That gap is an open decision:
+>   [NATS-DOCTRINE §9.8](../NATS-DOCTRINE.md).
+>
+> The product catalog, CoT protocol notes and SDK sections remain useful background.
 
 > **Companion to [[TACMAP-COP-STANDARD]]** (doctrine — what/why) and **[[NATS-DOCTRINE]] §9**
 > (geo-envelope standard and locked subject taxonomy).

@@ -8,6 +8,8 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: guard
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -17,6 +19,8 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: guard
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -26,6 +30,8 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: guard
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -44,6 +50,8 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: data
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -53,6 +61,8 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: system
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -62,6 +72,8 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
   labels:
     onemind.io/layer: make-sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -72,6 +84,8 @@ metadata:
     volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/layer: system
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 # The namespaces below are created by an Application with CreateNamespace=true (or, for
 # matrix, by nothing in Git) that does not ship its own labelled Namespace. They are labelled
@@ -89,6 +103,8 @@ metadata:
     volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/layer: make-sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -109,6 +125,8 @@ metadata:
     volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/layer: data
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -119,6 +137,8 @@ metadata:
     volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/layer: sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -129,6 +149,8 @@ metadata:
     volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/layer: act
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 # Moved from platform/ecosystem/resources/namespaces.yaml (the site/ecosystem labels are kept).
 apiVersion: v1
@@ -141,6 +163,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: make-sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -153,6 +177,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: decide
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace

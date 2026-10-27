@@ -17,23 +17,3 @@ subjects:
   - kind: ServiceAccount
     name: headlamp
     namespace: kube
----
-# ServiceAccount + ClusterRoleBinding for Kubernetes Dashboard
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: kubernetes-dashboard
-  namespace: kube
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: kubernetes-dashboard
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: kubernetes-dashboard
-    namespace: kube
