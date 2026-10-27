@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: hermes
 resources:
   - auth.sealedsecret.yaml
+  - registry.sealedsecret.yaml
   - deployment.yaml
   - service.yaml
   - network-policy.yaml
