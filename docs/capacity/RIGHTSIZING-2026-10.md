@@ -217,17 +217,17 @@ ecosystem pool is now one node, `onemind-ecosystem-cpu-3rhwrp`. Requested memory
 `container_memory_working_set_bytes` (a single kubelet/cAdvisor job, so nothing is double counted; retention is 10 days).
 
 Rule: new memory request = 7-day p95 x 1.3, rounded up to the step list above (64 Mi floor), and never below current use x 1.25
-or the 10-day peak. Limits are not changed. CPU is changed only where it is grossly over (Synapse).
+or the 10-day peak. This is not the rule in the method above (7-day peak x 1.3, 64 Mi floor), but for the four containers changed
+here both rules give the same values. Limits are not changed. CPU is changed only where it is grossly over (Synapse).
 
-| Workload (node) | Container | p95 / 10-day peak / now (Mi) | Mem req old -> new | CPU req old -> new | Owning app |
+| Workload (node) | Container | 7-day p95 / 7-day peak / 10-day peak / now (Mi) | Mem req old -> new | CPU req old -> new | Owning app |
 |---|---|---|---|---|---|
-| matrix synapse (3rtf4m) | synapse | 181 / 199 / 169 | 1Gi -> 256Mi | 500m -> 100m (p95 10m, max 25m) | platform-matrix (manual sync) |
-| omos feed-intel (3rtf4m) | feeds | 42 / 51 / 41 | 192Mi -> 64Mi | 100m (unchanged) | platform-omos |
-| onetak tak-portal (3rtf47) | portal | 44 / 54 / 43 | 128Mi -> 64Mi | 50m (unchanged) | platform-onetak |
-| onetak webodm-broker (3rtf47) | broker | 4 / 9 / 3 | 128Mi -> 64Mi | 100m (unchanged) | platform-onetak |
+| matrix synapse (3rtf4m) | synapse | 181 / 182 / 199 / 169 | 1Gi -> 256Mi | 500m -> 100m (p95 10m, peak 29m) | platform-matrix (manual sync) |
+| omos feed-intel (3rtf4m) | feeds | 42 / 47 / 51 / 41 | 192Mi -> 64Mi | 100m (unchanged) | platform-omos |
+| onetak tak-portal (3rtf47) | portal | 44 / 44 / 54 / 43 | 128Mi -> 64Mi | 50m (unchanged) | platform-onetak |
+| onetak webodm-broker (3rtf47) | broker | 4 / 5 / 9 / 3 | 128Mi -> 64Mi | 100m (unchanged) | platform-onetak |
 
-Requested memory per hub-core node, assuming every pod stays on its current node (the scheduler may place a restarted pod elsewhere;
-webodm-broker already prefers the ecosystem pool):
+Requested memory per hub-core node if every restarted pod comes back on its current node (see the placement note below):
 
 | Node | Before | After |
 |---|---|---|
@@ -236,12 +236,25 @@ webodm-broker already prefers the ecosystem pool):
 | hub-core ...3rtf4q | 9,805 Mi (71.9%) | 9,805 Mi (71.9%) |
 | **Pool** | **33,571 Mi (82.0%)** | **32,547 Mi (79.5%)** |
 
+No node crosses 80% because of this pass. ...3rtf47 and ...3rtf4q were already under it, and ...3rtf4m, the only node over it,
+stays above it.
+
+Same placement is not the likely outcome. The scheduler puts each restarted pod on the node that scores best, and the default
+scoring favours nodes with the most unrequested CPU and memory. Even after its old Synapse pod is gone, ...3rtf4m is the most
+requested node (12,112 Mi, 88.8%), so it is the least likely target. Synapse uses `Recreate`, has no affinity, and its one block
+volume only requires region `nyc3`. On the 2026-10-27 numbers it most likely lands on the untainted ecosystem node or on ...3rtf4q,
+which score within one point of each other. If it leaves ...3rtf4m, that node ends at 11,984 Mi (87.8%; 11,920 Mi, 87.4%, if
+feed-intel moves too) and the receiving node gains 256 Mi. If it lands on the ecosystem node, it takes that node's last free DigitalOcean volume slot (15 of 15). Until a volume
+detaches there, any further block-volume pod that prefers the ecosystem pool is placed on hub-core instead, and the move of
+hermes-legacy, ClickHouse or onemind-data-2 described below is blocked. feed-intel, tak-portal and webodm-broker have no volumes
+and can move too; webodm-broker prefers the ecosystem pool (weight 100), so ...3rtf47 most likely loses its full 128 Mi.
+
 ...3rtf4m stays above 80% because what is left on it is tier-1 (TAK PostgreSQL, Ignite and NATS, the NATS cluster, Argo CD,
-Authentik PostgreSQL) or requests that are already **below** real use: hermes-legacy 2,128 Mi against a p95 of 3,404 Mi, ClickHouse
-2 Gi against a 10-day peak of 2,644 Mi (raised on purpose in #227), Nextcloud 1,024 Mi and onemind-data-2 512 Mi against container
-p95s that sum to about 1,520 Mi and 615 Mi. Lowering requests cannot fix that node. Placement can: hermes-legacy, ClickHouse and
-onemind-data-2 all prefer the ecosystem pool, but the single ecosystem node has 14 of its 15 DigitalOcean volume attachments in use,
-so pods with block volumes cannot follow that preference.
+Authentik PostgreSQL, Hermes) or requests that are already **below** real use: hermes-legacy (tier-1) 2,128 Mi against a p95 of
+3,404 Mi, ClickHouse 2 Gi against a 10-day peak of 2,644 Mi (raised on purpose in #227), Nextcloud 1,024 Mi and onemind-data-2
+512 Mi against container p95s that sum to about 1,520 Mi and 615 Mi. Lowering requests cannot fix that node. Placement can:
+hermes-legacy, ClickHouse and onemind-data-2 all prefer the ecosystem pool, but the single ecosystem node has 14 of its 15
+DigitalOcean volume attachments in use, so pods with block volumes cannot follow that preference.
 
 Not changed in this pass:
 
@@ -252,15 +265,27 @@ Not changed in this pass:
   ride along with the next Postgres restart that is needed for another reason.
 - `onetak-media` (mediamtx, 128 -> 64 Mi possible): `platform/onetak/media-mtx.yaml` has existing yamllint errors, and the
   changed-YAML gate would force an unrelated reformat of the file.
-- hermes-fresh (9 h of history), vaultwarden (34 h of history, 64 Mi), n8n (the 10-day peak of 612 Mi is above its request),
+- vaultwarden (34 h of history, 64 Mi), n8n (the 10-day peak of its `n8n` container, 612 Mi, is above its 512 Mi request),
   matrix element-web and redis (already at the 64 Mi floor), and falcoctl (budget set on 2026-10-23 for download bursts).
-- Tier-1 (TAK Server including tak-ldap, NATS, Authentik, sealed-secrets, Argo CD), takml (separate PRs) and DOKS-managed
-  kube-system pods.
+- Everything tier-1 in `docs/STACK.md` (TAK Server, NATS, Authentik, ingress, cert-manager, sealed-secrets, backups and ops,
+  Argo CD, Hermes). That includes hermes-legacy and hermes-fresh, and tak-ldap: `docs/STACK.md` lists tak-ldap under the tier-2
+  `platform-fedhub`, but `platform/takserver/deploy/tak-ldap.yaml` is applied by `platform-takserver` (live tracking-id), the
+  TAK Server overlay.
+- takml (separate PRs) and DOKS-managed kube-system pods.
 
-Rollout: no pod restarts on merge alone. `platform-matrix` is manual-sync. `platform-onetak` and `platform-omos` list
-`/spec/template/spec/containers/0/resources` under `ignoreDifferences` without `RespectIgnoreDifferences`, so a change to resources
-alone leaves them Synced. Their next sync, manual or triggered by any other change in those directories, applies the new requests.
-Live resources matched Git for every container in the three apps before this change, so a sync touches only the four Deployments
-above. Each of those restarts once when synced. Synapse uses `Recreate` (Matrix is down for about a minute while
-its volume re-attaches). The Redis broker for webodm keeps no data on disk, so sync it while no
-WebODM task is running.
+Rollout: no pod restarts on merge alone. `platform-matrix` is manual-sync. `platform-onetak` and `platform-omos` sync automatically
+(with self-heal) but list `/spec/template/spec/containers/0/resources` under `ignoreDifferences` without
+`RespectIgnoreDifferences`, so a change to resources alone leaves them Synced. Their next sync applies the new requests. Without a
+deliberate sync, that happens whenever any other change under `platform/onetak` or `platform/omos` merges or self-heal reverts other
+drift, at a time nobody chose, so sync both apps on purpose right after merge. Live resources matched Git for every container in
+the three apps before this change, so a sync touches only the four Deployments above, and each restarts once:
+
+- Synapse uses `Recreate`: Matrix is down for about 1-2 minutes, longer if the new pod lands on another node and its volume has
+  to detach and re-attach. This follows step 6 of `docs/operations/matrix-drift-2026-10-23.md`: sync Synapse alone with
+  server-side apply, and do not restart Postgres or Redis.
+- The webodm Redis broker keeps no data on disk, so a restart drops queued Celery messages. Sync it while no WebODM task is running.
+- feed-intel has no readiness probe, so the rolling update removes the old pod as soon as the new container starts. That container
+  first runs an unpinned `pip install nats-py aiohttp` on the mutable `python:3.12-alpine` image. If PyPI is down or a new release
+  breaks the script, feed-intel stays down until the install succeeds or the script is fixed. Reverting does not help, because the
+  reverted pod runs the same install.
+- tak-portal has readiness and liveness probes, so its surge rollout should not interrupt it.
