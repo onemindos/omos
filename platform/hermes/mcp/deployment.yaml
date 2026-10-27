@@ -62,9 +62,10 @@ spec:
             - name: PROMETHEUS_URL
               value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
           resources:
+            # Observed 2026-10-27: peak 5m CPU / 44Mi working set since deploy.
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 25m
+              memory: 64Mi
             limits:
               cpu: "1"
               memory: 512Mi
