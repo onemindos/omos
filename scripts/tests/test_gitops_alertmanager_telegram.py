@@ -81,7 +81,11 @@ class TelegramReceiver(unittest.TestCase):
 
 
 class OwnerSealedSecret(unittest.TestCase):
-    """Skipped until the owner commits the SealedSecret; the receiver fails safe without it."""
+    """Run once the owner commits the SealedSecret; skipped, not failed, before that.
+
+    These tests run just before the Helm render in CI's helm job, so a failure would also skip that
+    render. If the file were ever missing on main, every later PR would lose its render check.
+    """
 
     def setUp(self):
         if not SEALED.is_file():
