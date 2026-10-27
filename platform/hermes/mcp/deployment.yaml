@@ -59,6 +59,11 @@ spec:
                   key: token
             - name: NATS_MONITOR_URL
               value: http://nats-0.nats-headless.nats.svc.cluster.local:8222
+            # Images with multi-node NATS tools read every node and fail over in this
+            # order; older images ignore this and use NATS_MONITOR_URL (nats-0).
+            - name: NATS_MONITOR_URLS
+              value: >-
+                http://nats-0.nats-headless.nats.svc.cluster.local:8222,http://nats-1.nats-headless.nats.svc.cluster.local:8222,http://nats-2.nats-headless.nats.svc.cluster.local:8222
             - name: PROMETHEUS_URL
               value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
             - name: STAC_URL
