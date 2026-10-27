@@ -2,6 +2,7 @@
 import asyncio
 import json
 import os
+import traceback
 from pathlib import Path
 
 import httpx
@@ -68,7 +69,11 @@ async def main():
                 for name, args in [("apps_list", {}), ("nats_server_stats", {}),
                                    ("nats_jetstream_stats", {}), ("prometheus_query", {"query": "up"})]:
                     result = await session.call_tool(name, args)
-                    if result.isError:
+                    payload = result.model_dump(by_alias=True)
+                    error_flag = payload.get("isError", payload.get("is_error"))
+                    if not isinstance(error_flag, bool):
+                        raise RuntimeError("Unrecognized MCP result error flag")
+                    if error_flag:
                         raise RuntimeError(f"{name} failed; no response body exported")
                     report["tools"][name] = "passed"
                 resources = await session.list_resources()
@@ -84,8 +89,11 @@ async def main():
             response = await kube.get(f"https://kubernetes.default.svc/apis/apps/v1/namespaces/hermes/deployments/{name}")
             response.raise_for_status()
             data = response.json()
-            assert data["status"].get("observedGeneration", 0) >= data["metadata"]["generation"]
-            assert data["status"].get("availableReplicas", 0) == data["spec"]["replicas"] == 1
+            if (data["status"].get("observedGeneration", 0) < data["metadata"]["generation"]
+                    or data["status"].get("availableReplicas", 0) != data["spec"]["replicas"]):
+                print(json.dumps({"phase": "waiting_for_rollout", **await observe_rollout()}, indent=2))
+                return 75
+            assert data["spec"]["replicas"] == 1
             report[name] = {"available_replicas": 1, "generation": data["metadata"]["generation"],
                             "images": [c["image"] for c in data["spec"]["template"]["spec"]["containers"]]}
         response = await kube.get("https://kubernetes.default.svc/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/platform-legacy")
@@ -93,10 +101,16 @@ async def main():
         status = response.json()["status"]
         report["argo"] = {"sync": status["sync"]["status"], "health": status["health"]["status"],
                           "revisions": status["sync"].get("revisions", [])}
-        assert report["argo"]["sync"] == "Synced"
-        assert report["argo"]["health"] == "Healthy"
+        if report["argo"]["sync"] != "Synced" or report["argo"]["health"] != "Healthy":
+            print(json.dumps({"phase": "waiting_for_argo", **report}, indent=2))
+            return 75
     print(json.dumps(report, indent=2))
 
 
 if __name__ == "__main__":
-    raise SystemExit(asyncio.run(main()))
+    try:
+        result = asyncio.run(main())
+    except Exception as error:
+        traceback.print_exception(error)
+        raise SystemExit(78)
+    raise SystemExit(result)
