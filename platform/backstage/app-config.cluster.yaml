@@ -50,6 +50,8 @@ catalog:
     - allow: [Component, System, API, Resource, Location, Domain]
   # GitHub discovery (catalog-backend-module-github; images without it ignore this block). Reuses
   # the read-only GitHub App under integrations.github: no new credential and no webhook ingress.
+  # Scope: every public onemindos repository plus the private ones the App installation selects
+  # (installation tokens read any public repository); add filters.repository to narrow it.
   # Registers a repository only when its main branch has /catalog-info.yaml; forks and archived
   # repositories are skipped. Keep the path literal: a wildcard also matches the Scaffolder
   # skeletons. The rules above apply to discovered entities. Rollback: delete this block.

@@ -34,8 +34,8 @@ Home reads shared app links from registered Catalog Components with an Open appl
 
 `@backstage/plugin-catalog-backend-module-github` is pinned at `0.14.0`, the version in
 the Backstage `1.55.3` release manifest. `catalog.providers.github.onemindos` in
-`app-config.cluster.yaml` scans the `onemindos` repositories the GitHub App can see every
-30 minutes and registers `https://github.com/onemindos/<repo>/blob/main/catalog-info.yaml`
+`app-config.cluster.yaml` scans the `onemindos` organization every 30 minutes and
+registers `https://github.com/onemindos/<repo>/blob/main/catalog-info.yaml`
 only where the `main` branch contains that file (`validateLocationsExist`). Forks and
 archived repositories are skipped, and `catalog.rules` applies to everything discovered
 (no User, Group or Template). Keep the path literal: a `**/catalog-info.yaml` wildcard
@@ -45,10 +45,15 @@ would also ingest the Scaffolder skeletons under
 The provider authenticates with the existing organization-owned read-only GitHub App
 (`integrations.github`, sealed in `backstage-plugin-integrations`). No credential, webhook
 ingress or event producer is added: a new repository descriptor is registered on the
-next scan, and edits to registered descriptors follow normal catalog processing. The App's
-repository selection is the access boundary (see the
-[installation record](../../docs/backstage-roadmap/COMMUNITY-PLUGIN-INSTALLATION.md)).
-On 2026-10-27 no organization repository had a root `catalog-info.yaml` on `main`, so the
+next scan, and edits to registered descriptors follow normal catalog processing. The scan
+covers every public non-fork `onemindos` repository plus any private one the App
+installation selects
+([installation record](../../docs/backstage-roadmap/COMMUNITY-PLUGIN-INSTALLATION.md)).
+Installation tokens can read any public repository, so that selection limits only private
+repositories, and anyone who can merge to `main` in a scanned repository can add entities
+within `catalog.rules`, including Locations that point at other URLs. To narrow the scan,
+add a `filters.repository` regular expression (for example `'^omos$'`). On 2026-10-27 no
+organization repository had a root `catalog-info.yaml` on `main`, so the
 provider registers nothing until one is merged. The module also lets Catalog Import
 analyze GitHub repository URLs; registration still needs `catalog.location.create`
 (administrators only).
