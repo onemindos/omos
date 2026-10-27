@@ -29,6 +29,9 @@ CLI = os.environ.get("KYVERNO_CLI") or shutil.which("kyverno")
 IMAGE_POLICY = "disallow-latest-image-tag"
 RESOURCE_POLICY = "require-requests-limits"
 GUARDED_RULES = ("require-image-tag", "validate-image-tag", "validate-resources")
+# Admission enforces these; the other policies stay Audit (see the policy file header).
+ENFORCED_POLICIES = {IMAGE_POLICY, "require-namespace-layer-label"}
+PRE_EXISTING = "pre-existing violations are allowed"
 BAD_CONTAINER = {"name": "workload", "image": "busybox:latest", "resources": {}}
 PROVIDER_BUDGET_SKIP = {
     "provider-system-pod", "provider-system-deployment", "provider-system-daemonset",
@@ -236,6 +239,19 @@ class PolicyDelivery(unittest.TestCase):
                     self.assertTrue(rule["skipBackgroundRequests"])
                     self.assertTrue(rule["validate"]["allowExistingViolations"])
 
+    def test_only_violation_free_policies_enforce(self):
+        names = set()
+        for policy in yaml.safe_load_all(POLICY.read_text()):
+            name = policy["metadata"]["name"]
+            names.add(name)
+            with self.subTest(policy=name):
+                expected = "Enforce" if name in ENFORCED_POLICIES else "Audit"
+                self.assertEqual(policy["spec"]["validationFailureAction"], expected)
+                for rule in policy["spec"]["rules"]:
+                    # Kyverno 1.19.1 lets a rule-level failureAction override the spec field.
+                    self.assertNotIn("failureAction", rule["validate"])
+        self.assertLessEqual(ENFORCED_POLICIES, names)
+
 
 class KyvernoNativeNumberContext(unittest.TestCase):
     """Reproduce the reports controller's native-int64 context without JSON laundering."""
@@ -301,6 +317,7 @@ class KyvernoHistoryEngine(unittest.TestCase):
         resources = Path(cls.temp.name) / "resources.yaml"
         resources.write_text(yaml.safe_dump_all([r for r, _ in cls.cases], sort_keys=False))
         cls.results = {}
+        cls.messages = {}
         for mode, variables in [
             ("background", []),
             ("empty-uid", ["--set", "request.uid="]),
@@ -323,6 +340,8 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 raise AssertionError(completed.stdout + completed.stderr)
             cls.results[mode] = {(reference["name"], result["policy"], result["rule"]): result["result"]
                                  for result in report["results"] for reference in result["resources"]}
+            cls.messages[mode] = {(reference["name"], result["policy"], result["rule"]): result.get("message", "")
+                                  for result in report["results"] for reference in result["resources"]}
 
     def assert_guarded_results(self, mode, background):
         for resource, skip in self.cases:
@@ -340,8 +359,16 @@ class KyvernoHistoryEngine(unittest.TestCase):
                 expected[2] = "skip"
             for rule, result in zip(GUARDED_RULES, expected):
                 policy = RESOURCE_POLICY if rule == "validate-resources" else IMAGE_POLICY
+                key = (name, policy, prefix + rule)
                 with self.subTest(mode=mode, resource=name, rule=rule):
-                    self.assertEqual(self.results[mode].get((name, policy, prefix + rule)), result)
+                    if mode == "admission-update" and policy in ENFORCED_POLICIES and result == "fail":
+                        # The CLI simulates UPDATE with oldObject == object, so Enforce with
+                        # allowExistingViolations admits the unchanged violation. The message proves the
+                        # rule was evaluated rather than skipped by the history precondition.
+                        self.assertEqual(self.results[mode].get(key), "skip")
+                        self.assertIn(PRE_EXISTING, self.messages[mode].get(key, ""))
+                    else:
+                        self.assertEqual(self.results[mode].get(key), result)
 
     def test_background_skips_only_controller_history(self):
         self.assert_guarded_results("background", True)

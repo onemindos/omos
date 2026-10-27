@@ -1,9 +1,12 @@
 # Namespace layer label
 
 Every namespace that Git defines carries `onemind.io/layer` with one of seven values. The
-Kyverno audit policy `require-namespace-layer-label` (`platform/security/kyverno-policies-audit.yaml`,
-PR #395) reports namespaces without a valid value; it excludes `kube-system`, `kube-public`
-and `kube-node-lease`.
+Kyverno policy `require-namespace-layer-label` (`platform/security/kyverno-policies-audit.yaml`,
+PR #395) enforces it: admission denies creating a namespace without a valid value and any update
+that removes or invalidates it. It excludes `kube-system`, `kube-public` and `kube-node-lease`. Argo CD
+`CreateNamespace=true` creates a bare namespace unless the Application itself contains the
+labelled Namespace manifest, so a new Application must ship that manifest or set
+`syncPolicy.managedNamespaceMetadata.labels`.
 
 | Layer | Meaning | Namespaces labelled in Git |
 |---|---|---|

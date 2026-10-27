@@ -6,7 +6,7 @@ One place for the security tools, applied by the `platform-security` Application
 
 | Application | Role in zero trust | Namespace |
 |---|---|---|
-| `ecosystem-kyverno` | Policy guardrails (admission control); no policies yet | `kyverno` |
+| `ecosystem-kyverno` | Policy guardrails (`kyverno-policies-audit.yaml`): image tags and namespace layer label enforced; requests/limits and privileged/hostPath audit only | `kyverno` |
 | `ecosystem-falco` | Runtime threat detection; alerts not delivered yet | `falco` |
 | `ecosystem-openfga` | Fine-grained authorization; used by Backstage Missions only | `onemind-core` (own namespace pending the OneMind Core decision) |
 
