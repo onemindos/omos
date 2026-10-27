@@ -42,6 +42,8 @@ alertmanager:
   # routes with `continue: true`, so they never stop an alert from reaching Telegram. Telegram is
   # configured here, not in an AlertmanagerConfig, because that CRD only takes the chat ID as a
   # literal integer; here the token and chat ID are both files from a Secret, never in Git.
+  # The restated defaults (global, inhibit_rules, root route timers, templates) are copied from chart
+  # 87.16.1 and no longer follow it: re-sync them with the chart's values.yaml on every chart bump.
   config:
     global:
       resolve_timeout: 5m
