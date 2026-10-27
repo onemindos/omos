@@ -78,6 +78,27 @@ def main():
         except Exception as error:
             # Avoid exception strings that could contain response data.
             report["upstreams"][name] = {"reachable": False, "error_type": type(error).__name__}
+    # Fixed read-only app probes; record only HTTP status and top-level shape.
+    async def app_probes():
+        import asyncio
+        targets = {
+            "stac": "http://stac-api.stac.svc.cluster.local:8080/collections",
+            "ollama": "http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434/api/tags",
+            "alertmanager": "http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093/api/v2/alerts",
+            "loki": "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/labels",
+            "opencost": "http://opencost.opencost.svc.cluster.local:9003/allocation?window=1h&aggregate=namespace&accumulate=true",
+            "mediamtx": "http://onetak-media.onetak.svc.cluster.local:4000/v3/paths/list?itemsPerPage=1",
+        }
+        async with httpx.AsyncClient(trust_env=False, timeout=12, follow_redirects=False) as client:
+            async def probe(name, url):
+                try:
+                    async with client.stream("GET", url) as response:
+                        return name, {"status": response.status_code}
+                except Exception as error:
+                    return name, {"error_type": type(error).__name__}
+            return dict(await asyncio.gather(*(probe(name, url) for name, url in targets.items())))
+    import asyncio
+    report["application_probes"] = asyncio.run(app_probes())
     for package in ("mcp", "hermes-agent"):
         try:
             report[package + "_version"] = importlib.metadata.version(package)
