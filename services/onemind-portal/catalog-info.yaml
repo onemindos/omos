@@ -2,8 +2,8 @@
 # catalog already defines component:default/backstage (platform/backstage/catalog/apps.yaml,
 # generated from catalog/structure.yaml), and Backstage rejects a second definition of the same
 # entity ref instead of merging it. To register this file, remove the static entry and its
-# structure.yaml source in the same change that lists it, and carry over the operational
-# annotations that entry holds (Kubernetes, Argo CD, Grafana, runbook).
+# structure.yaml source in the same change that lists it, and carry over the tags and the
+# annotations that entry holds (Kubernetes, Argo CD, Grafana, logs, runbook, hosting, pillar review).
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -13,6 +13,7 @@ metadata:
   annotations:
     github.com/project-slug: onemindos/omos
   labels:
+    onemind.io/pillar: so
     onemind.io/catalog-role: app
 spec:
   type: service
