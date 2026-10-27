@@ -34,29 +34,30 @@ Home reads shared app links from registered Catalog Components with an Open appl
 
 `@backstage/plugin-catalog-backend-module-github` is pinned at `0.14.0`, the version in
 the Backstage `1.55.3` release manifest. `catalog.providers.github.onemindos` in
-`app-config.cluster.yaml` scans the `onemindos` organization every 30 minutes and
-registers `https://github.com/onemindos/<repo>/blob/main/catalog-info.yaml`
-only where the `main` branch contains that file (`validateLocationsExist`). Forks and
-archived repositories are skipped, and `catalog.rules` applies to everything discovered
-(no User, Group or Template). Keep the path literal: a `**/catalog-info.yaml` wildcard
-would also ingest the Scaffolder skeletons under
-`services/onemind-portal/templates/*/skeleton/`.
+`app-config.cluster.yaml` scans the `onemindos` organization every 30 minutes, keeps only
+`omos` (`filters.repository: '^omos$'`) and registers
+`https://github.com/onemindos/omos/blob/main/catalog-info.yaml` only when the `main`
+branch contains that file (`validateLocationsExist`). Forks and archived repositories stay
+excluded, and `catalog.rules` applies to everything discovered (no User, Group or
+Template). Keep the path literal: a `**/catalog-info.yaml` wildcard would also ingest the
+Scaffolder skeletons under `services/onemind-portal/templates/*/skeleton/`.
 
 The provider authenticates with the existing organization-owned read-only GitHub App
 (`integrations.github`, sealed in `backstage-plugin-integrations`). No credential, webhook
-ingress or event producer is added: a new repository descriptor is registered on the
-next scan, and edits to registered descriptors follow normal catalog processing. The scan
-covers every public non-fork `onemindos` repository plus any private one the App
-installation selects
-([installation record](../../docs/backstage-roadmap/COMMUNITY-PLUGIN-INSTALLATION.md)).
-Installation tokens can read any public repository, so that selection limits only private
-repositories, and anyone who can merge to `main` in a scanned repository can add entities
-within `catalog.rules`, including Locations that point at other URLs. To narrow the scan,
-add a `filters.repository` regular expression (for example `'^omos$'`). On 2026-10-27 no
-organization repository had a root `catalog-info.yaml` on `main`, so the
-provider registers nothing until one is merged. The module also lets Catalog Import
-analyze GitHub repository URLs; registration still needs `catalog.location.create`
-(administrators only).
+ingress or event producer is added: a root descriptor merged to `main` is registered on the
+next scan, and edits to registered descriptors follow normal catalog processing. The App
+installation selects only `omos`
+([installation record](../../docs/backstage-roadmap/COMMUNITY-PLUGIN-INSTALLATION.md)),
+and that selection is the real limit. The provider's organization listing also returns the
+other public `onemindos` repositories, but `@backstage/integration` refuses to read a file
+from any repository outside the installation's selection (no `publicAccess` is configured).
+A descriptor there would only produce a Location that fails on every processing cycle, so
+the filter leaves those repositories out. To add one, select it in the App installation and
+widen `filters.repository` in the same change. Anyone who can merge to `main` in `omos` can
+add entities within `catalog.rules`, including Locations that point at other URLs. On
+2026-10-27 `omos` had no root `catalog-info.yaml` on `main`, so the provider registers
+nothing until one is merged. The module also lets Catalog Import analyze GitHub repository
+URLs; registration still needs `catalog.location.create` (administrators only).
 
 The block takes effect only once a portal image built from this source is pinned in
 `deployment.yaml`; older images ignore it. Rollback: delete `catalog.providers.github`

@@ -26,7 +26,9 @@ class GithubDiscoveryTests(unittest.TestCase):
         self.assertEqual(provider["organization"], "onemindos")
         # Literal path: a wildcard would also ingest the Scaffolder skeleton descriptors.
         self.assertEqual(provider["catalogPath"], "/catalog-info.yaml")
-        self.assertEqual(provider["filters"], {"branch": "main", "allowForks": False})
+        # omos is the only repository the App installation selects; @backstage/integration refuses
+        # to read any other onemindos repository with it, so a wider filter only adds failing Locations.
+        self.assertEqual(provider["filters"], {"branch": "main", "repository": "^omos$", "allowForks": False})
         self.assertIs(provider["validateLocationsExist"], True)
         # No credential or host of its own: it authenticates through integrations.github.
         self.assertNotIn("host", provider)
