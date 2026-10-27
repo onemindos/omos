@@ -216,13 +216,12 @@ ecosystem pool is now one node, `onemind-ecosystem-cpu-3rhwrp`. Requested memory
 2026-10-27 09:15 UTC: `kubectl describe nodes`, `kubectl top pods -A --containers`, and Prometheus 7-day and 10-day windows of
 `container_memory_working_set_bytes` (a single kubelet/cAdvisor job, so nothing is double counted; retention is 10 days).
 
-Rule: new memory request = 7-day p95 x 1.3, rounded up to the step list above (64 Mi floor, 128 Mi for databases), and never below
-current use x 1.25 or the 10-day peak. Limits are not changed. CPU is changed only where it is grossly over (Synapse).
+Rule: new memory request = 7-day p95 x 1.3, rounded up to the step list above (64 Mi floor), and never below current use x 1.25
+or the 10-day peak. Limits are not changed. CPU is changed only where it is grossly over (Synapse).
 
 | Workload (node) | Container | p95 / 10-day peak / now (Mi) | Mem req old -> new | CPU req old -> new | Owning app |
 |---|---|---|---|---|---|
 | matrix synapse (3rtf4m) | synapse | 181 / 199 / 169 | 1Gi -> 256Mi | 500m -> 100m (p95 10m, max 25m) | platform-matrix (manual sync) |
-| matrix postgres-0 (3rtf47) | postgres | 67 / 89 / 58 | 256Mi -> 128Mi | 100m (unchanged) | platform-matrix (manual sync) |
 | omos feed-intel (3rtf4m) | feeds | 42 / 51 / 41 | 192Mi -> 64Mi | 100m (unchanged) | platform-omos |
 | onetak tak-portal (3rtf47) | portal | 44 / 54 / 43 | 128Mi -> 64Mi | 50m (unchanged) | platform-onetak |
 | onetak webodm-broker (3rtf47) | broker | 4 / 9 / 3 | 128Mi -> 64Mi | 100m (unchanged) | platform-onetak |
@@ -232,10 +231,10 @@ webodm-broker already prefers the ecosystem pool):
 
 | Node | Before | After |
 |---|---|---|
-| hub-core ...3rtf47 | 10,630 Mi (77.9%); 10,886 Mi (79.8%) while a VolSync mover runs | 10,374 Mi (76.0%); 10,630 Mi (77.9%) with the mover |
+| hub-core ...3rtf47 | 10,630 Mi (77.9%); 10,886 Mi (79.8%) while a VolSync mover runs | 10,502 Mi (77.0%); 10,758 Mi (78.8%) with the mover |
 | hub-core ...3rtf4m | 13,136 Mi (96.3%) | 12,240 Mi (89.7%) |
 | hub-core ...3rtf4q | 9,805 Mi (71.9%) | 9,805 Mi (71.9%) |
-| **Pool** | **33,571 Mi (82.0%)** | **32,419 Mi (79.2%)** |
+| **Pool** | **33,571 Mi (82.0%)** | **32,547 Mi (79.5%)** |
 
 ...3rtf4m stays above 80% because what is left on it is tier-1 (TAK PostgreSQL, Ignite and NATS, the NATS cluster, Argo CD,
 Authentik PostgreSQL) or requests that are already **below** real use: hermes-legacy 2,128 Mi against a p95 of 3,404 Mi, ClickHouse
@@ -248,6 +247,9 @@ Not changed in this pass:
 
 - `onemind-data` (CNPG): postgres is under-requested (p95 547 Mi against 384 Mi). `onemind-core` and kyverno run only on the
   ecosystem node, and SPIRE has no running pods, so none of them affects hub-core.
+- matrix PostgreSQL (`postgres-0`, 256 -> 128 Mi possible, 7-day p95 67 Mi): it runs on ...3rtf47, which is already under 80%,
+  and `docs/operations/matrix-drift-2026-10-23.md` (step 6) says not to restart Matrix Postgres or Redis without need. It can
+  ride along with the next Postgres restart that is needed for another reason.
 - `onetak-media` (mediamtx, 128 -> 64 Mi possible): `platform/onetak/media-mtx.yaml` has existing yamllint errors, and the
   changed-YAML gate would force an unrelated reformat of the file.
 - hermes-fresh (9 h of history), vaultwarden (34 h of history, 64 Mi), n8n (the 10-day peak of 612 Mi is above its request),
@@ -258,7 +260,7 @@ Not changed in this pass:
 Rollout: no pod restarts on merge alone. `platform-matrix` is manual-sync. `platform-onetak` and `platform-omos` list
 `/spec/template/spec/containers/0/resources` under `ignoreDifferences` without `RespectIgnoreDifferences`, so a change to resources
 alone leaves them Synced. Their next sync, manual or triggered by any other change in those directories, applies the new requests.
-Live resources matched Git for every container in the three apps before this change, so a sync touches only the five Deployments
-and StatefulSets above. Each of those restarts once when synced. Synapse uses `Recreate` (Matrix is down for about a minute while
-its volume re-attaches). Matrix PostgreSQL rolls its single pod. The Redis broker for webodm keeps no data on disk, so sync it while no
+Live resources matched Git for every container in the three apps before this change, so a sync touches only the four Deployments
+above. Each of those restarts once when synced. Synapse uses `Recreate` (Matrix is down for about a minute while
+its volume re-attaches). The Redis broker for webodm keeps no data on disk, so sync it while no
 WebODM task is running.
