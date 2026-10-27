@@ -2,7 +2,11 @@ import type { Entity } from '@backstage/catalog-model';
 import type { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { readAuthentikOrg } from './authentik';
 import { readCurated } from './entities';
-import { AuthentikOrgProvider, type ProviderDeps } from './provider';
+import {
+  AuthentikOrgCleanup,
+  AuthentikOrgProvider,
+  type ProviderDeps,
+} from './provider';
 import {
   SCOPE,
   apiUser,
@@ -167,5 +171,53 @@ describe('AuthentikOrgProvider', () => {
     await expect(harness().provider.refresh()).rejects.toThrow(
       'Authentik org provider is not connected',
     );
+  });
+});
+
+describe('AuthentikOrgCleanup', () => {
+  const EMPTY = { type: 'full', entities: [] };
+
+  it('removes everything the sync published when connected and on every run, under the same name', async () => {
+    const mutations: Mutation[] = [];
+    const logger = { warn: jest.fn() };
+    const cleanup = new AuthentikOrgCleanup(logger);
+    expect(cleanup.getProviderName()).toBe(
+      harness().provider.getProviderName(),
+    );
+    await cleanup.connect({
+      applyMutation: async (m: Mutation) => {
+        mutations.push(m);
+      },
+      refresh: async () => {},
+    } as unknown as EntityProviderConnection);
+    await cleanup.clear();
+    expect(mutations).toEqual([EMPTY, EMPTY]);
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('lets the catalog start when the removal at startup fails, and the next run retries it', async () => {
+    const logger = { warn: jest.fn() };
+    const cleanup = new AuthentikOrgCleanup(logger);
+    const applyMutation = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('database is locked'))
+      .mockResolvedValue(undefined);
+    await expect(
+      cleanup.connect({
+        applyMutation,
+        refresh: jest.fn(),
+      } as unknown as EntityProviderConnection),
+    ).resolves.toBeUndefined();
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('database is locked'),
+    );
+    await cleanup.clear();
+    expect(applyMutation.mock.calls).toEqual([[EMPTY], [EMPTY]]);
+  });
+
+  it('refuses to run before the catalog connected it', async () => {
+    await expect(
+      new AuthentikOrgCleanup({ warn: jest.fn() }).clear(),
+    ).rejects.toThrow('Authentik org provider is not connected');
   });
 });

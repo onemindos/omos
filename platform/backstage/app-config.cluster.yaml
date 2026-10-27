@@ -103,12 +103,15 @@ onemind:
       enabled: true
 
 # Authentik users and groups as catalog Users/Groups (docs/catalog/authentik-org-sync.md).
-# OFF: nothing is read or published, and the token below resolves to nothing until the owner
-# seals backstage-authentik-catalog (AUTHENTIK_CATALOG_TOKEN, a service account that may only
-# view users and groups). To enable: list in userGroups the Authentik group(s) whose members may
-# use the portal, then set enabled: true. Users and Groups in catalog/org.yaml, including
-# onemind-admins, stay Git-owned. Rollback: set enabled to false; restarted pods evict the
-# synced entities (catalog.orphanProviderStrategy defaults to delete).
+# OFF: Authentik is never called and nothing is published; the module only removes entities it
+# published earlier. The token below resolves to nothing until the owner seals
+# backstage-authentik-catalog (AUTHENTIK_CATALOG_TOKEN, a service account that may only view users
+# and groups). To enable: bind the portal group(s) to the onemind-backstage application in
+# Authentik and confirm that a non-member is refused, list them in userGroups, then set
+# enabled: true and update scripts/tests/test_gitops_portal_org_sync.py. Users and Groups in
+# catalog/org.yaml, including onemind-admins, stay Git-owned. Rollback: set enabled to false; new
+# pods remove the synced entities at startup and every run of the sync's task removes them again,
+# so the catalog is clear within about 10 minutes of the last old pod's last run.
 authentik:
   baseUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
   token: ${AUTHENTIK_CATALOG_TOKEN}

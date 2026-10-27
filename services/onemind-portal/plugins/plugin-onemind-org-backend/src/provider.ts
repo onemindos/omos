@@ -31,7 +31,8 @@ export interface SyncSummary {
 /**
  * Publishes Authentik users and groups as catalog Users and Groups: one full mutation per run, so a
  * user who left the configured groups, or was deactivated, is removed at the next run. A failed or
- * implausible read throws before anything is applied, and the catalog keeps the last good state.
+ * implausible read throws before anything is applied, and the catalog keeps the last good state
+ * (the scheduler logs the error; there is no metric).
  */
 export class AuthentikOrgProvider implements EntityProvider {
   private connection?: EntityProviderConnection;
@@ -88,5 +89,41 @@ export class AuthentikOrgProvider implements EntityProvider {
       curatedGroups: mapping.curatedGroups,
       multiParentGroups: mapping.multiParentGroups,
     };
+  }
+}
+
+/**
+ * Registered under the same provider name while the sync is off or has no token. It never calls
+ * Authentik: it removes every entity the sync published when the catalog connects it and again on
+ * every run of the sync's task. Leaving the provider registered (rather than relying on the catalog's
+ * one-off orphan eviction at startup) means that a replica of an earlier, enabled rollout that runs
+ * the shared task once more can republish only until the next run after it is gone.
+ */
+export class AuthentikOrgCleanup implements EntityProvider {
+  private connection?: EntityProviderConnection;
+
+  constructor(private readonly logger: Pick<LoggerService, 'warn'>) {}
+
+  getProviderName() {
+    return PROVIDER_NAME;
+  }
+
+  async connect(connection: EntityProviderConnection) {
+    this.connection = connection;
+    // A failure here must not stop the catalog from starting; the scheduled task retries.
+    try {
+      await this.clear();
+    } catch (e) {
+      this.logger.warn(
+        `Authentik org sync: removing its entities at startup failed, the scheduled task retries: ${e}`,
+      );
+    }
+  }
+
+  /** One full mutation without entities, the same change the catalog's orphan eviction applies. */
+  async clear(): Promise<void> {
+    if (!this.connection)
+      throw new Error('Authentik org provider is not connected');
+    await this.connection.applyMutation({ type: 'full', entities: [] });
   }
 }

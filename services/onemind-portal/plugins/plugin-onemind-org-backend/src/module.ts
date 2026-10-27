@@ -15,9 +15,9 @@ import {
   readAuthentikOrg,
   type FetchJson,
 } from './authentik';
-import { readAuthentikOrgConfig } from './config';
+import { DEFAULT_SCHEDULE, readAuthentikOrgConfig } from './config';
 import { PROVIDER_NAME, readCurated } from './entities';
-import { AuthentikOrgProvider } from './provider';
+import { AuthentikOrgCleanup, AuthentikOrgProvider } from './provider';
 
 export interface RegisterDeps {
   config: Config;
@@ -28,9 +28,21 @@ export interface RegisterDeps {
   fetchJson?: FetchJson;
 }
 
+/** What the module runs: the sync, or only the removal of entities an earlier sync published. */
+export type AuthentikOrgMode = 'sync' | 'cleanup';
+
+/** One task id in both modes, so that during a rollout old and new replicas share its runs. */
+export const TASK_ID = `${PROVIDER_NAME}-refresh`;
+
 /**
- * Registers the Authentik org sync. With `authentik.orgSync.enabled` off (the default) this logs one
- * line and registers nothing: no provider, no scheduled task, no Authentik call.
+ * Registers the Authentik org sync. A provider named `onemind-authentik-org` and the global task
+ * `onemind-authentik-org-refresh` are registered in every state:
+ * - enabled with a token: each run reads Authentik and publishes the result;
+ * - disabled (the default), or enabled while `authentik.token` is unset: nothing calls Authentik; the
+ *   provider removes what the sync published when the catalog connects it and on every run of the
+ *   task, so turning the sync off, or losing its secret, revokes synced users even if a replica of
+ *   the enabled rollout runs the task once more.
+ * Invalid reviewed settings still fail startup; an absent token never does.
  */
 export function registerAuthentikOrg({
   config,
@@ -38,14 +50,43 @@ export function registerAuthentikOrg({
   scheduler,
   processing,
   fetchJson,
-}: RegisterDeps): boolean {
+}: RegisterDeps): AuthentikOrgMode {
   const settings = readAuthentikOrgConfig(config);
-  if (!settings.enabled) {
-    logger.info(
-      'Authentik org sync is disabled (authentik.orgSync.enabled is not true); users and groups come only from the reviewed org file',
-    );
-    return false;
+  // Both portal replicas register the task; the global scope runs each run on one of them.
+  const schedule = (
+    timing: {
+      frequencySeconds: number;
+      timeoutSeconds: number;
+      initialDelaySeconds: number;
+    },
+    fn: (signal: AbortSignal) => Promise<unknown>,
+  ) =>
+    scheduler.scheduleTask({
+      id: TASK_ID,
+      frequency: { seconds: timing.frequencySeconds },
+      timeout: { seconds: timing.timeoutSeconds },
+      initialDelay: { seconds: timing.initialDelaySeconds },
+      scope: 'global',
+      fn: async (signal: AbortSignal) => {
+        await fn(signal);
+      },
+    });
+
+  if (!settings.enabled || !settings.token) {
+    if (settings.enabled)
+      logger.error(
+        'Authentik org sync is enabled but authentik.token is not set (in the cluster: Secret backstage-authentik-catalog, key AUTHENTIK_CATALOG_TOKEN, read when the pod starts); it calls nothing and removes the users and groups it published',
+      );
+    else
+      logger.info(
+        'Authentik org sync is disabled (authentik.orgSync.enabled is not true); it calls nothing and only removes entities it published earlier, so users and groups come only from the reviewed org file',
+      );
+    const cleanup = new AuthentikOrgCleanup(logger);
+    processing.addEntityProvider(cleanup);
+    schedule(DEFAULT_SCHEDULE, () => cleanup.clear());
+    return 'cleanup';
   }
+
   const read = fetchJson ?? authentikFetchJson(settings.token);
   const provider = new AuthentikOrgProvider({
     userGroups: settings.userGroups,
@@ -55,23 +96,13 @@ export function registerAuthentikOrg({
     readCurated: () => readCurated(resolve(settings.curatedFile)),
   });
   processing.addEntityProvider(provider);
-  // Both portal replicas register the provider; the global scope runs each sync on one of them.
-  scheduler.scheduleTask({
-    id: `${PROVIDER_NAME}-refresh`,
-    frequency: { seconds: settings.frequencySeconds },
-    timeout: { seconds: settings.timeoutSeconds },
-    initialDelay: { seconds: settings.initialDelaySeconds },
-    scope: 'global',
-    fn: async (signal: AbortSignal) => {
-      await provider.refresh(signal);
-    },
-  });
+  schedule(settings, signal => provider.refresh(signal));
   logger.info(
     `Authentik org sync enabled: members of ${settings.userGroups.join(
       ', ',
     )} every ${settings.frequencySeconds}s from ${settings.baseUrl}`,
   );
-  return true;
+  return 'sync';
 }
 
 export const catalogModuleOnemindAuthentikOrg = createBackendModule({

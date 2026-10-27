@@ -1,11 +1,23 @@
+import { basename } from 'node:path';
 import type { Config } from '@backstage/config';
+
+/** Default schedule of the sync, and the fixed schedule of the removal that replaces it when off. */
+export const DEFAULT_SCHEDULE = {
+  frequencySeconds: 600,
+  timeoutSeconds: 120,
+  initialDelaySeconds: 60,
+} as const;
 
 /** Settings of an enabled sync, from `authentik.*` and `authentik.orgSync.*`. */
 export interface AuthentikOrgSettings {
   enabled: true;
   /** Without a trailing slash. */
   baseUrl: string;
-  token: string;
+  /**
+   * Absent when `authentik.token` is unset or blank, for example because its secret is missing. The
+   * module then removes what it published instead of failing startup.
+   */
+  token?: string;
   /** Exact Authentik group names whose members become catalog Users. */
   userGroups: string[];
   frequencySeconds: number;
@@ -16,9 +28,33 @@ export interface AuthentikOrgSettings {
 }
 
 /**
+ * The reviewed org file: `authentik.orgSync.curatedFile` when set, otherwise the one `file` location
+ * in `catalog.locations` named org.yaml. A relative path resolves against the working directory, as
+ * the catalog resolves that location, so the module reads the file the catalog reads: in the image
+ * /app/catalog/org.yaml, under `yarn start` ../../catalog/org.yaml from packages/backend.
+ */
+export function reviewedOrgFile(config: Config): string {
+  const explicit = config
+    .getOptionalString('authentik.orgSync.curatedFile')
+    ?.trim();
+  if (explicit) return explicit;
+  const targets = (config.getOptionalConfigArray('catalog.locations') ?? [])
+    .filter(location => location.getOptionalString('type') === 'file')
+    .map(location => location.getOptionalString('target') ?? '')
+    .filter(target => basename(target) === 'org.yaml');
+  if (targets.length !== 1)
+    throw new Error(
+      'authentik.orgSync.curatedFile is required when catalog.locations does not have exactly one file location named org.yaml',
+    );
+  return targets[0];
+}
+
+/**
  * The sync is off unless `authentik.orgSync.enabled` is true. While it is off nothing else is read,
- * so an absent token or URL cannot affect startup. When it is on, missing or nonsensical settings
- * throw at startup instead of running with them; messages name keys, never values.
+ * so an absent token or URL cannot affect startup. When it is on, missing or nonsensical reviewed
+ * settings throw at startup instead of running with them; messages name keys, never values. The
+ * token is the exception: it comes from a secret that can disappear at runtime, so an absent token
+ * is returned as such and never fails startup.
  */
 export function readAuthentikOrgConfig(
   config: Config,
@@ -48,7 +84,6 @@ export function readAuthentikOrgConfig(
     );
 
   const token = config.getOptionalString('authentik.token')?.trim();
-  if (!token) throw new Error(`authentik.token ${required}`);
 
   const userGroups = [
     ...new Set(
@@ -69,11 +104,17 @@ export function readAuthentikOrgConfig(
   return {
     enabled: true,
     baseUrl: rawUrl.replace(/\/+$/, ''),
-    token,
+    ...(token ? { token } : {}),
     userGroups,
-    frequencySeconds: num('frequencySeconds', 600),
-    timeoutSeconds: num('timeoutSeconds', 120),
-    initialDelaySeconds: num('initialDelaySeconds', 60),
-    curatedFile: sync.getOptionalString('curatedFile') ?? 'catalog/org.yaml',
+    frequencySeconds: num(
+      'frequencySeconds',
+      DEFAULT_SCHEDULE.frequencySeconds,
+    ),
+    timeoutSeconds: num('timeoutSeconds', DEFAULT_SCHEDULE.timeoutSeconds),
+    initialDelaySeconds: num(
+      'initialDelaySeconds',
+      DEFAULT_SCHEDULE.initialDelaySeconds,
+    ),
+    curatedFile: reviewedOrgFile(config),
   };
 }

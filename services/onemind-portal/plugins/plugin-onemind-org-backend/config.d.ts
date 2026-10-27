@@ -7,14 +7,16 @@ export interface Config {
      */
     baseUrl?: string;
     /**
-     * Authentik API token of a service account that may only view users and groups.
-     * Required when the sync is enabled; read from the environment, never committed.
+     * Authentik API token of a service account that may only view users and groups. Read from the
+     * environment, never committed. If it is unset while the sync is enabled, startup does not fail:
+     * the module calls nothing and removes the users and groups it published.
      * @visibility secret
      */
     token?: string;
     orgSync?: {
       /**
        * Publish Authentik users and groups as catalog User and Group entities. Defaults to false.
+       * While false the module calls nothing and only removes entities it published earlier.
        * @visibility backend
        */
       enabled?: boolean;
@@ -41,7 +43,8 @@ export interface Config {
       initialDelaySeconds?: number;
       /**
        * Reviewed catalog file whose Users and Groups always win and are never published or linked.
-       * Defaults to catalog/org.yaml.
+       * Defaults to the one file location in catalog.locations named org.yaml; a relative path
+       * resolves against the working directory, as the catalog resolves that location.
        * @visibility backend
        */
       curatedFile?: string;
