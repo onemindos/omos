@@ -1,0 +1,218 @@
+# Ingress allow-list for the NATS server pods (StatefulSet `nats`, the authority bus).
+#
+# Until this file, the only NetworkPolicy in `nats` selected the VolSync movers, so any pod in the
+# cluster could open 4222 (clients), 6222 (routes), 7422 (leaf nodes), 8080 (WebSocket) and 8222
+# (monitoring) on the servers. Every policy here selects only the three server pods. The other pods
+# in the namespace (NACK, Surveyor, the UIs, backup Jobs, VolSync movers) are not selected and keep
+# their current ingress. Policies are additive: a connection is allowed when any rule below matches,
+# and everything else sent to the server pods is dropped.
+#
+# Sources come from live connz (open plus the closed-connection buffer), leafz and routez on all
+# three servers, nine days of server logs, the Prometheus target list and the manifests under
+# platform/ and services/ (2026-10-27). The PR that added this file lists each source with evidence.
+#
+# Deliberately not listed:
+#   - kubelet probes on 8222: Cilium on DOKS admits traffic from the pod's own node (n8n's probes
+#     pass under its default-deny policy).
+#   - monitoring: Prometheus scrapes nats-surveyor:7777, a separate pod in this namespace, and the
+#     Surveyor reaches the servers on 4222 from this namespace.
+#   - clickhouse (NATS engine tables in platform/data/clickhouse/), onetak/tile38 and the matrix
+#     bridge: no open or recently closed connection, and no TLS or auth error in nine days of logs.
+#
+# A new NATS client outside these namespaces needs a rule here in the same change. Drops are silent
+# (the client times out); look for DROPPED flows to namespace `nats` in Hubble.
+---
+# 6222: cluster routes, between the three servers only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nats-routes
+  namespace: nats
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: nats
+      app.kubernetes.io/instance: nats
+      app.kubernetes.io/name: nats
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: nats
+              app.kubernetes.io/instance: nats
+              app.kubernetes.io/name: nats
+      ports:
+        - protocol: TCP
+          port: 6222
+---
+# 7422: leaf nodes (TLS, leaf user).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nats-leafnodes
+  namespace: nats
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: nats
+      app.kubernetes.io/instance: nats
+      app.kubernetes.io/name: nats
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # Edge and Mac leafs (zeus-mac) arrive through the omos-nats Tailscale LB proxy.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+        # Hermes Legacy's nats-leaf sidecar (hermes-legacy-leaf). Not hermes-fresh or onemind-mcp.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: hermes
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: hermes
+              onemind.io/agent: legacy
+        # TAK's leaf. The NatsBridgePlugin connects to it, not to the bus.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: takserver
+          podSelector:
+            matchLabels:
+              app: tak-nats-leaf
+      ports:
+        - protocol: TCP
+          port: 7422
+---
+# 4222: NATS clients (TLS, user and password).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nats-clients
+  namespace: nats
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: nats
+      app.kubernetes.io/instance: nats
+      app.kubernetes.io/name: nats
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # This namespace: NACK, Surveyor (SYS account), backup-nats-streams, HeyNATS.
+        - podSelector: {}
+        # Tailnet clients through the omos-nats Tailscale LB proxy.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+        # feed-intel, feed-satellites, omos-tak-projector, redpanda-connect, sink-clickhouse.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: omos
+        # onemind-core (API) and onemind-ingestion.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onemind-core
+        # takml-vision-worker.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: takml
+        # mumble-bridge.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: takserver
+        # Agent Console and agent-tap.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: agent-fabric
+      ports:
+        - protocol: TCP
+          port: 4222
+---
+# 8080: WebSocket (no TLS on this listener; NATS authentication still applies).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nats-websocket
+  namespace: nats
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: nats
+      app.kubernetes.io/instance: nats
+      app.kubernetes.io/name: nats
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # This namespace: NATS Dashboard is configured with a WebSocket URL (NATS_WS_URL).
+        - podSelector: {}
+        # Public wss://ws.onemindos.dev (Ingress nats-ws-ingress).
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        # Tailnet nats-ws Ingress (browser NATS UI) and the omos-nats LB.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+# 8222: HTTP monitoring (read-only, unauthenticated).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nats-monitoring
+  namespace: nats
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: nats
+      app.kubernetes.io/instance: nats
+      app.kubernetes.io/name: nats
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # This namespace: NATS Dashboard (NATS_MONITORING_URL).
+        - podSelector: {}
+        # Tailnet nats-monitor Ingress (browser NATS UI).
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+        # onemind-mcp: nats_server_stats and nats_jetstream_stats tools.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: hermes
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: onemind-mcp
+        # KEDA: ScaledObject omos/sink-clickhouse reads /jsz every 30 s.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: keda
+          podSelector:
+            matchLabels:
+              app: keda-operator
+        # Backstage: the operations fabric card reads /varz and /jsz.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: backstage
+          podSelector:
+            matchLabels:
+              app: backstage
+        # API server pod proxy (kubectl get --raw .../pods/nats-0:8222/proxy/varz) arrives from the
+        # DOKS konnectivity agents. Read-only access gated by RBAC on pods/proxy.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: konnectivity-agent
+      ports:
+        - protocol: TCP
+          port: 8222

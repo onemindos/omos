@@ -23,3 +23,16 @@ without production restarts; the schedule is enabled. Repeat restore checks afte
 changes to versions, sizing or credentials.
 The manifest's DigitalOcean storage class describes current volumes; a new home
 cluster needs an explicit storage-class overlay and data restoration.
+
+## Network access
+
+`network-policy.yaml` is an ingress allow-list on the three server pods: routes
+(6222) only between the servers; leaf nodes (7422), clients (4222), WebSocket
+(8080) and monitoring (8222) only from the namespaces and pods it lists. A new NATS
+client elsewhere needs a rule in the same change, otherwise its connection times
+out without any error in the NATS logs; look for DROPPED flows into namespace
+`nats` in Hubble. If a missing rule takes a client down, revert the change in Git.
+Until the revert syncs, an operator can apply an extra allow-all ingress policy for
+the server pods (Argo does not track it, so it is not pruned) and delete it after.
+A policy removed from Git is deleted only while `platform-nats` prunes; otherwise
+delete it by name.
