@@ -61,6 +61,9 @@ jobs:
           YAML_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python scripts/validate_changed_yaml.py
 
+      - name: Require MCP coverage for every Git-declared Application
+        run: python scripts/check_onemind_mcp_coverage.py
+
       - name: Report existing repository YAML debt
         continue-on-error: true
         run: yamllint -c .yamllint.yml platform/ docs/ platform/takserver/
