@@ -1,0 +1,61 @@
+# Ingress to the kube namespace: deny by default, then only the paths Headlamp needs. Cilium enforces these.
+# Egress is unchanged: Headlamp's backend sends every user request on to the Kubernetes API server.
+# The ai-operator resources (ai-operator.yaml) run no pods, so these policies do not apply to them.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: kube
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+# Headlamp from its own Tailscale ingress proxy (StatefulSet ts-headlamp-* in tailscale), so the tailnet ACL in
+# platform/core/policy.hujson decides who reaches it. Other Tailscale proxies and in-cluster pods are refused.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: headlamp-from-tailscale
+  namespace: kube
+spec:
+  podSelector:
+    matchLabels:
+      app: headlamp
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: headlamp
+              tailscale.com/parent-resource-ns: kube
+              tailscale.com/parent-resource-type: ingress
+      ports:
+        - protocol: TCP
+          port: 4466
+---
+# The portal's status check: an unauthenticated GET of http://headlamp.kube.svc:4466/ from the Backstage backend
+# (services/onemind-portal/plugins/plugin-onemind-common-backend/src/health.ts). Without it the check shows unknown.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: headlamp-from-portal
+  namespace: kube
+spec:
+  podSelector:
+    matchLabels:
+      app: headlamp
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: backstage
+          podSelector:
+            matchLabels:
+              app: backstage
+      ports:
+        - protocol: TCP
+          port: 4466
