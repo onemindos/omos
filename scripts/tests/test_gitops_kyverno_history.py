@@ -1,6 +1,8 @@
 """Exercise history suppression with the exact deployed Kyverno 1.19.1 engine.
 
 Set KYVERNO_CLI to a checksum-verified 1.19.1 CLI. No cluster access is used.
+Native-number tests also exercise the exact pinned JMESPath dependency because
+Kubernetes dynamic-client int64 values differ from CLI JSON float64 values.
 The CLI's default CREATE context has no request.uid, like the deployed scanner;
 --set request.uid supplies the discriminator present in real AdmissionReviews.
 Sources for that distinction and auto-generation behavior:
@@ -101,6 +103,18 @@ def fixtures():
     ]:
         add(workload("ReplicaSet", name, references=references,
                      status={"replicas": 0, "observedGeneration": 3}))
+    # Dynamic-client numbers must normalize without treating unknown state as history.
+    for section, key in (("spec", "replicas"), ("status", "replicas"),
+                         ("status", "observedGeneration"), ("metadata", "generation")):
+        for suffix, value in (("missing", None), ("unknown", "unknown"),
+                              ("boolean", False), ("object", {})):
+            r = copy.deepcopy(retired_rs)
+            r["metadata"]["name"] = f"rs-{section}-{key.lower()}-{suffix}"
+            if suffix == "missing":
+                r[section].pop(key, None)
+            else:
+                r[section][key] = value
+            add(r)
     add(workload("Deployment", "deployment-scaled-zero",
                  status={"replicas": 0, "observedGeneration": 3}))
     add(workload("ReplicationController", "replicationcontroller-zero",
@@ -109,6 +123,12 @@ def fixtures():
     completed_job = workload("Job", "job-complete", references=[owner("CronJob", "batch/v1")],
                              status={"active": 0, "conditions": [{"type": "Complete", "status": "True"}]})
     add(completed_job, True)
+    for key in ("active", "terminating"):
+        for suffix, value in (("unknown", "unknown"), ("boolean", False), ("object", {})):
+            r = copy.deepcopy(completed_job)
+            r["metadata"]["name"] = f"job-{key}-{suffix}"
+            r["status"][key] = value
+            add(r)
     failed = copy.deepcopy(completed_job)
     failed["metadata"]["name"] = "job-failed-terminal"
     failed["status"]["conditions"][0]["type"] = "Failed"
@@ -215,6 +235,57 @@ class PolicyDelivery(unittest.TestCase):
                 for rule in spec["rules"]:
                     self.assertTrue(rule["skipBackgroundRequests"])
                     self.assertTrue(rule["validate"]["allowExistingViolations"])
+
+
+class KyvernoNativeNumberContext(unittest.TestCase):
+    """Reproduce the reports controller's native-int64 context without JSON laundering."""
+
+    @classmethod
+    def setUpClass(cls):
+        go = shutil.which("go")
+        if not go:
+            raise RuntimeError("Go is required for the Kyverno native-number regression")
+        cls.temp = tempfile.TemporaryDirectory(prefix="kyverno-native-context-")
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.binary = Path(cls.temp.name) / "native-context"
+        subprocess.run([go, "build", "-mod=readonly", "-buildvcs=false", "-trimpath", "-o", str(cls.binary), "."],
+                       cwd=ROOT / "scripts/tests/jmespath_native", check=True,
+                       capture_output=True, text=True)
+
+    def evaluate(self, queries, contexts):
+        completed = subprocess.run([str(self.binary)], check=True, capture_output=True, text=True,
+                                   input=json.dumps({"queries": queries, "contexts": contexts}))
+        return json.loads(completed.stdout)
+
+    def test_history_guard_has_identical_native_and_json_classification(self):
+        queries = [entry["variable"]["jmesPath"]
+                   for policy in yaml.safe_load_all(POLICY.read_text())
+                   if policy["metadata"]["name"] in (IMAGE_POLICY, RESOURCE_POLICY)
+                   for rule in policy["spec"]["rules"] for entry in rule.get("context", [])
+                   if entry["name"] == "retiredWorkloadHistory"]
+        self.assertEqual(len(queries), 3)
+        cases = fixtures()
+        results = self.evaluate(queries, [{"request": {"object": r}} for r, _ in cases])
+        for mode, rows in results.items():
+            for (resource, expected), values in zip(cases, rows):
+                for index, result in enumerate(values):
+                    # The policy variable's default:false keeps null/errors evaluated.
+                    with self.subTest(mode=mode, resource=resource["metadata"]["name"], rule=index):
+                        self.assertEqual(result.get("value") is True and not result.get("error"), expected)
+        self.assertEqual(results["json-float64"], results["kubernetes-int64"])
+
+    def test_original_numeric_comparisons_reproduce_scanner_failure(self):
+        queries = ["request.object.spec.replicas == `0`",
+                   "request.object.status.observedGeneration >= request.object.metadata.generation",
+                   "to_number(to_string(request.object.spec.replicas)) == `0`",
+                   "to_number(to_string(request.object.status.observedGeneration)) >= "
+                   "to_number(to_string(request.object.metadata.generation))"]
+        resource = workload("ReplicaSet", "native-type-proof", references=[owner("Deployment")],
+                            status={"replicas": 0, "observedGeneration": 3})
+        results = self.evaluate(queries, [{"request": {"object": resource}}])
+        self.assertEqual([x["value"] for x in results["json-float64"][0]], [True] * 4)
+        self.assertEqual([x["value"] for x in results["kubernetes-int64"][0]],
+                         [False, None, True, True])
 
 
 @unittest.skipUnless(CLI, "Set KYVERNO_CLI to the verified Kyverno 1.19.1 binary")

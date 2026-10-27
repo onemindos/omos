@@ -80,3 +80,32 @@ label, every original namespace UID remains unchanged, and all58 Applications ar
 Synced/Healthy. TAK API/config/Ignite specs match their preflight SHA256 digests;
 workload and pod UIDs/restart counts are unchanged, all Ready, and Argo tracking is
 present. Thus the ownership sync did not restart these three running workloads.
+
+## Live scanner warning correction
+
+Fresh23:33Z warning Events disproved the earlier CLI-only history acceptance.
+The reports controller uses native Kubernetes int64 values in its request object;
+the CLI JSON fixture loader uses float64. Kyverno1.19.1's pinned JMESPath engine
+compares native int64 zero unequal to its float64 numeric literal and returns null
+for native generation ordering. Thus real retired ReplicaSets were still assessed
+while equivalent CLI fixtures were skipped. This was not a second Kyverno release.
+
+Canonicalize only the history guard's numeric comparisons through
+`to_number(to_string(...))`. Missing/unknown replica or generation status remains
+assessed, and optional Job counters preserve their missing→zero default while
+unknown/boolean/object values fail closed. The admission UID discriminator,
+provider budget boundary, audit/failure behavior and all image/budget validations
+remain unchanged. No controller restart, event deletion or broad policy exception.
+
+The regression uses the exact go-jmespath dependency pinned by Kyverno1.19.1 and
+compares actual native int64 contexts against JSON float64 contexts, before the
+CLI boundary. It reproduces the broken comparisons and verifies all80 history
+fixtures in both modes. The exact Kyverno CLI additionally runs four contexts
+(background absent/empty UID and admission CREATE/UPDATE). CI installs pinned Go
+so native-number tests are mandatory. Source reference:
+https://github.com/kyverno/kyverno/blob/v1.19.1/pkg/engine/context/utils.go
+
+Live acceptance must verify actual policy/autogen generations, reports-controller
+skip counters for retired revisions, no active-workload validation regressions,
+and no newly created history warnings during an observed rescan. Local CLI success
+alone is insufficient. Historical warning Events can expire normally.
