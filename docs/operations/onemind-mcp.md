@@ -152,7 +152,7 @@ and sync GitOps. Track the token's chosen expiration in the password manager. Th
 registry token is used by Kubernetes image pulling, not loaded into the AI agent.
 SDK 2 acceptance compatibility and fail-fast checks were completed by #492/#493.
 
-## Broad app coverage expansion (rollout pending)
+## Broad app coverage expansion
 
 The initial four-tool deployment covers NATS and Prometheus only. The expansion
 adds searchable inventory and descriptions, STAC imagery collections/search,
@@ -204,3 +204,11 @@ access stays denied. Runtime acceptance from the MCP must confirm that exception
 
 The Legacy toolset-revision environment marker rolls its gateway after MCP readiness
 so startup MCP discovery includes the new tools. Bump it when adding/removing tools.
+
+Follow-through is tracked in [the complete app integration checklist](https://github.com/onemindos/omos/issues/543).
+The expansion rollout serves the new catalog and tools; acceptance found that Loki's
+Service port 80 forwards to gateway pod port 8080. The egress policy must allow
+**8080**, scoped to Loki gateway pods. The pinned Loki 7.0.0 chart confirms this
+mapping. Do not use Service ports as NetworkPolicy destination ports without
+checking targetPort. Initial acceptance must wait for Legacy's toolset revision,
+rather than testing its old startup cache while Argo is still rolling it.

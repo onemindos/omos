@@ -97,6 +97,13 @@ async def main():
                                     text = response.text.lower()
                                     report["failure"]["direct_flags"] = [term for term in (
                                         "parse error", "invalid", "timeout", "max", "limit", "too many", "not ready", "no org id", "ring", "replica", "unhealthy") if term in text]
+                        if name == "loki_query":
+                            identity = Path("/var/run/secrets/kubernetes.io/serviceaccount")
+                            async with httpx.AsyncClient(verify=str(identity / "ca.crt"), trust_env=False,
+                                headers={"Authorization": "Bearer " + (identity / "token").read_text()}, timeout=10) as kube:
+                                response = await kube.get("https://kubernetes.default.svc/api/v1/namespaces/monitoring/services/loki-gateway")
+                                if response.status_code == 200:
+                                    report["failure"]["service_ports"] = response.json()["spec"]["ports"]
                         print(json.dumps(report, indent=2))
                         raise RuntimeError(f"{name} failed; no response body exported")
                     if name == "apps_list":

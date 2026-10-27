@@ -1,3 +1,4 @@
+# Egress ports are destination pod ports, after Service targetPort translation.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -82,6 +83,15 @@ spec:
           kubernetes.io/metadata.name: monitoring
     ports:
     - protocol: TCP
-      port: 80
-    - protocol: TCP
       port: 9093
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: loki
+          app.kubernetes.io/component: gateway
+    ports:
+    - protocol: TCP
+      port: 8080
