@@ -27,7 +27,7 @@ If Argo CD is down or mis-synced, `ARGOCD-SELF-MANAGEMENT.md` documents rolling 
 
 ## Backups
 
-Applications and settings are in Git, and `app-of-apps` recreates the Applications from it. The encrypted `backup-cluster-recovery` export holds only Secrets and ConfigMaps. Among them are `argocd-secret` (server signing key, admin password hash), which Argo CD writes itself and Git does not render, and `argocd-cm` and `argocd-rbac-cm`. No backup holds the Argo CD CRDs or the Application objects: the CRDs come from the pinned chart through the `helm template ... --set crds.install=true | kubectl apply --server-side` step in `ARGOCD-SELF-MANAGEMENT.md`.
+Applications and settings are in Git, and `app-of-apps` recreates the Applications from it. The encrypted `backup-cluster-recovery` export holds only Secrets and ConfigMaps. Among them are `argocd-cm` and `argocd-rbac-cm`, which Git also renders, and `argocd-secret` (server signing key, admin password hash), which Argo CD writes itself and Git does not render. No backup holds the Argo CD CRDs or the Application objects: the CRDs come from the pinned chart through the `helm template ... --set crds.install=true | kubectl apply --server-side` step in `ARGOCD-SELF-MANAGEMENT.md`.
 
 ## Verify completion
 

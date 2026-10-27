@@ -23,7 +23,7 @@ Because the controller runs with `--update-status`, each SealedSecret reports a 
 
 ## Key backup and recovery
 
-- `backup-cluster-recovery` (namespace `ops`, daily at 04:00 UTC) writes an encrypted export of every Secret and ConfigMap, and no other objects, including the active sealing keys. Its check is authenticated decryption and equality, not a replay onto a new cluster.
+- `backup-cluster-recovery` (namespace `ops`, daily at 04:00 UTC) writes an encrypted export of every Secret and ConfigMap, including the active sealing keys. It holds no other kind of object. Its check is authenticated decryption and equality, not a replay onto a new cluster.
 - Keep the sealing keys, the logical-archive key and the Restic password independent of the cluster and of the operator's laptop.
 - On a rebuilt cluster, restore the original sealing-key Secrets into `kube-system` before expecting existing ciphertext to decrypt. A new controller with new keys cannot decrypt old SealedSecrets; every secret would have to be resealed.
 - `platform/backups/tools/decrypt.py` authenticates and decrypts an archive offline into a new private file. It does not apply anything.
