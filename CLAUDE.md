@@ -78,7 +78,7 @@ Full doctrine: `docs/NATS-DOCTRINE.md`.
 
 ## NATS Streams
 
-The 39 Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats` Application and reconciled into JetStream by the NACK controller (Helm release `nack`, adopted into Argo as `edge-nack`). Do not use the older Python provisioning scripts as the source of truth.
+The Stream/KeyValue CRs in `platform/nats/streams/` are applied by the `platform-nats-streams` Application (sync-wave 2, `prune: false`, no finalizer, ServerSideApply), not by `platform-nats`, which does not recurse into `streams/`. The NACK controller (Helm release `nack`, adopted into Argo as `edge-nack`) reconciles them into JetStream: 38 CRs, all R3 file storage, all with `preventDelete: true`, so deleting a CR never deletes the stream or its data. `kv-feed-config.yaml` is excluded from the Application. Its live bucket is R1 and was created by an app, and it must be matched to `nats kv info feed-config` before adoption. NACK runs with `-crd-connect`: each CR's `spec.servers` (set out of band, never in Git) supplies the connection. A new stream is a new CR file here, never a `nats stream add`. Do not use the older Python provisioning scripts as the source of truth.
 
 ## Secrets
 
