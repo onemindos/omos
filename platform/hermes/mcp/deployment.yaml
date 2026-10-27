@@ -61,6 +61,18 @@ spec:
               value: http://nats-0.nats-headless.nats.svc.cluster.local:8222
             - name: PROMETHEUS_URL
               value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+            - name: STAC_URL
+              value: http://stac-api.stac.svc.cluster.local:8080
+            - name: OLLAMA_URL
+              value: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+            - name: ALERTMANAGER_URL
+              value: http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093
+            - name: LOKI_URL
+              value: http://loki-gateway.monitoring.svc.cluster.local
+            - name: OPENCOST_URL
+              value: http://opencost.opencost.svc.cluster.local:9003
+            - name: MEDIAMTX_URL
+              value: http://onetak-media.onetak.svc.cluster.local:4000
           resources:
             requests:
               cpu: 100m

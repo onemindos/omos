@@ -1315,3 +1315,11 @@ resource warnings during 150 seconds after sync;815-resource live engine run yie
 1446 pass / 999 expected skips / 0 fail / 0 error.153 regression tests and CI pass. The privileged
 GitHub DinD runner is a separate real open risk; do not hide it with an audit exception.
 Capacity/independent recovery remain pending owner choices. Phase 6 stays In progress.
+
+User-directed MCP coverage follow-through (2026-10-27): expansion prepared from the
+initial NATS/Prometheus slice to eight configured app integrations, 13 tools and an
+explicit 32-domain access catalog. CI requires coverage dispositions for all 56
+Git-declared Applications. Credential-gated and unimplemented app integrations
+remain blocked and visible; broad coverage is not claimed complete. No cluster
+administration, vault-content permission or physical actuation is added. Runtime
+acceptance must follow the pinned-image rollout; wider Phase 8 stays unfinished.

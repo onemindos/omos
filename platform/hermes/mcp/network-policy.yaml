@@ -47,3 +47,50 @@ spec:
       ports:
         - protocol: TCP
           port: 9090
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: stac
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: stac
+              app.kubernetes.io/component: api
+      ports:
+        - protocol: TCP
+          port: 8080
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onemind-ai
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ollama
+      ports:
+        - protocol: TCP
+          port: 11434
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: opencost
+      ports:
+        - protocol: TCP
+          port: 9003
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onetak
+          podSelector:
+            matchLabels:
+              app: onetak-media
+      ports:
+        - protocol: TCP
+          port: 4000
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 9093

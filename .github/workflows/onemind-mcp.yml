@@ -1,7 +1,7 @@
 name: OneMind internal MCP
 on:
   push:
-    branches: [main, codex/onemind-internal-mcp]
+    branches: [main, codex/onemind-internal-mcp, codex/onemind-mcp-app-coverage]
     paths:
       - services/onemind-mcp/**
       - .github/workflows/onemind-mcp.yml
