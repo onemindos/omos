@@ -1,5 +1,20 @@
 # Handoff: continuing the platform roadmap
 
+**2026-10-27 merge-preparation update:** for the current dcarku PR batch, start
+with [owner-item merge preparation](2026-10-27-owner-merge-preparation.md).
+**Zeus has approved all owner decisions for #495–#540, retained Telegram and
+authorized Claude to execute the batch's merges on his behalf.** The record
+contains the exact approval, technical holds and release order. Continue past
+an unavailable credential or unresolved technical blocker and report it at the
+end; do not ask again for settled decisions. The historical
+release observations below remain timestamped context, not current live state.
+
+**Superseding owner assignment (2026-10-27): Hermes is the lead and sole merger.**
+Start #542 → #504 → #497 → #498 → #496 with current-main review and final CI.
+The already-running second harness prepares/tests #505 and application changes
+without merging. The initial batch is source-only: no Terraform apply or proposed
+storage patches. Telegram and the recorded owner approvals remain unchanged.
+
 Updated 2026-10-20 during the authorized portal/catalog stabilization. The authoritative tracker and
 phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
