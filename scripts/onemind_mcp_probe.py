@@ -5,7 +5,9 @@ Only the SealedSecrets PUBLIC certificate is included in the report.
 """
 import importlib.metadata
 import importlib.util
+import importlib
 import json
+import os
 from pathlib import Path
 import urllib.error
 import urllib.request
@@ -43,6 +45,18 @@ def main():
     report["mcp_env_expansion_source"] = any(
         path.is_file() and ("expandvars" in path.read_text() or "_expand_env" in path.read_text())
         for path in candidates)
+    report["mcp_header_env_expansion_verified"] = False
+    for module_name in ("tools.mcp_tool_config", "tools.mcp_tool"):
+        try:
+            module = importlib.import_module(module_name)
+            interpolate = getattr(module, "_interpolate_env_vars", None)
+            if interpolate:
+                value = interpolate({"headers": {"Authorization": "Bearer ${PATH}"}})
+                report["mcp_header_env_expansion_verified"] = value["headers"]["Authorization"] == "Bearer " + os.environ["PATH"]
+                if report["mcp_header_env_expansion_verified"]:
+                    break
+        except Exception:
+            continue
     try:
         certificate = fetch("http://sealed-secrets-controller.kube-system.svc.cluster.local:8080/v1/cert.pem").decode()
         if "-----BEGIN CERTIFICATE-----" not in certificate or "PRIVATE KEY" in certificate:
