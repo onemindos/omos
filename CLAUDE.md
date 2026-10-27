@@ -59,7 +59,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
   values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator, kube-prometheus-stack, loki, tempo, otel-collector; Helm CLI: argocd)
-infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root); edge/ holds Mac leaf config (not deployed)
+infra/         Terraform: DO VPC + DOKS cluster, NOT matching live, do not apply (infra/README.md); ecosystem-workers/ is a separate root; edge/ holds Mac leaf config (not deployed)
 services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
 ```
 
@@ -124,7 +124,7 @@ kubectl --context do-nyc3-omos-cloud get nodes
 ```
 
 - The Kubernetes API endpoint is **public** (no control-plane firewall; `docs/operations/cluster-review-2026-10-09.md`, H3). Tailscale gives access to admin UIs, not a private API.
-- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (2 x 8 vCPU / 32 GiB, autoscale 2 to 4). `infra/main.tf` defaults do not match; do not `terraform apply` without a clean plan.
+- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (8 vCPU / 32 GiB, 1 node, autoscale 1 to 4; 2026-10-27). `infra/main.tf` does not match and has no state; do not `terraform apply` it (see `infra/README.md`).
 - Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
 
 ## TAK Server
