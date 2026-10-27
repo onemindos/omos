@@ -1,7 +1,7 @@
 name: OneMind internal MCP
 on:
   push:
-    branches: [main, codex/onemind-internal-mcp]
+    branches: [main, codex/onemind-internal-mcp, codex/onemind-mcp-app-coverage]
     paths:
       - services/onemind-mcp/**
       - .github/workflows/onemind-mcp.yml
@@ -25,7 +25,10 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   test-and-image:
-    if: github.event_name != 'workflow_dispatch'
+    # Self-hosted runner inside the production cluster: pull requests from forks never run here.
+    if: >-
+      github.event_name != 'workflow_dispatch' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 20
     permissions:
