@@ -1,10 +1,156 @@
-# Verify upstream addresses and policy selectors before deploying.
+# Complete application access inventory; configured does not imply verified live health.
 apps:
-  - id: nats
-    adapter: nats
-    description: NATS node and JetStream statistics (read only, one node per request)
-    url_env: NATS_MONITOR_URL
-  - id: prometheus
-    adapter: prometheus
-    description: Cluster and application metrics via PromQL (read only)
-    url_env: PROMETHEUS_URL
+- id: nats
+  adapter: nats
+  description: NATS node and JetStream statistics (read only, one node per request)
+  url_env: NATS_MONITOR_URL
+- id: prometheus
+  adapter: prometheus
+  description: Cluster and application metrics via PromQL (read only)
+  url_env: PROMETHEUS_URL
+- id: stac
+  adapter: stac
+  description: Geospatial imagery collections and bounding-box search
+  url_env: STAC_URL
+- id: ollama
+  adapter: ollama
+  description: Local AI model inventory and current memory residency
+  url_env: OLLAMA_URL
+- id: alertmanager
+  adapter: alertmanager
+  description: Active operational alerts without silence or routing changes
+  url_env: ALERTMANAGER_URL
+- id: loki
+  adapter: loki
+  description: Recent application and Kubernetes logs through bounded LogQL queries
+  url_env: LOKI_URL
+- id: opencost
+  adapter: opencost
+  description: Estimated Kubernetes cost allocations by namespace
+  url_env: OPENCOST_URL
+- id: mediamtx
+  adapter: mediamtx
+  description: Live media stream paths, readiness and traffic without camera control
+  url_env: MEDIAMTX_URL
+  enabled: false
+  blocked_reason: Live preflight returned HTTP 401. Dedicated MediaMTX API-read identity and verified authentication adapter required; stream
+    source credentials must not be exposed.
+- id: karakeep
+  description: Bookmarks, saved links and knowledge search
+  enabled: false
+  blocked_reason: Dedicated Karakeep user API token, scoped network ingress and authenticated acceptance required.
+  adapter: karakeep
+  url_env: KARAKEEP_URL
+  token_env: KARAKEEP_API_TOKEN
+- id: n8n
+  description: Workflow inventory and execution summaries
+  enabled: false
+  blocked_reason: Dedicated n8n API key with read scope, scoped network ingress and authenticated acceptance required.
+  adapter: n8n
+  url_env: N8N_URL
+  token_env: N8N_API_TOKEN
+  auth_header: X-N8N-API-KEY
+- id: paperclip
+  description: Companies, issues and backlog task creation
+  enabled: false
+  blocked_reason: Dedicated company-scoped Paperclip agent API token and authenticated acceptance required; do not reuse browser sessions or provider
+    keys.
+  adapter: paperclip
+  url_env: PAPERCLIP_URL
+  token_env: PAPERCLIP_API_TOKEN
+- id: grafana
+  description: Dashboard discovery and observability navigation
+  enabled: false
+  blocked_reason: Dedicated viewer service-account token and authenticated acceptance required.
+  adapter: grafana
+  url_env: GRAFANA_URL
+  token_env: GRAFANA_API_TOKEN
+- id: tempo
+  description: Distributed traces by trace identifier
+  enabled: false
+  blocked_reason: Adapter implemented; confirm trace service endpoint and representative trace ID before enabling.
+  adapter: tempo
+  url_env: TEMPO_URL
+- id: nextcloud
+  description: Files, calendars and contacts
+  enabled: false
+  blocked_reason: Dedicated user app password, WebDAV/CalDAV adapter, scoped network ingress and authenticated acceptance required. Never reuse
+    admin credentials.
+- id: matrix
+  description: Rooms, messages and communication
+  enabled: false
+  blocked_reason: Dedicated Matrix bot identity, room membership, reviewed API adapter and authenticated acceptance required. E2EE needs explicit
+    key management.
+- id: backstage
+  description: OneMind service catalog and developer workspace
+  enabled: false
+  blocked_reason: Verify existing portal MCP/API capabilities and dedicated agent identity before federation; do not copy portal admin credentials.
+- id: tak
+  description: TAK situational awareness, missions and field coordination
+  enabled: false
+  blocked_reason: Existing Legacy NATS/TAK integration remains available outside this MCP. HTTP tools need scoped TAK client certificate, reviewed
+    operations and acceptance; physical actions require explicit policy.
+- id: fedhub
+  description: TAK federation management
+  enabled: false
+  blocked_reason: Scoped federation identity and reviewed API contract required; no broad federation administration is inferred.
+- id: webodm
+  description: Drone mapping projects and processing tasks
+  enabled: false
+  blocked_reason: Dedicated project-scoped WebODM API identity and reviewed adapter required; processing starts consume resources.
+- id: tiles
+  description: Map tiles and basemaps
+  enabled: false
+  blocked_reason: Read tile metadata adapter and live endpoint verification required; imagery search is available through stac.
+- id: tile38
+  description: Live geospatial entities and geofences
+  enabled: false
+  blocked_reason: Reviewed read-command adapter and scoped Tile38 identity required; no arbitrary command proxy.
+- id: cloudtak
+  description: CloudTAK application API
+  enabled: false
+  blocked_reason: Confirm current deployment and scoped user API contract before enabling; inventory is not proof of a running workload.
+- id: takml
+  description: Vision detections and inference pipeline
+  enabled: false
+  blocked_reason: Reviewed detection/query API contract and dedicated identity required; existing NATS integration is separate.
+- id: home_assistant
+  description: Home, sensors and device capabilities
+  enabled: false
+  blocked_reason: Edge host previously offline; verify reachability, dedicated token and device action policy before enabling. No physical actuation
+    granted.
+- id: litellm
+  description: Model gateway and available routed AI models
+  enabled: false
+  blocked_reason: Dedicated model-list identity and reviewed adapter required; no billing changes or provider-key disclosure.
+- id: onemind_core
+  description: Core entities, ingestion and workflow runtime
+  enabled: false
+  blocked_reason: Dedicated core API identity and domain-scoped operations required; do not expose internal database or Dapr admin interfaces.
+- id: agent_fabric
+  description: Agent console, collaboration and bus activity
+  enabled: false
+  blocked_reason: Verify existing Legacy bus tools and reviewed console API contract; prevent duplicate agent execution paths.
+- id: vaultwarden
+  description: Personal encrypted password vault
+  enabled: false
+  blocked_reason: Excluded from general agent content access. Owner-controlled vault permissions and purpose-specific integration require separate
+    authorization; admin token is not a vault-reading credential.
+- id: authentik
+  description: Authentication and identity management
+  enabled: false
+  blocked_reason: Separate identity-administration permission and scoped adapter required; user app access does not grant identity admin.
+- id: kubernetes
+  description: Cluster workloads and deployment control
+  enabled: false
+  blocked_reason: MCP intentionally has no Kubernetes token or RBAC. Existing observer access remains separate; cluster writes require a dedicated
+    scoped design.
+- id: argocd
+  description: GitOps application delivery and rollout
+  enabled: false
+  blocked_reason: Git remains deployment authority. Dedicated read identity and reviewed adapter required; no unrestricted sync/delete API.
+- id: data_backups
+  description: PostgreSQL, ClickHouse and backup recovery
+  enabled: false
+  blocked_reason: Domain query/restore contracts and dedicated identities required; no raw SQL, backup decryption keys or destructive restore
+    tools.
