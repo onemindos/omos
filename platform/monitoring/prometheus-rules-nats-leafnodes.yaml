@@ -12,9 +12,9 @@ spec:
     # Per-leaf series come from nats-leafz-exporter (nats-leafz-exporter.yaml). A leaf is
     # matched on the server name it presents to the hub, the "name" field of /leafz.
     # Baseline 2026-10-27: three leaves, all in account ONEMIND, one per hub server:
-    # hermes-legacy-leaf, zeus-mac, and the TAK leaf. takserver/tak-nats-leaf sets no
-    # server name, so the hub lists it under a random server ID that changes on every
-    # restart; it gets a rule once the leaf has a stable name.
+    # hermes-legacy-leaf, zeus-mac, and the TAK leaf. takserver/tak-nats-leaf is named after
+    # its pod (--name in platform/takserver/deploy/tak-nats-leaf.yaml), so its rule matches
+    # the tak-nats-leaf-<replicaset>-<pod> prefix.
     #
     # Each leaf rule fires only while the exporter reads at least one hub server (the
     # "and on() count(...)" guard), so an exporter outage raises NATSLeafzExporterDown
@@ -42,6 +42,23 @@ spec:
             description: >-
               No hub server has a leafnode connection from hermes-legacy-leaf, the nats-leaf sidecar of
               hermes/hermes-legacy. The Hermes agent is cut off from the bus. Check that container's log.
+
+        - alert: NATSLeafnodeDown
+          expr: |
+            absent(gnatsd_leafz_info{job="nats-leafz-exporter", name=~"tak-nats-leaf-.+"})
+            and on() count(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"})
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+            leaf: tak-nats-leaf
+          annotations:
+            summary: "NATS leaf tak-nats-leaf is not connected to the hub"
+            description: >-
+              No hub server has a leafnode connection from takserver/tak-nats-leaf, so clients of this leaf
+              are cut off from the bus. If the NatsBridgePlugin is connected to this leaf, its CoT to and from
+              the bus stops too; TAKCoTFlowStopped fires if the COT stream stops receiving messages. Check the
+              tak-nats-leaf pod log and the hub's /leafz.
 
         # zeus-mac is a laptop. Over the 10 days to 2026-10-27 the summed leaf count dipped
         # for 1-3 min at reconnects and pod restarts, and for 25 min to 5 h four times in the
