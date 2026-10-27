@@ -11,41 +11,41 @@ kind: Deployment
 metadata:
   name: tak-nats-leaf
   namespace: takserver
-  labels: { app: tak-nats-leaf }
+  labels: {app: tak-nats-leaf}
 spec:
   replicas: 1
-  selector: { matchLabels: { app: tak-nats-leaf } }
+  selector: {matchLabels: {app: tak-nats-leaf}}
   template:
     metadata:
-      labels: { app: tak-nats-leaf }
+      labels: {app: tak-nats-leaf}
     spec:
       containers:
         - name: nats
           image: nats:2.10-alpine
           args: ["-c", "/etc/leaf/leaf.conf"]
           ports:
-            - { containerPort: 4222, name: client }
-            - { containerPort: 8222, name: monitor }
+            - {containerPort: 4222, name: client}
+            - {containerPort: 8222, name: monitor}
           volumeMounts:
-            - { name: leaf, mountPath: /etc/leaf, readOnly: true }
+            - {name: leaf, mountPath: /etc/leaf, readOnly: true}
           readinessProbe:
-            httpGet: { path: /healthz, port: 8222 }
+            httpGet: {path: /healthz, port: 8222}
             initialDelaySeconds: 3
             periodSeconds: 10
           resources:
-            requests: { cpu: 50m, memory: 32Mi }
-            limits:   { cpu: 250m, memory: 128Mi }
+            requests: {cpu: 50m, memory: 32Mi}
+            limits: {cpu: 250m, memory: 128Mi}
       volumes:
         - name: leaf
-          secret: { secretName: tak-nats-leaf }
+          secret: {secretName: tak-nats-leaf}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: tak-nats-leaf
   namespace: takserver
-  labels: { app: tak-nats-leaf }
+  labels: {app: tak-nats-leaf}
 spec:
-  selector: { app: tak-nats-leaf }
+  selector: {app: tak-nats-leaf}
   ports:
-    - { name: client, port: 4222, targetPort: 4222, protocol: TCP }
+    - {name: client, port: 4222, targetPort: 4222, protocol: TCP}
