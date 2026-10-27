@@ -15,7 +15,7 @@ Cluster OIDC requests use the existing Tailscale egress ProxyGroup. CoreDNS rewr
 
 ## Database and recovery
 
-PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. Two application replicas use rolling updates with zero unavailable replicas and one surge replica. Preferred node separation and a disruption budget preserve application availability during routine updates and voluntary eviction. Review schema migration compatibility before each upgrade. PostgreSQL and identity remain single-instance dependencies; this is not full high availability.
+PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. Two application replicas use rolling updates with zero unavailable replicas and one surge replica. Replicas are required to run on the autoscaled `onemind-ecosystem-cpu` pool (not the memory-saturated hub-core pool); preferred node separation spreads them when that pool has two or more nodes, and a disruption budget preserves application availability during routine updates and voluntary eviction. With a single ecosystem node both replicas share it until the autoscaler adds one. Review schema migration compatibility before each upgrade. PostgreSQL and identity remain single-instance dependencies; this is not full high availability.
 
 The old `backstage-backup` CronJob is suspended, superseded by the managed
 `backup-postgres-backstage` job at 06:40 UTC. Its current encrypted prefix is
