@@ -4,8 +4,9 @@
 # DOKS bus leafnode port (7422) over TLS. Plugin stays creds-free and portable:
 # same plugin config works on Mac / DOKS / edge — only the leaf's remote changes.
 #
-# Secret `tak-nats-leaf` (leaf.conf + ca.crt) is created out-of-band (contains the
-# leaf_tak password) — see DEPLOY-RUNBOOK.md. Never committed.
+# Secret `tak-nats-leaf` (leaf.conf + ca.crt; contains the leaf_tak password) is unsealed
+# from tak-nats-leaf.sealedsecret.yaml beside this file, so changing leaf.conf means
+# resealing it from the plaintext.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
