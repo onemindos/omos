@@ -95,6 +95,20 @@ spec:
             summary: "CloudTAK API is down"
             description: "cloudtak-api has no available replicas. TAK picture sharing is offline."
 
+    # ─── TAK ML ──────────────────────────────────────────────────────────────
+    - name: onemind.takml
+      interval: 30s
+      rules:
+        - alert: TakmlServerDown
+          expr: kube_deployment_status_replicas_available{namespace="takml",deployment="takml-server"} == 0
+          for: 10m
+          labels:
+            severity: warning
+            service: takml
+          annotations:
+            summary: "TAK ML server is down"
+            description: "takml-server has had no available replicas for 10 minutes. TAK ML model execution is offline."
+
     # ─── Pod health (all namespaces) ─────────────────────────────────────────
     - name: onemind.pods
       interval: 60s
@@ -102,7 +116,7 @@ spec:
         - alert: PodCrashLooping
           expr: |
             rate(kube_pod_container_status_restarts_total{
-              namespace=~"nats|hermes|cloudtak|orp|omos|intel|takserver|clickhouse"
+              namespace=~"nats|hermes|cloudtak|orp|omos|intel|takserver|clickhouse|takml"
             }[15m]) * 60 * 15 > 3
           for: 5m
           labels:
@@ -114,7 +128,7 @@ spec:
         - alert: PodOOMKilled
           expr: |
             kube_pod_container_status_last_terminated_reason{
-              namespace=~"nats|hermes|cloudtak|orp|omos|intel|takserver|clickhouse",
+              namespace=~"nats|hermes|cloudtak|orp|omos|intel|takserver|clickhouse|takml",
               reason="OOMKilled"
             } == 1
           for: 0m
