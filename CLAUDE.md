@@ -51,7 +51,7 @@ Not active or not deployed: `docs/references/` (external project research, moved
 
 1. Application manifests live under `platform/<layer>/` (or `platform/takserver/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
 2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
-3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is no in-cluster registry (Harbor was removed). DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
+3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is no in-cluster registry (Harbor was removed). DOCR is not used. Running images were pinned to their observed digests on 2026-10-23 (`docs/operations/running-image-pins-2026-10-23.md`); a read-only check on 2026-10-27 found no running container on `:latest`. Only parked manifests (`platform/parked/`) still reference `:latest`. Pin a version or digest for anything new.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
 5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (`docs/operations/cluster-review-2026-10-09.md`, H1); do not add requests casually.
 
