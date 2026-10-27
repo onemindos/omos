@@ -1,16 +1,15 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # LAYER 4 — ALERTS                                               sync-wave: "4"
 # ─────────────────────────────────────────────────────────────────────────────
-# platform-monitoring: PrometheusRules + Alertmanager Telegram routing
+# platform-monitoring: PrometheusRules + the Alertmanager Telegram SealedSecret
 #
 # Covers: platform/monitoring/
-#   prometheus-rules-onemind.yaml  — OneMind K8s health alert rules
-#   alertmanager-telegram.yaml     — AlertmanagerConfig routing to Telegram
+#   prometheus-rules-onemind.yaml            — OneMind K8s health alert rules
+#   alertmanager-telegram.sealedsecret.yaml  — Telegram bot token and chat ID (keys bot-token,
+#                                              chat-id), sealed by the owner as in CLAUDE.md
 #
-# Prerequisites (apply once, out-of-band — see CLAUDE.md for kubeseal steps):
-#   kubectl create secret generic telegram-alertmanager-creds -n monitoring \
-#     --from-literal=bot_token=<token>
-#   Seal it → platform/monitoring/telegram-creds.sealedsecret.yaml
+# The Telegram receiver and routing are in platform/values/kube-prometheus-stack.yaml
+# (alertmanager.config); Alertmanager reads both values as files from that Secret.
 #
 # Helm values wired in platform/values/kube-prometheus-stack.yaml:
 #   alertmanagerConfigSelector: {}   — picks up AlertmanagerConfig CRs
