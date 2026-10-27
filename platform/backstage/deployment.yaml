@@ -165,11 +165,12 @@ spec:
           name: onemind-fga-context
       terminationGracePeriodSeconds: 45
       affinity:
+        # Required, not preferred: hub-core is memory-saturated, so the portal runs only
+        # on the autoscaled ecosystem pool. PostgreSQL (RWO volume) is not moved.
         nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            preference:
-              matchExpressions:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
               - key: doks.digitalocean.com/node-pool
                 operator: In
                 values:
