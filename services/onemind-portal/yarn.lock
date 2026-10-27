@@ -6377,6 +6377,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@internal/plugin-onemind-org-backend@workspace:^, @internal/plugin-onemind-org-backend@workspace:plugins/plugin-onemind-org-backend":
+  version: 0.0.0-use.local
+  resolution: "@internal/plugin-onemind-org-backend@workspace:plugins/plugin-onemind-org-backend"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:1.10.1"
+    "@backstage/backend-test-utils": "npm:1.11.7"
+    "@backstage/catalog-model": "npm:1.10.1"
+    "@backstage/cli": "npm:0.36.6"
+    "@backstage/config": "npm:1.3.9"
+    "@backstage/config-loader": "npm:^1.11.3"
+    "@backstage/plugin-catalog-backend": "npm:4.0.0"
+    "@backstage/plugin-catalog-node": "npm:2.2.5"
+    "@backstage/types": "npm:^1.2.2"
+    yaml: "npm:2.9.1"
+  languageName: unknown
+  linkType: soft
+
 "@internal/plugin-onemind-permissions-backend@workspace:^, @internal/plugin-onemind-permissions-backend@workspace:plugins/plugin-onemind-permissions-backend":
   version: 0.0.0-use.local
   resolution: "@internal/plugin-onemind-permissions-backend@workspace:plugins/plugin-onemind-permissions-backend"
@@ -15625,6 +15642,7 @@ __metadata:
     "@internal/plugin-onemind-missions-backend": "workspace:^"
     "@internal/plugin-onemind-offline-backend": "workspace:^"
     "@internal/plugin-onemind-operations-backend": "workspace:^"
+    "@internal/plugin-onemind-org-backend": "workspace:^"
     "@internal/plugin-onemind-permissions-backend": "workspace:^"
     "@internal/plugin-onemind-services-backend": "workspace:^"
     "@types/express": "npm:^4.17.21"

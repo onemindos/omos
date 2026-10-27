@@ -74,11 +74,10 @@ Current annotations:
 
 | CronJob | State | Detail |
 |---|---|---|
-| `backstage/backstage-backup` | superseded | by `backup-postgres-backstage` |
 | `clickhouse/backup-clickhouse` | superseded | by the daily VolSync snapshot |
 | `ops/backup-offsite-copy` | pending-setup | waits for SealedSecret `offsite-copy-credentials` (`platform/backups/OFFSITE-COPY.md` steps 1 to 5) |
 
-All three keep `suspend: true`. Not covered yet: Velero (exports no metrics) and
+Both keep `suspend: true`. (`backstage/backstage-backup`, superseded by `backup-postgres-backstage`, was removed from Git on 2026-10-27.) Not covered yet: Velero (exports no metrics) and
 CloudNativePG (its metrics carry no cluster name and read `0`, meaning no backup recorded);
 the page says so.
 

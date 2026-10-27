@@ -1,5 +1,7 @@
 # OneMind stack inventory
 
+> **Kubernetes Dashboard retired 2026-10-27.** `kubernetes-dashboard` v2.7.0 in `kube` ran with `--enable-insecure-login --enable-skip-login` under a cluster-admin ServiceAccount on the tailnet (`k8s-dashboard`); Headlamp covers the use case. Its manifests and catalog entries were removed through a reviewed Git change (`platform-kube` prunes them); the hand-made `ClusterRoleBinding/kubernetes-dashboard-admin` needs a manual delete. Earlier snapshots in this file that mention it are historical.
+
 > **OpenClaw retired 2026-10-22** (Zeus: not needed any more). Its Application, manifests, namespace, volume and backup source were removed through reviewed Git changes (PRs #379 and the retirement series). Earlier snapshots in this file that mention it are historical.
 
 Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), what owns it, what state it holds, whether it is backed up, who can reach it, and whether Git or a laptop controls it.
@@ -15,7 +17,7 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 This narrow refresh does not recertify the older inventory below. Live cluster:
 4 nodes, 70 Argo Applications (68 Synced/Healthy); only pre-existing Matrix
 OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending pods.
-All nodes are below 78% requested CPU/memory. OpenCost duplicate KSM emission is off.
+All nodes were below 78% requested CPU/memory at that refresh. On 2026-10-27 hub-core memory requests were 79%, 96% and 71% (read-only `kubectl describe node`). OpenCost duplicate KSM emission is off.
 OpenChoreo observability core/modules are deployed on existing backends, with
 an authenticated tailnet Observer, real console/MCP pilot logs and metrics, and
 verified encrypted SQLite backup/isolated restore. See the timestamped
@@ -65,10 +67,10 @@ This entry does not refresh historical counts or certify a working route.
 | Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
 | Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4) and `nats` UIs (5) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`) that take ownership once synced; until then they are untracked |
 | Namespaces | 48 |
-| Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
+| Nodes | 5 at capture: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB). 4 on 2026-10-27: the ecosystem pool (autoscale 1–4) was at 1 node |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
 | Other external listeners | `tak-tailnet` Tailscale LB (TAK, 8089/8443/8446/64738), `omos-nats` Tailscale LB |
-| Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 (see [Mutable image tags](#mutable-image-tags)) |
+| Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 at capture; 0 running on 2026-10-27 (see [Mutable image tags](#mutable-image-tags)) |
 
 ## Tier definitions
 
@@ -133,7 +135,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
 | `platform-n8n` | n8n | n8n workflow automation | PostgreSQL, 15 GiB | `PG dump` (05:20 UTC), `VolSync` | tailnet | Argo |
-| `platform-kube` | kube | Headlamp and Kubernetes Dashboard | none | Git | tailnet | Argo |
+| `platform-kube` | kube | Headlamp | none | Git | tailnet | Argo |
 | `platform-ecosystem-applications` | argocd | Generates the `ecosystem-*` Applications (11) from `platform/ecosystem/applications` | none | Git | internal | Argo |
 | `platform-ecosystem-foundation` | argocd | Generates the foundation `ecosystem-*` Applications (10) | none | Git | internal | Argo |
 | `platform-ecosystem-resources` | argocd | Ecosystem SealedSecrets, namespaces and shared resources | sealed credentials | Git | internal | Argo. **OutOfSync** (`SharedResourceWarning`: `SealedSecret auth/ghcr` is also owned by `platform-backups`) |
@@ -171,7 +173,7 @@ These run live and are not owned by any Application. Manifests for some of them 
 
 | Namespace | Workloads | Manifests in Git | Tier | Backup | Exposure |
 |-----------|-----------|------------------|------|--------|----------|
-| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (`:latest`); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
+| `nats` (UIs) | `heynats`, `nats-dashboard`, `nats-ui` (digest-pinned 2026-10-23); the agent tools moved to namespace `agent-fabric` (Agent Console, agent-tap, digest-pinned) on 2026-10-17 | `platform/nats-tools/`, Application `platform-nats-tools` (auto-sync, `prune: false`) | 2 | none needed | tailnet |
 | `matrix` | Synapse, Element Web, PostgreSQL, Redis | `platform/matrix/argo/`, Application `platform-matrix` (**manual sync** until `Secret/synapse-homeserver` is sealed, see `platform/matrix/SECRETS-TODO.md`; the older `base/` and `overlays/` are not deployed and not synced) | 2 | `PG dump` (05:40 UTC), `VolSync` x3 (80 GiB) | `matrix.onemindos.com`, `element.onemindos.com` **public (open)** |
 | `tailscale` | about 24 operator-generated proxy StatefulSets | generated | n/a | none | tailnet |
 | `kube-system` | Cilium, CoreDNS, Hubble, metrics-server, DO CSI and agents | DOKS-managed | n/a | none | `hubble` tailnet |
@@ -211,11 +213,18 @@ Gaps beyond the eleven releases:
 | Public, Cloudflare ranges only (nginx) | `auth.onemindos.dev`, `ws.onemindos.dev` (NATS WebSocket), `onemindos.dev` (tak-portal) |
 | Public, **no source restriction** (nginx) | `matrix.onemindos.com`, `element.onemindos.com` |
 | Public, control plane | Kubernetes API endpoint, no control-plane firewall (review finding H3) |
-| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Kubernetes Dashboard, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
+| Tailnet only | TAK (`tak`: 8089, 8443, 8446, 64738), TAK Portal (`enroll`), FedHub (`fedhub`), Argo CD, Grafana, Hermes dashboard, n8n, Headlamp, Hubble, Backstage preview, Authentik admin (`onemind-auth`), NATS UIs, `omos-nats` (4222, 7422, 8080), OpenChoreo gateway |
 
 ## Mutable image tags
 
-31 container references use `:latest`, a bare image name, or `run-latest` and so are not reproducible. Renovate (`renovate.json`) is deliberately **not** pinning digests for these yet; pinning is a separate, deliberate change because it will touch many manifests at once.
+> **Resolved 2026-10-23.** The running references below were pinned to their observed
+> image digests ([running-image-pins-2026-10-23.md](operations/running-image-pins-2026-10-23.md)).
+> A read-only check on 2026-10-27 (`kubectl get pods -A`, 141 unique container images)
+> found none on `:latest` or a bare name. The only remaining `:latest` under `platform/`
+> is `platform/parked/omos-mission-engine/`, which has no Application.
+> The Kyverno `disallow-latest-image-tag` policy is still in `Audit` mode.
+
+At capture (2026-10-09), 31 container references used `:latest`, a bare image name, or `run-latest` and so were not reproducible:
 
 | Namespace | Workloads |
 |-----------|-----------|

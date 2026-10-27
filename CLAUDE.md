@@ -26,7 +26,7 @@ execute the proposed storage patches. Keep Telegram and the settled approvals.
 
 ## What This Repo Is
 
-If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 52 Argo Applications reconcile from `main` (2026-10-17). Of the 11 Helm releases first installed by hand, 8 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-tempo`, `monitoring-otel-collector` (2026-10-17). **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
+If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 59 Argo Applications reconcile from `main` (2026-10-27). Of the 11 Helm releases first installed by hand, 8 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-tempo`, `monitoring-otel-collector` (2026-10-17). **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
 
 The platform is a NATS-native C2/ISR system. NATS is the nervous system, TAK (ATAK/iTAK/WebTAK) is the tactical display, and Hermes ("Legacy") is the AI agent.
 
@@ -59,7 +59,7 @@ platform/      Everything Argo CD syncs. argocd/ holds the Application CRs; the 
   onetak/ omos/ data/ takml/ n8n/ backstage/ monitoring/ kube/ ops/ ...
   ecosystem/   Argo-managed "ecosystem" stack: applications/, foundation-applications/, values/, charts/
   values/      Helm values for the add-ons (Argo-adopted: cert-manager, ingress-nginx, tailscale-operator, kube-prometheus-stack, loki, tempo, otel-collector; Helm CLI: argocd)
-infra/         Terraform: DO VPC + DOKS cluster (ecosystem-workers/ is a separate root); edge/ holds Mac leaf config (not deployed)
+infra/         Terraform: DO VPC + DOKS cluster, NOT matching live, do not apply (infra/README.md); ecosystem-workers/ is a separate root; edge/ holds Mac leaf config (not deployed)
 services/ docs/ scripts/                                code (built into images) and bus contracts (services/schemas/), docs, CI helpers
 ```
 
@@ -69,7 +69,7 @@ Not active or not deployed: `docs/references/` (external project research, moved
 
 1. Application manifests live under `platform/<layer>/` (or `platform/takserver/deploy`) and are applied by an Argo Application in `platform/argocd/` (ecosystem charts: `platform/ecosystem/applications/`). A path with no Application is not deployed.
 2. Third-party charts are Argo sources with a pinned `targetRevision`; values live in `platform/ecosystem/values/` or `platform/values/`. Foundation charts are also checksum-locked in `platform/ecosystem/foundation-lock.json`.
-3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is no in-cluster registry (Harbor was removed). DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
+3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is no in-cluster registry (Harbor was removed). DOCR is not used. Running images were pinned to their observed digests on 2026-10-23 (`docs/operations/running-image-pins-2026-10-23.md`); a read-only check on 2026-10-27 found no running container on `:latest`. Only parked manifests (`platform/parked/`) still reference `:latest`. Pin a version or digest for anything new.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
 5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (`docs/operations/cluster-review-2026-10-09.md`, H1); do not add requests casually.
 
@@ -124,7 +124,7 @@ kubectl --context do-nyc3-omos-cloud get nodes
 ```
 
 - The Kubernetes API endpoint is **public** (no control-plane firewall; `docs/operations/cluster-review-2026-10-09.md`, H3). Tailscale gives access to admin UIs, not a private API.
-- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (2 x 8 vCPU / 32 GiB, autoscale 2 to 4). `infra/main.tf` defaults do not match; do not `terraform apply` without a clean plan.
+- Cluster `omos-cloud` (nyc3, DOKS 1.36): pools `onemind-hub-core-v2` (3 x 8 vCPU / 16 GiB) and `onemind-ecosystem-cpu` (8 vCPU / 32 GiB, 1 node, autoscale 1 to 4; 2026-10-27). `infra/main.tf` does not match and has no state; do not `terraform apply` it (see `infra/README.md`).
 - Older local contexts such as `do-nyc3-onemind-hub` may exist. Check the context before running anything.
 
 ## TAK Server
