@@ -25,6 +25,7 @@ See the root [`README.md`](README.md) for the full directory map.
 - Use two-space indentation and avoid trailing whitespace.
 - Keep resources with the platform layer or service that owns them.
 - Follow the existing namespace, labels, probes, and resource request/limit pattern for that workload.
+- Set `storageClassName: do-block-storage-retain` on stateful claims (PVCs and StatefulSet `volumeClaimTemplates`). Leave VolSync cache claims, ReplicationSource snapshot copies and one-off restore-drill claims on `do-block-storage`. Do not edit the class of an existing claim or of a live StatefulSet's templates: Kubernetes rejects the change (root `CLAUDE.md`, "The Deployment Pattern").
 - Update the relevant Argo CD application or Kustomize configuration when adding resources; avoid expanding the manual bootstrap script for routine application deployments.
 
 ### Terraform

@@ -54,6 +54,7 @@ Not active or not deployed: `docs/references/` (external project research, moved
 3. Images come from GHCR (`ghcr.io/onemindos/...`) or upstream registries; there is no in-cluster registry (Harbor was removed). DOCR is not used. **About 31 container references still use `:latest`.** For anything new, pin a version or digest.
 4. Secrets: SealedSecrets (below). Never `kubectl create secret` and leave it.
 5. Every workload needs resource requests and limits. The hub-core node pool is memory-saturated (`docs/operations/cluster-review-2026-10-09.md`, H1); do not add requests casually.
+6. Stateful claims use the `do-block-storage-retain` StorageClass (`storageClassName` on PVCs and StatefulSet `volumeClaimTemplates`, or the chart or operator equivalent), so deleting the claim keeps the volume. VolSync cache claims and ReplicationSource snapshot copies (`cacheStorageClassName`, `restic.storageClassName`) stay on `do-block-storage`, as do one-off restore-drill claims. The class cannot be changed on a bound claim or in a live StatefulSet's templates: apply this to new claims only, and never recreate a live claim to switch it (set its PersistentVolume's reclaim policy to `Retain` instead, with owner approval).
 
 ### Public ingress
 
