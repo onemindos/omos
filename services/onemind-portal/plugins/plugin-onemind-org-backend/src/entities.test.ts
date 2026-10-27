@@ -1,3 +1,6 @@
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import {
   FieldFormatEntityPolicy,
   KubernetesValidatorFunctions,
@@ -103,6 +106,68 @@ describe('readCurated', () => {
     expect([...curated.groups]).toEqual(['onemind-admins']);
     expect(curated.subjects.size).toBe(1);
     expect([...curated.subjects][0]).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  /** catalog/org.yaml with the members of onemind-admins replaced, in a temporary file. */
+  async function withAdminMembers<T>(
+    members: string,
+    use: (file: string) => Promise<T>,
+  ): Promise<T> {
+    const reviewed = await readFile(orgYamlPath, 'utf8');
+    expect(reviewed).toContain('members: [akadmin]');
+    const dir = await mkdtemp(join(tmpdir(), 'onemind-org-'));
+    try {
+      const file = join(dir, 'org.yaml');
+      await writeFile(
+        file,
+        reviewed.replace('members: [akadmin]', `members: ${members}`),
+      );
+      return await use(file);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  }
+
+  it('also protects every user a reviewed Group lists as a member, defined in the file or not', async () => {
+    await withAdminMembers(
+      "[akadmin, Ops.Lead, 'user:default/second.admin', default/third, elsewhere/outsider, 'group:default/nested']",
+      async file => {
+        const curated = await readCurated(file);
+        expect([...curated.users].sort()).toEqual([
+          'akadmin',
+          'ops.lead',
+          'second.admin',
+          'third',
+        ]);
+        expect([...curated.groups]).toEqual(['onemind-admins']);
+        // The catalog would give a synced user with one of those names group:default/onemind-admins
+        // from the group side. None is published; a user in another namespace or a group ref is not
+        // a member that a synced default-namespace user could match.
+        const out = buildOrgEntities(
+          snapshot({
+            groups: directory.groups,
+            users: [
+              apiUser(20, 'Ops.Lead', [1]),
+              apiUser(21, 'second.admin', [1]),
+              apiUser(22, 'third', [1]),
+              apiUser(23, 'outsider', [1]),
+              apiUser(24, 'nested', [1]),
+            ],
+          }),
+          { userGroups: SCOPE, curated },
+        );
+        expect(names(out.entities, 'User')).toEqual(['nested', 'outsider']);
+        expect(out.curatedUsers).toBe(3);
+      },
+    );
+  });
+
+  it('refuses a reviewed Group member reference the catalog could not resolve', async () => {
+    await withAdminMembers("[akadmin, 'user:']", async file => {
+      await expect(readCurated(file)).rejects.toThrow(
+        `${file}: Group onemind-admins lists an invalid member`,
+      );
+    });
   });
 });
 

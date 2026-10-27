@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import type { Entity } from '@backstage/catalog-model';
+import { parseEntityRef, type Entity } from '@backstage/catalog-model';
 import YAML from 'yaml';
 import {
   PERSON_TYPES,
@@ -47,12 +47,28 @@ export function entityName(raw: string): string {
 
 /** What the reviewed org file (catalog/org.yaml) defines; those entities stay Git-owned. */
 export interface Curated {
-  /** Lower-case User names in the default namespace. */
+  /**
+   * Lower-case User names in the default namespace: the Users the file defines, and every user its
+   * Groups list in `spec.members`, defined in the file or not. The catalog gives a listed user the
+   * group's membership from the group side, so a synced user must never take one of those names.
+   */
   users: Set<string>;
   /** Lower-case Group names in the default namespace. */
   groups: Set<string>;
   /** Lower-case `onemind.io/oidc-sub` values of every User, in any namespace. */
   subjects: Set<string>;
+}
+
+/** A reviewed Group member resolved as the catalog resolves it (default kind User). */
+function memberRef(file: string, group: string, member: string, ns: string) {
+  try {
+    return parseEntityRef(member, {
+      defaultKind: 'user',
+      defaultNamespace: ns,
+    });
+  } catch {
+    throw new Error(`${file}: Group ${group} lists an invalid member`);
+  }
 }
 
 /** Reads the reviewed org file. An unreadable or invalid file throws, so nothing is published blind. */
@@ -68,14 +84,26 @@ export async function readCurated(file: string): Promise<Curated> {
     const e = doc.toJSON() as Partial<Entity> | null;
     if (!e || typeof e !== 'object') continue;
     const name = String(e.metadata?.name ?? '').toLowerCase();
-    const inDefault = (e.metadata?.namespace ?? 'default') === 'default';
+    const namespace = e.metadata?.namespace ?? 'default';
+    const inDefault = namespace === 'default';
     if (e.kind === 'User') {
       const sub = e.metadata?.annotations?.[A.oidcSub];
       if (typeof sub === 'string' && sub)
         curated.subjects.add(sub.toLowerCase());
       if (inDefault && name) curated.users.add(name);
-    } else if (e.kind === 'Group' && inDefault && name) {
-      curated.groups.add(name);
+    } else if (e.kind === 'Group') {
+      if (inDefault && name) curated.groups.add(name);
+      const members = e.spec?.members;
+      for (const member of Array.isArray(members) ? members : []) {
+        // The catalog rejects a Group whose members are not strings, so it grants nothing.
+        if (typeof member !== 'string') continue;
+        const ref = memberRef(file, name, member, namespace);
+        if (
+          ref.kind.toLowerCase() === 'user' &&
+          ref.namespace.toLowerCase() === 'default'
+        )
+          curated.users.add(ref.name.toLowerCase());
+      }
     }
   }
   return curated;
@@ -179,8 +207,9 @@ function groupEntity(
  *   example) is never published or listed in a user's memberOf. Within the scope, a superuser group
  *   or any group below one is not published either, because Authentik makes its members
  *   superusers. The hierarchy is copied only where Backstage can hold it (one parent per group).
- * - Names and subjects defined in the reviewed org file are never published, and nothing published
- *   points at them: admin membership (group:default/onemind-admins) stays Git-reviewed.
+ * - Names and subjects the reviewed org file defines, and user names its Groups list as members,
+ *   are never published, and nothing published points at them: admin membership
+ *   (group:default/onemind-admins) stays Git-reviewed.
  * - Two records that map to the same entity name: the older user (lower pk) or the group whose name
  *   sorts first keeps it; the other is skipped with a warning.
  */

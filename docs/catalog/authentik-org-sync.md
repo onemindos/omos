@@ -35,7 +35,7 @@ An application without bindings admits every Authentik user. The bootstrap job c
 
 ## What stays Git-owned
 
-Users and Groups defined in `catalog/org.yaml` (today `akadmin` and `onemind-admins`) win: the module never publishes their names or a user holding one of their subjects, and nothing it publishes refers to them. Admin rights (membership of `group:default/onemind-admins`) therefore remain a reviewed Git change, even if Authentik has a group called "OneMind Admins". The module reads the same org file the catalog reads: the one `file` location in `catalog.locations` named `org.yaml` (`/app/catalog/org.yaml` in the image, `../../catalog/org.yaml` from `packages/backend` under `yarn start`), unless `authentik.orgSync.curatedFile` names another.
+Users and Groups defined in `catalog/org.yaml` (today `akadmin` and `onemind-admins`) win: the module never publishes their names or a user holding one of their subjects, and nothing it publishes refers to them. It also never publishes a user whose name a reviewed Group lists in `spec.members`, whether or not the file defines that User: the catalog gives a listed user the group's membership from the group side, so adding a name to `onemind-admins` without a User entry cannot hand admin to the Authentik account with that username. Admin rights (membership of `group:default/onemind-admins`) therefore remain a reviewed Git change, even if Authentik has a group called "OneMind Admins". The module reads the same org file the catalog reads: the one `file` location in `catalog.locations` named `org.yaml` (`/app/catalog/org.yaml` in the image, `../../catalog/org.yaml` from `packages/backend` under `yarn start`), unless `authentik.orgSync.curatedFile` names another.
 
 ## Safety rails
 
