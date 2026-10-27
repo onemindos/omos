@@ -49,7 +49,7 @@ def test_protocol_discovery_resources_call_and_audit(setup, caplog):
                                          "clientInfo": {"name": "test", "version": "1"}})
         assert "serverInfo" in init["result"]
         tools = rpc(client, "tools/list")["result"]["tools"]
-        assert {t["name"] for t in tools} == {"apps_list", "nats_server_stats", "nats_jetstream_stats", "prometheus_query"}
+        assert {t["name"] for t in tools} == {"apps_list", "apps_describe", "nats_server_stats", "nats_jetstream_stats", "prometheus_query"}
         assert all(t["annotations"]["readOnlyHint"] for t in tools)
         result = rpc(client, "tools/call", {"name": "nats_server_stats", "arguments": {}})["result"]
         assert not result.get("isError")
