@@ -7,6 +7,13 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 PORTAL = ROOT / "services/onemind-portal"
 MODULE = "@backstage/plugin-catalog-backend-module-github"
+# Backstage requires spec.owner on every allowed kind except Location. spec.system is optional
+# upstream, but every Component, API and Resource in the static catalog sets one.
+OWNED_KINDS = {"Component", "API", "Resource", "System", "Domain"}
+SYSTEM_KINDS = {"Component", "API", "Resource"}
+# Backstage defaults the kind of spec.owner (Group) and spec.system (System), but not of
+# spec.dependsOn or spec.dependencyOf: those refs fail processing without "kind:".
+KIND_PREFIX = r"^[A-Za-z][A-Za-z0-9]*:"
 
 
 def entity_ref(entity):
@@ -14,13 +21,13 @@ def entity_ref(entity):
     return f'{entity["kind"]}:{meta.get("namespace", "default")}/{meta["name"]}'.lower()
 
 
-def parse_ref(value, default_kind):
+def parse_ref(value, default_kind, default_namespace="default"):
     kind, sep, rest = value.partition(":")
     if not sep:
         kind, rest = default_kind, value
     namespace, sep, name = rest.partition("/")
     if not sep:
-        namespace, name = "default", rest
+        namespace, name = default_namespace, rest
     return f"{kind}:{namespace}/{name}".lower()
 
 
@@ -89,12 +96,18 @@ class GithubDiscoveryTests(unittest.TestCase):
         for path, entities in descriptors.items():
             for entity in entities:
                 with self.subTest(path=path, entity=entity_ref(entity)):
-                    self.assertIn(entity["kind"], allowed)
-                    spec = entity["spec"]
-                    self.assertIn(parse_ref(spec["owner"], "group"), static)
-                    self.assertIn(parse_ref(spec["system"], "system"), static)
+                    kind, spec = entity["kind"], entity.get("spec") or {}
+                    namespace = entity["metadata"].get("namespace", "default")
+                    self.assertIn(kind, allowed)
+                    if kind in OWNED_KINDS:
+                        self.assertIn("owner", spec, f"{kind} needs spec.owner")
+                        self.assertIn(parse_ref(spec["owner"], "group", namespace), static)
+                    if kind in SYSTEM_KINDS:
+                        self.assertIn("system", spec, f"{kind} needs spec.system like the static catalog")
+                        self.assertIn(parse_ref(spec["system"], "system", namespace), static)
                     for relation in spec.get("dependsOn", []) + spec.get("dependencyOf", []):
-                        self.assertIn(parse_ref(relation, "component"), known)
+                        self.assertRegex(relation, KIND_PREFIX, "dependsOn/dependencyOf need an explicit kind")
+                        self.assertIn(parse_ref(relation, None, namespace), known)
 
 
 if __name__ == "__main__":
