@@ -6,6 +6,24 @@ Read `docs/MISSION.md` before architecture, product, AI or infrastructure decisi
 
 The platform plan (four layers, AI trust model, OpenChoreo migration phases and their tracker) is in `PLATFORM-ROADMAP.md` at the repository root. Read it before platform or AI-operations work, and update its tracker in the same PR when you complete roadmap work.
 
+## Owner-approved merge batch — 2026-10-27
+
+Zeus approved all owner decisions for dcarku's 46 PRs #495–#540, retained
+Telegram, and authorized Claude Code to review, fix, validate and execute those
+merges on his behalf, including this batch's foundation PRs. See the exact
+[approval, decisions and continuation](docs/roadmap/2026-10-27-owner-merge-preparation.md#owner-authorization--2026-10-27)
+in PR #542. This satisfies the default human-merge/owner-approval requirement
+only for this batch; technical checks, credential and release prerequisites
+remain. Do not request the settled approvals again. Hold an actually blocked PR,
+continue the queue and report remaining blockers together at the end.
+
+**Latest owner direction (2026-10-27): Hermes is the lead and sole merger.**
+Start with #542, #504, #497, #498 and #496 sequentially, reviewing each against
+current `main` and verifying its final CI before marking ready and merging.
+The existing second harness prepares/tests #505 and application PRs; it does not
+merge. These first five are source merges only: do not run Terraform apply or
+execute the proposed storage patches. Keep Telegram and the settled approvals.
+
 ## What This Repo Is
 
 If a service runs in the cluster, its manifest should live here, and Argo CD should apply it. Reality is not there yet: 52 Argo Applications reconcile from `main` (2026-10-17). Of the 11 Helm releases first installed by hand, 8 are adopted into Argo: `edge-cert-manager`, `edge-ingress-nginx`, `edge-nack`, `edge-tailscale-operator` (PR #176) and `monitoring-kube-prometheus-stack`, `monitoring-loki`, `monitoring-tempo`, `monitoring-otel-collector` (2026-10-17). **3 are still Helm CLI only**: nats, takserver and argocd. Never `helm upgrade` an adopted release, and do not run `platform/install.sh`, which still upgrades all of them; see `docs/gitops/HELM-ADOPTION.md`. Also a few namespaces (`matrix`, the NATS web UIs) have no Application. See "GitOps gaps" in `docs/STACK.md`. Do not add to that list: new workloads get an Argo Application, not `helm install` or `kubectl apply`.
