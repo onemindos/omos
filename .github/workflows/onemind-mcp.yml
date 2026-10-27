@@ -72,7 +72,9 @@ jobs:
           path: services/onemind-mcp/image-digest.txt
   preflight:
     # Existing scoped pod-reader identity; no new Kubernetes privileges or credentials.
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: >-
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.verify_live)
     runs-on: [self-hosted, onemind-hermes-readonly]
     timeout-minutes: 5
     steps:
