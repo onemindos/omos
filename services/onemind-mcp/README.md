@@ -8,7 +8,10 @@ replace app APIs, operate Kubernetes, or grant access to every app automatically
 ## Current implementation
 
 - Official Python MCP SDK, Streamable HTTP at `/mcp`, stateless JSON responses.
-- `apps_list` and `onemind://apps` describe configured applications and tools.
+- `apps_list` searches all access domains; `apps_describe` explains available operations and blockers.
+- STAC imagery, Ollama model inventory, Alertmanager alerts, Loki logs and OpenCost estimates.
+- Credential-gated adapters for bookmarks, workflows, Paperclip, Grafana, Tempo and MediaMTX.
+- `onemind://apps` exposes the same catalog as a resource.
 - NATS: `nats_server_stats`, `nats_jetstream_stats`. Each reports one node, not a
   cluster aggregate. No message reading, publishing or administrative operations.
 - Prometheus: `prometheus_query`. Instant PromQL, 5-second server-side timeout,
@@ -22,7 +25,7 @@ replace app APIs, operate Kubernetes, or grant access to every app automatically
 - Eight concurrent tool calls, a 15-second overall call budget and bounded HTTP
   connections. The initial client has access to all configured read tools.
 
-Deployment status: **deployed and live-verified for Legacy on 2026-10-27**. The owning manifests are
+Deployment and live acceptance evidence are recorded separately in the runbook. The owning manifests are
 in `platform/hermes/mcp/`; the activation gates and rollout evidence are recorded in
 [the runbook](../../docs/operations/onemind-mcp.md). Source is not live acceptance.
 
@@ -64,11 +67,14 @@ Run tests with `python -m pytest -q` after installing `requirements-dev.txt`.
 
 The catalog is loaded at startup. ConfigMap hash changes roll pods automatically
 through Kustomize; secret rotation needs a rollout/reload. No automatic import of
-every OpenAPI endpoint, URL execution, Kubernetes scanning or write operations is
-included. All tools are deliberately annotated read-only; before adding writes,
-introduce separate authorization scopes and mutation-specific registration,
-idempotency, approvals where needed, and rollback semantics. Do not add a write
-tool through the existing read-only registrar.
+every OpenAPI endpoint, URL execution or Kubernetes scanning is included.
+Write registration uses `add_tool(fn, read_only=False)` and is omitted unless
+that app opts into `allow_writes: true`; the deployed catalog grants no writes.
+Use dedicated per-app identities; creation operations are non-idempotent.
+Update `coverage.yaml` whenever an Argo Application is added/removed. The quality
+gate checks every Git-declared Application against this inventory.
+Bump Legacy's `ONEMIND_MCP_TOOLSET_REVISION` when changing tools so its startup
+MCP cache refreshes after server readiness.
 
 ## Deploy and connect Hermes
 
