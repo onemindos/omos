@@ -3,6 +3,13 @@
 Living document. Started 2026-10-18. Owner: Zeus. Kept at the repository root so any
 agent (Claude Code, Codex or another) can pick up the work where the last one stopped.
 
+2026-10-27 user-directed merge preparation: [portal alias #524](https://github.com/onemindos/omos/pull/524)
+keeps `onemind-preview` canonical and only redirects the proposed `portal` hostname.
+The current alias requires no new OIDC callback; a later canonical-host change
+does. Source/review preparation is separate from hostname registration, Argo
+rollout and browser acceptance. Phase 6 remains In progress; Phases 7/8 stay
+Not started. No identity-provider mutation or deployment is recorded here.
+
 2026-10-26 user-directed work: launch an independent `hermes-fresh` beside Legacy
 through `platform-hermes-fresh`, with new storage and no imported agent state or
 operational credentials. Source and isolated image smoke checks are prepared;

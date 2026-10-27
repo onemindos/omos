@@ -1,7 +1,7 @@
 # OneMind Backstage
 
 Private preview: https://onemind-preview.tail717ba0.ts.net
-Alias: https://portal.tail717ba0.ts.net (redirects to the preview host; see [Hostnames](#hostnames))
+Prepared alias: https://portal.tail717ba0.ts.net (available after the alias rollout; redirects to the preview host; see [Hostnames](#hostnames))
 Identity provider: https://onemind-auth.tail717ba0.ts.net
 
 This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `services/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its source was removed; Git history retains the pre-retirement configuration for recovery.
@@ -19,6 +19,15 @@ Cluster OIDC requests use the existing Tailscale egress ProxyGroup. CoreDNS rewr
 Backstage serves one origin, `PORTAL_URL` in `deployment.yaml`. It sets `app.baseUrl`, `backend.baseUrl` and the CORS origin, and the auth backend builds the OIDC callback from it. Each of these takes a single value. A page loaded from a second host would call the API at `backend.baseUrl` cross-origin, which the CORS origin and CSP `connect-src 'self'` block, so a second host cannot serve the portal itself.
 
 `portal` is a tailnet alias (`portal-redirect.yaml`). Its Tailscale Ingress reaches a small nginx that answers every request with a 302 to the same path and query on `PORTAL_URL`; only that Ingress proxy can reach it, and it has no egress. The redirect is temporary so browsers do not cache it. Use the canonical host for API, MCP and OAuth clients. To make `portal` canonical later, add `https://portal.tail717ba0.ts.net/api/auth/oidc/handler/frame` to the Authentik `onemind-backstage` provider first, then in one change set `PORTAL_URL` to the portal host, point the `portal` Ingress at the `backstage` Service and make `onemind-preview` the redirect. `scripts/tests/test_gitops_portal_alias.py` fails if the redirect target and `PORTAL_URL` drift apart.
+
+**Merge and rollout checks:** confirm that no existing tailnet device or Tailscale
+Ingress claims `portal`. This redirect keeps Backstage's origin and OIDC callback
+on `onemind-preview`; it needs no Authentik provider edit. An additional callback
+is a prerequisite only for the separate future canonical-host migration described
+above. After Argo reconciliation, check that the alias preserves a harmless path
+and query in its redirect, the destination still supports sign-in, and the
+operator registered the exact `portal` hostname rather than a suffixed name.
+Keep the existing canonical hostname if the alias cannot be registered.
 
 ## Database and recovery
 
