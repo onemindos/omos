@@ -1,0 +1,281 @@
+# Ingress NetworkPolicies for namespace takserver (enforced by Cilium on DOKS).
+#
+# Scope: INGRESS ONLY, and only for the pods selected below. There is deliberately no
+# namespace-wide default-deny and no egress restriction yet (follow-up once every egress
+# is mapped). Pods not selected here (fedhub, fedhub-mongodb, murmur, mumble-bridge,
+# takserver-nats, takserver-nats-box) keep today's open ingress.
+#
+# "TAK core" below means the TAK Server JVM pods: app in (takserver-messaging,
+# takserver-api, takserver-config, takserver-plugins, takserver-ignite). They talk to each
+# other on many ports (Ignite discovery 47500 and communication 47100 run in both
+# directions), so core-to-core traffic is allowed on all ports.
+#
+# Kubelet liveness/readiness probes come from the node and are not affected (Cilium allows
+# host-to-local-pod traffic; the same holds for existing default-deny namespaces such as
+# vaultwarden). Loopback traffic (kubectl exec + localhost, e.g. ldappasswd inside
+# tak-ldap-0) is never subject to NetworkPolicy.
+#
+# Evidence for each client is in the PR description (feat/takserver-netpol).
+#
+# EUD entry point. tak-tailnet (LoadBalancer, class tailscale, tak.tail717ba0.ts.net)
+# selects tak-lb-proxy; the Tailscale operator runs its proxy pod in namespace tailscale
+# and forwards to the Service, so EUD traffic arrives from that pod. CloudTAK reaches the
+# same pods through its ExternalName to tak-tailnet.takserver.svc.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tak-lb-proxy-ingress
+  namespace: takserver
+spec:
+  podSelector:
+    matchLabels:
+      app: tak-lb-proxy
+  policyTypes:
+  - Ingress
+  ingress:
+  # Tailnet EUDs (ATAK/iTAK/WinTAK, WebTAK, enrollment, Mumble) via the tak-tailnet proxy.
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tailscale
+      podSelector:
+        matchLabels:
+          tailscale.com/parent-resource: tak-tailnet
+          tailscale.com/parent-resource-ns: takserver
+          tailscale.com/parent-resource-type: svc
+    ports:
+    - protocol: TCP
+      port: 8089
+    - protocol: TCP
+      port: 8443
+    - protocol: TCP
+      port: 8446
+    - protocol: TCP
+      port: 64738
+  # CloudTAK (platform/cloudtak/takserver.yaml ExternalName -> tak-tailnet) and the
+  # TAK portal (onetak); its egress policy already allows these ports to tak-lb-proxy.
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cloudtak
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: cloudtak
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onetak
+      podSelector:
+        matchLabels:
+          app: tak-portal
+    ports:
+    - protocol: TCP
+      port: 8089
+    - protocol: TCP
+      port: 8443
+    - protocol: TCP
+      port: 8446
+  # Hermes streaming CoT (owner-reported client; keep until confirmed unused).
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: hermes
+    ports:
+    - protocol: TCP
+      port: 8089
+---
+# TAK Server messaging (8089 CoT, 9000/9001), API (8443 Marti/WebTAK, 8444 fed_https,
+# 8446 enrollment/OAuth), config and plugins.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: takserver-core-ingress
+  namespace: takserver
+spec:
+  podSelector:
+    matchExpressions:
+    - key: app
+      operator: In
+      values:
+      - takserver-messaging
+      - takserver-api
+      - takserver-config
+      - takserver-plugins
+  policyTypes:
+  - Ingress
+  ingress:
+  # TAK core to TAK core, all ports (Ignite client/server traffic, internal APIs).
+  - from:
+    - podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - takserver-messaging
+          - takserver-api
+          - takserver-config
+          - takserver-plugins
+          - takserver-ignite
+  # EUD ports: the LB proxy (nginx stream upstreams in tak-lb-proxy.yaml), CloudTAK
+  # (its egress policy targets takserver-api/-messaging directly) and the TAK portal.
+  - from:
+    - podSelector:
+        matchLabels:
+          app: tak-lb-proxy
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cloudtak
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: cloudtak
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: onetak
+      podSelector:
+        matchLabels:
+          app: tak-portal
+    ports:
+    - protocol: TCP
+      port: 8089
+    - protocol: TCP
+      port: 8443
+    - protocol: TCP
+      port: 8446
+  # TAK-ML server: Marti API with client certificate (platform/takml configmap-server.yaml
+  # tak.addr=takserver-api-service, tak.port=8443).
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: takml
+      podSelector:
+        matchLabels:
+          app: takml-server
+    ports:
+    - protocol: TCP
+      port: 8443
+  # Hermes streaming CoT (owner-reported client; keep until confirmed unused).
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: hermes
+    ports:
+    - protocol: TCP
+      port: 8089
+---
+# Ignite cache/discovery server: TAK core only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: takserver-ignite-ingress
+  namespace: takserver
+spec:
+  podSelector:
+    matchLabels:
+      app: takserver-ignite
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - takserver-messaging
+          - takserver-api
+          - takserver-config
+          - takserver-plugins
+          - takserver-ignite
+---
+# TAK PostgreSQL (database cot): TAK core, the cot-retention CronJob and the nightly
+# backup-takserver-postgres dump (platform/backups/backups.yaml, PGHOST=takserver-postgresql).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: takserver-postgresql-ingress
+  namespace: takserver
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+      app.kubernetes.io/instance: takserver
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - takserver-messaging
+          - takserver-api
+          - takserver-config
+          - takserver-plugins
+          - takserver-ignite
+    # Label added to the CronJob pod template by fix/tak-cot-retention; merge that first.
+    - podSelector:
+        matchLabels:
+          app: cot-retention
+    - podSelector:
+        matchLabels:
+          app: platform-backup
+          backup-kind: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
+---
+# tak-ldap (OpenLDAP, CoreConfig <ldap url="ldap://tak-ldap:389">): TAK core only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tak-ldap-ingress
+  namespace: takserver
+spec:
+  podSelector:
+    matchLabels:
+      app: tak-ldap
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - takserver-messaging
+          - takserver-api
+          - takserver-config
+          - takserver-plugins
+          - takserver-ignite
+    ports:
+    - protocol: TCP
+      port: 389
+    - protocol: TCP
+      port: 636
+---
+# tak-nats-leaf: plaintext, unauthenticated 4222 that forwards into the authority bus
+# with the leaf's full-permission credentials. Only the NatsBridgePlugin (runs in
+# takserver-plugins; services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml
+# -> tak-nats-leaf.takserver.svc.cluster.local:4222) may connect. The leaf dials out to
+# nats.nats:7422 itself, so it needs no ingress for that. 8222 (monitor) is only used by
+# the kubelet health probe.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tak-nats-leaf-ingress
+  namespace: takserver
+spec:
+  podSelector:
+    matchLabels:
+      app: tak-nats-leaf
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: takserver-plugins
+    ports:
+    - protocol: TCP
+      port: 4222
