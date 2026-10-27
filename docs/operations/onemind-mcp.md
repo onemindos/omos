@@ -8,16 +8,20 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
 ## Source and activation status
 
 - Source: `services/onemind-mcp/`, official Python MCP SDK 1.30.0, Streamable HTTP.
-- Manifests: `platform/hermes/mcp/`, target namespace `hermes`. Reuse that
-  namespace's existing `ghcr` image pull Secret; do not duplicate its owner.
+- Manifests: `platform/hermes/mcp/`, target namespace `hermes`. Use the dedicated
+  `onemind-mcp-registry` image-pull Secret; do not rotate the shared registry credential.
 - Initial tools: `apps_list`, `nats_server_stats`, `nats_jetstream_stats`,
   `prometheus_query`. App catalog resource: `onemind://apps`.
 - 16 source/config tests pass; restricted container/official SDK smoke tests pass against
   **mock upstreams**, not live apps. Kubernetes manifests render and validate.
-- Live acceptance remains pending until merge/sync. The PR registers the new path
-  with `platform-legacy`, pins the published image digest and supplies a
-  namespace-scoped SealedSecret. The Legacy config merger preserves existing
-  settings and stores only a credential reference, with a private first-change backup.
+- **Deployed and live-verified**, 2026-10-27 04:00 EDT, from inside Legacy.
+  [Acceptance run](https://github.com/onemindos/omos/actions/runs/40470531771)
+  passed all four tools, resource reads, private authentication and rollout checks.
+  MCP and Legacy each have one available replica; `platform-legacy` is Synced/Healthy.
+- The deployed MCP uses the pinned image and a dedicated `onemind-mcp-registry`
+  image-pull SealedSecret. The namespace's unrelated shared `ghcr` credential was
+  left unchanged. The Legacy config contains only a runtime credential reference,
+  with a private first-change backup.
 - Only Legacy (`app.kubernetes.io/name=hermes,onemind.io/agent=legacy`) is the
   intended client. The separately isolated fresh Hermes is unchanged.
 
@@ -132,4 +136,18 @@ Image candidate built from source `3c68986` in
 Later changes add config integration/tests/docs; the server runtime source is
 unchanged from that image. The active SealedSecrets public certificate fingerprint
 was `B8:21:29:16:FE:9B:B0:B7:4A:7B:29:BB:32:B6:F9:93:16:41:16:46:BC:F9:29:D4:69:15:E7:49:8C:9D:26:22`.
-No live deployment or Hermes tool-call acceptance has been recorded yet.
+Live acceptance completed in
+[40470531771](https://github.com/onemindos/omos/actions/runs/40470531771).
+[Recorded result](onemind-mcp-acceptance-2026-10-27.json): all four tools and the app
+resource pass; anonymous access returns 401; MCP generation 2 and Legacy generation
+100 each have one available replica; Argo is Synced/Healthy. Progressive disclosure
+is enabled in Legacy's config. Calls were made by the official SDK from the actual
+Legacy container; this does not claim a separate end-to-end model/chat evaluation.
+
+The private pull failure was resolved by #491 using repository Actions secret
+`ONEMIND_MCP_GHCR_PULL_TOKEN`. Workflow `onemind-mcp-registry.yml` verifies access to
+the pinned image and outputs only namespace-scoped SealedSecret ciphertext. To
+rotate: update that repository secret, run the workflow, commit its sealed artifact
+and sync GitOps. Track the token's chosen expiration in the password manager. The
+registry token is used by Kubernetes image pulling, not loaded into the AI agent.
+SDK 2 acceptance compatibility and fail-fast checks were completed by #492/#493.

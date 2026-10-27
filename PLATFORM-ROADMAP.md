@@ -779,9 +779,12 @@ application MCP for the existing Legacy Hermes agent. This request supersedes th
 earlier Hermes deferral for this bounded integration only; it does not start the
 broader home-runtime or application-migration phases. Source, tests, image build
 and manifests are in `services/onemind-mcp/` and `platform/hermes/mcp/`.
-[Activation and live evidence](docs/operations/onemind-mcp.md) track the image digest,
-SealedSecret, Hermes compatibility and actual tool calls; this note does not mark
-the phase complete.
+[Live acceptance](docs/operations/onemind-mcp-acceptance-2026-10-27.json) passed
+2026-10-27: four authenticated read tools and app resource from Legacy, anonymous
+rejection, both workloads available and Argo Synced/Healthy. Native Tool Search is
+enabled. #487 implements the service; #491 supplies its dedicated pull credential;
+#492/#493 make acceptance compatible with the installed SDK. This bounded slice is
+delivered; the broader Phase 8/home-runtime work is not marked complete.
 
 - Planning scope requested 2026-10-20: [full Kubernetes operating structure and
   execution queue](docs/architecture/kubernetes-operating-structure.md), backed by
