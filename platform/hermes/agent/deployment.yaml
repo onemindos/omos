@@ -154,6 +154,9 @@ spec:
                 secretKeyRef:
                   name: onemind-mcp-auth
                   key: token
+            # Roll Legacy after MCP readiness so its startup tool cache is refreshed.
+            - name: ONEMIND_MCP_TOOLSET_REVISION
+              value: app-coverage-v2
             - name: NATS_URL
               value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
             - name: HERMES_NATS_SESSION_NAME
