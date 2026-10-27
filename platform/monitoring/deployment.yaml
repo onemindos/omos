@@ -5,9 +5,11 @@
 # and verifies the server certificate before exporting Prometheus metrics.
 #
 # The $SYS password is never committed here. It comes from the
-# nats-surveyor-creds Secret (key: password) in the nats namespace, committed
-# only as a SealedSecret. Surveyor reads NATS_SURVEYOR_PASSWORD natively, so
-# the password is not passed as an argument and stays off the command line.
+# nats-surveyor-creds Secret (key: password) in the nats namespace. That Secret
+# must be committed only as the SealedSecret
+# platform/monitoring/nats-surveyor-creds.sealedsecret.yaml. Surveyor reads
+# NATS_SURVEYOR_PASSWORD natively, so the password is not passed as an argument
+# and stays off the command line.
 ---
 apiVersion: v1
 kind: Service
