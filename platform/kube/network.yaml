@@ -12,6 +12,8 @@ spec:
 ---
 # Headlamp from its own Tailscale ingress proxy (StatefulSet ts-headlamp-* in tailscale), so the tailnet ACL in
 # platform/core/policy.hujson decides who reaches it. Other Tailscale proxies and in-cluster pods are refused.
+# If this Ingress moves to a ProxyGroup (tailscale.com/proxy-group), its proxy pods are relabelled
+# parent-resource-type=proxygroup: update this selector in the same change or tailnet access is cut.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
