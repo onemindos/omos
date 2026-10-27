@@ -26,7 +26,7 @@ See the root [`README.md`](README.md) for the full directory map.
 - Keep resources with the platform layer or service that owns them.
 - Follow the existing namespace, labels, probes, and resource request/limit pattern for that workload.
 - Set `storageClassName: do-block-storage-retain` on stateful claims: PVCs, StatefulSet `volumeClaimTemplates`, or the chart or operator equivalent. Keep a StatefulSet's `persistentVolumeClaimRetentionPolicy` at `Retain`. Do not edit the class of an existing claim or of a live StatefulSet's templates: Kubernetes rejects the change (root `CLAUDE.md`, "The Deployment Pattern").
-- Keep temporary claims on `do-block-storage`. Every VolSync ReplicationSource sets `spec.restic.storageClassName` and `spec.restic.cacheStorageClassName` to `do-block-storage` explicitly, because unset they take the source claim's class. Throwaway restore-drill claims use `do-block-storage` too; a restore that becomes the live claim uses the name, size and class declared in Git.
+- Keep temporary claims on `do-block-storage`. Every VolSync ReplicationSource sets `spec.restic.storageClassName` and `spec.restic.cacheStorageClassName` to `do-block-storage` explicitly, because unset they take the source claim's class. Throwaway restore-drill claims use `do-block-storage` too; a restore that becomes the live claim uses the name, size and class declared in Git. Before creating that claim, move a standalone PVC manifest that still declares `do-block-storage` to `do-block-storage-retain`.
 - Update the relevant Argo CD application or Kustomize configuration when adding resources; avoid expanding the manual bootstrap script for routine application deployments.
 
 ### Terraform
