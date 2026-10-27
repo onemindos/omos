@@ -7,6 +7,13 @@ admissionController:
   replicas: 1
   nodeSelector: &id001
     onemind.io/compute-role: ecosystem
+  # Report-writer restart token, shared with reportsController. Kyverno 1.19.x latches each report
+  # circuit breaker open for the rest of the process once its EphemeralReport counter watch gets a
+  # 410 (kyverno/kyverno#17084; fixed on main by #17085, in no 1.19.x release). Every admission and
+  # background-scan report is then dropped silently, so PolicyReports stay empty. A changed value
+  # rolls both pods once and re-arms the counters. Remove after upgrading to a release with the fix.
+  podAnnotations: &reports-breaker-reset
+    onemind.io/reports-breaker-reset: '2026-10-27'
   container:
     resources:
       requests:
@@ -38,6 +45,7 @@ cleanupController:
 reportsController:
   replicas: 1
   nodeSelector: *id001
+  podAnnotations: *reports-breaker-reset
   resources:
     requests:
       cpu: 10m
