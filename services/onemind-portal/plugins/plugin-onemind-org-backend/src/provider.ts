@@ -25,6 +25,7 @@ export interface SyncSummary {
   groups: number;
   curatedUsers: number;
   curatedGroups: number;
+  superuserGroups: number;
   multiParentGroups: number;
 }
 
@@ -80,6 +81,7 @@ export class AuthentikOrgProvider implements EntityProvider {
     logger.info(
       `Authentik org sync: ${mapping.users} users and ${mapping.groups} groups published; ` +
         `${mapping.curatedUsers} users and ${mapping.curatedGroups} groups left to ${this.deps.curatedFile}; ` +
+        `${mapping.superuserGroups} superuser groups not published; ` +
         `${mapping.multiParentGroups} groups published without a parent (several Authentik parents)`,
     );
     return {
@@ -87,6 +89,7 @@ export class AuthentikOrgProvider implements EntityProvider {
       groups: mapping.groups,
       curatedUsers: mapping.curatedUsers,
       curatedGroups: mapping.curatedGroups,
+      superuserGroups: mapping.superuserGroups,
       multiParentGroups: mapping.multiParentGroups,
     };
   }

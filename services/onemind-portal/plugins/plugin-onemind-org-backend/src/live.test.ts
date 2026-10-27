@@ -164,7 +164,7 @@ describe('Authentik org sync enabled, against a real catalog with the reviewed o
         groups = await list('kind=group');
         const stitched =
           users.length === 5 &&
-          groups.length === 7 &&
+          groups.length === 5 &&
           users.every(u => memberOf(u).length > 0) &&
           groups.some(g => (g.relations ?? []).some(r => r.type === 'childOf'));
         if (stitched) break;
@@ -206,6 +206,19 @@ describe('Authentik org sync enabled, against a real catalog with the reviewed o
           .filter(r => r.type === 'hasMember')
           .map(r => r.targetRef),
       ).toEqual(['user:default/akadmin']);
+
+      // Only the scope's groups are in the catalog: no group outside it (authentik Admins,
+      // argocd-admins, TAK Users) and no superuser group, so nobody can read who is in them.
+      expect(groups.map(g => g.metadata.name).sort()).toEqual([
+        'field-ops',
+        'field-ops-night-shift',
+        'onemind-admins',
+        'onemind-portal-users',
+        'two-parents',
+      ]);
+      expect(memberOf(byName.get('User:daniel-example.test'))).toEqual([
+        'group:default/onemind-portal-users',
+      ]);
 
       // Membership and hierarchy relations are stitched like the reviewed file's.
       expect(memberOf(byName.get('User:night.owl'))).toEqual([

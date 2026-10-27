@@ -176,16 +176,15 @@ describe('buildOrgEntities', () => {
     ).toEqual({ displayName: 'Person 8' });
   });
 
-  it('publishes every Authentik group except one the reviewed file defines', () => {
+  it('publishes only the groups in the scope, except one the reviewed file defines and superuser groups', () => {
     expect(names(result.entities, 'Group')).toEqual([
-      'authentik-admins',
       'field-ops',
       'field-ops-night-shift',
       'onemind-portal-users',
-      'tak-users',
       'two-parents',
     ]);
     expect(result.curatedGroups).toBe(1);
+    expect(result.superuserGroups).toBe(2);
     expect(find(result.entities, 'Group', 'field-ops-night-shift')).toEqual({
       apiVersion: 'backstage.io/v1alpha1',
       kind: 'Group',
@@ -214,8 +213,62 @@ describe('buildOrgEntities', () => {
     expect(text).not.toMatch(/"akadmin"/);
     for (const e of result.entities.filter(x => x.kind === 'User'))
       expect(e.spec?.memberOf).not.toContain('onemind-admins');
-    // Even an Authentik group that sanitises to the reviewed admin group name is not published.
+    // Even an Authentik group in the scope that sanitises to the reviewed admin group name is not
+    // published.
     expect(names(result.entities, 'Group')).not.toContain('onemind-admins');
+  });
+
+  it('never publishes or lists a group outside the scope, even one a synced user is in', () => {
+    // daniel@example.test is synced and also in argocd-admins; tak-only is in TAK Users and
+    // argocd-admins only; akadmin is in authentik Admins.
+    const text = JSON.stringify(result.entities);
+    for (const name of [
+      'authentik Admins',
+      'authentik-admins',
+      'argocd-admins',
+      'TAK Users',
+      'tak-users',
+    ])
+      expect(text).not.toContain(name);
+    expect(
+      find(result.entities, 'User', 'daniel-example.test').spec?.memberOf,
+    ).toEqual(['onemind-portal-users']);
+  });
+
+  it('never publishes a superuser group or a group below one, even in the scope, and keeps its members as users', () => {
+    // Portal Superusers is a superuser group under the portal group. Delegated Admins is in the
+    // scope through the portal group but also below authentik Admins, so Authentik makes its
+    // members superusers too.
+    const text = JSON.stringify(result.entities);
+    for (const name of [
+      'Portal Superusers',
+      'portal-superusers',
+      'Delegated Admins',
+      'delegated-admins',
+    ])
+      expect(text).not.toContain(name);
+    // Their members are in the scope, so they stay synced users, without that membership.
+    expect(find(result.entities, 'User', 'night.owl').spec?.memberOf).toEqual([
+      'field-ops-night-shift',
+    ]);
+    expect(
+      find(result.entities, 'User', 'two-parents-member').spec?.memberOf,
+    ).toEqual(['two-parents']);
+  });
+
+  it('publishes no group when the configured scope group is itself a superuser group', () => {
+    const out = buildOrgEntities(snapshot(), {
+      userGroups: ['authentik Admins'],
+      curated,
+    });
+    expect(names(out.entities, 'Group')).toEqual([]);
+    // authentik Admins, and Delegated Admins below it.
+    expect(out.superuserGroups).toBe(2);
+    // akadmin is reviewed; the Delegated Admins member is synced without any membership.
+    expect(names(out.entities, 'User')).toEqual(['two-parents-member']);
+    expect(
+      find(out.entities, 'User', 'two-parents-member').spec?.memberOf,
+    ).toEqual([]);
   });
 
   it('copies the hierarchy only where a group has exactly one Authentik parent', () => {
@@ -233,14 +286,8 @@ describe('buildOrgEntities', () => {
     const two = find(result.entities, 'Group', 'two-parents');
     expect(two.spec?.parent).toBeUndefined();
     expect(two.spec?.members).toEqual(['two-parents-member']);
+    // Delegated Admins also has two parents, but it is not published, so it is not counted.
     expect(result.multiParentGroups).toBe(1);
-    // Members of groups outside the scope, and reviewed users, are not listed.
-    expect(find(result.entities, 'Group', 'tak-users').spec?.members).toEqual(
-      [],
-    );
-    expect(
-      find(result.entities, 'Group', 'authentik-admins').spec?.members,
-    ).toEqual([]);
   });
 
   it('every reference points at a published entity, and both sides of each link agree', () => {
@@ -343,17 +390,18 @@ describe('buildOrgEntities', () => {
   it('keeps the first group by name when two group names map to one entity name', () => {
     const data = {
       groups: [
-        apiGroup(1, 'Portal'),
-        apiGroup(2, 'portal'),
-        apiGroup(3, 'PORTAL'),
+        apiGroup(1, 'Root'),
+        apiGroup(2, 'Portal', [1]),
+        apiGroup(3, 'portal', [1]),
+        apiGroup(4, 'PORTAL', [1]),
       ],
-      users: [apiUser(2, 'member', [2])],
+      users: [apiUser(2, 'member', [3])],
     };
     const out = buildOrgEntities(snapshot(data), {
-      userGroups: ['portal'],
+      userGroups: ['Root'],
       curated: none,
     });
-    expect(out.entities.filter(e => e.kind === 'Group')).toHaveLength(1);
+    expect(names(out.entities, 'Group')).toEqual(['portal', 'root']);
     expect(
       find(out.entities, 'Group', 'portal').metadata.annotations?.[A.name],
     ).toBe('PORTAL');
@@ -404,7 +452,7 @@ describe('buildOrgEntities', () => {
       users: [apiUser(2, 'member', [1])],
     };
     const out = buildOrgEntities(snapshot(data), {
-      userGroups: ['A'],
+      userGroups: ['A', 'Self'],
       curated: none,
     });
     expect(find(out.entities, 'Group', 'a').spec?.parent).toBeUndefined();

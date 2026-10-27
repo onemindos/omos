@@ -31,6 +31,8 @@ export interface AuthentikGroup {
   name: string;
   /** Direct parent group pks. Authentik allows several. */
   parents: string[];
+  /** Authentik makes members of this group, and of every group below it, superusers. */
+  isSuperuser: boolean;
 }
 
 export interface AuthentikSnapshot {
@@ -200,19 +202,21 @@ export function parseUser(raw: Record<string, unknown>): AuthentikUser {
   };
 }
 
+/** A group without a boolean `is_superuser` fails the run: it could be a superuser group. */
 export function parseGroup(raw: Record<string, unknown>): AuthentikGroup {
-  const { pk, name, parents } = raw;
+  const { pk, name, parents, is_superuser } = raw;
   if (
     typeof pk !== 'string' ||
     !pk ||
     typeof name !== 'string' ||
     !name.trim() ||
-    !isStringArray(parents)
+    !isStringArray(parents) ||
+    typeof is_superuser !== 'boolean'
   )
     throw new Error(
       `Unexpected group record from Authentik (pk ${String(pk)})`,
     );
-  return { pk, name, parents };
+  return { pk, name, parents, isSuperuser: is_superuser };
 }
 
 /**

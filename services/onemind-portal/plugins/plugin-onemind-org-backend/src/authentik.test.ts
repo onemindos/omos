@@ -1,5 +1,6 @@
 import {
   authentikFetchJson,
+  parseGroup,
   parseUser,
   readAuthentikOrg,
   type FetchJson,
@@ -19,8 +20,8 @@ describe('readAuthentikOrg', () => {
     expect(org.groups.map(g => g.name)).toEqual(
       directory.groups.map(g => g.name),
     );
-    // 9 users and 7 groups at a server page size of 2: 5 + 4 requests.
-    expect(api.urls).toHaveLength(9);
+    // 9 users and 10 groups at a server page size of 2: 5 + 5 requests.
+    expect(api.urls).toHaveLength(10);
     const first = new URL(api.urls[0]);
     expect(first.origin + first.pathname).toBe(`${BASE}/api/v3/core/users/`);
     expect([...first.searchParams]).toEqual([
@@ -54,10 +55,18 @@ describe('readAuthentikOrg', () => {
       uuid: '10000000-0000-4000-8000-000000000009',
       groups: ['00000000-0000-4000-8000-000000000002'],
     });
-    expect(org.groups.find(g => g.name === 'Two Parents')?.parents).toEqual([
-      '00000000-0000-4000-8000-000000000001',
-      '00000000-0000-4000-8000-000000000004',
-    ]);
+    expect(org.groups.find(g => g.name === 'Delegated Admins')).toEqual({
+      pk: '00000000-0000-4000-8000-000000000010',
+      name: 'Delegated Admins',
+      parents: [
+        '00000000-0000-4000-8000-000000000001',
+        '00000000-0000-4000-8000-000000000004',
+      ],
+      isSuperuser: false,
+    });
+    expect(
+      org.groups.find(g => g.name === 'authentik Admins')?.isSuperuser,
+    ).toBe(true);
   });
 
   const page = (results: unknown[], next: number, count: number) => ({
@@ -140,6 +149,18 @@ describe('readAuthentikOrg', () => {
       'Unexpected user record from Authentik (pk 1)',
     );
   });
+
+  it.each([
+    ['without is_superuser', { is_superuser: undefined }],
+    ['with a non-boolean is_superuser', { is_superuser: 'false' }],
+  ])(
+    'rejects a group record %s, since it could be a superuser group',
+    (_name, extra) => {
+      expect(() => parseGroup(apiGroup(1, 'g', [], extra))).toThrow(
+        'Unexpected group record from Authentik (pk 00000000-0000-4000-8000-000000000001)',
+      );
+    },
+  );
 
   it('rejects a group record from an older API without parents', async () => {
     const legacy = { ...apiGroup(1, 'g'), parents: undefined, parent: null };

@@ -47,7 +47,12 @@ export function apiUser(
 }
 
 /** One GET /api/v3/core/groups/ record with every field the API returns (include_users=false). */
-export function apiGroup(n: number, name: string, parents: number[] = []) {
+export function apiGroup(
+  n: number,
+  name: string,
+  parents: number[] = [],
+  extra: Record<string, unknown> = {},
+) {
   return {
     pk: groupPk(n),
     num_pk: 10000 + n,
@@ -63,6 +68,7 @@ export function apiGroup(n: number, name: string, parents: number[] = []) {
     inherited_roles_obj: null,
     children: [],
     children_obj: null,
+    ...extra,
   };
 }
 
@@ -109,29 +115,37 @@ export function fakeAuthentik(
 }
 
 /**
- * A small directory: a portal scope group with a child and grandchild, a group with two parents,
- * groups outside the scope, a group whose name collides with the reviewed onemind-admins, and users
- * that must or must not be published.
+ * A small directory: a portal scope group with a child and grandchild, a group with two parents, a
+ * group under the scope whose name collides with the reviewed onemind-admins, groups outside the
+ * scope (Authentik's superuser group "authentik Admins", an application admin group), a superuser
+ * group inside the scope, a group in the scope that is also below "authentik Admins" (so Authentik
+ * makes its members superusers), and users that must or must not be published.
  */
 export const directory = {
   groups: [
     apiGroup(1, 'OneMind Portal Users'),
     apiGroup(2, 'Field Ops', [1]),
     apiGroup(3, 'Field Ops / Night Shift', [2]),
-    apiGroup(4, 'authentik Admins'),
-    apiGroup(5, 'OneMind Admins'),
-    apiGroup(6, 'Two Parents', [1, 4]),
+    apiGroup(4, 'authentik Admins', [], { is_superuser: true }),
+    apiGroup(5, 'OneMind Admins', [1]),
+    apiGroup(6, 'Two Parents', [1, 7]),
     apiGroup(7, 'TAK Users'),
+    apiGroup(8, 'argocd-admins'),
+    apiGroup(9, 'Portal Superusers', [1], { is_superuser: true }),
+    apiGroup(10, 'Delegated Admins', [1, 4]),
   ],
   users: [
     apiUser(1, 'akadmin', [4, 1, 5], { is_superuser: true }),
-    apiUser(2, 'daniel@example.test', [1, 5], { name: 'Daniel Example' }),
-    apiUser(3, 'night.owl', [3]),
+    apiUser(2, 'daniel@example.test', [1, 5, 8], { name: 'Daniel Example' }),
+    apiUser(3, 'night.owl', [3, 9], { is_superuser: true }),
     apiUser(4, 'ak-outpost-ldap', [1], { type: 'internal_service_account' }),
     apiUser(5, 'former', [1], { is_active: false }),
-    apiUser(6, 'tak-only', [7]),
+    apiUser(6, 'tak-only', [7, 8]),
     apiUser(7, 'Daniel@Example.test', [1]),
-    apiUser(8, 'two-parents-member', [6], { email: '' }),
+    apiUser(8, 'two-parents-member', [6, 10], {
+      email: '',
+      is_superuser: true,
+    }),
     apiUser(9, 'external.partner', [2], { type: 'external', name: '' }),
   ],
 };

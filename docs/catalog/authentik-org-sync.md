@@ -11,9 +11,14 @@ Every 10 minutes (configurable), on one portal replica, the module lists Authent
 |---|---|
 | Active `internal` or `external` user who is a member of a group in `authentik.orgSync.userGroups`, or of a group below one (Authentik counts members of child groups as members of the parent) | `User` named from the username. `onemind.io/oidc-sub` is the user's `uid`; `profile.displayName` is the name (or the username), `profile.email` the email; `memberOf` lists the published groups the user is directly in |
 | Any other user: service accounts, deactivated users, people outside the configured groups | Nothing |
-| Every group | `Group` named from the group name, `type: team`, `displayName` the Authentik name, `members` the published users in it, `parent`/`children` where the group has exactly one Authentik parent (Backstage allows one; a group with several parents is published without one) |
+| A group in `userGroups`, or below one, unless it is an Authentik superuser group or below one | `Group` named from the group name, `type: team`, `displayName` the Authentik name, `members` the published users in it, `parent`/`children` where the group has exactly one Authentik parent (Backstage allows one; a group with several parents is published without one) |
+| Any other group: outside the configured groups (for example `argocd-admins`, `fedhub-admins`, `authentik Admins`), a superuser group or a group below one (Authentik makes their members superusers, even inside the configured groups), or a group defined in `catalog/org.yaml` | Nothing, and no published user lists it in `memberOf`. A member of such a group who is also in the configured groups is still published, without that membership |
 
 Each entity also carries `onemind.io/authentik-name` (the name before it was made a valid entity name), `onemind.io/authentik-uuid` and `backstage.io/managed-by-location: provider:onemind-authentik-org`.
+
+## Who can read it
+
+The OneMind permission policy allows every read, so every signed-in portal user, and the MCP machine token that agents use, can read every synced user (entity name, display name, email) and every published group with its synced members. Groups outside `userGroups` are never published, so who is in `argocd-admins`, `fedhub-admins` or `authentik Admins` stays in Authentik, and so does the membership of superuser groups placed inside the configured groups. Any other group placed below a configured group is published with its members: choose `userGroups` so that no group below them has a membership that should stay private.
 
 Entity names are lower case, accents dropped, every run of other characters becomes one `-` (`daniel@example.com` becomes `daniel-example.com`, `Field Ops` becomes `field-ops`); names over 63 characters are cut to 54 plus `-` and 8 hex of a hash. When two records map to the same name, the older user (lower pk) or the group whose name sorts first keeps it, and the other is skipped with a warning in the log.
 

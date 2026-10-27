@@ -61,9 +61,10 @@ describe('AuthentikOrgProvider', () => {
     await h.connect();
     await expect(h.provider.refresh()).resolves.toEqual({
       users: 4,
-      groups: 6,
+      groups: 4,
       curatedUsers: 1,
       curatedGroups: 1,
+      superuserGroups: 2,
       multiParentGroups: 1,
     });
     expect(h.provider.getProviderName()).toBe('onemind-authentik-org');
@@ -74,11 +75,9 @@ describe('AuthentikOrgProvider', () => {
       'User:external.partner',
       'User:night.owl',
       'User:two-parents-member',
-      'Group:authentik-admins',
       'Group:field-ops',
       'Group:field-ops-night-shift',
       'Group:onemind-portal-users',
-      'Group:tak-users',
       'Group:two-parents',
     ]);
     expect(
@@ -88,8 +87,8 @@ describe('AuthentikOrgProvider', () => {
     ).toBe(true);
     expect(h.logger.warn).toHaveBeenCalledTimes(1);
     expect(h.logger.info).toHaveBeenCalledWith(
-      'Authentik org sync: 4 users and 6 groups published; 1 users and 1 groups left to catalog/org.yaml; ' +
-        '1 groups published without a parent (several Authentik parents)',
+      'Authentik org sync: 4 users and 4 groups published; 1 users and 1 groups left to catalog/org.yaml; ' +
+        '2 superuser groups not published; 1 groups published without a parent (several Authentik parents)',
     );
   });
 

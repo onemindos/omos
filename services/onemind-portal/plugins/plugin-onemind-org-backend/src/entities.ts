@@ -92,9 +92,11 @@ export interface OrgMapping {
   entities: Entity[];
   users: number;
   groups: number;
-  /** Authentik users and groups left to the reviewed org file. */
+  /** Authentik users and groups in the scope left to the reviewed org file. */
   curatedUsers: number;
   curatedGroups: number;
+  /** Groups in the scope never published because Authentik makes their members superusers. */
+  superuserGroups: number;
   /** Groups published without a parent because Authentik gives them several. */
   multiParentGroups: number;
   /** Problems an operator should fix in Authentik or in the configuration. */
@@ -170,10 +172,13 @@ function groupEntity(
 /**
  * Maps one Authentik snapshot to catalog Users and Groups.
  *
- * - Users: active people (internal or external) who are members of a configured group or of any
- *   group below it, as Authentik counts membership. `onemind.io/oidc-sub` is their `uid`.
- * - Groups: every Authentik group. The hierarchy is copied only where Backstage can hold it (one
- *   parent per group).
+ * - Scope: the configured groups and every group below them (Authentik's parent links, all of them).
+ * - Users: active people (internal or external) who are members of a group in the scope, as
+ *   Authentik counts membership. `onemind.io/oidc-sub` is their `uid`.
+ * - Groups: only groups in the scope, so the membership of other groups (argocd-admins, for
+ *   example) is never published or listed in a user's memberOf. Within the scope, a superuser group
+ *   or any group below one is not published either, because Authentik makes its members
+ *   superusers. The hierarchy is copied only where Backstage can hold it (one parent per group).
  * - Names and subjects defined in the reviewed org file are never published, and nothing published
  *   points at them: admin membership (group:default/onemind-admins) stays Git-reviewed.
  * - Two records that map to the same entity name: the older user (lower pk) or the group whose name
@@ -185,33 +190,22 @@ export function buildOrgEntities(
 ): OrgMapping {
   const warnings: string[] = [];
 
-  const groupNames = new Map<string, string>(); // Authentik pk -> published entity name
-  const groupHolders = new Map<string, string>(); // entity name -> Authentik group name
-  let curatedGroups = 0;
-  const ordered = [...snapshot.groups].sort((a, b) =>
-    byCodePoint(a.name, b.name),
-  );
-  for (const group of ordered) {
-    const name = entityName(group.name);
-    if (curated.groups.has(name)) {
-      curatedGroups++;
-      continue;
-    }
-    const holder = groupHolders.get(name);
-    if (holder !== undefined) {
-      warnings.push(
-        `group "${group.name}" maps to the entity name ${name}, already used by group "${holder}"; skipped`,
-      );
-      continue;
-    }
-    groupHolders.set(name, group.name);
-    groupNames.set(group.pk, name);
-  }
-
-  // Scope: the configured groups and everything below them (Authentik's parent links, all of them).
   const childPks = new Map<string, string[]>();
   for (const group of snapshot.groups)
     for (const parent of group.parents) push(childPks, parent, group.pk);
+  /** The given groups and every group below them; a parent cycle ends the walk. */
+  const andBelow = (pks: string[]) => {
+    const found = new Set<string>();
+    const queue = [...pks];
+    while (queue.length) {
+      const pk = queue.pop()!;
+      if (found.has(pk)) continue;
+      found.add(pk);
+      queue.push(...(childPks.get(pk) ?? []));
+    }
+    return found;
+  };
+
   const wanted = new Set(userGroups);
   const roots = snapshot.groups.filter(g => wanted.has(g.name));
   const found = new Set(roots.map(g => g.name));
@@ -228,13 +222,38 @@ export function buildOrgEntities(
         ', ',
       )}`,
     );
-  const scope = new Set<string>();
-  const queue = roots.map(g => g.pk);
-  while (queue.length) {
-    const pk = queue.pop()!;
-    if (scope.has(pk)) continue;
-    scope.add(pk);
-    queue.push(...(childPks.get(pk) ?? []));
+  const scope = andBelow(roots.map(g => g.pk));
+  // Authentik counts a member of any group below a superuser group as a superuser too.
+  const superuser = andBelow(
+    snapshot.groups.filter(g => g.isSuperuser).map(g => g.pk),
+  );
+
+  const groupNames = new Map<string, string>(); // Authentik pk -> published entity name
+  const groupHolders = new Map<string, string>(); // entity name -> Authentik group name
+  let curatedGroups = 0;
+  let superuserGroups = 0;
+  const ordered = snapshot.groups
+    .filter(g => scope.has(g.pk))
+    .sort((a, b) => byCodePoint(a.name, b.name));
+  for (const group of ordered) {
+    const name = entityName(group.name);
+    if (curated.groups.has(name)) {
+      curatedGroups++;
+      continue;
+    }
+    if (superuser.has(group.pk)) {
+      superuserGroups++;
+      continue;
+    }
+    const holder = groupHolders.get(name);
+    if (holder !== undefined) {
+      warnings.push(
+        `group "${group.name}" maps to the entity name ${name}, already used by group "${holder}"; skipped`,
+      );
+      continue;
+    }
+    groupHolders.set(name, group.name);
+    groupNames.set(group.pk, name);
   }
 
   const users: { user: AuthentikUser; name: string }[] = [];
@@ -329,6 +348,7 @@ export function buildOrgEntities(
     groups: groupEntities.length,
     curatedUsers,
     curatedGroups,
+    superuserGroups,
     multiParentGroups,
     warnings,
   };
