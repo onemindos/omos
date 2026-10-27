@@ -63,6 +63,17 @@ The block takes effect only once a portal image built from this source is pinned
 `deployment.yaml`; older images ignore it. Rollback: delete `catalog.providers.github`
 and let Argo sync (no image build), or drop the module in the next image.
 
+The repository's root `catalog-info.yaml` is a Location listing descriptors kept next to
+service source, only for deployed services the static catalog does not define. Today that is
+`onemind-data` (Resource: the CloudNativePG cluster that runs the `services/onemind-postgres`
+image). Services the static catalog defines (portal, core, TAK Server, TAK Portal,
+WebODM-to-STAC sync) stay static. Backstage keeps the first definition of an entity ref and
+logs a conflict for any other; it never merges them. To move a service to its descriptor,
+remove the static entry and the generator input that recreates it in the change that lists
+the descriptor. `services/onemind-portal/catalog-info.yaml` is ready for that and
+deliberately unlisted. `scripts/tests/test_gitops_portal_discovery.py` rejects overlaps and
+unknown owners, systems or relation targets.
+
 ## Release checks
 
 Use the official Backstage Kubernetes, Docker, OIDC, permissions and Kubernetes integration documentation. Require: immutable dependency install, TypeScript check, backend/container build, server-side manifest validation, healthy rollout, verified OIDC callback and identity, authenticated catalog and live status, denied anonymous APIs, read-only cluster permissions, and an encrypted backup with successful restore verification. Verify actual browser rendering before replacing Homepage.
