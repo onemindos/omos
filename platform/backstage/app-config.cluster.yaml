@@ -90,6 +90,13 @@ proxy:
       allowedMethods: [GET, HEAD]
       headers:
         Authorization: Bearer ${GRAFANA_TOKEN}
+    # OpenCost allocation API only (target path is fixed to /allocation, so other exporter
+    # routes are unreachable). OpenCost has no auth; Backstage credentials are required
+    # and not forwarded. No NetworkPolicy selects either side today (2026-10-27).
+    '/opencost/allocation':
+      target: http://opencost.opencost.svc.cluster.local:9003/allocation
+      credentials: require
+      allowedMethods: [GET]
 
 auth:
   providers:

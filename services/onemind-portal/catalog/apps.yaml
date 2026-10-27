@@ -6641,6 +6641,10 @@ metadata:
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
+  links:
+    - url: https://opencost.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
 spec:
   type: service
   lifecycle: production
