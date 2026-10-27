@@ -193,7 +193,7 @@ to absent `registry-onemind-hub`. Every current consumer has explicit working
 copy credentials or restart current pods. The remaining ServiceAccount payload is
 identical after server dry-run.
 
-The authenticated remote cluster-recovery archive additionally matches all14
+The authenticated remote cluster-recovery archive additionally matches all 14
 required TAK runtime configuration/credential objects including NATS box contexts,
 NATS and PostgreSQL configuration. No sensitive payload is exported into Git.
 Legacy `cert-migration`, `core-config`, `tak-userauth` ConfigMaps and remaining

@@ -56,7 +56,7 @@ Nextcloud corrections. The plan is not applied or committed as an approved chang
 Nextcloud's cron sidecar was OOM-killed on2026-10-23T19:55:28Z. Its sampled peak
 was498.2Mi at a512Mi cap, and its mounted PHP configuration permits512M per process.
 Raise the request128Mi→512Mi and cap512Mi→1Gi. The specific Nextcloud Tailscale
-proxy last OOM-killed at2026-10-23T20:12:57Z; sampled peak253.1Mi at its256Mi cap.
+proxy last OOM-killed at 2026-10-23T20:12:57Z; sampled peak253.1Mi at its256Mi cap.
 Give only that ingress a dedicated ProxyClass with256Mi request/512Mi cap, retaining
 existing CPU/init budgets. Total standing request increase:576Mi. The global proxy
 class and all other proxies stay as configured.
@@ -76,16 +76,16 @@ sealed credentials, seed copy and recovery test are complete. The fixed-selectio
 verification repair and real-engine regression cases are safe preparation now.
 
 Verified after PRs479/480: all policy-covered namespaces now carry a valid layer
-label, every original namespace UID remains unchanged, and all58 Applications are
+label, every original namespace UID remains unchanged, and all 58 Applications are
 Synced/Healthy. TAK API/config/Ignite specs match their preflight SHA256 digests;
 workload and pod UIDs/restart counts are unchanged, all Ready, and Argo tracking is
 present. Thus the ownership sync did not restart these three running workloads.
 
 ## Live scanner warning correction
 
-Fresh23:33Z warning Events disproved the earlier CLI-only history acceptance.
+Fresh 23:33Z warning Events disproved the earlier CLI-only history acceptance.
 The reports controller uses native Kubernetes int64 values in its request object;
-the CLI JSON fixture loader uses float64. Kyverno1.19.1's pinned JMESPath engine
+the CLI JSON fixture loader uses float64. Kyverno 1.19.1's pinned JMESPath engine
 compares native int64 zero unequal to its float64 numeric literal and returns null
 for native generation ordering. Thus real retired ReplicaSets were still assessed
 while equivalent CLI fixtures were skipped. This was not a second Kyverno release.
@@ -97,9 +97,9 @@ unknown/boolean/object values fail closed. The admission UID discriminator,
 provider budget boundary, audit/failure behavior and all image/budget validations
 remain unchanged. No controller restart, event deletion or broad policy exception.
 
-The regression uses the exact go-jmespath dependency pinned by Kyverno1.19.1 and
+The regression uses the exact go-jmespath dependency pinned by Kyverno 1.19.1 and
 compares actual native int64 contexts against JSON float64 contexts, before the
-CLI boundary. It reproduces the broken comparisons and verifies all80 history
+CLI boundary. It reproduces the broken comparisons and verifies all 80 history
 fixtures in both modes. The exact Kyverno CLI additionally runs four contexts
 (background absent/empty UID and admission CREATE/UPDATE). CI installs pinned Go
 so native-number tests are mandatory. Source reference:
@@ -109,3 +109,31 @@ Live acceptance must verify actual policy/autogen generations, reports-controlle
 skip counters for retired revisions, no active-workload validation regressions,
 and no newly created history warnings during an observed rescan. Local CLI success
 alone is insufficient. Historical warning Events can expire normally.
+
+### Verified scanner outcome — 2026-10-26, 22:28 EDT
+
+PR484 reconciled at 2026-10-27T02:25:37Z. Live image policy generation 3 and budget
+policy generation 4 contain numeric normalization in both spec and generated rules.
+The actual reports controller now records 9 background skips per image/budget rule
+for Matrix's retired ReplicaSets, where no skip series existed before. Its prior
+image-tag failure counter stayed fixed at 768 across the observed rescan. Zero new
+image/resource warning Events appeared during the150-second post-sync observation.
+The fresh full-cluster engine run assessed 815 resources: 1446 pass,999 expected
+history/provider skips,0 fail,0 error. Original active-workload checks also report
+zero violations. All153 local regression tests and PR CI checks passed.
+
+Two fresh warning Events remain for one real existing condition: the GitHub build
+runner's `dind` container is privileged. It runs on the shared ecosystem worker
+with foundational services; its ServiceAccount token is not mounted. This is an
+open build-isolation/privilege risk, not history noise to suppress with an exception.
+A reviewed builder/isolation change remains necessary; this maintenance did not
+replace its build engine or provision a dedicated worker.
+
+Current observed availability is 59/59 Applications Synced/Healthy, 202 Running pods
+all ready, 4 Ready nodes without pressure, and 84/84 PVCs Bound. The additional
+Hermes Application/storage came from concurrent owner-directed work and was not
+changed by this maintenance. Capacity remains unresolved: 52.65 GiB reservations
+versus 39.98 GiB available after the largest worker fails (12.67 GiB deficit). A second
+ecosystem worker projects about 14.39 GiB N-1 request headroom after its daemon costs;
+the +$168/month plan remains unapplied pending the owner's cost decision. Independent
+backup activation still requires the owner's destination and scoped credentials.
