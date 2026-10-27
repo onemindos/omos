@@ -15,7 +15,7 @@ Tiered inventory of everything running on the DOKS cluster `omos-cloud` (nyc3), 
 This narrow refresh does not recertify the older inventory below. Live cluster:
 4 nodes, 70 Argo Applications (68 Synced/Healthy); only pre-existing Matrix
 OutOfSync/Healthy and OpenClaw Synced/Progressing exceptions. No Pending pods.
-All nodes are below 78% requested CPU/memory. OpenCost duplicate KSM emission is off.
+All nodes were below 78% requested CPU/memory at that refresh. On 2026-10-27 hub-core memory requests were 79%, 96% and 71% (read-only `kubectl describe node`). OpenCost duplicate KSM emission is off.
 OpenChoreo observability core/modules are deployed on existing backends, with
 an authenticated tailnet Observer, real console/MCP pilot logs and metrics, and
 verified encrypted SQLite backup/isolated restore. See the timestamped
@@ -65,7 +65,7 @@ This entry does not refresh historical counts or certify a working route.
 | Helm-CLI releases (not in Git as Applications) | 3 on 2026-10-17: `nats`, `takserver`, `argocd` (11 at capture; `cert-manager`, `ingress-nginx`, `nack`, `tailscale-operator` adopted in PR #176, the four monitoring releases on 2026-10-17) |
 | Workloads that neither Argo nor Helm tracks | DOKS system and Tailscale operator proxies. `matrix` (4) and `nats` UIs (5) have Applications defined in the repo (`platform-matrix`, `platform-nats-tools`) that take ownership once synced; until then they are untracked |
 | Namespaces | 48 |
-| Nodes | 5: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB) |
+| Nodes | 5 at capture: 3 x `onemind-hub-core-v2` (8 vCPU / 16 GiB), 2 x `onemind-ecosystem-cpu` (8 vCPU / 32 GiB). 4 on 2026-10-27: the ecosystem pool (autoscale 1–4) was at 1 node |
 | Ingress classes | `nginx` (public, LB `143.244.220.155`), `tailscale` (tailnet only) |
 | Other external listeners | `tak-tailnet` Tailscale LB (TAK, 8089/8443/8446/64738), `omos-nats` Tailscale LB |
 | Container references on mutable tags (`:latest`, bare `busybox`, `run-latest`) | 31 at capture; 0 running on 2026-10-27 (see [Mutable image tags](#mutable-image-tags)) |
