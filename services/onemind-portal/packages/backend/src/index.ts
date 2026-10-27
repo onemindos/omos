@@ -33,6 +33,8 @@ backend.add(import('@backstage/plugin-catalog-backend-module-github'));
 backend.add(import('@internal/plugin-onemind-machine-backend'));
 // Live cluster inventory. Disabled unless onemind.inventory.live.enabled is true; see docs/catalog/live-inventory.md.
 backend.add(import('@internal/plugin-onemind-inventory-backend'));
+// Authentik users and groups. Disabled unless authentik.orgSync.enabled is true; see docs/catalog/authentik-org-sync.md.
+backend.add(import('@internal/plugin-onemind-org-backend'));
 
 backend.add(import('@backstage/plugin-permission-backend'));
 backend.add(import('@internal/plugin-onemind-permissions-backend'));

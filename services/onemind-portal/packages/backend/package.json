@@ -68,6 +68,7 @@
     "@internal/plugin-onemind-missions-backend": "workspace:^",
     "@internal/plugin-onemind-offline-backend": "workspace:^",
     "@internal/plugin-onemind-operations-backend": "workspace:^",
+    "@internal/plugin-onemind-org-backend": "workspace:^",
     "@internal/plugin-onemind-permissions-backend": "workspace:^",
     "@internal/plugin-onemind-services-backend": "workspace:^",
     "app": "link:../app",

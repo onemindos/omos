@@ -1,30 +1,62 @@
 # OneMind Backstage
 
 Private preview: https://onemind-preview.tail717ba0.ts.net
+Prepared alias: https://portal.tail717ba0.ts.net (available after the alias rollout; redirects to the preview host; see [Hostnames](#hostnames))
 Identity provider: https://onemind-auth.tail717ba0.ts.net
 
 This application is built from upstream Backstage 1.55.3 using the new frontend and backend systems. Source is `services/onemind-portal`. Production catalog files are mounted from the generated ConfigMap in this directory; reviewed inventory changes do not require rebuilding the image. Argo CD manages this directory after merge. Argo uses the existing authenticated repository URL (the old omos-infra alias redirects to omos). Container images are pinned by digest; application changes require a successful image build and a reviewed digest update. The previous Homepage application was retired after browser review. Its source was removed; Git history retains the pre-retirement configuration for recovery.
 
 ## Identity and access
 
-Tailscale provides private HTTPS access. Authentik OIDC supplies Backstage identity and membership. The existing `akadmin` account is registered as the initial catalog user and sole allowed Authentik application user. Backstage maps the signed stable subject to `onemind.io/oidc-sub` in the user catalog; it does not trust unverified email as identity. The `onemind-admins` group permits configured Backstage actions; other identified users receive read permissions. No guest login is enabled. Adding a user requires a catalog annotation `onemind.io/oidc-sub` matching the signed subject, Authentik application access, and deliberate group membership.
+Tailscale provides private HTTPS access. Authentik OIDC supplies Backstage identity and membership. The existing `akadmin` account is registered as the initial catalog user and sole allowed Authentik application user. Backstage maps the signed stable subject to `onemind.io/oidc-sub` in the user catalog; it does not trust unverified email as identity. The `onemind-admins` group permits configured Backstage actions; other identified users receive read permissions. No guest login is enabled. Adding a user requires a catalog annotation `onemind.io/oidc-sub` matching the signed subject, Authentik application access, and deliberate group membership. An optional Authentik org sync (off by default; [docs/catalog/authentik-org-sync.md](../../docs/catalog/authentik-org-sync.md)) can publish the members of chosen Authentik groups as catalog users with that annotation; users and groups in `catalog/org.yaml`, including `onemind-admins`, stay Git-owned.
 
 The Kubernetes service account has observation permissions, including pod logs, but cannot read Secrets or modify workloads. Portal actions do not receive a GitHub credential. MCP exposes globally filtered read-only catalog and operational actions. OAuth CIMD uses existing user identity. A dedicated machine token is sealed in backstage-mcp, restricted to the mcp-actions, catalog and OneMind plugins. Global actions filtering excludes mutation tools; a catalog middleware rejects direct machine writes. Permission-restricted service credentials cannot be delegated by this Backstage version; it cannot call scaffolder or cloud summaries. The initial token is stored locally in ~/.config/onemind/backstage-mcp.token (mode 600), never in chat. Use OAuth where supported; rotate the fallback through a reviewed SealedSecret update.
 
 Cluster OIDC requests use the existing Tailscale egress ProxyGroup. CoreDNS rewrites only the identity provider hostname to the operator-managed egress Service while TLS still validates the original hostname. The operator owns that Service's ExternalName, which Argo ignores. CoreDNS must reload newly added custom files; verify resolution and HTTPS after a change.
 
+## Hostnames
+
+Backstage serves one origin, `PORTAL_URL` in `deployment.yaml`. It sets `app.baseUrl`, `backend.baseUrl` and the CORS origin, and the auth backend builds the OIDC callback from it. Each of these takes a single value. A page loaded from a second host would call the API at `backend.baseUrl` cross-origin, which the CORS origin and CSP `connect-src 'self'` block, so a second host cannot serve the portal itself.
+
+`portal` is a tailnet alias (`portal-redirect.yaml`). Its Tailscale Ingress reaches
+a small nginx that answers every request except `/healthz` with a 302 to the same
+path and query on `PORTAL_URL`; `/healthz` returns 200 for probes. Only that Ingress
+proxy can reach it, and it has no egress. Use the canonical host for API, MCP and
+OAuth clients. `scripts/tests/test_gitops_portal_alias.py` fails if the redirect
+target and `PORTAL_URL` drift apart.
+
+To make `portal` canonical in a separate change, add its
+`https://portal.tail717ba0.ts.net/api/auth/oidc/handler/frame` callback to the
+Authentik `onemind-backstage` provider first. Then update `PORTAL_URL`, route the
+`portal` Ingress to the `backstage` Service, and move the redirect to
+`onemind-preview`, targeting `portal`. Update the alias contracts, the provider
+bootstrap payload and catalog links in that same change. The current temporary
+redirect avoids a permanent redirect back to the old canonical hostname.
+
+**Merge and rollout checks:** confirm that no existing tailnet device or Tailscale
+Ingress claims `portal`. This redirect keeps Backstage's origin and OIDC callback
+on `onemind-preview`; it needs no Authentik provider edit. An additional callback
+is a prerequisite only for the separate future canonical-host migration described
+above. After Argo reconciliation, check that the alias preserves a harmless path
+and query in its redirect, the destination still supports sign-in, and the
+operator registered the exact `portal` hostname rather than a suffixed name.
+Keep the existing canonical hostname if the alias cannot be registered.
+
 ## Database and recovery
 
-PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. Two application replicas use rolling updates with zero unavailable replicas and one surge replica. Preferred node separation and a disruption budget preserve application availability during routine updates and voluntary eviction. Review schema migration compatibility before each upgrade. PostgreSQL and identity remain single-instance dependencies; this is not full high availability.
+PostgreSQL 17 uses a 10 GiB retained DigitalOcean volume. The application role can create plugin databases but is not a superuser. Credentials are SealedSecrets. Two application replicas use rolling updates with zero unavailable replicas and one surge replica. Replicas are required to run on the autoscaled `onemind-ecosystem-cpu` pool (not the memory-saturated hub-core pool); preferred node separation spreads them when that pool has two or more nodes, and a disruption budget preserves application availability during routine updates and voluntary eviction. With a single ecosystem node both replicas share it until the autoscaler adds one. Review schema migration compatibility before each upgrade. PostgreSQL and identity remain single-instance dependencies; this is not full high availability.
 
-The old `backstage-backup` CronJob is suspended, superseded by the managed
-`backup-postgres-backstage` job at 06:40 UTC. Its current encrypted prefix is
-`backups/postgres-backstage/` and it verifies restore of all owned plugin databases.
-The older recovery mechanism described below is historical: `backstage-backup` ran daily at 07:15 UTC. It dumps all databases owned by the application role, encrypts the compressed archive with AES-256-GCM, and uploads to the existing private Spaces bucket under `backups/backstage/`. Each run downloads the object, checks authenticated decryption, restores the catalog to a uniquely named temporary database, verifies tables, and removes only that temporary database. Job failure means backup or recovery verification failed. Objects are retained; no automatic deletion policy is configured.
+Backups come from the managed `backup-postgres-backstage` job (`platform/backups`) at 06:40 UTC.
+Its encrypted prefix is `backups/postgres-backstage/` and it verifies restore of all owned
+plugin databases. The legacy `backstage-backup` CronJob was suspended on 2026-10-08 and has
+been removed from Git. Its `backstage-backup` Secret, image source (`backup-image/`, built by
+`build-backstage-backup.yml`) and the `recovery/` exercise are kept: they still decrypt the
+older archives, and `platform/backups/tools/mirror.py` reads the Spaces credentials from that Secret.
+The description below is historical: `backstage-backup` ran daily at 07:15 UTC. It dumps all databases owned by the application role, encrypts the compressed archive with AES-256-GCM, and uploads to the existing private Spaces bucket under `backups/backstage/`. Each run downloads the object, checks authenticated decryption, restores the catalog to a uniquely named temporary database, verifies tables, and removes only that temporary database. Job failure means backup or recovery verification failed. Objects are retained; no automatic deletion policy is configured.
 
 Recovery requires the backup Secret's encryption key, Spaces access, database credentials, and access to the SealedSecrets controller's sealing key when rebuilding the cluster. Keep an independent secure copy of recovery keys; Git alone cannot decrypt a SealedSecret on a new controller. Do not rotate or remove the encryption key without preserving access to prior archives.
 
-For a recovery exercise, create a Job from the CronJob and inspect its `restoreVerified` output. For full recovery, stop Backstage, restore the selected archive into a separate PostgreSQL instance using the same application role and each original database name, verify all databases and catalog entities, then point the application at that instance. Do not restore over a running database. The backup includes database state; application code, catalog source and deployment manifests live in Git. TechDocs is packaged in the pinned application image. See the resilience runbook and recovery exercise for destination prerequisites.
+For a recovery exercise on a legacy archive, follow `recovery/README.md` and inspect its `restoreVerified` output. For full recovery, stop Backstage, restore the selected archive into a separate PostgreSQL instance using the same application role and each original database name, verify all databases and catalog entities, then point the application at that instance. Do not restore over a running database. The backup includes database state; application code, catalog source and deployment manifests live in Git. TechDocs is packaged in the pinned application image. See the resilience runbook and recovery exercise for destination prerequisites.
 
 ## Catalog and live state
 
@@ -129,7 +161,7 @@ The same server reads fixed Prometheus queries for five namespaces: backstage, a
 
 Operations documentation lives in `services/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.
 
-TechDocs search uses the existing PostgreSQL search engine and collates every minute. The catalog documentation entity appears in Docs; selected critical-service entries have runbook links. Documentation is versioned with the portal, does not require Notion, and requires host reachability rather than promising offline browser access. These runbooks distinguish verified configuration from untested data recovery and historical Fabric notes.
+TechDocs search uses the existing PostgreSQL search engine and collates every 15 minutes, plus 30 seconds after each pod start (docs only change with a new image). The catalog documentation entity appears in Docs; selected critical-service entries have runbook links. Documentation is versioned with the portal, does not require Notion, and requires host reachability rather than promising offline browser access. These runbooks distinguish verified configuration from untested data recovery and historical Fabric notes.
 
 ## Native Events bus across replicas
 

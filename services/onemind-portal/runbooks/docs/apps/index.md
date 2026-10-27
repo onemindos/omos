@@ -29,7 +29,6 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [ingress-nginx](ingress-nginx.md) | infrastructure |
 | [Karakeep](karakeep.md) | personal-tools |
 | [KEDA](keda.md) | infrastructure |
-| [Kubernetes Dashboard](kubernetes-dashboard.md) | developer-platform |
 | [Kubernetes system services](kubernetes-system.md) | infrastructure |
 | [Kyverno](kyverno.md) | identity-access |
 | [LiteLLM](litellm.md) | ai-agents |

@@ -7,6 +7,22 @@ admissionController:
   replicas: 1
   nodeSelector: &id001
     onemind.io/compute-role: ecosystem
+  # Report-writer restart token, shared with backgroundController and reportsController. Kyverno
+  # 1.19.x latches each report circuit breaker open for the rest of the process once its
+  # EphemeralReport counter watch gets a 410 (kyverno/kyverno#17084; fixed on main by #17085, in no
+  # 1.19.x release). Every report write is then dropped silently, so PolicyReports stay empty. A
+  # changed value rolls the three pods once and re-arms the counters (the background controller
+  # writes reports only for generate and mutate-existing policies; there are none yet). Alert
+  # KyvernoReportsDropped (prometheusRule below) says when to bump it. Remove the token after
+  # upgrading to a release with the fix.
+  podAnnotations: &reports-breaker-reset
+    onemind.io/reports-breaker-reset: '2026-10-27'
+  # Scrape the three report writers so the breaker counters reach Prometheus, which selects
+  # ServiceMonitors labelled release: monitoring.
+  serviceMonitor: &report-writer-metrics
+    enabled: true
+    additionalLabels:
+      release: monitoring
   container:
     resources:
       requests:
@@ -18,6 +34,8 @@ admissionController:
 backgroundController:
   replicas: 1
   nodeSelector: *id001
+  podAnnotations: *reports-breaker-reset
+  serviceMonitor: *report-writer-metrics
   resources:
     requests:
       cpu: 10m
@@ -38,6 +56,8 @@ cleanupController:
 reportsController:
   replicas: 1
   nodeSelector: *id001
+  podAnnotations: *reports-breaker-reset
+  serviceMonitor: *report-writer-metrics
   resources:
     requests:
       cpu: 10m
@@ -48,3 +68,32 @@ reportsController:
 features:
   policyExceptions:
     enabled: false
+# Fires when a report circuit breaker drops most report writes (latched; see admissionController).
+# A few drops are normal: a breaker also drops while its counter watch reconnects, for about a
+# second each time. The guard on the instant series ignores pods that are gone, so a roll clears it.
+prometheusRule:
+  enabled: true
+  additionalLabels:
+    release: monitoring
+  spec:
+    - name: kyverno.reports
+      rules:
+        - alert: KyvernoReportsDropped
+          expr: |
+            (
+              sum by (namespace, pod, circuit_name) (increase(kyverno_breaker_drops_total[2h]))
+              /
+              sum by (namespace, pod, circuit_name) (increase(kyverno_breaker_total[2h]))
+            ) > 0.5
+            and on (namespace, pod, circuit_name) kyverno_breaker_total
+          for: 30m
+          labels:
+            severity: warning
+            service: kyverno
+          annotations:
+            summary: "Kyverno is dropping {{ $labels.circuit_name }} ({{ $labels.pod }})"
+            description: >-
+              {{ $value | humanizePercentage }} of report writes in the last 2h were dropped, so
+              PolicyReports go stale. On Kyverno 1.19.x the usual cause is a breaker counter watch
+              that stopped after a 410 (kyverno/kyverno#17084): bump onemind.io/reports-breaker-reset
+              in platform/ecosystem/values/kyverno.yaml.

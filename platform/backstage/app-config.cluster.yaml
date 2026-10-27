@@ -14,10 +14,13 @@ kubernetes:
     - resourcequotas
 search:
   collators:
+    # TechDocs are packaged in the image and only change with a new digest; a rollout
+    # restarts the pods, so initialDelay re-indexes each release. adr, announcements and
+    # software-catalog keep their module defaults (every 10 minutes).
     techdocs:
       schedule:
-        frequency: {minutes: 1}
-        timeout: {seconds: 50}
+        frequency: {minutes: 15}
+        timeout: {minutes: 5}
         initialDelay: {seconds: 30}
 
 backend:
@@ -122,6 +125,27 @@ onemind:
   inventory:
     live:
       enabled: true
+
+# Authentik users and groups as catalog Users/Groups (docs/catalog/authentik-org-sync.md).
+# OFF: Authentik is never called and nothing is published; the module only removes entities it
+# published earlier. The token below resolves to nothing until the owner seals
+# backstage-authentik-catalog (AUTHENTIK_CATALOG_TOKEN, a service account that may only view users
+# and groups). To enable, follow the doc's "Turning it on": bind the portal group(s) to the
+# onemind-backstage application in Authentik and confirm that a non-member is refused, create the
+# required stale-sync alert, list the groups in userGroups (only they and the groups below them are
+# published, never a superuser group), then set enabled: true and update
+# scripts/tests/test_gitops_portal_org_sync.py. The first sync comes at the task's next scheduled
+# run, within 10 minutes (about 20 during the rollout), not after initialDelaySeconds. Users and
+# Groups in catalog/org.yaml, including onemind-admins, stay Git-owned. Rollback: set enabled to
+# false; new pods remove the synced entities at startup and every run of the sync's task removes
+# them again, so the catalog is clear within 10 minutes (or frequencySeconds, if set higher) of
+# the last old pod's last run.
+authentik:
+  baseUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
+  token: ${AUTHENTIK_CATALOG_TOKEN}
+  orgSync:
+    enabled: false
+    userGroups: []
 
 # Required shared bus: retry startup races instead of falling back to local-only delivery.
 events:
