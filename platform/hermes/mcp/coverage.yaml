@@ -160,6 +160,10 @@ applications:
     apps:
     - nats
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-nats-streams:
+    apps:
+    - nats
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-nats-tools:
     apps:
     - nats
