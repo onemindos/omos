@@ -30,6 +30,9 @@ spec:
   sources:
     - repoURL: https://github.com/onemindos/omos.git
       targetRevision: main
+      path: platform/hermes/mcp
+    - repoURL: https://github.com/onemindos/omos.git
+      targetRevision: main
       path: platform/hermes/agent
       # ArgoCD auto-detects kustomization.yaml and uses Kustomize
     - repoURL: https://github.com/onemindos/omos.git

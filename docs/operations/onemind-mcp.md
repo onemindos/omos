@@ -12,11 +12,12 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
   namespace's existing `ghcr` image pull Secret; do not duplicate its owner.
 - Initial tools: `apps_list`, `nats_server_stats`, `nats_jetstream_stats`,
   `prometheus_query`. App catalog resource: `onemind://apps`.
-- Source tests pass; restricted container/official SDK smoke tests pass against
+- 16 source/config tests pass; restricted container/official SDK smoke tests pass against
   **mock upstreams**, not live apps. Kubernetes manifests render and validate.
-- Live acceptance remains pending. The new manifest path is not yet a source of
-  `platform-legacy`, and its image is intentionally `onemind-mcp:UNSET`. Do not
-  register/sync it until the image and client credential gates below are complete.
+- Live acceptance remains pending until merge/sync. The PR registers the new path
+  with `platform-legacy`, pins the published image digest and supplies a
+  namespace-scoped SealedSecret. The Legacy config merger preserves existing
+  settings and stores only a credential reference, with a private first-change backup.
 - Only Legacy (`app.kubernetes.io/name=hermes,onemind.io/agent=legacy`) is the
   intended client. The separately isolated fresh Hermes is unchanged.
 
@@ -120,5 +121,15 @@ authorization/registration design plus idempotency and mutation-specific checks.
 ## Evidence log
 
 Record image digest, source revision, Argo revision, pod rollout, verified Hermes
-version/features and actual tool calls here when observed. No live deployment
-evidence has been recorded yet.
+version/features and actual tool calls here when observed. Preflight run [40455726651](https://github.com/onemindos/omos/actions/runs/40455726651)
+verified both upstreams from Legacy, Hermes 0.21.5 / MCP SDK 2.0.0, the Tool Search
+module and actual nested HTTP header environment interpolation. The running
+Hermes image digest matches the config init-container's pinned image.
+
+Image candidate built from source `3c68986` in
+[40455284585](https://github.com/onemindos/omos/actions/runs/40455284585):
+`ghcr.io/onemindos/onemind-mcp@sha256:80fa67bc138006bd1efc0dc849504910b4068667036d880cba9d0c71afb762cc`.
+Later changes add config integration/tests/docs; the server runtime source is
+unchanged from that image. The active SealedSecrets public certificate fingerprint
+was `B8:21:29:16:FE:9B:B0:B7:4A:7B:29:BB:32:B6:F9:93:16:41:16:46:BC:F9:29:D4:69:15:E7:49:8C:9D:26:22`.
+No live deployment or Hermes tool-call acceptance has been recorded yet.

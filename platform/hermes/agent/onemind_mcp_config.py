@@ -4,6 +4,7 @@ import importlib.util
 import os
 from pathlib import Path
 import sys
+import stat
 import tempfile
 
 import yaml
@@ -36,6 +37,7 @@ def merge(config, tool_search_supported):
     headers = entry.get("headers", {})
     if not isinstance(headers, dict):
         raise ValueError("MCP headers must be a mapping")
+    headers = {key: value for key, value in headers.items() if key.lower() != "authorization"}
     entry.update({"url": URL, "headers": {**headers, "Authorization": HEADER}})
     servers["onemind"] = entry
     if tool_search_supported:
@@ -78,7 +80,7 @@ def main(config_path, token_present, *, header_supported=None, search_supported=
     try:
         descriptor = os.open(backup, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
     except FileExistsError:
-        if backup.is_symlink() or backup.stat().st_mode & 0o077:
+        if not stat.S_ISREG(backup.lstat().st_mode) or backup.stat().st_mode & 0o077:
             raise RuntimeError("Existing MCP backup must be a private regular file")
     else:
         with os.fdopen(descriptor, "wb") as handle:

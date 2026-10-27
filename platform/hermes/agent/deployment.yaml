@@ -65,6 +65,28 @@ spec:
             - name: litellm-provider-config
               mountPath: /run/config
               readOnly: true
+        - name: merge-onemind-mcp
+          # Same immutable image observed in the running Legacy pod during preflight.
+          image: nousresearch/hermes-agent:v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
+          command: ["/opt/hermes/.venv/bin/python3", "/run/onemind-mcp/onemind_mcp_config.py", "/opt/data/config.yaml"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests: {cpu: "10m", memory: "32Mi"}
+            limits: {cpu: "100m", memory: "128Mi"}
+          env:
+            - name: ONEMIND_MCP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-mcp-auth
+                  key: token
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: onemind-mcp-config
+              mountPath: /run/onemind-mcp
+              readOnly: true
         # ---- Install gateway-only deps missing from the public Nous image ----
         # nousresearch/hermes-agent:v2026.9.24 ships without nats-py, nkeys,
         # synadia-ai-agents, and synadia-ai-agent-service — all required for
@@ -127,6 +149,11 @@ spec:
             - secretRef:
                 name: hermes-dashboard-auth   # HERMES_DASHBOARD_BASIC_AUTH_USERNAME + _PASSWORD
           env:
+            - name: ONEMIND_MCP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-mcp-auth
+                  key: token
             - name: NATS_URL
               value: "nats://localhost:4222"   # → the leaf sidecar (plaintext, in-pod only)
             - name: HERMES_NATS_SESSION_NAME
@@ -250,6 +277,9 @@ spec:
         - name: litellm-provider-config
           configMap:
             name: hermes-litellm-provider
+        - name: onemind-mcp-config
+          configMap:
+            name: hermes-onemind-mcp-config
         - name: paperclip-api-nginx
           configMap:
             name: hermes-paperclip-api-nginx

@@ -13,6 +13,11 @@ on:
       - scripts/onemind_mcp_probe.py
       - .github/workflows/onemind-mcp.yml
   workflow_dispatch:
+    inputs:
+      verify_live:
+        description: Verify the deployed MCP from Legacy without changing cluster state
+        type: boolean
+        default: true
 permissions:
   contents: read
 concurrency:
@@ -20,6 +25,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   test-and-image:
+    if: github.event_name != 'workflow_dispatch'
     runs-on: [self-hosted, linux, amd64, zeus-v2]
     timeout-minutes: 20
     permissions:
@@ -97,3 +103,33 @@ jobs:
           name: onemind-mcp-preflight
           path: ${{ runner.temp }}/mcp-preflight.json
           retention-days: 7
+  acceptance:
+    if: github.event_name == 'workflow_dispatch' && inputs.verify_live
+    runs-on: [self-hosted, onemind-hermes-readonly]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install checksum-verified kubectl
+        env:
+          KUBECTL_VERSION: v1.36.0
+          KUBECTL_SHA256: 123d8c8844f46b1244c547fffb3c17180c0c26dac9890589fe7e67763298748e
+        run: |
+          set -euo pipefail
+          curl -fsSL -o "$RUNNER_TEMP/kubectl" "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+          echo "${KUBECTL_SHA256}  $RUNNER_TEMP/kubectl" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/kubectl"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Verify config, authentication, real tools, resource and Argo health
+        run: |
+          set -euo pipefail
+          POD=$(kubectl -n hermes get pod -l app.kubernetes.io/name=hermes,onemind.io/agent=legacy \
+            -o jsonpath='{.items[0].metadata.name}')
+          test -n "$POD"
+          kubectl -n hermes exec -i "$POD" -c hermes -- /opt/hermes/.venv/bin/python - \
+            < scripts/onemind_mcp_acceptance.py | tee "$RUNNER_TEMP/mcp-acceptance.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: onemind-mcp-acceptance
+          path: ${{ runner.temp }}/mcp-acceptance.json
