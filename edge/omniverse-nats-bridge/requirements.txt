@@ -1,0 +1,2 @@
+nats-py>=2.6.0
+# omni.usd and pxr are provided by the Isaac Sim / Omniverse Kit Python environment
