@@ -1,4 +1,4 @@
-# TAK Server 5.7 — OneMind cluster on DOKS
+# TAK Server 5.8 — OneMind cluster on DOKS
 
 > **2026-10-26 partial Argo ownership:** `platform-takserver` owns the existing
 > `takserver-postgresql`, `takserver-nats`, `takserver-ignite` StatefulSets,
@@ -8,131 +8,105 @@
 > Helm revision34 remains historical; the rest of the release is not adopted here.
 > Follow [the bounded preflight](../../docs/operations/2026-10-26-tak-policy-preflight.md).
 
-> **Layout (2026-10-17):** this folder now holds the deployment half only (`chart/`, `values-onemind.yaml`, `deploy/`, `fedhub/`). The image builds, NatsBridgePlugin source and JAR, build scripts and `cot-tap` moved to `services/takserver/`; the edge TAK deployment and device enrollment moved to `infra/edge/takserver/`. Paths below that start with `docker/`, `plugin/` or `build/` are relative to `services/takserver/`.
+**Status (verified live 2026-10-27, read-only):** deployed and healthy in namespace
+`takserver` on `omos-cloud`; TAK Server **5.8** on OneMind images; every component runs a
+single replica. TAK is **TIER-1**: a change to any TAK pod template restarts TAK for all EUDs.
 
-Horizontally-scalable TAK Server (messaging / api / plugins / config split) on
-DigitalOcean Kubernetes, adapted from the official TAK Product Center cluster
-blueprint, with **Zeus's NATS bridge plugin baked in** so the tactical fabric
-projects onto the OneMind bus.
+This folder holds the deployment half only. Image builds, the NatsBridgePlugin source and JAR,
+build scripts and `cot-tap` (not deployed) are in `services/takserver/`; the edge TAK deployment
+and device enrollment are in `infra/edge/takserver/`. Deploy and upgrade steps:
+[`DEPLOY-RUNBOOK.md`](DEPLOY-RUNBOOK.md).
 
-**Status:** scaffold + runbook. Not yet deployed. Two decisions block first apply
-(see _Open decisions_).
+## Layout and ownership
 
----
+| Path | What | Applied by |
+|------|------|-----------|
+| `chart/` + `values-onemind.yaml` | TAK cluster Helm chart (adapted from the TAK Product Center `takserver-cluster` blueprint) | Helm release `takserver`, revision 34 (2026-09-29), **frozen**: no whole-release Helm operations |
+| `deploy/` | Adopted core workloads, Services, ConfigMaps, LB proxy, NATS leaf, LDAP, Mumble, `cot-retention`, SealedSecrets | Argo `platform-takserver` (plain directory; `CoreConfig.xml` and `TAKIgniteConfig.xml` excluded) |
+| `fedhub/` | TAK Federation Hub + MongoDB + tailnet UI | Argo `platform-fedhub` |
 
-## What this is (and where it came from)
+## What runs (namespace `takserver`)
 
-- `upstream/` — the **authoritative blueprint**, vendored verbatim from
-  `github.com/TAK-Product-Center/Server` → `src/takserver-cluster` (public mirror,
-  chart appVersion 4.5.0 / ~TAK 5.2). This is the real Helm chart + Dockerfiles +
-  Ignite/NATS wiring + the AWS/kops `ManualClusterGuide.md`. We adapt it; we don't
-  fork the logic.
-- `values-onemind.yaml` — our DOKS overlay values (sized down, DOCR images, namespace
-  `takserver`, in-cluster PostGIS to start, internal NATS at 1 replica).
-- `services/takserver/docker/Dockerfile.takserver-plugins.onemind` — the plugins image, extended to bake
-  in `takserver-nats-plugin-1.0.0.jar` + `NatsBridgePlugin.yaml`.
-- `services/takserver/plugin/` — the plugin's config (tracked) + its JAR (copied at build time, gitignored).
+| Component | Kind | Image | Ports |
+|-----------|------|-------|-------|
+| `takserver-messaging` | Deployment | `ghcr.io/onemindos/takserver-base@sha256:…` (5.8, digest-pinned) | 8089 CoT/TLS, 9000/9001 |
+| `takserver-api` | Deployment | `ghcr.io/onemindos/takserver-base:api-5.8-onemind` | 8443 Marti/WebTAK, 8444 fed_https, 8446 enrollment/OAuth |
+| `takserver-config` | Deployment | `ghcr.io/onemindos/takserver-base:config-5.8-onemind` | internal |
+| `takserver-plugins` | Deployment | `ghcr.io/onemindos/takserver-base@sha256:…` (5.8 + NatsBridgePlugin) | none inbound |
+| `takserver-ignite` | StatefulSet | `ghcr.io/onemindos/takserver-base:ignite-5.8-onemind` | 47100/47500/10800/… (cache and discovery) |
+| `takserver-postgresql` | StatefulSet | `postgis/postgis:15-3.4` | 5432 (database `cot`, PVC 20Gi) |
+| `takserver-nats` (+ `takserver-nats-box`) | StatefulSet | `nats:2.9.21-alpine` | 4222, TAK-internal only |
+| `tak-ldap` | StatefulSet | `ghcr.io/onemindos/tak-ldap:5.8` | 389/636 (CoreConfig LDAP auth) |
+| `tak-lb-proxy` | Deployment | `nginx:1.27-alpine` (L4 stream) | 8089, 8443, 8446, 64738 |
+| `tak-nats-leaf` | Deployment | `nats:2.10-alpine` | 4222 (from the plugin) |
+| `murmur`, `mumble-bridge` | Deployment | Mumble server; Python STT bridge | 64738 |
+| `fedhub`, `fedhub-mongodb` | Deployment, StatefulSet | `ghcr.io/onemindos/fedhub:5.8`, `mongo:6.0` | 9100/9443 UI, 9101/9102 federation (ClusterIP only) |
 
-## Architecture (what actually gets deployed)
+Images are built by `.github/workflows/build-takserver.yml` on the self-hosted runner and pushed
+to GHCR (DOCR is not used).
 
-| Tier | Pod(s) | Ports | Scale knob |
-|------|--------|-------|-----------|
-| **config** | `takserver-config` | 10800 (ignite) | 1 (singleton) |
-| **messaging** | `takserver-messaging` | 8089 CoT/TLS, 9000/9001 fed | **scale with EUD count** |
-| **api** | `takserver-api` | 8443 WebTAK, 8444 fed, 8446 enroll | scale with UI/API load |
-| **plugins** | `takserver-plugins` | — (egress to OneMind NATS) | 1 |
-| **ignite** | statefulset | 10800 | cache/discovery backbone |
-| **nats (internal)** | statefulset | 4222 | TAK-internal only |
-| **postgres** | PostGIS | 5432 | in-cluster now → DO Managed later |
+## How clients reach TAK (tailnet only)
 
-Config is delivered by **three ConfigMaps** the pods mount:
-- `cert-migration` → `/certs-configmap/` (CA + X.509, generated via `Dockerfile.ca`)
-- `core-config` → `/CoreConfig.xml`
-- `tak-ignite-config` → `/TAKIgniteConfig.xml`
-
-### Two different NATS — do not conflate
-1. **Internal NATS** (`nats.*` in values) — the cluster's own inter-pod JetStream bus.
-   Private plumbing. Never touches OneMind.
-2. **OneMind NATS** — your sovereign bus. Reached **only** by Zeus's bridge plugin in
-   the `plugins` pod, via `services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml`
-   (`tak.cot.inject` in, `tak.cot.out` out). This is the seam.
-
-## Hard constraints (learned from the blueprint + upstream issues)
-
-- **Namespace must be `takserver`.** Ignite's `TcpDiscoveryKubernetesIpFinder` hardcodes
-  service `takserver-ignite` + namespace `takserver` (issue #43). Deploy elsewhere → no discovery.
-- **SSL passthrough** is required if you use an ingress controller — TAK terminates its own
-  mTLS. We avoid that by fronting 8089 with a **DO TCP (L4) LoadBalancer** and tunneling
-  8443/8446 through **Cloudflare Tunnel** (no TLS termination in the middle).
-- Prod defaults in the blueprint are **60 messaging + 30 api** pods (~720Gi RAM). Ignore —
-  `values-onemind.yaml` starts at 1/1 and scales up deliberately.
-
----
-
-## Image build (the sovereign path) — and the honest fork
-
-The blueprint's Dockerfiles (`upstream/docker-files/`) build the cluster images from a
-TAK Server **source-build layout**:
-`Dockerfile.takserver-base` expects `takserver-core/takserver-core*.war`,
-`takserver-core/setenv-cluster.sh`, `takserver-usermanager/UserManager.jar`,
-`takserver-schemamanager/SchemaManager.jar`, and the cluster launch/readiness scripts
-(`takserver-config-cluster.sh`, `takserver-api-cluster.sh`, `takserver-messaging-cluster.sh`,
-`*-readiness.sh`, `db-connection-configuration.sh`).
-
-**The fork:** the single-node distro (`takserver-docker-5.7-RELEASE-43`) ships the WAR,
-`setenv-cluster.sh`, `takserver-plugins-cluster.sh`, `UserManager.jar`, `SchemaManager.jar`
-— but **may not contain all the config/api/messaging cluster scripts + readiness scripts**,
-which live in the source tree. So:
-
-- **Option A — build from source (recommended, needs your tak.gov account):** clone the
-  full `git.tak.gov/core/takserver` at the **5.7 tag**, `./gradlew` the WARs, then build the
-  cluster images with the vendored Dockerfiles → push to DOCR as `5.7-onemind`. Current + sovereign.
-- **Option B — stage from the distro:** arrange the distro files into the Dockerfile layout and
-  supply the missing cluster scripts from `upstream/`. Lighter, but we must verify every script exists.
-- **Option C — pull provisioned images from tak.gov Artifactory** (`docker-devtest-local.artifacts.tak.gov/takserver-cluster/*`). Fastest, but **5.2 not 5.7**, account-gated, and historically flaky pulls (issue #28). Reference only.
-
-Plugins image (all options): FROM the resulting `takserver-base`, then
-`docker/Dockerfile.takserver-plugins.onemind` bakes in the NATS bridge. Copy the JAR first:
 ```
-cp /Users/zeus/ATAK/plugins/nats-bridge/takserver-nats-plugin/build/libs/takserver-nats-plugin-1.0.0.jar services/takserver/plugin/
-# (or the built jar already in the distro: .../tak/lib/takserver-nats-plugin-1.0.0.jar)
+EUD (ATAK/iTAK/WinTAK/WebTAK) ── tailnet ──► tak.tail717ba0.ts.net
+   Service tak-tailnet (LoadBalancer, class tailscale; proxy pod in ns tailscale)
+     └─► tak-lb-proxy (nginx stream) ──► takserver-messaging:8089
+                                     ├─► takserver-api:8443 / 8446
+                                     └─► murmur:64738
 ```
 
----
+- There is no public listener: the DigitalOcean LB `tak-external` was removed on 2026-10-23
+  and `tak.onemindos.dev` is retired. No Cloudflare Tunnel or ingress-nginx path exists for TAK.
+- Federation ports 9101/9102 are not exposed outside the cluster; the FedHub UI is at
+  `fedhub.tail717ba0.ts.net`.
+- In-cluster clients: CloudTAK (`platform/cloudtak/takserver.yaml`, ExternalName to `tak-tailnet`),
+  TAK-ML (`takserver-api-service:8443`). The TAK portal (`onetak/tak-portal`,
+  `enroll.tail717ba0.ts.net`) writes `tak.tail717ba0.ts.net:8089` into enrollment packages.
 
-## Deploy runbook (DOKS-adapted from ManualClusterGuide.md)
+## Two different NATS — do not conflate
 
-1. **Cluster + registry:** `doctl kubernetes cluster create` (or existing), `doctl registry create onemind`, `kubectl create ns takserver`.
-2. **DOCR pull secret:** `kubectl -n takserver create secret docker-registry docr-cred --docker-server=registry.digitalocean.com ...` (or `doctl registry kubernetes-manifest | kubectl apply`).
-3. **Certs:** build `Dockerfile.ca` → produces CA + admin.p12 + server certs →
-   `kubectl -n takserver create configmap cert-migration --from-file=<certs>`. Back up the `files/` dir.
-4. **Database:** in-cluster PostGIS (default values) OR provision **DO Managed PostgreSQL**
-   + set `global.postgresql.host` and the `CoreConfig.xml` Repository block.
-5. **CoreConfig / Ignite configmaps:** `kubectl -n takserver create configmap core-config --from-file=CoreConfig.xml` and `tak-ignite-config --from-file=TAKIgniteConfig.xml`.
-6. **Build + push images** (see Image build) → DOCR as `5.7-onemind`; set `<DOCR>` in `values-onemind.yaml`.
-7. **Point the bridge** — edit `services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml` `natsUrl` at the
-   real OneMind NATS (not `host.docker.internal`). If the OneMind bus needs TLS/creds, the plugin
-   must support them — **review `nats-bridge` source before relying on it** (see Risks).
-8. **Deploy:**
-   ```
-   helm upgrade --install takserver ./upstream/deployments/helm \
-     -n takserver --create-namespace -f values-onemind.yaml
-   ```
-9. **Expose:** DO L4 LoadBalancer → `takserver-messaging-service:8089`; Cloudflare Tunnel → `takserver-api-service:8443/8446`.
-10. **Verify:** load `admin.p12`, open `https://<host>:8443`; enroll a client on 8089; publish a CoT
-    to `tak.cot.inject` on the OneMind bus and confirm it lands on the client; watch `tak.cot.out`.
+1. **Internal NATS** (`takserver-nats`): TAK's own inter-pod plumbing. Never touches OneMind.
+2. **OneMind authority bus** (`nats.nats`): reached only by the NatsBridgePlugin in
+   `takserver-plugins`, through the in-namespace leaf:
+   `plugin → tak-nats-leaf:4222 (plaintext, in-namespace) → leaf remote → nats.nats:7422 (TLS, leaf credentials)`.
 
-## Risks / open verifications
-- **Cluster scripts completeness** in the distro (drives Option A vs B).
-- **Plugin scan dir** in cluster mode — confirm `takserver-pm.jar` loads the JAR from `lib/`.
-- **Bridge auth/TLS** — does `nats-bridge` v1.0.0 support the secured OneMind bus? (review source).
-- **Ignite RBAC** — `takserver-ignite` ServiceAccount needs endpoints read in ns `takserver`.
+Live subjects (`services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml`):
 
-## Open decisions (need Zeus)
-1. **Image path:** A (build from source, tak.gov) / B (stage from distro) / C (pull provisioned)?
-2. **Database:** in-cluster PostGIS first, or straight to DO Managed PostgreSQL?
-3. **8089 exposure:** DO L4 LoadBalancer (public) vs Tailscale-only ingress?
+| Direction | Subject | Stream |
+|-----------|---------|--------|
+| NATS → TAK (inject) | `tak.cot.inject` | — |
+| TAK → NATS (all EUD CoT) | `tak.cot.out` | `COT` (`tak.cot.>`) |
+
+[NATS-DOCTRINE §9](../../docs/NATS-DOCTRINE.md) specifies `evt.tak.cot.{uid}` for TAK CoT; nothing
+publishes there today (the `GEO` stream is empty). This is an **open decision**, recorded in
+NATS-DOCTRINE §9.8. Do not change the runtime subjects without it.
+
+## Data, retention, backup, monitoring
+
+- **CoT history:** table `cot_router` in database `cot` (~11.5M rows / 9.6 GB on 2026-10-27).
+  `cot-retention` (every 4 h) is meant to keep 24 h. Until `fix/tak-cot-retention` merges, it
+  deletes nothing: Kubernetes `$$` expansion breaks its inline SQL and the error is swallowed.
+- **Backups:** `backup-takserver-postgres` dumps the database daily at 02:00 UTC (~2 h 20 min);
+  VolSync backs up the PVCs (`platform/backups/volsync/`).
+- **Monitoring:** Prometheus scrapes no TAK target. The only TAK alert on `main` is
+  `TAKCoTFlowStopped` (COT stream rate); workload, volume and job alerts are proposed in
+  `feat/tak-alerts`.
+- **Network:** namespace `takserver` has no NetworkPolicy on `main`; ingress policies are proposed
+  in `feat/takserver-netpol`.
+
+## Hard constraints
+
+- **Namespace must be `takserver`.** Ignite's `TcpDiscoveryKubernetesIpFinder` hardcodes service
+  `takserver-ignite` in namespace `takserver`.
+- TAK terminates its own mTLS. Keep every path L4 (the nginx `stream` proxy and Tailscale); never
+  put a TLS-terminating ingress in front of 8089/8443/8446.
+- Config is mounted from ConfigMaps: `cert-migration` (`/certs-configmap/`), `core-config`
+  (`CoreConfig.xml`) and `tak-ignite-config`. They contain keys and passwords; do not print them.
+  `deploy/CoreConfig.xml` still carries the 5.7 `version` attribute from the original distro; the
+  running images are 5.8.
 
 ## Provenance
-Blueprint: TAK-Product-Center/Server `src/takserver-cluster` (public mirror, ~5.2).
-Adapted for OneMind / DOKS, July 2026. Plugin: Zeus's `nats-bridge` (takserver-nats-plugin v1.0.0).
+
+Blueprint: TAK-Product-Center/Server `src/takserver-cluster` (public mirror). Adapted for OneMind
+on DOKS from July 2026; upgraded to 5.8 OneMind images. Plugin: NatsBridgePlugin
+(`services/takserver/plugin-src/`).

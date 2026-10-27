@@ -30,8 +30,8 @@ Kubernetes cluster dashboard
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="kube", k8s_pod_name=~"(headlamp)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=kube&var-workload=headlamp`
+- Loki query: `{k8s_namespace_name="kube"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=kube`
 - Source: `onemindos/omos`
 
 ## Escalate

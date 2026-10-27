@@ -208,3 +208,118 @@ savings above are about capacity headroom first (the most-requested hub-core nod
 - 27 h of history on ecosystem containers: a rarely-used controller could burst above the new request. Their limits are unchanged, so
   the worst case is an unreserved spike, not an OOM.
 - Rollback: revert the commit; Argo restores the old requests. No data migration is involved.
+
+## Addendum: hub-core pass (2026-10-27)
+
+The hub-core nodes were replaced on 2026-10-18 (`onemind-hub-core-v2-3rtf47/-3rtf4m/-3rtf4q`, 13,646 Mi allocatable each);
+the ecosystem pool is now one node, `onemind-ecosystem-cpu-3rhwrp`. Requested memory was 79% / 96% / 71% while actual use
+was 57-66%. Data taken read-only on 2026-10-27 between 09:15 and 11:25 UTC: `kubectl describe nodes`, `kubectl top pods -A
+--containers`, kube-state-metrics, and Prometheus 7-day and 10-day windows of `container_memory_working_set_bytes` (a single
+kubelet/cAdvisor job, so nothing is double counted; retention is 10 days).
+
+### Why ...3rtf4m is at 96%
+
+Mostly placement, not over-requesting. hermes-legacy (tier-1; 2,128 Mi request, `Recreate`, one 25 GiB volume, weight-100
+preference for the ecosystem pool) ran on the ecosystem node for its five previous pods. A `platform-legacy` sync replaced its
+pod at 07:47 UTC (ReplicaSet `5779cdd6bf`), and the new pod landed on ...3rtf4m. Per kube-state-metrics, ...3rtf4m went from
+10,880 to 13,008 Mi of container requests between 07:47 and 07:50, and the ecosystem node fell by the same 2,128 Mi. Before
+the move ...3rtf4m was at about 11,008 Mi (80.7%).
+
+The new pod could not stay on the ecosystem node because that node was at its CSI limit of 15 DigitalOcean volume
+attachments. kube-scheduler 1.36 counts the old pod's attachment, which is not yet detached, and the new pod's claim on the
+same volume separately (`pkg/scheduler/framework/plugins/nodevolumelimits/csi.go`), so a full node turns away its own
+`Recreate` pod. The four earlier replacements on that node ran with 9-13 attachments, and the pod stayed. The node is now at
+14 of 15: the free slot is the one hermes-legacy left.
+
+So while the ecosystem node holds 15 attachments including hermes-legacy's, the next hermes-legacy pod replacement moves it to
+hub-core, and the one after that brings it back if the slot is still free. Its pod was replaced eight times in the 10-day
+window: six times by `platform-legacy` changes and twice during the 2026-10-18 node replacement.
+
+### Change
+
+Rule: new memory request = 7-day p95 x 1.3, rounded up to the step list above (64 Mi floor), and never below current use x 1.25
+or the 10-day peak. This is not the rule in the method above (7-day peak x 1.3, 64 Mi floor), but for Synapse both give 256 Mi.
+Limits are not changed. CPU is changed only where it is grossly over.
+
+| Workload (node) | p95 7d / peak 7d / peak 10d / now (Mi) | Memory request | CPU request | Owning app |
+|---|---|---|---|---|
+| matrix synapse (3rtf4m) | 181 / 182 / 199 / 170 | 1Gi -> 256Mi | 500m -> 100m | platform-matrix (manual sync) |
+
+Synapse CPU: 5-minute p95 10m, and daily maxima of the 1-minute rate 9-17m. Its two starts in the window peaked at 131m and
+138m (1-minute rate), for one or two 30-second samples each. CPU is compressible and the limit stays at 2 cores, so the lower
+request only matters if the node is CPU-saturated while Synapse starts; that start, and the Matrix outage, would then take a
+little longer. Hub-core CPU use is 10-32% now, with 5-minute peaks of 27-69% over the last 7 days.
+
+Requested memory per hub-core node (`kubectl describe nodes`, 11:18 UTC):
+
+| Node | Now | After this change, same placement | After this change, hermes-legacy back on the ecosystem node |
+|---|---|---|---|
+| ...3rtf47 | 10,630 Mi (77.9%); 10,886 Mi (79.8%) with a stuck VolSync mover | unchanged | unchanged |
+| ...3rtf4m | 13,136 Mi (96.3%) | 12,368 Mi (90.6%) | 10,240 Mi (75.0%) |
+| ...3rtf4q | 9,805 Mi (71.9%) | unchanged | unchanged |
+| **Pool** | **33,571 Mi (82.0%)** | **32,803 Mi (80.1%)** | **30,675 Mi (74.9%)** |
+
+This change alone takes no node under 80%, and lowering requests cannot bring ...3rtf4m under 80% while hermes-legacy runs
+there. The rest of that node is tier-1 (TAK PostgreSQL, Ignite and NATS, the NATS cluster, Argo CD, Authentik PostgreSQL),
+already below real use (ClickHouse 2 Gi against a 10-day peak of 2,644 Mi, raised on purpose in #227; Nextcloud 1,024 Mi and
+onemind-data-2 512 Mi against container p95s of about 1,520 and 615 Mi; backstage-postgres), or small: feed-intel,
+metrics-server, onetak-media and vaultwarden hold about 360 Mi above a 64-96 Mi floor (see below), and cutting all four would
+leave ...3rtf4m at about 88%. With hermes-legacy back on the ecosystem node, ...3rtf4m is at 75% after this change and every
+hub-core node is under 80%, but only until its next pod replacement while that node is full (see above). Keeping hub-core
+under 80% needs one more free volume slot on the ecosystem node, or a second ecosystem node.
+
+When to sync Synapse. It uses `Recreate`, has no affinity, and its one 50 GiB volume only requires region `nyc3`; in the last
+10 days it ran on three nodes, one of them an ecosystem node. Synced now, with the ecosystem slot free, it would most likely
+land on the ecosystem node or ...3rtf4q (estimated default-scheduler scores ~126 and ~125, ...3rtf4m ~110). On the ecosystem
+node it would take that slot (15 of 15) and keep hermes-legacy on hub-core. So sync Synapse only when the ecosystem node shows
+15 volume attachments, normally because hermes-legacy is back there. That node is then filtered out for Synapse, which lands
+on ...3rtf4m or ...3rtf4q (~126 and ~125; ...3rtf47 ~120); both end at 73-75%. The other way is a hub-core node preference on
+Synapse, which is a Matrix placement change and not part of this pass. `platform-matrix` is manual-sync, so waiting costs
+nothing.
+
+Not changed in this pass:
+
+- feed-intel (omos, ...3rtf4m; 192 Mi, 10-day peak 51 Mi), tak-portal (onetak, ...3rtf47; 128 Mi, peak 54 Mi) and
+  webodm-broker (onetak, ...3rtf47; 128 Mi, peak 9 Mi). A first draft cut each to 64 Mi; dropped on review.
+  `platform-onetak` and `platform-omos` sync automatically but ignore `/spec/template/spec/containers/0/resources`, so the
+  cuts would deploy at the next unrelated sync rather than at merge, possibly during a WebODM task, and feed-intel has no
+  readiness probe and runs an unpinned `pip install` at start. Together they are 256 Mi and change no node's 80% outcome.
+  Redo them together with removing that ignore rule; live matched Git for all 21 containers of the 16 workloads in the three
+  apps on 2026-10-27, so removing it would not cause a sync storm.
+- metrics-server (kube-system, ...3rtf4m; 200 Mi, 7-day p95 48 Mi, 10-day peak 58 Mi). Unlike the other kube-system pods it
+  is Argo-owned (`platform-metrics-server`). Kept: it is the cluster's only metrics API replica (`system-cluster-critical`;
+  `kubectl top` and HPAs use it), #478 adopted it only to add a memory limit and left the upstream 100m/200Mi requests alone,
+  a change would restart it at merge (its app auto-syncs), and about 104 Mi changes no node's 80% outcome. Candidate for
+  96 Mi with the items above.
+- `onemind-data` (CNPG): postgres is under-requested (p95 547 Mi against 384 Mi). `onemind-core` and kyverno run only on the
+  ecosystem node, and SPIRE has no running pods, so none of them affects hub-core.
+- matrix PostgreSQL (`postgres-0`, 256 -> 128 Mi possible, 7-day p95 67 Mi): it runs on ...3rtf47, which is already under
+  80%, and `docs/operations/matrix-drift-2026-10-23.md` (step 6) says not to restart Matrix Postgres or Redis without need. It
+  can ride along with the next Postgres restart that is needed for another reason.
+- `onetak-media` (mediamtx, 128 -> 64 Mi possible): `platform/onetak/media-mtx.yaml` has existing yamllint errors, and the
+  changed-YAML gate would force an unrelated reformat of the file.
+- vaultwarden (34 h of history, 64 Mi), n8n (the 10-day peak of its `n8n` container, 612 Mi, is above its 512 Mi request),
+  matrix element-web and redis (already at the 64 Mi floor), and falcoctl (budget set on 2026-10-23 for download bursts).
+- Everything tier-1 in `docs/STACK.md` (TAK Server, NATS, Authentik, ingress, cert-manager, sealed-secrets, backups and ops,
+  Argo CD, Hermes). That includes hermes-legacy and hermes-fresh, and tak-ldap: `docs/STACK.md` lists tak-ldap under the
+  tier-2 `platform-fedhub`, but `platform/takserver/deploy/tak-ldap.yaml` is applied by `platform-takserver` (live
+  tracking-id), the TAK Server overlay.
+- takml (separate PRs) and the DOKS-managed kube-system pods.
+
+Rollout: nothing restarts on merge. `platform-matrix` is manual-sync, so after merge it shows OutOfSync for `Deployment/synapse`
+only, and Synapse keeps its old requests until it is synced. Live resources matched Git for every container in
+`platform/matrix/argo` before this change, so that sync touches only Synapse, which restarts once. It uses `Recreate`: Matrix
+is down for about 1-2 minutes, longer if the new pod lands on another node and its volume has to detach and re-attach. Follow
+step 6 of `docs/operations/matrix-drift-2026-10-23.md`: sync Synapse alone with server-side apply, and do not restart Postgres
+or Redis. Rollback: revert the change and sync Synapse again, which is one more restart.
+
+Follow-ups from this pass:
+
+1. Ecosystem volume slots: free one more slot on the ecosystem node for good (move a PVC-backed pod that does not need that
+   pool, or add a second ecosystem node), so hermes-legacy, ClickHouse and onemind-data-2 can stay there across pod
+   replacements. This, not further request cuts, is what keeps ...3rtf4m under 80%.
+2. Remove `/spec/template/spec/containers/0/resources` from `ignoreDifferences` in `platform-onetak` and `platform-omos`, then
+   apply the feed-intel, tak-portal and webodm-broker cuts (and onetak-media after its yamllint fix) so they deploy at merge.
+3. metrics-server 200 -> 96 Mi, and vaultwarden once it has 7 days of history.
+4. A TAK-scoped right-size review (tier-1, owner decision): tak-ldap 512 Mi (p95 24), takserver-config 1 Gi (p95 433),
+   takserver-nats 192 Mi (p95 18), takserver-api/-messaging 1.5 Gi each (p95 about 1.0 Gi).
