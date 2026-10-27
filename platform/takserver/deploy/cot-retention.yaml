@@ -1,3 +1,94 @@
+# cot-retention: deletes cot_router rows older than RETENTION_HOURS (24 h, unchanged
+# from the original inline SQL) from the TAK `cot` database.
+#
+# The SQL used to live inline in `command` as `DO $$ ... $$`. Kubernetes expands `$$`
+# to a literal `$` in command/args, so Postgres received `DO $ DECLARE ...`, failed with
+# a syntax error, and psql (no ON_ERROR_STOP) still exited 0: the job "succeeded" every
+# 4 h without ever deleting a row. The script is now a mounted file (no Kubernetes
+# variable expansion), runs with `set -euo pipefail` and `ON_ERROR_STOP=1`, and fails
+# the Job on any error.
+#
+# Deletes run in primary-key ranges of BATCH_SIZE ids, one transaction per batch, so a
+# large backlog never becomes one huge transaction and an interrupted run simply resumes
+# on the next schedule. MAX_DELETE_SECONDS bounds the delete loop so the Job finishes
+# inside activeDeadlineSeconds and before the 02:00 UTC backup-takserver-postgres run
+# (which takes ~2 h 20 min). Plain VACUUM marks the freed space reusable; it does not
+# shrink the files on disk (that needs VACUUM FULL or pg_repack in an owner window).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cot-retention-script
+  namespace: takserver
+  labels:
+    app: cot-retention
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+data:
+  cot-retention.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    RETENTION_HOURS="${RETENTION_HOURS:-24}"
+    BATCH_SIZE="${BATCH_SIZE:-50000}"
+    MAX_DELETE_SECONDS="${MAX_DELETE_SECONDS:-1200}"
+
+    log() { echo "[cot-retention] $(date -u +%Y-%m-%dT%H:%M:%SZ) $*"; }
+
+    # One psql call per statement; -X ignores any psqlrc, -At prints bare values.
+    q() {
+      psql -X -v ON_ERROR_STOP=1 -At -h "${PGHOST}" -U "${PGUSER}" -d "${PGDATABASE}" "$@"
+    }
+
+    log "starting: retention=${RETENTION_HOURS}h batch=${BATCH_SIZE} budget=${MAX_DELETE_SECONDS}s"
+
+    # Preflight: the batching walks the primary key, so require it to be exactly cot_router(id).
+    pk="$(q -c "SELECT a.attname FROM pg_index i
+                JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY (i.indkey)
+                WHERE i.indrelid = 'cot_router'::regclass AND i.indisprimary")"
+    if [[ "${pk}" != "id" ]]; then
+      log "ERROR: expected primary key cot_router(id), found '${pk}'; refusing to delete"
+      exit 1
+    fi
+
+    # Fix the cutoff once so every batch uses the same boundary.
+    cutoff="$(q -c "SELECT now() - make_interval(hours => ${RETENTION_HOURS})")"
+    range="$(q -F ' ' -c "SELECT coalesce(min(id), 0), coalesce(max(id), -1)
+                         FROM cot_router WHERE servertime < '${cutoff}'::timestamptz")"
+    read -r min_id max_id <<<"${range}"
+    log "cutoff=${cutoff} candidate id range=[${min_id}, ${max_id}]"
+
+    total=0
+    batches=0
+    started=${SECONDS}
+    lo=${min_id}
+    while (( lo <= max_id )); do
+      if (( SECONDS - started >= MAX_DELETE_SECONDS )); then
+        log "time budget reached at id ${lo}; the next run continues from here"
+        break
+      fi
+      hi=$(( lo + BATCH_SIZE ))
+      n="$(q -c "WITH d AS (
+                   DELETE FROM cot_router
+                   WHERE id >= ${lo} AND id < ${hi}
+                     AND servertime < '${cutoff}'::timestamptz
+                   RETURNING 1)
+                 SELECT count(*) FROM d")"
+      total=$(( total + n ))
+      batches=$(( batches + 1 ))
+      if (( batches % 20 == 0 )); then
+        log "progress: ${batches} batches, ${total} rows deleted, at id ${hi}"
+      fi
+      lo=${hi}
+    done
+    log "deleted ${total} rows in ${batches} batches ($(( SECONDS - started ))s)"
+
+    log "VACUUM (ANALYZE) cot_router"
+    q -c "VACUUM (ANALYZE) cot_router"
+
+    q -F ' | ' -c "SELECT 'remaining rows: ' || count(*), 'size: ' || pg_size_pretty(pg_total_relation_size('cot_router'))
+                   FROM cot_router" | while read -r line; do log "${line}"; done
+    log "done"
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -12,31 +103,35 @@ spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 3
   jobTemplate:
-    metadata: {}
+    metadata:
+      labels:
+        app: cot-retention
     spec:
+      # Hard stop below the 1 h gap before the 02:00 UTC TAK database backup.
+      activeDeadlineSeconds: 3000
+      backoffLimit: 2
       template:
-        metadata: {}
+        metadata:
+          labels:
+            app: cot-retention
         spec:
           containers:
           - command:
             - /bin/bash
-            - -c
-            - 'echo "[cot-retention] Starting at $(date)"
-
-              psql -h takserver-postgresql -U postgres -d cot -At -c "DO $$ DECLARE
-              deleted_count bigint; BEGIN DELETE FROM cot_router WHERE servertime
-              < NOW() - INTERVAL ''24 hours''; GET DIAGNOSTICS deleted_count = ROW_COUNT;
-              RAISE NOTICE ''Deleted % rows'', deleted_count; END $$;" 2>&1
-
-              psql -h takserver-postgresql -U postgres -d cot -c "VACUUM ANALYZE cot_router;"
-              2>&1
-
-              echo "[cot-retention] Done at $(date)"
-
-              psql -h takserver-postgresql -U postgres -d cot -c "SELECT count(*)
-              as rows, pg_size_pretty(pg_total_relation_size(''cot_router'')) as size
-              FROM cot_router;"'
+            - /scripts/cot-retention.sh
             env:
+            - name: PGHOST
+              value: takserver-postgresql
+            - name: PGUSER
+              value: postgres
+            - name: PGDATABASE
+              value: cot
+            - name: RETENTION_HOURS
+              value: '24'
+            - name: BATCH_SIZE
+              value: '50000'
+            - name: MAX_DELETE_SECONDS
+              value: '1200'
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
@@ -53,11 +148,22 @@ spec:
                 memory: 256Mi
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
+            volumeMounts:
+            - mountPath: /scripts
+              name: script
+              readOnly: true
           dnsPolicy: ClusterFirst
           restartPolicy: OnFailure
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
-  schedule: 0 */4 * * *
+          volumes:
+          - configMap:
+              name: cot-retention-script
+            name: script
+  # Every 4 h at 01,05,09,13,17,21 UTC (was 00,04,...): same cadence, shifted one hour so
+  # no run overlaps backup-takserver-postgres (02:00 UTC, ~2 h 20 min). Explicit UTC.
+  schedule: 0 1-23/4 * * *
+  timeZone: Etc/UTC
   successfulJobsHistoryLimit: 3
   suspend: false
