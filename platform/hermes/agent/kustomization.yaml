@@ -8,6 +8,7 @@ resources:
   - deployment.yaml
   - dashboard.yaml
   - egress.yaml
+  - network-policy.yaml
   - paperclip-api.yaml
   - paperclip-agent.sealedsecret.yaml
   - provider-config-pre-paperclip.sealedsecret.yaml
