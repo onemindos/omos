@@ -1,3 +1,5 @@
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import json
 import logging
 import secrets
@@ -7,8 +9,9 @@ import pytest
 from pydantic import ValidationError
 from starlette.testclient import TestClient
 
+from onemind_mcp import server
 from onemind_mcp.config import Catalog, load_catalog
-from onemind_mcp.server import create_app
+from onemind_mcp.server import create_app, load_client_tokens
 from onemind_mcp.upstream import Upstream
 
 TOKEN = secrets.token_urlsafe(32)
@@ -29,8 +32,8 @@ def setup(monkeypatch):
     return load_catalog("config/apps.yaml")
 
 
-def build(catalog, handler):
-    return create_app(catalog, TOKEN, ["testserver"], upstream_factory=lambda url, token:
+def build(catalog, handler, clients=TOKEN):
+    return create_app(catalog, clients, ["testserver"], upstream_factory=lambda url, token:
                       Upstream(url, token, httpx.MockTransport(handler)))
 
 
@@ -70,6 +73,129 @@ def test_unauthenticated_and_rebinding_rejected(setup):
         response = client.post("/mcp", headers={**HEADERS, "Host": "attacker.example"}, json={})
         assert response.status_code == 421
         assert client.post("/mcp", headers={**HEADERS, "Origin": "https://attacker.example"}, json={}).status_code == 403
+
+
+OTHER = secrets.token_urlsafe(32)
+CLIENTS = {"hermes": TOKEN, "claude-code": OTHER}
+
+
+def bearer(token):
+    return {**HEADERS, "Authorization": f"Bearer {token}"}
+
+
+def audit(caplog):
+    return [json.loads(record.message) for record in caplog.records if record.name == "onemind.audit"]
+
+
+def run_entrypoint(monkeypatch, env):
+    """Run main() with the deployment's environment names; capture the app instead of serving it."""
+    for name in ("ONEMIND_MCP_TOKEN", "ONEMIND_MCP_TOKENS_FILE"):
+        monkeypatch.delenv(name, raising=False)
+    for name, value in {"ONEMIND_APPS_FILE": "config/apps.yaml", "ONEMIND_ALLOWED_HOSTS": "testserver", **env}.items():
+        monkeypatch.setenv(name, value)
+    apps = []
+    monkeypatch.setattr(server.uvicorn, "run", lambda app, **options: apps.append(app))
+    server.main()
+    return apps[0]
+
+
+def test_each_client_token_is_audited_as_its_client(setup, caplog):
+    caplog.set_level(logging.INFO, logger="onemind.audit")
+    with TestClient(build(setup, lambda r: httpx.Response(200, json={"server_name": OTHER}), CLIENTS)) as client:
+        for token, tool in [(OTHER, "nats_server_stats"), (TOKEN, "apps_list"), (OTHER, "apps_list")]:
+            result = rpc(client, "tools/call", {"name": tool, "arguments": {}}, bearer(token))["result"]
+            assert not result.get("isError")
+            assert OTHER not in json.dumps(result)
+        for wrong in [TOKEN + OTHER, OTHER[:-1], secrets.token_urlsafe(32)]:
+            assert client.post("/mcp", json={}, headers=bearer(wrong)).status_code == 401
+    assert [(entry["client"], entry["tool"]) for entry in audit(caplog)] == [
+        ("claude-code", "nats_server_stats"), ("hermes", "apps_list"), ("claude-code", "apps_list")]
+    assert OTHER not in caplog.text and TOKEN not in caplog.text
+
+
+def test_concurrent_calls_keep_their_own_client(setup, caplog):
+    caplog.set_level(logging.INFO, logger="onemind.audit")
+    arrived, both = [], asyncio.Event()
+    async def handler(request):
+        # Hold each upstream call until both are in flight, so the two audits interleave.
+        arrived.append(request.url.path)
+        if len(arrived) == 2:
+            both.set()
+        await asyncio.wait_for(both.wait(), 5)
+        return httpx.Response(200, json={})
+    calls = [(OTHER, "nats_server_stats"), (TOKEN, "nats_jetstream_stats")]
+    with TestClient(build(setup, handler, CLIENTS)) as client, ThreadPoolExecutor(2) as pool:
+        results = list(pool.map(lambda call: rpc(client, "tools/call", {"name": call[1], "arguments": {}},
+                                                 bearer(call[0]))["result"], calls))
+    assert not any(result.get("isError") for result in results)
+    assert sorted((entry["client"], entry["tool"]) for entry in audit(caplog)) == [
+        ("claude-code", "nats_server_stats"), ("hermes", "nats_jetstream_stats")]
+
+
+@pytest.mark.parametrize("env_token, file_clients", [
+    pytest.param(True, {}, id="deployed-single-token"),
+    pytest.param(True, {"claude-code": OTHER}, id="env-hermes-plus-file"),
+    pytest.param(False, CLIENTS, id="file-only"),
+])
+def test_entrypoint_client_sources(setup, monkeypatch, tmp_path, caplog, env_token, file_clients):
+    caplog.set_level(logging.INFO, logger="onemind.audit")
+    env = {"ONEMIND_MCP_TOKEN": TOKEN} if env_token else {}
+    if file_clients:
+        path = tmp_path / "tokens"
+        path.write_text(json.dumps(file_clients))
+        env["ONEMIND_MCP_TOKENS_FILE"] = str(path)
+    expected = {"hermes": TOKEN, **file_clients}
+    with TestClient(run_entrypoint(monkeypatch, env)) as client:
+        for token in expected.values():
+            rpc(client, "tools/call", {"name": "apps_list", "arguments": {}}, bearer(token))
+        if OTHER not in expected.values():
+            assert client.post("/mcp", json={}, headers=bearer(OTHER)).status_code == 401
+    assert [entry["client"] for entry in audit(caplog)] == list(expected)
+
+
+def test_tokens_file_accepts_json_or_name_token_lines(tmp_path):
+    path = tmp_path / "tokens"
+    path.write_text(json.dumps(CLIENTS))
+    assert load_client_tokens(path) == CLIENTS
+    path.write_text(f"# one client per line\nhermes:{TOKEN}\r\n\n  claude-code : {OTHER}  \n")
+    assert load_client_tokens(path) == CLIENTS
+
+
+@pytest.mark.parametrize("content", [
+    pytest.param('{"hermes": "' + TOKEN + '",}', id="invalid-json"),
+    pytest.param(f'{{"hermes": "{TOKEN}", "hermes": "{OTHER}"}}', id="duplicate-json-name"),
+    pytest.param(f"hermes:{TOKEN}\nhermes:{OTHER}\n", id="duplicate-line-name"),
+    pytest.param(f"{TOKEN}:hermes\n", id="swapped-name-and-token"),
+    pytest.param(f"{TOKEN}\n", id="missing-separator"),
+    pytest.param(f"Hermes:{TOKEN}\n", id="invalid-name"),
+    pytest.param("hermes:short\n", id="short-token"),
+    pytest.param(f"hermes:{TOKEN[:20]} {TOKEN[20:]}\n", id="whitespace-in-token"),
+    pytest.param(json.dumps({"hermes": {"token": TOKEN}}), id="non-string-token"),
+    pytest.param("# no clients\n", id="no-lines"),
+    pytest.param("{}", id="empty-json"),
+])
+def test_tokens_file_fails_closed_without_quoting_secrets(tmp_path, content):
+    path = tmp_path / "tokens"
+    path.write_text(content)
+    with pytest.raises(ValueError, match="ONEMIND_MCP_TOKENS_FILE") as error:
+        load_client_tokens(path)
+    assert not any(secret[:16] in str(error.value) for secret in (TOKEN, OTHER))
+
+
+def test_client_configuration_fails_closed(setup, monkeypatch, tmp_path):
+    for clients, message in [({}, "ONEMIND_MCP_TOKENS_FILE"), ({"Claude Code": OTHER}, "names must match"),
+                             ({"hermes": TOKEN, "claude-code": "short"}, "32"),
+                             ({"hermes": TOKEN, "claude-code": TOKEN}, "own token")]:
+        with pytest.raises(ValueError, match=message):
+            create_app(setup, clients, ["testserver"])
+    path = tmp_path / "tokens"
+    path.write_text(f"hermes:{OTHER}\n")
+    with pytest.raises(ValueError, match="not both"):
+        run_entrypoint(monkeypatch, {"ONEMIND_MCP_TOKEN": TOKEN, "ONEMIND_MCP_TOKENS_FILE": str(path)})
+    with pytest.raises(FileNotFoundError):
+        run_entrypoint(monkeypatch, {"ONEMIND_MCP_TOKEN": TOKEN, "ONEMIND_MCP_TOKENS_FILE": str(tmp_path / "missing")})
+    with pytest.raises(ValueError, match="ONEMIND_MCP_TOKENS_FILE"):
+        run_entrypoint(monkeypatch, {})
 
 
 @pytest.mark.parametrize("status", [302, 401, 500])
