@@ -103,6 +103,21 @@ Argo CD itself is a Helm-CLI release, not self-managed (gap G3). Chart `argo-cd`
    sit empty or crash-loop until their data is restored (steps 6-10). That is fine.
    To avoid surprises, you can set `spec.syncPolicy.automated` off on data apps while restoring,
    or sync in the order below.
+6. Once `platform-security` (wave 4) is up, Kyverno enforces two policies from
+   `platform/security/kyverno-policies-audit.yaml`: admission denies a namespace without
+   `onemind.io/layer` and an untagged or `:latest` image.
+   - Argo `CreateNamespace=true` creates a bare namespace. `clickhouse`, `matrix`, `monitoring`,
+     `nats` and `takserver` get their label only when `platform-volume-backups` (wave 6) syncs, so
+     if you hold apps back (item 5, Step 6), an Application that targets one of them can fail with
+     `denied the request` naming `onemind.io/layer`. Apply `platform/backups/volsync/namespaces.yaml`
+     by hand (it holds only those Namespaces, no backup objects), then sync the failed Application
+     again: Argo retries a failed automated sync only a few times within minutes and does not start
+     a new one for the same Git revision. `docs/architecture/namespace-layers.md` lists the files
+     that label the namespaces other Applications create.
+   - Helm-CLI installs (Steps 5, 7 and 8) go into the existing labelled namespace without
+     `--create-namespace`. Helm sends its own unlabelled create even when the namespace exists,
+     and Kyverno denies it.
+   - Ad-hoc pods need a tagged image, for example `busybox:1.37.0`.
 
 ### Step 5. platform-core, cert-manager, ingress, Tailscale (about 1 h)
 
@@ -295,7 +310,9 @@ Procedure:
    `_offsite/last-success.json` is under 36 h old; VolSync sources `Successful`.
 2. Start the clock. Create an empty cluster (step 1).
 3. Execute Steps 2-10 as written, in a scratch namespace set where possible
-   (e.g. suffix `-drill`). Write down every point where you had to improvise.
+   (e.g. suffix `-drill`). Kyverno denies a bare `kubectl create namespace` there too, so create
+   each one with its layer label (`docs/architecture/namespace-layers.md`, "Creating a namespace
+   by hand"). Write down every point where you had to improvise.
 4. Run the verification checklist. Data comparisons: row counts for TAK, CNPG,
    Authentik; NATS stream message counts; file counts on a restored PVC compared to a
    VolSync status.
