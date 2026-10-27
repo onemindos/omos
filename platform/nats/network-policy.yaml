@@ -178,7 +178,8 @@ spec:
     - Ingress
   ingress:
     - from:
-        # This namespace: NATS Dashboard (NATS_MONITORING_URL).
+        # This namespace: NATS Dashboard (NATS_MONITORING_URL) and nats-leafz-exporter (polls
+        # /leafz on each server; platform/monitoring/nats-leafz-exporter.yaml).
         - podSelector: {}
         # Tailnet nats-monitor Ingress (browser NATS UI).
         - namespaceSelector:
