@@ -102,6 +102,20 @@ onemind:
     live:
       enabled: true
 
+# Authentik users and groups as catalog Users/Groups (docs/catalog/authentik-org-sync.md).
+# OFF: nothing is read or published, and the token below resolves to nothing until the owner
+# seals backstage-authentik-catalog (AUTHENTIK_CATALOG_TOKEN, a service account that may only
+# view users and groups). To enable: list in userGroups the Authentik group(s) whose members may
+# use the portal, then set enabled: true. Users and Groups in catalog/org.yaml, including
+# onemind-admins, stay Git-owned. Rollback: set enabled to false; restarted pods evict the
+# synced entities (catalog.orphanProviderStrategy defaults to delete).
+authentik:
+  baseUrl: http://platform-auth-helm-authentik-server.auth.svc.cluster.local
+  token: ${AUTHENTIK_CATALOG_TOKEN}
+  orgSync:
+    enabled: false
+    userGroups: []
+
 # Required shared bus: retry startup races instead of falling back to local-only delivery.
 events:
   useEventBus: always
