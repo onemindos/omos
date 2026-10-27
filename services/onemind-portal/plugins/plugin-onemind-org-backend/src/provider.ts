@@ -78,6 +78,8 @@ export class AuthentikOrgProvider implements EntityProvider {
         locationKey: LOCATION,
       })),
     });
+    // The required stale-sync alert (docs/catalog/authentik-org-sync.md) matches this line by
+    // "Authentik org sync: " and " groups published; ".
     logger.info(
       `Authentik org sync: ${mapping.users} users and ${mapping.groups} groups published; ` +
         `${mapping.curatedUsers} users and ${mapping.curatedGroups} groups left to ${this.deps.curatedFile}; ` +

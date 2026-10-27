@@ -37,7 +37,10 @@ export interface Config {
        */
       timeoutSeconds?: number;
       /**
-       * Seconds before the first sync after startup. Defaults to 60.
+       * Seconds a starting pod waits before it may run the task. Defaults to 60. It does not delay
+       * the schedule: the scheduler adds it to the next run only when the task is first stored, and
+       * the disabled module stores the same task, so the first sync after enabling comes at the
+       * task's next scheduled run (within 10 minutes, or frequencySeconds if lower).
        * @visibility backend
        */
       initialDelaySeconds?: number;

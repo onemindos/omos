@@ -86,6 +86,8 @@ describe('AuthentikOrgProvider', () => {
       ),
     ).toBe(true);
     expect(h.logger.warn).toHaveBeenCalledTimes(1);
+    // The required stale-sync alert (docs/catalog/authentik-org-sync.md) matches this line by
+    // "Authentik org sync: " and " groups published; ".
     expect(h.logger.info).toHaveBeenCalledWith(
       'Authentik org sync: 4 users and 4 groups published; 1 users and 1 groups left to catalog/org.yaml; ' +
         '2 superuser groups not published; 1 groups published without a parent (several Authentik parents)',
