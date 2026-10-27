@@ -37,7 +37,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: mcp
-          image: ghcr.io/onemindos/onemind-mcp@sha256:80fa67bc138006bd1efc0dc849504910b4068667036d880cba9d0c71afb762cc
+          image: ghcr.io/onemindos/onemind-mcp@sha256:9308342f592fb0b7b5dfaefa244bc2d5e8083751a4cae596bd8642b4813342b3
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -61,6 +61,16 @@ spec:
               value: http://nats-0.nats-headless.nats.svc.cluster.local:8222
             - name: PROMETHEUS_URL
               value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+            - name: STAC_URL
+              value: http://stac-api.stac.svc.cluster.local:8080
+            - name: OLLAMA_URL
+              value: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+            - name: ALERTMANAGER_URL
+              value: http://monitoring-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093
+            - name: LOKI_URL
+              value: http://loki-gateway.monitoring.svc.cluster.local
+            - name: OPENCOST_URL
+              value: http://opencost.opencost.svc.cluster.local:9003
           resources:
             # Observed 2026-10-27: peak 5m CPU / 44Mi working set since deploy.
             requests:
