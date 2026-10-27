@@ -109,3 +109,31 @@ Live acceptance must verify actual policy/autogen generations, reports-controlle
 skip counters for retired revisions, no active-workload validation regressions,
 and no newly created history warnings during an observed rescan. Local CLI success
 alone is insufficient. Historical warning Events can expire normally.
+
+### Verified scanner outcome — 2026-10-26, 22:28 EDT
+
+PR484 reconciled at2026-10-27T02:25:37Z. Live image policy generation3 and budget
+policy generation4 contain numeric normalization in both spec and generated rules.
+The actual reports controller now records9 background skips per image/budget rule
+for Matrix's retired ReplicaSets, where no skip series existed before. Its prior
+image-tag failure counter stayed fixed at768 across the observed rescan. Zero new
+image/resource warning Events appeared during the150-second post-sync observation.
+The fresh full-cluster engine run assessed815 resources:1446 pass,999 expected
+history/provider skips,0fail,0error. Original active-workload checks also report
+zero violations. All153 local regression tests and PR CI checks passed.
+
+Two fresh warning Events remain for one real existing condition: the GitHub build
+runner's `dind` container is privileged. It runs on the shared ecosystem worker
+with foundational services; its ServiceAccount token is not mounted. This is an
+open build-isolation/privilege risk, not history noise to suppress with an exception.
+A reviewed builder/isolation change remains necessary; this maintenance did not
+replace its build engine or provision a dedicated worker.
+
+Current observed availability is59/59 Applications Synced/Healthy,202 Running pods
+all ready,4 Ready nodes without pressure, and84/84 PVCs Bound. The additional
+Hermes Application/storage came from concurrent owner-directed work and was not
+changed by this maintenance. Capacity remains unresolved:52.65GiB reservations
+versus39.98GiB available after the largest worker fails (12.67GiB deficit). A second
+ecosystem worker projects about14.39GiB N-1 request headroom after its daemon costs;
+the+$168/month plan remains unapplied pending the owner's cost decision. Independent
+backup activation still requires the owner's destination and scoped credentials.

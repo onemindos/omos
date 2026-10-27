@@ -1295,3 +1295,11 @@ running TAK pod UIDs and restart counts unchanged. Nextcloud app/proxy are Ready
 with0restarts after the measured memory corrections; original data/cache PVC/PV
 identities and capacity are preserved. Separate concurrent Hermes work added one
 healthy Application; the latest snapshot is59 Synced/Healthy apps and84 Bound PVCs.
+
+Scanner live acceptance verified after PR484: generations3/4 and generated rules
+contain numeric normalization; the real reports controller records9 skips per rule
+for retired Matrix ReplicaSets, with its old failure counter stable. No new image/
+resource warnings during150seconds after sync;815-resource live engine run yields
+1446pass/999expectedskips/0fail/0error.153regression tests and CI pass. The privileged
+GitHub DinD runner is a separate real open risk; do not hide it with an audit exception.
+Capacity/independent recovery remain pending owner choices. Phase6 stays In progress.
