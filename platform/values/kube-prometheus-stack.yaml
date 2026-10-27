@@ -84,15 +84,20 @@ alertmanager:
         - receiver: 'null'
           matchers:
             - 'alertname =~ "Watchdog|InfoInhibitor"'
-        # One message per alert name and namespace. Warnings repeat every 12h, critical every 4h.
+        # Warnings: one message per alert name, all namespaces together, repeated every 12h. A group
+        # chat takes at most 20 bot messages a minute and Alertmanager ignores Telegram's retry_after,
+        # so a node failure, which touches many namespaces at once, must not send one per namespace.
         - receiver: telegram
           matchers:
             - 'severity =~ "critical|warning"'
-          group_by: ['alertname', 'namespace']
+          group_by: ['alertname']
           routes:
+            # Critical: one message per alert name and namespace, repeated every 4h. Critical rules
+            # are cluster-wide or tied to one namespace, so they do not fan out across namespaces.
             - receiver: telegram
               matchers:
                 - 'severity = critical'
+              group_by: ['alertname', 'namespace']
               repeat_interval: 4h
     receivers:
       - name: 'null'
