@@ -1,0 +1,10 @@
+# Merge these keys with the existing Hermes config; never replace the whole file.
+# Verify support in the deployed Hermes revision before applying.
+mcp_servers:
+  onemind:
+    url: http://onemind-mcp.hermes.svc.cluster.local:8000/mcp
+    headers:
+      Authorization: "Bearer ${ONEMIND_MCP_TOKEN}"
+tools:
+  tool_search:
+    enabled: "on"

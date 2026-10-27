@@ -774,6 +774,15 @@ Gate per project: healthy in OpenChoreo, visible in the portal, old Argo resourc
 
 ### Phase 8: Expand
 
+Explicit user scope, 2026-10-27: implement and deploy a small extensible internal
+application MCP for the existing Legacy Hermes agent. This request supersedes the
+earlier Hermes deferral for this bounded integration only; it does not start the
+broader home-runtime or application-migration phases. Source, tests, image build
+and manifests are in `services/onemind-mcp/` and `platform/hermes/mcp/`.
+[Activation and live evidence](docs/operations/onemind-mcp.md) track the image digest,
+SealedSecret, Hermes compatibility and actual tool calls; this note does not mark
+the phase complete.
+
 - Planning scope requested 2026-10-20: [full Kubernetes operating structure and
   execution queue](docs/architecture/kubernetes-operating-structure.md), backed by
   the [read-only baseline](docs/operations/kubernetes-structure-baseline-2026-10-20.md).

@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onemind-mcp
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 180
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-mcp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: onemind-mcp
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values: [onemind-ecosystem-cpu]
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mcp
+          image: onemind-mcp:UNSET
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: ONEMIND_APPS_FILE
+              value: /etc/onemind/apps.yaml
+            - name: ONEMIND_ALLOWED_HOSTS
+              value: onemind-mcp.hermes.svc.cluster.local:8000,onemind-mcp.hermes.svc:8000,127.0.0.1:8000
+            - name: ONEMIND_MCP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: onemind-mcp-auth
+                  key: token
+            - name: NATS_MONITOR_URL
+              value: http://nats-0.nats-headless.nats.svc.cluster.local:8222
+            - name: PROMETHEUS_URL
+              value: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - name: apps
+              mountPath: /etc/onemind
+              readOnly: true
+      volumes:
+        - name: apps
+          configMap:
+            name: onemind-mcp-apps
