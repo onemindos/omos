@@ -7,6 +7,8 @@ import hmac
 import json
 import logging
 import os
+from pathlib import Path
+import re
 import time
 import uuid
 
@@ -22,6 +24,10 @@ from .upstream import Upstream
 
 log = logging.getLogger("onemind.audit")
 actor = ContextVar("actor", default="unknown")
+# The original single token keeps its audit name; ONEMIND_MCP_TOKENS_FILE names other clients.
+LEGACY_CLIENT = "hermes"
+CLIENT_NAME = re.compile(r"[a-z][a-z0-9_-]{0,31}")
+CLIENT_TOKEN = re.compile(r"[!-~]{32,}")  # Visible ASCII without whitespace.
 
 
 def redact(value, secrets: list[str]):
@@ -37,13 +43,61 @@ def redact(value, secrets: list[str]):
     return value
 
 
-class PrivateBearerAuth:
-    """Pre-provisioned private bearer credential, not an OAuth authorization server."""
-    def __init__(self, app, token: str):
+def load_client_tokens(path: str | Path) -> dict[str, str]:
+    """Read named client tokens from a mounted secret: a JSON object or `name:token` lines.
+
+    Errors cite only the entry position, so a swapped name and token never reach logs.
+    """
+    text = Path(path).read_text(encoding="utf-8")
+    if text.lstrip().startswith("{"):
+        try:
+            pairs = json.loads(text, object_pairs_hook=list)
+        except ValueError:
+            raise ValueError("ONEMIND_MCP_TOKENS_FILE is not valid JSON") from None
+        entries = [(f"entry {number}", name, token) for number, (name, token) in enumerate(pairs, 1)]
+    else:
+        entries = []
+        for number, line in enumerate(text.splitlines(), 1):
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            name, separator, token = line.partition(":")
+            if not separator:
+                raise ValueError(f"ONEMIND_MCP_TOKENS_FILE line {number}: expected name:token")
+            entries.append((f"line {number}", name.strip(), token.strip()))
+    clients = {}
+    for where, name, token in entries:
+        if not CLIENT_NAME.fullmatch(name) or name in clients:
+            raise ValueError(f"ONEMIND_MCP_TOKENS_FILE {where}: client names are unique and match {CLIENT_NAME.pattern}")
+        if not isinstance(token, str) or not CLIENT_TOKEN.fullmatch(token):
+            raise ValueError(f"ONEMIND_MCP_TOKENS_FILE {where}: tokens need at least 32 visible ASCII characters")
+        clients[name] = token
+    if not clients:
+        raise ValueError("ONEMIND_MCP_TOKENS_FILE defines no clients")
+    return clients
+
+
+def validate_clients(clients: str | dict[str, str]) -> dict[str, str]:
+    """Fail closed on missing, short or shared credentials. A bare token is client "hermes"."""
+    clients = {LEGACY_CLIENT: clients} if isinstance(clients, str) else dict(clients)
+    if not clients:
+        raise ValueError("Set ONEMIND_MCP_TOKEN or ONEMIND_MCP_TOKENS_FILE")
+    for name, token in clients.items():
+        if not CLIENT_NAME.fullmatch(name):
+            raise ValueError(f"MCP client names must match {CLIENT_NAME.pattern}")
         if len(token) < 32:
-            raise ValueError("ONEMIND_MCP_TOKEN must contain at least 32 characters")
+            raise ValueError("ONEMIND_MCP_TOKEN must contain at least 32 characters" if name == LEGACY_CLIENT
+                             else "Every MCP client token must contain at least 32 characters")
+    if len(set(clients.values())) != len(clients):
+        raise ValueError("Every MCP client needs its own token")
+    return clients
+
+
+class PrivateBearerAuth:
+    """Pre-provisioned private bearer credentials, not an OAuth authorization server."""
+    def __init__(self, app, clients: str | dict[str, str]):
+        self.clients = [(name, token.encode()) for name, token in validate_clients(clients).items()]
         self.app = app
-        self.token = token.encode()
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -53,28 +107,29 @@ class PrivateBearerAuth:
         headers = [v for k, v in scope["headers"] if k.lower() == b"authorization"]
         value = headers[0] if len(headers) == 1 else b""
         scheme, _, supplied = value.partition(b" ")
-        if scheme.lower() != b"bearer" or not hmac.compare_digest(supplied, self.token):
+        # Compare with every client so response timing does not reveal which token matched.
+        matched = [name for name, token in self.clients if hmac.compare_digest(supplied, token)]
+        if scheme.lower() != b"bearer" or not matched:
             response = JSONResponse({"error": "Unauthorized"}, status_code=401,
                                     headers={"WWW-Authenticate": "Bearer"})
             return await response(scope, receive, send)
-        context = actor.set("hermes")
+        context = actor.set(matched[0])
         try:
             return await self.app(scope, receive, send)
         finally:
             actor.reset(context)
 
 
-def create_app(catalog: Catalog, token: str, allowed_hosts: list[str], *, upstream_factory=Upstream):
+def create_app(catalog: Catalog, clients: str | dict[str, str], allowed_hosts: list[str], *, upstream_factory=Upstream):
     if not allowed_hosts or "*" in allowed_hosts:
         raise ValueError("Explicit allowed MCP Host headers are required")
-    if len(token) < 32:
-        raise ValueError("ONEMIND_MCP_TOKEN must contain at least 32 characters")
+    clients = validate_clients(clients)
     connections = {}
     for app in catalog.apps:
         if app.adapter not in ADAPTERS:
             raise ValueError(f"Unknown adapter for {app.id}: {app.adapter}")
         connections[app.id] = app.connection()
-    secrets = [token, *(value[1] for value in connections.values() if value[1])]
+    secrets = [*clients.values(), *(value[1] for value in connections.values() if value[1])]
     concurrency = asyncio.Semaphore(8)
     serving = False
 
@@ -154,7 +209,7 @@ def create_app(catalog: Catalog, token: str, allowed_hosts: list[str], *, upstre
                 serving = False
 
     http_app.router.lifespan_context = lifespan
-    return PrivateBearerAuth(http_app, token)
+    return PrivateBearerAuth(http_app, clients)
 
 
 def main():
@@ -164,7 +219,13 @@ def main():
     logging.getLogger("mcp.server").setLevel(logging.WARNING)
     catalog = load_catalog(os.environ.get("ONEMIND_APPS_FILE", "/etc/onemind/apps.yaml"))
     hosts = [host.strip() for host in os.environ.get("ONEMIND_ALLOWED_HOSTS", "").split(",") if host.strip()]
-    app = create_app(catalog, os.environ.get("ONEMIND_MCP_TOKEN", ""), hosts)
+    # ONEMIND_MCP_TOKEN stays client "hermes"; a mounted secret file adds named clients.
+    tokens_file = os.environ.get("ONEMIND_MCP_TOKENS_FILE", "")
+    clients = load_client_tokens(tokens_file) if tokens_file else {}
+    token = os.environ.get("ONEMIND_MCP_TOKEN", "")
+    if token and LEGACY_CLIENT in clients:
+        raise ValueError("Set client hermes in ONEMIND_MCP_TOKEN or ONEMIND_MCP_TOKENS_FILE, not both")
+    app = create_app(catalog, {LEGACY_CLIENT: token, **clients} if token else clients, hosts)
     uvicorn.run(app, host="0.0.0.0", port=8000, access_log=False,
                 limit_concurrency=64, timeout_keep_alive=5)
 
