@@ -553,21 +553,6 @@
    "apiVersion": "apps/v1",
    "kind": "Deployment",
    "metadata": {
-    "name": "kubernetes-dashboard",
-    "namespace": "kube"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "kubernetes-dashboard"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "Deployment",
-   "metadata": {
     "name": "kyverno-admission-controller",
     "namespace": "kyverno"
    },
@@ -1791,21 +1776,6 @@
     "selector": {
      "matchLabels": {
       "app": "75bd5f05-7ab1-4c02-9720-08a46d10a76a"
-     }
-    }
-   }
-  },
-  {
-   "apiVersion": "apps/v1",
-   "kind": "StatefulSet",
-   "metadata": {
-    "name": "ts-kubernetes-dashboard-9r9fp",
-    "namespace": "tailscale"
-   },
-   "spec": {
-    "selector": {
-     "matchLabels": {
-      "app": "c5dd0973-444a-4f0c-a535-3d6d8aa6c997"
      }
     }
    }

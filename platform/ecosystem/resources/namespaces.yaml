@@ -8,6 +8,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: make-sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -19,6 +21,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: make-sense
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace
@@ -31,6 +35,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: decide
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace

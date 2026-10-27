@@ -15,7 +15,7 @@ This repository contains the source and GitOps configuration for OneMind OS: the
 | Path | Purpose |
 |------|---------|
 | `.github/` | CI quality gate (`quality.yml`) and service image build workflows |
-| `infra/` | Terraform for the DigitalOcean foundation (VPC and DOKS cluster), plus `edge/` for hardware-bound and Mac edge configuration |
+| `infra/` | Terraform for the DigitalOcean foundation (VPC and DOKS cluster; does not match live, do not apply, see `infra/README.md`), plus `edge/` for hardware-bound and Mac edge configuration |
 | `platform/` | Kubernetes resources, Helm values, and Argo CD applications for cluster workloads |
 | `services/` | First-party source code built into images (portals, OneMind runtime services, bridges), the bus contracts in `schemas/`, and supporting scripts |
 | `docs/` | Architecture, platform, security, and infrastructure documentation |
@@ -38,7 +38,7 @@ python scripts/validate_helm_renders.py --all     # render every Helm chart (nee
 gitleaks dir . --config .gitleaks.toml --baseline-path .gitleaks-baseline.json --redact
 ```
 
-Terraform commands use `infra/` and require DigitalOcean credentials for `plan` or `apply`:
+Terraform commands use `infra/` and require DigitalOcean credentials for `plan` or `apply`. The code does not match the live cluster yet; read [`infra/README.md`](infra/README.md) first and do not apply:
 
 ```bash
 make plan
@@ -51,7 +51,7 @@ NATS JetStream stream and KV resources are declared under `platform/nats/streams
 
 ## Deployment model
 
-- Terraform declares the DigitalOcean VPC and DOKS foundation in `infra/`.
+- `infra/` holds Terraform for the DigitalOcean VPC and DOKS foundation, but it has no state and does not match the live cluster; see [`infra/README.md`](infra/README.md) before running `plan` or `apply`.
 - Argo CD applications in `platform/argocd/` (47 Applications live) reconcile Kubernetes resources from `platform/` and related directories. Eleven Helm releases, including the TAK Server core and NATS, are still installed by hand; see "GitOps gaps" in [`docs/STACK.md`](docs/STACK.md).
 - Keep credentials out of Git. Secrets are committed as Bitnami SealedSecrets (see `CLAUDE.md`, "Secrets"). [`docs/secrets-eso.md`](docs/secrets-eso.md) describes the earlier External Secrets design and is historical.
 - Dependency updates are proposed weekly by Renovate (`renovate.json`) and GitHub Actions are pinned by commit SHA.

@@ -1,0 +1,11 @@
+# One replica: maxUnavailable 1 keeps node drains unblocked (minAvailable 1 would
+# block them). It records the intended disruption budget, like hermes-legacy's.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: onemind-mcp
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-mcp

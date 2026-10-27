@@ -8,14 +8,6 @@
     "groupTitle": "Infrastructure"
   },
   {
-    "name": "kubernetes-dashboard",
-    "title": "Kubernetes Dashboard",
-    "url": "https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default",
-    "description": "Cluster UI",
-    "group": "infrastructure",
-    "groupTitle": "Infrastructure"
-  },
-  {
     "name": "headlamp",
     "title": "Headlamp",
     "url": "https://headlamp.tail717ba0.ts.net/c/main/token",
@@ -492,14 +484,6 @@
     "title": "ArgoCD",
     "url": "https://argocd.tail717ba0.ts.net",
     "description": "GitOps CD",
-    "group": "external",
-    "groupTitle": "External"
-  },
-  {
-    "name": "external-kubernetes-dashboard",
-    "title": "Kubernetes Dashboard",
-    "url": "https://k8s-dashboard.tail717ba0.ts.net",
-    "description": "Cluster UI",
     "group": "external",
     "groupTitle": "External"
   },

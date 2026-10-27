@@ -1,0 +1,94 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: onemind-nats-leafnodes
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app: kube-prometheus-stack
+spec:
+  groups:
+    # ─── NATS leafnode links ─────────────────────────────────────────────────
+    # Per-leaf series come from nats-leafz-exporter (nats-leafz-exporter.yaml). A leaf is
+    # matched on the server name it presents to the hub, the "name" field of /leafz.
+    # Baseline 2026-10-27: three leaves, all in account ONEMIND, one per hub server:
+    # hermes-legacy-leaf, zeus-mac, and the TAK leaf. takserver/tak-nats-leaf sets no
+    # server name, so the hub lists it under a random server ID that changes on every
+    # restart; it gets a rule once the leaf has a stable name.
+    #
+    # Each leaf rule fires only while the exporter reads at least one hub server (the
+    # "and on() count(...)" guard), so an exporter outage raises NATSLeafzExporterDown
+    # instead of one alert per leaf. When it reads only some servers, a leaf on an unread
+    # server looks disconnected; NATSLeafzHubUnreadable reports that case.
+    # Every NATSLeafnodeDown has the same severity: the stack's default inhibit rules match
+    # on alertname, so a critical one would hide the warning ones. The Mac edge leaf, often
+    # away by design, has its own alertname, NATSEdgeLeafAway, at severity info. Summaries
+    # spell out the leaf name: annotation templates see only the expression's labels, not
+    # the static "leaf" label, and absent() on a regex matcher returns only job.
+    - name: onemind.nats.leafnodes
+      interval: 30s
+      rules:
+        - alert: NATSLeafnodeDown
+          expr: |
+            absent(gnatsd_leafz_info{job="nats-leafz-exporter", name="hermes-legacy-leaf"})
+            and on() count(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"})
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+            leaf: hermes-legacy-leaf
+          annotations:
+            summary: "NATS leaf hermes-legacy-leaf is not connected to the hub"
+            description: >-
+              No hub server has a leafnode connection from hermes-legacy-leaf, the nats-leaf sidecar of
+              hermes/hermes-legacy. The Hermes agent is cut off from the bus. Check that container's log.
+
+        # zeus-mac is a laptop. Over the 10 days to 2026-10-27 the summed leaf count dipped
+        # for 1-3 min at reconnects and pod restarts, and for 25 min to 5 h four times in the
+        # US Eastern evening. 15m skips the blips and still reports a Mac that is away.
+        # Since that absence is routine, the rule has its own alertname at severity info: a
+        # route for critical and warning alerts skips it, and its notifications never share a
+        # group with NATSLeafnodeDown, so a real Hermes or TAK leaf outage stays distinct.
+        - alert: NATSEdgeLeafAway
+          expr: |
+            absent(gnatsd_leafz_info{job="nats-leafz-exporter", name="zeus-mac"})
+            and on() count(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"})
+          for: 15m
+          labels:
+            severity: info
+            service: nats
+            leaf: zeus-mac
+          annotations:
+            summary: "NATS edge leaf zeus-mac is not connected to the hub"
+            description: >-
+              The Mac edge leaf has had no connection through the omos-nats Tailscale load balancer for
+              15 minutes, so the Mac's edge bridges are off the bus. The cloud bus keeps running.
+              Expected while the Mac sleeps or is offline.
+
+        - alert: NATSLeafzExporterDown
+          expr: absent(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"})
+          for: 10m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "NATS leafnode metrics are not being collected"
+            description: "nats-leafz-exporter is not scraped or cannot read /leafz on any hub server, so NATSLeafnodeDown and NATSEdgeLeafAway are blind."
+
+        # The exporter skips a hub server whose /leafz it cannot read, without failing the
+        # scrape or logging at its default level. 3 is the number of servers listed in
+        # nats-leafz-exporter.yaml. 5m, like the fastest leaf rule, so this arrives no later
+        # than a NATSLeafnodeDown it explains.
+        - alert: NATSLeafzHubUnreadable
+          expr: count(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"}) < 3
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "nats-leafz-exporter reads /leafz on only {{ $value }} of 3 NATS hub servers"
+            description: >-
+              A leaf connected to an unread hub server looks disconnected, so a NATSLeafnodeDown or
+              NATSEdgeLeafAway firing alongside this may be false. Find the missing server_id with
+              gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"}, then check that nats pod and its
+              monitor port 8222.

@@ -58,7 +58,6 @@ export const mapping: InventoryMapping = {
     'kube-system/platform-clickhouse-operator': 'component:default/clickhouse',
     'kube-system/sealed-secrets-controller': 'component:default/platform-core',
     'kube/headlamp': 'component:default/headlamp',
-    'kube/kubernetes-dashboard': 'component:default/kubernetes-dashboard',
     'kyverno/kyverno-admission-controller': 'component:default/kyverno',
     'kyverno/kyverno-background-controller': 'component:default/kyverno',
     'kyverno/kyverno-cleanup-controller': 'component:default/kyverno',
@@ -129,8 +128,6 @@ export const mapping: InventoryMapping = {
       'component:default/tailscale-operator',
     'tailscale/ts-heynats-p5dmf': 'component:default/tailscale-operator',
     'tailscale/ts-hubble-tw85d': 'component:default/tailscale-operator',
-    'tailscale/ts-kubernetes-dashboard-9r9fp':
-      'component:default/tailscale-operator',
     'tailscale/ts-n8n-pmtds': 'component:default/tailscale-operator',
     'tailscale/ts-nats-dashboard-242wv': 'component:default/tailscale-operator',
     'tailscale/ts-nats-monitor-zh589': 'component:default/tailscale-operator',
@@ -281,12 +278,6 @@ export const mapping: InventoryMapping = {
     keda: {
       title: 'KEDA',
       system: 'infrastructure',
-      pillar: 'so',
-      review: 'proposed',
-    },
-    'kubernetes-dashboard': {
-      title: 'Kubernetes Dashboard',
-      system: 'developer-platform',
       pillar: 'so',
       review: 'proposed',
     },
