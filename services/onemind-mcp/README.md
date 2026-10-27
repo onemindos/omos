@@ -22,7 +22,7 @@ replace app APIs, operate Kubernetes, or grant access to every app automatically
 - Eight concurrent tool calls, a 15-second overall call budget and bounded HTTP
   connections. The initial client has access to all configured read tools.
 
-Deployment status: **source prepared and locally tested**. The owning manifests are
+Deployment status: **deployed and live-verified for Legacy on 2026-10-27**. The owning manifests are
 in `platform/hermes/mcp/`; the activation gates and rollout evidence are recorded in
 [the runbook](../../docs/operations/onemind-mcp.md). Source is not live acceptance.
 

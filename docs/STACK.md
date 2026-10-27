@@ -270,13 +270,16 @@ CNPG. PRs #424/#425 are merged. The Mac's full-library upload has started;
 Samsung FolderSync two-way acceptance and full-transfer completion remain pending.
 See [setup, cost and acceptance](../platform/nextcloud/README.md).
 
-## New integration awaiting live acceptance
+## OneMind application MCP — verified 2026-10-27
 
-`services/onemind-mcp/` and `platform/hermes/mcp/` define a tier-2, stateless,
-private application MCP for Legacy Hermes. No database/PVC; source/catalog and
-sealed credentials are the recovery artifacts. `platform-legacy` owns the new
-source; the manifest pins the tested GHCR image and the client config merge is
-managed with Legacy. Initial adapters read NATS node
-statistics and Prometheus metrics. It has no Kubernetes API privileges or write
-tools. This is **source preparation**, not a deployed inventory row; see the
-[activation runbook](operations/onemind-mcp.md) for current gates and evidence.
+Tier 2, namespace `hermes`, Deployment `onemind-mcp`, owned by `platform-legacy`.
+Stateless private app tools for Legacy: NATS node/JetStream stats and Prometheus
+instant queries, with a discoverable app catalog. One available replica, 100m CPU /
+128Mi memory requests; no database/PVC. Git source/catalog and SealedSecrets are
+recovery artifacts. A dedicated image-pull credential keeps unrelated registry
+credentials unchanged. No Kubernetes API privileges or write tools are granted.
+
+[Live acceptance](operations/onemind-mcp-acceptance-2026-10-27.json), 04:00 EDT:
+all four tools and resource reads pass from Legacy, anonymous access is rejected,
+MCP and Legacy are available, and Argo is Synced/Healthy. Extension, rotation and
+rollback: [runbook](operations/onemind-mcp.md).

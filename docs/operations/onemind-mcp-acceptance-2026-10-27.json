@@ -1,0 +1,41 @@
+{
+  "verified_at": "2026-10-27T04:00:19-04:00",
+  "workflow_run": "https://github.com/onemindos/omos/actions/runs/40470531771",
+  "result": {
+    "config_verified": true,
+    "progressive_disclosure_enabled": true,
+    "tools": {
+      "apps_list": "passed",
+      "nats_server_stats": "passed",
+      "nats_jetstream_stats": "passed",
+      "prometheus_query": "passed"
+    },
+    "anonymous_status": 401,
+    "resource_read": "passed",
+    "onemind-mcp": {
+      "available_replicas": 1,
+      "generation": 2,
+      "images": [
+        "ghcr.io/onemindos/onemind-mcp@sha256:80fa67bc138006bd1efc0dc849504910b4068667036d880cba9d0c71afb762cc"
+      ]
+    },
+    "hermes-legacy": {
+      "available_replicas": 1,
+      "generation": 100,
+      "images": [
+        "nousresearch/hermes-agent:v2026.9.24",
+        "nginx:1.30.6-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951",
+        "nats:2.10-alpine"
+      ]
+    },
+    "argo": {
+      "sync": "Synced",
+      "health": "Healthy",
+      "revisions": [
+        "230f5b9055a00c4001b749d0d5cd605b01cc13ee",
+        "230f5b9055a00c4001b749d0d5cd605b01cc13ee",
+        "230f5b9055a00c4001b749d0d5cd605b01cc13ee"
+      ]
+    }
+  }
+}
