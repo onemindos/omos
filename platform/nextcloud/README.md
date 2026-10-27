@@ -191,4 +191,5 @@ References: [chart](https://github.com/nextcloud/helm),
 [FolderSync](https://foldersync.io/docs/help/concept/),
 [large files](https://docs.nextcloud.com/server/stable/admin_manual/configuration_files/big_file_upload_configuration.html),
 [backup](https://docs.nextcloud.com/server/stable/admin_manual/maintenance/backup.html),
-[DigitalOcean volume pricing](https://docs.digitalocean.com/products/volumes/details/pricing/).
+[DigitalOcean volume pricing](https://docs.digitalocean.com/products/volumes/details/pricing/),
+[volume expansion](https://docs.digitalocean.com/products/volumes/how-to/increase-size/).

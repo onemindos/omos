@@ -1184,7 +1184,7 @@ shared file service under Argo CD; it does not complete or bypass phase gates.
 
 | Work | Status | Evidence |
 |---|---|---|
-| Nextcloud GitOps deployment and full-library Mac/Android sync | Server healthy; Mac renamed-root mapping repaired and uploads verified 2026-10-26; 300 GiB headroom proposal awaits cost approval/deployment; full device/recovery acceptance pending | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425); [PR #426](https://github.com/onemindos/omos/pull/426); current repair/headroom PR |
+| Nextcloud GitOps deployment and full-library Mac/Android sync | Server healthy; Mac renamed-root mapping repaired and uploads verified 2026-10-26; 300 GiB headroom proposal awaits cost approval/deployment; full device/recovery acceptance pending | [Runbook](platform/nextcloud/README.md); [PR #424](https://github.com/onemindos/omos/pull/424); [PR #425](https://github.com/onemindos/omos/pull/425); [PR #426](https://github.com/onemindos/omos/pull/426); [PR #485](https://github.com/onemindos/omos/pull/485) |
 
 Acceptance requires actual edits flowing in both directions, offline and conflict
 checks, a reviewed real-vault upload set, and a coordinated backup/restore drill.
