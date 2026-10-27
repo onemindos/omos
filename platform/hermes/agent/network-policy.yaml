@@ -1,0 +1,45 @@
+# Ingress isolation for Legacy (hermes-legacy). Only the two in-cluster callers found by the 2026-10-27
+# inventory (manifests, live Services and EndpointSlices, Prometheus config, logs) may connect:
+#   9119  dashboard, through the Tailscale proxy for the hermes-dashboard Ingress (dashboard.yaml)
+#   8643  Paperclip, to the TLS sidecar in front of the gateway API (platform/paperclip/HERMES.md)
+# Every other pod is refused, including on the nats-leaf client port 4222 (no auth) and monitor 8222.
+# Hermes reaches the leaf over localhost, which no policy filters, and nothing scrapes this pod.
+# Kubelet probes come from the node, which Cilium admits without a rule; kubectl exec and port-forward
+# go through the kubelet. Egress stays open: models, MCP servers and chat platforms live in Hermes's
+# config on the volume and change at runtime, so they cannot yet be listed with confidence.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hermes-legacy
+  namespace: hermes
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: hermes
+      onemind.io/agent: legacy
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          # Labels the Tailscale operator puts on this Ingress's proxy. Moving the Ingress to a
+          # ProxyGroup changes them, and this selector must follow.
+          podSelector:
+            matchLabels:
+              tailscale.com/parent-resource: hermes-dashboard
+              tailscale.com/parent-resource-ns: hermes
+              tailscale.com/parent-resource-type: ingress
+      ports:
+        - protocol: TCP
+          port: 9119
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: paperclip
+          podSelector:
+            matchLabels:
+              app: paperclip
+      ports:
+        - protocol: TCP
+          port: 8643
