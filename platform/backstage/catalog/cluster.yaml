@@ -883,6 +883,72 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: k8s-hermes-hermes-fresh-c0d4ec2d
+  title: Hermes (Fresh) — Core
+  description: Deployment in hermes
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes-fresh
+    backstage.io/kubernetes-namespace: hermes
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: hermes-fresh
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - hermes
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/hermes-fresh
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-hermes-onemind-mcp-07887746
+  title: OneMind internal app MCP — Core
+  description: Deployment in hermes
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-mcp
+    backstage.io/kubernetes-namespace: hermes
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: onemind-mcp
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - hermes
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/onemind-mcp
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: k8s-ingress-nginx-ingress-nginx-controller-65f99d2d
   title: ingress-nginx — Controller
   description: Deployment in ingress-nginx
@@ -3044,6 +3110,39 @@ spec:
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
   subcomponentOf: component:default/velero
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: k8s-vaultwarden-vaultwarden-fa08c5c9
+  title: Vaultwarden — Core
+  description: Deployment in vaultwarden
+  annotations:
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=web,app.kubernetes.io/name=vaultwarden
+    backstage.io/kubernetes-namespace: vaultwarden
+    onemind.io/inventory-source: kubernetes
+    onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/inventory-review: discovered
+    onemind.io/inventory-state: observed
+    onemind.io/inventory-missing-observations: "0"
+    onemind.io/kubernetes-workload: vaultwarden
+    onemind.io/kubernetes-workload-kind: Deployment
+    onemind.io/pillar-review: proposed
+  tags:
+    - kubernetes
+    - vaultwarden
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: workload
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependsOn:
+    - resource:default/do-nyc3-omos-cloud
+  subcomponentOf: component:default/vaultwarden
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

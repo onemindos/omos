@@ -1,6 +1,9 @@
 # Reviewed mapping of generated workloads and Argo CD applications to curated app Components.
 # workloads: "<namespace>/<workload>" -> app ref. Workloads not listed land in system:default/unassigned-workloads.
-# argoApplications: every Argo CD application -> exactly one app Component (carries argocd/app-name).
+# argoApplications: every Argo CD application -> exactly one app Component. The app carries the primary application in
+#   argocd/app-name and lists all of them in onemind.io/argocd-apps; scripts/curate-structure.cjs generates a
+#   Resource argocd-app-<name> (with its own argocd/app-name) for every other application, so each one is shown by the Argo CD plugin.
+# primaryArgoApplication: app name -> the application its argocd/app-name shows, when the default choice is wrong.
 # Checked by scripts/test-catalog-structure.cjs.
 workloads:
   agent-fabric/agent-console: component:default/agent-web-ui
@@ -31,7 +34,9 @@ workloads:
   dapr-system/dapr-sidecar-injector: component:default/dapr
   github-runner/github-runner: component:default/platform-core
   github-runner/github-runner-hermes: component:default/platform-core
+  hermes/hermes-fresh: component:default/hermes-fresh
   hermes/hermes-legacy: component:default/hermes-legacy
+  hermes/onemind-mcp: component:default/onemind-mcp
   ingress-nginx/ingress-nginx-controller: component:default/ingress-nginx
   keda/keda-admission-webhooks: component:default/keda
   keda/keda-operator: component:default/keda
@@ -146,6 +151,7 @@ workloads:
   takserver/takserver-nats-box: component:default/tak-server
   takserver/takserver-plugins: component:default/tak-server
   takserver/takserver-postgresql: component:default/tak-server
+  vaultwarden/vaultwarden: component:default/vaultwarden
   velero/velero: component:default/velero
   karakeep/web: component:default/karakeep
   karakeep/chrome: component:default/karakeep
@@ -185,9 +191,11 @@ argoApplications:
   platform-ecosystem-foundation: component:default/argocd
   platform-ecosystem-resources: component:default/argocd
   platform-fedhub: component:default/fedhub
+  platform-hermes-fresh: component:default/hermes-fresh
   platform-kube: component:default/headlamp
   platform-legacy: component:default/hermes-legacy
   platform-matrix: component:default/matrix-synapse
+  platform-metrics-server: component:default/kubernetes-system
   platform-monitoring: component:default/grafana
   platform-n8n: component:default/n8n
   platform-nats: component:default/nats
@@ -204,6 +212,9 @@ argoApplications:
   platform-stac-validation: component:default/stac
   platform-takml: component:default/takml
   platform-takserver: component:default/tak-server
+  platform-vaultwarden: component:default/vaultwarden
   platform-volsync: component:default/volsync
   platform-volume-backups: component:default/platform-backup-recovery
   platform-karakeep: component:default/karakeep
+primaryArgoApplication:
+  cloudnative-pg: ecosystem-cnpg

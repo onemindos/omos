@@ -2,12 +2,12 @@
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. No Argo application.
+DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. Argo application platform-metrics-server adopts only metrics-server.
 
 ## Where it runs
 
 - Catalog entity: `component:default/kubernetes-system` in System `infrastructure`
-- Argo CD application: none recorded for this app
+- Argo CD application: `platform-metrics-server`
 - Namespace: `kube-system`
 
 ## Workloads

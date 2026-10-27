@@ -23,6 +23,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Grafana](grafana.md) | observability |
 | [Headlamp](headlamp.md) | developer-platform |
 | [Cluster health observer](health-keeper.md) | observability |
+| [Hermes (Fresh)](hermes-fresh.md) | ai-agents |
 | [Hermes (Legacy)](hermes-legacy.md) | ai-agents |
 | [HeyNATS](heynats.md) | messaging-nats |
 | [Hubble UI](hubble-ui.md) | observability |
@@ -44,6 +45,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [Ollama](ollama.md) | ai-agents |
 | [OMOS data pipeline](omos-data-pipeline.md) | messaging-nats |
 | [OneMind core services](onemind-core.md) | infrastructure |
+| [OneMind internal app MCP](onemind-mcp.md) | ai-agents |
 | [OneTAK](onetak.md) | tak-ecosystem |
 | [OpenCost](opencost.md) | observability |
 | [OpenFGA](openfga.md) | identity-access |
@@ -59,6 +61,7 @@ One page per Kubernetes app, generated from the catalog so a new app gets a runb
 | [TAK-ML](takml.md) | tak-ecosystem |
 | [Tempo](tempo.md) | observability |
 | [TileServer GL](tileserver-gl.md) | geospatial |
+| [Vaultwarden](vaultwarden.md) | identity-access |
 | [Velero](velero.md) | data-storage |
 | [VolSync](volsync.md) | data-storage |
 | [WebODM](webodm.md) | geospatial |

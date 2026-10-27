@@ -44,8 +44,13 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
+    'hermes/hermes-fresh': 'component:default/hermes-fresh',
     'hermes/hermes-legacy': 'component:default/hermes-legacy',
+    'hermes/onemind-mcp': 'component:default/onemind-mcp',
     'ingress-nginx/ingress-nginx-controller': 'component:default/ingress-nginx',
+    'karakeep/chrome': 'component:default/karakeep',
+    'karakeep/meilisearch': 'component:default/karakeep',
+    'karakeep/web': 'component:default/karakeep',
     'keda/keda-admission-webhooks': 'component:default/keda',
     'keda/keda-operator': 'component:default/keda',
     'keda/keda-operator-metrics-apiserver': 'component:default/keda',
@@ -167,6 +172,7 @@ export const mapping: InventoryMapping = {
     'takserver/takserver-nats-box': 'component:default/tak-server',
     'takserver/takserver-plugins': 'component:default/tak-server',
     'takserver/takserver-postgresql': 'component:default/tak-server',
+    'vaultwarden/vaultwarden': 'component:default/vaultwarden',
     'velero/velero': 'component:default/velero',
   },
   apps: {
@@ -254,6 +260,12 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
+    'hermes-fresh': {
+      title: 'Hermes (Fresh)',
+      system: 'ai-agents',
+      pillar: 'so',
+      review: 'proposed',
+    },
     'hermes-legacy': {
       title: 'Hermes (Legacy)',
       system: 'ai-agents',
@@ -277,6 +289,12 @@ export const mapping: InventoryMapping = {
       system: 'infrastructure',
       pillar: 'so',
       review: 'proposed',
+    },
+    karakeep: {
+      title: 'Karakeep',
+      system: 'personal-tools',
+      pillar: 'shared',
+      review: 'approved',
     },
     keda: {
       title: 'KEDA',
@@ -374,6 +392,12 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
+    'onemind-mcp': {
+      title: 'OneMind internal app MCP',
+      system: 'ai-agents',
+      pillar: 'so',
+      review: 'proposed',
+    },
     onetak: {
       title: 'OneTAK',
       system: 'tak-ecosystem',
@@ -437,6 +461,12 @@ export const mapping: InventoryMapping = {
     'tileserver-gl': {
       title: 'TileServer GL',
       system: 'geospatial',
+      pillar: 'so',
+      review: 'proposed',
+    },
+    vaultwarden: {
+      title: 'Vaultwarden',
+      system: 'identity-access',
       pillar: 'so',
       review: 'proposed',
     },

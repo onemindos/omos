@@ -812,12 +812,15 @@ metadata:
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: hermes
     grafana/alert-label-selector: namespace=hermes
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes
-    onemind.io/logs-query: '{k8s_namespace_name="hermes"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-legacy
+    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-legacy)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/hermes-legacy/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: hermes/hermes-legacy
+    onemind.io/api-relationship-source: platform/hermes/agent/deployment.yaml
+      (nats-platform plugin registers agents.prompt.hermes.zeus.legacy through
+      the nats-leaf sidecar)
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -828,6 +831,8 @@ spec:
   system: ai-agents
   dependsOn:
     - component:default/k8s-hermes-hermes-legacy-1e93d498
+  consumesApis:
+    - api:default/nats-agent-protocol
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -1238,6 +1243,9 @@ metadata:
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
     onemind.io/kubernetes-workloads: takserver/mumble-bridge,takserver/murmur,takserver/tak-lb-proxy,takserver/tak-ldap,takserver/tak-nats-leaf,takserver/takserver-api,takserver/takserver-config,takserver/takserver-ignite,takserver/takserver-messaging,takserver/takserver-nats,takserver/takserver-nats-box,takserver/takserver-plugins,takserver/takserver-postgresql
+    onemind.io/api-relationship-source: services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml
+      (natsConsumerSubject tak.cot.inject, natsProducerSubject tak.cot.out);
+      platform/takserver/deploy/tak-nats-leaf.yaml
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -1246,6 +1254,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: tak-ecosystem
+  providesApis:
+    - api:default/tak-cot-bridge
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -3664,6 +3674,713 @@ spec:
       }
     }
   system: intelligence
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: nats-events
+  title: NATS events (evt.>)
+  description: Immutable facts on evt.{domain}.{entity}.{event}. JetStream
+    captures them in the EVT, WORLD, GEO, MISSION and SYS streams.
+  tags:
+    - nats
+    - asyncapi
+    - events
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/NATS-DOCTRINE.md
+      title: NATS doctrine (subject grammar)
+      type: docs
+    - url: https://github.com/onemindos/omos/tree/main/platform/nats/streams
+      title: JetStream stream definitions
+      type: source
+    - url: https://github.com/onemindos/omos/blob/main/services/schemas/envelope/envelope.schema.json
+      title: Event envelope schema
+      type: schema
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: OneMind NATS events
+      version: 1.0.0
+      description: "Events are immutable facts (past tense), docs/NATS-DOCTRINE.md section 2. Domains are the pillars so, hp,
+        le, ge plus sys; the deployed streams also capture task, cloud, bio, robot, drone, world (WORLD), tak (GEO:
+        evt.tak.cot.>, evt.tak.status.>), mission and map (MISSION) and sys (SYS). Never publish a command as an event."
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      evt.{domain}.{entity}.{event}:
+        description: "Example: evt.so.task.created. Consumers filter with wildcards such as evt.so.> or evt.world.>."
+        parameters:
+          domain:
+            description: Pillar (so, hp, le, ge) or sys, or a stream-defined domain (world, tak, mission, map, task, ...).
+            schema:
+              type: string
+          entity:
+            description: Entity type.
+            schema:
+              type: string
+          event:
+            description: Past-tense event name.
+            schema:
+              type: string
+        publish:
+          summary: Clients publish events.
+          message: &a1
+            $ref: "#/components/messages/envelope"
+        subscribe:
+          summary: Clients receive events.
+          message: *a1
+    components:
+      messages:
+        envelope:
+          name: OneMindEventEnvelope
+          title: OneMind event envelope v1
+          contentType: application/json
+          summary: "Canonical schema: services/schemas/envelope/envelope.schema.json (summarized here; the catalog ConfigMap does
+            not carry the schema files)."
+          payload:
+            type: object
+            required:
+              - v
+              - id
+              - ts
+              - type
+              - source
+              - subject
+              - data
+            additionalProperties: true
+            properties:
+              v:
+                type: integer
+                minimum: 1
+                description: Envelope version.
+              id:
+                type: string
+                format: uuid
+                description: UUID v4 message id.
+              ts:
+                type: string
+                format: date-time
+                description: RFC3339 timestamp, millisecond precision.
+              type:
+                type: string
+                description: Dotted type mirroring the subject grammar.
+              source:
+                type: string
+                description: Actor id that emitted the message.
+              subject:
+                type: string
+                description: NATS subject the message was published on.
+              data:
+                type: object
+                additionalProperties: true
+                description: Typed payload; schema depends on type.
+              corr:
+                type: string
+                format: uuid
+              causation:
+                type: string
+                format: uuid
+              trace:
+                type: string
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: nats-commands
+  title: NATS commands (cmd.>)
+  description: Imperatives on cmd.{domain}.{entity}.{action}; captured by the CMD
+    stream. Commands may be rejected.
+  tags:
+    - nats
+    - asyncapi
+    - commands
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/NATS-DOCTRINE.md
+      title: NATS doctrine (subject grammar)
+      type: docs
+    - url: https://github.com/onemindos/omos/tree/main/platform/nats/streams
+      title: JetStream stream definitions
+      type: source
+    - url: https://github.com/onemindos/omos/blob/main/services/schemas/command/envelope.schema.json
+      title: Command envelope schema
+      type: schema
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: OneMind NATS commands
+      version: 1.0.0
+      description: Commands (imperatives), docs/NATS-DOCTRINE.md section 2 and the map/fleet/mission commands of section 9
+        (cmd.map.>, cmd.fleet.>, cmd.mission.>). The CMD stream captures cmd.>.
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      cmd.{domain}.{entity}.{action}:
+        description: "Example: cmd.le.light.on, cmd.projector.disable."
+        parameters:
+          domain:
+            description: Pillar, sys, or a section 9 domain (fleet, mission, map).
+            schema:
+              type: string
+          entity:
+            description: Target entity.
+            schema:
+              type: string
+          action:
+            description: Imperative verb.
+            schema:
+              type: string
+        publish:
+          summary: Clients publish commands.
+          message: &a1
+            $ref: "#/components/messages/command"
+        subscribe:
+          summary: Clients receive commands.
+          message: *a1
+    components:
+      messages:
+        command:
+          name: OneMindCommandEnvelope
+          title: OneMind command envelope v1
+          contentType: application/json
+          summary: "Canonical schema: services/schemas/command/envelope.schema.json (summarized here). Commands may be rejected;
+            results are published as evt.command.* events."
+          payload:
+            type: object
+            required:
+              - v
+              - id
+              - ts
+              - cmd
+              - source
+              - subject
+              - data
+            additionalProperties: true
+            properties:
+              v:
+                type: integer
+                minimum: 1
+              id:
+                type: string
+                format: uuid
+              ts:
+                type: string
+                format: date-time
+              cmd:
+                type: string
+                pattern: ^cmd\.[a-z0-9_][a-z0-9_.\-$]*$
+                description: Dotted command type mirroring the subject.
+              source:
+                type: string
+                description: Actor id that issued the command.
+              subject:
+                type: string
+              data:
+                type: object
+                additionalProperties: true
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: nats-telemetry
+  title: NATS telemetry (tel.>)
+  description: Telemetry on tel.{node}.{class}.{metric}; captured by the TEL, ENV
+    and SYS (tel.host.>) streams.
+  tags:
+    - nats
+    - asyncapi
+    - telemetry
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/NATS-DOCTRINE.md
+      title: NATS doctrine (subject grammar)
+      type: docs
+    - url: https://github.com/onemindos/omos/tree/main/platform/nats/streams
+      title: JetStream stream definitions
+      type: source
+    - url: https://github.com/onemindos/omos/blob/main/services/schemas/envelope/envelope.schema.json
+      title: Event envelope schema
+      type: schema
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: OneMind NATS telemetry
+      version: 1.0.0
+      description: Telemetry, docs/NATS-DOCTRINE.md section 2; fleet positions use tel.fleet.{class}.{id}.position with the
+        geo-envelope of section 9.2. Node-local telemetry stays on the leaf; core merges tel.> for fleet analytics.
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      tel.{node}.{class}.{metric}:
+        description: "Example: tel.barn-pi-1.temp.c, tel.fleet.drone.x47.position, tel.feed.usgs.status."
+        parameters:
+          node:
+            description: Node, fleet or feed scope.
+            schema:
+              type: string
+          class:
+            description: Metric class.
+            schema:
+              type: string
+          metric:
+            description: Metric name.
+            schema:
+              type: string
+        publish:
+          summary: Clients publish telemetry.
+          message: &a1
+            $ref: "#/components/messages/envelope"
+        subscribe:
+          summary: Clients receive telemetry.
+          message: *a1
+    components:
+      messages:
+        envelope:
+          name: OneMindEventEnvelope
+          title: OneMind event envelope v1
+          contentType: application/json
+          summary: "Canonical schema: services/schemas/envelope/envelope.schema.json (summarized here; the catalog ConfigMap does
+            not carry the schema files)."
+          payload:
+            type: object
+            required:
+              - v
+              - id
+              - ts
+              - type
+              - source
+              - subject
+              - data
+            additionalProperties: true
+            properties:
+              v:
+                type: integer
+                minimum: 1
+                description: Envelope version.
+              id:
+                type: string
+                format: uuid
+                description: UUID v4 message id.
+              ts:
+                type: string
+                format: date-time
+                description: RFC3339 timestamp, millisecond precision.
+              type:
+                type: string
+                description: Dotted type mirroring the subject grammar.
+              source:
+                type: string
+                description: Actor id that emitted the message.
+              subject:
+                type: string
+                description: NATS subject the message was published on.
+              data:
+                type: object
+                additionalProperties: true
+                description: Typed payload; schema depends on type.
+              corr:
+                type: string
+                format: uuid
+              causation:
+                type: string
+                format: uuid
+              trace:
+                type: string
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: nats-intel
+  title: NATS intelligence (intel.>)
+  description: Intelligence observations on intel.{domain}.{source}.{type};
+    captured by the INTEL stream.
+  tags:
+    - nats
+    - asyncapi
+    - intelligence
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/CLAUDE.md
+      title: Subject grammar (CLAUDE.md)
+      type: docs
+    - url: https://github.com/onemindos/omos/tree/main/platform/nats/streams
+      title: JetStream stream definitions
+      type: source
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: OneMind NATS intelligence
+      version: 1.0.0
+      description: Intelligence feed events, subject grammar in CLAUDE.md (intel.{domain}.{source}.{type}). Published by the
+        OMOS intel feeds (platform/omos/intel-scripts.yaml) as JSON with an intel envelope; no schema is published in
+        services/schemas yet.
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      intel.{domain}.{source}.{type}:
+        description: "Example: intel.conflict.acled.event, intel.seismic.usgs.<id>."
+        parameters:
+          domain:
+            description: Intelligence domain (conflict, seismic, fire, weather, disaster, natural, ...).
+            schema:
+              type: string
+          source:
+            description: Feed source (acled, usgs, firms, noaa, ...).
+            schema:
+              type: string
+          type:
+            description: Event type or id.
+            schema:
+              type: string
+        publish:
+          summary: Clients publish intelligence events.
+          message: &a1
+            name: IntelEvent
+            contentType: application/json
+            payload:
+              type: object
+              additionalProperties: true
+        subscribe:
+          summary: Clients receive intelligence events.
+          message: *a1
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: nats-service-rpc
+  title: NATS service RPC (svc.>)
+  description: Internal request/reply on svc.{service}.{endpoint}. Part of the
+    locked grammar; no stream, and no deployed caller is recorded in GitOps
+    manifests yet.
+  tags:
+    - nats
+    - asyncapi
+    - rpc
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/NATS-DOCTRINE.md
+      title: NATS doctrine (subject grammar)
+      type: docs
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: experimental
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: OneMind NATS service RPC
+      version: 1.0.0
+      description: Internal service RPC, docs/NATS-DOCTRINE.md section 2 (request/reply, no JetStream capture). Discovery for
+        agents uses $SRV (see nats-agent-protocol).
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      svc.{service}.{endpoint}:
+        description: "Example: svc.meta.task.list."
+        parameters:
+          service:
+            description: Service name.
+            schema:
+              type: string
+          endpoint:
+            description: Endpoint name.
+            schema:
+              type: string
+        publish:
+          summary: Clients send requests (reply subject set).
+          message: &a1
+            $ref: "#/components/messages/envelope"
+        subscribe:
+          summary: Services receive requests and reply.
+          message: *a1
+    components:
+      messages:
+        envelope:
+          name: OneMindEventEnvelope
+          title: OneMind event envelope v1
+          contentType: application/json
+          summary: "Canonical schema: services/schemas/envelope/envelope.schema.json (summarized here; the catalog ConfigMap does
+            not carry the schema files)."
+          payload:
+            type: object
+            required:
+              - v
+              - id
+              - ts
+              - type
+              - source
+              - subject
+              - data
+            additionalProperties: true
+            properties:
+              v:
+                type: integer
+                minimum: 1
+                description: Envelope version.
+              id:
+                type: string
+                format: uuid
+                description: UUID v4 message id.
+              ts:
+                type: string
+                format: date-time
+                description: RFC3339 timestamp, millisecond precision.
+              type:
+                type: string
+                description: Dotted type mirroring the subject grammar.
+              source:
+                type: string
+                description: Actor id that emitted the message.
+              subject:
+                type: string
+                description: NATS subject the message was published on.
+              data:
+                type: object
+                additionalProperties: true
+                description: Typed payload; schema depends on type.
+              corr:
+                type: string
+                format: uuid
+              causation:
+                type: string
+                format: uuid
+              trace:
+                type: string
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: nats-agent-protocol
+  title: NATS agent fabric (agents.>)
+  description: Synadia Agent Protocol v0.3 subjects
+    agents.{verb}.{agent}.{owner}.{session} and $SRV discovery; the AGENTS
+    stream captures heartbeats and status.
+  tags:
+    - nats
+    - asyncapi
+    - agents
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/docs/NATS-DOCTRINE.md
+      title: NATS doctrine (subject grammar)
+      type: docs
+    - url: https://github.com/onemindos/omos/tree/main/platform/nats/streams
+      title: JetStream stream definitions
+      type: source
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: OneMind NATS agent fabric
+      version: 1.0.0
+      description: "External standard: Synadia Agent Protocol v0.3 (verb-first), docs/NATS-DOCTRINE.md section 2. Callers MUST
+        read endpoint subjects from $SRV.PING.agents / $SRV.INFO.agents (stall-timeout request-many), never hardcode a
+        roster. Payloads follow the upstream protocol; no local schema."
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      agents.{verb}.{agent}.{owner}.{session}:
+        description: "Example: agents.prompt.hermes.zeus.legacy (Hermes Legacy prompt endpoint)."
+        parameters:
+          verb:
+            description: prompt | hb | status | attachments
+            schema:
+              type: string
+          agent:
+            description: Agent framework (hermes, ...).
+            schema:
+              type: string
+          owner:
+            description: Owner (zeus).
+            schema:
+              type: string
+          session:
+            description: Session or instance (legacy, ...).
+            schema:
+              type: string
+        publish:
+          summary: Callers send prompts (request/reply) or agents publish hb/status.
+          message:
+            name: AgentProtocolMessage
+            payload:
+              type: object
+              additionalProperties: true
+        subscribe:
+          summary: Agents serve prompt endpoints; observers receive hb/status.
+          message:
+            name: AgentProtocolMessage
+            payload:
+              type: object
+              additionalProperties: true
+      $SRV.PING.agents:
+        description: NATS micro discovery of agent endpoints.
+        publish:
+          summary: Discovery sweep request.
+          message:
+            name: ServicePing
+            payload:
+              type: object
+      $SRV.INFO.agents:
+        description: NATS micro endpoint info for agents.
+        publish:
+          summary: Endpoint info request.
+          message:
+            name: ServiceInfo
+            payload:
+              type: object
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: tak-cot-bridge
+  title: TAK CoT bridge (tak.cot.>)
+  description: "Cursor-on-Target between the OneMind bus and TAK Server through
+    the NatsBridgePlugin: tak.cot.inject in, tak.cot.out (tak.cot.>) out. The
+    COT stream captures tak.cot.>."
+  tags:
+    - nats
+    - asyncapi
+    - tak
+    - cot
+  links:
+    - url: https://github.com/onemindos/omos/blob/main/services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml
+      title: NatsBridgePlugin subject configuration
+      type: source
+    - url: https://github.com/onemindos/omos/blob/main/platform/nats/streams/cot.yaml
+      title: COT stream
+      type: source
+  annotations:
+    onemind.io/contract-source: docs/NATS-DOCTRINE.md; platform/nats/streams/
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: tak-ecosystem
+  definition: |
+    asyncapi: 2.6.0
+    info:
+      title: TAK CoT bridge
+      version: 1.0.0
+      description: The NatsBridgePlugin in the takserver-plugins pod subscribes to tak.cot.inject and fans CoT out to TAK
+        clients, and publishes CoT from TAK clients on tak.cot.out (natsConsumerSubject / natsProducerSubject in
+        services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml). It reaches the bus through the tak-nats-leaf
+        leaf node. Payload is CoT XML, not the JSON envelope.
+    defaultContentType: application/json
+    servers:
+      onemind-cloud:
+        url: nats.nats.svc.cluster.local:4222
+        protocol: nats
+        description: In-cluster authority bus (3-node JetStream, namespace nats). Cloud workloads connect with credentials from
+          Secrets; Hermes and edge nodes connect through a NATS leaf node.
+    channels:
+      tak.cot.inject:
+        description: CoT to inject into TAK (NatsBridgePlugin input).
+        publish:
+          summary: Producers (OMOS TAK projector and feeds, Redpanda Connect feeds) publish CoT events.
+          message:
+            $ref: "#/components/messages/cot"
+        subscribe:
+          summary: TAK Server NatsBridgePlugin consumes and fans out to TAK clients.
+          message:
+            $ref: "#/components/messages/cot"
+      tak.cot.out:
+        description: CoT from TAK clients (NatsBridgePlugin output, within tak.cot.>).
+        subscribe:
+          summary: Consumers receive CoT published by TAK Server.
+          message:
+            $ref: "#/components/messages/cot"
+    components:
+      messages:
+        cot:
+          name: CursorOnTarget
+          title: Cursor-on-Target event
+          contentType: application/xml
+          payload:
+            type: string
+            description: CoT <event> XML document.
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -6429,7 +7146,8 @@ metadata:
     - kubernetes
   title: Kubernetes system services
   description: "DOKS-managed core services: CoreDNS, konnectivity agent and
-    metrics-server. No Argo application."
+    metrics-server. Argo application platform-metrics-server adopts only
+    metrics-server."
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
@@ -6445,6 +7163,8 @@ metadata:
     onemind.io/recovery-runbook: apps/kubernetes-system/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: kube-system/coredns,kube-system/konnectivity-agent,kube-system/metrics-server
+    argocd/app-name: platform-metrics-server
+    argocd/instance-name: onemind-cloud
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6480,6 +7200,9 @@ metadata:
     onemind.io/recovery-runbook: apps/onemind-core/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: onemind-core/onemind-core,onemind-core/onemind-ingestion
+    onemind.io/api-relationship-source: services/onemind-core/onemind/ingestion.py
+      (subscribes tel.fleet.>, evt.world.>, evt.tak.cot.>), deployed as
+      onemind-core/onemind-ingestion
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6488,6 +7211,9 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: infrastructure
+  consumesApis:
+    - api:default/nats-telemetry
+    - api:default/nats-events
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -6608,6 +7334,41 @@ metadata:
     onemind.io/pillar-review: proposed
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/falco/
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: identity-access
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vaultwarden
+  tags:
+    - kubernetes
+  title: Vaultwarden
+  description: Private Vaultwarden vault (one replica, SQLite on a 5Gi volume,
+    tailnet-only HTTPS, registration disabled), deployed by Argo application
+    platform-vaultwarden.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-vaultwarden
+    argocd/instance-name: onemind-cloud
+    backstage.io/kubernetes-namespace: vaultwarden
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/component=web,app.kubernetes.io/name=vaultwarden
+    onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: vaultwarden
+    onemind.io/kubernetes-workloads: vaultwarden/vaultwarden
+    grafana/alert-label-selector: namespace=vaultwarden
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=vaultwarden
+    onemind.io/logs-query: '{k8s_namespace_name="vaultwarden"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/vaultwarden/
     github.com/project-slug: onemindos/omos
   labels:
     onemind.io/pillar: so
@@ -6782,7 +7543,7 @@ metadata:
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: ecosystem-barman
+    argocd/app-name: ecosystem-cnpg
     argocd/instance-name: onemind-cloud
     onemind.io/argocd-apps: ecosystem-barman,ecosystem-cnpg
     onemind.io/pillar-review: proposed
@@ -6935,6 +7696,7 @@ metadata:
     onemind.io/kubernetes-scope: namespace
     onemind.io/kubernetes-workloads: nats/nack,nats/nats,nats/nats-metrics-scrape
     onemind.io/prometheus-scopes: nats
+    onemind.io/api-relationship-source: platform/nats/streams/ (JetStream streams for every modeled subject family)
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6943,6 +7705,13 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
+  providesApis:
+    - api:default/nats-events
+    - api:default/nats-commands
+    - api:default/nats-telemetry
+    - api:default/nats-intel
+    - api:default/nats-service-rpc
+    - api:default/nats-agent-protocol
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -6968,6 +7737,8 @@ metadata:
     onemind.io/recovery-runbook: apps/redpanda-connect/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: omos/redpanda-connect
+    onemind.io/api-relationship-source: platform/data/redpanda-connect/deployment.yaml
+      (four pipelines publish tak.cot.inject)
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6976,6 +7747,8 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
+  consumesApis:
+    - api:default/tak-cot-bridge
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7003,6 +7776,11 @@ metadata:
     onemind.io/recovery-runbook: apps/omos-data-pipeline/
     github.com/project-slug: onemindos/omos
     onemind.io/kubernetes-workloads: omos/feed-intel,omos/feed-satellites,omos/omos-tak-projector,omos/sink-clickhouse
+    onemind.io/api-relationship-source: platform/omos/tak-projector.yaml (intel.>
+      durable consumer, cmd.projector.enable/disable, publishes tak.cot.inject);
+      platform/omos/feed-scripts.yaml (feed-satellites publishes
+      tak.cot.inject); platform/omos/intel-scripts.yaml (publishes intel.* and
+      tel.feed.*.status)
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -7011,6 +7789,11 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: messaging-nats
+  consumesApis:
+    - api:default/tak-cot-bridge
+    - api:default/nats-commands
+    - api:default/nats-intel
+    - api:default/nats-telemetry
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -7175,6 +7958,91 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: hermes-fresh
+  tags:
+    - kubernetes
+  title: Hermes (Fresh)
+  description: Independent fresh Hermes instance beside Legacy in the hermes
+    namespace (Argo application platform-hermes-fresh); no NATS sidecar, no
+    imported Legacy data.
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    argocd/app-name: platform-hermes-fresh
+    argocd/instance-name: onemind-cloud
+    backstage.io/kubernetes-namespace: hermes
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes-fresh
+    onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: hermes
+    onemind.io/kubernetes-workloads: hermes/hermes-fresh
+    grafana/alert-label-selector: namespace=hermes
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-fresh
+    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-fresh)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/hermes-fresh/
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: onemind-mcp
+  tags:
+    - kubernetes
+  title: OneMind internal app MCP
+  description: Read-only MCP server giving Hermes typed tools for in-cluster apps
+    (NATS monitoring, Prometheus); manifests in platform/hermes/mcp (Argo
+    application platform-legacy).
+  annotations:
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/structure.yaml
+    backstage.io/kubernetes-namespace: hermes
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-mcp
+    onemind.io/pillar-review: proposed
+    onemind.io/kubernetes-namespaces: hermes
+    onemind.io/kubernetes-workloads: hermes/onemind-mcp
+    grafana/alert-label-selector: namespace=hermes
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-mcp
+    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-mcp)-.*"}'
+    grafana/dashboard-selector: uid == 'onemind-workload'
+    onemind.io/recovery-runbook: apps/onemind-mcp/
+    github.com/project-slug: onemindos/omos
+    backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/services/onemind-mcp
+    onemind.io/deployment-source: platform/hermes/mcp; platform/argocd/platform-legacy.yaml
+    onemind.io/relationship-source: platform/hermes/mcp/deployment.yaml
+      (NATS_MONITOR_URL nats-0 monitoring port 8222, PROMETHEUS_URL);
+      platform/hermes/agent/onemind_mcp_config.py (Hermes Legacy client)
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
+  links:
+    - url: https://github.com/onemindos/omos/tree/main/services/onemind-mcp
+      title: Source
+      type: source
+    - url: https://github.com/onemindos/omos/blob/main/docs/operations/onemind-mcp.md
+      title: Deployment runbook
+      type: runbook
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: ai-agents
+  dependsOn:
+    - component:default/nats
+    - component:default/prometheus
+  dependencyOf:
+    - component:default/hermes-legacy
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: paperclip
   tags:
     - kubernetes
@@ -7233,3 +8101,352 @@ spec:
   lifecycle: production
   owner: group:default/onemind-admins
   system: personal-tools
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-app-of-apps
+  title: Argo CD application app-of-apps
+  description: Argo CD application app-of-apps, one of the applications that
+    deploy ArgoCD (component:default/argocd, whose primary application is
+    platform-argocd).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/app-of-apps
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: app-of-apps
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: gitops-delivery
+  dependencyOf:
+    - component:default/argocd
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-ecosystem-barman
+  title: Argo CD application ecosystem-barman
+  description: Argo CD application ecosystem-barman, one of the applications that
+    deploy CloudNativePG (component:default/cloudnative-pg, whose primary
+    application is ecosystem-cnpg).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/ecosystem-barman
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: ecosystem-barman
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: data-storage
+  dependencyOf:
+    - component:default/cloudnative-pg
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-edge-nack
+  title: Argo CD application edge-nack
+  description: Argo CD application edge-nack, one of the applications that deploy
+    NATS JetStream (component:default/nats, whose primary application is
+    platform-nats).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/edge-nack
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: edge-nack
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependencyOf:
+    - component:default/nats
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-auth-infra
+  title: Argo CD application platform-auth-infra
+  description: Argo CD application platform-auth-infra, one of the applications
+    that deploy Authentik (component:default/authentik, whose primary
+    application is platform-auth-helm).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-auth-infra
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-auth-infra
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependencyOf:
+    - component:default/authentik
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-ecosystem-applications
+  title: Argo CD application platform-ecosystem-applications
+  description: Argo CD application platform-ecosystem-applications, one of the
+    applications that deploy ArgoCD (component:default/argocd, whose primary
+    application is platform-argocd).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-ecosystem-applications
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-ecosystem-applications
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: gitops-delivery
+  dependencyOf:
+    - component:default/argocd
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-ecosystem-foundation
+  title: Argo CD application platform-ecosystem-foundation
+  description: Argo CD application platform-ecosystem-foundation, one of the
+    applications that deploy ArgoCD (component:default/argocd, whose primary
+    application is platform-argocd).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-ecosystem-foundation
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-ecosystem-foundation
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: gitops-delivery
+  dependencyOf:
+    - component:default/argocd
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-ecosystem-resources
+  title: Argo CD application platform-ecosystem-resources
+  description: Argo CD application platform-ecosystem-resources, one of the
+    applications that deploy ArgoCD (component:default/argocd, whose primary
+    application is platform-argocd).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-ecosystem-resources
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-ecosystem-resources
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: gitops-delivery
+  dependencyOf:
+    - component:default/argocd
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-nats-tools
+  title: Argo CD application platform-nats-tools
+  description: Argo CD application platform-nats-tools, one of the applications
+    that deploy NATS JetStream (component:default/nats, whose primary
+    application is platform-nats).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-nats-tools
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-nats-tools
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: messaging-nats
+  dependencyOf:
+    - component:default/nats
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-observability
+  title: Argo CD application platform-observability
+  description: Argo CD application platform-observability, one of the applications
+    that deploy ClickHouse (component:default/clickhouse, whose primary
+    application is platform-clickhouse-operator).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-observability
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-observability
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: data-storage
+  dependencyOf:
+    - component:default/clickhouse
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-security
+  title: Argo CD application platform-security
+  description: Argo CD application platform-security, one of the applications that
+    deploy Kyverno (component:default/kyverno, whose primary application is
+    ecosystem-kyverno).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-security
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-security
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: identity-access
+  dependencyOf:
+    - component:default/kyverno
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-stac-validation
+  title: Argo CD application platform-stac-validation
+  description: Argo CD application platform-stac-validation, one of the
+    applications that deploy STAC imagery catalog (component:default/stac, whose
+    primary application is platform-stac).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-stac-validation
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-stac-validation
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: geospatial
+  dependencyOf:
+    - component:default/stac
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: argocd-app-platform-volume-backups
+  title: Argo CD application platform-volume-backups
+  description: Argo CD application platform-volume-backups, one of the
+    applications that deploy Platform Backup and Recovery
+    (component:default/platform-backup-recovery, whose primary application is
+    platform-backups).
+  tags:
+    - argocd
+  links:
+    - url: https://argocd.tail717ba0.ts.net/applications/argocd/platform-volume-backups
+      title: Argo CD application
+      type: argocd
+  annotations:
+    argocd/app-name: platform-volume-backups
+    argocd/instance-name: onemind-cloud
+    onemind.io/hosting: digitalocean-nyc3
+    onemind.io/structure-source: catalog/workload-map.yaml
+    onemind.io/pillar-review: proposed
+  labels:
+    onemind.io/pillar: so
+spec:
+  type: argocd-application
+  owner: group:default/onemind-admins
+  system: data-storage
+  dependencyOf:
+    - component:default/platform-backup-recovery
