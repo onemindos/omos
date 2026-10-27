@@ -1315,3 +1315,14 @@ resource warnings during 150 seconds after sync;815-resource live engine run yie
 1446 pass / 999 expected skips / 0 fail / 0 error.153 regression tests and CI pass. The privileged
 GitHub DinD runner is a separate real open risk; do not hide it with an audit exception.
 Capacity/independent recovery remain pending owner choices. Phase 6 stays In progress.
+
+## User-directed PR merge preparation — 2026-10-27
+
+Zeus delegated straightforward owner-item preparation and requested a checked
+handoff for Claude. [Merge queue and evidence](docs/roadmap/2026-10-27-owner-merge-preparation.md)
+records #524 (redirect alias with no new OIDC callback), #534 (OMOS-only discovery)
+and #539 (source-only MCP identities) as source-review candidates. #532/#535 keep
+their documentation-release/integration holds. Destructive retention, access,
+credentials, directory visibility and admission enforcement remain distinct
+decisions. No merge, image release, activation or deployment is claimed by this
+preparation. Phase 6 remains In progress; Phases 7/8 remain Not started.

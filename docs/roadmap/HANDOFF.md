@@ -1,5 +1,11 @@
 # Handoff: continuing the platform roadmap
 
+**2026-10-27 merge-preparation update:** for the current dcarku PR batch, start
+with [owner-item merge preparation](2026-10-27-owner-merge-preparation.md).
+It records the checked source candidates (#524/#534/#539), technical holds
+(#532/#535), remaining owner choices and Claude's release order. The historical
+release observations below remain timestamped context, not current live state.
+
 Updated 2026-10-20 during the authorized portal/catalog stabilization. The authoritative tracker and
 phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).
 
