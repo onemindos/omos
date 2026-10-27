@@ -85,7 +85,7 @@ The same server reads fixed Prometheus queries for five namespaces: backstage, a
 
 Operations documentation lives in `services/onemind-portal/runbooks/`. CI generates MkDocs using pinned TechDocs CLI 1.12.0 and mkdocs-techdocs-core 1.7.1, checks metadata and search artifacts, and packages output at `/app/techdocs/default/component/onemind-runbooks`. The existing external builder and local filesystem publisher serve this immutable release content from the self-hosted portal. A failed docs build blocks the image release. Docs changes require a new image digest; Git and prior images provide recovery, and no cloud publishing credentials are added.
 
-TechDocs search uses the existing PostgreSQL search engine and collates every minute. The catalog documentation entity appears in Docs; selected critical-service entries have runbook links. Documentation is versioned with the portal, does not require Notion, and requires host reachability rather than promising offline browser access. These runbooks distinguish verified configuration from untested data recovery and historical Fabric notes.
+TechDocs search uses the existing PostgreSQL search engine and collates every 15 minutes, plus 30 seconds after each pod start (docs only change with a new image). The catalog documentation entity appears in Docs; selected critical-service entries have runbook links. Documentation is versioned with the portal, does not require Notion, and requires host reachability rather than promising offline browser access. These runbooks distinguish verified configuration from untested data recovery and historical Fabric notes.
 
 ## Native Events bus across replicas
 

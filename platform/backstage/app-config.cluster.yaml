@@ -14,10 +14,13 @@ kubernetes:
     - resourcequotas
 search:
   collators:
+    # TechDocs are packaged in the image and only change with a new digest; a rollout
+    # restarts the pods, so initialDelay re-indexes each release. adr, announcements and
+    # software-catalog keep their module defaults (every 10 minutes).
     techdocs:
       schedule:
-        frequency: {minutes: 1}
-        timeout: {seconds: 50}
+        frequency: {minutes: 15}
+        timeout: {minutes: 5}
         initialDelay: {seconds: 30}
 
 backend:
