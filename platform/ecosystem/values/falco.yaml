@@ -56,6 +56,18 @@ customRules:
             - [backstage, ghcr.io/onemindos/onemind-portal, node]
       override:
         exceptions: append
+    # Self-hosted CI runner executes tools unpacked into its tool cache (Python,
+    # pip, node): all 298 Critical "Drop and execute new binary" events in the
+    # same 24h sample. Scoped to that namespace and path only.
+    - rule: Drop and execute new binary in container
+      exceptions:
+        - name: omos_github_runner_toolcache
+          fields: [k8s.ns.name, proc.exepath]
+          comps: [=, startswith]
+          values:
+            - [github-runner, /opt/hostedtoolcache/]
+      override:
+        exceptions: append
 falcoctl:
   artifact:
     install:
