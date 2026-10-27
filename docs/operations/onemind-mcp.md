@@ -154,3 +154,64 @@ rotate: update that repository secret, run the workflow, commit its sealed artif
 and sync GitOps. Track the token's chosen expiration in the password manager. The
 registry token is used by Kubernetes image pulling, not loaded into the AI agent.
 SDK 2 acceptance compatibility and fail-fast checks were completed by #492/#493.
+
+## Broad app coverage expansion
+
+The initial four-tool deployment covers NATS and Prometheus only. The expansion
+adds searchable inventory and descriptions, STAC imagery collections/search,
+Ollama installed/running models, active Alertmanager alerts, bounded Loki log
+queries, OpenCost namespace allocations with MediaMTX stream status blocked by API authentication. This is 12
+callable tools across seven configured apps, including the original integrations.
+Configured is a deployment setting, not proof of upstream health. The acceptance
+workflow checks each exposed tool without exporting application content.
+
+`platform/hermes/mcp/apps.yaml` accounts for 32 application/access domains. Entries
+without credentials, reviewed APIs or authorization stay **blocked**, are visible
+to `apps_list`/`apps_describe`, and register no callable tools. This does not claim
+that all applications are integrated. Nextcloud, Matrix, TAK HTTP, portal federation,
+WebODM and other adapters remain explicit implementation work. Existing Legacy
+bus/TAK tools remain separate. No user-file scraping or database backdoor is added.
+
+Karakeep bookmark read/search/save, n8n workflow/execution summaries, Paperclip
+company/issue read and backlog creation, Grafana dashboard search and Tempo trace
+lookup have adapters in source. They are blocked pending the requirements recorded
+on each catalog entry. Dedicated user/service identities are required; the registry
+pull PAT, app admin credentials and model provider keys are not app API identities.
+For n8n the transport uses `X-N8N-API-KEY`, not Bearer authentication.
+
+Write tools are omitted unless the administrator explicitly sets `allow_writes:
+true` on that app, supplies its dedicated credentials, and verifies network ingress
+and end-to-end permissions. Write annotations are non-read-only/non-idempotent;
+creation retries can duplicate records. The prepared deployment enables no writes.
+Vault content, identity administration and physical actuation require separately
+scoped authorization. "All apps" does not silently grant those privileges.
+
+`coverage.yaml` maps all 56 Git-declared Argo Applications to their owning app or
+supporting infrastructure disposition. The quality gate fails if a new Application
+has no disposition, if an old one disappears without a coverage update, or if a
+mapping points to a missing catalog entry. This is source inventory, not a count of
+live Applications or ApplicationSet-generated children. Supporting Postgres,
+Redis, operators, ingress and backup agents stay behind purpose-specific app APIs.
+
+New app checklist: add the app access entry and coverage mapping, reuse a reviewed
+adapter or implement typed operations, provision a dedicated least-privilege app
+identity with SealedSecrets, allow both network directions only for the intended
+pod/port, add boundary tests, pin the built image and run live acceptance from
+Legacy. Optional/blocked entries must not make otherwise healthy tools unavailable.
+
+Expansion preflight: STAC, Alertmanager, Loki and OpenCost returned HTTP 200 from
+Legacy. MediaMTX returned 401 and stays blocked. Direct Legacy-to-Ollama timed out
+under the gateway-only ingress policy; the expansion adds an MCP-pod-only ingress
+exception for inventory reads, preserving the existing gateway rule. Legacy direct
+access stays denied. Runtime acceptance from the MCP must confirm that exception.
+
+The Legacy toolset-revision environment marker rolls its gateway after MCP readiness
+so startup MCP discovery includes the new tools. Bump it when adding/removing tools.
+
+Follow-through is tracked in [the complete app integration checklist](https://github.com/onemindos/omos/issues/543).
+The expansion rollout serves the new catalog and tools; acceptance found that Loki's
+Service port 80 forwards to gateway pod port 8080. The egress policy must allow
+**8080**, scoped to Loki gateway pods. The pinned Loki 7.0.0 chart confirms this
+mapping. Do not use Service ports as NetworkPolicy destination ports without
+checking targetPort. Initial acceptance must wait for Legacy's toolset revision,
+rather than testing its old startup cache while Argo is still rolling it.

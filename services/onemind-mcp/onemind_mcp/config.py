@@ -2,6 +2,7 @@
 import os
 import re
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlsplit
 
 import yaml
@@ -13,9 +14,13 @@ MAX_NODES = 8
 class App(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str = Field(pattern=r"^[a-z][a-z0-9_]{0,31}$")
-    adapter: str
+    adapter: str | None = None
+    enabled: bool = True
+    blocked_reason: str | None = Field(default=None, max_length=500)
+    allow_writes: bool = False
     description: str = Field(min_length=1, max_length=300)
-    url_env: str
+    url_env: str | None = None
+    auth_header: Literal["Authorization", "X-N8N-API-KEY"] = "Authorization"
     token_env: str | None = None
 
     @field_validator("url_env", "token_env")
@@ -38,12 +43,18 @@ class App(BaseModel):
             raise ValueError(f"{self.id}: missing {self.token_env}")
         return token
 
+    def _url_env(self) -> str:
+        if not self.url_env:
+            raise ValueError(f"{self.id}: enabled app requires url_env")
+        return self.url_env
+
     def connection(self) -> tuple[str, str | None]:
-        return self._base_url(os.environ.get(self.url_env, ""), self.url_env), self._token()
+        url_env = self._url_env()
+        return self._base_url(os.environ.get(url_env, ""), url_env), self._token()
 
     def connections(self) -> list[tuple[str, str | None]]:
         """Every node of a multi-node app: comma-separated `<url_env>S` when set, else `url_env`."""
-        env = f"{self.url_env}S"
+        env = f"{self._url_env()}S"
         urls = [url.strip() for url in os.environ.get(env, "").split(",") if url.strip()]
         if not urls:
             return [self.connection()]
