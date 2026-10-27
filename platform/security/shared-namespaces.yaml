@@ -72,3 +72,95 @@ metadata:
     volsync.backube/privileged-movers: 'true'
   labels:
     onemind.io/layer: system
+---
+# The namespaces below are created by an Application with CreateNamespace=true (or, for
+# matrix, by nothing in Git) that does not ship its own labelled Namespace. They are labelled
+# here, not in a second Application, so that the label is always applied in the same sync as,
+# and before, the Enforce ClusterPolicies in kyverno-policies-audit.yaml (wave 5). On a rebuild
+# from zero no namespace can be created unlabelled after Kyverno starts enforcing.
+# scripts/tests/test_gitops_kyverno_history.py (NamespaceBootstrap) keeps this true.
+# Moved from platform/backups/volsync/namespaces.yaml (VolSync privileged movers need the annotation).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: clickhouse
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/layer: make-sense
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/layer: guard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nats
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/layer: data
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: takserver
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/layer: sense
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: matrix
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/layer: act
+---
+# Moved from platform/ecosystem/resources/namespaces.yaml (the site/ecosystem labels are kept).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-core
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+    onemind.io/layer: make-sense
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onemind-ai
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+    volsync.backube/privileged-movers: 'true'
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+    onemind.io/layer: decide
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velero
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false,Replace=false,Force=false
+  labels:
+    onemind.io/site: cloud
+    onemind.io/ecosystem: cpu
+    onemind.io/layer: guard

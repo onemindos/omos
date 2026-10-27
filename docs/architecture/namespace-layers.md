@@ -32,11 +32,19 @@ Application that does not prune it:
 
 | File | Application | Namespaces |
 |---|---|---|
-| `platform/security/shared-namespaces.yaml` | `platform-security` | `argocd`, `cert-manager`, `ingress-nginx`, `tailscale`, `cnpg-system`, `keda`, `opencost`, `dapr-system` |
+| `platform/security/shared-namespaces.yaml` | `platform-security` | `argocd`, `cert-manager`, `ingress-nginx`, `tailscale`, `cnpg-system`, `keda`, `opencost`, `dapr-system`, `clickhouse`, `matrix`, `monitoring`, `nats`, `takserver`, `onemind-ai`, `onemind-core`, `velero` |
 | `platform/security/namespaces.yaml` | `platform-security` | `kyverno`, `falco` |
-| `platform/ecosystem/resources/namespaces.yaml` | `platform-ecosystem-resources` | `default`, `onemind-ai`, `onemind-core`, `onemind-data`, `velero` |
+| `platform/ecosystem/resources/namespaces.yaml` | `platform-ecosystem-resources` | `default`, `onemind-data` |
 | `platform/ecosystem/resources/retained-recovery.yaml` | `platform-ecosystem-resources` | `onemind-search`, `openchoreo-observability-plane` |
-| `platform/backups/volsync/namespaces.yaml` | `platform-volume-backups` | `clickhouse`, `matrix`, `monitoring`, `nats`, `takserver` |
+
+If an Application creates the namespace with `CreateNamespace=true` and does not ship its own
+labelled Namespace, label it in `platform/security/shared-namespaces.yaml`, not in another
+Application. `platform-security` applies those Namespaces in the same sync as, and before, the
+Enforce ClusterPolicies (wave 5), so on a rebuild from zero no namespace is ever created
+unlabelled after Kyverno starts enforcing. The one exception is `omos`: it is labelled by
+`platform-omos`, which prunes, so `platform-redpanda-connect` (same namespace) sets
+`managedNamespaceMetadata` with the same labels instead. `NamespaceBootstrap` in
+`scripts/tests/test_gitops_kyverno_history.py` fails CI if a new Application breaks this.
 
 To label another such namespace, add it to one of these files. Do not also set
 `managedNamespaceMetadata` on an Application whose namespace is listed here: Argo CD 3.4 then

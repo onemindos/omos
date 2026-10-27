@@ -106,14 +106,15 @@ Argo CD itself is a Helm-CLI release, not self-managed (gap G3). Chart `argo-cd`
 6. Once `platform-security` (wave 4) is up, Kyverno enforces two policies from
    `platform/security/kyverno-policies-audit.yaml`: admission denies a namespace without
    `onemind.io/layer` and an untagged or `:latest` image.
-   - Argo `CreateNamespace=true` creates a bare namespace. `clickhouse`, `matrix`, `monitoring`,
-     `nats` and `takserver` get their label only when `platform-volume-backups` (wave 6) syncs, so
-     if you hold apps back (item 5, Step 6), an Application that targets one of them can fail with
-     `denied the request` naming `onemind.io/layer`. Apply `platform/backups/volsync/namespaces.yaml`
-     by hand (it holds only those Namespaces, no backup objects), then sync the failed Application
-     again: Argo retries a failed automated sync only a few times within minutes and does not start
-     a new one for the same Git revision. `docs/architecture/namespace-layers.md` lists the files
-     that label the namespaces other Applications create.
+   - Argo `CreateNamespace=true` creates a bare namespace. Every namespace that an Application
+     creates this way without shipping its own labelled Namespace is labelled by `platform-security`
+     (`platform/security/shared-namespaces.yaml`) in the same sync as, and before, the policies, or
+     (only `omos`, via `platform-redpanda-connect`) by `managedNamespaceMetadata`. So holding apps
+     back (item 5, Step 6) cannot make a namespace create fail. If an Application still fails with
+     `denied the request` naming `onemind.io/layer`, sync `platform-security` and then that
+     Application again: Argo retries a failed automated sync only a few times within minutes and
+     does not start a new one for the same Git revision. `docs/architecture/namespace-layers.md`
+     lists the files that label the namespaces other Applications create.
    - Helm-CLI installs (Steps 5, 7 and 8) go into the existing labelled namespace without
      `--create-namespace`. Helm sends its own unlabelled create even when the namespace exists,
      and Kyverno denies it.
