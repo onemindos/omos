@@ -8,6 +8,7 @@ import importlib.util
 import importlib
 import json
 import os
+import sys
 from pathlib import Path
 import urllib.error
 import urllib.request
@@ -21,6 +22,8 @@ def fetch(url):
 
 def main():
     report = {"upstreams": {}}
+    if len(sys.argv) > 1:
+        report["hermes_image_id"] = sys.argv[1]
     for name, url in {
         "nats": "http://nats-0.nats-headless.nats.svc.cluster.local:8222/varz",
         "prometheus": "http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/query?query=up&limit=1",

@@ -89,7 +89,8 @@ jobs:
           POD=$(kubectl -n hermes get pod -l app.kubernetes.io/name=hermes,onemind.io/agent=legacy \
             -o jsonpath='{.items[0].metadata.name}')
           test -n "$POD"
-          kubectl -n hermes exec -i "$POD" -c hermes -- /opt/hermes/.venv/bin/python - \
+          IMAGE_ID=$(kubectl -n hermes get pod "$POD" -o jsonpath='{.status.containerStatuses[?(@.name=="hermes")].imageID}')
+          kubectl -n hermes exec -i "$POD" -c hermes -- /opt/hermes/.venv/bin/python - "$IMAGE_ID" \
             < scripts/onemind_mcp_probe.py > "$RUNNER_TEMP/mcp-preflight.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

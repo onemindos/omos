@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: onemind-mcp
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -35,7 +37,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: mcp
-          image: onemind-mcp:UNSET
+          image: ghcr.io/onemindos/onemind-mcp@sha256:80fa67bc138006bd1efc0dc849504910b4068667036d880cba9d0c71afb762cc
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
