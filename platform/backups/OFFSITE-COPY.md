@@ -54,6 +54,7 @@ Not covered: provider Droplet/volume snapshots, the laptop recovery mirror
 
 - The CronJob is named `backup-offsite-copy`, so the existing `ScheduledBackupOverdue`
   alert (no successful run within 30 h, while not suspended) covers it unchanged.
+  While it is suspended, `CriticalBackupScheduleSuspended` fires after 7 days instead.
 - `OffsiteBackupCopyFailed` (added to `platform/monitoring/backup-health.yaml`) fires
   5 minutes after any failed Job; finished Jobs are garbage-collected after 24 h.
 - A successful run proves presence and size, not restorability. Periodically run

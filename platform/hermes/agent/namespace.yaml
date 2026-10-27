@@ -8,3 +8,5 @@ metadata:
     app.kubernetes.io/part-of: onemind
     onemind.io/component: legacy-agent
     onemind.io/layer: decide
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

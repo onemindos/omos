@@ -2,7 +2,7 @@
 apps:
 - id: nats
   adapter: nats
-  description: NATS node and JetStream statistics (read only, one node per request)
+  description: NATS node and JetStream statistics (read only, one node per call, any of the 3 nodes)
   url_env: NATS_MONITOR_URL
 - id: prometheus
   adapter: prometheus

@@ -13,7 +13,11 @@ replace app APIs, operate Kubernetes, or grant access to every app automatically
 - Credential-gated adapters for bookmarks, workflows, Paperclip, Grafana, Tempo and MediaMTX.
 - `onemind://apps` exposes the same catalog as a resource.
 - NATS: `nats_server_stats`, `nats_jetstream_stats`. Each reports one node, not a
-  cluster aggregate. No message reading, publishing or administrative operations.
+  cluster aggregate, and names it in `node`. Set `NATS_MONITOR_URLS` (comma-separated,
+  at most 8) to list every node; it falls back to `NATS_MONITOR_URL`. An optional
+  `node` argument (e.g. `nats-1`) reads one node; without it the first reachable node
+  answers and skipped nodes appear in `unavailable_nodes`. No message reading,
+  publishing or administrative operations.
 - Prometheus: `prometheus_query`. Instant PromQL, 5-second server-side timeout,
   100-series limit, 1 MiB response limit, no administrative endpoints.
 - A bearer token per client, audited by client name; no anonymous MCP access. See
@@ -73,6 +77,8 @@ can call every configured read tool.
    credentials and unnecessary private configuration.
 3. Register that module in `adapters/ADAPTERS`, then add an `id`, `adapter`,
    `description`, `url_env`, and optional `token_env` to `platform/hermes/mcp/apps.yaml`.
+   Multi-node adapters (listed in `adapters.MULTI_NODE`) receive one upstream per URL
+   in `<url_env>S`; other adapters refuse a URL list.
    IDs prefix tool names, allowing multiple instances without collisions. An
    existing adapter can be reused by adding only a new catalog entry and env vars.
 4. Set the new URL and least-privilege credential through the deployment and a

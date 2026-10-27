@@ -265,3 +265,95 @@ def test_add_app_instance_without_core_changes(setup, monkeypatch):
         names = {t["name"] for t in rpc(client, "tools/list")["result"]["tools"]}
         assert "edge_server_stats" in names
         assert "edge_jetstream_stats" in names
+
+
+NODES = [f"http://nats-{i}.nats-headless.nats.svc.cluster.local:8222" for i in range(3)]
+
+
+def nats_call(client, tool, arguments=None):
+    result = rpc(client, "tools/call", {"name": tool, "arguments": arguments or {}})["result"]
+    return result, (None if result.get("isError") else json.loads(result["content"][0]["text"]))
+
+
+def test_single_url_fallback_names_node(setup):
+    with TestClient(build(setup, lambda r: httpx.Response(200, json={"server_name": "nats-0"}))) as client:
+        _, data = nats_call(client, "nats_server_stats")
+    assert data == {"node": "nats", "server_name": "nats-0"}
+
+
+def test_multinode_schema_is_backward_compatible(setup, monkeypatch):
+    monkeypatch.setenv("NATS_MONITOR_URLS", ",".join(NODES))
+    with TestClient(build(setup, lambda r: httpx.Response(200, json={}))) as client:
+        tools = {t["name"]: t for t in rpc(client, "tools/list")["result"]["tools"]}
+    for name in ("nats_server_stats", "nats_jetstream_stats"):
+        schema = tools[name]["inputSchema"]
+        assert "node" in schema["properties"]
+        assert "node" not in schema.get("required", [])
+        assert "nats-0, nats-1, nats-2" in json.dumps(schema)
+        assert "svc.cluster.local" not in json.dumps(tools[name])
+
+
+@pytest.mark.parametrize("failure", ["http_500", "connect_error"])
+def test_multinode_fails_over_in_order(setup, monkeypatch, failure):
+    monkeypatch.setenv("NATS_MONITOR_URLS", " , ".join(NODES))
+    requests = []
+    def handler(request):
+        requests.append(request.url.host.split(".")[0])
+        if request.url.host.startswith("nats-0."):
+            if failure == "connect_error":
+                raise httpx.ConnectError("nats-0 secret detail", request=request)
+            return httpx.Response(500)
+        return httpx.Response(200, json={"server_id": "nats-1", "streams": 39, "config": {"x": 1}})
+    with TestClient(build(setup, handler)) as client:
+        _, data = nats_call(client, "nats_jetstream_stats")
+    assert data == {"node": "nats-1", "server_id": "nats-1", "streams": 39, "unavailable_nodes": ["nats-0"]}
+    assert requests == ["nats-0", "nats-1"]
+
+
+def test_multinode_explicit_node_does_not_fail_over(setup, monkeypatch):
+    monkeypatch.setenv("NATS_MONITOR_URLS", ",".join(NODES))
+    requests = []
+    def handler(request):
+        requests.append(request.url.host.split(".")[0])
+        if request.url.host.startswith("nats-1."):
+            return httpx.Response(503)
+        return httpx.Response(200, json={"server_name": request.url.host.split(".")[0]})
+    with TestClient(build(setup, handler)) as client:
+        _, data = nats_call(client, "nats_server_stats", {"node": "nats-2"})
+        assert data == {"node": "nats-2", "server_name": "nats-2"}
+        result, _ = nats_call(client, "nats_server_stats", {"node": "nats-1"})
+        assert result["isError"]
+        unknown, _ = nats_call(client, "nats_server_stats", {"node": "nats-9"})
+        assert unknown["isError"]
+        assert "nats-0, nats-1, nats-2" in json.dumps(unknown)
+    assert requests == ["nats-2", "nats-1"]
+
+
+def test_multinode_all_down_is_bounded_error(setup, monkeypatch):
+    monkeypatch.setenv("NATS_MONITOR_URLS", ",".join(NODES))
+    def handler(request):
+        raise httpx.ConnectError(f"refused {TOKEN}", request=request)
+    with TestClient(build(setup, handler)) as client:
+        result, _ = nats_call(client, "nats_server_stats")
+    assert result["isError"]
+    text = json.dumps(result)
+    assert "nats-0, nats-1, nats-2" in text
+    assert TOKEN not in text and "svc.cluster.local" not in text
+
+
+def test_multinode_url_list_validation(setup, monkeypatch):
+    monkeypatch.delenv("NATS_MONITOR_URL")
+    monkeypatch.setenv("NATS_MONITOR_URLS", f"{NODES[0]},{NODES[0]}/")
+    assert setup.apps[0].connections() == [(NODES[0], None)]
+    monkeypatch.setenv("NATS_MONITOR_URLS", f"{NODES[0]},http://user:pw@nats-1:8222")
+    with pytest.raises(ValueError, match="NATS_MONITOR_URLS"):
+        create_app(setup, TOKEN, ["testserver"])
+    monkeypatch.setenv("NATS_MONITOR_URLS", ",".join(f"http://n{i}:8222" for i in range(9)))
+    with pytest.raises(ValueError, match="more than 8"):
+        create_app(setup, TOKEN, ["testserver"])
+
+
+def test_single_node_adapter_rejects_url_list(setup, monkeypatch):
+    monkeypatch.setenv("PROMETHEUS_URLS", "http://p0:9090,http://p1:9090")
+    with pytest.raises(ValueError, match="accepts one URL"):
+        create_app(setup, TOKEN, ["testserver"])

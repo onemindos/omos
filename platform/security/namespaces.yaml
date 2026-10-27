@@ -8,6 +8,8 @@ metadata:
   name: kyverno
   labels:
     onemind.io/layer: guard
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 apiVersion: v1
 kind: Namespace

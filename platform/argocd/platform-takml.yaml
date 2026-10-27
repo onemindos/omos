@@ -43,12 +43,13 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  # Container resources are not ignored: Git is the source of truth for them, and
+  # ignoring them meant a resources-only change never triggered a sync.
   ignoreDifferences:
     - group: apps
       kind: Deployment
       jsonPointers:
         - /spec/template/metadata/annotations
-        - /spec/template/spec/containers/0/resources
     - group: ""
       kind: PersistentVolumeClaim
       jsonPointers:
