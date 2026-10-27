@@ -439,6 +439,8 @@ metadata:
     - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3b9d0cf70a7e8158815be14e14b0f162.md
       title: "Archived registry: ArgoCD"
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/argocd/
     onemind.io/access-points: |-
       [
         {
@@ -793,6 +795,8 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/nats/
       title: Operations runbook
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/hermes/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/relationship-source: ingress-service-selector
     onemind.io/inventory-review: imported-link
@@ -1219,6 +1223,8 @@ metadata:
     - url: https://onemind-preview.tail717ba0.ts.net/docs/default/component/onemind-runbooks/tak/
       title: Operations runbook
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/tak-server/
     onemind.io/launcher-reviewed-at: "2026-10-20T08:02:51.107324+00:00"
     onemind.io/launcher-review: certificate-untrusted-from-operator-mac
     onemind.io/inventory-review: imported-link
@@ -3836,6 +3842,8 @@ metadata:
     - backup
     - recovery
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     argocd/app-name: platform-backups
     backstage.io/source-location: url:https://github.com/onemindos/omos/tree/main/platform/backups
     onemind.io/verified-at: 2026-10-08
@@ -6230,6 +6238,8 @@ metadata:
   description: Sealed Secrets controller, GitHub runner and Tailscale policy (Argo
     application platform-core).
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/sealed-secrets/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-core
@@ -6262,6 +6272,8 @@ metadata:
   title: cert-manager
   description: Certificate management for the cluster.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/cert-manager/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: edge-cert-manager
@@ -6295,6 +6307,8 @@ metadata:
   title: ingress-nginx
   description: Public ingress controller.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/ingress-nginx/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: edge-ingress-nginx
@@ -6498,6 +6512,8 @@ metadata:
   title: Authentik
   description: Identity provider (server, worker, Redis, PostgreSQL).
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/authentik/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-auth-helm
@@ -6754,6 +6770,8 @@ metadata:
   title: Cluster health observer
   description: Read-only five-minute cluster health observer (platform-ops).
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-ops
@@ -6814,6 +6832,8 @@ metadata:
   title: Velero
   description: Cluster backup and restore.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: ecosystem-velero
@@ -6882,6 +6902,8 @@ metadata:
   title: VolSync
   description: Volume replication and backup controller.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/backups-ops/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-volsync
@@ -6916,6 +6938,8 @@ metadata:
   description: The authority message bus (3-node JetStream), the NACK controller
     and NATS tools.
   annotations:
+    backstage.io/techdocs-entity: component:default/onemind-runbooks
+    backstage.io/techdocs-entity-path: /tier1/nats/
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-nats
