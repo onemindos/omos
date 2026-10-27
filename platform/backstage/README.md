@@ -18,7 +18,20 @@ Cluster OIDC requests use the existing Tailscale egress ProxyGroup. CoreDNS rewr
 
 Backstage serves one origin, `PORTAL_URL` in `deployment.yaml`. It sets `app.baseUrl`, `backend.baseUrl` and the CORS origin, and the auth backend builds the OIDC callback from it. Each of these takes a single value. A page loaded from a second host would call the API at `backend.baseUrl` cross-origin, which the CORS origin and CSP `connect-src 'self'` block, so a second host cannot serve the portal itself.
 
-`portal` is a tailnet alias (`portal-redirect.yaml`). Its Tailscale Ingress reaches a small nginx that answers every request with a 302 to the same path and query on `PORTAL_URL`; only that Ingress proxy can reach it, and it has no egress. The redirect is temporary so browsers do not cache it. Use the canonical host for API, MCP and OAuth clients. To make `portal` canonical later, add `https://portal.tail717ba0.ts.net/api/auth/oidc/handler/frame` to the Authentik `onemind-backstage` provider first, then in one change set `PORTAL_URL` to the portal host, point the `portal` Ingress at the `backstage` Service and make `onemind-preview` the redirect. `scripts/tests/test_gitops_portal_alias.py` fails if the redirect target and `PORTAL_URL` drift apart.
+`portal` is a tailnet alias (`portal-redirect.yaml`). Its Tailscale Ingress reaches
+a small nginx that answers every request except `/healthz` with a 302 to the same
+path and query on `PORTAL_URL`; `/healthz` returns 200 for probes. Only that Ingress
+proxy can reach it, and it has no egress. Use the canonical host for API, MCP and
+OAuth clients. `scripts/tests/test_gitops_portal_alias.py` fails if the redirect
+target and `PORTAL_URL` drift apart.
+
+To make `portal` canonical in a separate change, add its
+`https://portal.tail717ba0.ts.net/api/auth/oidc/handler/frame` callback to the
+Authentik `onemind-backstage` provider first. Then update `PORTAL_URL`, route the
+`portal` Ingress to the `backstage` Service, and move the redirect to
+`onemind-preview`, targeting `portal`. Update the alias contracts, the provider
+bootstrap payload and catalog links in that same change. The current temporary
+redirect avoids a permanent redirect back to the old canonical hostname.
 
 **Merge and rollout checks:** confirm that no existing tailnet device or Tailscale
 Ingress claims `portal`. This redirect keeps Backstage's origin and OIDC callback
