@@ -8,6 +8,7 @@ import importlib.util
 import importlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 import urllib.error
@@ -46,6 +47,20 @@ def main():
                         "diagnostic_flags": [word for word in ("unauthorized", "denied", "not found", "secret", "permission", "pull") if word in message],
                         "last_exit_code": container.get("lastState", {}).get("terminated", {}).get("exitCode"),
                     })
+                events = kube.get("https://kubernetes.default.svc/api/v1/namespaces/hermes/events",
+                                  params={"fieldSelector": "involvedObject.name=" + row["name"]})
+                row["pull_events"] = []
+                if events.status_code == 200:
+                    for event in events.json().get("items", []):
+                        message = event.get("message", "").lower()
+                        row["pull_events"].append({
+                            "reason": event.get("reason"),
+                            "http_status_codes": re.findall(r"\b(?:401|403|404|429|500|502|503)\b", message),
+                            "diagnostic_flags": [word for word in (
+                                "unauthorized", "forbidden", "denied", "not found", "manifest unknown",
+                                "i/o timeout", "no such host", "x509", "connection refused", "secret",
+                            ) if word in message],
+                        })
                 pods.append(row)
             report["mcp_pods"] = pods
     except Exception as error:
