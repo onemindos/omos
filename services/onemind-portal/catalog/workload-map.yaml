@@ -189,6 +189,7 @@ argoApplications:
   platform-monitoring: component:default/grafana
   platform-n8n: component:default/n8n
   platform-nats: component:default/nats
+  platform-nats-streams: component:default/nats
   platform-nats-tools: component:default/nats
   platform-nextcloud: component:default/nextcloud
   platform-observability: component:default/clickhouse
