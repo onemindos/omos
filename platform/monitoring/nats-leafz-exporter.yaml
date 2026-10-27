@@ -8,8 +8,9 @@
 #
 # A hub server lists only the leaves connected to it, so each pod is polled by its
 # nats-headless DNS name; the nats-monitor Service would answer from one random pod. The
-# "nats-N," prefix becomes the server_id label; add a line if the StatefulSet grows. The
-# monitor port is read-only plain HTTP, so no credentials are involved.
+# "nats-N," prefix becomes the server_id label. If the StatefulSet grows, add a line and
+# raise the 3 in NATSLeafzHubUnreadable. The monitor port is read-only plain HTTP, so no
+# credentials are involved.
 ---
 apiVersion: v1
 kind: Service

@@ -18,7 +18,8 @@ spec:
     #
     # Each leaf rule fires only while the exporter reads at least one hub server (the
     # "and on() count(...)" guard), so an exporter outage raises NATSLeafzExporterDown
-    # instead of a NATSLeafnodeDown for every leaf.
+    # instead of a NATSLeafnodeDown for every leaf. When it reads only some servers, a leaf
+    # on an unread server looks disconnected; NATSLeafzHubUnreadable reports that case.
     # All leaves share one severity: the stack's default inhibit rules match on alertname,
     # so a critical NATSLeafnodeDown would hide the warning ones. Summaries spell out the
     # leaf name: annotation templates see only the expression's labels, not the static
@@ -69,3 +70,21 @@ spec:
           annotations:
             summary: "NATS leafnode metrics are not being collected"
             description: "nats-leafz-exporter is not scraped or cannot read /leafz on any hub server, so NATSLeafnodeDown is blind."
+
+        # The exporter skips a hub server whose /leafz it cannot read, without failing the
+        # scrape or logging at its default level. 3 is the number of servers listed in
+        # nats-leafz-exporter.yaml. 5m, like the fastest leaf rule, so this arrives no later
+        # than a NATSLeafnodeDown it explains.
+        - alert: NATSLeafzHubUnreadable
+          expr: count(gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"}) < 3
+          for: 5m
+          labels:
+            severity: warning
+            service: nats
+          annotations:
+            summary: "nats-leafz-exporter reads /leafz on only {{ $value }} of 3 NATS hub servers"
+            description: >-
+              A leaf connected to an unread hub server looks disconnected, so a NATSLeafnodeDown firing
+              alongside this may be false. Find the missing server_id with
+              gnatsd_leafz_conn_nodes_total{job="nats-leafz-exporter"}, then check that nats pod and its
+              monitor port 8222.
