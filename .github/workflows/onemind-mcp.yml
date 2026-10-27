@@ -130,9 +130,14 @@ jobs:
           for attempt in $(seq 1 16); do
             POD=$(kubectl -n hermes get pod -l app.kubernetes.io/name=hermes,onemind.io/agent=legacy \
               -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)
-            if [ -n "$POD" ] && kubectl -n hermes exec -i "$POD" -c hermes -- /opt/hermes/.venv/bin/python - \
-              < scripts/onemind_mcp_acceptance.py | tee "$RUNNER_TEMP/mcp-acceptance.json"; then
-              exit 0
+            if [ -n "$POD" ]; then
+              set +e
+              kubectl -n hermes exec -i "$POD" -c hermes -- /opt/hermes/.venv/bin/python - \
+                < scripts/onemind_mcp_acceptance.py | tee "$RUNNER_TEMP/mcp-acceptance.json"
+              check_status=${PIPESTATUS[0]}
+              set -e
+              if [ "$check_status" -eq 0 ]; then exit 0; fi
+              if [ "$check_status" -eq 78 ]; then exit 78; fi
             fi
             echo "Waiting for GitOps rollout (attempt ${attempt}/16)"
             sleep 10
