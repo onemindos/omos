@@ -153,15 +153,17 @@ spec:
           ports:
             - name: http
               containerPort: 8234
-          # 2026-09-28: requests/limits adjusted to actual pod usage (92% node imbalance)
-          # Measured usage: 508Mi.
+          # 2026-10-27: measured steady-state usage 507Mi (kubectl top), i.e. 79% of the
+          # old 640Mi limit. Request now covers usage; limit leaves ~50% headroom.
+          # No -Xmx is set, so the JVM default heap cap is 25% of the limit (192Mi);
+          # most of the footprint is non-heap (ONNX Runtime / PyTorch native code).
           resources:
             requests:
               cpu: 500m
-              memory: 305Mi        # ~60% of measured usage
+              memory: 512Mi
             limits:
               cpu: "2"
-              memory: 640Mi        # ~usage + ~26% headroom
+              memory: 768Mi
           startupProbe:
             tcpSocket:
               port: 8234
@@ -276,10 +278,12 @@ spec:
             - name: FEEDS
               # feeds served by onetak-media (MediaMTX). Streams auto-register on publish.
               value: '{"drone1":"rtsp://onetak-media.onetak.svc.cluster.local:8554/drone1","takcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/takcam","helmcam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/helmcam","maccam":"rtsp://onetak-media.onetak.svc.cluster.local:8554/maccam"}'  # yamllint disable-line rule:line-length
+          # 2026-10-27: measured 265Mi with no feed publishing (all FEEDS paths 404);
+          # the 1Gi limit is kept for inference spikes when streams are live.
           resources:
             requests:
               cpu: 50m
-              memory: 512Mi
+              memory: 320Mi
             limits:
               cpu: "2"
               memory: 1Gi
