@@ -13,6 +13,8 @@ from pathlib import Path
 import urllib.error
 import urllib.request
 
+import httpx
+
 
 def fetch(url):
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -24,6 +26,30 @@ def main():
     report = {"upstreams": {}}
     if len(sys.argv) > 1:
         report["hermes_image_id"] = sys.argv[1]
+    identity = Path("/var/run/secrets/kubernetes.io/serviceaccount")
+    try:
+        with httpx.Client(verify=str(identity / "ca.crt"), trust_env=False,
+                          headers={"Authorization": "Bearer " + (identity / "token").read_text()}, timeout=10) as kube:
+            response = kube.get("https://kubernetes.default.svc/api/v1/namespaces/hermes/pods",
+                                params={"labelSelector": "app.kubernetes.io/name=onemind-mcp"})
+            response.raise_for_status()
+            pods = []
+            for pod in response.json()["items"]:
+                row = {"name": pod["metadata"]["name"], "phase": pod["status"].get("phase"), "containers": []}
+                for container in pod["status"].get("containerStatuses", []):
+                    state = container.get("state", {})
+                    waiting = state.get("waiting", {})
+                    message = waiting.get("message", "").lower()
+                    row["containers"].append({
+                        "name": container["name"], "ready": container["ready"],
+                        "restarts": container["restartCount"], "waiting_reason": waiting.get("reason"),
+                        "diagnostic_flags": [word for word in ("unauthorized", "denied", "not found", "secret", "permission", "pull") if word in message],
+                        "last_exit_code": container.get("lastState", {}).get("terminated", {}).get("exitCode"),
+                    })
+                pods.append(row)
+            report["mcp_pods"] = pods
+    except Exception as error:
+        report["pod_status_error_type"] = type(error).__name__
     for name, url in {
         "nats": "http://nats-0.nats-headless.nats.svc.cluster.local:8222/varz",
         "prometheus": "http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/query?query=up&limit=1",
