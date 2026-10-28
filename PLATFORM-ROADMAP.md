@@ -166,6 +166,20 @@ patches; Telegram remains selected. See the updated approval record below.
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
+### Application-lane catalog preparation — 2026-10-27
+
+Zeus's latest instruction assigns Codex all four remaining original PRs:
+#505, #535, #533 and #532. Catalog
+[PR #505](https://github.com/onemindos/omos/pull/505) was integrated with main `3495a614`; its portal image-build
+catalog/topology gate passes all 66 tests on supported Node 24. It repairs the
+stale generated mapping/runbook and covers all 60 source Argo Applications,
+with a 409-entity static inventory baseline. The
+[Claude continuation](docs/operations/2026-10-27-claude-merge-continuation.md)
+records 42 of the original 46 PRs merged and the specific technical gates for
+the final four. Source preparation does not publish an image
+or certify the catalog ConfigMap's later portal rollout. Phase 6 remains In
+progress; Phases 7/8 remain Not started.
+
 ### Fresh application replacement source (2026-10-24)
 
 [PR #390](https://github.com/onemindos/omos/pull/390) is prepared against the current cleanup baseline, preserving

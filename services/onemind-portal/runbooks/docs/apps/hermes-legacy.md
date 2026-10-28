@@ -30,8 +30,8 @@ Legacy AI — cloud
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="hermes"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=hermes`
+- Loki query: `{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-legacy)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-legacy`
 - Source: `onemindos/omos`
 
 ## Escalate

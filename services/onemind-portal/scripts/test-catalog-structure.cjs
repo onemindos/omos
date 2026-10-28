@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const YAML = require('yaml');
-const { applyStructure, applyStructureToText, loadSources, load, refOf, UNASSIGNED } = require('./curate-structure.cjs');
+const { applyStructure, applyStructureToText, isArgoResource, loadSources, load, refOf, UNASSIGNED } = require('./curate-structure.cjs');
 
 const root = path.join(__dirname, '..');
 // Repo-level platform/ is absent in the image build context (only services/onemind-portal is copied).
@@ -145,7 +145,7 @@ test('colliding titles are disambiguated instead of dropped', () => {
 test('every Argo application in Git maps to exactly one app Component, and a new one fails', repoOnly, () => {
   const map = sources.map.argoApplications;
   const inGit = argoApplicationsInGit();
-  assert.equal(inGit.size, 56, 'platform/ should define the 56 source Argo applications');
+  assert.equal(inGit.size, 60, 'platform/ should define the 60 source Argo applications');
   const unmapped = [...inGit].filter(a => !map[a]);
   assert.deepEqual(unmapped, [], `Argo applications without a mapping in catalog/workload-map.yaml: ${unmapped}`);
   assert.deepEqual(Object.keys(map).filter(a => !inGit.has(a)), [], 'mapping names an Argo application that Git does not define');
@@ -156,6 +156,30 @@ test('every Argo application in Git maps to exactly one app Component, and a new
     assert.deepEqual(holders.map(refOf), [ref], `${argo} must resolve to exactly ${ref}`);
     assert.ok(ann(byRef.get(ref), 'argocd/instance-name'));
   }
+});
+
+test('every Argo application in Git has exactly one top-level entity whose argocd/app-name names it', repoOnly, () => {
+  // The Argo CD plugin reads one argocd/app-name per entity. Reviewed workload views (curate-dependencies.cjs)
+  // may repeat their app's application; they are subcomponents and do not count.
+  const map = sources.map.argoApplications;
+  for (const argo of argoApplicationsInGit()) {
+    const holders = all.filter(e => !e.spec?.subcomponentOf && ann(e, 'argocd/app-name') === argo);
+    assert.equal(holders.length, 1, `${argo}: ${holders.map(refOf)}`);
+    const [holder] = holders;
+    assert.ok(ann(holder, 'argocd/instance-name'), refOf(holder));
+    if (holder.kind === 'Resource') {
+      assert.deepEqual(holder.spec.dependencyOf, [map[argo]], `${argo} Resource hangs under its mapped app`);
+      assert.equal(holder.spec.system, byRef.get(map[argo]).spec.system);
+    } else assert.equal(refOf(holder), map[argo]);
+  }
+  const generated = all.filter(isArgoResource);
+  assert.equal(generated.length, Object.keys(map).length - new Set(Object.values(map)).size, 'one Resource per non-primary application');
+  // A mapping that disappears takes its generated Resource with it.
+  const trimmed = structuredClone(sources);
+  delete trimmed.map.argoApplications['edge-nack'];
+  const out = applyStructure({ apps, cluster }, trimmed);
+  assert.ok(!out.apps.some(e => e.metadata.name === 'argocd-app-edge-nack'));
+  assert.equal(out.apps.filter(isArgoResource).length, generated.length - 1);
 });
 
 test('no previously valid ref disappears without a redirect, and redirects resolve', () => {

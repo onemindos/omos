@@ -188,7 +188,7 @@ apps:
   - name: kubernetes-system
     title: Kubernetes system services
     system: infrastructure
-    description: "DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. No Argo application."
+    description: "DOKS-managed core services: CoreDNS, konnectivity agent and metrics-server. Argo application platform-metrics-server adopts only metrics-server."
   - name: onemind-core
     title: OneMind core services
     system: infrastructure
@@ -209,6 +209,10 @@ apps:
     title: Falco
     system: identity-access
     description: Runtime security detection (DaemonSet).
+  - name: vaultwarden
+    title: Vaultwarden
+    system: identity-access
+    description: Private Vaultwarden vault (one replica, SQLite on a 5Gi volume, tailnet-only HTTPS, registration disabled), deployed by Argo application platform-vaultwarden.
   - name: backstage
     title: Backstage portal
     system: developer-platform
@@ -277,6 +281,14 @@ apps:
     title: LiteLLM
     system: ai-agents
     description: Model gateway.
+  - name: hermes-fresh
+    title: Hermes (Fresh)
+    system: ai-agents
+    description: Independent fresh Hermes instance beside Legacy in the hermes namespace (Argo application platform-hermes-fresh); no NATS sidecar, no imported Legacy data.
+  - name: onemind-mcp
+    title: OneMind internal app MCP
+    system: ai-agents
+    description: Read-only MCP server giving Hermes typed tools for in-cluster apps (NATS monitoring, Prometheus); manifests in platform/hermes/mcp (Argo application platform-legacy).
   - name: paperclip
     title: Paperclip
     system: ai-agents
@@ -354,8 +366,14 @@ placement:
   ministral-models: ai-agents
   miro: productivity-saas
   mta: communication
+  nats-agent-protocol: messaging-nats
+  nats-commands: messaging-nats
   nats-dashboard: messaging-nats
+  nats-events: messaging-nats
+  nats-intel: messaging-nats
+  nats-service-rpc: messaging-nats
   nats-surveyor: messaging-nats
+  nats-telemetry: messaging-nats
   nats-ui: messaging-nats
   nemotron-models: ai-agents
   notion: productivity-saas
@@ -393,6 +411,7 @@ placement:
   tailscale-admin: infrastructure
   tak-gov: tak-ecosystem
   tak-product-center: tak-ecosystem
+  tak-cot-bridge: tak-ecosystem
   tak-server: tak-ecosystem
   termius: personal-tools
   threads-zeus: social-media
