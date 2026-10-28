@@ -32,16 +32,16 @@ hold that PR, continue the rest and report the remaining blockers together at
 the end. Approval does not create credentials, waive checks or make a skipped
 PR merged. Do not mark every Draft ready before its own technical gates pass.
 
-## Superseding merger assignment — 2026-10-27
+## Latest finishing assignment — 2026-10-27
 
-Zeus subsequently authorized Hermes to execute the owner-approved merges recorded
-in #542 on his behalf and designated **Hermes the lead and sole merger**. This
-supersedes the earlier Claude merger assignment above, not the settled approvals
-or technical gates. The initial sequence is **#542, #504, #497, #498, #496**.
-Review each PR, refresh it against current `main`, resolve issues, verify final
-CI, mark ready and merge sequentially with merge commits. Continue past blocked
-PRs and report remaining blockers together without asking again for settled
-approvals. **Keep Telegram.**
+Zeus narrowed the assignment to **Codex finishes and merges #505 only; Claude
+Code finishes the rest**. This supersedes the earlier Hermes-only merger
+assignment without changing the settled owner approvals or technical gates.
+Read the [current continuation and checked fixes](../operations/2026-10-27-claude-merge-continuation.md).
+Codex stops after #505 and this handoff. Keep one active final merger; refresh
+each PR against current `main`, resolve issues, verify final CI, mark ready and
+merge sequentially. Continue past blocked PRs and report them together without
+asking again for settled approvals. **Keep Telegram.**
 
 These are source merges: **do not run Terraform apply or execute the proposed
 storage patches**. Zeus confirmed an existing agent is already preparing #505;
