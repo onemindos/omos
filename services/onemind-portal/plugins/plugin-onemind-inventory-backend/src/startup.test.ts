@@ -88,8 +88,8 @@ describe('portal catalog with the live inventory flag off', () => {
     const flagFalse = await serve([catalogModuleOnemindLiveInventory], {
       inventory: { live: { enabled: false } },
     });
-    // The reviewed file includes Hermes Fresh, OneMind MCP and Vaultwarden workloads.
-    expect(baseline.clean).toHaveLength(411);
+    // Includes this PR's three workloads and the workload retirements now on main.
+    expect(baseline.clean).toHaveLength(409);
     expect(flagAbsent.clean).toEqual(baseline.clean);
     expect(flagFalse.clean).toEqual(baseline.clean);
     const stamped = baseline.clean.filter(e =>

@@ -1,10 +1,33 @@
-# Kyverno ClusterPolicies, AUDIT ONLY. Applied by platform-security (platform/argocd/platform-security.yaml).
+# Kyverno ClusterPolicies. Applied by platform-security (platform/argocd/platform-security.yaml).
 #
 # Safety:
-#   * validationFailureAction: Audit on every policy. Nothing is blocked; violations show up in
-#     PolicyReports (wgpolicyk8s.io). Do not switch to Enforce without a cleanup PR and Zeus's approval.
+#   * validationFailureAction: Enforce on disallow-latest-image-tag and require-namespace-layer-label only
+#     (no live violation on 2026-10-27). A rule-level validate.failureAction would override this field in
+#     Kyverno 1.19.1; none is set.
+#     - require-namespace-layer-label denies a CREATE that violates and an UPDATE that adds a violation;
+#       allowExistingViolations admits updates to namespaces that already violated.
+#     - The image rules match CREATE only. Kyverno 1.19.1 never applies allowExistingViolations to a rule
+#       with preconditions: validateOldObject re-checks the raw preconditions in matchResource, which fails
+#       even for a constant condition, so every UPDATE of an already-violating object would be denied
+#       (finalizer, label or ownerReference patches on a Pod admitted while the webhook was down).
+#       Every Pod a controller makes is still a CREATE, background scans run as CREATE, and an in-place
+#       image change to :latest on UPDATE is reported, not denied. Re-check on every Kyverno upgrade
+#       (test_admission_update_skips_image_rules).
+#     The installed CRD marks this spec field deprecated (and kyverno.io/v1 ClusterPolicy itself). On every Kyverno
+#     upgrade, check the release notes for it, then confirm both policies still show Enforce (kubectl get
+#     clusterpolicy) and that `kubectl create namespace enforce-probe --dry-run=server` and
+#     `kubectl run enforce-probe --image=busybox --dry-run=server` are denied. If the field is dropped or ignored,
+#     move all four policies to rules[].validate.failureAction and update test_only_violation_free_policies_enforce
+#     (scripts/tests/test_gitops_kyverno_history.py), which forbids the rule-level field today.
+#   * require-requests-limits and disallow-privileged-and-hostpath stay Audit (the github-runner dind container
+#     is privileged): violations only show up in PolicyReports (wgpolicyk8s.io). Do not switch them to Enforce
+#     without a cleanup PR and Zeus's approval.
+#   * Enforce never sees what Kyverno filters out: the webhook skips the kube-system and kyverno namespaces, and
+#     the kyverno ConfigMap resourceFilters also skip kube-public, kube-node-lease and ReplicaSets (the Pods a
+#     ReplicaSet creates are still checked). New namespaces need the layer label at creation; see
+#     docs/architecture/namespace-layers.md.
 #   * failurePolicy: Ignore. Kyverno runs one admission replica; with the default (Fail) a Kyverno outage
-#     would reject every Pod create. Ignore lets requests through if the webhook is down.
+#     would reject every Pod create. Ignore lets requests through if the webhook is down, so Enforce fails open.
 #   * Per-resource SkipDryRun + sync-wave 5 so these apply after the Kyverno CRDs on a fresh bootstrap.
 #
 # Image/resource background scans skip only settled controller history. Real admission
@@ -36,7 +59,7 @@ metadata:
 spec:
   admission: true
   emitWarning: false
-  validationFailureAction: Audit
+  validationFailureAction: Enforce
   failurePolicy: Ignore
   background: true
   rules:
@@ -46,6 +69,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              operations:
+                - CREATE
       context: &historical-workload-context
         - name: retiredWorkloadHistory
           variable:
@@ -96,6 +121,8 @@ spec:
           - resources:
               kinds:
                 - Pod
+              operations:
+                - CREATE
       context: *historical-workload-context
       preconditions: *assess-admission-or-current
       skipBackgroundRequests: true
@@ -207,7 +234,7 @@ metadata:
 spec:
   admission: true
   emitWarning: false
-  validationFailureAction: Audit
+  validationFailureAction: Enforce
   failurePolicy: Ignore
   background: true
   rules:

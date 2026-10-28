@@ -1,0 +1,144 @@
+# Tailnet alias https://portal.tail717ba0.ts.net for the portal.
+#
+# Backstage takes a single origin from PORTAL_URL (deployment.yaml): app.baseUrl,
+# backend.baseUrl, the CORS origin, the CSP 'self' source and the OIDC callback all
+# derive from it. A second host serving Backstage directly would load the app and then
+# call the API cross-origin, which CORS and CSP block, so the alias does not route to
+# the backstage Service. This nginx answers every request with a temporary redirect to
+# the same path on the canonical host (portal-redirect.conf). No Backstage pod changes.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-redirect
+  namespace: backstage
+  labels:
+    app: portal-redirect
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: portal-redirect
+  template:
+    metadata:
+      labels:
+        app: portal-redirect
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: nginx
+        image: nginx:1.30.6-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
+        command: [nginx, -c, /etc/portal-redirect/nginx.conf, -g, 'daemon off;']
+        ports:
+        - name: http
+          containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 20
+        volumeMounts:
+        - name: config
+          mountPath: /etc/portal-redirect
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: config
+        configMap:
+          name: portal-redirect
+      - name: tmp
+        emptyDir:
+          sizeLimit: 16Mi
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - onemind-ecosystem-cpu
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-redirect
+  namespace: backstage
+spec:
+  selector:
+    app: portal-redirect
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+---
+# Only the portal Ingress proxy may connect; nginx needs no egress at all.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: portal-redirect
+  namespace: backstage
+spec:
+  podSelector:
+    matchLabels:
+      app: portal-redirect
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tailscale
+      podSelector:
+        matchLabels:
+          tailscale.com/parent-resource: portal
+          tailscale.com/parent-resource-ns: backstage
+          tailscale.com/parent-resource-type: ingress
+    ports:
+    - protocol: TCP
+      port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portal
+  namespace: backstage
+  annotations:
+    tailscale.com/hostname: portal
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: portal-redirect
+      port:
+        number: 80
+  tls:
+  - hosts:
+    - portal

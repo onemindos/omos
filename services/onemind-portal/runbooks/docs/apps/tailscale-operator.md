@@ -26,7 +26,6 @@ Tailscale Kubernetes operator and the per-service tailnet proxies it creates.
 | `ts-hermes-dashboard-6thbx` | StatefulSet | `tailscale` |
 | `ts-heynats-p5dmf` | StatefulSet | `tailscale` |
 | `ts-hubble-tw85d` | StatefulSet | `tailscale` |
-| `ts-kubernetes-dashboard-9r9fp` | StatefulSet | `tailscale` |
 | `ts-n8n-pmtds` | StatefulSet | `tailscale` |
 | `ts-nats-dashboard-242wv` | StatefulSet | `tailscale` |
 | `ts-nats-monitor-zh589` | StatefulSet | `tailscale` |

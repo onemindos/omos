@@ -44,10 +44,11 @@ merge sequentially. Continue past blocked PRs and report them together without
 asking again for settled approvals. **Keep Telegram.**
 
 These are source merges: **do not run Terraform apply or execute the proposed
-storage patches**. Zeus confirmed an existing agent is already preparing #505;
-do not duplicate or interfere with its work. That harness prepares and tests #505
-and the application PRs, coordinating dependencies with Hermes; final merges
-remain Hermes's responsibility. Source integration is not rollout acceptance.
+storage patches**. Codex owns #505; do not duplicate or interfere with its work.
+Claude owns the remaining queue. GitHub readback now confirms 42/46 originals
+merged; #535, #533 and #532 are the remaining Claude assignments, with the
+specific gates in the current continuation. Source integration is not rollout
+acceptance.
 
 ## Decisions and source candidates
 

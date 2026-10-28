@@ -194,7 +194,7 @@ Each step is its own PR (or small set of PRs), reviewed before the next begins. 
 
 ### Step 3: Prove it, and apply the soul change
 
-1. Restore the latest VolSync snapshot into a **scratch namespace** (never over the live volume). Check `SOUL.md`, `config.yaml`, skills, memory files, and `PRAGMA integrity_check` on both databases. A file-level restore was already verified on 2026-10-08 (see 1.2); this step adds the application-level check.
+1. Restore the latest VolSync snapshot into a **scratch namespace** (never over the live volume). Create it with `onemind.io/layer: decide`; Kyverno denies a bare `kubectl create namespace` (recipe in `docs/architecture/namespace-layers.md`). Check `SOUL.md`, `config.yaml`, skills, memory files, and `PRAGMA integrity_check` on both databases. A file-level restore was already verified on 2026-10-08 (see 1.2); this step adds the application-level check.
 2. Boot a second Hermes against the restored volume with the NATS platform disabled, so it cannot collide with the live agent's bus identity. Confirm it loads the soul and skills.
 3. Repeat the seed path from an empty volume and compare with the live agent.
 4. Record the result in `docs/operations/` and in `docs/STACK.md`. Re-run quarterly.

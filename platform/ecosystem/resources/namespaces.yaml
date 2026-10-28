@@ -1,3 +1,5 @@
+# onemind-core, onemind-ai and velero are labelled in platform/security/shared-namespaces.yaml, because
+# other Applications create them with CreateNamespace=true (see the comment there).
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -8,40 +10,8 @@ metadata:
     onemind.io/site: cloud
     onemind.io/ecosystem: cpu
     onemind.io/layer: make-sense
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-core
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
-    onemind.io/layer: make-sense
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onemind-ai
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-    volsync.backube/privileged-movers: 'true'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
-    onemind.io/layer: decide
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: velero
-  annotations:
-    argocd.argoproj.io/sync-wave: '-2'
-  labels:
-    onemind.io/site: cloud
-    onemind.io/ecosystem: cpu
-    onemind.io/layer: guard
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
 ---
 # `default` is the cluster's built-in namespace. It was defined by the (now removed)
 # platform-openchoreo-defaults Application, which also set openchoreo.dev/control-plane;

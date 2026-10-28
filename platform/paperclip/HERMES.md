@@ -31,10 +31,12 @@ without a Hermes restart. No service or ingress exposes port 8642 directly.
 
 Paperclip's existing default-deny policy adds only TCP/8643 egress to the precise
 Hermes pod identity. Callback ingress is only TCP/3100 from that same identity.
-There is deliberately no new Hermes ingress-isolation policy: an ingress policy
-would isolate the entire existing pod, including its dashboard and NATS leaf.
-Inventory their current consumers before introducing a default-deny rule. The API
-still requires its existing bearer authorization, and the Service is cluster-only.
+On the Hermes side, the `hermes-legacy` NetworkPolicy
+(`platform/hermes/agent/network-policy.yaml`) admits TCP/8643 only from the
+Paperclip pods. The only other in-cluster caller it admits is the dashboard's
+Tailscale proxy, on TCP/9119. The NATS leaf and port 8642 accept no connections
+from other pods. The API still requires its existing bearer authorization, and
+the Service is cluster-only.
 
 ## Ordered activation (coordinator only)
 

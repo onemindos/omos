@@ -330,7 +330,6 @@ placement:
   equifax: personal-finance
   experian: personal-finance
   external-argocd: gitops-delivery
-  external-kubernetes-dashboard: developer-platform
   external-tailscale: infrastructure
   facebook-legacy: social-media
   facebook-zeus: social-media
@@ -351,7 +350,6 @@ placement:
   innovis: personal-finance
   instagram-zeus: social-media
   jan: ai-agents
-  kubernetes-dashboard: developer-platform
   langfuse: observability
   lf-edge: reference-links
   lingbot-map: geospatial
@@ -519,5 +517,4 @@ fallbackSystems:
 pillarOverrides: {}
 titles:
   component:default/external-argocd: ArgoCD (external launcher)
-  component:default/external-kubernetes-dashboard: Kubernetes Dashboard (external launcher)
   component:default/external-tailscale: Tailscale (external launcher)

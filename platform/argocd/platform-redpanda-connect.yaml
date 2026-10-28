@@ -47,6 +47,14 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+    # omos is labelled by platform-omos (platform/omos), a different Application in the same
+    # wave. If this app creates omos first, the Kyverno Enforce policy require-namespace-layer-label
+    # denies an unlabelled namespace, so Argo creates it with the same labels as platform-omos.
+    # omos carries no argocd.argoproj.io/sync-options annotation, so the one Argo adds is harmless.
+    managedNamespaceMetadata:
+      labels:
+        app.kubernetes.io/part-of: omos-platform
+        onemind.io/layer: sense
   ignoreDifferences:
     - group: apps
       kind: Deployment
