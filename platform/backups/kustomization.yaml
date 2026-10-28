@@ -23,4 +23,3 @@ resources:
 - sealed/ops-platform-backup-credentials.yaml
 - sealed/ops-ghcr.yaml
 - offsite-copy.yaml
-- retained-recovery.yaml

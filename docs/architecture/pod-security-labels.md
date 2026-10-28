@@ -19,8 +19,7 @@ No `*-version` label is set, so each mode uses the profile of the cluster's Kube
 
 - `falco`, `velero`, `tailscale`, `monitoring`, `github-runner`: their workloads need privileged
   containers, host namespaces or hostPath volumes by design, so the warnings would never clear.
-- `default`, `onemind-search`, `openchoreo-observability-plane`: no long-running workloads
-  (`onemind-search` still runs a nightly VolSync backup mover).
+- `default`: no long-running workloads.
 - `kube-system`, `kube-public`, `kube-node-lease`: managed by DOKS, not defined in Git.
 
 ## VolSync privileged movers
