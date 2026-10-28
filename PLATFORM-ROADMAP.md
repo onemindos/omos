@@ -143,6 +143,20 @@ Current foundation/shared-service and machine read-only boundaries are unchanged
 | 7 | Migrate Layer 3 apps project by project; NATS and Postgres as ResourceTypes | Not started | | 6 |
 | 8 | Expand: home server data plane, Hermes on the same tools | Not started | | none |
 
+### Application-lane catalog preparation — 2026-10-27
+
+Zeus narrowed Codex's work to finishing and merging only catalog
+[PR #505](https://github.com/onemindos/omos/pull/505), with Claude handling the
+remaining PRs. It was integrated with main `988af5d8`; its portal image-build
+catalog/topology gate passes all 66 tests
+on supported Node 24. It repairs the stale generated mapping/runbook and the
+Argo application-count contract. The
+[Claude continuation](docs/operations/2026-10-27-claude-merge-continuation.md)
+records the #505 startup-test correction and checked but unapplied #502/#506
+fixes for Claude to finish. Source preparation does not publish an image
+or certify the catalog ConfigMap's later portal rollout. Phase 6 remains In
+progress; Phases 7/8 remain Not started.
+
 ### Fresh application replacement source (2026-10-24)
 
 [PR #390](https://github.com/onemindos/omos/pull/390) is prepared against the current cleanup baseline, preserving
