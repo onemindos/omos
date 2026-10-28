@@ -1,13 +1,22 @@
+# Source descriptor of the portal, deliberately NOT listed in /catalog-info.yaml: the static
+# catalog already defines component:default/backstage (platform/backstage/catalog/apps.yaml,
+# generated from catalog/structure.yaml), and Backstage rejects a second definition of the same
+# entity ref instead of merging it. To register this file, remove the static entry and its
+# structure.yaml source in the same change that lists it, and carry over the tags and the
+# annotations that entry holds (Kubernetes, Argo CD, Grafana, logs, runbook, hosting, pillar review).
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: onemind-portal
-  description: An example of a Backstage application.
-  # Example for optional annotations
-  # annotations:
-  #   github.com/project-slug: backstage/backstage
-  #   backstage.io/techdocs-ref: dir:.
+  name: backstage
+  title: Backstage portal
+  description: The OneMind developer portal and its PostgreSQL database.
+  annotations:
+    github.com/project-slug: onemindos/omos
+  labels:
+    onemind.io/pillar: so
+    onemind.io/catalog-role: app
 spec:
-  type: website
-  owner: john@example.com
-  lifecycle: experimental
+  type: service
+  lifecycle: production
+  owner: group:default/onemind-admins
+  system: developer-platform
