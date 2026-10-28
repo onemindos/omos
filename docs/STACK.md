@@ -233,7 +233,7 @@ At capture (2026-10-09), 31 container references used `:latest`, a bare image na
 | omos | `omos-mission-engine:latest` |
 | kube | `headlamp:latest` |
 | takserver | `murmur:latest` |
-| matrix, onemind-search | init containers using bare `busybox` / `busybox:latest` |
+| matrix | init containers using bare `busybox` / `busybox:latest` |
 
 Good patterns to copy: NATS server, ingress-nginx, `takserver-plugins` and `redpanda-connect` are digest-pinned; `github-runner` is digest-pinned.
 

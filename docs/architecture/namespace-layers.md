@@ -9,15 +9,15 @@ three `kube-*` namespaces. Argo CD `CreateNamespace=true` creates a bare namespa
 Application itself contains the labelled Namespace manifest, so a new Application must ship that
 manifest or set `syncPolicy.managedNamespaceMetadata.labels`.
 
-| Layer | Meaning | Namespaces (Git and cluster agree, checked 2026-10-27) |
+| Layer | Meaning | Namespaces (Git and cluster agree, checked 2026-10-27, except the two retired namespaces below) |
 |---|---|---|
-| `data` | Event bus and the network the data moves on | `nats`, `cnpg-system`, `onemind-search` |
+| `data` | Event bus and the network the data moves on | `nats`, `cnpg-system` |
 | `sense` | Collection and edge sensors | `omos`, `takml`, `takserver` |
 | `make-sense` | Fusion, storage and analytics | `onetak`, `clickhouse`, `onemind-core`, `onemind-data`, `stac`, `stac-validation`, `karakeep`, `nextcloud`, `vaultwarden`, `opencost` |
 | `decide` | AI models and agents | `onemind-ai`, `hermes`, `agent-fabric`, `n8n`, `paperclip` |
 | `act` | Human-facing surfaces and delivery | `backstage`, `matrix`, `cloudtak` |
 | `guard` | Security, identity, observability, backup and CI | `auth`, `monitoring`, `falco`, `kyverno`, `velero`, `ops`, `kube`, `github-runner`, `argocd`, `cert-manager`, `ingress-nginx`, `tailscale` |
-| `system` | Cluster plumbing | `default`, `dapr-system`, `keda`, `openchoreo-observability-plane` |
+| `system` | Cluster plumbing | `default`, `dapr-system`, `keda` |
 
 `kyverno` and `falco` were `security`, and `agent-fabric` was `agents`; those values were
 retired. `default` is labelled by `platform/ecosystem/resources/namespaces.yaml` (Application
@@ -35,7 +35,6 @@ Application that does not prune it:
 | `platform/security/shared-namespaces.yaml` | `platform-security` | `argocd`, `cert-manager`, `ingress-nginx`, `tailscale`, `cnpg-system`, `keda`, `opencost`, `dapr-system`, `clickhouse`, `matrix`, `monitoring`, `nats`, `takserver`, `onemind-ai`, `onemind-core`, `velero` |
 | `platform/security/namespaces.yaml` | `platform-security` | `kyverno`, `falco` |
 | `platform/ecosystem/resources/namespaces.yaml` | `platform-ecosystem-resources` | `default`, `onemind-data` |
-| `platform/ecosystem/resources/retained-recovery.yaml` | `platform-ecosystem-resources` | `onemind-search`, `openchoreo-observability-plane` |
 
 If an Application creates the namespace with `CreateNamespace=true` and does not ship its own
 labelled Namespace, label it in `platform/security/shared-namespaces.yaml`, not in another
@@ -50,8 +49,8 @@ To label another such namespace, add it to one of these files. Do not also set
 `managedNamespaceMetadata` on an Application whose namespace is listed here: Argo CD 3.4 then
 applies that namespace on every sync of the Application and overwrites its
 `argocd.argoproj.io/sync-options` annotation with `ServerSideApply=true`. That removes
-`Prune=false,Delete=false` from the namespaces in `shared-namespaces.yaml` and
-`retained-recovery.yaml`, and `Delete=false` from `default`.
+`Prune=false,Delete=false` from the namespaces in `shared-namespaces.yaml`, and
+`Delete=false` from `default`.
 
 ## Namespaces that Git does not define
 
@@ -63,9 +62,14 @@ layer label, and the policy excludes them by name.
 `geo` (`platform/geo/namespace.yaml`) and `nats-tools` (`platform/nats-tools/namespace.yaml`,
 which Application `platform-nats-tools` excludes). Neither is applied and neither exists in the
 cluster. Applying either file as it stands is denied, so add the label in the change that deploys
-it. `onemind-search` and `openchoreo-observability-plane` were not removed with OpenSearch and
-OpenChoreo: they remain, labelled and without workloads, to hold those services' recovery volumes
-(`retained-recovery.yaml`).
+it.
+
+## Retired namespaces awaiting deletion
+
+`onemind-search` and `openchoreo-observability-plane` were kept after OpenSearch and OpenChoreo were
+removed, to hold their recovery volumes. The retirement change removed their Git definitions
+(`retained-recovery.yaml`); the namespaces and volumes are deleted by the post-merge runbook in
+the pull request, not by Argo CD.
 
 ## Creating a namespace by hand
 
