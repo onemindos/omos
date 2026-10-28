@@ -17,11 +17,11 @@ only for this batch; technical checks, credential and release prerequisites
 remain. Do not request the settled approvals again. Hold an actually blocked PR,
 continue the queue and report remaining blockers together at the end.
 
-**Latest owner direction (2026-10-27): Codex finishes and merges #505 only;
-Claude Code finishes the rest.** This supersedes the earlier Hermes-only merger
-assignment. Read the [current continuation and checked fixes](docs/operations/2026-10-27-claude-merge-continuation.md).
-Keep one active final merger, current-main review and final CI. Codex stops after
-#505 and its handoff. Keep Telegram and all settled approvals; do not run
+**Latest owner direction (2026-10-27): Codex merges all four remaining original
+PRs: #505, #535, #533 and #532.** This supersedes the earlier #505-only and
+Hermes-only assignments. Read the [current continuation](docs/operations/2026-10-27-claude-merge-continuation.md).
+Other harnesses must not edit or merge these branches concurrently. Keep
+current-main review, final CI, Telegram and all settled approvals. Do not run
 Terraform apply or proposed storage patches merely because their docs merged.
 
 ## What This Repo Is

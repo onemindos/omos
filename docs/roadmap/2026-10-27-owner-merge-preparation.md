@@ -34,21 +34,17 @@ PR merged. Do not mark every Draft ready before its own technical gates pass.
 
 ## Latest finishing assignment — 2026-10-27
 
-Zeus narrowed the assignment to **Codex finishes and merges #505 only; Claude
-Code finishes the rest**. This supersedes the earlier Hermes-only merger
-assignment without changing the settled owner approvals or technical gates.
-Read the [current continuation and checked fixes](../operations/2026-10-27-claude-merge-continuation.md).
-Codex stops after #505 and this handoff. Keep one active final merger; refresh
-each PR against current `main`, resolve issues, verify final CI, mark ready and
-merge sequentially. Continue past blocked PRs and report them together without
-asking again for settled approvals. **Keep Telegram.**
+Zeus's latest assignment is **Codex merges all four remaining original PRs:
+#505, #535, #533 and #532**. This supersedes the earlier #505-only and Hermes-only
+assignments without changing settled approvals or technical gates. Read the
+[current continuation](../operations/2026-10-27-claude-merge-continuation.md).
+Other harnesses must not edit or merge these branches concurrently. Refresh
+against current main, resolve issues, verify final CI and merge sequentially.
+Continue past blocked PRs and report actual blockers together. **Keep Telegram.**
 
-These are source merges: **do not run Terraform apply or execute the proposed
-storage patches**. Codex owns #505; do not duplicate or interfere with its work.
-Claude owns the remaining queue. GitHub readback now confirms 42/46 originals
-merged; #535, #533 and #532 are the remaining Claude assignments, with the
-specific gates in the current continuation. Source integration is not rollout
-acceptance.
+These are source merges: **do not run Terraform apply or execute proposed
+storage patches**. GitHub readback confirms 42/46 originals merged. Source
+integration is not rollout acceptance.
 
 ## Decisions and source candidates
 

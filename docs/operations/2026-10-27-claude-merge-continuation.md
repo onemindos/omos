@@ -2,12 +2,12 @@
 
 ## Current owner instruction
 
-Zeus narrowed Codex's assignment to: "finish off with 505 and dont merge
-anything else and update the claude code to finish the do the rest".
+Zeus's latest instruction is: "merge everything yourself please", followed by
+"lets get it out of the way and finish the work no more lagging on it do it".
 
-**Codex finishes and merges #505 only. Claude Code handles the remaining PRs.**
-The earlier broad Codex application-lane and Hermes-only merger assignments are
-superseded. Keep one final merger per branch and do not edit #505 concurrently.
+**Codex owns all four remaining original PRs: #505, #535, #533 and #532.**
+This supersedes the earlier #505-only and Hermes-only assignments. Other
+harnesses must not edit or merge these branches concurrently.
 Owner approvals for dcarku's original 46 PRs #495–#540, including **Telegram**,
 are recorded in [PR #542](https://github.com/onemindos/omos/pull/542). Do not ask
 again for settled decisions. Technical, credential and release gates still apply;
@@ -23,11 +23,11 @@ observation, not a claim about later merges.
 | Assignment | Remaining work before merge |
 | --- | --- |
 | Codex: [#505](https://github.com/onemindos/omos/pull/505) | Integrate current main, preserve catalog mappings and generated data, pass final tests and CI, then merge only this PR. |
-| Claude first: [#535](https://github.com/onemindos/omos/pull/535) | #534 has merged; #535 now targets main and all four Quality Gate checks pass. Check authorized catalog Locations registration records, including pending/unprocessed targets, for `services/onemind-portal/catalog-info.yaml`; resolve duplicate registration before merge. Processed entities alone do not complete this check. Rerun focused discovery/descriptor tests against final main. |
-| Claude next: [#533](https://github.com/onemindos/omos/pull/533) | Keep Telegram. Obtain the intended dedicated alerts bot token and chat ID through authorized secret access, seal for the correct cluster, validate and merge. Confirm alert delivery after reconciliation. If credentials are unavailable, hold and report exactly what is missing; approval does not manufacture a bot or chat access. |
-| Claude release: [#532](https://github.com/onemindos/omos/pull/532) | #531 pages have merged. After #505's build repair, build/publish a portal image containing the intended source/pages, verify it, and use a reviewed GitOps digest pin. Merge the links with that pin or after all 12 pages are verified available. Keep the release hold until then. |
+| Codex next: [#535](https://github.com/onemindos/omos/pull/535) | #534 has merged; #535 now targets main and all four Quality Gate checks pass. Check authorized catalog Locations registration records, including pending/unprocessed targets, for `services/onemind-portal/catalog-info.yaml`; resolve duplicate registration before merge. Processed entities alone do not complete this check. Rerun focused discovery/descriptor tests against final main. |
+| Codex next: [#533](https://github.com/onemindos/omos/pull/533) | Keep Telegram. Obtain the intended dedicated alerts bot token and chat ID through authorized secret access, seal for the correct cluster, validate and merge. Confirm alert delivery after reconciliation. If credentials are unavailable, hold and report exactly what is missing; approval does not manufacture a bot or chat access. |
+| Codex release: [#532](https://github.com/onemindos/omos/pull/532) | #531 pages have merged. After #505's build repair, build/publish a portal image containing the intended source/pages, verify it, and use a reviewed GitOps digest pin. Merge the links with that pin or after all 12 pages are verified available. Keep the release hold until then. |
 
-All three Claude PRs were Draft, targeted main, were mergeable and had four
+All three other PRs were Draft, targeted main, were mergeable and had four
 successful Quality Gate checks at readback. Those checks do not satisfy the
 specific registration, credential or image gates above. They require no new
 personal preference from Zeus. Bot creation or private credentials can still
@@ -77,5 +77,5 @@ the 42/46 count or automatically declared ready by the batch approval. Review
 their scopes, compatibility and actual CI before recommending another queue.
 
 Local raw receipts are under `/tmp/omos-app-pr-preparation-20261027/`; this
-tracked handoff is sufficient if Claude runs elsewhere. No source PR other
-than #505 was merged or modified by Codex during the final scoped preparation.
+tracked handoff is sufficient if Claude runs elsewhere. The initial preparation was limited to #505; the latest instruction above
+authorizes completion of the remaining queue.

@@ -9,13 +9,13 @@ an unavailable credential or unresolved technical blocker and report it at the
 end; do not ask again for settled decisions. The historical
 release observations below remain timestamped context, not current live state.
 
-**Latest owner assignment (2026-10-27): Codex finishes and merges #505 only;
-Claude Code finishes the rest.** Read the
-[current continuation and checked fixes](../operations/2026-10-27-claude-merge-continuation.md).
-This replaces the earlier Hermes-only merger assignment. Keep one active final
-merger, current-main review and final CI. No Terraform apply or proposed storage
-patches follow merely from their docs merging. Telegram and the owner approvals
-remain unchanged.
+**Latest owner assignment (2026-10-27): Codex merges all four remaining original
+PRs: #505, #535, #533 and #532.** Read the
+[current continuation](../operations/2026-10-27-claude-merge-continuation.md).
+This supersedes the earlier #505-only and Hermes-only assignments. Other
+harnesses must not edit or merge these branches concurrently. Keep current-main
+review and final CI. Telegram and the owner approvals remain unchanged. No
+Terraform apply or storage patches follow merely from their docs merging.
 
 Updated 2026-10-20 during the authorized portal/catalog stabilization. The authoritative tracker and
 phase evidence live in [PLATFORM-ROADMAP.md](../../PLATFORM-ROADMAP.md).

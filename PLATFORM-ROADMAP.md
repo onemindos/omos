@@ -168,15 +168,15 @@ patches; Telegram remains selected. See the updated approval record below.
 
 ### Application-lane catalog preparation — 2026-10-27
 
-Zeus narrowed Codex's work to finishing and merging only catalog
-[PR #505](https://github.com/onemindos/omos/pull/505), with Claude handling the
-remaining PRs. It was integrated with main `3495a614`; its portal image-build
+Zeus's latest instruction assigns Codex all four remaining original PRs:
+#505, #535, #533 and #532. Catalog
+[PR #505](https://github.com/onemindos/omos/pull/505) was integrated with main `3495a614`; its portal image-build
 catalog/topology gate passes all 66 tests on supported Node 24. It repairs the
 stale generated mapping/runbook and covers all 60 source Argo Applications,
 with a 409-entity static inventory baseline. The
 [Claude continuation](docs/operations/2026-10-27-claude-merge-continuation.md)
-records 42 of the original 46 PRs merged and assigns #535, #533 and #532 to
-Claude after their specific technical gates. Source preparation does not publish an image
+records 42 of the original 46 PRs merged and the specific technical gates for
+the final four. Source preparation does not publish an image
 or certify the catalog ConfigMap's later portal rollout. Phase 6 remains In
 progress; Phases 7/8 remain Not started.
 
