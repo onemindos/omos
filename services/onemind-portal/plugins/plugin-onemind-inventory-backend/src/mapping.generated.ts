@@ -46,6 +46,9 @@ export const mapping: InventoryMapping = {
     'github-runner/github-runner-hermes': 'component:default/platform-core',
     'hermes/hermes-legacy': 'component:default/hermes-legacy',
     'ingress-nginx/ingress-nginx-controller': 'component:default/ingress-nginx',
+    'karakeep/chrome': 'component:default/karakeep',
+    'karakeep/meilisearch': 'component:default/karakeep',
+    'karakeep/web': 'component:default/karakeep',
     'keda/keda-admission-webhooks': 'component:default/keda',
     'keda/keda-operator': 'component:default/keda',
     'keda/keda-operator-metrics-apiserver': 'component:default/keda',
@@ -274,6 +277,12 @@ export const mapping: InventoryMapping = {
       system: 'infrastructure',
       pillar: 'so',
       review: 'proposed',
+    },
+    karakeep: {
+      title: 'Karakeep',
+      system: 'personal-tools',
+      pillar: 'shared',
+      review: 'approved',
     },
     keda: {
       title: 'KEDA',
