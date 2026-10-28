@@ -1,0 +1,19 @@
+# Entry point for Backstage GitHub discovery: catalog.providers.github.onemindos in
+# platform/backstage/app-config.cluster.yaml registers this file from main.
+#
+# List only service descriptors whose entities the static catalog (platform/backstage/catalog/*.yaml)
+# does not define. Backstage rejects a second definition of an entity ref as a conflict; it never
+# merges the two. Deployed services that the static catalog defines stay there and are not listed,
+# for example services/onemind-portal (component:default/backstage; its descriptor is kept
+# unlisted), services/onemind-core, services/takserver, services/tak-portal and
+# services/stac-webodm-sync. To move one here, remove its static entry (and the generator input
+# that recreates it) in the same change that adds its target.
+# scripts/tests/test_gitops_portal_discovery.py enforces this.
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: omos-service-descriptors
+  description: Catalog descriptors kept next to the source of deployed omos services that the static catalog does not define.
+spec:
+  targets:
+    - ./services/onemind-postgres/catalog-info.yaml
