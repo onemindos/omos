@@ -103,6 +103,22 @@ Argo CD itself is a Helm-CLI release, not self-managed (gap G3). Chart `argo-cd`
    sit empty or crash-loop until their data is restored (steps 6-10). That is fine.
    To avoid surprises, you can set `spec.syncPolicy.automated` off on data apps while restoring,
    or sync in the order below.
+6. Once `platform-security` (wave 4) is up, Kyverno enforces two policies from
+   `platform/security/kyverno-policies-audit.yaml`: admission denies a namespace without
+   `onemind.io/layer` and an untagged or `:latest` image.
+   - Argo `CreateNamespace=true` creates a bare namespace. Every namespace that an Application
+     creates this way without shipping its own labelled Namespace is labelled by `platform-security`
+     (`platform/security/shared-namespaces.yaml`) in the same sync as, and before, the policies, or
+     (only `omos`, via `platform-redpanda-connect`) by `managedNamespaceMetadata`. So holding apps
+     back (item 5, Step 6) cannot make a namespace create fail. If an Application still fails with
+     `denied the request` naming `onemind.io/layer`, sync `platform-security` and then that
+     Application again: Argo retries a failed automated sync only a few times within minutes and
+     does not start a new one for the same Git revision. `docs/architecture/namespace-layers.md`
+     lists the files that label the namespaces other Applications create.
+   - Helm-CLI installs (Steps 5, 7 and 8) go into the existing labelled namespace without
+     `--create-namespace`. Helm sends its own unlabelled create even when the namespace exists,
+     and Kyverno denies it.
+   - Ad-hoc pods need a tagged image, for example `busybox:1.37.0`.
 
 ### Step 5. platform-core, cert-manager, ingress, Tailscale (about 1 h)
 
@@ -192,6 +208,15 @@ Loki/Tempo), onetak geo data (about 450 GiB; may be rebuilt from public sources 
   `onemind-core`, `onemind-data`, `onemind-ai` if Git is missing something:
   new BSL, `accessMode: ReadOnly`, then `velero restore create --from-backup <name>`.
   Exclude Secrets that Sealed Secrets owns to avoid conflicts.
+  - Kyverno checks restored objects like new ones. Velero reuses an existing namespace, so
+    restoring into the three namespaces Argo has already created works. A missing target
+    namespace is created from the backed-up Namespace object, and backups taken before
+    2026-10-23T18:53Z (when these three got `onemind.io/layer`) carry no label; backups up to
+    2026-10-23 also include `onemind-jobs`, which no longer exists. A restore that creates a
+    namespace (`--namespace-mappings` into a scratch namespace, or `onemind-jobs`) is therefore
+    denied: create the target namespace with its label first (`docs/architecture/namespace-layers.md`,
+    "Creating a namespace by hand"). A backed-up workload with an untagged or `:latest` image is
+    denied the same way.
 - Let Argo finish syncing every remaining Application. Resolve the known OutOfSync items
   (`SealedSecret auth/ghcr` owned twice; `litellm-migrations` Job).
 - Apps with no Argo owner (gap G5): matrix (`platform/matrix/`, deploy script), NATS UIs
@@ -295,7 +320,9 @@ Procedure:
    `_offsite/last-success.json` is under 36 h old; VolSync sources `Successful`.
 2. Start the clock. Create an empty cluster (step 1).
 3. Execute Steps 2-10 as written, in a scratch namespace set where possible
-   (e.g. suffix `-drill`). Write down every point where you had to improvise.
+   (e.g. suffix `-drill`). Kyverno denies a bare `kubectl create namespace` there too, so create
+   each one with its layer label (`docs/architecture/namespace-layers.md`, "Creating a namespace
+   by hand"). Write down every point where you had to improvise.
 4. Run the verification checklist. Data comparisons: row counts for TAK, CNPG,
    Authentik; NATS stream message counts; file counts on a restored PVC compared to a
    VolSync status.

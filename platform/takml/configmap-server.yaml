@@ -7,10 +7,10 @@ data:
   application.properties: |
     server.port=8234
     logging.level.org.springframework.web=WARN
-    logging.level.com.bbn=DEBUG
+    logging.level.com.bbn=INFO
     security.require-ssl=false
     server.ssl.enabled=false
-    server.api.key.enabled=false
+    server.api.key.enabled=true
     springdoc.api-docs.path=/v3/api-docs
     springdoc.swagger-ui.path=/swagger-ui.html
     spring.datasource.url=jdbc:postgresql://takml-db.takml.svc.cluster.local:5432/takml_server

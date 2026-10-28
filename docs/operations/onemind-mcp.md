@@ -37,6 +37,9 @@ the app catalog, NATS, LiteLLM or Backstage's existing MCP.
    and `monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090`.
    Git records these names; the preflight/live calls must confirm reachability.
    NATS tools report one node and never claim a cluster aggregate.
+   From the image that adds multi-node support, `NATS_MONITOR_URLS` lists
+   `nats-{0,1,2}` and the tools fail over in that order or read the node named in
+   `node`; the existing `NATS_MONITOR_URL` (nats-0) stays as the fallback for older images.
 3. The `OneMind internal MCP` workflow builds/pushes
    `ghcr.io/onemindos/onemind-mcp:sha-<source-sha>` on the feature branch and main.
    Obtain its `onemind-mcp-image` artifact and pin the returned `sha256` digest in
@@ -85,12 +88,38 @@ mcp_servers:
       Authorization: "Bearer ${ONEMIND_MCP_TOKEN}"
 ```
 
-The initial pre-provisioned bearer credential is for **one private Legacy client**
-and authorizes all configured read tools. It is not browser OAuth or per-user
-authorization. The MCP has no Kubernetes token mount or API privileges. Add
-separate scopes/identities before enabling writes or other principals. Do not
+Legacy's pre-provisioned bearer credential (`ONEMIND_MCP_TOKEN` from
+`onemind-mcp-auth`) is audited as client `hermes` and authorizes all configured read
+tools. It is not browser OAuth or per-user authorization. The MCP has no Kubernetes
+token mount or API privileges. Source supports a token per client
+(`ONEMIND_MCP_TOKENS_FILE`, below); each client is audited by name but still gets
+every read tool, so add separate scopes before enabling writes. Do not
 expose this plaintext internal endpoint beyond the intended cluster trust boundary;
 TLS/mTLS and an identity layer are prerequisites for wider exposure.
+
+### Adding a client (not yet deployed)
+
+The pinned image predates per-client tokens, and the deployment sets only
+`ONEMIND_MCP_TOKEN` until an owner seals a client Secret. To add a client:
+
+1. Generate one random token per client locally without printing it. Seal a
+   namespace-scoped `SealedSecret/onemind-mcp-clients` in `hermes`, key `tokens`,
+   holding a JSON object or `name:token` lines (format in
+   `services/onemind-mcp/README.md`). Leave `hermes` out while `ONEMIND_MCP_TOKEN`
+   is set. Commit only ciphertext; list it in `platform/hermes/mcp/kustomization.yaml`
+   with sync wave -2.
+2. In one commit, pin an image digest built from source with per-client tokens,
+   mount the Secret read-only (for example at `/etc/onemind-clients`, keeping the
+   default file mode because the container runs as uid 10001 without an fsGroup) and
+   set `ONEMIND_MCP_TOKENS_FILE=/etc/onemind-clients/tokens`. Older images ignore it.
+3. Allow the client's pods in `platform/hermes/mcp/network-policy.yaml` (today only
+   Legacy may connect) and add the client's egress. A client in another namespace
+   needs its own token sealed in that namespace.
+4. Sync. Only the MCP pod restarts; Legacy keeps its token. Verify anonymous `/mcp`
+   returns 401 and each client's calls appear in the audit log under its name.
+
+To revoke or rotate one client, change its entry, reseal and roll the MCP; the
+other clients keep working.
 
 ## Acceptance and rollback
 
@@ -133,8 +162,9 @@ Hermes image digest matches the config init-container's pinned image.
 Image candidate built from source `3c68986` in
 [40455284585](https://github.com/onemindos/omos/actions/runs/40455284585):
 `ghcr.io/onemindos/onemind-mcp@sha256:80fa67bc138006bd1efc0dc849504910b4068667036d880cba9d0c71afb762cc`.
-Later changes add config integration/tests/docs; the server runtime source is
-unchanged from that image. The active SealedSecrets public certificate fingerprint
+Later changes add config integration/tests/docs; the server runtime source was
+unchanged from that image until per-client tokens were added (not yet deployed).
+The active SealedSecrets public certificate fingerprint
 was `B8:21:29:16:FE:9B:B0:B7:4A:7B:29:BB:32:B6:F9:93:16:41:16:46:BC:F9:29:D4:69:15:E7:49:8C:9D:26:22`.
 Live acceptance completed in
 [40470531771](https://github.com/onemindos/omos/actions/runs/40470531771).
@@ -151,3 +181,64 @@ rotate: update that repository secret, run the workflow, commit its sealed artif
 and sync GitOps. Track the token's chosen expiration in the password manager. The
 registry token is used by Kubernetes image pulling, not loaded into the AI agent.
 SDK 2 acceptance compatibility and fail-fast checks were completed by #492/#493.
+
+## Broad app coverage expansion
+
+The initial four-tool deployment covers NATS and Prometheus only. The expansion
+adds searchable inventory and descriptions, STAC imagery collections/search,
+Ollama installed/running models, active Alertmanager alerts, bounded Loki log
+queries, OpenCost namespace allocations with MediaMTX stream status blocked by API authentication. This is 12
+callable tools across seven configured apps, including the original integrations.
+Configured is a deployment setting, not proof of upstream health. The acceptance
+workflow checks each exposed tool without exporting application content.
+
+`platform/hermes/mcp/apps.yaml` accounts for 32 application/access domains. Entries
+without credentials, reviewed APIs or authorization stay **blocked**, are visible
+to `apps_list`/`apps_describe`, and register no callable tools. This does not claim
+that all applications are integrated. Nextcloud, Matrix, TAK HTTP, portal federation,
+WebODM and other adapters remain explicit implementation work. Existing Legacy
+bus/TAK tools remain separate. No user-file scraping or database backdoor is added.
+
+Karakeep bookmark read/search/save, n8n workflow/execution summaries, Paperclip
+company/issue read and backlog creation, Grafana dashboard search and Tempo trace
+lookup have adapters in source. They are blocked pending the requirements recorded
+on each catalog entry. Dedicated user/service identities are required; the registry
+pull PAT, app admin credentials and model provider keys are not app API identities.
+For n8n the transport uses `X-N8N-API-KEY`, not Bearer authentication.
+
+Write tools are omitted unless the administrator explicitly sets `allow_writes:
+true` on that app, supplies its dedicated credentials, and verifies network ingress
+and end-to-end permissions. Write annotations are non-read-only/non-idempotent;
+creation retries can duplicate records. The prepared deployment enables no writes.
+Vault content, identity administration and physical actuation require separately
+scoped authorization. "All apps" does not silently grant those privileges.
+
+`coverage.yaml` maps all 56 Git-declared Argo Applications to their owning app or
+supporting infrastructure disposition. The quality gate fails if a new Application
+has no disposition, if an old one disappears without a coverage update, or if a
+mapping points to a missing catalog entry. This is source inventory, not a count of
+live Applications or ApplicationSet-generated children. Supporting Postgres,
+Redis, operators, ingress and backup agents stay behind purpose-specific app APIs.
+
+New app checklist: add the app access entry and coverage mapping, reuse a reviewed
+adapter or implement typed operations, provision a dedicated least-privilege app
+identity with SealedSecrets, allow both network directions only for the intended
+pod/port, add boundary tests, pin the built image and run live acceptance from
+Legacy. Optional/blocked entries must not make otherwise healthy tools unavailable.
+
+Expansion preflight: STAC, Alertmanager, Loki and OpenCost returned HTTP 200 from
+Legacy. MediaMTX returned 401 and stays blocked. Direct Legacy-to-Ollama timed out
+under the gateway-only ingress policy; the expansion adds an MCP-pod-only ingress
+exception for inventory reads, preserving the existing gateway rule. Legacy direct
+access stays denied. Runtime acceptance from the MCP must confirm that exception.
+
+The Legacy toolset-revision environment marker rolls its gateway after MCP readiness
+so startup MCP discovery includes the new tools. Bump it when adding/removing tools.
+
+Follow-through is tracked in [the complete app integration checklist](https://github.com/onemindos/omos/issues/543).
+The expansion rollout serves the new catalog and tools; acceptance found that Loki's
+Service port 80 forwards to gateway pod port 8080. The egress policy must allow
+**8080**, scoped to Loki gateway pods. The pinned Loki 7.0.0 chart confirms this
+mapping. Do not use Service ports as NetworkPolicy destination ports without
+checking targetPort. Initial acceptance must wait for Legacy's toolset revision,
+rather than testing its old startup cache while Argo is still rolling it.

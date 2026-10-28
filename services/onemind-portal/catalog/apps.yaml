@@ -495,74 +495,6 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: kubernetes-dashboard
-  title: Kubernetes Dashboard
-  description: Cluster UI
-  tags:
-    - infrastructure
-    - deployment-verified
-  links:
-    - url: https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default
-      title: Open application
-      icon: dashboard
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e1b21dcc86988a49ba.md
-      title: "Archived registry: Kubernetes Dashboard"
-    - url: https://github.com/onemindos/omos/blob/main/docs/inventory/fabric/3d0d0cf70a7e81e1b21dcc86988a49ba.md
-      title: "Archived registry: Kubernetes Dashboard"
-  annotations:
-    onemind.io/access-points: >-
-      [
-        {
-          "id": "cluster-web",
-          "label": "OneMind Kubernetes web deployment",
-          "platform": "Web",
-          "method": "Kubernetes",
-          "location": "OneMind Cloud — NYC3",
-          "targetRef": "resource:default/do-nyc3-omos-cloud",
-          "url": "https://k8s-dashboard.tail717ba0.ts.net/#/configmap?namespace=default",
-          "evidence": "Catalog snapshot",
-          "observedAt": "2026-10-06"
-        }
-      ]
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/documented-purpose: Official Kubernetes Dashboard — cluster resource
-      management, workloads, services, config.
-    onemind.io/documented-host: ☁️ DOKS Cluster
-    onemind.io/documented-status: ✅ Live
-    onemind.io/documented-category: 📊 Observability
-    onemind.io/documented-at: 2026-09-03 21:19:40Z
-    onemind.io/registry-review: source-reviewed-runtime-unverified
-    onemind.io/verification: deployment-verified
-    onemind.io/verified-at: 2026-10-20T06:51:11.173Z
-    onemind.io/runtime-evidence: Deployment kube/kubernetes-dashboard; Service kube/kubernetes-dashboard
-    onemind.io/documented-address: https://k8s-dashboard.tail717ba0.ts.net
-    backstage.io/kubernetes-namespace: kube
-    backstage.io/kubernetes-label-selector: app=kubernetes-dashboard
-    onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: kube
-    grafana/alert-label-selector: namespace=kube
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube&var-workload=kubernetes-dashboard
-    onemind.io/logs-query: '{k8s_namespace_name="kube", k8s_pod_name=~"(kubernetes-dashboard)-.*"}'
-    grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/kubernetes-dashboard/
-    github.com/project-slug: onemindos/omos
-    onemind.io/kubernetes-workloads: kube/kubernetes-dashboard
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: developer-platform
-  dependsOn:
-    - component:default/k8s-kube-kubernetes-dashboard-226fa5ac
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
   name: headlamp
   title: Headlamp
   description: Kubernetes cluster dashboard
@@ -615,8 +547,8 @@ metadata:
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: kube
     grafana/alert-label-selector: namespace=kube
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube&var-workload=headlamp
-    onemind.io/logs-query: '{k8s_namespace_name="kube", k8s_pod_name=~"(headlamp)-.*"}'
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=kube
+    onemind.io/logs-query: '{k8s_namespace_name="kube"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
     onemind.io/recovery-runbook: apps/headlamp/
     github.com/project-slug: onemindos/omos
@@ -3044,36 +2976,6 @@ spec:
   dependsOn:
     - component:default/k8s-argocd-argocd-server-4414022f
     - component:default/argocd
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: external-kubernetes-dashboard
-  title: Kubernetes Dashboard (external launcher)
-  description: Cluster UI
-  tags:
-    - external
-  links:
-    - url: https://k8s-dashboard.tail717ba0.ts.net
-      title: Open application
-      icon: dashboard
-  annotations:
-    onemind.io/canonical-entity-ref: component:default/kubernetes-dashboard
-    onemind.io/hosting: digitalocean-nyc3
-    onemind.io/relationship-source: ingress-service-selector
-    onemind.io/inventory-review: imported-link
-    onemind.io/pillar-review: proposed
-  labels:
-    onemind.io/pillar: so
-    onemind.io/catalog-role: app
-spec:
-  type: website
-  lifecycle: production
-  owner: group:default/onemind-admins
-  system: developer-platform
-  dependsOn:
-    - component:default/kubernetes-dashboard
-    - component:default/k8s-kube-kubernetes-dashboard-226fa5ac
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -6343,7 +6245,7 @@ metadata:
     github.com/project-slug: onemindos/omos
     backstage.io/kubernetes-label-selector: "!onemind.io/scope-all"
     onemind.io/kubernetes-scope: namespace
-    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hermes-dashboard-6thbx,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-kubernetes-dashboard-9r9fp,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
+    onemind.io/kubernetes-workloads: tailscale/egress,tailscale/operator,tailscale/ts-agent-console-8khxt,tailscale/ts-agent-tap-v7ktr,tailscale/ts-argocd-slkzh,tailscale/ts-cilium-gateway-gateway-default-bl4tw,tailscale/ts-cilium-gateway-gateway-default-hl5fh,tailscale/ts-grafana-ksprn,tailscale/ts-headlamp-4qwkc,tailscale/ts-hermes-dashboard-6thbx,tailscale/ts-heynats-p5dmf,tailscale/ts-hubble-tw85d,tailscale/ts-n8n-pmtds,tailscale/ts-nats-dashboard-242wv,tailscale/ts-nats-monitor-zh589,tailscale/ts-nats-ui-d6rrg,tailscale/ts-nats-ws-4q6bc,tailscale/ts-observer-pftsp,tailscale/ts-omos-ha-edge-rlv6k,tailscale/ts-omos-mbp-hgq9w,tailscale/ts-omos-nats-fs6r4,tailscale/ts-omos-s24-44l4v,tailscale/ts-onemind-auth-4w5hk,tailscale/ts-onemind-preview-shtd7,tailscale/ts-opencost-rqpmq,tailscale/ts-tak-tailnet-jtgn4
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
@@ -6739,6 +6641,10 @@ metadata:
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app
+  links:
+    - url: https://opencost.tail717ba0.ts.net
+      title: Open application
+      icon: dashboard
 spec:
   type: service
   lifecycle: production
@@ -6920,7 +6826,7 @@ metadata:
     onemind.io/structure-source: catalog/structure.yaml
     argocd/app-name: platform-nats
     argocd/instance-name: onemind-cloud
-    onemind.io/argocd-apps: edge-nack,platform-nats,platform-nats-tools
+    onemind.io/argocd-apps: edge-nack,platform-nats,platform-nats-streams,platform-nats-tools
     onemind.io/pillar-review: proposed
     onemind.io/kubernetes-namespaces: nats
     backstage.io/kubernetes-namespace: nats

@@ -11,3 +11,4 @@ spec:
   replicas: 3
   history: 1
   maxBytes: 1048576
+  preventDelete: true

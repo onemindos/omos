@@ -7,9 +7,11 @@
 # ARCHITECTURE — Layered sync waves (lower wave = deployed first)
 #
 #  Wave 0 │ CORE        platform-core            networking, certs, secrets, tunnel
-#  Wave 1 │ BUS         platform-nats            NATS 3-node HA + streams
+#  Wave 1 │ BUS         platform-nats            NATS 3-node HA StatefulSet, TLS, tailnet LB
+#         │             edge-nack                NACK JetStream controller
 #         │ OPERATORS   platform-clickhouse-op   Altinity ClickHouse Operator
-#  Wave 2 │ TAK         platform-onetak          OneTAK API/Events/Media/Tiles
+#  Wave 2 │ BUS         platform-nats-streams    Stream/KeyValue CRs (platform/nats/streams), after NACK
+#         │ TAK         platform-onetak          OneTAK API/Events/Media/Tiles
 #         │             platform-takserver       TAK Server overlay (LB, NATS leaf, config)
 #         │             platform-takml           TAK ML vision pipeline (inference → CoT)
 #         │ AUTH        platform-auth-infra      Authentik Postgres + Redis + ingress + secret

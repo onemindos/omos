@@ -7,7 +7,7 @@ The authority message bus (3-node JetStream), the NACK controller and NATS tools
 ## Where it runs
 
 - Catalog entity: `component:default/nats` in System `messaging-nats`
-- Argo CD applications: `edge-nack`, `platform-nats`, `platform-nats-tools`
+- Argo CD applications: `edge-nack`, `platform-nats`, `platform-nats-streams`, `platform-nats-tools`
 - Namespace: `nats`
 
 ## Workloads
