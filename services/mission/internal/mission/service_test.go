@@ -397,6 +397,7 @@ func TestScheduledAndComplete(t *testing.T) {
 	e.waitState(tsk, StateScheduled)
 	e.command(tsk, "complete", map[string]any{})
 	e.waitState(tsk, StateCompleteRequested)
+	e.waitFact(tsk, StateCompleteRequested)
 	if got := strings.Join(e.subjects(tsk), ","); got != "created,scheduled,complete_requested" {
 		t.Fatalf("%s", got)
 	}
@@ -648,6 +649,7 @@ func TestDispatchedBeforeCreate(t *testing.T) {
 	time.Sleep(300 * time.Millisecond)
 	e.command(tsk, "create", taskData(tsk, "", "onemind.task.manual.v1", map[string]any{"instructions": "x"}, zeus))
 	e.waitState(tsk, StateSent)
+	e.waitFact(tsk, StateSent)
 	if got := strings.Join(e.subjects(tsk), ","); got != "created,sent" {
 		t.Fatalf("facts %s", got)
 	}
