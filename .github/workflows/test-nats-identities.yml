@@ -58,14 +58,19 @@ jobs:
       - name: Renderer unit tests
         run: python -m unittest scripts/tests/test_nats_identities.py -v
 
-      - name: gofmt and go vet
-        working-directory: platform/nats/identities/permtest
-        run: |
-          test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
-          go vet ./...
-
-      - name: Permission tests (go test -race)
+      # The zeus-v2 runner has a 1 GiB memory limit (platform/core/github-runner.yaml). Compiling the
+      # embedded nats-server with default parallelism, or with -race, exhausted it on the first run
+      # (runner container restarted). Build serially under a soft memory limit and run without
+      # -race here; the -race run is done before merge (onemind-xr docs/evidence/M1/A19).
+      - name: gofmt, go vet and permission tests
         working-directory: platform/nats/identities/permtest
         env:
           PYTHON: python
-        run: go test -race -count=1 -v ./... 2>&1 | tee "$RUNNER_TEMP/permtest.txt"; test "${PIPESTATUS[0]}" -eq 0
+          GOFLAGS: -p=1
+          GOMAXPROCS: "1"
+          GOMEMLIMIT: 600MiB
+          GOGC: "50"
+        run: |
+          test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+          go vet ./...
+          go test -count=1 -v ./... 2>&1 | tee "$RUNNER_TEMP/permtest.txt"; test "${PIPESTATUS[0]}" -eq 0
