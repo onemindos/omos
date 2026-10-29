@@ -1,0 +1,13 @@
+# The task service serves only over NATS (outbound). No pod may connect to it; kubelet
+# probes from the pod's own node are admitted by Cilium on DOKS (as platform/policy notes).
+# Egress stays open: NATS (namespace nats, allowed for onemind-core by nats-clients).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mission-service-ingress
+  namespace: onemind-core
+spec:
+  podSelector:
+    matchLabels:
+      app: mission-service
+  policyTypes: [Ingress]

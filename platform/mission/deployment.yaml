@@ -1,0 +1,111 @@
+# Task service (FEATURES D2, H4; onemind-xr docs/contracts/mission-task.md): applies
+# cmd.mission.{id}.{verb} from the policy service, is the only writer of KV mission-state
+# (compare-and-set on the KV revision), republishes every change as evt.mission.{id}.{event},
+# and serves svc.mission.{get,list,report,apply}. One replica with Recreate, so two writers
+# never run at once (compare-and-set would still refuse a stale write).
+#
+# IMAGE: ghcr.io/onemindos/mission is built by .github/workflows/build-mission.yml on main.
+# The tag below is a placeholder until that first build: replace it with the built tag and
+# PIN THE DIGEST (sha-<commit>@sha256:..., from the run's image-digest artifact) before the
+# first manual sync.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mission-service
+  namespace: onemind-core
+  labels:
+    app: mission-service
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mission-service
+  template:
+    metadata:
+      labels:
+        app: mission-service
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      # Ecosystem pool (hub-core is memory-saturated, cluster review H1); the pool has no taints.
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mission
+          image: ghcr.io/onemindos/mission:sha-pending-first-build  # pin digest after first CI build
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: health
+              containerPort: 8080
+          env:
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_CA_FILE
+              value: /etc/nats-trust/ca.crt
+            - name: MISSION_BUCKET
+              value: mission-state
+            - name: MISSION_CMD_STREAM
+              value: CMD
+            - name: MISSION_EVT_STREAM
+              value: EVT
+            - name: MISSION_REPORT_CLASSES
+              value: drone,robot
+            - name: MISSION_PRINCIPALS_FILE
+              value: /config/principals.json
+            # Complete asset goto tasks from fleet telemetry (owner proposal D2-P2).
+            - name: MISSION_ARRIVAL
+              value: "true"
+          # NATS_USER and NATS_PASSWORD (the `mission` user): SealedSecret
+          # mission-service-runtime, created by the owner (README.md). Not in Git as plaintext.
+          envFrom:
+            - secretRef:
+                name: mission-service-runtime
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 300m
+              memory: 128Mi
+          startupProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 20
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: nats-trust
+              mountPath: /etc/nats-trust
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: mission-service
+            items:
+              - key: principals.json
+                path: principals.json
+        - name: nats-trust
+          configMap:
+            name: onemind-nats-trust

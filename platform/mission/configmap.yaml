@@ -1,0 +1,23 @@
+# Identity directory of the task service (FEATURES D2, H4). No secrets. Same layout as the
+# policy service's principals.json: it maps a verified NATS identity (account/user from the
+# server-set Nats-Request-Info header on a `share: true` import) to a principal. Only
+# svc.mission.report uses it: a person reports tasks assigned to person `{id}` as user:{id},
+# an agent tasks assigned to agent `{id}`, and `teams` lists the team tasks a person may
+# report. The CLIENT and AGENTS accounts arrive with the A19 identities PR (#562).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mission-service
+  namespace: onemind-core
+  labels:
+    app: mission-service
+data:
+  principals.json: |
+    {
+      "own_account": "ONEMIND",
+      "agent_accounts": ["AGENTS"],
+      "principals": [
+        {"account": "CLIENT", "user": "zeus", "kind": "user", "id": "user:zeus"},
+        {"account": "AGENTS", "user": "hermes", "kind": "agent", "id": "agent:hermes/zeus/legacy"}
+      ]
+    }
