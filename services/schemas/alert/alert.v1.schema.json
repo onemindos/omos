@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.onemindos.local/alert/alert/v1",
+  "title": "Alert v1 (data of evt.so.alert.{raised|updated|resolved})",
+  "description": "An alert from the geofence and alert service (FEATURES D6): a geofence crossing, a stale own asset or a feed outage. One alert per condition with a deterministic alert_id; seq grows by one per fact, and Nats-Msg-Id is {alert_id}:{seq}. Fields follow onemind-xr docs/design/ONTOLOGY.md (alert row). Subject proposal D1-P3.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "v",
+    "alert_id",
+    "alert_kind",
+    "level",
+    "state",
+    "about",
+    "reason",
+    "message",
+    "raised_by",
+    "opened_t",
+    "updated_t",
+    "seq"
+  ],
+  "properties": {
+    "v": {
+      "const": 1
+    },
+    "alert_id": {
+      "type": "string",
+      "pattern": "^alr-(gf|stale|feed)-"
+    },
+    "alert_kind": {
+      "enum": [
+        "geofence",
+        "stale_asset",
+        "feed_outage"
+      ]
+    },
+    "level": {
+      "enum": [
+        "advisory",
+        "caution",
+        "warning"
+      ]
+    },
+    "state": {
+      "enum": [
+        "open",
+        "resolved"
+      ]
+    },
+    "about": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "feed": {
+          "type": "string"
+        }
+      }
+    },
+    "zone_id": {
+      "type": "string"
+    },
+    "zone_kind": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string",
+      "description": "raise: left_keep_in, entered_keep_out, entered_hazard, entered_zone, stale, lost, expired, no_update, silent; resolve: returned, zone_removed, zone_inactive, zone_change, entity_gone, fresh, disabled"
+    },
+    "message": {
+      "type": "string"
+    },
+    "raised_by": {
+      "type": "string"
+    },
+    "opened_t": {
+      "type": "integer"
+    },
+    "updated_t": {
+      "type": "integer"
+    },
+    "resolved_t": {
+      "type": "integer"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        },
+        "hae": {
+          "type": "number"
+        }
+      }
+    },
+    "simulated": {
+      "type": "boolean"
+    }
+  }
+}
