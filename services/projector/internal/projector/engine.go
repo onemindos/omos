@@ -77,6 +77,7 @@ type Engine struct {
 	pend     map[string]*pending
 	admitted int
 	sent     []time.Time // send times within the last second (global ceiling ring)
+	csent    []time.Time // svc.cot.send publishes within the last second
 	lastCap  time.Time
 	lastHB   time.Time
 }
@@ -328,6 +329,25 @@ func (g *Engine) budget(now time.Time) int {
 	}
 	g.sent = g.sent[i:]
 	return g.cfg.MaxRatePerSec - len(g.sent)
+}
+
+// clientBudget reports whether one svc.cot.send publish fits now: under the client ceiling
+// (COT_SEND_MAX_PER_SEC) and under the global ceiling it shares with projected entities.
+func (g *Engine) clientBudget(now time.Time) bool {
+	cut := now.Add(-time.Second)
+	i := 0
+	for i < len(g.csent) && !g.csent[i].After(cut) {
+		i++
+	}
+	g.csent = g.csent[i:]
+	return len(g.csent) < g.cfg.Send.MaxPerSec && g.budget(now) > 0
+}
+
+// noteClientSend counts a client publish in both windows.
+func (g *Engine) noteClientSend(now time.Time) {
+	g.csent = append(g.csent, now)
+	g.sent = append(g.sent, now)
+	g.C.Inc("client_sent")
 }
 
 // flush sends due items, removals first, then by cap order, within the global ceiling: at most

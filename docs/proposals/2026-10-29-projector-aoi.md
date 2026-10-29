@@ -15,7 +15,9 @@ Stacked on the layer service (A5) and the entity service (A4) branches.
 | `platform/omos/tak-projector.yaml` | Legacy Python projector: the ungated `ent.*.*.state` path is off unless `ENT_PROJECTION=true`; its `intel.>` path is unchanged |
 | `platform/hermes/mcp/coverage.yaml`, `docs/STACK.md`, `services/README.md` | Registration rows |
 
-No new subject, stream or bucket. Subjects used: `ent.*.*.state` (read), `tak.cot.inject` /
+No new subject pattern, stream or bucket. `svc.cot.send` is already in the grammar register
+(PR #556, `proposed  svc.cot.send`, resolution INT-R4) and in the #562 `CLIENT` imports; this PR
+serves it. Subjects used: `ent.*.*.state` (read), `svc.cot.send` (serve), `tak.cot.inject` /
 `tak.cot.mesh.tx` (write), `tak.cot.out` and `tak.cot.mesh.rx` (read only, for the tasking
 guard), and the live legacy control subjects `cmd.projector.disable` / `cmd.projector.enable`
 (CP-1 in the contract proposes a four-token form; not changed here).
@@ -46,6 +48,28 @@ The legacy projector's live `ent.*.*.state` path applies none of these (it ignor
 | A6-P4 | **Tasking guard.** The projector also subscribes to `tak.cot.out` and `tak.cot.mesh.rx`, read only, to log and count strike/engage CoT (`t-k-*`, `t-e-*`; stop line SL1, JADC2-MAP test 8) and other `t-*` tasking (not supported yet, section 8.3). It never creates, forwards or executes anything. BUS-DESIGN section 7.2 must give the projector user subscribe rights on those two subjects when accounts split | add to the projector's permissions | one shared account today |
 | A6-P5 | **Smaller rules the contract leaves open:** (a) an AOI altitude band applies only when the entity's altitude is known; (b) person-like track kinds are `person`, `human`, `pedestrian`, `people`, `crowd`; (c) `station` is never projected (no owner switch); (d) drones, robots and vehicles that are not own `sim-*` assets have no row and are not projected; (e) a simulated entity is sent with `how="m-s"` (SL7) even when `provenance.how` says otherwise (contract section 5.1 vs JADC2-MAP SL7) | as listed | as listed |
 
+## svc.cot.send (INT-R4)
+
+The projector serves `svc.cot.send` and stays the single writer of `tak.cot.inject` /
+`tak.cot.mesh.tx`: client sends go through the same publisher, kill switch and global ceiling as
+projected entities. Rules and bodies: `services/projector/README.md` "svc.cot.send". Where
+the build differs from INT-R4 as written, the decisions are below; they are additions to INT-R4
+in the #556 register, not a parallel register.
+
+| # | Decision | Proposed | Until ruled |
+|---|---|---|---|
+| A6-P6 | **Client XML.** INT-R4 says the client never sends XML, but the Unreal client (M2 and M4, `CotSendRequest`, kinds `marker`, `spi`, `route`, `geofence`, `shape`, `chat`) sends built CoT, and only the web GeoChat is structured. The projector accepts both: structured GeoChat is built here; client CoT is parsed strictly, its `<detail>` allowlisted, its uid bound to `onemind-{client_id}-`, and published unchanged | accept both until the Unreal client moves to structured bodies; then drop the CoT form | both forms served |
+| A6-P7 | **One reply shape.** The structured form replies `{ok, uid}` / `{ok: false, error: {code, message}}` (INT-R4); the CoT form keeps the Unreal parser's `{ok: false, error: "<code>", detail}` (`CotSendReply::Parse` reads `error` as a string). Codes are the same | converge on INT-R4's object once `CotSendReply::Parse` reads `error.code` | per form |
+| A6-P8 | **Sender binding.** INT-R4 takes the sender from `Nats-Request-Info`. A GeoChat `sender.uid` must equal the NATS user or end in `-{user}` (web `OM-WEB-{user}`); `OneMind-Sender: {account}/{user}` is on every publish. The Unreal `client_id` is not bound to the NATS user (the client uses `mac`, `headless`) | bind `client_id` to the user in the identity directory (#562) | client_id unbound; rate limit and headers use the verified user |
+| A6-P9 | **Chat marking.** The web GeoChat body has no `marking`. A GeoChat without one takes `COT_SEND_CHAT_DEFAULT_TLP=CLEAR` (TAK users see chat anyway); CoT-form sends must carry a marking (G7 fails closed). This also answers UE-P5's open question for chat sent through the projector | as built | as built |
+| A6-P10 | **Who may call.** Only verified users of `COT_SEND_ACCOUNTS` (`CLIENT`). Callers on the shared `onemind` login (own account) are refused, so agentops/Hermes cannot use the endpoint until #562 exports it to `AGENTS` and `COT_SEND_ACCOUNTS` adds `AGENTS` (the I1-P2 exit in INT-R4) | add `AGENTS` with that export, with its own lower rate | `CLIENT` only |
+| A6-P11 | **Hub and site on one bus.** Both instances answer in queue group `omos-tak-projector`; across a leaf connection a `server` request could reach the site instance and get `target_failed` (and the reverse). Clients retry; a request for `both` is served by whichever instance answers | a site projector sets `COT_SEND_ENABLED=false` until a per-target endpoint is ruled (no new pattern proposed here) | hub serves; no site deployment yet |
+| A6-P12 | **Ceiling.** A client send is refused `rate_limited` when the shared one-second window is full of entity updates, so the target never exceeds `MAX_RATE_PER_SEC`. The alternative reserves part of the window for humans | as built | as built |
+
+Finding for the web client (onemind-xr #2): its B11 CoT export (`b11-cot-export.xml`) writes
+`OM.draw.*` uids, the projector's reserved prefix (contract §5.1). The export is a file, not a
+send, and the projector refuses those uids if they are ever sent.
+
 ## Sync order
 
 1. A4-P1 approved, `ENT` reconciled, `platform-omos-entity` running.
@@ -59,7 +83,8 @@ The legacy projector's live `ent.*.*.state` path applies none of these (it ignor
 
 - `<sensor>` / `<__video>` detail (robotics profile sections 4 and 5; H9, K3), `<precisionlocation>`,
   event-area (`.area`) and structure footprint children, the `ALERT:` remarks prefix (section 5.6),
-  `svc.cot.send`, and the `t-x-d-d` delete experiment (owner checklist).
+  and the `t-x-d-d` delete experiment (owner checklist).
+- `svc.cot.status` (contract §9) and a `svc.cot.chat` history endpoint (WEB-P2 (c)).
 - A site deployment of `PROJECTOR_TARGET=mesh` (runs on the site host next to the mesh gateway; F9).
 - Cap churn: when more than `MAX_PROJECTED` entities qualify and arrive in a different order than
   their rank, the cap swaps some out (49 removals in the 5,000-entity test). A rank hysteresis

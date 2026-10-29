@@ -12,7 +12,55 @@ sync, `platform-omos-projector`).
 | reads | KV `geofences`, KV `mission-state` | watch all keys; every change re-runs the gates for every entity |
 | reads | `tak.cot.out`, `tak.cot.mesh.rx` | tasking guard only: logs and counts `t-k-*` / `t-e-*` (refused, SL1) and other `t-*`; never acts |
 | reads | `cmd.projector.disable`, `cmd.projector.enable` | live legacy control subjects (contract CP-1) |
-| writes | `tak.cot.inject` (`PROJECTOR_TARGET=server`) or `tak.cot.mesh.tx` (`mesh`) | core publish, no reply subject; headers `Nats-Msg-Id: {uid}:{time_ms}`, `OneMind-Marking`, `OneMind-Releasable-To`, `OneMind-Projector` |
+| serves | `svc.cot.send` (queue group `omos-tak-projector`) | client-originated CoT, below |
+| writes | `tak.cot.inject` (`PROJECTOR_TARGET=server`) or `tak.cot.mesh.tx` (`mesh`) | core publish, no reply subject; headers `Nats-Msg-Id: {uid}:{time_ms}`, `OneMind-Marking`, `OneMind-Releasable-To`, `OneMind-Projector`; client sends add `OneMind-Origin: svc.cot.send`, `OneMind-Sender: {account}/{user}` and, for a directed send, `Tak-Dest-Uid` |
+
+## svc.cot.send (client-originated CoT)
+
+The projector is the single writer of its output subject, so client CoT (GeoChat, drawings,
+routes, markers, SPI) goes through it and through the same publisher and ceiling as entities
+(cot-projection.md §1 and §9; register entry INT-R4 in `docs/proposals/2026-10-29-grammar-register/`,
+PR #556). Two bodies are accepted:
+
+| Form | Request | Reply |
+|---|---|---|
+| Structured GeoChat (L0 web, WEB-P4) | `{v: 1, kind: "geochat", target: server\|mesh\|both, message_uid, room {id, name, kind: all\|group\|direct}, text (≤ 1000), sender {uid, callsign}, marking?}`; the projector builds the `b-t-f` CoT | `{v, ok: true, uid, targets[, skipped]}` or `{v, ok: false, error: {code, message}}` |
+| CoT (Unreal client, B-P4 and UE-P1) | `{v: 1, kind: marker\|spi\|route\|geofence\|shape\|chat, targets[], client_id, client_ref, marking {tlp, releasable_to?}, dest_uid?, cot}` | `{v, ok: true, uid, targets[, skipped]}` or `{v, ok: false, error: "<code>", detail}` |
+
+Codes: `invalid`, `forbidden`, `rate_limited`, `target_failed`. Checks, in order:
+
+1. **Caller.** Only a verified user of an account in `COT_SEND_ACCOUNTS` (`CLIENT`): the
+   server-set `Nats-Request-Info` header of the `share: true` import (omos #562). Callers in the
+   projector's own account carry no verified identity and are refused (`forbidden`), as is any
+   own-account header.
+2. **Replay.** A repeated `client_ref` / `message_uid` from the same caller gets the stored reply
+   and is not sent again (`COT_SEND` dedup window 10 min).
+3. **Rate.** Token bucket per caller (`COT_SEND_RATE_PER_MIN`, `COT_SEND_BURST`).
+4. **Content.** Reserved uids: any attribute naming `OM.*` or `INTEL.*` (also after a
+   `BAO.F.*.` source prefix) is `forbidden`. The uid is bound to the sender: `onemind-{client_id}-…`
+   (`GeoChat.onemind-{client_id}.…` for chat), so a client cannot take over a TAK user's marker;
+   a GeoChat `sender.uid` must be the calling NATS user or end in `-{user}` (web `OM-WEB-{user}`).
+   The kind fixes the CoT type (marker `a-*` or `b-m-p-s-m`, spi `b-m-p-s-p-i`, route `b-m-r`,
+   geofence `u-d-f|u-d-c-c|u-d-r`, shape adds `b-m-p-s-m|u-r-b-c-c|u-rb-a`, chat `b-t-f`);
+   civilian scope (no hostile, suspect, weapon or tasking type); `how` must be human (`h-*`).
+   The XML is parsed strictly (one `<event>`, no DOCTYPE, comments or namespaces, depth ≤ 4) and
+   `<detail>` children are allowlisted. **Person-track data** is `forbidden`: an EUD's own
+   position report (`<takv>`, `<__group>`, `<uid>`, `<status>`, `<track>`, `<contact endpoint|phone|…>`)
+   would become `ent.person.*` on the reverse path, and remarks may not reference
+   `ent.person.*` / `ent.station.*` or device identifiers. Projector-only detail (`<onemind>`,
+   `<_flow-tags_>`, `<marti>`) and the `access` / `caveat` / `releasableTo` attributes are refused.
+   Time within `±10 min`, stale ≤ `COT_SEND_MAX_STALE_SEC`, size ≤ `COT_SEND_MAX_BYTES`
+   (mesh: `MESH_MAX_BYTES`), vertices ≤ `MAX_VERTICES`.
+5. **Marking gate G7**, the same rule as for entities. A GeoChat without `marking` takes
+   `COT_SEND_CHAT_DEFAULT_TLP` (`CLEAR`; empty refuses); CoT-form sends must carry one.
+6. **Target.** Each instance publishes only its own target; other requested targets are listed in
+   `skipped`, and a request for none of this instance's targets is `target_failed`.
+7. **Kill switch G1** (`cmd.projector.disable` refuses sends) and the **ceilings**: at most
+   `COT_SEND_MAX_PER_SEC` client publishes per second, counted in the shared
+   `MAX_RATE_PER_SEC` window, so the target never sees more than the global ceiling.
+
+Client CoT is published unchanged after these checks (the Unreal client's bytes); GeoChat XML is
+built by the projector.
 
 ## Configuration (contract section 10)
 
@@ -23,6 +71,12 @@ sync, `platform-omos-projector`).
 `MESH_MAX_BYTES` (1200), `MAX_VERTICES` (200), `ENT_STREAM` (`ENT`), `ENT_MODE=core`,
 `HTTP_ADDR` (`:8080`: `/healthz`, `/readyz`, `/status` with counters), `LOG_LEVEL`.
 `TAK_GROUP` is deprecated and ignored (`<__group>` is no longer sent, section 5.4).
+
+svc.cot.send: `COT_SEND_ENABLED` (`true`), `COT_SEND_SUBJECT` (`svc.cot.send`),
+`COT_SEND_ACCOUNTS` (`CLIENT`), `COT_SEND_OWN_ACCOUNT` (`ONEMIND`), `COT_SEND_RATE_PER_MIN` (30),
+`COT_SEND_BURST` (10), `COT_SEND_MAX_PER_SEC` (10 / 2 mesh), `COT_SEND_MAX_BYTES` (65536 / mesh
+`MESH_MAX_BYTES`), `COT_SEND_MAX_STALE_SEC` (86400), `COT_SEND_CHAT_STALE_SEC` (600),
+`COT_SEND_CHAT_DEFAULT_TLP` (`CLEAR`), `COT_SEND_ALLOW_UNVERIFIED` (`false`; local tests only).
 
 ## Tests
 
@@ -39,3 +93,9 @@ half of test 8, plus JADC2-MAP stop-line tests 8 and 10, on a disposable `nats-s
 and tasking test builds and runs the entity service from `../entity` (skipped if it does not
 build; set `ENTITY_SERVICE_BIN` to use a prebuilt one). `A6_EVIDENCE_LOG` appends a one-line
 result per check to a file.
+
+`internal/projector/cotsend_test.go` covers svc.cot.send with the clients' own shapes (Unreal
+`CotSendRequest` and builders, M4 drawings, web `geochatRequest`, an ATAK EUD report) and, on a
+disposable `nats-server` with the omos #562 account layout (`CLIENT` imports `svc.cot.send` with
+`share: true`), verified identity, impersonation, person data, marking, replay, per-caller and
+global rate limits, the kill switch and the single-writer count.

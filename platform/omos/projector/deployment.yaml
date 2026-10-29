@@ -103,6 +103,18 @@ spec:
               value: "200"
             - name: ENT_STREAM
               value: "ENT"
+            # svc.cot.send (services/projector/README.md): verified CLIENT users only, through
+            # the share: true import of omos #562; never COT_SEND_ALLOW_UNVERIFIED here.
+            - name: COT_SEND_ACCOUNTS
+              value: "CLIENT"
+            - name: COT_SEND_RATE_PER_MIN
+              value: "30"
+            - name: COT_SEND_BURST
+              value: "10"
+            - name: COT_SEND_MAX_PER_SEC
+              value: "10"
+            - name: COT_SEND_CHAT_DEFAULT_TLP
+              value: "CLEAR"
           readinessProbe:
             httpGet:
               path: /readyz

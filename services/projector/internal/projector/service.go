@@ -48,6 +48,8 @@ type Service struct {
 	log    *slog.Logger
 	Engine *Engine
 	events chan event
+	sends  chan *sendJob
+	sender *sender
 	ready  atomic.Bool
 	entOK  atomic.Bool
 	kvOK   atomic.Int32
@@ -71,8 +73,9 @@ func New(cfg Config, nc *nats.Conn, log *slog.Logger) (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	s := &Service{cfg: cfg, nc: nc, js: js, log: log, events: make(chan event, 8192), now: time.Now}
+	s := &Service{cfg: cfg, nc: nc, js: js, log: log, events: make(chan event, 8192), sends: make(chan *sendJob, 64), now: time.Now}
 	s.Engine = NewEngine(cfg, log, s.publish)
+	s.sender = newSender(&s.cfg, s.now)
 	return s, nil
 }
 
@@ -124,6 +127,15 @@ func (s *Service) Run(ctx context.Context) error {
 		}
 		subs = append(subs, sub)
 	}
+	if s.cfg.Send.Subject != "" {
+		sub, err := s.nc.QueueSubscribe(s.cfg.Send.Subject, s.cfg.Send.Queue, s.handleSend)
+		if err != nil {
+			return err
+		}
+		subs = append(subs, sub)
+		s.log.Info("serving client CoT", "subject", s.cfg.Send.Subject, "accounts", s.cfg.Send.Accounts,
+			"allow_unverified", s.cfg.Send.AllowUnverified, "per_identity_per_min", s.cfg.Send.PerIdentityMin)
+	}
 	for _, subj := range s.cfg.TakInputSubjects {
 		sub, err := s.nc.Subscribe(subj, s.guard)
 		if err != nil {
@@ -171,6 +183,8 @@ func (s *Service) loop(ctx context.Context) error {
 				s.log.Warn("projector disabled", "subject", s.cfg.ControlDisable)
 				s.Engine.SetEnabled(false, now)
 			}
+		case j := <-s.sends:
+			j.reply <- s.runSend(j, s.now())
 		case <-tick.C:
 			s.Engine.Tick(s.now())
 		case <-statEvery.C:
