@@ -105,6 +105,13 @@ spec:
               value: "ENT"
             # svc.cot.send (services/projector/README.md): verified CLIENT users only, through
             # the share: true import of omos #562; never COT_SEND_ALLOW_UNVERIFIED here.
+            # Off until owner proposal A6-P13 is applied: the legacy ONEMIND users (onemind,
+            # leaf_tak) can forge Nats-Request-Info until #562 denies them publish on svc.cot.>.
+            - name: COT_SEND_ENABLED
+              value: "false"
+            # Persistent kinds (marker/route/geofence/shape) belong to entity.create (A6-P6).
+            - name: COT_SEND_PERSISTENT_KINDS
+              value: "false"
             - name: COT_SEND_ACCOUNTS
               value: "CLIENT"
             - name: COT_SEND_RATE_PER_MIN

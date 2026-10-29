@@ -29,12 +29,20 @@ PR #556). Two bodies are accepted:
 
 Codes: `invalid`, `forbidden`, `rate_limited`, `target_failed`. Checks, in order:
 
-1. **Caller.** Only a verified user of an account in `COT_SEND_ACCOUNTS` (`CLIENT`): the
-   server-set `Nats-Request-Info` header of the `share: true` import (omos #562). Callers in the
-   projector's own account carry no verified identity and are refused (`forbidden`), as is any
-   own-account header.
+1. **Caller.** Only a user of an account in `COT_SEND_ACCOUNTS` (`CLIENT`), read from the
+   `Nats-Request-Info` header that nats-server sets on the `share: true` import (omos #562).
+   A caller in the projector's own account with no header, or with a header naming the own
+   account, is refused (`forbidden`). **That header is not proof of identity by itself:**
+   nats-server passes a header that an own-account publisher wrote by hand unchanged, so any
+   other `ONEMIND` user (the shared `onemind` and `leaf_tak` logins) can claim
+   `{"acc":"CLIENT","user":"zeus"}` and the projector cannot tell
+   (`TestSendForgedRequestInfo`, "without bus control"). The identity is only trustworthy when
+   no own-account user except the projector may publish to `svc.cot.>` (owner proposal A6-P13).
+   Until that deny is applied the endpoint is **off**: `COT_SEND_ENABLED` defaults to `false`.
 2. **Replay.** A repeated `client_ref` / `message_uid` from the same caller gets the stored reply
-   and is not sent again (`COT_SEND` dedup window 10 min).
+   and is not sent again (`COT_SEND` dedup window 10 min). The key is reserved before the send
+   is queued, so a retry while the first is in flight gets `target_failed` ("in progress") and
+   never publishes twice; once queued, the request waits for the loop's answer (no timeout).
 3. **Rate.** Token bucket per caller (`COT_SEND_RATE_PER_MIN`, `COT_SEND_BURST`).
 4. **Content.** Reserved uids: any attribute naming `OM.*` or `INTEL.*` (also after a
    `BAO.F.*.` source prefix) is `forbidden`. The uid is bound to the sender: `onemind-{client_id}-…`
@@ -44,10 +52,15 @@ Codes: `invalid`, `forbidden`, `rate_limited`, `target_failed`. Checks, in order
    geofence `u-d-f|u-d-c-c|u-d-r`, shape adds `b-m-p-s-m|u-r-b-c-c|u-rb-a`, chat `b-t-f`);
    civilian scope (no hostile, suspect, weapon or tasking type); `how` must be human (`h-*`).
    The XML is parsed strictly (one `<event>`, no DOCTYPE, comments or namespaces, depth ≤ 4) and
-   `<detail>` children are allowlisted. **Person-track data** is `forbidden`: an EUD's own
+   `<detail>` children are allowlisted. Only ephemeral kinds (`spi`, `chat`, structured
+   GeoChat) are served by default; the persistent kinds `marker`, `route`, `geofence` and
+   `shape` belong to `entity.create` (cot-projection.md section 9) and need
+   `COT_SEND_PERSISTENT_KINDS=true` (A6-P6). **Person-track data** is `forbidden`: an EUD's own
    position report (`<takv>`, `<__group>`, `<uid>`, `<status>`, `<track>`, `<contact endpoint|phone|…>`)
-   would become `ent.person.*` on the reverse path, and remarks may not reference
-   `ent.person.*` / `ent.station.*` or device identifiers. Projector-only detail (`<onemind>`,
+   would become `ent.person.*` on the reverse path; no attribute value (both forms: contact
+   callsign, link and label attributes, GeoChat sender, room and uid) and no non-chat remarks
+   text may reference `ent.person.*` / `ent.station.*` or device identifiers (IMSI, IMEI, MAC
+   address). The free text of a chat message is not screened (A6-P14). Projector-only detail (`<onemind>`,
    `<_flow-tags_>`, `<marti>`) and the `access` / `caveat` / `releasableTo` attributes are refused.
    Time within `±10 min`, stale ≤ `COT_SEND_MAX_STALE_SEC`, size ≤ `COT_SEND_MAX_BYTES`
    (mesh: `MESH_MAX_BYTES`), vertices ≤ `MAX_VERTICES`.
@@ -72,7 +85,8 @@ built by the projector.
 `HTTP_ADDR` (`:8080`: `/healthz`, `/readyz`, `/status` with counters), `LOG_LEVEL`.
 `TAK_GROUP` is deprecated and ignored (`<__group>` is no longer sent, section 5.4).
 
-svc.cot.send: `COT_SEND_ENABLED` (`true`), `COT_SEND_SUBJECT` (`svc.cot.send`),
+svc.cot.send: `COT_SEND_ENABLED` (`false`; set `true` only after A6-P13),
+`COT_SEND_PERSISTENT_KINDS` (`false`), `COT_SEND_SUBJECT` (`svc.cot.send`),
 `COT_SEND_ACCOUNTS` (`CLIENT`), `COT_SEND_OWN_ACCOUNT` (`ONEMIND`), `COT_SEND_RATE_PER_MIN` (30),
 `COT_SEND_BURST` (10), `COT_SEND_MAX_PER_SEC` (10 / 2 mesh), `COT_SEND_MAX_BYTES` (65536 / mesh
 `MESH_MAX_BYTES`), `COT_SEND_MAX_STALE_SEC` (86400), `COT_SEND_CHAT_STALE_SEC` (600),
@@ -97,5 +111,6 @@ result per check to a file.
 `internal/projector/cotsend_test.go` covers svc.cot.send with the clients' own shapes (Unreal
 `CotSendRequest` and builders, M4 drawings, web `geochatRequest`, an ATAK EUD report) and, on a
 disposable `nats-server` with the omos #562 account layout (`CLIENT` imports `svc.cot.send` with
-`share: true`), verified identity, impersonation, person data, marking, replay, per-caller and
+`share: true`), verified identity, impersonation (including an own-account forged
+`Nats-Request-Info`, with and without the A6-P13 deny), person data, marking, replay, per-caller and
 global rate limits, the kill switch and the single-writer count.

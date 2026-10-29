@@ -105,6 +105,7 @@ func asReq(t *testing.T, m map[string]any) *sendRequest {
 
 func TestSendPrepareCotClientShapes(t *testing.T) {
 	cfg := Defaults(TargetServer)
+	cfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	now := time.Now()
 	for _, tc := range []struct {
 		kind, cot string
@@ -145,6 +146,7 @@ func ueShapes(now time.Time) map[string]string {
 
 func TestSendPrepareShapesM4(t *testing.T) {
 	cfg := Defaults(TargetServer)
+	cfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	now := time.Now()
 	for name, cot := range ueShapes(now) {
 		if _, e := prepareCot(asReq(t, ueRequest("shape", "mac", cot, []string{"server"}, "CLEAR")), &cfg, now); e != nil {
@@ -159,6 +161,7 @@ func TestSendPrepareShapesM4(t *testing.T) {
 
 func TestSendPrepareCotRefusals(t *testing.T) {
 	cfg := Defaults(TargetServer)
+	cfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	now := time.Now()
 	good := ueMarker("onemind-headless-1-UiErQFEk", now)
 	cases := []struct {
@@ -217,6 +220,7 @@ func TestSendPrepareCotRefusals(t *testing.T) {
 	}
 	// Mesh profile: the size limit is MESH_MAX_BYTES.
 	mcfg := Defaults(TargetMesh)
+	mcfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	big := strings.Replace(good, "marker from the OneMind client", strings.Repeat("x", 1300), 1)
 	if _, e := prepareCot(asReq(t, ueRequest("marker", "headless", big, []string{"mesh"}, "CLEAR")), &mcfg, now); e == nil || e.code != ErrInvalid {
 		t.Errorf("mesh size: want invalid, got %v", e)
@@ -225,6 +229,7 @@ func TestSendPrepareCotRefusals(t *testing.T) {
 
 func TestSendPrepareChatWebShape(t *testing.T) {
 	cfg := Defaults(TargetServer)
+	cfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	now := time.Now()
 	id := identity{Account: "CLIENT", User: "zeus", Verified: true}
 	req := webGeochat("zeus", allChatRooms, "all", "Need eyes on <north field> & the gate", "both")
@@ -286,6 +291,7 @@ func TestSendPrepareChatWebShape(t *testing.T) {
 
 func TestSendRateBucket(t *testing.T) {
 	cfg := Defaults(TargetServer)
+	cfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	cfg.Send.PerIdentityMin, cfg.Send.Burst = 60, 3
 	s := newSender(&cfg, time.Now)
 	now := time.Now()
@@ -306,6 +312,11 @@ func TestSendRateBucket(t *testing.T) {
 }
 
 func TestSendConfigFromEnv(t *testing.T) {
+	// Off by default: the endpoint needs the bus control of A6-P13 before it may serve.
+	if c, err := FromEnv(); err != nil || c.Send.Subject != "" || c.Send.Persistent {
+		t.Fatalf("default send config %+v %v: want disabled, persistent kinds off", c.Send, err)
+	}
+	t.Setenv("COT_SEND_ENABLED", "true")
 	t.Setenv("COT_SEND_ACCOUNTS", "CLIENT,ATAK")
 	t.Setenv("COT_SEND_RATE_PER_MIN", "12")
 	t.Setenv("COT_SEND_CHAT_DEFAULT_TLP", "")
@@ -321,8 +332,9 @@ func TestSendConfigFromEnv(t *testing.T) {
 		t.Fatal("COT_SEND_ENABLED=false did not disable")
 	}
 	t.Setenv("PROJECTOR_TARGET", "mesh")
-	t.Setenv("COT_SEND_ENABLED", "")
-	if c, _ = FromEnv(); c.Send.MaxBytes != c.MeshMaxBytes || c.Send.MaxPerSec != 2 {
+	t.Setenv("COT_SEND_ENABLED", "true")
+	t.Setenv("COT_SEND_PERSISTENT_KINDS", "true")
+	if c, _ = FromEnv(); c.Send.MaxBytes != c.MeshMaxBytes || c.Send.MaxPerSec != 2 || !c.Send.Persistent {
 		t.Fatalf("mesh send config %+v", c.Send)
 	}
 }
@@ -342,8 +354,17 @@ func pw() string {
 
 // startAccountServer runs nats-server with the #562 account layout for svc.cot.send. Passwords
 // are generated per run and never written outside the temp dir.
-func startAccountServer(t *testing.T) *acctServer {
+func startAccountServer(t *testing.T) *acctServer { return startAccountServerGuard(t, false) }
+
+// startAccountServerGuard with guard=true adds the bus control of owner proposal A6-P13: the
+// legacy shared ONEMIND user may not publish to svc.cot.>, so only a request that crosses the
+// CLIENT import (with its server-set Nats-Request-Info) reaches the projector.
+func startAccountServerGuard(t *testing.T, guard bool) *acctServer {
 	t.Helper()
+	perm := ""
+	if guard {
+		perm = `, permissions: {publish: {deny: ["svc.cot.>"]}}`
+	}
 	bin := natsServerBin(t)
 	dir := storeRoot(t)
 	port := freePort(t)
@@ -356,7 +377,7 @@ jetstream { store_dir: %q }
 accounts {
   ONEMIND {
     jetstream: enabled
-    users: [ {user: projector, password: %q}, {user: onemind, password: %q} ]
+    users: [ {user: projector, password: %q}, {user: onemind, password: %q%s} ]
     exports: [ {service: "svc.cot.send", accounts: [CLIENT]} ]
   }
   CLIENT {
@@ -367,7 +388,7 @@ accounts {
     users: [ {user: hermes, password: %q} ]
   }
 }
-`, port, filepath.Join(dir, "js"), s.pw["projector"], s.pw["onemind"], s.pw["zeus"], s.pw["carol"], s.pw["hermes"])
+`, port, filepath.Join(dir, "js"), s.pw["projector"], s.pw["onemind"], perm, s.pw["zeus"], s.pw["carol"], s.pw["hermes"])
 	cf := filepath.Join(dir, "nats.conf")
 	if err := os.WriteFile(cf, []byte(conf), 0o600); err != nil {
 		t.Fatal(err)
@@ -475,6 +496,7 @@ func collectSubj(t *testing.T, nc *nats.Conn, subj string) *subjCollector {
 func TestSendIntegrationHub(t *testing.T) {
 	s := startAccountServer(t)
 	cfg := testCfg(TargetServer)
+	cfg.Send.Persistent = true // marker/route/geofence/shape (COT_SEND_PERSISTENT_KINDS)
 	cfg.EntStream = ""
 	cfg.ReleaseGroups = []string{"homestead"}
 	cfg.Send.PerIdentityMin, cfg.Send.Burst = 6, 25
@@ -585,7 +607,7 @@ func TestSendIntegrationHub(t *testing.T) {
 	if rm, err := forged.RequestMsg(fm, 3*time.Second); err != nil || !strings.Contains(string(rm.Data), ErrForbidden) {
 		t.Fatalf("own-account forged header: %v %s", err, rm.Data)
 	}
-	evidence(t, "own-account caller with a hand-written Nats-Request-Info: refused forbidden")
+	evidence(t, "own-account caller with a hand-written Nats-Request-Info naming its own account: refused forbidden")
 	if _, err := send(t, s.conn(t, "hermes"), webGeochat("hermes", "Cyan", "group", "hi", "server")); err == nil {
 		t.Fatal("AGENTS reached svc.cot.send")
 	}
@@ -681,4 +703,116 @@ func TestSendIntegrationMeshAndCeiling(t *testing.T) {
 		t.Fatal("site projector wrote tak.cot.inject")
 	}
 	evidence(t, "client ceiling COT_SEND_MAX_PER_SEC=3: %d ok, %d rate_limited in one burst; nothing on tak.cot.inject", ok, limited)
+}
+
+func TestSendPersistentKindsGated(t *testing.T) {
+	cfg := Defaults(TargetServer) // Persistent off, as deployed
+	now := time.Now()
+	for kind, cot := range map[string]string{
+		"marker":   ueMarker("onemind-headless-1-UiErQFEk", now),
+		"route":    ueRoute("onemind-headless-4-Rr12Ss34", now),
+		"geofence": ueGeofence("onemind-headless-5-Gg12Hh34", now),
+		"shape":    ueShapes(now)["line"],
+	} {
+		if _, e := prepareCot(asReq(t, ueRequest(kind, "headless", cot, []string{"server"}, "CLEAR")), &cfg, now); e == nil || e.code != ErrForbidden {
+			t.Fatalf("%s served with COT_SEND_PERSISTENT_KINDS off: %v", kind, e)
+		}
+	}
+	for kind, cot := range map[string]string{
+		"spi":  ueSpi("onemind-headless-3-Zz12Yy34", now),
+		"chat": ueChat("onemind-headless", "ephemeral", now),
+	} {
+		if _, e := prepareCot(asReq(t, ueRequest(kind, "headless", cot, []string{"server"}, "CLEAR")), &cfg, now); e != nil {
+			t.Fatalf("ephemeral %s refused: %v", kind, e)
+		}
+	}
+}
+
+func TestSendPersonWordsInAttributes(t *testing.T) {
+	cfg := Defaults(TargetServer)
+	cfg.Send.Persistent = true
+	now := time.Now()
+	m := strings.Replace(ueMarker("onemind-headless-1-UiErQFEk", now), "<detail>",
+		`<detail><contact callsign="IMEI 356938035643809"/>`, 1)
+	if _, e := prepareCot(asReq(t, ueRequest("marker", "headless", m, []string{"server"}, "CLEAR")), &cfg, now); e == nil || e.code != ErrForbidden {
+		t.Fatalf("device identifier in an attribute: %v", e)
+	}
+	c := strings.Replace(ueChat("onemind-headless", "hi", now), `chatroom="`, `chatroom="ent.person.p1 `, 1)
+	if !strings.Contains(c, "ent.person.p1") {
+		t.Fatal("fixture: chatroom attribute not found")
+	}
+	if _, e := prepareCot(asReq(t, ueRequest("chat", "headless", c, []string{"server"}, "CLEAR")), &cfg, now); e == nil || e.code != ErrForbidden {
+		t.Fatalf("person reference in a chat attribute: %v", e)
+	}
+	id := identity{Account: "CLIENT", User: "zeus", Verified: true}
+	w := asReq(t, webGeochat("zeus", "Cyan", "group", "hi", "server"))
+	w.Sender.Callsign = "mac address 00:11:22:33:44:55"
+	if _, e := prepareChat(w, id, &cfg, now); e == nil || e.code != ErrForbidden {
+		t.Fatalf("device identifier in a GeoChat callsign: %v", e)
+	}
+	// The message text itself is the user's own words and is not screened (A6-P14).
+	w = asReq(t, webGeochat("zeus", "Cyan", "group", "my IMEI is on the form", "server"))
+	if _, e := prepareChat(w, id, &cfg, now); e != nil {
+		t.Fatalf("chat text screened: %v", e)
+	}
+}
+
+func TestSendDedupPending(t *testing.T) {
+	cfg := Defaults(TargetServer)
+	s := newSender(&cfg, time.Now)
+	now := time.Now()
+	if r, p := s.dedupReserve("CLIENT/zeus|a", now); r != nil || p {
+		t.Fatal("first reserve")
+	}
+	if r, p := s.dedupReserve("CLIENT/zeus|a", now); r != nil || !p {
+		t.Fatal("second request while the first is queued must see pending, not publish again")
+	}
+	s.dedupRelease("CLIENT/zeus|a")
+	if _, p := s.dedupReserve("CLIENT/zeus|a", now); p {
+		t.Fatal("release did not free the key")
+	}
+	s.dedupPut("CLIENT/zeus|a", []byte(`{"ok":true}`), now)
+	s.dedupRelease("CLIENT/zeus|a") // must not drop a stored reply
+	if r, _ := s.dedupReserve("CLIENT/zeus|a", now); string(r) != `{"ok":true}` {
+		t.Fatalf("stored reply %q", r)
+	}
+}
+
+// TestSendForgedRequestInfo: a user of the projector's own account writes
+// Nats-Request-Info {"acc":"CLIENT","user":"zeus"} by hand. nats-server passes that header
+// through unchanged, so without the bus control the projector cannot tell it from a real
+// CLIENT request (known gap, recorded); with the A6-P13 deny on the legacy user it never
+// reaches the projector, while real CLIENT callers still do.
+func TestSendForgedRequestInfo(t *testing.T) {
+	forge := func(t *testing.T, s *acctServer) (accepted bool, published int) {
+		t.Helper()
+		cfg := testCfg(TargetServer)
+		cfg.EntStream = ""
+		startSendProjector(t, s, cfg)
+		watch := s.conn(t, "projector")
+		inject := collectSubj(t, watch, "tak.cot.inject")
+		fm := nats.NewMsg("svc.cot.send")
+		fm.Header.Set(RequestInfoHeader, `{"acc":"CLIENT","user":"zeus"}`)
+		fm.Data, _ = json.Marshal(webGeochat("zeus", "Cyan", "group", "forged", "server"))
+		rm, err := s.conn(t, "onemind").RequestMsg(fm, 1500*time.Millisecond)
+		accepted = err == nil && strings.Contains(string(rm.Data), `"ok":true`)
+		time.Sleep(200 * time.Millisecond)
+		// A real CLIENT caller is unaffected either way.
+		if r, err := send(t, s.conn(t, "zeus"), webGeochat("zeus", "Cyan", "group", "real", "server")); err != nil || !r.OK {
+			t.Fatalf("real CLIENT caller: %v %+v", err, r)
+		}
+		waitFor(t, 3*time.Second, "real send", func() bool { return inject.n() >= 1 })
+		return accepted, inject.n() - 1
+	}
+	t.Run("without bus control", func(t *testing.T) {
+		accepted, n := forge(t, startAccountServerGuard(t, false))
+		evidence(t, "KNOWN GAP (A6-P13): own-account user forging Nats-Request-Info acc=CLIENT user=zeus without the bus deny: accepted=%v, forged publishes=%d; COT_SEND_ENABLED defaults to false until the deny is applied", accepted, n)
+	})
+	t.Run("with bus control", func(t *testing.T) {
+		accepted, n := forge(t, startAccountServerGuard(t, true))
+		if accepted || n != 0 {
+			t.Fatalf("forged request reached the projector under the A6-P13 deny: accepted=%v published=%d", accepted, n)
+		}
+		evidence(t, "A6-P13 bus control (legacy ONEMIND user publish deny svc.cot.>): forged acc=CLIENT header refused at the server, 0 forged publishes; real CLIENT caller still served")
+	})
 }

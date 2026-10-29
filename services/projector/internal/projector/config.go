@@ -52,6 +52,7 @@ type SendConfig struct {
 	Accounts        []string      // accounts whose verified users may send (share: true import)
 	OwnAccount      string        // the projector's account; its callers carry no verified identity
 	AllowUnverified bool          // local tests only: accept same-account callers
+	Persistent      bool          // also serve marker/route/geofence/shape (§9 deviation, A6-P6)
 	PerIdentityMin  int           // sustained sends per identity per minute
 	Burst           int           // per-identity burst
 	MaxPerSec       int           // all client sends on this target, per second
@@ -136,9 +137,13 @@ func sendFromEnv(c *Config) error {
 	if v, ok := os.LookupEnv("COT_SEND_SUBJECT"); ok {
 		s.Subject = strings.TrimSpace(v)
 	}
-	if os.Getenv("COT_SEND_ENABLED") == "false" {
+	// Off unless COT_SEND_ENABLED=true: the caller identity is only trustworthy once the bus
+	// stops own-account users other than the projector from publishing to svc.cot.send
+	// (resolveIdentity, owner proposal A6-P13).
+	if os.Getenv("COT_SEND_ENABLED") != "true" {
 		s.Subject = ""
 	}
+	s.Persistent = os.Getenv("COT_SEND_PERSISTENT_KINDS") == "true"
 	s.Accounts = envList("COT_SEND_ACCOUNTS", s.Accounts)
 	if v := os.Getenv("COT_SEND_OWN_ACCOUNT"); v != "" {
 		s.OwnAccount = v

@@ -141,6 +141,8 @@ type bucket struct {
 	last   time.Time
 }
 
+// dedupEntry is a stored reply, or a pending one (reply nil) while the send is queued, so a
+// retry with the same client_ref / message_uid never publishes twice.
 type dedupEntry struct {
 	reply   []byte
 	expires time.Time
@@ -177,34 +179,61 @@ func (s *sender) allow(key string, now time.Time) bool {
 	return true
 }
 
-func (s *sender) dedupGet(key string, now time.Time) []byte {
+// dedupReserve returns the stored reply for key, or pending=true while another request with the
+// same key is in flight; otherwise it records a pending entry and returns neither.
+func (s *sender) dedupReserve(key string, now time.Time) (reply []byte, pending bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if e, ok := s.ded[key]; ok && now.Before(e.expires) {
-		return e.reply
+		return e.reply, e.reply == nil
 	}
-	return nil
+	s.gcLocked(now)
+	s.ded[key] = dedupEntry{expires: now.Add(s.cfg.Send.DedupTTL)}
+	return nil, false
+}
+
+// dedupRelease drops a pending entry after a refused send, so the client may retry.
+func (s *sender) dedupRelease(key string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if e, ok := s.ded[key]; ok && e.reply == nil {
+		delete(s.ded, key)
+	}
 }
 
 func (s *sender) dedupPut(key string, reply []byte, now time.Time) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if len(s.ded) >= 10000 {
-		for k, e := range s.ded {
-			if !now.Before(e.expires) {
-				delete(s.ded, k)
-			}
-		}
-		if len(s.ded) >= 10000 {
-			s.ded = map[string]dedupEntry{}
-		}
-	}
+	s.gcLocked(now)
 	s.ded[key] = dedupEntry{reply: reply, expires: now.Add(s.cfg.Send.DedupTTL)}
 }
 
-// resolveIdentity reads the verified caller, as services/policy Directory.Resolve does: only a
-// header from an account other than the projector's own counts, since an own-account caller
-// carries no server-set value and could have written one.
+func (s *sender) gcLocked(now time.Time) {
+	if len(s.ded) < 10000 {
+		return
+	}
+	for k, e := range s.ded {
+		if !now.Before(e.expires) {
+			delete(s.ded, k)
+		}
+	}
+	if len(s.ded) >= 10000 {
+		for k, e := range s.ded { // keep pending entries; drop stored replies
+			if e.reply != nil {
+				delete(s.ded, k)
+			}
+		}
+	}
+}
+
+// resolveIdentity reads the caller from Nats-Request-Info, refusing a header that names the
+// projector's own account. This is NOT proof of identity on its own: nats-server sets the header
+// only on a request that crosses a share: true import, and passes a header that a publisher in
+// the projector's own account wrote by hand unchanged, so an own-account user can forge
+// {"acc":"CLIENT","user":"zeus"} and the subscriber cannot tell. The identity is trustworthy
+// only when no user of the own account except the projector may publish to svc.cot.send (bus
+// control, owner proposal A6-P13). Until that is applied the endpoint stays off
+// (COT_SEND_ENABLED defaults to false).
 func resolveIdentity(m *nats.Msg, own string) identity {
 	if m.Header == nil {
 		return identity{}
@@ -263,10 +292,21 @@ func (s *Service) handleSend(m *nats.Msg) {
 	dkey := ""
 	if ref != "" {
 		dkey = id.key() + "|" + ref
-		if r := s.sender.dedupGet(dkey, now); r != nil {
+		r, pending := s.sender.dedupReserve(dkey, now)
+		if r != nil {
 			c.Inc("cot_send_replayed")
 			s.respond(m, r)
 			return
+		}
+		if pending {
+			fail(&sendErr{ErrTargetFailed, "a send with this client_ref / message_uid is in progress; retry for its reply"}, id, req.Kind)
+			return
+		}
+		// Every refusal below releases the pending entry; a success stores the reply.
+		inner := fail
+		fail = func(e *sendErr, id identity, kind string) {
+			s.sender.dedupRelease(dkey)
+			inner(e, id, kind)
 		}
 	}
 	if !s.sender.allow(id.key(), now) {
@@ -305,11 +345,18 @@ func (s *Service) handleSend(m *nats.Msg) {
 		fail(&sendErr{ErrTargetFailed, "projector stopping"}, id, req.Kind)
 		return
 	}
+	// Once queued, wait for the loop's answer without a timeout: runSend is bounded (one core
+	// publish), and replying target_failed while the publish may still happen would let a retry
+	// publish twice. Only shutdown ends the wait.
 	var res *sendErr
 	select {
 	case res = <-job.reply:
-	case <-time.After(2 * time.Second):
-		res = &sendErr{ErrTargetFailed, "projector busy"}
+	case <-s.done:
+		select {
+		case res = <-job.reply:
+		default:
+			res = &sendErr{ErrTargetFailed, "projector stopping"}
+		}
 	}
 	if res != nil {
 		fail(res, id, req.Kind)
@@ -518,6 +565,11 @@ func prepareChat(req *sendRequest, id identity, cfg *Config, now time.Time) (*pr
 	if roomName == "" {
 		roomName = roomID
 	}
+	for _, v := range []string{sender, callsign, roomID, roomName, req.MessageUID} {
+		if personWords.MatchString(v) {
+			return nil, forbidden("sender, room or message_uid references a person or a device identifier (G4)")
+		}
+	}
 	switch req.Room.Kind {
 	case "all":
 		roomID, roomName = allChatRooms, allChatRooms
@@ -603,7 +655,8 @@ func sanitizeUser(u string) string {
 // ---- client-built CoT (B-P4) ----------------------------------------------------------------
 
 // kindTypes is the kind-to-type table. Persistent drawings belong to entity.create
-// (cot-projection.md §9, B-P1); until that exists the Unreal client sends them here.
+// (cot-projection.md §9, B-P1); until that exists the Unreal client may send them here, but
+// only when COT_SEND_PERSISTENT_KINDS=true (owner proposal A6-P6). Off by default.
 var kindTypes = map[string]func(string) bool{
 	"marker":   func(t string) bool { return strings.HasPrefix(t, "a-") || t == "b-m-p-s-m" },
 	"spi":      func(t string) bool { return t == "b-m-p-s-p-i" },
@@ -620,6 +673,9 @@ var kindTypes = map[string]func(string) bool{
 	},
 	"chat": func(t string) bool { return t == "b-t-f" },
 }
+
+// persistentKinds are served only with SendConfig.Persistent (cot-projection.md §9 deviation).
+var persistentKinds = map[string]bool{"marker": true, "route": true, "geofence": true, "shape": true}
 
 // detailAllowed is the allowlist of <detail> descendants (drawing, route and chat detail of
 // cot-projection.md §5.4-5.5 and the client builders). Anything else is refused.
@@ -646,7 +702,9 @@ var projectorElements = map[string]bool{"onemind": true, "_flow-tags_": true, "m
 var personContactAttrs = map[string]bool{"endpoint": true, "phone": true, "emailAddress": true, "xmppUsername": true, "sipAddress": true}
 
 // personWords are references to person-class entities or to device identifiers that track a
-// person (BUS-DESIGN D9). Checked in remarks of non-chat CoT only; chat text is the user's own.
+// person (BUS-DESIGN D9). Checked in every attribute value of client CoT (both forms) and in
+// the remarks text of non-chat CoT. The free text of a chat message is not screened: it is the
+// user's own words (README "svc.cot.send", owner proposal A6-P14).
 var personWords = regexp.MustCompile(`(?i)(\bent\.(person|station)\.|\b(imsi|imei)\b|\bmac[_ -]?address\b)`)
 
 const cotTimeLayout = "2006-01-02T15:04:05.000Z"
@@ -732,6 +790,9 @@ func scanCot(doc []byte, maxElems int) (*cotSummary, *sendErr) {
 				attrs[a.Name.Local] = a.Value
 				if reserved(a.Value) {
 					return nil, forbidden("<%s %s> names a reserved uid (OM., INTEL.)", name, a.Name.Local)
+				}
+				if personWords.MatchString(a.Value) {
+					return nil, forbidden("<%s %s> references a person or a device identifier (G4)", name, a.Name.Local)
 				}
 			}
 			switch {
@@ -825,6 +886,9 @@ func prepareCot(req *sendRequest, cfg *Config, now time.Time) (*prepared, *sendE
 	match, ok := kindTypes[req.Kind]
 	if !ok {
 		return nil, invalid("kind must be marker, spi, route, geofence, shape, chat or geochat")
+	}
+	if persistentKinds[req.Kind] && !cfg.Send.Persistent {
+		return nil, forbidden("kind %s is a persistent item; it belongs to entity.create (cot-projection.md section 9) and COT_SEND_PERSISTENT_KINDS is off", req.Kind)
 	}
 	ts, e := normTargets(req)
 	if e != nil {
