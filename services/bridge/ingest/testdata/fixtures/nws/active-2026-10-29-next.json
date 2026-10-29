@@ -1,0 +1,1072 @@
+{
+ "@context": [
+  "https://geojson.org/geojson-ld/geojson-context.jsonld",
+  {
+   "@version": "1.1",
+   "wx": "https://api.weather.gov/ontology#",
+   "@vocab": "https://api.weather.gov/ontology#"
+  }
+ ],
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e456a8b989cbe05485479fdd536926c3faf164ce.001.1",
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -106.92,
+       34.27
+      ],
+      [
+       -106.84,
+       34.25
+      ],
+      [
+       -106.82,
+       33.79
+      ],
+      [
+       -107.09,
+       33.48
+      ],
+      [
+       -107.18,
+       33.48
+      ],
+      [
+       -106.91,
+       33.81
+      ],
+      [
+       -106.95,
+       34.21
+      ],
+      [
+       -106.92,
+       34.27
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e456a8b989cbe05485479fdd536926c3faf164ce.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.e456a8b989cbe05485479fdd536926c3faf164ce.001.1",
+    "areaDesc": "Socorro, NM",
+    "geocode": {
+     "SAME": [
+      "035053"
+     ],
+     "UGC": [
+      "NMC053"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/county/NMC053"
+    ],
+    "references": [],
+    "sent": "2026-10-28T18:40:00-06:00",
+    "effective": "2026-10-28T18:40:00-06:00",
+    "onset": "2026-10-28T18:40:00-06:00",
+    "expires": "2026-10-29T18:45:00-06:00",
+    "ends": "2026-10-29T18:45:00-06:00",
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Severe",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Flood Warning",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Albuquerque NM",
+    "headline": "Flood Warning issued October 28 at 6:40PM MDT until October 29 at 6:45PM MDT by NWS Albuquerque NM",
+    "description": "* WHAT...Flooding caused by excessive rainfall is occurring.\n\n* WHERE...South Central Socorro County in central New Mexico...\n\n* WHEN...Until 645 PM MDT Thursday.\n\n* IMPACTS...Flooding of rivers, creeks, streams, and other low-lying\nand flood-prone locations is imminent or occurring.\n\n* ADDITIONAL DETAILS...\n- At 638 PM MDT, emergency management reported flooding in the\nwarned area. Flooding is already occurring.\n- Flooding was reported in Socorro County in the Escondida and\nPueblito Communities. Several roads have been rendered impassible\nnear San Pedro.\n- Some locations that will experience ",
+    "instruction": "Turn around, don't drown when encountering flooded roads. Most flood\ndeaths occur in vehicles.\n\nBe especially cautious at night when it is harder to recognize the\ndangers of flooding.",
+    "response": "Avoid",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "FLWABQ"
+     ],
+     "WMOidentifier": [
+      "WGUS45 KABQ 290040"
+     ],
+     "NWSheadline": [
+      "FLOOD WARNING IN EFFECT UNTIL 645 PM MDT THURSDAY"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "EAS-ORG": [
+      "WXR"
+     ],
+     "VTEC": [
+      "/O.NEW.KABQ.FA.W.0022.261029T0040Z-261030T0045Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-29T18:45:00-06:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "FLW"
+     ],
+     "NationalWeatherService": [
+      "FAW"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.2ae6599a096d368270ba354267308408782921d7.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.2ae6599a096d368270ba354267308408782921d7.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.2ae6599a096d368270ba354267308408782921d7.001.1",
+    "areaDesc": "Coastal Waters from Stonington, ME to Port Clyde, ME out 25 NM",
+    "geocode": {
+     "SAME": [
+      "073150"
+     ],
+     "UGC": [
+      "ANZ150"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/ANZ150"
+    ],
+    "references": [
+     {
+      "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.aa28f87f4c8b8159ad8483dab1e97a5be18f0fcb.001.1",
+      "identifier": "urn:oid:2.49.0.1.840.0.aa28f87f4c8b8159ad8483dab1e97a5be18f0fcb.001.1",
+      "sender": "w-nws.webmaster@noaa.gov",
+      "sent": "2026-10-29T02:19:00-04:00"
+     }
+    ],
+    "sent": "2026-10-29T06:21:00-04:00",
+    "effective": "2026-10-29T06:21:00-04:00",
+    "onset": "2026-10-29T14:00:00-04:00",
+    "expires": "2026-10-29T20:30:00-04:00",
+    "ends": "2026-10-30T05:00:00-04:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Minor",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Small Craft Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Gray ME",
+    "headline": "Small Craft Advisory issued October 29 at 6:21AM EDT until October 30 at 5:00AM EDT by NWS Gray ME",
+    "description": "* WHAT...Southwest winds 15 to 20 kt with gusts up to 25 kt and\nseas 3 to 6 ft expected.\n\n* WHERE...Coastal Waters from Stonington, ME to Port Clyde, ME\nout 25 NM.\n\n* WHEN...From 2 PM Thursday to 5 AM EDT Friday.\n\n* IMPACTS...Conditions will be hazardous to small craft.",
+    "instruction": "Inexperienced mariners, especially those operating smaller\nvessels, should avoid navigating in hazardous conditions.",
+    "response": "Avoid",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "MWWGYX"
+     ],
+     "WMOidentifier": [
+      "WHUS71 KGYX 291021"
+     ],
+     "NWSheadline": [
+      "SMALL CRAFT ADVISORY REMAINS IN EFFECT FROM 2 PM THIS AFTERNOON TO 5 AM EDT FRIDAY"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.CON.KGYX.SC.Y.0085.261029T1800Z-261030T0900Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-30T05:00:00-04:00"
+     ],
+     "expiredReferences": [
+      "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.b28af772e3625c20d31c47f201f6728c8b399591.001.1,2026-10-28T14:30:00-04:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "SCY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.a4b7ce5f0a8b2b655844a0c59940618942e3cced.002.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.a4b7ce5f0a8b2b655844a0c59940618942e3cced.002.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.a4b7ce5f0a8b2b655844a0c59940618942e3cced.002.1",
+    "areaDesc": "Scott; Lane; Ness; Hamilton; Kearny; Finney; Hodgeman; Stanton; Grant; Haskell; Gray; Ford; Morton; Stevens; Seward; Meade",
+    "geocode": {
+     "SAME": [
+      "020171",
+      "020101",
+      "020135",
+      "020075",
+      "020093",
+      "020055",
+      "020083",
+      "020187",
+      "020067",
+      "020081",
+      "020069",
+      "020057",
+      "020129",
+      "020189",
+      "020175",
+      "020119"
+     ],
+     "UGC": [
+      "KSZ043",
+      "KSZ044",
+      "KSZ045",
+      "KSZ061",
+      "KSZ062",
+      "KSZ063",
+      "KSZ064",
+      "KSZ074",
+      "KSZ075",
+      "KSZ076",
+      "KSZ077",
+      "KSZ078",
+      "KSZ084",
+      "KSZ085",
+      "KSZ086",
+      "KSZ087"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/KSZ043",
+     "https://api.weather.gov/zones/forecast/KSZ044",
+     "https://api.weather.gov/zones/forecast/KSZ045",
+     "https://api.weather.gov/zones/forecast/KSZ061",
+     "https://api.weather.gov/zones/forecast/KSZ062",
+     "https://api.weather.gov/zones/forecast/KSZ063",
+     "https://api.weather.gov/zones/forecast/KSZ064",
+     "https://api.weather.gov/zones/forecast/KSZ074",
+     "https://api.weather.gov/zones/forecast/KSZ075",
+     "https://api.weather.gov/zones/forecast/KSZ076",
+     "https://api.weather.gov/zones/forecast/KSZ077",
+     "https://api.weather.gov/zones/forecast/KSZ078",
+     "https://api.weather.gov/zones/forecast/KSZ084",
+     "https://api.weather.gov/zones/forecast/KSZ085",
+     "https://api.weather.gov/zones/forecast/KSZ086",
+     "https://api.weather.gov/zones/forecast/KSZ087"
+    ],
+    "references": [
+     {
+      "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.cf37fde544f51f26f15ed82a4e6ecca8f4a0d705.001.1",
+      "identifier": "urn:oid:2.49.0.1.840.0.cf37fde544f51f26f15ed82a4e6ecca8f4a0d705.001.1",
+      "sender": "w-nws.webmaster@noaa.gov",
+      "sent": "2026-10-28T20:44:00-05:00"
+     }
+    ],
+    "sent": "2026-10-29T05:18:00-05:00",
+    "effective": "2026-10-29T05:18:00-05:00",
+    "onset": "2026-10-29T05:18:00-05:00",
+    "expires": "2026-10-29T12:00:00-05:00",
+    "ends": "2026-10-29T12:00:00-05:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Moderate",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Dense Fog Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Dodge City KS",
+    "headline": "Dense Fog Advisory issued October 29 at 5:18AM CDT until October 29 at 12:00PM CDT by NWS Dodge City KS",
+    "description": "* WHAT...Visibility one quarter mile or less in dense fog.\n\n* WHERE...Portions of southwest and west central Kansas.\n\n* WHEN...Until noon CDT /11 AM MDT/ today.\n\n* IMPACTS...Low visibility could make driving conditions hazardous.",
+    "instruction": "If driving, slow down, use your headlights, and leave plenty of\ndistance ahead of you.",
+    "response": "Execute",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "NPWDDC"
+     ],
+     "WMOidentifier": [
+      "WWUS73 KDDC 291018"
+     ],
+     "NWSheadline": [
+      "DENSE FOG ADVISORY REMAINS IN EFFECT UNTIL NOON CDT /11 AM MDT/ TODAY"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.CON.KDDC.FG.Y.0015.000000T0000Z-261029T1700Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-29T12:00:00-05:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "FGY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.8e8eb9d9b5f23c305ec192d3fa061d262f95eeeb.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.8e8eb9d9b5f23c305ec192d3fa061d262f95eeeb.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.8e8eb9d9b5f23c305ec192d3fa061d262f95eeeb.001.1",
+    "areaDesc": "Southern Hancock",
+    "geocode": {
+     "SAME": [
+      "028045"
+     ],
+     "UGC": [
+      "MSZ086"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/MSZ086"
+    ],
+    "references": [
+     {
+      "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.62ab7b0a66a7f47e59812a3adeab77086797de6c.001.1",
+      "identifier": "urn:oid:2.49.0.1.840.0.62ab7b0a66a7f47e59812a3adeab77086797de6c.001.1",
+      "sender": "w-nws.webmaster@noaa.gov",
+      "sent": "2026-10-29T00:02:00-05:00"
+     }
+    ],
+    "sent": "2026-10-29T05:14:00-05:00",
+    "effective": "2026-10-29T05:14:00-05:00",
+    "onset": "2026-10-30T01:00:00-05:00",
+    "expires": "2026-10-29T19:15:00-05:00",
+    "ends": "2026-10-30T05:00:00-05:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Minor",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Coastal Flood Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS New Orleans LA",
+    "headline": "Coastal Flood Advisory issued October 29 at 5:14AM CDT until October 30 at 5:00AM CDT by NWS New Orleans LA",
+    "description": "* WHAT...Minor coastal flooding expected.\n\n* WHERE...Southern Hancock County.\n\n* WHEN...1 AM to 5 AM CDT Friday.\n\n* IMPACTS...Flooding of lots, parks, and roads with only\nisolated road closures expected.",
+    "instruction": "If travel is required, allow extra time as some roads may be\nclosed. Do not drive around barricades or through water of\nunknown depth. Take the necessary actions to protect flood-prone\nproperty.",
+    "response": "Monitor",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "CFWLIX"
+     ],
+     "WMOidentifier": [
+      "WHUS44 KLIX 291014"
+     ],
+     "NWSheadline": [
+      "COASTAL FLOOD ADVISORY REMAINS IN EFFECT FROM 1 AM TO 5 AM CDT FRIDAY"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.CON.KLIX.CF.Y.0013.261030T0600Z-261030T1000Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-30T05:00:00-05:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "CFY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.667fca00993151ace5f2f16e1f2a789f9e15b192.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.667fca00993151ace5f2f16e1f2a789f9e15b192.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.667fca00993151ace5f2f16e1f2a789f9e15b192.001.1",
+    "areaDesc": "Coastal waters from Cape Mendocino to Pt. Arena CA out 10 nm",
+    "geocode": {
+     "SAME": [
+      "057455"
+     ],
+     "UGC": [
+      "PZZ455"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/PZZ455"
+    ],
+    "references": [
+     {
+      "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.5a2259abf138df4c552193307773dd53f207770e.001.1",
+      "identifier": "urn:oid:2.49.0.1.840.0.5a2259abf138df4c552193307773dd53f207770e.001.1",
+      "sender": "w-nws.webmaster@noaa.gov",
+      "sent": "2026-10-28T21:58:00-07:00"
+     }
+    ],
+    "sent": "2026-10-29T03:06:00-07:00",
+    "effective": "2026-10-29T03:06:00-07:00",
+    "onset": "2026-10-29T03:06:00-07:00",
+    "expires": "2026-10-29T09:00:00-07:00",
+    "ends": "2026-10-29T09:00:00-07:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Minor",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Small Craft Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Eureka CA",
+    "headline": "Small Craft Advisory issued October 29 at 3:06AM PDT until October 29 at 9:00AM PDT by NWS Eureka CA",
+    "description": "* WHAT...North winds 5 to 15 kt with gusts to 25 kt and seas 5 to\n7 feet.\n\n* WHERE...Coastal waters from Cape Mendocino to Pt. Arena CA out\n10 nm.\n\n* WHEN...Until 9 AM PDT this morning.\n\n* IMPACTS...Conditions will be hazardous to small craft.",
+    "instruction": "Inexperienced mariners, especially those operating smaller\nvessels, should avoid navigating in hazardous conditions.",
+    "response": "Avoid",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "MWWEKA"
+     ],
+     "WMOidentifier": [
+      "WHUS76 KEKA 291006"
+     ],
+     "NWSheadline": [
+      "SMALL CRAFT ADVISORY REMAINS IN EFFECT UNTIL 9 AM PDT THIS MORNING"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.CON.KEKA.SC.Y.0098.000000T0000Z-261029T1600Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-29T09:00:00-07:00"
+     ],
+     "expiredReferences": [
+      "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.3e713df2de3cfce59e3394466144b8d306a313e2.001.1,2026-10-28T14:46:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.632e95bf75b5e029a91e93756c237d43604864c8.002.1,2026-10-28T08:31:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.9e450988d0970f8d591d77ef7614a36d4d21ea05.001.1,2026-10-28T02:24:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.7fe6759c5ce037c3b63d80fa887f041fa220c900.001.1,2026-10-27T21:53:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.d0e6bf924cc4972bad77a4eb7dfa7fff392e2f03.001.1,2026-10-27T14:55:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.9036324803452300cf5fd2db88b6961291d2deab.001.1,2026-10-27T08:35:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.5efb48e1dc08a44b81e99903c116d1cf4dba424d.001.1,2026-10-27T02:28:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.c77c8b9377031aec25ed083b1a9042ea374cfcbe.001.1,2026-10-26T21:30:00-07:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.d22bf478afde256feb0bf4232958f3e44774f119.001.1,2026-10-26T15:06:00-07:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "SCY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.a4b7ce5f0a8b2b655844a0c59940618942e3cced.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.a4b7ce5f0a8b2b655844a0c59940618942e3cced.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.a4b7ce5f0a8b2b655844a0c59940618942e3cced.001.1",
+    "areaDesc": "Kiowa; Clark; Comanche",
+    "geocode": {
+     "SAME": [
+      "020097",
+      "020025",
+      "020033"
+     ],
+     "UGC": [
+      "KSZ080",
+      "KSZ088",
+      "KSZ089"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/KSZ080",
+     "https://api.weather.gov/zones/forecast/KSZ088",
+     "https://api.weather.gov/zones/forecast/KSZ089"
+    ],
+    "references": [],
+    "sent": "2026-10-29T05:18:00-05:00",
+    "effective": "2026-10-29T05:18:00-05:00",
+    "onset": "2026-10-29T05:18:00-05:00",
+    "expires": "2026-10-29T12:00:00-05:00",
+    "ends": "2026-10-29T12:00:00-05:00",
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Moderate",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Dense Fog Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Dodge City KS",
+    "headline": "Dense Fog Advisory issued October 29 at 5:18AM CDT until October 29 at 12:00PM CDT by NWS Dodge City KS",
+    "description": "* WHAT...Visibility one quarter mile or less in dense fog.\n\n* WHERE...Comanche, Kiowa, and Clark Counties.\n\n* WHEN...Until noon CDT today.\n\n* IMPACTS...Low visibility could make driving conditions hazardous.",
+    "instruction": "If driving, slow down, use your headlights, and leave plenty of\ndistance ahead of you.",
+    "response": "Execute",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "NPWDDC"
+     ],
+     "WMOidentifier": [
+      "WWUS73 KDDC 291018"
+     ],
+     "NWSheadline": [
+      "DENSE FOG ADVISORY IN EFFECT UNTIL NOON CDT TODAY"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.EXA.KDDC.FG.Y.0015.000000T0000Z-261029T1700Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-29T12:00:00-05:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "FGY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.87bab9f4c77e70148a88945d8328bff81518a50b.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.87bab9f4c77e70148a88945d8328bff81518a50b.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.87bab9f4c77e70148a88945d8328bff81518a50b.001.1",
+    "areaDesc": "Warren; Rappahannock; Northern Fauquier",
+    "geocode": {
+     "SAME": [
+      "051187",
+      "051157",
+      "051061"
+     ],
+     "UGC": [
+      "VAZ030",
+      "VAZ040",
+      "VAZ501"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/VAZ030",
+     "https://api.weather.gov/zones/forecast/VAZ040",
+     "https://api.weather.gov/zones/forecast/VAZ501"
+    ],
+    "references": [],
+    "sent": "2026-10-29T05:54:00-04:00",
+    "effective": "2026-10-29T05:54:00-04:00",
+    "onset": "2026-10-29T05:54:00-04:00",
+    "expires": "2026-10-29T10:00:00-04:00",
+    "ends": "2026-10-29T10:00:00-04:00",
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Moderate",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Dense Fog Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Baltimore MD/Washington DC",
+    "headline": "Dense Fog Advisory issued October 29 at 5:54AM EDT until October 29 at 10:00AM EDT by NWS Baltimore MD/Washington DC",
+    "description": "* WHAT...Visibility one quarter mile or less in dense fog.\n\n* WHERE...Northern Fauquier, Rappahannock, and Warren Counties.\n\n* WHEN...Until 10 AM EDT this morning.\n\n* IMPACTS...Low visibility could make driving conditions hazardous.",
+    "instruction": "If driving, slow down, use your headlights, and leave plenty of\ndistance ahead of you.",
+    "response": "Execute",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "NPWLWX"
+     ],
+     "WMOidentifier": [
+      "WWUS71 KLWX 290954"
+     ],
+     "NWSheadline": [
+      "DENSE FOG ADVISORY IN EFFECT UNTIL 10 AM EDT THIS MORNING"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.EXA.KLWX.FG.Y.0015.000000T0000Z-261029T1400Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-29T10:00:00-04:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "FGY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.f6bf88d5e6f4fe751dedaf48bbd7fd3fa21d0b17.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.f6bf88d5e6f4fe751dedaf48bbd7fd3fa21d0b17.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.f6bf88d5e6f4fe751dedaf48bbd7fd3fa21d0b17.001.1",
+    "areaDesc": "Lyon; Osceola; Sioux; O'Brien; Plymouth; Cherokee; Woodbury; Rock; Dixon; Dakota; McCook; Minnehaha; Hutchinson; Turner; Lincoln; Bon Homme; Yankton; Clay; Union",
+    "geocode": {
+     "SAME": [
+      "019119",
+      "019143",
+      "019167",
+      "019141",
+      "019149",
+      "019035",
+      "019193",
+      "027133",
+      "031051",
+      "031043",
+      "046087",
+      "046099",
+      "046067",
+      "046125",
+      "046083",
+      "046009",
+      "046135",
+      "046027",
+      "046127"
+     ],
+     "UGC": [
+      "IAZ001",
+      "IAZ002",
+      "IAZ012",
+      "IAZ013",
+      "IAZ020",
+      "IAZ021",
+      "IAZ031",
+      "MNZ098",
+      "NEZ013",
+      "NEZ014",
+      "SDZ061",
+      "SDZ062",
+      "SDZ065",
+      "SDZ066",
+      "SDZ067",
+      "SDZ068",
+      "SDZ069",
+      "SDZ070",
+      "SDZ071"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/IAZ001",
+     "https://api.weather.gov/zones/forecast/IAZ002",
+     "https://api.weather.gov/zones/forecast/IAZ012",
+     "https://api.weather.gov/zones/forecast/IAZ013",
+     "https://api.weather.gov/zones/forecast/IAZ020",
+     "https://api.weather.gov/zones/forecast/IAZ021",
+     "https://api.weather.gov/zones/forecast/IAZ031",
+     "https://api.weather.gov/zones/forecast/MNZ098",
+     "https://api.weather.gov/zones/forecast/NEZ013",
+     "https://api.weather.gov/zones/forecast/NEZ014",
+     "https://api.weather.gov/zones/forecast/SDZ061",
+     "https://api.weather.gov/zones/forecast/SDZ062",
+     "https://api.weather.gov/zones/forecast/SDZ065",
+     "https://api.weather.gov/zones/forecast/SDZ066",
+     "https://api.weather.gov/zones/forecast/SDZ067",
+     "https://api.weather.gov/zones/forecast/SDZ068",
+     "https://api.weather.gov/zones/forecast/SDZ069",
+     "https://api.weather.gov/zones/forecast/SDZ070",
+     "https://api.weather.gov/zones/forecast/SDZ071"
+    ],
+    "references": [],
+    "sent": "2026-10-29T04:47:00-05:00",
+    "effective": "2026-10-29T04:47:00-05:00",
+    "onset": "2026-10-29T04:47:00-05:00",
+    "expires": "2026-10-29T07:00:00-05:00",
+    "ends": null,
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Moderate",
+    "certainty": "Observed",
+    "urgency": "Expected",
+    "event": "Special Weather Statement",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Sioux Falls SD",
+    "headline": "Special Weather Statement issued October 29 at 4:47AM CDT by NWS Sioux Falls SD",
+    "description": "Areas of fog have developed early this morning, with dense fog\nconfined to areas mainly near river valleys. Though fog may spread\na bit farther, the greatest chance of dense fog will continue to\nbe along and near river valleys through the morning commute\nThursday. Make sure to use your low beam headlights when driving\nin fog and consider leaving extra time to get your destination.\nAny fog should lift entirely by 10 am or shortly afterwards.",
+    "instruction": null,
+    "response": "Execute",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "SPSFSD"
+     ],
+     "WMOidentifier": [
+      "WWUS83 KFSD 290947"
+     ],
+     "NWSheadline": [
+      "AREAS OF DENSE FOG MAINLY NEAR RIVER VALLEYS THIS MORNING"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "EAS-ORG": [
+      "WXR"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "SPS"
+     ],
+     "NationalWeatherService": [
+      "SPS"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.b7c43cfef750df8c39bbfd20ab0a558359af4c12.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.b7c43cfef750df8c39bbfd20ab0a558359af4c12.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.b7c43cfef750df8c39bbfd20ab0a558359af4c12.001.1",
+    "areaDesc": "Sherman; Thomas; Sheridan; Graham; Wallace; Logan; Gove; Greeley; Wichita",
+    "geocode": {
+     "SAME": [
+      "020181",
+      "020193",
+      "020179",
+      "020065",
+      "020199",
+      "020109",
+      "020063",
+      "020071",
+      "020203"
+     ],
+     "UGC": [
+      "KSZ013",
+      "KSZ014",
+      "KSZ015",
+      "KSZ016",
+      "KSZ027",
+      "KSZ028",
+      "KSZ029",
+      "KSZ041",
+      "KSZ042"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/KSZ013",
+     "https://api.weather.gov/zones/forecast/KSZ014",
+     "https://api.weather.gov/zones/forecast/KSZ015",
+     "https://api.weather.gov/zones/forecast/KSZ016",
+     "https://api.weather.gov/zones/forecast/KSZ027",
+     "https://api.weather.gov/zones/forecast/KSZ028",
+     "https://api.weather.gov/zones/forecast/KSZ029",
+     "https://api.weather.gov/zones/forecast/KSZ041",
+     "https://api.weather.gov/zones/forecast/KSZ042"
+    ],
+    "references": [],
+    "sent": "2026-10-29T03:43:00-06:00",
+    "effective": "2026-10-29T03:43:00-06:00",
+    "onset": "2026-10-29T03:43:00-06:00",
+    "expires": "2026-10-29T12:00:00-06:00",
+    "ends": "2026-10-29T12:00:00-06:00",
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Moderate",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Dense Fog Advisory",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Goodland KS",
+    "headline": "Dense Fog Advisory issued October 29 at 3:43AM MDT until October 29 at 12:00PM MDT by NWS Goodland KS",
+    "description": "* WHAT...Visibility around a quarter of a mile or less in dense fog.\n\n* WHERE...Graham, Sheridan, Sherman, Thomas, Gove, Greeley, Logan,\nWallace, and Wichita Counties.\n\n* WHEN...Until noon MDT /1 PM CDT/ today.\n\n* IMPACTS...Low visibility could make driving conditions hazardous.\n\n* ADDITIONAL DETAILS...The dense fog may come and go, be careful for\nrapidly changing visibility.",
+    "instruction": "If driving, slow down, use your headlights, and leave plenty of\ndistance ahead of you.",
+    "response": "Execute",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "NPWGLD"
+     ],
+     "WMOidentifier": [
+      "WWUS73 KGLD 290943"
+     ],
+     "NWSheadline": [
+      "DENSE FOG ADVISORY IN EFFECT UNTIL NOON MDT /1 PM CDT/ TODAY"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "VTEC": [
+      "/O.NEW.KGLD.FG.Y.0023.261029T0943Z-261029T1800Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-29T12:00:00-06:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "NWS"
+     ],
+     "NationalWeatherService": [
+      "FGY"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e4043b68ab167d968bd2059f10592ccc0fc3417f.001.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e4043b68ab167d968bd2059f10592ccc0fc3417f.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.e4043b68ab167d968bd2059f10592ccc0fc3417f.001.1",
+    "areaDesc": "Monroe Upper Keys; Monroe Middle Keys; Monroe Lower Keys",
+    "geocode": {
+     "SAME": [
+      "012087"
+     ],
+     "UGC": [
+      "FLZ076",
+      "FLZ077",
+      "FLZ078"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/FLZ076",
+     "https://api.weather.gov/zones/forecast/FLZ077",
+     "https://api.weather.gov/zones/forecast/FLZ078"
+    ],
+    "references": [],
+    "sent": "2026-10-29T05:38:00-04:00",
+    "effective": "2026-10-29T05:38:00-04:00",
+    "onset": "2026-10-29T05:38:00-04:00",
+    "expires": "2026-10-29T13:45:00-04:00",
+    "ends": "2026-10-30T05:00:00-04:00",
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Severe",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Coastal Flood Warning",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Key West FL",
+    "headline": "Coastal Flood Warning issued October 29 at 5:38AM EDT until October 30 at 5:00AM EDT by NWS Key West FL",
+    "description": "* WHAT...Major saltwater flooding.\n\n* WHERE...Florida Keys.\n\n* WHEN...Until 5 AM EDT Friday.\n\n* IMPACTS...Numerous roads may be closed. Low lying property\nincluding homes, businesses, and some critical infrastructure\nwill be inundated. Some shoreline erosion will occur.",
+    "instruction": "Take the necessary actions to protect flood-prone property. If\ntravel is required, do not drive around barricades or through\nwater of unknown depth.",
+    "response": "Avoid",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "CFWKEY"
+     ],
+     "WMOidentifier": [
+      "WHUS42 KKEY 290938"
+     ],
+     "NWSheadline": [
+      "COASTAL FLOOD WARNING REMAINS IN EFFECT"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "EAS-ORG": [
+      "WXR"
+     ],
+     "VTEC": [
+      "/O.NEW.KKEY.CF.W.0004.261029T0938Z-261030T0900Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-30T05:00:00-04:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "CFW"
+     ],
+     "NationalWeatherService": [
+      "CFW"
+     ]
+    }
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e4043b68ab167d968bd2059f10592ccc0fc3417f.002.1",
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e4043b68ab167d968bd2059f10592ccc0fc3417f.001.1",
+    "@type": "wx:Alert",
+    "id": "urn:oid:2.49.0.1.840.0.e4043b68ab167d968bd2059f10592ccc0fc3417f.002.1",
+    "areaDesc": "Monroe Upper Keys; Monroe Middle Keys; Monroe Lower Keys",
+    "geocode": {
+     "SAME": [
+      "012087"
+     ],
+     "UGC": [
+      "FLZ076",
+      "FLZ077",
+      "FLZ078"
+     ]
+    },
+    "affectedZones": [
+     "https://api.weather.gov/zones/forecast/FLZ076",
+     "https://api.weather.gov/zones/forecast/FLZ077",
+     "https://api.weather.gov/zones/forecast/FLZ078"
+    ],
+    "references": [],
+    "sent": "2026-10-29T05:38:00-04:00",
+    "effective": "2026-10-29T05:38:00-04:00",
+    "onset": "2026-10-29T05:38:00-04:00",
+    "expires": "2026-10-29T13:45:00-04:00",
+    "ends": "2026-10-30T05:00:00-04:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Severe",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Coastal Flood Warning",
+    "sender": "w-nws.webmaster@noaa.gov",
+    "senderName": "NWS Key West FL",
+    "headline": "Coastal Flood Warning issued October 29 at 5:38AM EDT until October 30 at 5:00AM EDT by NWS Key West FL",
+    "description": "* WHAT...Major saltwater flooding.\n\n* WHERE...Florida Keys.\n\n* WHEN...Until 5 AM EDT Friday.\n\n* IMPACTS...Numerous roads may be closed. Low lying property\nincluding homes, businesses, and some critical infrastructure\nwill be inundated. Some shoreline erosion will occur.",
+    "instruction": "Take the necessary actions to protect flood-prone property. If\ntravel is required, do not drive around barricades or through\nwater of unknown depth.",
+    "response": "Avoid",
+    "note": null,
+    "parameters": {
+     "AWIPSidentifier": [
+      "CFWKEY"
+     ],
+     "WMOidentifier": [
+      "WHUS42 KKEY 290938"
+     ],
+     "NWSheadline": [
+      "COASTAL FLOOD WARNING REMAINS IN EFFECT"
+     ],
+     "BLOCKCHANNEL": [
+      "EAS",
+      "NWEM",
+      "CMAS"
+     ],
+     "EAS-ORG": [
+      "WXR"
+     ],
+     "VTEC": [
+      "/O.NEW.KKEY.CF.W.0004.261029T0938Z-261030T0900Z/"
+     ],
+     "eventEndingTime": [
+      "2026-10-30T05:00:00-04:00"
+     ]
+    },
+    "scope": "Public",
+    "code": "IPAWSv1.0",
+    "language": "en-US",
+    "web": "http://www.weather.gov",
+    "eventCode": {
+     "SAME": [
+      "CFW"
+     ],
+     "NationalWeatherService": [
+      "CFW"
+     ]
+    }
+   }
+  }
+ ],
+ "title": "Current watches, warnings, and advisories",
+ "updated": "2026-10-29T10:25:05+00:00"
+}
