@@ -146,3 +146,66 @@ func fleetCotType(entityType, kind, environment string) string {
 	}
 	return ""
 }
+
+// Fleet health.overall thresholds (entity.md §4.1 `overall: healthy|warning|failed`). The
+// engine derives overall for any entity with a fleet-* source from connection, battery and
+// staleness; the worst condition wins.
+const (
+	// BatteryFailedPct and below is "failed": too little charge to complete an RTL safely.
+	BatteryFailedPct = 15.0
+	// BatteryWarningPct and below is "warning": the operator should plan a recovery.
+	BatteryWarningPct = 30.0
+)
+
+// fleetOverall maps a fleet asset's health and lifecycle to health.overall:
+//
+//	failed:  connection "offline", battery_pct <= 15, or lifecycle "lost"/"expired"
+//	warning: connection "degraded" (or missing), battery_pct <= 30, or lifecycle "stale"
+//	healthy: otherwise (connection "online", battery above 30 % or not reported, fresh)
+func fleetOverall(h map[string]any, lifecycle string) string {
+	level := 0 // 0 healthy, 1 warning, 2 failed
+	worse := func(l int) {
+		if l > level {
+			level = l
+		}
+	}
+	switch h["connection"] {
+	case "online":
+	case "offline":
+		worse(2)
+	default: // "degraded", or a fleet entity that never reported its link
+		worse(1)
+	}
+	if b, ok := number(h["battery_pct"]); ok {
+		switch {
+		case b <= BatteryFailedPct:
+			worse(2)
+		case b <= BatteryWarningPct:
+			worse(1)
+		}
+	}
+	switch lifecycle {
+	case "lost", "expired":
+		worse(2)
+	case "stale":
+		worse(1)
+	}
+	return [...]string{"healthy", "warning", "failed"}[level]
+}
+
+// number reads a JSON number (float64), or a Go int/float set by an adapter.
+func number(v any) (float64, bool) {
+	switch n := v.(type) {
+	case float64:
+		return n, true
+	case float32:
+		return float64(n), true
+	case int:
+		return float64(n), true
+	case int64:
+		return float64(n), true
+	case int32:
+		return float64(n), true
+	}
+	return 0, false
+}

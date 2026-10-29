@@ -319,7 +319,8 @@
     "health": {
       "battery_pct": 79,
       "connection": "online",
-      "link_rssi": -66
+      "link_rssi": -66,
+      "overall": "healthy"
     },
     "indicators": {
       "egress_tak": true,

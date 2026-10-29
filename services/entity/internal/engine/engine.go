@@ -125,7 +125,8 @@ type track struct {
 	last      *pubSnap
 	pending   *Publish // a publish that failed; retried by Sweep
 	// connBefore is health.connection as it was before Sweep forced it to "offline" when the
-	// entity went stale; restored by the next observation that does not state a connection.
+	// entity went stale; restored by the next fleet-* observation that does not state a
+	// connection (a CoT source resuming does not restore it).
 	connBefore any
 	// dead marks an expired track kept as a tombstone until its final `live:false` record is
 	// acked (Published), so a failed final publish is retried instead of lost.
@@ -280,7 +281,10 @@ func (e *Engine) Apply(o *model.Observation) Result {
 	}
 	tr.rec.Status = mergeMap(tr.rec.Status, o.Status)
 	tr.rec.Health = mergeMap(tr.rec.Health, o.Health)
-	if tr.connBefore != nil {
+	// Only the fleet bridge knows the link state: a CoT report about the same asset (tak-mesh
+	// relaying it) does not prove the bridge is back, so the connection stays "offline" until
+	// a fleet-* integration reports again.
+	if tr.connBefore != nil && strings.HasPrefix(o.Integration, "fleet-") {
 		if _, ok := o.Health["connection"]; !ok {
 			tr.rec.Health["connection"] = tr.connBefore
 		}
@@ -530,7 +534,7 @@ func (e *Engine) derive(t *track, now int64) {
 	r.Sources = r.Sources[:0]
 	var primary string
 	bestTier, bestT := model.Tier(99), int64(-1)
-	sim, allCot, allFleet, tlp := false, true, len(keys) > 0, ""
+	sim, allCot, allFleet, anyFleet, tlp := false, true, len(keys) > 0, false, ""
 	egressSet := true
 	active := map[string]float64{}
 	for _, k := range keys {
@@ -542,6 +546,7 @@ func (e *Engine) derive(t *track, now int64) {
 		sim = sim || t.srcSim[k]
 		allCot = allCot && s.DataType == "cot"
 		allFleet = allFleet && s.DataType == "geo" && strings.HasPrefix(s.Integration, "fleet-")
+		anyFleet = anyFleet || strings.HasPrefix(s.Integration, "fleet-")
 		tlp = stricterTLP(tlp, t.srcTLP[k])
 		if eg := t.srcEgress[k]; eg != nil && !*eg && s.DataType != "cot" {
 			egressSet = false
@@ -564,6 +569,9 @@ func (e *Engine) derive(t *track, now int64) {
 		rel = append(rel, e.cfg.OwnReleasableTo...)
 	}
 	r.Marking = model.Marking{TLP: tlp, ReleasableTo: rel}
+	if anyFleet && r.Health != nil {
+		r.Health["overall"] = fleetOverall(r.Health, r.Lifecycle)
+	}
 	if ownAsset {
 		r.CotType = fleetCotType(r.EntityType, r.Kind, r.Environment) // robotics-cot-profile.md §2
 	}
