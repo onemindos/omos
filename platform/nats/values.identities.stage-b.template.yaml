@@ -95,6 +95,9 @@ config:
         - stream: evt.map.geofence.>
           accounts:
           - CLIENT
+        - stream: evt.so.alert.>
+          accounts:
+          - CLIENT
         - stream: tel.feed.*.status
           accounts:
           - CLIENT
@@ -863,6 +866,9 @@ config:
             subject: evt.map.geofence.>
         - stream:
             account: ONEMIND
+            subject: evt.so.alert.>
+        - stream:
+            account: ONEMIND
             subject: tel.feed.*.status
         - stream:
             account: ONEMIND
@@ -904,6 +910,7 @@ config:
               - evt.so.action.>
               - evt.mission.>
               - evt.map.geofence.>
+              - evt.so.alert.>
               - tel.feed.*.status
               - tak.cot.out
               - tak.cot.mesh.rx

@@ -53,7 +53,7 @@ every requester. Responders use `allow_responses`, so no service may publish on 
 | `leaf-tak` (leaf only) | ONEMIND | `tak.cot.out` | `tak.cot.inject` | inside `leaf.conf` of `takserver/tak-nats-leaf` |
 | `leaf-site-mac` (leaf only) | ONEMIND | the site's bridges: `tel.fleet.drone.sim-x1.>`, `evt.drone.sim-x1.>`, `tel.fleet.robot.sim-tb1.>`, `evt.robot.sim-tb1.>`, `tak.cot.mesh.rx`, `tel.fleet.edge.tak-mesh.status` | `cmd.fleet.drone.sim-x1.>`, `cmd.fleet.robot.sim-tb1.>`, `tak.cot.mesh.tx`, `ent.*.*.state` | Mac leaf config (`infra/edge/mac-leaf`, keychain) |
 | `hermes` (leaf only) | AGENTS | `agents.*.hermes.>`, `cmd.map.>` (acked by clients, I2-P2), requests `svc.entity.>`, `svc.layer.{list,meta}`, `svc.policy.{command,task}.propose`, `svc.policy.action.get`, `svc.mission.{get,list}`; replies `_R_.>` | `agents.prompt.hermes.>`, `svc.bridge.>`, `$SRV` | inside `leaf.conf` of `hermes/hermes-leaf-conf` (rendered by `leaf-conf`; its local user carries the same lists) |
-| `zeus` | CLIENT | requests `svc.{layer,entity,policy}.>`, `svc.cot.send`, `svc.mission.{get,list,report}`, `svc.geofence.alerts`, `svc.registry.video.{get,list}`, `svc.tak.mission.>`, `agents.prompt.hermes.>`; `cmd.map.>`; acks with `allow_responses {max: -1, expires: 5s}` | `cmd.map.>`, `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`, `tel.feed.*.status`, `tak.cot.out`, `tak.cot.mesh.rx` (stream imports, A19-P11) | owner keychain on each client device |
+| `zeus` | CLIENT | requests `svc.{layer,entity,policy}.>`, `svc.cot.send`, `svc.mission.{get,list,report}`, `svc.geofence.alerts`, `svc.registry.video.{get,list}`, `svc.tak.mission.>`, `agents.prompt.hermes.>`; `cmd.map.>`; acks with `allow_responses {max: -1, expires: 5s}` | `cmd.map.>`, `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`, `evt.so.alert.>`, `tel.feed.*.status`, `tak.cot.out`, `tak.cot.mesh.rx` (stream imports, A19-P11) | owner keychain on each client device |
 | `alice` (test only) | CLIENT | same lists as `zeus` | same as `zeus` | none: `test_only`, rendered only by `conf --test-users` (permtest, E2E harness); never in the values files or the live config |
 | `auth-callout` (#565) | AUTH | nothing (answers through `allow_responses {max: 1, expires: 5s}`) | `$SYS.REQ.USER.AUTH` | `onemind-core/auth-callout-runtime` (`NATS_USER`, `NATS_PASSWORD`) |
 | `onemind`, `leaf_tak` | ONEMIND | everything until stage B; then denied `cmd.{fleet,drone,robot,vehicle,mission,entity}.>`, `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` (other `cmd.*` domains and forged inputs stay open until stage C, see Limits) | everything; from stage B not `svc.{policy,entity,layer,cot,mission,geofence,registry}.>` and not `svc.mission.apply` (cannot impersonate a service or assign tasks) | existing `values.secret.yaml` |
@@ -64,7 +64,10 @@ to `AGENTS` (propose and action lookup only, never confirm), `svc.entity.>` to b
 `svc.mission.report`, `svc.geofence.alerts`, `svc.registry.video.>` and `svc.tak.mission.>` to
 `CLIENT` only. `svc.mission.apply` is never exported. For the clients' displays it also exports
 the read-only streams `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`,
-`tel.feed.*.status`, `tak.cot.out` and `tak.cot.mesh.rx` to `CLIENT` (A19-P11). `CLIENT`,
+`evt.so.alert.>`, `tel.feed.*.status`, `tak.cot.out` and `tak.cot.mesh.rx` to `CLIENT` (A19-P11).
+Clients read alerts (D6) from the geofence service: the open set from `svc.geofence.alerts`, then
+the live `evt.so.alert.{raised,updated,resolved}` facts. They never read `ent.alert.*`: `CLIENT`
+imports no `ent.*` stream, and nobody writes alert entities yet (#569 D1-P5). `CLIENT`,
 `AGENTS` and `AUTH` have no JetStream. `AGENTS` exports Hermes' prompts, `svc.bridge.>` and
 `$SRV` discovery to ONEMIND (and prompts to CLIENT), and its heartbeats and status to the
 ONEMIND stream `AGENTS`. `CLIENT` exports `cmd.map.>` to `AGENTS` as a service with streamed

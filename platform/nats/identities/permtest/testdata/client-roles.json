@@ -55,7 +55,8 @@
         "tel.feed.*.status",
         "evt.so.action.>",
         "evt.mission.>",
-        "evt.map.geofence.>"
+        "evt.map.geofence.>",
+        "evt.so.alert.>"
       ]
     },
     {
@@ -97,6 +98,7 @@
         "evt.so.action.>",
         "evt.mission.>",
         "evt.map.geofence.>",
+        "evt.so.alert.>",
         "tak.cot.out",
         "tak.cot.mesh.rx"
       ]
@@ -140,6 +142,7 @@
         "evt.so.action.>",
         "evt.mission.>",
         "evt.map.geofence.>",
+        "evt.so.alert.>",
         "tak.cot.out",
         "tak.cot.mesh.rx"
       ]
@@ -183,6 +186,7 @@
         "evt.so.action.>",
         "evt.mission.>",
         "evt.map.geofence.>",
+        "evt.so.alert.>",
         "tak.cot.out",
         "tak.cot.mesh.rx"
       ]

@@ -60,8 +60,13 @@ func TestClientDisplaysAndServices(t *testing.T) {
 		// Wildcard subscriptions the clients use (J1 main.ts, UE FeedGaps).
 		expectDelivered(t, zeus, "evt.map.geofence.*.*", h.conn(t, "geofence"), `{}`)
 		expectDelivered(t, zeus, "tel.feed.*.status", h.conn(t, "ingest"), `{}`)
+		// Alert facts (D6, #569 D1-P3): the live half of the web alerts list; svc.geofence.alerts
+		// gives the open set (onemind-xr INT F-ALERT: ent.alert.* is not a client path).
+		expectDelivered(t, zeus, "evt.so.alert.>", h.conn(t, "geofence"), `{"v":1,"data":{"alert_id":"alr-gf-home-sim-x1","seq":1}}`)
 		// Not imported: other evt.so.* and the TAK inject path stay invisible.
-		expectSub(t, zeus, "evt.so.alert.>", false)
+		expectSub(t, zeus, "evt.so.brief.>", false)
+		expectSub(t, zeus, "evt.so.>", false)
+		expectSub(t, zeus, "ent.alert.*.state", false)
 		expectSub(t, zeus, "tak.cot.inject", false)
 		expectSub(t, zeus, "tel.fleet.>", false)
 	})
@@ -196,6 +201,11 @@ func TestClientRoles(t *testing.T) {
 	tak := h.conn(t, "tak-client")
 	bridge := h.conn(t, "bridge-mavlink-home")
 	entObs := h.conn(t, "onemind")
+	geofence := h.conn(t, "geofence")
+	if _, err := geofence.nc.Subscribe("svc.geofence.alerts", func(m *nats.Msg) { _ = m.Respond([]byte(`{"v":1,"alerts":[]}`)) }); err != nil {
+		t.Fatal(err)
+	}
+	geofence.nc.Flush()
 
 	low := map[string]bool{"newcomer": true, "viewer": true}
 	for _, r := range rf.Roles {
@@ -222,13 +232,23 @@ func TestClientRoles(t *testing.T) {
 				pass(t, "ALLOW req  role-%s -> svc.policy.command.confirm reaches policy (humans confirm)", r.Name)
 				expectDelivered(t, c, "tak.cot.out", tak, `<event uid="chat"/>`)
 			}
+			// No role subscribes ent.* for alerts (F-ALERT): alerts come from the geofence service.
+			expectSub(t, c, "ent.alert.*.state", false)
 			if r.Name == "newcomer" {
 				expectSub(t, c, "evt.so.action.>", false)
 				expectSub(t, c, "evt.mission.>", false)
 				expectPub(t, c, "svc.policy.action.get", false, nil)
+				// J2: a newcomer sees no alerts (neither the open set nor the live facts).
+				expectSub(t, c, "evt.so.alert.>", false)
+				expectPub(t, c, "svc.geofence.alerts", false, nil)
 			} else {
 				expectDelivered(t, c, "evt.so.action.executed", policy, `{}`)
 				expectSub(t, c, "evt.mission.>", true)
+				expectDelivered(t, c, "evt.so.alert.raised", geofence, `{"v":1}`)
+				if _, err := c.nc.Request("svc.geofence.alerts", []byte(`{}`), 2*time.Second); err != nil {
+					t.Fatalf("%s svc.geofence.alerts: %v", r.Name, err)
+				}
+				pass(t, "ALLOW req  role-%s -> svc.geofence.alerts answered", r.Name)
 			}
 		})
 	}

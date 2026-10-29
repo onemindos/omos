@@ -110,6 +110,8 @@ accounts:
         accounts: [CLIENT]
       - stream: "evt.map.geofence.>"    # zone crossings (D1)
         accounts: [CLIENT]
+      - stream: "evt.so.alert.>"        # alert facts raised/updated/resolved (D6, #569 D1-P3); svc.geofence.alerts gives the open set
+        accounts: [CLIENT]
       - stream: "tel.feed.*.status"     # feed freshness (B20)
         accounts: [CLIENT]
       - stream: "tak.cot.out"           # GeoChat and CoT from TAK Server (C8)
@@ -159,6 +161,7 @@ accounts:
       - stream: {account: ONEMIND, subject: "evt.so.action.>"}
       - stream: {account: ONEMIND, subject: "evt.mission.>"}
       - stream: {account: ONEMIND, subject: "evt.map.geofence.>"}
+      - stream: {account: ONEMIND, subject: "evt.so.alert.>"}
       - stream: {account: ONEMIND, subject: "tel.feed.*.status"}
       - stream: {account: ONEMIND, subject: "tak.cot.out"}
       - stream: {account: ONEMIND, subject: "tak.cot.mesh.rx"}
@@ -661,6 +664,7 @@ users:
       - "evt.so.action.>"
       - "evt.mission.>"
       - "evt.map.geofence.>"
+      - "evt.so.alert.>"
       - "tel.feed.*.status"
       - "tak.cot.out"
       - "tak.cot.mesh.rx"
