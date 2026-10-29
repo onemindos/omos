@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/micro"
 )
 
 // Entity is the subset of the entity record (onemind-xr docs/contracts/entity.md) the
@@ -56,6 +57,24 @@ func (n *NATSEntities) Get(ctx context.Context, entityType, id string) (*Entity,
 	if err != nil {
 		return nil, err
 	}
+	return decodeEntityReply(msg)
+}
+
+// decodeEntityReply reads a svc.entity.get reply. The entity service answers errors in
+// two forms, and both are accepted:
+//   - the NATS micro form: an empty body with the Nats-Service-Error-Code header
+//     (for example "404") and Nats-Service-Error carrying the description;
+//   - a JSON body {"error":{"code":"not_found"}} (code "404" is read the same way).
+//
+// Not found in either form maps to ErrEntityNotFound; any other error is a lookup
+// failure, and the caller denies (fail closed).
+func decodeEntityReply(msg *nats.Msg) (*Entity, error) {
+	if code := msg.Header.Get(micro.ErrorCodeHeader); code != "" {
+		if code == "404" {
+			return nil, ErrEntityNotFound
+		}
+		return nil, errors.New("entity service error " + code + ": " + msg.Header.Get(micro.ErrorHeader))
+	}
 	var wrap struct {
 		Entity *Entity `json:"entity"`
 		Error  *struct {
@@ -66,7 +85,7 @@ func (n *NATSEntities) Get(ctx context.Context, entityType, id string) (*Entity,
 		return nil, err
 	}
 	if wrap.Error != nil {
-		if wrap.Error.Code == "not_found" {
+		if wrap.Error.Code == "not_found" || wrap.Error.Code == "404" {
 			return nil, ErrEntityNotFound
 		}
 		return nil, errors.New("entity service error: " + wrap.Error.Code)

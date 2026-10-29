@@ -87,7 +87,9 @@ type env struct {
 	bridge   *bridgeStub
 	entities map[string]map[string]any
 	entMu    sync.Mutex
+	entMicro bool // not-found replies in the NATS micro form (empty body, error headers)
 	taskDown bool
+	geoDown  bool // geofence stub silent
 	taskMu   sync.Mutex
 	conns    map[string]*nats.Conn
 	errs     map[string][]error
@@ -112,7 +114,7 @@ accounts {
     users: [
       { user: policy, password: %q, permissions: {
           publish: { allow: ["cmd.>", "evt.so.action.>", "svc.entity.get", "$JS.API.>", "_INBOX.>"] }
-          subscribe: { allow: ["svc.policy.>", "evt.drone.>", "evt.robot.>", "evt.vehicle.>", "evt.mission.>", "evt.entity.>", "_INBOX.>"] }
+          subscribe: { allow: ["svc.policy.>", "evt.drone.>", "evt.robot.>", "evt.vehicle.>", "evt.mission.>", "evt.entity.>", "evt.map.geofence.*", "_INBOX.>"] }
           allow_responses: true } }
       { user: entity, password: %q, permissions: {
           publish: { allow: ["_INBOX.>"] }, subscribe: { allow: ["svc.entity.>"] }, allow_responses: true } }
@@ -121,6 +123,8 @@ accounts {
           subscribe: { allow: ["cmd.fleet.drone.sim-x1.>", "cmd.fleet.drone.sim-x2.>"] } } }
       { user: tasksvc, password: %q, permissions: {
           publish: { allow: ["evt.mission.>"] }, subscribe: { allow: ["cmd.mission.>"] } } }
+      { user: geofence, password: %q, permissions: {
+          publish: { allow: ["evt.map.geofence.*"] }, subscribe: { allow: ["cmd.map.geofence.>"] } } }
       { user: watch, password: %q, permissions: {
           publish: { allow: ["svc.policy.command.propose", "svc.policy.task.propose"] }, subscribe: { allow: ["_INBOX.>"] } } }
       { user: other, password: %q, permissions: {
@@ -153,7 +157,7 @@ accounts {
     imports: [ { service: { account: ONEMIND, subject: "svc.policy.>" }, share: true } ]
   }
 }
-`, storeDir, pw["policy"], pw["entity"], pw["bridge"], pw["tasksvc"], pw["watch"], pw["other"], pw["admin"],
+`, storeDir, pw["policy"], pw["entity"], pw["bridge"], pw["tasksvc"], pw["geofence"], pw["watch"], pw["other"], pw["admin"],
 		pw["zeus"], pw["alice"], pw["carol"], pw["mallory"], pw["hermes"], pw["rogue"])
 }
 
@@ -199,7 +203,7 @@ func newEnv(t *testing.T) *env {
 	t.Helper()
 	e := &env{t: t, pw: map[string]string{}, clock: &fakeClock{t: time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)},
 		conns: map[string]*nats.Conn{}, errs: map[string][]error{}, entities: map[string]map[string]any{}}
-	for _, u := range []string{"policy", "entity", "bridge", "tasksvc", "watch", "other", "admin", "zeus", "alice", "carol", "mallory", "hermes", "rogue"} {
+	for _, u := range []string{"policy", "entity", "bridge", "tasksvc", "geofence", "watch", "other", "admin", "zeus", "alice", "carol", "mallory", "hermes", "rogue"} {
 		e.pw[u] = randPW()
 	}
 	dir := t.TempDir()
@@ -290,9 +294,18 @@ func newEnv(t *testing.T) *env {
 		_ = json.Unmarshal(m.Data, &q)
 		e.entMu.Lock()
 		rec, ok := e.entities[q.EntityID]
+		microForm := e.entMicro
 		var b []byte
 		if ok {
 			b, _ = json.Marshal(map[string]any{"entity": rec})
+		} else if microForm {
+			e.entMu.Unlock()
+			// What micro's Request.Error("404", "entity not found", nil) sends.
+			r := nats.NewMsg(m.Reply)
+			r.Header.Set("Nats-Service-Error-Code", "404")
+			r.Header.Set("Nats-Service-Error", "entity not found")
+			_ = m.RespondMsg(r)
+			return
 		} else {
 			b = []byte(`{"error":{"code":"not_found"}}`)
 		}
@@ -329,6 +342,37 @@ func newEnv(t *testing.T) *env {
 		t.Fatal(err)
 	}
 	_ = tc.Flush()
+
+	// Geofence service stub (D1-P2): answers cmd.map.geofence.{id}.{verb} on the four-token
+	// evt.map.geofence.{created|updated|deleted|refused} with the zone id in data. A zone id
+	// starting "bad-" is refused.
+	gc := e.conn("geofence")
+	if _, err := gc.Subscribe("cmd.map.geofence.*.*", func(m *nats.Msg) {
+		e.taskMu.Lock()
+		down := e.geoDown
+		e.taskMu.Unlock()
+		if down {
+			return
+		}
+		var c struct {
+			ID       string `json:"id"`
+			ActionID string `json:"action_id"`
+		}
+		_ = json.Unmarshal(m.Data, &c)
+		parts := strings.Split(m.Subject, ".")
+		zone, verb := parts[3], parts[4]
+		event := map[string]string{"create": "created", "update": "updated", "remove": "deleted"}[verb]
+		data := map[string]any{"zone_id": zone, "action_id": c.ActionID, "outcome": "executed", "revision": 1}
+		if strings.HasPrefix(zone, "bad-") {
+			event = "refused"
+			data["outcome"], data["code"], data["message"] = "refused", "schema_invalid", "zone refused"
+		}
+		b, _ := json.Marshal(map[string]any{"v": 1, "id": NewUUID(), "causation": c.ID, "data": data})
+		_ = gc.Publish("evt.map.geofence."+event, b)
+	}); err != nil {
+		t.Fatal(err)
+	}
+	_ = gc.Flush()
 
 	// The policy service.
 	pc := e.conn("policy")
@@ -460,3 +504,10 @@ func (b *bridgeStub) handle(nc *nats.Conn, m *nats.Msg) {
 }
 
 func (b *bridgeStub) count() int { b.mu.Lock(); defer b.mu.Unlock(); return len(b.received) }
+
+// geofenceDown silences the geofence service stub.
+func (e *env) geofenceDown(down bool) {
+	e.taskMu.Lock()
+	e.geoDown = down
+	e.taskMu.Unlock()
+}
