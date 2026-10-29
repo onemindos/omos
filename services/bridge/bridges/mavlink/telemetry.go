@@ -131,6 +131,13 @@ func (s *vehicleState) position() (lat, lon, altMSL float64, ok bool) {
 	return s.lat, s.lon, s.altMSL, s.hasPos
 }
 
+// freshPosition is position, but ok only when GLOBAL_POSITION_INT arrived within maxAge.
+func (s *vehicleState) freshPosition(now time.Time, maxAge time.Duration) (lat, lon, altMSL float64, ok bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.lat, s.lon, s.altMSL, s.hasPos && now.Sub(s.posAt) <= maxAge
+}
+
 // haeLocked returns the ellipsoid height and how it was derived.
 // Preferred: the autopilot's own GPS_RAW_INT undulation (alt_ellipsoid - alt) seen in
 // the last 5 s; otherwise the embedded EGM96 model.
@@ -246,7 +253,7 @@ func (s *vehicleState) statusEnvelope(cfg *Config, now time.Time) (GeoEnvelope, 
 			"simulated":         true,
 			"source":            cfg.Source,
 			"position_age_ms":   now.Sub(s.posAt).Milliseconds(),
-			"commands_accepted": "goto,rtl,land,arm,disarm,estop,takeoff",
+			"commands_accepted": "goto,hold,rtl,land,arm,disarm,estop,takeoff",
 		},
 	}, true
 }

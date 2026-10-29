@@ -243,8 +243,13 @@ func TestE2E(t *testing.T) {
 	expect("arm (A4, two humans)", send("arm (A4, two humans)", ct.Opts{Verb: "arm"}, ""), "acknowledged", "executed")
 	expect("takeoff (A4)", send("takeoff (A4)", ct.Opts{Verb: "takeoff", Data: map[string]any{"hae_m": 60 + n0}}, ""), "acknowledged", "executed")
 	expect("goto", send("goto", ct.Opts{Verb: "goto", Data: map[string]any{"lat": 0.001, "lon": 0.001, "hae_m": 80 + n0, "speed_mps": 6.0}}, ""), "acknowledged", "executed")
+	// hold (task.abort's verb): DO_REPOSITION to the current position while airborne.
+	expect("hold", send("hold", ct.Opts{Verb: "hold"}, ""), "acknowledged", "executed")
+	expect("hold (reason abort)", send("hold (reason abort)", ct.Opts{Verb: "hold", Data: map[string]any{"reason": "abort"}}, ""), "acknowledged", "executed")
 	expect("rtl", send("rtl", ct.Opts{Verb: "rtl"}, ""), "acknowledged", "executed")
 	expect("land", send("land", ct.Opts{Verb: "land"}, ""), "acknowledged", "executed")
+	// On the ground the scripted drone answers DO_REPOSITION TEMPORARILY_REJECTED.
+	expect("hold while landed", send("hold while landed", ct.Opts{Verb: "hold"}, ""), "acknowledged", "failed/vehicle_rejected")
 	expect("disarm", send("disarm", ct.Opts{Verb: "disarm"}, ""), "acknowledged", "executed")
 
 	// Refused: nothing is sent to the vehicle.

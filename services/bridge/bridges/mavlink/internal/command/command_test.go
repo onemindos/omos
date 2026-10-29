@@ -2,6 +2,7 @@ package command_test
 
 import (
 	"crypto/ed25519"
+	"strings"
 	"testing"
 	"time"
 
@@ -48,6 +49,15 @@ func TestVerify(t *testing.T) {
 		{"estop", ct.Opts{Verb: "estop"}, "", ""},
 		{"land with point", ct.Opts{Verb: "land", Data: map[string]any{"lat": 0.0, "lon": 0.0}}, "", ""},
 		{"takeoff", ct.Opts{Verb: "takeoff", Data: map[string]any{"hae_m": 40.0}}, "", ""},
+		{"hold", ct.Opts{Verb: "hold"}, "", ""},
+		{"hold with duration and reason", ct.Opts{Verb: "hold", Data: map[string]any{"duration_s": 120, "reason": "abort"}}, "", ""},
+		{"hold duration not integer", ct.Opts{Verb: "hold", Data: map[string]any{"duration_s": 1.5}}, command.CodeSchemaInvalid, ""},
+		{"hold duration zero", ct.Opts{Verb: "hold", Data: map[string]any{"duration_s": 0}}, command.CodeSchemaInvalid, ""},
+		{"hold duration too long", ct.Opts{Verb: "hold", Data: map[string]any{"duration_s": 3601}}, command.CodeSchemaInvalid, ""},
+		{"hold reason too long", ct.Opts{Verb: "hold", Data: map[string]any{"reason": strings.Repeat("x", 101)}}, command.CodeSchemaInvalid, ""},
+		{"hold reason not a string", ct.Opts{Verb: "hold", Data: map[string]any{"reason": 7}}, command.CodeSchemaInvalid, ""},
+		{"hold extra param", ct.Opts{Verb: "hold", Data: map[string]any{"lat": 0.0}}, command.CodeSchemaInvalid, ""},
+		{"hold agent approver", ct.Opts{Verb: "hold", Approvers: []string{"agent:hermes/zeus/legacy"}}, command.CodeAgentCannotConfirm, ""},
 		{"arm one human", ct.Opts{Verb: "arm", Approvers: []string{"user:zeus"}}, command.CodeNotAuthorized, ""},
 		{"arm at A3 level", ct.Opts{Verb: "arm", Level: "A3"}, command.CodeNotAuthorized, ""},
 		{"pending approval", ct.Opts{Verb: "rtl", Status: "pending"}, command.CodeNotAuthorized, ""},

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"net"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -625,5 +626,110 @@ func TestSendErrorsAreNotVehicleRejected(t *testing.T) {
 		if len(got) != 2 || got[1]["outcome"] != "failed" || got[1]["code"] != c.code || (c.detail != "" && got[1]["detail"] != c.detail) {
 			t.Fatalf("%v: %s %v", c.err, outcomes(got), got)
 		}
+	}
+}
+
+// hold is MAV_CMD_DO_REPOSITION (COMMAND_INT, frame GLOBAL, CHANGE_MODE) to the latest
+// GLOBAL_POSITION_INT, the hold that task.abort sends (mission-task.md §6.2).
+func TestHoldAtCurrentPosition(t *testing.T) {
+	h := newHarness(t)
+	h.veh.mu.Lock()
+	h.veh.lat, h.veh.lon, h.veh.altMSL = 0.0012345, -0.0006789, 61.5
+	h.veh.mu.Unlock()
+	h.waitFor(func() bool {
+		lat, _, _, ok := h.b.state.position()
+		return ok && math.Abs(lat-0.0012345) < 1e-9
+	}, "moved position")
+
+	taskReport := func() map[string]any {
+		tasks := h.bus.bySubject("evt.drone.sim-x1.task")
+		var env struct{ Data map[string]any }
+		if err := json.Unmarshal(tasks[len(tasks)-1].Data, &env); err != nil {
+			t.Fatal(err)
+		}
+		return env.Data
+	}
+
+	// task.abort: hold with reason abort, task-bound -> executed, task done_not_ok + cancelled.
+	got := h.send(ct.Opts{Verb: "hold", Data: map[string]any{"reason": "abort"}, TaskID: "tsk-abort-1",
+		ParamsHash: "sha256:" + strings.Repeat("ab", 32)})
+	if len(got) != 2 || got[0]["outcome"] != "acknowledged" || got[1]["outcome"] != "executed" {
+		t.Fatalf("abort hold: %s %v", outcomes(got), got)
+	}
+	if mav := got[1]["mavlink"].(map[string]any); mav["command"] != "MAV_CMD_DO_REPOSITION" {
+		t.Fatalf("abort hold mavlink %v", mav)
+	}
+	if r := taskReport(); r["state"] != "done_not_ok" || r["error"].(map[string]any)["code"] != "cancelled" {
+		t.Fatalf("abort task report %v", r)
+	}
+
+	// Plain hold task: the vehicle is holding, the task keeps executing.
+	got = h.send(ct.Opts{Verb: "hold", Data: map[string]any{"duration_s": 60}, TaskID: "tsk-hold-1"})
+	if len(got) != 2 || got[1]["outcome"] != "executed" {
+		t.Fatalf("hold: %s", outcomes(got))
+	}
+	if r := taskReport(); r["state"] != "executing" || r["error"] != nil {
+		t.Fatalf("hold task report %v", r)
+	}
+
+	h.veh.mu.Lock()
+	defer h.veh.mu.Unlock()
+	if len(h.veh.ints) != 2 || len(h.veh.longs) != 0 {
+		t.Fatalf("vehicle got %d COMMAND_INT, %d COMMAND_LONG", len(h.veh.ints), len(h.veh.longs))
+	}
+	for _, g := range h.veh.ints {
+		if g.Command != common.MAV_CMD_DO_REPOSITION || g.Frame != common.MAV_FRAME_GLOBAL ||
+			g.X != 12345 || g.Y != -6789 || math.Abs(float64(g.Z)-61.5) > 0.01 ||
+			g.Param1 != -1 || g.Param2 != float32(common.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE) || !math.IsNaN(float64(g.Param4)) {
+			t.Fatalf("hold DO_REPOSITION fields %+v", g)
+		}
+	}
+}
+
+// A vehicle that does not read COMMAND_INT gets the hold as COMMAND_LONG (param5/6/7).
+func TestHoldFallsBackToCommandLong(t *testing.T) {
+	h := newHarness(t)
+	h.veh.mu.Lock()
+	h.veh.intUnsup = true
+	h.veh.mu.Unlock()
+	if got := h.send(ct.Opts{Verb: "hold"}); len(got) != 2 || got[1]["outcome"] != "executed" {
+		t.Fatalf("hold: %s", outcomes(got))
+	}
+	h.veh.mu.Lock()
+	defer h.veh.mu.Unlock()
+	if len(h.veh.longs) != 1 {
+		t.Fatalf("COMMAND_LONG count %d", len(h.veh.longs))
+	}
+	l := h.veh.longs[0]
+	if l.Command != common.MAV_CMD_DO_REPOSITION || math.Abs(float64(l.Param5)-0.001) > 1e-6 ||
+		math.Abs(float64(l.Param6)-0.001) > 1e-6 || math.Abs(float64(l.Param7)-50) > 0.01 || l.Param2 != 1 {
+		t.Fatalf("COMMAND_LONG hold %+v", l)
+	}
+}
+
+// hold needs a link and a recent position; a stale position is refused, never sent.
+func TestHoldRefusedWithoutFreshPosition(t *testing.T) {
+	h := newHarness(t)
+	h.veh.mu.Lock()
+	h.veh.paused = true
+	h.veh.mu.Unlock()
+	time.Sleep(100 * time.Millisecond)
+	h.b.offset.Store(int64(10 * time.Second))
+	got := h.send(ct.Opts{Verb: "hold", Now: time.Now().Add(10 * time.Second)})
+	if len(got) != 1 || got[0]["code"] != "precondition_failed" || got[0]["detail"] != "offline" {
+		t.Fatalf("offline hold: %s %v", outcomes(got), got)
+	}
+
+	s := newVehicleState()
+	now := time.Now()
+	if _, _, _, ok := s.freshPosition(now, time.Second); ok {
+		t.Fatal("no position yet but freshPosition ok")
+	}
+	s.update(&ardupilotmega.MessageGlobalPositionInt{Lat: 10, Lon: 20, Alt: 30000}, now.Add(-5*time.Second), time.Second)
+	if _, _, _, ok := s.freshPosition(now, 3*time.Second); ok {
+		t.Fatal("5 s old position accepted with a 3 s limit")
+	}
+	if lat, lon, alt, ok := s.freshPosition(now, 10*time.Second); !ok || lat != 1e-6 || lon != 2e-6 || alt != 30 {
+		t.Fatalf("freshPosition %v %v %v %v", lat, lon, alt, ok)
 	}
 }

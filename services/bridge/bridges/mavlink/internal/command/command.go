@@ -16,6 +16,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/onemindos/omos-bridge/bridges/mavlink/internal/jcs"
 )
@@ -133,6 +134,7 @@ type Verb struct {
 // Verbs is the catalogue this bridge executes. Any other verb is refused.
 var Verbs = map[string]Verb{
 	"goto":    {"goto", "A3", 1},
+	"hold":    {"hold", "A3", 1},
 	"rtl":     {"rtl", "A3", 1},
 	"land":    {"land", "A3", 1},
 	"disarm":  {"disarm", "A3", 1},
@@ -445,6 +447,11 @@ type Params struct {
 	HaeM     *float64 `json:"hae_m,omitempty"`
 	SpeedMps *float64 `json:"speed_mps,omitempty"`
 	YawDeg   *float64 `json:"yaw_deg,omitempty"`
+	// hold: duration_s is an integer in [1, 3600] (services/schemas asset.hold.v1);
+	// reason is free text, "abort" when the policy service sends it for task.abort
+	// (mission-task.md §6.2).
+	DurationS *float64 `json:"duration_s,omitempty"`
+	Reason    *string  `json:"reason,omitempty"`
 }
 
 func finite(p *float64) bool { return p != nil && !math.IsNaN(*p) && !math.IsInf(*p, 0) }
@@ -462,6 +469,7 @@ func ParseParams(verb string, data json.RawMessage) (Params, *Refusal) {
 	allowed := map[string][]string{
 		"goto":    {"lat", "lon", "hae_m", "speed_mps", "yaw_deg"},
 		"land":    {"lat", "lon"},
+		"hold":    {"duration_s", "reason"},
 		"takeoff": {"hae_m"},
 	}[verb]
 	for k := range probe {
@@ -508,6 +516,13 @@ func ParseParams(verb string, data json.RawMessage) (Params, *Refusal) {
 	case "takeoff":
 		if !finite(p.HaeM) {
 			return p, refuse(CodeSchemaInvalid, "hae_m required")
+		}
+	case "hold":
+		if p.DurationS != nil && (!finite(p.DurationS) || *p.DurationS != math.Trunc(*p.DurationS) || *p.DurationS < 1 || *p.DurationS > 3600) {
+			return p, refuse(CodeSchemaInvalid, "duration_s must be an integer in [1, 3600]")
+		}
+		if p.Reason != nil && utf8.RuneCountInString(*p.Reason) > 100 {
+			return p, refuse(CodeSchemaInvalid, "reason longer than 100 characters")
 		}
 	}
 	return p, nil

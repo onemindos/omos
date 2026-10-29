@@ -70,7 +70,7 @@ and a link write error or shutdown is `failed` / `no_ack` with `detail` `not_sen
 (owner proposal P4). Only a `COMMAND_ACK` from the vehicle sysid whose `target_system` is 0 or
 `MAV_GCS_SYSID` completes a command, so ACKs for another GCS on a shared link are ignored.
 
-`COMMAND_INT` requests (`goto`, `land` at a point) fall back to `COMMAND_LONG` (param5/6 = lat/lon
+`COMMAND_INT` requests (`goto`, `hold`, `land` at a point) fall back to `COMMAND_LONG` (param5/6 = lat/lon
 in degrees, param7 = z) when the vehicle answers `MAV_RESULT_UNSUPPORTED` or never ACKs
 `COMMAND_INT`; the bridge then uses `COMMAND_LONG` for that command until it restarts. How each
 autopilot reads the `COMMAND_LONG` altitude frame is **unverified** (PX4 documents AMSL).
@@ -83,13 +83,37 @@ a task for the life of the process (owner proposal P7).
 | Verb | Level | MAVLink | Notes |
 |---|---|---|---|
 | `goto {lat, lon, hae_m, speed_mps?, yaw_deg?}` | A3 | `MAV_CMD_DO_REPOSITION` (192), `COMMAND_INT`, frame `MAV_FRAME_GLOBAL` (`COMMAND_LONG` fallback) | z = `hae_m` − N (MSL); param1 speed or −1; param2 `MAV_DO_REPOSITION_FLAGS_CHANGE_MODE`; param4 yaw or NaN |
+| `hold {duration_s?, reason?}` | A3 | `MAV_CMD_DO_REPOSITION` (192) to the current position, `COMMAND_INT`, frame `MAV_FRAME_GLOBAL` (`COMMAND_LONG` fallback) | x/y/z = latest `GLOBAL_POSITION_INT` lat/lon/MSL alt (refused `offline` if older than `LINK_TIMEOUT`); param1 −1; param2 `MAV_DO_REPOSITION_FLAGS_CHANGE_MODE`; param4 NaN; no geofence check. See **hold** |
 | `rtl {}` | A3 | `MAV_CMD_NAV_RETURN_TO_LAUNCH` (20) | |
 | `land {lat?, lon?}` | A3 | `MAV_CMD_NAV_LAND` (21) | `COMMAND_INT` at a point, else `COMMAND_LONG` |
 | `arm {}` / `disarm {}` | A4 / A3 | `MAV_CMD_COMPONENT_ARM_DISARM` (400) | param1 1 / 0; never the force value |
 | `estop {}` | A3 | `MAV_CMD_DO_FLIGHTTERMINATION` (185) | param1 1 |
 | `takeoff {hae_m}` | A4 | `MAV_CMD_NAV_TAKEOFF` (22) | param7 = `hae_m` − N; how each autopilot reads param7 is **unverified** |
 
-Levels and verbs follow asset-command.md §3. Every other verb is refused.
+Levels and verbs follow asset-command.md §3. Every other verb is refused. Status telemetry
+lists the catalogue in `meta.commands_accepted`.
+
+**hold.** asset-command.md §3 leaves the mapping bridge-defined. The bridge sends
+`MAV_CMD_DO_REPOSITION` to the vehicle's own latest position because it is the guided "stop here"
+command both autopilots document as a command (not only a mission item):
+
+- PX4: `Commander.cpp` handles `VEHICLE_CMD_DO_REPOSITION` with the `CHANGE_MODE` bit by switching
+  to Hold (`AUTO_LOITER`), and `navigator_main.cpp` applies the reposition setpoint when armed;
+  Hold mode loiters at that point (docs.px4.io `flight_modes_mc/hold`, `flight_modes_fw/hold`
+  "Altitude Ramp on Reposition"). PX4's commander has no handler for `MAV_CMD_NAV_LOITER_UNLIM`.
+- ArduPilot Copter: "Copter Commands in Guided Mode" lists `MAV_CMD_DO_REPOSITION` among the
+  commands processed in `COMMAND_INT`; `NAV_LOITER_UNLIM` there only changes to Loiter mode (which
+  expects pilot sticks), so it is not used.
+- MAVLink common.xml: `DO_REPOSITION` "is intended for guided commands"; `MAV_CMD_DO_PAUSE_CONTINUE`
+  pauses missions and is not listed in either guided-command page, so it is not used.
+
+The vehicle holds until its next command: `duration_s` is validated (integer 1–3600, as
+`services/schemas/actions/asset.hold.v1`) but not enforced by the bridge. `reason: "abort"` is what
+the policy service sends for `task.abort` (mission-task.md §6.2); on a task-bearing command that
+the vehicle accepts, the task report is `done_not_ok` with `error.code = cancelled`. Other holds
+report `executing`. A vehicle on the ground may reject `DO_REPOSITION` (the scripted drone answers
+`TEMPORARILY_REJECTED`), which is reported as `failed`/`vehicle_rejected`. Real-autopilot behaviour
+is unverified here (SITL is the owner check).
 
 **Signing.** Until the policy service publishes its key, `SIG_REQUIRED=false` lets unsigned
 commands through **for local development only**, with a warning per command; a present but
@@ -135,13 +159,14 @@ SIM_DRONE=../../../../../onemind-xr/scripts/sim/mavlink_sim_drone.py ./test/e2e.
 
 `test/e2e.sh` starts a disposable nats-server with JetStream and per-role users (passwords
 generated per run), a MAVLink 2 scripted drone, and the bridge in-process, then checks: telemetry
-appears and the `TEL`-equivalent stream stores every message; approved arm, takeoff, goto, rtl,
-land, disarm are ACKed and executed; unapproved, one-human arm, agent-approved, non-simulated, forged, unsigned,
+appears and the `TEL`-equivalent stream stores every message; approved arm, takeoff, goto, hold
+(plain and `reason: abort`), rtl, land, disarm are ACKed and executed; hold on the ground is
+`vehicle_rejected`; unapproved, one-human arm, agent-approved, non-simulated, forged, unsigned,
 expired, replayed, keep-out and unknown-verb commands are refused; a non-`sim-` target gets no
 answer; and a client user cannot publish `cmd.fleet.>`.
 
 The scripted drone answers `COMMAND_LONG` arm, disarm, takeoff, land and RTL, and
-`DO_REPOSITION` over `COMMAND_INT` or `COMMAND_LONG` when armed and airborne, so `goto` runs end to
+`DO_REPOSITION` over `COMMAND_INT` or `COMMAND_LONG` when armed and airborne, so `goto` and `hold` run end to
 end there. It does not implement `DO_FLIGHTTERMINATION` (`estop` would be `vehicle_rejected`); the
 in-process test vehicle covers `estop` and the `COMMAND_LONG` fallback. PX4 SITL or ArduPilot SITL is the
 owner check for real autopilot behaviour.

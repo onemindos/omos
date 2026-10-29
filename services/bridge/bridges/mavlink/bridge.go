@@ -120,6 +120,7 @@ type outcome struct {
 	SigOK     *bool          `json:"sig_verified,omitempty"`
 	TaskID    string         `json:"task_id,omitempty"`
 	Simulated bool           `json:"simulated"`
+	abort     bool           // a task-bearing hold with data.reason "abort" (mission-task.md §6.2)
 }
 
 func uuid4() string {
@@ -208,6 +209,11 @@ func (b *Bridge) reportTask(e *command.Envelope, o outcome) {
 		if o.Verb == "arm" || o.Verb == "disarm" || o.Verb == "estop" {
 			state = "done_ok"
 		}
+		if o.abort {
+			// task.abort: the vehicle is holding, so the task ends cancelled (mission-task.md §6.2).
+			state = "done_not_ok"
+			errObj = map[string]string{"code": "cancelled", "message": "task aborted; vehicle holding at its current position"}
+		}
 	case "refused":
 		state = "done_not_ok"
 		errObj = map[string]string{"code": "rejected", "message": o.Code + ": " + o.Message}
@@ -293,7 +299,8 @@ func (b *Bridge) HandleCommand(ctx context.Context, subject string, data []byte)
 			Message: "vehicle answered " + common.MAV_RESULT(result).String(), Mavlink: mav})
 	default:
 		mav["result"] = 0
-		b.report(e, outcome{Outcome: "executed", Verb: verbName, Mavlink: mav})
+		abort := verbName == "hold" && res.Params.Reason != nil && *res.Params.Reason == "abort"
+		b.report(e, outcome{Outcome: "executed", Verb: verbName, Mavlink: mav, abort: abort})
 	}
 }
 
@@ -361,6 +368,23 @@ func (b *Bridge) precheck(res *command.Result, now time.Time) (MavRequest, *comm
 		return MavRequest{Cmd: common.MAV_CMD_COMPONENT_ARM_DISARM, P: [7]float32{1}}, nil
 	case "disarm":
 		return MavRequest{Cmd: common.MAV_CMD_COMPONENT_ARM_DISARM, P: [7]float32{0}}, nil
+	case "hold":
+		// Hold at the current position: MAV_CMD_DO_REPOSITION to the latest GLOBAL_POSITION_INT
+		// (lat/lon, MSL altitude), param2 MAV_DO_REPOSITION_FLAGS_CHANGE_MODE, speed default,
+		// yaw NaN. This is the hold command both autopilots document: PX4's commander switches to
+		// Hold (AUTO_LOITER) on DO_REPOSITION with CHANGE_MODE and the navigator loiters at the
+		// point; ArduPilot Copter accepts DO_REPOSITION over COMMAND_INT in Guided. PX4's
+		// commander does not handle NAV_LOITER_UNLIM as a command (mission item only), so it is
+		// not used. No geofence check: stopping where the vehicle is must not be blocked
+		// (asset-command.md §3: precondition "online"). duration_s is not enforced by the
+		// bridge; the vehicle holds until its next command. See README "hold".
+		lat, lon, alt, ok := b.state.freshPosition(now, b.cfg.LinkTimeout)
+		if !ok {
+			return MavRequest{}, precond("offline", "no GLOBAL_POSITION_INT from sysid %d within %s; cannot hold at an unknown position", b.cfg.SysID, b.cfg.LinkTimeout)
+		}
+		return MavRequest{Cmd: common.MAV_CMD_DO_REPOSITION, Int: true, LongFallback: true, Frame: common.MAV_FRAME_GLOBAL,
+			P: [7]float32{-1, float32(common.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE), 0, nanF},
+			X: int32(math.Round(lat * 1e7)), Y: int32(math.Round(lon * 1e7)), Z: float32(alt)}, nil
 	case "rtl":
 		return MavRequest{Cmd: common.MAV_CMD_NAV_RETURN_TO_LAUNCH}, nil
 	case "land":

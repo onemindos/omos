@@ -84,9 +84,10 @@ func TestTaskBoundParamsHash(t *testing.T) {
 		code string
 	}{
 		{"goto with task.assign hash", ct.Opts{Verb: "goto", Data: spec, TaskID: "tsk-01jbx7k2m9q4r8s6t0v2w4y6z8", ParamsHash: assign.ParamsHash}, ""},
-		// task.abort sends cmd.fleet...hold, a verb this bridge does not implement yet; any
-		// task-bound verb it does implement takes the task action's hash the same way.
+		// task.abort sends cmd.fleet.drone.{id}.hold with data {"reason":"abort"} (mission-task.md §6.2).
+		{"hold with task.abort hash", ct.Opts{Verb: "hold", Data: map[string]any{"reason": "abort"}, TaskID: "tsk-01jbx7k2m9q4r8s6t0v2w4y6z8", ParamsHash: abort.ParamsHash}, ""},
 		{"rtl with task.abort hash", ct.Opts{Verb: "rtl", TaskID: "tsk-01jbx7k2m9q4r8s6t0v2w4y6z8", ParamsHash: abort.ParamsHash}, ""},
+		{"abort hold with bad data", ct.Opts{Verb: "hold", Data: map[string]any{"reason": "abort", "duration_s": -1}, TaskID: "tsk-01jbx7k2m9q4r8s6t0v2w4y6z8", ParamsHash: abort.ParamsHash}, command.CodeSchemaInvalid},
 		{"task hash without task_id", ct.Opts{Verb: "goto", Data: spec, ParamsHash: assign.ParamsHash}, command.CodeNotAuthorized},
 		{"task_id with malformed hash", ct.Opts{Verb: "goto", Data: spec, TaskID: "tsk-01jbx7k2m9q4r8s6t0v2w4y6z8", ParamsHash: "sha256:XYZ"}, command.CodeSchemaInvalid},
 		{"malformed task_id", ct.Opts{Verb: "goto", Data: spec, TaskID: "task 1", ParamsHash: assign.ParamsHash}, command.CodeSchemaInvalid},
