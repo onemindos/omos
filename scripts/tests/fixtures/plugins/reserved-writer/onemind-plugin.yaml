@@ -1,0 +1,14 @@
+# Invalid on purpose: a plugin may not write entity state or publish commands.
+apiVersion: onemind.io/plugin/v1
+id: org.example.source.reserved
+version: 0.1.0
+kinds: [source]
+trust: verified
+licence: MIT
+bus:
+  publishes: [ent.quake.*.state, cmd.fleet.drone.*.goto]
+source:
+  engine: image
+  image: ghcr.io/onemindos/collector-example:0.1.0
+  delivery: rest_poll
+  subject: ent.quake.*.state

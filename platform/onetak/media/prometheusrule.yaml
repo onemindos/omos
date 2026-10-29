@@ -1,0 +1,48 @@
+# Disk guard for the onemind-media recordings volume (FEATURES K1). MediaMTX has no disk-full
+# guard: when the volume fills it stops writing segments for every stream, silently, until the
+# oldest ones age out. Retention in mediamtx.yml is sized to stay near 2/3 of the 20 Gi volume
+# (pvc.yaml "Budget"); these alerts fire earlier than the generic 85% PVCFillingUp so retention
+# can be cut or the claim grown before recording stops. Prometheus selects PrometheusRules in
+# every namespace (platform/values/kube-prometheus-stack.yaml ruleNamespaceSelector: {}).
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: onemind-media
+  labels:
+    app.kubernetes.io/name: onemind-media
+    app.kubernetes.io/part-of: omos-video
+    release: monitoring
+spec:
+  groups:
+    - name: onemind.media
+      interval: 60s
+      rules:
+        - alert: OneMindMediaRecordingsFillingUp
+          expr: |
+            kubelet_volume_stats_used_bytes{namespace="onetak",persistentvolumeclaim="onemind-media-recordings"}
+              / kubelet_volume_stats_capacity_bytes{namespace="onetak",persistentvolumeclaim="onemind-media-recordings"} > 0.75
+          for: 15m
+          labels:
+            severity: warning
+            service: onemind-media
+          annotations:
+            summary: "onemind-media recordings volume is {{ $value | humanizePercentage }} full"
+            description: >-
+              onetak/onemind-media-recordings is above 75%, beyond the retention budget in pvc.yaml.
+              More or higher-bitrate streams are recording than it was sized for. Lower
+              recordDeleteAfter in platform/onetak/media/mediamtx.yml or grow the claim (owner
+              approval, billed) before it fills: at 100% MediaMTX stops recording every stream.
+        - alert: OneMindMediaRecordingsAlmostFull
+          expr: |
+            kubelet_volume_stats_used_bytes{namespace="onetak",persistentvolumeclaim="onemind-media-recordings"}
+              / kubelet_volume_stats_capacity_bytes{namespace="onetak",persistentvolumeclaim="onemind-media-recordings"} > 0.9
+          for: 5m
+          labels:
+            severity: critical
+            service: onemind-media
+          annotations:
+            summary: "onemind-media recordings volume is {{ $value | humanizePercentage }} full; recording will stop"
+            description: >-
+              onetak/onemind-media-recordings is above 90%. When it is full MediaMTX stops writing
+              segments for every stream until the oldest age out. Cut recordDeleteAfter now
+              (mediamtx.yml) or delete old segments under /recordings by hand.

@@ -1,0 +1,89 @@
+# onemind-media: MediaMTX v1.21.3 with authentication, path allowlists and recording (FEATURES K1).
+# Credentials: the onemind-media-users Secret (SealedSecret, see SEALING.md). One key per user in
+# mediamtx.yml; MTX_AUTHINTERNALUSERS_<index>_PASS replaces that user's `pass: from-secret`.
+# The env index must match the user's position in mediamtx.yml; video-registry's unit test
+# TestDeploymentEnvMatchesUsers checks it in CI.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onemind-media
+  labels:
+    app.kubernetes.io/name: onemind-media
+    app.kubernetes.io/part-of: omos-video
+spec:
+  replicas: 1 # one RWO recordings volume; MediaMTX holds path state in memory
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onemind-media
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: onemind-media
+        app.kubernetes.io/part-of: omos-video
+    spec:
+      # Ecosystem pool: hub-core is memory-saturated (cluster review H1).
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      enableServiceLinks: false
+      containers:
+        - name: mediamtx
+          # Upstream image, pinned by digest (Docker Hub bluenviron/mediamtx:1.21.3, resolved
+          # 2026-10-29). Not the -ffmpeg variant: nothing here transcodes.
+          image: bluenviron/mediamtx:1.21.3@sha256:59e43552f3be43695b70c19424dc2a42fcec18075f88d91561a24ac5d70a586c
+          args: ["/config/mediamtx.yml"]
+          ports:
+            - {name: rtsp, containerPort: 8554, protocol: TCP}
+            - {name: hls, containerPort: 8888, protocol: TCP}
+            - {name: webrtc, containerPort: 8889, protocol: TCP}
+            - {name: webrtc-ice, containerPort: 8189, protocol: UDP}
+            - {name: srt, containerPort: 8890, protocol: UDP}
+            - {name: playback, containerPort: 9996, protocol: TCP}
+            - {name: api, containerPort: 9997, protocol: TCP}
+          env:
+            - name: MTX_AUTHINTERNALUSERS_0_PASS
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: mavlink-bridge}}
+            - name: MTX_AUTHINTERNALUSERS_1_PASS
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: edge-home}}
+            - name: MTX_AUTHINTERNALUSERS_2_PASS
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: onemind-client}}
+            - name: MTX_AUTHINTERNALUSERS_3_PASS
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: tak-viewer}}
+            - name: MTX_AUTHINTERNALUSERS_4_PASS
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: takml}}
+            - name: MTX_AUTHINTERNALUSERS_5_PASS
+              valueFrom: {secretKeyRef: {name: onemind-media-users, key: video-registry}}
+          readinessProbe:
+            tcpSocket: {port: rtsp}
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket: {port: rtsp}
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - {name: config, mountPath: /config, readOnly: true}
+            - {name: recordings, mountPath: /recordings}
+      volumes:
+        - name: config
+          configMap:
+            name: onemind-media-config
+        - name: recordings
+          persistentVolumeClaim:
+            claimName: onemind-media-recordings

@@ -1,0 +1,27 @@
+# onemind-media on the tailnet only (FEATURES K1): the Tailscale operator creates the node
+# `media` (media.<tailnet>.ts.net), as tak-tailnet does for TAK. No Ingress, no public LB.
+# Every port still requires a MediaMTX user (no anonymous read or publish).
+# Not exposed: 9997 API, 9998 metrics.
+# UNVERIFIED until the first sync: UDP through the operator proxy (SRT 8890, WebRTC ICE 8189).
+# RTSP over TCP and LL-HLS do not depend on it.
+apiVersion: v1
+kind: Service
+metadata:
+  name: onemind-media-tailnet
+  labels:
+    app.kubernetes.io/name: onemind-media-tailnet
+    app.kubernetes.io/part-of: omos-video
+  annotations:
+    tailscale.com/hostname: "media"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector:
+    app.kubernetes.io/name: onemind-media
+  ports:
+    - {name: rtsp, port: 8554, targetPort: rtsp, protocol: TCP}
+    - {name: hls, port: 8888, targetPort: hls, protocol: TCP}
+    - {name: webrtc, port: 8889, targetPort: webrtc, protocol: TCP}
+    - {name: webrtc-ice, port: 8189, targetPort: webrtc-ice, protocol: UDP}
+    - {name: srt, port: 8890, targetPort: srt, protocol: UDP}
+    - {name: playback, port: 9996, targetPort: playback, protocol: TCP}

@@ -1,0 +1,42 @@
+# Example source + layer plugin (FEATURES K6): USGS earthquakes as a new layer with no core change.
+# The source block is one omos-ingest (A0) source entry; the layer block is declarative and is
+# rendered by every client from the layer service's snapshot of the entities the entity service
+# derives from intel.hazard.usgs.quake (entity_type event, kind from the record type; see
+# services/entity adapt/intel.go in PR #552).
+#
+# Layer fields follow what omos-ingest actually emits (PR #553 parser geojson, golden
+# testdata/golden/geojson-usgs.golden.json): every USGS feature property passes through
+# unchanged, plus id, lat and lon. So the kind is USGS properties.type ("earthquake"; the
+# #552 adapter takes Kind from the record type), the size is `mag`, and there is no colour
+# field: depth is only the geometry's third coordinate, which the parser does not emit.
+# scripts/tests/test_plugin_manifests.py checks these fields against that record shape.
+apiVersion: onemind.io/plugin/v1
+id: org.onemindos.layer.usgs-quakes
+name: USGS earthquakes
+description: Earthquakes of the past hour from the USGS GeoJSON summary feed, as a hazard layer.
+version: 0.1.0
+kinds: [source, layer]
+trust: built-in
+licence: Apache-2.0
+compat: {onemind: ">=0.1", omos: ">=2026.10"}
+requires: {secrets: []}
+bus:
+  publishes: [intel.hazard.usgs.quake, tel.feed.usgs-quakes.status]
+  subscribes: [ent.event.*.state]
+  kv: [{bucket: world-state, access: read}]
+source:
+  engine: omos-ingest
+  delivery: rest_poll
+  parser: geojson
+  url: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson
+  interval: 60s
+  staleAfter: 10m
+  subject: intel.hazard.usgs.quake
+  terms:
+    licence: "USGS data are public domain"
+    url: https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits
+layer:
+  id: usgs-quakes
+  from: ent.event.*.state
+  where: {kind: earthquake}
+  render: {entity: point, sizeField: mag, maxEntities: 5000, lod: on-demand}
