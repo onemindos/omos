@@ -36,3 +36,9 @@ Until the revert syncs, an operator can apply an extra allow-all ingress policy 
 the server pods (Argo does not track it, so it is not pruned) and delete it after.
 A policy removed from Git is deleted only while `platform-nats` prunes; otherwise
 delete it by name.
+
+## Identities
+
+Per-service users, the `CLIENT` and `AGENTS` accounts and per-leaf users are prepared in
+`identities/` and are not live. Activation is a staged change of the `nats-config` ConfigMap,
+never a Helm upgrade: `IDENTITIES.md`.
