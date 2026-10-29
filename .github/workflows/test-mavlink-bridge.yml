@@ -1,0 +1,56 @@
+name: MAVLink bridge tests
+
+# Unit and in-process tests for services/bridge/bridges/mavlink (FEATURES H2):
+# go vet, go test -race, and a build of the native binary. The bridge runs at the edge
+# (omos CLAUDE.md "Bus Authority": Mac or home-server bridges behind a NATS leaf), so
+# there is no image or Argo Application. The end-to-end test (test/e2e.sh) needs
+# nats-server and a MAVLink vehicle and runs on the operator's machine.
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/test-mavlink-bridge.yml"
+      - "services/bridge/bridges/mavlink/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/test-mavlink-bridge.yml"
+      - "services/bridge/bridges/mavlink/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    defaults:
+      run:
+        working-directory: services/bridge/bridges/mavlink
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+
+      - name: gofmt
+        run: test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+
+      - name: go vet (including the e2e build tag)
+        run: |
+          go vet ./...
+          go vet -tags e2e ./...
+
+      - name: go test -race
+        run: go test -race -count=1 ./...
+
+      - name: Build native binary
+        run: CGO_ENABLED=0 go build -trimpath -o "$RUNNER_TEMP/bridge-mavlink" .
