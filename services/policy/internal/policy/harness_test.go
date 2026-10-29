@@ -87,6 +87,7 @@ type env struct {
 	bridge   *bridgeStub
 	entities map[string]map[string]any
 	entMu    sync.Mutex
+	entMicro bool // not-found replies in the NATS micro form (empty body, error headers)
 	taskDown bool
 	geoDown  bool // geofence stub silent
 	taskMu   sync.Mutex
@@ -293,9 +294,18 @@ func newEnv(t *testing.T) *env {
 		_ = json.Unmarshal(m.Data, &q)
 		e.entMu.Lock()
 		rec, ok := e.entities[q.EntityID]
+		microForm := e.entMicro
 		var b []byte
 		if ok {
 			b, _ = json.Marshal(map[string]any{"entity": rec})
+		} else if microForm {
+			e.entMu.Unlock()
+			// What micro's Request.Error("404", "entity not found", nil) sends.
+			r := nats.NewMsg(m.Reply)
+			r.Header.Set("Nats-Service-Error-Code", "404")
+			r.Header.Set("Nats-Service-Error", "entity not found")
+			_ = m.RespondMsg(r)
+			return
 		} else {
 			b = []byte(`{"error":{"code":"not_found"}}`)
 		}
