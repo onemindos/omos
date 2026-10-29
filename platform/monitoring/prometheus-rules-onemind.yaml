@@ -135,7 +135,9 @@ spec:
             service: nats
           annotations:
             summary: "CMD stream is above 80% of its 512 MiB cap"
-            description: "CMD holds {{ $value | humanize1024 }}B. At 512 MiB it refuses new commands (discard: new) until old ones age out at 365 days. Raise maxBytes in cmd.yaml or archive the audit trail."
+            description: >-
+              CMD holds {{ $value | humanize1024 }}B. At 512 MiB it refuses new commands (discard: new)
+              until old ones age out at 365 days. Raise maxBytes in cmd.yaml or archive the audit trail.
 
     # ─── AI Brain ────────────────────────────────────────────────────────────
     - name: onemind.hermes
