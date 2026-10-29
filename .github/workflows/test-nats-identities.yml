@@ -1,10 +1,13 @@
 name: NATS identities tests
 
 # Per-service NATS identities (FEATURES A19): the spec invariants and generated Helm values
-# (scripts/nats_identities.py check), their unit tests, and the permission tests that run the
-# rendered config on an in-process nats-server pinned to the live version
-# (platform/nats/identities/permtest). Test-only passwords are generated per run in a temp
-# directory; nothing here touches the cluster.
+# (scripts/nats_identities.py check) and their unit tests. Nothing here touches the cluster.
+#
+# The Go permission tests (platform/nats/identities/permtest: the rendered config on an
+# in-process nats-server 2.14.2) are NOT run here: compiling nats-server OOM-killed the zeus-v2
+# runner container (1 GiB limit, platform/core/github-runner.yaml) twice, even with -p=1. Run
+# them before merging, as platform/nats/IDENTITIES.md "Tests" says; results are recorded in
+# onemind-xr docs/evidence/M1/A19/.
 
 on:
   pull_request:
@@ -47,30 +50,8 @@ jobs:
       - name: Install PyYAML
         run: pip install pyyaml
 
-      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
-        with:
-          go-version: "1.26.4"
-          cache: false
-
       - name: Spec invariants and generated values are current
         run: python scripts/nats_identities.py check
 
       - name: Renderer unit tests
         run: python -m unittest scripts/tests/test_nats_identities.py -v
-
-      # The zeus-v2 runner has a 1 GiB memory limit (platform/core/github-runner.yaml). Compiling the
-      # embedded nats-server with default parallelism, or with -race, exhausted it on the first run
-      # (runner container restarted). Build serially under a soft memory limit and run without
-      # -race here; the -race run is done before merge (onemind-xr docs/evidence/M1/A19).
-      - name: gofmt, go vet and permission tests
-        working-directory: platform/nats/identities/permtest
-        env:
-          PYTHON: python
-          GOFLAGS: -p=1
-          GOMAXPROCS: "1"
-          GOMEMLIMIT: 600MiB
-          GOGC: "50"
-        run: |
-          test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
-          go vet ./...
-          go test -count=1 -v ./... 2>&1 | tee "$RUNNER_TEMP/permtest.txt"; test "${PIPESTATUS[0]}" -eq 0

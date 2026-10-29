@@ -24,8 +24,10 @@ shared password can publish `cmd.>` and `tak.cot.inject`, also through the publi
 | `../../scripts/tests/test_nats_identities.py` | Renderer and invariant unit tests |
 | `../../docs/proposals/2026-10-29-nats-identities-a19.md` | Decisions that need the owner |
 
-`python3 scripts/nats_identities.py check` must pass after any edit of the spec (CI runs it with
-the tests: `.github/workflows/test-nats-identities.yml`).
+`python3 scripts/nats_identities.py check` must pass after any edit of the spec. CI
+(`.github/workflows/test-nats-identities.yml`) runs it and the Python unit tests. The Go
+permission tests compile nats-server, which does not fit the self-hosted runner's 1 GiB limit,
+so run them locally before merging any change to the spec (see Tests).
 
 ## Identities
 
@@ -243,6 +245,9 @@ ConfigMap and the running stage the same before any pod restart.
   `max_file_store` (proposal A19-P7).
 
 ## Tests
+
+Run all of these before merging a change to `identities/identities.yaml` (CI runs only the
+first two):
 
 ```bash
 python3 scripts/nats_identities.py check
