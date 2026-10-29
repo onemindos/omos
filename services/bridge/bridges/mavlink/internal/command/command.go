@@ -33,6 +33,7 @@ const (
 	CodePrecondition       = "precondition_failed"
 	CodeVehicleRejected    = "vehicle_rejected"
 	CodeNoAck              = "no_ack"
+	CodeConflict           = "conflict"
 )
 
 // PolicySource is the only accepted command source (asset-command.md §6.3).

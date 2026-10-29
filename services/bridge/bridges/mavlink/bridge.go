@@ -36,7 +36,14 @@ type Bridge struct {
 	logf     func(string, ...any)
 
 	moveMu sync.Mutex // one non-estop command at a time; estop never waits
+
+	taskMu  sync.Mutex
+	taskVer map[string]int // last status_version reported per task_id
+	taskIDs []string       // insertion order, to bound taskVer
 }
+
+// maxTrackedTasks bounds the per-task status_version memory.
+const maxTrackedTasks = 4096
 
 // NewBridge validates the safety configuration and returns a bridge.
 func NewBridge(cfg Config, bus Bus, veh Vehicle) (*Bridge, error) {
@@ -53,7 +60,8 @@ func NewBridge(cfg Config, bus Bus, veh Vehicle) (*Bridge, error) {
 	if cfg.Fence == nil || len(cfg.Fence.KeepIn) == 0 {
 		log.Printf("[%s] WARNING: no keep-in zone; goto, takeoff, arm and land-at-point are refused (fail closed)", cfg.Source)
 	}
-	return &Bridge{cfg: cfg, bus: bus, veh: veh, verifier: ver, state: newVehicleState(), logf: log.Printf}, nil
+	return &Bridge{cfg: cfg, bus: bus, veh: veh, verifier: ver, state: newVehicleState(), logf: log.Printf,
+		taskVer: map[string]int{}}, nil
 }
 
 // Subjects (locked grammar; asset-command.md §1, robotics-cot-profile.md §1).
@@ -125,8 +133,12 @@ func uuid4() string {
 func rfc3339ms(t time.Time) string { return t.UTC().Format("2006-01-02T15:04:05.000Z07:00") }
 
 // publishEvent publishes an omos event envelope v1 (services/schemas/envelope).
-func (b *Bridge) publishEvent(subject, typ string, e *command.Envelope, data any) {
+// msgID is the Nats-Msg-Id; empty means the envelope id.
+func (b *Bridge) publishEvent(subject, typ, msgID string, e *command.Envelope, data any) {
 	id := uuid4()
+	if msgID == "" {
+		msgID = id
+	}
 	env := map[string]any{
 		"v": 1, "id": id, "ts": rfc3339ms(b.clock()), "type": typ, "source": b.cfg.Source,
 		"subject": subject, "data": data,
@@ -142,7 +154,7 @@ func (b *Bridge) publishEvent(subject, typ string, e *command.Envelope, data any
 			env["trace"] = e.Trace
 		}
 	}
-	if err := b.bus.Publish(subject, id, mustJSON(env)); err != nil {
+	if err := b.bus.Publish(subject, msgID, mustJSON(env)); err != nil {
 		b.logf("[%s] publish %s: %v", b.cfg.Source, subject, err)
 	}
 }
@@ -157,35 +169,57 @@ func (b *Bridge) report(e *command.Envelope, o outcome) {
 	}
 	o.Simulated = true
 	b.logf("[%s] command %s %s outcome=%s code=%s %s", b.cfg.Source, o.CommandID, o.Verb, o.Outcome, o.Code, o.Message)
-	b.publishEvent(b.outcomeSubject(), "evt.drone.command", e, o)
+	b.publishEvent(b.outcomeSubject(), "evt.drone.command", "", e, o)
 	if e != nil && e.TaskID != "" {
 		b.reportTask(e, o)
 	}
 }
 
+// nextTaskVersion returns the next status_version for taskID: it increases by one per
+// report across every command of the task, for the life of this process. The task
+// service still drops a report that is not newer than its record (mission-task.md §5
+// rule 1); see the owner proposal P7 for the restart and base-version gap.
+func (b *Bridge) nextTaskVersion(taskID string) int {
+	b.taskMu.Lock()
+	defer b.taskMu.Unlock()
+	v, ok := b.taskVer[taskID]
+	if !ok {
+		b.taskIDs = append(b.taskIDs, taskID)
+		if len(b.taskIDs) > maxTrackedTasks {
+			delete(b.taskVer, b.taskIDs[0])
+			b.taskIDs = b.taskIDs[1:]
+		}
+	}
+	v++
+	b.taskVer[taskID] = v
+	return v
+}
+
 // reportTask publishes evt.drone.{id}.task (mission-task.md §7) for task-bearing commands.
 func (b *Bridge) reportTask(e *command.Envelope, o outcome) {
-	state, ver := "", 0
+	state := ""
 	var errObj any
 	switch o.Outcome {
 	case "acknowledged":
-		state, ver = "received", 1
+		state = "received"
 	case "executed":
 		// The vehicle accepted the command. Movement verbs keep executing; instant verbs are done.
-		state, ver = "executing", 2
+		state = "executing"
 		if o.Verb == "arm" || o.Verb == "disarm" || o.Verb == "estop" {
 			state = "done_ok"
 		}
 	case "refused":
-		state, ver = "done_not_ok", 1
+		state = "done_not_ok"
 		errObj = map[string]string{"code": "rejected", "message": o.Code + ": " + o.Message}
 	case "failed":
-		state, ver = "done_not_ok", 2
+		state = "done_not_ok"
 		errObj = map[string]string{"code": "failed", "message": o.Code + ": " + o.Message}
 	default:
 		return
 	}
-	b.publishEvent(b.taskSubject(), "evt.drone.task", e, map[string]any{
+	ver := b.nextTaskVersion(e.TaskID)
+	// Nats-Msg-Id = {task_id}:{status_version} (mission-task.md §7).
+	b.publishEvent(b.taskSubject(), "evt.drone.task", fmt.Sprintf("%s:%d", e.TaskID, ver), e, map[string]any{
 		"task_id": e.TaskID, "state": state, "status_version": ver, "error": errObj,
 		"at_t": b.clock().UnixMilli(), "simulated": true,
 	})
@@ -236,8 +270,19 @@ func (b *Bridge) HandleCommand(ctx context.Context, subject string, data []byte)
 	switch {
 	case errors.Is(err, ErrNoAck):
 		b.report(e, outcome{Outcome: "failed", Verb: verbName, Code: command.CodeNoAck, Message: err.Error(), Mavlink: mav})
+	case errors.Is(err, ErrNotHeard):
+		// Nothing was sent: the link has not delivered a frame from the vehicle yet.
+		b.report(e, outcome{Outcome: "failed", Verb: verbName, Code: command.CodePrecondition, Detail: "offline", Message: err.Error(), Mavlink: mav})
+	case errors.Is(err, ErrBusy):
+		b.report(e, outcome{Outcome: "failed", Verb: verbName, Code: command.CodeConflict, Message: err.Error(), Mavlink: mav})
 	case err != nil:
-		b.report(e, outcome{Outcome: "failed", Verb: verbName, Code: command.CodeVehicleRejected, Message: err.Error(), Mavlink: mav})
+		// Link write error or shutdown before an ACK: the vehicle never answered
+		// (owner proposal P4). vehicle_rejected is kept for a MAVLink result other than 0.
+		detail := "not_sent"
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			detail = "aborted"
+		}
+		b.report(e, outcome{Outcome: "failed", Verb: verbName, Code: command.CodeNoAck, Detail: detail, Message: err.Error(), Mavlink: mav})
 	case result != int(common.MAV_RESULT_ACCEPTED):
 		mav["result"] = result
 		mav["result_name"] = common.MAV_RESULT(result).String()
@@ -290,7 +335,8 @@ func (b *Bridge) precheck(res *command.Result, now time.Time) (MavRequest, *comm
 		// MAV_CMD_DO_REPOSITION over COMMAND_INT, frame GLOBAL (altitude MSL):
 		// param1 speed (-1 default), param2 MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,
 		// param4 yaw (NaN keeps heading), x/y degE7, z altitude.
-		return MavRequest{Cmd: common.MAV_CMD_DO_REPOSITION, Int: true, Frame: common.MAV_FRAME_GLOBAL,
+		// LongFallback: re-sent as COMMAND_LONG (params 5/6/7) if COMMAND_INT is unsupported.
+		return MavRequest{Cmd: common.MAV_CMD_DO_REPOSITION, Int: true, LongFallback: true, Frame: common.MAV_FRAME_GLOBAL,
 			P: [7]float32{speed, float32(common.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE), 0, yaw},
 			X: int32(math.Round(*p.Lat * 1e7)), Y: int32(math.Round(*p.Lon * 1e7)), Z: float32(msl)}, nil
 	case "takeoff":
@@ -320,7 +366,7 @@ func (b *Bridge) precheck(res *command.Result, now time.Time) (MavRequest, *comm
 				return MavRequest{}, precond(v.Detail, "land point: %s", v.Reason)
 			}
 			// NAV_LAND at a point: COMMAND_INT keeps full lat/lon precision; z NaN = current altitude reference.
-			return MavRequest{Cmd: common.MAV_CMD_NAV_LAND, Int: true, Frame: common.MAV_FRAME_GLOBAL,
+			return MavRequest{Cmd: common.MAV_CMD_NAV_LAND, Int: true, LongFallback: true, Frame: common.MAV_FRAME_GLOBAL,
 				P: [7]float32{0, 0, 0, nanF}, X: int32(math.Round(*p.Lat * 1e7)), Y: int32(math.Round(*p.Lon * 1e7)), Z: 0}, nil
 		}
 		return MavRequest{Cmd: common.MAV_CMD_NAV_LAND, P: [7]float32{0, 0, 0, nanF, 0, 0, 0}}, nil

@@ -44,7 +44,18 @@ asset-command.md §6.4 has `no_ack` (the policy service saw no bridge acknowledg
 vehicle sent no `COMMAND_ACK`". The bridge reports `outcome: failed, code: no_ack` with
 `mavlink.command` set, so the two cases can be told apart.
 
-**Proposal:** either accept the reuse, or add `vehicle_timeout` to the §6.4 list.
+Errors before the vehicle could answer are not `vehicle_rejected` either, since §6.4 keeps that
+code for a MAVLink result other than 0:
+
+| Bridge case | Reported as |
+|---|---|
+| No frame from the vehicle sysid yet, so nothing was sent | `failed`, `precondition_failed`, `detail: offline` |
+| The same MAV_CMD already waiting for an ACK | `failed`, `conflict` |
+| Link write error | `failed`, `no_ack`, `detail: not_sent` |
+| Bridge shut down while waiting | `failed`, `no_ack`, `detail: aborted` |
+
+**Proposal:** either accept the reuse, or add `vehicle_timeout` (and `link_error` for the last two
+rows) to the §6.4 list.
 
 ## P5. `estop` needs one human, not two
 
@@ -62,3 +73,17 @@ logins.
 
 **Proposal:** when per-role NATS users land (I4), give each asset bridge these permissions.
 Credentials go in a SealedSecret or the edge host's keychain, never in Git.
+
+## P7. Task `status_version` from a bridge
+
+mission-task.md §7 sets `Nats-Msg-Id` = `{task_id}:{status_version}`, and §5 rule 1 drops an
+assignee report whose `status_version` is not greater than the stored one. The bridge does not know
+the version the task service has already stored (`created`, `scheduled`, `sent`), and it keeps its
+per-task counter only in memory. Today it starts each task at 1 and adds one per report across
+every command of the task, so reports from one bridge process always increase. After a restart the
+counter starts again at 1, and within the 2 m `EVT` duplicate window a new report can share a
+`Nats-Msg-Id` with an old one and be dropped.
+
+**Proposal (H4):** the task service puts the current `version.status` in the command it dispatches
+(for example `task_status_version`), and the bridge reports from that base; or the task service
+assigns `status_version` itself and the bridge omits it.

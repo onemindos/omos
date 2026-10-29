@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"net"
@@ -59,7 +60,10 @@ type fakeVehicle struct {
 	ints     []*common.MessageCommandInt
 	result   common.MAV_RESULT
 	silent   bool
-	paused   bool // stop telemetry (link loss) but still answer commands
+	noInt    bool  // drop COMMAND_INT unanswered (a vehicle that reads only COMMAND_LONG)
+	intUnsup bool  // answer COMMAND_INT with MAV_RESULT_UNSUPPORTED
+	ackTo    uint8 // COMMAND_ACK target_system (0 = unset)
+	paused   bool  // stop telemetry (link loss) but still answer commands
 	lat, lon float64
 	altMSL   float64
 	gpsN     float64 // if non-zero, also send GPS_RAW_INT with alt_ellipsoid = alt + gpsN
@@ -122,7 +126,7 @@ func startFakeVehicle(t *testing.T, ctx context.Context, addr string, lat, lon, 
 					continue
 				}
 				f.mu.Lock()
-				res, silent := f.result, f.silent
+				res, silent, ackTo := f.result, f.silent, f.ackTo
 				var cmd common.MAV_CMD
 				switch m := fr.Message().(type) {
 				case *ardupilotmega.MessageCommandLong:
@@ -131,13 +135,17 @@ func startFakeVehicle(t *testing.T, ctx context.Context, addr string, lat, lon, 
 				case *ardupilotmega.MessageCommandInt:
 					f.ints = append(f.ints, m)
 					cmd = m.Command
+					silent = silent || f.noInt
+					if f.intUnsup {
+						res = common.MAV_RESULT_UNSUPPORTED
+					}
 				default:
 					f.mu.Unlock()
 					continue
 				}
 				f.mu.Unlock()
 				if !silent {
-					_ = n.WriteMessageTo(fr.Channel, &ardupilotmega.MessageCommandAck{Command: cmd, Result: res})
+					_ = n.WriteMessageTo(fr.Channel, &ardupilotmega.MessageCommandAck{Command: cmd, Result: res, TargetSystem: ackTo})
 				}
 			}
 		}
@@ -195,7 +203,7 @@ func newHarness(t *testing.T) *harness {
 		t.Fatal(err)
 	}
 	t.Cleanup(node.Close)
-	mv := newMavVehicle(node, 1, cfg.AckTimeout, cfg.AckRetries)
+	mv := newMavVehicle(node, 1, 254, cfg.AckTimeout, cfg.AckRetries)
 	bus := &memBus{}
 	b, err := NewBridge(cfg, bus, mv)
 	if err != nil {
@@ -507,5 +515,115 @@ func TestConfigRefusesNonSim(t *testing.T) {
 func TestRoundDropsNegativeZero(t *testing.T) {
 	if b, _ := json.Marshal(round(-0.0001, 2)); string(b) != "0" {
 		t.Fatalf("round(-0.0001) marshals as %s", b)
+	}
+}
+
+// A vehicle that reads only COMMAND_LONG (the scripted drone) still executes goto:
+// DO_REPOSITION is re-sent as COMMAND_LONG, and later gotos go straight to COMMAND_LONG.
+func TestRepositionFallsBackToCommandLong(t *testing.T) {
+	for _, mode := range []string{"no ack", "unsupported"} {
+		t.Run(mode, func(t *testing.T) {
+			h := newHarness(t)
+			h.veh.mu.Lock()
+			h.veh.noInt, h.veh.intUnsup = mode == "no ack", mode == "unsupported"
+			h.veh.mu.Unlock()
+			goTo := map[string]any{"lat": 0.002, "lon": -0.003, "hae_m": 100.0}
+			for i := 0; i < 2; i++ {
+				got := h.send(ct.Opts{Verb: "goto", Data: goTo})
+				if len(got) != 2 || got[1]["outcome"] != "executed" {
+					t.Fatalf("goto %d: %s", i, outcomes(got))
+				}
+			}
+			h.veh.mu.Lock()
+			defer h.veh.mu.Unlock()
+			wantInts := 2 // AckRetries in the harness
+			if mode == "unsupported" {
+				wantInts = 1
+			}
+			if len(h.veh.ints) != wantInts || len(h.veh.longs) != 2 {
+				t.Fatalf("vehicle got %d COMMAND_INT (want %d), %d COMMAND_LONG (want 2)", len(h.veh.ints), wantInts, len(h.veh.longs))
+			}
+			l := h.veh.longs[0]
+			n, _ := geoid.Undulation(0.002, -0.003)
+			if l.Command != common.MAV_CMD_DO_REPOSITION || math.Abs(float64(l.Param5)-0.002) > 1e-6 ||
+				math.Abs(float64(l.Param6)+0.003) > 1e-6 || math.Abs(float64(l.Param7)-(100-n)) > 0.01 || l.Param2 != 1 {
+				t.Fatalf("COMMAND_LONG DO_REPOSITION %+v", l)
+			}
+		})
+	}
+}
+
+// An ACK addressed to another GCS on a shared link must not complete our command.
+func TestAckForOtherGCSIgnored(t *testing.T) {
+	h := newHarness(t)
+	h.veh.mu.Lock()
+	h.veh.ackTo = 200
+	h.veh.mu.Unlock()
+	if got := h.send(ct.Opts{Verb: "rtl"}); len(got) != 2 || got[1]["code"] != "no_ack" {
+		t.Fatalf("ACK for sysid 200: %s", outcomes(got))
+	}
+	h.veh.mu.Lock()
+	h.veh.ackTo = 254
+	h.veh.mu.Unlock()
+	if got := h.send(ct.Opts{Verb: "rtl"}); len(got) != 2 || got[1]["outcome"] != "executed" {
+		t.Fatalf("ACK for our sysid 254: %s", outcomes(got))
+	}
+}
+
+// Task reports use Nats-Msg-Id {task_id}:{status_version}, and status_version keeps
+// increasing across the commands of one task.
+func TestTaskStatusVersions(t *testing.T) {
+	h := newHarness(t)
+	for _, c := range []ct.Opts{
+		{Verb: "takeoff", Data: map[string]any{"hae_m": 70.0}},
+		{Verb: "goto", Data: map[string]any{"lat": 0.002, "lon": 0.002, "hae_m": 90.0}},
+	} {
+		c.TaskID = "tsk-multi"
+		if got := h.send(c); len(got) != 2 || got[1]["outcome"] != "executed" {
+			t.Fatalf("%s: %s", c.Verb, outcomes(got))
+		}
+	}
+	tasks := h.bus.bySubject("evt.drone.sim-x1.task")
+	if len(tasks) != 4 {
+		t.Fatalf("task reports %d, want 4", len(tasks))
+	}
+	for i, m := range tasks {
+		var env struct {
+			Data struct {
+				TaskID string `json:"task_id"`
+				Ver    int    `json:"status_version"`
+			} `json:"data"`
+		}
+		if err := json.Unmarshal(m.Data, &env); err != nil {
+			t.Fatal(err)
+		}
+		if env.Data.Ver != i+1 || m.MsgID != fmt.Sprintf("tsk-multi:%d", i+1) {
+			t.Fatalf("report %d: status_version %d, Nats-Msg-Id %q", i, env.Data.Ver, m.MsgID)
+		}
+	}
+}
+
+type errVehicle struct{ err error }
+
+func (v errVehicle) Send(context.Context, MavRequest) (int, error) { return -1, v.err }
+
+// A command the vehicle never received is not reported as vehicle_rejected.
+func TestSendErrorsAreNotVehicleRejected(t *testing.T) {
+	h := newHarness(t)
+	cases := []struct {
+		err          error
+		code, detail string
+	}{
+		{fmt.Errorf("%w: sysid 1", ErrNotHeard), "precondition_failed", "offline"},
+		{fmt.Errorf("%w: MAV_CMD_NAV_RETURN_TO_LAUNCH", ErrBusy), "conflict", ""},
+		{context.Canceled, "no_ack", "aborted"},
+		{errors.New("write: broken pipe"), "no_ack", "not_sent"},
+	}
+	for _, c := range cases {
+		h.b.veh = errVehicle{c.err}
+		got := h.send(ct.Opts{Verb: "rtl"})
+		if len(got) != 2 || got[1]["outcome"] != "failed" || got[1]["code"] != c.code || (c.detail != "" && got[1]["detail"] != c.detail) {
+			t.Fatalf("%v: %s %v", c.err, outcomes(got), got)
+		}
 	}
 }

@@ -80,7 +80,8 @@ func run(ctx context.Context, cfg Config, ready func()) error {
 	defer node.Close()
 	log.Printf("[%s] MAVLink endpoint %s, vehicle sysid %d, out %v", cfg.Source, cfg.EndpointS, cfg.SysID, cfg.OutVersion)
 
-	veh := newMavVehicle(node, cfg.SysID, cfg.AckTimeout, cfg.AckRetries)
+	veh := newMavVehicle(node, cfg.SysID, cfg.GCSSysID, cfg.AckTimeout, cfg.AckRetries)
+	veh.logf = log.Printf
 	b, err := NewBridge(cfg, natsBus{nc}, veh)
 	if err != nil {
 		return err

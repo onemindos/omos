@@ -242,12 +242,7 @@ func TestE2E(t *testing.T) {
 	// Approved sim commands: ACKed by the vehicle.
 	expect("arm (A4, two humans)", send("arm (A4, two humans)", ct.Opts{Verb: "arm"}, ""), "acknowledged", "executed")
 	expect("takeoff (A4)", send("takeoff (A4)", ct.Opts{Verb: "takeoff", Data: map[string]any{"hae_m": 60 + n0}}, ""), "acknowledged", "executed")
-	gotoOut := send("goto", ct.Opts{Verb: "goto", Data: map[string]any{"lat": 0.001, "lon": 0.001, "hae_m": 80 + n0, "speed_mps": 6.0}}, "")
-	if want := os.Getenv("E2E_GOTO_OUTCOME"); want != "" {
-		expect("goto", gotoOut, strings.Split(want, ",")...)
-	} else {
-		expect("goto", gotoOut, "acknowledged", "executed")
-	}
+	expect("goto", send("goto", ct.Opts{Verb: "goto", Data: map[string]any{"lat": 0.001, "lon": 0.001, "hae_m": 80 + n0, "speed_mps": 6.0}}, ""), "acknowledged", "executed")
 	expect("rtl", send("rtl", ct.Opts{Verb: "rtl"}, ""), "acknowledged", "executed")
 	expect("land", send("land", ct.Opts{Verb: "land"}, ""), "acknowledged", "executed")
 	expect("disarm", send("disarm", ct.Opts{Verb: "disarm"}, ""), "acknowledged", "executed")

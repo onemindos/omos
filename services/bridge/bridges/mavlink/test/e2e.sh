@@ -13,8 +13,6 @@
 #   MAVLINK_ENDPOINT  when SIM_DRONE is unset: the bridge endpoint of an already running
 #                 vehicle (default udpserver:127.0.0.1:14550)
 #   OUT_VERSION   MAVLink version the bridge sends (default 2)
-#   GOTO_OUTCOME  expected goto outcomes, e.g. "acknowledged,failed/no_ack" for a vehicle
-#                 without COMMAND_INT support (default: acknowledged,executed)
 #   WORKDIR       temp dir (default: mktemp -d); TRANSCRIPT  JSONL output path
 set -euo pipefail
 
@@ -79,7 +77,6 @@ else
   export E2E_MAVLINK_ENDPOINT="${MAVLINK_ENDPOINT:-udpserver:127.0.0.1:14550}"
 fi
 export E2E_OUT_VERSION="${OUT_VERSION:-2}"
-export E2E_GOTO_OUTCOME="${GOTO_OUTCOME:-}"
 export E2E_TRANSCRIPT="${TRANSCRIPT:-$workdir/transcript.jsonl}"
 
 echo "nats-server $E2E_NATS_URL; vehicle endpoint $E2E_MAVLINK_ENDPOINT; out v$E2E_OUT_VERSION; transcript $E2E_TRANSCRIPT"
