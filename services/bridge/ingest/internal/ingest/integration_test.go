@@ -845,3 +845,24 @@ func TestReplayRebuildsRecords(t *testing.T) {
 		}
 	}
 }
+
+// Bounded memory: a long-lived stream's in-memory seen set is trimmed to seenMax at each
+// checkpoint, not only in the stored copy.
+func TestSaveCheckpointTrimsInPlace(t *testing.T) {
+	e := newEnv(t, 2*time.Minute)
+	rt, _ := e.runtime(t, "a")
+	cp := ingest.Checkpoint{}
+	for i := 0; i < 1000; i++ {
+		cp.Seen = append(cp.Seen, fmt.Sprintf("k%d", i))
+	}
+	if err := rt.SaveCheckpoint(context.Background(), "src", &cp, 100); err != nil {
+		t.Fatal(err)
+	}
+	if len(cp.Seen) != 100 || cp.Seen[0] != "k900" {
+		t.Fatalf("in-memory seen not trimmed: %d %s", len(cp.Seen), cp.Seen[0])
+	}
+	stored, err := rt.LoadCheckpoint(context.Background(), "src")
+	if err != nil || len(stored.Seen) != 100 {
+		t.Fatalf("%d %v", len(stored.Seen), err)
+	}
+}

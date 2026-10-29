@@ -21,7 +21,12 @@ var ErrBodyTooLarge = errors.New("response body exceeds maxBodyBytes")
 
 // StatusError is a non-retryable upstream answer (4xx other than 429) or a retryable one
 // that kept failing after every attempt.
-type StatusError struct{ Code int }
+type StatusError struct {
+	Code int
+	// RetryAfter is the upstream's Retry-After when it exceeds the fetcher's backoff cap;
+	// the poll loop then waits at least this long instead of retrying sooner.
+	RetryAfter time.Duration
+}
 
 func (e *StatusError) Error() string { return fmt.Sprintf("http %d", e.Code) }
 
@@ -203,11 +208,15 @@ func (f *Fetcher) Do(ctx context.Context, method, rawURL string, cond Conditiona
 		case resp.StatusCode == http.StatusNotModified:
 			return Response{Code: 304, ETag: cond.ETag, LastModified: cond.LastModified}, nil
 		case resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode >= 500:
-			last = &StatusError{resp.StatusCode}
+			last = &StatusError{Code: resp.StatusCode}
+			ra, hasRA := retryAfter(resp.Header.Get("Retry-After"), time.Now())
+			if hasRA && ra > f.MaxBackoff {
+				return Response{}, &StatusError{Code: resp.StatusCode, RetryAfter: ra}
+			}
 			if attempt < f.Attempts {
 				wait := jitter(backoff)
-				if ra, ok := retryAfter(resp.Header.Get("Retry-After"), time.Now()); ok {
-					wait = min(ra, f.MaxBackoff)
+				if hasRA {
+					wait = ra
 				}
 				if err := sleep(ctx, wait); err != nil {
 					return Response{}, err
@@ -215,7 +224,7 @@ func (f *Fetcher) Do(ctx context.Context, method, rawURL string, cond Conditiona
 				backoff = min(backoff*2, f.MaxBackoff)
 			}
 		default:
-			return Response{}, &StatusError{resp.StatusCode} // 4xx: never hammer
+			return Response{}, &StatusError{Code: resp.StatusCode} // 4xx: never hammer
 		}
 	}
 	return Response{}, last

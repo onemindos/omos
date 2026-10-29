@@ -130,7 +130,9 @@ func main() {
 		go func() {
 			defer wg.Done()
 			if *once {
-				s.Run(ctx) // CronJob: one owner is guaranteed by concurrencyPolicy: Forbid
+				// CronJob: one owner is guaranteed by concurrencyPolicy: Forbid.
+				rt.Board.SetLeader(s.Config().ID, true)
+				s.Run(ctx)
 				return
 			}
 			rt.RunOwned(ctx, s.Config().ID, s.Run)

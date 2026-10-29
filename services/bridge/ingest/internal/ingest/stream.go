@@ -117,7 +117,7 @@ func (s *Source) sseOnce(ctx context.Context) error {
 	defer resp.Body.Close()
 	s.fetcher.observe(resp.StatusCode)
 	if resp.StatusCode != http.StatusOK {
-		return &StatusError{resp.StatusCode}
+		return &StatusError{Code: resp.StatusCode}
 	}
 	sc := bufio.NewScanner(resp.Body)
 	sc.Buffer(make([]byte, 64<<10), int(min(s.cfg.MaxBodyBytes, 4<<20)))
@@ -125,7 +125,7 @@ func (s *Source) sseOnce(ctx context.Context) error {
 	pending := false
 	defer func() {
 		if pending {
-			_ = s.rt.SaveCheckpoint(context.WithoutCancel(ctx), s.cfg.ID, cp, s.cfg.SeenMax)
+			_ = s.rt.SaveCheckpoint(context.WithoutCancel(ctx), s.cfg.ID, &cp, s.cfg.SeenMax)
 		}
 	}()
 	return ReadSSE(sc, func(ev SSEEvent) error {
@@ -143,7 +143,7 @@ func (s *Source) sseOnce(ctx context.Context) error {
 		pending = true
 		s.rt.Board.OK(s.cfg.ID, len(recs), n)
 		if time.Since(lastSave) >= time.Second {
-			_ = s.rt.SaveCheckpoint(ctx, s.cfg.ID, cp, s.cfg.SeenMax)
+			_ = s.rt.SaveCheckpoint(ctx, s.cfg.ID, &cp, s.cfg.SeenMax)
 			lastSave, pending = time.Now(), false
 		}
 		return nil

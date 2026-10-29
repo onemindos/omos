@@ -75,6 +75,10 @@ func (s *Source) nextDelay(fails int, err error) time.Duration {
 	if errors.As(err, &qe) {
 		return max(time.Until(qe.ResetAt), s.cfg.Interval.Duration)
 	}
+	var se *StatusError
+	if errors.As(err, &se) && se.RetryAfter > 0 {
+		return max(se.RetryAfter, s.cfg.Interval.Duration)
+	}
 	d := s.cfg.Interval.Duration
 	for i := 0; i < fails && d < s.cfg.MaxBackoff.Duration; i++ {
 		d *= 2
@@ -119,7 +123,7 @@ func (s *Source) PollOnce(ctx context.Context) (int, int, error) {
 	if len(recs) > s.cfg.SeenMax {
 		s.rt.Log.Warn("snapshot larger than seenMax; raise seenMax or rely on Nats-Msg-Id", "source", s.cfg.ID, "records", len(recs), "seenMax", s.cfg.SeenMax)
 	}
-	_ = s.rt.SaveCheckpoint(ctx, s.cfg.ID, cp, s.cfg.SeenMax)
+	_ = s.rt.SaveCheckpoint(ctx, s.cfg.ID, &cp, s.cfg.SeenMax)
 	return len(recs), n, nil
 }
 

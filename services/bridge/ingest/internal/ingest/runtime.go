@@ -165,15 +165,16 @@ func (r *Runtime) LoadCheckpoint(ctx context.Context, src string) (Checkpoint, e
 
 // SaveCheckpoint is called only after every record of a fetch is acked. A failed save is
 // safe: the next fetch republishes and Nats-Msg-Id or the seen set absorbs it.
-func (r *Runtime) SaveCheckpoint(ctx context.Context, src string, cp Checkpoint, seenMax int) error {
+// It trims cp.Seen in place to seenMax, so long-lived streams keep bounded memory.
+func (r *Runtime) SaveCheckpoint(ctx context.Context, src string, cp *Checkpoint, seenMax int) error {
 	if seenMax > 0 && len(cp.Seen) > seenMax {
-		cp.Seen = cp.Seen[len(cp.Seen)-seenMax:]
+		cp.Seen = append([]string(nil), cp.Seen[len(cp.Seen)-seenMax:]...)
 	}
 	cp.UpdatedAt = r.now().UTC().Format(time.RFC3339)
-	b, _ := json.Marshal(cp)
+	b, _ := json.Marshal(*cp)
 	for len(b) > 512<<10 && len(cp.Seen) > 0 { // stay well under the 1 MiB max payload
 		cp.Seen = cp.Seen[len(cp.Seen)/2:]
-		b, _ = json.Marshal(cp)
+		b, _ = json.Marshal(*cp)
 	}
 	if _, err := r.State.Put(ctx, src, b); err != nil {
 		r.Metrics.Checkpoints.WithLabelValues(src, "error").Inc()

@@ -239,3 +239,25 @@ func TestFetchFileURL(t *testing.T) {
 		t.Fatalf("%+v %v", r2, err)
 	}
 }
+
+// Politeness: a Retry-After longer than the backoff cap is not cut short: the fetch gives
+// up now and the poll loop waits the full Retry-After.
+func TestFetchLongRetryAfterHonouredByPollLoop(t *testing.T) {
+	var n atomic.Int32
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		n.Add(1)
+		w.Header().Set("Retry-After", "3600")
+		w.WriteHeader(http.StatusTooManyRequests)
+	}))
+	defer srv.Close()
+	f, waits := testFetcher(1024)
+	_, err := f.Get(context.Background(), srv.URL, Conditional{})
+	var se *StatusError
+	if !errors.As(err, &se) || se.RetryAfter != time.Hour || n.Load() != 1 || len(*waits) != 0 {
+		t.Fatalf("err=%v n=%d waits=%v", err, n.Load(), *waits)
+	}
+	s := &Source{cfg: SourceConfig{SourceConfigBase: SourceConfigBase{Interval: Duration{time.Minute}, MaxBackoff: Duration{10 * time.Minute}}}}
+	if d := s.nextDelay(1, err); d != time.Hour {
+		t.Fatalf("next poll in %v, want 1h", d)
+	}
+}
