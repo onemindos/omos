@@ -1,16 +1,16 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: hermes-fresh-data
+  name: onemind-hermes-data
   namespace: hermes
   annotations:
-    onemind.dev/source-pvc: hermes-fresh-data
+    onemind.dev/source-pvc: onemind-hermes-data
 spec:
-  sourcePVC: hermes-fresh-data
+  sourcePVC: onemind-hermes-data
   trigger:
-    schedule: 10 1 * * *
+    schedule: 25 1 * * *  # 01:25 UTC; offset from the orphaned hermes-fresh-data source (01:10)
   restic:
-    repository: hermes-fresh-restic
+    repository: onemind-hermes-restic
     copyMethod: Snapshot
     volumeSnapshotClassName: do-block-storage
     storageClassName: do-block-storage

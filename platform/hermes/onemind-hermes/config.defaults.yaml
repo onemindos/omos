@@ -1,0 +1,94 @@
+# onemind-hermes initial configuration (agent persona: Legacy, single soul).
+# Copied once into the empty PVC by the init container; later edits made through
+# Hermes win. No Legacy state, custom plugins, jobs or connectors.
+# Every key below was checked against Hermes v0.22.5 (/opt/hermes); see README.md.
+# Select/authenticate the model from the instance before using chat.
+model:
+  provider: openai-codex
+  default: gpt-6.1-sol
+
+# Spread turns across every signed-in openai-codex credential instead of
+# draining the first one (fill_first, the default) into its daily token cap.
+credential_pool_strategies:
+  openai-codex: least_used
+
+# Used only when the primary route fails. Needs OLLAMA_API_KEY in the runtime
+# environment, which is not provisioned yet: until it is, the fallback is skipped.
+fallback_providers:
+  - provider: ollama-cloud
+    model: glm-5.3
+
+agent:
+  # Global suppression list, applied last and at tool granularity. Use `yuanbao`
+  # (the yb_* platform tools), not `hermes-yuanbao`: that composite contains
+  # terminal, file, web, skills, delegation and kanban tools and would strip them.
+  disabled_toolsets:
+    - computer_use
+    - browser
+    - discord
+    - discord_admin
+    - yuanbao
+    - feishu_doc
+    - feishu_drive
+    - x_search
+    - video_gen
+
+# The terminal backend stays `local`: the pod itself is the sandbox (no
+# service-account token, NetworkPolicy, no privilege escalation). Docker, SSH,
+# Modal and Daytona backends are unavailable or external here.
+approvals:
+  mode: manual            # dangerous commands wait for a human, not the LLM judge (default: smart)
+  timeout: 300
+  cron_mode: deny         # scheduled jobs never run flagged commands
+  single_query_mode: deny
+  unattended_mode: deny   # API-server/webhook sessions never run flagged commands
+
+security:
+  redact_secrets: true
+  allow_private_urls: false
+
+skills:
+  # Reviewed OneMind skills from platform/hermes/skills/, copied here after deploy
+  # (see platform/hermes/skills/README.md). Read-only to Hermes; local skills win.
+  external_dirs:
+    - /opt/data/onemind-skills
+  # Bundled skills that do not fit a headless cloud agent (reasons in skills/README.md).
+  disabled:
+    - apple-notes
+    - apple-reminders
+    - findmy
+    - imessage
+    - ascii-video
+    - baoyu-infographic
+    - manim-video
+    - p5js
+    - popular-web-designs
+    - songwriting-and-ai-music
+    - design-md
+    - claude-design
+    - gif-search
+    - songsee
+    - xurl
+    - himalaya
+    - obsidian
+    - airtable
+    - box
+    - teams-meeting-pipeline
+    - product-price-monitor
+    - competitor-news-monitor
+    - llm-wiki
+    - inspecting-hermes-desktop-dom
+    - computer-use
+
+plugins:
+  enabled: []
+# One MCP endpoint for all OneMind apps: the LiteLLM gateway (platform/hermes/mcp/HUB.md).
+# ONEMIND_LITELLM_MCP_KEY is a LiteLLM virtual key scoped to the `onemind` server; it is
+# added to the onemind-hermes-runtime SealedSecret after merge. Until then this server
+# answers 401 and Hermes runs without OneMind tools. Keep gateway.multiplex_profiles off:
+# with it on, ${VAR} in headers is not filled from container env (Legacy's 401).
+mcp_servers:
+  onemind:
+    url: http://litellm.onemind-ai.svc.cluster.local:4000/mcp/
+    headers:
+      x-litellm-api-key: Bearer ${ONEMIND_LITELLM_MCP_KEY}
