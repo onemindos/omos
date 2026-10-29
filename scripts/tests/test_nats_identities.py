@@ -149,6 +149,38 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn("permissions", leaf)
         self.assertIn("authorization: null", ni.render_values(self.spec, "A2"))
 
+    def test_legacy_connection_types_from_a2(self):
+        a1 = self.users(ni.render_accounts(self.spec, "A1", ni.placeholder))
+        for name in ("onemind", "sys", "monitor"):
+            self.assertNotIn("allowed_connection_types", a1[name][1], name)
+        for stage in ("A2", "B"):
+            users = self.users(ni.render_accounts(self.spec, stage, ni.placeholder))
+            self.assertEqual(users["onemind"][1]["allowed_connection_types"], ["STANDARD", "WEBSOCKET"])
+            self.assertEqual(users["sys"][1]["allowed_connection_types"], ["STANDARD"])
+            self.assertEqual(users["monitor"][1]["allowed_connection_types"], ["STANDARD"])
+
+    def test_hermes_sidecar_carries_the_hub_allow_lists(self):
+        hub = self.users(ni.render_accounts(self.spec, "B", ni.placeholder))["hermes"][1]
+        frag = ni.sidecar_local(self.spec, "hermes")
+        self.assertEqual(frag["no_auth_user"], "local")
+        (local,) = frag["accounts"]["OMOS"]["users"]
+        self.assertEqual(local["permissions"], hub["permissions"])
+        self.assertNotIn("password", local)
+        self.assertNotIn("cmd.>", local["permissions"]["publish"]["allow"])
+        conf = ni.render_leaf_conf(self.spec, "hermes", "p@ss/w:rd")
+        (remote,) = conf["leafnodes"]["remotes"]
+        self.assertEqual(remote["urls"], ["tls://hermes:p%40ss%2Fw%3Ard@nats.nats.svc.cluster.local:7422"])
+        self.assertEqual(remote["account"], "OMOS")
+        self.assertEqual(conf["server_name"], "hermes-legacy-leaf")
+
+    def test_sidecar_only_on_leaf_users(self):
+        spec = copy.deepcopy(self.spec)
+        self.user_of(spec, "policy")["sidecar"] = self.user_of(spec, "hermes")["sidecar"]
+        self.assertTrue(any("leaf-only user" in e for e in ni.check_invariants(spec)))
+
+    def user_of(self, spec, name):
+        return next(u for u in spec["users"] if u["user"] == name)
+
     def test_stage_c_drops_shared_users_only(self):
         users = self.users(ni.render_accounts(self.spec, "C", ni.placeholder))
         self.assertNotIn("onemind", users)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -456,10 +457,17 @@ func TestCrossAccountRequests(t *testing.T) {
 
 // FEATURES A19 acceptance: Hermes (AGENTS, its own leaf credential) cannot publish
 // tak.cot.inject or cmd.fleet.> (nor any cmd.* except cmd.map.>), cannot confirm, cannot read
-// the raw firehoses; it can propose, read entities, serve prompts and drive cmd.map.>.
+// the raw firehoses, and each refusal is a server permission violation; it can propose, read
+// entities, serve prompts and drive cmd.map.>.
+//
+// The leaf is configured as the sealed sidecar leaf.conf is (`nats_identities.py leaf-conf`):
+// the agent logs in to a local user carrying the hub user's allow lists. The hub alone only
+// filters (it advertises to a leaf just the subjects that user may publish, so a forbidden
+// publish is dropped on the spoke with no error); the sidecar's local user turns each attempt
+// into a `Permissions Violation` for the agent and a `Publish Violation` line in the sidecar log.
 func TestHermesLeaf(t *testing.T) {
 	h := startHub(t, "B")
-	l := h.startLeaf(t, "hermes")
+	l := h.startLeafWith(t, "hermes", renderSidecar(t, "hermes"))
 	if !waitLeafs(t, h.srv, 1, 5*time.Second) {
 		t.Fatalf("hermes leaf did not connect: %v", h.log.grep("hermes"))
 	}
@@ -485,10 +493,23 @@ func TestHermesLeaf(t *testing.T) {
 		time.Sleep(200 * time.Millisecond)
 		hermes.nc.Publish(subj, []byte(`{"from":"hermes"}`))
 		hermes.nc.Flush()
+		e, ok := hermes.sink.violation("publish", subj, 2*time.Second)
+		if !ok {
+			t.Fatalf("hermes publish %s: expected a server permission violation at the sidecar", subj)
+		}
+		var logged string
+		for _, line := range l.log.grep("Publish Violation") {
+			if strings.Contains(line, fmt.Sprintf("%q", subj)) {
+				logged = line
+			}
+		}
+		if logged == "" {
+			t.Fatalf("hermes publish %s: no Publish Violation line in the sidecar log", subj)
+		}
 		if m, err := s.NextMsg(700 * time.Millisecond); err == nil {
 			t.Fatalf("hermes published %s and %s received %q", subj, sub.user, m.Data)
 		}
-		pass(t, "DENY  leaf-pub hermes            %-40s not delivered (%s listening)", subj, sub.user)
+		pass(t, "DENY  leaf-pub hermes            %-40s client: %s; sidecar log: %s; not delivered (%s listening)", subj, e, logged, sub.user)
 	}
 	expectLeafPubTo("cmd.fleet.drone.sim-x1.goto", bridge)
 	expectLeafPubTo("cmd.fleet.drone.sim-x1.land", bridge)
@@ -497,16 +518,24 @@ func TestHermesLeaf(t *testing.T) {
 	expectLeafPubTo("cmd.mission.m1.create", onemind)
 	expectLeafPubTo("ent.drone.sim-x1.state", onemind)
 	expectLeafPubTo("evt.so.action.approved", onemind)
-	expectLeafSub(t, hermes, "intel.weather.noaa.alert", false, onemind)
-	expectLeafSub(t, hermes, "tel.drone.x47.position", false, onemind)
-	expectLeafSub(t, hermes, "tak.cot.out", false, onemind)
+	for _, subj := range []string{"intel.weather.noaa.alert", "tel.drone.x47.position", "tak.cot.out"} {
+		expectLeafSub(t, hermes, subj, false, onemind)
+		if e, ok := hermes.sink.violation("subscription", subj, 2*time.Second); !ok {
+			t.Fatalf("hermes subscribe %s: expected a server permission violation at the sidecar", subj)
+		} else {
+			pass(t, "DENY  leaf-sub hermes            %-40s client: %s", subj, e)
+		}
+	}
 
-	// The leaf stays up: the spoke filters with the permissions the hub sent; nothing was
-	// forwarded, so the hub never had to close the connection.
+	// The leaf stays up: the sidecar refused locally and nothing was forwarded, so the hub never
+	// had to close the connection.
 	if h.srv.NumLeafNodes() != 2 {
 		t.Fatalf("leaf count %d after denied publishes", h.srv.NumLeafNodes())
 	}
-	pass(t, "hermes leaf still connected after the denied publishes (spoke-side filtering, no disconnect)")
+	if !hermes.nc.IsConnected() {
+		t.Fatal("hermes agent connection closed after the violations")
+	}
+	pass(t, "hermes leaf and agent connection still up after the denied publishes (refused at the sidecar, no disconnect)")
 
 	// Allowed: proposals with server-set AGENTS identity; confirm is unreachable.
 	policy := h.conn(t, "policy")
@@ -529,8 +558,10 @@ func TestHermesLeaf(t *testing.T) {
 	pass(t, "policy sees Hermes as account AGENTS (policy maps every AGENTS identity to kind agent)")
 	if _, err := hermes.nc.Request("svc.policy.command.confirm", []byte(`{}`), 700*time.Millisecond); err == nil {
 		t.Fatal("hermes reached svc.policy.command.confirm")
+	} else if e, ok := hermes.sink.violation("publish", "svc.policy.command.confirm", 2*time.Second); !ok {
+		t.Fatalf("hermes svc.policy.command.confirm: %v, but no server permission violation", err)
 	} else {
-		pass(t, "DENY  hermes -> svc.policy.command.confirm: %v", err)
+		pass(t, "DENY  hermes -> svc.policy.command.confirm: %v; client: %s", err, e)
 	}
 	if _, err := hermes.nc.Request("svc.policy.task.confirm", []byte(`{}`), 700*time.Millisecond); err == nil {
 		t.Fatal("hermes reached svc.policy.task.confirm")
@@ -612,7 +643,7 @@ func TestHermesLeaf(t *testing.T) {
 	}
 	pass(t, "ALLOW agent-fabric -> $SRV.PING.agents served by hermes")
 	t.Logf("hub log lines mentioning Violation: %q", h.log.grep("Violation"))
-	t.Logf("hermes leaf log lines mentioning Violation: %q", l.log.grep("Violation"))
+	t.Logf("hermes sidecar log lines mentioning Violation: %q", l.log.grep("Violation"))
 }
 
 // Leaf users are filtered by the hub in both directions (security-and-trust.md fact 16).
@@ -699,6 +730,26 @@ func TestConnectionTypes(t *testing.T) {
 	} else {
 		pass(t, "DENY  conn policy with a wrong password: %v", err)
 	}
+	// From A2 there is no leafnodes.authorization, so any account user without connection types
+	// could open a leaf link. The shared (browser-exposed) onemind login and the SYS users cannot.
+	for _, u := range []string{"onemind", "sys", "monitor"} {
+		h.startLeaf(t, u)
+		time.Sleep(1200 * time.Millisecond)
+		if n := h.srv.NumLeafNodes(); n != 0 {
+			t.Fatalf("%s logged in as a leaf (%d leafs)", u, n)
+		}
+		pass(t, "DENY  leaf %-20s cannot log in as a leaf node: %s", u, firstOr(h.log.grep("connection type"), h.log.grep("Authorization")))
+	}
+	for _, u := range []string{"onemind", "sys"} {
+		if _, err := dial(t, h.url(), u); err != nil {
+			t.Fatalf("%s as STANDARD client: %v", u, err)
+		}
+		pass(t, "ALLOW conn %-20s as STANDARD client", u)
+	}
+	if _, err := dial(t, h.wsURL(), "onemind"); err != nil {
+		t.Fatalf("onemind over WebSocket (ws.onemindos.dev): %v", err)
+	}
+	pass(t, "ALLOW conn onemind              over WebSocket (ws.onemindos.dev clients keep working)")
 }
 
 // Stage A1 is additive: shared users keep working unchanged (so nothing breaks), new users are

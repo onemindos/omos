@@ -23,8 +23,12 @@ config:
         users:
         - user: sys
           password: __SYS_PW__
+          allowed_connection_types:
+          - STANDARD
         - user: monitor
           password: __MONITOR_PW__
+          allowed_connection_types:
+          - STANDARD
       ONEMIND:
         jetstream:
           max_mem: -1
@@ -89,6 +93,9 @@ config:
         users:
         - user: onemind
           password: __ONEMIND_PW__
+          allowed_connection_types:
+          - STANDARD
+          - WEBSOCKET
         - user: leaf_tak
           password: __LEAF_TAK_PW__
           allowed_connection_types:

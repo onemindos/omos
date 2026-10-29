@@ -18,6 +18,12 @@ Commands
                                     removed. Users already in the live config (sys, monitor,
                                     onemind, leaf_tak) keep their live password hashes; new users
                                     get bcrypt hashes of the passwords in FILE.
+  leaf-local --user U               the local-account fragment of U's leaf sidecar (no credentials):
+                                    a local user with U's allow lists, so the sidecar itself refuses
+                                    a forbidden publish with a Permissions Violation (used by permtest)
+  leaf-conf --user U --passwords FILE --out FILE
+                                    the full leaf.conf for U's sidecar (to seal as a SecretKey),
+                                    written outside the repository
   secrets                           table of where each user's password must be sealed
 
 Stages (platform/nats/IDENTITIES.md):
@@ -39,6 +45,7 @@ import secrets
 import shutil
 import subprocess
 import sys
+import urllib.parse
 from pathlib import Path
 
 import yaml
@@ -132,7 +139,9 @@ def user_entry(u: dict, stage: str, password: str) -> dict | None:
     if stage == "A1" and u["user"] in LEAF_AUTH_A1:
         return None  # still in leafnodes.authorization (rendered by leaf_auth_a1)
     e: dict = {"user": u["user"], "password": password}
-    if u.get("connection_types"):
+    # Legacy users get connection types from A2 on: at A1 only leafnodes.authorization users can
+    # log in as leafs anyway, and A1 must not change anything for existing clients.
+    if u.get("connection_types") and not (legacy and stage == "A1"):
         e["allowed_connection_types"] = list(u["connection_types"])
     perms: dict = {}
     pub = list(u.get("publish") or []) + expand_jetstream(u.get("jetstream"))
@@ -182,6 +191,39 @@ def render_values(spec: dict, stage: str = "B") -> str:
     doc = {"config": cfg}
     body = yaml.safe_dump(doc, sort_keys=False, width=100, default_flow_style=False)
     return HEADER.format(stage=stage) + body
+
+
+def find_user(spec: dict, name: str) -> dict:
+    for u in spec["users"]:
+        if u["user"] == name:
+            return u
+    sys.exit(f"unknown user {name}")
+
+
+def sidecar_local(spec: dict, name: str) -> dict:
+    """Local account of a leaf user's sidecar: one password-less local user carrying exactly the
+    hub user's allow lists (same render as the hub entry). The hub only advertises to a leaf the
+    subjects its user may publish, so without this a forbidden publish vanishes on the spoke with
+    no error and no log line; with it the sidecar answers `Permissions Violation` and logs it."""
+    u = find_user(spec, name)
+    sc = u.get("sidecar")
+    if not sc:
+        sys.exit(f"{name} has no sidecar in the spec")
+    hub = user_entry(u, "B", "")
+    local = {"user": sc["local_user"]}
+    if "permissions" in hub:
+        local["permissions"] = hub["permissions"]
+    return {"accounts": {sc["account"]: {"users": [local]}}, "no_auth_user": sc["local_user"]}
+
+
+def render_leaf_conf(spec: dict, name: str, password: str) -> dict:
+    u = find_user(spec, name)
+    sc = u["sidecar"] if u.get("sidecar") else sys.exit(f"{name} has no sidecar in the spec")
+    conf = {"port": 4222, "http": 8222, "server_name": sc["server_name"]}
+    conf.update(sidecar_local(spec, name))
+    url = f"tls://{urllib.parse.quote(name, safe='')}:{urllib.parse.quote(password, safe='')}@{sc['remote']}"
+    conf["leafnodes"] = {"remotes": [{"urls": [url], "account": sc["account"], "tls": {"ca_file": sc["ca_file"]}}]}
+    return conf
 
 
 def bcrypt_hash(password: str) -> str:
@@ -261,6 +303,8 @@ def check_invariants(spec: dict) -> list[str]:
                     errs.append(f"{u['user']}: may publish {probe} (projector only)")
         if u["user"] != "entity" and any(_covers(p, "ent.drone.sim-x1.state") for p in pub):
             errs.append(f"{u['user']}: may publish ent.*.*.state (entity service only)")
+        if u.get("sidecar") and u.get("connection_types") != ["LEAFNODE"]:
+            errs.append(f"{u['user']}: a sidecar belongs to a leaf-only user (connection_types [LEAFNODE])")
         if u["account"] in ("CLIENT", "AGENTS") and u.get("jetstream"):
             errs.append(f"{u['user']}: {u['account']} has no JetStream")
         if u["account"] == "AGENTS" and any(_covers(p, "svc.policy.command.confirm") for p in pub):
@@ -387,6 +431,21 @@ def cmd_live(args) -> int:
     return 0
 
 
+def cmd_leaf_local(args) -> int:
+    sys.stdout.write(json.dumps(sidecar_local(load_spec(), args.user), indent=2) + "\n")
+    return 0
+
+
+def cmd_leaf_conf(args) -> int:
+    pws = read_passwords(args.passwords)
+    if args.user not in pws:
+        sys.exit(f"no password for {args.user} in {args.passwords}")
+    conf = render_leaf_conf(load_spec(), args.user, pws[args.user])
+    write_private(args.out, json.dumps(conf, indent=2) + "\n")
+    print(f"wrote {args.out} (0600); seal it as key leaf.conf (platform/nats/IDENTITIES.md step 2)")
+    return 0
+
+
 def cmd_secrets(args) -> int:
     spec = load_spec()
     print("| user | account | stage | where the password goes |")
@@ -408,6 +467,9 @@ def main() -> int:
     p.add_argument("--hash", action="store_true"); p.add_argument("--out"); p.set_defaults(fn=cmd_conf)
     p = sp.add_parser("live"); p.add_argument("--live-conf", required=True); p.add_argument("--passwords", required=True)
     p.add_argument("--stage", default="A1", choices=STAGES); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_live)
+    p = sp.add_parser("leaf-local"); p.add_argument("--user", required=True); p.set_defaults(fn=cmd_leaf_local)
+    p = sp.add_parser("leaf-conf"); p.add_argument("--user", required=True); p.add_argument("--passwords", required=True)
+    p.add_argument("--out", required=True); p.set_defaults(fn=cmd_leaf_conf)
     p = sp.add_parser("secrets"); p.set_defaults(fn=cmd_secrets)
     args = ap.parse_args()
     return args.fn(args)

@@ -25,9 +25,8 @@ shared password can publish `cmd.>` and `tak.cot.inject`, also through the publi
 | `../../docs/proposals/2026-10-29-nats-identities-a19.md` | Decisions that need the owner |
 
 `python3 scripts/nats_identities.py check` must pass after any edit of the spec. CI
-(`.github/workflows/test-nats-identities.yml`) runs it and the Python unit tests. The Go
-permission tests compile nats-server, which does not fit the self-hosted runner's 1 GiB limit,
-so run them locally before merging any change to the spec (see Tests).
+(`.github/workflows/test-nats-identities.yml`) runs it, the Python unit tests and the Go
+permission tests against the checksum-verified nats-server v2.14.2 release binary (see Tests).
 
 ## Identities
 
@@ -47,9 +46,9 @@ every requester. Responders use `allow_responses`, so no service may publish on 
 | `agent-fabric` | ONEMIND | `agents.prompt.>`, `$SRV.>` | `agents.>` | `agent-fabric/agent-fabric-nats` (`NATS_USER`, `NATS_PASSWORD`) |
 | `leaf-tak` (leaf only) | ONEMIND | `tak.cot.out` | `tak.cot.inject` | inside `leaf.conf` of `takserver/tak-nats-leaf` |
 | `leaf-site-mac` (leaf only) | ONEMIND | the site's bridges: `tel.fleet.drone.sim-x1.>`, `evt.drone.sim-x1.>`, `tak.cot.mesh.rx`, `tel.fleet.edge.tak-mesh.status` | `cmd.fleet.drone.sim-x1.>`, `tak.cot.mesh.tx`, `ent.*.*.state` | Mac leaf config (`infra/edge/mac-leaf`, keychain) |
-| `hermes` (leaf only) | AGENTS | `agents.*.hermes.>`, `cmd.map.>`, requests `svc.entity.>`, `svc.layer.{list,meta}`, `svc.policy.{command,task}.propose`, `svc.policy.action.get`; replies `_R_.>` | `agents.prompt.hermes.>`, `svc.bridge.>`, `$SRV` | inside `leaf.conf` of `hermes/hermes-leaf-conf` |
+| `hermes` (leaf only) | AGENTS | `agents.*.hermes.>`, `cmd.map.>`, requests `svc.entity.>`, `svc.layer.{list,meta}`, `svc.policy.{command,task}.propose`, `svc.policy.action.get`; replies `_R_.>` | `agents.prompt.hermes.>`, `svc.bridge.>`, `$SRV` | inside `leaf.conf` of `hermes/hermes-leaf-conf` (rendered by `leaf-conf`; its local user carries the same lists) |
 | `zeus` | CLIENT | requests `svc.{layer,entity,policy}.>`, `svc.cot.send`, `agents.prompt.hermes.>`; `cmd.map.>` | `cmd.map.>` | owner keychain on each client device |
-| `onemind`, `leaf_tak` | ONEMIND | everything until stage B; then denied commands, `tak.cot.inject`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` | everything; from stage B not `svc.{policy,entity,layer,cot}.>` (cannot impersonate a service) | existing `values.secret.yaml` |
+| `onemind`, `leaf_tak` | ONEMIND | everything until stage B; then denied `cmd.{fleet,drone,robot,vehicle,mission,entity}.>`, `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` (other `cmd.*` domains and forged inputs stay open until stage C, see Limits) | everything; from stage B not `svc.{policy,entity,layer,cot}.>` (cannot impersonate a service) | existing `values.secret.yaml` |
 
 Accounts: `ONEMIND` keeps every stream. It exports the policy API to `CLIENT` (all of it) and
 to `AGENTS` (propose and action lookup only, never confirm), `svc.entity.>` to both, and
@@ -115,9 +114,29 @@ kubectl create secret generic "$NAME" -n "$NS" \
 - `agent-fabric-nats` keeps its keys `NATS_USER` / `NATS_PASSWORD`.
 - Leaf credentials go inside `leaf.conf`. TAK leaf: the remote URL user changes from
   `leaf_tak` to `leaf-tak`; re-seal `platform/takserver/deploy/tak-nats-leaf.sealedsecret.yaml`
-  (key `leaf.conf`). Hermes: same `leaf.conf` as `platform/hermes/agent/SECRETS.md` §2 with
-  user `hermes`; commit it as `platform/hermes/agent/hermes-leaf-conf.sealedsecret.yaml`
-  instead of the `kubectl create secret` in that file.
+  (key `leaf.conf`). Hermes: render the whole sidecar config instead of hand-editing
+  `platform/hermes/agent/SECRETS.md` §2, then seal it as
+  `platform/hermes/agent/hermes-leaf-conf.sealedsecret.yaml` (instead of the
+  `kubectl create secret` in that file):
+
+  ```bash
+  python3 scripts/nats_identities.py leaf-conf --user hermes \
+    --passwords "$W/identities.json" --out "$W/hermes-leaf.conf"
+  kubectl create secret generic hermes-leaf-conf -n hermes \
+    --from-file=leaf.conf="$W/hermes-leaf.conf" --dry-run=client -o json \
+    | kubeseal --cert /tmp/pub-cert.pem --format yaml --scope namespace-wide \
+    > platform/hermes/agent/hermes-leaf-conf.sealedsecret.yaml
+  ```
+
+  The rendered `leaf.conf` keeps `server_name: hermes-legacy-leaf`, ports 4222/8222, the
+  password-less `local` user and the TLS CA path, and gives `local` the **same publish and
+  subscribe allow-lists as the hub user `hermes`**. The hub alone would only filter: it
+  advertises to a leaf just the subjects that leaf user may publish, so a forbidden publish
+  from the agent would be dropped on the spoke with no error and no log line. With the local
+  allow-list the sidecar refuses it: the agent gets `Permissions Violation for Publish to
+  "cmd.fleet.drone.sim-x1.goto"` and the `nats-leaf` container logs `Publish Violation - Subject
+  "cmd.fleet.drone.sim-x1.goto"` (FEATURES A19 test; proved in `TestHermesLeaf`). Watch it with
+  `kubectl -n hermes logs deploy/hermes -c nats-leaf | grep Violation`.
 - Edge and client passwords (`bridge-mavlink-home`, `mesh-gateway`, `leaf-site-mac`, `zeus`)
   go to the owner keychain, not to the cluster.
 
@@ -152,6 +171,18 @@ Keep `values.secret.yaml` in step: copy `values.identities.stage-a1.template.yam
 with the bcrypt hashes from `nats.conf.A1` for each `__<USER>_PW__`. Do not run Helm.
 
 ### 4. Stage A2: leaf users get permissions (needs a pod restart)
+
+From A2 there is no `leafnodes.authorization`, so any account user without
+`allowed_connection_types` could open a leaf link on 7422. The spec gives the remaining
+legacy users connection types from A2: `onemind` STANDARD and WEBSOCKET, `sys` and `monitor`
+STANDARD (`TestConnectionTypes`). No current leaf uses them: while `leafnodes.authorization`
+exists (today and at A1), only its user `leaf_tak` can log in as a leaf (`server/auth.go`,
+`isLeafNodeAuthorized`). Before applying A2, confirm that no client of these users needs
+another connection type (MQTT is not enabled):
+
+```bash
+curl -s 'http://127.0.0.1:8222/connz?auth=1&limit=1024' | python3 -c 'import sys,json,collections;print(collections.Counter((c.get("authorized_user"),c.get("kind","Client"),c.get("type")) for c in json.load(sys.stdin)["connections"]))'
+```
 
 nats-server 2.14.2 cannot reload a change of `leafnodes.authorization.users`
 (`server/reload.go`: "config reload not supported for LeafNode: field Users"), and while that
@@ -237,8 +268,19 @@ ConfigMap and the running stage the same before any pod restart.
 - Any user in an account that may subscribe `_INBOX.>` can read replies sent to other users'
   inboxes in that account. Per-identity inbox prefixes fix it (proposal A19-P5).
 - A JetStream read grant is per stream: a consumer grant on `ENT` reads all of `ENT`.
-- A leaf spoke drops a forbidden publish silently: Hermes' client gets no error, and nothing
-  reaches the hub. Direct connections get `Permissions Violation` from the server.
+- A leaf spoke drops a forbidden publish silently unless the spoke itself has permissions. The
+  Hermes sidecar's rendered `leaf.conf` (step 2) gives the agent a local user with the hub
+  allow-lists, so Hermes' attempts are refused and logged at the sidecar. The TAK leaf and the
+  Mac site leaf have no such local user yet: there, a forbidden publish is still only filtered
+  (nothing reaches the hub, no error, no log line).
+- Stage B closes only the commands in policy's domains (`cmd.fleet/drone/robot/vehicle/mission/entity.>`),
+  `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>` and `svc.policy.>`
+  for `onemind` and `leaf_tak`. Until stage C those shared logins (`onemind` also through the
+  browser-exposed `ws.onemindos.dev`) can still publish other command domains:
+  `cmd.projector.disable` (the projector's live kill switch), `cmd.ha.*`, `cmd.alert.*` and any
+  future domain. They can also forge inputs that services trust: `tak.cot.out` (the entity
+  service turns it into `ent` state, which the projector sends to TAK), `tel.fleet.drone.sim-x1.*`
+  and `evt.drone.sim-x1.*` (policy reads `evt.drone.*` as command outcomes). Proposal A19-P10.
 - Passwords, not nkeys or JWTs. Operator/JWT mode with revocation is stage 2 (onemind-xr
   BUS-DESIGN §7, doctrine §5).
 - ONEMIND keeps unlimited per-account JetStream limits, bounded by the server's
@@ -246,12 +288,18 @@ ConfigMap and the running stage the same before any pod restart.
 
 ## Tests
 
-Run all of these before merging a change to `identities/identities.yaml` (CI runs only the
-first two):
+CI runs all three on every PR that touches the identities (the Go tests with `-tags natsbin`
+against the nats-server v2.14.2 release binary, checksum-verified in the workflow). Locally:
 
 ```bash
 python3 scripts/nats_identities.py check
 python3 -m unittest scripts/tests/test_nats_identities.py
-cd platform/nats/identities/permtest && go test -race -count=1 -v ./...
+cd platform/nats/identities/permtest
+go test -race -count=1 -v ./...                      # nats-server 2.14.2 compiled in (go.mod)
+NATS_SERVER_BIN=/path/to/nats-server-v2.14.2 go test -tags natsbin -race -count=1 -v ./...
 # bcrypt like live (needs the nats CLI): NATS_IDENTITY_HASH=1 go test -count=1 ./...
 ```
+
+The Go harness renders the configs by running `scripts/nats_identities.py`, so `python3` must
+have PyYAML (`pip install pyyaml==6.0.2`), or set `PYTHON` to an interpreter that has it.
+Without it every Go test fails in setup with `ModuleNotFoundError: No module named 'yaml'`.

@@ -7,6 +7,12 @@
 //
 // NATS_IDENTITY_HASH=1 renders bcrypt hashes (as live) instead of plaintext passwords; it needs
 // the nats CLI on PATH. PYTHON selects the interpreter (needs PyYAML).
+//
+// Two ways to run the servers (server_inproc_test.go, server_bin_test.go):
+//   - default: nats-server v2.14.2 compiled into the test binary (the version pinned in go.mod);
+//   - -tags natsbin: an external nats-server release binary (NATS_SERVER_BIN, default
+//     nats-server on PATH), started per test as a process. CI uses this with the checksum-verified
+//     v2.14.2 release, because compiling nats-server does not fit the runner's 1 GiB limit.
 package permtest
 
 import (
@@ -23,15 +29,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 )
+
+// natsServer is a running nats-server, in-process or an external process.
+type natsServer interface {
+	NumLeafNodes() int
+	// Reload re-reads the config file, as the reloader sidecar's signal does; it returns the
+	// server's refusal (e.g. "config reload not supported ...").
+	Reload() error
+	Shutdown()
+}
 
 var checks atomic.Int64
 
 func TestMain(m *testing.M) {
 	code := m.Run()
-	fmt.Printf("permtest: %d permission checks passed in this run (version %s)\n", checks.Load(), server.VERSION)
+	fmt.Printf("permtest: %d permission checks passed in this run (nats-server %s, %s)\n", checks.Load(), serverVersion(), serverMode)
 	os.Exit(code)
 }
 
@@ -195,6 +209,21 @@ func (l *logBuf) Fatalf(f string, a ...any)  { l.add("[FTL]", f, a...) }
 func (l *logBuf) Errorf(f string, a ...any)  { l.add("[ERR]", f, a...) }
 func (l *logBuf) Debugf(f string, a ...any)  { l.add("[DBG]", f, a...) }
 func (l *logBuf) Tracef(f string, a ...any)  { l.add("[TRC]", f, a...) }
+func (l *logBuf) raw(line string) {
+	l.mu.Lock()
+	l.lines = append(l.lines, line)
+	l.mu.Unlock()
+}
+func (l *logBuf) len() int {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return len(l.lines)
+}
+func (l *logBuf) since(n int) []string {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	return append([]string(nil), l.lines[n:]...)
+}
 func (l *logBuf) grep(s string) []string {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -228,12 +257,12 @@ func freePort(t *testing.T) int {
 }
 
 type hub struct {
-	t                      *testing.T
-	stage                  string
-	port, leafPort, wsPort int
-	storeDir, confPath     string
-	srv                    *server.Server
-	log                    *logBuf
+	t                                *testing.T
+	stage                            string
+	port, leafPort, wsPort, httpPort int
+	storeDir, confPath               string
+	srv                              natsServer
+	log                              *logBuf
 }
 
 func (h *hub) url() string   { return fmt.Sprintf("nats://127.0.0.1:%d", h.port) }
@@ -245,6 +274,7 @@ func (h *hub) writeConf(frag map[string]any) {
 		"server_name": "hub",
 		"host":        "127.0.0.1",
 		"port":        h.port,
+		"http_port":   h.httpPort,
 		"jetstream":   map[string]any{"store_dir": h.storeDir, "max_file_store": 256 << 20, "max_memory_store": 0},
 		"websocket":   map[string]any{"host": "127.0.0.1", "port": h.wsPort, "no_tls": true},
 	}
@@ -267,19 +297,9 @@ func (h *hub) writeConf(frag map[string]any) {
 
 func (h *hub) start() {
 	h.t.Helper()
-	opts, err := server.ProcessConfigFile(h.confPath)
+	srv, err := startServer(h.confPath, h.httpPort, h.log)
 	if err != nil {
-		h.t.Fatalf("config %s rejected: %v", h.stage, err)
-	}
-	opts.NoSigs = true
-	srv, err := server.NewServer(opts)
-	if err != nil {
-		h.t.Fatalf("server: %v", err)
-	}
-	srv.SetLogger(h.log, false, false)
-	go srv.Start()
-	if !srv.ReadyForConnections(10 * time.Second) {
-		h.t.Fatal("hub not ready")
+		h.t.Fatalf("hub %s: %v", h.stage, err)
 	}
 	h.srv = srv
 }
@@ -287,7 +307,6 @@ func (h *hub) start() {
 func (h *hub) stop() {
 	if h.srv != nil {
 		h.srv.Shutdown()
-		h.srv.WaitForShutdown()
 		h.srv = nil
 	}
 }
@@ -303,7 +322,7 @@ func newHub(t *testing.T, stage string, frag map[string]any) *hub {
 	t.Helper()
 	setup(t)
 	dir := t.TempDir()
-	h := &hub{t: t, stage: stage, port: freePort(t), leafPort: freePort(t), wsPort: freePort(t),
+	h := &hub{t: t, stage: stage, port: freePort(t), leafPort: freePort(t), wsPort: freePort(t), httpPort: freePort(t),
 		storeDir: filepath.Join(dir, "js"), confPath: filepath.Join(workDir, fmt.Sprintf("hub-%s-%d.conf", stage, time.Now().UnixNano())), log: &logBuf{}}
 	h.writeConf(frag)
 	h.start()
@@ -318,27 +337,59 @@ func startHub(t *testing.T, stage string) *hub {
 // leaf is a local leaf server whose remote authenticates to the hub as one hub user; local
 // clients connect without credentials (like the Hermes sidecar and the TAK leaf).
 type leaf struct {
-	srv  *server.Server
+	srv  natsServer
 	port int
 	log  *logBuf
 }
 
 func (l *leaf) url() string { return fmt.Sprintf("nats://127.0.0.1:%d", l.port) }
 
+// startLeaf starts a leaf whose local clients log in unrestricted (no permissions on the spoke).
 func (h *hub) startLeaf(t *testing.T, user string) *leaf {
+	return h.startLeafWith(t, user, map[string]any{
+		"accounts":     map[string]any{"LOCAL": map[string]any{"users": []any{map[string]any{"user": "local"}}}},
+		"no_auth_user": "local",
+	})
+}
+
+// renderSidecar returns the rendered local-account fragment of a leaf user's sidecar
+// (`nats_identities.py leaf-local`), the block the owner seals into that sidecar's leaf.conf.
+func renderSidecar(t *testing.T, user string) map[string]any {
+	t.Helper()
+	setup(t)
+	b, err := exec.Command(python(), filepath.Join(repoRoot, "scripts/nats_identities.py"), "leaf-local", "--user", user).Output()
+	if err != nil {
+		t.Fatalf("leaf-local %s: %v", user, err)
+	}
+	var m map[string]any
+	if err := json.Unmarshal(b, &m); err != nil {
+		t.Fatal(err)
+	}
+	return m
+}
+
+// startLeafWith starts a leaf with the given local accounts/no_auth_user fragment; the remote
+// binds to the fragment's single account and authenticates to the hub as user.
+func (h *hub) startLeafWith(t *testing.T, user string, local map[string]any) *leaf {
 	t.Helper()
 	l := &leaf{port: freePort(t), log: &logBuf{}}
+	var account string
+	for a := range local["accounts"].(map[string]any) {
+		account = a
+	}
+	httpPort := freePort(t)
 	conf := map[string]any{
 		"server_name":  "leaf-" + user,
 		"host":         "127.0.0.1",
 		"port":         l.port,
-		"accounts":     map[string]any{"LOCAL": map[string]any{"users": []any{map[string]any{"user": "local"}}}},
-		"no_auth_user": "local",
+		"http_port":    httpPort,
+		"accounts":     local["accounts"],
+		"no_auth_user": local["no_auth_user"],
 		"leafnodes": map[string]any{
 			"reconnect": "250ms",
 			"remotes": []any{map[string]any{
 				"url":     fmt.Sprintf("nats://%s:%s@127.0.0.1:%d", user, passwords[user], h.leafPort),
-				"account": "LOCAL",
+				"account": account,
 			}},
 		},
 	}
@@ -348,26 +399,16 @@ func (h *hub) startLeaf(t *testing.T, user string) *leaf {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { os.Remove(path) })
-	opts, err := server.ProcessConfigFile(path)
+	srv, err := startServer(path, httpPort, l.log)
 	if err != nil {
-		t.Fatal(err)
-	}
-	opts.NoSigs = true
-	srv, err := server.NewServer(opts)
-	if err != nil {
-		t.Fatal(err)
-	}
-	srv.SetLogger(l.log, false, false)
-	go srv.Start()
-	if !srv.ReadyForConnections(10 * time.Second) {
-		t.Fatal("leaf not ready")
+		t.Fatalf("leaf %s: %v", user, err)
 	}
 	l.srv = srv
-	t.Cleanup(func() { srv.Shutdown(); srv.WaitForShutdown() })
+	t.Cleanup(srv.Shutdown)
 	return l
 }
 
-func waitLeafs(t *testing.T, s *server.Server, n int, d time.Duration) bool {
+func waitLeafs(t *testing.T, s natsServer, n int, d time.Duration) bool {
 	t.Helper()
 	deadline := time.Now().Add(d)
 	for time.Now().Before(deadline) {

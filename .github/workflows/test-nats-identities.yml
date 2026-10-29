@@ -1,13 +1,14 @@
 name: NATS identities tests
 
 # Per-service NATS identities (FEATURES A19): the spec invariants and generated Helm values
-# (scripts/nats_identities.py check) and their unit tests. Nothing here touches the cluster.
+# (scripts/nats_identities.py check), their unit tests, and the Go permission tests
+# (platform/nats/identities/permtest) that prove the access matrix on a real server. Nothing
+# here touches the cluster.
 #
-# The Go permission tests (platform/nats/identities/permtest: the rendered config on an
-# in-process nats-server 2.14.2) are NOT run here: compiling nats-server OOM-killed the zeus-v2
-# runner container (1 GiB limit, platform/core/github-runner.yaml) twice, even with -p=1. Run
-# them before merging, as platform/nats/IDENTITIES.md "Tests" says; results are recorded in
-# onemind-xr docs/evidence/M1/A19/.
+# The permission tests run against the nats-server v2.14.2 release binary (the live version),
+# checksum-verified, with -tags natsbin. Compiling nats-server into the test binary OOM-killed
+# the zeus-v2 runner container (1 GiB limit, platform/core/github-runner.yaml); the in-process
+# mode stays for local runs (platform/nats/IDENTITIES.md "Tests").
 
 on:
   pull_request:
@@ -48,10 +49,44 @@ jobs:
           python-version: "3.12"
 
       - name: Install PyYAML
-        run: pip install pyyaml
+        run: pip install pyyaml==6.0.2
+
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+
+      - name: nats-server v2.14.2 release binary (checksum-verified)
+        env:
+          NATS_SERVER_VERSION: v2.14.2
+          # SHA256SUMS of the release: nats-server-v2.14.2-linux-amd64.tar.gz
+          NATS_SERVER_SHA256: b3e7b14eb10c895fd90c2dacdb6b65bd3208adcc9524dd7689ba2c1024e6b97a
+        run: |
+          set -euo pipefail
+          d="$RUNNER_TEMP/nats-server"; mkdir -p "$d"
+          f="nats-server-${NATS_SERVER_VERSION}-linux-amd64"
+          curl -fsSL -o "$d/$f.tar.gz" "https://github.com/nats-io/nats-server/releases/download/${NATS_SERVER_VERSION}/$f.tar.gz"
+          echo "${NATS_SERVER_SHA256}  $d/$f.tar.gz" | sha256sum -c -
+          tar -xzf "$d/$f.tar.gz" -C "$d" "$f/nats-server"
+          echo "NATS_SERVER_BIN=$d/$f/nats-server" >> "$GITHUB_ENV"
+          "$d/$f/nats-server" --version
 
       - name: Spec invariants and generated values are current
         run: python scripts/nats_identities.py check
 
       - name: Renderer unit tests
         run: python -m unittest scripts/tests/test_nats_identities.py -v
+
+      # Serial build under a soft memory limit: only nats.go is compiled (the server is the
+      # release binary), well inside the runner's 1 GiB. `go vet` without the tag would compile
+      # nats-server again, so only the natsbin build is vetted here.
+      - name: gofmt, go vet and permission tests (release binary)
+        working-directory: platform/nats/identities/permtest
+        env:
+          PYTHON: python
+          GOFLAGS: -p=1
+          GOMEMLIMIT: 600MiB
+        run: |
+          test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+          go vet -tags natsbin ./...
+          go test -tags natsbin -race -count=1 -v ./... 2>&1 | tee "$RUNNER_TEMP/permtest.txt"; test "${PIPESTATUS[0]}" -eq 0

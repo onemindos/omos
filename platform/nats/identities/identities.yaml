@@ -15,7 +15,8 @@
 #
 # Field reference (users):
 #   account            account the user belongs to (and, for a leaf, the account the leaf binds to)
-#   connection_types   allowed_connection_types (STANDARD, WEBSOCKET, LEAFNODE); omitted = any
+#   connection_types   allowed_connection_types (STANDARD, WEBSOCKET, LEAFNODE); omitted = any.
+#                      On a legacy user it applies from stage A2 (A1 stays purely additive)
 #   publish/subscribe  allow lists (subjects; NATS wildcards)
 #   jetstream          expanded by the renderer into $JS.API / $JS.ACK / $JS.FC / $KV allows:
 #     info: true               $JS.API.INFO
@@ -31,6 +32,11 @@
 #                      legacy = existing shared user, kept until every client has moved
 #   stage_b            restrictions applied to a legacy user in stage B (runbook step 4)
 #   secret             where the plaintext password lives for the workload (SealedSecret)
+#   sidecar            (leaf users) the in-pod leaf server the workload's client logs in to.
+#                      `nats_identities.py leaf-conf` renders its leaf.conf with a local user that
+#                      carries the same allow lists, so a forbidden publish fails at the sidecar
+#                      with a server Permissions Violation (client error + sidecar log line)
+#                      instead of being dropped silently on the leaf link
 
 version: 1
 system_account: SYS
@@ -135,10 +141,16 @@ accounts:
       - service: {account: ONEMIND, subject: "svc.policy.action.get"}
         share: true
 
-# Publish/subscribe deny lists applied to the legacy shared users in stage B. From then on
-# the server enforces: only `policy` publishes commands (other than cmd.map.>), only the
-# projector publishes tak.cot.inject / tak.cot.mesh.tx, only the entity service publishes
-# ent.*.*.state, and nobody but the owning service can answer svc.policy/entity/layer/cot.
+# Publish/subscribe deny lists applied to the legacy shared users in stage B. Exactly what
+# stage B closes for `onemind` and `leaf_tak`:
+#   - commands in policy's domains: cmd.fleet.>, cmd.drone.>, cmd.robot.>, cmd.vehicle.>,
+#     cmd.mission.>, cmd.entity.> (with the per-service users, only `policy` publishes these);
+#   - tak.cot.inject and tak.cot.mesh.tx (projector only), ent.*.*.state (entity only),
+#     evt.so.action.> (policy's audit events) and requests to svc.policy.>;
+#   - serving svc.policy/entity/layer/cot (nobody but the owning service can answer them).
+# NOT closed until stage C (IDENTITIES.md "Limits", proposal A19-P10): other command domains
+# (cmd.projector.> kill switch, cmd.ha.>, cmd.alert.>, any future domain), and forged inputs
+# tak.cot.out, tel.fleet.> and evt.drone.> (entity and policy consume them).
 legacy_stage_b: &legacy_stage_b
   publish_deny:
     - "cmd.fleet.>"
@@ -164,16 +176,21 @@ users:
     account: SYS
     stage: legacy
     purpose: "system account (nats-surveyor; PR #547 rotates it)"
+    connection_types: [STANDARD]
   - user: monitor
     account: SYS
     stage: legacy
     purpose: "monitoring"
+    connection_types: [STANDARD]
 
   # ---- ONEMIND legacy shared users ----
   - user: onemind
     account: ONEMIND
     stage: legacy
     purpose: "shared login of every service not yet moved (NACK, feed-intel, onemind-core, sink-clickhouse, ws.onemindos.dev clients)"
+    # From A2 no account user without connection types may log in as a leaf; today only the
+    # leafnodes.authorization user leaf_tak can, so no current leaf uses onemind, sys or monitor.
+    connection_types: [STANDARD, WEBSOCKET]
     stage_b: *legacy_stage_b
   - user: leaf_tak
     account: ONEMIND
@@ -376,6 +393,12 @@ users:
     purpose: "Hermes leaf sidecar (own leaf credential instead of leaf_tak); proposals only, never confirm, no cmd.* except cmd.map.>"
     secret: {namespace: hermes, name: hermes-leaf-conf, user_key: "(inside leaf.conf)", password_key: "(inside leaf.conf)"}
     connection_types: [LEAFNODE]
+    sidecar:
+      server_name: hermes-legacy-leaf     # platform/hermes/agent/deployment.yaml nats-leaf container
+      account: OMOS
+      local_user: local                   # no password; the pod's NetworkPolicy blocks other pods
+      remote: "nats.nats.svc.cluster.local:7422"
+      ca_file: /etc/nats-ca/ca.crt
     publish:
       - "agents.*.hermes.>"
       - "cmd.map.>"

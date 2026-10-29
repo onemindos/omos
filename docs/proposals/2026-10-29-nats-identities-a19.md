@@ -18,8 +18,19 @@ used until it is ruled.
 | A19-P7 | Per-account JetStream limits | Live `ONEMIND` limits are all `-1` (nats-config read 2026-10-29); the server-level `max_file_store` is 45Gi | Set `ONEMIND` `max_file` from the A22 cap arithmetic once the stream caps merge; `CLIENT` and `AGENTS` stay without JetStream | `ONEMIND` `-1`; no JetStream for `CLIENT`/`AGENTS` |
 | A19-P8 | Mesh gateway forwarding to TAK Server | Decision 0004 #6: `MESH_TO_TAK_SERVER=false` by default (#551) | If enabled, add `tak.cot.inject` to `mesh-gateway` and `leaf-site-mac` and allow it in the checker (`scripts/nats_identities.py`, projector-only rule) | Not granted |
 | A19-P9 | Legacy subject `cmd.projector.{enable,disable}` (3 tokens; the grammar's commands have 4) | Live kill switch in `platform/omos/tak-projector.yaml` | Keep for the projector only; rename when the projector is rebuilt | Granted to `projector` (subscribe) |
+| A19-P10 | What stage B closes for the shared logins `onemind` and `leaf_tak`, and when the rest closes | Stage B denies only `cmd.{fleet,drone,robot,vehicle,mission,entity}.>`, `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` (`identities.yaml` `legacy_stage_b`). Still open until stage C: `cmd.projector.disable` (live kill switch, also reachable with the browser-exposed `ws.onemindos.dev` password), `cmd.ha.*`, `cmd.alert.*`, future command domains, and forged `tak.cot.out`, `tel.fleet.drone.sim-x1.*`, `evt.drone.sim-x1.*` (entity and policy consume them). The #554 migration step 3 ("deny `cmd.>` except `cmd.map.>` for every remaining shared user") says more than stage B does | (a) Move the projector toggle behind policy (`cmd.projector.>` published only by `policy` after a human confirm), then add `cmd.projector.>` to the stage-B deny list. (b) Add a stage B2 that denies `onemind` and `leaf_tak` `cmd.>` except `cmd.map.>`, plus `tak.cot.out`, `tel.fleet.>` and `evt.drone.>`, once the TAK leaf is on `leaf-tak` and the MAVLink bridge and mesh gateway are on their own users (check `connz?auth=1` and `leafz` first). (c) Stage C retires both logins | Stage B as listed; the open subjects are recorded in `platform/nats/IDENTITIES.md` "Limits" |
 
 ## Information only (no ruling needed)
+
+- **Hermes refusals are server permission violations at its sidecar.** A hub only filters a
+  leaf: it advertises just the subjects the leaf user may publish, so a forbidden publish
+  vanished on the spoke with no error and no log line (first permtest run). The rendered Hermes
+  `leaf.conf` (`nats_identities.py leaf-conf`) now gives the agent's local user the hub
+  allow-lists, so `cmd.fleet.drone.sim-x1.goto`, `tak.cot.inject` and every other denied subject
+  returns `Permissions Violation` to the agent and logs `Publish Violation` in the `nats-leaf`
+  container (`TestHermesLeaf`). The FEATURES A19 wording is met as written; no ruling needed.
+- **Legacy users get connection types from A2:** `onemind` STANDARD and WEBSOCKET, `sys` and
+  `monitor` STANDARD, so removing `leafnodes.authorization` does not let them open leaf links.
 
 - **Stage A2 needs a pod restart.** Leaf users carry permissions only as account users, and
   nats-server 2.14.2 cannot reload `leafnodes.authorization.users`. The runbook rolls the
