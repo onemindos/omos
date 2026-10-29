@@ -138,7 +138,7 @@ accounts {
       { user: carol, password: %q, permissions: {
           publish: { allow: ["svc.policy.>"] }, subscribe: { allow: ["_INBOX.>"] } } }
       { user: mallory, password: %q, permissions: {
-          publish: { allow: ["svc.policy.>"] }, subscribe: { allow: ["_INBOX.>"] } } }
+          publish: { allow: ["svc.policy.>"] }, subscribe: { allow: ["_INBOX.>"] } } }%s
     ]
     imports: [ { service: { account: ONEMIND, subject: "svc.policy.>" }, share: true } ]
   }
@@ -154,7 +154,7 @@ accounts {
   }
 }
 `, storeDir, pw["policy"], pw["entity"], pw["bridge"], pw["tasksvc"], pw["watch"], pw["other"], pw["admin"],
-		pw["zeus"], pw["alice"], pw["carol"], pw["mallory"], pw["hermes"], pw["rogue"])
+		pw["zeus"], pw["alice"], pw["carol"], pw["mallory"], roleUsersConf(pw), pw["hermes"], pw["rogue"])
 }
 
 var testDirectory = Directory{
@@ -168,6 +168,10 @@ var testDirectory = Directory{
 		// Mislabelled on purpose: the AGENTS account must still resolve it to an agent.
 		{Account: "AGENTS", User: "rogue", Kind: "user", ID: "user:rogue"},
 	},
+	// FEATURES J2: users placed in CLIENT by the auth callout. Same shape as
+	// platform/policy/configmap.yaml.
+	Callout: []CalloutAccount{{Account: "CLIENT", NamePrefix: "ak:",
+		Groups: []string{"onemind-newcomers", "onemind-viewers", "onemind-operators", "onemind-commanders", "onemind-admins"}}},
 }
 
 func testTuples() []Tuple {
@@ -200,6 +204,9 @@ func newEnv(t *testing.T) *env {
 	e := &env{t: t, pw: map[string]string{}, clock: &fakeClock{t: time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)},
 		conns: map[string]*nats.Conn{}, errs: map[string][]error{}, entities: map[string]map[string]any{}}
 	for _, u := range []string{"policy", "entity", "bridge", "tasksvc", "watch", "other", "admin", "zeus", "alice", "carol", "mallory", "hermes", "rogue"} {
+		e.pw[u] = randPW()
+	}
+	for _, u := range roleUsers {
 		e.pw[u] = randPW()
 	}
 	dir := t.TempDir()
@@ -342,6 +349,11 @@ func newEnv(t *testing.T) *env {
 		t.Fatal(err)
 	}
 	if err := e.eval.Write(testTuples()...); err != nil {
+		t.Fatal(err)
+	}
+	// FEATURES J2: the committed role grants, and the simulated drones in site "sim".
+	if err := e.eval.Write(append(loadRoleTuples(t), Tuple{User: "site:sim", Relation: "site", Object: "asset:sim-x1"},
+		Tuple{User: "site:sim", Relation: "site", Object: "asset:sim-x2"})...); err != nil {
 		t.Fatal(err)
 	}
 	e.authz = &swapAuthz{a: e.eval}

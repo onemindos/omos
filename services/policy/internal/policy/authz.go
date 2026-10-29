@@ -19,6 +19,10 @@ type CheckRequest struct {
 	Relation string         `json:"relation"`
 	Object   string         `json:"object"`
 	Context  map[string]any `json:"context,omitempty"`
+	// ContextualTuples hold for this Check only (OpenFGA contextual_tuples). The policy
+	// service sends a verified callout user's role groups this way (FEATURES J2), so group
+	// membership follows the Authentik token and needs no sync job.
+	ContextualTuples []Tuple `json:"contextual_tuples,omitempty"`
 }
 
 // Authorizer answers OpenFGA Check questions. Any error means "deny" to the caller
@@ -129,6 +133,16 @@ func splitObj(o string) (typ, id, rel string) {
 func (e *ModelEvaluator) Write(tuples ...Tuple) error {
 	e.mu.Lock()
 	defer e.mu.Unlock()
+	if err := e.validate(tuples); err != nil {
+		return err
+	}
+	e.tuples = append(e.tuples, tuples...)
+	return nil
+}
+
+// validate enforces the model's type restrictions (OpenFGA applies them to written and to
+// contextual tuples alike).
+func (e *ModelEvaluator) validate(tuples []Tuple) error {
 	for _, t := range tuples {
 		otype, _, _ := splitObj(t.Object)
 		td, ok := e.types[otype]
@@ -150,7 +164,6 @@ func (e *ModelEvaluator) Write(tuples ...Tuple) error {
 		if !allowed {
 			return fmt.Errorf("type restriction: %s cannot be %s of %s", t.User, t.Relation, t.Object)
 		}
-		e.tuples = append(e.tuples, t)
 	}
 	return nil
 }
@@ -161,10 +174,17 @@ func (e *ModelEvaluator) Check(_ context.Context, req CheckRequest) (bool, error
 	if e.down {
 		return false, errors.New("authorization store unreachable")
 	}
-	return e.check(req.User, req.Relation, req.Object, req.Context, 0)
+	ts := e.tuples
+	if len(req.ContextualTuples) > 0 {
+		if err := e.validate(req.ContextualTuples); err != nil {
+			return false, err
+		}
+		ts = append(append([]Tuple(nil), e.tuples...), req.ContextualTuples...)
+	}
+	return e.check(ts, req.User, req.Relation, req.Object, req.Context, 0)
 }
 
-func (e *ModelEvaluator) check(user, relation, object string, ctx map[string]any, depth int) (bool, error) {
+func (e *ModelEvaluator) check(ts []Tuple, user, relation, object string, ctx map[string]any, depth int) (bool, error) {
 	if depth > 25 {
 		return false, errors.New("resolution depth exceeded")
 	}
@@ -177,13 +197,13 @@ func (e *ModelEvaluator) check(user, relation, object string, ctx map[string]any
 	if !ok {
 		return false, nil
 	}
-	return e.eval(rw, user, relation, object, ctx, depth)
+	return e.eval(ts, rw, user, relation, object, ctx, depth)
 }
 
-func (e *ModelEvaluator) eval(rw rewrite, user, relation, object string, ctx map[string]any, depth int) (bool, error) {
+func (e *ModelEvaluator) eval(ts []Tuple, rw rewrite, user, relation, object string, ctx map[string]any, depth int) (bool, error) {
 	switch {
 	case rw.This != nil:
-		for _, t := range e.tuples {
+		for _, t := range ts {
 			if t.Object != object || t.Relation != relation {
 				continue
 			}
@@ -194,18 +214,18 @@ func (e *ModelEvaluator) eval(rw rewrite, user, relation, object string, ctx map
 				return true, nil
 			}
 			if ut, uid, urel := splitObj(t.User); urel != "" {
-				ok, err := e.check(user, urel, ut+":"+uid, ctx, depth+1)
+				ok, err := e.check(ts, user, urel, ut+":"+uid, ctx, depth+1)
 				if err != nil || ok {
 					return ok, err
 				}
 			}
 		}
 	case rw.ComputedUserset != nil:
-		return e.check(user, rw.ComputedUserset.Relation, object, ctx, depth+1)
+		return e.check(ts, user, rw.ComputedUserset.Relation, object, ctx, depth+1)
 	case rw.TupleToUserset != nil:
-		for _, t := range e.tuples {
+		for _, t := range ts {
 			if t.Object == object && t.Relation == rw.TupleToUserset.Tupleset.Relation {
-				ok, err := e.check(user, rw.TupleToUserset.ComputedUserset.Relation, t.User, ctx, depth+1)
+				ok, err := e.check(ts, user, rw.TupleToUserset.ComputedUserset.Relation, t.User, ctx, depth+1)
 				if err != nil || ok {
 					return ok, err
 				}
@@ -213,7 +233,7 @@ func (e *ModelEvaluator) eval(rw rewrite, user, relation, object string, ctx map
 		}
 	case rw.Union != nil:
 		for _, c := range rw.Union.Child {
-			ok, err := e.eval(c, user, relation, object, ctx, depth+1)
+			ok, err := e.eval(ts, c, user, relation, object, ctx, depth+1)
 			if err != nil || ok {
 				return ok, err
 			}
@@ -274,6 +294,13 @@ func (c *OpenFGAClient) Check(ctx context.Context, req CheckRequest) (bool, erro
 	}
 	if len(req.Context) > 0 {
 		body["context"] = req.Context
+	}
+	if len(req.ContextualTuples) > 0 {
+		keys := make([]map[string]string, 0, len(req.ContextualTuples))
+		for _, t := range req.ContextualTuples {
+			keys = append(keys, map[string]string{"user": t.User, "relation": t.Relation, "object": t.Object})
+		}
+		body["contextual_tuples"] = map[string]any{"tuple_keys": keys}
 	}
 	b, _ := json.Marshal(body)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodPost,

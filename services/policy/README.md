@@ -37,6 +37,7 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | Levels A0/A1 run at once (logged); A2/A3 need one human; A4 two distinct humans; A5 never | `duplicate_confirmation` for the same human twice |
 | Agents may propose; any agent identity calling confirm is refused (and the server also denies the publish) | `agent_cannot_confirm` |
 | Confirmation needs a verified human identity: the server-set `Nats-Request-Info` header from a `share: true` service import (CLIENT account). Same-account callers are recorded `actor_verified: false` and cannot confirm | `not_authorized` |
+| Role modes (FEATURES J2): a user the NATS auth callout placed in CLIENT is named `ak:<username>;<role groups>` by the server ([`services/auth-callout`](../auth-callout/README.md)); it resolves to `user:<username>` (`callout_accounts` in `principals.json`) and its role groups go to OpenFGA as contextual tuples `member group:<group>`, so a newcomer or viewer is not a proposer or approver of anything ([role grants](../../platform/security/openfga/onemind-roles.tuples.json)) | `not_authorized` |
 | An approval is bound to one `action_id` and its `params_hash` (SHA-256 of the RFC 8785 JCS form of `{action_type, action_version, target, params}`); a hash from any other action, or the wrong endpoint family | `conflict` |
 | An approval is used once: confirming an approved, dispatched or finished action | `replayed` |
 | No confirmation within `confirm_by` (120 s): the action expires | `expired` |

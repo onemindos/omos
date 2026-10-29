@@ -1,0 +1,122 @@
+# Authentik side of OneMind role modes (FEATURES J2), as an Authentik blueprint: the five role
+# groups, the `groups` claim mapping and the public PKCE OIDC client `onemind-xr` used by the L0
+# web client and remote Unreal clients. No secret: a public client has no client secret.
+#
+# INERT until the owner mounts it. platform-auth-callout (manual sync) creates this ConfigMap in
+# namespace auth; the Authentik worker reads it only after platform-auth-helm gets
+#   blueprints:
+#     configMaps:
+#       - onemind-xr-blueprint
+# in its Helm values (README.md step 5; the goauthentik chart mounts each listed ConfigMap under
+# /blueprints/mounted/ and the worker applies it). Do that only after this ConfigMap exists, or
+# the worker pod cannot start (missing volume).
+#
+# Live Authentik has no blueprints yet; the other providers are created by Sync-hook Jobs
+# (platform/ecosystem/resources/argocd-authentik-provider.yaml). This blueprint uses the same
+# names where they overlap: the scope mapping "OneMind groups" (same expression), so applying it
+# adopts the existing mapping instead of duplicating it.
+#
+# Groups use state `created`: created when missing, never modified afterwards, so members added
+# in the Authentik UI are kept. Nobody is added here; the owner adds himself to onemind-admins.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: onemind-xr-blueprint
+  namespace: auth
+  labels:
+    app.kubernetes.io/part-of: onemind-roles
+data:
+  onemind-xr.yaml: |
+    # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+    version: 1
+    metadata:
+      name: OneMind XR role modes
+      labels:
+        blueprints.goauthentik.io/description: "OneMind role groups and the onemind-xr OIDC client (FEATURES J2)"
+    entries:
+      # Role groups, lowest to highest (platform/security/roles/onemind-roles.json).
+      - model: authentik_core.group
+        state: created
+        identifiers: {name: onemind-newcomers}
+        attrs: {name: onemind-newcomers, attributes: {onemind_role: newcomer, onemind_rank: 1}}
+      - model: authentik_core.group
+        state: created
+        identifiers: {name: onemind-viewers}
+        attrs: {name: onemind-viewers, attributes: {onemind_role: viewer, onemind_rank: 2}}
+      - model: authentik_core.group
+        state: created
+        identifiers: {name: onemind-operators}
+        attrs: {name: onemind-operators, attributes: {onemind_role: operator, onemind_rank: 3}}
+      - model: authentik_core.group
+        state: created
+        identifiers: {name: onemind-commanders}
+        attrs: {name: onemind-commanders, attributes: {onemind_role: commander, onemind_rank: 4}}
+      - model: authentik_core.group
+        state: created
+        identifiers: {name: onemind-admins}
+        attrs: {name: onemind-admins, attributes: {onemind_role: admin, onemind_rank: 5}}
+
+      # Claim `groups` = the user's Authentik group names (same as the Argo CD Job's mapping).
+      - model: authentik_providers_oauth2.scopemapping
+        id: groups-mapping
+        identifiers: {name: OneMind groups}
+        attrs:
+          name: OneMind groups
+          scope_name: groups
+          expression: |
+            return {"groups": [group.name for group in request.user.ak_groups.all()]}
+
+      # Public PKCE client. RS256 signing key (the callout refuses HS256), hashed user ids as
+      # `sub` (used as the client's NATS inbox token), short access tokens: the NATS user the
+      # callout issues never outlives the token (and at most max_ttl_seconds, 1 h).
+      - model: authentik_providers_oauth2.oauth2provider
+        id: provider
+        identifiers: {name: OneMind XR}
+        attrs:
+          name: OneMind XR
+          client_type: public
+          client_id: onemind-xr
+          authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+          invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+          signing_key: !Find [authentik_crypto.certificatekeypair, [name, authentik Self-signed Certificate]]
+          sub_mode: hashed_user_id
+          issuer_mode: per_provider
+          include_claims_in_id_token: true
+          access_token_validity: minutes=15
+          refresh_token_validity: hours=8
+          grant_types: [authorization_code, refresh_token]
+          redirect_uris:
+            # Local development of the L0 web client (onemind-xr web/). The production URL is
+            # owner proposal J2-P4 (no hostname is chosen yet).
+            - {matching_mode: strict, url: "http://localhost:5173/auth/callback"}
+          property_mappings:
+            - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-openid]]
+            - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-profile]]
+            - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-offline_access]]
+            - !KeyOf groups-mapping
+
+      - model: authentik_core.application
+        id: app
+        identifiers: {slug: onemind-xr}
+        attrs:
+          name: OneMind XR
+          slug: onemind-xr
+          provider: !KeyOf provider
+          policy_engine_mode: any
+
+      # Only members of a OneMind role group may obtain a token for onemind-xr.
+      - model: authentik_policies.policybinding
+        identifiers: {target: !KeyOf app, group: !Find [authentik_core.group, [name, onemind-newcomers]], order: 10}
+        attrs: {enabled: true}
+      - model: authentik_policies.policybinding
+        identifiers: {target: !KeyOf app, group: !Find [authentik_core.group, [name, onemind-viewers]], order: 20}
+        attrs: {enabled: true}
+      - model: authentik_policies.policybinding
+        identifiers: {target: !KeyOf app, group: !Find [authentik_core.group, [name, onemind-operators]], order: 30}
+        attrs: {enabled: true}
+      - model: authentik_policies.policybinding
+        identifiers: {target: !KeyOf app, group: !Find [authentik_core.group, [name, onemind-commanders]], order: 40}
+        attrs: {enabled: true}
+      - model: authentik_policies.policybinding
+        identifiers: {target: !KeyOf app, group: !Find [authentik_core.group, [name, onemind-admins]], order: 50}
+        attrs: {enabled: true}

@@ -12,6 +12,7 @@ on:
       - services/schemas/command/**
       - services/schemas/envelope/**
       - platform/security/openfga/**
+      - platform/security/roles/**
       - .github/workflows/build-policy.yml
   pull_request:
     branches: [main]
@@ -22,6 +23,7 @@ on:
       - services/schemas/command/**
       - services/schemas/envelope/**
       - platform/security/openfga/**
+      - platform/security/roles/**
       - .github/workflows/build-policy.yml
   workflow_dispatch:
 permissions:

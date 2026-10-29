@@ -1,0 +1,32 @@
+# platform-auth-callout: the NATS auth callout for browser and remote clients (FEATURES J2) in
+# namespace onemind-core, from platform/auth-callout/, plus the Authentik blueprint ConfigMap
+# for the `onemind-xr` OIDC client (namespace auth; inert until the owner mounts it, README.md).
+# The onemind-core namespace already exists (platform/security/shared-namespaces.yaml).
+#
+# Manual sync only, and no resources-finalizer (deleting the Application deletes nothing).
+# Before the first sync (platform/auth-callout/README.md): the AUTH account and the
+# auth-callout user are live, the SealedSecrets auth-callout-runtime and auth-callout-keys
+# exist, and the image digest is pinned. The auth_callout block goes into the NATS config only
+# after this Deployment is Ready.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-auth-callout
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/auth-callout
+    directory:
+      recurse: false
+      exclude: "{*.md,*.conf,identities.fragment.yaml}"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onemind-core
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true

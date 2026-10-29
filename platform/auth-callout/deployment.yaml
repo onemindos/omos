@@ -1,0 +1,118 @@
+# NATS auth callout (FEATURES J2): answers $SYS.REQ.USER.AUTH for clients that log in with an
+# Authentik token (browsers over ws.onemindos.dev, remote Unreal). Stateless; two replicas in
+# one queue group so a restart does not block logins. Password and leaf logins never reach it
+# (README.md "What the callout touches").
+#
+# IMAGE: ghcr.io/onemindos/auth-callout is built by .github/workflows/build-auth-callout.yml on
+# main. The tag below is a placeholder until that first build: replace it with the built tag
+# and PIN THE DIGEST (sha-<commit>@sha256:..., from the run's image-digest artifact) before the
+# first manual sync.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-callout
+  namespace: onemind-core
+  labels:
+    app: auth-callout
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-callout
+  template:
+    metadata:
+      labels:
+        app: auth-callout
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: auth-callout
+          image: ghcr.io/onemindos/auth-callout:sha-pending-first-build  # pin digest after first CI build
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: health
+              containerPort: 8080
+          env:
+            - name: NATS_URL
+              value: tls://nats.nats.svc.cluster.local:4222
+            - name: NATS_CA_FILE
+              value: /etc/nats-trust/ca.crt
+            - name: ROLES_FILE
+              value: /config/roles.json
+            - name: CALLOUT_ISSUER_SEED_FILE
+              value: /keys/issuer.seed
+            - name: CALLOUT_XKEY_SEED_FILE
+              value: /keys/xkey.seed
+            - name: OIDC_ISSUER
+              valueFrom: {configMapKeyRef: {name: auth-callout, key: OIDC_ISSUER}}
+            - name: OIDC_AUDIENCE
+              valueFrom: {configMapKeyRef: {name: auth-callout, key: OIDC_AUDIENCE}}
+            - name: OIDC_JWKS_URL
+              valueFrom: {configMapKeyRef: {name: auth-callout, key: OIDC_JWKS_URL}}
+          # NATS_USER and NATS_PASSWORD (the `auth-callout` user in account AUTH): SealedSecret
+          # auth-callout-runtime, created by the owner (README.md). Not in Git as plaintext.
+          envFrom:
+            - secretRef:
+                name: auth-callout-runtime
+          resources:
+            requests:
+              cpu: 10m
+              memory: 24Mi
+            limits:
+              cpu: 250m
+              memory: 64Mi
+          startupProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /healthz, port: health}
+            periodSeconds: 20
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: keys
+              mountPath: /keys
+              readOnly: true
+            - name: nats-trust
+              mountPath: /etc/nats-trust
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: auth-callout
+            items:
+              - key: roles.json
+                path: roles.json
+        # Account seed (SA...) and curve seed (SX...): SealedSecret auth-callout-keys (README.md).
+        - name: keys
+          secret:
+            secretName: auth-callout-keys
+            items:
+              - key: issuer.seed
+                path: issuer.seed
+              - key: xkey.seed
+                path: xkey.seed
+        - name: nats-trust
+          configMap:
+            name: onemind-nats-trust
