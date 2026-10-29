@@ -26,7 +26,7 @@ _UNSET = object()
 
 def build(key, verb="rtl", asset="sim-tb1", data=None, now=None, ttl=timedelta(seconds=30), level=None,
           approvers=None, status="approved", simulated=True, source=C.POLICY_SOURCE, hash_data=_UNSET,
-          cid=None, task_id="", no_sig=False, kid="policy-test", mutate=None, cls="robot", subject_verb=None):
+          cid=None, task_id="", params_hash=None, no_sig=False, kid="policy-test", mutate=None, cls="robot", subject_verb=None):
     now = now or datetime.now(timezone.utc)
     data = {} if data is None else data
     hd = data if hash_data is _UNSET else hash_data
@@ -41,7 +41,7 @@ def build(key, verb="rtl", asset="sim-tb1", data=None, now=None, ttl=timedelta(s
         "expires_at": rfc(now + ttl), "simulated": simulated,
         "approval": {"required": True, "status": status, "approver": approvers[-1] if approvers else "",
                      "reason": "", "level": level,
-                     "params_hash": C.params_hash("asset." + verb, 1, cls, asset, hd),
+                     "params_hash": params_hash or C.params_hash("asset." + verb, 1, cls, asset, hd),
                      "approvals": [{"by": a, "at": rfc(now - timedelta(seconds=1)), "step": i + 1}
                                    for i, a in enumerate(approvers)]},
         "policy": {"decision_id": "dec-" + uuid.uuid4().hex[:8], "allowed": True},

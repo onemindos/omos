@@ -16,11 +16,13 @@ on:
     paths:
       - ".github/workflows/test-ros2-bridge.yml"
       - "services/bridge/bridges/ros2/**"
+      - "services/schemas/command/testdata/params-hash-vectors.json"
   push:
     branches: [main]
     paths:
       - ".github/workflows/test-ros2-bridge.yml"
       - "services/bridge/bridges/ros2/**"
+      - "services/schemas/command/testdata/params-hash-vectors.json"
 
 permissions:
   contents: read

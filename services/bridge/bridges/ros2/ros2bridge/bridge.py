@@ -384,6 +384,9 @@ class Bridge:
             return
         if not res.signed:
             log.warning("[%s] command %s accepted without a signature (SIG_REQUIRED=false)", self.cfg.source, env["id"])
+            if res.task_bound:
+                log.warning("[%s] command %s is task-bound (%s): its params_hash is the task action's and nothing "
+                            "binds data to the approval without a signature", self.cfg.source, env["id"], env.get("task_id"))
         sig_ok = res.signed
         try:
             target = self._precheck(res, now)

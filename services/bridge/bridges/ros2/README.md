@@ -49,7 +49,7 @@ and `simulated` say sim; `source` is `service:policy`; Ed25519 signature over th
 envelope without `sig` from a key in `POLICY_PUBKEYS`; `ts`/`expires_at` fresh and at most
 `CMD_MAX_TTL` apart; allowing policy decision; `approval.status = approved` at a level at or
 above the verb's, with enough distinct `user:` approvers (an agent approver is
-`agent_cannot_confirm`); `params_hash` equals the hash of the delivered `data`; unseen command id.
+`agent_cannot_confirm`); `params_hash` equals the `asset.{verb}` hash of the delivered `data` when there is no `task_id`; a task-bearing command carries the `task.assign`/`task.abort` hash and is checked for form only, the signature binding it (D2-P1; shared vectors `services/schemas/command/testdata/params-hash-vectors.json`, `tests/test_params_hash_vectors.py`); unseen command id.
 Then the bridge's own checks: robot heard within `LINK_TIMEOUT` (not for `estop`), e-stop latch,
 and its own keep-in/keep-out geofence (the #550 file format, fail closed with no keep-in zone)
 on the target and on the straight line from the robot to it (keep-out only; a zone the robot is

@@ -79,6 +79,8 @@ def _level_rank(level) -> int:
 
 
 _UUID = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+_TASK_ID = re.compile(r"^tsk-[0-9a-z][0-9a-z_-]{0,63}$")
+_HASH = re.compile(r"^sha256:[0-9a-f]{64}$")
 _RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$")
 
 
@@ -174,6 +176,9 @@ class Result:
     signed: bool
     params_hash: str
     expires_at: datetime
+    # The command carries task_id, so params_hash is the task action's hash and was checked
+    # for form only; without a signature nothing binds the data to the approval.
+    task_bound: bool = False
 
 
 class Verifier:
@@ -288,16 +293,31 @@ class Verifier:
         av = env.get("action_version", 1)
         if not isinstance(av, int) or isinstance(av, bool):
             raise Refusal(SCHEMA_INVALID, "action_version must be an integer")
-        try:
-            h = params_hash("asset." + verb.name, av, cfg.asset_class, asset, data)
-        except (TypeError, ValueError) as e:
-            raise Refusal(SCHEMA_INVALID, f"params_hash: {e}") from None
-        if a.get("params_hash") != h:
-            raise Refusal(NOT_AUTHORIZED, "params_hash does not match the approved parameters")
+        # approval.params_hash is the hash of the approved action (asset-command.md sections
+        # 4-5, 6.3; mission-task.md section 6 step 6). Without task_id that action is
+        # asset.{verb} over this data, so the bridge recomputes it. With task_id it is
+        # task.assign or task.abort over the task parameters, which the command does not carry:
+        # the bridge checks the form only and relies on the signature, which covers data and
+        # approval (decision HASH, D2-P1, 2026-10-29).
+        task_id = env.get("task_id")
+        task_bound = task_id not in (None, "")
+        if task_bound:
+            if not isinstance(task_id, str) or not _TASK_ID.match(task_id):
+                raise Refusal(SCHEMA_INVALID, f"task_id {task_id!r} is not a tsk- id")
+            h = a.get("params_hash")
+            if not isinstance(h, str) or not _HASH.match(h):
+                raise Refusal(SCHEMA_INVALID, "params_hash is not sha256:{64 hex}")
+        else:
+            try:
+                h = params_hash("asset." + verb.name, av, cfg.asset_class, asset, data)
+            except (TypeError, ValueError) as e:
+                raise Refusal(SCHEMA_INVALID, f"params_hash: {e}") from None
+            if a.get("params_hash") != h:
+                raise Refusal(NOT_AUTHORIZED, "params_hash does not match the approved parameters")
 
         # Nonce: refuse a command id seen before; remember it until it expires.
         self._remember(env["id"], exp, now)
-        return Result(verb, params, signed, h, exp)
+        return Result(verb, params, signed, h, exp, task_bound)
 
     def _check_sig(self, env: dict) -> None:
         sig = env["sig"]
