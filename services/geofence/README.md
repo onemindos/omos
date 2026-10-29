@@ -27,8 +27,8 @@ outages.
 | out | KV `geofences` | | value per D1-P1: what the projector (PR #563 A6-P2) and the policy service (PR #554 POL-9) read |
 | out | `evt.map.geofence.{id}.{enter\|exit}` | `MISSION` | doctrine §9.7; `Nats-Msg-Id` deterministic |
 | out | `evt.map.geofence.{created\|updated\|deleted\|refused}` | `MISSION` | the command result (four tokens; zone id in `data.zone_id`), `causation` = command id, `data.action_id` (D1-P2) |
-| out | `evt.so.alert.{raised\|updated\|resolved}` | `EVT` | the alert stream (D1-P3); `Nats-Msg-Id: {alert_id}:{seq}` |
-| rpc | `svc.geofence.alerts` | | `{kind?, entity_id?, feed?}` → `{v, alerts: [...]}` (open alerts) |
+| out | `evt.so.alert.{raised\|updated\|resolved}` | `EVT` | the alert stream (D1-P3); `Nats-Msg-Id: {alert_id}:{seq}`; clients follow it live through the CLIENT stream import (#562 A19-P11) |
+| rpc | `svc.geofence.alerts` | | `{kind?, entity_id?, feed?}` → `{v, alerts: [...]}` (open alerts); the clients' snapshot before the live facts. The J2 newcomer role (#565) gets neither |
 
 ## Zones
 

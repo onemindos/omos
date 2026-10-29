@@ -92,7 +92,10 @@ the policy service. Rejected.
 `.resolved`; data `services/schemas/alert/alert.v1.schema.json` (`alert_id`, `alert_kind`
 `geofence|stale_asset|feed_outage`, `level` `advisory|caution|warning`, `state`, `about`,
 `reason`, `seq`). `Nats-Msg-Id: {alert_id}:{seq}`. `EVT` stores `evt.so.>` (90 d, 2 min dedup)
-today. Clients read open alerts with `svc.geofence.alerts` or replay `evt.so.alert.>`.
+today. Clients (CLIENT account, no JetStream) take the open set from `svc.geofence.alerts` and
+then follow the live facts on `evt.so.alert.>` (core subscription through the CLIENT stream
+import of #562 A19-P11); they never read `ent.alert.*` (onemind-xr INT F-ALERT, L0 web
+`bus/alertfeed.ts`). Services with JetStream may replay `EVT`.
 
 **Why.** It is doctrine §2's own example form (`evt.so.task.created`: domain `so`, entity type,
 past-tense event) and the only option stored today, the same reasoning that chose
