@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LAYER 3 — SHARE (gated TAK projector)                          sync-wave: "6"
+# ─────────────────────────────────────────────────────────────────────────────
+# platform-omos-projector: the AOI-gated TAK projector (FEATURES A6), namespace omos.
+#
+# Covers: platform/omos/projector/ (Deployment only; it reuses the omos-nats-creds
+# SealedSecret that platform-omos applies).
+#
+# MANUAL SYNC, zero retries. Do not sync until the prerequisites at the top of
+# platform/omos/projector/deployment.yaml are met (ENT live and the entity service running,
+# first image build and digest pin). Re-enable automation only after a first rollout has
+# been observed.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-omos-projector
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/omos/projector
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: omos
+  syncPolicy:
+    retry:
+      limit: 0

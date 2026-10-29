@@ -29,6 +29,7 @@ Go services monorepo absorbed from the former `omos-services` repo (merged
 | **omd** | `omd/` | OneMind Daemon — runs on every node, supervises local agent harnesses |
 | **entity** | `entity/` | Entity service (Go): fuses observations into `ent.{entity_type}.{entity_id}.state` in `ENT` |
 | **layer** | `layer/` | Layer service (Go): `svc.layer.snapshot`/`watch` over `ENT`, layer manifests and cells in KV `world-state`, site status in KV `fleet-state` |
+| **projector** | `projector/` | TAK projector (Go, FEATURES A6): `ENT` to CoT on `tak.cot.inject` (or `tak.cot.mesh.tx` at a site) behind the AOI, marking, egress and person gates |
 | **bridge** | `bridge/` | Universal protocol bridge (MAVLink, MQTT, HA, TAK, webhook) → NATS |
 | **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
 | **agents/meta** | `agents/meta/` | Meta agent service |

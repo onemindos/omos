@@ -10,8 +10,11 @@ data:
     omos-tak-projector — unified NATS → CoT → TAK bridge
 
     Subscribes to:
-      1. ent.*.*.state   (core NATS — ORP fused entity states)
-      2. intel.>         (JetStream durable consumer — intel events)
+      1. intel.>         (JetStream durable consumer — intel events)
+      2. ent.*.*.state   (core NATS) ONLY when ENT_PROJECTION=true. Default off: fused
+         entities go to TAK through the gated projector (services/projector,
+         platform/omos/projector, FEATURES A6), which applies egress_tak, the marking
+         gate, person exclusion and the AOI filter. This path applies none of them.
 
     Publishes CoT XML to tak.cot.inject which the NatsBridgePlugin fans
     out to all TAK clients (CloudTAK, iTAK, ATAK, WebTAK).
@@ -47,6 +50,7 @@ data:
     INJECT_SUBJ   = os.getenv("TAK_INJECT_SUBJECT",  "tak.cot.inject")
     TAK_GROUP     = os.getenv("TAK_GROUP",            "__ANON__")
     MIN_INTERVAL  = float(os.getenv("MIN_INTERVAL_SEC", "5"))
+    ENT_PROJECTION = os.getenv("ENT_PROJECTION", "false").lower() == "true"
 
     XML_DECLARATION = b'<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
     W3C_DT = "%Y-%m-%dT%H:%M:%SZ"
@@ -303,7 +307,8 @@ data:
         global _enabled
 
         LOG.info("omos-tak-projector (unified) → %s [group=%s]", INJECT_SUBJ, TAK_GROUP)
-        LOG.info("  subscriptions: ent.*.*.state (core) + intel.> (JetStream durable)")
+        LOG.info("  subscriptions: intel.> (JetStream durable)%s",
+                 " + ent.*.*.state (core)" if ENT_PROJECTION else "")
 
         tls_ctx = ssl.create_default_context()
         tls_ctx.check_hostname = False
@@ -412,9 +417,13 @@ data:
         await nc.subscribe("cmd.projector.disable", cb=handle_disable)
         await nc.subscribe("cmd.projector.enable",  cb=handle_enable)
 
-        # Subscribe: entity states (core NATS — no JetStream)
-        await nc.subscribe("ent.*.*.state", cb=entity_handler)
-        LOG.info("subscribed: ent.*.*.state (core NATS)")
+        # Subscribe: entity states (core NATS — no JetStream). Off by default: the gated
+        # projector (FEATURES A6) owns ent.*.*.state -> tak.cot.inject.
+        if ENT_PROJECTION:
+            await nc.subscribe("ent.*.*.state", cb=entity_handler)
+            LOG.info("subscribed: ent.*.*.state (core NATS, ungated)")
+        else:
+            LOG.info("ent.*.*.state not projected here (ENT_PROJECTION=false; see omos-tak-projector-gated)")
 
         # Subscribe: intel events (JetStream durable consumer)
         js = nc.jetstream()
@@ -486,6 +495,11 @@ spec:
               value: "__ANON__"
             - name: MIN_INTERVAL_SEC
               value: "5"
+            # Fused entities are projected by omos-tak-projector-gated (FEATURES A6). Do not
+            # set "true" while that one runs: this path ignores egress_tak, markings, person
+            # exclusion and AOIs.
+            - name: ENT_PROJECTION
+              value: "false"
           volumeMounts:
             - name: script
               mountPath: /app
