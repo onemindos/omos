@@ -15,7 +15,10 @@ through `platform-hermes-fresh`, with new storage and no imported agent state or
 operational credentials. Source and isolated image smoke checks are prepared;
 cluster rollout, private access and model sign-in require live acceptance. This
 does not mark the broader agent migration or Phase 8 complete. See
-[`fresh Hermes`](platform/hermes/fresh/README.md); deployment PR records live evidence.
+[`fresh Hermes`](platform/hermes/onemind-hermes/README.md); deployment PR records live evidence.
+2026-10-29: renamed to `onemind-hermes` (Application `platform-onemind-hermes`,
+persona Legacy as a single soul) with new retain-class storage and hardened
+initial config; the `hermes-fresh` resources are orphaned pending owner cleanup.
 
 2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
 and sanitized readiness collector for the owner's Paperclip status-report task.

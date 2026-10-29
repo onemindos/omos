@@ -72,9 +72,30 @@ proxy_config:
     litellm_params:
       model: ollama/bge-m3
       api_base: http://onemind-cpu-model.onemind-ai.svc.cluster.local:11434
+  # MCP gateway (platform/hermes/mcp/HUB.md). Servers are declared here (GitOps), not in the
+  # UI/DB. A non-admin key reaches a server only through object_permission.mcp_servers (or a
+  # team/access-group grant); keep allow_all_keys false so new and existing keys get nothing
+  # by default. Admin keys (master key, proxy_admin) still see every server.
+  mcp_servers:
+    # Server names must not contain "-" (MCP_TOOL_PREFIX_SEPARATOR); tools appear as onemind-<tool>.
+    onemind:
+      # Pinned so object_permission grants keep matching if url/auth fields change.
+      server_id: onemind
+      description: OneMind read-only cluster app adapters (services/onemind-mcp, platform/hermes/mcp)
+      # Host:port must stay in onemind-mcp's ONEMIND_ALLOWED_HOSTS.
+      url: http://onemind-mcp.hermes.svc.cluster.local:8000/mcp
+      transport: http
+      auth_type: bearer_token
+      # Optional env from Secret litellm-mcp-upstreams (extraEnvVars below). Unset → no upstream
+      # auth → onemind-mcp answers 401; the proxy itself keeps serving models.
+      auth_value: os.environ/ONEMIND_MCP_TOKEN
+      allow_all_keys: false
+      available_on_public_internet: false
   general_settings:
     master_key: os.environ/PROXY_MASTER_KEY
     store_model_in_db: true
+    # A key without its own mcp_servers list does not inherit its team's MCP servers.
+    require_key_mcp_access_defined: true
   router_settings:
     fallbacks:
     - hermes-agent: [local-tools]
@@ -94,6 +115,14 @@ serviceMonitor:
     release: monitoring
 envVars:
   DATABASE_CONNECTION_POOL_LIMIT: '10'
+# Upstream MCP credentials. optional: a missing Secret must not block proxy rollouts.
+extraEnvVars:
+- name: ONEMIND_MCP_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: litellm-mcp-upstreams
+      key: ONEMIND_MCP_TOKEN
+      optional: true
 migrationJob:
   hooks:
     helm:

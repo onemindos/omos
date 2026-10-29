@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hermes-fresh
+  name: onemind-hermes
   namespace: hermes
   labels:
-    app.kubernetes.io/name: hermes-fresh
-    onemind.io/agent: fresh
+    app.kubernetes.io/name: onemind-hermes
+    onemind.io/agent: legacy
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: hermes-fresh
+      app.kubernetes.io/name: onemind-hermes
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: hermes-fresh
-        onemind.io/agent: fresh
+        app.kubernetes.io/name: onemind-hermes
+        onemind.io/agent: legacy
     spec:
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 60
@@ -74,7 +74,7 @@ spec:
             - secretRef:
                 name: hermes-dashboard-auth
             - secretRef:
-                name: hermes-fresh-runtime
+                name: onemind-hermes-runtime
           env:
             - name: HERMES_HOME
               value: /opt/data
@@ -116,7 +116,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: hermes-fresh-data
+            claimName: onemind-hermes-data
         - name: defaults
           configMap:
-            name: hermes-fresh-defaults
+            name: onemind-hermes-defaults

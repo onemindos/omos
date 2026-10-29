@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: hermes-fresh
+  name: onemind-hermes
   namespace: hermes
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: hermes-fresh
+      app.kubernetes.io/name: onemind-hermes
   policyTypes: [Ingress, Egress]
   ingress:
     - from:
@@ -26,6 +26,18 @@ spec:
       ports:
         - {protocol: UDP, port: 53}
         - {protocol: TCP, port: 53}
+    # LiteLLM in onemind-ai is the planned MCP hub (and model gateway). The
+    # destination also needs a matching ingress rule in its litellm-clients policy.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: onemind-ai
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: litellm
+              app.kubernetes.io/instance: litellm
+      ports:
+        - {protocol: TCP, port: 4000}
     - to:
         - ipBlock:
             cidr: 0.0.0.0/0

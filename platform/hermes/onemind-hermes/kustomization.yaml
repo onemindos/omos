@@ -10,6 +10,6 @@ resources:
   - runtime.sealedsecret.yaml
   - backup.sealedsecret.yaml
 configMapGenerator:
-  - name: hermes-fresh-defaults
+  - name: onemind-hermes-defaults
     files:
       - config.yaml=config.defaults.yaml

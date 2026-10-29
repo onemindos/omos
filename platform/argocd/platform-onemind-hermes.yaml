@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-hermes-fresh
+  name: platform-onemind-hermes
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '3'
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/onemindos/omos.git
     targetRevision: main
-    path: platform/hermes/fresh
+    path: platform/hermes/onemind-hermes
   destination:
     server: https://kubernetes.default.svc
     namespace: hermes

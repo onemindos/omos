@@ -105,7 +105,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-ops` | ops | `health-keeper` read-only cluster observer (every 5 minutes). Logs only, it does not alert | none | Git | internal | Argo |
 | `ecosystem-velero` | velero | Velero (chart 12.2.1) and the `velero-onemind-platform` schedule | backups in Spaces | n/a | internal | Argo |
 | `platform-legacy` | hermes | Hermes "Legacy" agent (`nousresearch/hermes-agent`, NATS leaf sidecar) and bridge secrets | 25 GiB PVC (agent home, state.db) | `VolSync` | `hermes-agent` dashboard tailnet | Argo |
-| `platform-hermes-fresh` | hermes | Independent vanilla Hermes v0.22.5; launch source prepared, runtime acceptance in deployment PR | New 25 GiB `hermes-fresh-data`; no Legacy import | Separate VolSync/Restic prefix; restore acceptance pending | `hermes-fresh` dashboard tailnet | Argo |
+| `platform-onemind-hermes` | hermes | `onemind-hermes`: new Hermes v0.22.5 instance (persona Legacy, single soul), replaces the `hermes-fresh` launch; runtime acceptance in deployment PR. The orphaned `hermes-fresh` resources await owner-approved cleanup (`platform/hermes/onemind-hermes/README.md`) | New 25 GiB `onemind-hermes-data` (`do-block-storage-retain`); no Legacy import | `VolSync` to its own Restic prefix; restore acceptance pending | `onemind-hermes` dashboard tailnet | Argo |
 
 ### Helm-CLI releases (tier 1)
 
