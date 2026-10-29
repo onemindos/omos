@@ -31,6 +31,8 @@ metadata:
   name: redpanda-connect-pipelines
   namespace: omos
 data:
+  # Legacy pipeline bodies (unchanged by A1) have lines over 200 characters.
+  # yamllint disable rule:line-length
   feed-mta.yaml: |
     input:
       generate:
@@ -116,6 +118,7 @@ data:
         tls:
           enabled: true
           skip_cert_verify: true
+  # yamllint enable rule:line-length
   feed-mta-grammar.yaml: |
     # feed-mta-grammar — MTA Metro-North + LIRR GTFS-RT vehicle positions as raw observations.
     #
@@ -520,6 +523,7 @@ data:
                 tls:
                   enabled: ${NATS_TLS_ENABLED:true}
                   skip_cert_verify: true
+  # yamllint disable rule:line-length
   feed-ships.yaml: |
     input:
       websocket:
@@ -634,6 +638,7 @@ data:
         tls:
           enabled: true
           skip_cert_verify: true
+# yamllint enable rule:line-length
 ---
 apiVersion: v1
 kind: ConfigMap
