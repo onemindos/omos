@@ -28,6 +28,7 @@ Go services monorepo absorbed from the former `omos-services` repo (merged
 | **task-engine** | `task-engine/` | NATS-native task orchestration — create, dispatch, track tasks |
 | **omd** | `omd/` | OneMind Daemon — runs on every node, supervises local agent harnesses |
 | **entity** | `entity/` | Entity service (Go): fuses observations into `ent.{entity_type}.{entity_id}.state` in `ENT` |
+| **geofence** | `geofence/` | Geofence and alert service (Go): KV `geofences` writer, `evt.map.geofence.*` crossings, `evt.so.alert.*` alerts |
 | **bridge** | `bridge/` | Universal protocol bridge (MAVLink, MQTT, HA, TAK, webhook) → NATS |
 | **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
 | **agents/meta** | `agents/meta/` | Meta agent service |

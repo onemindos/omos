@@ -1,0 +1,19 @@
+# Trusted policy public keys for omos-geofence-service (FEATURES D1). PUBLIC keys only: the
+# service verifies the Ed25519 `sig` on every cmd.map.geofence.* command with them and refuses
+# any zone write that the policy service did not sign (zone.* actions are level A2).
+#
+# File name = key id (`sig.kid`) + ".pem". The policy service signs with kid policy-2026-10
+# (platform/policy/deployment.yaml, PR #554). Add its public half before the first sync:
+#   openssl pkey -in policy-signing.pem -pubout      # run where the owner created the key
+# and paste the "-----BEGIN PUBLIC KEY-----" block as the value of policy-2026-10.pem below.
+# Until a key is present the service exits at start (fail closed), so it can never accept an
+# unsigned zone write. Key rotation: add the new kid file, roll policy, then remove the old one.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-geofence-policy-keys
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: omos-geofence-service
+    app.kubernetes.io/part-of: omos-platform
+data: {}

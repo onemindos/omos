@@ -184,6 +184,10 @@ applications:
     apps:
     - onemind_core
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-omos-geofence:
+    apps:
+    - onemind_core
+    reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
   platform-onetak:
     apps:
     - mediamtx
