@@ -20,7 +20,7 @@ in evidence files on onemind-xr `run/m0`:
 | PR | Proposal file |
 |---|---|
 | #555 `feat/stream-caps` | `docs/proposals/2026-10-29-stream-caps.md` |
-| #557 `feat/agent-eval-redteam` (on #554) | adds POL-16 … POL-20 to #554's `docs/proposals/2026-10-29-policy-service-owner-proposals.md` |
+| #557 `feat/agent-eval-redteam` (on #554) | adds POL-16 … POL-20 to its copy of #554's `docs/proposals/2026-10-29-policy-service-owner-proposals.md` (written "#557 POL-16" here; the number clashes with #554's own POL-16, see contradictions) |
 | #558 `feat/feed-grammar-fixes` | `docs/proposals/2026-10-29-feed-grammar-cutover.md` |
 | #559 `feat/mediamtx-video` | `docs/proposals/2026-10-29-video-k1-k9.md` |
 | #560 `feat/tak-server-leg` | `docs/proposals/2026-10-29-tak-server-leg.md` |
@@ -35,6 +35,7 @@ in evidence files on onemind-xr `run/m0`:
 | #569 `feat/geofence-alerts` (on #552) | `docs/proposals/2026-10-29-geofence-alert-service.md` |
 | onemind-xr #5 `run/m4-web` | onemind-xr `docs/evidence/M4/WEB/OWNER-PROPOSALS.md` (WEB-P1 … WEB-P9) |
 | onemind-xr #4 `run/m4-client` | onemind-xr `docs/evidence/M4/UE/OWNER-STEPS.md`, "Owner proposals from this lane" (UE-P1 … UE-P6) |
+| onemind-xr #3 `run/m2-client` | onemind-xr `docs/evidence/M2/B/EVIDENCE.md`, "Owner proposals" (B-P1 … B-P9); the `svc.cot.send` body is `client/OneMind/Docs/svc-cot-send.md` on the client branches |
 | integration pass | [integration-resolutions.md](integration-resolutions.md) (INT-R1 … INT-R4) |
 
 ## Mapping
@@ -108,7 +109,7 @@ The columns are the same as above. "INT-Rn" means the item is ruled once, in
 | #569 D1-P6 NATS user `geofence` | permissions | — (#562 layout) | in PR |
 | #569 D1-P7 zone verb `remove` (canonical), `delete` (alias) | verb | doctrine §9.7 | here (tier 2) |
 | #569 D1-P8 zones never watch people | stop line | — | in PR |
-| #568 D2-P1 `params_hash` on task-dispatched asset commands | payload | INT-R1 | INT-R1 |
+| #568 D2-P1 `params_hash` on task-dispatched asset commands (#554 records it as #554 POL-16) | payload | INT-R1: the approved action's own hash, carried by #554 `f4519b17`, #550 `2b724093`, #566 `44de8068`; the #568 patch is not needed | INT-R1 |
 | #568 D2-P2, D2-P3, D2-P8 … D2-P13 arrival rule, `status_version`, defaults, parked placeholder | service | — (D2-P3 closes #550 P7) | in PR |
 | #568 D2-P4 `svc.mission.{get\|list\|report\|apply}`, refusals on `evt.mission.{id}.rejected` | subject names | ONT-P11 (domain); names inside the grammar | here (tier 2) |
 | #568 D2-P5 NATS user `mission`; exports to CLIENT and AGENTS | permissions | INT-R3 (exports) | in PR, INT-R3 |
@@ -122,7 +123,7 @@ The columns are the same as above. "INT-Rn" means the item is ruled once, in
 | #567 I1-P6 NATS user `agentops`, one OpenFGA tuple | permissions | — | in PR (tier 1 for #567) |
 | #567 I1-P7 watch definitions stay in Git | information | ONT-P9 | here (information) |
 | #566 H3-P1 robot verbs, latched `estop`, `estop_release` A4 | verbs | BUS-P2 (SL5 list) | in PR |
-| #566 H3-P2 shared command vectors | tests | INT-R1 | INT-R1 |
+| #566 H3-P2 shared command vectors | tests | INT-R1: `services/schemas/command/testdata/params-hash-vectors.json`, identical on #554, #550, #566 | INT-R1 |
 | #566 H3-P4 `capabilities` and `meta.kind` | payload | INT-R2 | INT-R2 |
 | #566 H3-P3, H3-P5 … H3-P8 map frame, robot users, edge only, Nav2 keep-out, CI e2e | service | — | in PR |
 | #565 J2-P1 … J2-P8 auth callout order, user-name groups, roles, token lifetime | accounts | — (no subject; J2-P3 sits next to I2-P5) | in PR |
@@ -149,13 +150,14 @@ The columns are the same as above. "INT-Rn" means the item is ruled once, in
 | #562 A19-P8 `tak.cot.inject` for the mesh gateway only if forwarding is on | permissions | CP-2 | here (with CP-2) |
 | #562 A19-P9 legacy `cmd.projector.{enable\|disable}` | subject | CP-1, BUS-P4 | here (with CP-1) |
 | #562 A19-P1, A19-P3, A19-P5 … A19-P7, A19-P10 Hermes account, watch replies, inboxes, agent delegation, JetStream limits, stage B | accounts | — | in PR |
+| #562 A19-P11 CLIENT service imports (`svc.mission.{get|list|report}`, `svc.geofence.alerts`, `svc.registry.video.>`, `svc.tak.mission.>`) and read-only stream imports (`evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`, `tel.feed.*.status`, `tak.cot.out`, `tak.cot.mesh.rx`); in the A19 working copy, not pushed on 2026-10-29 | accounts | INT-R3 (stream imports: open contradiction) | INT-R3 |
 | #555 A22-P1 `COT` from 30 days to 72 h (**removes data**) | stream | BUS-P10 neighbourhood | in PR (owner sign-off) |
 | #555 A22-P2 `CMD` 365 d, 512 MiB, `discard: old` for now | stream | ONT-P7 (corrects its `discard: new`) | here (with ONT-P7) |
 | #555 A22-P3 new `DET` stream | stream | ONT-P3 | here (with ONT-P3) |
 | #555 A22-P4 `INTEL` dedup window to 1 h | stream setting | — (#553 A0-7) | in PR |
 | #555 A22-P5 `GEO` to 7 days | stream | BUS-P10 | here (with BUS-P10) |
 | #560 A21-P1 … A21-P6 plugin rebuild, `tak-client` user, single producer of `tak.cot.out`, rotation, cot-tap removal, TAK groups | service | — (no new subject) | in PR |
-| #557 POL-16 … POL-20 rate limit, text stop line, refused confirm of an unknown action, forbidden names, header forging | policy | — (POL-18 rules with POL-1; POL-20 with A19-P1) | in PR (#554) |
+| #557 POL-16 … #557 POL-20 rate limit (#557 POL-16, not #554's POL-16 = D2-P1), text stop line, refused confirm of an unknown action, forbidden names, header forging | policy | — (#557 POL-18 rules with POL-1; #557 POL-20 with A19-P1); renumber to POL-21 … POL-25 | in PR (#554) |
 | WEB-P1 zone writes through policy | catalogue | D1-P4 | in PR (#554) |
 | WEB-P2 CLIENT subscriptions | accounts | INT-R3 | INT-R3 |
 | WEB-P3 dry run authorizes before preconditions, or a `can` probe on `svc.policy.check` | payload | — (POL-11) | in PR (#554) |
@@ -171,6 +173,12 @@ The columns are the same as above. "INT-Rn" means the item is ruled once, in
 | UE-P4 one TAK user per client device | identity | — | onemind-xr |
 | UE-P5 client's own TAK stream limited to SA and human chat | contract | — (cot-projection §1; next to I1-P2) | here (tier 3) |
 | UE-P6 OpenSSL licence for Unreal builds | licence | — | onemind-xr (owner) |
+| B-P1 persistent markers, routes, geofences through `entity.create`; `svc.cot.send` for ephemeral items | catalogue | — (same ask as WEB-P9) | in PR (#554) |
+| B-P2 FEATURES B3 test uses a `probe.*` key, not a `world-state` write | test wording | — | onemind-xr |
+| B-P3 core publish on `tak.cot.mesh.tx` | publish mode | CP-3 | here (with CP-3) |
+| B-P4 adopt the client `svc.cot.send` v1 body (client-built CoT, projector re-validates) | subject body | INT-R4 (open contradiction: one body or two) | INT-R4 |
+| B-P5 where layer batches go after a renewal | payload | — (next to A5-P4) | in PR (#561) |
+| B-P6 … B-P9 WebSocket transport, imagery source, ISM icons, layer catalogue | client | — | onemind-xr |
 
 ## Checked for contradictions
 
@@ -220,6 +228,23 @@ The columns are the same as above. "INT-Rn" means the item is ruled once, in
   exception for agentops. INT-R4 ends that exception once `svc.cot.send` is served. UE-P5 is a
   TAK-protocol stream from the client to TAK Server, not a NATS publish, so it does not count
   against T4.
+- **Duplicate ID POL-16 (#554 against #557).** #554 `f4519b17` defines POL-16 as the
+  `params_hash` decision (D2-P1, INT-R1). #557's copy of the same proposal file defines POL-16
+  as the rate-limit code (RT14), with POL-17 … POL-20 after it. Both PRs edit one file, so the
+  owner would see two different POL-16 rows. Ask #557 to renumber its five rows to POL-21 …
+  POL-25 when it rebases on #554. Until then this register writes "#557 POL-16" for the rate
+  limit and "POL-16 (D2-P1)" for the hash.
+- **`CLIENT` stream imports (INT-R3 against A19-P11).** The A19 working copy (not pushed on
+  2026-10-29) imports `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`,
+  `tel.feed.*.status`, `tak.cot.out` and `tak.cot.mesh.rx` into `CLIENT` as streams. The
+  register had action status on polling and chat receive as an open choice. INT-R3 now lists
+  each import as an owner choice, with the exposure risk noted, and takes A19-P11's narrower
+  `svc.registry.video.>` and `tel.feed.*.status`.
+- **`svc.cot.send` body (INT-R4 against B-P4 and the COT working copy).** The register proposed
+  one body with kinds `geochat` and `shape` and no client XML. The COT lane's projector code
+  (not pushed to #563 on 2026-10-29) takes two bodies: the client CoT form of B-P4 (UE-P1),
+  which the projector re-checks against an allowlist, and structured GeoChat (WEB-P4). The two
+  forms have different error shapes. INT-R4 puts the choice to the owner.
 - **Refusal event names.** D1-P2 uses `refused` and D2-P4 uses `rejected` for a command that
   the executor did not apply. #554's POL-14 maps both to `failed`, so nothing breaks today. One
   word would be cleaner: rule it with D2-P4.
@@ -284,4 +309,10 @@ proposed  evt.mission.{tak-token}.changed
 filter    evt.map.>
 current   evt.map.geofence.{id}.{enter|exit}
 filter    evt.map.geofence.>
+filter    evt.so.action.>
+filter    evt.mission.>
+filter    tel.feed.*.status
+filter    svc.registry.video.>
+proposed  svc.mission.{get|list|report}
+proposed  svc.geofence.alerts
 ```

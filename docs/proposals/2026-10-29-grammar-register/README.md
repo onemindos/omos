@@ -23,7 +23,7 @@ row and, where they need a grammar or stream ruling, a row in the index below.
 | [reference-architecture.md](reference-architecture.md) | RA1 … RA4 |
 | [cot-projection.md](cot-projection.md) | CP-1 … CP-4 |
 | [f1-intercept-example.md](f1-intercept-example.md) | F1 |
-| [cross-reference.md](cross-reference.md) | Every PR proposal against this register: A4-P*, A0-*, POL-*, H2 P*, A7 P*, A1-P*, A5-P*, A6-P*, A19-P*, A21-P*, A22-P*, D1-P*, D2-P*, H3-P*, I1-P*, I2-P*, J2-P*, K-P*, WEB-P*, UE-P* |
+| [cross-reference.md](cross-reference.md) | Every PR proposal against this register: A4-P*, A0-*, POL-*, H2 P*, A7 P*, A1-P*, A5-P*, A6-P*, A19-P*, A21-P*, A22-P*, D1-P*, D2-P*, H3-P*, I1-P*, I2-P*, J2-P*, K-P*, WEB-P*, UE-P*, B-P* |
 | [integration-resolutions.md](integration-resolutions.md) | INT-R1 … INT-R4 (cross-PR blockers from the integration pass) |
 | `i1-agents-watch-briefs.md` | I1-P1 … I1-P7, filed by #567 into this folder; arrives when #567 merges |
 
@@ -35,14 +35,14 @@ behaviour it ships switched off. Within a tier, the order is the order to rule.
 | Tier | ID | Decision asked | Blocks | Duplicates ruled with it |
 |---|---|---|---|---|
 | **1. Blocks syncing a built PR** | ONT-P1 | Approve the `ENT` stream CR | #552 sync (A4-P1), and #561, #563, #569 stacked on it | — |
-| | INT-R2 | The entity service fills `capabilities` from the bridge's `commands_accepted` | every asset command in the cluster (#554 denies `not_capable`) | WEB-P5, H3-P4 |
-| | INT-R1 | One `params_hash` form, over the action the message executes | every task-dispatched asset command (#568 with #550, #566) | D2-P1, H3-P2 |
+| | INT-R2 | The entity service fills `capabilities` on `sim-*` fleet entities from the bridge's `commands_accepted`, bounded by class (carried by #552 `73823045`) | every asset command in the cluster (#554 denies `not_capable`) | WEB-P5, H3-P4 |
+| | INT-R1 | A command carries the approved action's own `params_hash` (`task.assign`/`task.abort` when `task_id` is set); bridges recompute only without `task_id` and otherwise rely on the Ed25519 signature; shared vectors in `services/schemas/command/testdata/` (carried by #554 `f4519b17`, #550 `2b724093`, #566 `44de8068`) | every task-dispatched asset command (#568 with #550, #566) | D2-P1 (= #554 POL-16), H3-P2 |
 | | BUS-P2 | Asset commands are `cmd.fleet.{class}.{id}.{verb}`; mission verb `cancel` | #554 and #550 command path; #566 | ONT-P4 |
 | | ONT-P14 | Policy RPC names `svc.policy.{command\|task}.{propose\|confirm}`, `svc.policy.action.get`, `svc.policy.check` | #554 sync | RA2 (naming half) |
 | | ONT-P10 | One audit subject `evt.so.action.{event}` | #554 sync | RA2 (audit half) |
 | | ONT-P7 | `CMD` 365 d, 512 MiB; discard policy as corrected by A22-P2 (`discard: old` for now) | #554 audit retention; #555 | A22-P2 |
 | | BUS-P1 | Telemetry token two is a class; fleet uses doctrine §9.1; `tel.feed.>` in `TEL` | #550, #551 status, #553 heartbeat binding (A0-2), #561 site monitor, #566 | ONT-P5, ONT-P6, RA4 (form), A5-P5, A1-P3 (status) |
-| | INT-R3 | One `CLIENT` import list in #562 | browser and Unreal clients under #562; Hermes map acks | WEB-P2, UE-P3, I2-P2, A5-P7, D2-P5 (exports), K-P7 |
+| | INT-R3 | One `CLIENT` import list in #562; stream imports (action status, missions, crossings, TAK chat) are an open owner choice against A19-P11 | browser and Unreal clients under #562; Hermes map acks | WEB-P2, UE-P3, I2-P2, A5-P7, D2-P5 (exports), K-P7, A19-P11 |
 | | CP-4 | `tak.cot.mesh.rx`/`.tx` are the mesh pair; grammar line "CoT to and from TAK" | #551 at a site | — |
 | **2. Ratifies what open PRs already publish** | F1 | Replace the `cmd.drone.x47.intercept` example; forbid the verb | none (safety; doc only) | — |
 | | BUS-P9 | Dead letters on `evt.sys.{source}.rejected` | none (`SYS` stores it today) | A1-P3 (dead letters) |
@@ -65,7 +65,7 @@ behaviour it ships switched off. Within a tier, the order is the order to rule.
 | | ONT-P13 | `evt.vehicle.>` in `EVT` | #554 vehicle outcomes (POL-4) | — |
 | | BUS-P6 | World classes `rail`, `transit` | #558 grammar pipelines (replicas 0) | A1-P1 |
 | | RA1 | `evt.video.>` in `EVT` | #559 registry events (core publish only) | K-P1 |
-| | INT-R4 | The projector serves `svc.cot.send` (kinds `geochat`, `shape`) | web and Unreal chat and shapes; agentops' exit from I1-P2 | WEB-P4, UE-P1 |
+| | INT-R4 | The projector serves `svc.cot.send`; owner chooses one body or two (client CoT re-validated by the projector, B-P4, plus structured GeoChat, WEB-P4) | web and Unreal chat and shapes; agentops' exit from I1-P2 | WEB-P4, UE-P1, B-P4 |
 | | I1-P1 | Agent contacts in TAK (cot-projection §4.1 exception) | #567 contact PLI (ships off) | — |
 | | I1-P2 | Agentops as an interim second publisher of the TAK outbound subjects | #567 GeoChat replies (ship off) | ends with INT-R4 |
 | | UE-P5 | The client's own TAK stream carries only its SA and human chat | onemind-xr #4 shapes on its own stream (off) | — |
@@ -121,6 +121,8 @@ filter    svc.tak.mission.>
 legacy    cmd.drone.x47.intercept
 legacy    evt.task.>
 legacy    evt.tak.cot.{uid}
+action    task.assign
+action    task.abort
 ```
 
 ## How to rule
