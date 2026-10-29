@@ -1,0 +1,29 @@
+# platform-mission: the OneMind task service (FEATURES D2, H4) in namespace onemind-core,
+# from platform/mission/. The namespace already exists and is labelled by
+# platform/security/shared-namespaces.yaml, so this Application does not create it.
+#
+# Manual sync only, and no resources-finalizer (deleting the Application deletes nothing).
+# Before the first sync (platform/mission/README.md): the NATS user `mission` is live,
+# the SealedSecret mission-service-runtime exists, and the image digest is pinned.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-mission
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/onemindos/omos.git
+    targetRevision: main
+    path: platform/mission
+    directory:
+      recurse: false
+      exclude: "*.md"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: onemind-core
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true

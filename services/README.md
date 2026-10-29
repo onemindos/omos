@@ -26,6 +26,7 @@ Go services monorepo absorbed from the former `omos-services` repo (merged
 | Service | Path | Purpose |
 |---------|------|---------|
 | **task-engine** | `task-engine/` | NATS-native task orchestration — create, dispatch, track tasks |
+| **mission** | `mission/` | Task service (Go): missions and tasks in KV `mission-state`, facts on `evt.mission.*`, `svc.mission.*` (D2, H4) |
 | **omd** | `omd/` | OneMind Daemon — runs on every node, supervises local agent harnesses |
 | **bridge** | `bridge/` | Universal protocol bridge (MAVLink, MQTT, HA, TAK, webhook) → NATS |
 | **nex** | `nex/` | NATS Execution Engine workloads (overwatch bridges, om-task) |
