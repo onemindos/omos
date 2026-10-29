@@ -46,5 +46,9 @@ no ingress).
    this service. Decide D2-P1 before relying on asset tasks: until it is fixed the MAVLink
    bridge refuses every task-dispatched command.
 
+6. **Arrival (D2-P2).** `MISSION_ARRIVAL` is `"false"`: a goto task completes only on the
+   bridge's own `done_ok`. Set it to `"true"` only after ratifying D2-P2, because arrival
+   trusts any publisher of `tel.fleet.*.*.position`.
+
 Until these are done, leave the Application unsynced. It deletes nothing if removed (no
 resources-finalizer).

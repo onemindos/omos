@@ -104,12 +104,18 @@ func (e *DirectoryEntry) mayReportFor(a Ref) bool {
 	return false
 }
 
+// reply answers a request. If the answer cannot be sent (for example it exceeds the
+// server's max_payload), the caller gets an error reply instead of a timeout.
 func (s *Service) reply(m *nats.Msg, v any) {
 	if m.Reply == "" {
 		return
 	}
 	b, _ := json.Marshal(v)
-	_ = m.Respond(b)
+	if err := m.Respond(b); err != nil {
+		s.cfg.Log.Warn("reply not sent", "subject", m.Subject, "bytes", len(b), "err", err)
+		eb, _ := json.Marshal(errReply(CodeUnavailable, "reply not sent: "+err.Error()))
+		_ = m.Respond(eb)
+	}
 }
 
 func errReply(code, msg string) map[string]any {
@@ -145,6 +151,16 @@ type ListRequest struct {
 	ParentID string    `json:"parent_id"`
 	BBox     []float64 `json:"bbox"` // [min_lon, min_lat, max_lon, max_lat]
 	Limit    int       `json:"limit"`
+	After    string    `json:"after"` // paging: only ids after this one (the previous reply's next)
+}
+
+// maxListBytes caps the items of one svc.mission.list reply below the NATS default
+// max_payload (1 MiB); the server's own max_payload lowers it further.
+const maxListBytes = 900 * 1024
+
+type listItem struct {
+	id string
+	v  any
 }
 
 func inBBox(b []float64, lat, lon float64) bool {
@@ -155,7 +171,7 @@ func inBBox(b []float64, lat, lon float64) bool {
 func (s *Service) handleList(m *nats.Msg) {
 	var req ListRequest
 	if len(m.Data) > 0 && json.Unmarshal(m.Data, &req) != nil {
-		s.reply(m, errReply(CodeSchemaInvalid, "body {kind?, state?, assignee?, parent_id?, bbox?, limit?}"))
+		s.reply(m, errReply(CodeSchemaInvalid, "body {kind?, state?, assignee?, parent_id?, bbox?, limit?, after?}"))
 		return
 	}
 	if req.BBox != nil && len(req.BBox) != 4 {
@@ -166,7 +182,8 @@ func (s *Service) handleList(m *nats.Msg) {
 	if limit <= 0 || limit > 1000 {
 		limit = 1000
 	}
-	var items []any
+	// Missions (msn-…) sort before tasks (tsk-…), so one id order pages both kinds.
+	var items []listItem
 	if req.Kind == "" || req.Kind == "mission" {
 		ms := s.st.cachedMissions()
 		sort.Slice(ms, func(i, j int) bool { return ms[i].MissionID < ms[j].MissionID })
@@ -192,7 +209,7 @@ func (s *Service) handleList(m *nats.Msg) {
 					continue
 				}
 			}
-			items = append(items, x)
+			items = append(items, listItem{x.MissionID, x})
 		}
 	}
 	if req.Kind == "" || req.Kind == "task" {
@@ -214,17 +231,33 @@ func (s *Service) handleList(m *nats.Msg) {
 					continue
 				}
 			}
-			items = append(items, x)
+			items = append(items, listItem{x.TaskID, x})
 		}
 	}
-	truncated := len(items) > limit
+	budget := int64(maxListBytes)
+	if mp := s.cfg.Conn.MaxPayload(); mp > 0 && mp-64*1024 < budget {
+		budget = mp - 64*1024
+	}
+	out := []json.RawMessage{}
+	size, truncated, next := int64(0), false, ""
+	for _, it := range items {
+		if req.After != "" && it.id <= req.After {
+			continue
+		}
+		b, _ := json.Marshal(it.v)
+		if len(out) >= limit || (len(out) > 0 && size+int64(len(b)) > budget) {
+			truncated = true
+			break
+		}
+		out = append(out, b)
+		size += int64(len(b))
+		next = it.id
+	}
+	resp := map[string]any{"items": out, "count": len(out), "truncated": truncated}
 	if truncated {
-		items = items[:limit]
+		resp["next"] = next
 	}
-	if items == nil {
-		items = []any{}
-	}
-	s.reply(m, map[string]any{"items": items, "count": len(items), "truncated": truncated})
+	s.reply(m, resp)
 }
 
 // handleReport serves svc.mission.report: people and agents report their own tasks with

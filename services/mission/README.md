@@ -52,9 +52,19 @@ for the life of its process (#550 P7) and knows nothing of `version.status`:
   must be greater than the last accepted one.
 
 Abort (section 6.2): `cancel_requested` keeps its state against progress from the original
-command; a report from a command dispatched after the abort (the hold) that says `executing`
-or `done_ok` ends the task `done_not_ok` + `cancelled`; if the asset refuses the hold, the
-task returns to its previous state with `error.code = rejected`.
+command; a report from the hold that says `executing` or `done_ok` ends the task
+`done_not_ok` + `cancelled`; if the asset refuses the hold, the task returns to its previous
+state with `error.code = rejected`. A hold is recognised by what it is, not by arrival order:
+its command id is in `report_guard.abort_commands` (from the `task.abort` dispatch audit), or
+it is any command after the task's one `task.assign` command. The abort command (`CMD`), the
+hold's audit and the hold's reports (both `EVT`) can arrive in any order: a hold report
+before the abort keeps the task's state and is kept in `report_guard.hold`, and is applied
+when the abort lands.
+
+Redelivery: every record keeps the newest 32 applied `cmd.mission` command ids
+(`applied_commands`). A redelivered command already applied (ack lost) is recognised before
+the expiry and precondition checks: it never produces a `rejected` fact (a create reports
+`created` again so the action can close; anything else is a no-op).
 
 Timeouts (rule 4): no `received` by `delivery.before_t` (default creation + 60 s) or past
 `stale_t` (default `execution.complete_before_t`, else creation + 1 h) ends `done_not_ok` +
@@ -73,12 +83,14 @@ AGENTS), a least-privilege `mission` user (any JetStream call it is not granted 
 test), the `CMD`, `EVT`, `MISSION` streams and KV `mission-state`, publish commands and audit
 events exactly as `services/policy` does and reports exactly as the MAVLink bridge does, and
 validate every fact against `services/schemas/envelope/envelope.schema.json`. They cover
-mission-task.md section 10 tests 1 (task-service half), 2 and 6, the bridge-restart and
+mission-task.md section 10 tests 1 (task-service half), 2, 4 (defence in depth: a create whose
+target or target snapshot is a person is refused `forbidden_action`) and 6, every ordering of
+abort, hold audit and hold reports, redelivery after expiry, list paging, eviction, the bridge-restart and
 early-report cases, abort, rejections, idempotent redelivery, missions, the RPCs, arrival,
 restart and a forced compare-and-set conflict.
 
 End to end, with the real policy service (#554), the real MAVLink bridge (#550) and the
-onemind-xr scripted drone (section 10 tests 1, 3 and 6, plus the whole-run invariant that no
+onemind-xr scripted drone (section 10 tests 1, 3, 4 and 6, plus the whole-run invariant that no
 `cmd.fleet.>` exists without a human approval):
 
 ```
@@ -97,10 +109,27 @@ POLICY_PATCH=$PWD/test/interop/policy-task-fleet-params-hash.patch SIM_DRONE=...
 | `MISSION_CONSUMER` | `mission` | consumer name prefix (`mission-commands`, `mission-events`) |
 | `MISSION_REPORT_CLASSES` | `drone,robot` | asset classes whose `evt.{class}.*.task` `EVT` binds (`vehicle` waits for ONT-P13) |
 | `MISSION_PRINCIPALS_FILE` | `/config/principals.json` | identity directory for `svc.mission.report` (missing: every report is refused) |
-| `MISSION_ARRIVAL`, `MISSION_ARRIVAL_RADIUS_M`, `MISSION_ARRIVAL_VERTICAL_M` | `true`, `5`, `5` | goto arrival from telemetry (D2-P2) |
+| `MISSION_ARRIVAL`, `MISSION_ARRIVAL_RADIUS_M`, `MISSION_ARRIVAL_VERTICAL_M` | `false`, `5`, `5` | goto arrival from telemetry (D2-P2; off until the owner ratifies it, since it trusts any `tel.fleet.*.*.position` publisher) |
+| `MISSION_CACHE_TERMINAL_FOR` | `24h` | how long terminal records stay in the in-memory copy (`svc.mission.list`) |
 | `MISSION_SWEEP_EVERY` | `1s` | timeout sweep period |
 | `MISSION_SOURCE` | `service:task` | envelope `source` and `updated_by` of service-made changes |
 | `HEALTH_ADDR` | `:8080` | `/healthz`, `/metrics` (counters) |
+
+## Memory and retention
+
+- KV `mission-state` keeps every record (history 5); the `MISSION` stream keeps 90 days of
+  facts. Nothing here deletes a record.
+- The in-memory copy (KV watch) holds every open record and terminal records until
+  `MISSION_CACHE_TERMINAL_FOR` (24 h) after their last change; an eviction pass runs every
+  minute. `svc.mission.list` shows only that copy; `svc.mission.get` reads KV, so an evicted
+  record is still served. The timeout sweep walks open tasks only. Writers of one key are
+  serialised by 64 striped locks (no per-key allocation).
+- On start the watch loads every KV record once, then evicts old terminal ones. If the
+  bucket grows past what 128Mi holds at start, the owner should add a KV `max_age` or an
+  archival job (follow-up; not decided here).
+- `svc.mission.list` replies are capped by count (`limit`, max 1000) and by size (about
+  900 KB, below the 1 MB NATS default `max_payload`); a capped reply has `truncated: true` and
+  `next`, which the caller passes as `after` for the next page.
 
 ## Not done here (follow-ups, see the owner proposals)
 

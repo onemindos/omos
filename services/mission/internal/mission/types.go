@@ -53,6 +53,7 @@ const (
 	CodeNotSimulated       = "not_simulated"
 	CodeNotAuthorized      = "not_authorized"
 	CodeUnavailable        = "unavailable"
+	CodeForbiddenAction    = "forbidden_action"
 )
 
 var terminalStates = map[string]bool{StateDoneOK: true, StateDoneNotOK: true, StateReplaced: true}
@@ -197,13 +198,46 @@ type Status struct {
 // Commands, which holds every asset command of the task in dispatch order. A report from a
 // newer command wins even when a restarted bridge started again at 1; within one command
 // status_version must increase; a report from an older command is stale.
+//
+// Abort holds are recognised by what they are, not by where they sit in Commands: the
+// command id of every evt.so.action.dispatched with action_type task.abort is kept in
+// AbortCommands, and a task has exactly one task.assign command (re-tasking is a new
+// proposal), so any command after the first is a hold too, even when its report beats the
+// abort's audit. The latest hold report is kept in Hold, so it takes effect whichever of
+// the abort command, the hold's audit and the hold's reports arrives first.
 type Guard struct {
-	Commands    []string `json:"commands"`
-	Epoch       int      `json:"epoch"`
-	LastVersion int      `json:"last_version"`
-	Reporter    string   `json:"reporter,omitempty"`
-	CancelFrom  int      `json:"cancel_from,omitempty"`
-	PrevState   string   `json:"prev_state,omitempty"`
+	Commands      []string    `json:"commands"`
+	AbortCommands []string    `json:"abort_commands,omitempty"`
+	Epoch         int         `json:"epoch"`
+	LastVersion   int         `json:"last_version"`
+	Reporter      string      `json:"reporter,omitempty"`
+	PrevState     string      `json:"prev_state,omitempty"`
+	Hold          *HoldReport `json:"hold,omitempty"`
+}
+
+// HoldReport is the latest accepted report from an abort hold command.
+type HoldReport struct {
+	Command  string          `json:"command"`
+	State    string          `json:"state"`
+	Error    *TaskError      `json:"error,omitempty"`
+	Progress json.RawMessage `json:"progress,omitempty"`
+	Source   string          `json:"source,omitempty"`
+	EnvID    string          `json:"env_id,omitempty"`
+}
+
+// maxApplied bounds the command ids kept per record for idempotent redelivery.
+const maxApplied = 32
+
+// addApplied records a command id as applied, keeping the newest maxApplied.
+func addApplied(xs []string, id string) []string {
+	if id == "" || contains(xs, id) {
+		return xs
+	}
+	xs = append(xs, id)
+	if len(xs) > maxApplied {
+		xs = xs[len(xs)-maxApplied:]
+	}
+	return xs
 }
 
 // Task is the KV mission-state record under key tsk-... (section 3.2).
@@ -234,6 +268,7 @@ type Task struct {
 	Corr            string            `json:"corr,omitempty"`
 	Trace           string            `json:"trace,omitempty"`
 	Guard           Guard             `json:"report_guard"`
+	Applied         []string          `json:"applied_commands,omitempty"` // cmd.mission command ids applied (newest 32)
 }
 
 type Waypoint struct {
@@ -282,6 +317,7 @@ type Mission struct {
 	UpdatedT    int64           `json:"updated_t"`
 	UpdatedBy   string          `json:"updated_by"`
 	Corr        string          `json:"corr,omitempty"`
+	Applied     []string        `json:"applied_commands,omitempty"` // cmd.mission command ids applied (newest 32)
 }
 
 // Report is the data of a status report (section 7), from evt.{class}.{id}.task or

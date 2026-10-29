@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"strings"
 	"sync"
 
@@ -21,16 +22,24 @@ const maxCASAttempts = 8
 // KV watch. The copy serves svc.mission.list, the timeout sweep and the arrival check;
 // every write reads the authoritative revision from KV and writes with Update(rev), so a
 // stale copy can never overwrite a newer record.
+//
+// Retention: KV keeps every record (history 5; the MISSION stream keeps 90 days of facts).
+// The copy holds every open record and terminal records until evictTerminal drops them
+// (Config.CacheTerminalFor after their last change); open lists the non-terminal tasks, so
+// the sweep never walks terminal records.
 type store struct {
 	kv jetstream.KeyValue
 
 	mu       sync.RWMutex
 	tasks    map[string]cachedTask
 	missions map[string]cachedMission
+	open     map[string]bool            // non-terminal task ids
 	gotoIdx  map[string]map[string]bool // assignee "class.id" -> open goto task ids
 
-	locks sync.Map // key -> *sync.Mutex (serializes writers of one key in this process)
+	locks [lockStripes]sync.Mutex // striped by key (serializes writers of one key in this process)
 }
+
+const lockStripes = 64
 
 type cachedTask struct {
 	rev uint64
@@ -44,12 +53,16 @@ type cachedMission struct {
 
 func newStore(kv jetstream.KeyValue) *store {
 	return &store{kv: kv, tasks: map[string]cachedTask{}, missions: map[string]cachedMission{},
-		gotoIdx: map[string]map[string]bool{}}
+		open: map[string]bool{}, gotoIdx: map[string]map[string]bool{}}
 }
 
+// lock takes the stripe of key. A task mutation may lock a mission while it holds its own
+// stripe only through updateMissionRollup, which runs after mutateTask returned, so two
+// stripes are never held at once.
 func (s *store) lock(key string) func() {
-	v, _ := s.locks.LoadOrStore(key, &sync.Mutex{})
-	mu := v.(*sync.Mutex)
+	h := fnv.New32a()
+	_, _ = h.Write([]byte(key))
+	mu := &s.locks[h.Sum32()%lockStripes]
 	mu.Lock()
 	return mu.Unlock
 }
@@ -84,6 +97,7 @@ func (s *store) apply(e jetstream.KeyValueEntry) {
 			s.unindex(c.t)
 		}
 		delete(s.tasks, key)
+		delete(s.open, key)
 		delete(s.missions, key)
 		s.mu.Unlock()
 		return
@@ -113,6 +127,11 @@ func (s *store) putTask(t Task, rev uint64) {
 		s.unindex(c.t)
 	}
 	s.tasks[t.TaskID] = cachedTask{rev: rev, t: t}
+	if IsTerminal(t.Status.State) {
+		delete(s.open, t.TaskID)
+	} else {
+		s.open[t.TaskID] = true
+	}
 	if !IsTerminal(t.Status.State) && TaskTypes[t.Type] == "goto" && AssetClasses[t.Assignee.EntityType] {
 		k := t.Assignee.String()
 		if s.gotoIdx[k] == nil {
@@ -150,6 +169,40 @@ func (s *store) cachedTasks() []Task {
 		out = append(out, c.t)
 	}
 	return out
+}
+
+// openTasks returns a snapshot of the non-terminal tasks only.
+func (s *store) openTasks() []Task {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	out := make([]Task, 0, len(s.open))
+	for id := range s.open {
+		if c, ok := s.tasks[id]; ok {
+			out = append(out, c.t)
+		}
+	}
+	return out
+}
+
+// evictTerminal drops terminal tasks and finished missions last changed before
+// beforeMS from the copy (KV keeps them). It returns how many records it dropped.
+func (s *store) evictTerminal(beforeMS int64) int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	n := 0
+	for id, c := range s.tasks {
+		if !s.open[id] && IsTerminal(c.t.Status.State) && c.t.UpdatedT < beforeMS {
+			delete(s.tasks, id)
+			n++
+		}
+	}
+	for id, c := range s.missions {
+		if (c.m.State == MissionCompleted || c.m.State == MissionAborted) && c.m.UpdatedT < beforeMS {
+			delete(s.missions, id)
+			n++
+		}
+	}
+	return n
 }
 
 func (s *store) cachedMissions() []Mission {

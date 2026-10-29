@@ -75,6 +75,10 @@ func run(log *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("MISSION_ARRIVAL_VERTICAL_M: %w", err)
 	}
+	retain, err := time.ParseDuration(env("MISSION_CACHE_TERMINAL_FOR", "24h"))
+	if err != nil {
+		return fmt.Errorf("MISSION_CACHE_TERMINAL_FOR: %w", err)
+	}
 	sweep, err := time.ParseDuration(env("MISSION_SWEEP_EVERY", "1s"))
 	if err != nil {
 		return fmt.Errorf("MISSION_SWEEP_EVERY: %w", err)
@@ -84,8 +88,8 @@ func run(log *slog.Logger) error {
 		Bucket: env("MISSION_BUCKET", "mission-state"), CmdStream: env("MISSION_CMD_STREAM", "CMD"),
 		EvtStream: env("MISSION_EVT_STREAM", "EVT"), ConsumerName: env("MISSION_CONSUMER", "mission"),
 		ReportClasses: strings.Split(env("MISSION_REPORT_CLASSES", "drone,robot"), ","),
-		SweepEvery:    sweep, Arrival: env("MISSION_ARRIVAL", "true") == "true",
-		ArrivalRadiusM: radius, ArrivalVerticalM: vert, Directory: dir,
+		SweepEvery:    sweep, Arrival: env("MISSION_ARRIVAL", "false") == "true",
+		ArrivalRadiusM: radius, ArrivalVerticalM: vert, Directory: dir, CacheTerminalFor: retain,
 	})
 	if err != nil {
 		return err
@@ -120,6 +124,7 @@ func run(log *slog.Logger) error {
 			{"mission_task_timeouts_total", c.Timeouts.Load()},
 			{"mission_task_arrivals_total", c.Arrivals.Load()},
 			{"mission_fact_publish_errors_total", c.FactErrors.Load()},
+			{"mission_commands_redelivered_total", c.CommandsRedelivered.Load()},
 		} {
 			fmt.Fprintf(w, "# TYPE %s counter\n%s %d\n", m.n, m.n, m.v)
 		}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # End-to-end test of the task service (FEATURES D2, H4; mission-task.md section 10 tests
-# 1, 3 and 6) with the real policy service (omos #554), the real MAVLink bridge (omos
+# 1, 3, 4 and 6) with the real policy service (omos #554), the real MAVLink bridge (omos
 # #550) and the onemind-xr scripted drone on a disposable nats-server.
 #
 # Builds the policy service and the bridge from their git refs (git archive, nothing is

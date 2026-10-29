@@ -5,7 +5,7 @@
 // nats-server with the A19 account layout (ONEMIND, CLIENT, AGENTS). Run through
 // test/e2e.sh, which builds the binaries and sets the E2E_* variables.
 //
-// Flow (mission-task.md section 6.1 and section 10 tests 1, 3 and 6):
+// Flow (mission-task.md section 6.1 and section 10 tests 1, 3, 4 and 6):
 //  1. two humans arm and take off sim-x1 (A4) so it can fly;
 //  2. zeus creates a mission and two waypoints (A2), each closed by the task service's
 //     result (POL-14: causation = command id);
@@ -13,6 +13,7 @@
 //     drone flies; the task goes created, sent, received, executing, done_ok in KV
 //     mission-state and on evt.mission.{tsk}.*; the mission completes;
 //  4. an orbit task for an asset without that capability is denied not_capable;
+//     an observe task on a person-class track is denied forbidden_action;
 //  5. a goto for sim-x2 (no bridge) times out at delivery.before_t and is not sent again.
 package e2e
 
@@ -431,6 +432,8 @@ func TestE2E(t *testing.T) {
 		"sim-x2": {"entity_id": "sim-x2", "entity_type": "drone", "kind": "multirotor", "location": home,
 			"health": map[string]any{"connection": "online"}, "indicators": map[string]any{"simulated": true},
 			"capabilities": []string{"onemind.task.goto.v1"}},
+		// A person-class track (test 4): never the target of an observe task.
+		"trk-p1": {"entity_id": "trk-p1", "entity_type": "track", "kind": "person", "location": home},
 	}
 	ec := h.conn("entity")
 	if _, err := ec.Subscribe("svc.entity.get", func(m *nats.Msg) {
@@ -500,7 +503,8 @@ func TestE2E(t *testing.T) {
 		"POLICY_PRINCIPALS_FILE=" + prPath, envPair("POLICY_SIGNING_KEY_FILE", keyPath), "POLICY_SIGNING_KID=e2e",
 		fmt.Sprintf("HEALTH_ADDR=127.0.0.1:%d", polHealth)}, policyBin)
 	start("mission", []string{"NATS_URL=" + h.url, "NATS_USER=mission", "NATS_PASSWORD=" + h.pw["mission"],
-		"MISSION_PRINCIPALS_FILE=" + prPath, "MISSION_SWEEP_EVERY=200ms", fmt.Sprintf("HEALTH_ADDR=127.0.0.1:%d", misHealth)}, missionBin)
+		// Arrival (D2-P2) is off in the manifest until ratified; the run turns it on to test it.
+		"MISSION_PRINCIPALS_FILE=" + prPath, "MISSION_SWEEP_EVERY=200ms", "MISSION_ARRIVAL=true", fmt.Sprintf("HEALTH_ADDR=127.0.0.1:%d", misHealth)}, missionBin)
 	for _, p := range []int{polHealth, misHealth} {
 		url := fmt.Sprintf("http://127.0.0.1:%d/healthz", p)
 		waitFor(t, 20*time.Second, url, func() bool {
@@ -635,6 +639,32 @@ func TestE2E(t *testing.T) {
 		t.Fatal("a denied task reached the task service")
 	}
 	tr.log("check", "", map[string]any{"contract_test": 3, "denial": den, "pass": true})
+
+	// Step 4b (contract test 4): an observe task on a person-class track is denied
+	// forbidden_action, and nothing reaches cmd.mission or cmd.fleet.
+	t4 := newID("tsk")
+	missionBefore, fleetBefore := h.count("cmd.mission."), h.count("cmd.fleet.")
+	r4 := h.request("hermes", "svc.policy.task.propose", func() map[string]any {
+		b := actionReq("task.assign", "drone", "sim-x1", map[string]any{"task_id": t4, "parent_id": nil,
+			"type": "onemind.task.observe.v1", "spec": map[string]any{"target": map[string]any{"entity_id": "trk-p1"}, "sensor_id": "sim-x1.cam0"}})
+		b["requested_by"] = map[string]any{"kind": "agent", "id": "agent:hermes/zeus/legacy", "on_behalf_of": "user:zeus"}
+		return b
+	}())
+	den4, _ := r4["denial"].(map[string]any)
+	if r4["status"] != "denied" || den4["code"] != "forbidden_action" {
+		t.Fatalf("observe on a person-class track: %v", r4)
+	}
+	time.Sleep(500 * time.Millisecond)
+	if _, err := mstate.Get(ctx, t4); err == nil || h.count("evt.mission."+t4) != 0 {
+		t.Fatal("a denied person-target task reached the task service")
+	}
+	if h.count("cmd.mission.") != missionBefore || h.count("cmd.fleet.") != fleetBefore {
+		t.Fatal("a person-target proposal produced a command")
+	}
+	if a4, _ := r4["action_id"].(string); a4 != "" && h.auditCode(a4, "denied") != "forbidden_action" {
+		t.Fatalf("denial not audited with forbidden_action: %q", h.auditCode(a4, "denied"))
+	}
+	tr.log("check", "", map[string]any{"contract_test": 4, "denial": den4, "cmd_mission_published": 0, "cmd_fleet_published": 0, "pass": true})
 
 	// Step 5 (contract test 6): no receipt by delivery.before_t -> done_not_ok timeout, never re-sent.
 	t6 := newID("tsk")

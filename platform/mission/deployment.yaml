@@ -67,9 +67,10 @@ spec:
               value: drone,robot
             - name: MISSION_PRINCIPALS_FILE
               value: /config/principals.json
-            # Complete asset goto tasks from fleet telemetry (owner proposal D2-P2).
+            # Completing asset goto tasks from fleet telemetry (owner proposal D2-P2) stays
+            # off until the owner ratifies D2-P2: it trusts any tel.fleet.*.*.position publisher.
             - name: MISSION_ARRIVAL
-              value: "true"
+              value: "false"
           # NATS_USER and NATS_PASSWORD (the `mission` user): SealedSecret
           # mission-service-runtime, created by the owner (README.md). Not in Git as plaintext.
           envFrom:

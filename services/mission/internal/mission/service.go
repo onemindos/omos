@@ -36,6 +36,11 @@ type Config struct {
 	DefaultDelivery time.Duration // delivery.before_t default after creation (default 60s, section 3.2)
 	DefaultStale    time.Duration // stale_t default when neither stale_t nor complete_before_t is set (default 1h)
 
+	// CacheTerminalFor is how long a terminal task or mission stays in the in-memory copy
+	// (svc.mission.list) after its last change (default 24h). KV keeps the record; get
+	// reads KV, so an evicted record is still served by svc.mission.get.
+	CacheTerminalFor time.Duration
+
 	// Arrival: complete an asset goto task from fleet telemetry when the asset is within
 	// ArrivalRadiusM (horizontal) and ArrivalVerticalM of the goal (owner proposal D2-P2).
 	Arrival          bool
@@ -56,6 +61,8 @@ type Counters struct {
 	Timeouts         atomic.Int64
 	Arrivals         atomic.Int64
 	FactErrors       atomic.Int64
+	// CommandsRedelivered counts commands already applied (ack lost) and not applied again.
+	CommandsRedelivered atomic.Int64
 }
 
 // Service is the task service.
@@ -108,6 +115,9 @@ func New(cfg Config) (*Service, error) {
 	}
 	if cfg.DefaultStale == 0 {
 		cfg.DefaultStale = time.Hour
+	}
+	if cfg.CacheTerminalFor == 0 {
+		cfg.CacheTerminalFor = 24 * time.Hour
 	}
 	if cfg.ArrivalRadiusM == 0 {
 		cfg.ArrivalRadiusM = 5
@@ -184,6 +194,7 @@ func (s *Service) Start(ctx context.Context) error {
 	if err := s.cfg.Conn.Flush(); err != nil {
 		return err
 	}
+	s.EvictOnce()
 	s.wg.Add(1)
 	go s.sweepLoop()
 	s.cfg.Log.Info("task service ready", "bucket", s.cfg.Bucket, "records", len(s.st.cachedTasks())+len(s.st.cachedMissions()))
@@ -362,6 +373,13 @@ func (s *Service) HandleCommand(subject string, data []byte) error {
 		s.reject(id, verb, &c, CodeSchemaInvalid, "id must be msn-{ulid} or tsk-{ulid}")
 		return nil
 	}
+	// A redelivery of a command already applied (its ack was lost) is recognised before the
+	// expiry and precondition checks, so it never produces a spurious rejection.
+	if done, err := s.alreadyApplied(id, verb, &c); err != nil {
+		return retryable{err}
+	} else if done {
+		return nil
+	}
 	exp, err := time.Parse(time.RFC3339Nano, c.ExpiresAt)
 	if err != nil {
 		s.reject(id, verb, &c, CodeSchemaInvalid, "expires_at missing or not RFC 3339")
@@ -409,6 +427,54 @@ func (s *Service) HandleCommand(subject string, data []byte) error {
 	return nil
 }
 
+// alreadyApplied reports whether the record already shows this command as applied: its id
+// is in applied_commands, or (task create) the task exists for the same action. A create is
+// reported again so the action can close if the first fact was lost (same Nats-Msg-Id for a
+// task, so MISSION keeps one copy inside the duplicate window); any other verb is a no-op,
+// because its fact was published when it was applied.
+func (s *Service) alreadyApplied(id, verb string, c *Command) (bool, error) {
+	if IsTaskID(id) {
+		t, _, err := s.st.getTask(s.ctx, id)
+		if err != nil || t == nil {
+			return false, err
+		}
+		if !contains(t.Applied, c.ID) {
+			if verb != "create" {
+				return false, nil
+			}
+			var p struct {
+				ActionID string `json:"action_id"`
+			}
+			_ = json.Unmarshal(c.Data, &p)
+			if p.ActionID == "" {
+				p.ActionID = c.ActionID
+			}
+			if p.ActionID == "" || t.ActionID != p.ActionID {
+				return false, nil
+			}
+		}
+		if verb == "create" {
+			s.publishFact(id, StateCreated, t, factOpts{msgID: id + ":1", causation: c.ID, corr: t.Corr})
+		}
+		s.C.CommandsRedelivered.Add(1)
+		s.cfg.Log.Info("command already applied (redelivery)", "id", id, "verb", verb, "command_id", c.ID)
+		return true, nil
+	}
+	if !IsMissionID(id) {
+		return false, nil
+	}
+	m, _, err := s.st.getMission(s.ctx, id)
+	if err != nil || m == nil || !contains(m.Applied, c.ID) {
+		return false, err
+	}
+	if verb == "create" {
+		s.emitMission(m, "created", c.ID, map[string]any{"action_id": c.ActionID})
+	}
+	s.C.CommandsRedelivered.Add(1)
+	s.cfg.Log.Info("command already applied (redelivery)", "id", id, "verb", verb, "command_id", c.ID)
+	return true, nil
+}
+
 func by(c *Command) string {
 	if c.Approval.Approver != "" {
 		return c.Approval.Approver
@@ -431,7 +497,8 @@ func (s *Service) missionCreate(id string, c *Command) error {
 	m := &Mission{V: 1, MissionID: id, Name: p.Name, Intent: p.Intent, State: MissionPlanned,
 		Rollup: MissionRollup(MissionPlanned), AOI: p.AOI, Route: []Waypoint{}, Assignments: []Assignment{},
 		TaskIDs: []string{}, Window: p.Window, Marking: Marking{TLP: "AMBER", ReleasableTo: []string{}},
-		TAKMission: json.RawMessage("null"), CreatedT: now, CreatedBy: c.Source, UpdatedT: now, UpdatedBy: by(c), Corr: c.Corr}
+		TAKMission: json.RawMessage("null"), CreatedT: now, CreatedBy: c.Source, UpdatedT: now, UpdatedBy: by(c), Corr: c.Corr,
+		Applied: []string{c.ID}}
 	if _, err := s.st.createMission(s.ctx, m); err != nil {
 		if !errors.Is(err, jetstream.ErrKeyExists) {
 			return retryable{err}
@@ -477,6 +544,7 @@ func (s *Service) missionWaypoint(id string, c *Command) error {
 			sort.SliceStable(m.Route, func(i, j int) bool { return m.Route[i].Seq < m.Route[j].Seq })
 		}
 		m.UpdatedT, m.UpdatedBy = s.nowMS(), by(c)
+		m.Applied = addApplied(m.Applied, c.ID)
 		return nil
 	})
 	return s.finishMission(id, "waypoint", "waypoint", c, m, err, reason, map[string]any{"action_id": c.ActionID, "waypoint": w})
@@ -491,6 +559,7 @@ func (s *Service) missionComplete(id string, c *Command) error {
 		}
 		m.State, m.Rollup = MissionCompleted, MissionRollup(MissionCompleted)
 		m.UpdatedT, m.UpdatedBy = s.nowMS(), by(c)
+		m.Applied = addApplied(m.Applied, c.ID)
 		return nil
 	})
 	return s.finishMission(id, "complete", "completed", c, m, err, reason, map[string]any{"action_id": c.ActionID})
@@ -506,6 +575,7 @@ func (s *Service) missionAbort(id string, c *Command) error {
 		}
 		m.State, m.Rollup = MissionAborted, MissionRollup(MissionAborted)
 		m.UpdatedT, m.UpdatedBy = s.nowMS(), by(c)
+		m.Applied = addApplied(m.Applied, c.ID)
 		return nil
 	})
 	if ferr := s.finishMission(id, "abort", "aborted", c, m, err, reason, map[string]any{"action_id": c.ActionID}); ferr != nil || reason != "" || m == nil {
@@ -585,6 +655,12 @@ func (s *Service) taskCreate(id string, c *Command) error {
 		s.reject(id, "create", c, CodeSchemaInvalid, "task type "+p.Type+" does not fit assignee "+p.Assignee.EntityType)
 		return nil
 	}
+	if why := personTarget(p.Spec, p.TargetSnapshots); why != "" {
+		// Defence in depth behind the policy service (stop line SL2, contract section 10
+		// test 4): a task is never pointed at a person or a person-class track.
+		s.reject(id, "create", c, CodeForbiddenAction, why)
+		return nil
+	}
 	if p.ActionID == "" {
 		p.ActionID = c.ActionID
 	}
@@ -636,7 +712,7 @@ func (s *Service) taskCreate(id string, c *Command) error {
 		Status:     Status{State: StateCreated, UpdatedT: now},
 		Allocation: p.Allocation, Rollup: Rollup(StateCreated, ""), Simulated: asset && p.Assignee.Simulated(),
 		CreatedT: now, CreatedBy: c.Source, UpdatedT: now, UpdatedBy: c.Source, Corr: c.Corr, Trace: c.Trace,
-		Guard: Guard{Commands: []string{}}}
+		Guard: Guard{Commands: []string{}}, Applied: []string{c.ID}}
 	if t.TargetSnapshots == nil {
 		t.TargetSnapshots = []json.RawMessage{}
 	}
@@ -683,6 +759,38 @@ func (s *Service) taskCreate(id string, c *Command) error {
 		s.linkToMission(parentMission, t, c)
 	}
 	return nil
+}
+
+// personTarget returns why a task spec or its target snapshots point at a person or a
+// person-class track, or "". The task service has no entity lookup of its own (the policy
+// service resolves spec entity references before approval); it checks the frozen
+// target_snapshots and any entity_type or kind the spec's target or center carries.
+func personTarget(spec json.RawMessage, snaps []json.RawMessage) string {
+	isPerson := func(raw json.RawMessage) bool {
+		var e struct {
+			EntityType string `json:"entity_type"`
+			Kind       string `json:"kind"`
+		}
+		return json.Unmarshal(raw, &e) == nil && (e.EntityType == "person" || strings.EqualFold(e.Kind, "person"))
+	}
+	var sp map[string]json.RawMessage
+	if json.Unmarshal(spec, &sp) == nil {
+		for _, k := range []string{"target", "center"} {
+			if v, ok := sp[k]; ok && isPerson(v) {
+				return "spec " + k + " is a person or a person-class track"
+			}
+		}
+	}
+	for _, raw := range snaps {
+		var ts struct {
+			EntityID string          `json:"entity_id"`
+			Snapshot json.RawMessage `json:"snapshot"`
+		}
+		if json.Unmarshal(raw, &ts) == nil && (isPerson(ts.Snapshot) || isPerson(raw)) {
+			return "target " + ts.EntityID + " is a person or a person-class track"
+		}
+	}
+	return ""
 }
 
 // typeFits checks the Assignee column of section 4.
@@ -772,9 +880,10 @@ func (s *Service) taskAbort(id string, c *Command, direct bool) error {
 			// Not yet sent: cancelled at once (rule 3).
 			s.setState(t, StateDoneNotOK, &TaskError{Code: ErrCancelled, Message: "aborted before dispatch"}, by(c))
 		default:
-			t.Guard.PrevState, t.Guard.CancelFrom = st, len(t.Guard.Commands)
+			t.Guard.PrevState = st
 			s.setState(t, StateCancelRequested, nil, by(c))
 		}
+		t.Applied = addApplied(t.Applied, c.ID)
 		return nil
 	})
 	switch {
@@ -793,6 +902,8 @@ func (s *Service) taskAbort(id string, c *Command, direct bool) error {
 	}
 	s.emitTask(t, c.ID)
 	s.updateMissionRollup(t, c.ID)
+	// The hold may have reported (or been audited) before this abort was applied.
+	s.resolveHold(id, c.ID)
 	return nil
 }
 
@@ -804,6 +915,7 @@ func (s *Service) taskComplete(id string, c *Command) error {
 			return errNoChange
 		}
 		s.setState(t, StateCompleteRequested, nil, by(c))
+		t.Applied = addApplied(t.Applied, c.ID)
 		return nil
 	})
 	switch {
@@ -876,6 +988,11 @@ func (s *Service) handleDispatched(env *Event) error {
 			t.Guard.Commands = append(t.Guard.Commands, d.CommandID)
 			changed = true
 		}
+		if asset && d.ActionType == "task.abort" && uuidRE.MatchString(d.CommandID) && !contains(t.Guard.AbortCommands, d.CommandID) {
+			// The hold is known by its audit, whether or not the abort command is applied yet.
+			t.Guard.AbortCommands = append(t.Guard.AbortCommands, d.CommandID)
+			changed = true
+		}
 		if d.ActionType == "task.assign" && (t.Status.State == StateCreated || t.Status.State == StateScheduled) {
 			s.setState(t, StateSent, nil, s.cfg.Source)
 			sent = true
@@ -902,7 +1019,59 @@ func (s *Service) handleDispatched(env *Event) error {
 	if sent {
 		s.emitTask(t, env.ID)
 	}
+	if d.ActionType == "task.abort" {
+		s.resolveHold(d.TaskID, env.ID)
+	}
 	return nil
+}
+
+// holdOutcome maps a hold report to the state it gives a cancel_requested task (section
+// 6.2): executing or done_ok means the hold took effect (cancelled); done_not_ok means the
+// asset refused it (previous state, rejected). Anything else changes nothing yet.
+func holdOutcome(g *Guard, state string, e *TaskError) (string, *TaskError, bool) {
+	switch state {
+	case StateExecuting, StateDoneOK:
+		return StateDoneNotOK, &TaskError{Code: ErrCancelled, Message: "aborted: hold executed by the asset"}, true
+	case StateDoneNotOK:
+		prev := g.PrevState
+		if prev == "" || IsTerminal(prev) || prev == StateCancelRequested {
+			prev = StateExecuting
+		}
+		msg := "abort refused"
+		if e != nil && e.Message != "" {
+			msg += ": " + e.Message
+		}
+		return prev, &TaskError{Code: ErrRejected, Message: msg}, true
+	}
+	return "", nil, false
+}
+
+// resolveHold applies a hold report that arrived before the task entered cancel_requested.
+func (s *Service) resolveHold(id, causation string) {
+	t, err := s.st.mutateTask(s.ctx, id, func(t *Task) error {
+		h := t.Guard.Hold
+		if t.Status.State != StateCancelRequested || h == nil {
+			return errNoChange
+		}
+		state, terr, ok := holdOutcome(&t.Guard, h.State, h.Error)
+		if !ok {
+			return errNoChange
+		}
+		t.Guard.Hold = nil
+		s.setState(t, state, terr, h.Source)
+		if len(h.Progress) > 0 {
+			t.Status.Progress = h.Progress
+		}
+		return nil
+	})
+	if err != nil || t == nil {
+		if err != nil && !errors.Is(err, errNoChange) {
+			s.cfg.Log.Error("hold resolution failed", "task", id, "err", err)
+		}
+		return
+	}
+	s.emitTask(t, causation)
+	s.updateMissionRollup(t, causation)
 }
 
 // ReportResult says what happened to a report.
@@ -914,10 +1083,9 @@ type ReportResult struct {
 }
 
 var (
-	errStale     = errors.New("stale")
-	errTerminal  = errors.New("terminal")
-	errNotYours  = errors.New("not the assignee")
-	errGuardOnly = errors.New("guard only")
+	errStale    = errors.New("stale")
+	errTerminal = errors.New("terminal")
+	errNotYours = errors.New("not the assignee")
 )
 
 // ApplyReport applies one assignee status report (sections 5 and 7). fromBridge marks an
@@ -935,7 +1103,9 @@ func (s *Service) ApplyReport(r Report, reporter Ref, source, causation, envID s
 		r.Error = nil
 	}
 	var reason string
+	guardOnly := false
 	t, err := s.st.mutateTask(s.ctx, r.TaskID, func(t *Task) error {
+		guardOnly, reason = false, ""
 		if t.Assignee != reporter {
 			return errNotYours
 		}
@@ -961,28 +1131,29 @@ func (s *Service) ApplyReport(r Report, reporter Ref, source, causation, envID s
 		}
 		g.Epoch, g.LastVersion, g.Reporter = idx, r.StatusVersion, source
 
+		// A hold is an abort command: audited as task.abort, or any command after the task's
+		// one task.assign command (its report can beat both the abort and the audit).
+		isHold := fromBridge && causation != "" && (contains(g.AbortCommands, causation) || idx > 0)
 		state, terr := r.State, r.Error
-		if t.Status.State == StateCancelRequested {
-			fromHold := fromBridge && idx >= g.CancelFrom && causation != ""
-			switch {
-			case fromHold && (state == StateExecuting || state == StateDoneOK):
-				// The abort hold took effect (section 6.2): the task is cancelled.
-				state, terr = StateDoneNotOK, &TaskError{Code: ErrCancelled, Message: "aborted: hold executed by the asset"}
-			case fromHold && state == StateDoneNotOK:
-				// The asset refused the abort: it keeps its state and says rejected (rule 3).
-				prev := g.PrevState
-				if prev == "" || IsTerminal(prev) {
-					prev = StateExecuting
-				}
-				msg := "abort refused"
-				if r.Error != nil && r.Error.Message != "" {
-					msg += ": " + r.Error.Message
-				}
-				state, terr = prev, &TaskError{Code: ErrRejected, Message: msg}
-			case !IsTerminal(state):
-				// Progress while the abort is pending: keep cancel_requested.
-				return errGuardOnly
+		switch {
+		case isHold:
+			g.Hold = &HoldReport{Command: causation, State: r.State, Error: r.Error, Progress: r.Progress, Source: source, EnvID: envID}
+			if t.Status.State != StateCancelRequested {
+				// The abort is not applied yet: keep the state; resolveHold applies this report
+				// when the abort lands.
+				guardOnly, reason = true, "abort hold reported before the abort was applied; state kept"
+				return nil
 			}
+			var ok bool
+			if state, terr, ok = holdOutcome(g, r.State, r.Error); !ok {
+				guardOnly, reason = true, "abort pending; state kept"
+				return nil
+			}
+			g.Hold = nil
+		case t.Status.State == StateCancelRequested && !IsTerminal(state):
+			// Progress from the original command while the abort is pending.
+			guardOnly, reason = true, "abort pending; state kept"
+			return nil
 		}
 		s.setState(t, state, terr, source)
 		for dst, src := range map[*json.RawMessage]json.RawMessage{&t.Status.Progress: r.Progress, &t.Status.Estimate: r.Estimate, &t.Status.Result: r.Result} {
@@ -993,27 +1164,10 @@ func (s *Service) ApplyReport(r Report, reporter Ref, source, causation, envID s
 		return nil
 	})
 	switch {
-	case errors.Is(err, errGuardOnly):
-		// The guard moved but not the state: write it so later reports compare against it.
-		_, err = s.st.mutateTask(s.ctx, r.TaskID, func(t *Task) error {
-			idx := t.Guard.Epoch
-			if causation != "" && fromBridge {
-				if idx = indexOf(t.Guard.Commands, causation); idx < 0 {
-					t.Guard.Commands = append(t.Guard.Commands, causation)
-					idx = len(t.Guard.Commands) - 1
-				}
-			}
-			if idx < t.Guard.Epoch || (idx == t.Guard.Epoch && r.StatusVersion <= t.Guard.LastVersion) {
-				return errNoChange
-			}
-			t.Guard.Epoch, t.Guard.LastVersion, t.Guard.Reporter = idx, r.StatusVersion, source
-			return nil
-		})
-		if err != nil && !errors.Is(err, errNoChange) {
-			return ReportResult{}, retryable{err}
-		}
+	case err == nil && t != nil && guardOnly:
+		// Only the guard moved (written without a fact; version.status unchanged).
 		s.C.ReportsAccepted.Add(1)
-		return ReportResult{Accepted: true, Reason: "abort pending; state kept", State: StateCancelRequested}, nil
+		return ReportResult{Accepted: true, Reason: reason, State: t.Status.State}, nil
 	case errors.Is(err, errStale):
 		s.C.ReportsStale.Add(1)
 		s.cfg.Log.Info("report dropped (out of order)", "task", r.TaskID, "reason", reason)
@@ -1080,6 +1234,9 @@ func (s *Service) updateMissionRollup(t *Task, causation string) {
 				st = t.Status.State
 			} else if ct, ok := s.st.cachedTask(id); ok {
 				st = ct.Status.State
+			} else if kt, _, err := s.st.getTask(s.ctx, id); err == nil && kt != nil {
+				// Evicted from the copy (terminal for longer than CacheTerminalFor).
+				st = kt.Status.State
 			}
 			if st != StateDoneOK {
 				allOK = false
@@ -1113,21 +1270,34 @@ func (s *Service) sweepLoop() {
 	defer s.wg.Done()
 	tk := time.NewTicker(s.cfg.SweepEvery)
 	defer tk.Stop()
+	ev := time.NewTicker(time.Minute)
+	defer ev.Stop()
 	for {
 		select {
 		case <-s.ctx.Done():
 			return
 		case <-tk.C:
 			s.SweepOnce()
+		case <-ev.C:
+			s.EvictOnce()
 		}
 	}
 }
 
-// SweepOnce times out every task with no receipt by delivery.before_t, or past stale_t.
-// It never re-sends anything: re-tasking is a new proposal.
+// EvictOnce drops terminal records older than CacheTerminalFor from the in-memory copy.
+func (s *Service) EvictOnce() int {
+	n := s.st.evictTerminal(s.nowMS() - s.cfg.CacheTerminalFor.Milliseconds())
+	if n > 0 {
+		s.cfg.Log.Info("terminal records dropped from the in-memory copy", "count", n)
+	}
+	return n
+}
+
+// SweepOnce times out every open task with no receipt by delivery.before_t, or past
+// stale_t. It never re-sends anything: re-tasking is a new proposal.
 func (s *Service) SweepOnce() {
 	now := s.nowMS()
-	for _, t := range s.st.cachedTasks() {
+	for _, t := range s.st.openTasks() {
 		if IsTerminal(t.Status.State) {
 			continue
 		}
