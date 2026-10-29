@@ -46,6 +46,7 @@ const (
 	execFleet   = "fleet"   // cmd.fleet.{class}.{id}.{verb}
 	execEntity  = "entity"  // cmd.entity.{id}.{verb}
 	execMission = "mission" // cmd.mission.{id}.{verb}
+	execMap     = "map"     // cmd.map.geofence.{id}.{verb} (geofence service, D1-P4)
 	execTask    = "task"    // cmd.mission.{tsk}.create then optional cmd.fleet
 	execAbort   = "abort"   // cmd.mission.{tsk}.abort then optional cmd.fleet hold
 	execRefused = "refused" // A5: never runs
@@ -113,6 +114,13 @@ func init() {
 	entity("alert.acknowledge", "acknowledge", A1)
 	entity("alert.resolve", "resolve", A1)
 	entity("entity.override", "override", A2)
+
+	// Zones (ONTOLOGY.md section 6.2, A2): applied by the geofence service, which reports
+	// each command on evt.map.geofence.{created|updated|deleted|refused} (D1-P2, D1-P4).
+	for _, v := range []string{"create", "update", "remove"} {
+		Catalogue["zone."+v] = ActionSpec{Name: "zone." + v, Family: FamilyCommand, Level: A2,
+			Versions: []int{1}, Targets: []string{"zone"}, Exec: execMap, Verb: v}
+	}
 
 	mission := func(verb string) {
 		name := "mission." + verb
@@ -238,6 +246,8 @@ func commandSubject(exec, class, id, verb string) (string, error) {
 		return "cmd.entity." + id + "." + verb, nil
 	case execMission, execTask, execAbort:
 		return "cmd.mission." + id + "." + verb, nil
+	case execMap:
+		return "cmd.map.geofence." + id + "." + verb, nil
 	}
 	return "", fmt.Errorf("no subject for exec %q", exec)
 }
