@@ -145,6 +145,8 @@ type Action struct {
 	execDeadline    time.Time // acknowledged asset command: fail when no executed/failed outcome by this time
 	resultDeadline  time.Time // entity/mission/task command: closes on its evt.entity/evt.mission result, fails after this
 	rqKey           string    // idempotency key: requester id and request_id
+	quotaKey        string    // open-proposal cap bucket: the verified identity, or "unverified:" + claimed id
+	TextFlag        string    `json:"-"` // stop-line wording in the free text of a safety verb, audited not refused
 }
 
 // clone returns a copy that shares no mutable slice with the original.
@@ -189,3 +191,11 @@ type ConfirmReply struct {
 	CommandID         string  `json:"command_id,omitempty"`
 	Denial            *Denial `json:"denial"`
 }
+
+// Rate limits on proposals (security-and-trust.md T1, "rate limit per agent").
+const (
+	// DetailRateLimited is the precondition_failed detail for a requester over its limits.
+	DetailRateLimited = "rate_limited"
+	// MaxOpenPerRequester is how many actions one requester may hold awaiting confirmation.
+	MaxOpenPerRequester = 10
+)

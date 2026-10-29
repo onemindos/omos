@@ -27,6 +27,7 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | Closed verb allowlist (`Catalogue` in `catalogue.go`); anything else refused | `unknown_action` |
 | Civilian stop line: `strike`, `engage`, `intercept`, `designate`, `attack`, `kill`, `weapon`, `hostile`, follow/track a person, face or identity recognition, payload release, CoT `t-k-*` are refused by name, in action types, task types and parameter values | `forbidden_action` |
 | Orbit, observe or a task pointed at a `person` entity or a person-class `track` | `forbidden_action` |
+| Free text (`reason`, task instructions, agent questions, any string parameter) that asks to follow, track, tail or chase a person, or names a strike-class action (`TextStopLine` in `catalogue.go`; defence in depth behind the closed verb list). The safety verbs `estop`, `rtl`, `land` and `hold` are exempt, so "bird strike, stop now" still stops the asset; the wording is recorded as `text_stop_line` in their audit events | `forbidden_action` |
 | A5 actions (credentials, cluster, foundation) | `forbidden_action` |
 | Commandable targets must be `sim-*` and not marked non-simulated | `not_simulated` |
 | The asset advertises the matching task type in `capabilities` | `not_capable` |
@@ -40,6 +41,8 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | An approval is bound to one `action_id` and its `params_hash` (SHA-256 of the RFC 8785 JCS form of `{action_type, action_version, target, params}`); a hash from any other action, or the wrong endpoint family | `conflict` |
 | An approval is used once: confirming an approved, dispatched or finished action | `replayed` |
 | No confirmation within `confirm_by` (120 s): the action expires | `expired` |
+| One requester may hold at most 10 actions awaiting confirmation (`estop` is never limited). The count is keyed on the verified identity; an unverified same-account caller is counted in its own bucket for the id it claims, so it cannot use up a real principal's slots | `precondition_failed` (`detail: rate_limited`) |
+| Parameters are stored, shown, hashed and sent in one canonical (RFC 8785) form, so duplicate keys cannot show the confirmer one value and send another | — |
 | `request_id` is an idempotency key per requester: the same requester with the same body gets the same action; with a different body, `conflict`. Another principal reusing the id goes through every check itself | `conflict` |
 | Preconditions are checked again at dispatch | `precondition_failed` |
 | Commands carry `expires_at` (30 s), `simulated`, the approval and an Ed25519 `sig` over the JCS envelope; they are published with a JetStream ack (the `CMD` PubAck is the record) | — |
@@ -53,8 +56,11 @@ Every proposal, denial, refused confirmation, approval, rejection, expiry, dispa
 outcome and entity/task result is published as one event on `evt.so.action.{event}` in the omos event envelope v1
 (`Nats-Msg-Id` = envelope id; the `EVT` stream stores `evt.so.>`). Agent sessions add
 `agent_session`, `model_alias`, `prompt_sha256` and `tool_input_sha256` (hashes only).
-Denial and refused-confirmation events are rate limited to 60 per identity per minute (the
-excess is logged, not published), so a client flooding bad requests cannot flood `EVT`.
+Denial and refused-confirmation events are rate limited to 60 per identity **and code** per
+minute (the excess is logged, not published), so a client flooding bad requests cannot flood
+`EVT`, and flooding one kind of bad request cannot hide a different attempt (a stop-line verb,
+an agent confirm) from the audit. A refused confirmation is audited even when the action id
+does not exist (`action_id: act-unknown` when it is not a valid id).
 
 Concurrency: requests are handled concurrently (up to 128 in flight). No lock is held across
 an OpenFGA check, an entity lookup, a publish or the wait for `evt.mission.{tsk}.created`;
@@ -77,6 +83,21 @@ OpenFGA model from `platform/security/openfga/onemind-actions.json` (in-process 
 the HTTP client against a stub OpenFGA server and a closed port). The last check of
 `TestPolicyService` is the whole-run invariant: no `cmd.fleet.>` message without a human
 `evt.so.action.approved`.
+
+## Red-team suite (FEATURES I6)
+
+`internal/policy/redteam_test.go` runs 18 adversarial cases (RT01–RT18) against the same
+in-process stack: prompt-injected proposals and an injection corpus, an agent confirming,
+forged and replayed approvals, parameter swaps after approval, stop-line verbs with synonyms and
+encodings, follow-a-person requests, non-`sim-` ids, expired approvals and commands, offline
+assets, OpenFGA down, bus permissions, flooding, audit completeness with the whole-run
+invariant, the forbidden-name check over `services/schemas` and the catalogue
+(`forbidden.go`; pre-existing hits are counted per file and word in `forbiddenBaseline`, so any
+extra occurrence fails; compounds such as `airstrike` match), safety verbs whose reason uses
+stop-line wording (RT17) and a quota flood under a claimed identity (RT18). Each case is mapped
+to onemind-xr `docs/design/JADC2-MAP.md` §5.3 and `docs/contracts/asset-command.md` §9.
+`REDTEAM_REPORT=/path/table.md go test ./internal/policy/ -run 'TestRedTeam|TestForbiddenNames'`
+writes the pass/fail table.
 
 ## Configuration (environment)
 
