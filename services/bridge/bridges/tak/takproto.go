@@ -10,9 +10,12 @@ package main
 // Streaming message: 0xbf <varint length>  <TakMessage protobuf>
 
 import (
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"math"
+	"strings"
 
 	"google.golang.org/protobuf/encoding/protowire"
 )
@@ -370,8 +373,14 @@ func (d *Detail) unmarshal(b []byte) error {
 	return fields(b, func(num protowire.Number, typ protowire.Type, v []byte) error {
 		if num == 1 {
 			s, err := asString(typ, v)
+			if err != nil {
+				return err
+			}
+			if err := checkXMLFragment(s); err != nil {
+				return fmt.Errorf("xmlDetail: %w", err)
+			}
 			d.XML = s
-			return err
+			return nil
 		}
 		raw, err := asBytes(typ, v)
 		if err != nil {
@@ -436,4 +445,38 @@ func (d *Detail) unmarshal(b []byte) error {
 		}
 		return err
 	})
+}
+
+// checkXMLFragment accepts s only if it is a balanced XML fragment that can sit
+// between <detail> and </detail>. MarshalCotXML writes xmlDetail verbatim, so
+// without this a mesh peer could close the detail and event elements and
+// append a second, forged event (for example an OM.* uid that CP-2 would
+// otherwise keep off tak.cot.inject).
+func checkXMLFragment(s string) error {
+	dec := xml.NewDecoder(strings.NewReader(s))
+	depth := 0
+	for {
+		tok, err := dec.Token()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		switch tok.(type) {
+		case xml.StartElement:
+			depth++
+		case xml.EndElement:
+			depth--
+		case xml.ProcInst, xml.Directive:
+			return errors.New("processing instructions and directives are not allowed")
+		}
+		if depth < 0 {
+			return errors.New("closes an element it did not open")
+		}
+	}
+	if depth != 0 {
+		return errors.New("unclosed element")
+	}
+	return nil
 }

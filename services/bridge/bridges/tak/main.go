@@ -6,7 +6,7 @@
 // protobuf v1). Everything it hears goes onto NATS as CoT XML; anything
 // published to the transmit subject goes out on the mesh.
 //
-//	mesh  ──► tak.cot.mesh.rx              (stream COT, deduplicated across gateways)
+//	mesh  ──► tak.cot.mesh.rx              (acked JetStream publish to stream COT, deduplicated across gateways)
 //	mesh  ◄── tak.cot.mesh.tx              (CoT XML; request/reply gets "ok" or an error)
 //	          tel.fleet.edge.{id}.status   (gateway health every 30s)
 //
@@ -37,7 +37,7 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-const buildVersion = "0.3.0"
+const buildVersion = "0.4.0"
 
 const (
 	subjectRx     = "tak.cot.mesh.rx"
@@ -69,7 +69,8 @@ type config struct {
 	lat, lon                        float64
 	datapkgDir                      string
 	datapkgPort                     int
-	datapkgMax                      int64
+	datapkgMax, datapkgInboxMax     int64
+	rxJetStream                     bool
 }
 
 func getenv(key, def string) string {
@@ -126,7 +127,9 @@ func loadConfig() config {
 		datapkgDir:   os.Getenv("DATAPKG_DIR"),
 		datapkgPort:  mustInt("DATAPKG_HTTP_PORT", "0"),
 		datapkgMax:   int64(mustInt("DATAPKG_MAX_BYTES", "52428800")),
+		rxJetStream:  mustBool("MESH_RX_JETSTREAM", "true"),
 	}
+	c.datapkgInboxMax = int64(mustInt("DATAPKG_INBOX_MAX_BYTES", "1073741824"))
 	if c.chatGroup == "off" {
 		c.chatGroup = ""
 	}
@@ -154,6 +157,41 @@ func injectAllowed(ev *Event) bool {
 		!strings.HasPrefix(ev.UID, gatewayUIDPrefix)
 }
 
+// txRefused implements the transmit-side type guard: OneMind does not put
+// tasking (t-k-*) or hostile, joker or faker affiliations (a-h-*, a-j-*,
+// a-k-*) on the mesh, matching the projector contract. It is defence in depth
+// until leaf permissions restrict who may publish tak.cot.mesh.tx.
+func txRefused(cotType string) error {
+	for _, p := range []string{"t-k", "a-h", "a-j", "a-k"} {
+		if cotType == p || strings.HasPrefix(cotType, p+"-") {
+			return fmt.Errorf("CoT type %s is not sent on the mesh (%s-* refused)", cotType, p)
+		}
+	}
+	return nil
+}
+
+// bindHost picks the address the /getfile server listens on: the advertised
+// endpoint host, else MESH_INTERFACE's first IPv4 address, else all
+// interfaces.
+func bindHost(endpointHost string, iface *net.Interface) string {
+	if endpointHost != "" {
+		return endpointHost
+	}
+	if iface == nil {
+		return ""
+	}
+	addrs, err := iface.Addrs()
+	if err != nil {
+		return ""
+	}
+	for _, a := range addrs {
+		if n, ok := a.(*net.IPNet); ok && n.IP.To4() != nil {
+			return n.IP.String()
+		}
+	}
+	return ""
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 func main() {
@@ -175,6 +213,14 @@ func main() {
 	nc, err := nats.Connect(cfg.natsURL, opts...)
 	if err != nil {
 		log.Fatalf("[%s] NATS connect failed: %v", id, err)
+	}
+	var js nats.JetStreamContext
+	if cfg.rxJetStream {
+		// Acked publishes, at most 256 awaiting an ack; a stalled window or a
+		// missing ack is an error, not a silent drop.
+		if js, err = nc.JetStream(nats.PublishAsyncMaxPending(256), nats.PublishAsyncTimeout(5*time.Second)); err != nil {
+			log.Fatalf("[%s] JetStream: %v", id, err)
+		}
 	}
 
 	group, err := net.ResolveUDPAddr("udp4", cfg.meshGroup)
@@ -225,7 +271,8 @@ func main() {
 	// ── Data packages ────────────────────────────────────────────────────────
 	var dp *DataPackages
 	if cfg.datapkgDir != "" {
-		dp = &DataPackages{Dir: cfg.datapkgDir, MaxBytes: cfg.datapkgMax, SelfUID: uid, OnErr: onErr,
+		dp = &DataPackages{Dir: cfg.datapkgDir, MaxBytes: cfg.datapkgMax, MaxInboxBytes: cfg.datapkgInboxMax,
+			SelfUID: uid, OnErr: onErr,
 			SendAck: func(ack *Event, senderUID, from string) error {
 				// Commo routes the ack like any CoT to the sender: directed to
 				// its advertised endpoint, else its source address on 4242.
@@ -247,14 +294,18 @@ func main() {
 	}
 	var httpSrv *http.Server
 	if dp != nil && cfg.datapkgPort > 0 {
-		httpSrv = &http.Server{Addr: fmt.Sprintf(":%d", cfg.datapkgPort), Handler: dp,
+		host := bindHost(cfg.endpointHost, iface)
+		if host == "" {
+			log.Printf("[%s] warning: /getfile listens on all interfaces; set GATEWAY_ENDPOINT_HOST or MESH_INTERFACE", id)
+		}
+		httpSrv = &http.Server{Addr: net.JoinHostPort(host, strconv.Itoa(cfg.datapkgPort)), Handler: dp,
 			ReadHeaderTimeout: 10 * time.Second}
 		go func() {
 			if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 				log.Fatalf("[%s] DATAPKG_HTTP_PORT: %v", id, err)
 			}
 		}()
-		log.Printf("[%s] serving outbox on http :%d/getfile", id, cfg.datapkgPort)
+		log.Printf("[%s] serving outbox on http %s/getfile", id, httpSrv.Addr)
 	}
 
 	// ── Mesh → NATS ──────────────────────────────────────────────────────────
@@ -271,16 +322,32 @@ func main() {
 			// takproto README: tell consumers the message was not fully decoded.
 			msg.Header.Set("Tak-Undecoded-Extensions", strconv.Itoa(r.Event.Detail.Extensions))
 		}
-		if err := nc.PublishMsg(msg); err != nil {
-			onErr(fmt.Errorf("publish %s: %w", subjectRx, err))
-			return
+		if js != nil {
+			f, err := js.PublishMsgAsync(msg)
+			if err != nil {
+				onErr(fmt.Errorf("publish %s: %w", subjectRx, err))
+				return
+			}
+			go func() {
+				select {
+				case <-f.Ok():
+					rx.Add(1)
+				case err := <-f.Err():
+					onErr(fmt.Errorf("publish %s uid=%s not acked: %w", subjectRx, r.Event.UID, err))
+				}
+			}()
+		} else {
+			if err := nc.PublishMsg(msg); err != nil {
+				onErr(fmt.Errorf("publish %s: %w", subjectRx, err))
+				return
+			}
+			rx.Add(1)
 		}
 		if cfg.toTakServer && injectAllowed(r.Event) {
 			if err := nc.Publish(subjectInject, xmlBytes); err != nil {
 				onErr(fmt.Errorf("publish %s: %w", subjectInject, err))
 			}
 		}
-		rx.Add(1)
 		if dp != nil {
 			dp.Handle(r)
 		}
@@ -317,6 +384,11 @@ func main() {
 		ev, err := ParseCotXML(m.Data)
 		if err != nil {
 			onErr(fmt.Errorf("%s: %w", subjectTx, err))
+			reply("error: " + err.Error())
+			return
+		}
+		if err := txRefused(ev.Type); err != nil {
+			onErr(fmt.Errorf("%s uid=%s: %w", subjectTx, ev.UID, err))
 			reply("error: " + err.Error())
 			return
 		}

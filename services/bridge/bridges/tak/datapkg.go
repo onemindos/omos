@@ -15,7 +15,10 @@ package main
 // The gateway fetches only requests addressed to it (directed TCP), only over
 // http, only from the IP address the request came from (Commo's own fallback
 // rule 4b uses that address), only up to DATAPKG_MAX_BYTES, and keeps the file
-// only if its size and SHA-256 match the request.
+// only if its size and SHA-256 match the request. At most MaxConcurrent
+// fetches run at once, a package already in the inbox (same SHA-256) is acked
+// without fetching it again, and a request that would take the inbox over
+// MaxInboxBytes is refused with a nack.
 
 import (
 	"crypto/rand"
@@ -33,6 +36,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -41,6 +45,8 @@ const (
 	typeFileRequest = "b-f-t-r"
 	typeFileAck     = "b-f-t-a"
 	ackStale        = 10 * time.Second // Commo STALE_TIME_FILE_ACK
+
+	defaultMaxConcurrentFetches = 2
 )
 
 // FileShare is a parsed CoT file transfer request.
@@ -102,9 +108,13 @@ func ParseFileShare(ev *Event) (*FileShare, error) {
 // received files go to Dir/inbox, files to offer go in Dir/outbox.
 type DataPackages struct {
 	Dir      string
-	MaxBytes int64
-	SelfUID  string
-	Client   *http.Client
+	MaxBytes int64 // largest single package
+	// MaxInboxBytes caps the inbox, counting files and fetches in flight;
+	// 0 means no cap. MaxConcurrent caps fetches in flight (default 2).
+	MaxInboxBytes int64
+	MaxConcurrent int
+	SelfUID       string
+	Client        *http.Client
 	// SendAck delivers an ack to the sender; senderUID and from (the
 	// request's network source) let it find the sender's endpoint.
 	SendAck func(ack *Event, senderUID, from string) error
@@ -112,6 +122,9 @@ type DataPackages struct {
 
 	Received atomic.Int64
 	Failed   atomic.Int64
+
+	mu       sync.Mutex
+	inflight map[string]int64 // sha256 -> size, fetches running
 }
 
 func (d *DataPackages) inbox() string  { return filepath.Join(d.Dir, "inbox") }
@@ -138,7 +151,86 @@ func (d *DataPackages) Handle(r Received) {
 		d.OnErr(fmt.Errorf("data package from %s: %w", r.From, err))
 		return
 	}
-	go d.receive(fs, r.From)
+	switch release, err := d.admit(fs); {
+	case errors.Is(err, errInFlight):
+		// The running fetch of the same package will ack it.
+	case errors.Is(err, errHave):
+		go d.reply(fs, r.From, nil)
+	case err != nil:
+		d.Failed.Add(1)
+		d.OnErr(fmt.Errorf("data package %q from %s: %w", fs.Name, fs.SenderUID, err))
+		go d.reply(fs, r.From, err)
+	default:
+		go func() {
+			defer release()
+			d.receive(fs, r.From)
+		}()
+	}
+}
+
+var (
+	errInFlight = errors.New("already being fetched")
+	errHave     = errors.New("already received")
+)
+
+func (d *DataPackages) storedPath(fs *FileShare) string {
+	return filepath.Join(d.inbox(), fs.SHA256+"-"+safeFilename(fs.Filename))
+}
+
+// admit reserves a fetch slot and inbox space for fs. The caller runs release
+// when the fetch ends.
+func (d *DataPackages) admit(fs *FileShare) (release func(), err error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	if d.inflight == nil {
+		d.inflight = map[string]int64{}
+	}
+	if _, ok := d.inflight[fs.SHA256]; ok {
+		return nil, errInFlight
+	}
+	if m, _ := filepath.Glob(filepath.Join(d.inbox(), fs.SHA256+"-*")); len(m) > 0 {
+		return nil, errHave
+	}
+	limit := d.MaxConcurrent
+	if limit <= 0 {
+		limit = defaultMaxConcurrentFetches
+	}
+	if len(d.inflight) >= limit {
+		return nil, fmt.Errorf("busy: %d transfers in progress", len(d.inflight))
+	}
+	if d.MaxInboxBytes > 0 {
+		used, err := dirBytes(d.inbox())
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range d.inflight {
+			used += n
+		}
+		if used+fs.Size > d.MaxInboxBytes {
+			return nil, fmt.Errorf("inbox full: %d bytes used, limit %d", used, d.MaxInboxBytes)
+		}
+	}
+	d.inflight[fs.SHA256] = fs.Size
+	return func() {
+		d.mu.Lock()
+		delete(d.inflight, fs.SHA256)
+		d.mu.Unlock()
+	}, nil
+}
+
+// dirBytes sums the sizes of the regular files in dir.
+func dirBytes(dir string) (int64, error) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return 0, err
+	}
+	var n int64
+	for _, e := range entries {
+		if fi, err := e.Info(); err == nil && fi.Mode().IsRegular() {
+			n += fi.Size()
+		}
+	}
+	return n, nil
 }
 
 func (d *DataPackages) receive(fs *FileShare, from string) {
@@ -149,6 +241,11 @@ func (d *DataPackages) receive(fs *FileShare, from string) {
 	} else {
 		d.Received.Add(1)
 	}
+	d.reply(fs, from, err)
+}
+
+// reply sends the ack the sender asked for, if any.
+func (d *DataPackages) reply(fs *FileShare, from string, err error) {
 	if fs.AckUID == "" || d.SendAck == nil {
 		return
 	}
@@ -241,7 +338,7 @@ func (d *DataPackages) Fetch(fs *FileShare, from string) (string, error) {
 	if got := hex.EncodeToString(h.Sum(nil)); got != fs.SHA256 {
 		return "", fmt.Errorf("sha256 %s, request said %s", got, fs.SHA256)
 	}
-	dst := filepath.Join(d.inbox(), fs.SHA256+"-"+safeFilename(fs.Filename))
+	dst := d.storedPath(fs)
 	if err := os.Rename(tmp.Name(), dst); err != nil {
 		return "", err
 	}

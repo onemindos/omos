@@ -29,7 +29,8 @@ const (
 	controlTimeout  = 2 * time.Minute  // rule 3c
 	contactTimeout  = 5 * time.Minute  // forget contacts we no longer hear
 	echoWindow      = 10 * time.Second // drop our own datagrams looped back
-	maxDirectBytes  = 1 << 20          // largest directed TCP message accepted
+	maxDirectBytes  = 256 << 10        // largest directed TCP message accepted
+	maxDirectConns  = 16               // directed TCP connections handled at once
 	directTimeout   = 10 * time.Second
 )
 
@@ -491,8 +492,11 @@ func (m *Mesh) readGroup(g groupConn, fn func(Received), onErr func(error)) {
 type decodeFunc func([]byte) (*Event, *TakControl, uint64, error)
 
 // ServeDirect accepts directed TCP messages (connect, send one message, close),
-// the way TAK clients reach a contact's "host:port:tcp" endpoint.
+// the way TAK clients reach a contact's "host:port:tcp" endpoint. At most
+// maxDirectConns are read at once; further connections are closed at once, so
+// a LAN flood holds at most maxDirectConns*maxDirectBytes of buffers.
 func ServeDirect(ln net.Listener, decode decodeFunc, observe func(*Event, *TakControl, uint64), fn func(Received), onErr func(error)) {
+	sem := make(chan struct{}, maxDirectConns)
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -502,7 +506,15 @@ func ServeDirect(ln net.Listener, decode decodeFunc, observe func(*Event, *TakCo
 			onErr(fmt.Errorf("direct accept: %w", err))
 			continue
 		}
+		select {
+		case sem <- struct{}{}:
+		default:
+			onErr(fmt.Errorf("direct: %d connections busy, closed %s", maxDirectConns, conn.RemoteAddr()))
+			conn.Close()
+			continue
+		}
 		go func(c net.Conn) {
+			defer func() { <-sem }()
 			defer c.Close()
 			_ = c.SetReadDeadline(time.Now().Add(directTimeout))
 			data, err := io.ReadAll(io.LimitReader(c, maxDirectBytes+1))

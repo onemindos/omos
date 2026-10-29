@@ -34,6 +34,19 @@ Protocol handling follows `takproto/README.txt` and the Commo sources in
   everything else stays in `xmlDetail`.
 - Drops its own multicast echo, and sets `Nats-Msg-Id` so two gateways hearing
   the same report store it once in stream `COT` (2 min duplicate window).
+- Publishes `tak.cot.mesh.rx` with acked JetStream publishes (at most 256
+  awaiting an ack, 5 s timeout). A publish that is not acked, for example
+  during a leaf outage, counts in `meta.errors`, not in `meta.rx`. With no
+  stream on `tak.cot.mesh.rx` reachable from the leaf, set
+  `MESH_RX_JETSTREAM=false` for core publishes.
+- Rejects a v1 message whose `xmlDetail` is not a balanced XML fragment (or
+  carries a processing instruction or DOCTYPE), so a peer cannot close the
+  detail and smuggle a second event onto the bus or `tak.cot.inject`.
+- Refuses tasking and hostile, joker or faker types (`t-k-*`, `a-h-*`, `a-j-*`,
+  `a-k-*`) on `tak.cot.mesh.tx` with an error reply, as defence in depth until
+  leaf permissions restrict that subject.
+- Reads at most 16 directed TCP connections at once, each up to 256 KiB;
+  further connections are closed.
 - Registered detail extensions it cannot decode are counted in the
   `Tak-Undecoded-Extensions` header.
 
@@ -88,11 +101,16 @@ With `DATAPKG_DIR` set, the gateway takes part in Commo's peer-hosted transfer
   is kept only if its size and SHA-256 match the request, as
   `inbox/<sha256>-<filename>`. If the sender asked for an ack, the gateway
   sends a `b-f-t-a` `<ackresponse>` with `success` true or false to the
-  sender's endpoint. Requests heard on multicast are not fetched. Peer-hosted
+  sender's endpoint. Requests heard on multicast are not fetched. At most two
+  fetches run at once; a package already in the inbox (same SHA-256) is acked
+  without a second fetch, and requests that arrive while two fetches run, or
+  that would take the inbox over `DATAPKG_INBOX_MAX_BYTES`, get a nack. Peer-hosted
   https (`peerHosted`, `httpsPort`) and server-hosted (`/Marti/`) URLs are
   refused.
 - **Serve.** With `DATAPKG_HTTP_PORT` set, files placed in `outbox/` are served
-  at `http://<host>:<port>/getfile?file=<name>`. To send one to an ATAK user,
+  at `http://<host>:<port>/getfile?file=<name>`. The server listens on
+  `GATEWAY_ENDPOINT_HOST`, else on `MESH_INTERFACE`'s IPv4 address, and on all
+  interfaces only when neither is set (it logs a warning). To send one to an ATAK user,
   publish a `b-f-t-r` naming that URL on `tak.cot.mesh.tx` with
   `Tak-Dest-Uid: <their uid>`.
 
@@ -144,13 +162,15 @@ gateway has no container image or Argo Application.
 | `DATAPKG_DIR` | unset | Enables data packages; holds `inbox/` and `outbox/` |
 | `DATAPKG_HTTP_PORT` | `0` | Serves `outbox/` at `/getfile`; `0` disables |
 | `DATAPKG_MAX_BYTES` | `52428800` | Largest data package accepted |
+| `DATAPKG_INBOX_MAX_BYTES` | `1073741824` | Inbox size cap, counting fetches in flight; `0` disables |
+| `MESH_RX_JETSTREAM` | `true` | Acked JetStream publishes on `tak.cot.mesh.rx`; `false` uses core publishes |
 
 ## NATS Subjects
 
 | Subject | Direction | Payload |
 |---|---|---|
 | `tak.cot.mesh.rx` | Publish | CoT XML. Headers: `Nats-Msg-Id`, `Tak-Gateway`, `Tak-Delivery` (`mesh`, `chat`, `direct`, `udp`), `Tak-Proto` (`0`, `1`), `Tak-From` |
-| `tak.cot.mesh.tx` | Subscribe | CoT XML to send. Optional header `Tak-Dest-Uid` sends it directed to that contact. Request/reply answers `ok` or `error: …`; senders that would use a JetStream publish should use a core publish instead (the reply would race the PubAck) and read `meta.tx` from the status |
+| `tak.cot.mesh.tx` | Subscribe | CoT XML to send; `t-k-*`, `a-h-*`, `a-j-*` and `a-k-*` are refused. Optional header `Tak-Dest-Uid` sends it directed to that contact. Request/reply answers `ok` or `error: …`; senders that would use a JetStream publish should use a core publish instead (the reply would race the PubAck) and read `meta.tx` from the status |
 | `tak.cot.inject` | Publish (optional) | CoT XML for TAK Server via NatsBridgePlugin |
 | `tel.fleet.edge.{id}.status` | Publish | `{uid, type: "fleet.edge", t, meta: {proto_version, contacts, rx, tx, errors, last_error, tx_interface, chat_group, encrypted, to_tak_server, datapkg_rx, datapkg_failed, …}}` |
 
@@ -177,8 +197,18 @@ malformed input, real multicast on the host, transmit on a named interface
 routing, mesh encryption against an OpenSSL known-answer vector, plaintext
 rejection on an encrypted mesh, the `MESH_TO_TAK_SERVER` filter, directed TCP
 both ways, and data package fetch, verify, ack and `/getfile` serving.
+`hardening_test.go` covers the review fixes: a smuggled `</detail></event>`
+in `xmlDetail`, the transmit type guard, the `/getfile` bind address, data
+package admission (concurrency, SHA-256 dedup, inbox cap) and the directed
+connection limit.
 
 ## Changes
+
+**v0.4.0.** Review hardening: v1 `xmlDetail` must be a balanced XML fragment;
+acked JetStream publishes on `tak.cot.mesh.rx` (`MESH_RX_JETSTREAM`); transmit
+refuses `t-k-*`, `a-h-*`, `a-j-*` and `a-k-*`; data package fetch limit,
+SHA-256 dedup and inbox cap (`DATAPKG_INBOX_MAX_BYTES`); directed TCP limited to
+16 connections of 256 KiB; `/getfile` binds to the mesh address.
 
 **v0.3.0.** `MESH_INTERFACE` now applies to transmit (it was receive only, so
 SA could leave by the default route instead of the ATAK LAN). GeoChat group,
