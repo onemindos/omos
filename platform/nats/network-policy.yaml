@@ -67,7 +67,7 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tailscale
-        # Hermes Legacy's nats-leaf sidecar (hermes-legacy-leaf). Not hermes-fresh or onemind-mcp.
+        # Hermes Legacy's nats-leaf sidecar (hermes-legacy-leaf). Not onemind-hermes or onemind-mcp.
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: hermes

@@ -2,7 +2,7 @@
 
 Curated from the live Legacy pod (`/opt/data/skills`, reviewed 2026-10-29) for the
 single-agent instance `onemind-hermes` (persona: Legacy, one soul). The inventory
-is "Skills not shipped with Fresh" in `platform/hermes/fresh/MIGRATION.md`.
+is "Skills not shipped with the stock image" in `platform/hermes/onemind-hermes/MIGRATION.md`.
 
 Rules used for curation:
 
@@ -127,7 +127,7 @@ Treat each as exposed on that volume and rotate on retirement of Legacy.
 
 ## How they are installed into `onemind-hermes`
 
-Verified on `hermes-fresh` (Hermes v0.22.5):
+Verified on the predecessor `hermes-fresh` (same image) (Hermes v0.22.5):
 
 - `/opt/hermes/cli-config.yaml.example` documents `skills.external_dirs`: extra
   directories whose skills are loaded without copying them into `~/.hermes/skills/`.
@@ -161,7 +161,7 @@ plan wants to avoid.
 
 ## Bundled skills proposed for disabling on the new instance
 
-Bundled count on Fresh is 58. Keep `devops`, `software-development`, `research`
+Bundled count on the stock image is 58. Keep `devops`, `software-development`, `research`
 (except the two noted), `productivity` (document skills) and `autonomous-ai-agents`
 (except `computer-use`), as requested.
 

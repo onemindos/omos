@@ -7864,29 +7864,29 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: hermes-fresh
+  name: onemind-hermes
   tags:
     - kubernetes
-  title: Hermes (Fresh)
-  description: Independent fresh Hermes instance beside Legacy in the hermes
-    namespace (Argo application platform-hermes-fresh); no NATS sidecar, no
+  title: OneMind Hermes
+  description: Hermes v0.22.5 instance with the single Legacy soul in the hermes
+    namespace (Argo application platform-onemind-hermes); no NATS sidecar, no
     imported Legacy data.
   annotations:
     onemind.io/hosting: digitalocean-nyc3
     onemind.io/structure-source: catalog/structure.yaml
-    argocd/app-name: platform-hermes-fresh
+    argocd/app-name: platform-onemind-hermes
     argocd/instance-name: onemind-cloud
-    backstage.io/kubernetes-namespace: hermes
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes-fresh
     onemind.io/pillar-review: proposed
-    onemind.io/kubernetes-namespaces: hermes
-    onemind.io/kubernetes-workloads: hermes/hermes-fresh
-    grafana/alert-label-selector: namespace=hermes
-    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-fresh
-    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-fresh)-.*"}'
     grafana/dashboard-selector: uid == 'onemind-workload'
-    onemind.io/recovery-runbook: apps/hermes-fresh/
+    onemind.io/recovery-runbook: apps/onemind-hermes/
     github.com/project-slug: onemindos/omos
+    backstage.io/kubernetes-namespace: hermes
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-hermes
+    onemind.io/kubernetes-namespaces: hermes
+    onemind.io/kubernetes-workloads: hermes/onemind-hermes
+    grafana/alert-label-selector: namespace=hermes
+    onemind.io/grafana-dashboard-path: d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-hermes
+    onemind.io/logs-query: '{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-hermes)-.*"}'
   labels:
     onemind.io/pillar: so
     onemind.io/catalog-role: app

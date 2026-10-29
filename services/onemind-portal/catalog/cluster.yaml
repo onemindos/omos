@@ -883,11 +883,11 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: k8s-hermes-hermes-fresh-c0d4ec2d
-  title: Hermes (Fresh) — Core
+  name: k8s-hermes-onemind-hermes-2c3922bb
+  title: OneMind Hermes — Core
   description: Deployment in hermes
   annotations:
-    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=hermes-fresh
+    backstage.io/kubernetes-label-selector: app.kubernetes.io/name=onemind-hermes
     backstage.io/kubernetes-namespace: hermes
     onemind.io/inventory-source: kubernetes
     onemind.io/inventory-observed-at: 2026-10-27T08:51:13.000Z
@@ -895,7 +895,7 @@ metadata:
     onemind.io/inventory-review: discovered
     onemind.io/inventory-state: observed
     onemind.io/inventory-missing-observations: "0"
-    onemind.io/kubernetes-workload: hermes-fresh
+    onemind.io/kubernetes-workload: onemind-hermes
     onemind.io/kubernetes-workload-kind: Deployment
     onemind.io/pillar-review: proposed
   tags:
@@ -911,7 +911,7 @@ spec:
   system: ai-agents
   dependsOn:
     - resource:default/do-nyc3-omos-cloud
-  subcomponentOf: component:default/hermes-fresh
+  subcomponentOf: component:default/onemind-hermes
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

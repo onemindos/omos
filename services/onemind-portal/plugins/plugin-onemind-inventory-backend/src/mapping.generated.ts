@@ -44,8 +44,8 @@ export const mapping: InventoryMapping = {
     'dapr-system/dapr-sidecar-injector': 'component:default/dapr',
     'github-runner/github-runner': 'component:default/platform-core',
     'github-runner/github-runner-hermes': 'component:default/platform-core',
-    'hermes/hermes-fresh': 'component:default/hermes-fresh',
     'hermes/hermes-legacy': 'component:default/hermes-legacy',
+    'hermes/onemind-hermes': 'component:default/onemind-hermes',
     'hermes/onemind-mcp': 'component:default/onemind-mcp',
     'ingress-nginx/ingress-nginx-controller': 'component:default/ingress-nginx',
     'karakeep/chrome': 'component:default/karakeep',
@@ -257,12 +257,6 @@ export const mapping: InventoryMapping = {
       pillar: 'so',
       review: 'proposed',
     },
-    'hermes-fresh': {
-      title: 'Hermes (Fresh)',
-      system: 'ai-agents',
-      pillar: 'so',
-      review: 'proposed',
-    },
     'hermes-legacy': {
       title: 'Hermes (Legacy)',
       system: 'ai-agents',
@@ -380,6 +374,12 @@ export const mapping: InventoryMapping = {
     'onemind-core': {
       title: 'OneMind core services',
       system: 'infrastructure',
+      pillar: 'so',
+      review: 'proposed',
+    },
+    'onemind-hermes': {
+      title: 'OneMind Hermes',
+      system: 'ai-agents',
       pillar: 'so',
       review: 'proposed',
     },

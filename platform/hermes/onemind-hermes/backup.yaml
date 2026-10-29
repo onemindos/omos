@@ -8,7 +8,7 @@ metadata:
 spec:
   sourcePVC: onemind-hermes-data
   trigger:
-    schedule: 25 1 * * *  # 01:25 UTC; offset from the orphaned hermes-fresh-data source (01:10)
+    schedule: 25 1 * * *  # 01:25 UTC; offset from the retired hermes-fresh-data source (01:10)
   restic:
     repository: onemind-hermes-restic
     copyMethod: Snapshot
