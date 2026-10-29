@@ -131,6 +131,7 @@ Tier 1 follows the owner's list: TAK Server, NATS, Authentik, ingress, cert-mana
 | `platform-observability` | clickhouse | ClickHouse "Time Machine" (Altinity CHI) | 20 GiB time-series | `VolSync`; native backup Job suspended | internal | Argo |
 | `platform-clickhouse-operator` | kube-system | Altinity ClickHouse operator (chart 0.27.3). A second, legacy `clickhouse-operator` Deployment sits at 0 replicas | none | Git | internal | Argo |
 | `platform-omos` | omos | `feed-intel`, `feed-satellites`, `omos-tak-projector`, `sink-clickhouse`, `omos-mission-engine` (0 replicas) | none (streams in NATS, data in ClickHouse) | Git | internal | Argo |
+| `platform-omos-entity` | omos | **Proposed, not synced (manual sync).** `omos-entity-service` (FEATURES A4): fuses `COT`/`TEL`/`WORLD`/`INTEL` into `ent.{entity_type}.{entity_id}.state` in the proposed `ENT` stream; one replica on the ecosystem pool, KV lease in the proposed `entity-correlation` bucket | none on disk (state in `ENT`, rebuilt from it on start) | Git; state rebuildable by replay | internal (`svc.entity.get`/`query` on NATS) | Argo, manual sync |
 | `platform-redpanda-connect` | omos | Redpanda Connect (digest-pinned) | none | Git | internal | Argo |
 | `platform-onetak` | onetak | Tak-portal (root host), MediaMTX, geo stack (Tile38), WebODM | about 150 GiB of PVCs | `VolSync` x5 | `onemindos.dev`, geo hosts **public (CF)**; `enroll.tail717ba0.ts.net` **tailnet** | Argo |
 | `platform-takml` | takml | TAK-ML vision pipeline | PostgreSQL, 8 GiB | `PG dump` (06:00 UTC), `VolSync` | internal | Argo |
