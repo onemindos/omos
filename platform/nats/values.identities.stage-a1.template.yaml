@@ -59,6 +59,44 @@ config:
         - service: svc.cot.send
           accounts:
           - CLIENT
+        - service: svc.mission.get
+          accounts:
+          - CLIENT
+          - AGENTS
+        - service: svc.mission.list
+          accounts:
+          - CLIENT
+          - AGENTS
+        - service: svc.mission.report
+          accounts:
+          - CLIENT
+        - service: svc.geofence.alerts
+          accounts:
+          - CLIENT
+        - service: svc.registry.video.>
+          accounts:
+          - CLIENT
+        - service: svc.tak.mission.>
+          accounts:
+          - CLIENT
+        - stream: evt.so.action.>
+          accounts:
+          - CLIENT
+        - stream: evt.mission.>
+          accounts:
+          - CLIENT
+        - stream: evt.map.geofence.>
+          accounts:
+          - CLIENT
+        - stream: tel.feed.*.status
+          accounts:
+          - CLIENT
+        - stream: tak.cot.out
+          accounts:
+          - CLIENT
+        - stream: tak.cot.mesh.rx
+          accounts:
+          - CLIENT
         imports:
         - service:
             account: SYS
@@ -96,6 +134,7 @@ config:
               - cmd.>
               - evt.so.action.>
               - svc.entity.get
+              - svc.mission.apply
               - $JS.API.INFO
               - $JS.API.STREAM.INFO.KV_geofences
               - $JS.API.CONSUMER.CREATE.KV_geofences
@@ -109,20 +148,6 @@ config:
               - $JS.API.DIRECT.GET.KV_geofences
               - $JS.API.DIRECT.GET.KV_geofences.>
               - $JS.API.STREAM.MSG.GET.KV_geofences
-              - $JS.API.STREAM.INFO.KV_mission-state
-              - $JS.API.CONSUMER.CREATE.KV_mission-state
-              - $JS.API.CONSUMER.CREATE.KV_mission-state.>
-              - $JS.API.CONSUMER.DURABLE.CREATE.KV_mission-state.*
-              - $JS.API.CONSUMER.INFO.KV_mission-state.*
-              - $JS.API.CONSUMER.DELETE.KV_mission-state.*
-              - $JS.API.CONSUMER.MSG.NEXT.KV_mission-state.*
-              - $JS.ACK.KV_mission-state.>
-              - $JS.FC.KV_mission-state.>
-              - $JS.API.DIRECT.GET.KV_mission-state
-              - $JS.API.DIRECT.GET.KV_mission-state.>
-              - $JS.API.STREAM.MSG.GET.KV_mission-state
-              - $KV.geofences.>
-              - $KV.mission-state.>
             subscribe:
               allow:
               - svc.policy.>
@@ -285,6 +310,9 @@ config:
             publish:
               allow:
               - $JS.API.INFO
+              - $JS.API.STREAM.NAMES
+              - $JS.API.STREAM.LIST
+              - $JS.API.STREAM.INFO.*
               - $JS.API.STREAM.INFO.ENT
               - $JS.API.CONSUMER.CREATE.ENT
               - $JS.API.CONSUMER.CREATE.ENT.>
@@ -294,18 +322,13 @@ config:
               - $JS.API.CONSUMER.MSG.NEXT.ENT.*
               - $JS.ACK.ENT.>
               - $JS.FC.ENT.>
-              - $JS.API.STREAM.INFO.TEL
-              - $JS.API.CONSUMER.CREATE.TEL
-              - $JS.API.CONSUMER.CREATE.TEL.>
-              - $JS.API.CONSUMER.DURABLE.CREATE.TEL.*
-              - $JS.API.CONSUMER.INFO.TEL.*
-              - $JS.API.CONSUMER.DELETE.TEL.*
-              - $JS.API.CONSUMER.MSG.NEXT.TEL.*
-              - $JS.ACK.TEL.>
-              - $JS.FC.TEL.>
               - $JS.API.DIRECT.GET.ENT
               - $JS.API.DIRECT.GET.ENT.>
               - $JS.API.STREAM.MSG.GET.ENT
+              - $JS.API.STREAM.INFO.TEL
+              - $JS.API.DIRECT.GET.TEL
+              - $JS.API.DIRECT.GET.TEL.>
+              - $JS.API.STREAM.MSG.GET.TEL
               - $JS.API.STREAM.INFO.KV_world-state
               - $JS.API.CONSUMER.CREATE.KV_world-state
               - $JS.API.CONSUMER.CREATE.KV_world-state.>
@@ -335,7 +358,8 @@ config:
             subscribe:
               allow:
               - svc.layer.>
-              - tel.feed.>
+              - tel.feed.*.status
+              - tel.fleet.node.*.status
               - _INBOX.>
             allow_responses:
               max: -1
@@ -348,7 +372,6 @@ config:
             publish:
               allow:
               - tak.cot.inject
-              - tak.cot.mesh.tx
               - $JS.API.INFO
               - $JS.API.STREAM.NAMES
               - $JS.API.STREAM.INFO.INTEL
@@ -360,6 +383,21 @@ config:
               - $JS.API.CONSUMER.MSG.NEXT.INTEL.*
               - $JS.ACK.INTEL.>
               - $JS.FC.INTEL.>
+            subscribe:
+              allow:
+              - ent.*.*.state
+              - cmd.projector.>
+              - _INBOX.>
+        - user: projector-gated
+          password: __PROJECTOR_GATED_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - tak.cot.inject
+              - tak.cot.mesh.tx
+              - $JS.API.INFO
               - $JS.API.STREAM.INFO.ENT
               - $JS.API.CONSUMER.CREATE.ENT
               - $JS.API.CONSUMER.CREATE.ENT.>
@@ -397,6 +435,8 @@ config:
               allow:
               - svc.cot.send
               - ent.*.*.state
+              - tak.cot.out
+              - tak.cot.mesh.rx
               - cmd.projector.>
               - _INBOX.>
             allow_responses: true
@@ -410,6 +450,7 @@ config:
               - tak.cot.out
             subscribe:
               allow:
+              - tak.cot.inject
               - _INBOX.>
         - user: bridge-mavlink-home
           password: __BRIDGE_MAVLINK_HOME_PW__
@@ -437,6 +478,226 @@ config:
               allow:
               - tak.cot.mesh.tx
               - _INBOX.>
+        - user: bridge-ros2-home
+          password: __BRIDGE_ROS2_HOME_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - tel.fleet.robot.sim-tb1.>
+              - evt.robot.sim-tb1.>
+            subscribe:
+              allow:
+              - cmd.fleet.robot.sim-tb1.>
+              - _INBOX.>
+        - user: geofence
+          password: __GEOFENCE_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - evt.map.geofence.>
+              - evt.so.alert.>
+              - $JS.API.INFO
+              - $JS.API.STREAM.INFO.CMD
+              - $JS.API.CONSUMER.CREATE.CMD
+              - $JS.API.CONSUMER.CREATE.CMD.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.CMD.*
+              - $JS.API.CONSUMER.INFO.CMD.*
+              - $JS.API.CONSUMER.DELETE.CMD.*
+              - $JS.API.CONSUMER.MSG.NEXT.CMD.*
+              - $JS.ACK.CMD.>
+              - $JS.FC.CMD.>
+              - $JS.API.STREAM.INFO.ENT
+              - $JS.API.CONSUMER.CREATE.ENT
+              - $JS.API.CONSUMER.CREATE.ENT.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.ENT.*
+              - $JS.API.CONSUMER.INFO.ENT.*
+              - $JS.API.CONSUMER.DELETE.ENT.*
+              - $JS.API.CONSUMER.MSG.NEXT.ENT.*
+              - $JS.ACK.ENT.>
+              - $JS.FC.ENT.>
+              - $JS.API.STREAM.INFO.MISSION
+              - $JS.API.CONSUMER.CREATE.MISSION
+              - $JS.API.CONSUMER.CREATE.MISSION.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.MISSION.*
+              - $JS.API.CONSUMER.INFO.MISSION.*
+              - $JS.API.CONSUMER.DELETE.MISSION.*
+              - $JS.API.CONSUMER.MSG.NEXT.MISSION.*
+              - $JS.ACK.MISSION.>
+              - $JS.FC.MISSION.>
+              - $JS.API.STREAM.INFO.EVT
+              - $JS.API.CONSUMER.CREATE.EVT
+              - $JS.API.CONSUMER.CREATE.EVT.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.EVT.*
+              - $JS.API.CONSUMER.INFO.EVT.*
+              - $JS.API.CONSUMER.DELETE.EVT.*
+              - $JS.API.CONSUMER.MSG.NEXT.EVT.*
+              - $JS.ACK.EVT.>
+              - $JS.FC.EVT.>
+              - $JS.API.STREAM.INFO.KV_geofences
+              - $JS.API.CONSUMER.CREATE.KV_geofences
+              - $JS.API.CONSUMER.CREATE.KV_geofences.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.KV_geofences.*
+              - $JS.API.CONSUMER.INFO.KV_geofences.*
+              - $JS.API.CONSUMER.DELETE.KV_geofences.*
+              - $JS.API.CONSUMER.MSG.NEXT.KV_geofences.*
+              - $JS.ACK.KV_geofences.>
+              - $JS.FC.KV_geofences.>
+              - $JS.API.DIRECT.GET.KV_geofences
+              - $JS.API.DIRECT.GET.KV_geofences.>
+              - $JS.API.STREAM.MSG.GET.KV_geofences
+              - $KV.geofences.>
+            subscribe:
+              allow:
+              - tel.feed.*.status
+              - svc.geofence.alerts
+              - _INBOX.>
+            allow_responses: true
+        - user: mission
+          password: __MISSION_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - evt.mission.>
+              - $JS.API.INFO
+              - $JS.API.STREAM.INFO.CMD
+              - $JS.API.CONSUMER.CREATE.CMD
+              - $JS.API.CONSUMER.CREATE.CMD.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.CMD.*
+              - $JS.API.CONSUMER.INFO.CMD.*
+              - $JS.API.CONSUMER.DELETE.CMD.*
+              - $JS.API.CONSUMER.MSG.NEXT.CMD.*
+              - $JS.ACK.CMD.>
+              - $JS.FC.CMD.>
+              - $JS.API.STREAM.INFO.EVT
+              - $JS.API.CONSUMER.CREATE.EVT
+              - $JS.API.CONSUMER.CREATE.EVT.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.EVT.*
+              - $JS.API.CONSUMER.INFO.EVT.*
+              - $JS.API.CONSUMER.DELETE.EVT.*
+              - $JS.API.CONSUMER.MSG.NEXT.EVT.*
+              - $JS.ACK.EVT.>
+              - $JS.FC.EVT.>
+              - $JS.API.STREAM.INFO.KV_mission-state
+              - $JS.API.CONSUMER.CREATE.KV_mission-state
+              - $JS.API.CONSUMER.CREATE.KV_mission-state.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.KV_mission-state.*
+              - $JS.API.CONSUMER.INFO.KV_mission-state.*
+              - $JS.API.CONSUMER.DELETE.KV_mission-state.*
+              - $JS.API.CONSUMER.MSG.NEXT.KV_mission-state.*
+              - $JS.ACK.KV_mission-state.>
+              - $JS.FC.KV_mission-state.>
+              - $JS.API.DIRECT.GET.KV_mission-state
+              - $JS.API.DIRECT.GET.KV_mission-state.>
+              - $JS.API.STREAM.MSG.GET.KV_mission-state
+              - $KV.mission-state.>
+            subscribe:
+              allow:
+              - svc.mission.>
+              - tel.fleet.*.*.position
+              - _INBOX.>
+            allow_responses: true
+        - user: agentops
+          password: __AGENTOPS_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - tel.fleet.agent.>
+              - evt.entity.*.alert
+              - evt.map.geofence.>
+              - evt.so.brief.published
+              - agents.hb.onemind-watch.>
+              - agents.hb.onemind-brief.>
+              - agents.prompt.hermes.>
+              - svc.entity.query
+              - svc.policy.task.propose
+              - svc.cot.send
+              - $JS.API.INFO
+              - $JS.API.STREAM.NAMES
+              - $JS.API.STREAM.INFO.ENT
+              - $JS.API.CONSUMER.CREATE.ENT
+              - $JS.API.CONSUMER.CREATE.ENT.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.ENT.*
+              - $JS.API.CONSUMER.INFO.ENT.*
+              - $JS.API.CONSUMER.DELETE.ENT.*
+              - $JS.API.CONSUMER.MSG.NEXT.ENT.*
+              - $JS.ACK.ENT.>
+              - $JS.FC.ENT.>
+              - $JS.API.STREAM.INFO.TEL
+              - $JS.API.CONSUMER.CREATE.TEL
+              - $JS.API.CONSUMER.CREATE.TEL.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.TEL.*
+              - $JS.API.CONSUMER.INFO.TEL.*
+              - $JS.API.CONSUMER.DELETE.TEL.*
+              - $JS.API.CONSUMER.MSG.NEXT.TEL.*
+              - $JS.ACK.TEL.>
+              - $JS.FC.TEL.>
+              - $JS.API.STREAM.INFO.AGENTS
+              - $JS.API.CONSUMER.CREATE.AGENTS
+              - $JS.API.CONSUMER.CREATE.AGENTS.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.AGENTS.*
+              - $JS.API.CONSUMER.INFO.AGENTS.*
+              - $JS.API.CONSUMER.DELETE.AGENTS.*
+              - $JS.API.CONSUMER.MSG.NEXT.AGENTS.*
+              - $JS.ACK.AGENTS.>
+              - $JS.FC.AGENTS.>
+              - $JS.API.STREAM.INFO.KV_geofences
+              - $JS.API.CONSUMER.CREATE.KV_geofences
+              - $JS.API.CONSUMER.CREATE.KV_geofences.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.KV_geofences.*
+              - $JS.API.CONSUMER.INFO.KV_geofences.*
+              - $JS.API.CONSUMER.DELETE.KV_geofences.*
+              - $JS.API.CONSUMER.MSG.NEXT.KV_geofences.*
+              - $JS.ACK.KV_geofences.>
+              - $JS.FC.KV_geofences.>
+              - $JS.API.DIRECT.GET.KV_geofences
+              - $JS.API.DIRECT.GET.KV_geofences.>
+              - $JS.API.STREAM.MSG.GET.KV_geofences
+            subscribe:
+              allow:
+              - svc.brief.>
+              - agents.status.onemind-watch.>
+              - agents.status.onemind-brief.>
+              - tak.cot.out
+              - tak.cot.mesh.rx
+              - tel.feed.*.status
+              - evt.entity.*.alert
+              - _INBOX.>
+            allow_responses: true
+        - user: video-registry
+          password: __VIDEO_REGISTRY_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - evt.video.>
+              - $JS.API.INFO
+              - $JS.API.STREAM.INFO.KV_OVERWATCH_VIDEO
+              - $JS.API.CONSUMER.CREATE.KV_OVERWATCH_VIDEO
+              - $JS.API.CONSUMER.CREATE.KV_OVERWATCH_VIDEO.>
+              - $JS.API.CONSUMER.DURABLE.CREATE.KV_OVERWATCH_VIDEO.*
+              - $JS.API.CONSUMER.INFO.KV_OVERWATCH_VIDEO.*
+              - $JS.API.CONSUMER.DELETE.KV_OVERWATCH_VIDEO.*
+              - $JS.API.CONSUMER.MSG.NEXT.KV_OVERWATCH_VIDEO.*
+              - $JS.ACK.KV_OVERWATCH_VIDEO.>
+              - $JS.FC.KV_OVERWATCH_VIDEO.>
+              - $JS.API.DIRECT.GET.KV_OVERWATCH_VIDEO
+              - $JS.API.DIRECT.GET.KV_OVERWATCH_VIDEO.>
+              - $JS.API.STREAM.MSG.GET.KV_OVERWATCH_VIDEO
+              - $KV.OVERWATCH_VIDEO.>
+            subscribe:
+              allow:
+              - svc.registry.video.>
+              - _INBOX.>
+            allow_responses: true
         - user: agent-fabric
           password: __AGENT_FABRIC_PW__
           allowed_connection_types:
@@ -471,11 +732,14 @@ config:
               allow:
               - tel.fleet.drone.sim-x1.>
               - evt.drone.sim-x1.>
+              - tel.fleet.robot.sim-tb1.>
+              - evt.robot.sim-tb1.>
               - tak.cot.mesh.rx
               - tel.fleet.edge.tak-mesh.status
             subscribe:
               allow:
               - cmd.fleet.drone.sim-x1.>
+              - cmd.fleet.robot.sim-tb1.>
               - tak.cot.mesh.tx
               - ent.*.*.state
               - _INBOX.>
@@ -498,12 +762,57 @@ config:
             subject: svc.cot.send
           share: true
         - service:
+            account: ONEMIND
+            subject: svc.mission.get
+          share: true
+        - service:
+            account: ONEMIND
+            subject: svc.mission.list
+          share: true
+        - service:
+            account: ONEMIND
+            subject: svc.mission.report
+          share: true
+        - service:
+            account: ONEMIND
+            subject: svc.geofence.alerts
+          share: true
+        - service:
+            account: ONEMIND
+            subject: svc.registry.video.>
+          share: true
+        - service:
+            account: ONEMIND
+            subject: svc.tak.mission.>
+          share: true
+        - service:
             account: AGENTS
             subject: agents.prompt.hermes.>
           share: true
         - stream:
-            account: AGENTS
-            subject: cmd.map.>
+            account: ONEMIND
+            subject: evt.so.action.>
+        - stream:
+            account: ONEMIND
+            subject: evt.mission.>
+        - stream:
+            account: ONEMIND
+            subject: evt.map.geofence.>
+        - stream:
+            account: ONEMIND
+            subject: tel.feed.*.status
+        - stream:
+            account: ONEMIND
+            subject: tak.cot.out
+        - stream:
+            account: ONEMIND
+            subject: tak.cot.mesh.rx
+        exports:
+        - service: cmd.map.>
+          accounts:
+          - AGENTS
+          response_type: stream
+          response_threshold: 5s
         users:
         - user: zeus
           password: __ZEUS_PW__
@@ -517,12 +826,28 @@ config:
               - svc.entity.>
               - svc.policy.>
               - svc.cot.send
+              - svc.mission.get
+              - svc.mission.list
+              - svc.mission.report
+              - svc.geofence.alerts
+              - svc.registry.video.get
+              - svc.registry.video.list
+              - svc.tak.mission.>
               - cmd.map.>
               - agents.prompt.hermes.>
             subscribe:
               allow:
               - cmd.map.>
+              - evt.so.action.>
+              - evt.mission.>
+              - evt.map.geofence.>
+              - tel.feed.*.status
+              - tak.cot.out
+              - tak.cot.mesh.rx
               - _INBOX.>
+            allow_responses:
+              max: -1
+              expires: 5s
       AGENTS:
         exports:
         - service: agents.prompt.hermes.>
@@ -544,10 +869,10 @@ config:
         - stream: agents.status.hermes.>
           accounts:
           - ONEMIND
-        - stream: cmd.map.>
-          accounts:
-          - CLIENT
         imports:
+        - service:
+            account: CLIENT
+            subject: cmd.map.>
         - service:
             account: ONEMIND
             subject: svc.entity.>
@@ -572,6 +897,14 @@ config:
             account: ONEMIND
             subject: svc.policy.action.get
           share: true
+        - service:
+            account: ONEMIND
+            subject: svc.mission.get
+          share: true
+        - service:
+            account: ONEMIND
+            subject: svc.mission.list
+          share: true
         users:
         - user: hermes
           password: __HERMES_PW__
@@ -588,6 +921,8 @@ config:
               - svc.policy.command.propose
               - svc.policy.task.propose
               - svc.policy.action.get
+              - svc.mission.get
+              - svc.mission.list
               - _R_.>
             subscribe:
               allow:
@@ -598,3 +933,19 @@ config:
               - $SRV.*.agents.>
               - _INBOX.>
             allow_responses: true
+      AUTH:
+        users:
+        - user: auth-callout
+          password: __AUTH_CALLOUT_PW__
+          allowed_connection_types:
+          - STANDARD
+          permissions:
+            publish:
+              allow:
+              - _NO_PUBLISH_
+            subscribe:
+              allow:
+              - $SYS.REQ.USER.AUTH
+            allow_responses:
+              max: 1
+              expires: 5s

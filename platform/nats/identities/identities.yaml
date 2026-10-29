@@ -21,6 +21,8 @@
 #   jetstream          expanded by the renderer into $JS.API / $JS.ACK / $JS.FC / $KV allows:
 #     info: true               $JS.API.INFO
 #     names: true              $JS.API.STREAM.NAMES (stream lookup by subject, nats-py)
+#     list_streams: true       $JS.API.STREAM.NAMES, $JS.API.STREAM.LIST and $JS.API.STREAM.INFO.*
+#                              (read-only metadata of every stream; layer service source lag)
 #     consume: [STREAM]        stream info, consumer create/info/delete, next, ack, flow control
 #     get: [STREAM]            stream info, direct get, msg get
 #     delete_msg: [STREAM]     $JS.API.STREAM.MSG.DELETE.<STREAM>
@@ -79,6 +81,38 @@ accounts:
         accounts: [AGENTS]
       - service: "svc.cot.send"
         accounts: [CLIENT]
+      # Task service (D2, #568 proposal D2-P5). svc.mission.apply is policy-only and never
+      # exported; agents read but do not report until a Hermes tool needs it.
+      - service: "svc.mission.get"
+        accounts: [CLIENT, AGENTS]
+      - service: "svc.mission.list"
+        accounts: [CLIENT, AGENTS]
+      - service: "svc.mission.report"
+        accounts: [CLIENT]
+      # Open alerts (D6, #569).
+      - service: "svc.geofence.alerts"
+        accounts: [CLIENT]
+      # Video registry (K2, #559; BUS-DESIGN 7.1 svc.registry.>).
+      - service: "svc.registry.video.>"
+        accounts: [CLIENT]
+      # TAK Data Sync missions through tak-client (onemind-xr UE-P2/UE-P3, proposed; nobody serves
+      # it yet, so a request gets "no responders").
+      - service: "svc.tak.mission.>"
+        accounts: [CLIENT]
+      # Read-only streams the browser and Unreal clients display (onemind-xr WEB-P2, UE-P3;
+      # proposal A19-P11). Clients subscribe; they can never publish into ONEMIND through these.
+      - stream: "evt.so.action.>"       # live action status and audit (D3 outcome display)
+        accounts: [CLIENT]
+      - stream: "evt.mission.>"         # mission and task facts (D2, C7)
+        accounts: [CLIENT]
+      - stream: "evt.map.geofence.>"    # zone crossings (D1)
+        accounts: [CLIENT]
+      - stream: "tel.feed.*.status"     # feed freshness (B20)
+        accounts: [CLIENT]
+      - stream: "tak.cot.out"           # GeoChat and CoT from TAK Server (C8)
+        accounts: [CLIENT]
+      - stream: "tak.cot.mesh.rx"       # GeoChat and CoT from the mesh (C8)
+        accounts: [CLIENT]
     imports:
       - service: {account: SYS, subject: "$SYS.REQ.>"}
       # Hermes moves to AGENTS; ONEMIND callers (agent-console, other agents, TAK chat)
@@ -105,10 +139,34 @@ accounts:
         share: true
       - service: {account: ONEMIND, subject: "svc.cot.send"}
         share: true
+      - service: {account: ONEMIND, subject: "svc.mission.get"}
+        share: true
+      - service: {account: ONEMIND, subject: "svc.mission.list"}
+        share: true
+      - service: {account: ONEMIND, subject: "svc.mission.report"}
+        share: true
+      - service: {account: ONEMIND, subject: "svc.geofence.alerts"}
+        share: true
+      - service: {account: ONEMIND, subject: "svc.registry.video.>"}
+        share: true
+      - service: {account: ONEMIND, subject: "svc.tak.mission.>"}
+        share: true
       - service: {account: AGENTS, subject: "agents.prompt.hermes.>"}
         share: true
-      # Hermes UI actions (FEATURES D11) reach the clients.
-      - stream: {account: AGENTS, subject: "cmd.map.>"}
+      - stream: {account: ONEMIND, subject: "evt.so.action.>"}
+      - stream: {account: ONEMIND, subject: "evt.mission.>"}
+      - stream: {account: ONEMIND, subject: "evt.map.geofence.>"}
+      - stream: {account: ONEMIND, subject: "tel.feed.*.status"}
+      - stream: {account: ONEMIND, subject: "tak.cot.out"}
+      - stream: {account: ONEMIND, subject: "tak.cot.mesh.rx"}
+    exports:
+      # Hermes UI actions (FEATURES D11) reach the clients as a service (#564 proposal I2-P2), so
+      # each client's ack goes back to the agent. Every CLIENT subscriber still receives each
+      # action; a plain publish (no reply) is delivered the same way.
+      - service: "cmd.map.>"
+        accounts: [AGENTS]
+        response_type: stream
+        response_threshold: "5s"
 
   # Agents (Hermes first). Reach the bus only through svc.* imports; no data firehose.
   AGENTS:
@@ -125,9 +183,8 @@ accounts:
         accounts: [ONEMIND]
       - stream: "agents.status.hermes.>"
         accounts: [ONEMIND]
-      - stream: "cmd.map.>"
-        accounts: [CLIENT]
     imports:
+      - service: {account: CLIENT, subject: "cmd.map.>"}
       - service: {account: ONEMIND, subject: "svc.entity.>"}
         share: true
       - service: {account: ONEMIND, subject: "svc.layer.list"}
@@ -140,6 +197,16 @@ accounts:
         share: true
       - service: {account: ONEMIND, subject: "svc.policy.action.get"}
         share: true
+      - service: {account: ONEMIND, subject: "svc.mission.get"}
+        share: true
+      - service: {account: ONEMIND, subject: "svc.mission.list"}
+        share: true
+
+  # NATS auth callout (J2, #565; platform/auth-callout/identities.fragment.yaml). Holds only the
+  # callout responder. The top-level authorization.auth_callout block (issuer, auth_users, xkey)
+  # is NOT rendered here: it is enabled by hand from platform/auth-callout/nats-callout.conf,
+  # after stage A1 and never together with A2 (#565 proposal J2-P1).
+  AUTH: {}
 
 # Publish/subscribe deny lists applied to the legacy shared users in stage B. Exactly what
 # stage B closes for `onemind` and `leaf_tak`:
@@ -164,11 +231,15 @@ legacy_stage_b: &legacy_stage_b
     - "ent.*.*.state"
     - "evt.so.action.>"
     - "svc.policy.>"
+    - "svc.mission.apply"
   subscribe_deny:
     - "svc.policy.>"
     - "svc.entity.>"
     - "svc.layer.>"
     - "svc.cot.>"
+    - "svc.mission.>"
+    - "svc.geofence.>"
+    - "svc.registry.>"
 
 users:
   # ---- SYS (unchanged) ----
@@ -210,6 +281,7 @@ users:
       - "cmd.>"
       - "evt.so.action.>"
       - "svc.entity.get"
+      - "svc.mission.apply"   # assign/unassign through the task service (#568 D2-P5)
     subscribe:
       - "svc.policy.>"
       - "evt.drone.>"
@@ -219,9 +291,11 @@ users:
       - "evt.entity.>"
       - "_INBOX.>"
     allow_responses: true
+    # Reads zones for keep-in/keep-out checks. It writes neither bucket: the geofence service
+    # (#569 D1-P4/D1-P6) and the task service (#568 D2-P5) are their single writers.
     jetstream:
       info: true
-      kv_write: [geofences, mission-state]
+      kv_read: [geofences]
 
   - user: entity
     account: ONEMIND
@@ -271,51 +345,72 @@ users:
   - user: layer
     account: ONEMIND
     stage: A
-    purpose: "layer service (A5, not built yet); serves svc.layer.> including streamed svc.layer.watch"
+    purpose: "layer service (A5, PR #561); serves svc.layer.> including streamed svc.layer.watch"
     secret: {namespace: omos, name: omos-layer-nats, user_key: user, password_key: password}
     connection_types: [STANDARD]
     publish: []
     subscribe:
       - "svc.layer.>"
-      - "tel.feed.>"
+      - "tel.feed.*.status"
+      - "tel.fleet.node.*.status"   # site contact (SITE_SUBJECT)
       - "_INBOX.>"
     allow_responses: {max: -1, expires: "10m"}
     jetstream:
       info: true
-      consume: [ENT, TEL]
-      get: [ENT]
+      list_streams: true            # ListStreams + stream info for source lag (SITE_STREAMS)
+      consume: [ENT]
+      get: [ENT, TEL]               # last tel.feed.*.status per feed at start
       kv_write: [world-state, fleet-state]
 
   - user: projector
     account: ONEMIND
     stage: A
-    purpose: "hub CoT projector (omos-tak-projector, A6); the only publisher of tak.cot.inject and tak.cot.mesh.tx"
+    purpose: "live unified CoT projector (platform/omos/tak-projector.yaml): intel.> to TAK, ent.*.*.state only with ENT_PROJECTION=true (#563)"
     secret: {namespace: omos, name: omos-tak-projector-nats, user_key: user, password_key: password}
     connection_types: [STANDARD]
     publish:
       - "tak.cot.inject"
-      - "tak.cot.mesh.tx"
+    subscribe:
+      - "ent.*.*.state"     # ENT_PROJECTION=true only (default off since #563)
+      - "cmd.projector.>"   # live kill switch cmd.projector.{enable,disable}
+      - "_INBOX.>"
+    jetstream:
+      info: true
+      names: true           # nats-py js.subscribe("intel.>", durable="sink-tak") looks the stream up by subject
+      consume: [INTEL]
+
+  - user: projector-gated
+    account: ONEMIND
+    stage: A
+    purpose: "AOI-gated TAK projector (omos-tak-projector-gated, A6, PR #563); serves svc.cot.send for verified CLIENT callers"
+    secret: {namespace: omos, name: omos-tak-projector-gated-nats, user_key: user, password_key: password}
+    connection_types: [STANDARD]
+    publish:
+      - "tak.cot.inject"    # PROJECTOR_TARGET=server
+      - "tak.cot.mesh.tx"   # PROJECTOR_TARGET=mesh
     subscribe:
       - "svc.cot.send"
-      - "ent.*.*.state"
-      - "cmd.projector.>"   # live kill switch cmd.projector.{enable,disable} (platform/omos/tak-projector.yaml)
+      - "ent.*.*.state"     # core fallback when ENT is absent
+      - "tak.cot.out"       # tasking guard (logs and refuses t-k-*/t-e-*)
+      - "tak.cot.mesh.rx"
+      - "cmd.projector.>"
       - "_INBOX.>"
     allow_responses: true
     jetstream:
       info: true
-      names: true           # nats-py js.subscribe("intel.>", durable="sink-tak") looks the stream up by subject
-      consume: [INTEL, ENT]
+      consume: [ENT]        # ordered consumer, last per subject then changes
       kv_read: [geofences, mission-state]
 
   - user: tak-client
     account: ONEMIND
     stage: A
-    purpose: "Go tak-client bridge (A21, not built yet); TAK Server to bus"
+    purpose: "Go tak-client bridge (A21, PR #560); TAK Server stream to tak.cot.out (acked into COT), tak.cot.inject to TAK (queue tak-cot-inject)"
     secret: {namespace: takserver, name: tak-client-nats, user_key: user, password_key: password}
     connection_types: [STANDARD]
     publish:
       - "tak.cot.out"
     subscribe:
+      - "tak.cot.inject"
       - "_INBOX.>"
 
   - user: bridge-mavlink-home
@@ -343,6 +438,108 @@ users:
     subscribe:
       - "tak.cot.mesh.tx"
       - "_INBOX.>"
+
+  - user: bridge-ros2-home
+    account: ONEMIND
+    stage: A
+    purpose: "ROS 2 fleet bridge (H3, PR #566 proposal H3-P5) when it connects to the hub directly; one entry per robot id"
+    secret: {namespace: "(edge)", name: "owner keychain or edge .env (not a cluster Secret)", user_key: NATS_USER, password_key: NATS_PASSWORD}
+    connection_types: [STANDARD]
+    publish:
+      - "tel.fleet.robot.sim-tb1.>"
+      - "evt.robot.sim-tb1.>"
+    subscribe:
+      - "cmd.fleet.robot.sim-tb1.>"
+      - "_INBOX.>"
+
+  - user: geofence
+    account: ONEMIND
+    stage: A
+    purpose: "geofence and alert service (D1/D6, PR #569 proposal D1-P6); the only writer of KV geofences"
+    secret: {namespace: omos, name: omos-geofence-nats, user_key: user, password_key: password}
+    connection_types: [STANDARD]
+    publish:
+      - "evt.map.geofence.>"
+      - "evt.so.alert.>"
+    subscribe:
+      - "tel.feed.*.status"
+      - "svc.geofence.alerts"
+      - "_INBOX.>"
+    allow_responses: true
+    jetstream:
+      info: true
+      consume: [CMD, ENT, MISSION, EVT]   # cmd.map.geofence.> (policy-signed), ent.*.*.state, replay
+      kv_write: [geofences]
+
+  - user: mission
+    account: ONEMIND
+    stage: A
+    purpose: "task service (D2/H4, PR #568 proposal D2-P5); the only writer of KV mission-state and of evt.mission.>"
+    secret: {namespace: onemind-core, name: mission-service-runtime, user_key: NATS_USER, password_key: NATS_PASSWORD}
+    connection_types: [STANDARD]
+    publish:
+      - "evt.mission.>"
+    subscribe:
+      - "svc.mission.>"
+      - "tel.fleet.*.*.position"   # interim arrival detection (D2-P2)
+      - "_INBOX.>"
+    allow_responses: true
+    jetstream:
+      info: true
+      consume: [CMD, EVT]          # durables mission-commands (cmd.mission.>) and mission-events
+      kv_write: [mission-state]
+
+  - user: agentops
+    account: ONEMIND
+    stage: A
+    purpose: "omos-agentops (I1/I3/D10, PR #567 proposal I1-P6): agent presence, ATAK chat to agents, watch jobs, briefs; proposes tasks, never confirms"
+    secret: {namespace: omos, name: omos-agentops-nats, user_key: user, password_key: password}
+    connection_types: [STANDARD]
+    # tak.cot.inject / tak.cot.mesh.tx (asked in I1-P6 for chat replies) are NOT granted: only
+    # the projectors publish them. Replies go through svc.cot.send once the gated projector
+    # accepts this caller (I1-P1/I1-P2; it accepts verified CLIENT callers only today).
+    publish:
+      - "tel.fleet.agent.>"
+      - "evt.entity.*.alert"
+      - "evt.map.geofence.>"       # watch-job zone crossings; overlaps the geofence service (A19-P12)
+      - "evt.so.brief.published"
+      - "agents.hb.onemind-watch.>"
+      - "agents.hb.onemind-brief.>"
+      - "agents.prompt.hermes.>"
+      - "svc.entity.query"
+      - "svc.policy.task.propose"
+      - "svc.cot.send"
+    subscribe:
+      - "svc.brief.>"
+      - "agents.status.onemind-watch.>"
+      - "agents.status.onemind-brief.>"
+      - "tak.cot.out"
+      - "tak.cot.mesh.rx"
+      - "tel.feed.*.status"
+      - "evt.entity.*.alert"
+      - "_INBOX.>"
+    allow_responses: true
+    jetstream:
+      info: true
+      names: true                  # StreamNameBySubject before each fact publish
+      consume: [ENT, TEL, AGENTS]
+      kv_read: [geofences]
+
+  - user: video-registry
+    account: ONEMIND
+    stage: A
+    purpose: "video registry (K2, PR #559): MediaMTX streams to KV OVERWATCH_VIDEO, evt.video.*, serves svc.registry.video.{get,list}"
+    secret: {namespace: onetak, name: video-registry-nats, user_key: user, password_key: password}
+    connection_types: [STANDARD]
+    publish:
+      - "evt.video.>"
+    subscribe:
+      - "svc.registry.video.>"
+      - "_INBOX.>"
+    allow_responses: true
+    jetstream:
+      info: true
+      kv_write: [OVERWATCH_VIDEO]
 
   - user: agent-fabric
     account: ONEMIND
@@ -378,10 +575,13 @@ users:
     publish:
       - "tel.fleet.drone.sim-x1.>"
       - "evt.drone.sim-x1.>"
+      - "tel.fleet.robot.sim-tb1.>"   # ROS 2 bridge (#566 H3-P5)
+      - "evt.robot.sim-tb1.>"
       - "tak.cot.mesh.rx"
       - "tel.fleet.edge.tak-mesh.status"
     subscribe:
       - "cmd.fleet.drone.sim-x1.>"
+      - "cmd.fleet.robot.sim-tb1.>"
       - "tak.cot.mesh.tx"
       - "ent.*.*.state"
       - "_INBOX.>"
@@ -408,6 +608,8 @@ users:
       - "svc.policy.command.propose"
       - "svc.policy.task.propose"
       - "svc.policy.action.get"
+      - "svc.mission.get"
+      - "svc.mission.list"
       # Replies to requests that reach Hermes through a service import (prompts, svc.bridge,
       # $SRV). A hub only advertises to a leaf the subjects that leaf user may publish, so
       # allow_responses alone does not carry these replies over the leaf (proved in permtest
@@ -434,8 +636,35 @@ users:
       - "svc.entity.>"
       - "svc.policy.>"
       - "svc.cot.send"
+      - "svc.mission.get"
+      - "svc.mission.list"
+      - "svc.mission.report"
+      - "svc.geofence.alerts"
+      - "svc.registry.video.get"
+      - "svc.registry.video.list"
+      - "svc.tak.mission.>"
       - "cmd.map.>"
       - "agents.prompt.hermes.>"
+    # Read-only displays (A19-P11; onemind-xr WEB-P2, UE-P3), all through CLIENT stream imports.
     subscribe:
       - "cmd.map.>"
+      - "evt.so.action.>"
+      - "evt.mission.>"
+      - "evt.map.geofence.>"
+      - "tel.feed.*.status"
+      - "tak.cot.out"
+      - "tak.cot.mesh.rx"
       - "_INBOX.>"
+    allow_responses: {max: -1, expires: "5s"}   # acks to Hermes map actions (cmd.map.> service import, I2-P2)
+
+  # ---- AUTH (J2, #565) ----
+  - user: auth-callout
+    account: AUTH
+    stage: A
+    purpose: "NATS auth callout responder (J2, PR #565); answers $SYS.REQ.USER.AUTH only through allow_responses"
+    secret: {namespace: onemind-core, name: auth-callout-runtime, user_key: NATS_USER, password_key: NATS_PASSWORD}
+    connection_types: [STANDARD]
+    publish: []
+    subscribe:
+      - "$SYS.REQ.USER.AUTH"
+    allow_responses: {max: 1, expires: "5s"}

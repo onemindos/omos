@@ -1,0 +1,191 @@
+{
+  "_comment": [
+    "TEST INPUT, not a source of truth. The role file of omos PR #565 (platform/security/roles/onemind-roles.json,",
+    "read 2026-10-29) with only `publish` and `subscribe` kept, plus the additions proposed in",
+    "docs/proposals/2026-10-29-nats-identities-a19.md A19-P11 (marked by `proposed_publish` /",
+    "`proposed_subscribe`). permtest TestClientRoles logs one CLIENT user per role in with the union",
+    "and proves the A19 CLIENT account serves it while newcomer and viewer can never command, forge",
+    "entities or confirm."
+  ],
+  "version": 1,
+  "client_account": "CLIENT",
+  "roles": [
+    {
+      "name": "newcomer",
+      "publish": [
+        "svc.layer.list",
+        "svc.layer.meta",
+        "svc.layer.snapshot",
+        "svc.layer.watch",
+        "svc.layer.unwatch",
+        "svc.entity.get",
+        "svc.entity.search"
+      ],
+      "subscribe": [],
+      "proposed_publish": [],
+      "proposed_subscribe": [
+        "tel.feed.*.status"
+      ]
+    },
+    {
+      "name": "viewer",
+      "publish": [
+        "svc.layer.list",
+        "svc.layer.meta",
+        "svc.layer.snapshot",
+        "svc.layer.watch",
+        "svc.layer.unwatch",
+        "svc.entity.get",
+        "svc.entity.search",
+        "svc.entity.query",
+        "svc.entity.history",
+        "svc.policy.action.get"
+      ],
+      "subscribe": [
+        "cmd.map.>"
+      ],
+      "proposed_publish": [
+        "svc.mission.get",
+        "svc.mission.list",
+        "svc.geofence.alerts",
+        "svc.registry.video.get",
+        "svc.registry.video.list"
+      ],
+      "proposed_subscribe": [
+        "tel.feed.*.status",
+        "evt.so.action.>",
+        "evt.mission.>",
+        "evt.map.geofence.>"
+      ]
+    },
+    {
+      "name": "operator",
+      "publish": [
+        "svc.layer.list",
+        "svc.layer.meta",
+        "svc.layer.snapshot",
+        "svc.layer.watch",
+        "svc.layer.unwatch",
+        "svc.entity.get",
+        "svc.entity.search",
+        "svc.entity.query",
+        "svc.entity.history",
+        "svc.policy.action.get",
+        "svc.policy.check",
+        "svc.policy.command.propose",
+        "svc.policy.command.confirm",
+        "svc.policy.task.propose",
+        "svc.policy.task.confirm",
+        "svc.cot.send",
+        "agents.prompt.hermes.>",
+        "cmd.map.>"
+      ],
+      "subscribe": [
+        "cmd.map.>"
+      ],
+      "proposed_publish": [
+        "svc.mission.get",
+        "svc.mission.list",
+        "svc.geofence.alerts",
+        "svc.registry.video.get",
+        "svc.registry.video.list",
+        "svc.mission.report",
+        "svc.tak.mission.>"
+      ],
+      "proposed_subscribe": [
+        "tel.feed.*.status",
+        "evt.so.action.>",
+        "evt.mission.>",
+        "evt.map.geofence.>",
+        "tak.cot.out",
+        "tak.cot.mesh.rx"
+      ]
+    },
+    {
+      "name": "commander",
+      "publish": [
+        "svc.layer.list",
+        "svc.layer.meta",
+        "svc.layer.snapshot",
+        "svc.layer.watch",
+        "svc.layer.unwatch",
+        "svc.entity.get",
+        "svc.entity.search",
+        "svc.entity.query",
+        "svc.entity.history",
+        "svc.policy.action.get",
+        "svc.policy.check",
+        "svc.policy.command.propose",
+        "svc.policy.command.confirm",
+        "svc.policy.task.propose",
+        "svc.policy.task.confirm",
+        "svc.cot.send",
+        "agents.prompt.hermes.>",
+        "cmd.map.>"
+      ],
+      "subscribe": [
+        "cmd.map.>"
+      ],
+      "proposed_publish": [
+        "svc.mission.get",
+        "svc.mission.list",
+        "svc.geofence.alerts",
+        "svc.registry.video.get",
+        "svc.registry.video.list",
+        "svc.mission.report",
+        "svc.tak.mission.>"
+      ],
+      "proposed_subscribe": [
+        "tel.feed.*.status",
+        "evt.so.action.>",
+        "evt.mission.>",
+        "evt.map.geofence.>",
+        "tak.cot.out",
+        "tak.cot.mesh.rx"
+      ]
+    },
+    {
+      "name": "admin",
+      "publish": [
+        "svc.layer.list",
+        "svc.layer.meta",
+        "svc.layer.snapshot",
+        "svc.layer.watch",
+        "svc.layer.unwatch",
+        "svc.entity.get",
+        "svc.entity.search",
+        "svc.entity.query",
+        "svc.entity.history",
+        "svc.policy.action.get",
+        "svc.policy.check",
+        "svc.policy.command.propose",
+        "svc.policy.command.confirm",
+        "svc.policy.task.propose",
+        "svc.policy.task.confirm",
+        "svc.cot.send",
+        "agents.prompt.hermes.>",
+        "cmd.map.>"
+      ],
+      "subscribe": [
+        "cmd.map.>"
+      ],
+      "proposed_publish": [
+        "svc.mission.get",
+        "svc.mission.list",
+        "svc.geofence.alerts",
+        "svc.registry.video.get",
+        "svc.registry.video.list",
+        "svc.mission.report",
+        "svc.tak.mission.>"
+      ],
+      "proposed_subscribe": [
+        "tel.feed.*.status",
+        "evt.so.action.>",
+        "evt.mission.>",
+        "evt.map.geofence.>",
+        "tak.cot.out",
+        "tak.cot.mesh.rx"
+      ]
+    }
+  ]
+}

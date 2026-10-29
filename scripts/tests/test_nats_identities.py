@@ -71,12 +71,12 @@ class InvariantTests(unittest.TestCase):
     def test_only_projector_injects_into_tak(self):
         spec = copy.deepcopy(self.spec)
         self.user(spec, "mesh-gateway")["publish"].append("tak.cot.inject")
-        self.assertTrue(any("projector only" in e for e in ni.check_invariants(spec)))
+        self.assertTrue(any("only projector, projector-gated" in e for e in ni.check_invariants(spec)))
 
     def test_only_entity_publishes_entities(self):
         spec = copy.deepcopy(self.spec)
         self.user(spec, "zeus")["publish"].append("ent.>")
-        self.assertTrue(any("entity service only" in e for e in ni.check_invariants(spec)))
+        self.assertTrue(any("(only entity)" in e for e in ni.check_invariants(spec)))
 
     def test_no_inbox_publish_and_no_stream_admin(self):
         spec = copy.deepcopy(self.spec)
@@ -92,7 +92,34 @@ class InvariantTests(unittest.TestCase):
         self.assertTrue(any("never confirm" in e for e in ni.check_invariants(spec)))
         spec = copy.deepcopy(self.spec)
         self.user(spec, "hermes")["publish"].append("svc.policy.>")
-        self.assertTrue(any("never reach" in e for e in ni.check_invariants(spec)))
+        self.assertTrue(any("only humans (CLIENT)" in e for e in ni.check_invariants(spec)))
+
+    def test_single_writers(self):
+        # #569 D1-P6, #568 D2-P5, #554: one writer each.
+        for name, subj, owner in (("policy", "$KV.geofences.>", "geofence"), ("policy", "$KV.mission-state.>", "mission"),
+                                  ("agentops", "evt.mission.>", "mission"), ("zeus", "svc.mission.apply", "policy"),
+                                  ("agentops", "tak.cot.inject", "projector")):
+            spec = copy.deepcopy(self.spec)
+            self.user(spec, name)["publish"].append(subj)
+            self.assertTrue(any(f"may publish" in e and owner in e for e in ni.check_invariants(spec)), (name, subj))
+
+    def test_services_never_confirm(self):
+        # Only humans (CLIENT users) confirm; an ONEMIND service such as agentops cannot.
+        spec = copy.deepcopy(self.spec)
+        self.user(spec, "agentops")["publish"].append("svc.policy.*.confirm")
+        self.assertTrue(any("only humans (CLIENT)" in e for e in ni.check_invariants(spec)))
+
+    def test_callout_usernames_are_reserved(self):
+        # #565 J2-P2: callout users are `ak:<user>;<groups>`.
+        for bad in ("ak:zeus", "zeus;onemind-admins"):
+            spec = copy.deepcopy(self.spec)
+            self.user(spec, "zeus")["user"] = bad
+            self.assertTrue(any("reserved for auth-callout" in e for e in ni.check_invariants(spec)), bad)
+
+    def test_auth_account_has_no_jetstream(self):
+        spec = copy.deepcopy(self.spec)
+        spec["accounts"]["AUTH"]["jetstream"] = {"max_mem": -1}
+        self.assertTrue(any("account AUTH" in e for e in ni.check_invariants(spec)))
 
     def test_no_credentials_in_spec(self):
         spec = copy.deepcopy(self.spec)
@@ -234,6 +261,52 @@ class LiveMergeTests(unittest.TestCase):
             ni.write_private(str(ROOT / "platform/nats/x.json"), "{}")
         with self.assertRaises(SystemExit):
             ni.read_passwords(str(ROOT / "platform/nats/identities/identities.yaml"))
+
+
+
+class RoleTests(unittest.TestCase):
+    """check-roles: the #565 role file against the CLIENT account."""
+
+    FIXTURE = ROOT / "platform/nats/identities/permtest/testdata/client-roles.json"
+
+    def setUp(self):
+        self.spec = ni.load_spec()
+        self.roles = json.loads(self.FIXTURE.read_text())
+
+    def role(self, roles, name):
+        return next(r for r in roles["roles"] if r["name"] == name)
+
+    def test_fixture_fits(self):
+        self.assertEqual(ni.check_roles(self.spec, self.roles), [])
+
+    def test_no_role_commands_or_forges(self):
+        for subj in ("cmd.fleet.>", "ent.*.*.state", "tak.cot.inject", "cmd.>", "evt.so.action.>", "$JS.API.>"):
+            roles = copy.deepcopy(self.roles)
+            self.role(roles, "admin")["publish"].append(subj)
+            self.assertTrue(any("may publish" in e for e in ni.check_roles(self.spec, roles)), subj)
+
+    def test_newcomer_and_viewer_never_confirm(self):
+        for name in ("newcomer", "viewer"):
+            for subj in ("svc.policy.command.confirm", "svc.policy.>", "svc.policy.*.confirm"):
+                roles = copy.deepcopy(self.roles)
+                self.role(roles, name)["publish"].append(subj)
+                self.assertTrue(any("never confirm" in e for e in ni.check_roles(self.spec, roles)), (name, subj))
+        self.assertIn("svc.policy.command.confirm", self.role(self.roles, "operator")["publish"])
+
+    def test_subjects_need_a_client_import(self):
+        roles = copy.deepcopy(self.roles)
+        self.role(roles, "viewer")["proposed_subscribe"].append("tel.fleet.>")
+        self.role(roles, "viewer")["proposed_publish"].append("svc.mission.apply")
+        errs = ni.check_roles(self.spec, roles)
+        self.assertTrue(any("tel.fleet.> is not imported" in e for e in errs))
+        self.assertTrue(any("svc.mission.apply has no CLIENT service import" in e for e in errs))
+
+    def test_within(self):
+        self.assertTrue(ni._within("evt.map.geofence.*.*", ["evt.map.geofence.>"]))
+        self.assertTrue(ni._within("svc.tak.mission.>", ["svc.tak.mission.>"]))
+        self.assertFalse(ni._within("tel.feed.>", ["tel.feed.*.status"]))
+        self.assertFalse(ni._within("svc.layer.>", ["svc.layer.list"]))
+        self.assertTrue(ni._within("tel.feed.nws.status", ["tel.feed.*.status"]))
 
 
 if __name__ == "__main__":

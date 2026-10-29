@@ -35,26 +35,45 @@ every requester. Responders use `allow_responses`, so no service may publish on 
 
 | User | Account | Publishes | Subscribes / serves | Password goes to |
 |---|---|---|---|---|
-| `policy` | ONEMIND | `cmd.>`, `evt.so.action.>`, `svc.entity.get`, KV `geofences`, `mission-state` | `svc.policy.>`, `evt.{drone,robot,vehicle,mission,entity}.>` | SealedSecret `onemind-core/policy-service-runtime` (`NATS_USER`, `NATS_PASSWORD`; it also holds `OPENFGA_TOKEN`, #554) |
+| `policy` | ONEMIND | `cmd.>`, `evt.so.action.>`, `svc.entity.get`, `svc.mission.apply` | `svc.policy.>`, `evt.{drone,robot,vehicle,mission,entity}.>`; reads KV `geofences` (writes no bucket) | SealedSecret `onemind-core/policy-service-runtime` (`NATS_USER`, `NATS_PASSWORD`; it also holds `OPENFGA_TOKEN`, #554) |
 | `entity` | ONEMIND | `ent.*.*.state`, `evt.entity.>`, `evt.sys.entity.rejected`, KV `entity-correlation` | `svc.entity.>`, `cmd.entity.>`, `$SRV` (micro); consumes COT TEL WORLD INTEL DET ENT | `omos/omos-entity-nats` (`user`, `password`) |
 | `ingest` | ONEMIND | `intel.>`, `evt.world.>`, `tel.feed.>`, `evt.sys.*.rejected`, KV `ingest-locks`, `ingest-state` | reads KV `feed-config` | `omos/omos-ingest-nats` |
-| `layer` (A5, not built) | ONEMIND | KV `world-state`, `fleet-state` | `svc.layer.>` (streamed replies), `tel.feed.>`; consumes ENT TEL | `omos/omos-layer-nats` |
-| `projector` | ONEMIND | `tak.cot.inject`, `tak.cot.mesh.tx` | `svc.cot.send`, `ent.*.*.state`, `cmd.projector.>`; consumes INTEL ENT | `omos/omos-tak-projector-nats` |
-| `tak-client` (A21, not built) | ONEMIND | `tak.cot.out` | — | `takserver/tak-client-nats` |
+| `layer` (#561) | ONEMIND | KV `world-state`, `fleet-state` | `svc.layer.>` (streamed replies), `tel.feed.*.status`, `tel.fleet.node.*.status`; consumes ENT, last value from TEL, lists streams (A19-P15) | `omos/omos-layer-nats` |
+| `projector` (live Python) | ONEMIND | `tak.cot.inject` | `ent.*.*.state` (only with `ENT_PROJECTION=true`), `cmd.projector.>`; consumes INTEL | `omos/omos-tak-projector-nats` |
+| `projector-gated` (#563) | ONEMIND | `tak.cot.inject`, `tak.cot.mesh.tx` | `svc.cot.send`, `ent.*.*.state`, `tak.cot.out`, `tak.cot.mesh.rx` (tasking guard), `cmd.projector.>`; consumes ENT; reads KV `geofences`, `mission-state` | `omos/omos-tak-projector-gated-nats` |
+| `tak-client` (#560) | ONEMIND | `tak.cot.out` (acked into COT) | `tak.cot.inject` (queue `tak-cot-inject`) | `takserver/tak-client-nats` |
+| `geofence` (#569) | ONEMIND | `evt.map.geofence.>`, `evt.so.alert.>`, KV `geofences` (only writer) | `svc.geofence.alerts`, `tel.feed.*.status`; consumes CMD ENT MISSION EVT | `omos/omos-geofence-nats` |
+| `mission` (#568) | ONEMIND | `evt.mission.>`, KV `mission-state` (only writer) | `svc.mission.>`, `tel.fleet.*.*.position`; consumes CMD EVT | `onemind-core/mission-service-runtime` (`NATS_USER`, `NATS_PASSWORD`) |
+| `agentops` (#567) | ONEMIND | `tel.fleet.agent.>`, `evt.entity.*.alert`, `evt.map.geofence.>`, `evt.so.brief.published`, its `agents.hb.*`, requests `svc.entity.query`, `svc.policy.task.propose`, `svc.cot.send`, `agents.prompt.hermes.>` (never `tak.cot.inject`, never confirm) | `svc.brief.>`, `tak.cot.out`, `tak.cot.mesh.rx`, `tel.feed.*.status`, `evt.entity.*.alert`; consumes ENT TEL AGENTS; reads KV `geofences` | `omos/omos-agentops-nats` |
+| `video-registry` (#559) | ONEMIND | `evt.video.>`, KV `OVERWATCH_VIDEO` | `svc.registry.video.>` | `onetak/video-registry-nats` |
 | `bridge-mavlink-home` | ONEMIND | `tel.fleet.drone.sim-x1.>`, `evt.drone.sim-x1.>` | `cmd.fleet.drone.sim-x1.>` | edge `.env` / keychain (direct connection only) |
+| `bridge-ros2-home` (#566) | ONEMIND | `tel.fleet.robot.sim-tb1.>`, `evt.robot.sim-tb1.>` | `cmd.fleet.robot.sim-tb1.>` | edge `.env` / keychain (direct connection only) |
 | `mesh-gateway` | ONEMIND | `tak.cot.mesh.rx`, `tel.fleet.edge.tak-mesh.status` | `tak.cot.mesh.tx` | edge `.env` / keychain (direct connection only) |
 | `agent-fabric` | ONEMIND | `agents.prompt.>`, `$SRV.>` | `agents.>` | `agent-fabric/agent-fabric-nats` (`NATS_USER`, `NATS_PASSWORD`) |
 | `leaf-tak` (leaf only) | ONEMIND | `tak.cot.out` | `tak.cot.inject` | inside `leaf.conf` of `takserver/tak-nats-leaf` |
-| `leaf-site-mac` (leaf only) | ONEMIND | the site's bridges: `tel.fleet.drone.sim-x1.>`, `evt.drone.sim-x1.>`, `tak.cot.mesh.rx`, `tel.fleet.edge.tak-mesh.status` | `cmd.fleet.drone.sim-x1.>`, `tak.cot.mesh.tx`, `ent.*.*.state` | Mac leaf config (`infra/edge/mac-leaf`, keychain) |
-| `hermes` (leaf only) | AGENTS | `agents.*.hermes.>`, `cmd.map.>`, requests `svc.entity.>`, `svc.layer.{list,meta}`, `svc.policy.{command,task}.propose`, `svc.policy.action.get`; replies `_R_.>` | `agents.prompt.hermes.>`, `svc.bridge.>`, `$SRV` | inside `leaf.conf` of `hermes/hermes-leaf-conf` (rendered by `leaf-conf`; its local user carries the same lists) |
-| `zeus` | CLIENT | requests `svc.{layer,entity,policy}.>`, `svc.cot.send`, `agents.prompt.hermes.>`; `cmd.map.>` | `cmd.map.>` | owner keychain on each client device |
-| `onemind`, `leaf_tak` | ONEMIND | everything until stage B; then denied `cmd.{fleet,drone,robot,vehicle,mission,entity}.>`, `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` (other `cmd.*` domains and forged inputs stay open until stage C, see Limits) | everything; from stage B not `svc.{policy,entity,layer,cot}.>` (cannot impersonate a service) | existing `values.secret.yaml` |
+| `leaf-site-mac` (leaf only) | ONEMIND | the site's bridges: `tel.fleet.drone.sim-x1.>`, `evt.drone.sim-x1.>`, `tel.fleet.robot.sim-tb1.>`, `evt.robot.sim-tb1.>`, `tak.cot.mesh.rx`, `tel.fleet.edge.tak-mesh.status` | `cmd.fleet.drone.sim-x1.>`, `cmd.fleet.robot.sim-tb1.>`, `tak.cot.mesh.tx`, `ent.*.*.state` | Mac leaf config (`infra/edge/mac-leaf`, keychain) |
+| `hermes` (leaf only) | AGENTS | `agents.*.hermes.>`, `cmd.map.>` (acked by clients, I2-P2), requests `svc.entity.>`, `svc.layer.{list,meta}`, `svc.policy.{command,task}.propose`, `svc.policy.action.get`, `svc.mission.{get,list}`; replies `_R_.>` | `agents.prompt.hermes.>`, `svc.bridge.>`, `$SRV` | inside `leaf.conf` of `hermes/hermes-leaf-conf` (rendered by `leaf-conf`; its local user carries the same lists) |
+| `zeus` | CLIENT | requests `svc.{layer,entity,policy}.>`, `svc.cot.send`, `svc.mission.{get,list,report}`, `svc.geofence.alerts`, `svc.registry.video.{get,list}`, `svc.tak.mission.>`, `agents.prompt.hermes.>`; `cmd.map.>`; acks with `allow_responses {max: -1, expires: 5s}` | `cmd.map.>`, `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`, `tel.feed.*.status`, `tak.cot.out`, `tak.cot.mesh.rx` (stream imports, A19-P11) | owner keychain on each client device |
+| `auth-callout` (#565) | AUTH | nothing (answers through `allow_responses {max: 1, expires: 5s}`) | `$SYS.REQ.USER.AUTH` | `onemind-core/auth-callout-runtime` (`NATS_USER`, `NATS_PASSWORD`) |
+| `onemind`, `leaf_tak` | ONEMIND | everything until stage B; then denied `cmd.{fleet,drone,robot,vehicle,mission,entity}.>`, `tak.cot.inject`, `tak.cot.mesh.tx`, `ent.*.*.state`, `evt.so.action.>`, `svc.policy.>` (other `cmd.*` domains and forged inputs stay open until stage C, see Limits) | everything; from stage B not `svc.{policy,entity,layer,cot,mission,geofence,registry}.>` and not `svc.mission.apply` (cannot impersonate a service or assign tasks) | existing `values.secret.yaml` |
 
 Accounts: `ONEMIND` keeps every stream. It exports the policy API to `CLIENT` (all of it) and
 to `AGENTS` (propose and action lookup only, never confirm), `svc.entity.>` to both, and
-`svc.layer.>` to `CLIENT` with streamed responses. `CLIENT` and `AGENTS` have no JetStream.
-`AGENTS` exports Hermes' prompts, `svc.bridge.>` and `$SRV` discovery to ONEMIND (and prompts
-to CLIENT), its heartbeats and status to the ONEMIND stream `AGENTS`, and `cmd.map.>` to CLIENT.
+`svc.layer.>` to `CLIENT` with streamed responses. `svc.mission.{get,list}` go to both,
+`svc.mission.report`, `svc.geofence.alerts`, `svc.registry.video.>` and `svc.tak.mission.>` to
+`CLIENT` only. `svc.mission.apply` is never exported. For the clients' displays it also exports
+the read-only streams `evt.so.action.>`, `evt.mission.>`, `evt.map.geofence.>`,
+`tel.feed.*.status`, `tak.cot.out` and `tak.cot.mesh.rx` to `CLIENT` (A19-P11). `CLIENT`,
+`AGENTS` and `AUTH` have no JetStream. `AGENTS` exports Hermes' prompts, `svc.bridge.>` and
+`$SRV` discovery to ONEMIND (and prompts to CLIENT), and its heartbeats and status to the
+ONEMIND stream `AGENTS`. `CLIENT` exports `cmd.map.>` to `AGENTS` as a service with streamed
+responses, so Hermes' map actions reach every client and the acks come back (#564 I2-P2).
+`AUTH` holds only the auth callout responder; the `authorization.auth_callout` block is still
+enabled by hand (`platform/auth-callout/nats-callout.conf`, after A1, not with A2: J2-P1).
+
+Role modes (#565): callout-issued CLIENT users carry their role's allow lists in the user JWT.
+`python3 scripts/nats_identities.py check-roles --roles platform/security/roles/onemind-roles.json`
+checks that file against this account (A19-P11).
 
 ## What changes for running clients
 
@@ -64,6 +83,7 @@ to CLIENT), its heartbeats and status to the ONEMIND stream `AGENTS`, and `cmd.m
 | TAK leaf | `leaf_tak`, unrestricted | `leaf-tak`: `tak.cot.out` out, `tak.cot.inject` in |
 | `zeus-mac` leaf | `leaf_tak` | stays on `leaf_tak` (HA, cameras, legacy subjects) until its bridges are moved; `leaf-site-mac` is the target for the OneMind site bridges |
 | `omos-tak-projector` | `omos-nats-creds` (`onemind`) | `projector`; must move before stage B or its `tak.cot.inject` is refused |
+| `omos-tak-projector-gated`, geofence, task, agentops, layer, video-registry (#559–#569) | `omos-nats-creds` or not deployed | their own users above; seal each Secret before the first sync |
 | agent-console / agent-tap | `onemind` (`agent-fabric-nats`) | `agent-fabric` |
 | `ws.onemindos.dev` browsers, `onemind-core`, `feed-*`, `sink-clickhouse`, NACK | `onemind` | unchanged in stage 1 (stage B removes their command rights); retire `onemind` in stage C |
 
@@ -87,8 +107,10 @@ kubectl --context do-nyc3-omos-cloud -n nats get cm nats-config -o jsonpath='{.d
 
 ```bash
 python3 scripts/nats_identities.py gen-passwords --out "$W/identities.json" \
-  --users policy,entity,ingest,layer,projector,tak-client,bridge-mavlink-home,mesh-gateway,agent-fabric,leaf-tak,leaf-site-mac,hermes,zeus
+  --users policy,entity,ingest,layer,projector,projector-gated,tak-client,geofence,mission,agentops,video-registry,bridge-mavlink-home,bridge-ros2-home,mesh-gateway,agent-fabric,leaf-tak,leaf-site-mac,hermes,zeus,auth-callout
 ```
+
+`python3 scripts/nats_identities.py secrets` prints where each password is sealed.
 
 Store the file in the password manager. Existing users (`sys`, `monitor`, `onemind`,
 `leaf_tak`) keep their passwords: `live` copies their hashes from `live.conf`.
@@ -137,8 +159,10 @@ kubectl create secret generic "$NAME" -n "$NS" \
   "cmd.fleet.drone.sim-x1.goto"` and the `nats-leaf` container logs `Publish Violation - Subject
   "cmd.fleet.drone.sim-x1.goto"` (FEATURES A19 test; proved in `TestHermesLeaf`). Watch it with
   `kubectl -n hermes logs deploy/hermes -c nats-leaf | grep Violation`.
-- Edge and client passwords (`bridge-mavlink-home`, `mesh-gateway`, `leaf-site-mac`, `zeus`)
-  go to the owner keychain, not to the cluster.
+- `mission-service-runtime` and `auth-callout-runtime` use keys `NATS_USER` / `NATS_PASSWORD`
+  (#568, #565); `video-registry-nats` is in namespace `onetak` (#559).
+- Edge and client passwords (`bridge-mavlink-home`, `bridge-ros2-home`, `mesh-gateway`,
+  `leaf-site-mac`, `zeus`) go to the owner keychain, not to the cluster.
 
 Commit the SealedSecrets in a PR, but **do not repoint any workload until stage A1 is live**: a
 workload that logs in as a user the server does not know yet stops.

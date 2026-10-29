@@ -25,6 +25,11 @@ Commands
                                     the full leaf.conf for U's sidecar (to seal as a SecretKey),
                                     written outside the repository
   secrets                           table of where each user's password must be sealed
+  check-roles --roles FILE          check an auth-callout role file (#565 platform/security/roles/
+                                    onemind-roles.json format) against the CLIENT account: no role
+                                    publishes cmd.* (except cmd.map.>), ent.*, tak.cot.inject or
+                                    stream admin; newcomer and viewer never confirm; every subject
+                                    a role uses is reachable through a CLIENT import
 
 Stages (platform/nats/IDENTITIES.md):
   A1 new accounts and users next to the shared ones; legacy users unrestricted; leaf_tak stays in
@@ -115,8 +120,10 @@ def expand_jetstream(js: dict | None) -> list[str]:
     out: list[str] = []
     if js.get("info"):
         out.append(JS_INFO)
-    if js.get("names"):
+    if js.get("names") or js.get("list_streams"):
         out.append("$JS.API.STREAM.NAMES")
+    if js.get("list_streams"):
+        out += ["$JS.API.STREAM.LIST", "$JS.API.STREAM.INFO.*"]
     for s in js.get("consume", []):
         out += _consume(s)
     for s in js.get("get", []):
@@ -260,6 +267,21 @@ def write_private(path: str, text: str) -> None:
 
 CMD_EXEMPT = ("cmd.map.",)
 
+# Single publishers/writers: probe subject -> users allowed to publish it.
+OWNERS = {
+    "tak.cot.inject": ("projector", "projector-gated"),
+    "tak.cot.mesh.tx": ("projector", "projector-gated"),
+    "ent.drone.sim-x1.state": ("entity",),
+    "evt.mission.m1.completed": ("mission",),
+    "svc.mission.apply": ("policy",),
+    "$KV.geofences.zone-1": ("geofence",),
+    "$KV.mission-state.m1": ("mission",),
+    "evt.so.action.approved": ("policy",),
+}
+# Humans confirm; no service or agent identity may (CLIENT users only).
+CONFIRM_PROBES = ("svc.policy.command.confirm", "svc.policy.task.confirm")
+NO_JS_ACCOUNTS = ("CLIENT", "AGENTS", "AUTH")
+
 
 def _covers(pattern: str, subject: str) -> bool:
     """True if NATS pattern `pattern` matches the literal subject `subject`."""
@@ -297,20 +319,24 @@ def check_invariants(spec: dict) -> list[str]:
             for probe in ("cmd.fleet.drone.sim-x1.goto", "cmd.mission.m1.create", "cmd.entity.e1.override", "cmd.ha.light.on"):
                 if any(_covers(p, probe) for p in pub):
                     errs.append(f"{u['user']}: may publish {probe} (only policy publishes cmd.*, except cmd.map.>)")
-        if u["user"] != "projector":
-            for probe in ("tak.cot.inject", "tak.cot.mesh.tx"):
-                if any(_covers(p, probe) for p in pub):
-                    errs.append(f"{u['user']}: may publish {probe} (projector only)")
-        if u["user"] != "entity" and any(_covers(p, "ent.drone.sim-x1.state") for p in pub):
-            errs.append(f"{u['user']}: may publish ent.*.*.state (entity service only)")
+        for probe, owners in OWNERS.items():
+            if u["user"] not in owners and any(_covers(p, probe) for p in pub):
+                errs.append(f"{u['user']}: may publish {probe} (only {', '.join(owners)})")
         if u.get("sidecar") and u.get("connection_types") != ["LEAFNODE"]:
             errs.append(f"{u['user']}: a sidecar belongs to a leaf-only user (connection_types [LEAFNODE])")
-        if u["account"] in ("CLIENT", "AGENTS") and u.get("jetstream"):
+        if u["account"] in NO_JS_ACCOUNTS and u.get("jetstream"):
             errs.append(f"{u['user']}: {u['account']} has no JetStream")
-        if u["account"] == "AGENTS" and any(_covers(p, "svc.policy.command.confirm") for p in pub):
-            errs.append(f"{u['user']}: an agent may never reach svc.policy.*.confirm")
-    for name in ("CLIENT", "AGENTS"):
-        if spec["accounts"][name].get("jetstream"):
+        if u["account"] != "CLIENT":
+            for probe in CONFIRM_PROBES:
+                if any(_covers(p, probe) for p in pub):
+                    errs.append(f"{u['user']}: only humans (CLIENT) may reach {probe}")
+    for u in spec["users"]:
+        # #565 J2-P2: auth-callout users are named `ak:<user>;<groups>`; no configured user may
+        # look like one.
+        if ";" in u["user"] or u["user"].startswith("ak:"):
+            errs.append(f"{u['user']}: ';' and the 'ak:' prefix are reserved for auth-callout users")
+    for name in NO_JS_ACCOUNTS:
+        if (spec["accounts"].get(name) or {}).get("jetstream"):
             errs.append(f"account {name} must not enable JetStream")
     ag = spec["accounts"]["AGENTS"]
     for imp in ag.get("imports", []):
@@ -318,6 +344,85 @@ def check_invariants(spec: dict) -> list[str]:
         if "confirm" in subj or subj in ("svc.policy.>", "svc.policy.*.confirm"):
             errs.append(f"AGENTS imports {subj}: agents can never confirm")
     return errs
+
+
+# ---------------------------------------------------------------- auth-callout roles (#565)
+
+ROLE_DENY_ALL = ("cmd.fleet.drone.sim-x1.goto", "cmd.mission.m1.create", "cmd.entity.e1.override",
+                 "cmd.ha.light.on", "ent.drone.sim-x1.state", "tak.cot.inject", "tak.cot.mesh.tx",
+                 "evt.so.action.approved", "svc.mission.apply", "$JS.API.INFO", "$KV.geofences.z1",
+                 "_INBOX.spoof")
+LOW_ROLES = ("newcomer", "viewer")
+
+
+def client_reach(spec: dict) -> tuple[list[str], list[str]]:
+    """Subjects a CLIENT user can usefully publish (service imports) and subscribe (stream
+    imports), plus the account-internal cmd.map.> and _INBOX.>."""
+    acc = spec["accounts"]["CLIENT"]
+    pub = ["cmd.map.>"]
+    sub = ["cmd.map.>", "_INBOX.>"]
+    for imp in acc.get("imports", []):
+        if "service" in imp:
+            pub.append(imp["service"]["subject"])
+        elif "stream" in imp:
+            sub.append(imp["stream"]["subject"])
+    return pub, sub
+
+
+def _within(pattern: str, allowed: list[str]) -> bool:
+    """True if every subject matched by `pattern` is matched by one of `allowed` (token-wise)."""
+    for a in allowed:
+        pt, at = pattern.split("."), a.split(".")
+        ok = True
+        for i, tok in enumerate(at):
+            if tok == ">":
+                ok = len(pt) > i
+                break
+            if i >= len(pt) or pt[i] == ">" or (tok != "*" and (pt[i] == "*" or tok != pt[i])):
+                ok = False
+                break
+        else:
+            ok = len(pt) == len(at)
+        if ok:
+            return True
+    return False
+
+
+def check_roles(spec: dict, roles: dict) -> list[str]:
+    errs: list[str] = []
+    if roles.get("client_account", "CLIENT") != "CLIENT":
+        errs.append("roles: client_account must be CLIENT")
+    pub_ok, sub_ok = client_reach(spec)
+    for r in roles.get("roles", []):
+        n = r.get("name", "?")
+        # proposed_* (A19-P11 additions not yet in #565) are checked as if adopted.
+        pub = r.get("publish", []) + r.get("proposed_publish", [])
+        sub = r.get("subscribe", []) + r.get("proposed_subscribe", [])
+        for probe in ROLE_DENY_ALL:
+            if any(_covers(p, probe) for p in pub):
+                errs.append(f"role {n}: may publish {probe}")
+        if n in LOW_ROLES:
+            for probe in CONFIRM_PROBES:
+                if any(_covers(p, probe) for p in pub):
+                    errs.append(f"role {n}: may reach {probe} (newcomer and viewer never confirm)")
+        for p in pub:
+            if not _within(p, pub_ok):
+                errs.append(f"role {n}: publish {p} has no CLIENT service import (would get no responders)")
+        for p in sub:
+            if not _within(p, sub_ok):
+                errs.append(f"role {n}: subscribe {p} is not imported into CLIENT")
+    return errs
+
+
+def cmd_check_roles(args) -> int:
+    with open(args.roles) as f:
+        roles = json.load(f)
+    errs = check_roles(load_spec(), roles)
+    for e in errs:
+        print("ERROR:", e)
+    if not errs:
+        print(f"ok: {len(roles.get('roles', []))} roles fit the CLIENT account; none publishes cmd.*/ent.*/inject, newcomer and viewer never confirm")
+    return 1 if errs else 0
 
 
 def cmd_values(args) -> int:
@@ -471,6 +576,7 @@ def main() -> int:
     p = sp.add_parser("leaf-conf"); p.add_argument("--user", required=True); p.add_argument("--passwords", required=True)
     p.add_argument("--out", required=True); p.set_defaults(fn=cmd_leaf_conf)
     p = sp.add_parser("secrets"); p.set_defaults(fn=cmd_secrets)
+    p = sp.add_parser("check-roles"); p.add_argument("--roles", required=True); p.set_defaults(fn=cmd_check_roles)
     args = ap.parse_args()
     return args.fn(args)
 

@@ -14,21 +14,24 @@ import (
 )
 
 // streams mirrors the subjects of the omos stream CRs the services use (platform/nats/streams/
-// plus ENT, DET and the KV buckets proposed in #552/#553/#554). Created by the shared `onemind`
-// user, as NACK does today.
+// plus ENT, DET and the KV buckets proposed in #552/#553/#554). CMD (cmd.>), MISSION
+// (evt.mission.>, evt.map.>) and AGENTS are as live. Created by the shared `onemind` user, as
+// NACK does today.
 var streams = map[string][]string{
-	"COT":   {"tak.cot.>"},
-	"TEL":   {"tel.>"},
-	"WORLD": {"evt.world.>"},
-	"INTEL": {"intel.>"},
-	"DET":   {"det.>"},
-	"ENT":   {"ent.*.*.state"},
-	"CMD":   {"cmd.fleet.>", "cmd.mission.>", "cmd.entity.>"},
-	"EVT":   {"evt.so.>", "evt.drone.>", "evt.entity.>", "evt.mission.>"},
-	"SYS":   {"evt.sys.>"},
+	"COT":     {"tak.cot.>"},
+	"TEL":     {"tel.>"},
+	"WORLD":   {"evt.world.>"},
+	"INTEL":   {"intel.>"},
+	"DET":     {"det.>"},
+	"ENT":     {"ent.*.*.state"},
+	"CMD":     {"cmd.>"},
+	"EVT":     {"evt.so.>", "evt.drone.>", "evt.robot.>", "evt.entity.>", "evt.video.>"},
+	"MISSION": {"evt.mission.>", "evt.map.>"},
+	"AGENTS":  {"agents.hb.>", "agents.status.>"},
+	"SYS":     {"evt.sys.>"},
 }
 
-var buckets = []string{"geofences", "mission-state", "entity-correlation", "ingest-locks", "ingest-state", "feed-config", "world-state", "fleet-state"}
+var buckets = []string{"geofences", "mission-state", "entity-correlation", "ingest-locks", "ingest-state", "feed-config", "world-state", "fleet-state", "OVERWATCH_VIDEO"}
 
 func provision(t *testing.T, h *hub) {
 	t.Helper()
@@ -65,8 +68,16 @@ func observerFor(t *testing.T, h *hub, publisherAccount, subj string, cache map[
 	case strings.HasPrefix(subj, "svc.layer."):
 		pick = "layer"
 	case strings.HasPrefix(subj, "svc.cot."):
-		pick = "projector"
-	case strings.HasPrefix(subj, "cmd.map."):
+		pick = "projector-gated"
+	case strings.HasPrefix(subj, "svc.mission."):
+		pick = "mission"
+	case strings.HasPrefix(subj, "svc.geofence."):
+		pick = "geofence"
+	case strings.HasPrefix(subj, "svc.registry."):
+		pick = "video-registry"
+	case strings.HasPrefix(subj, "svc.brief."):
+		pick = "agentops"
+	case strings.HasPrefix(subj, "cmd.map.") && publisherAccount != "ONEMIND":
 		pick = "zeus" // second CLIENT connection
 	case strings.HasPrefix(subj, "agents.prompt.hermes."):
 		return nil // served in AGENTS (leaf); covered by TestHermesLeaf
@@ -90,8 +101,8 @@ type row struct {
 // matrix is the stage-B (target) allow/deny matrix for every directly connecting user.
 var matrix = []row{
 	{"policy", "ONEMIND",
-		[]string{"cmd.fleet.drone.sim-x1.goto", "cmd.mission.m1.create", "evt.so.action.approved", "svc.entity.get", "$KV.geofences.z1"},
-		[]string{"tak.cot.inject", "ent.drone.sim-x1.state", "intel.weather.noaa.alert", "_INBOX.spoof", "agents.prompt.hermes.zeus.legacy", "$JS.API.STREAM.CREATE.X", "$KV.entity-correlation.k"},
+		[]string{"cmd.fleet.drone.sim-x1.goto", "cmd.mission.m1.create", "cmd.map.geofence.home.create", "evt.so.action.approved", "svc.entity.get", "svc.mission.apply"},
+		[]string{"tak.cot.inject", "ent.drone.sim-x1.state", "intel.weather.noaa.alert", "_INBOX.spoof", "agents.prompt.hermes.zeus.legacy", "$JS.API.STREAM.CREATE.X", "$KV.entity-correlation.k", "$KV.geofences.z1", "$KV.mission-state.m1", "evt.mission.m1.completed"},
 		[]string{"svc.policy.>", "evt.drone.>", "evt.mission.>", "_INBOX.>"},
 		[]string{"tel.>", "intel.>", "cmd.>", "svc.entity.>"}},
 	{"entity", "ONEMIND",
@@ -109,19 +120,54 @@ var matrix = []row{
 		[]string{"intel.>", "svc.policy.>", "cmd.>"}},
 	{"layer", "ONEMIND",
 		[]string{"$KV.world-state.air", "$KV.fleet-state.sim-x1"},
-		[]string{"ent.drone.sim-x1.state", "cmd.map.view.fly", "tak.cot.inject", "svc.layer.snapshot", "$JS.API.STREAM.MSG.DELETE.ENT"},
-		[]string{"svc.layer.>", "tel.feed.>", "_INBOX.>"},
-		[]string{"svc.policy.>", "cmd.>", "intel.>"}},
+		[]string{"ent.drone.sim-x1.state", "cmd.map.view.fly", "tak.cot.inject", "svc.layer.snapshot", "$JS.API.STREAM.MSG.DELETE.ENT", "$JS.API.STREAM.UPDATE.ENT"},
+		[]string{"svc.layer.>", "tel.feed.*.status", "tel.fleet.node.*.status", "_INBOX.>"},
+		[]string{"svc.policy.>", "cmd.>", "intel.>", "tel.feed.>", "tel.fleet.>"}},
 	{"projector", "ONEMIND",
+		[]string{"tak.cot.inject"},
+		[]string{"tak.cot.mesh.tx", "cmd.fleet.drone.sim-x1.goto", "ent.drone.sim-x1.state", "tak.cot.out", "$KV.geofences.z1"},
+		[]string{"ent.*.*.state", "cmd.projector.disable", "_INBOX.>"},
+		[]string{"svc.cot.send", "svc.policy.>", "cmd.>", "cmd.fleet.>", "tak.cot.out"}},
+	{"projector-gated", "ONEMIND",
 		[]string{"tak.cot.inject", "tak.cot.mesh.tx"},
-		[]string{"cmd.fleet.drone.sim-x1.goto", "ent.drone.sim-x1.state", "tak.cot.out", "$KV.geofences.z1"},
-		[]string{"svc.cot.send", "ent.*.*.state", "cmd.projector.disable", "_INBOX.>"},
-		[]string{"svc.policy.>", "cmd.>", "cmd.fleet.>"}},
+		[]string{"cmd.fleet.drone.sim-x1.goto", "ent.drone.sim-x1.state", "tak.cot.out", "$KV.geofences.z1", "$KV.mission-state.m1", "_INBOX.spoof"},
+		[]string{"svc.cot.send", "ent.*.*.state", "tak.cot.out", "tak.cot.mesh.rx", "cmd.projector.disable", "_INBOX.>"},
+		[]string{"svc.policy.>", "cmd.>", "cmd.fleet.>", "intel.>"}},
 	{"tak-client", "ONEMIND",
 		[]string{"tak.cot.out"},
 		[]string{"tak.cot.inject", "cmd.fleet.drone.sim-x1.goto", "ent.drone.sim-x1.state", "tak.cot.mesh.rx"},
-		[]string{"_INBOX.>"},
-		[]string{"tak.cot.inject", "tak.cot.>"}},
+		[]string{"tak.cot.inject", "_INBOX.>"},
+		[]string{"tak.cot.>", "tak.cot.out", "tak.cot.mesh.rx"}},
+	{"geofence", "ONEMIND",
+		[]string{"evt.map.geofence.home.enter", "evt.so.alert.raised", "$KV.geofences.home"},
+		[]string{"cmd.map.geofence.home.create", "ent.zone.home.state", "evt.mission.m1.completed", "evt.so.action.approved", "tak.cot.inject", "$KV.mission-state.m1", "_INBOX.spoof"},
+		[]string{"tel.feed.*.status", "svc.geofence.alerts", "_INBOX.>"},
+		[]string{"cmd.>", "tel.>", "svc.policy.>"}},
+	{"mission", "ONEMIND",
+		[]string{"evt.mission.m1.completed", "$KV.mission-state.m1"},
+		[]string{"cmd.mission.m1.create", "cmd.fleet.drone.sim-x1.goto", "evt.so.action.approved", "ent.mission.m1.state", "$KV.geofences.z1", "svc.policy.task.propose", "_INBOX.spoof"},
+		[]string{"svc.mission.>", "tel.fleet.drone.sim-x1.position", "_INBOX.>"},
+		[]string{"cmd.>", "tel.>", "tel.fleet.drone.sim-x1.status"}},
+	{"agentops", "ONEMIND",
+		[]string{"tel.fleet.agent.onemind-watch.position", "evt.entity.e1.alert", "evt.so.brief.published", "agents.hb.onemind-watch.zeus.hub", "svc.entity.query", "svc.policy.task.propose", "svc.cot.send"},
+		[]string{"tak.cot.inject", "tak.cot.mesh.tx", "cmd.fleet.drone.sim-x1.goto", "cmd.map.view.fly", "svc.policy.task.confirm", "svc.policy.command.confirm", "svc.policy.command.propose", "ent.agent.a1.state", "agents.hb.hermes.zeus.legacy", "_INBOX.spoof"},
+		[]string{"svc.brief.>", "tak.cot.out", "tak.cot.mesh.rx", "tel.feed.*.status", "evt.entity.*.alert", "agents.status.onemind-watch.>", "_INBOX.>"},
+		[]string{"cmd.>", "intel.>", "agents.prompt.>", "svc.policy.>"}},
+	{"video-registry", "ONEMIND",
+		[]string{"evt.video.sim-x1.online", "$KV.OVERWATCH_VIDEO.drone.sim-x1"},
+		[]string{"ent.drone.sim-x1.state", "cmd.fleet.drone.sim-x1.goto", "tak.cot.inject", "$KV.geofences.z1", "_INBOX.spoof"},
+		[]string{"svc.registry.video.>", "_INBOX.>"},
+		[]string{"cmd.>", "ent.>", "svc.policy.>"}},
+	{"bridge-ros2-home", "ONEMIND",
+		[]string{"tel.fleet.robot.sim-tb1.odom", "evt.robot.sim-tb1.command"},
+		[]string{"tel.fleet.robot.sim-tb2.odom", "tel.fleet.drone.sim-x1.position", "cmd.fleet.robot.sim-tb1.goto", "ent.robot.sim-tb1.state"},
+		[]string{"cmd.fleet.robot.sim-tb1.>", "_INBOX.>"},
+		[]string{"cmd.fleet.robot.sim-tb2.>", "cmd.fleet.drone.sim-x1.>", "cmd.>"}},
+	{"auth-callout", "AUTH",
+		[]string{},
+		[]string{"cmd.fleet.drone.sim-x1.goto", "$SYS.REQ.USER.AUTH", "_INBOX.spoof", "svc.policy.command.confirm"},
+		[]string{"$SYS.REQ.USER.AUTH"},
+		[]string{">", "_INBOX.>", "$SYS.>"}},
 	{"bridge-mavlink-home", "ONEMIND",
 		[]string{"tel.fleet.drone.sim-x1.position", "tel.fleet.drone.sim-x1.status", "evt.drone.sim-x1.command"},
 		[]string{"tel.fleet.drone.sim-x2.position", "evt.drone.sim-x2.command", "cmd.fleet.drone.sim-x1.goto", "ent.drone.sim-x1.state", "tak.cot.inject"},
@@ -138,15 +184,17 @@ var matrix = []row{
 		[]string{"agents.>", "_INBOX.>"},
 		[]string{"cmd.>", "intel.>"}},
 	{"zeus", "CLIENT",
-		[]string{"svc.policy.command.propose", "svc.policy.command.confirm", "svc.entity.get", "svc.layer.snapshot", "svc.cot.send", "cmd.map.view.fly"},
-		[]string{"cmd.fleet.drone.sim-x1.goto", "cmd.fleet.drone.sim-x1.land", "ent.drone.sim-x1.state", "ent.aircraft.icao-a1b2c3.state", "tak.cot.inject", "intel.a.b.c", "evt.so.action.approved", "$JS.API.INFO", "$KV.geofences.z1"},
-		[]string{"cmd.map.>", "_INBOX.>"},
-		[]string{"tel.>", "intel.>", "ent.>", "cmd.fleet.>", ">"}},
+		[]string{"svc.policy.command.propose", "svc.policy.command.confirm", "svc.entity.get", "svc.layer.snapshot", "svc.cot.send", "cmd.map.view.fly",
+			"svc.mission.get", "svc.mission.report", "svc.geofence.alerts", "svc.registry.video.get", "svc.tak.mission.list"},
+		[]string{"cmd.fleet.drone.sim-x1.goto", "cmd.fleet.drone.sim-x1.land", "ent.drone.sim-x1.state", "ent.aircraft.icao-a1b2c3.state", "tak.cot.inject", "tak.cot.out", "tak.cot.mesh.tx", "intel.a.b.c",
+			"evt.so.action.approved", "evt.mission.m1.completed", "tel.feed.nws-alerts.status", "svc.mission.apply", "$JS.API.INFO", "$KV.geofences.z1"},
+		[]string{"cmd.map.>", "_INBOX.>", "evt.so.action.>", "evt.mission.>", "evt.map.geofence.>", "tel.feed.*.status", "tak.cot.out", "tak.cot.mesh.rx"},
+		[]string{"tel.>", "intel.>", "ent.>", "cmd.fleet.>", ">", "tak.cot.>", "tak.cot.inject", "evt.so.>", "tel.fleet.drone.sim-x1.position"}},
 	{"onemind", "ONEMIND",
 		[]string{"intel.legacy.x.y", "tel.drone.x47.position", "evt.world.air.icao-1"},
-		[]string{"cmd.fleet.drone.sim-x1.goto", "cmd.drone.x47.land", "tak.cot.inject", "ent.drone.sim-x1.state", "evt.so.action.approved", "svc.policy.command.confirm"},
+		[]string{"cmd.fleet.drone.sim-x1.goto", "cmd.drone.x47.land", "tak.cot.inject", "ent.drone.sim-x1.state", "evt.so.action.approved", "svc.policy.command.confirm", "svc.mission.apply"},
 		[]string{"intel.>", "tel.>"},
-		[]string{"svc.policy.>", "svc.entity.>", "svc.layer.>", "svc.cot.send"}},
+		[]string{"svc.policy.>", "svc.entity.>", "svc.layer.>", "svc.cot.send", "svc.mission.>", "svc.geofence.alerts", "svc.registry.video.get"}},
 }
 
 func TestStageBMatrix(t *testing.T) {
@@ -340,12 +388,11 @@ func TestJetStreamGrants(t *testing.T) {
 			t.Fatal("policy watch delivered nothing")
 		}
 		w.Stop()
+		// Single writers (#569 D1-P6, #568 D2-P5): policy only reads zones.
 		_, err = gf.Put(tctx(t), "zone-1", []byte(`{}`))
-		mustJS(t, "policy: KV put geofences", err)
-		ms, err := js.KeyValue(tctx(t), "mission-state")
-		mustJS(t, "policy: bind KV mission-state", err)
-		_, err = ms.Put(tctx(t), "m1", []byte(`{}`))
-		mustJS(t, "policy: KV put mission-state", err)
+		mustNotJS(t, c, "policy: KV put geofences", err, "$KV.geofences.zone-1")
+		_, err = js.KeyValue(tctx(t), "mission-state")
+		mustNotJS(t, c, "policy: bind KV mission-state", err, "$JS.API.STREAM.INFO.KV_mission-state")
 		_, err = js.Stream(tctx(t), "ENT")
 		mustNotJS(t, c, "policy: stream info ENT", err, "$JS.API.STREAM.INFO.ENT")
 	})
@@ -359,12 +406,109 @@ func TestJetStreamGrants(t *testing.T) {
 		mustJS(t, "projector: durable consumer sink-tak on INTEL", err)
 		_, err = js.StreamNameBySubject(tctx(t), "intel.>")
 		mustJS(t, "projector: stream lookup by subject (nats-py js.subscribe)", err)
+		_, err = js.KeyValue(tctx(t), "geofences")
+		mustNotJS(t, c, "projector (legacy): bind KV geofences", err, "$JS.API.STREAM.INFO.KV_geofences")
+	})
+
+	t.Run("projector-gated", func(t *testing.T) {
+		c := h.conn(t, "projector-gated")
+		js, _ := jetstream.New(c.nc)
+		_, err := js.OrderedConsumer(tctx(t), "ENT", jetstream.OrderedConsumerConfig{FilterSubjects: []string{"ent.*.*.state"}, DeliverPolicy: jetstream.DeliverLastPerSubjectPolicy})
+		mustJS(t, "projector-gated: ordered consumer on ENT", err)
+		for _, b := range []string{"geofences", "mission-state"} {
+			kv, err := js.KeyValue(tctx(t), b)
+			mustJS(t, "projector-gated: bind KV "+b+" (read)", err)
+			w, err := kv.WatchAll(tctx(t))
+			mustJS(t, "projector-gated: KV watch "+b, err)
+			w.Stop()
+			_, err = kv.Put(tctx(t), "zone-x", []byte("x"))
+			mustNotJS(t, c, "projector-gated: KV put "+b, err, "$KV."+b+".zone-x")
+		}
+		_, err = js.Stream(tctx(t), "INTEL")
+		mustNotJS(t, c, "projector-gated: stream info INTEL", err, "$JS.API.STREAM.INFO.INTEL")
+	})
+
+	t.Run("geofence", func(t *testing.T) {
+		c := h.conn(t, "geofence")
+		js, _ := jetstream.New(c.nc)
+		for _, sc := range []struct{ stream, durable, filter string }{
+			{"CMD", "geofence-svc-cmd", "cmd.map.geofence.>"},
+			{"ENT", "", "ent.*.*.state"},
+			{"MISSION", "", "evt.mission.>"},
+			{"EVT", "", "evt.so.alert.>"},
+		} {
+			st, err := js.Stream(tctx(t), sc.stream)
+			mustJS(t, "geofence: stream info "+sc.stream, err)
+			_, err = st.CreateOrUpdateConsumer(tctx(t), jetstream.ConsumerConfig{Durable: sc.durable, FilterSubjects: []string{sc.filter}, AckPolicy: jetstream.AckExplicitPolicy})
+			mustJS(t, "geofence: consumer on "+sc.stream+" ("+sc.filter+")", err)
+		}
+		_, err := js.Publish(tctx(t), "evt.map.geofence.home.enter", []byte(`{}`))
+		mustJS(t, "geofence: acked publish into MISSION", err)
+		_, err = js.Publish(tctx(t), "evt.so.alert.raised", []byte(`{}`))
+		mustJS(t, "geofence: acked publish into EVT", err)
 		gf, err := js.KeyValue(tctx(t), "geofences")
-		mustJS(t, "projector: bind KV geofences (read)", err)
-		_, err = gf.Get(tctx(t), "seed")
-		mustJS(t, "projector: KV get geofences", err)
-		_, err = gf.Put(tctx(t), "zone-x", []byte("x"))
-		mustNotJS(t, c, "projector: KV put geofences", err, "$KV.geofences.zone-x")
+		mustJS(t, "geofence: bind KV geofences", err)
+		_, err = gf.Put(tctx(t), "home", []byte(`{"zone_id":"home"}`))
+		mustJS(t, "geofence: KV put geofences (single writer)", err)
+		_, err = js.KeyValue(tctx(t), "mission-state")
+		mustNotJS(t, c, "geofence: bind KV mission-state", err, "$JS.API.STREAM.INFO.KV_mission-state")
+	})
+
+	t.Run("mission", func(t *testing.T) {
+		c := h.conn(t, "mission")
+		js, _ := jetstream.New(c.nc)
+		for _, sc := range []struct{ stream, durable, filter string }{
+			{"CMD", "mission-commands", "cmd.mission.>"},
+			{"EVT", "mission-events", "evt.drone.>"},
+		} {
+			st, err := js.Stream(tctx(t), sc.stream)
+			mustJS(t, "mission: stream info "+sc.stream, err)
+			cons, err := st.CreateOrUpdateConsumer(tctx(t), jetstream.ConsumerConfig{Durable: sc.durable, FilterSubjects: []string{sc.filter}, AckPolicy: jetstream.AckExplicitPolicy})
+			mustJS(t, "mission: durable "+sc.durable+" on "+sc.stream, err)
+			_, err = cons.Fetch(1, jetstream.FetchMaxWait(300*time.Millisecond))
+			mustJS(t, "mission: fetch from "+sc.durable, err)
+		}
+		_, err := js.Publish(tctx(t), "evt.mission.m1.completed", []byte(`{}`))
+		mustJS(t, "mission: acked publish into MISSION", err)
+		ms, err := js.KeyValue(tctx(t), "mission-state")
+		mustJS(t, "mission: bind KV mission-state", err)
+		_, err = ms.Put(tctx(t), "msn.m1", []byte(`{}`))
+		mustJS(t, "mission: KV put mission-state (single writer)", err)
+		w, err := ms.WatchAll(tctx(t))
+		mustJS(t, "mission: KV watch mission-state", err)
+		w.Stop()
+		_, err = js.KeyValue(tctx(t), "geofences")
+		mustNotJS(t, c, "mission: bind KV geofences", err, "$JS.API.STREAM.INFO.KV_geofences")
+	})
+
+	t.Run("agentops", func(t *testing.T) {
+		c := h.conn(t, "agentops")
+		js, _ := jetstream.New(c.nc)
+		_, err := js.StreamNameBySubject(tctx(t), "evt.so.brief.published")
+		mustJS(t, "agentops: stream lookup by subject before a fact publish", err)
+		for _, sc := range []struct{ stream, filter string }{{"ENT", "ent.*.*.state"}, {"TEL", "tel.feed.>"}, {"AGENTS", "agents.hb.>"}} {
+			_, err := js.OrderedConsumer(tctx(t), sc.stream, jetstream.OrderedConsumerConfig{FilterSubjects: []string{sc.filter}})
+			mustJS(t, "agentops: ordered consumer on "+sc.stream, err)
+		}
+		gf, err := js.KeyValue(tctx(t), "geofences")
+		mustJS(t, "agentops: bind KV geofences (read)", err)
+		_, err = gf.Put(tctx(t), "x", []byte("x"))
+		mustNotJS(t, c, "agentops: KV put geofences", err, "$KV.geofences.x")
+		_, err = js.Stream(tctx(t), "CMD")
+		mustNotJS(t, c, "agentops: stream info CMD", err, "$JS.API.STREAM.INFO.CMD")
+	})
+
+	t.Run("video-registry", func(t *testing.T) {
+		c := h.conn(t, "video-registry")
+		js, _ := jetstream.New(c.nc)
+		kv, err := js.KeyValue(tctx(t), "OVERWATCH_VIDEO")
+		mustJS(t, "video-registry: bind KV OVERWATCH_VIDEO", err)
+		_, err = kv.Put(tctx(t), "drone.sim-x1", []byte(`{"v":1}`))
+		mustJS(t, "video-registry: KV put OVERWATCH_VIDEO", err)
+		_, err = kv.Get(tctx(t), "drone.sim-x1")
+		mustJS(t, "video-registry: KV get OVERWATCH_VIDEO", err)
+		_, err = js.CreateKeyValue(tctx(t), jetstream.KeyValueConfig{Bucket: "OVERWATCH_VIDEO2"})
+		mustNotJS(t, c, "video-registry: create KV bucket", err, "$JS.API.STREAM.CREATE.KV_OVERWATCH_VIDEO2")
 	})
 
 	t.Run("layer", func(t *testing.T) {
@@ -376,9 +520,33 @@ func TestJetStreamGrants(t *testing.T) {
 		mustJS(t, "layer: bind KV world-state", err)
 		_, err = ws.Put(tctx(t), "air", []byte(`{}`))
 		mustJS(t, "layer: KV put world-state", err)
+		names := 0
+		for range js.StreamNames(tctx(t)).Name() {
+			names++
+		}
+		lister := js.ListStreams(tctx(t))
+		infos := 0
+		for range lister.Info() {
+			infos++
+		}
+		if lister.Err() != nil || infos == 0 {
+			t.Fatalf("layer: list streams: %d infos, %v", infos, lister.Err())
+		}
+		pass(t, "ALLOW js   layer: list %d stream names and %d stream infos (source lag)", names, infos)
+		_, err = js.Stream(tctx(t), "COT")
+		mustJS(t, "layer: stream info COT (any stream, read-only)", err)
+		tel, err := js.Stream(tctx(t), "TEL")
+		mustJS(t, "layer: stream info TEL", err)
+		admin.nc.Publish("tel.feed.nws-alerts.status", []byte(`{"ok":true}`))
+		admin.nc.Flush()
+		time.Sleep(100 * time.Millisecond)
+		_, err = tel.GetLastMsgForSubject(tctx(t), "tel.feed.nws-alerts.status")
+		mustJS(t, "layer: last tel.feed.nws-alerts.status from TEL", err)
 		ent, _ := js.Stream(tctx(t), "ENT")
 		err = ent.DeleteMsg(tctx(t), 1)
 		mustNotJS(t, c, "layer: delete ENT message", err, "$JS.API.STREAM.MSG.DELETE.ENT")
+		_, err = tel.CreateOrUpdateConsumer(tctx(t), jetstream.ConsumerConfig{Durable: "x"})
+		mustNotJS(t, c, "layer: consumer on TEL", err, "$JS.API.CONSUMER.CREATE.TEL.x")
 	})
 }
 
@@ -615,6 +783,53 @@ func TestHermesLeaf(t *testing.T) {
 	}
 	pass(t, "ALLOW hermes agents.hb.hermes.zeus.legacy delivered to ONEMIND (stream export AGENTS -> ONEMIND)")
 
+	// I2-P2 (#564): the client's ack to a Hermes map action comes back through the CLIENT
+	// service export of cmd.map.> (response_type stream). zeus still holds the sync subscription
+	// zsub on cmd.map.> here, so the action reaches it twice; with allow_responses: true (max 1)
+	// that refused the ack with a Publish Violation on _R_.*, so CLIENT users carry
+	// {max: -1, expires: 5s} (still only replies to requests they received).
+	ackSub, err := zeus.nc.Subscribe("cmd.map.>", func(m *nats.Msg) {
+		if m.Reply != "" {
+			_ = m.Respond([]byte(`{"v":1,"ok":true,"client":"zeus-web"}`))
+		}
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	zeus.nc.Flush()
+	time.Sleep(200 * time.Millisecond)
+	if r, err := hermes.nc.Request("cmd.map.viewport.set", []byte(`{"v":1,"id":"a1","mode":"fly_to"}`), 2*time.Second); err != nil {
+		t.Fatalf("hermes cmd.map.viewport.set ack: %v", err)
+	} else {
+		pass(t, "ALLOW hermes -> cmd.map.viewport.set acked by CLIENT zeus through the service export: %s", r.Data)
+	}
+	if e, bad := zeus.sink.violation("publish", "", settle); bad {
+		t.Fatalf("zeus violation while acking: %s", e)
+	}
+	ackSub.Unsubscribe()
+
+	// Task reads (#568 D2-P5): get and list only; agents do not report.
+	mission := h.conn(t, "mission")
+	mission.nc.Subscribe("svc.mission.>", func(m *nats.Msg) { _ = m.Respond([]byte(m.Header.Get("Nats-Request-Info"))) })
+	mission.nc.Flush()
+	time.Sleep(200 * time.Millisecond)
+	if r, err := hermes.nc.Request("svc.mission.list", []byte(`{}`), 2*time.Second); err != nil {
+		t.Fatalf("hermes svc.mission.list: %v", err)
+	} else if !strings.Contains(string(r.Data), `"acc":"AGENTS"`) {
+		t.Fatalf("hermes svc.mission.list identity %s", r.Data)
+	} else {
+		pass(t, "ALLOW hermes -> svc.mission.list answered; task service saw %s", r.Data)
+	}
+	for _, subj := range []string{"svc.mission.report", "svc.mission.apply"} {
+		if _, err := hermes.nc.Request(subj, []byte(`{}`), 700*time.Millisecond); err == nil {
+			t.Fatalf("hermes reached %s", subj)
+		} else if e, ok := hermes.sink.violation("publish", subj, 2*time.Second); !ok {
+			t.Fatalf("hermes %s: %v but no permission violation", subj, err)
+		} else {
+			pass(t, "DENY  hermes -> %s: %s", subj, e)
+		}
+	}
+
 	// Hermes serves prompts, svc.bridge and $SRV discovery to ONEMIND and CLIENT callers.
 	hermes.nc.Subscribe("agents.prompt.hermes.>", func(m *nats.Msg) {
 		_ = m.Respond([]byte("pong " + m.Header.Get("Nats-Request-Info")))
@@ -652,7 +867,7 @@ func TestLeafUsers(t *testing.T) {
 	provision(t, h)
 	onemind := h.conn(t, "onemind")
 	policy := h.conn(t, "policy")
-	projector := h.conn(t, "projector")
+	projector := h.conn(t, "projector-gated")
 
 	t.Run("leaf-tak", func(t *testing.T) {
 		l := h.startLeaf(t, "leaf-tak")
@@ -686,6 +901,12 @@ func TestLeafUsers(t *testing.T) {
 		expectLeafPub(t, b, "tak.cot.mesh.rx", true, onemind)
 		expectLeafPub(t, b, "tak.cot.inject", false, onemind)
 		expectLeafPub(t, b, "cmd.fleet.drone.sim-x1.goto", false, onemind)
+		// ROS 2 bridge on the same site (#566 H3-P5).
+		expectLeafSub(t, b, "cmd.fleet.robot.sim-tb1.goto", true, policy)
+		expectLeafSub(t, b, "cmd.fleet.robot.sim-tb2.goto", false, policy)
+		expectLeafPub(t, b, "tel.fleet.robot.sim-tb1.odom", true, onemind)
+		expectLeafPub(t, b, "evt.robot.sim-tb1.command", true, onemind)
+		expectLeafPub(t, b, "tel.fleet.robot.sim-tb2.odom", false, onemind)
 		// The mesh gateway's acked JetStream publish into COT works through the leaf.
 		js, _ := jetstream.New(b.nc)
 		time.Sleep(200 * time.Millisecond)
