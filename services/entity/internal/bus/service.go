@@ -564,7 +564,10 @@ func (s *Service) serveRPC() (micro.Service, error) {
 		}
 		e, ok := s.eng.Get(q.EntityID)
 		if !ok {
-			_ = r.Error("404", "entity not found", nil)
+			// Same error body as the layer service (layer-snapshot.md "Errors"), plus the micro
+			// error headers, so a client can branch on either.
+			body, _ := json.Marshal(map[string]any{"v": 1, "error": "not_found", "detail": "entity " + q.EntityID + " not found"})
+			_ = r.Error("404", "entity not found", body)
 			return
 		}
 		_ = r.RespondJSON(e)

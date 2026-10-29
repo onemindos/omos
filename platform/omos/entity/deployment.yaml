@@ -72,6 +72,10 @@ spec:
                   fieldPath: metadata.name
             - name: ENT_MODE
               value: "jetstream"
+            # release group for own sim-* fleet assets (entity.md §3); matches the
+            # projector's TAK_RELEASE_GROUPS so its G7 gate can release them
+            - name: OWN_RELEASABLE_TO
+              value: "homestead"
             - name: ENT_MSG_TTL
               value: "false"
             - name: LEASE_BUCKET
