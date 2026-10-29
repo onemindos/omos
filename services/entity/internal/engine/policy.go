@@ -123,3 +123,26 @@ func round(v float64, places int) float64 {
 }
 
 func ptr(v float64) *float64 { return &v }
+
+// fleetCotType is the CoT type for an own asset (robotics-cot-profile.md §2). Own assets are
+// always affiliation `f`.
+func fleetCotType(entityType, kind, environment string) string {
+	switch {
+	case environment == "subsurface" || kind == "uuv":
+		return "a-f-U-S-U"
+	case environment == "surface" || kind == "usv" || kind == "boat":
+		return "a-f-S-X"
+	}
+	switch entityType {
+	case "drone":
+		if kind == "multirotor" {
+			return "a-f-A-M-H-Q"
+		}
+		return "a-f-A-M-F-Q" // fixed_wing, vtol, unknown airframe
+	case "robot":
+		return "a-f-G-E-V"
+	case "vehicle":
+		return "a-f-G-E-V-C"
+	}
+	return ""
+}

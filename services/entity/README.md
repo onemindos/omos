@@ -94,6 +94,7 @@ Safety rules in code: a `person` with `disposition: hostile` is rejected and dea
 | `LEASE_BUCKET`, `LEASE_KEY`, `LEASE_TTL` | `entity-correlation`, `lease.entity-service`, `15s` | `none` disables the lease (local runs only) |
 | `ENTITY_LINKS` | — | JSON `{"cot_uid:SOME-UID": "sim-x1"}` declared links |
 | `SOURCE_PRIORS` | — | JSON per-integration `source_prior` overrides |
+| `OWN_RELEASABLE_TO` | `homestead` | comma-separated `marking.releasable_to` for own `sim-*` fleet assets (every source a `tel.fleet.*` bridge); empty value = no group. Never applied to records a feed or CoT source contributes to |
 | `REJECT_SUBJECT` | `evt.sys.entity.rejected` | dead-letter subject; acked JetStream publish with `Nats-Msg-Id: {stream}:{seq}`, the input is redelivered if it fails |
 | `SERVE_RPC` | `true` | `svc.entity.get` and `svc.entity.query` (`{types, bbox, limit, cursor}`; pages of at most 200, `cursor` is the last `entity_id`, `null` on the last page) |
 | `ORBIT_EVERY` | `30s` | satellite re-propagation interval; negative disables. A TLE older than 7 days is no longer propagated |

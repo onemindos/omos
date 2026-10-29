@@ -573,4 +573,12 @@ func TestRPC(t *testing.T) {
 	if m.Header.Get("Nats-Service-Error-Code") != "404" {
 		t.Fatalf("missing entity: %v", m.Header)
 	}
+	var eb struct {
+		V      int    `json:"v"`
+		Error  string `json:"error"`
+		Detail string `json:"detail"`
+	}
+	if err := json.Unmarshal(m.Data, &eb); err != nil || eb.V != 1 || eb.Error != "not_found" || eb.Detail == "" {
+		t.Fatalf("missing entity body = %s (%v), want {v:1,error:not_found,detail}", m.Data, err)
+	}
 }

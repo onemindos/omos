@@ -73,6 +73,16 @@ func main() {
 			os.Exit(2)
 		}
 	}
+	// OWN_RELEASABLE_TO: comma-separated release groups for own sim-* fleet assets (entity.md
+	// §3); default "homestead"; set to an empty value to release them to no group.
+	if s, ok := os.LookupEnv("OWN_RELEASABLE_TO"); ok {
+		ecfg.OwnReleasableTo = nil
+		for _, g := range strings.Split(s, ",") {
+			if g = strings.TrimSpace(g); g != "" {
+				ecfg.OwnReleasableTo = append(ecfg.OwnReleasableTo, g)
+			}
+		}
+	}
 	if s := os.Getenv("SOURCE_PRIORS"); s != "" { // JSON {"feed-aircraft": 0.8}
 		if err := json.Unmarshal([]byte(s), &ecfg.Priors); err != nil {
 			log.Error("SOURCE_PRIORS is not a JSON object", "err", err)

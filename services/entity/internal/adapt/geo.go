@@ -103,6 +103,12 @@ func Fleet(data []byte, subject string) (*model.Observation, string, error) {
 		}
 	case "robot", "vehicle":
 		o.Kind, o.Environment = metaString(g.Meta, "kind"), "land" // omos #566 bridge: ugv
+		switch o.Kind {                                            // robotics-cot-profile.md §1: a boat or submersible is class robot
+		case "usv":
+			o.Environment = "surface"
+		case "uuv":
+			o.Environment = "subsurface"
+		}
 		o.Traits = []string{"locatable", "trackable", "taskable"}
 	default:
 		o.Traits = []string{"locatable"}
