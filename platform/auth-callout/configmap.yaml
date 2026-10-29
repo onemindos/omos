@@ -1,0 +1,158 @@
+# Settings and role map for the NATS auth callout (FEATURES J2). No secrets.
+# roles.json is a copy of platform/security/roles/onemind-roles.json (the source);
+# services/auth-callout TestConfigMapMatchesSource fails if the two differ.
+# OIDC_ISSUER is the issuer of the Authentik provider `onemind-xr` created by
+# authentik-blueprint.yaml (same host and path pattern as the live Argo CD provider,
+# platform/ecosystem/resources/argocd-authentik-provider.yaml). The JWKS is fetched in-cluster.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-callout
+  namespace: onemind-core
+  labels:
+    app: auth-callout
+data:
+  OIDC_ISSUER: https://auth.onemindos.dev/application/o/onemind-xr/
+  OIDC_AUDIENCE: onemind-xr
+  OIDC_JWKS_URL: http://platform-auth-helm-authentik-server.auth.svc.cluster.local/application/o/onemind-xr/jwks/
+  roles.json: |
+    {
+      "_comment": [
+        "OneMind role modes (FEATURES J2). Single source of truth, no secrets. Not applied by any Application",
+        "(platform-security does not recurse). Consumers: services/auth-callout (inline copy in",
+        "platform/auth-callout/configmap.yaml, kept equal by TestConfigMapMatchesSource), the policy service",
+        "tests (role matrix and the OpenFGA tuples in platform/security/openfga/onemind-roles.tuples.json),",
+        "the Authentik blueprint (group names) and the clients (ui_modes). README.md explains each field."
+      ],
+      "version": 1,
+      "client_account": "CLIENT",
+      "name_prefix": "ak:",
+      "group_tag_prefix": "group:",
+      "role_tag_prefix": "role:",
+      "inbox_prefix": "_INBOX",
+      "max_ttl_seconds": 3600,
+      "connection_types": ["WEBSOCKET", "STANDARD"],
+      "roles": [
+        {
+          "name": "newcomer",
+          "rank": 1,
+          "group": "onemind-newcomers",
+          "ui_modes": ["explore"],
+          "publish": [
+            "svc.layer.list",
+            "svc.layer.meta",
+            "svc.layer.snapshot",
+            "svc.layer.watch",
+            "svc.layer.unwatch",
+            "svc.entity.get",
+            "svc.entity.search"
+          ],
+          "subscribe": [],
+          "openfga": {"inherits": "", "operate_sites": [], "propose_max_level": "", "approve_max_level": "", "second_approve_max_level": ""}
+        },
+        {
+          "name": "viewer",
+          "rank": 2,
+          "group": "onemind-viewers",
+          "ui_modes": ["explore", "watch"],
+          "publish": [
+            "svc.layer.list",
+            "svc.layer.meta",
+            "svc.layer.snapshot",
+            "svc.layer.watch",
+            "svc.layer.unwatch",
+            "svc.entity.get",
+            "svc.entity.search",
+            "svc.entity.query",
+            "svc.entity.history",
+            "svc.policy.action.get"
+          ],
+          "subscribe": ["cmd.map.>"],
+          "openfga": {"inherits": "onemind-newcomers", "operate_sites": [], "propose_max_level": "", "approve_max_level": "", "second_approve_max_level": ""}
+        },
+        {
+          "name": "operator",
+          "rank": 3,
+          "group": "onemind-operators",
+          "ui_modes": ["explore", "watch", "operate"],
+          "publish": [
+            "svc.layer.list",
+            "svc.layer.meta",
+            "svc.layer.snapshot",
+            "svc.layer.watch",
+            "svc.layer.unwatch",
+            "svc.entity.get",
+            "svc.entity.search",
+            "svc.entity.query",
+            "svc.entity.history",
+            "svc.policy.action.get",
+            "svc.policy.check",
+            "svc.policy.command.propose",
+            "svc.policy.command.confirm",
+            "svc.policy.task.propose",
+            "svc.policy.task.confirm",
+            "svc.cot.send",
+            "agents.prompt.hermes.>",
+            "cmd.map.>"
+          ],
+          "subscribe": ["cmd.map.>"],
+          "openfga": {"inherits": "onemind-viewers", "operate_sites": ["sim"], "propose_max_level": "A3", "approve_max_level": "A3", "second_approve_max_level": ""}
+        },
+        {
+          "name": "commander",
+          "rank": 4,
+          "group": "onemind-commanders",
+          "ui_modes": ["explore", "watch", "operate", "command"],
+          "publish": [
+            "svc.layer.list",
+            "svc.layer.meta",
+            "svc.layer.snapshot",
+            "svc.layer.watch",
+            "svc.layer.unwatch",
+            "svc.entity.get",
+            "svc.entity.search",
+            "svc.entity.query",
+            "svc.entity.history",
+            "svc.policy.action.get",
+            "svc.policy.check",
+            "svc.policy.command.propose",
+            "svc.policy.command.confirm",
+            "svc.policy.task.propose",
+            "svc.policy.task.confirm",
+            "svc.cot.send",
+            "agents.prompt.hermes.>",
+            "cmd.map.>"
+          ],
+          "subscribe": ["cmd.map.>"],
+          "openfga": {"inherits": "onemind-operators", "operate_sites": ["sim"], "propose_max_level": "A4", "approve_max_level": "A4", "second_approve_max_level": "A4"}
+        },
+        {
+          "name": "admin",
+          "rank": 5,
+          "group": "onemind-admins",
+          "ui_modes": ["explore", "watch", "operate", "command", "admin"],
+          "publish": [
+            "svc.layer.list",
+            "svc.layer.meta",
+            "svc.layer.snapshot",
+            "svc.layer.watch",
+            "svc.layer.unwatch",
+            "svc.entity.get",
+            "svc.entity.search",
+            "svc.entity.query",
+            "svc.entity.history",
+            "svc.policy.action.get",
+            "svc.policy.check",
+            "svc.policy.command.propose",
+            "svc.policy.command.confirm",
+            "svc.policy.task.propose",
+            "svc.policy.task.confirm",
+            "svc.cot.send",
+            "agents.prompt.hermes.>",
+            "cmd.map.>"
+          ],
+          "subscribe": ["cmd.map.>"],
+          "openfga": {"inherits": "onemind-commanders", "operate_sites": ["sim"], "propose_max_level": "A4", "approve_max_level": "A4", "second_approve_max_level": "A4"}
+        }
+      ]
+    }

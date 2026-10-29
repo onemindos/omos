@@ -1,0 +1,378 @@
+package policy
+
+// FEATURES J2: role modes from Authentik groups. The role map
+// (platform/security/roles/onemind-roles.json) is the source; the OpenFGA grants in
+// platform/security/openfga/onemind-roles.tuples.json are generated from it and the
+// catalogue levels (go test -run TestRoleTuplesGolden -update-role-tuples).
+
+import (
+	"context"
+	"encoding/json"
+	"flag"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"sort"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/nats-io/nats.go"
+)
+
+const (
+	roleMapFile    = "../../../../platform/security/roles/onemind-roles.json"
+	roleTuplesFile = "../../../../platform/security/openfga/onemind-roles.tuples.json"
+)
+
+var updateRoleTuples = flag.Bool("update-role-tuples", false, "rewrite onemind-roles.tuples.json")
+
+// Users in the test CLIENT account, named as the auth callout names them.
+var roleUsers = map[string]string{
+	"newcomer":   "ak:nina;onemind-newcomers",
+	"viewer":     "ak:vera;onemind-viewers",
+	"operator":   "ak:olga;onemind-operators",
+	"commander":  "ak:cora;onemind-commanders",
+	"commander2": "ak:cole;onemind-commanders",
+	"admin":      "ak:adam;onemind-admins",
+	// A forged-looking group that is not in the directory's allow list is ignored.
+	"forged": "ak:fred;argocd-admins,onemind-root",
+}
+
+func roleUsersConf(pw map[string]string) string {
+	names := make([]string, 0, len(roleUsers))
+	for _, u := range roleUsers {
+		names = append(names, u)
+	}
+	sort.Strings(names)
+	var b strings.Builder
+	for _, u := range names {
+		fmt.Fprintf(&b, "\n      { user: %q, password: %q, permissions: {\n          publish: { allow: [\"svc.policy.>\"] }, subscribe: { allow: [\"_INBOX.>\"] } } }", u, pw[u])
+	}
+	return b.String()
+}
+
+type roleMap struct {
+	Roles []struct {
+		Name    string `json:"name"`
+		Rank    int    `json:"rank"`
+		Group   string `json:"group"`
+		OpenFGA struct {
+			Inherits     string   `json:"inherits"`
+			OperateSites []string `json:"operate_sites"`
+			Propose      Level    `json:"propose_max_level"`
+			Approve      Level    `json:"approve_max_level"`
+			Second       Level    `json:"second_approve_max_level"`
+		} `json:"openfga"`
+	} `json:"roles"`
+}
+
+func loadRoleMap(t *testing.T) roleMap {
+	t.Helper()
+	b, err := os.ReadFile(roleMapFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m roleMap
+	if err := json.Unmarshal(b, &m); err != nil {
+		t.Fatal(err)
+	}
+	return m
+}
+
+// upTo reports whether level l is within max ("" grants nothing). A0 actions need no
+// grant and A5 is never granted.
+func upTo(l, max Level) bool {
+	return max != "" && l != A0 && l != A5 && l <= max
+}
+
+// generateRoleTuples: nesting (group:<higher>#member member group:<lower>) plus, per role,
+// only the grants its inherited role does not already give.
+func generateRoleTuples(t *testing.T, m roleMap) []Tuple {
+	t.Helper()
+	byGroup := map[string]int{}
+	for i, r := range m.Roles {
+		byGroup[r.Group] = i
+	}
+	names := make([]string, 0, len(Catalogue))
+	for n := range Catalogue {
+		names = append(names, n)
+	}
+	sort.Strings(names)
+	var out []Tuple
+	for _, r := range m.Roles {
+		subj := "group:" + r.Group + "#member"
+		var parentSites []string
+		var pp, pa, ps Level
+		if r.OpenFGA.Inherits != "" {
+			i, ok := byGroup[r.OpenFGA.Inherits]
+			if !ok || m.Roles[i].Rank >= r.Rank {
+				t.Fatalf("role %s inherits %q: unknown or not lower", r.Name, r.OpenFGA.Inherits)
+			}
+			out = append(out, Tuple{User: subj, Relation: "member", Object: "group:" + r.OpenFGA.Inherits})
+			p := m.Roles[i].OpenFGA
+			parentSites, pp, pa, ps = p.OperateSites, p.Propose, p.Approve, p.Second
+		}
+		for _, site := range r.OpenFGA.OperateSites {
+			if !contains(parentSites, site) {
+				out = append(out, Tuple{User: subj, Relation: "operator", Object: "site:" + site})
+			}
+		}
+		for _, n := range names {
+			l := Catalogue[n].Level
+			for _, g := range []struct {
+				rel      string
+				max, par Level
+			}{{"proposer", r.OpenFGA.Propose, pp}, {"approver", r.OpenFGA.Approve, pa}, {"second_approver", r.OpenFGA.Second, ps}} {
+				// second_approver only matters for A4 (two people); grant it only there.
+				if g.rel == "second_approver" && l != A4 {
+					continue
+				}
+				if upTo(l, g.max) && !upTo(l, g.par) {
+					out = append(out, Tuple{User: subj, Relation: g.rel, Object: "action_type:" + n})
+				}
+			}
+		}
+	}
+	return out
+}
+
+func contains(xs []string, x string) bool {
+	for _, y := range xs {
+		if x == y {
+			return true
+		}
+	}
+	return false
+}
+
+func loadRoleTuples(t *testing.T) []Tuple {
+	t.Helper()
+	b, err := os.ReadFile(roleTuplesFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var doc struct {
+		Tuples []Tuple `json:"tuples"`
+	}
+	if err := json.Unmarshal(b, &doc); err != nil {
+		t.Fatal(err)
+	}
+	return doc.Tuples
+}
+
+func TestRoleTuplesGolden(t *testing.T) {
+	gen := generateRoleTuples(t, loadRoleMap(t))
+	if *updateRoleTuples {
+		doc := map[string]any{
+			"_comment": []string{
+				"OneMind role grants for OpenFGA (FEATURES J2). GENERATED by services/policy",
+				"(go test ./internal/policy -run TestRoleTuplesGolden -update-role-tuples) from",
+				"platform/security/roles/onemind-roles.json and the action catalogue; do not edit by hand.",
+				"Write them to the actions store with the model (README.md). User membership is not here:",
+				"the policy service sends a callout user's role groups as contextual tuples per Check.",
+			},
+			"tuples": gen,
+		}
+		b, _ := json.MarshalIndent(doc, "", "  ")
+		if err := os.WriteFile(roleTuplesFile, append(b, '\n'), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	got := loadRoleTuples(t)
+	a, _ := json.Marshal(gen)
+	b, _ := json.Marshal(got)
+	if string(a) != string(b) {
+		t.Fatalf("onemind-roles.tuples.json is stale: run go test ./internal/policy -run TestRoleTuplesGolden -update-role-tuples")
+	}
+	// The grants are writable under the model's type restrictions.
+	ev, err := LoadModel(modelFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := ev.Write(got...); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// The OpenFGA layer on its own: each role's rights, through contextual group tuples only.
+func TestRoleMatrixOpenFGA(t *testing.T) {
+	ev, err := LoadModel(modelFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := ev.Write(append(loadRoleTuples(t), Tuple{User: "site:sim", Relation: "site", Object: "asset:sim-x1"})...); err != nil {
+		t.Fatal(err)
+	}
+	check := func(user string, groups []string, rel, obj string) bool {
+		t.Helper()
+		var ctx []Tuple
+		for _, g := range groups {
+			ctx = append(ctx, Tuple{User: user, Relation: "member", Object: "group:" + g})
+		}
+		ok, err := ev.Check(context.Background(), CheckRequest{User: user, Relation: rel, Object: obj,
+			Context: map[string]any{"current_time": time.Now().UTC().Format(time.RFC3339Nano)}, ContextualTuples: ctx})
+		if err != nil {
+			t.Fatalf("check %s %s %s: %v", user, rel, obj, err)
+		}
+		return ok
+	}
+	type want struct{ propose, approve, second Level }
+	cases := map[string]want{
+		"onemind-newcomers":  {},
+		"onemind-viewers":    {},
+		"onemind-operators":  {A3, A3, ""},
+		"onemind-commanders": {A4, A4, A4},
+		"onemind-admins":     {A4, A4, A4},
+	}
+	assets := 0
+	for group, w := range cases {
+		u := "user:" + strings.TrimPrefix(group, "onemind-")
+		operates := check(u, []string{group}, "operator", "asset:sim-x1")
+		if operates != (w.propose != "") {
+			t.Errorf("%s operator of sim-x1 = %v", group, operates)
+		}
+		for name, spec := range Catalogue {
+			obj := "action_type:" + name
+			if got, exp := check(u, []string{group}, "proposer", obj), upTo(spec.Level, w.propose); got != exp {
+				t.Errorf("%s proposer %s (%s) = %v", group, name, spec.Level, got)
+			}
+			if got, exp := check(u, []string{group}, "approver", obj), upTo(spec.Level, w.approve); got != exp {
+				t.Errorf("%s approver %s (%s) = %v", group, name, spec.Level, got)
+			}
+			if got, exp := check(u, []string{group}, "second_approver", obj), spec.Level == A4 && upTo(spec.Level, w.second); got != exp {
+				t.Errorf("%s second_approver %s (%s) = %v", group, name, spec.Level, got)
+			}
+			if strings.HasPrefix(name, "asset.") {
+				assets++
+			}
+		}
+	}
+	if assets == 0 {
+		t.Fatal("no asset actions in the catalogue")
+	}
+	// No group, no rights: membership comes only from the verified token.
+	if check("user:olga", nil, "proposer", "action_type:asset.goto") {
+		t.Fatal("rights without a group")
+	}
+	// Agents can never be group members: OpenFGA refuses the tuple, written or contextual.
+	if err := ev.Write(Tuple{User: "agent:hermes/zeus/legacy", Relation: "member", Object: "group:onemind-commanders"}); err == nil {
+		t.Fatal("agent written as a group member")
+	}
+	_, err = ev.Check(context.Background(), CheckRequest{User: "agent:hermes/zeus/legacy", Relation: "approver",
+		Object: "action_type:asset.goto", ContextualTuples: []Tuple{{User: "agent:hermes/zeus/legacy", Relation: "member", Object: "group:onemind-commanders"}}})
+	if err == nil {
+		t.Fatal("agent accepted as a contextual group member")
+	}
+}
+
+// End to end through the policy service: identity from the server-set name, groups as
+// contextual tuples, OpenFGA decides. NATS permissions are deliberately wide here (all
+// svc.policy.>) to show the second layer holds even if the first were misconfigured; the
+// auth-callout tests prove the first layer.
+func TestRoleModesThroughPolicyService(t *testing.T) {
+	e := newEnv(t)
+	u := roleUsers
+
+	t.Run("newcomer and viewer cannot propose asset commands", func(t *testing.T) {
+		for _, who := range []string{u["newcomer"], u["viewer"], u["forged"]} {
+			expectDenied(t, e.propose(who, FamilyCommand, gotoReq("sim-x1", 30.27, -97.742)), CodeNotAuthorized)
+		}
+	})
+
+	t.Run("operator proposes and confirms an A3 goto", func(t *testing.T) {
+		r := e.propose(u["operator"], FamilyCommand, gotoReq("sim-x1", 30.27, -97.742))
+		if r.Status != StateAwaiting {
+			t.Fatalf("operator propose: %+v %+v", r, r.Denial)
+		}
+		waitFor(t, func() bool { return e.hasAudit(r.ActionID, "proposed", "") }, "proposed")
+		ev := e.auditFor(r.ActionID)[0].Env.Data
+		if rb := ev["requested_by"].(map[string]any); rb["id"] != "user:olga" || ev["actor_verified"] != true {
+			t.Fatalf("requested_by %v", ev["requested_by"])
+		}
+		// A viewer cannot confirm it.
+		c := e.confirm(u["viewer"], FamilyCommand, r.ActionID, r.ParamsHash, "approve")
+		if c.Denial == nil || c.Denial.Code != CodeNotAuthorized {
+			t.Fatalf("viewer confirm: %+v %+v", c, c.Denial)
+		}
+		c = e.confirm(u["operator"], FamilyCommand, r.ActionID, r.ParamsHash, "approve")
+		if c.Status != StateDispatched {
+			t.Fatalf("operator confirm: %+v %+v", c, c.Denial)
+		}
+	})
+
+	t.Run("operator cannot propose A4; commanders need two people", func(t *testing.T) {
+		arm := req("asset.arm", "drone", "sim-x1", map[string]any{})
+		expectDenied(t, e.propose(u["operator"], FamilyCommand, arm), CodeNotAuthorized)
+		r := e.propose(u["commander"], FamilyCommand, req("asset.arm", "drone", "sim-x1", map[string]any{}))
+		if r.Status != StateAwaiting || r.ApprovalsNeeded != 2 {
+			t.Fatalf("commander arm: %+v %+v", r, r.Denial)
+		}
+		if c := e.confirm(u["commander"], FamilyCommand, r.ActionID, r.ParamsHash, "approve"); c.Denial != nil {
+			t.Fatalf("first approval: %+v", c.Denial)
+		}
+		// An operator is not a second approver.
+		if c := e.confirm(u["operator"], FamilyCommand, r.ActionID, r.ParamsHash, "approve"); c.Denial == nil {
+			t.Fatal("operator gave the second approval")
+		}
+		c := e.confirm(u["commander2"], FamilyCommand, r.ActionID, r.ParamsHash, "approve")
+		if c.Denial != nil || (c.Status != StateDispatched && c.Status != StateApproved && c.Status != StateFailed) {
+			t.Fatalf("second commander: %+v %+v", c, c.Denial)
+		}
+		// Admin inherits commander rights.
+		r = e.propose(u["admin"], FamilyCommand, gotoReq("sim-x1", 30.271, -97.742))
+		if r.Status != StateAwaiting {
+			t.Fatalf("admin propose: %+v %+v", r, r.Denial)
+		}
+	})
+}
+
+func TestDirectoryResolvesCalloutNames(t *testing.T) {
+	d := testDirectory
+	d.AgentAccounts = append([]string{}, d.AgentAccounts...)
+	d.Callout = append([]CalloutAccount{}, testDirectory.Callout...)
+	d.Callout = append(d.Callout, CalloutAccount{Account: "AGENTS", NamePrefix: "ak:", Groups: []string{"onemind-admins"}})
+	for _, tc := range []struct {
+		acc, user string
+		id        string
+		groups    string
+		known     bool
+		kind      string
+	}{
+		{"CLIENT", "ak:olga;onemind-operators,onemind-viewers", "user:olga", "onemind-operators,onemind-viewers", true, "user"},
+		{"CLIENT", "ak:olga;onemind-operators,argocd-admins", "user:olga", "onemind-operators", true, "user"},
+		{"CLIENT", "ak:olga;", "user:olga", "", true, "user"},
+		{"CLIENT", "ak:olga", "", "", false, ""},                      // no ';': not the callout form
+		{"CLIENT", "ak:Olga Smith;onemind-admins", "", "", false, ""}, // invalid username
+		{"CLIENT", "zeus", "user:zeus", "", true, "user"},             // static entry still works
+		// An agent account never yields a callout user, even if configured.
+		{"AGENTS", "ak:eve;onemind-admins", "", "", false, "agent"},
+	} {
+		m := &nats.Msg{Header: nats.Header{}}
+		m.Header.Set(RequestInfoHeader, fmt.Sprintf(`{"acc":%q,"user":%q}`, tc.acc, tc.user))
+		p, known := d.Resolve(m)
+		if known != tc.known || p.ID != tc.id || strings.Join(p.Groups, ",") != tc.groups || p.Kind != tc.kind {
+			t.Errorf("%s/%s: got %+v known=%v", tc.acc, tc.user, p, known)
+		}
+	}
+}
+
+func TestOpenFGAClientSendsContextualTuples(t *testing.T) {
+	var body map[string]any
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewDecoder(r.Body).Decode(&body)
+		_, _ = w.Write([]byte(`{"allowed":true}`))
+	}))
+	defer srv.Close()
+	c := &OpenFGAClient{BaseURL: srv.URL, Store: "s1", Model: "m1"}
+	ok, err := c.Check(context.Background(), CheckRequest{User: "user:olga", Relation: "proposer", Object: "action_type:asset.goto",
+		ContextualTuples: []Tuple{{User: "user:olga", Relation: "member", Object: "group:onemind-operators"}}})
+	if err != nil || !ok {
+		t.Fatal(ok, err)
+	}
+	ct, _ := json.Marshal(body["contextual_tuples"])
+	if string(ct) != `{"tuple_keys":[{"object":"group:onemind-operators","relation":"member","user":"user:olga"}]}` {
+		t.Fatalf("contextual_tuples %s", ct)
+	}
+}

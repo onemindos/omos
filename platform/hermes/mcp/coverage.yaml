@@ -196,6 +196,10 @@ applications:
     apps:
     - paperclip
     reason: Owning app access is tracked in apps.yaml; supporting controllers, databases and workers do not get direct admin tools.
+  platform-auth-callout:
+    apps:
+    - onemind_core
+    reason: NATS auth callout that maps Authentik roles to client permissions. Supporting infrastructure; agents get no MCP admin tools for it.
   platform-policy:
     apps:
     - onemind_core

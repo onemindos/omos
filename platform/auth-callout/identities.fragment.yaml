@@ -1,0 +1,23 @@
+# The auth callout's NATS identity in the A19 spec format (platform/nats/identities/identities.yaml,
+# PR #562). Not a Kubernetes manifest; excluded from platform-auth-callout. When #562 has merged,
+# move these entries into identities.yaml, teach scripts/nats_identities.py to render the
+# top-level `authorization.auth_callout` block (nats-callout.conf) and run its `check`.
+# Until then nats-callout.conf is the hand-merge reference. No credentials here.
+accounts:
+  AUTH: {}
+
+users:
+  - user: auth-callout
+    account: AUTH
+    stage: A
+    connection_types: [STANDARD]
+    publish: []          # rendered as deny ">"; answers go out through allow_responses only
+    subscribe:
+      - "$SYS.REQ.USER.AUTH"
+    allow_responses: {max: 1, expires: 5s}
+    secret: onemind-core/auth-callout-runtime (NATS_USER, NATS_PASSWORD)
+
+# CLIENT keeps the imports #562 gives it. Callout-issued users carry their own allow lists in
+# the user JWT (platform/security/roles/onemind-roles.json), so no CLIENT user entry is added.
+# The checker must refuse any configured username containing ';' (the callout name separator,
+# services/policy identity.go resolveCallout), so no config user can look like a callout user.

@@ -70,6 +70,18 @@ two SealedSecrets, pinned image digest).
 | --- | --- | --- | --- | --- | --- |
 | 2 | `platform-policy` | `onemind-core` | No PVC; action records in memory (pending actions are forgotten on restart and cannot be confirmed); audit in `EVT` (`evt.so.>`), commands in `CMD` | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/policy/README.md) pending |
 
+## Role modes and NATS auth callout preparation — 2026-10-29
+
+FEATURES J2 (onemind-xr): browsers and remote clients log in to NATS with their Authentik token;
+`auth-callout` places them in `CLIENT` with the permissions of one of five roles (newcomer,
+viewer, operator, commander, admin). Not deployed: manual Application, owner steps in
+[`platform/auth-callout/README.md`](../platform/auth-callout/README.md) (AUTH account, two
+SealedSecrets, pinned image, Authentik blueprint mount, then the `auth_callout` block).
+
+| Tier | Application | Namespace | State / recovery | Exposure | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2 | `platform-auth-callout` | `onemind-core` (+ blueprint ConfigMap in `auth`) | Stateless, no PVC; role map in a ConfigMap; keys in SealedSecrets | None (NATS client only; no Service or ingress); ecosystem pool | Manual Argo, not synced; [owner steps](../platform/auth-callout/README.md) pending |
+
 ## Summary
 
 | Item | Count / value |

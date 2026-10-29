@@ -23,6 +23,10 @@
             "directly_related_user_types": [
               {
                 "type": "user"
+              },
+              {
+                "type": "group",
+                "relation": "member"
               }
             ]
           }

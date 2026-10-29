@@ -677,12 +677,25 @@ func (s *Service) checkAsset(t Target, capability string, gp geoPoint, fenced, s
 	return nil
 }
 
-func (s *Service) checkFGA(pol *PolicyInfo, user, relation, object string) (bool, error) {
+// groupTuples are the contextual tuples for a verified callout user's role groups
+// (FEATURES J2): user:<name> member group:<group>, for that user only.
+func groupTuples(p Principal, user string) []Tuple {
+	if !p.Verified || p.ID != user || len(p.Groups) == 0 {
+		return nil
+	}
+	ts := make([]Tuple, 0, len(p.Groups))
+	for _, g := range p.Groups {
+		ts = append(ts, Tuple{User: user, Relation: "member", Object: "group:" + g})
+	}
+	return ts
+}
+
+func (s *Service) checkFGA(pol *PolicyInfo, user, relation, object string, ctxTuples []Tuple) (bool, error) {
 	ctx, cancel := s.ctx()
 	defer cancel()
 	now := s.cfg.Now().UTC().Format(time.RFC3339Nano)
 	ok, err := s.cfg.Authz.Check(ctx, CheckRequest{User: user, Relation: relation, Object: object,
-		Context: map[string]any{"current_time": now}})
+		Context: map[string]any{"current_time": now}, ContextualTuples: ctxTuples})
 	if err != nil {
 		return false, err
 	}
@@ -712,7 +725,7 @@ func (s *Service) authorizePropose(spec ActionSpec, req *ActionRequest, p Princi
 		users = []string{who.ID}
 	}
 	for _, u := range users {
-		ok, err := s.checkFGA(&pol, u, "proposer", actionObj)
+		ok, err := s.checkFGA(&pol, u, "proposer", actionObj, groupTuples(p, u))
 		if err != nil {
 			return pol, deny(CodePolicyUnavailable, "authorization unavailable (fail closed): "+err.Error())
 		}
@@ -721,7 +734,7 @@ func (s *Service) authorizePropose(spec ActionSpec, req *ActionRequest, p Princi
 		}
 	}
 	if isAsset && human != "" {
-		ok, err := s.checkFGA(&pol, human, "operator", "asset:"+req.Target.EntityID)
+		ok, err := s.checkFGA(&pol, human, "operator", "asset:"+req.Target.EntityID, groupTuples(p, human))
 		if err != nil {
 			return pol, deny(CodePolicyUnavailable, "authorization unavailable (fail closed): "+err.Error())
 		}
@@ -863,9 +876,9 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 	if step == 2 {
 		relation = "second_approver"
 	}
-	ok, err := s.checkFGA(&a.Policy, p.ID, relation, "action_type:"+a.ActionType)
+	ok, err := s.checkFGA(&a.Policy, p.ID, relation, "action_type:"+a.ActionType, groupTuples(p, p.ID))
 	if err == nil && ok && step == 1 && isAssetClass(a.Target.EntityType) {
-		ok, err = s.checkFGA(&a.Policy, p.ID, "operator", "asset:"+a.Target.EntityID)
+		ok, err = s.checkFGA(&a.Policy, p.ID, "operator", "asset:"+a.Target.EntityID, groupTuples(p, p.ID))
 	}
 	if err != nil {
 		return refuse(deny(CodePolicyUnavailable, "authorization unavailable (fail closed): "+err.Error()))

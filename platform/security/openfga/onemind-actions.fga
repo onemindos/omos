@@ -8,7 +8,12 @@
 #   - agents may be proposers, never approvers, second approvers or operators (type restriction);
 #   - approvers and second approvers are humans (user or group member);
 #   - executor is a service (the policy service), never a person or an agent;
-#   - an operator grant can be time-boxed with the within_window condition.
+#   - an operator grant can be time-boxed with the within_window condition;
+#   - groups nest (FEATURES J2 role modes): group:onemind-operators#member is a member of
+#     group:onemind-viewers, so a higher role holds every grant of the roles below it. Agents
+#     are never group members, so a role grant can never reach an agent. The policy service
+#     sends a callout user's Authentik role groups as contextual tuples
+#     (user:<name> member group:<group>); onemind-roles.tuples.json holds the role grants.
 model
   schema 1.1
 
@@ -20,7 +25,7 @@ type service
 
 type group
   relations
-    define member: [user]
+    define member: [user, group#member]
 
 type capability
   relations
