@@ -101,6 +101,10 @@ names the gateway instead of `hermes`, and so Legacy's token can rotate independ
 
 ### 2. The onemind-hermes LiteLLM key (scoped to MCP)
 
+Done 2026-10-29: alias `onemind-hermes-mcp` (the alias `onemind-hermes` already belongs to the Legacy
+model key), `models: ["no-default-models"]`, `object_permission.mcp_servers: ["onemind"]`, sealed into
+`onemind-hermes-runtime` as `ONEMIND_LITELLM_MCP_KEY`. The commands below are the original procedure.
+
 Choose the key value locally, register it with the master key, then seal it for onemind-hermes.
 No value is echoed.
 
