@@ -141,6 +141,28 @@ stops being simulated loses them. The bridge's `meta.connection`
 (`online|degraded|offline`) is copied into `health.connection` (before this change it was always
 `online`), and a change in capabilities or connection publishes at once.
 
+When a fleet entity goes `stale` or `lost`, the sweep sets `health.connection` to `offline`.
+Only the next `fleet-*` report restores the earlier value (or sets its own `meta.connection`).
+A CoT report about the same asset, such as the tak-mesh gateway relaying it, makes the entity
+`active` again but leaves the connection `offline`, because it does not show that the bridge
+link is back.
+
+### `health.overall` for fleet entities
+
+Every entity with a `fleet-*` source gets `health.overall` (entity.md §4.1). The service works
+it out from connection, battery and lifecycle, and the worst condition wins. The thresholds are
+the constants in `internal/engine/policy.go`:
+
+| `overall` | When |
+|---|---|
+| `failed` | `connection` is `offline`; or `battery_pct` <= 15; or lifecycle is `lost` or `expired` |
+| `warning` | `connection` is `degraded` or missing; or `battery_pct` <= 30; or lifecycle is `stale` |
+| `healthy` | otherwise: `online`, battery above 30 % or not reported, and `active` |
+
+Stale also sets the connection to `offline`, so in practice a stale fleet asset reads `failed`.
+A non-numeric battery is ignored. Entities with no fleet source (CoT only, feeds) get no derived
+`overall`.
+
 ## Tests
 
 ```bash
