@@ -46,7 +46,9 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | Commands carry `expires_at` (30 s), `simulated`, the approval and an Ed25519 `sig` over the JCS envelope; they are published with a JetStream ack (the `CMD` PubAck is the record) | — |
 | Task assignment publishes `cmd.mission.{tsk}.create` first and sends the asset command only after `evt.mission.{tsk}.created` | `no_ack` |
 | No `acknowledged` from the bridge within 10 s; acknowledged but no `executed`/`failed` within 10 min | `no_ack` |
-| Entity, mission and person/team/agent task commands close on the entity or task service result (`evt.entity.{id}.*` / `evt.mission.{id}.*` matched by `causation` = command id or `data.action_id`; `evt.mission.{tsk}.created` for a task); none within 30 s | `no_ack` |
+| Entity, mission, zone and person/team/agent task commands close on the entity, geofence or task service result (`evt.entity.{id}.*` / `evt.mission.{id}.*` / `evt.map.geofence.{created\|updated\|deleted\|refused}` with the zone id in `data.zone_id`, matched by `causation` = command id or `data.action_id`; `evt.mission.{tsk}.created` for a task); none within 30 s | `no_ack` |
+| Zones: `zone.create`, `zone.update`, `zone.remove` (A2, target `zone`) execute as `cmd.map.geofence.{id}.{create\|update\|remove}` for the geofence service (D1-P4, omos #569); the policy service never writes KV `geofences` itself | — |
+| `approval.params_hash` on a command is the hash of the approved action: `asset.{verb}` over the command `data` for an asset action, `task.assign` / `task.abort` over the task parameters for a task-bearing command (`task_id` set). Shared vectors: `services/schemas/command/testdata/params-hash-vectors.json`, checked by this service, the MAVLink bridge and the ROS 2 bridge | — |
 
 Every proposal, denial, refused confirmation, approval, rejection, expiry, dispatch, bridge
 outcome and entity/task result is published as one event on `evt.so.action.{event}` in the omos event envelope v1

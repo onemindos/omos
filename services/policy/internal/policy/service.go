@@ -210,6 +210,7 @@ func (s *Service) Start() error {
 		{"evt.mission.*.created", s.handleCreated, false},
 		{"evt.mission.>", s.handleResult, false},
 		{"evt.entity.>", s.handleResult, false},
+		{"evt.map.geofence.*", s.handleResult, false}, // zone command results (D1-P2)
 	}
 	for _, x := range hs {
 		var sub *nats.Subscription
@@ -961,7 +962,7 @@ func (s *Service) dispatch(a *Action, causation string) {
 	switch spec.Exec {
 	case execFleet:
 		s.sendFleet(a, spec.Verb, a.Params, "", causation)
-	case execEntity, execMission:
+	case execEntity, execMission, execMap:
 		subj, err := commandSubject(spec.Exec, "", a.Target.EntityID, spec.Verb)
 		if err != nil {
 			s.fail(a, deny(CodeSchemaInvalid, err.Error()))
@@ -1119,6 +1120,11 @@ func (s *Service) publishCommandID(a *Action, id, subject string, data json.RawM
 	if a.ApprovalsNeeded == 0 {
 		status = "not_required"
 	}
+	// approval.params_hash is the hash of the approved action itself (asset-command.md
+	// sections 4-5, 6.3; mission-task.md section 6 step 6): asset.{verb} over the command
+	// data for an asset action, but task.assign (or task.abort) over the task parameters for
+	// a task-bearing command (task_id set). Bridges recompute it only when task_id is absent;
+	// with task_id they cannot, and rely on the signature (decision HASH, 2026-10-29).
 	env := map[string]any{
 		"v": 1, "id": id, "ts": ts(now), "cmd": subject, "source": s.cfg.Source, "subject": subject, "data": d,
 		"action_id":  a.ActionID,
@@ -1275,6 +1281,7 @@ func (s *Service) handleResult(m *nats.Msg) {
 		Causation string `json:"causation"`
 		Data      struct {
 			ActionID string `json:"action_id"`
+			ZoneID   string `json:"zone_id"`
 			Code     string `json:"code"`
 			Message  string `json:"message"`
 		} `json:"data"`
@@ -1301,7 +1308,12 @@ func (s *Service) handleResult(m *nats.Msg) {
 	e.op.Lock()
 	defer e.op.Unlock()
 	a := s.load(e)
-	if !a.awaitingResult() || (parts[2] != a.Target.EntityID && parts[2] != a.TaskID) {
+	subjectID := parts[2]
+	if parts[1] == "map" && parts[2] == "geofence" {
+		// evt.map.geofence.{event}: four tokens, the zone id travels in data.zone_id (D1-P2).
+		subjectID = env.Data.ZoneID
+	}
+	if !a.awaitingResult() || (subjectID != a.Target.EntityID && subjectID != a.TaskID) {
 		return
 	}
 	var d *Denial

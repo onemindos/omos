@@ -203,6 +203,36 @@
       "object": "action_type:task.assign"
     },
     {
+      "user": "group:onemind-operators#member",
+      "relation": "proposer",
+      "object": "action_type:zone.create"
+    },
+    {
+      "user": "group:onemind-operators#member",
+      "relation": "approver",
+      "object": "action_type:zone.create"
+    },
+    {
+      "user": "group:onemind-operators#member",
+      "relation": "proposer",
+      "object": "action_type:zone.remove"
+    },
+    {
+      "user": "group:onemind-operators#member",
+      "relation": "approver",
+      "object": "action_type:zone.remove"
+    },
+    {
+      "user": "group:onemind-operators#member",
+      "relation": "proposer",
+      "object": "action_type:zone.update"
+    },
+    {
+      "user": "group:onemind-operators#member",
+      "relation": "approver",
+      "object": "action_type:zone.update"
+    },
+    {
       "user": "group:onemind-commanders#member",
       "relation": "member",
       "object": "group:onemind-operators"

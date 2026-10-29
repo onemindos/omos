@@ -54,7 +54,7 @@ subject is rewritten by the server).
 
 | Identity (account) | Publish | Subscribe |
 |---|---|---|
-| `policy` (ONEMIND) | `cmd.>`, `evt.so.action.>`, `svc.entity.get`, `$JS.API.>`, `_INBOX.>`; `allow_responses` | `svc.policy.>`, `evt.drone.>`, `evt.robot.>`, `evt.vehicle.>`, `evt.mission.>`, `evt.entity.>`, `_INBOX.>` |
+| `policy` (ONEMIND) | `cmd.>`, `evt.so.action.>`, `svc.entity.get`, `$JS.API.>`, `_INBOX.>`; `allow_responses` | `svc.policy.>`, `evt.drone.>`, `evt.robot.>`, `evt.vehicle.>`, `evt.mission.>`, `evt.entity.>`, `evt.map.geofence.*`, `_INBOX.>` |
 | `entity` (ONEMIND) | `ent.*.*.state`, `evt.entity.>`; `allow_responses` | `svc.entity.>`, `cmd.entity.>`, its inputs (`tak.cot.out`, `tel.fleet.>`, `intel.>`, `det.>`, …) |
 | `task` (ONEMIND) | `evt.mission.>`, KV `mission-state`; `svc.policy.task.propose` (decomposed children); `allow_responses` | `cmd.mission.>`, `svc.mission.>`, `evt.so.action.>`, `evt.drone.>`, `evt.robot.>` |
 | `watch` (ONEMIND) | `svc.policy.command.propose`, `svc.policy.task.propose` | its inputs, `_INBOX.>` |
@@ -79,7 +79,7 @@ accounts {
     users: [
       { user: policy, password: "<from secret>", permissions: {
           publish:   { allow: ["cmd.>", "evt.so.action.>", "svc.entity.get", "$JS.API.>", "_INBOX.>"] }
-          subscribe: { allow: ["svc.policy.>", "evt.drone.>", "evt.robot.>", "evt.vehicle.>", "evt.mission.>", "evt.entity.>", "_INBOX.>"] }
+          subscribe: { allow: ["svc.policy.>", "evt.drone.>", "evt.robot.>", "evt.vehicle.>", "evt.mission.>", "evt.entity.>", "evt.map.geofence.*", "_INBOX.>"] }
           allow_responses: true } }
       { user: bridge-mavlink-home, password: "<from secret>", permissions: {
           publish:   { allow: ["evt.drone.sim-x1.>", "tel.fleet.drone.sim-x1.>"] }
