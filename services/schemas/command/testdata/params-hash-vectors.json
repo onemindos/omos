@@ -1,0 +1,162 @@
+{
+  "description": "Cross-implementation params_hash vectors (onemind-xr docs/contracts/asset-command.md section 5): params_hash = \"sha256:\" + lowercase hex SHA-256 of the RFC 8785 (JCS) form of {action_type, action_version, target: {entity_type, entity_id}, params}. params_json is the parameter object exactly as received on the wire (empty means {}); canonical is the JCS text that is hashed. A command's approval.params_hash is the hash of the approved action: asset.{verb} over the command data when the command has no task_id, task.assign or task.abort over the task parameters when it has one. Generated from omos services/policy ParamsHash (PR #554) and checked by services/policy, services/bridge/bridges/mavlink (PR #550) and services/bridge/bridges/ros2 (PR #566). Do not edit one copy: every branch carries the same file.",
+  "vectors": [
+    {
+      "action_type": "asset.goto",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.goto\",\"action_version\":1,\"params\":{\"hae_m\":160,\"lat\":30.269,\"lon\":-97.742,\"speed_mps\":8},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "asset-goto-contract-example",
+      "note": "asset-command.md 6.1 example; the hash a bridge recomputes for a command without task_id",
+      "params_hash": "sha256:c4ed3a928fc7e83d514db2fea28aeb3024cf88c3960485898aa246e4bdbe4db0",
+      "params_json": "{\"lat\": 30.2690, \"lon\": -97.7420, \"hae_m\": 160.0, \"speed_mps\": 8.0}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "asset.goto",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.goto\",\"action_version\":1,\"params\":{\"hae_m\":160,\"lat\":30.269,\"lon\":-97.742,\"speed_mps\":8},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "asset-goto-reordered-whitespace",
+      "note": "same parameters as the contract example in another key order and spacing: same hash",
+      "params_hash": "sha256:c4ed3a928fc7e83d514db2fea28aeb3024cf88c3960485898aa246e4bdbe4db0",
+      "params_json": "{ \"speed_mps\":8, \"hae_m\":1.6e2,\n \"lon\":-97.742,\"lat\":30.269 }",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "asset.goto",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.goto\",\"action_version\":1,\"params\":{\"hae_m\":150.25,\"lat\":30.2672,\"lon\":-97.7431,\"speed_mps\":0.5},\"target\":{\"entity_id\":\"sim-tb1\",\"entity_type\":\"robot\"}}",
+      "name": "asset-goto-robot",
+      "note": "ROS 2 bridge target",
+      "params_hash": "sha256:01be81f469c3beaf8fe2bd1540ca7eeef07833d0ff8e3aa5e117efd69e0f5f93",
+      "params_json": "{\"lat\":30.2672,\"lon\":-97.7431,\"hae_m\":150.25,\"speed_mps\":0.5}",
+      "target": {
+        "entity_type": "robot",
+        "entity_id": "sim-tb1"
+      }
+    },
+    {
+      "action_type": "asset.rtl",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.rtl\",\"action_version\":1,\"params\":{},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "asset-rtl-empty",
+      "note": "verb without parameters",
+      "params_hash": "sha256:d89153cf4b6e4037e983be7f3336be82d9b5c4eb0a16bb2d998fe1cc861e13c7",
+      "params_json": "{}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "asset.estop",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.estop\",\"action_version\":1,\"params\":{},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "asset-estop-empty-params",
+      "note": "params absent or empty hashes as {}",
+      "params_hash": "sha256:4a22021b1c77ad8f6a377c5770f4ff117d367c2cdff90a0d014710959a4845a8",
+      "params_json": "",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "asset.hold",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.hold\",\"action_version\":1,\"params\":{\"reason\":\"abort\"},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "asset-hold-abort",
+      "note": "the hold a task.abort sends, hashed as asset.hold (used only if it were a direct action)",
+      "params_hash": "sha256:e852624c0d26d7623d041fbd0352f1558e3a4fd2caa14489596cfb6a72fd293c",
+      "params_json": "{\"reason\":\"abort\"}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "asset.goto",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.goto\",\"action_version\":1,\"params\":{\"hae_m\":1e+21,\"lat\":1e-7,\"lon\":0,\"speed_mps\":0.000001,\"yaw_deg\":123456789012345680000},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "numbers-rfc8785",
+      "note": "RFC 8785 number serialisation (ECMAScript): exponent forms, -0, integers stored as floats",
+      "params_hash": "sha256:7ebd7d0ae5b2f54ada1a68ebadc2834059b206a0c9cc59d02124f9440cf4b592",
+      "params_json": "{\"lat\":1e-7,\"lon\":-0.0,\"hae_m\":1E21,\"speed_mps\":0.000001,\"yaw_deg\":123456789012345680000}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "asset.observe",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"asset.observe\",\"action_version\":1,\"params\":{\"\\r\":2,\"sensor_id\":\"cam\\\"0\\\\1\\u000f\u2028\",\"target\":{\"hae_m\":0,\"lat\":30.27,\"lon\":-97.74},\"ö\":3,\"€\":1,\"😀\":4,\"דּ\":5},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "strings-and-key-order",
+      "note": "RFC 8785 key order is by UTF-16 code units; string escapes",
+      "params_hash": "sha256:500dc868a2068cf733496aed48abb26976db79c444a382541ae9ebbc25a672de",
+      "params_json": "{\"sensor_id\":\"cam\\\"0\\\\1\\u000f\u2028\",\"target\":{\"lat\":30.27,\"lon\":-97.74,\"hae_m\":0},\"€\":1,\"\\r\":2,\"ö\":3,\"😀\":4,\"דּ\":5}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "task.assign",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"task.assign\",\"action_version\":1,\"params\":{\"description\":\"Look at the north gate\",\"spec\":{\"hae_m\":160,\"lat\":30.269,\"lon\":-97.742},\"task_id\":\"tsk-01jbx7k2m9q4r8s6t0v2w4y6z8\",\"type\":\"onemind.task.goto.v1\"},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "task-assign-goto",
+      "note": "a task.assign approval: the params_hash a task-bearing cmd.fleet command carries (task_id set); bridges cannot recompute it",
+      "params_hash": "sha256:7b9fe9aa9f9a144b57b5cc063098e6aa6fd98171ca71cab94f1dfcfd1f6cc9cb",
+      "params_json": "{\"type\":\"onemind.task.goto.v1\",\"spec\":{\"lat\":30.2690,\"lon\":-97.7420,\"hae_m\":160.0},\"description\":\"Look at the north gate\",\"task_id\":\"tsk-01jbx7k2m9q4r8s6t0v2w4y6z8\"}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "task.abort",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"task.abort\",\"action_version\":1,\"params\":{\"reason\":\"operator abort\",\"task_id\":\"tsk-01jbx7k2m9q4r8s6t0v2w4y6z8\"},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "task-abort",
+      "note": "a task.abort approval: carried by the cmd.fleet hold it sends",
+      "params_hash": "sha256:396900a799fe19483bbee1662af09dd70ed9234e36f4d908fb65984552bc0b96",
+      "params_json": "{\"task_id\":\"tsk-01jbx7k2m9q4r8s6t0v2w4y6z8\",\"reason\":\"operator abort\"}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    },
+    {
+      "action_type": "zone.create",
+      "action_version": 1,
+      "canonical": "{\"action_type\":\"zone.create\",\"action_version\":1,\"params\":{\"geo\":{\"coords\":{\"coordinates\":[-97.74,30.27],\"type\":\"Point\"},\"kind\":\"keep_in\",\"radius_m\":500,\"shape\":\"circle\"},\"name\":\"Home\"},\"target\":{\"entity_id\":\"home\",\"entity_type\":\"zone\"}}",
+      "name": "zone-create",
+      "note": "zone.create (D1-P4)",
+      "params_hash": "sha256:5cb2d5c7bc3bec88e1a038163297853a0e66be0be00e9461dce7aedbca6377b7",
+      "params_json": "{\"name\":\"Home\",\"geo\":{\"shape\":\"circle\",\"kind\":\"keep_in\",\"coords\":{\"type\":\"Point\",\"coordinates\":[-97.74,30.27]},\"radius_m\":500}}",
+      "target": {
+        "entity_type": "zone",
+        "entity_id": "home"
+      }
+    },
+    {
+      "action_type": "asset.goto",
+      "action_version": 2,
+      "canonical": "{\"action_type\":\"asset.goto\",\"action_version\":2,\"params\":{\"hae_m\":160,\"lat\":30.269,\"lon\":-97.742,\"speed_mps\":8},\"target\":{\"entity_id\":\"sim-x1\",\"entity_type\":\"drone\"}}",
+      "name": "action-version-2",
+      "note": "action_version is part of the hash",
+      "params_hash": "sha256:fe1864ae14979222ec03daa1c8dc487fdd94076b6bdf8564ff027d489822faa5",
+      "params_json": "{\"lat\":30.2690,\"lon\":-97.7420,\"hae_m\":160.0,\"speed_mps\":8.0}",
+      "target": {
+        "entity_type": "drone",
+        "entity_id": "sim-x1"
+      }
+    }
+  ],
+  "version": 1
+}
