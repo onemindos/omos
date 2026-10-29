@@ -1,3 +1,9 @@
+# fleet-state: per-site link and sync status (BUS-DESIGN D3; onemind-xr contract
+# layer-snapshot.md section 2). Single writer: omos-layer-service's site monitor
+# (platform/omos/layer/). Key {site} = {v, site, connected, last_contact, source_lag_s},
+# refreshed every 10 s; the 30 s TTL makes a missing key mean "site disconnected".
+# This purpose and an 8 MiB maxBytes cap are owner proposal A5-P1/A5-P2
+# (docs/proposals/2026-10-29-layer-service.md); the spec below is unchanged.
 apiVersion: jetstream.nats.io/v1beta2
 kind: KeyValue
 metadata:
