@@ -15,26 +15,26 @@ import (
 
 // Entity is the subset of entity.v1 the projector reads (field names are the contract's).
 type Entity struct {
-	EntityID    string          `json:"entity_id"`
-	EntityType  string          `json:"entity_type"`
-	Kind        string          `json:"kind"`
-	Template    string          `json:"template"`
-	Traits      []string        `json:"traits"`
-	Live        bool            `json:"live"`
-	Lifecycle   string          `json:"lifecycle"`
-	Lat         *float64        `json:"lat"`
-	Lon         *float64        `json:"lon"`
-	HAE         *float64        `json:"hae"`
-	Course      *float64        `json:"course"`
-	Speed       *float64        `json:"speed"`
-	Callsign    string          `json:"callsign"`
-	Stale       int             `json:"stale"`
-	T           int64           `json:"t"`
-	Seq         uint64          `json:"seq"`
-	Confidence  float64         `json:"confidence"`
-	Disposition string          `json:"disposition"`
-	Environment string          `json:"environment"`
-	CotType     string          `json:"cot_type"`
+	EntityID    string   `json:"entity_id"`
+	EntityType  string   `json:"entity_type"`
+	Kind        string   `json:"kind"`
+	Template    string   `json:"template"`
+	Traits      []string `json:"traits"`
+	Live        bool     `json:"live"`
+	Lifecycle   string   `json:"lifecycle"`
+	Lat         *float64 `json:"lat"`
+	Lon         *float64 `json:"lon"`
+	HAE         *float64 `json:"hae"`
+	Course      *float64 `json:"course"`
+	Speed       *float64 `json:"speed"`
+	Callsign    string   `json:"callsign"`
+	Stale       int      `json:"stale"`
+	T           int64    `json:"t"`
+	Seq         uint64   `json:"seq"`
+	Confidence  float64  `json:"confidence"`
+	Disposition string   `json:"disposition"`
+	Environment string   `json:"environment"`
+	CotType     string   `json:"cot_type"`
 	Aliases     struct {
 		Name *string `json:"name"`
 	} `json:"aliases"`

@@ -428,4 +428,3 @@ func (g *Engine) Stats() map[string]any {
 	return map[string]any{"entities": len(g.tracks), "admitted": g.admitted, "pending": len(g.pend),
 		"aoi_active": len(g.idx.active), "enabled": g.enabled}
 }
-

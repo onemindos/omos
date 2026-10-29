@@ -79,7 +79,10 @@ func (e *Entity) dim() string {
 }
 
 // eventAtoms is the §4.1 `event` table; matched against kind and the source's event name.
-var eventAtoms = []struct{ keys []string; atom string }{
+var eventAtoms = []struct {
+	keys []string
+	atom string
+}{
 	{[]string{"earthquake", "quake"}, "a-n-X-i-g-e"},
 	{[]string{"hotspot", "hot_spot", "fire_hot"}, "a-n-X-i-f-h"},
 	{[]string{"wildfire", "red flag", "red_flag", "fire"}, "a-n-X-i-f-w"},

@@ -310,7 +310,7 @@ func TestMissionTasking(t *testing.T) {
 	x := newAOIIndex()
 	cfg := cfgFor(TargetServer)
 	x.setMission("tsk-1", mustJSON(map[string]any{"task_id": "tsk-1", "rollup": "running",
-		"assignee": map[string]any{"entity_type": "drone", "entity_id": "sim-x1"},
+		"assignee":         map[string]any{"entity_type": "drone", "entity_id": "sim-x1"},
 		"target_snapshots": []any{map[string]any{"entity_id": "mmsi-1"}}}))
 	if d := evaluate(decode(fixture("vessel", "mmsi-1", 50, 50)), cfg, x, true, time.Now()); !d.ok || d.rank != RankTasked {
 		t.Errorf("targeted vessel: %+v", d)
