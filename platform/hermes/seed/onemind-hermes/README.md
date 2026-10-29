@@ -46,7 +46,7 @@ Entries in the memory files are separated by a line containing `§`, the Hermes 
 2. Telegram is mentioned as retained (per `CLAUDE.md`); Matrix is stated as the day-to-day channel (per old `USER.md`). Confirm which is primary for the new instance.
 3. The Mercury "close 5 LLCs, open OneMind LLC" line is kept as unverified plan text. Drop it if it is done or private.
 4. Which geo-stack, CloudTAK and OneTAK hostnames are still live was not verified here.
-5. The soul asks for explicit instruction before any physical action and for Zeus's go-ahead before deletions. Confirm that is the wanted default.
+5. The soul never deletes and never acts in the physical world (drones, home devices, locks, vehicles, payments) unless Zeus writes "execute" or "override" in chat for that specific action; approval does not carry to the next action, and without the word she proposes and waits. There is no standing exception (the earlier namespace-deletion exception was removed).
 6. Soul says the revenue target is $50K per month and education is the cornerstone, from old memory. Confirm still current.
 
 ## How these are copied into the pod (after review)

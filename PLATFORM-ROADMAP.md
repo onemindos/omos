@@ -18,7 +18,7 @@ does not mark the broader agent migration or Phase 8 complete. See
 [`fresh Hermes`](platform/hermes/onemind-hermes/README.md); deployment PR records live evidence.
 2026-10-29: renamed to `onemind-hermes` (Application `platform-onemind-hermes`,
 persona Legacy as a single soul) with new retain-class storage and hardened
-initial config; the `hermes-fresh` resources are orphaned pending owner cleanup.
+initial config; the `hermes-fresh` resources were removed the same day except the PVC `hermes-fresh-data`, kept pending owner approval.
 
 2026-10-24 sprint: prepared a dedicated read-only Hermes cluster observer identity
 and sanitized readiness collector for the owner's Paperclip status-report task.

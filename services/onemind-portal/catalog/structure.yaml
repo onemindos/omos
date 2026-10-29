@@ -281,10 +281,10 @@ apps:
     title: LiteLLM
     system: ai-agents
     description: Model gateway.
-  - name: hermes-fresh
-    title: Hermes (Fresh)
+  - name: onemind-hermes
+    title: OneMind Hermes
     system: ai-agents
-    description: Independent fresh Hermes instance beside Legacy in the hermes namespace (Argo application platform-hermes-fresh); no NATS sidecar, no imported Legacy data.
+    description: Hermes v0.22.5 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
   - name: onemind-mcp
     title: OneMind internal app MCP
     system: ai-agents

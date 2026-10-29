@@ -133,24 +133,27 @@ Legacy running until the owner chooses the final cutover.
 - LiteLLM ingress: add the `onemind-hermes` rule to `litellm-clients` in
   `onemind-ai`.
 
-## Cleanup after cutover (needs owner approval)
+## Cleanup after cutover
 
-Removing `platform-hermes-fresh` from Git makes the app-of-apps delete that
-Application. It has no finalizer and `prune: false`, so its resources are
-orphaned, not deleted. They keep running and costing until removed by hand. Do
-not delete them without a fresh snapshot and explicit owner approval:
+Removing `platform-hermes-fresh` from Git made the app-of-apps delete that
+Application. It had no finalizer and `prune: false`, so its resources were
+orphaned and then removed by hand.
 
-- Deployment `hermes/hermes-fresh` (still running; scale to 0 first).
-- Service `hermes/hermes-fresh` and Ingress `hermes/hermes-fresh`
-  (tailnet node `hermes-fresh`; remove the device from the tailnet after the
-  Ingress).
-- NetworkPolicy `hermes/hermes-fresh`.
-- ConfigMap `hermes/hermes-fresh-defaults-*` (generated name).
-- ReplicationSource `hermes/hermes-fresh-data` (keeps running nightly at 01:10
-  UTC until deleted) and its cache claim `volsync-src-hermes-fresh-data-cache`.
-- PVC `hermes/hermes-fresh-data` (`do-block-storage`, Delete reclaim policy; no
-  sessions were ever recorded on it).
+Done (2026-10-29), with owner approval:
+
+- Deployment, Service, Ingress and NetworkPolicy `hermes/hermes-fresh`, and the
+  tailnet proxy for the `hermes-fresh` node.
+- ConfigMap `hermes/hermes-fresh-defaults-*`.
+- ReplicationSource `hermes/hermes-fresh-data` and its cache claim
+  `volsync-src-hermes-fresh-data-cache`.
 - SealedSecrets and Secrets `hermes/hermes-fresh-runtime` and
   `hermes/hermes-fresh-restic`.
+
+Still pending:
+
+- PVC `hermes/hermes-fresh-data` (`do-block-storage`, Delete reclaim policy; no
+  sessions were ever recorded on it). Owner decision: keep for now. Do not
+  delete it without a fresh snapshot and explicit owner approval.
+- Remove the `hermes-fresh` device from the tailnet admin console.
 - The `hermes-fresh` Restic prefix in the `onemind-backups` bucket, after the
   above.

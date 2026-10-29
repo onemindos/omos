@@ -1,20 +1,20 @@
-# Hermes (Fresh)
+# OneMind Hermes
 
 > Generated from the reviewed catalog (workload-map.yaml, structure.yaml). It lists what is recorded, not what is currently healthy; check the Live tab for current state.
 
-Independent fresh Hermes instance beside Legacy in the hermes namespace (Argo application platform-hermes-fresh); no NATS sidecar, no imported Legacy data.
+Hermes v0.22.5 instance with the single Legacy soul in the hermes namespace (Argo application platform-onemind-hermes); no NATS sidecar, no imported Legacy data.
 
 ## Where it runs
 
-- Catalog entity: `component:default/hermes-fresh` in System `ai-agents`
-- Argo CD application: `platform-hermes-fresh`
+- Catalog entity: `component:default/onemind-hermes` in System `ai-agents`
+- Argo CD application: `platform-onemind-hermes`
 - Namespace: `hermes`
 
 ## Workloads
 
 | Workload | Kind | Namespace |
 | --- | --- | --- |
-| `hermes-fresh` | Deployment | `hermes` |
+| `onemind-hermes` | Deployment | `hermes` |
 
 ## When it looks wrong
 
@@ -30,8 +30,8 @@ Independent fresh Hermes instance beside Legacy in the hermes namespace (Argo ap
 
 ## Generated links
 
-- Loki query: `{k8s_namespace_name="hermes", k8s_pod_name=~"(hermes-fresh)-.*"}`
-- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=hermes-fresh`
+- Loki query: `{k8s_namespace_name="hermes", k8s_pod_name=~"(onemind-hermes)-.*"}`
+- Grafana dashboard path: `d/onemind-workload/onemind-workload?var-namespace=hermes&var-workload=onemind-hermes`
 - Source: `onemindos/omos`
 
 ## Escalate
