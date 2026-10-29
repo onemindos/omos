@@ -1,0 +1,24 @@
+name: onemind-bus
+version: "0.1.0"
+description: "OneMind bus tools: entity and layer reads (svc.entity.*, svc.layer.*), policy proposals that wait for a human confirm (svc.policy.*.propose; no confirm tool), and reversible map actions (cmd.map.*). Retires nats_publish."
+author: "onemindos"
+requires_env: []
+provides_tools:
+  - onemind_entity_get
+  - onemind_entity_query
+  - onemind_layer_list
+  - onemind_layer_meta
+  - onemind_layer_snapshot
+  - onemind_command_propose
+  - onemind_task_propose
+  - onemind_action_status
+  - onemind_map_fly_to
+  - onemind_map_frame
+  - onemind_map_layers
+  - onemind_map_select
+  - onemind_map_annotate
+  - onemind_map_remove_annotation
+  - onemind_map_measure
+  - onemind_map_camera_tour
+provides_hooks:
+  - pre_tool_call

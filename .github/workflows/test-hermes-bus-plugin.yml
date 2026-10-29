@@ -1,0 +1,79 @@
+name: Hermes onemind-bus plugin tests
+
+# Tool-level, scripted-model and account-layout tests of the Hermes onemind-bus plugin
+# (platform/hermes/agent/plugins/onemind-bus; onemind-xr FEATURES I2, D5, D11). Each test starts
+# its own nats-server (release binary, checksum-verified) with stub services. Nothing here
+# touches the cluster or calls a model API.
+#
+# The D5 integration test runs the real policy service. It needs services/policy (omos PR #554);
+# until that is on the branch the step builds nothing and the test skips itself.
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/test-hermes-bus-plugin.yml"
+      - "platform/hermes/agent/plugins/onemind-bus/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/test-hermes-bus-plugin.yml"
+      - "platform/hermes/agent/plugins/onemind-bus/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, linux, amd64, zeus-v2]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: pip install nats-py==2.16.0 pytest==9.0.2 pyyaml==6.0.2
+
+      - name: nats-server v2.14.2 release binary (checksum-verified)
+        env:
+          NATS_SERVER_VERSION: v2.14.2
+          # SHA256SUMS of the release: nats-server-v2.14.2-linux-amd64.tar.gz
+          NATS_SERVER_SHA256: b3e7b14eb10c895fd90c2dacdb6b65bd3208adcc9524dd7689ba2c1024e6b97a
+        run: |
+          set -euo pipefail
+          d="$RUNNER_TEMP/nats-server"; mkdir -p "$d"
+          f="nats-server-${NATS_SERVER_VERSION}-linux-amd64"
+          curl -fsSL -o "$d/$f.tar.gz" "https://github.com/nats-io/nats-server/releases/download/${NATS_SERVER_VERSION}/$f.tar.gz"
+          echo "${NATS_SERVER_SHA256}  $d/$f.tar.gz" | sha256sum -c -
+          tar -xzf "$d/$f.tar.gz" -C "$d" "$f/nats-server"
+          echo "NATS_SERVER_BIN=$d/$f/nats-server" >> "$GITHUB_ENV"
+          "$d/$f/nats-server" --version
+
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        if: hashFiles('services/policy/go.mod') != ''
+        with:
+          go-version: "1.26.4"
+          cache: false
+
+      - name: Build the policy service for the D5 integration test (when present)
+        if: hashFiles('services/policy/go.mod') != ''
+        working-directory: services/policy
+        env:
+          GOFLAGS: -p=1
+          GOMEMLIMIT: 600MiB
+        run: |
+          go build -o "$RUNNER_TEMP/policy" ./cmd/policy
+          echo "POLICY_BIN=$RUNNER_TEMP/policy" >> "$GITHUB_ENV"
+          echo "POLICY_SRC=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+
+      - name: pytest
+        working-directory: platform/hermes/agent/plugins/onemind-bus/tests
+        run: python -m pytest -v -rs --basetemp="$RUNNER_TEMP/pytest"
