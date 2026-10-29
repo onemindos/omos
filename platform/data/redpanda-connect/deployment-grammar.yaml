@@ -1,0 +1,104 @@
+# =============================================================================
+# redpanda-connect-grammar: the grammar feed pipelines (FEATURES A1), separate from the
+# legacy redpanda-connect pod so the old CoT pipeline keeps running, untouched, until the new
+# one is proven (decision 0004 #18).
+#
+#   feed-mta-grammar.yaml        evt.world.rail.{id}          (WORLD; replaces feed-mta CoT)
+#   feed-satellites-grammar.yaml intel.space.celestrak.tle    (INTEL; replaces feed-satellites CoT)
+#   both                         tel.feed.{source}.status, evt.sys.{source}.rejected
+#
+# FEED SWITCH: `replicas` below is the on/off switch. 0 = off (as merged). Activation order,
+# checks and rollback: CUTOVER.md in this directory. Nothing in this Deployment publishes to
+# tak.cot.inject (test/replay.sh proves it on recorded fixtures).
+#
+# Own pod, not more streams in the legacy pod: that pod runs at about 116Mi of its 128Mi limit
+# (kubectl top, 2026-10-29), so adding pipelines there could OOM the live feed. New workloads go
+# on the ecosystem pool (omos CLAUDE.md); same digest-pinned image as the legacy pod.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redpanda-connect-grammar
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: redpanda-connect-grammar
+    app.kubernetes.io/part-of: omos-feeds
+spec:
+  replicas: 0
+  strategy:
+    type: Recreate  # one poller per source: never two pods publishing during a rollout
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redpanda-connect-grammar
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redpanda-connect-grammar
+        app.kubernetes.io/part-of: omos-feeds
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
+      containers:
+        - name: connect
+          image: redpandadata/connect@sha256:b462939a6d7c265df7d6584925a5070beabaf5bc84d35180219e247f438b64ac
+          args:
+            - streams
+            - --chilled
+            - /config/pipelines/feed-mta-grammar.yaml
+            - /config/pipelines/feed-satellites-grammar.yaml
+          env:
+            - name: NATS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: user
+            - name: NATS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omos-nats-creds
+                  key: password
+          ports:
+            - name: api
+              containerPort: 4195
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 4195
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 4195
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: pipelines
+              mountPath: /config/pipelines
+            - name: proto
+              mountPath: /proto/gtfs-realtime.proto
+              subPath: gtfs-realtime.proto
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "96Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+      volumes:
+        - name: pipelines
+          configMap:
+            name: redpanda-connect-pipelines
+        - name: proto
+          configMap:
+            name: redpanda-connect-proto
+            items:
+              - key: gtfs-realtime.proto
+                path: gtfs-realtime.proto

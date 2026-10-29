@@ -1,15 +1,23 @@
 # =============================================================================
 # Redpanda Connect (Wombat) — declarative data feed engine → NATS → TAK
 #
-# Runs in streams mode: all pipeline files in /config/pipelines/ run as
-# independent concurrent streams in one pod. To add a feed: drop a YAML file
-# in pipelines/ and add it to the ConfigMap below.
+# Runs in streams mode: each pipeline file named in a Deployment's args runs as an
+# independent stream. The ConfigMap holds every pipeline; pipelines/ holds reference copies
+# (kept identical by scripts/tests/test_gitops_feed_grammar.py; Argo excludes them).
 #
-# Current pipelines:
-#   feed-mta.yaml      — MTA Metro-North + LIRR trains → tak.cot.inject (30s poll)
-#   feed-hazards.yaml  — USGS earthquakes + NWS weather alerts → tak.cot.inject (60s poll)
-#   feed-ships.yaml    — AIS vessel positions via aisstream.io WebSocket → tak.cot.inject
-#   feed-aircraft.yaml — ADS-B aircraft via OpenSky REST → tak.cot.inject (15s poll)
+# Pipelines, and which pod runs them:
+#   feed-mta.yaml                LEGACY  MTA trains → CoT on tak.cot.inject. Runs in this pod.
+#   feed-mta-grammar.yaml        A1      MTA trains → evt.world.rail.{id}. redpanda-connect-grammar.
+#   feed-satellites-grammar.yaml A1      CelesTrak TLE → intel.space.celestrak.tle. redpanda-connect-grammar.
+#   feed-ships.yaml              OFF     AIS → CoT. Both stay off: they return only through
+#   feed-aircraft.yaml           OFF     OpenSky → CoT. omos-ingest with an AOI box and quota (A1, A0).
+# feed-hazards.yaml was removed (A1): it duplicated the USGS and NWS collectors in feed-intel.
+#
+# FEED SWITCH (decision 0004 #18: the old pipeline stays until the new one is proven):
+#   the grammar pipelines run in deployment-grammar.yaml, whose replicas (0 as merged) turn them
+#   on; the legacy CoT outputs go off by setting this Deployment's replicas and feed-satellites'
+#   replicas (platform/omos/feeds.yaml) to 0. Order, checks and rollback: CUTOVER.md.
+#   scripts/tests/test_gitops_feed_grammar.py fails if a legacy output goes off first.
 #
 # Secrets required in omos namespace:
 #   omos-nats-creds   — NATS_USER, NATS_PASSWORD
@@ -108,115 +116,410 @@ data:
         tls:
           enabled: true
           skip_cert_verify: true
-  feed-hazards.yaml: |
-    cache_resources:
-      - label: seen_hazards
-        memory:
-          ttl: 21600s
-          cap: 10000
-
+  feed-mta-grammar.yaml: |
+    # feed-mta-grammar — MTA Metro-North + LIRR GTFS-RT vehicle positions as raw observations.
+    #
+    # Replaces feed-mta.yaml (CoT XML on tak.cot.inject). Publishes, per train, the doctrine §9.2
+    # geo envelope on evt.world.rail.{id} (stream WORLD, acked JetStream publish, Nats-Msg-Id
+    # dedup). The entity service turns these into ent.*.*.state and the projector turns entities
+    # into CoT; this pipeline never publishes CoT. Subject class `rail` is owner proposal BUS-P6
+    # (docs/proposals/2026-10-29-feed-grammar-cutover.md, A1-P1).
+    #
+    # Also publishes:
+    #   tel.feed.mta.status     one freshness record per poll (core NATS; TEL adds tel.feed.> later)
+    #   evt.sys.mta.rejected    a vehicle with a position outside WGS-84 or at 0,0 (BUS-P9)
+    #
+    # Runs only in the redpanda-connect-grammar Deployment (deployment-grammar.yaml), whose
+    # replicas are the on/off switch. Cut-over order: platform/data/redpanda-connect/CUTOVER.md.
+    # Every ${VAR:default} below has the cluster value as its default; the overrides exist so
+    # test/replay.sh can run this exact file against a local nats-server and recorded fixtures.
     input:
       generate:
-        interval: "60s"
+        interval: "${MTA_POLL_INTERVAL:30s}"
         mapping: 'root = ""'
 
     pipeline:
       processors:
-        - branch:
-            request_map: 'root = ""'
-            processors:
-              - http:
-                  url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_hour.geojson"
-                  verb: GET
-                  timeout: "15s"
-                  headers:
-                    User-Agent: "OMOS-FeedEngine/1.0"
-              - mapping: |
-                  root = this.features.or([]).map_each(f -> {
-                    "id": f.id,
-                    "uid": "USGS-" + f.id,
-                    "lat": f.geometry.coordinates.index(1),
-                    "lon": f.geometry.coordinates.index(0),
-                    "depth": f.geometry.coordinates.index(2).or(0),
-                    "mag": f.properties.mag.or(0),
-                    "place": f.properties.place.or("Unknown").replace_all("&", "&amp;").replace_all("<", "&lt;"),
-                    "stale_s": 21600,
-                    "hae": (0 - (f.geometry.coordinates.index(2).or(0) * 1000)).round().string(),
-                    "source": "USGS"
-                  })
-            result_map: 'root.usgs = this'
+        - mapping: 'root = {"errors": []}'
 
         - branch:
             request_map: 'root = ""'
             processors:
               - http:
-                  url: "https://api.weather.gov/alerts/active?severity=Extreme,Severe&status=actual"
+                  url: "${MTA_BASE_URL:https://api-endpoint.mta.info}/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr"
                   verb: GET
-                  timeout: "15s"
+                  timeout: "10s"
                   headers:
-                    Accept: "application/geo+json"
                     User-Agent: "OMOS-FeedEngine/1.0"
+              - protobuf:
+                  operator: to_json
+                  message: "transit_realtime.FeedMessage"
+                  import_paths: ["${MTA_PROTO_DIR:/proto/}"]
               - mapping: |
-                  root = this.features.or([]).map_each(f ->
-                    let geom = f.geometry.or({})
-                    let gtype = $geom.type.or("")
-                    let c = if $gtype == "Point" { $geom.coordinates }
-                            else if $gtype == "Polygon" { $geom.coordinates.index(0).index(0) }
-                            else { null }
-                    if $c == null { deleted() } else {
-                      let fid = f.id.or("")
-                      let short_id = if $fid.length() > 16 { $fid.slice($fid.length() - 16) } else { $fid }
-                      {
-                        "id": $fid,
-                        "uid": "NWS-" + $short_id,
-                        "lat": $c.index(1),
-                        "lon": $c.index(0),
-                        "event": f.properties.event.or("Alert").replace_all("&", "&amp;").replace_all("<", "&lt;"),
-                        "headline": (f.properties.headline.or(f.properties.event.or("Alert"))).slice(0, 80).replace_all("&", "&amp;").replace_all("<", "&lt;"),
-                        "severity": f.properties.severity.or("Unknown"),
-                        "stale_s": 3600,
-                        "hae": "9999999.0",
-                        "source": "NWS"
-                      }
-                    }
-                  )
-            result_map: 'root.nws = this'
+                  root = this.entity.or([]).filter(e -> e.exists("vehicle.position")).map_each(e -> e.merge({"_feed": "mnr"}))
+            result_map: 'root.mnr = this'
+        - catch:
+            - mapping: 'root.errors = this.errors.or([]).append("mnr: " + error())'
 
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "${MTA_BASE_URL:https://api-endpoint.mta.info}/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr"
+                  verb: GET
+                  timeout: "10s"
+                  headers:
+                    User-Agent: "OMOS-FeedEngine/1.0"
+              - protobuf:
+                  operator: to_json
+                  message: "transit_realtime.FeedMessage"
+                  import_paths: ["${MTA_PROTO_DIR:/proto/}"]
+              - mapping: |
+                  root = this.entity.or([]).filter(e -> e.exists("vehicle.position")).map_each(e -> e.merge({"_feed": "lirr"}))
+            result_map: 'root.lirr = this'
+        - catch:
+            - mapping: 'root.errors = this.errors.or([]).append("lirr: " + error())'
+
+        # One element per train (kind obs or rejected) plus one status element.
+        # protobuf to_json field names differ by engine version (camelCase in 4.115, snake_case in
+        # older builds), so every GTFS field is read under both spellings.
         - mapping: |
-            root = this.usgs.or([]).concat(this.nws.or([]))
+            map rail {
+              let v = this.vehicle
+              let tu = this.tripUpdate.or(this.trip_update).or({})
+              let trip = $v.trip.tripId.or($v.trip.trip_id).or($tu.trip.tripId).or($tu.trip.trip_id).or(this.id).string()
+              let route = $v.trip.routeId.or($v.trip.route_id).or($tu.trip.routeId).or($tu.trip.route_id).or("").string()
+              let feed = this._feed
+              let token = $trip.lowercase().re_replace_all("[^a-z0-9_-]", "_")
+              let uid = "mta-" + $feed + "-" + $token
+              let lat = $v.position.latitude.or(0).number()
+              let lon = $v.position.longitude.or(0).number()
+              let ts = $v.timestamp.or(0).number()
+              let t = if $ts > 0 { ($ts * 1000).round().int64() } else { now().ts_unix() * 1000 }
+              let label = if $feed == "mnr" { "MNR" } else { "LIRR" }
+              let ok = $lat != 0 && $lon != 0 && $lat >= -90 && $lat <= 90 && $lon >= -180 && $lon <= 180
+              root = if $ok {
+                {
+                  "kind": "obs",
+                  "id": $uid,
+                  "msg_id": "mta:%s:%s:%d".format($feed, $token, $t),
+                  "body": {
+                    "uid": $uid,
+                    "type": "ground.rail",
+                    "lat": $lat,
+                    "lon": $lon,
+                    "hae": 0,
+                    "course": $v.position.bearing.or(-1).number(),
+                    "speed": $v.position.speed.or(-1).number(),
+                    "callsign": "%s-%s".format($label, if $route != "" { $route } else { $trip }),
+                    "stale": 120,
+                    "t": $t,
+                    "meta": {
+                      "agency": "MTA",
+                      "feed": $label,
+                      "trip_id": $trip,
+                      "route_id": $route,
+                      "vehicle_id": $v.vehicle.id.or("").string(),
+                      "vehicle_label": $v.vehicle.label.or("").string(),
+                      "stop_id": $v.stopId.or($v.stop_id).or("").string(),
+                      "current_status": $v.currentStatus.or($v.current_status).or("").string(),
+                      "start_date": $v.trip.startDate.or($v.trip.start_date).or($tu.trip.startDate).or($tu.trip.start_date).or("").string()
+                    }
+                  }
+                }
+              } else {
+                {
+                  "kind": "rejected",
+                  "id": $uid,
+                  "msg_id": "mta-rejected:%s:%s:%d".format($feed, $token, now().ts_unix_nano()),
+                  "body": {
+                    "source": "mta",
+                    "reason": "position outside WGS-84 or at 0,0 (lat %v, lon %v)".format($lat, $lon),
+                    "raw": this.without("_feed").string().slice(0, 4096),
+                    "rawBytes": this.without("_feed").string().length()
+                  }
+                }
+              }
+            }
+            let errs = this.errors.or([])
+            let recs = this.mnr.or([]).concat(this.lirr.or([])).map_each(e -> e.apply("rail"))
+            let now = now().ts_format("2006-01-02T15:04:05.000Z", "UTC")
+            let failed = $errs.length() >= 2
+            root = $recs.append({
+              "kind": "status",
+              "id": "mta",
+              "msg_id": "",
+              "body": {
+                "source": "mta",
+                "kind": "rest_poll",
+                "collector": "redpanda-connect",
+                "instance": hostname(),
+                "leader": true,
+                "fetchedAt": if $failed { null } else { $now },
+                "count": $recs.length(),
+                "published": $recs.filter(r -> r.kind == "obs").length(),
+                "rejected": $recs.filter(r -> r.kind == "rejected").length(),
+                "feeds": {"mnr": this.mnr.or([]).length(), "lirr": this.lirr.or([]).length()},
+                "lastError": if $errs.length() > 0 { $errs.join("; ").slice(0, 300) } else { null },
+                "errorAt": if $errs.length() > 0 { $now } else { null },
+                "staleAfterSec": 120,
+                "stale": $failed,
+                "at": $now
+              }
+            })
+
+        # A mapping failure must not vanish: publish it as a stale status instead.
+        - catch:
+            - mapping: |
+                let now = now().ts_format("2006-01-02T15:04:05.000Z", "UTC")
+                root = [{"kind": "status", "msg_id": "", "body": {
+                  "source": "mta", "kind": "rest_poll", "collector": "redpanda-connect",
+                  "instance": hostname(), "leader": true, "fetchedAt": null,
+                  "count": 0, "published": 0, "rejected": 0,
+                  "lastError": ("mapping: " + error()).slice(0, 300), "errorAt": $now,
+                  "staleAfterSec": 120, "stale": true, "at": $now
+                }}]
 
         - unarchive:
             format: json_array
 
-        - dedupe:
-            cache: seen_hazards
-            key: '${!this.id}'
-
         - mapping: |
-            let ts = now().format_timestamp("2006-01-02T15:04:05.000Z")
-            let stale = (now().ts_unix() + this.stale_s.number()).ts_format("2006-01-02T15:04:05.000Z")
-            let callsign = if this.source == "USGS" {
-              "M" + this.mag.format_number(1) + " Earthquake"
-            } else {
-              this.event
-            }
-            let remarks = if this.source == "USGS" {
-              "M" + this.mag.format_number(1) + " " + this.place + " depth:" + this.depth.format_number(1) + "km"
-            } else {
-              this.severity + ": " + this.headline
-            }
-            root = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n<event version=\"2.0\" type=\"b-r-f-h-h\" uid=\"" + this.uid + "\" how=\"h-e\" time=\"" + $ts + "\" start=\"" + $ts + "\" stale=\"" + $stale + "\"><point lat=\"" + this.lat.string() + "\" lon=\"" + this.lon.string() + "\" hae=\"" + this.hae + "\" ce=\"9999999.0\" le=\"9999999.0\"/><detail><contact callsign=\"" + $callsign + "\"/><status readiness=\"false\"/><remarks>" + $remarks + "</remarks><marti><dest mission=\"Hazards\"/></marti></detail></event>"
+            meta feed_kind = this.kind
+            meta rail_id = this.id
+            meta msg_id = this.msg_id
+            root = this.body
 
     output:
-      nats:
-        urls: ["nats://nats.nats.svc.cluster.local:4222"]
-        subject: "tak.cot.inject"
-        auth:
-          user: "${NATS_USER}"
-          password: "${NATS_PASSWORD}"
-        tls:
-          enabled: true
-          skip_cert_verify: true
+      switch:
+        cases:
+          - check: '@feed_kind == "status"'
+            output:
+              nats:
+                urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+                subject: "tel.feed.mta.status"
+                auth:
+                  user: "${NATS_USER}"
+                  password: "${NATS_PASSWORD}"
+                tls:
+                  enabled: ${NATS_TLS_ENABLED:true}
+                  skip_cert_verify: true
+          - check: '@feed_kind == "rejected"'
+            output:
+              nats_jetstream:
+                urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+                subject: "evt.sys.mta.rejected"
+                headers:
+                  Nats-Msg-Id: '${! @msg_id }'
+                auth:
+                  user: "${NATS_USER}"
+                  password: "${NATS_PASSWORD}"
+                tls:
+                  enabled: ${NATS_TLS_ENABLED:true}
+                  skip_cert_verify: true
+          - check: '@feed_kind == "obs"'
+            output:
+              nats_jetstream:
+                urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+                subject: 'evt.world.rail.${! @rail_id }'
+                headers:
+                  Nats-Msg-Id: '${! @msg_id }'
+                auth:
+                  user: "${NATS_USER}"
+                  password: "${NATS_PASSWORD}"
+                tls:
+                  enabled: ${NATS_TLS_ENABLED:true}
+                  skip_cert_verify: true
+  feed-satellites-grammar.yaml: |
+    # feed-satellites-grammar — CelesTrak two-line element sets as raw observations.
+    #
+    # Replaces the CoT output of the feed-satellites Deployment (platform/omos/feeds.yaml), which
+    # propagates SGP4 in Python and core-publishes CoT XML to tak.cot.inject. This pipeline
+    # publishes the source data itself: one record per satellite on intel.space.celestrak.tle
+    # (stream INTEL, acked JetStream publish, Nats-Msg-Id tle:{norad}:{epoch}), as BUS-DESIGN §3.1
+    # and the ingestion migration plan step 7 specify. Propagating positions is the entity
+    # service's job (FEATURES A12), not the collector's. Until A12 exists the legacy
+    # feed-satellites keeps running (CUTOVER.md); see owner proposal A1-P2.
+    #
+    # Also publishes:
+    #   tel.feed.celestrak.status    one freshness record per fetch (core NATS)
+    #   evt.sys.celestrak.rejected   a TLE with a bad checksum, length or mismatched NORAD id (BUS-P9)
+    #
+    # Politeness: CelesTrak asks clients not to download the same GP data more than once every
+    # two hours; the default interval is 4 h, the same as the legacy script's TLE refresh.
+    # Runs only in the redpanda-connect-grammar Deployment (deployment-grammar.yaml).
+    input:
+      generate:
+        interval: "${CELESTRAK_POLL_INTERVAL:4h}"
+        mapping: 'root = ""'
+
+    pipeline:
+      processors:
+        - mapping: 'root = {"errors": []}'
+
+        - branch:
+            request_map: 'root = ""'
+            processors:
+              - http:
+                  url: "${CELESTRAK_BASE_URL:https://celestrak.org}/NORAD/elements/gp.php?GROUP=${CELESTRAK_GROUP:stations}&FORMAT=tle"
+                  verb: GET
+                  timeout: "30s"
+                  headers:
+                    User-Agent: "omos-feed-sats/1.0"
+            result_map: 'root.text = content().string()'
+        - catch:
+            - mapping: 'root.errors = this.errors.or([]).append(error())'
+
+        - mapping: |
+            map tle_ok {
+              let digits = this.slice(0, 68).split("").map_each(c -> if c == "-" { 1 } else if c.re_match("^[0-9]$") { c.number() } else { 0 })
+              root = this.length() == 69 && $digits.sum() % 10 == this.slice(68, 69).number().catch(-1)
+            }
+            map tle {
+              let l0 = this.l0
+              let l1 = this.l1
+              let l2 = this.l2
+              let norad = $l1.slice(2, 7).trim()
+              let epoch = $l1.slice(18, 32).trim()
+              let yy = $l1.slice(18, 20).number().catch(0)
+              let year = if $yy < 57 { 2000 + $yy } else { 1900 + $yy }
+              let jan1 = "%d-01-01T00:00:00Z".format($year.int64()).ts_parse("2006-01-02T15:04:05Z").ts_unix()
+              let epoch_ms = (($jan1 + ($l1.slice(20, 32).number().catch(1) - 1) * 86400) * 1000).round().int64()
+              let reason = if !$l1.apply("tle_ok") {
+                "line 1 length or checksum invalid"
+              } else if !$l2.apply("tle_ok") {
+                "line 2 length or checksum invalid"
+              } else if $l2.slice(2, 7).trim() != $norad {
+                "NORAD id differs between line 1 and line 2"
+              } else { "" }
+              root = if $reason == "" {
+                {
+                  "kind": "obs",
+                  "msg_id": "tle:%s:%s".format($norad, $epoch),
+                  "body": {
+                    "id": "celestrak-" + $norad,
+                    "type": "tle",
+                    "source": "celestrak",
+                    "lat": null,
+                    "lon": null,
+                    "timestamp": ($epoch_ms / 1000).ts_format("2006-01-02T15:04:05.000Z", "UTC"),
+                    "properties": {
+                      "norad_id": $norad,
+                      "name": if $l0 != "" { $l0 } else { "NORAD " + $norad },
+                      "group": "${CELESTRAK_GROUP:stations}",
+                      "classification": $l1.slice(7, 8),
+                      "intl_designator": $l1.slice(9, 17).trim(),
+                      "epoch": $epoch,
+                      "epoch_ms": $epoch_ms,
+                      "line1": $l1,
+                      "line2": $l2
+                    }
+                  }
+                }
+              } else {
+                {
+                  "kind": "rejected",
+                  "msg_id": "tle-rejected:%s:%d".format($norad, now().ts_unix_nano()),
+                  "body": {
+                    "source": "celestrak",
+                    "reason": $reason,
+                    "raw": [$l0, $l1, $l2].join("\n").slice(0, 4096),
+                    "rawBytes": [$l0, $l1, $l2].join("\n").length()
+                  }
+                }
+              }
+            }
+            let errs = this.errors.or([])
+            let lines = this.text.or("").split("\n").map_each(l -> l.trim()).filter(l -> l != "")
+            let n = $lines.length()
+            let starts = if $n > 1 { range(0, $n - 1).filter(i -> $lines.index(i).has_prefix("1 ") && $lines.index(i + 1).has_prefix("2 ")) } else { [] }
+            let recs = $starts.map_each(i -> {
+              "l0": if i > 0 && !$lines.index(i - 1).has_prefix("1 ") && !$lines.index(i - 1).has_prefix("2 ") { $lines.index(i - 1) } else { "" },
+              "l1": $lines.index(i),
+              "l2": $lines.index(i + 1)
+            }.apply("tle"))
+            let now = now().ts_format("2006-01-02T15:04:05.000Z", "UTC")
+            let failed = $errs.length() > 0
+            root = $recs.append({
+              "kind": "status",
+              "msg_id": "",
+              "body": {
+                "source": "celestrak",
+                "kind": "file",
+                "collector": "redpanda-connect",
+                "instance": hostname(),
+                "leader": true,
+                "fetchedAt": if $failed { null } else { $now },
+                "count": $recs.length(),
+                "published": $recs.filter(r -> r.kind == "obs").length(),
+                "rejected": $recs.filter(r -> r.kind == "rejected").length(),
+                "lastError": if $failed { $errs.join("; ").slice(0, 300) } else { null },
+                "errorAt": if $failed { $now } else { null },
+                "staleAfterSec": 43200,
+                "stale": $failed,
+                "at": $now
+              }
+            })
+
+        # A mapping failure must not vanish: publish it as a stale status instead.
+        - catch:
+            - mapping: |
+                let now = now().ts_format("2006-01-02T15:04:05.000Z", "UTC")
+                root = [{"kind": "status", "msg_id": "", "body": {
+                  "source": "celestrak", "kind": "file", "collector": "redpanda-connect",
+                  "instance": hostname(), "leader": true, "fetchedAt": null,
+                  "count": 0, "published": 0, "rejected": 0,
+                  "lastError": ("mapping: " + error()).slice(0, 300), "errorAt": $now,
+                  "staleAfterSec": 43200, "stale": true, "at": $now
+                }}]
+
+        - unarchive:
+            format: json_array
+
+        - mapping: |
+            meta feed_kind = this.kind
+            meta msg_id = this.msg_id
+            root = this.body
+
+    output:
+      switch:
+        cases:
+          - check: '@feed_kind == "status"'
+            output:
+              nats:
+                urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+                subject: "tel.feed.celestrak.status"
+                auth:
+                  user: "${NATS_USER}"
+                  password: "${NATS_PASSWORD}"
+                tls:
+                  enabled: ${NATS_TLS_ENABLED:true}
+                  skip_cert_verify: true
+          - check: '@feed_kind == "rejected"'
+            output:
+              nats_jetstream:
+                urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+                subject: "evt.sys.celestrak.rejected"
+                headers:
+                  Nats-Msg-Id: '${! @msg_id }'
+                auth:
+                  user: "${NATS_USER}"
+                  password: "${NATS_PASSWORD}"
+                tls:
+                  enabled: ${NATS_TLS_ENABLED:true}
+                  skip_cert_verify: true
+          - check: '@feed_kind == "obs"'
+            output:
+              nats_jetstream:
+                urls: ["${NATS_URL:nats://nats.nats.svc.cluster.local:4222}"]
+                subject: "intel.space.celestrak.tle"
+                headers:
+                  Nats-Msg-Id: '${! @msg_id }'
+                auth:
+                  user: "${NATS_USER}"
+                  password: "${NATS_PASSWORD}"
+                tls:
+                  enabled: ${NATS_TLS_ENABLED:true}
+                  skip_cert_verify: true
   feed-ships.yaml: |
     input:
       websocket:
