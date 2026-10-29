@@ -16,24 +16,41 @@ dependencies {
     // TAK Server plugin API — local JAR (no tak.gov credentials needed)
     compileOnly fileTree(dir: '../tak-server-sdk/tak-server-sdk', include: '*.jar')
 
-    // NATS.java client
+    // NATS.java client (shaded and relocated below)
     implementation 'io.nats:jnats:2.20.2'
 
-    // Logging
-    implementation 'org.slf4j:slf4j-api:2.0.13'
-    testImplementation 'ch.qos.logback:logback-classic:1.4.14'
+    // Logging: TAK Server's plugin manager already ships SLF4J 2 with Logback, so the
+    // API is provided, not bundled. A second, unrelocated copy of org.slf4j inside the
+    // plugin JAR (as in 1.0.0) can shadow or conflict with the server's own.
+    compileOnly 'org.slf4j:slf4j-api:2.0.13'
+    testImplementation 'org.slf4j:slf4j-api:2.0.13'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.13'
     testImplementation 'junit:junit:4.13.2'
 }
 
+// The plugin manager loads lib/*.jar after WEB-INF/lib on one class path. TAK Server
+// 5.8 uses NATS itself (takserver-nats), so an unrelocated io.nats copy here would lose
+// to, or clash with, the server's jnats version. Relocate the client and its eddsa
+// dependency into the plugin's own package.
 shadowJar {
     archiveBaseName.set('takserver-nats-plugin')
     archiveClassifier.set('')
-    archiveVersion.set('1.0.0')
+    archiveVersion.set('1.1.0')
+
+    relocate 'io.nats', 'tak.server.plugins.natsbridge.shaded.io.nats'
+    relocate 'net.i2p', 'tak.server.plugins.natsbridge.shaded.net.i2p'
 
     // Don't bundle the TAK Server API classes — they're provided by the server
     dependencies {
         exclude(dependency('gov.tak:.*'))
+        exclude(dependency('org.slf4j:.*'))
     }
+}
+
+// The SDK-free classes (BridgeCore, NatsLink) are tested without the TAK SDK by
+// ./test.sh (also run in CI by .github/workflows/test-takserver-plugin.yml).
+test {
+    environment 'NATS_SERVER_BIN', System.getenv('NATS_SERVER_BIN') ?: 'nats-server'
 }
 
 build.dependsOn shadowJar

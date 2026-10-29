@@ -1,0 +1,36 @@
+name: Test NatsBridgePlugin
+# Compiles and tests the TAK-SDK-free part of the NatsBridgePlugin (BridgeCore, NatsLink)
+# with plain javac and JUnit (services/takserver/plugin-src/test.sh), including NatsLink
+# against a disposable nats-server. NatsBridgePlugin.java itself needs the TAK Server SDK
+# JAR from tak.gov, which is not in Git, so it is not compiled here.
+on:
+  pull_request:
+    paths:
+      - services/takserver/plugin-src/**
+      - .github/workflows/test-takserver-plugin.yml
+  push:
+    branches: [main]
+    paths:
+      - services/takserver/plugin-src/**
+      - .github/workflows/test-takserver-plugin.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: takserver-plugin-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: "1.26.4"
+          cache: false
+      - name: Install nats-server
+        run: go install github.com/nats-io/nats-server/v2@v2.14.9
+      - name: Test (JDK 17 preinstalled on the runner)
+        run: |
+          export JAVA_HOME="$JAVA_HOME_17_X64"
+          NATS_SERVER_BIN="$(go env GOPATH)/bin/nats-server" services/takserver/plugin-src/test.sh

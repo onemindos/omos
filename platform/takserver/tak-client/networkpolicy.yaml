@@ -1,0 +1,25 @@
+# Lets omos-tak-client reach TAK Server's streaming input. NetworkPolicies are additive, so
+# this adds one allowed source to takserver-messaging next to takserver-core-ingress
+# (platform/takserver/deploy/networkpolicy-takserver-ingress.yaml) without editing it; it
+# lives here so it is applied and removed together with the tak-client Deployment.
+# Egress to nats.nats:4222 is already allowed for namespace takserver
+# (platform/nats/network-policy.yaml, client port rule).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tak-client-to-messaging
+  namespace: takserver
+spec:
+  podSelector:
+    matchLabels:
+      app: takserver-messaging
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: tak-client
+      ports:
+        - protocol: TCP
+          port: 8089

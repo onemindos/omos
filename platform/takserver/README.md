@@ -32,13 +32,14 @@ and device enrollment are in `infra/edge/takserver/`. Deploy and upgrade steps:
 | `takserver-messaging` | Deployment | `ghcr.io/onemindos/takserver-base@sha256:…` (5.8, digest-pinned) | 8089 CoT/TLS, 9000/9001 |
 | `takserver-api` | Deployment | `ghcr.io/onemindos/takserver-base:api-5.8-onemind` | 8443 Marti/WebTAK, 8444 fed_https, 8446 enrollment/OAuth |
 | `takserver-config` | Deployment | `ghcr.io/onemindos/takserver-base:config-5.8-onemind` | internal |
-| `takserver-plugins` | Deployment | `ghcr.io/onemindos/takserver-base@sha256:…` (5.8 + NatsBridgePlugin) | none inbound |
+| `takserver-plugins` | Deployment | `ghcr.io/onemindos/takserver-base@sha256:…` (5.8; **the NatsBridgePlugin is not loaded** in the running image, see `services/takserver/plugin-src/README.md`) | none inbound |
 | `takserver-ignite` | StatefulSet | `ghcr.io/onemindos/takserver-base:ignite-5.8-onemind` | 47100/47500/10800/… (cache and discovery) |
 | `takserver-postgresql` | StatefulSet | `postgis/postgis:15-3.4` | 5432 (database `cot`, PVC 20Gi) |
 | `takserver-nats` (+ `takserver-nats-box`) | StatefulSet | `nats:2.9.21-alpine` | 4222, TAK-internal only |
 | `tak-ldap` | StatefulSet | `ghcr.io/onemindos/tak-ldap:5.8` | 389/636 (CoreConfig LDAP auth) |
 | `tak-lb-proxy` | Deployment | `nginx:1.27-alpine` (L4 stream) | 8089, 8443, 8446, 64738 |
 | `tak-nats-leaf` | Deployment | `nats:2.10-alpine` | 4222 (from the plugin) |
+| `omos-tak-client` (proposed, A21) | Deployment, Argo `platform-takserver-tak-client` (manual sync), `tak-client/` | `ghcr.io/onemindos/omos-tak-client` | none inbound; client of 8089 |
 | `murmur`, `mumble-bridge` | Deployment | Mumble server; Python STT bridge | 64738 |
 | `fedhub`, `fedhub-mongodb` | Deployment, StatefulSet | `ghcr.io/onemindos/fedhub:5.8`, `mongo:6.0` | 9100/9443 UI, 9101/9102 federation (ClusterIP only) |
 
@@ -66,16 +67,19 @@ EUD (ATAK/iTAK/WinTAK/WebTAK) ── tailnet ──► tak.tail717ba0.ts.net
 ## Two different NATS — do not conflate
 
 1. **Internal NATS** (`takserver-nats`): TAK's own inter-pod plumbing. Never touches OneMind.
-2. **OneMind authority bus** (`nats.nats`): reached only by the NatsBridgePlugin in
+2. **OneMind authority bus** (`nats.nats`): reached by the NatsBridgePlugin in
    `takserver-plugins`, through the in-namespace leaf:
-   `plugin → tak-nats-leaf:4222 (plaintext, in-namespace) → leaf remote → nats.nats:7422 (TLS, leaf credentials)`.
+   `plugin → tak-nats-leaf:4222 (plaintext, in-namespace) → leaf remote → nats.nats:7422 (TLS, leaf credentials)`,
+   and (once synced) by `omos-tak-client` directly on `nats.nats:4222` with its own Secret.
+   tak-client is the TAK → bus leg, because cluster-mode TAK delivers nothing to plugin
+   `onMessage`; both inject in queue group `tak-cot-inject`, so each message reaches TAK once.
 
 Live subjects (`services/takserver/plugin/tak.server.plugins.NatsBridgePlugin.yaml`):
 
 | Direction | Subject | Stream |
 |-----------|---------|--------|
 | NATS → TAK (inject) | `tak.cot.inject` | — |
-| TAK → NATS (all EUD CoT) | `tak.cot.out` | `COT` (`tak.cot.>`) |
+| TAK → NATS (all EUD CoT) | `tak.cot.out` (publisher: `omos-tak-client`; nothing published it in the 30 days before A21) | `COT` (`tak.cot.>`) |
 
 [NATS-DOCTRINE §9](../../docs/NATS-DOCTRINE.md) specifies `evt.tak.cot.{uid}` for TAK CoT; nothing
 publishes there today (the `GEO` stream is empty). This is an **open decision**, recorded in
