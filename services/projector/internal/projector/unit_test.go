@@ -208,6 +208,8 @@ func TestMarkingGate(t *testing.T) {
 		{"AMBER+STRICT", []string{"homestead"}, nil, false},
 		{"AMBER+STRICT", []string{"homestead"}, []string{"homestead"}, true},
 		{"AMBER+STRICT", []string{"partner"}, []string{"homestead"}, false},
+		{"AMBER", []string{}, []string{"homestead"}, false},
+		{"AMBER+STRICT", nil, []string{"homestead"}, false},
 		{"RED", []string{"homestead"}, []string{"homestead"}, false},
 		{"", nil, []string{"homestead"}, false},
 		{"TOP", nil, nil, false},
@@ -568,5 +570,35 @@ func TestSimplifyAndBuffer(t *testing.T) {
 	a := ringArea(poly)
 	if !a.contains(0.0005, 0.005, 0, false) || a.contains(0.002, 0.005, 0, false) {
 		t.Error("corridor buffer wrong")
+	}
+}
+
+// A6-P15 (whole-loop bug 3): with the deployment's TAK_RELEASE_GROUPS=homestead, an own sim-*
+// asset marked AMBER+STRICT releasable to [homestead] passes G7 and is projected; one with
+// releasable_to [] stays blocked at the marking gate.
+func TestReleaseGroupsHomesteadFromEnv(t *testing.T) {
+	t.Setenv("TAK_RELEASE_GROUPS", "homestead")
+	cfg, err := FromEnv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cfg.ReleaseGroups) != 1 || cfg.ReleaseGroups[0] != "homestead" {
+		t.Fatalf("ReleaseGroups = %v", cfg.ReleaseGroups)
+	}
+	x := newAOIIndex()
+	for _, c := range []struct {
+		rel  []string
+		want bool
+	}{{[]string{"homestead"}, true}, {[]string{}, false}} {
+		for _, tlp := range []string{"AMBER", "AMBER+STRICT"} {
+			e := decode(fixture("drone", "sim-x1", 1, 1, ownAsset, marking(tlp, c.rel...)))
+			d := evaluate(e, &cfg, x, true, time.Now())
+			if d.ok != c.want {
+				t.Errorf("tlp=%s releasable_to=%v: ok=%v (%s), want %v", tlp, c.rel, d.ok, d.reason, c.want)
+			}
+			if !c.want && d.reason != ReasonMarking {
+				t.Errorf("tlp=%s releasable_to=%v: blocked by %q, want the marking gate", tlp, c.rel, d.reason)
+			}
+		}
 	}
 }

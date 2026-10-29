@@ -80,7 +80,7 @@ built by the projector.
 `NATS_URL`, `NATS_USER`, `NATS_PASSWORD`; `PROJECTOR_TARGET` (`server`), `PROJECTOR_INSTANCE`
 (`hub`), `TAK_INJECT_SUBJECT`, `MESH_TX_SUBJECT`, `MIN_INTERVAL_SEC` (5 / 15 mesh),
 `OWN_MIN_INTERVAL_SEC` (1 / 5), `MAX_RATE_PER_SEC` (50 / 10), `MAX_PROJECTED` (500 / 100),
-`TAK_RELEASE_GROUPS` (empty), `AOI_EXIT_GRACE_S` (60), `MESH_WORLD_FEEDS` (false),
+`TAK_RELEASE_GROUPS` (empty in code; the deployment sets `homestead`, A6-P15), `AOI_EXIT_GRACE_S` (60), `MESH_WORLD_FEEDS` (false),
 `MESH_MAX_BYTES` (1200), `MAX_VERTICES` (200), `ENT_STREAM` (`ENT`), `ENT_MODE=core`,
 `HTTP_ADDR` (`:8080`: `/healthz`, `/readyz`, `/status` with counters), `LOG_LEVEL`.
 `TAK_GROUP` is deprecated and ignored (`<__group>` is no longer sent, section 5.4).

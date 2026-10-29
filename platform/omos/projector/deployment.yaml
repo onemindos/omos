@@ -95,10 +95,11 @@ spec:
               value: "500"
             - name: AOI_EXIT_GRACE_S
               value: "60"
-            # Empty: CLEAR and GREEN only. The owner adds the group of his own TAK (for example
-            # "homestead") to release AMBER entities marked releasable to it.
+            # Owner decision A6-P15: release AMBER and AMBER+STRICT entities marked releasable to
+            # "homestead" (the entity.md example and the entity service's releasable_to default),
+            # which covers own sim-* assets. Empty would project CLEAR and GREEN only.
             - name: TAK_RELEASE_GROUPS
-              value: ""
+              value: "homestead"
             - name: MAX_VERTICES
               value: "200"
             - name: ENT_STREAM
