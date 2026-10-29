@@ -126,11 +126,41 @@ ruled, satellites from `feed-satellites` are `ent.vehicle.norad-{n}.state` with
 `kind: satellite` and `environment: space`. MTA trains are `vehicle` with `kind: train`; BUS-P6
 covers their world class.
 
+The same applies to satellites propagated from `intel.space.celestrak.tle` (FEATURES A12) and to
+trains on `evt.world.rail.*` (#558 A1-P4): both resolve to the entity the legacy CoT makes
+(`norad-{n}`, `gtfs-{feed}-{trip}`), so the parallel run in #558's cut-over shows one entity each.
+
+Intel events follow the same rule for the omos-ingest parallel run (#553, BUS-P3). The adapter
+reduces a URL record id to its last path segment, so the legacy NWS `feature.id`
+(`https://api.weather.gov/alerts/urn:oid:...`) and the omos-ingest `properties.id`
+(`urn:oid:...`) give one entity. It also maps legacy `source` values to the grammar token
+(`nasa_firms` to `firms`, `nasa-eonet` to `eonet`). Known migration gaps, for the owner:
+
+- **FIRMS id shape**: the legacy collector's id is a SHA-1 of `lat:lon:acq_date:acq_time`; the
+  #553 CSV source's id is `firms:{lat}:{lon}:{date}:{time}`. The prefix now matches, but the
+  native ids differ, so a hotspot seen by both shows twice until one collector is retired or
+  #553 adopts the legacy key.
+- **Event time**: #553's GeoJSON parser defaults `timeField` to `time` and reads epoch
+  milliseconds, so USGS envelopes already carry the quake time in `ts`. A source whose time
+  field does not parse falls back to `fetchedAt`; the adapter therefore prefers a numeric
+  `data.time` in milliseconds when present, as the flat path did.
+
 ## A4-P5: lifecycle events (information)
 
 BUS-DESIGN BUS-P5 says lifecycle events are "not published until ruled". The service follows
 that. If the owner accepts domain `entity`, add `evt.entity.>` to `EVT` and set the service to
 emit `created`, `expired`, `deleted` and `conflict` events.
+
+## A4-P6: SGP4 library (information)
+
+FEATURES A12 needs SGP4 in Go. The most widely used pure-Go implementation is
+`github.com/joshuaferrara/go-satellite` (BSD-2-Clause; last commit June 2022; cgo-free). It has
+three defects the wrapper in `services/entity/internal/orbit` works around and tests: `log.Fatal`
+on a malformed TLE number (prevented by validating every column first), whole-second epoch
+truncation (compensated exactly), and a wrong longitude wrap in `LatLongDeg` (not used). Measured
+against python-sgp4 the result is within 3.7 m over 7 days. **Proposed:** accept the dependency.
+Alternative if the owner prefers no unmaintained dependency: vendor a reviewed copy under
+`services/entity/third_party/` (BSD-2 permits it) or port Vallado's public-domain reference.
 
 ## Risks the owner should know
 

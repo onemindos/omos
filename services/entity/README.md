@@ -17,10 +17,11 @@ projector read entities; only this service writes them.
 
 | Direction | Subject | Stream | Notes |
 |---|---|---|---|
-| in | `tak.cot.>` (`tak.cot.inject`, `tak.cot.out`, `tak.cot.mesh.rx`) | `COT` | CoT XML. The projector's own output (uid `OM.*` or `_flow-tags_ omos-tak-projector`) is ignored |
+| in | `tak.cot.>` (`tak.cot.inject`, `tak.cot.out`, `tak.cot.mesh.rx`) | `COT` | CoT XML. The projector's own output (uid `OM.*` or `INTEL.*`, or `_flow-tags_ omos-tak-projector`) is ignored (cot-projection.md §8.2) |
 | in | `tel.fleet.{class}.{id}.position\|status` | `TEL` | doctrine §9.2 geo-envelope |
-| in | `evt.world.{air\|sea\|fire\|seismic\|conflict\|chokepoint}.{id}` | `WORLD` | military surge subjects are skipped (BUS-DESIGN D9) |
-| in | `intel.>` | `INTEL` | the live feed-intel payload; records without coordinates are skipped |
+| in | `evt.world.{air\|sea\|rail\|fire\|seismic\|conflict\|chokepoint}.{id}` | `WORLD` | military surge subjects are skipped (BUS-DESIGN D9). `rail` (#558 A1-P1, owner proposal BUS-P6) is a `vehicle` of kind `train`, keyed `gtfs-{feed}-{trip_id}` so it fuses with the legacy `MTA-*` CoT |
+| in | `intel.>` | `INTEL` | the flat feed-intel payload or the omos-ingest bus envelope (`{v, id, ts, type: <subject>, source, data}`, #553); records without coordinates are skipped, so NWS zone-only alerts (no polygon) make no entity yet |
+| in | `intel.space.celestrak.tle` | `INTEL` | one TLE per message (#558); propagated with SGP4 (`internal/orbit`) into `ent.vehicle.norad-{n}.state`, then re-propagated every `ORBIT_EVERY` until the next TLE |
 | in | `det.{domain}.{type}.{id}` | `DET` | read only if the stream exists (it is proposed, not live) |
 | out | `ent.{entity_type}.{entity_id}.state` | `ENT` | JetStream publish with ack; headers `Nats-Msg-Id: {entity_id}:{seq}`, `Nats-TTL`, `OneMind-Marking`, `OneMind-Releasable-To`, `OneMind-Schema: entity.v1` |
 | out | `evt.sys.entity.rejected` | `SYS` | dead letters with a reason (stop-line SL9, unparseable input); BUS-P9 form |
@@ -93,9 +94,74 @@ Safety rules in code: a `person` with `disposition: hostile` is rejected and dea
 | `LEASE_BUCKET`, `LEASE_KEY`, `LEASE_TTL` | `entity-correlation`, `lease.entity-service`, `15s` | `none` disables the lease (local runs only) |
 | `ENTITY_LINKS` | — | JSON `{"cot_uid:SOME-UID": "sim-x1"}` declared links |
 | `SOURCE_PRIORS` | — | JSON per-integration `source_prior` overrides |
+| `OWN_RELEASABLE_TO` | `homestead` | comma-separated `marking.releasable_to` for own `sim-*` fleet assets (every source a `tel.fleet.*` bridge); empty value = no group. Never applied to records a feed or CoT source contributes to |
 | `REJECT_SUBJECT` | `evt.sys.entity.rejected` | dead-letter subject; acked JetStream publish with `Nats-Msg-Id: {stream}:{seq}`, the input is redelivered if it fails |
 | `SERVE_RPC` | `true` | `svc.entity.get` and `svc.entity.query` (`{types, bbox, limit, cursor}`; pages of at most 200, `cursor` is the last `entity_id`, `null` on the last page) |
+| `ORBIT_EVERY` | `30s` | satellite re-propagation interval; negative disables. A TLE older than 7 days is no longer propagated |
+| `MAX_ORBITS` | `500` | most satellites kept for re-propagation; negative means no cap. Each sweep runs in the consume loop and publishes one record per satellite, so feed small CelesTrak groups (stations, ~50), not the full catalogue. A new NORAD id past the cap is fused once and counted as `orbit_cap` |
 | `HTTP_ADDR` | `:8080` | `/healthz`, `/readyz` (lease held and consuming), `/metrics` (counters) |
+
+## Satellites (FEATURES A12)
+
+`internal/orbit` propagates TLEs with SGP4 using
+[`github.com/joshuaferrara/go-satellite`](https://github.com/joshuaferrara/go-satellite)
+(BSD-2-Clause, a Go port of Vallado's reference SGP4; last commit 2022). The wrapper validates
+every TLE column before calling the library (its parser calls `log.Fatal` on a bad number),
+compensates for its whole-second epoch truncation, and converts TEME to WGS84 itself. Its test
+compares 95 positions of 16 stations-group objects (including the ISS) out to 7 days
+against python-sgp4 (`internal/orbit/testdata/gen_reference.py`): worst difference 3.7 m,
+against the 5 km acceptance limit. The latest TLE per satellite is kept in memory and rebuilt
+from the restored entity's `meta.line1/line2` on restart (JetStream mode only; in `core` mode
+satellites reappear with the next TLE). Next-pass prediction and orbit rings are client work.
+
+## Capabilities (task gate)
+
+The policy service (omos #554) refuses an asset verb unless the target entity's `capabilities`
+lists the matching task type (mission-task.md §4, `not_capable`). The service fills
+`capabilities` only for **`sim-*` fleet assets**, from the verbs the bridge advertises in a
+`tel.fleet.{class}.{id}.status` envelope's `meta.commands_accepted` (a comma-separated string
+or an array; omos #550 MAVLink sends `goto,rtl,land,arm,disarm,estop,takeoff`, the ROS 2 bridge
+in #566 sends `goto,hold,rtl,estop,estop_release`). `internal/adapt/capabilities.go`:
+
+| verb | task type | drone | robot, vehicle |
+|---|---|---|---|
+| `goto` | `onemind.task.goto.v1` | yes | yes |
+| `hold` | `onemind.task.hold.v1` | yes | yes |
+| `rtl` | `onemind.task.rtl.v1` | yes | yes |
+| `land` | `onemind.task.land.v1` | yes | no (air verb) |
+| `orbit` | `onemind.task.orbit.v1` | yes | no (air verb) |
+| `observe` | `onemind.task.observe.v1` | yes (observable) | only if `observable` (never today) |
+
+Every rule fails closed. A verb is listed only if the bridge advertises it, with no default for
+the class. A position message (no list) keeps the last list, and an explicit empty list clears it.
+Verbs with no task type (`arm`, `disarm`, `takeoff`, `estop`, `estop_release`) are dropped,
+because estop is an unblockable action that needs no capability. A non-sim fleet id, a feed, a
+CoT/TAK record and anything outside `fleet-*` integrations never get capabilities. A record that
+stops being simulated loses them. The bridge's `meta.connection`
+(`online|degraded|offline`) is copied into `health.connection` (before this change it was always
+`online`), and a change in capabilities or connection publishes at once.
+
+When a fleet entity goes `stale` or `lost`, the sweep sets `health.connection` to `offline`.
+Only the next `fleet-*` report restores the earlier value (or sets its own `meta.connection`).
+A CoT report about the same asset, such as the tak-mesh gateway relaying it, makes the entity
+`active` again but leaves the connection `offline`, because it does not show that the bridge
+link is back.
+
+### `health.overall` for fleet entities
+
+Every entity with a `fleet-*` source gets `health.overall` (entity.md §4.1). The service works
+it out from connection, battery and lifecycle, and the worst condition wins. The thresholds are
+the constants in `internal/engine/policy.go`:
+
+| `overall` | When |
+|---|---|
+| `failed` | `connection` is `offline`; or `battery_pct` <= 15; or lifecycle is `lost` or `expired` |
+| `warning` | `connection` is `degraded` or missing; or `battery_pct` <= 30; or lifecycle is `stale` |
+| `healthy` | otherwise: `online`, battery above 30 % or not reported, and `active` |
+
+Stale also sets the connection to `offline`, so in practice a stale fleet asset reads `failed`.
+A non-numeric battery is ignored. Entities with no fleet source (CoT only, feeds) get no derived
+`overall`.
 
 ## Tests
 

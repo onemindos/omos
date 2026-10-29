@@ -65,11 +65,15 @@ type Config struct {
 	Priors       map[string]float64 // per-integration source_prior overrides
 	Links        map[string]string  // declared links "type:id" -> entity_id
 	ConfirmHits  int                // M of M-of-N for det tracks (fusion-and-tracking.md Stage 3)
+	// OwnReleasableTo is marking.releasable_to for own simulated fleet assets: a `sim-*` id
+	// whose every source is a `tel.fleet.*` bridge (entity.md §3 example `["homestead"]`).
+	// Any other record, including one a feed or CoT source contributes to, keeps `[]`.
+	OwnReleasableTo []string
 }
 
 // DefaultConfig returns the contract defaults.
 func DefaultConfig() Config {
-	return Config{SkewMs: 5000, HeartbeatMax: 120000, ConfirmHits: 3}
+	return Config{SkewMs: 5000, HeartbeatMax: 120000, ConfirmHits: 3, OwnReleasableTo: []string{"homestead"}}
 }
 
 // Publish is one record to publish on `ent.{entity_type}.{entity_id}.state`.
@@ -120,6 +124,10 @@ type track struct {
 	srcTLP    map[string]string
 	last      *pubSnap
 	pending   *Publish // a publish that failed; retried by Sweep
+	// connBefore is health.connection as it was before Sweep forced it to "offline" when the
+	// entity went stale; restored by the next fleet-* observation that does not state a
+	// connection (a CoT source resuming does not restore it).
+	connBefore any
 	// dead marks an expired track kept as a tombstone until its final `live:false` record is
 	// acked (Published), so a failed final publish is retried instead of lost.
 	dead bool
@@ -273,6 +281,18 @@ func (e *Engine) Apply(o *model.Observation) Result {
 	}
 	tr.rec.Status = mergeMap(tr.rec.Status, o.Status)
 	tr.rec.Health = mergeMap(tr.rec.Health, o.Health)
+	// Only the fleet bridge knows the link state: a CoT report about the same asset (tak-mesh
+	// relaying it) does not prove the bridge is back, so the connection stays "offline" until
+	// a fleet-* integration reports again.
+	if tr.connBefore != nil && strings.HasPrefix(o.Integration, "fleet-") {
+		if _, ok := o.Health["connection"]; !ok {
+			tr.rec.Health["connection"] = tr.connBefore
+		}
+		tr.connBefore = nil
+	}
+	if o.HasCapabilities && o.Simulated && strings.HasPrefix(o.Integration, "fleet-") {
+		tr.rec.Capabilities = append([]string{}, o.Capabilities...)
+	}
 	if o.Emergency {
 		tr.rec.Indicators.Emergency = true
 	}
@@ -514,7 +534,7 @@ func (e *Engine) derive(t *track, now int64) {
 	r.Sources = r.Sources[:0]
 	var primary string
 	bestTier, bestT := model.Tier(99), int64(-1)
-	sim, allCot, tlp := false, true, ""
+	sim, allCot, allFleet, anyFleet, tlp := false, true, len(keys) > 0, false, ""
 	egressSet := true
 	active := map[string]float64{}
 	for _, k := range keys {
@@ -525,6 +545,8 @@ func (e *Engine) derive(t *track, now int64) {
 		}
 		sim = sim || t.srcSim[k]
 		allCot = allCot && s.DataType == "cot"
+		allFleet = allFleet && s.DataType == "geo" && strings.HasPrefix(s.Integration, "fleet-")
+		anyFleet = anyFleet || strings.HasPrefix(s.Integration, "fleet-")
 		tlp = stricterTLP(tlp, t.srcTLP[k])
 		if eg := t.srcEgress[k]; eg != nil && !*eg && s.DataType != "cot" {
 			egressSet = false
@@ -541,7 +563,18 @@ func (e *Engine) derive(t *track, now int64) {
 	if r.Kind == "person" || r.EntityType == "person" {
 		tlp = stricterTLP(tlp, "AMBER+STRICT")
 	}
-	r.Marking = model.Marking{TLP: tlp, ReleasableTo: []string{}}
+	ownAsset := allFleet && (r.EntityType == "drone" || r.EntityType == "robot" || r.EntityType == "vehicle")
+	rel := []string{}
+	if ownAsset && sim && strings.HasPrefix(strings.ToLower(r.EntityID), "sim-") {
+		rel = append(rel, e.cfg.OwnReleasableTo...)
+	}
+	r.Marking = model.Marking{TLP: tlp, ReleasableTo: rel}
+	if anyFleet && r.Health != nil {
+		r.Health["overall"] = fleetOverall(r.Health, r.Lifecycle)
+	}
+	if ownAsset {
+		r.CotType = fleetCotType(r.EntityType, r.Kind, r.Environment) // robotics-cot-profile.md §2
+	}
 
 	how := "m-g"
 	switch {
@@ -568,6 +601,11 @@ func (e *Engine) derive(t *track, now int64) {
 	}
 	r.Indicators.Simulated = sim
 	r.Indicators.EgressTAK = egress
+	// Capabilities only on a simulated, taskable sim-* asset (adapt.FleetCapabilities); any
+	// other record, including a restored one that no longer qualifies, advertises none.
+	if !sim || !strings.HasPrefix(strings.ToLower(r.EntityID), "sim-") || !hasTrait(r.Traits, "taskable") {
+		r.Capabilities = nil
+	}
 
 	// Confidence (entity.md §7): parts kept so the UI and Hermes can explain it.
 	prior, miss := 0.0, 1.0
@@ -627,7 +665,8 @@ func mergeMap(dst, src map[string]any) map[string]any {
 func (t *track) signature() string {
 	r := &t.rec
 	return fmt.Sprint(r.EntityType, r.Type, r.Callsign, r.Disposition, r.Kind, r.Environment, r.CotType,
-		r.Indicators, r.Marking.TLP, r.Lifecycle, len(r.Sources), r.Status, r.Health["battery_pct"])
+		r.Indicators, r.Marking.TLP, r.Lifecycle, len(r.Sources), r.Status, r.Health["battery_pct"],
+		r.Health["connection"], r.Capabilities, r.Marking.ReleasableTo)
 }
 
 func heartbeatMs(stale int, max int64, pinned bool) int64 {
@@ -699,6 +738,7 @@ func ttlHeader(r model.Entity, now int64) string {
 func clone(r model.Entity) model.Entity {
 	c := r
 	c.Traits = append([]string(nil), r.Traits...)
+	c.Capabilities = append([]string(nil), r.Capabilities...)
 	c.Aliases.IDs = append([]model.Alias(nil), r.Aliases.IDs...)
 	c.Sources = append([]model.Source(nil), r.Sources...)
 	c.Conflicts = append([]model.Conflict(nil), r.Conflicts...)
@@ -792,6 +832,11 @@ func (e *Engine) Sweep() []*Publish {
 			lc = "stale"
 		}
 		t.rec.Lifecycle = lc
+		// A bridge that stopped reporting is no longer "online" (the policy service refuses
+		// commands unless it reads "online"); entity.md health.connection enum.
+		if c, ok := t.rec.Health["connection"]; ok && lc != "active" && c != "offline" {
+			t.connBefore, t.rec.Health["connection"] = c, "offline"
+		}
 		e.derive(t, now)
 		if t.last == nil || t.signature() != t.last.sig ||
 			now-t.last.wallT >= heartbeatMs(t.rec.Stale, e.cfg.HeartbeatMax, t.rec.Pinned) {
