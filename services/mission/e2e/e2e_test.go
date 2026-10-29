@@ -10,8 +10,9 @@
 //  2. zeus creates a mission and two waypoints (A2), each closed by the task service's
 //     result (POL-14: causation = command id);
 //  3. Hermes proposes a goto task for sim-x1; nothing happens until zeus confirms; the
-//     drone flies; the task goes created, sent, received, executing, done_ok in KV
-//     mission-state and on evt.mission.{tsk}.*; the mission completes;
+//     drone flies; the task goes created, sent, received, executing, done_ok (the
+//     bridge's arrival report, D2-P2) in KV mission-state and on evt.mission.{tsk}.*, in
+//     that order; the mission completes;
 //  4. an orbit task for an asset without that capability is denied not_capable;
 //     an observe task on a person-class track is denied forbidden_action;
 //  5. a goto for sim-x2 (no bridge) times out at delivery.before_t and is not sent again.
@@ -503,8 +504,9 @@ func TestE2E(t *testing.T) {
 		"POLICY_PRINCIPALS_FILE=" + prPath, envPair("POLICY_SIGNING_KEY_FILE", keyPath), "POLICY_SIGNING_KID=e2e",
 		fmt.Sprintf("HEALTH_ADDR=127.0.0.1:%d", polHealth)}, policyBin)
 	start("mission", []string{"NATS_URL=" + h.url, "NATS_USER=mission", "NATS_PASSWORD=" + h.pw["mission"],
-		// Arrival (D2-P2) is off in the manifest until ratified; the run turns it on to test it.
-		"MISSION_PRINCIPALS_FILE=" + prPath, "MISSION_SWEEP_EVERY=200ms", "MISSION_ARRIVAL=true", fmt.Sprintf("HEALTH_ADDR=127.0.0.1:%d", misHealth)}, missionBin)
+		// The deployment's arrival setting (MISSION_ARRIVAL unset = false, platform/mission):
+		// the goto completes on the bridge's own done_ok on arrival (D2-P2), not on telemetry.
+		"MISSION_PRINCIPALS_FILE=" + prPath, "MISSION_SWEEP_EVERY=200ms", fmt.Sprintf("HEALTH_ADDR=127.0.0.1:%d", misHealth)}, missionBin)
 	for _, p := range []int{polHealth, misHealth} {
 		url := fmt.Sprintf("http://127.0.0.1:%d/healthz", p)
 		waitFor(t, 20*time.Second, url, func() bool {
@@ -586,15 +588,15 @@ func TestE2E(t *testing.T) {
 	if st := final["status"].(map[string]any); st["state"] != "done_ok" {
 		t.Fatalf("task goto: want done_ok, got %v", st)
 	}
+	// D2-P2: done_ok is the bridge's arrival report, not the task service's telemetry check.
+	if res, _ := final["status"].(map[string]any)["result"].(map[string]any); res["arrived"] != true || res["source"] != "bridge" {
+		t.Fatalf("task goto result %v, want the bridge's arrival report", res)
+	}
+	// F-MIS (a): the full lifecycle in order, whichever of the dispatch audit and the
+	// bridge's received report is applied first (they are about 1 ms apart).
 	facts := h.facts(tsk)
-	for _, want := range []string{"created", "received", "executing", "done_ok"} {
-		found := false
-		for _, f := range facts {
-			found = found || f == want
-		}
-		if !found {
-			t.Fatalf("no evt.mission.%s.%s; facts %v", tsk, want, facts)
-		}
+	if got := strings.Join(facts, ","); got != "created,sent,received,executing,done_ok" {
+		t.Fatalf("evt.mission.%s.* facts %s, want created,sent,received,executing,done_ok", tsk, got)
 	}
 	for _, ev := range []string{"proposed", "approved", "dispatched"} {
 		if !h.audit(act, ev) {

@@ -3,6 +3,7 @@ package mission
 import (
 	"encoding/json"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -309,4 +310,76 @@ func TestPersonTargetRefused(t *testing.T) {
 	e.command(id, "create", taskData(id, "", "onemind.task.observe.v1",
 		map[string]any{"target": map[string]any{"lat": 30.27, "lon": -97.74, "hae_m": 30}, "sensor_id": "sim-x1.cam0"}, simX1))
 	e.waitFact(id, "created")
+}
+
+// E2E-2 race: the bridge's received report (EVT, evt.drone.{id}.task) is applied before the
+// policy service's dispatch audit (EVT, evt.so.action.dispatched), about 1 ms apart. The
+// report proves the task was sent, so sent is recorded first; the late audit changes nothing.
+func TestReceivedBeforeDispatchAudit(t *testing.T) {
+	e := newEnv(t)
+	msn := newMission(e)
+	tsk := newID("tsk")
+	e.command(tsk, "create", taskData(tsk, msn, "onemind.task.goto.v1", gotoSpec, simX1))
+	e.waitFact(tsk, "created")
+	fleet := uuid4()
+	e.report(tsk, StateReceived, 1, fleet, nil)
+	e.waitState(tsk, StateReceived)
+	e.dispatched(tsk, "task.assign", fleet, simX1) // late audit
+	e.report(tsk, StateExecuting, 2, fleet, nil)
+	e.waitState(tsk, StateExecuting)
+	e.report(tsk, StateDoneOK, 3, fleet, nil)
+	rec := e.waitState(tsk, StateDoneOK)
+	e.settle()
+	if got := strings.Join(e.subjects(tsk), ","); got != "created,sent,received,executing,done_ok" {
+		t.Fatalf("task facts %s", got)
+	}
+	for i, st := range []string{"sent", "received", "executing", "done_ok"} {
+		if v := e.waitFact(tsk, st)["data"].(map[string]any)["status_version"]; v != float64(i+2) {
+			t.Errorf("%s status_version %v, want %d", st, v, i+2)
+		}
+	}
+	if f := e.waitFact(tsk, StateSent); f["causation"] != fleet || f["data"].(map[string]any)["updated_by"] != "service:task" {
+		t.Fatalf("sent fact causation %v updated_by %v, want the fleet command and the task service", f["causation"], f["data"].(map[string]any)["updated_by"])
+	}
+	if rec.Version.Status != 5 || len(rec.Guard.Commands) != 1 || rec.Guard.Commands[0] != fleet {
+		t.Fatalf("record %+v guard %+v", rec.Version, rec.Guard)
+	}
+	e.waitFact(msn, "completed")
+	e.validateFacts()
+}
+
+// Both orders, concurrently: for each task the audit and the received report are published
+// at the same time from two goroutines. Every task records sent exactly once, before received.
+func TestDispatchAuditReportRace(t *testing.T) {
+	e := newEnv(t)
+	msn := newMission(e)
+	const n = 12
+	tasks, fleets := make([]string, n), make([]string, n)
+	for i := range tasks {
+		tasks[i], fleets[i] = newID("tsk"), uuid4()
+		e.command(tasks[i], "create", taskData(tasks[i], msn, "onemind.task.goto.v1", gotoSpec, simX1))
+		e.waitFact(tasks[i], "created")
+	}
+	e.conn("policy") // open both connections before the goroutines share the cache
+	e.conn("bridge")
+	var wg sync.WaitGroup
+	for i := range tasks {
+		wg.Add(2)
+		go func(i int) { defer wg.Done(); e.dispatched(tasks[i], "task.assign", fleets[i], simX1) }(i)
+		go func(i int) { defer wg.Done(); e.report(tasks[i], StateReceived, 1, fleets[i], nil) }(i)
+	}
+	wg.Wait()
+	for _, tsk := range tasks {
+		e.waitState(tsk, StateReceived)
+	}
+	e.settle()
+	for i, tsk := range tasks {
+		if got := strings.Join(e.subjects(tsk), ","); got != "created,sent,received" {
+			t.Errorf("task %d facts %s", i, got)
+		}
+		if rec := e.task(tsk); rec.Version.Status != 3 || len(rec.Guard.Commands) != 1 {
+			t.Errorf("task %d record %+v guard %+v", i, rec.Version, rec.Guard)
+		}
+	}
+	e.validateFacts()
 }

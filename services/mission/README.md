@@ -15,7 +15,7 @@ user has no publish grant on `cmd.>`).
 |---|---|---|
 | in | `cmd.mission.{msn}.{create\|waypoint\|complete\|abort}`, `cmd.mission.{tsk}.{create\|abort\|complete}` | from the policy service after a human confirm; durable consumer `mission-commands` on `CMD`. Expired commands (`expires_at`) and commands without an approval are refused, never applied late |
 | in | `evt.so.action.dispatched` | `task.assign` sets `sent`; the asset command id (and the abort hold's) goes into the report guard. Durable consumer `mission-events` on `EVT` |
-| in | `evt.drone.*.task`, `evt.robot.*.task` | asset status reports (section 7); the subject id must be the task's assignee |
+| in | `evt.drone.*.task`, `evt.robot.*.task` | asset status reports (section 7); the subject id must be the task's assignee. A report applied before the dispatch audit records `sent` first (D2-P14). The MAVLink bridge reports `done_ok` when a goto arrives (D2-P2) |
 | in | `tel.fleet.*.*.position` (core) | arrival check for asset `goto` tasks (owner proposal D2-P2; `MISSION_ARRIVAL`) |
 | out | KV `mission-state` keys `msn-…`, `tsk-…` | only writer; every write is compare-and-set on the KV revision, re-read and re-applied on a conflict |
 | out | `evt.mission.{tsk}.{state}` | one fact per state change; `type` `evt.mission.task.{state}`; `data.status_version` = the record's `version.status`; `Nats-Msg-Id` `{task_id}:{status_version}`. `created` carries the whole record (section 6.1 step 5) |
@@ -86,7 +86,7 @@ validate every fact against `services/schemas/envelope/envelope.schema.json`. Th
 mission-task.md section 10 tests 1 (task-service half), 2, 4 (defence in depth: a create whose
 target or target snapshot is a person is refused `forbidden_action`) and 6, every ordering of
 abort, hold audit and hold reports, redelivery after expiry, list paging, eviction, the bridge-restart and
-early-report cases, abort, rejections, idempotent redelivery, missions, the RPCs, arrival,
+early-report cases (including the audit/report race, D2-P14), abort, rejections, idempotent redelivery, missions, the RPCs, arrival,
 restart and a forced compare-and-set conflict.
 
 End to end, with the real policy service (#554), the real MAVLink bridge (#550) and the
@@ -98,7 +98,10 @@ SIM_DRONE=../onemind-xr/scripts/sim/mavlink_sim_drone.py PYTHON=python3 ./test/e
 ```
 
 The drone flies the task goto and the task ends `done_ok` (POL-16 / D2-P1: the bridge accepts
-the `task.assign` `params_hash` on a task-bearing command).
+the `task.assign` `params_hash` on a task-bearing command). The run uses the deployment's
+`MISSION_ARRIVAL=false`: `done_ok` is the bridge's arrival report (D2-P2, `result.source`
+`bridge`), and the task facts must be exactly `created, sent, received, executing, done_ok`
+whichever of the dispatch audit and the `received` report is applied first (D2-P14).
 
 ## Configuration (environment)
 
@@ -110,7 +113,7 @@ the `task.assign` `params_hash` on a task-bearing command).
 | `MISSION_CONSUMER` | `mission` | consumer name prefix (`mission-commands`, `mission-events`) |
 | `MISSION_REPORT_CLASSES` | `drone,robot` | asset classes whose `evt.{class}.*.task` `EVT` binds (`vehicle` waits for ONT-P13) |
 | `MISSION_PRINCIPALS_FILE` | `/config/principals.json` | identity directory for `svc.mission.report` (missing: every report is refused) |
-| `MISSION_ARRIVAL`, `MISSION_ARRIVAL_RADIUS_M`, `MISSION_ARRIVAL_VERTICAL_M` | `false`, `5`, `5` | goto arrival from telemetry (D2-P2; off until the owner ratifies it, since it trusts any `tel.fleet.*.*.position` publisher) |
+| `MISSION_ARRIVAL`, `MISSION_ARRIVAL_RADIUS_M`, `MISSION_ARRIVAL_VERTICAL_M` | `false`, `5`, `5` | goto arrival from telemetry, a fallback for a bridge that does not report `done_ok` on arrival (D2-P2; off by default: the MAVLink bridge reports arrival itself, and this trusts any `tel.fleet.*.*.position` publisher) |
 | `MISSION_CACHE_TERMINAL_FOR` | `24h` | how long terminal records stay in the in-memory copy (`svc.mission.list`) |
 | `MISSION_SWEEP_EVERY` | `1s` | timeout sweep period |
 | `MISSION_SOURCE` | `service:task` | envelope `source` and `updated_by` of service-made changes |

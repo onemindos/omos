@@ -67,8 +67,8 @@ spec:
               value: drone,robot
             - name: MISSION_PRINCIPALS_FILE
               value: /config/principals.json
-            # Completing asset goto tasks from fleet telemetry (owner proposal D2-P2) stays
-            # off until the owner ratifies D2-P2: it trusts any tel.fleet.*.*.position publisher.
+            # A goto completes on the bridge's own done_ok on arrival (D2-P2, #550). The task
+            # service's telemetry fallback stays off: it trusts any tel.fleet.*.*.position publisher.
             - name: MISSION_ARRIVAL
               value: "false"
           # NATS_USER and NATS_PASSWORD (the `mission` user): SealedSecret

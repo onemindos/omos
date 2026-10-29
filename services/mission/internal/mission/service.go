@@ -1104,8 +1104,9 @@ func (s *Service) ApplyReport(r Report, reporter Ref, source, causation, envID s
 	}
 	var reason string
 	guardOnly := false
+	var sentSnap *Task
 	t, err := s.st.mutateTask(s.ctx, r.TaskID, func(t *Task) error {
-		guardOnly, reason = false, ""
+		guardOnly, reason, sentSnap = false, "", nil
 		if t.Assignee != reporter {
 			return errNotYours
 		}
@@ -1155,6 +1156,15 @@ func (s *Service) ApplyReport(r Report, reporter Ref, source, causation, envID s
 			guardOnly, reason = true, "abort pending; state kept"
 			return nil
 		}
+		if t.Status.State == StateCreated || t.Status.State == StateScheduled {
+			// The assignee's report beat the policy service's dispatch audit (they are about
+			// 1 ms apart on different streams): a report proves the task was sent, so sent is
+			// recorded first and the lifecycle facts stay created, sent, received, ...; the
+			// late audit then finds the task past sent and changes nothing (section 5).
+			s.setState(t, StateSent, nil, s.cfg.Source)
+			snap := *t
+			sentSnap = &snap
+		}
 		s.setState(t, state, terr, source)
 		for dst, src := range map[*json.RawMessage]json.RawMessage{&t.Status.Progress: r.Progress, &t.Status.Estimate: r.Estimate, &t.Status.Result: r.Result} {
 			if len(src) > 0 {
@@ -1187,6 +1197,13 @@ func (s *Service) ApplyReport(r Report, reporter Ref, source, causation, envID s
 		return ReportResult{Reason: CodeNotFound + ": no task " + r.TaskID}, nil
 	}
 	s.C.ReportsAccepted.Add(1)
+	if sentSnap != nil {
+		cause := causation
+		if cause == "" {
+			cause = envID
+		}
+		s.emitTask(sentSnap, cause) // as handleDispatched: no mission rollup on sent
+	}
 	s.emitTask(t, envID)
 	s.updateMissionRollup(t, envID)
 	return ReportResult{Accepted: true, State: t.Status.State, StatusVersion: t.Version.Status}, nil

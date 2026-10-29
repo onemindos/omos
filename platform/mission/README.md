@@ -46,9 +46,10 @@ no ingress).
    this service, and the MAVLink bridge from #550 at or after `2b724093`, which accepts the
    `task.assign` `params_hash` on task-bearing commands (POL-16 / D2-P1).
 
-6. **Arrival (D2-P2).** `MISSION_ARRIVAL` is `"false"`: a goto task completes only on the
-   bridge's own `done_ok`. Set it to `"true"` only after ratifying D2-P2, because arrival
-   trusts any publisher of `tel.fleet.*.*.position`.
+6. **Arrival (D2-P2).** `MISSION_ARRIVAL` is `"false"`: a goto task completes on the
+   bridge's own `done_ok`, which the MAVLink bridge (#550) reports when the vehicle reaches
+   the target. The telemetry fallback (`"true"`) is only for a bridge without arrival reports,
+   and it trusts any publisher of `tel.fleet.*.*.position`.
 
 Until these are done, leave the Application unsynced. It deletes nothing if removed (no
 resources-finalizer).

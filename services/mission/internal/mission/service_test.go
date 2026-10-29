@@ -155,8 +155,8 @@ func TestBridgeRestartAndEarlyReport(t *testing.T) {
 	e.report(tsk, StateExecuting, 2, fleet, nil)
 	e.waitState(tsk, StateExecuting)
 	e.settle()
-	if s := e.subjects(tsk); strings.Contains(strings.Join(s, ","), "sent") {
-		t.Fatalf("sent after received: %v", s)
+	if s := strings.Join(e.subjects(tsk), ","); !strings.HasSuffix(s, "created,sent,received,executing") {
+		t.Fatalf("an early report must record sent first, once: %v", s)
 	}
 	// Abort: the policy service sends cmd.mission.{tsk}.abort, then a hold to a bridge that
 	// restarted in between, so the hold's reports start at status_version 1 again.
