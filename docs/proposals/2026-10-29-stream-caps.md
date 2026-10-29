@@ -1,5 +1,9 @@
 # Owner proposal: stream caps, COT retention, CMD discard policy and the DET stream (A22)
 
+> **A22-P1 removes data: owner sign-off required.** Approving the other decisions does not
+> approve P1. P1 is the single commit "feat(nats): COT retention 720h -> 72h"; if P1 is not
+> signed off, that commit must be reverted on the branch before the merge.
+
 Date: 2026-10-29. Feature A22 of the OneMind XR build (BUS-DESIGN section 4.1 and section 11).
 Status: proposed in a draft PR. **Merging is activation.** `platform-nats-streams` is an
 automated Argo Application (`selfHeal: true`), so NACK applies every change here within a
@@ -14,8 +18,8 @@ Byte caps are per replica: every R3 stream counts fully on every node.
 | Stream | Live today (messages / bytes) | maxAge before → after | maxBytes after | Other | Data removed on sync |
 |---|---|---|---|---|---|
 | `COT` | 9,531,820 / **4,948,843,022** (first 2026-09-29) | 720h → **72h** | 3 GiB | — | **Yes: about 4.45 GB per replica** (decision A22-P1) |
-| `CMD` | 2 / 166 | 720h → **8760h** | 512 MiB | `discard: old` → **`new`** | No (the 2 messages are kept longer) (A22-P2) |
-| `TEL` | 0 / 0 | 168h → 72h | 4 GiB | + `tel.feed.>`, `maxMsgsPerSubject: 2000`, `allowDirect` | No |
+| `CMD` | 2 / 166 | 720h → **8760h** | 512 MiB | `discard: old` (kept; see A22-P2) | No (the 2 messages are kept longer) (A22-P2) |
+| `TEL` | 0 / 0 | 168h → 72h | 4 GiB | + `tel.feed.>` (needs BUS-P1), `maxMsgsPerSubject: 2000`, `allowDirect` | No |
 | `DET` (new) | does not exist | 168h | 2 GiB | `det.>` | No (A22-P3) |
 | `INTEL` | 92,129 / 103,612,881 (first 2026-08-04) | 2160h (keep) | 1 GiB | `duplicateWindow` 2m → **1h** | No: 104 MB is 10% of the cap (A22-P4) |
 | `GEO` | 0 / 0 | 720h → 168h | 512 MiB | — | No (A22-P5) |
@@ -32,7 +36,7 @@ label `stream="CMD"`, a metric confirmed present in Prometheus read-only) and th
 Not in this PR: `ent.yaml` and `kv-entity-correlation.yaml` (PR #552),
 `kv-ingest-locks.yaml` and `kv-ingest-state.yaml` (PR #553), `evt.entity.>` on `EVT`
 (BUS-P5, filed as A4-P5 in #552), `maxBytes` on the other KV buckets (BUS-DESIGN section 11
-"other 21 kv-*.yaml"; follow-up). `TEL` gets `tel.feed.>` with the same two lines as #553,
+"other 21 kv-*.yaml"; follow-up, see "Follow-up" below). `TEL` gets `tel.feed.>` with the same two lines as #553,
 so either PR can merge first without a conflict (checked with `git merge-tree`).
 
 ## Per-node budget
@@ -67,15 +71,46 @@ the reservations fit.
 - **Alternative.** Keep 720h with a 3 GiB cap: the server then drops the oldest 1.95 GB at
   sync instead, and the stream keeps about 18 days. Say so and I change one line.
 
-### A22-P2: CMD keeps a year of commands and refuses when full
+### A22-P2: CMD keeps a year of commands; discard policy
 
-`discard: new` is a deliberate deviation from every other stream. When `CMD` reaches 512 MiB
-it refuses new publishes (error 10077 "maximum bytes exceeded", shown in the local test)
-instead of deleting the oldest audit records. The policy service treats the failed publish as
-a refusal, so no command leaves without its audit record (run rule 6). The cost: a full `CMD`
-stops all commands until messages age out at 365 days or the cap is raised. The 80% alert
-gives warning; at today's volume (2 messages) that is far away. Alertmanager has no receiver
-yet (docs/STACK.md), so the alert shows only in Grafana and Prometheus until one is set.
+**Decision asked:** keep `CMD` at 365 days and 512 MiB with `discard: old` and the 80% alert
+(option b, what this PR now sets). Switch to `discard: new` later, only once option (a)
+exists.
+
+**What `discard: new` actually does (corrected).** A stream storing a message and core
+delivery of that message are independent in NATS. When a `discard: new` stream is full it
+refuses to *store* the publish (error 10077 "maximum bytes exceeded"), but the server still
+*delivers* the message to every core subscriber. The independent review showed this on a
+disposable server (5 publishes to `cmd.fleet.drone.sim-x1.hold`: 2 stored, 3 refused, a core
+`nats sub 'cmd.>'` received all 5), and the engine test
+`test_cmd_discard_new_refused_publish_still_reaches_core_subscribers` reproduces it. The
+#554 bridge and task identities subscribe to `cmd.fleet.drone.*` and `cmd.mission.>` on core.
+So with `discard: new` a full `CMD` **stops recording commands but does not stop delivering
+them**: the asset runs the command, the policy service gets an error ack and records a
+refusal, and `CMD` keeps no record. That is worse than `discard: old`. An earlier version of
+this proposal claimed `discard: new` fails closed; that claim was wrong.
+
+**Option (b), in this PR: `discard: old` with the 80% alert.** A full `CMD` deletes its oldest
+command records and keeps recording new ones; delivery is unaffected either way. Alert
+`NATSCmdStreamNearFull` fires at 80% of the cap, and at today's volume (2 messages, 166 bytes)
+that is far away. Alertmanager has no receiver yet (docs/STACK.md), so the alert shows only in
+Grafana and Prometheus until one is set. The audit trail of the decision itself is in `EVT`
+(#554 stores it with a JetStream ack before publishing the command, POL-5).
+
+**Option (a), the prerequisite for `discard: new`, a requirement on #554 (I4) and
+#550 (H2):**
+
+1. Every `cmd.*` consumer (the MAVLink bridges, the task service, any future asset bridge)
+   reads commands through a JetStream consumer on `CMD`, never a core subscription, and the
+   NATS permissions in #554 deny those identities a core `cmd.>` subscription. Then a
+   message `CMD` refuses is never delivered.
+2. The policy service stores the audit record and checks its ack before it publishes the
+   command (#554 already does this for the `EVT` decision record), and treats a refused
+   `CMD` publish as a failed command, not a sent one.
+3. An engine test shows a full `discard: new` `CMD` delivers nothing to the bridge.
+
+When (a) is merged, a one-line change to `cmd.yaml` switches to `discard: new`;
+`test_cmd_update_from_old_to_new_discard` already shows the switch keeps existing messages.
 
 ### A22-P3: new DET stream
 
@@ -95,6 +130,13 @@ memory for the id table (INTEL writes are sparse).
 ### A22-P5: GEO to 7 days
 
 `GEO` is empty and is a retirement candidate (BUS-P10). This shrinks it only; it is not deleted.
+
+## Dependencies
+
+- `tel.feed.>` on `TEL` (`tel.feed.{source}.status`) uses `feed` as the `{node}` token, which
+  is owner proposal **BUS-P1** (BUS-DESIGN). Approval of this line depends on BUS-P1 being
+  approved before or with this PR. If BUS-P1 is rejected, drop the `tel.feed.>` line from
+  `tel.yaml` (and from #553, which adds the same two lines) before merging.
 
 ## Activation order
 
@@ -122,7 +164,7 @@ kubectl --context do-nyc3-omos-cloud get --raw \
 ```
 
 Expected: `COT` `max_age` 259200000000000 ns, `max_bytes` 3221225472, bytes about 0.5 GB;
-`CMD` `discard` `new`; `TEL` 9 subjects including `tel.feed.>`; `DET` present with
+`CMD` `discard` `old`, `max_age` 31536000000000000 ns; `TEL` 9 subjects including `tel.feed.>`; `DET` present with
 `max_bytes` 2147483648; `NATSJetStreamStorageHigh` baseline drops from about 10% to about 1%.
 
 ## Rollback
@@ -130,3 +172,9 @@ Expected: `COT` `max_age` 259200000000000 ns, `max_bytes` 3221225472, bytes abou
 Reverting the PR restores the old limits for future messages. Revert does **not** bring back
 COT messages removed by the 72 h cut; only the backup archive does (`platform/backups/`).
 `preventDelete: true` stays on every CR, so no rollback path deletes a stream.
+
+## Follow-up
+
+`maxBytes` on the remaining KeyValue CRs (BUS-DESIGN section 11) is not in this PR. It needs a
+tracking issue in `onemindos/omos`; opening it from this run was blocked by the permission
+system, so the issue text is with the A22 evidence for the owner to file.

@@ -12,10 +12,13 @@ spec:
   storage: file
   replicas: 3
   retention: limits
-  # discard: new (not old): a full CMD refuses the publish, so the policy service fails
-  # closed and no command goes out without its audit record (BUS-DESIGN 4.1, run rule 6).
-  # Alert NATSCmdStreamNearFull fires at 80% of maxBytes (prometheus-rules-onemind.yaml).
-  discard: new
+  # discard: old (A22-P2 option b). discard: new would NOT fail closed: a refused JetStream
+  # publish is still delivered to core subscribers (the bridge and task service subscribe
+  # cmd.* on core), so a full CMD would stop recording commands but keep delivering them.
+  # Switch to discard: new only after every cmd.* consumer reads through a JetStream consumer
+  # on CMD (A22-P2 option a, a requirement on #554/H2). Until then a full CMD drops its oldest
+  # records; alert NATSCmdStreamNearFull fires at 80% of maxBytes (prometheus-rules-onemind.yaml).
+  discard: old
   maxAge: 8760h
   maxBytes: 536870912
   duplicateWindow: 2m

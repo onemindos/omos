@@ -3,7 +3,8 @@
 Static contracts always run. The engine tests translate each Stream CR into a JetStream
 stream config, create it on a disposable loopback nats-server (replicas forced to 1) and
 show that the limits behave as configured: maxAge ages out, maxBytes with discard: old drops
-the oldest, discard: new refuses the publish, and shrinking a limit on an existing stream (what
+the oldest, discard: new refuses to store the publish but core subscribers still receive it
+(why CMD stays on discard: old, A22-P2), and shrinking a limit on an existing stream (what
 NACK does when Argo syncs a changed CR) removes stored data at once.
 
 Engine tests need NATS_SERVER_BIN (or nats-server on PATH) and the nats-py package; they
@@ -96,7 +97,9 @@ class StreamCapContracts(unittest.TestCase):
         cot, cmd, tel, det = by_name("COT"), by_name("CMD"), by_name("TEL"), by_name("DET")
         self.assertEqual(duration_seconds(cot["maxAge"]), 72 * 3600)
         self.assertEqual(int(cot["maxBytes"]), 3 * GIB)
-        self.assertEqual(cmd["discard"], "new")
+        # A22-P2 option b: discard: new does not stop core delivery, so CMD keeps discard: old
+        # until every cmd.* consumer reads through a JetStream consumer (option a).
+        self.assertEqual(cmd["discard"], "old")
         self.assertEqual(duration_seconds(cmd["maxAge"]), 365 * 86400)
         self.assertEqual(int(cmd["maxBytes"]), 512 * 1024**2)
         self.assertIn("tel.feed.>", tel["subjects"])
@@ -256,32 +259,77 @@ class StreamCapEngine(unittest.TestCase):
             self.assertLessEqual(st.bytes, 32 * 1024)
         self.run_js(body)
 
-    def test_cmd_discard_new_refuses_when_full(self):
+    def test_cmd_discard_old_keeps_recording_when_full(self):
         async def body(js):
             cap = 8 * 1024
             await js.add_stream(to_config(by_name("CMD"), max_bytes=cap))
+            for i in range(50):
+                await js.publish(f"cmd.fleet.drone.sim-x1.goto{i}", b"x" * 1024)  # never refused
+            st = (await js.stream_info("CMD")).state
+            print(f"  CMD discard:old 8 KiB cap: messages={st.messages} first_seq={st.first_seq} last_seq={st.last_seq}")
+            self.assertEqual(st.last_seq, 50, "the newest command is always recorded")
+            self.assertGreater(st.first_seq, 1, "the oldest records are dropped instead")
+            self.assertLessEqual(st.bytes, cap)
+        self.run_js(body)
+
+    def test_cmd_discard_new_refuses_when_full(self):
+        """Option (a) config: a full discard: new CMD refuses to store the publish."""
+        async def body(js):
+            cap = 8 * 1024
+            await js.add_stream(to_config(by_name("CMD"), max_bytes=cap, discard=jsapi.DiscardPolicy.NEW))
             accepted, refused = 0, None
             for i in range(50):
                 try:
-                    await js.publish(f"cmd.drone.sim-x1.goto{i}", b"x" * 1024)
+                    await js.publish(f"cmd.fleet.drone.sim-x1.goto{i}", b"x" * 1024)
                     accepted += 1
                 except APIError as err:
                     refused = err
                     break
             st = (await js.stream_info("CMD")).state
-            print(f"  CMD 8 KiB cap: accepted={accepted} refused err_code={getattr(refused, 'err_code', None)} "
+            print(f"  CMD discard:new 8 KiB cap: accepted={accepted} refused err_code={getattr(refused, 'err_code', None)} "
                   f"description={getattr(refused, 'description', None)!r} first_seq={st.first_seq}")
             self.assertIsNotNone(refused, "a full discard:new stream must refuse the publish")
             self.assertEqual(refused.err_code, 10077)  # JSStreamStoreFailedF: maximum bytes exceeded
-            self.assertEqual(st.first_seq, 1, "the oldest audit record is kept")
+            self.assertEqual(st.first_seq, 1, "the oldest record is kept")
             self.assertLessEqual(st.bytes, cap)
         self.run_js(body)
 
-    def test_cmd_update_from_old_to_new_discard(self):
+    def test_cmd_discard_new_refused_publish_still_reaches_core_subscribers(self):
+        """Why discard: new is not fail-closed while bridges subscribe cmd.* on core (A22-P2)."""
         async def body(js):
-            await js.add_stream(to_config(by_name("CMD"), discard=jsapi.DiscardPolicy.OLD, max_age=720 * 3600, max_bytes=-1))
-            await js.publish("cmd.drone.sim-x1.rtl", b"{}")
-            await js.update_stream(to_config(by_name("CMD")))
+            nc = js._nc
+            await js.add_stream(to_config(by_name("CMD"), max_bytes=400, discard=jsapi.DiscardPolicy.NEW))
+            got = []
+            async def on_msg(m):
+                got.append(m.data)
+
+            sub = await nc.subscribe("cmd.>", cb=on_msg)
+            await nc.flush()
+            stored = refused = 0
+            for i in range(1, 6):
+                try:
+                    await js.publish("cmd.fleet.drone.sim-x1.hold", f"payload-number-{i}".ljust(100).encode())
+                    stored += 1
+                except APIError as err:
+                    self.assertEqual(err.err_code, 10077)
+                    refused += 1
+            await nc.flush()
+            await asyncio.sleep(0.2)
+            await sub.unsubscribe()
+            st = (await js.stream_info("CMD")).state
+            print(f"  CMD discard:new 400 B cap: stored={stored} refused={refused} "
+                  f"stream_messages={st.messages} core_subscriber_received={len(got)}")
+            self.assertGreater(refused, 0)
+            self.assertEqual(st.messages, stored)
+            self.assertEqual(len(got), 5, "core delivery is independent of the stream refusing to store")
+        self.run_js(body)
+
+    def test_cmd_update_from_old_to_new_discard(self):
+        """The later switch to discard: new (after option a) keeps existing commands."""
+        async def body(js):
+            await js.add_stream(to_config(by_name("CMD"), max_age=720 * 3600, max_bytes=-1))
+            await js.publish("cmd.fleet.drone.sim-x1.rtl", b"{}")
+            await js.update_stream(to_config(by_name("CMD"), discard=jsapi.DiscardPolicy.NEW))
             info = await js.stream_info("CMD")
             self.assertEqual(getattr(info.config.discard, "value", info.config.discard), "new")
             self.assertEqual(info.state.messages, 1, "existing commands survive the update")
