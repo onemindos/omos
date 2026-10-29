@@ -567,40 +567,27 @@ func TestE2E(t *testing.T) {
 	if c["status"] != "dispatched" {
 		t.Fatalf("confirm: %v", c)
 	}
-	// With the branches as they are, the bridge (#550) refuses every task-bearing command:
-	// it recomputes params_hash as asset.{verb} over the command data, while the policy
-	// service (#554) stamps the task.assign hash (owner proposal D2-P1). Then the task must
-	// end done_not_ok + rejected, faithfully. With test/interop/policy-task-fleet-params-hash.patch
-	// applied to the policy build (E2E_POLICY_PATCHED=1), the drone flies and the task completes.
-	patched := os.Getenv("E2E_POLICY_PATCHED") == "1"
-	want := "done_ok"
-	if !patched {
-		want = "done_not_ok"
-	}
+	// POL-16 (D2-P1, resolved by #554/#550/#566): the fleet command of a task.assign carries
+	// the task.assign params_hash; the bridge checks its form and the Ed25519 signature, so
+	// the drone flies the goto and the task completes.
 	var final map[string]any
-	waitFor(t, 90*time.Second, "task "+want+" in mission-state", func() bool {
+	waitFor(t, 90*time.Second, "task done_ok in mission-state", func() bool {
 		e, err := mstate.Get(ctx, tsk)
 		if err != nil {
 			return false
 		}
 		_ = json.Unmarshal(e.Value(), &final)
 		st, _ := final["status"].(map[string]any)
-		return st["state"] == want
+		return st["state"] == "done_ok" || st["state"] == "done_not_ok"
 	})
 	posMu.Lock()
 	tr.log("check", "", map[string]any{"task": tsk, "final_record": final, "last_position": lastPos})
 	posMu.Unlock()
-	facts := h.facts(tsk)
-	if !patched {
-		st := final["status"].(map[string]any)
-		er, _ := st["error"].(map[string]any)
-		if er["code"] != "rejected" || !strings.Contains(fmt.Sprint(er["message"]), "params_hash") {
-			t.Fatalf("unpatched run: want done_not_ok rejected (params_hash), got %v", st)
-		}
-		tr.log("check", "", map[string]any{"contract_test": 1, "result": "interop blocker reproduced: bridge refused the task goto (params_hash); task service recorded done_not_ok + rejected",
-			"task_facts": facts, "blocker": "D2-P1", "pass": "partial"})
+	if st := final["status"].(map[string]any); st["state"] != "done_ok" {
+		t.Fatalf("task goto: want done_ok, got %v", st)
 	}
-	for _, want := range map[bool][]string{true: {"created", "received", "executing", "done_ok"}, false: {"created", "done_not_ok"}}[patched] {
+	facts := h.facts(tsk)
+	for _, want := range []string{"created", "received", "executing", "done_ok"} {
 		found := false
 		for _, f := range facts {
 			found = found || f == want
@@ -614,17 +601,15 @@ func TestE2E(t *testing.T) {
 			t.Fatalf("no evt.so.action.%s for %s", ev, act)
 		}
 	}
-	if patched {
-		waitFor(t, 10*time.Second, "mission completed", func() bool {
-			for _, f := range h.facts(msn) {
-				if f == "completed" {
-					return true
-				}
+	waitFor(t, 10*time.Second, "mission completed", func() bool {
+		for _, f := range h.facts(msn) {
+			if f == "completed" {
+				return true
 			}
-			return false
-		})
-		tr.log("check", "", map[string]any{"contract_test": 1, "task_facts": facts, "mission_facts": h.facts(msn), "pass": true})
-	}
+		}
+		return false
+	})
+	tr.log("check", "", map[string]any{"contract_test": 1, "task_facts": facts, "mission_facts": h.facts(msn), "pass": true})
 
 	// Step 4 (contract test 3): orbit for an asset without the capability: not_capable.
 	t3 := newID("tsk")

@@ -95,9 +95,10 @@ onemind-xr scripted drone (section 10 tests 1, 3, 4 and 6, plus the whole-run in
 
 ```
 SIM_DRONE=../onemind-xr/scripts/sim/mavlink_sim_drone.py PYTHON=python3 ./test/e2e.sh
-# with the proposed #554 fix (owner proposal D2-P1), so the drone actually flies the task:
-POLICY_PATCH=$PWD/test/interop/policy-task-fleet-params-hash.patch SIM_DRONE=... ./test/e2e.sh
 ```
+
+The drone flies the task goto and the task ends `done_ok` (POL-16 / D2-P1: the bridge accepts
+the `task.assign` `params_hash` on a task-bearing command).
 
 ## Configuration (environment)
 

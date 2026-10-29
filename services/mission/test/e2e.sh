@@ -13,8 +13,6 @@
 #   SIM_DRONE     onemind-xr scripts/sim/mavlink_sim_drone.py (required)
 #   PYTHON        python with pymavlink            (default python3)
 #   NATS_SERVER   nats-server binary               (default nats-server on PATH)
-#   POLICY_PATCH  optional patch applied to the policy build only, e.g.
-#                 test/interop/policy-task-fleet-params-hash.patch (proposed #554 fix, D2-P1)
 #   WORKDIR       temp dir (default mktemp -d); TRANSCRIPT JSONL path (default $WORKDIR/transcript.jsonl)
 set -euo pipefail
 
@@ -33,11 +31,6 @@ rm -rf "$workdir/src/policy" "$workdir/src/bridge"
 mkdir -p "$workdir/src/policy" "$workdir/src/bridge"
 git -C "$repo" archive "$policy_ref" services/policy services/schemas platform/security/openfga | tar -x -C "$workdir/src/policy"
 git -C "$repo" archive "$bridge_ref" services/bridge/bridges/mavlink | tar -x -C "$workdir/src/bridge"
-if [[ -n "${POLICY_PATCH:-}" ]]; then
-  # Proposed fix for #554 (owner proposal D2-P1), applied to this throwaway build only.
-  patch -p1 -d "$workdir/src/policy" < "$POLICY_PATCH"
-  export E2E_POLICY_PATCHED=1
-fi
 (cd "$workdir/src/policy/services/policy" && go build -o "$workdir/bin/policy" ./cmd/policy)
 (cd "$workdir/src/bridge/services/bridge/bridges/mavlink" && go build -o "$workdir/bin/bridge-mavlink" .)
 (cd "$here" && go build -o "$workdir/bin/mission" ./cmd/mission)

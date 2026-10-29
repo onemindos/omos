@@ -43,8 +43,8 @@ no ingress).
    `MISSION` (`evt.mission.>`) and KV `mission-state` exist already. The service creates two
    durable consumers (`CMD/mission-commands`, `EVT/mission-events`, deliver-new on first start).
 5. **Policy service.** Sync `platform-policy` (#554) first; without it no command reaches
-   this service. Decide D2-P1 before relying on asset tasks: until it is fixed the MAVLink
-   bridge refuses every task-dispatched command.
+   this service, and the MAVLink bridge from #550 at or after `2b724093`, which accepts the
+   `task.assign` `params_hash` on task-bearing commands (POL-16 / D2-P1).
 
 6. **Arrival (D2-P2).** `MISSION_ARRIVAL` is `"false"`: a goto task completes only on the
    bridge's own `done_ok`. Set it to `"true"` only after ratifying D2-P2, because arrival
