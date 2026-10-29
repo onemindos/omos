@@ -48,10 +48,20 @@ in that section's per-node budget (about 32.4 GiB of 45 GiB, arithmetic, not a m
   TTL has a stale-TTL fix in 2.14.8 (nats-platform.md R9). The deployment therefore ships with
   `ENT_MSG_TTL: "false"`; turn it on after the server moves to 2.14.9. Without `Nats-TTL` an
   ended entity is still removed for clients: the service publishes a final `live: false`
-  record, and `maxAge` 7 d is the storage backstop.
+  record and, 60 s after that record is acked, deletes it from `ENT` by its stream sequence
+  (`TestFinalRecordDeletedWhenTTLOff`). Final records found on restart are deleted the same
+  way. `maxAge` 7 d stays the storage backstop.
 - Locally (nats-server 2.15.2, and 2.14.9 in CI), the integration tests in
   `services/entity/internal/bus` create `ENT` with exactly these settings and pass: one message
   per entity, `Nats-Msg-Id` deduplication, no growth on a full replay.
+
+**Eviction risk under `discard: old`.** `ENT` keeps one record per live entity, but the
+1 GiB cap is shared. If live churn (aircraft, vessels; A14 plans 50k vessels at about 1.7 KB
+per record) ever fills it, `discard: old` evicts the oldest records first, and those are the
+long-lived and pinned entities (pinned heartbeat 3.5 d). A restart would then not restore
+them. Deleting final records keeps ended entities from adding to this. If the owner wants a
+margin, lower `maxAge` to at most the pinned heartbeat (84 h) or raise `maxBytes`; this PR
+keeps the BUS-DESIGN values.
 
 **Operational note.** A purge of `ENT` keeps its duplicate window. A rebuild from scratch must
 wait 2 minutes after the purge before replaying, or earlier `{entity_id}:{seq}` ids are
@@ -81,12 +91,31 @@ with `Create` and renewed or taken over only with `Update(key, value, lastRevisi
 replicas cannot both hold it (`TestLeaseSingleActive`). The same bucket is where manual
 correlation and `decorrelated_from` will live when `cmd.entity.*` edits are built.
 
+## A4-P2b: identity keys and the record (deviations from entity.md, for the owner)
+
+- **Soft keys.** `mavlink_sysid` and `tak_callsign` are kept in `aliases.ids` but never resolve
+  or merge an entity: sysid 1 is the ArduPilot and PX4 SITL default, and two TAK devices can
+  share a callsign. Only hard keys (`sim`, `icao`, `mmsi`, `norad`, `gtfs`, `cot_uid`,
+  `fleet_uid`, `det_track`, `intel_id`) and declared links merge (entity.md section 5).
+  Tests: `TestSameSysidTwoSimDronesAreTwoEntities`, `TestSameCallsignTwoEUDsAreTwoEntities`.
+- **Fleet prefix.** A non-sim fleet asset is `fleet-{uid}` (for example `fleet-x47`), following
+  entity.md section 3's `{prefix}-{native}` rule. entity.md section 3 does not list a `fleet`
+  prefix; the owner should add it there or name another.
+- **`sources[].tier`.** Each source carries its attribute tier (`human`, `self_report`,
+  `sensor`) so a restart restores the conflict tiers exactly. This is an additive optional
+  field: `sources` items in `entity.v1.schema.json` allow extra properties.
+- **`svc.entity.query` paging.** Pages of at most 200 entities (the default) with a `cursor`
+  (last `entity_id`; `null` on the last page). A page is halved until it fits the server's
+  `max_payload` (1 MiB live; `TestQueryPagesLargeResult` reads 1,200 entities).
+
 ## A4-P3: dead-letter subject
 
 Rejected inputs (stop-line SL9: a `person` with `disposition: hostile`; unparseable messages)
 are published on `evt.sys.entity.rejected` with `{reason, service, subject, stream, seq,
 integration, source_id, entity_type, disposition, t}`. `SYS` binds `evt.sys.>`
-(`platform/nats/streams/sys.yaml`), so they are stored without a CR change. BUS-P9 proposes
+(`platform/nats/streams/sys.yaml`), so they are stored without a CR change. They are
+JetStream publishes with `Nats-Msg-Id: {stream}:{seq}` of the input; if the publish is not
+acked, the input is not acked either and is redelivered (`TestDeadLetterIsAckedOrInputRedelivered`). BUS-P9 proposes
 `evt.sys.{source}.rejected`; this PR reads `{source}` as the service that rejects.
 
 ## A4-P4: satellite entity type

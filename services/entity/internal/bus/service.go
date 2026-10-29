@@ -58,6 +58,10 @@ type Config struct {
 	Holder        string
 	ServeRPC      bool
 	AckWait       time.Duration // redelivery delay for unacked input; default 30 s
+	// FinalRetain is how long a final `live:false` record stays in ENT when MsgTTL is off
+	// before the service deletes it (the same 60 s the Nats-TTL header gives it when on).
+	FinalRetain time.Duration
+	QueryLimit  int // svc.entity.query page size: default and maximum; default 200
 
 	// crashAfter, when > 0, makes Run return errCrash right after the n-th ENT publish and
 	// before acking the input message. Tests use it to prove a restart never duplicates.
@@ -68,13 +72,20 @@ var errCrash = errors.New("simulated crash after publish, before ack")
 
 // Service is one running entity service.
 type Service struct {
-	cfg   Config
-	nc    *nats.Conn
-	js    jetstream.JetStream
-	eng   *engine.Engine
-	log   *slog.Logger
-	ready atomic.Bool
-	pubs  int
+	cfg    Config
+	nc     *nats.Conn
+	js     jetstream.JetStream
+	eng    *engine.Engine
+	log    *slog.Logger
+	ready  atomic.Bool
+	pubs   int
+	ent    jetstream.Stream
+	finals []finalMsg // ENT sequences of final records to delete when MsgTTL is off
+}
+
+type finalMsg struct {
+	seq uint64
+	due time.Time
 }
 
 // New returns a service on an open connection.
@@ -106,6 +117,12 @@ func New(nc *nats.Conn, eng *engine.Engine, cfg Config, log *slog.Logger) (*Serv
 	}
 	if cfg.AckWait == 0 {
 		cfg.AckWait = 30 * time.Second
+	}
+	if cfg.FinalRetain == 0 {
+		cfg.FinalRetain = time.Minute
+	}
+	if cfg.QueryLimit == 0 {
+		cfg.QueryLimit = 200
 	}
 	if cfg.Inputs == nil {
 		cfg.Inputs = DefaultInputs()
@@ -140,9 +157,11 @@ func (s *Service) Run(ctx context.Context) (retErr error) {
 	}
 
 	if !s.cfg.CoreMode {
-		if _, err := s.js.Stream(ctx, s.cfg.EntStream); err != nil {
+		ent, err := s.js.Stream(ctx, s.cfg.EntStream)
+		if err != nil {
 			return fmt.Errorf("stream %s: %w (apply platform/nats/streams/ent.yaml, or run with ENT_MODE=core)", s.cfg.EntStream, err)
 		}
+		s.ent = ent
 		n, err := s.restore(ctx)
 		if err != nil {
 			return fmt.Errorf("restore from %s: %w", s.cfg.EntStream, err)
@@ -198,6 +217,7 @@ func (s *Service) Run(ctx context.Context) (retErr error) {
 					s.eng.PublishFailed(p)
 				}
 			}
+			s.deleteFinals(ctx)
 			nextSweep = time.Now().Add(s.cfg.SweepEvery)
 		}
 		if got == 0 {
@@ -217,7 +237,9 @@ func (s *Service) handle(ctx context.Context, msg jetstream.Msg) error {
 	obs, skip, perr := adapt.Parse(msg.Subject(), msg.Data())
 	switch {
 	case perr != nil:
-		s.deadLetter(msg.Subject(), meta, "parse_error: "+perr.Error(), nil)
+		if err := s.deadLetter(ctx, msg.Subject(), meta, "parse_error: "+perr.Error(), nil); err != nil {
+			return s.nakDeadLetter(msg, err)
+		}
 		s.eng.Count("parse_error")
 		return msg.Ack()
 	case obs == nil:
@@ -227,7 +249,9 @@ func (s *Service) handle(ctx context.Context, msg jetstream.Msg) error {
 	obs.Stream, obs.StreamSeq = meta.Stream, meta.Sequence.Stream
 	res := s.eng.Apply(obs)
 	if res.Reject != nil {
-		s.deadLetter(msg.Subject(), meta, res.Reject.Reason, obs)
+		if err := s.deadLetter(ctx, msg.Subject(), meta, res.Reject.Reason, obs); err != nil {
+			return s.nakDeadLetter(msg, err)
+		}
 		return msg.Ack()
 	}
 	if res.Publish != nil {
@@ -263,7 +287,11 @@ func (s *Service) publish(ctx context.Context, p *engine.Publish) error {
 	m.Header.Set("OneMind-Releasable-To", strings.Join(p.Entity.Marking.ReleasableTo, ","))
 	m.Header.Set("OneMind-Schema", "entity.v1")
 	if s.cfg.CoreMode {
-		return s.nc.PublishMsg(m)
+		if err := s.nc.PublishMsg(m); err != nil {
+			return err
+		}
+		s.eng.Published(p)
+		return nil
 	}
 	ack, err := s.js.PublishMsg(ctx, m)
 	if err != nil {
@@ -272,10 +300,50 @@ func (s *Service) publish(ctx context.Context, p *engine.Publish) error {
 	if ack.Duplicate {
 		s.eng.Count("ent_duplicate_ack")
 	}
+	s.eng.Published(p)
+	if !p.Entity.Live && !s.cfg.MsgTTL {
+		s.finals = append(s.finals, finalMsg{seq: ack.Sequence, due: time.Now().Add(s.cfg.FinalRetain)})
+	}
 	return nil
 }
 
-func (s *Service) deadLetter(subject string, meta *jetstream.MsgMetadata, reason string, obs *model.Observation) {
+// deleteFinals removes final `live:false` records from ENT once FinalRetain has passed, when
+// MsgTTL is off, so expired entities do not fill ENT until maxAge and evict live ones under
+// `discard: old`. Deleting by sequence never touches a newer record on the same subject: if
+// the entity came back, maxMsgsPerSubject 1 already removed the old sequence.
+func (s *Service) deleteFinals(ctx context.Context) {
+	if s.ent == nil {
+		return
+	}
+	now, keep := time.Now(), s.finals[:0]
+	for _, f := range s.finals {
+		if now.Before(f.due) {
+			keep = append(keep, f)
+			continue
+		}
+		err := s.ent.DeleteMsg(ctx, f.seq)
+		switch {
+		case err == nil:
+			s.eng.Count("final_deleted")
+		case errors.Is(err, jetstream.ErrMsgNotFound):
+		default:
+			s.log.Warn("delete final record failed; will retry", "seq", f.seq, "err", err)
+			keep = append(keep, f)
+		}
+	}
+	s.finals = keep
+}
+
+// nakDeadLetter redelivers an input whose dead letter was not stored, so no reject is lost.
+func (s *Service) nakDeadLetter(msg jetstream.Msg, err error) error {
+	s.log.Warn("dead letter publish failed; input will be redelivered", "err", err)
+	s.eng.Count("dead_letter_failed")
+	return msg.NakWithDelay(2 * time.Second)
+}
+
+// deadLetter stores one reject in the SYS stream with an acked JetStream publish. Its
+// Nats-Msg-Id is `{stream}:{seq}` of the input, so a redelivered input is stored once.
+func (s *Service) deadLetter(ctx context.Context, subject string, meta *jetstream.MsgMetadata, reason string, obs *model.Observation) error {
 	rec := map[string]any{
 		"reason": reason, "service": "entity-service", "subject": subject,
 		"stream": meta.Stream, "seq": meta.Sequence.Stream, "t": time.Now().UnixMilli(),
@@ -285,10 +353,14 @@ func (s *Service) deadLetter(subject string, meta *jetstream.MsgMetadata, reason
 		rec["entity_type"], rec["disposition"] = obs.EntityType, obs.Disposition
 	}
 	b, _ := json.Marshal(rec)
-	if err := s.nc.Publish(s.cfg.RejectSubject, b); err != nil {
-		s.log.Warn("dead letter publish failed", "err", err)
+	m := nats.NewMsg(s.cfg.RejectSubject)
+	m.Data = b
+	m.Header.Set("Nats-Msg-Id", fmt.Sprintf("%s:%d", meta.Stream, meta.Sequence.Stream))
+	if _, err := s.js.PublishMsg(ctx, m); err != nil {
+		return err
 	}
 	s.eng.Count("rejected")
+	return nil
 }
 
 // consumers opens (or creates once) one durable pull consumer per existing input stream.
@@ -358,8 +430,12 @@ func (s *Service) restore(ctx context.Context) (int, error) {
 			if len(msg.Data()) > 0 && msg.Headers().Get("Nats-Marker-Reason") == "" {
 				var e model.Entity
 				if err := json.Unmarshal(msg.Data(), &e); err == nil {
-					s.eng.Restore(e)
-					n++
+					if e.Live {
+						s.eng.Restore(e)
+						n++
+					} else if !s.cfg.MsgTTL && meta != nil { // left by a previous process
+						s.finals = append(s.finals, finalMsg{seq: meta.Sequence.Stream, due: time.Now().Add(s.cfg.FinalRetain)})
+					}
 				}
 			}
 			if meta != nil && meta.NumPending == 0 {
@@ -377,6 +453,12 @@ type queryReq struct {
 	Types    []string  `json:"types"`
 	BBox     []float64 `json:"bbox"`
 	Limit    int       `json:"limit"`
+	Cursor   string    `json:"cursor"`
+}
+
+type queryResp struct {
+	Entities []model.Entity `json:"entities"`
+	Cursor   *string        `json:"cursor"` // last entity_id of this page; null on the last page
 }
 
 // serveRPC registers `svc.entity.get` and `svc.entity.query` (entity.md §8, interim reads).
@@ -408,10 +490,46 @@ func (s *Service) serveRPC() (micro.Service, error) {
 				return
 			}
 		}
-		if q.Limit <= 0 || q.Limit > 5000 {
-			q.Limit = 5000
+		if q.Limit <= 0 || q.Limit > s.cfg.QueryLimit {
+			q.Limit = s.cfg.QueryLimit
 		}
-		_ = r.RespondJSON(map[string]any{"entities": s.eng.Query(q.Types, q.BBox, q.Limit)})
+		body, err := s.queryPage(q)
+		if err != nil {
+			s.log.Warn("svc.entity.query failed", "err", err)
+			_ = r.Error("413", err.Error(), nil)
+			return
+		}
+		if err := r.Respond(body); err != nil {
+			s.log.Warn("svc.entity.query respond failed", "err", err)
+			_ = r.Error("500", "respond failed", nil)
+		}
 	}))
 	return svc, nil
+}
+
+// queryPage encodes one page that fits the server's max_payload, halving the page until it
+// does. The cursor is the last entity_id returned; the client sends it back for the next page.
+func (s *Service) queryPage(q queryReq) ([]byte, error) {
+	max := int(s.nc.MaxPayload()) - 4096 // headroom for headers
+	for limit := q.Limit; ; limit /= 2 {
+		ents, more := s.eng.Query(q.Types, q.BBox, q.Cursor, limit)
+		resp := queryResp{Entities: ents}
+		if ents == nil {
+			resp.Entities = []model.Entity{}
+		}
+		if more && len(ents) > 0 {
+			c := ents[len(ents)-1].EntityID
+			resp.Cursor = &c
+		}
+		body, err := json.Marshal(resp)
+		if err != nil {
+			return nil, err
+		}
+		if len(body) <= max {
+			return body, nil
+		}
+		if limit <= 1 {
+			return nil, fmt.Errorf("one entity is %d bytes, over max_payload %d", len(body), max)
+		}
+	}
 }

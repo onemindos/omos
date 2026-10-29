@@ -35,7 +35,9 @@ waits for the owner (BUS-P5). Deletion still works: the final record has `live: 
    observation with hard keys, source time, position, `ce`/`le`, class, `stale` and its stream
    pointer. CoT `ce`/`le` 9999999 means unknown.
 2. **Identity** (`internal/identity`): hard keys map to one `entity_id` through an alias map:
-   `icao-{hex}`, `mmsi-{n}`, `norad-{n}`, `tak-{uid}`, `gtfs-{agency}-{trip}`, `sim-*`. A
+   `icao-{hex}`, `mmsi-{n}`, `norad-{n}`, `tak-{uid}`, `gtfs-{agency}-{trip}`, `fleet-{uid}`,
+   `sim-*`. Soft keys (`mavlink_sysid`, `tak_callsign`) are kept in `aliases.ids` but never
+   resolve or merge: they are not unique. A
    native id with characters a NATS token cannot carry is hashed
    (`{prefix}-{base32(sha256)[0:26]}`) and kept in `aliases.ids`. Declared links
    (`ENTITY_LINKS`) can join ids from different families; nothing else auto-merges. An AIS
@@ -85,14 +87,14 @@ Safety rules in code: a `person` with `disposition: hostile` is rejected and dea
 | `NATS_URL`, `NATS_USER`, `NATS_PASSWORD` | `nats://127.0.0.1:4222` | connection; credentials from the `omos-nats-creds` SealedSecret in the cluster |
 | `ENT_MODE` | `jetstream` | `core` is the interim mode without `ENT`: core publish, no restore; `seq` starts at the epoch ms |
 | `ENT_STREAM` | `ENT` | |
-| `ENT_MSG_TTL` | `true` | send `Nats-TTL` (needs `allowMsgTtl` on the stream). The cluster manifest sets `false` until NATS 2.14.9 |
+| `ENT_MSG_TTL` | `true` | send `Nats-TTL` (needs `allowMsgTtl` on the stream). The cluster manifest sets `false` until NATS 2.14.9; while `false`, each final `live:false` record is deleted from `ENT` 60 s after its ack |
 | `INPUTS` | `COT=tak.cot.>;TEL=tel.fleet.>;WORLD=evt.world.>;INTEL=intel.>;DET=det.>` | missing streams are skipped |
 | `START_LOOKBACK` | `10m` | where a new durable starts; `0` replays everything |
 | `LEASE_BUCKET`, `LEASE_KEY`, `LEASE_TTL` | `entity-correlation`, `lease.entity-service`, `15s` | `none` disables the lease (local runs only) |
 | `ENTITY_LINKS` | — | JSON `{"cot_uid:SOME-UID": "sim-x1"}` declared links |
 | `SOURCE_PRIORS` | — | JSON per-integration `source_prior` overrides |
-| `REJECT_SUBJECT` | `evt.sys.entity.rejected` | dead-letter subject |
-| `SERVE_RPC` | `true` | `svc.entity.get` and `svc.entity.query` |
+| `REJECT_SUBJECT` | `evt.sys.entity.rejected` | dead-letter subject; acked JetStream publish with `Nats-Msg-Id: {stream}:{seq}`, the input is redelivered if it fails |
+| `SERVE_RPC` | `true` | `svc.entity.get` and `svc.entity.query` (`{types, bbox, limit, cursor}`; pages of at most 200, `cursor` is the last `entity_id`, `null` on the last page) |
 | `HTTP_ADDR` | `:8080` | `/healthz`, `/readyz` (lease held and consuming), `/metrics` (counters) |
 
 ## Tests

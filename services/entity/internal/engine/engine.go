@@ -120,6 +120,9 @@ type track struct {
 	srcTLP    map[string]string
 	last      *pubSnap
 	pending   *Publish // a publish that failed; retried by Sweep
+	// dead marks an expired track kept as a tombstone until its final `live:false` record is
+	// acked (Published), so a failed final publish is retried instead of lost.
+	dead bool
 }
 
 // Engine holds every live entity. Safe for concurrent use.
@@ -205,12 +208,24 @@ func (e *Engine) Apply(o *model.Observation) Result {
 	id, split := e.plausible(id, o)
 
 	tr := e.tracks[id]
+	var prevSeq uint64
+	if tr != nil && tr.dead {
+		// The entity reappears while its final record is unacked: the new live record supersedes
+		// that record. seq continues so `{entity_id}:{seq}` never repeats.
+		prevSeq = tr.rec.Seq
+		delete(e.tracks, id)
+		e.res.Forget(id)
+		tr = nil
+	}
 	if tr == nil {
 		if exp := e.expiryFor(o.EntityType, o.Kind, o.StaleS, o.SourceT, o.ExpireT); exp != nil && *exp <= now {
 			e.count(DropExpiredOnArrive)
 			return Result{Drop: DropExpiredOnArrive}
 		}
 		tr = e.newTrack(id, o, now)
+		if prevSeq > tr.rec.Seq {
+			tr.rec.Seq = prevSeq
+		}
 		e.tracks[id] = tr
 		if split {
 			tr.rec.Conflicts = append(tr.rec.Conflicts, model.Conflict{Attribute: "identity",
@@ -232,6 +247,7 @@ func (e *Engine) Apply(o *model.Observation) Result {
 	src.Subject, src.Stream, src.Seq = o.Subject, o.Stream, o.StreamSeq
 	src.LastSeenT, src.SourceT, src.Components = o.RecvT, o.SourceT, o.Components
 	tr.srcTier[key] = o.Tier
+	src.Tier = o.Tier.String()
 	tr.srcPrior[key] = sourcePrior(o.Integration, e.cfg.Priors)
 	tr.srcSim[key] = o.Simulated
 	tr.srcEgress[key] = o.EgressTAK
@@ -704,6 +720,20 @@ func clone(r model.Entity) model.Entity {
 	return c
 }
 
+// Published confirms that p was stored. A tombstone whose final record this was is deleted.
+func (e *Engine) Published(p *Publish) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	if t := e.tracks[p.Entity.EntityID]; t != nil && t.dead && t.rec.Seq == p.Entity.Seq {
+		e.drop(p.Entity.EntityID)
+	}
+}
+
+func (e *Engine) drop(id string) {
+	delete(e.tracks, id)
+	e.res.Forget(id)
+}
+
 // PublishFailed keeps a publish for retry by Sweep with the same seq and Nats-Msg-Id, so a
 // retry that did reach the stream is deduplicated.
 func (e *Engine) PublishFailed(p *Publish) {
@@ -715,7 +745,9 @@ func (e *Engine) PublishFailed(p *Publish) {
 }
 
 // Sweep advances lifecycles at time now: stale, lost, expiry (final `live:false` record),
-// heartbeats and failed-publish retries. Results are in entity_id order.
+// heartbeats and failed-publish retries. Results are in entity_id order. The caller reports
+// each result with Published or PublishFailed before the next Sweep; an expired tombstone
+// with neither reported is treated as delivered and deleted.
 func (e *Engine) Sweep() []*Publish {
 	e.mu.Lock()
 	defer e.mu.Unlock()
@@ -732,11 +764,14 @@ func (e *Engine) Sweep() []*Publish {
 			out = append(out, t.pending)
 			continue
 		}
+		if t.dead {
+			e.drop(id)
+			continue
+		}
 		if t.rec.Lifecycle == "tentative" || t.last == nil {
 			// never published: expire silently, publish nothing
 			if t.rec.ExpiryT != nil && now >= *t.rec.ExpiryT {
-				delete(e.tracks, id)
-				e.res.Forget(id)
+				e.drop(id)
 			}
 			continue
 		}
@@ -744,8 +779,7 @@ func (e *Engine) Sweep() []*Publish {
 			t.rec.Live, t.rec.Lifecycle = false, "expired"
 			e.derive(t, now)
 			out = append(out, e.emit(t, now))
-			delete(e.tracks, id)
-			e.res.Forget(id)
+			t.dead = true // deleted by Published once the final record is acked
 			e.count("expired")
 			continue
 		}
@@ -787,9 +821,13 @@ func (e *Engine) Restore(r model.Entity) {
 		t.srcPrior[k] = sourcePrior(s.Integration, e.cfg.Priors)
 		t.srcSim[k] = r.Indicators.Simulated
 		t.srcTLP[k] = r.Marking.TLP
-		t.srcTier[k] = model.TierSelfReport
-		if s.Integration == r.Provenance.Primary && r.Provenance.How == "h-e" {
-			t.srcTier[k] = model.TierHuman
+		if tier, ok := model.ParseTier(s.Tier); ok {
+			t.srcTier[k] = tier
+		} else { // record written before sources[].tier existed
+			t.srcTier[k] = model.TierSelfReport
+			if s.Integration == r.Provenance.Primary && r.Provenance.How == "h-e" {
+				t.srcTier[k] = model.TierHuman
+			}
 		}
 		if s.SourceT > t.newestT {
 			t.newestT = s.SourceT
@@ -815,8 +853,17 @@ func (e *Engine) Restore(r model.Entity) {
 			}
 		}
 	}
+	best := model.TierSensor // attributes were set by the best tier among the sources
+	for _, tier := range t.srcTier {
+		if tier < best {
+			best = tier
+		}
+	}
+	if len(t.srcTier) == 0 {
+		best = model.TierSelfReport
+	}
 	for _, name := range []string{"callsign", "disposition", "kind", "cot_type", "environment", "type"} {
-		t.attrs[name] = attr{tier: model.TierSelfReport, t: t.newestT}
+		t.attrs[name] = attr{tier: best, t: t.newestT}
 	}
 	t.last = &pubSnap{sig: t.signature(), wallT: e.now(), lifecycle: r.Lifecycle}
 	if r.Location != nil {
@@ -832,15 +879,16 @@ func (e *Engine) Get(id string) (model.Entity, bool) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 	t := e.tracks[id]
-	if t == nil || t.rec.Lifecycle == "tentative" || t.last == nil {
+	if t == nil || t.dead || t.rec.Lifecycle == "tentative" || t.last == nil {
 		return model.Entity{}, false
 	}
 	return clone(t.rec), true
 }
 
 // Query returns published entities filtered by type and bounding box [lon0, lat0, lon1, lat1],
-// in entity_id order, at most limit (0 = no limit).
-func (e *Engine) Query(types []string, bbox []float64, limit int) []model.Entity {
+// in entity_id order, with entity_id greater than after (the paging cursor), at most limit
+// (0 = no limit). more reports whether further matches follow the last one returned.
+func (e *Engine) Query(types []string, bbox []float64, after string, limit int) (out []model.Entity, more bool) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 	want := map[string]bool{}
@@ -852,10 +900,9 @@ func (e *Engine) Query(types []string, bbox []float64, limit int) []model.Entity
 		ids = append(ids, id)
 	}
 	sort.Strings(ids)
-	var out []model.Entity
 	for _, id := range ids {
 		t := e.tracks[id]
-		if t.rec.Lifecycle == "tentative" || t.last == nil {
+		if id <= after || t.dead || t.rec.Lifecycle == "tentative" || t.last == nil {
 			continue
 		}
 		if len(want) > 0 && !want[t.rec.EntityType] {
@@ -864,10 +911,10 @@ func (e *Engine) Query(types []string, bbox []float64, limit int) []model.Entity
 		if len(bbox) == 4 && !(t.rec.Lon >= bbox[0] && t.rec.Lat >= bbox[1] && t.rec.Lon <= bbox[2] && t.rec.Lat <= bbox[3]) {
 			continue
 		}
-		out = append(out, clone(t.rec))
 		if limit > 0 && len(out) >= limit {
-			break
+			return out, true
 		}
+		out = append(out, clone(t.rec))
 	}
-	return out
+	return out, false
 }

@@ -344,7 +344,7 @@ func TestHumanAssertionBeatsSensorForCallsign(t *testing.T) {
 	o2.Integration, o2.Tier, o2.SourceT, o2.Callsign = "det-b", model.TierSensor, t0+1000, "SENSOR-GUESS"
 	e.Apply(o1)
 	r := e.Apply(&o2)
-	got, _ := e.Get("x-1")
+	got, _ := e.Get("fleet-x-1")
 	if got.Callsign != "OPERATOR-NAME" || len(got.Conflicts) != 1 {
 		t.Fatalf("callsign %q conflicts %+v (%+v)", got.Callsign, got.Conflicts, r)
 	}

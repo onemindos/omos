@@ -8,6 +8,8 @@
 #   2. The first build-entity-service run on main pushed the image; then replace the tag below
 #      with its digest (tag@sha256:...) from the workflow's image-digest artifact.
 #   3. Set ENT_MSG_TTL to "true" only after NATS moves from 2.14.2 to 2.14.9 (stale-TTL fix).
+#      While it is "false" the service deletes each final live:false record from ENT 60 s
+#      after it is acked, so expired entities do not accumulate until maxAge.
 # Credentials: the existing omos-nats-creds SealedSecret (platform/omos/
 # omos-nats-creds.sealedsecret.yaml, keys user/password); no new secret. A per-service NATS
 # user is planned with the account split (BUS-DESIGN D6).
@@ -33,15 +35,10 @@ spec:
         app.kubernetes.io/name: omos-entity-service
         app.kubernetes.io/part-of: omos-platform
     spec:
-      affinity:
-        nodeAffinity: # ecosystem pool: hub-core is memory-saturated (cluster review H1)
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
-                  - key: doks.digitalocean.com/node-pool
-                    operator: In
-                    values: [onemind-ecosystem-cpu]
+      # Ecosystem pool, hard placement as platform/ecosystem/resources/authorization-context.yaml
+      # does: hub-core is memory-saturated (cluster review H1). The pool has no taints.
+      nodeSelector:
+        onemind.io/compute-role: ecosystem
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532

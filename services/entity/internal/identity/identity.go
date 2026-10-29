@@ -33,6 +33,14 @@ const (
 	KeyTakCallsign = "tak_callsign"
 )
 
+// soft keys are recorded in aliases.ids but never resolve or index an entity: they are not
+// unique (MAVLink sysid 1 is the ArduPilot and PX4 SITL default; two TAK devices can share a
+// callsign). entity.md §5: auto-merge only on a shared hard key or a declared link.
+var soft = map[string]bool{KeyMavlinkSys: true, KeyTakCallsign: true}
+
+// Hard reports whether a key type may resolve and merge entities.
+func Hard(keyType string) bool { return !soft[keyType] }
+
 // prefixFor maps a key type to the entity_id prefix of entity.md §3.
 var prefixFor = map[string]string{
 	KeyICAO:     "icao",
@@ -41,6 +49,7 @@ var prefixFor = map[string]string{
 	KeyGTFS:     "gtfs",
 	KeyCotUID:   "tak",
 	KeyDetTrack: "trk",
+	KeyFleetUID: "fleet",
 }
 
 // MakeID builds `{prefix}-{native}` in lowercase, or `{prefix}-{base32(sha256(native))[0:26]}`
@@ -70,8 +79,8 @@ func Canonical(k model.Alias) string {
 	switch k.Type {
 	case KeySim:
 		return MakeID("", k.ID) // already `sim-...`
-	case KeyIntelID, KeyFleetUID:
-		return MakeID("", k.ID)
+	case KeyIntelID:
+		return MakeID("", k.ID) // already `evt-...` or `intel-...`
 	}
 	if p, ok := prefixFor[k.Type]; ok {
 		return MakeID(p, k.ID)
@@ -85,15 +94,16 @@ func aliasKey(k model.Alias) string { return k.Type + "|" + strings.ToLower(k.ID
 // concurrent use.
 type Resolver struct {
 	mu    sync.RWMutex
-	index map[string]string // aliasKey -> entity_id
-	links map[string]string // aliasKey -> entity_id, declared by the operator; wins over index
+	index map[string]string   // aliasKey -> entity_id (hard keys only)
+	byID  map[string][]string // entity_id -> its aliasKeys in index, so Forget is O(keys)
+	links map[string]string   // aliasKey -> entity_id, declared by the operator; wins over index
 }
 
 // NewResolver returns a resolver with declared links of the form "type:id" -> entity_id,
 // for example "cot_uid:SIM-X1-ATAK" -> "sim-x1" (fusion-and-tracking.md Stage 4: auto-merge
 // only on a shared hard key or a declared link).
 func NewResolver(links map[string]string) *Resolver {
-	r := &Resolver{index: map[string]string{}, links: map[string]string{}}
+	r := &Resolver{index: map[string]string{}, byID: map[string][]string{}, links: map[string]string{}}
 	for k, v := range links {
 		t, id, ok := strings.Cut(k, ":")
 		if !ok || !ValidID(v) {
@@ -104,8 +114,9 @@ func NewResolver(links map[string]string) *Resolver {
 	return r
 }
 
-// Resolve returns the entity_id for the keys. Declared links win, then an existing alias,
-// then the canonical id of the most specific key. ok is false when keys is empty.
+// Resolve returns the entity_id for the keys. Declared links win, then an existing alias of a
+// hard key, then the canonical id of the first hard key. Soft keys never resolve. ok is false
+// when keys holds no hard key and no declared link.
 func (r *Resolver) Resolve(keys []model.Alias) (id string, ok bool) {
 	if len(keys) == 0 {
 		return "", false
@@ -118,22 +129,35 @@ func (r *Resolver) Resolve(keys []model.Alias) (id string, ok bool) {
 		}
 	}
 	for _, k := range keys {
+		if !Hard(k.Type) {
+			continue
+		}
 		if v, hit := r.index[aliasKey(k)]; hit {
 			return v, true
 		}
 	}
-	return Canonical(keys[0]), true
+	for _, k := range keys {
+		if Hard(k.Type) {
+			return Canonical(k), true
+		}
+	}
+	return "", false
 }
 
-// Register records that every key in keys names entity id. An existing mapping is kept: a key
-// never silently moves to another entity (wrong merges are worse than duplicates, Risk 2).
+// Register records that every hard key in keys names entity id. An existing mapping is kept: a
+// key never silently moves to another entity (wrong merges are worse than duplicates, Risk 2).
+// Soft keys are not indexed.
 func (r *Resolver) Register(id string, keys []model.Alias) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	for _, k := range keys {
+		if !Hard(k.Type) {
+			continue
+		}
 		ak := aliasKey(k)
 		if _, exists := r.index[ak]; !exists {
 			r.index[ak] = id
+			r.byID[id] = append(r.byID[id], ak)
 		}
 	}
 }
@@ -142,9 +166,10 @@ func (r *Resolver) Register(id string, keys []model.Alias) {
 func (r *Resolver) Forget(id string) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	for k, v := range r.index {
-		if v == id {
-			delete(r.index, k)
+	for _, ak := range r.byID[id] {
+		if r.index[ak] == id {
+			delete(r.index, ak)
 		}
 	}
+	delete(r.byID, id)
 }

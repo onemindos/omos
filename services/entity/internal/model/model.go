@@ -157,6 +157,9 @@ type Source struct {
 	LastSeenT   int64    `json:"last_seen_t"`
 	SourceT     int64    `json:"source_t"`
 	Components  []string `json:"components"`
+	// Tier is this source's attribute authority ("human", "self_report", "sensor"), kept so a
+	// restart restores conflict tiers exactly. Additive field (sources items allow extra keys).
+	Tier string `json:"tier,omitempty"`
 }
 
 // Key identifies the source for the per-source monotonic rule.
@@ -185,6 +188,26 @@ const (
 	TierSelfReport Tier = 1 // cooperative self-report (ADS-B, AIS, MAVLink, PLI)
 	TierSensor     Tier = 2 // sensor estimate or third-party report
 )
+
+var tierNames = [...]string{"human", "self_report", "sensor"}
+
+// String returns the name stored in Source.Tier.
+func (t Tier) String() string {
+	if t >= 0 && int(t) < len(tierNames) {
+		return tierNames[t]
+	}
+	return ""
+}
+
+// ParseTier reads a Source.Tier name.
+func ParseTier(s string) (Tier, bool) {
+	for i, n := range tierNames {
+		if n == s {
+			return Tier(i), true
+		}
+	}
+	return 0, false
+}
 
 // Observation is one normalised input message (fusion-and-tracking.md Stage 0).
 type Observation struct {

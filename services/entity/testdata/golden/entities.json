@@ -95,7 +95,8 @@
         "source_id": "ADSB-A1B2C3",
         "source_t": 1793275220000,
         "stream": "COT",
-        "subject": "tak.cot.inject"
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
       },
       {
         "components": [
@@ -109,7 +110,8 @@
         "source_id": "icao-a1b2c3",
         "source_t": 1793275222000,
         "stream": "WORLD",
-        "subject": "evt.world.air.icao-a1b2c3"
+        "subject": "evt.world.air.icao-a1b2c3",
+        "tier": "self_report"
       }
     ],
     "speed": 129.64,
@@ -238,7 +240,8 @@
         "source_id": "ADSB-ABC123",
         "source_t": 1793275205000,
         "stream": "COT",
-        "subject": "tak.cot.inject"
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
       }
     ],
     "speed": 154.33,
@@ -385,7 +388,8 @@
         "source_id": "sim-x1",
         "source_t": 1793275236000,
         "stream": "TEL",
-        "subject": "tel.fleet.drone.sim-x1.status"
+        "subject": "tel.fleet.drone.sim-x1.status",
+        "tier": "self_report"
       },
       {
         "components": [
@@ -399,7 +403,8 @@
         "source_id": "sim-x1",
         "source_t": 1793275237000,
         "stream": "COT",
-        "subject": "tak.cot.mesh.rx"
+        "subject": "tak.cot.mesh.rx",
+        "tier": "self_report"
       }
     ],
     "speed": 12.5,
@@ -530,7 +535,8 @@
         "source_id": "emsc-20261029_0001",
         "source_t": 1793274900000,
         "stream": "INTEL",
-        "subject": "intel.seismic.emsc.m3.20261029_0001"
+        "subject": "intel.seismic.emsc.m3.20261029_0001",
+        "tier": "sensor"
       }
     ],
     "stale": 3600,
@@ -643,7 +649,8 @@
         "source_id": "us7000abcd",
         "source_t": 1793274600000,
         "stream": "INTEL",
-        "subject": "intel.seismic.usgs.m4.us7000abcd"
+        "subject": "intel.seismic.usgs.m4.us7000abcd",
+        "tier": "sensor"
       }
     ],
     "stale": 3600,
@@ -762,7 +769,8 @@
         "source_id": "ANDROID-a1b2c3d4e5f6",
         "source_t": 1793275233000,
         "stream": "COT",
-        "subject": "tak.cot.out"
+        "subject": "tak.cot.out",
+        "tier": "self_report"
       }
     ],
     "speed": 1.03,
@@ -901,7 +909,8 @@
         "source_id": "S-1-5-21-942292099.WINTAK",
         "source_t": 1793275204000,
         "stream": "COT",
-        "subject": "tak.cot.out"
+        "subject": "tak.cot.out",
+        "tier": "self_report"
       }
     ],
     "speed": 0,
@@ -1035,7 +1044,8 @@
         "source_id": "MTA-LIRR-GO103_25_2611",
         "source_t": 1793275202000,
         "stream": "COT",
-        "subject": "tak.cot.inject"
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
       }
     ],
     "speed": 0,
@@ -1165,7 +1175,8 @@
         "source_id": "MTA-MNR-1234_5678",
         "source_t": 1793275231000,
         "stream": "COT",
-        "subject": "tak.cot.inject"
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
       }
     ],
     "speed": 20.39,
@@ -1295,7 +1306,8 @@
         "source_id": "SAT-25544",
         "source_t": 1793275230000,
         "stream": "COT",
-        "subject": "tak.cot.inject"
+        "subject": "tak.cot.inject",
+        "tier": "self_report"
       }
     ],
     "speed": 62844.36,
@@ -1431,7 +1443,8 @@
         "source_id": "mmsi-367000001",
         "source_t": 1793275225000,
         "stream": "WORLD",
-        "subject": "evt.world.sea.mmsi-367000001"
+        "subject": "evt.world.sea.mmsi-367000001",
+        "tier": "self_report"
       }
     ],
     "speed": 5,
@@ -1558,7 +1571,8 @@
         "source_id": "mmsi-367000001",
         "source_t": 1793275220000,
         "stream": "WORLD",
-        "subject": "evt.world.sea.mmsi-367000001"
+        "subject": "evt.world.sea.mmsi-367000001",
+        "tier": "self_report"
       }
     ],
     "speed": 5.51,
