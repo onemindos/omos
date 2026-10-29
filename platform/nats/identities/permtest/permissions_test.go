@@ -665,10 +665,16 @@ func TestHermesLeaf(t *testing.T) {
 		if !ok {
 			t.Fatalf("hermes publish %s: expected a server permission violation at the sidecar", subj)
 		}
+		// An external sidecar process writes its log asynchronously: poll for the line.
 		var logged string
-		for _, line := range l.log.grep("Publish Violation") {
-			if strings.Contains(line, fmt.Sprintf("%q", subj)) {
-				logged = line
+		for deadline := time.Now().Add(3 * time.Second); logged == "" && time.Now().Before(deadline); {
+			for _, line := range l.log.grep("Publish Violation") {
+				if strings.Contains(line, fmt.Sprintf("%q", subj)) {
+					logged = line
+				}
+			}
+			if logged == "" {
+				time.Sleep(50 * time.Millisecond)
 			}
 		}
 		if logged == "" {
