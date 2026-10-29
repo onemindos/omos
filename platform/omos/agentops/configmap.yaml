@@ -1,0 +1,73 @@
+# omos-agentops configuration (FEATURES I1, I3, D10). No secrets here.
+# Applied only by the platform-omos-agentops Application (manual sync).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omos-agentops
+  namespace: omos
+  labels:
+    app.kubernetes.io/name: omos-agentops
+    app.kubernetes.io/part-of: omos-platform
+data:
+  COMPONENTS: "presence,chat,watch,brief"
+  # Where agents are drawn on the map (an agent has no real position). Owner sets these to
+  # the site anchor before the first sync; presence refuses to start while they are empty.
+  SITE_LAT: ""
+  SITE_LON: ""
+  NODE_ID: "omos-cloud"
+  # Model chain: primary, optional local fallback, then the built-in deterministic stub.
+  # "none" keeps every model call inside this pod (zero spend). To let Hermes word the
+  # explanations and briefs, set MODEL_PRIMARY to agent:agents.prompt.hermes.zeus.legacy
+  # (Hermes then uses its own configured provider). A local server is
+  # openai:http://{host}:11434/v1|{model} (see services/agentops/LOCAL-MODELS.md).
+  MODEL_PRIMARY: "none"
+  MODEL_LOCAL: "none"
+  # ATAK messaging: empty keeps the chat path receive-only (no tak.cot.inject or
+  # tak.cot.mesh.tx publish) until owner proposals I1-P1 and I1-P2 are approved.
+  CHAT_AGENTS: "hermes/zeus/legacy"
+  REPLY_TARGETS: ""
+  CONTACT_TARGETS: ""
+  # Briefs: JSON list of {id, name, bbox:[lon0,lat0,lon1,lat1]}; empty = on request only
+  # (svc.brief.generate with an inline aoi).
+  BRIEF_AOIS: "[]"
+  BRIEF_EVERY: "15m"
+  EXPECTED_FEEDS: "{}"
+  FEED_LAYERS: "{}"
+  watches.yaml: |
+    # Watch jobs (services/agentops/README.md "Watch file"). Each envelope names exactly
+    # what the job reads; a model may only pick a response from on_trigger.propose, and every
+    # proposal waits for a human in svc.policy.task.confirm.
+    watches:
+      - id: sim-keep-in
+        owner: user:zeus
+        description: simulated drones stay inside the keep-in zone zone-home
+        level: warning
+        rule: {kind: zone, entity_types: [drone], entity_ids: ["sim-*"], zone: zone-home, alert: outside}
+        inputs: [ent.drone.*.state, "kv:geofences"]
+        rate: {cooldown_s: 300, max_alerts_per_hour: 12, max_llm_per_hour: 6, max_proposals_per_hour: 3}
+        on_trigger:
+          explain: true
+          propose: {task_types: [onemind.task.rtl.v1, onemind.task.hold.v1]}
+      - id: sim-stale
+        owner: user:zeus
+        description: a simulated asset stops reporting
+        level: caution
+        rule: {kind: stale, entity_types: [drone, robot], entity_ids: ["sim-*"], max_age_s: 60}
+        inputs: [ent.drone.*.state, ent.robot.*.state]
+        on_trigger: {explain: true}
+      - id: sim-battery
+        owner: user:zeus
+        level: caution
+        rule: {kind: threshold, entity_types: [drone], entity_ids: ["sim-*"], field: health.battery_pct, op: lt, value: 25, clear: 30}
+        inputs: [ent.drone.*.state]
+        on_trigger:
+          explain: true
+          propose: {task_types: [onemind.task.rtl.v1]}
+      - id: feed-outage
+        owner: user:zeus
+        description: a collector is stale, failing or silent (FEATURES B20 gaps)
+        level: advisory
+        rule: {kind: feed_stale}
+        inputs: [tel.feed.*.status]
+        rate: {cooldown_s: 900}
+        on_trigger: {explain: true}
