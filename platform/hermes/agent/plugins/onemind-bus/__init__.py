@@ -61,13 +61,19 @@ def build(env: Optional[Dict[str, str]] = None, client: Optional[BusClient] = No
         agent_id=e.get("ONEMIND_BUS_AGENT_ID") or "agent:hermes/zeus/legacy",
         on_behalf_of=e.get("ONEMIND_BUS_ON_BEHALF_OF") or None,
         model_alias=e.get("ONEMIND_BUS_MODEL_ALIAS") or None,
-        layer_snapshot=_truthy(e.get("ONEMIND_BUS_LAYER_SNAPSHOT"), True),
+        # Off until I2-P1 (svc.layer.snapshot for the hermes user) is ruled: under the A19 layout the
+        # publish is a permission violation that ends in a timeout.
+        layer_snapshot=_truthy(e.get("ONEMIND_BUS_LAYER_SNAPSHOT"), False),
     )
 
 
 def register(ctx, env: Optional[Dict[str, str]] = None, client: Optional[BusClient] = None) -> Tools:
     tools = build(env, client)
+    registered = 0
     for name, method, description, params in SPECS:
+        if name == "onemind_layer_snapshot" and not tools.layer_snapshot_enabled:
+            continue  # not offered to the model at all while the flag is off
+        registered += 1
         ctx.register_tool(
             name=name,
             toolset=TOOLSET,
@@ -79,5 +85,5 @@ def register(ctx, env: Optional[Dict[str, str]] = None, client: Optional[BusClie
     blocked = retired_tools(env)
     if blocked:
         ctx.register_hook("pre_tool_call", make_pre_tool_call(blocked))
-    log.info('{"event":"onemind_bus_registered","tools":%d,"retired":%s}', len(SPECS), sorted(blocked))
+    log.info('{"event":"onemind_bus_registered","tools":%d,"retired":%s}', registered, sorted(blocked))
     return tools

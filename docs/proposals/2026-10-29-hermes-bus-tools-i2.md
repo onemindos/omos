@@ -8,7 +8,17 @@ Status: **proposed, for the owner**. Date: 2026-10-29. PR: `feat/hermes-nats-too
 listed in onemind-xr `docs/design/BUS-DESIGN.md` §3.3–§3.4. The items below are permission,
 payload and identity decisions. They belong in the A24 register (omos PR #556) as rows of
 `cross-reference.md` under this PR, all "in PR" (no grammar ruling needed); this file is the
-proposal text, not a second register.
+proposal text, not a second register. The rows are not in #556 yet; this PR does not edit
+#556, so they are handed off to its owner to paste into the Mapping table:
+
+```
+| #564 `feat/hermes-nats-tools` | `docs/proposals/2026-10-29-hermes-bus-tools-i2.md` |   (PR table)
+| #564 I2-P1 `hermes` may request `svc.layer.snapshot` | permission | — | in PR |
+| #564 I2-P2 map-action acks from CLIENT back to AGENTS (service import) | permission | — | in PR |
+| #564 I2-P3 agent map actions recorded in `CMD` | stream capture | — | in PR |
+| #564 I2-P4 `cmd.map.*` payload v1 and ack | payload | — | in PR |
+| #564 I2-P5 `on_behalf_of` for agent proposals | identity | — | in PR |
+```
 
 ```subjects
 current   svc.entity.get
@@ -37,7 +47,9 @@ surface of security-and-trust.md T1 is the callsign, as for `svc.entity.*`).
 Change if approved: `hermes` publish allow `svc.layer.snapshot`; `AGENTS` import
 `svc.layer.snapshot` from `ONEMIND` with `share: true`. The layer service's export already uses
 `response_type: stream` (PR #561 acceptance test), which the request-many reply needs.
-If rejected: set `ONEMIND_BUS_LAYER_SNAPSHOT=0`; the tool disappears from use, nothing else changes.
+Until then the tool is off: `ONEMIND_BUS_LAYER_SNAPSHOT` defaults to `0` and the tool is not
+registered, so the model never sees it. If approved: set `ONEMIND_BUS_LAYER_SNAPSHOT=1` after the
+A19 change is live. If rejected: nothing to do.
 
 - [ ] approve  - [ ] approve with changes  - [ ] reject
 

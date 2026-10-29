@@ -17,7 +17,7 @@ It replaces the generic bus pipe: when this plugin is enabled, the `nats_publish
 | `onemind_entity_get` | `svc.entity.get` | read (A0) |
 | `onemind_entity_query` | `svc.entity.query` (pages; `near`, `name`, `moving_only` filtered in the tool) | read (A0) |
 | `onemind_layer_list`, `onemind_layer_meta` | `svc.layer.list`, `svc.layer.meta` | read (A0) |
-| `onemind_layer_snapshot` | `svc.layer.snapshot` (area required, at most 200 items, `fields: render`) | read (A0); proposal I2-P1 |
+| `onemind_layer_snapshot` | `svc.layer.snapshot` (area required, at most 200 items, `fields: render`) | read (A0); proposal I2-P1. **Off by default and not registered** until I2-P1 is ruled (`ONEMIND_BUS_LAYER_SNAPSHOT=1` turns it on) |
 | `onemind_command_propose` | `svc.policy.command.propose` | proposal; waits for a human |
 | `onemind_task_propose` | `svc.policy.task.propose` | proposal; waits for a human |
 | `onemind_action_status` | `svc.policy.action.get` | read of own actions |
@@ -36,10 +36,14 @@ they are not a direct agent map action. The server-side guarantee is the per-age
 
 Proposals carry `requested_by: {kind: agent, id: ONEMIND_BUS_AGENT_ID, on_behalf_of:
 ONEMIND_BUS_ON_BEHALF_OF}` and the audit hashes `agent_session` (the Hermes task id),
-`prompt_sha256` and `tool_input_sha256`; raw prompts never leave the pod. The `request_id` is
-derived from the session and the tool input, so a retried tool call returns the same action
-instead of creating a second one. The tool result tells the model that the action is only
-proposed and awaits a human.
+`prompt_sha256` and `tool_input_sha256`; raw prompts never leave the pod. The policy service
+keeps `request_id` as a permanent per-requester idempotency key, so it is derived from the
+individual tool call: a retry of the same call (same Hermes `tool_call_id`) returns the same
+action, while a new call with the same input (the user says "try again" after a human rejected
+it, or "do it again" after it ran) creates a new action that a human must confirm again. With no
+`tool_call_id` every call gets a fresh UUID. The tool result tells the model that the action is
+only proposed and awaits a human; a human rejection (`rejected_by_human`) and an expiry are
+reported as such, not as a policy denial.
 
 Every tool call writes one JSON log line (`event: onemind_bus_tool`, tool, outcome, duration,
 session, argument hash) to the `onemind_bus` logger.
@@ -59,7 +63,7 @@ the §9.7 examples (proposal I2-P4). Every payload has:
 | `cmd.map.viewport.set` | `mode: fly_to` with `lat, lon, range_m, heading_deg, pitch_deg, duration_s` and §9.7 `zoom` (derived from `range_m`); `mode: frame` with `bbox [w,s,e,n]`, `entity_ids`; `mode: tour` with `stops [{lat, lon, range_m, heading_deg, pitch_deg, dwell_s, duration_s, label}]`, `loop` |
 | `cmd.map.filter.set` | `show: [layer]`, `hide: [layer]` (layer ids from `svc.layer.list`); clients keep accepting the §9.7 `layers` full list |
 | `cmd.map.highlight.{uid}` | `select: true, ring, label, color`, or `clear: true` |
-| `cmd.map.annotation.{id}.create` | `kind: note\|line\|area\|boundary\|measure`, `label`, `note`, `geometry` (GeoJSON Point, LineString or Polygon), `measure: {distance_m, area_m2}`, `entity_id(s)`. `boundary` geometry is copied from the entity record (`geo.coords`), never written by the model |
+| `cmd.map.annotation.{id}.create` | `kind: note\|line\|area\|boundary\|measure`, `label`, `note`, `geometry` (GeoJSON Point, LineString or Polygon), `measure: {distance_m, area_m2}`, `entity_id(s)`. `boundary` geometry is copied from the entity record (`geo.coords`), never written by the model; a boundary over 5000 vertices or 256 KiB is refused (`geometry_too_large`) so the action stays under NATS `max_payload` |
 | `cmd.map.annotation.{id}.remove` | — |
 
 The message is published with a reply subject and `Nats-Msg-Id` = `id`. A map client that
@@ -92,7 +96,7 @@ those lanes).
 | `ONEMIND_BUS_MODEL_ALIAS` | unset | recorded in the audit event |
 | `ONEMIND_BUS_TIMEOUT_S` | `5` | request timeout |
 | `ONEMIND_BUS_MAP_ACK_WINDOW_S` | `1.5` | how long a map tool waits for a client ack |
-| `ONEMIND_BUS_LAYER_SNAPSHOT` | `1` | `0` removes the snapshot read (until I2-P1 is ruled) |
+| `ONEMIND_BUS_LAYER_SNAPSHOT` | `0` | `1` registers the snapshot read. Leave it off until I2-P1 is approved: the A19 `hermes` user (#562) cannot publish `svc.layer.snapshot`, so each call would be a permission violation and a 5 s timeout |
 | `ONEMIND_BUS_RETIRE_NATS_PUBLISH` | `1` | block `nats_publish` (and `ONEMIND_BUS_RETIRED_TOOLS`) through `pre_tool_call` |
 | `ONEMIND_BUS_RETIRED_TOOLS` | unset | extra tool names to block, comma-separated (for example `tak_publish_cot`) |
 
@@ -123,6 +127,10 @@ GitOps gap recorded in `../README.md`):
 
 The exact commands and expected output are in onemind-xr `docs/evidence/M4/I2/OWNER-STEPS.md`.
 
+Follow-up (not in this PR): seed Hermes plugins from Git (an init container copying from a
+ConfigMap or the image) so `onemind-bus` and `onemind-vision` are reconciled by Argo and this
+manual step and its GitOps gap go away.
+
 ## Tests
 
 ```bash
@@ -137,5 +145,5 @@ POLICY_BIN=/path/to/policy POLICY_SRC=/path/to/omos-with-#554 python -m pytest -
 |---|---|
 | `test_tools.py` | each tool against stub entity, layer, policy and map services on a disposable server; the subject allowlist; the retire hook; no tool reaches `cmd.fleet.>` or confirm even with hostile arguments; injected callsigns come back as data |
 | `test_scripted_model.py` | D11: ten scripted text requests, each checked against the stub map client's view; with no ack the script reports failure. I2: "What's moving near the north field?" answered with bus tools only. D5: the follow-a-person refusal |
-| `test_policy_integration.py` | D5 with the real policy service: a Hermes proposal waits; Hermes cannot confirm (server permission violation; `agent_cannot_confirm` for an agent identity that reaches confirm); only a human confirm dispatches; follow-a-person is denied `forbidden_action` and audited; no `cmd.fleet.>` without a human approval |
+| `test_policy_integration.py` | D5 with the real policy service: a Hermes proposal waits; Hermes cannot confirm (server permission violation; `agent_cannot_confirm` for an agent identity that reaches confirm); only a human confirm dispatches; follow-a-person is denied `forbidden_action` and audited; after a human rejection the same proposal in the same session creates a new action awaiting confirmation; no `cmd.fleet.>` without a human approval |
 | `test_account_layout.py` | the cross-account ack problem of the A19 layout and the I2-P2 fix |

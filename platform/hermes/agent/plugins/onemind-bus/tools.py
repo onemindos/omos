@@ -37,12 +37,53 @@ PROPOSAL_NOTE = ("Proposed only. A human must confirm it in the OneMind UI; you 
                  "execute it. Do not say it was done. Report the action_id and that it awaits "
                  "human confirmation.")
 
+DENIAL_NOTE = "Denied by policy and recorded in the audit log. Tell the user it was refused and why."
+DENIAL_NOTES = {
+    "rejected_by_human": ("A human operator rejected this action in the OneMind UI (recorded in the audit log). "
+                          "Tell the user a human rejected it, with their reason if given; it was not done."),
+    "expired": ("No human confirmed this action before it expired, so it was not done (recorded in the audit "
+                "log). Tell the user it expired unconfirmed."),
+}
+# A replayed tool call (same tool_call_id) returns the action it already created, whatever its state.
+STATUS_NOTES = {
+    "approved": "This tool call was already submitted and a human approved it; it is being dispatched.",
+    "dispatched": "This tool call was already submitted, approved by a human and dispatched; it is not yet confirmed done.",
+    "executed": "This tool call was already submitted, approved by a human and executed. Nothing new was proposed.",
+    "failed": "This tool call was already submitted and approved, but the asset reported failure. Nothing new was proposed.",
+}
+
 MAX_QUERY_LIMIT = 50
 MAX_QUERY_PAGES = 5
 MAX_SNAPSHOT_ITEMS = 200
 MAX_TOUR_STOPS = 12
 MAX_POINTS = 200
 MAX_NEAR_RADIUS_M = 100_000
+# An entity boundary copied into cmd.map.annotation.*.create must fit well inside NATS max_payload
+# (1 MiB default); the rest of the envelope is small.
+MAX_GEOMETRY_VERTICES = 5_000
+MAX_GEOMETRY_BYTES = 256 * 1024
+
+
+def proposal_request_id(session: str, tool_call_id: str, tool_input: Dict[str, Any]) -> str:
+    """Idempotency key for one proposal tool call (the policy service keeps it per requester forever).
+
+    Keyed on the individual tool call: a retry of the same call (same Hermes ``tool_call_id``)
+    reuses the id, while a new call with the same input (the user says "try again" after a human
+    rejected it, or "do it again" after it ran) gets a new id and so a new action. Without a
+    tool_call_id every call is new. The policy service requires a lowercase UUID.
+    """
+    if tool_call_id:
+        key = "onemind-bus:call:" + _sha256({"s": session, "c": tool_call_id, "i": tool_input})
+        return str(uuid.uuid5(uuid.NAMESPACE_URL, key))
+    return str(uuid.uuid4())
+
+
+def _vertex_count(coords: Any) -> int:
+    if isinstance(coords, (list, tuple)):
+        if coords and all(isinstance(c, (int, float)) for c in coords):
+            return 1
+        return sum(_vertex_count(c) for c in coords)
+    return 0
 
 
 class ToolError(Exception):
@@ -163,7 +204,7 @@ class Tools:
     """Holds the bus client and agent identity; each public ``t_*`` method is one tool."""
 
     def __init__(self, client: BusClient, agent_id: str, on_behalf_of: Optional[str],
-                 model_alias: Optional[str] = None, layer_snapshot: bool = True):
+                 model_alias: Optional[str] = None, layer_snapshot: bool = False):
         self.client = client
         self.agent_id = agent_id
         self.on_behalf_of = on_behalf_of
@@ -258,10 +299,7 @@ class Tools:
         params = args.get("params") if isinstance(args.get("params"), dict) else {}
         tool_input = {"family": family, "action_type": action_type, "target": target, "params": params}
         session = str(ctx.get("task_id") or "")
-        # Same session + same input = same request_id, so a retried tool call never makes a
-        # second action (the policy service treats request_id as an idempotency key).
-        # The policy service requires a lowercase UUID (services/policy validateEnvelope).
-        request_id = str(uuid.uuid5(uuid.NAMESPACE_URL, "onemind-bus:" + _sha256({"s": session, "i": tool_input})))
+        request_id = proposal_request_id(session, str(ctx.get("tool_call_id") or ""), tool_input)
         body: Dict[str, Any] = {
             "v": 1, "request_id": request_id, "action_type": action_type,
             "action_version": int(args.get("action_version") or 1),
@@ -282,11 +320,11 @@ class Tools:
                if r.get(k) not in (None, "")}
         if r.get("denial"):
             out["denial"] = r["denial"]
-            out["note"] = "Denied by policy and recorded in the audit log. Tell the user it was refused and why."
+            out["note"] = DENIAL_NOTES.get(str((r["denial"] or {}).get("code")), DENIAL_NOTE)
         elif r.get("error"):
             out["error"] = r["error"]
         else:
-            out["note"] = PROPOSAL_NOTE
+            out["note"] = STATUS_NOTES.get(str(r.get("status") or ""), PROPOSAL_NOTE)
         return out
 
     # .. reads ................................................................................
@@ -385,7 +423,7 @@ class Tools:
         for p in parts:
             if p.get("error"):
                 raise ToolError("layer_service_error", f"svc.layer.snapshot: {p.get('error')} {p.get('detail', '')}".strip())
-            meta = {k: p.get(k) for k in ("mode", "as_of", "ent_seq", "truncated") if k in p} or meta
+            meta.update({k: p[k] for k in ("mode", "as_of", "ent_seq") if k in p})
             if p.get("truncated"):
                 meta["truncated"] = True
             items.extend(i for i in (p.get("items") or []) if isinstance(i, dict))
@@ -487,6 +525,13 @@ class Tools:
             e = self._get_entity(args["entity_id"])
             g = (e.get("geo") or {}).get("coords")
             if isinstance(g, dict) and g.get("type") in ("Polygon", "MultiPolygon", "LineString"):
+                n = _vertex_count(g.get("coordinates"))
+                size = len(json.dumps(g, separators=(",", ":")))
+                if n > MAX_GEOMETRY_VERTICES or size > MAX_GEOMETRY_BYTES:
+                    raise ToolError("geometry_too_large",
+                                    f"entity {args['entity_id']} boundary has {n} vertices ({size} bytes); the map "
+                                    f"annotation limit is {MAX_GEOMETRY_VERTICES} vertices / {MAX_GEOMETRY_BYTES} bytes. "
+                                    "Use onemind_map_highlight or onemind_map_fly_to on the entity instead.")
                 geometry, kind = g, "boundary"
             else:
                 p = entity_position(e)
@@ -678,7 +723,8 @@ def make_handler(tools: Tools, tool_name: str, method: str) -> Callable[..., str
 
     def handler(args: Dict[str, Any], **kwargs) -> str:
         args = args if isinstance(args, dict) else {}
-        ctx = {"task_id": kwargs.get("task_id") or "", "user_task": kwargs.get("user_task")}
+        ctx = {"task_id": kwargs.get("task_id") or "", "user_task": kwargs.get("user_task"),
+               "tool_call_id": kwargs.get("tool_call_id") or ""}
         t0 = time.monotonic()
         outcome = "ok"
         try:

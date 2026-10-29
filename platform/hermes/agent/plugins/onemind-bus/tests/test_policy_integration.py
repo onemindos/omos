@@ -17,6 +17,7 @@ Proves:
 3. Only after the human `zeus` confirms does cmd.fleet.drone.sim-x1.goto appear, and every
    cmd.fleet.> message has a human evt.so.action.approved (stop-line test 4 invariant).
 4. "Follow that person": the proposal is denied forbidden_action and recorded (stop-line test 6).
+6. After a human rejects a proposal, the same proposal in a new tool call is a new action awaiting a human.
 """
 from __future__ import annotations
 
@@ -334,3 +335,26 @@ def test_5_invariant_no_fleet_command_without_a_human_approval(stack):
     log = stack.srv.log_text()
     assert "\"AGENTS/user:hermes\" - Publish Violation - Subject \"cmd.fleet.drone.sim-x1.goto\"" in log
     assert "\"AGENTS/user:hermes\" - Publish Violation - Subject \"svc.policy.command.confirm\"" in log
+
+
+def test_6_after_a_human_rejection_the_same_proposal_makes_a_new_action(stack):
+    """Review finding: request_id is per tool call, so "try again" reaches a human again."""
+    args = dict(GOTO, params={"lat": 30.2760, "lon": -97.7410, "hae_m": 150}, reason="check the pond")
+    r1 = stack.ctx.dispatch("onemind_command_propose", args, task_id="sess-d5-retry", tool_call_id="call-a")
+    assert r1["status"] == "awaiting_confirmation", r1
+    body = {"v": 1, "action_id": r1["action_id"], "params_hash": r1["params_hash"], "decision": "reject",
+            "reason": "not now"}
+    rj, _ = _request(stack, "zeus", "svc.policy.command.confirm", body)
+    assert rj["status"] == "rejected" and rj["denial"]["code"] == "rejected_by_human", rj
+    # a retry of the same tool call is idempotent and reports the human rejection as such
+    again = stack.ctx.dispatch("onemind_command_propose", args, task_id="sess-d5-retry", tool_call_id="call-a")
+    assert again["action_id"] == r1["action_id"] and again["denial"]["code"] == "rejected_by_human", again
+    assert "human rejected" in again["note"] and "Denied by policy" not in again["note"]
+    # the user says "try again": a new tool call in the same session is a new action for a human
+    r2 = stack.ctx.dispatch("onemind_command_propose", args, task_id="sess-d5-retry", tool_call_id="call-b")
+    assert r2["action_id"] != r1["action_id"] and r2["status"] == "awaiting_confirmation", r2
+    # and without a tool_call_id every call is new as well
+    r3 = stack.ctx.dispatch("onemind_command_propose", args, task_id="sess-d5-retry")
+    assert r3["action_id"] not in (r1["action_id"], r2["action_id"]) and r3["status"] == "awaiting_confirmation", r3
+    time.sleep(0.5)
+    assert not [c for c in stack.rec["cmd"] if c[1].get("action_id") in (r1["action_id"], r2["action_id"], r3["action_id"])]

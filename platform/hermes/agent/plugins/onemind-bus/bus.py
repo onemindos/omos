@@ -205,6 +205,9 @@ class BusClient:
                 parts.append(d)
                 if d.get("last") or d.get("error"):
                     break
+            else:
+                # max_parts reached without a last:true chunk: say so instead of returning a silent prefix.
+                parts.append({"truncated": True, "detail": f"stopped after {max_parts} parts without last chunk"})
             return parts
         finally:
             await sub.unsubscribe()

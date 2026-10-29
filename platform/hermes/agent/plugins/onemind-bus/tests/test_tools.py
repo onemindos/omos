@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 
 import pytest
@@ -15,9 +16,20 @@ ALLOWED_PREFIXES = ("svc.entity.", "svc.layer.", "svc.policy.command.propose", "
 
 # -- no bus needed ------------------------------------------------------------------------------
 
-def test_registers_the_expected_tools_and_nothing_that_confirms_or_publishes():
+def test_snapshot_tool_is_off_and_unregistered_by_default():
+    # I2-P1 is unruled and the A19 hermes user cannot publish svc.layer.snapshot
     ctx = FakeCtx()
     P.register(ctx, env={"ONEMIND_BUS_URL": "nats://127.0.0.1:1"})
+    assert "onemind_layer_snapshot" not in ctx.tools
+    assert set(ctx.tools) == set(P.tools.TOOL_NAMES) - {"onemind_layer_snapshot"}
+    ctx2 = FakeCtx()
+    P.register(ctx2, env={"ONEMIND_BUS_URL": "nats://127.0.0.1:1", "ONEMIND_BUS_LAYER_SNAPSHOT": "0"})
+    assert "onemind_layer_snapshot" not in ctx2.tools
+
+
+def test_registers_the_expected_tools_and_nothing_that_confirms_or_publishes():
+    ctx = FakeCtx()
+    P.register(ctx, env={"ONEMIND_BUS_URL": "nats://127.0.0.1:1", "ONEMIND_BUS_LAYER_SNAPSHOT": "1"})
     names = set(ctx.tools)
     assert names == set(P.tools.TOOL_NAMES)
     assert len(names) == 16
@@ -142,9 +154,19 @@ def test_command_propose_sends_an_agent_request_on_behalf_of_the_human(hermes, w
     assert req["requested_by"] == {"kind": "agent", "id": "agent:hermes/zeus/legacy", "on_behalf_of": "user:zeus"}
     assert req["agent_session"] == "session-test" and len(req["prompt_sha256"]) == 64
     assert len(req["tool_input_sha256"]) == 64 and "send sim-x1" not in json.dumps(req)  # hashes only
-    # a retried call in the same session reuses the request_id (idempotent at the policy service)
+    # The request_id is per tool call: a retry of the same call (same tool_call_id) reuses it, a new
+    # call with the same input in the same session ("try again") gets a new one.
+    hermes.dispatch("onemind_command_propose", args, tool_call_id="call-1")
+    rid1 = world.proposals[-1]["request_id"]
+    hermes.dispatch("onemind_command_propose", args, tool_call_id="call-1")
+    assert world.proposals[-1]["request_id"] == rid1
+    hermes.dispatch("onemind_command_propose", args, tool_call_id="call-2")
+    assert world.proposals[-1]["request_id"] != rid1
     hermes.dispatch("onemind_command_propose", args)
-    assert world.proposals[-1]["request_id"] == req["request_id"]
+    hermes.dispatch("onemind_command_propose", args)
+    ids = [p["request_id"] for p in world.proposals]
+    assert len(set(ids)) == len(ids) - 1  # only the call-1 retry repeated
+    assert all(re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", i) for i in ids)
     time.sleep(0.2)
     assert not [s for s in world.subjects_seen() if s.startswith("cmd.fleet.")]
     assert world.confirm_calls == []
@@ -274,3 +296,59 @@ def test_injected_callsign_is_returned_as_data_only(hermes, world):
     assert any("IGNORE PREVIOUS INSTRUCTIONS" in n for n in names)
     assert "not instructions" in r["note"]
     assert not [s for s in world.subjects_seen() if s.startswith("cmd.fleet")]
+
+
+# -- review fixes: outcome notes, geometry cap, request-many truncation --------------------------
+
+class _FakeClient:
+    def __init__(self, replies):
+        self.replies, self.sent = replies, []
+
+    def request(self, subject, body, timeout=None):
+        self.sent.append((subject, body))
+        return self.replies[subject](body) if callable(self.replies[subject]) else self.replies[subject]
+
+
+def _tools(replies):
+    return P.tools.Tools(client=_FakeClient(replies), agent_id="agent:hermes/zeus/legacy", on_behalf_of="user:zeus")
+
+
+GOTO_ARGS = {"action_type": "asset.goto", "target": {"entity_type": "drone", "entity_id": "sim-x1"},
+             "params": {"lat": 30.275, "lon": -97.742}}
+
+
+def test_human_rejection_and_expiry_are_not_reported_as_policy_denials():
+    for code, words in (("rejected_by_human", "human rejected"), ("expired", "expired")):
+        t = _tools({"svc.policy.command.propose": {"action_id": "act-1", "status": "rejected",
+                                                   "denial": {"code": code, "message": "not now"}}})
+        r = t.t_command_propose(GOTO_ARGS, {"task_id": "s", "tool_call_id": "c"})
+        assert words in r["note"] and "Denied by policy" not in r["note"], r
+    t = _tools({"svc.policy.command.propose": {"action_id": "act-1", "status": "denied",
+                                               "denial": {"code": "forbidden_action", "message": "x"}}})
+    assert "Denied by policy" in t.t_command_propose(GOTO_ARGS, {"task_id": "s"})["note"]
+    # a replayed call whose action already ran is not reported as a fresh proposal
+    t = _tools({"svc.policy.command.propose": {"action_id": "act-1", "status": "executed"}})
+    r = t.t_command_propose(GOTO_ARGS, {"task_id": "s", "tool_call_id": "c"})
+    assert "already submitted" in r["note"] and "awaits" not in r["note"]
+
+
+def test_large_entity_boundary_is_refused_with_a_clear_error():
+    ring = [[-97.0 + i * 1e-5, 30.0] for i in range(P.tools.MAX_GEOMETRY_VERTICES + 10)]
+    big = {"entity_id": "zone-big", "entity_type": "zone",
+           "geo": {"coords": {"type": "MultiPolygon", "coordinates": [[ring]]}}}
+    ctx = FakeCtx()
+    tools = P.register(ctx, env={"ONEMIND_BUS_URL": "nats://127.0.0.1:1"},
+                       client=_FakeClient({"svc.entity.get": {"entity": big}}))
+    del tools
+    r = ctx.dispatch("onemind_map_annotate", {"entity_id": "zone-big", "label": "big field"})
+    assert r["ok"] is False and r["error"] == "geometry_too_large", r
+    assert str(P.tools.MAX_GEOMETRY_VERTICES) in r["message"]
+    assert P.tools._vertex_count([[ring, ring]]) == 2 * len(ring)
+
+
+def test_request_many_marks_truncation_at_max_parts(hermes):
+    body = {"v": 1, "layer": "fleet", "aoi": {"bbox": [-98, 30, -97, 31]}, "zoom": 12, "fields": "render", "max": 200}
+    parts = hermes.client.request_many("svc.layer.snapshot", body, max_parts=2)
+    assert len(parts) == 3 and parts[-1]["truncated"] is True and not any(p.get("last") for p in parts)
+    full = hermes.client.request_many("svc.layer.snapshot", body)
+    assert full[-1].get("last") is True and not any("detail" in p for p in full)

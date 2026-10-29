@@ -64,13 +64,16 @@ class FakeCtx:
                 return r["message"]
         return None
 
-    def dispatch(self, name, args, task_id="session-test", user_task=None):
+    def dispatch(self, name, args, task_id="session-test", user_task=None, tool_call_id=None):
         import json
 
         msg = self.blocked(name, args)
         if msg:
             return {"blocked": msg}
-        return json.loads(self.tools[name]["handler"](args, task_id=task_id, user_task=user_task))
+        kw = {"task_id": task_id, "user_task": user_task}
+        if tool_call_id is not None:
+            kw["tool_call_id"] = tool_call_id
+        return json.loads(self.tools[name]["handler"](args, **kw))
 
 
 def nats_server_bin():
@@ -154,7 +157,7 @@ def hermes(plugin, nats_server, world):
     from stubs import RecordingClient
 
     env = {"ONEMIND_BUS_URL": nats_server.url(), "ONEMIND_BUS_ON_BEHALF_OF": "user:zeus",
-           "ONEMIND_BUS_MAP_ACK_WINDOW_S": "1.0", "ONEMIND_BUS_TIMEOUT_S": "3"}
+           "ONEMIND_BUS_MAP_ACK_WINDOW_S": "1.0", "ONEMIND_BUS_TIMEOUT_S": "3", "ONEMIND_BUS_LAYER_SNAPSHOT": "1"}
     client = RecordingClient(plugin.bus.BusConfig.from_env(env))
     ctx = FakeCtx()
     plugin.register(ctx, env=env, client=client)
