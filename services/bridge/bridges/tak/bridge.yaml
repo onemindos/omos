@@ -1,10 +1,12 @@
-name: tak-bridge
+name: tak-mesh
 runtime: native
-entity: omos.bridge.tak
+entity: tel.fleet.edge.tak-mesh
 
 env:
   NATS_URL: nats://localhost:4222
-  BRIDGE_NAME: tak-bridge
-  TAK_LISTEN_PORT: "8087"
-  TAK_SERVER_HOST: localhost
-  TAK_SERVER_PORT: "8087"
+  GATEWAY_ID: tak-mesh
+  MESH_GROUP: 239.2.3.1:6969
+  MESH_PROTOCOL: auto
+  DIRECT_TCP_PORT: "4242"
+  UDP_LISTEN_PORT: "0"
+  MESH_TO_TAK_SERVER: "false"

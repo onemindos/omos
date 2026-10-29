@@ -353,6 +353,11 @@ Options for the owner:
 Until the owner decides, new consumers of TAK CoT read `tak.cot.out` (stream `COT`), and
 injectors publish to `tak.cot.inject`. Nobody should publish `evt.tak.cot.*` by hand.
 
+The edge TAK mesh gateway (`services/bridge/bridges/tak`, ADR 0003) uses the same raw-wire
+convention for traffic that never touches TAK Server: CoT XML heard on the mesh goes to
+`tak.cot.mesh.rx`, and CoT XML published to `tak.cot.mesh.tx` is broadcast to the mesh. Both
+are in stream `COT`.
+
 ---
 
 ## 10. Sources

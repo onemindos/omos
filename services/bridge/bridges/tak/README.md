@@ -1,150 +1,105 @@
-# tak-bridge — TAK/CoT ↔ NATS Bridge
+# tak-mesh — OneMind TAK mesh gateway
 
-Part of the **One Mind OS (omos)** bridge ecosystem.
+Part of the **One Mind OS (omos)** bridge ecosystem. Design and context:
+[ADR 0003](../../../../docs/architecture/decisions/0003-tak-native-clients-and-mesh.md).
 
 ## What It Does
 
-`tak-bridge` translates between the [Cursor-on-Target (CoT)](https://www.mitre.org/capabilities/cybersecurity/overview/cybersecurity-blog/cursor-on-target) XML protocol used by ATAK, WinTAK, and OpenTAK Server (OTS) and the omos NATS message bus.
+ATAK, iTAK, WinTAK and VR-TAK talk to each other through Common Commo, TAK's
+comms library: SA over UDP multicast, direct messages over short TCP
+connections, and TAK Protocol negotiation between XML (v0) and protobuf (v1).
+This gateway does the same, so OneMind is a peer on the mesh rather than only a
+TAK Server feed. It works with no server and no cloud link; the NATS leaf node
+forwards to the cluster bus whenever it is connected.
 
-**Inbound (ATAK → NATS):**
-- Listens on a UDP port for CoT XML events from ATAK/OTS clients.
-- Parses each `<event>` into a typed `CotPayload` struct.
-- Wraps the payload in the standard One Mind envelope and publishes to `omos.field.<uid>.telemetry`.
+| Direction | Path |
+|---|---|
+| Mesh → bus | SA group, directed TCP and optional UDP → CoT XML on `tak.cot.mesh.rx` |
+| Bus → mesh | CoT XML on `tak.cot.mesh.tx` → multicast in the negotiated protocol version |
+| Mesh → TAK Server (optional) | `MESH_TO_TAK_SERVER=true` also publishes to `tak.cot.inject` |
+| Health | `tel.fleet.edge.{GATEWAY_ID}.status` every 30 s |
 
-**Outbound (NATS → ATAK):**
-- Subscribes to `omos.field.*.command` on NATS.
-- Serialises command payloads as CoT `<event>` XML and forwards them to the configured TAK server via UDP.
+Protocol handling follows `takproto/README.txt` in `TAK-Product-Center/atak-civ`:
 
-**Operations:**
-- Heartbeat published every 30 s to `omos.bridge.tak-bridge.health`.
-- Errors reported to `omos.bridge.tak-bridge.errors`.
-- Graceful shutdown on `SIGTERM`/`SIGINT` with NATS drain.
+- Receives both v0 XML and v1 protobuf; always publishes XML to NATS, so
+  consumers see the same format as `tak.cot.out` from TAK Server.
+- Broadcasts TakControl every 60 s and tracks each contact's versions; sends v1
+  only when every contact it hears can decode it, otherwise XML.
+- On encode, typed detail fields (`contact`, `__group`, `precisionlocation`,
+  `status`, `takv`, `track`) are used only when the whole element maps;
+  everything else stays in `xmlDetail`.
+- Drops its own multicast echo, and sets `Nats-Msg-Id` so two gateways hearing
+  the same report store it once in stream `COT` (2 min duplicate window).
+- Registered detail extensions it cannot decode are counted in the
+  `Tak-Undecoded-Extensions` header.
 
----
+The codec is written from the published wire spec; no GPL code is included.
 
 ## Quick Start
 
 ```bash
-# 1. Clone / enter the bridge directory
-cd omos-bridge/bridges/tak
-
-# 2. Copy and edit environment
+cd services/bridge/bridges/tak
 cp .env.example .env
-
-# 3. Build
-go build -o tak-bridge .
-
-# 4. Run (with a local NATS server already running)
-source .env && ./tak-bridge
+go build -o tak .
+set -a; source .env; set +a; ./tak
 ```
 
----
+Run it on an edge host on the same LAN or radio network as the TAK devices, next
+to a NATS leaf. Multicast does not reach pods in the cloud cluster.
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |---|---|---|
-| `NATS_URL` | `nats://localhost:4222` | NATS server connection URL |
-| `BRIDGE_NAME` | `tak-bridge` | Bridge identifier used in log lines and NATS subjects |
-| `TAK_LISTEN_PORT` | `8087` | UDP port to listen on for incoming CoT XML |
-| `TAK_SERVER_HOST` | `localhost` | Hostname / IP of the TAK server to forward commands to |
-| `TAK_SERVER_PORT` | `8087` | UDP port of the TAK server |
-
----
+| `NATS_URL` | `nats://localhost:4222` | NATS (normally the local leaf) |
+| `NATS_USER`, `NATS_PASSWORD` | unset | NATS credentials, if the leaf requires them |
+| `GATEWAY_ID` | `tak-mesh` | Gateway name in subjects, headers and TakControl (`omos-gw-<id>`) |
+| `MESH_GROUP` | `239.2.3.1:6969` | SA multicast group |
+| `MESH_INTERFACE` | system default | Interface to join the group on |
+| `MESH_PROTOCOL` | `auto` | `auto` negotiates; `xml` never sends protobuf |
+| `DIRECT_TCP_PORT` | `4242` | Directed TCP messages; `0` disables |
+| `UDP_LISTEN_PORT` | `0` | Unicast UDP CoT input; `0` disables |
+| `MESH_TO_TAK_SERVER` | `false` | Also publish received CoT to `tak.cot.inject` |
+| `GATEWAY_CALLSIGN` | unset | If set, the gateway sends its own SA every 30 s |
+| `GATEWAY_ENDPOINT_HOST` | unset | LAN address advertised as `host:DIRECT_TCP_PORT:tcp`, so TAK users can message the gateway |
+| `GATEWAY_COT_TYPE` | `a-f-G-E-S` | CoT type of the gateway's SA |
+| `GATEWAY_LAT`, `GATEWAY_LON` | `0` | Position of the gateway's SA |
 
 ## NATS Subjects
 
-| Subject | Direction | Description |
+| Subject | Direction | Payload |
 |---|---|---|
-| `omos.field.<uid>.telemetry` | Publish | One Mind envelope containing `CotPayload` for each received CoT event |
-| `omos.field.*.command` | Subscribe | Commands received here are wrapped in CoT XML and forwarded to the TAK server |
-| `omos.bridge.tak-bridge.health` | Publish | Heartbeat JSON every 30 s: `{"source","ts","status":"ok"}` |
-| `omos.bridge.tak-bridge.errors` | Publish | Error JSON: `{"source","ts","error":"…"}` |
+| `tak.cot.mesh.rx` | Publish | CoT XML. Headers: `Nats-Msg-Id`, `Tak-Gateway`, `Tak-Delivery` (`mesh`, `direct`, `udp`), `Tak-Proto` (`0`, `1`), `Tak-From` |
+| `tak.cot.mesh.tx` | Subscribe | CoT XML to broadcast. Request/reply answers `ok` or `error: …` |
+| `tak.cot.inject` | Publish (optional) | CoT XML for TAK Server via NatsBridgePlugin |
+| `tel.fleet.edge.{id}.status` | Publish | `{uid, type: "fleet.edge", t, meta: {proto_version, contacts, rx, tx, errors, last_error, …}}` |
 
-### One Mind Envelope Shape
-
-```json
-{
-  "id": "1718000000000000000",
-  "ts": 1718000000000,
-  "source": "tak-bridge",
-  "entity": "field.ANDROID-abc",
-  "domain": "field",
-  "payload": {
-    "msg_type": "cot",
-    "data": {
-      "uid": "ANDROID-abc",
-      "cot_type": "a-f-G-U-C",
-      "how": "m-g",
-      "callsign": "ZEUS",
-      "lat": 30.267,
-      "lon": -97.743,
-      "hae": 150.0,
-      "ce": 9.9,
-      "le": 9.9,
-      "stale_at": 1751500800000,
-      "detail_raw": "<detail><contact callsign=\"ZEUS\"/></detail>"
-    }
-  }
-}
-```
-
----
-
-## Watch Commands
+Anyone allowed to publish `tak.cot.mesh.tx` can put markers on every device on
+the mesh. Restrict it with NATS permissions.
 
 ```bash
-# Stream all field telemetry from ATAK units
-nats sub 'omos.field.*.telemetry'
-
-# Stream telemetry from a specific unit
-nats sub 'omos.field.ANDROID-abc.telemetry'
-
-# Monitor bridge health
-nats sub 'omos.bridge.tak-bridge.health'
-
-# Monitor bridge errors
-nats sub 'omos.bridge.tak-bridge.errors'
-
-# Send a test command to all field units
-nats pub 'omos.field.ANDROID-abc.command' '{"action":"ping"}'
-
-# Pretty-print incoming telemetry (requires jq)
-nats sub 'omos.field.*.telemetry' | while read -r line; do echo "$line" | jq .; done
+nats sub tak.cot.mesh.rx --headers-only
+nats req tak.cot.mesh.tx '<event version="2.0" uid="omos-test-1" type="b-m-p-s-m" how="h-g-i-g-o" time="2026-10-29T12:00:00Z" start="2026-10-29T12:00:00Z" stale="2026-10-29T13:00:00Z"><point lat="30.2672" lon="-97.7431" hae="0" ce="9999999" le="9999999"/><detail><contact callsign="OneMind test"/></detail></event>'
+nats sub 'tel.fleet.edge.*.status'
 ```
 
----
+## Tests
 
-## Architecture
-
-```
-ATAK/WinTAK/OTS
-      │  CoT XML (UDP)
-      ▼
- tak-bridge (this binary)
-      │  JSON One Mind Envelope
-      ├──▶  NATS: omos.field.<uid>.telemetry
-      │
-      │  NATS: omos.field.*.command
-      ◀──┤
-      │  CoT XML (UDP)
-      ▼
- TAK Server / OTS
+```bash
+go test ./...
 ```
 
----
+Covers the protobuf round trip of a full ATAK SA, the whole-element rule,
+negotiation rules 3a–3c and 4, malformed input, real multicast on the host
+(skipped where multicast is unavailable) and directed TCP.
 
-## Roadmap
+## Changes from v0.1
 
-| Version | Feature |
-|---|---|
-| **v0.1** | UDP inbound CoT → NATS, NATS command → UDP outbound *(current)* |
-| **v0.2** | TCP multicast / streaming socket support for high-density TAK nets |
-| **v0.3** | Full bidirectional NATS→TAK command relay with ACK envelope |
-| **v0.4** | `orbit.go` batch publish — aggregate CoT events and publish as bulk telemetry bundles |
-
----
+v0.1 accepted XML on unicast UDP 8087, published JSON envelopes to
+`omos.field.<uid>.telemetry` and sent `omos.field.*.command` to a TAK server as
+CoT at 0,0. Those subjects were outside the platform grammar and had no
+consumers; they are removed. Set `UDP_LISTEN_PORT=8087` to keep the old input.
 
 ## License
 
-Apache-2.0 — see [`SPDX-License-Identifier`](../../../LICENSE) header in source.
+Apache-2.0.
