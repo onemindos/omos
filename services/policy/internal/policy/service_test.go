@@ -403,6 +403,11 @@ func TestPolicyService(t *testing.T) {
 		if a.ActionID == "" || a.ActionID != b.ActionID {
 			t.Fatalf("same request_id gave %s and %s", a.ActionID, b.ActionID)
 		}
+		// Another principal reusing zeus' request_id gets its own checks, not zeus' reply.
+		expectDenied(t, e.propose("carol", FamilyCommand, body), CodeNotAuthorized)
+		if c := e.propose("alice", FamilyCommand, body); c.ActionID == a.ActionID || c.Status != StateAwaiting {
+			t.Fatalf("alice reusing zeus' request_id: %+v %+v", c, c.Denial)
+		}
 		body["params"].(map[string]any)["lat"] = 30.271
 		expectDenied(t, e.propose("zeus", FamilyCommand, body), CodeConflict)
 		// carol has no approver grant.
@@ -550,6 +555,20 @@ func TestPolicyService(t *testing.T) {
 		_ = json.Unmarshal(m.Data, &out)
 		if out["allowed"] != false {
 			t.Fatalf("dry run into keep-out: %v", out)
+		}
+		// Clients cannot probe the permission graph with tuple checks, but can dry-run.
+		out = map[string]any{}
+		m, _ = e.request("zeus", SubjCheck, map[string]any{"v": 1, "user": "user:alice", "relation": "operator", "object": "asset:sim-x1"}, nil)
+		_ = json.Unmarshal(m.Data, &out)
+		if d, _ := out["denial"].(map[string]any); out["allowed"] != false || d == nil || d["code"] != CodeNotAuthorized {
+			t.Fatalf("client tuple check answered: %v", out)
+		}
+		ok := gotoReq("sim-x1", 30.27, -97.74)
+		m, _ = e.request("zeus", SubjCheck, map[string]any{"v": 1, "action": ok}, nil)
+		out = map[string]any{}
+		_ = json.Unmarshal(m.Data, &out)
+		if out["allowed"] != true {
+			t.Fatalf("client dry run: %v", out)
 		}
 	})
 

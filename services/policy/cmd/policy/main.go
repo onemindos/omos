@@ -103,7 +103,7 @@ func run(log *slog.Logger) error {
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
-	zones, err := policy.WatchZones(ctx, js, env("POLICY_GEOFENCE_BUCKET", "geofences"))
+	zones, err := policy.WatchZones(ctx, js, env("POLICY_GEOFENCE_BUCKET", "geofences"), log)
 	if err != nil {
 		return err
 	}

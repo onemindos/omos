@@ -46,22 +46,38 @@ type Config struct {
 	SweepEvery        time.Duration // default 500ms
 	CheckTimeout      time.Duration // default 2s per OpenFGA call
 	Retain            time.Duration // default 24h: finished actions are dropped from memory after this
+	ResultTimeout     time.Duration // default 30s: entity/mission/task command with no evt.entity/evt.mission result fails
+	ExecuteTimeout    time.Duration // default 10m: acknowledged asset command with no executed/failed outcome fails
+	MaxInFlight       int           // default 128 requests handled concurrently
+	DenialAuditRate   int           // default 60: denial and refused-confirm audits per identity per minute
+}
+
+// entry holds one action. op serializes the operations that change it (confirm, dispatch,
+// outcome, result, sweep) and may be held across I/O; it never blocks another action.
+// cur is the committed state: read and replaced only under Service.mu, which is never held
+// across I/O, so lookups never wait for an operation in progress.
+type entry struct {
+	op  sync.Mutex
+	cur *Action
 }
 
 // Service is the policy and audit service. It is the only publisher of cmd.* (besides
 // cmd.map.>) and the single writer of evt.so.action.*.
 type Service struct {
-	cfg  Config
-	mu   sync.Mutex // serializes every state change
-	byID map[string]*Action
-	byRQ map[string]string // request_id -> action_id
+	cfg   Config
+	mu    sync.Mutex // guards byID, byRQ, byRes and every entry.cur; held for map and pointer work only
+	byID  map[string]*entry
+	byRQ  map[string]string // requester id + request_id -> action_id
+	byRes map[string]string // command id, or "tsk:"+task id, awaiting an entity/task result -> action_id
 
 	waitMu  sync.Mutex
 	created map[string]chan struct{} // tsk id -> closed when evt.mission.{tsk}.created arrives
 
-	subs   []*nats.Subscription
-	cancel context.CancelFunc
-	done   chan struct{}
+	limiter  *auditLimiter
+	inflight chan struct{}
+	subs     []*nats.Subscription
+	cancel   context.CancelFunc
+	done     chan struct{}
 }
 
 // New validates the config and fills defaults.
@@ -82,6 +98,14 @@ func New(cfg Config) (*Service, error) {
 	def(&cfg.SweepEvery, 500*time.Millisecond)
 	def(&cfg.CheckTimeout, 2*time.Second)
 	def(&cfg.Retain, 24*time.Hour)
+	def(&cfg.ResultTimeout, 30*time.Second)
+	def(&cfg.ExecuteTimeout, 10*time.Minute)
+	if cfg.MaxInFlight <= 0 {
+		cfg.MaxInFlight = 128
+	}
+	if cfg.DenialAuditRate <= 0 {
+		cfg.DenialAuditRate = 60
+	}
 	if cfg.Source == "" {
 		cfg.Source = "service:policy"
 	}
@@ -91,9 +115,68 @@ func New(cfg Config) (*Service, error) {
 	if cfg.Log == nil {
 		cfg.Log = slog.Default()
 	}
-	return &Service{cfg: cfg, byID: map[string]*Action{}, byRQ: map[string]string{},
-		created: map[string]chan struct{}{}}, nil
+	return &Service{cfg: cfg, byID: map[string]*entry{}, byRQ: map[string]string{}, byRes: map[string]string{},
+		created: map[string]chan struct{}{}, limiter: newAuditLimiter(cfg.DenialAuditRate, time.Minute),
+		inflight: make(chan struct{}, cfg.MaxInFlight)}, nil
 }
+
+// lookup returns the entry of an action, or nil.
+func (s *Service) lookup(id string) *entry {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.byID[id]
+}
+
+// load returns a private working copy of the committed state. The caller holds e.op when it
+// will change the copy and save it.
+func (s *Service) load(e *entry) *Action {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return e.cur.clone()
+}
+
+// save commits a working copy and keeps the result index in step. Caller holds e.op.
+func (s *Service) save(e *entry, w *Action) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	e.cur = w.clone()
+	for _, k := range resultKeys(w) {
+		if w.awaitingResult() {
+			s.byRes[k] = w.ActionID
+		} else if s.byRes[k] == w.ActionID {
+			delete(s.byRes, k)
+		}
+	}
+}
+
+// remove drops an action from every map. Caller holds s.mu.
+func (s *Service) remove(a *Action) {
+	delete(s.byID, a.ActionID)
+	if s.byRQ[a.rqKey] == a.ActionID {
+		delete(s.byRQ, a.rqKey)
+	}
+	for _, k := range resultKeys(a) {
+		if s.byRes[k] == a.ActionID {
+			delete(s.byRes, k)
+		}
+	}
+}
+
+// resultKeys are the index keys under which an entity/task result for the action arrives:
+// the command id (the result's causation) and, for a task assignment to a person, team or
+// agent, the task id (evt.mission.{tsk}.created).
+func resultKeys(a *Action) []string {
+	var ks []string
+	if a.CommandID != "" {
+		ks = append(ks, a.CommandID)
+	}
+	if a.ActionType == "task.assign" && a.TaskID != "" && !isAssetClass(a.Target.EntityType) {
+		ks = append(ks, "tsk:"+a.TaskID)
+	}
+	return ks
+}
+
+func rqKey(requester, requestID string) string { return requester + "\x00" + requestID }
 
 // Start subscribes to every endpoint and fact, and starts the expiry sweeper.
 func (s *Service) Start() error {
@@ -102,17 +185,31 @@ func (s *Service) Start() error {
 		fn    nats.MsgHandler
 		queue bool
 	}
+	// Requests run concurrently (bounded by MaxInFlight): a slow authorization, entity lookup
+	// or task wait on one request never holds up another, so a stop is never queued behind it.
+	serve := func(fn func(*nats.Msg) any) nats.MsgHandler {
+		return func(m *nats.Msg) {
+			s.inflight <- struct{}{}
+			go func() {
+				defer func() { <-s.inflight }()
+				s.respond(m, fn(m))
+			}()
+		}
+	}
 	hs := []h{
-		{SubjCommandPropose, func(m *nats.Msg) { s.respond(m, s.handlePropose(m, FamilyCommand)) }, true},
-		{SubjTaskPropose, func(m *nats.Msg) { s.respond(m, s.handlePropose(m, FamilyTask)) }, true},
-		{SubjCommandConfirm, func(m *nats.Msg) { s.respond(m, s.handleConfirm(m, FamilyCommand)) }, true},
-		{SubjTaskConfirm, func(m *nats.Msg) { s.respond(m, s.handleConfirm(m, FamilyTask)) }, true},
-		{SubjActionGet, func(m *nats.Msg) { s.respond(m, s.handleGet(m)) }, true},
-		{SubjCheck, func(m *nats.Msg) { s.respond(m, s.handleCheck(m)) }, true},
+		{SubjCommandPropose, serve(func(m *nats.Msg) any { return s.handlePropose(m, FamilyCommand) }), true},
+		{SubjTaskPropose, serve(func(m *nats.Msg) any { return s.handlePropose(m, FamilyTask) }), true},
+		{SubjCommandConfirm, serve(func(m *nats.Msg) any { return s.handleConfirm(m, FamilyCommand) }), true},
+		{SubjTaskConfirm, serve(func(m *nats.Msg) any { return s.handleConfirm(m, FamilyTask) }), true},
+		{SubjActionGet, serve(s.handleGet), true},
+		{SubjCheck, serve(s.handleCheck), true},
 		{"evt.drone.*.command", s.handleOutcome, false},
 		{"evt.robot.*.command", s.handleOutcome, false},
 		{"evt.vehicle.*.command", s.handleOutcome, false},
+		// Separate subscriptions: the task-created signal must never queue behind a result.
 		{"evt.mission.*.created", s.handleCreated, false},
+		{"evt.mission.>", s.handleResult, false},
+		{"evt.entity.>", s.handleResult, false},
 	}
 	for _, x := range hs {
 		var sub *nats.Subscription
@@ -143,6 +240,13 @@ func (s *Service) Stop() {
 		_ = sub.Unsubscribe()
 	}
 	s.subs = nil
+	// Wait for requests in flight: take every slot, then give them back.
+	for i := 0; i < cap(s.inflight); i++ {
+		s.inflight <- struct{}{}
+	}
+	for i := 0; i < cap(s.inflight); i++ {
+		<-s.inflight
+	}
 	if s.cancel != nil {
 		s.cancel()
 		<-s.done
@@ -175,12 +279,11 @@ func (s *Service) handlePropose(m *nats.Msg, fam Family) ProposeReply {
 		return s.denyNew(&ActionRequest{}, Principal{}, fam, deny(CodeSchemaInvalid, "request is not valid JSON"))
 	}
 	p, known := s.cfg.Directory.Resolve(m)
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	return s.propose(&req, p, known, fam)
 }
 
-// propose runs every check of asset-command.md section 4 steps 1-3. Caller holds s.mu.
+// propose runs every check of asset-command.md section 4 steps 1-3. It holds no lock across
+// the authorization, entity and geofence calls; s.mu is taken only to read or change maps.
 func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Family) ProposeReply {
 	// Identity: the verified NATS identity replaces the claimed one.
 	verified := p.Verified
@@ -242,12 +345,16 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 	if err != nil {
 		return s.denyNew(req, p, fam, deny(CodeSchemaInvalid, "params cannot be canonicalized"))
 	}
-	if id, ok := s.byRQ[req.RequestID]; ok && !req.DryRun {
-		prev := s.byID[id]
-		if prev.ParamsHash == hash && prev.ActionType == req.ActionType {
-			return replyFor(prev)
+	// Idempotency is per requester: another principal reusing a request_id gets its own
+	// checks, never the first requester's reply.
+	key := rqKey(req.RequestedBy.ID, req.RequestID)
+	if !req.DryRun {
+		if r, d, ok := s.replay(key, req.ActionType, hash); ok {
+			if d != nil {
+				return s.denyNew(req, p, fam, d)
+			}
+			return r
 		}
-		return s.denyNew(req, p, fam, deny(CodeConflict, "request_id was already used with different parameters"))
 	}
 
 	// Person references: never orbit, observe or task against a person (stop line SL2).
@@ -255,11 +362,10 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 		return s.denyNew(req, p, fam, d)
 	}
 	if isAsset && !spec.Unblockable {
-		if d := s.checkAsset(req.Target, capability, geoPoint, spec.Geofence == "self"); d != nil {
+		if d := s.checkAsset(req.Target, capability, geoPoint, fenced(spec, verb), spec.Geofence == "self"); d != nil {
 			return s.denyNew(req, p, fam, d)
 		}
 	}
-	_ = verb
 
 	pol, d := s.authorizePropose(spec, req, p, isAsset)
 	if d != nil {
@@ -277,17 +383,72 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 		RequestedBy: req.RequestedBy, ActorVerified: verified, Reason: req.Reason, State: StateAwaiting,
 		ApprovalsNeeded: needed, Approvals: []Approval{}, ConfirmBy: now.Add(s.cfg.ConfirmWindow),
 		CreatedAt: now, UpdatedAt: now, TaskID: req.TaskID, Policy: pol, Corr: req.Corr,
-		Simulated: isAsset, Agent: req,
+		Simulated: isAsset, Agent: req, rqKey: key,
 	}
+	// Reserve the request_id with the operation lock held, so a concurrent duplicate gets
+	// this action and nothing can act on it before the proposed event is recorded.
+	e := &entry{cur: a.clone()}
+	e.op.Lock()
+	defer e.op.Unlock()
+	s.mu.Lock()
+	if _, taken := s.byRQ[key]; taken {
+		s.mu.Unlock()
+		if r, d, ok := s.replay(key, req.ActionType, hash); ok {
+			if d != nil {
+				return s.denyNew(req, p, fam, d)
+			}
+			return r
+		}
+		return s.denyNew(req, p, fam, deny(CodeConflict, "request_id is in use"))
+	}
+	s.byID[a.ActionID], s.byRQ[key] = e, a.ActionID
+	s.mu.Unlock()
 	if err := s.audit(a, "proposed", nil, ""); err != nil {
+		s.mu.Lock()
+		s.remove(a)
+		s.mu.Unlock()
 		return s.denyNewWithPolicy(req, p, fam, deny(CodePolicyUnavailable, "audit trail unavailable: "+err.Error()), pol, level)
 	}
-	s.byID[a.ActionID] = a
-	s.byRQ[req.RequestID] = a.ActionID
 	if needed == 0 { // A0/A1: no gate, logged
 		s.dispatch(a, "")
 	}
+	s.save(e, a)
 	return replyFor(a)
+}
+
+// replay answers a repeated request_id from the same requester: the first action's reply
+// when the body matches, a conflict denial when it does not. ok is false for a new key.
+// A duplicate that arrives while the first is still being proposed waits for it.
+func (s *Service) replay(key, actionType, hash string) (ProposeReply, *Denial, bool) {
+	s.mu.Lock()
+	id, ok := s.byRQ[key]
+	e := s.byID[id]
+	s.mu.Unlock()
+	if !ok || e == nil {
+		return ProposeReply{}, nil, false
+	}
+	e.op.Lock() // the first proposal holds it until its proposed event is recorded
+	prev := s.load(e)
+	e.op.Unlock()
+	if s.lookup(id) == nil { // its audit failed and it was withdrawn
+		return ProposeReply{}, nil, false
+	}
+	if prev.ParamsHash == hash && prev.ActionType == actionType {
+		return replyFor(prev), nil, true
+	}
+	return ProposeReply{}, deny(CodeConflict, "request_id was already used with different parameters"), true
+}
+
+// fenced reports whether the action moves the asset, so an unevaluable zone denies it.
+func fenced(spec ActionSpec, verb string) bool {
+	if spec.Geofence != "" {
+		return true
+	}
+	switch verb {
+	case "goto", "land", "orbit", "takeoff":
+		return spec.Exec == execTask
+	}
+	return false
 }
 
 func replyFor(a *Action) ProposeReply {
@@ -463,8 +624,9 @@ func (s *Service) checkReferences(spec ActionSpec, req *ActionRequest) *Denial {
 }
 
 // checkAsset runs the preconditions on the target asset: it exists, is simulated, is
-// capable, is online, and the destination passes the geofence.
-func (s *Service) checkAsset(t Target, capability string, gp geoPoint, selfGeofence bool) *Denial {
+// capable, is online, and the destination passes the geofence. A movement verb (fenced) is
+// denied while any zone that applies to the asset cannot be evaluated.
+func (s *Service) checkAsset(t Target, capability string, gp geoPoint, fenced, selfGeofence bool) *Denial {
 	ctx, cancel := s.ctx()
 	e, err := s.cfg.Entities.Get(ctx, t.EntityType, t.EntityID)
 	cancel()
@@ -495,10 +657,17 @@ func (s *Service) checkAsset(t Target, capability string, gp geoPoint, selfGeofe
 	if selfGeofence && e.Location != nil {
 		gp = geoPoint{e.Location.Lat, e.Location.Lon, true}
 	}
-	if gp.Set {
+	if fenced || gp.Set {
 		zones, err := s.cfg.Zones.Zones()
 		if err != nil {
 			return deny(CodePolicyUnavailable, "geofences unavailable: "+err.Error())
+		}
+		if z, bad := UnevaluableZone(zones, t.EntityID); bad {
+			return &Denial{Code: CodePreconditionFailed, Detail: DetailUnevaluable,
+				Message: "geofence " + z.ID + " cannot be evaluated (" + z.Problem + "); movement is denied until it is fixed"}
+		}
+		if !gp.Set {
+			return nil
 		}
 		if v := CheckPoint(zones, t.EntityID, gp.Lat, gp.Lon); v != "" {
 			return &Denial{Code: CodePreconditionFailed, Message: "point violates a geofence", Detail: v}
@@ -562,8 +731,7 @@ func (s *Service) authorizePropose(spec ActionSpec, req *ActionRequest, p Princi
 	return pol, nil
 }
 
-// denyNew records a denied proposal, audits it and builds the reply. Caller holds s.mu
-// (or the action is not yet shared).
+// denyNew audits a denied proposal and builds the reply.
 func (s *Service) denyNew(req *ActionRequest, p Principal, fam Family, d *Denial) ProposeReply {
 	return s.denyNewWithPolicy(req, p, fam, d, PolicyInfo{Store: s.cfg.Authz.StoreID(), ModelID: s.cfg.Authz.ModelID(), Checks: []PolicyCheck{}}, "")
 }
@@ -593,10 +761,15 @@ func (s *Service) denyNewWithPolicy(req *ActionRequest, p Principal, fam Family,
 	if req.DryRun {
 		return ProposeReply{ActionID: "", Status: StateDenied, Denial: d, DryRun: true}
 	}
-	if err := s.audit(a, "denied", d, ""); err != nil {
-		s.cfg.Log.Error("audit of denial failed", "action_id", a.ActionID, "err", err)
+	// A denial is not kept in memory: the audit event is its record. The audit is rate
+	// limited per identity so a flood of bad requests cannot flood EVT.
+	if s.limiter.allow(attemptBy(p), now) {
+		if err := s.audit(a, "denied", d, ""); err != nil {
+			s.cfg.Log.Error("audit of denial failed", "action_id", a.ActionID, "err", err)
+		}
+	} else {
+		s.cfg.Log.Warn("denial audit rate limited", "action_id", a.ActionID, "by", attemptBy(p), "code", d.Code)
 	}
-	s.byID[a.ActionID] = a
 	s.cfg.Log.Info("denied", "action_id", a.ActionID, "action_type", a.ActionType, "code", d.Code, "by", a.RequestedBy.ID)
 	return ProposeReply{ActionID: a.ActionID, Status: StateDenied, Level: level, ParamsHash: a.ParamsHash, Denial: d}
 }
@@ -613,16 +786,27 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 			Denial: deny(CodeSchemaInvalid, "confirm needs v:1, action_id, params_hash, decision approve|reject, and reason for reject")}
 	}
 	p, known := s.cfg.Directory.Resolve(m)
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	a := s.byID[req.ActionID]
+	// Only this action's operation lock is held across the checks, the audit and the
+	// dispatch (which may wait for the task service); other actions are never blocked.
+	var a *Action
+	e := s.lookup(req.ActionID)
+	if e != nil {
+		e.op.Lock()
+		defer e.op.Unlock()
+		a = s.load(e)
+	}
 	refuse := func(d *Denial) ConfirmReply {
 		r := ConfirmReply{ActionID: req.ActionID, Status: StateDenied, Denial: d}
 		if a != nil {
 			r.Status, r.ApprovalsNeeded, r.ApprovalsReceived = a.State, a.ApprovalsNeeded, len(a.Approvals)
-			// Every refused confirmation is audited; the action itself keeps its state.
-			if err := s.audit(a, "denied", d, attemptBy(p)); err != nil {
-				s.cfg.Log.Error("audit failed", "err", err)
+			// A refused confirmation is audited (rate limited per identity); the action
+			// itself keeps its state.
+			if s.limiter.allow(attemptBy(p), s.cfg.Now()) {
+				if err := s.audit(a, "denied", d, attemptBy(p)); err != nil {
+					s.cfg.Log.Error("audit failed", "err", err)
+				}
+			} else {
+				s.cfg.Log.Warn("refused-confirm audit rate limited", "action_id", a.ActionID, "by", attemptBy(p))
 			}
 		}
 		s.cfg.Log.Info("confirm refused", "action_id", req.ActionID, "code", d.Code, "by", attemptBy(p))
@@ -654,6 +838,7 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 	now := s.cfg.Now()
 	if now.After(a.ConfirmBy) {
 		s.expire(a)
+		s.save(e, a)
 		return ConfirmReply{ActionID: a.ActionID, Status: a.State, ApprovalsNeeded: a.ApprovalsNeeded,
 			ApprovalsReceived: len(a.Approvals), Denial: a.Denial}
 	}
@@ -668,6 +853,7 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 		if err := s.audit(a, "rejected", a.Denial, p.ID); err != nil {
 			s.cfg.Log.Error("audit failed", "err", err)
 		}
+		s.save(e, a)
 		return ConfirmReply{ActionID: a.ActionID, Status: a.State, ApprovalsNeeded: a.ApprovalsNeeded,
 			ApprovalsReceived: len(a.Approvals), Denial: a.Denial}
 	}
@@ -689,6 +875,7 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 	a.Approvals = append(a.Approvals, Approval{By: p.ID, At: ts(now), Step: step})
 	a.UpdatedAt = now
 	if len(a.Approvals) < a.ApprovalsNeeded {
+		s.save(e, a)
 		return ConfirmReply{ActionID: a.ActionID, Status: a.State, ApprovalsNeeded: a.ApprovalsNeeded,
 			ApprovalsReceived: len(a.Approvals)}
 	}
@@ -697,8 +884,10 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 	if err := s.auditWithID(a, "approved", nil, "", approvedID); err != nil {
 		s.fail(a, deny(CodePolicyUnavailable, "audit trail unavailable; nothing dispatched: "+err.Error()))
 	} else {
+		s.save(e, a) // readers see approved while the dispatch runs
 		s.dispatch(a, approvedID)
 	}
+	s.save(e, a)
 	return ConfirmReply{ActionID: a.ActionID, Status: a.State, ApprovalsNeeded: a.ApprovalsNeeded,
 		ApprovalsReceived: len(a.Approvals), CommandID: a.CommandID, Denial: a.Denial}
 }
@@ -737,12 +926,12 @@ func (s *Service) dispatch(a *Action, causation string) {
 	// Re-check preconditions: the world may have changed since the proposal.
 	if isAsset && !spec.Unblockable {
 		req := a.Agent
-		_, _, capability, gp, d := s.resolveAction(spec, req)
+		_, verb, capability, gp, d := s.resolveAction(spec, req)
 		if d == nil {
 			d = s.checkReferences(spec, req)
 		}
 		if d == nil {
-			d = s.checkAsset(a.Target, capability, gp, spec.Geofence == "self")
+			d = s.checkAsset(a.Target, capability, gp, fenced(spec, verb), spec.Geofence == "self")
 		}
 		if d != nil {
 			if d.Code == CodePolicyUnavailable || d.Code == CodePreconditionFailed {
@@ -765,10 +954,14 @@ func (s *Service) dispatch(a *Action, causation string) {
 			s.fail(a, deny(CodeSchemaInvalid, err.Error()))
 			return
 		}
-		if _, err := s.publishCommand(a, subj, a.Params, "", causation); err != nil {
+		id := NewUUID()
+		s.expectResult(a.ActionID, id)
+		if err := s.publishCommandID(a, id, subj, a.Params, "", causation); err != nil {
+			s.unexpect(a.ActionID, id)
 			s.fail(a, deny(CodePolicyUnavailable, err.Error()))
 			return
 		}
+		a.CommandID, a.CommandSubject = id, subj
 		s.markDispatched(a, false)
 	case execTask:
 		var tp taskParams
@@ -785,17 +978,25 @@ func (s *Service) dispatch(a *Action, causation string) {
 		data["author"] = a.RequestedBy
 		data["action_id"] = a.ActionID
 		data["approval"] = map[string]any{"level": a.Level, "approvals": a.Approvals}
-		ch := s.awaitCreated(tsk)
 		b, _ := json.Marshal(data)
-		if _, err := s.publishCommand(a, "cmd.mission."+tsk+".create", b, tsk, causation); err != nil {
-			s.dropWait(tsk)
-			s.fail(a, deny(CodePolicyUnavailable, err.Error()))
-			return
-		}
+		createID, createSubj := NewUUID(), "cmd.mission."+tsk+".create"
 		verb := TaskTypes[tp.Type]
 		if verb == "" {
-			s.dropWait(tsk)
+			// Person, team or agent task: closes on evt.mission.{tsk}.created.
+			s.expectResult(a.ActionID, createID, "tsk:"+tsk)
+			if err := s.publishCommandID(a, createID, createSubj, b, tsk, causation); err != nil {
+				s.unexpect(a.ActionID, createID, "tsk:"+tsk)
+				s.fail(a, deny(CodePolicyUnavailable, err.Error()))
+				return
+			}
+			a.CommandID, a.CommandSubject = createID, createSubj
 			s.markDispatched(a, false)
+			return
+		}
+		ch := s.awaitCreated(tsk)
+		if err := s.publishCommandID(a, createID, createSubj, b, tsk, causation); err != nil {
+			s.dropWait(tsk)
+			s.fail(a, deny(CodePolicyUnavailable, err.Error()))
 			return
 		}
 		select {
@@ -813,7 +1014,12 @@ func (s *Service) dispatch(a *Action, causation string) {
 		}
 		_ = json.Unmarshal(a.Params, &ap)
 		a.TaskID = ap.TaskID
-		if _, err := s.publishCommand(a, "cmd.mission."+ap.TaskID+".abort", a.Params, ap.TaskID, causation); err != nil {
+		abortSubj, id := "cmd.mission."+ap.TaskID+".abort", NewUUID()
+		if !isAsset {
+			s.expectResult(a.ActionID, id)
+		}
+		if err := s.publishCommandID(a, id, abortSubj, a.Params, ap.TaskID, causation); err != nil {
+			s.unexpect(a.ActionID, id)
 			s.fail(a, deny(CodePolicyUnavailable, err.Error()))
 			return
 		}
@@ -821,6 +1027,7 @@ func (s *Service) dispatch(a *Action, causation string) {
 			s.sendFleet(a, "hold", json.RawMessage(`{"reason":"abort"}`), ap.TaskID, causation)
 			return
 		}
+		a.CommandID, a.CommandSubject = id, abortSubj
 		s.markDispatched(a, false)
 	default:
 		s.fail(a, deny(CodeForbiddenAction, "action cannot execute"))
@@ -842,10 +1049,15 @@ func (s *Service) sendFleet(a *Action, verb string, data json.RawMessage, taskID
 	s.markDispatched(a, true)
 }
 
+// markDispatched records the dispatch. track: an asset command, closed by the bridge
+// outcomes (no_ack after AckTimeout). Otherwise an entity, mission or task command, closed by
+// the entity or task service result (asset-command.md section 2), failing after ResultTimeout.
 func (s *Service) markDispatched(a *Action, track bool) {
 	a.State, a.UpdatedAt = StateDispatched, s.cfg.Now()
 	if track {
 		a.ackDeadline = s.cfg.Now().Add(s.cfg.AckTimeout)
+	} else {
+		a.resultDeadline = s.cfg.Now().Add(s.cfg.ResultTimeout)
 	}
 	if err := s.audit(a, "dispatched", nil, ""); err != nil {
 		s.cfg.Log.Error("audit of dispatch failed", "action_id", a.ActionID, "err", err)
@@ -855,8 +1067,33 @@ func (s *Service) markDispatched(a *Action, track bool) {
 // publishCommand builds, validates, signs and publishes one command with a JetStream ack
 // (the CMD PubAck is the proof of record). It returns the command id.
 func (s *Service) publishCommand(a *Action, subject string, data json.RawMessage, taskID, causation string) (string, error) {
-	now := s.cfg.Now()
 	id := NewUUID()
+	return id, s.publishCommandID(a, id, subject, data, taskID, causation)
+}
+
+// expectResult indexes an entity/task command before it is published, so a result that
+// arrives before the dispatch is saved is not lost: it waits on the action's operation lock.
+func (s *Service) expectResult(actionID string, keys ...string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for _, k := range keys {
+		s.byRes[k] = actionID
+	}
+}
+
+func (s *Service) unexpect(actionID string, keys ...string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for _, k := range keys {
+		if s.byRes[k] == actionID {
+			delete(s.byRes, k)
+		}
+	}
+}
+
+// publishCommandID publishes one command with the given id (see publishCommand).
+func (s *Service) publishCommandID(a *Action, id, subject string, data json.RawMessage, taskID, causation string) error {
+	now := s.cfg.Now()
 	var d any
 	if err := json.Unmarshal(data, &d); err != nil || d == nil {
 		d = map[string]any{}
@@ -889,23 +1126,23 @@ func (s *Service) publishCommand(a *Action, subject string, data json.RawMessage
 	}
 	if s.cfg.Signer != nil {
 		if err := s.cfg.Signer.Sign(env); err != nil {
-			return "", err
+			return err
 		}
 	} else {
 		s.cfg.Log.Warn("command sent unsigned (no signing key configured)", "subject", subject)
 	}
 	b, err := json.Marshal(env)
 	if err != nil {
-		return "", err
+		return err
 	}
 	if err := s.cfg.Schemas.ValidateCommand(b); err != nil {
-		return "", fmt.Errorf("command envelope invalid: %s", firstLine(err))
+		return fmt.Errorf("command envelope invalid: %s", firstLine(err))
 	}
 	if _, err := s.cfg.JS.Publish(subject, b, nats.MsgId(id)); err != nil {
-		return "", fmt.Errorf("CMD stream did not ack %s: %w", subject, err)
+		return fmt.Errorf("CMD stream did not ack %s: %w", subject, err)
 	}
 	s.cfg.Log.Info("command published", "subject", subject, "command_id", id, "action_id", a.ActionID)
-	return id, nil
+	return nil
 }
 
 func (s *Service) awaitCreated(tsk string) chan struct{} {
@@ -957,21 +1194,28 @@ func (s *Service) handleOutcome(m *nats.Msg) {
 	if json.Unmarshal(m.Data, &env) != nil {
 		return
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	a := s.byID[env.Data.ActionID]
-	if a == nil || a.Target.EntityType != parts[1] || a.Target.EntityID != parts[2] ||
+	e := s.lookup(env.Data.ActionID)
+	if e == nil {
+		s.cfg.Log.Warn("outcome for unknown command dropped", "subject", m.Subject, "action_id", env.Data.ActionID)
+		return
+	}
+	e.op.Lock() // waits only for an operation on this same action (its dispatch)
+	defer e.op.Unlock()
+	a := s.load(e)
+	if a.Target.EntityType != parts[1] || a.Target.EntityID != parts[2] ||
 		a.CommandID == "" || env.Data.CommandID != a.CommandID {
-		s.cfg.Log.Warn("outcome for unknown or mismatched command dropped", "subject", m.Subject, "action_id", env.Data.ActionID)
+		s.cfg.Log.Warn("outcome for mismatched command dropped", "subject", m.Subject, "action_id", env.Data.ActionID)
 		return
 	}
 	if a.terminal() {
 		return
 	}
 	var d *Denial
+	now := s.cfg.Now()
 	switch env.Data.Outcome {
 	case "acknowledged":
 		a.State, a.acked = StateAcked, true
+		a.execDeadline = now.Add(s.cfg.ExecuteTimeout)
 	case "executed":
 		a.State, a.acked = StateExecuted, true
 	case "failed", "refused":
@@ -985,7 +1229,7 @@ func (s *Service) handleOutcome(m *nats.Msg) {
 	default:
 		return
 	}
-	a.UpdatedAt = s.cfg.Now()
+	a.UpdatedAt = now
 	extra := map[string]any{}
 	if len(env.Data.MAVLink) > 0 {
 		extra["mavlink"] = env.Data.MAVLink
@@ -993,6 +1237,77 @@ func (s *Service) handleOutcome(m *nats.Msg) {
 	if err := s.auditFull(a, env.Data.Outcome, d, "", NewUUID(), env.ID, extra); err != nil {
 		s.cfg.Log.Error("audit failed", "err", err)
 	}
+	s.save(e, a)
+}
+
+// handleResult closes an entity, mission or task command when its result arrives
+// (asset-command.md section 2: the entity and task services report each cmd.entity.* /
+// cmd.mission.* they apply as evt.entity.{id}.* / evt.mission.{id}.*; the policy service
+// turns it into evt.so.action.executed or .failed). A result matches by its causation (the
+// command id), by data.action_id, or, for a task assigned to a person, team or agent, by
+// evt.mission.{tsk}.created. Its subject id must be the action's target or task.
+func (s *Service) handleResult(m *nats.Msg) {
+	parts := strings.Split(m.Subject, ".")
+	if len(parts) != 4 {
+		return
+	}
+	s.mu.Lock()
+	idle := len(s.byRes) == 0
+	s.mu.Unlock()
+	if idle {
+		return
+	}
+	var env struct {
+		ID        string `json:"id"`
+		Causation string `json:"causation"`
+		Data      struct {
+			ActionID string `json:"action_id"`
+			Code     string `json:"code"`
+			Message  string `json:"message"`
+		} `json:"data"`
+	}
+	_ = json.Unmarshal(m.Data, &env)
+	s.mu.Lock()
+	id := ""
+	if env.Causation != "" {
+		id = s.byRes[env.Causation]
+	}
+	if id == "" && env.Data.ActionID != "" {
+		if e := s.byID[env.Data.ActionID]; e != nil && e.cur.awaitingResult() {
+			id = env.Data.ActionID
+		}
+	}
+	if id == "" && parts[1] == "mission" && parts[3] == "created" {
+		id = s.byRes["tsk:"+parts[2]]
+	}
+	e := s.byID[id]
+	s.mu.Unlock()
+	if e == nil {
+		return
+	}
+	e.op.Lock()
+	defer e.op.Unlock()
+	a := s.load(e)
+	if !a.awaitingResult() || (parts[2] != a.Target.EntityID && parts[2] != a.TaskID) {
+		return
+	}
+	var d *Denial
+	event := "executed"
+	switch parts[3] {
+	case "failed", "rejected", "refused", "error":
+		event = StateFailed
+		code := env.Data.Code
+		if code == "" {
+			code = CodePreconditionFailed
+		}
+		d = &Denial{Code: code, Message: env.Data.Message, Detail: m.Subject}
+		a.Denial = d
+	}
+	a.State, a.UpdatedAt = event, s.cfg.Now()
+	if err := s.auditFull(a, event, d, "", NewUUID(), env.ID, map[string]any{"result_subject": m.Subject}); err != nil {
+		s.cfg.Log.Error("audit failed", "err", err)
+	}
+	s.save(e, a)
 }
 
 func (s *Service) sweep(ctx context.Context) {
@@ -1009,25 +1324,52 @@ func (s *Service) sweep(ctx context.Context) {
 	}
 }
 
-// SweepOnce expires unconfirmed actions, fails commands with no acknowledgement and drops
-// finished actions older than Retain (the audit trail in EVT keeps them; memory stays bounded).
+// SweepOnce expires unconfirmed actions, fails commands with no acknowledgement, no
+// execution outcome or no entity/task result, and drops finished actions older than Retain
+// (the audit trail in EVT keeps them). Every non-terminal state has a deadline, so every
+// action becomes terminal and is dropped: memory stays bounded. An action whose operation
+// is in progress is skipped until the next sweep.
 func (s *Service) SweepOnce() {
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	now := s.cfg.Now()
-	for id, a := range s.byID {
-		switch {
-		case a.terminal() && now.Sub(a.UpdatedAt) > s.cfg.Retain:
-			delete(s.byID, id)
-			if s.byRQ[a.RequestID] == id {
-				delete(s.byRQ, a.RequestID)
-			}
-		case a.State == StateAwaiting && now.After(a.ConfirmBy):
-			s.expire(a)
-		case a.State == StateDispatched && !a.ackDeadline.IsZero() && !a.acked && now.After(a.ackDeadline):
-			s.fail(a, deny(CodeNoAck, "no acknowledgement from the asset within "+s.cfg.AckTimeout.String()))
-		}
+	s.mu.Lock()
+	es := make([]*entry, 0, len(s.byID))
+	for _, e := range s.byID {
+		es = append(es, e)
 	}
+	s.mu.Unlock()
+	for _, e := range es {
+		if !e.op.TryLock() {
+			continue
+		}
+		s.sweepOne(e, now)
+		e.op.Unlock()
+	}
+	if s.limiter != nil {
+		s.limiter.prune(now)
+	}
+}
+
+func (s *Service) sweepOne(e *entry, now time.Time) {
+	a := s.load(e)
+	switch {
+	case a.terminal() && now.Sub(a.UpdatedAt) > s.cfg.Retain:
+		s.mu.Lock()
+		s.remove(a)
+		s.mu.Unlock()
+		return
+	case a.State == StateAwaiting && now.After(a.ConfirmBy):
+		s.expire(a)
+	case a.State == StateDispatched && !a.ackDeadline.IsZero() && !a.acked && now.After(a.ackDeadline):
+		s.fail(a, deny(CodeNoAck, "no acknowledgement from the asset within "+s.cfg.AckTimeout.String()))
+	case a.awaitingResult() && now.After(a.resultDeadline):
+		s.fail(a, deny(CodeNoAck, "no result from the entity or task service within "+s.cfg.ResultTimeout.String()+
+			"; the command is recorded in CMD"))
+	case a.State == StateAcked && !a.execDeadline.IsZero() && now.After(a.execDeadline):
+		s.fail(a, deny(CodeNoAck, "acknowledged, but no executed or failed outcome within "+s.cfg.ExecuteTimeout.String()))
+	default:
+		return
+	}
+	s.save(e, a)
 }
 
 // ---------------------------------------------------------------------------
@@ -1042,15 +1384,14 @@ func (s *Service) handleGet(m *nats.Msg) any {
 		return map[string]any{"action": nil, "denial": deny(CodeSchemaInvalid, "action_id is required")}
 	}
 	p, known := s.cfg.Directory.Resolve(m)
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	if p.Verified && !known {
 		return map[string]any{"action": nil, "denial": deny(CodeNotAuthorized, "unknown NATS identity")}
 	}
-	a := s.byID[req.ActionID]
-	if a == nil {
+	e := s.lookup(req.ActionID)
+	if e == nil {
 		return map[string]any{"action": nil, "denial": deny(CodeConflict, "no such action")}
 	}
+	a := s.load(e) // committed state; never waits for an operation in progress
 	if p.Verified && p.Kind == "agent" && a.RequestedBy.ID != p.ID {
 		return map[string]any{"action": nil, "denial": deny(CodeNotAuthorized, "agents may read only their own actions")}
 	}
@@ -1069,18 +1410,23 @@ func (s *Service) handleCheck(m *nats.Msg) any {
 	if json.Unmarshal(m.Data, &req) != nil {
 		return map[string]any{"allowed": false, "denial": deny(CodeSchemaInvalid, "not JSON")}
 	}
+	p, known := s.cfg.Directory.Resolve(m)
 	if req.Action != nil { // full dry run of a proposal: no record, no audit, no command
 		req.Action.DryRun = true
-		p, known := s.cfg.Directory.Resolve(m)
 		spec, ok := Catalogue[req.Action.ActionType]
 		fam := FamilyCommand
 		if ok {
 			fam = spec.Family
 		}
-		s.mu.Lock()
-		defer s.mu.Unlock()
 		r := s.propose(req.Action, p, known, fam)
 		return map[string]any{"allowed": r.Denial == nil, "decision": r}
+	}
+	// The tuple pass-through could map the whole permission graph, so it answers only
+	// callers in the policy service's own account (no service import: unverified). Clients
+	// and agents use the action form, which checks their own identity.
+	if p.Verified {
+		return map[string]any{"allowed": false, "denial": deny(CodeNotAuthorized,
+			"tuple checks are limited to the policy service's own account; send {v, action} for a dry run")}
 	}
 	if req.User == "" || req.Relation == "" || req.Object == "" {
 		return map[string]any{"allowed": false, "denial": deny(CodeSchemaInvalid, "user, relation and object are required")}
@@ -1094,15 +1440,63 @@ func (s *Service) handleCheck(m *nats.Msg) any {
 	return map[string]any{"allowed": ok, "store": s.cfg.Authz.StoreID(), "model_id": s.cfg.Authz.ModelID(), "denial": nil}
 }
 
-// Snapshot returns a copy of every action (tests and diagnostics).
+// Snapshot returns a copy of every action's committed state (tests and diagnostics).
 func (s *Service) Snapshot() []Action {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	out := make([]Action, 0, len(s.byID))
-	for _, a := range s.byID {
-		out = append(out, *a)
+	for _, e := range s.byID {
+		out = append(out, *e.cur.clone())
 	}
 	return out
+}
+
+// auditLimiter caps denial and refused-confirm audits per identity in a fixed window.
+type auditLimiter struct {
+	mu     sync.Mutex
+	limit  int
+	window time.Duration
+	seen   map[string]*limitWindow
+}
+
+type limitWindow struct {
+	start      time.Time
+	n          int
+	suppressed int
+}
+
+func newAuditLimiter(limit int, window time.Duration) *auditLimiter {
+	return &auditLimiter{limit: limit, window: window, seen: map[string]*limitWindow{}}
+}
+
+func (l *auditLimiter) allow(who string, now time.Time) bool {
+	if l == nil {
+		return true
+	}
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	w := l.seen[who]
+	if w == nil || now.Sub(w.start) >= l.window {
+		w = &limitWindow{start: now}
+		l.seen[who] = w
+	}
+	if w.n >= l.limit {
+		w.suppressed++
+		return false
+	}
+	w.n++
+	return true
+}
+
+// prune forgets identities whose window has passed.
+func (l *auditLimiter) prune(now time.Time) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	for k, w := range l.seen {
+		if now.Sub(w.start) >= l.window {
+			delete(l.seen, k)
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------

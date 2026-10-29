@@ -17,9 +17,9 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | `svc.policy.task.propose` | same | ActionRequest for `task.*` and `mission.*` | same |
 | `svc.policy.command.confirm` / `svc.policy.task.confirm` | **humans only** | `{v, action_id, params_hash, decision: approve\|reject, reason}` | `{action_id, status, approvals_needed, approvals_received, command_id, denial}` |
 | `svc.policy.action.get` | clients, Hermes (own actions only) | `{v, action_id}` | `{action, denial}` |
-| `svc.policy.check` | other services | `{v, user, relation, object, context?}` or `{v, action: ActionRequest}` (dry run, nothing stored or sent) | `{allowed, ...}` |
+| `svc.policy.check` | other services; clients and agents for the dry run only | `{v, user, relation, object, context?}` (callers in the policy service's own account only, so a client cannot map the permission graph) or `{v, action: ActionRequest}` (dry run as the caller, nothing stored or sent) | `{allowed, ...}` |
 
-## Rules it enforces (each has a test in `internal/policy/service_test.go`)
+## Rules it enforces (each has a test in `internal/policy/*_test.go`)
 
 | Rule | Code on failure |
 |---|---|
@@ -31,6 +31,7 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | Commandable targets must be `sim-*` and not marked non-simulated | `not_simulated` |
 | The asset advertises the matching task type in `capabilities` | `not_capable` |
 | The asset is online (no command is ever held for an offline asset), the point is outside every keep-out and inside a keep-in zone (KV `geofences`); `estop` skips these so a stop is never blocked | `precondition_failed` (`detail`) |
+| A keep-in or keep-out zone the service cannot read (corridor, MultiPolygon, malformed coordinates, missing kind) is kept as *unevaluable* and logged; movement verbs (`goto`, `land`, `orbit`, `arm`, `takeoff`, movement tasks) are denied for the assets it applies to until the shape is supported. `estop`, `rtl` and `hold` are not blocked | `precondition_failed` (`detail: geofence_unevaluable`) |
 | OpenFGA: `proposer` on `action_type:{name}`; an agent needs a human `on_behalf_of` and both must be proposers (intersection); the human must be `operator` of the asset. Confirm: `approver` (step 1, plus `operator`) or `second_approver` (step 2) | `not_authorized` |
 | OpenFGA, the entity service, the geofence watcher or the audit stream unreachable: deny (fail closed) | `policy_unavailable` |
 | Levels A0/A1 run at once (logged); A2/A3 need one human; A4 two distinct humans; A5 never | `duplicate_confirmation` for the same human twice |
@@ -39,16 +40,24 @@ Contracts it implements (onemind-xr, branch `run/m0`): `docs/contracts/asset-com
 | An approval is bound to one `action_id` and its `params_hash` (SHA-256 of the RFC 8785 JCS form of `{action_type, action_version, target, params}`); a hash from any other action, or the wrong endpoint family | `conflict` |
 | An approval is used once: confirming an approved, dispatched or finished action | `replayed` |
 | No confirmation within `confirm_by` (120 s): the action expires | `expired` |
-| `request_id` is an idempotency key: same body returns the same action; different body | `conflict` |
+| `request_id` is an idempotency key per requester: the same requester with the same body gets the same action; with a different body, `conflict`. Another principal reusing the id goes through every check itself | `conflict` |
 | Preconditions are checked again at dispatch | `precondition_failed` |
 | Commands carry `expires_at` (30 s), `simulated`, the approval and an Ed25519 `sig` over the JCS envelope; they are published with a JetStream ack (the `CMD` PubAck is the record) | — |
 | Task assignment publishes `cmd.mission.{tsk}.create` first and sends the asset command only after `evt.mission.{tsk}.created` | `no_ack` |
-| No `acknowledged` from the bridge within 10 s | `no_ack` |
+| No `acknowledged` from the bridge within 10 s; acknowledged but no `executed`/`failed` within 10 min | `no_ack` |
+| Entity, mission and person/team/agent task commands close on the entity or task service result (`evt.entity.{id}.*` / `evt.mission.{id}.*` matched by `causation` = command id or `data.action_id`; `evt.mission.{tsk}.created` for a task); none within 30 s | `no_ack` |
 
-Every proposal, denial, refused confirmation, approval, rejection, expiry, dispatch and bridge
-outcome is published as one event on `evt.so.action.{event}` in the omos event envelope v1
+Every proposal, denial, refused confirmation, approval, rejection, expiry, dispatch, bridge
+outcome and entity/task result is published as one event on `evt.so.action.{event}` in the omos event envelope v1
 (`Nats-Msg-Id` = envelope id; the `EVT` stream stores `evt.so.>`). Agent sessions add
 `agent_session`, `model_alias`, `prompt_sha256` and `tool_input_sha256` (hashes only).
+Denial and refused-confirmation events are rate limited to 60 per identity per minute (the
+excess is logged, not published), so a client flooding bad requests cannot flood `EVT`.
+
+Concurrency: requests are handled concurrently (up to 128 in flight). No lock is held across
+an OpenFGA check, an entity lookup, a publish or the wait for `evt.mission.{tsk}.created`;
+each action has its own operation lock, so a slow dependency on one action never delays a
+proposal or confirmation of another (an `estop` is never queued behind a task assignment).
 
 ## Run the tests
 
@@ -84,8 +93,9 @@ the HTTP client against a stub OpenFGA server and a closed port). The last check
 ## Not done here (follow-ups)
 
 - Action records live in memory. A restart forgets pending actions (they can no longer be
-  confirmed, which fails safe) and the idempotency memory. Finished actions are dropped from
-  memory after 24 h (the audit trail in `EVT` keeps them). The contract's Postgres decision
+  confirmed, which fails safe) and the idempotency memory. Denials are not held. Every other
+  state has a deadline, so every action finishes and is dropped from memory 24 h later (the
+  audit trail in `EVT` keeps them). The contract's Postgres decision
   row with an outbox (asset-command.md §5) is a follow-up.
 - One replica (`Recreate`); no leader election.
 - The bridge-side checks (signature, nonce, expiry, own geofence) are H6 and the MAVLink

@@ -137,8 +137,50 @@ func TestGeofence(t *testing.T) {
 	if CheckPoint(zones, "sim-x1", 10.005, 10) != "" {
 		t.Fatal("inside circle")
 	}
-	if _, ok := ParseZone("x", []byte(`{"geo":{"shape":"corridor","coords":{}}}`)); ok {
-		t.Fatal("unsupported shape accepted")
+	// Unreadable keep_in/keep_out records fail closed; a non-constraining zone is ignored.
+	if _, ok := ParseZone("x", []byte(`{"geo":{"shape":"corridor","kind":"aoi","coords":{}}}`)); ok {
+		t.Fatal("unsupported aoi shape kept")
+	}
+	for name, raw := range map[string]string{
+		"corridor keep_out": `{"geo":{"shape":"corridor","kind":"keep_out","coords":{"type":"LineString","coordinates":[[0,0],[1,1]]}},"properties":{"applies_to":["sim-x1"]}}`,
+		"multipolygon":      `{"geo":{"shape":"polygon","kind":"keep_out","coords":{"type":"MultiPolygon","coordinates":[]}},"properties":{"applies_to":["sim-x1"]}}`,
+		"bad ring":          `{"geo":{"shape":"polygon","kind":"keep_in","coords":{"type":"Polygon","coordinates":[[[0,0],[1,1]]]}},"properties":{"applies_to":["sim-x1"]}}`,
+		"no kind":           `{"geo":{"shape":"corridor","coords":{}},"properties":{"applies_to":["sim-x1"]}}`,
+	} {
+		z, ok := ParseZone("x", []byte(raw))
+		if !ok || !z.Unevaluable || z.Problem == "" {
+			t.Fatalf("%s: want an unevaluable zone, got %+v %v", name, z, ok)
+		}
+		withBad := append([]Zone{sq, ci}, z)
+		if CheckPoint(withBad, "sim-x1", 10.005, 10) != DetailUnevaluable {
+			t.Fatalf("%s: point allowed past an unevaluable zone", name)
+		}
+		if CheckPoint(withBad, "sim-x9", 5, 5) != "" {
+			t.Fatalf("%s: unevaluable zone applied to an asset it does not name", name)
+		}
+	}
+	if z, ok := ParseZone("x", []byte(`not json`)); !ok || !z.Unevaluable || len(z.AppliesTo) != 0 {
+		t.Fatalf("garbage record: %+v %v", z, ok)
+	}
+}
+
+func TestAuditLimiter(t *testing.T) {
+	l := newAuditLimiter(3, time.Minute)
+	t0 := time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)
+	for i := 0; i < 3; i++ {
+		if !l.allow("user:mallory", t0) {
+			t.Fatal("under the limit refused")
+		}
+	}
+	if l.allow("user:mallory", t0) || !l.allow("user:zeus", t0) {
+		t.Fatal("limit is not per identity")
+	}
+	if !l.allow("user:mallory", t0.Add(time.Minute)) {
+		t.Fatal("window did not reset")
+	}
+	l.prune(t0.Add(3 * time.Minute))
+	if len(l.seen) != 0 {
+		t.Fatal("idle identities kept")
 	}
 }
 
@@ -253,13 +295,17 @@ func TestIDsAndDirectory(t *testing.T) {
 
 func TestSweepDropsOldFinishedActions(t *testing.T) {
 	clock := &fakeClock{t: time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)}
-	s := &Service{cfg: Config{Now: clock.Now, Retain: time.Hour}, byID: map[string]*Action{}, byRQ: map[string]string{}}
-	s.byID["act-old"] = &Action{ActionID: "act-old", RequestID: "r1", State: StateExecuted, UpdatedAt: clock.Now()}
-	s.byRQ["r1"] = "act-old"
-	s.byID["act-new"] = &Action{ActionID: "act-new", RequestID: "r2", State: StateDenied, UpdatedAt: clock.Now().Add(30 * time.Minute)}
+	s := &Service{cfg: Config{Now: clock.Now, Retain: time.Hour}, byID: map[string]*entry{}, byRQ: map[string]string{},
+		byRes: map[string]string{}}
+	k1 := rqKey("user:zeus", "r1")
+	s.byID["act-old"] = &entry{cur: &Action{ActionID: "act-old", RequestID: "r1", rqKey: k1, State: StateExecuted,
+		CommandID: "cmd-1", UpdatedAt: clock.Now()}}
+	s.byRQ[k1] = "act-old"
+	s.byRes["cmd-1"] = "act-old"
+	s.byID["act-new"] = &entry{cur: &Action{ActionID: "act-new", RequestID: "r2", State: StateDenied, UpdatedAt: clock.Now().Add(30 * time.Minute)}}
 	clock.Advance(61 * time.Minute)
 	s.SweepOnce()
-	if _, ok := s.byID["act-old"]; ok || s.byRQ["r1"] != "" {
+	if _, ok := s.byID["act-old"]; ok || s.byRQ[k1] != "" || s.byRes["cmd-1"] != "" {
 		t.Fatal("old finished action kept")
 	}
 	if _, ok := s.byID["act-new"]; !ok {

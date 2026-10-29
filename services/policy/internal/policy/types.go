@@ -140,8 +140,24 @@ type Action struct {
 	Corr            string          `json:"corr,omitempty"`
 	Simulated       bool            `json:"simulated"`
 	Agent           *ActionRequest  `json:"-"`
-	ackDeadline     time.Time
+	ackDeadline     time.Time       // asset command: fail no_ack when no acknowledgement by this time
 	acked           bool
+	execDeadline    time.Time // acknowledged asset command: fail when no executed/failed outcome by this time
+	resultDeadline  time.Time // entity/mission/task command: closes on its evt.entity/evt.mission result, fails after this
+	rqKey           string    // idempotency key: requester id and request_id
+}
+
+// clone returns a copy that shares no mutable slice with the original.
+func (a *Action) clone() *Action {
+	c := *a
+	c.Approvals = append(make([]Approval, 0, len(a.Approvals)), a.Approvals...)
+	c.Policy.Checks = append(make([]PolicyCheck, 0, len(a.Policy.Checks)), a.Policy.Checks...)
+	return &c
+}
+
+// awaitingResult reports whether the action waits for an entity or task service result.
+func (a *Action) awaitingResult() bool {
+	return a.State == StateDispatched && !a.resultDeadline.IsZero()
 }
 
 func (a *Action) terminal() bool {

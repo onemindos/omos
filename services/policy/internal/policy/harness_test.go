@@ -112,7 +112,7 @@ accounts {
     users: [
       { user: policy, password: %q, permissions: {
           publish: { allow: ["cmd.>", "evt.so.action.>", "svc.entity.get", "$JS.API.>", "_INBOX.>"] }
-          subscribe: { allow: ["svc.policy.>", "evt.drone.>", "evt.robot.>", "evt.vehicle.>", "evt.mission.>", "_INBOX.>"] }
+          subscribe: { allow: ["svc.policy.>", "evt.drone.>", "evt.robot.>", "evt.vehicle.>", "evt.mission.>", "evt.entity.>", "_INBOX.>"] }
           allow_responses: true } }
       { user: entity, password: %q, permissions: {
           publish: { allow: ["_INBOX.>"] }, subscribe: { allow: ["svc.entity.>"] }, allow_responses: true } }
@@ -345,7 +345,7 @@ func newEnv(t *testing.T) *env {
 		t.Fatal(err)
 	}
 	e.authz = &swapAuthz{a: e.eval}
-	zones, err := WatchZones(t.Context(), pjs, "geofences")
+	zones, err := WatchZones(t.Context(), pjs, "geofences", nil)
 	if err != nil {
 		t.Fatal(err)
 	}

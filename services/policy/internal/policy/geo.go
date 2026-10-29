@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"math"
 	"sync"
 
@@ -21,9 +22,19 @@ type Zone struct {
 	RadiusM   float64
 	AppliesTo []string // asset ids; empty = every asset
 	Live      bool
+	// Unevaluable marks a keep_in/keep_out record (or a record whose kind cannot be read)
+	// whose shape the policy cannot evaluate. It fails closed: movement verbs are denied for
+	// the assets it applies to (detail geofence_unevaluable) until the shape is supported.
+	Unevaluable bool
+	Problem     string
 }
 
-// ParseZone decodes a KV value. Only shapes the policy can evaluate are returned.
+// DetailUnevaluable is the denial detail for a movement blocked by an unreadable zone.
+const DetailUnevaluable = "geofence_unevaluable"
+
+// ParseZone decodes a KV value. It returns false only for a zone that does not constrain
+// movement (aoi, hazard, control_area) and whose shape cannot be read; an unreadable
+// keep_in/keep_out record, or one whose kind cannot be read, comes back Unevaluable.
 func ParseZone(key string, value []byte) (Zone, bool) {
 	var rec struct {
 		EntityID string `json:"entity_id"`
@@ -38,36 +49,61 @@ func ParseZone(key string, value []byte) (Zone, bool) {
 			AppliesTo []string `json:"applies_to"`
 		} `json:"properties"`
 	}
-	if json.Unmarshal(value, &rec) != nil || rec.Geo == nil {
-		return Zone{}, false
+	if json.Unmarshal(value, &rec) != nil {
+		return Zone{ID: key, Live: true, Unevaluable: true, Problem: "record is not valid JSON"}, true
+	}
+	if rec.Geo == nil {
+		// The kind is unknown, so it may be a keep_out: fail closed for every asset it names.
+		return Zone{ID: key, Live: rec.Live == nil || *rec.Live, AppliesTo: rec.Properties.AppliesTo,
+			Unevaluable: true, Problem: "record has no geo"}, true
 	}
 	z := Zone{ID: rec.EntityID, Kind: rec.Geo.Kind, Shape: rec.Geo.Shape, RadiusM: rec.Geo.RadiusM,
 		AppliesTo: rec.Properties.AppliesTo, Live: rec.Live == nil || *rec.Live}
 	if z.ID == "" {
 		z.ID = key
 	}
+	bad := func(problem string) (Zone, bool) {
+		if z.Kind != "" && z.Kind != "keep_in" && z.Kind != "keep_out" {
+			return Zone{}, false // does not constrain movement
+		}
+		z.Unevaluable, z.Problem = true, problem
+		return z, true
+	}
+	if z.Kind == "" {
+		return bad("zone kind is missing")
+	}
 	var geom struct {
 		Type        string          `json:"type"`
 		Coordinates json.RawMessage `json:"coordinates"`
 	}
 	if json.Unmarshal(rec.Geo.Coords, &geom) != nil {
-		return Zone{}, false
+		return bad("coords are not GeoJSON")
 	}
 	switch {
 	case z.Shape == "polygon" && geom.Type == "Polygon":
 		var rings [][][2]float64
 		if json.Unmarshal(geom.Coordinates, &rings) != nil || len(rings) == 0 || len(rings[0]) < 4 {
-			return Zone{}, false
+			return bad("polygon coordinates are malformed")
 		}
 		z.Ring, z.Holes = rings[0], rings[1:]
 	case z.Shape == "circle" && geom.Type == "Point" && z.RadiusM > 0:
 		if json.Unmarshal(geom.Coordinates, &z.Center) != nil {
-			return Zone{}, false
+			return bad("circle center is malformed")
 		}
 	default:
-		return Zone{}, false
+		return bad("shape " + z.Shape + " with geometry " + geom.Type + " is not supported")
 	}
 	return z, true
+}
+
+// UnevaluableZone returns the first live unevaluable zone that applies to the asset.
+func UnevaluableZone(zones []Zone, asset string) (Zone, bool) {
+	for _, z := range zones {
+		if z.Live && z.Unevaluable && z.appliesTo(asset) {
+			return z, true
+		}
+	}
+	return Zone{}, false
 }
 
 func pointInRing(lon, lat float64, ring [][2]float64) bool {
@@ -120,10 +156,14 @@ func (z Zone) appliesTo(asset string) bool {
 	return false
 }
 
-// CheckPoint returns "" when the point is allowed for the asset, else keep_out or keep_in.
-// A point must be outside every live keep-out zone and, when any keep-in zone applies to
-// the asset, inside at least one of them.
+// CheckPoint returns "" when the point is allowed for the asset, else keep_out, keep_in or
+// geofence_unevaluable. A point must be outside every live keep-out zone and, when any
+// keep-in zone applies to the asset, inside at least one of them; any unevaluable zone that
+// applies to the asset denies the point (fail closed).
 func CheckPoint(zones []Zone, asset string, lat, lon float64) string {
+	if _, ok := UnevaluableZone(zones, asset); ok {
+		return DetailUnevaluable
+	}
 	haveKeepIn, inKeepIn := false, false
 	for _, z := range zones {
 		if !z.Live || !z.appliesTo(asset) {
@@ -161,7 +201,11 @@ type KVZones struct {
 }
 
 // WatchZones starts watching the bucket. Zones() fails until the initial values are loaded.
-func WatchZones(ctx context.Context, js nats.JetStreamContext, bucket string) (*KVZones, error) {
+// An unevaluable zone is kept (it denies movement) and logged as a warning.
+func WatchZones(ctx context.Context, js nats.JetStreamContext, bucket string, log *slog.Logger) (*KVZones, error) {
+	if log == nil {
+		log = slog.Default()
+	}
 	kv, err := js.KeyValue(bucket)
 	if err != nil {
 		return nil, err
@@ -189,6 +233,10 @@ func WatchZones(ctx context.Context, js nats.JetStreamContext, bucket string) (*
 					k.ready = true
 				} else if e.Operation() == nats.KeyValuePut {
 					if z, ok := ParseZone(e.Key(), e.Value()); ok {
+						if z.Unevaluable {
+							log.Warn("geofence cannot be evaluated; movement is denied for the assets it applies to",
+								"key", e.Key(), "zone", z.ID, "kind", z.Kind, "problem", z.Problem, "applies_to", z.AppliesTo)
+						}
 						k.zones[e.Key()] = z
 					} else {
 						delete(k.zones, e.Key())
