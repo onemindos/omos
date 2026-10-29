@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -274,11 +275,13 @@ func (s *Service) ctx() (context.Context, context.CancelFunc) {
 // Propose
 
 func (s *Service) handlePropose(m *nats.Msg, fam Family) ProposeReply {
+	// Resolve first, so a malformed request is audited (and rate limited) under its sender,
+	// never under a bucket that other callers share (I6 red team RT14).
+	p, known := s.cfg.Directory.Resolve(m)
 	var req ActionRequest
 	if err := json.Unmarshal(m.Data, &req); err != nil {
-		return s.denyNew(&ActionRequest{}, Principal{}, fam, deny(CodeSchemaInvalid, "request is not valid JSON"))
+		return s.denyNew(&ActionRequest{}, p, fam, deny(CodeSchemaInvalid, "request is not valid JSON"))
 	}
-	p, known := s.cfg.Directory.Resolve(m)
 	return s.propose(&req, p, known, fam)
 }
 
@@ -334,6 +337,23 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 	}
 	if scanTK(req.Params) {
 		return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "CoT t-k (strike tasking) is never accepted"))
+	}
+	// Free text (reason, task instructions, agent questions) that asks for a stop-line
+	// action: an agent can otherwise turn "follow that person" into an allowed verb or a
+	// manual task (I6 red team RT08; JADC2-MAP section 5.3 test 6).
+	if hit, why := TextStopLine(req.Reason); hit {
+		return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "reason asks for a stop-line action ("+why+")"))
+	}
+	if hit, why := scanText(req.Params); hit {
+		return s.denyNew(req, p, fam, deny(CodeForbiddenAction, "parameters ask for a stop-line action ("+why+")"))
+	}
+	// Keep one unambiguous form: duplicate keys or odd spacing in the request must not let the
+	// confirmer, the bridge or an audit reader see other values than the ones checked and
+	// hashed (I6 red team RT06). The hash is unchanged: it is computed over this same form.
+	if c, err := Canonicalize(req.Params); err == nil {
+		req.Params = c
+	} else {
+		return s.denyNew(req, p, fam, deny(CodeSchemaInvalid, "params cannot be canonicalized"))
 	}
 
 	level, verb, capability, geoPoint, d := s.resolveAction(spec, req)
@@ -400,6 +420,14 @@ func (s *Service) propose(req *ActionRequest, p Principal, known bool, fam Famil
 			return r
 		}
 		return s.denyNew(req, p, fam, deny(CodeConflict, "request_id is in use"))
+	}
+	// Per-requester cap on actions awaiting a human (security-and-trust.md T1 "rate limit
+	// per agent"; I6 red team RT14): a flooding agent cannot bury the confirm queue. A stop
+	// is never limited. Counted and reserved under one lock, so concurrent floods cannot pass it.
+	if !spec.Unblockable && s.openFor(req.RequestedBy.ID) >= MaxOpenPerRequester {
+		s.mu.Unlock()
+		return s.denyNewWithPolicy(req, p, fam, &Denial{Code: CodePreconditionFailed, Detail: DetailRateLimited,
+			Message: fmt.Sprintf("%s already has %d actions awaiting confirmation", req.RequestedBy.ID, MaxOpenPerRequester)}, pol, level)
 	}
 	s.byID[a.ActionID], s.byRQ[key] = e, a.ActionID
 	s.mu.Unlock()
@@ -763,7 +791,7 @@ func (s *Service) denyNewWithPolicy(req *ActionRequest, p Principal, fam Family,
 	}
 	// A denial is not kept in memory: the audit event is its record. The audit is rate
 	// limited per identity so a flood of bad requests cannot flood EVT.
-	if s.limiter.allow(attemptBy(p), now) {
+	if s.limiter.allow(attemptBy(p)+"|"+d.Code, now) {
 		if err := s.audit(a, "denied", d, ""); err != nil {
 			s.cfg.Log.Error("audit of denial failed", "action_id", a.ActionID, "err", err)
 		}
@@ -778,14 +806,18 @@ func (s *Service) denyNewWithPolicy(req *ActionRequest, p Principal, fam Family,
 // Confirm
 
 func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
+	p, known := s.cfg.Directory.Resolve(m)
 	var req ConfirmRequest
 	if err := json.Unmarshal(m.Data, &req); err != nil || req.V != 1 || req.ActionID == "" ||
 		!strings.HasPrefix(req.ParamsHash, "sha256:") || (req.Decision != "approve" && req.Decision != "reject") ||
 		(req.Decision == "reject" && req.Reason == "") {
-		return ConfirmReply{ActionID: req.ActionID, Status: StateDenied,
-			Denial: deny(CodeSchemaInvalid, "confirm needs v:1, action_id, params_hash, decision approve|reject, and reason for reject")}
+		d := deny(CodeSchemaInvalid, "confirm needs v:1, action_id, params_hash, decision approve|reject, and reason for reject")
+		if p.Verified && p.Kind == "agent" {
+			d = deny(CodeAgentCannotConfirm, "agents may propose but never confirm")
+		}
+		s.auditRefusal(nil, req, p, fam, d)
+		return ConfirmReply{ActionID: req.ActionID, Status: StateDenied, Denial: d}
 	}
-	p, known := s.cfg.Directory.Resolve(m)
 	// Only this action's operation lock is held across the checks, the audit and the
 	// dispatch (which may wait for the task service); other actions are never blocked.
 	var a *Action
@@ -799,17 +831,10 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 		r := ConfirmReply{ActionID: req.ActionID, Status: StateDenied, Denial: d}
 		if a != nil {
 			r.Status, r.ApprovalsNeeded, r.ApprovalsReceived = a.State, a.ApprovalsNeeded, len(a.Approvals)
-			// A refused confirmation is audited (rate limited per identity); the action
-			// itself keeps its state.
-			if s.limiter.allow(attemptBy(p), s.cfg.Now()) {
-				if err := s.audit(a, "denied", d, attemptBy(p)); err != nil {
-					s.cfg.Log.Error("audit failed", "err", err)
-				}
-			} else {
-				s.cfg.Log.Warn("refused-confirm audit rate limited", "action_id", a.ActionID, "by", attemptBy(p))
-			}
 		}
-		s.cfg.Log.Info("confirm refused", "action_id", req.ActionID, "code", d.Code, "by", attemptBy(p))
+		// A refused confirmation is audited (rate limited per identity and code), also when
+		// no such action exists; the action itself keeps its state.
+		s.auditRefusal(a, req, p, fam, d)
 		return r
 	}
 	switch {
@@ -890,6 +915,55 @@ func (s *Service) handleConfirm(m *nats.Msg, fam Family) ConfirmReply {
 	s.save(e, a)
 	return ConfirmReply{ActionID: a.ActionID, Status: a.State, ApprovalsNeeded: a.ApprovalsNeeded,
 		ApprovalsReceived: len(a.Approvals), CommandID: a.CommandID, Denial: a.Denial}
+}
+
+var (
+	actionIDRE   = regexp.MustCompile(`^act-[0-9a-z]{26}$`)
+	paramsHashRE = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
+)
+
+// auditRefusal records a refused confirmation as evt.so.action.denied with attempt_by. With
+// no matching action (unknown or guessed id, malformed body) it records a placeholder, so
+// every confirm attempt by an agent or an unauthorized caller lands in the audit trail
+// (I6 red team RT03).
+func (s *Service) auditRefusal(a *Action, req ConfirmRequest, p Principal, fam Family, d *Denial) {
+	who := attemptBy(p)
+	if a == nil {
+		id, hash := "act-unknown", "sha256:invalid"
+		if actionIDRE.MatchString(req.ActionID) {
+			id = req.ActionID
+		}
+		if paramsHashRE.MatchString(req.ParamsHash) {
+			hash = req.ParamsHash
+		}
+		kind := p.Kind
+		if kind == "" {
+			kind = "unknown"
+		}
+		a = &Action{ActionID: id, Family: fam, ActionType: "unknown", ActionVersion: 0, Level: A0,
+			ParamsHash: hash, RequestedBy: Actor{Kind: kind, ID: who}, ActorVerified: p.Verified,
+			State: StateDenied, Approvals: []Approval{},
+			Policy: PolicyInfo{Store: s.cfg.Authz.StoreID(), ModelID: s.cfg.Authz.ModelID(), Checks: []PolicyCheck{}}}
+	}
+	if s.limiter.allow(who+"|"+d.Code, s.cfg.Now()) {
+		if err := s.audit(a, "denied", d, who); err != nil {
+			s.cfg.Log.Error("audit failed", "err", err)
+		}
+	} else {
+		s.cfg.Log.Warn("refused-confirm audit rate limited", "action_id", a.ActionID, "by", who, "code", d.Code)
+	}
+	s.cfg.Log.Info("confirm refused", "action_id", req.ActionID, "code", d.Code, "by", who)
+}
+
+// openFor counts the actions a requester holds awaiting confirmation. Caller holds s.mu.
+func (s *Service) openFor(requester string) int {
+	n := 0
+	for _, e := range s.byID {
+		if e.cur.State == StateAwaiting && e.cur.RequestedBy.ID == requester {
+			n++
+		}
+	}
+	return n
 }
 
 func attemptBy(p Principal) string {

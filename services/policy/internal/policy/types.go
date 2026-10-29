@@ -189,3 +189,11 @@ type ConfirmReply struct {
 	CommandID         string  `json:"command_id,omitempty"`
 	Denial            *Denial `json:"denial"`
 }
+
+// Rate limits on proposals (security-and-trust.md T1, "rate limit per agent").
+const (
+	// DetailRateLimited is the precondition_failed detail for a requester over its limits.
+	DetailRateLimited = "rate_limited"
+	// MaxOpenPerRequester is how many actions one requester may hold awaiting confirmation.
+	MaxOpenPerRequester = 10
+)

@@ -256,3 +256,72 @@ func validToken(s string) bool {
 	}
 	return true
 }
+
+// Free-text stop line (I6 red team RT08; JADC2-MAP section 5.3 test 6). The closed verb
+// list is the hard guarantee; this catches an agent (or a person) asking in words for what
+// no verb allows: following or tracking a person, or a strike-class action, written into a
+// reason, task instructions or an agent question. Matching is on lowercase letter tokens.
+var (
+	textStopWords = map[string]bool{"engage": true, "engaging": true, "engagement": true, "intercept": true,
+		"intercepting": true, "designate": true, "designation": true, "hostile": true, "weapon": true,
+		"weapons": true, "neutralize": true, "neutralise": true, "strike": true, "strikes": true}
+	followVerbs = map[string]bool{"follow": true, "following": true, "followed": true, "track": true,
+		"tracking": true, "tail": true, "tailing": true, "shadow": true, "shadowing": true, "pursue": true,
+		"pursuing": true, "stalk": true, "stalking": true, "chase": true, "chasing": true, "surveil": true,
+		"surveilling": true}
+	personNouns = map[string]bool{"person": true, "persons": true, "people": true, "man": true, "men": true,
+		"woman": true, "women": true, "him": true, "her": true, "guy": true, "child": true, "kid": true,
+		"boy": true, "girl": true, "individual": true, "pedestrian": true, "suspect": true, "someone": true,
+		"somebody": true, "intruder": true, "he": true, "she": true}
+)
+
+// TextStopLine reports whether free text asks for a stop-line action, and why.
+func TextStopLine(s string) (bool, string) {
+	if s == "" {
+		return false, ""
+	}
+	toks := strings.FieldsFunc(strings.ToLower(s), func(r rune) bool { return r < 'a' || r > 'z' })
+	for i, t := range toks {
+		if textStopWords[t] && !(strings.HasPrefix(t, "strike") && i > 0 && toks[i-1] == "lightning") {
+			return true, t
+		}
+		if followVerbs[t] {
+			for j := i + 1; j < len(toks) && j <= i+4; j++ {
+				if personNouns[toks[j]] {
+					return true, t + " a person"
+				}
+			}
+		}
+	}
+	return false, ""
+}
+
+// scanText applies TextStopLine to every string value in the parameters (including a task
+// spec nested in them).
+func scanText(raw json.RawMessage) (bool, string) {
+	var v any
+	if json.Unmarshal(raw, &v) != nil {
+		return false, ""
+	}
+	var walk func(any) (bool, string)
+	walk = func(x any) (bool, string) {
+		switch t := x.(type) {
+		case string:
+			return TextStopLine(t)
+		case []any:
+			for _, e := range t {
+				if hit, w := walk(e); hit {
+					return hit, w
+				}
+			}
+		case map[string]any:
+			for _, e := range t {
+				if hit, w := walk(e); hit {
+					return hit, w
+				}
+			}
+		}
+		return false, ""
+	}
+	return walk(v)
+}
